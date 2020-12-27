@@ -102,3 +102,17 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Output for pip
+/nest_desktop/app
+__pycache__
+*.egg-info

@@ -1,0 +1,27 @@
+{
+  "abbreviation": "sd",
+  "id": "spike_detector",
+  "element_type": "recorder",
+  "label": "spike detector",
+  "params": [{
+    "id": "start",
+    "label": "start time",
+    "level": 2,
+    "unit": "ms",
+    "value": 0,
+    "input": "valueSlider",
+    "max": 10000,
+    "min": 0,
+    "step": 10
+  }, {
+    "id": "stop",
+    "label": "stop time",
+    "level": 2,
+    "unit": "ms",
+    "value": 10000,
+    "input": "valueSlider",
+    "max": 10000,
+    "min": 0,
+    "step": 10
+  }]
+}

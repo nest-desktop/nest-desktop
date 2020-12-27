@@ -1,0 +1,80 @@
+#!/bin/bash
+
+HOST="127.0.0.1"
+PORT="8000"
+
+usage() {
+  echo "NEST Desktop "`version`
+  echo "------------------"
+  echo "Usage: nest-desktop status|start|stop|restart [-h <HOST>] [-p <PORT>]"
+  echo ""
+  echo "Commands:"
+  echo "  status      display the status of NEST Desktop"
+  echo "  start       start a new server instance for NEST Desktop"
+  echo "  stop        stop a server instance running on <HOST>:<PORT>"
+  echo "  restart     restart (i.e. stop and start) a server on <HOST>:<PORT>"
+  echo
+  echo "Options:"
+  echo "  -h <HOST>   use hostname/IP address <HOST> for the server [default: ${HOST}]"
+  echo "  -p <PORT>   use port <PORT> for opening the socket [default: ${PORT}]" >&2; exit 1
+}
+
+pid() {
+  pgrep -f "python3 -m nest_desktop.app"
+}
+
+ps-aux() {
+  ps aux | grep "[p]ython3 -m nest_desktop.app"
+}
+
+ps-cmd() {
+  ps-aux | awk '{ for(i=1;i<=NF;i++) {if ( i >= 11 ) printf $i" "}; printf "\n" }'
+}
+
+start() {
+  echo "NEST Desktop "`version`
+  echo "------------------"
+
+  if [ `pid` ]; then
+    echo "NEST Desktop is already serving."
+  else
+    echo "NEST Desktop is serving at http://$HOST:$PORT."
+    echo "Use Control-C to stop this service."
+    python3 -m nest_desktop.app $HOST $PORT
+  fi
+}
+
+status() {
+  printf "HTTP-SOCKET\t\tUID\n"
+  ps-cmd | awk '{ for(i=1;i<=NF;i++) {if ( i == 5 || i == 7 ) printf $i"\t\t"}; printf "\n" }'
+}
+
+stop() {
+  if [ `nest-desktop pid` ]; then
+    kill `nest-desktop pid`
+    echo "NEST Desktop has stopped."
+  fi
+}
+
+version() {
+   python3 -c "from nest_desktop import __version__; print(__version__)"
+}
+
+
+CMD=$1; shift
+while getopts "h:p:" opt; do
+    case $opt in
+        h) HOST=$OPTARG ;;
+        p) PORT=$OPTARG ;;
+    esac
+done
+
+case "$CMD" in
+  pid) pid ;;
+  restart) stop; sleep .5; start ;;
+  start)   start ;;
+  status)  status ;;
+  stop)    stop ;;
+  version) version ;;
+  *) usage ;;
+esac

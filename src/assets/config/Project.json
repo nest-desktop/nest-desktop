@@ -1,0 +1,7 @@
+{
+  "maxNetworkRevisions": 5,
+  "runAfterChange": true,
+  "runAfterCheckout": false,
+  "runAfterLoad": false,
+  "showSnackBar": false
+}
