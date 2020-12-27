@@ -1,0 +1,27 @@
+{
+  "params": [{
+    "id": "local_num_threads",
+    "input": "tickSlider",
+    "label": "local number of threads",
+    "ticks": [
+      1,
+      2,
+      4,
+      6,
+      8
+    ],
+    "value": 1
+  }, {
+    "id": "resolution",
+    "input": "tickSlider",
+    "label": "time resolution",
+    "ticks": [
+      0.001,
+      0.01,
+      0.1,
+      1
+    ],
+    "unit": "ms",
+    "value": 0.1
+  }]
+}

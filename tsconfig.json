@@ -2,19 +2,27 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
+    "strict": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/vuetify/types"
+    ],
     "types": [
-      "webpack-env",
+      "chai",
       "mocha",
-      "chai"
+      "node",
+      "vuetify",
+      "webpack-env"
     ],
     "paths": {
       "@/*": [

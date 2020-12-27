@@ -1,0 +1,18 @@
+{
+  "displaylogo": false,
+  "editable": true,
+  "modeBarButtons": [
+    ["toImage"],
+    ["zoom2d", "pan2d", "select2d", "lasso2d"],
+    ["zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d"],
+    ["toggleSpikelines", "hoverClosestCartesian", "hoverCompareCartesian"]
+  ],
+  "responsive": true,
+  "scrollZoom": true,
+  "toImageButtonOptions": {
+    "format": "svg",
+    "width": 800,
+    "height": 600,
+    "scale": 1
+  }
+}

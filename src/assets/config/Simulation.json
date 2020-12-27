@@ -1,0 +1,21 @@
+{
+  "autoRandomSeed": false,
+  "params": [{
+    "id": "randomSeed",
+    "input": "valueSlider",
+    "label": "seed of random number generator",
+    "max": 1000,
+    "min": 0,
+    "step": 1,
+    "value": 0
+  }, {
+    "id": "time",
+    "input": "valueSlider",
+    "label": "simulation time",
+    "max": 2000,
+    "min": 0,
+    "step": 10,
+    "unit": "ms",
+    "value": 1000
+  }]
+}
