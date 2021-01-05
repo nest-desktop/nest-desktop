@@ -10,11 +10,10 @@
     >
       <v-row class="fill-height" no-gutters>
         <v-navigation-drawer
+          absolute
           mini-variant
           mini-variant-width="56"
           mobile-breakpoint="56"
-          app
-          permament
         >
           <!-- <v-toolbar dense flat>
             <v-icon
@@ -25,7 +24,7 @@
             />
           </v-toolbar> -->
 
-          <v-list nav>
+          <v-list nav dense>
             <v-list-item
               :disabled="state.navList.length === 0"
               @click="state.miniVariant = !state.miniVariant"
@@ -34,7 +33,7 @@
               <v-list-item-icon>
                 <v-icon
                   v-text="
-                    state.miniVariant ? 'mdi-chevron-right' : 'mdi-chevron-left'
+                    'mdi-chevron-' + (state.miniVariant ? 'right' : 'left')
                   "
                 />
               </v-list-item-icon>
@@ -42,7 +41,9 @@
                 <v-list-item-title v-text="'Close'" />
               </v-list-item-content>
             </v-list-item>
+          </v-list>
 
+          <v-list nav>
             <v-list-item @click="reset" title="Home" to="/">
               <v-list-item-icon>
                 <v-icon v-text="'mdi-home'" />
@@ -62,7 +63,7 @@
             >
               <v-list-item-icon>
                 <v-list-item-group>
-                  <v-icon v-text="route.icon"/>
+                  <v-icon v-text="route.icon" />
                   <div style="font-size:7px">{{ route.title }}</div>
                 </v-list-item-group>
               </v-list-item-icon>
@@ -73,9 +74,9 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div class="grow" style="padding-left:56px">
-          <ModelNavList v-if="state.navList === 'model'" />
+        <div style="padding-left:56px">
           <ProjectNavList v-if="state.navList === 'project'" />
+          <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />
         </div>
       </v-row>
@@ -84,54 +85,54 @@
 </template>
 
 <script>
-import { reactive } from "@vue/composition-api";
-import ModelNavList from "@/components/model/ModelNavList";
-import ProjectNavList from "@/components/project/ProjectNavList";
-import SettingNavList from "@/components/setting/SettingNavList";
+import { reactive } from '@vue/composition-api';
+import ModelNavList from '@/components/model/ModelNavList';
+import ProjectNavList from '@/components/project/ProjectNavList';
+import SettingNavList from '@/components/setting/SettingNavList';
 
 export default {
-  name: "Navigation",
+  name: 'Navigation',
   components: {
     ModelNavList,
     ProjectNavList,
-    SettingNavList
+    SettingNavList,
   },
   setup(props) {
     const routes = [
       {
-        id: "project",
-        icon: "mdi-brain",
-        title: "Projects"
+        id: 'project',
+        icon: 'mdi-brain',
+        title: 'Projects',
       },
       {
-        id: "model",
-        icon: "mdi-engine-outline",
-        title: "Models"
+        id: 'model',
+        icon: 'mdi-engine-outline',
+        title: 'Models',
       },
       {
-        id: "setting",
-        icon: "mdi-cogs",
-        title: "Settings"
-      }
+        id: 'setting',
+        icon: 'mdi-cogs',
+        title: 'Settings',
+      },
     ];
     const state = reactive({
-      navList: "",
-      miniVariant: true
+      navList: '',
+      miniVariant: true,
     });
     const open = navList => {
       state.navList = navList;
       state.miniVariant = false;
     };
     const reset = () => {
-      state.navList = "";
+      state.navList = '';
       state.miniVariant = true;
     };
     return {
       open,
       reset,
       routes,
-      state
+      state,
     };
-  }
+  },
 };
 </script>
