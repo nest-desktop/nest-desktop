@@ -126,7 +126,7 @@
         "factors": []
       }]
     }, {
-      "model": "spike_detector",
+      "model": "spike_recorder",
       "size": 1,
       "view": {
         "position": {
