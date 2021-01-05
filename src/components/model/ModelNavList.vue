@@ -30,14 +30,14 @@
 </template>
 
 <script>
-import Vue from "vue";
-import core from "@/core/index";
+import Vue from 'vue';
+import core from '@/core/index';
 
 export default Vue.extend({
-  name: "Models",
+  name: 'Models',
   setup() {
     const models = core.app.models;
     return { models };
-  }
+  },
 });
 </script>

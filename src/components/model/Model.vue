@@ -10,14 +10,14 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { reactive, watch } from "@vue/composition-api";
-import core from "@/core/index";
+import Vue from 'vue';
+import { reactive, watch } from '@vue/composition-api';
+import core from '@/core/index';
 
 export default Vue.extend({
-  name: "Model",
+  name: 'Model',
   props: {
-    id: String
+    id: String,
   },
   setup(props) {
     const model = core.app.getModel(props.id);
@@ -32,6 +32,6 @@ export default Vue.extend({
       }
     );
     return { state };
-  }
+  },
 });
 </script>
