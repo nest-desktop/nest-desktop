@@ -1,5 +1,20 @@
 <template>
   <div class="svg-container" ref="networkGraph">
+    <span style="position:absolute;right:0" class="ma-1">
+      <v-btn
+        :color="state.autofocus ? 'orange' : 'grey'"
+        @click="toggleAutofocus"
+        icon
+        small
+        tile
+        title="autofocus network graph"
+      >
+        <v-icon v-if="state.autofocus">mdi-image-filter-center-focus</v-icon>
+        <v-icon v-if="!state.autofocus"
+          >mdi-image-filter-center-focus-strong-outline</v-icon
+        >
+      </v-btn>
+    </span>
     <svg id="networkGraph" width="800" height="600">
       <defs>
         <marker
@@ -37,30 +52,51 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { onBeforeUnmount, onMounted, watch } from "@vue/composition-api";
-import * as d3 from "d3";
-import core from "@/core/index";
-import { getPoints } from "@/core/node/nodeGraph";
+import Vue from 'vue';
+import {
+  reactive,
+  onBeforeUnmount,
+  onMounted,
+  watch,
+} from '@vue/composition-api';
+import * as d3 from 'd3';
+import core from '@/core/index';
+import { getPoints } from '@/core/node/nodeGraph';
 
 export default Vue.extend({
-  name: "NetworkGraph",
+  name: 'NetworkGraph',
   props: {
-    projectId: String
+    projectId: String,
   },
   setup(props, { root, refs }) {
     // global variables
     let width = 800,
       height = 600;
     const strokeWidth = 4;
+    const state = reactive({
+      networkCenter: {
+        x: 200,
+        y: 100,
+      },
+      autofocus: true,
+    });
+    let resizing = false;
+    let zoom;
 
     function zoomed({ transform }) {
-      d3.select("g#network").attr("transform", transform);
+      if (resizing) {
+        d3.select('g#network')
+          .transition()
+          .duration(500)
+          .attr('transform', transform);
+      } else {
+        d3.select('g#network').attr('transform', transform);
+      }
     }
 
     function dragstarted(event, d) {
       d3.select(this)
-        .classed("active", true)
+        .classed('active', true)
         .raise();
     }
 
@@ -71,41 +107,56 @@ export default Vue.extend({
     }
 
     function dragended(event, d) {
-      d3.select(this).classed("active", false);
+      d3.select(this).classed('active', false);
       // d3.selectAll("g.node").sort((a,b) => d3.ascending(a.idx, b.idx))
+
+      centering();
     }
+
+    const centering = () => {
+      const x = [];
+      const y = [];
+      core.app.project.network.nodes.forEach(node => {
+        x.push(node.view.position.x);
+        y.push(node.view.position.y);
+      });
+      state.networkCenter.x = (d3.min(x) + d3.max(x)) / 2;
+      state.networkCenter.y = (d3.min(y) + d3.max(y)) / 2;
+
+      resize();
+    };
 
     function drawNode(node) {
       const radius = 20;
       const elem = d3.select(this);
 
-      elem.selectAll("*").remove();
+      elem.selectAll('*').remove();
       if (
-        node.model.elementType == "neuron" &&
-        node.view.weight == "inhibitory"
+        node.model.elementType == 'neuron' &&
+        node.view.weight == 'inhibitory'
       ) {
         elem
-          .append("circle")
-          .attr("class", "shape")
-          .attr("r", radius);
+          .append('circle')
+          .attr('class', 'shape')
+          .attr('r', radius);
       } else {
         elem
-          .append("polygon")
-          .attr("class", "shape")
-          .attr("points", getPoints(node, radius));
+          .append('polygon')
+          .attr('class', 'shape')
+          .attr('points', getPoints(node, radius));
       }
 
       elem
-        .selectAll(".shape")
-        .style("stroke", node.view.color)
-        .style("stroke-width", 4);
+        .selectAll('.shape')
+        .style('stroke', node.view.color)
+        .style('stroke-width', strokeWidth);
 
       elem
-        .append("text")
-        .attr("dy", () =>
-          node.model.elementType == "neuron" && node.view.weight == "inhibitory"
-            ? "0.4em"
-            : "0.7em"
+        .append('text')
+        .attr('dy', () =>
+          node.model.elementType == 'neuron' && node.view.weight == 'inhibitory'
+            ? '0.4em'
+            : '0.7em'
         )
         .text(() => node.view.label);
     }
@@ -113,110 +164,132 @@ export default Vue.extend({
     const init = () => {
       const network = core.app.project.network;
 
-      d3.select("rect#background").call(
-        d3
-          .zoom()
-          .extent([
-            [0, 0],
-            [width, height]
-          ])
-          .scaleExtent([0.5, 2])
-          .on("zoom", zoomed)
-      );
+      zoom = d3
+        .zoom()
+        .extent([
+          [0, 0],
+          [width, height],
+        ])
+        .scaleExtent([0.5, 2])
+        .on('zoom', zoomed);
+
+      d3.select('rect#background')
+        .on('mousedown', () => {
+          // state.autofocus = false;
+        })
+        .call(zoom);
 
       const links = d3
-        .select("g#links")
-        .selectAll("path.link")
+        .select('g#links')
+        .selectAll('path.link')
         .data(network.connections);
 
       links
         .enter()
-        .append("path")
-        .attr("class", "link")
-        .attr("marker-end", "url(#exc)")
-        .style("fill", "none")
-        .style("stroke-width", strokeWidth)
+        .append('path')
+        .attr('class', 'link')
+        .attr('marker-end', 'url(#exc)')
+        .style('fill', 'none')
+        .style('stroke-width', strokeWidth)
         .merge(links)
-        .style("opacity", 0);
+        .style('opacity', 0);
 
       links.exit().remove();
 
       const nodes = d3
-        .select("g#nodes")
-        .selectAll("g.node")
+        .select('g#nodes')
+        .selectAll('g.node')
         .data(network.nodes);
 
       nodes
         .enter()
-        .append("g")
-        .attr("class", "node")
-        .attr("idx", d => d.idx)
+        .append('g')
+        .attr('class', 'node')
+        .attr('idx', d => d.idx)
         .call(
           d3
             .drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended)
+            .on('start', dragstarted)
+            .on('drag', dragged)
+            .on('end', dragended)
         )
         .merge(nodes)
-        .style("opacity", 0)
+        .style('opacity', 0)
         .each(drawNode);
 
       nodes.exit().remove();
 
       update();
-      onResize();
+      centering();
     };
 
     const update = () => {
-      d3.selectAll("g.node");
+      d3.selectAll('g.node');
 
-      d3.selectAll("g.node")
+      d3.selectAll('g.node')
         .attr(
-          "transform",
-          d => "translate(" + d.view.position.x + "," + d.view.position.y + ")"
+          'transform',
+          d => 'translate(' + d.view.position.x + ',' + d.view.position.y + ')'
         )
         .transition()
         .delay(150)
-        .style("opacity", 1);
+        .style('opacity', 1);
 
-      d3.selectAll("path.link")
-        .attr("d", d => d.view.drawPath())
+      d3.selectAll('path.link')
+        .attr('d', d => d.view.drawPath())
         .transition()
         .delay(300)
-        .style("stroke", d => d.source.view.color)
-        .style("opacity", 1);
+        .style('stroke', d => d.source.view.color)
+        .style('opacity', 1);
     };
 
-    const onResize = () => {
+    const resize = () => {
       if (refs.networkGraph) {
+        resizing = true;
         width = refs.networkGraph.clientWidth;
         height = refs.networkGraph.clientHeight;
 
-        d3.select("svg#networkGraph")
-          .attr("width", width)
-          .attr("height", height);
+        d3.select('svg#networkGraph')
+          .attr('width', width)
+          .attr('height', height);
 
-        d3.select("rect#background")
-          .attr("width", width)
-          .attr("height", height);
+        d3.select('rect#background')
+          .attr('width', width)
+          .attr('height', height);
+
+        if (state.autofocus) {
+          const x = width / 2 - state.networkCenter.x;
+          const y = height / 2 - state.networkCenter.y;
+          d3.select('rect#background').call(
+            zoom.transform,
+            d3.zoomIdentity.translate(x, y)
+          );
+        }
       }
+      resizing = false;
+    };
+
+    const toggleAutofocus = () => {
+      state.autofocus = !state.autofocus;
+      resize();
     };
 
     onMounted(() => {
       init();
-      window.addEventListener("resize", onResize);
+      window.addEventListener('resize', resize);
     });
 
     onBeforeUnmount(() => {
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener('resize', resize);
     });
 
     watch(
       () => props.projectId,
       () => init()
     );
-  }
+
+    return { state, toggleAutofocus };
+  },
 });
 </script>
 
