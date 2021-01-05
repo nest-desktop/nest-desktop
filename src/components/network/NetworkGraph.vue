@@ -1,5 +1,5 @@
 <template>
-  <div class="svg-container" ref="networkGraph">
+  <div class="networkGraph" ref="networkGraph">
     <span style="position:absolute;right:0" class="ma-1">
       <v-btn
         :color="state.autofocus ? 'orange' : 'grey'"
@@ -7,7 +7,7 @@
         icon
         small
         tile
-        title="autofocus network graph"
+        title="Autofocus network graph"
       >
         <v-icon v-if="state.autofocus">mdi-image-filter-center-focus</v-icon>
         <v-icon v-if="!state.autofocus"
@@ -60,13 +60,13 @@ import {
   watch,
 } from '@vue/composition-api';
 import * as d3 from 'd3';
-import core from '@/core/index';
 import { getPoints } from '@/core/node/nodeGraph';
 
 export default Vue.extend({
   name: 'NetworkGraph',
   props: {
     projectId: String,
+    network: Object,
   },
   setup(props, { root, refs }) {
     // global variables
@@ -116,7 +116,7 @@ export default Vue.extend({
     const centering = () => {
       const x = [];
       const y = [];
-      core.app.project.network.nodes.forEach(node => {
+      props.network.nodes.forEach(node => {
         x.push(node.view.position.x);
         y.push(node.view.position.y);
       });
@@ -162,8 +162,6 @@ export default Vue.extend({
     }
 
     const init = () => {
-      const network = core.app.project.network;
-
       zoom = d3
         .zoom()
         .extent([
@@ -182,7 +180,7 @@ export default Vue.extend({
       const links = d3
         .select('g#links')
         .selectAll('path.link')
-        .data(network.connections);
+        .data(props.network.connections);
 
       links
         .enter()
@@ -199,7 +197,7 @@ export default Vue.extend({
       const nodes = d3
         .select('g#nodes')
         .selectAll('g.node')
-        .data(network.nodes);
+        .data(props.network.nodes);
 
       nodes
         .enter()
@@ -224,8 +222,6 @@ export default Vue.extend({
     };
 
     const update = () => {
-      d3.selectAll('g.node');
-
       d3.selectAll('g.node')
         .attr(
           'transform',
@@ -294,7 +290,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.svg-container {
+.networkGraph {
   display: inline-block;
   position: relative;
   width: 100%;

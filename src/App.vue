@@ -12,28 +12,26 @@
 
     <Navigation />
 
-    <v-main>
-      <transition name="fade">
-        <router-view />
-      </transition>
-    </v-main>
+    <transition name="fade">
+      <router-view />
+    </transition>
   </v-app>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Navigation from "@/components/Navigation.vue";
+<script>
+import Vue from 'vue';
+import Navigation from '@/components/Navigation.vue';
 // import Navigation from "@/components/NavigationTemporary.vue";
-import core from "@/core/index";
+import core from '@/core/index';
 
 export default Vue.extend({
-  name: "App",
+  name: 'App',
   components: {
-    Navigation
+    Navigation,
   },
   setup() {
     core.app.init();
-  }
+  },
 });
 </script>
 
