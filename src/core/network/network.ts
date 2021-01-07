@@ -1,3 +1,5 @@
+import * as objectHash from 'object-hash';
+
 import { Config } from '../config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
@@ -6,13 +8,13 @@ import { NetworkView } from './networkView';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
-
 export class Network extends Config {
-  private _code: NetworkCode;                    // code
-  private _connections: Connection[] = [];       // for nest.Connect
-  private _nodes: Node[] = [];                   // for nest.Create
-  private _project: Project;                     // parent
-  private _view: NetworkView;                    // view
+  private _code: NetworkCode; // code
+  private _connections: Connection[] = []; // for nest.Connect
+  private _nodes: Node[] = []; // for nest.Create
+  private _project: Project; // parent
+  private _view: NetworkView; // view
+  private _hash: string; // network hash
 
   constructor(project: Project, network: any = {}) {
     super('Network');
@@ -32,8 +34,14 @@ export class Network extends Config {
     return this._connections;
   }
 
+  get hash(): string {
+    return this._hash;
+  }
+
   get neurons(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.elementType === 'neuron');
+    return this._nodes.filter(
+      (node: Node) => node.model.elementType === 'neuron'
+    );
   }
 
   get nodes(): Node[] {
@@ -49,7 +57,9 @@ export class Network extends Config {
   }
 
   get stimulators(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.elementType === 'stimulator');
+    return this._nodes.filter(
+      (node: Node) => node.model.elementType === 'stimulator'
+    );
   }
 
   get view(): NetworkView {
@@ -130,7 +140,9 @@ export class Network extends Config {
   deleteNode(node: Node): void {
     this._view.resetFocus();
     this._view.resetSelection();
-    this._connections = this._connections.filter((c: Connection) => (c.source !== node && c.target !== node));
+    this._connections = this._connections.filter(
+      (c: Connection) => c.source !== node && c.target !== node
+    );
     // this.nodes = this.nodes.filter((n: Node) => n.idx !== node.idx);
     const idx: number = node.idx;
     this._nodes = this._nodes.slice(0, idx).concat(this.nodes.slice(idx + 1));
@@ -149,7 +161,9 @@ export class Network extends Config {
     this._view.resetSelection();
     // this.connections = this.connections.filter((c: Connection) => c.idx !== connection.idx);
     const idx: number = connection.idx;
-    this._connections = this._connections.slice(0, idx).concat(this.connections.slice(idx + 1));
+    this._connections = this._connections
+      .slice(0, idx)
+      .concat(this.connections.slice(idx + 1));
     this.clean();
     this.networkChanges();
   }
@@ -160,6 +174,7 @@ export class Network extends Config {
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
     this._connections.forEach((connection: Connection) => connection.clean());
+    this._hash = this.getHash();
   }
 
   /**
@@ -191,7 +206,9 @@ export class Network extends Config {
     }
     this._connections = [];
     if (network.connections) {
-      network.connections.forEach((connection: any) => this.addConnection(connection));
+      network.connections.forEach((connection: any) =>
+        this.addConnection(connection)
+      );
     }
     if (this._project.app.view.project.sidenavMode === 'codeEditor') {
       this._project.code.generate();
@@ -220,13 +237,21 @@ export class Network extends Config {
   }
 
   /**
+   * Calculate hash of this component.
+   */
+  getHash(): string {
+    return objectHash(this.toJSON());
+  }
+
+  /**
    * Serialize for JSON.
    * @return network object
    */
   toJSON(target: string = 'db'): any {
-    const connections: any[] = this._connections.map((connection: Connection) => connection.toJSON(target));
+    const connections: any[] = this._connections.map((connection: Connection) =>
+      connection.toJSON(target)
+    );
     const nodes: any[] = this._nodes.map((node: Node) => node.toJSON(target));
     return { connections, nodes };
   }
-
 }

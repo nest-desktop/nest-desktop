@@ -231,11 +231,13 @@ export default Vue.extend({
         .delay(150)
         .style('opacity', 1);
 
+      d3.selectAll('.shape').style('stroke', d => d.view.color);
+
       d3.selectAll('path.link')
         .attr('d', d => d.view.drawPath())
+        .style('stroke', d => d.source.view.color)
         .transition()
         .delay(300)
-        .style('stroke', d => d.source.view.color)
         .style('opacity', 1);
     };
 
@@ -282,6 +284,11 @@ export default Vue.extend({
     watch(
       () => props.projectId,
       () => init()
+    );
+
+    watch(
+      () => props.network.hash,
+      () => update()
     );
 
     return { state, toggleAutofocus };

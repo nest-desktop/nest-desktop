@@ -15,27 +15,25 @@ import { ProjectView } from './projectView';
 import { Simulation } from '../simulation/simulation';
 import { upgradeProject } from './projectUpgrade';
 
-
-
 export class Project extends Config {
   private _activityAnimationGraph: ActivityAnimationGraph;
   private _activityChartGraph: ActivityChartGraph;
-  private _app: App;                             // parent
-  private _code: ProjectCode;                    // code script for NEST Server
-  private _createdAt: string;                    // when is it created in database
-  private _description: string;                  // description about the project
+  private _app: App; // parent
+  private _code: ProjectCode; // code script for NEST Server
+  private _createdAt: string; // when is it created in database
+  private _description: string; // description about the project
   private _errorMessage = '';
   private _hasActivities = false;
-  private _hash: string;                         // obsolete: hash of serialized network
+  private _hash: string; // obsolete: hash of serialized network
   private _hasSpatialActivities = false;
-  private _id: string;                  // id of the project
-  private _name: string;                         // project name
-  private _network: Network;                     // network of neurons and devices
-  private _networkRevisionIdx = -1;      // Index of the network history;
-  private _networkRevisions: any[] = [];         // network history
-  private _rev: string;                 // rev of the project
-  private _simulation: Simulation;               // settings for the simulation
-  private _updatedAt: string;                    // when is it updated in database
+  private _id: string; // id of the project
+  private _name: string; // project name
+  private _network: Network; // network of neurons and devices
+  private _networkRevisionIdx = -1; // Index of the network history;
+  private _networkRevisions: any[] = []; // network history
+  private _rev: string; // rev of the project
+  private _simulation: Simulation; // settings for the simulation
+  private _updatedAt: string; // when is it updated in database
   private _view: ProjectView;
 
   constructor(app: App, project: any = {}) {
@@ -234,7 +232,10 @@ export class Project extends Config {
    * Use object hash.
    */
   isNetworkChanged(): boolean {
-    return this.getHash() !== this._activityChartGraph.hash && !this._simulation.running;
+    return (
+      this.getHash() !== this._activityChartGraph.hash &&
+      !this._simulation.running
+    );
   }
 
   /**
@@ -251,16 +252,26 @@ export class Project extends Config {
   commitNetwork(network: Network): void {
     // console.log('Commit network');
     const maxRev: number = this.config.maxNetworkRevisions || 5;
-    this._networkRevisions = this._networkRevisions.slice(0, this._networkRevisionIdx + 1);
+    this._networkRevisions = this._networkRevisions.slice(
+      0,
+      this._networkRevisionIdx + 1
+    );
     if (this._networkRevisions.length > maxRev) {
-      this._networkRevisions = this._networkRevisions.slice(this._networkRevisions.length - maxRev);
+      this._networkRevisions = this._networkRevisions.slice(
+        this._networkRevisions.length - maxRev
+      );
     }
     const currentNetwork: any = network.toJSON('revision');
     if (this._networkRevisions.length === 0) {
       this._networkRevisions.push(currentNetwork);
     } else {
-      const lastNetwork: any = this._networkRevisions[this._networkRevisions.length - 1];
-      if (objectHash(JSON.stringify(lastNetwork)) !== objectHash(JSON.stringify(currentNetwork))) {
+      const lastNetwork: any = this._networkRevisions[
+        this._networkRevisions.length - 1
+      ];
+      if (
+        objectHash(JSON.stringify(lastNetwork)) !==
+        objectHash(JSON.stringify(currentNetwork))
+      ) {
         this._networkRevisions.push(currentNetwork);
       }
     }
@@ -275,12 +286,19 @@ export class Project extends Config {
     if (this._networkRevisionIdx >= this._networkRevisions.length) {
       this._networkRevisionIdx = this._networkRevisions.length - 1;
     }
-    const oldModels: string[] = this._network.recorders.map((node: Node) => node.modelId);
+    const oldModels: string[] = this._network.recorders.map(
+      (node: Node) => node.modelId
+    );
     const network: any = this._networkRevisions[this._networkRevisionIdx];
     this._network.update(network);
-    const newModels: string[] = this._network.recorders.map((node: Node) => node.modelId);
+    const newModels: string[] = this._network.recorders.map(
+      (node: Node) => node.modelId
+    );
 
-    if (objectHash(JSON.stringify(oldModels)) === objectHash(JSON.stringify(newModels))) {
+    if (
+      objectHash(JSON.stringify(oldModels)) ===
+      objectHash(JSON.stringify(newModels))
+    ) {
       this._activityChartGraph.initPanels();
     } else {
       this._activityChartGraph.init();
@@ -288,7 +306,9 @@ export class Project extends Config {
     if (this.config.runAfterCheckout) {
       setTimeout(() => this.runSimulationScript(), 1);
     } else {
-      this.updateActivities(this.activities.map((activity: Activity) => activity.toJSON()));
+      this.updateActivities(
+        this.activities.map((activity: Activity) => activity.toJSON())
+      );
     }
   }
 
@@ -343,7 +363,8 @@ export class Project extends Config {
    * Start the simulation when a parameter is changed.
    */
   simulateAfterChange(): void {
-    const viewActivityExplorer: boolean = this._app.view.project.mode === 'activityExplorer';
+    const viewActivityExplorer: boolean =
+      this._app.view.project.mode === 'activityExplorer';
     if (viewActivityExplorer && this.config.runAfterChange) {
       setTimeout(() => this.runSimulation(), 1);
     }
@@ -357,11 +378,16 @@ export class Project extends Config {
    */
   runSimulation(): Promise<any> {
     // console.log('Run simulation');
-    const viewCodeEditor: boolean = this.app.view.project.sidenavMode === 'codeEditor';
-    const runScript: boolean = this.app.nestServer.state.simulatorVersion.startsWith('2.');
+    const viewCodeEditor: boolean =
+      this.app.view.project.sidenavMode === 'codeEditor';
+    const runScript: boolean = this.app.nestServer.state.simulatorVersion.startsWith(
+      '2.'
+    );
     this._simulation.running = true;
-    const request: Promise<any> = (!runScript || viewCodeEditor) ?
-      this.runSimulationCode() : this.runSimulationScript();
+    const request: Promise<any> =
+      !runScript || viewCodeEditor
+        ? this.runSimulationCode()
+        : this.runSimulationScript();
     return request
       .then((req: any) => {
         this._simulation.running = false;
@@ -409,7 +435,7 @@ export class Project extends Config {
     const url: string = this._app.nestServer.url + '/exec';
     const data: any = {
       source: this._code.script,
-      return: 'response'
+      return: 'response',
     };
     return this.app.nestServer.http.post(url, data);
   }
@@ -451,10 +477,16 @@ export class Project extends Config {
    */
   checkActivities(): void {
     const activities: Activity[] = this.activities;
-    this._hasActivities = activities.length > 0 ? activities.some(
-      (activity: Activity) => activity.hasEvents()) : false;
-    this._hasSpatialActivities = this.hasActivities ? activities.some(
-      (activity: Activity) => activity.hasEvents() && activity.nodePositions.length > 0) : false;
+    this._hasActivities =
+      activities.length > 0
+        ? activities.some((activity: Activity) => activity.hasEvents())
+        : false;
+    this._hasSpatialActivities = this.hasActivities
+      ? activities.some(
+          (activity: Activity) =>
+            activity.hasEvents() && activity.nodePositions.length > 0
+        )
+      : false;
   }
 
   /**
@@ -525,7 +557,6 @@ export class Project extends Config {
     this._activityAnimationGraph.update();
   }
 
-
   /**
    * Serialization
    */
@@ -576,5 +607,4 @@ export class Project extends Config {
       return project;
     }
   }
-
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="project-container">
+  <div class="project-container" v-if="state.project">
     <v-app-bar app clipped-left clipped-right color="project" dark dense flat>
       <!-- <v-tabs hide-slider optional style="max-width:270px">
         <v-tab>
@@ -41,7 +41,7 @@
       </v-btn-toggle>
 
       <v-toolbar-title>
-        {{ state.projectName }}
+        {{ state.project.name }}
       </v-toolbar-title>
 
       <v-spacer />
@@ -81,7 +81,7 @@
       mobile-breakpoint="56"
       permanent
       right
-      width="360"
+      :width="state.tool === 'simulationCodeEditor' ? '520' : '360'"
     >
       <v-row class="fill-height ml-0" no-gutters>
         <v-navigation-drawer
@@ -109,37 +109,47 @@
             </v-list-item>
           </v-list>
 
-          <v-list nav>
+          <v-list dense nav>
             <v-list-item
               :key="tool.id"
               :title="tool.title"
               v-for="tool in state.tools"
-              @click="onClick"
+              @click="onClick(tool)"
             >
               <v-list-item-icon>
-                <v-list-item-group style="margin-top:-5px">
-                  <v-icon v-text="tool.icon" />
-                  <div style="font-size:7px">{{ tool.title }}</div>
+                <v-list-item-group
+                  style="margin-top:-2px; text-align:center; width:100%; font-size: 7px"
+                >
+                  <v-icon small v-text="tool.icon" />
+                  <div v-text="tool.title" />
                 </v-list-item-group>
               </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="tool.title" />
-              </v-list-item-content>
+              <v-list-item-content />
             </v-list-item>
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width:100%; padding-right:56px">
-          <NetworkEdit :network="state.network" />
+        <div style="width:100%; padding-right:56px" v-show="!state.miniVariant">
+          <networkParamSelect
+            :network="state.project.network"
+            v-if="state.tool === 'networkParamSelect'"
+          />
+          <NetworkEdit
+            :network="state.project.network"
+            v-if="state.tool === 'networkEdit'"
+          />
+          <SimulationCodeEditor
+            :code="state.project.code"
+            v-if="state.tool === 'simulationCodeEditor'"
+          />
         </div>
       </v-row>
     </v-navigation-drawer>
 
     <v-main>
       <NetworkGraph
-        v-if="state.projectId.length > 0"
-        :projectId="state.projectId"
-        :network="state.network"
+        :projectId="state.project.id"
+        :network="state.project.network"
       />
     </v-main>
   </div>
@@ -149,7 +159,9 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 import NetworkEdit from '@/components/network/NetworkEdit';
+import NetworkParamSelect from '@/components/network/NetworkParamSelect';
 import NetworkGraph from '@/components/network/NetworkGraph';
+import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor';
 import core from '@/core/index';
 
 export default Vue.extend({
@@ -159,27 +171,31 @@ export default Vue.extend({
   },
   components: {
     NetworkEdit,
+    NetworkParamSelect,
     NetworkGraph,
+    SimulationCodeEditor,
   },
   setup(props) {
     const state = reactive({
       loading: false,
       miniVariant: false,
-      network: {},
-      projectId: '',
-      projectName: '',
+      project: null,
+      tool: 'networkEdit',
       tools: [
-        { icon: 'fa-project-diagram', name: 'network', title: 'Network' },
-        { icon: 'fa-chart-line', name: 'activity', title: 'Activity' },
-        { icon: 'mdi-xml', name: 'code', title: 'Code' },
+        {
+          icon: 'mdi-checkbox-marked-outline',
+          name: 'networkParamSelect',
+          title: 'Network',
+        },
+        { icon: 'mdi-tune', name: 'networkEdit', title: 'Network' },
+        { icon: 'mdi-chart-line', name: 'activityEdit', title: 'Activity' },
+        { icon: 'mdi-xml', name: 'simulationCodeEditor', title: 'Code' },
       ],
     });
     const loadProject = id => {
       core.app.initProject(id).then(() => {
         if (core.app.project) {
-          state.network = core.app.project.network;
-          state.projectId = core.app.project.id;
-          state.projectName = core.app.project.name;
+          state.project = core.app.project;
         }
       });
     };
@@ -189,8 +205,8 @@ export default Vue.extend({
         loadProject(id);
       }
     );
-    const onClick = () => {
-      console.log('bla bla');
+    const onClick = e => {
+      state.tool = e.name;
     };
     const simulate = () => {
       state.loading = true;
