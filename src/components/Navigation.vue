@@ -62,19 +62,19 @@
               :color="route.id"
             >
               <v-list-item-icon>
-                <v-list-item-group>
+                <v-list-item-group
+                  style="font-size:7px; text-align:center; width:100%"
+                >
                   <v-icon v-text="route.icon" />
-                  <div style="font-size:7px">{{ route.title }}</div>
+                  <div v-text="route.title" />
                 </v-list-item-group>
               </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="route.title" />
-              </v-list-item-content>
+              <v-list-item-content />
             </v-list-item>
           </v-list>
         </v-navigation-drawer>
 
-        <div style="padding-left:56px">
+        <div style="padding-left:56px" v-show="!state.miniVariant">
           <ProjectNavList v-if="state.navList === 'project'" />
           <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="networkEdit">
+  <div class="networkParamSelect">
     <v-toolbar class="elementType" dense flat tile>
       <!-- <v-tabs slider-size="5">
         <v-tab class="px-1">Simulator</v-tab>
@@ -51,10 +51,8 @@
           ></v-color-picker>
 
           <v-card-actions>
-            <v-btn @click="state.menu.content = null" text>back</v-btn>
-            <v-btn @click="state.selectedNode.view.color = null" text
-              >reset</v-btn
-            >
+            <v-btn @click="state.menu.content = null">back</v-btn>
+            <v-btn @click="state.selectedNode.view.color = null">reset</v-btn>
           </v-card-actions>
         </span>
       </v-card>
@@ -63,7 +61,6 @@
     <v-card
       :color="node.view.color"
       :key="node.idx"
-      @contextmenu="e => show(e, node)"
       class="mb-1"
       flat
       tile
@@ -77,6 +74,7 @@
         <v-overflow-btn
           :items="node.models"
           :value="node.modelId"
+          @contextmenu="e => show(e, node)"
           class="ma-0"
           dark
           dense
@@ -93,39 +91,34 @@
       <v-card-text class="pa-0 pl-1">
         <v-card
           :key="param.id"
+          class="param"
           flat
           tile
           v-for="param of node.params"
-          v-show="param.visible"
+          v-show="param.visible || true"
         >
-          <v-row class="mx-1 my-0" no-gutters>
-            <v-col cols="12">
-              <v-subheader class="paramLabel">
-                {{ paramLabel(param) }}
-              </v-subheader>
-              <v-slider
-                :max="param.options.max"
-                :min="param.options.min"
-                :thumb-color="node.view.color"
-                dense
-                height="40"
-                hide-details
-                v-model="param.value"
-                @change="networkChange"
-              >
-                <template v-slot:append>
-                  <v-text-field
-                    class="mt-0 pt-0"
-                    height="32"
+          <v-row>
+            <v-list-item style="font-size:12px; min-height:32px">
+              <template v-slot:default="{ active }">
+                <v-list-item-content style="padding: 4px">
+                  <v-row no-gutters>
+                    {{ param.options.label }}
+                    <v-spacer />
+                    {{ param.value }}
+                    {{ param.options.unit }}
+                  </v-row>
+                </v-list-item-content>
+
+                <v-list-item-action style="margin: 4px 0">
+                  <v-checkbox
+                    color="black"
+                    class="shrink mr-2"
                     hide-details
-                    single-line
-                    style="width: 60px; font-size:12px"
-                    type="number"
-                    v-model="param.value"
-                  />
-                </template>
-              </v-slider>
-            </v-col>
+                    v-model="param.visible"
+                  ></v-checkbox>
+                </v-list-item-action>
+              </template>
+            </v-list-item>
           </v-row>
         </v-card>
       </v-card-text>
@@ -220,5 +213,16 @@ export default Vue.extend({
   position: absolute;
   top: 2px;
   z-index: 1000;
+}
+
+.param .v-input__control .v-icon {
+  font-size: 16px;
+}
+
+.param .v-input__control .v-input--selection-controls__ripple {
+  height: 24px;
+  width: 24px;
+  left: -7px;
+  top: calc(50% - 19px);
 }
 </style>
