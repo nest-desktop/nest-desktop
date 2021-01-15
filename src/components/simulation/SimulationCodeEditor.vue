@@ -1,7 +1,7 @@
 <template>
   <div class="simulationCodeEditor">
     <v-row class="full-height" no-gutters>
-      <codemirror :value="state.code.script" :options="options" />
+      <codemirror v-model="state.code.script" :options="options" />
     </v-row>
   </div>
 </template>
@@ -23,6 +23,7 @@ export default Vue.extend({
     const state = reactive({
       code: props.code,
     });
+
     const options = {
       cursorBlinkRate: 700,
       foldGutter: true,
@@ -47,6 +48,7 @@ export default Vue.extend({
         state.code = props.code;
       }
     );
+
     return {
       options,
       state,
@@ -64,7 +66,7 @@ export default Vue.extend({
   border: 1px solid #eee;
   font-family: monospace;
   font-size: 12px;
-  height: auto;
-  width: 520px;
+  width: 512px;
+  height: calc(100vh - 48px);
 }
 </style>
