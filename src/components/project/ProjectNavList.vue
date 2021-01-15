@@ -28,7 +28,7 @@
       <v-list-item
         :key="project.id"
         :to="'/project/' + project.id"
-        v-for="project in projects"
+        v-for="project in core.app.projects"
       >
         <v-list-item-content>
           <v-list-item-title v-text="project.name" />
@@ -50,7 +50,6 @@ import core from '@/core/index';
 export default Vue.extend({
   name: 'ProjectNavList',
   setup() {
-    const projects = core.app.projects;
     const timeSince = date => {
       const seconds = Math.floor((+new Date() - +new Date(date)) / 1000);
       if (seconds < 60) {
@@ -78,7 +77,7 @@ export default Vue.extend({
     };
 
     return {
-      projects,
+      core,
       timeSince,
     };
   },
