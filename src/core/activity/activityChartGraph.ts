@@ -12,11 +12,9 @@ import { SpikeSendersHistogramPanel } from './plotPanels/spikeSendersHistogramPa
 import { InterSpikeIntervalHistogramPanel } from './plotPanels/interSpikeIntervalHistogramPanel';
 import { CVISIHistogramPanel } from './plotPanels/CVISIHistogramPanel';
 
-
 export class ActivityChartGraph {
   private _config: any = {};
   private _data: any[] = [];
-  private _hash: string;
   private _imageButtonOptions: any;
   private _layout: any = {};
   private _panels: ActivityGraphPanel[] = [];
@@ -27,7 +25,6 @@ export class ActivityChartGraph {
 
   constructor(project: Project, registerPanels: any[] = []) {
     this._project = project;
-    this._hash = project.hash;
     this._config = {
       scrollZoom: true,
       editable: true,
@@ -47,25 +44,29 @@ export class ActivityChartGraph {
         // "resetCameraLastSave3d", "hoverClosest3d", "orbitRotation", "tableRotation", "zoomInGeo",
         // "zoomOutGeo", "resetGeo", "hoverClosestGeo", "toImage", "sendDataToCloud", "hoverClosestGl2d",
         // "hoverClosestPie", "toggleHover", "resetViews", "toggleSpikelines", "resetViewMapbox"
-        [{
-          name: 'graph-reload',
-          title: 'Reload image graph',
-          icon: PlotlyJS.Icons.undo,
-          click: () => { this.init(); }
-        }],
+        [
+          {
+            name: 'graph-reload',
+            title: 'Reload image graph',
+            icon: PlotlyJS.Icons.undo,
+            click: () => {
+              this.init();
+            },
+          },
+        ],
         // [this.imageButtonOptions, "toImage"],
         ['toImage'],
         ['zoom2d', 'pan2d'],
         ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
-        ['hoverClosestCartesian', 'hoverCompareCartesian']
-      ]
+        ['hoverClosestCartesian', 'hoverCompareCartesian'],
+      ],
     };
 
     this._imageButtonOptions = {
       name: 'image_settings',
       title: 'Edit image settings',
       icon: PlotlyJS.Icons.pencil,
-      click: (gd: any) => { }
+      click: (gd: any) => {},
     };
 
     this._layout = {
@@ -92,7 +93,8 @@ export class ActivityChartGraph {
       (graph: ActivityChartGraph) => new SpikeTimesRasterPlotPanel(graph),
       (graph: ActivityChartGraph) => new SpikeTimesHistogramPanel(graph),
       (graph: ActivityChartGraph) => new SpikeSendersHistogramPanel(graph),
-      (graph: ActivityChartGraph) => new InterSpikeIntervalHistogramPanel(graph),
+      (graph: ActivityChartGraph) =>
+        new InterSpikeIntervalHistogramPanel(graph),
       (graph: ActivityChartGraph) => new CVISIHistogramPanel(graph),
     ];
 
@@ -113,14 +115,6 @@ export class ActivityChartGraph {
 
   get imageButtonOptions(): any {
     return this._imageButtonOptions;
-  }
-
-  get hash(): string {
-    return this._hash;
-  }
-
-  set hash(value: string) {
-    this._hash = value;
   }
 
   get layout(): any {
@@ -167,7 +161,9 @@ export class ActivityChartGraph {
         this._panels.push(panel);
       }
     }
-    this._panelsVisible = this.panels.map((panel: ActivityGraphPanel) => panel.name);
+    this._panelsVisible = this.panels.map(
+      (panel: ActivityGraphPanel) => panel.name
+    );
   }
 
   initPanels(): void {
@@ -184,8 +180,10 @@ export class ActivityChartGraph {
     this.panels.forEach((panel: ActivityGraphPanel) => {
       panel.update();
       panel.updateLayout();
-      this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] = panel.layout.yaxis;
-      this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] = panel.layout.xaxis;
+      this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
+        panel.layout.yaxis;
+      this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
+        panel.layout.xaxis;
       if (panel.layout.barmode) {
         this.layout.barmode = panel.layout.barmode;
       }
@@ -196,7 +194,6 @@ export class ActivityChartGraph {
         this._data.push(data);
       });
     });
-    this.hash = this.project.getHash();
   }
 
   updateColor(): void {
@@ -206,5 +203,4 @@ export class ActivityChartGraph {
   updateLayout(): void {
     this.panels.forEach((panel: ActivityGraphPanel) => panel.updateLayout());
   }
-
 }

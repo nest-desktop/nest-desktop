@@ -3,9 +3,7 @@ import { AnalogSignalActivity } from '../analogSignalActivity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { ActivityGraphPanel } from './activityGraphPanel';
 
-
 export class AnalogSignalPlotPanel extends ActivityGraphPanel {
-
   constructor(graph: ActivityChartGraph) {
     super(graph);
     this.name = 'AnalogSignalPlotPanel';
@@ -14,14 +12,17 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
   }
 
   init(): void {
-    this.activities = this.graph.project.activities.filter((activity: AnalogSignalActivity) => activity.hasAnalogData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: AnalogSignalActivity) => activity.hasAnalogData()
+    );
     this.data = [];
   }
 
   update(): void {
     this.activities.forEach((activity: AnalogSignalActivity) => {
-      const recordables: string[] = Object.keys(activity.events)
-        .filter((event: string) => !['times', 'senders'].includes(event));
+      const recordables: string[] = Object.keys(activity.events).filter(
+        (event: string) => !['times', 'senders'].includes(event)
+      );
       recordables.forEach((recordFrom: string) => {
         if (recordFrom === 'V_m') {
           this.updateSpikeThresholdLine(activity);
@@ -30,8 +31,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
 
     this.activities.forEach((activity: AnalogSignalActivity) => {
-      const recordables: string[] = Object.keys(activity.events)
-        .filter((event: string) => !['times', 'senders'].includes(event));
+      const recordables: string[] = Object.keys(activity.events).filter(
+        (event: string) => !['times', 'senders'].includes(event)
+      );
       recordables.forEach((recordFrom: string) => {
         if (activity.nodeIds.length === 1) {
           this.updateSingleLine(activity, recordFrom);
@@ -43,8 +45,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
 
     this.activities.forEach((activity: AnalogSignalActivity) => {
       if (activity.nodeIds.length > 1) {
-        const recordables: string[] = Object.keys(activity.events)
-          .filter((event: string) => !['times', 'senders'].includes(event));
+        const recordables: string[] = Object.keys(activity.events).filter(
+          (event: string) => !['times', 'senders'].includes(event)
+        );
         recordables.forEach((recordFrom: string) => {
           this.updateAverageLine(activity, recordFrom);
         });
@@ -54,14 +57,23 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
 
   updateColor(): void {
     this.activities.forEach((activity: AnalogSignalActivity) => {
-      const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
-      data.line.color = activity.recorder.view.color;
+      const data: any = this.data.filter(
+        (d: any) => d.activityIdx === activity.idx && d.class !== 'background'
+      );
+      if (data.length == 0) {
+        return;
+      }
+      data.forEach(d => {
+        d.line.color = activity.recorder.view.color;
+      });
     });
   }
 
   addSpikeThresholdLine(activity: AnalogSignalActivity): void {
-    const thresholds: number[] = activity.recorder.nodes.map((target: Node) => target.getParameter('V_th'));
-    const threshold: number = (thresholds.length > 0) ? thresholds[0] : -55.;
+    const thresholds: number[] = activity.recorder.nodes.map((target: Node) =>
+      target.getParameter('V_th')
+    );
+    const threshold: number = thresholds.length > 0 ? thresholds[0] : -55;
     this.data.push({
       activityIdx: activity.idx,
       id: 'threshold',
@@ -70,26 +82,34 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       showlegend: true,
       hoverinfo: 'none',
       name: 'Spike threshold',
-      opacity: .5,
+      opacity: 0.5,
       visible: 'legendonly',
       line: {
         color: 'black',
         dash: 'dot',
         width: 2,
       },
-      x: [0, activity.endtime],
+      x: [0.1, activity.endtime],
       y: [threshold, threshold],
     });
   }
 
   updateSpikeThresholdLine(activity: AnalogSignalActivity): void {
-    if (!this.data.some((d: any) => d.activityIdx === activity.idx && d.id === 'threshold')) {
+    if (
+      !this.data.some(
+        (d: any) => d.activityIdx === activity.idx && d.id === 'threshold'
+      )
+    ) {
       this.addSpikeThresholdLine(activity);
     }
 
-    const data = this.data.find((d: any) => d.activityIdx === activity.idx && d.id === 'threshold');
-    const thresholds: number[] = activity.recorder.nodes.map((target: Node) => target.getParameter('V_th'));
-    const threshold: number = (thresholds.length > 0) ? thresholds[0] : -55.;
+    const data = this.data.find(
+      (d: any) => d.activityIdx === activity.idx && d.id === 'threshold'
+    );
+    const thresholds: number[] = activity.recorder.nodes.map((target: Node) =>
+      target.getParameter('V_th')
+    );
+    const threshold: number = thresholds.length > 0 ? thresholds[0] : -55;
     data.y = [threshold, threshold];
     data.line.color = activity.recorder.view.color;
   }
@@ -115,11 +135,17 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
   }
 
   updateSingleLine(activity: AnalogSignalActivity, recordFrom: string): void {
-    if (!this.data.some((d: any) => d.activityIdx === activity.idx && d.id === recordFrom)) {
+    if (
+      !this.data.some(
+        (d: any) => d.activityIdx === activity.idx && d.id === recordFrom
+      )
+    ) {
       this.addSingleLine(activity, recordFrom);
     }
 
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx && d.id === recordFrom);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx && d.id === recordFrom
+    );
     data.x = activity.events.times;
     data.y = activity.events[recordFrom];
     data.name = recordFrom + ' of ' + activity.senders[0];
@@ -147,22 +173,36 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
-  updateMultipleLines(activity: AnalogSignalActivity, recordFrom: string): void {
-    if (!activity.events.hasOwnProperty(recordFrom)) { return; }
-    if (this.data.filter((d: any) => d.legendgroup === recordFrom + activity.idx).length !== 100) {
+  updateMultipleLines(
+    activity: AnalogSignalActivity,
+    recordFrom: string
+  ): void {
+    if (!activity.events.hasOwnProperty(recordFrom)) {
+      return;
+    }
+    if (
+      this.data.filter((d: any) => d.legendgroup === recordFrom + activity.idx)
+        .length !== 100
+    ) {
       this.addMultipleLines(activity, recordFrom);
     }
 
-    const data: any[] = this.data.filter((d: any) => d.legendgroup === recordFrom + activity.idx);
+    const data: any[] = this.data.filter(
+      (d: any) => d.legendgroup === recordFrom + activity.idx
+    );
     const senders: number[] = activity.senders.slice(0, 100);
     const events: any[] = senders.map(() => ({ x: [], y: [], name: '' }));
 
     activity.events.senders.forEach((sender: number, idx: number) => {
       const senderIdx: number = senders.indexOf(sender);
-      if (senderIdx === -1) { return; }
+      if (senderIdx === -1) {
+        return;
+      }
       events[senderIdx].x.push(activity.events.times[idx]);
       events[senderIdx].y.push(activity.events[recordFrom][idx]);
-      events[senderIdx].name = `${recordFrom} of [${senders[0]} - ${senders[senders.length - 1]}]`;
+      events[senderIdx].name = `${recordFrom} of [${senders[0]} - ${
+        senders[senders.length - 1]
+      }]`;
     });
 
     events.forEach((event: any, idx: number) => {
@@ -172,14 +212,13 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       d.name = event.name;
       d.line.color = activity.recorder.view.color;
     });
-
-
   }
 
   addAverageLine(activity: AnalogSignalActivity, recordFrom: string): void {
     // white background for average line
     this.data.push({
       activityIdx: activity.idx,
+      class: 'background',
       recordFrom,
       mode: 'lines',
       type: 'scattergl',
@@ -188,7 +227,7 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       showlegend: false,
       line: {
         width: 8,
-        color: 'white'
+        color: 'white',
       },
       x: [],
       y: [],
@@ -214,28 +253,42 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
   }
 
   updateAverageLine(activity: AnalogSignalActivity, recordFrom: string): void {
-    if (this.data.filter((d: any) => d.legendgroup === recordFrom + '_avg' + activity.idx).length !== 2) {
+    if (
+      this.data.filter(
+        (d: any) => d.legendgroup === recordFrom + '_avg' + activity.idx
+      ).length !== 2
+    ) {
       this.addAverageLine(activity, recordFrom);
     }
 
-    const data: any[] = this.data.filter((d: any) => d.legendgroup === recordFrom + '_avg' + activity.idx);
+    const data: any[] = this.data.filter(
+      (d: any) => d.legendgroup === recordFrom + '_avg' + activity.idx
+    );
     const senders: number[] = activity.senders;
     const events: any[] = senders.map(() => ({ x: [], y: [], name: '' }));
 
     activity.events.senders.forEach((sender: number, idx: number) => {
-      if (!activity.events.hasOwnProperty(recordFrom)) { return; }
+      if (!activity.events.hasOwnProperty(recordFrom)) {
+        return;
+      }
       const senderIdx: number = senders.indexOf(sender);
-      if (senderIdx === -1) { return; }
+      if (senderIdx === -1) {
+        return;
+      }
       events[senderIdx].x.push(activity.events.times[idx]);
       events[senderIdx].y.push(activity.events[recordFrom][idx]);
-      events[senderIdx].name = `${recordFrom} of [${senders[0]} - ${senders[senders.length - 1]}]`;
+      events[senderIdx].name = `${recordFrom} of [${senders[0]} - ${
+        senders[senders.length - 1]
+      }]`;
     });
 
     const x: any[] = events[0].x;
     const y: any[] = x.map((d: any, i: number) => {
       const yi: any[] = [];
-      senders.forEach((sender: number, idx: number) => yi.push(events[idx].y[i]));
-      const sum: number = yi.reduce((a: number, b: number) => (a + b));
+      senders.forEach((sender: number, idx: number) =>
+        yi.push(events[idx].y[i])
+      );
+      const sum: number = yi.reduce((a: number, b: number) => a + b);
       const avg: number = sum / senders.length;
       return avg;
     });
@@ -247,5 +300,4 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
 
     data[1].line.color = activity.recorder.view.color;
   }
-
 }

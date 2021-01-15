@@ -9,35 +9,32 @@ import { Node } from '../node/node';
 import { Parameter } from '../parameter';
 import { Synapse } from './synapse';
 
-
 enum Rule {
   AllToAll = 'all_to_all',
   FixedIndegree = 'fixed_indegree',
   FixedOutdegree = 'fixed_outdegree',
   FixedTotalNumber = 'fixed_total_number',
   OneToOne = 'one_to_one',
-  PairwiseBernoulli = 'pairwise_bernoulli'
+  PairwiseBernoulli = 'pairwise_bernoulli',
 }
-
 
 export class Connection extends Config {
   private readonly _name = 'Connection';
 
   private _code: ConnectionCode;
-  private _idx: number;                         // generative
+  private _idx: number; // generative
   private _mask: ConnectionMask;
-  private _network: Network;                     // parent
+  private _network: Network; // parent
   private _params: any[];
-  private _projections: ConnectionProjections;    // only for NEST 2, will be deprecated in NEST 3;
+  private _projections: ConnectionProjections; // only for NEST 2, will be deprecated in NEST 3;
   private _rule: string;
-  private _sourceIdx: number;                      // Node index
+  private _sourceIdx: number; // Node index
   private _synapse: Synapse;
-  private _targetIdx: number;                      // Node index
+  private _targetIdx: number; // Node index
   private _view: ConnectionView;
 
   srcIdx?: number[];
   tgtIdx?: number[];
-
 
   constructor(network: any, connection: any) {
     super('Connection');
@@ -170,7 +167,9 @@ export class Connection extends Config {
    * Check if source and target nodes has positions.
    */
   isBothSpatial(): boolean {
-    return this.source.spatial.hasPositions() && this.target.spatial.hasPositions();
+    return (
+      this.source.spatial.hasPositions() && this.target.spatial.hasPositions()
+    );
   }
 
   /**
@@ -238,8 +237,10 @@ export class Connection extends Config {
         connection.conn_spec = {
           rule: this._rule,
         };
-        this._params.forEach((param: Parameter) => connection.conn_spec[param.id] = param.value);
-        connection.syn_spec = this._synapse.toJSON(target);     // Collect specifications of the synapse
+        this._params.forEach(
+          (param: Parameter) => (connection.conn_spec[param.id] = param.value)
+        );
+        connection.syn_spec = this._synapse.toJSON(target); // Collect specifications of the synapse
       } else {
         connection.rule = this._rule;
         connection.params = this._params;
@@ -249,5 +250,4 @@ export class Connection extends Config {
 
     return connection;
   }
-
 }

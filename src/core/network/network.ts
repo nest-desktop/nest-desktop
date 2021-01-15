@@ -24,6 +24,7 @@ export class Network extends Config {
 
     this.update(network);
     this.clean();
+    this.updateHash();
   }
 
   get code(): NetworkCode {
@@ -71,15 +72,15 @@ export class Network extends Config {
    *
    * @remarks
    * It commits network in the network editor.
+   * It updates hash of the network.
    * It generates simulation code in the code editor.
    */
   networkChanges(): void {
+    this.updateHash();
     if (this._project.app.view.project.mode === 'networkEditor') {
       this._project.commitNetwork(this);
     }
-    if (this._project.app.view.project.sidenavMode === 'codeEditor') {
-      this._project.code.generate();
-    }
+    this._project.code.generate();
     // this._project.activityGraph.init();
   }
 
@@ -127,7 +128,7 @@ export class Network extends Config {
   addConnection(connection: any): void {
     this._connections.push(new Connection(this, connection));
     if (connection.elementType === 'recorder') {
-      this._project.initActivityGraph();
+      this._project.activityGraph.init();
     }
   }
 
@@ -174,7 +175,6 @@ export class Network extends Config {
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
     this._connections.forEach((connection: Connection) => connection.clean());
-    this._hash = this.getHash();
   }
 
   /**
@@ -210,9 +210,8 @@ export class Network extends Config {
         this.addConnection(connection)
       );
     }
-    if (this._project.app.view.project.sidenavMode === 'codeEditor') {
-      this._project.code.generate();
-    }
+    this.updateHash();
+    // this._project.code.generate();
   }
 
   /**
@@ -226,8 +225,6 @@ export class Network extends Config {
     this._view.resetSelection();
     this._connections = [];
     this._nodes = [];
-    // this.connections.forEach((connection: Connection) => this.deleteConnection(connection));
-    // this.nodes.forEach((node: Node) => this.deleteNode(node));
     this.clean();
     this.networkChanges();
   }
@@ -239,8 +236,8 @@ export class Network extends Config {
   /**
    * Calculate hash of this component.
    */
-  getHash(): string {
-    return objectHash(this.toJSON());
+  updateHash(): void {
+    this._hash = objectHash(this.toJSON());
   }
 
   /**

@@ -6,9 +6,7 @@ import { Activity } from '../activity';
 import { ActivityAnimationGraph } from '../activityAnimationGraph';
 import { ActivityAnimationScene } from './activityAnimationScene';
 
-
 export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
-
   constructor(graph: ActivityAnimationGraph, containerId: string) {
     super('box histogram', graph, containerId);
   }
@@ -19,7 +17,11 @@ export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
     const activityLayerGraph: THREE.Group = new THREE.Group();
 
     const scale = 0.01;
-    const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(scale, scale, scale);
+    const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(
+      scale,
+      scale,
+      scale
+    );
 
     const bins = this.graph.config.grid.divisions;
     const positions: any[] = this.generatePositions(bins, bins);
@@ -28,10 +30,7 @@ export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
         color: layer.color,
         transparent: true,
       });
-      const object: THREE.Mesh = new THREE.Mesh(
-        geometry,
-        material,
-      );
+      const object: THREE.Mesh = new THREE.Mesh(geometry, material);
       object.userData.position = position;
       object.userData.frames = this.graph.createEmptyFrames();
       object.position.set(position.x, 0, position.z);
@@ -112,9 +111,13 @@ export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
       const idx: number = this.graph.frameIdx;
       let value: number;
       if (trail.length > 0) {
-        const frames: any[] = object.userData.frames.slice(idx, idx + trail.length);
+        const frames: any[] = object.userData.frames.slice(
+          idx,
+          idx + trail.length
+        );
         const values: number[] = frames.map((frame: any) => frame.data.length);
-        value = values.length > 0 ? math.sum(values) / math.sqrt(trail.length) : 0;
+        value =
+          values.length > 0 ? math.sum(values) / math.sqrt(trail.length) : 0;
       } else {
         value = object.userData.frames[idx].data.length;
       }
@@ -123,14 +126,12 @@ export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
       object.position.setY(0);
       object.scale.setY(1);
       if (!this.graph.config.flatHeight) {
-        const height: number = value * size / grid * 10;
+        const height: number = ((value * size) / grid) * 10;
         object.position.setY(height / 100 / 2);
         if (!this.graph.config.flyingBoxes) {
           object.scale.setY(height);
         }
       }
     });
-
   }
-
 }

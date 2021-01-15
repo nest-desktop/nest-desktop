@@ -3,9 +3,7 @@ import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
 
-
 export class SpikeTimesRasterPlotPanel extends SpikeTimesPanel {
-
   constructor(graph: ActivityChartGraph) {
     super(graph);
     this.name = 'SpikeTimesRasterPlotPanel';
@@ -18,7 +16,9 @@ export class SpikeTimesRasterPlotPanel extends SpikeTimesPanel {
 
   init(): void {
     // console.log('Init raster plot panel for spike times');
-    this.activities = this.graph.project.activities.filter((activity: SpikeActivity) => activity.hasSpikeData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: SpikeActivity) => activity.hasSpikeData()
+    );
     this.data = [];
   }
 
@@ -53,10 +53,11 @@ export class SpikeTimesRasterPlotPanel extends SpikeTimesPanel {
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
       this.addSpikeTimesRasterPlot(activity);
     }
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
     data.x = activity.events.times;
     data.y = activity.events.senders;
     data.marker.color = activity.recorder.view.color;
   }
-
 }

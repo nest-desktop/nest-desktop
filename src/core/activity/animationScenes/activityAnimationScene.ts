@@ -6,7 +6,6 @@ import { GUI } from 'dat.gui';
 import { Activity } from '../activity';
 import { ActivityAnimationGraph } from '../activityAnimationGraph';
 
-
 export class ActivityAnimationScene {
   private _activityLayers: THREE.Group;
   private _animationFrameIdx: number;
@@ -16,14 +15,18 @@ export class ActivityAnimationScene {
   private _container: any;
   private _controls: OrbitControls;
   private _delta: number;
-  private _graph: ActivityAnimationGraph;                  // parent
+  private _graph: ActivityAnimationGraph; // parent
   private _name: string;
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
   private _stats: STATS;
   private _useStats = false;
 
-  constructor(name: string, graph: ActivityAnimationGraph, containerId: string) {
+  constructor(
+    name: string,
+    graph: ActivityAnimationGraph,
+    containerId: string
+  ) {
     this._name = name;
     this._container = document.getElementById(containerId);
     this._graph = graph;
@@ -33,10 +36,7 @@ export class ActivityAnimationScene {
     this._renderer = new THREE.WebGLRenderer({
       antialias: true,
     });
-    this._controls = new OrbitControls(
-      this._camera,
-      this._renderer.domElement
-    );
+    this._controls = new OrbitControls(this._camera, this._renderer.domElement);
     this._clock = new THREE.Clock();
     this._scene = new THREE.Scene();
 
@@ -141,7 +141,10 @@ export class ActivityAnimationScene {
     this._graph.project.activities.forEach((activity: Activity) => {
       const layer: any = this._graph.layers[activity.idx];
       if (layer.ndim !== -1) {
-        const activityLayerGraph: THREE.Group = this.createLayer(layer, activity);
+        const activityLayerGraph: THREE.Group = this.createLayer(
+          layer,
+          activity
+        );
         activityLayerGraph.userData = layer;
         layersGraph.add(activityLayerGraph);
         this._camera.layers.enable(activity.idx + 1);
@@ -163,18 +166,18 @@ export class ActivityAnimationScene {
     if (numDimensions === 3) {
       const gridX: THREE.GridHelper = new THREE.GridHelper(1, divisions);
       gridX.geometry.rotateZ(Math.PI / 2);
-      gridX.position.x = - scale.x / 2;
+      gridX.position.x = -scale.x / 2;
       grid.add(gridX);
     }
 
     const gridY: THREE.GridHelper = new THREE.GridHelper(1, divisions);
-    gridY.position.y = numDimensions === 2 ? 0 : (-scale.y / 2);
+    gridY.position.y = numDimensions === 2 ? 0 : -scale.y / 2;
     grid.add(gridY);
 
     if (numDimensions === 3) {
       const gridZ: THREE.GridHelper = new THREE.GridHelper(1, divisions);
       gridZ.geometry.rotateX(Math.PI / 2);
-      gridZ.position.z = - scale.z / 2;
+      gridZ.position.z = -scale.z / 2;
       grid.add(gridZ);
     }
     return grid;
@@ -185,7 +188,7 @@ export class ActivityAnimationScene {
     try {
       this.container.removeChild(this._renderer.domElement);
       document.body.removeChild(this._stats.dom);
-    } catch { }
+    } catch {}
   }
 
   stop(): void {
@@ -198,7 +201,7 @@ export class ActivityAnimationScene {
     this.update();
 
     this._delta = 0;
-    const interval: number = 1. / this._graph.config.frames.rate;
+    const interval: number = 1 / this._graph.config.frames.rate;
 
     const that = this;
     function render(): void {
@@ -241,8 +244,7 @@ export class ActivityAnimationScene {
     render();
   }
 
-  renderFrame(): void {
-  }
+  renderFrame(): void {}
 
   updateCameraPosition(): void {
     const position: any = this.graph.config.camera.position;
@@ -260,8 +262,10 @@ export class ActivityAnimationScene {
     camera.rotation.theta = camera.rotation.theta % 360;
     const thetaRad: number = this.degToRad(camera.rotation.theta);
     const position: any = this.graph.config.camera.position;
-    position.x = camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
-    position.z = camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
+    position.x =
+      camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
+    position.z =
+      camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
     this._camera.lookAt(this._scene.position);
   }
 
@@ -277,7 +281,10 @@ export class ActivityAnimationScene {
   resize(): void {
     this._camera.aspect = this.aspect;
     this._camera.updateProjectionMatrix();
-    this._renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    this._renderer.setSize(
+      this.container.clientWidth,
+      this.container.clientHeight
+    );
     this._renderer.render(this._scene, this._camera);
   }
 
@@ -296,19 +303,27 @@ export class ActivityAnimationScene {
     // sceneFolder.add(this.config.scene.fog, 'far', 0, 100, 0.1);
 
     const cameraProps = {
-      get control() { return _this.config.camera.control; },
-      set control(v) { _this.config.camera.control = v; },
-      get 'rotation speed'() { return _this.config.camera.rotation.speed; },
-      set 'rotation speed'(v) { _this.config.camera.rotation.speed = v; }
+      get control() {
+        return _this.config.camera.control;
+      },
+      set control(v) {
+        _this.config.camera.control = v;
+      },
+      get 'rotation speed'() {
+        return _this.config.camera.rotation.speed;
+      },
+      set 'rotation speed'(v) {
+        _this.config.camera.rotation.speed = v;
+      },
     };
 
     const cameraFolder = gui.addFolder('Camera');
     cameraFolder.add(cameraProps, 'control');
     cameraFolder.add(this.config.camera, 'distance', 10, 20, 1);
     cameraFolder.add(cameraProps, 'rotation speed', 0, 3, 0.01);
-    cameraFolder.add(this.config.camera.position, 'x', 0, 20, .1);
-    cameraFolder.add(this.config.camera.position, 'y', 0, 20, .1);
-    cameraFolder.add(this.config.camera.position, 'z', 0, 20, .1);
+    cameraFolder.add(this.config.camera.position, 'x', 0, 20, 0.1);
+    cameraFolder.add(this.config.camera.position, 'y', 0, 20, 0.1);
+    cameraFolder.add(this.config.camera.position, 'z', 0, 20, 0.1);
 
     // const layers: any = {
     //   'toggle grid': () => this._camera.layers.toggle(0),
@@ -354,7 +369,5 @@ export class ActivityAnimationScene {
     // clippingFolder.add(clippingProps, 'x plane', -.5, .5, 0.01);
     // clippingFolder.add(clippingProps, 'y plane', -.5, .5, 0.01);
     // clippingFolder.add(clippingProps, 'z plane', -.5, .5, 0.01);
-
   }
-
 }

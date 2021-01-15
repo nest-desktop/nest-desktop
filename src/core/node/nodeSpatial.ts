@@ -3,10 +3,9 @@ import * as math from 'mathjs';
 import { Config } from '../config';
 import { Node } from './node';
 
-
 export class FreePositions {
   private readonly _name = 'free';
-  private _center: number[];               // FreePositions has no argument for center in NEST 3.
+  private _center: number[]; // FreePositions has no argument for center in NEST 3.
   private _edgeWrap: boolean;
   private _extent: number[];
   private _numDimensions: number;
@@ -81,11 +80,11 @@ export class FreePositions {
   }
 
   generate(): void {
-    const minX: number = -1 * this._extent[0] / 2;
+    const minX: number = (-1 * this._extent[0]) / 2;
     const maxX: number = this._extent[0] / 2;
-    const minY: number = -1 * this._extent[1] / 2;
+    const minY: number = (-1 * this._extent[1]) / 2;
     const maxY: number = this._extent[1] / 2;
-    const minZ: number = -1 * this._extent[2] / 2;
+    const minZ: number = (-1 * this._extent[2]) / 2;
     const maxZ: number = this._extent[2] / 2;
     // console.log(center,extent,minX,maxX,minY,maxY,length)
 
@@ -117,9 +116,7 @@ export class FreePositions {
     }
     return positions;
   }
-
 }
-
 
 export class GridPositions {
   private readonly _name = 'grid';
@@ -199,8 +196,7 @@ export class GridPositions {
     return 2;
   }
 
-  set numDimensions(value: number) {
-  }
+  set numDimensions(value: number) {}
 
   generate(): void {
     const minX: number = this._center[0] - this._extent[0] / 2;
@@ -242,9 +238,7 @@ export class GridPositions {
     }
     return positions;
   }
-
 }
-
 
 export class NodeSpatial extends Config {
   node: Node;
@@ -263,7 +257,7 @@ export class NodeSpatial extends Config {
   initPositions(spatial: any) {
     this._positions = undefined;
     if (Object.keys(spatial).length > 0) {
-      if (spatial.hasOwnProperty('pos')) {
+      if (spatial.hasOwnProperty('numDimensions')) {
         this._positions = new FreePositions(this, spatial);
       } else if (spatial.hasOwnProperty('shape')) {
         this._positions = new GridPositions(this, spatial);
@@ -285,5 +279,4 @@ export class NodeSpatial extends Config {
   toJSON(target: string = 'db'): any {
     return this._positions.toJSON(target);
   }
-
 }

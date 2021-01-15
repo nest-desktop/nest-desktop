@@ -4,9 +4,7 @@ import { Activity } from '../activity';
 import { ActivityAnimationGraph } from '../activityAnimationGraph';
 import { ActivityAnimationScene } from './activityAnimationScene';
 
-
 export class ActivityAnimationSceneBox extends ActivityAnimationScene {
-
   constructor(graph: ActivityAnimationGraph, containerId: string) {
     super('box', graph, containerId);
   }
@@ -17,7 +15,11 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
     const activityLayerGraph: THREE.Group = new THREE.Group();
 
     const scale = 0.01;
-    const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(scale, scale, scale);
+    const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(
+      scale,
+      scale,
+      scale
+    );
 
     const positions: any[] = layer.positions;
     positions.forEach((position: any) => {
@@ -25,10 +27,7 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
         color: layer.color,
         transparent: true,
       });
-      const object: THREE.Mesh = new THREE.Mesh(
-        geometry,
-        material,
-      );
+      const object: THREE.Mesh = new THREE.Mesh(geometry, material);
       object.userData.position = position;
       object.position.set(position.x, position.y, position.z);
       object.layers.set(activity.idx + 1);
@@ -57,7 +56,9 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
         const trail: any = this.graph.config.trail;
         if (trail.length > 0) {
           for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
-            const frame: any = this.graph.frames[this.graph.frameIdx - trailIdx];
+            const frame: any = this.graph.frames[
+              this.graph.frameIdx - trailIdx
+            ];
             if (frame) {
               const trailData: any = frame.data[idx];
               this.updateGraphObjects(activityLayerGraph, trailData, trailIdx);
@@ -69,7 +70,11 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
     }
   }
 
-  updateGraphObjects(activityLayerGraph: THREE.Group, data: any, trailIdx: number = null): void {
+  updateGraphObjects(
+    activityLayerGraph: THREE.Group,
+    data: any,
+    trailIdx: number = null
+  ): void {
     const trail: any = this.graph.config.trail;
     const size: number = this.graph.config.objectSize;
     const ratio: number = trailIdx !== null ? trailIdx / (trail.length + 1) : 0;
@@ -104,11 +109,11 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
       object.material.color.set(colorRGB);
       // @ts-ignore
       object.material.opacity = opacity;
-      object.scale.set(scale, (value !== undefined ? 0.5 : scale), scale);
+      object.scale.set(scale, value !== undefined ? 0.5 : scale, scale);
       object.position.setY(object.userData.position.y);
       if (value !== undefined && !this.graph.config.flatHeight) {
         const height: number = value * size;
-        object.position.setY(object.userData.position.y + (height / 200));
+        object.position.setY(object.userData.position.y + height / 200);
         if (!this.graph.config.flyingBoxes) {
           object.scale.setY(height);
         }
@@ -120,7 +125,5 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
       //   object.position.setY(pos.y - ratio / 2);
       // }
     });
-
   }
-
 }

@@ -3,7 +3,7 @@ import { Project } from './project/project';
 
 export class AppView {
   private _activity: any;
-  private _app: App;                       // parent
+  private _app: App; // parent
   private _model: any;
   private _project: any;
 
@@ -20,8 +20,8 @@ export class AppView {
     this._project = {
       searchTerm: '',
       mode: 'networkEditor',
-      sidenavMode: 'networkSelection',
-      sidenavOpened: false,
+      toolMode: 'networkParamEdit',
+      toolOpened: false,
     };
   }
 
@@ -30,9 +30,14 @@ export class AppView {
   }
 
   get filteredProjects(): Project[] {
-    if (this._project.searchTerm === '') { return this._app.projects; }
-    return this._app.projects.filter((project: Project) =>
-      project.name.toLowerCase().indexOf(this._project.searchTerm.toLowerCase()) > -1
+    if (this._project.searchTerm === '') {
+      return this._app.projects;
+    }
+    return this._app.projects.filter(
+      (project: Project) =>
+        project.name
+          .toLowerCase()
+          .indexOf(this._project.searchTerm.toLowerCase()) > -1
     );
   }
 
@@ -40,24 +45,20 @@ export class AppView {
     return this._project;
   }
 
-  selectProjectMode(value: string) {
+  setProjectMode(value: string) {
     this._project.mode = value;
     if (this._project.mode === 'labBook') {
-      this._project.sidenavOpened = false;
+      this._project.toolOpened = false;
     }
     setTimeout(() => window.dispatchEvent(new Event('resize')), 10);
   }
 
-  selectProjectSidenav(mode: string): void {
-    if (this._project.sidenavMode === mode) {
-      this._project.sidenavOpened = !this._project.sidenavOpened;
+  setProjectTool(mode: string): void {
+    if (this._project.toolMode === mode) {
+      this._project.toolOpened = !this._project.toolOpened;
     } else {
-      this._project.sidenavMode = mode;
-      this._project.sidenavOpened = true;
-      if (this._project.sidenavMode === 'codeEditor') {
-        this._app.project.code.generate();
-      }
+      this._project.toolMode = mode;
+      this._project.toolOpened = true;
     }
   }
-
 }

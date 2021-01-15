@@ -2,17 +2,16 @@ import { Node } from './node/node';
 import { Model } from './model/model';
 import { Connection } from './connection/connection';
 
-
 export class Parameter {
-  private _factors: string[];                    // not functional yet
+  private _factors: string[]; // not functional yet
   private _id: string;
-  private _idx: number;                          // generative
+  private _idx: number; // generative
   private _input: string;
   private _label: string;
   private _level: number;
   private _max: number;
   private _min: number;
-  private _parent: Model | Node | Connection;    // parent
+  private _parent: Model | Node | Connection; // parent
   private _step: number;
   private _ticks: any[];
   private _unit: string;
@@ -131,10 +130,10 @@ export class Parameter {
   set value(value: any) {
     // console.log('Set parameter value');
     this._value = value;
-    if (['Node', 'Connection'].includes(this._parent.name)) {
-      this._parent.network.networkChanges();
-    }
-    this._parent.network.project.simulateAfterChange();
+    // if (['Node', 'Connection'].includes(this._parent.name)) {
+    //   this._parent.network.networkChanges();
+    // }
+    // this._parent.network.project.simulateAfterChange();
   }
 
   get visible(): boolean {
@@ -175,5 +174,4 @@ export class Parameter {
     }
     return params;
   }
-
 }

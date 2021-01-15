@@ -2,7 +2,6 @@ import { AnalogSignalActivity } from '../analogSignalActivity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { ActivityGraphPanel } from './activityGraphPanel';
 
-
 export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
   private _state: any = {
     bins: 250,
@@ -29,23 +28,28 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
   }
 
   init(): void {
-    this.activities = this.graph.project.activities.filter((activity: AnalogSignalActivity) => activity.hasAnalogData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: AnalogSignalActivity) => activity.hasAnalogData()
+    );
     this.data = [];
   }
 
   update(): void {
     // console.log('Init histogram panel of spike times')
     this.activities.forEach((activity: AnalogSignalActivity) => {
-
-      const recordables: string[] = Object.keys(activity.events)
-        .filter((event: string) => !['times', 'senders'].includes(event));
+      const recordables: string[] = Object.keys(activity.events).filter(
+        (event: string) => !['times', 'senders'].includes(event)
+      );
       recordables.forEach((recordFrom: string) => {
         this.updateAnalogSignalHistogram(activity, recordFrom);
       });
     });
   }
 
-  addAnalogSignalHistogram(activity: AnalogSignalActivity, recordFrom: string): void {
+  addAnalogSignalHistogram(
+    activity: AnalogSignalActivity,
+    recordFrom: string
+  ): void {
     // console.log('Init histogram panel of of analog signals')
     this.data.push({
       activityIdx: activity.idx,
@@ -68,19 +72,24 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
         line: {
           color: 'white',
           width: 1,
-        }
+        },
       },
       x: [],
       xaxis: 'x' + this.xaxis,
     });
   }
 
-  updateAnalogSignalHistogram(activity: AnalogSignalActivity, recordFrom: string): void {
+  updateAnalogSignalHistogram(
+    activity: AnalogSignalActivity,
+    recordFrom: string
+  ): void {
     // console.log('Update histogram panel of analog signals')
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
       this.addAnalogSignalHistogram(activity, recordFrom);
     }
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
     const event: number[] = activity.events[recordFrom];
     const start: number = this.state.start;
     const end: number = this.state.end;
@@ -92,5 +101,4 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
     data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
     data.marker.color = activity.recorder.view.color;
   }
-
 }

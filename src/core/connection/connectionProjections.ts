@@ -2,7 +2,6 @@ import { Config } from '../config';
 import { Connection } from './connection';
 import { ProjectionParameter } from './projectionParameter';
 
-
 enum ConnectionType {
   convergent,
   divergent,
@@ -82,7 +81,12 @@ export class ConnectionProjections extends Config {
   }
 
   get params(): ProjectionParameter[] {
-    return [this._kernel, this._numberOfConnections, this._weights, this._delays];
+    return [
+      this._kernel,
+      this._numberOfConnections,
+      this._weights,
+      this._delays,
+    ];
   }
 
   get weights(): ProjectionParameter {
@@ -147,5 +151,4 @@ export class ConnectionProjections extends Config {
     }
     return projections;
   }
-
 }

@@ -10,18 +10,17 @@ import { NodeSpatial } from './nodeSpatial';
 import { NodeView } from './nodeView';
 import { Parameter } from '../parameter';
 
-
 export class Node extends Config {
   private readonly _name = 'Node';
 
   private _activity: SpikeActivity | AnalogSignalActivity | Activity;
-  private _code: NodeCode;                   // code service for node
-  private _idx: number;                      // generative
+  private _code: NodeCode; // code service for node
+  private _idx: number; // generative
   private _modelId: string;
-  private _network: Network;                 // parent
+  private _network: Network; // parent
   private _params: Parameter[];
   private _positions: number[][] = [];
-  private _recordFrom: string[];             // only for multimeter
+  private _recordFrom: string[]; // only for multimeter
   private _size: number;
   private _spatial: NodeSpatial;
   private _view: NodeView;
@@ -103,9 +102,9 @@ export class Node extends Config {
     this._network.clean();
     this.initActivity();
     if (this.model.isRecorder()) {
-      this.initActivityGraph();
+      this.network.project.activityGraph.init();
     }
-    this.nodeChanges();         // start simulation
+    this.nodeChanges();
   }
 
   get n(): number {
@@ -121,8 +120,12 @@ export class Node extends Config {
   }
 
   get nodes(): Node[] {
-    if (this.model.existing === 'spike_detector') { return this.sources; }
-    if (['multimeter', 'voltmeter'].includes(this.model.existing)) { return this.targets; }
+    if (this.model.existing === 'spike_recorder') {
+      return this.sources;
+    }
+    if (['multimeter', 'voltmeter'].includes(this.model.existing)) {
+      return this.targets;
+    }
     return [];
   }
 
@@ -139,11 +142,17 @@ export class Node extends Config {
   // }
 
   get recordables(): string[] {
-    if (this.model.existing !== 'multimeter') { return []; }
+    if (this.model.existing !== 'multimeter') {
+      return [];
+    }
     const targets: Node[] = this.targets;
-    if (targets.length === 0) { return []; }
+    if (targets.length === 0) {
+      return [];
+    }
     const recordables = targets.map((target: Node) => target.model.recordables);
-    if (recordables.length === 0) { return []; }
+    if (recordables.length === 0) {
+      return [];
+    }
     const recordablesFlat: string[] = [].concat(...recordables);
     const recordablesSet: any[] = [...new Set(recordablesFlat)];
     recordablesSet.sort((a: number, b: number) => a - b);
@@ -156,7 +165,7 @@ export class Node extends Config {
 
   set recordFrom(value: string[]) {
     this._recordFrom = value;
-    this.initActivityGraph();
+    this.network.project.activityGraph.init();
   }
 
   get size(): number {
@@ -208,21 +217,16 @@ export class Node extends Config {
    * @param activity - network activity from the simulator
    */
   initActivity(activity: any = {}): void {
-    if (!this.model.isRecorder()) { return; }
-    if (this.model.existing === 'spike_detector') {
+    if (!this.model.isRecorder()) {
+      return;
+    }
+    if (this.model.existing === 'spike_recorder') {
       this._activity = new SpikeActivity(this, activity);
     } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
       this._activity = new AnalogSignalActivity(this, activity);
     } else {
       this._activity = new Activity(this, activity);
     }
-  }
-
-  /**
-   * Initialize activity graph in project component.
-   */
-  initActivityGraph(): void {
-    this._network.project.initActivityGraph();
   }
 
   /**
@@ -243,7 +247,7 @@ export class Node extends Config {
       node.params.forEach((param: Parameter) => this.addParameter(param));
     }
     if (this.model.existing === 'multimeter') {
-      this._recordFrom = (node !== null) ? node.recordFrom || ['V_m'] : ['V_m'];
+      this._recordFrom = node !== null ? node.recordFrom || ['V_m'] : ['V_m'];
     }
   }
 
@@ -260,7 +264,10 @@ export class Node extends Config {
    * @param paramId - parameter id
    */
   hasParameter(paramId: string): boolean {
-    return this._params.find((param: Parameter) => param.id === paramId) !== undefined;
+    return (
+      this._params.find((param: Parameter) => param.id === paramId) !==
+      undefined
+    );
   }
 
   /**
@@ -270,7 +277,8 @@ export class Node extends Config {
    */
   getParameter(paramId: string): any {
     if (this.hasParameter(paramId)) {
-      return this._params.find((param: Parameter) => param.id === paramId).value;
+      return this._params.find((param: Parameter) => param.id === paramId)
+        .value;
     }
   }
 
@@ -294,8 +302,11 @@ export class Node extends Config {
    * @param term - inhibitory (negative) or excitatory (positive)
    */
   setWeights(term: string): void {
-    const connections: Connection[] = this._network.connections
-      .filter((connection: Connection) => connection.source.idx === this._idx && connection.target.model.elementType !== 'recorder');
+    const connections: Connection[] = this._network.connections.filter(
+      (connection: Connection) =>
+        connection.source.idx === this._idx &&
+        connection.target.model.elementType !== 'recorder'
+    );
     connections.forEach((connection: Connection) => {
       const value: number = Math.abs(connection.synapse.weight);
       connection.synapse.weight = (term === 'inhibitory' ? -1 : 1) * value;
@@ -318,9 +329,14 @@ export class Node extends Config {
   }
 
   collectRecordFromTargets(): void {
-    if (this.model.existing !== 'multimeter') { return; }
+    if (this.model.existing !== 'multimeter') {
+      return;
+    }
     const recordables = this.recordables;
-    this._recordFrom = (recordables.length > 0) ? this.recordFrom.filter((rec: string) => recordables.includes(rec)) : [];
+    this._recordFrom =
+      recordables.length > 0
+        ? this.recordFrom.filter((rec: string) => recordables.includes(rec))
+        : [];
   }
 
   /**
@@ -337,7 +353,7 @@ export class Node extends Config {
    * @remarks
    * It removes node component of the network.
    */
-  delete(): void {
+  remove(): void {
     this._network.deleteNode(this);
   }
 
@@ -367,7 +383,7 @@ export class Node extends Config {
       node.params = {};
       this._params
         .filter((param: Parameter) => param.visible)
-        .forEach((param: Parameter) => node.params[param.id] = param.value);
+        .forEach((param: Parameter) => (node.params[param.id] = param.value));
       if (this.model.existing === 'multimeter' && this._recordFrom.length > 0) {
         node.params.record_from = this._recordFrom;
       }
@@ -387,5 +403,4 @@ export class Node extends Config {
     }
     return node;
   }
-
 }

@@ -3,8 +3,7 @@ import { environment } from '../../environments/environment';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from '../activity/activity';
-import { ActivityChartGraph } from '../activity/activityChartGraph';
-import { ActivityAnimationGraph } from '../activity/activityAnimationGraph';
+import { ActivityGraph } from '../activity/activityGraph';
 import { App } from '../app';
 import { Config } from '../config';
 import { Model } from '../model/model';
@@ -16,8 +15,7 @@ import { Simulation } from '../simulation/simulation';
 import { upgradeProject } from './projectUpgrade';
 
 export class Project extends Config {
-  private _activityAnimationGraph: ActivityAnimationGraph;
-  private _activityChartGraph: ActivityChartGraph;
+  private _activityGraph: ActivityGraph;
   private _app: App; // parent
   private _code: ProjectCode; // code script for NEST Server
   private _createdAt: string; // when is it created in database
@@ -60,7 +58,11 @@ export class Project extends Config {
 
     this.clean();
     this._code = new ProjectCode(this);
-    this.initActivityGraph();
+    this._activityGraph = new ActivityGraph(this);
+  }
+
+  get activityGraph(): ActivityGraph {
+    return this._activityGraph;
   }
 
   get app(): App {
@@ -232,10 +234,7 @@ export class Project extends Config {
    * Use object hash.
    */
   isNetworkChanged(): boolean {
-    return (
-      this.getHash() !== this._activityChartGraph.hash &&
-      !this._simulation.running
-    );
+    return this._network.hash !== this._activityGraph.hash;
   }
 
   /**
@@ -299,16 +298,17 @@ export class Project extends Config {
       objectHash(JSON.stringify(oldModels)) ===
       objectHash(JSON.stringify(newModels))
     ) {
-      this._activityChartGraph.initPanels();
+      this._activityGraph.activityChartGraph.initPanels();
     } else {
-      this._activityChartGraph.init();
+      this._activityGraph.activityChartGraph.init();
     }
     if (this.config.runAfterCheckout) {
-      setTimeout(() => this.runSimulationScript(), 1);
+      setTimeout(() => this.runSimulation(), 1);
     } else {
-      this.updateActivities(
-        this.activities.map((activity: Activity) => activity.toJSON())
+      const activities: any[] = this.activities.map((activity: Activity) =>
+        activity.toJSON()
       );
+      this.updateActivities(activities);
     }
   }
 
@@ -378,66 +378,38 @@ export class Project extends Config {
    */
   runSimulation(): Promise<any> {
     // console.log('Run simulation');
-    const viewCodeEditor: boolean =
-      this.app.view.project.sidenavMode === 'codeEditor';
-    const runScript: boolean = this.app.nestServer.state.simulatorVersion.startsWith(
-      '2.'
-    );
     this._simulation.running = true;
-    const request: Promise<any> =
-      !runScript || viewCodeEditor
-        ? this.runSimulationCode()
-        : this.runSimulationScript();
-    return request
-      .then((req: any) => {
-        this._simulation.running = false;
-        switch (req.status) {
+    return this.app.nestServer.http
+      .post(this._app.nestServer.url + '/exec', {
+        source: this._code.script,
+        return: 'response',
+      })
+      .then((resp: any) => {
+        let data: any;
+        switch (resp.status) {
           case 200:
             this._errorMessage = '';
-            const data: any = JSON.parse(req.responseText).data;
+            data = JSON.parse(resp.responseText).data;
             this._simulation.kernel.time = data.kernel.time;
             this.updateActivities(data.activities);
             this.commitNetwork(this._network);
             break;
           default:
-            this._errorMessage = req.responseText;
+            this._errorMessage = resp.responseText;
             break;
         }
-        return req;
+        setTimeout(() => {
+          this._simulation.running = false;
+        }, 100);
+        return resp;
       })
-      .catch((req: any) => {
-        this._simulation.running = false;
-        this._errorMessage = req.responseText;
-        return req;
+      .catch((resp: any) => {
+        this._errorMessage = resp.responseText;
+        setTimeout(() => {
+          this._simulation.running = false;
+        }, 100);
+        return resp;
       });
-  }
-
-  /**
-   * Run simulation script framework.
-   */
-  runSimulationScript(): Promise<any> {
-    // console.log('Run simulation script');
-    if (this.simulation.config.autoRandomSeed) {
-      const seed: number = Math.random() * 1000;
-      this.simulation.randomSeed = parseInt(seed.toFixed(0), 0);
-    }
-    this.code.generate();
-    const url: string = this._app.nestServer.url + '/script/simulation/run';
-    const data: any = this.toJSON('simulator');
-    return this._app.nestServer.http.post(url, data);
-  }
-
-  /**
-   * Run simulation via textual code.
-   */
-  runSimulationCode(): Promise<any> {
-    // console.log('Run simulation code');
-    const url: string = this._app.nestServer.url + '/exec';
-    const data: any = {
-      source: this._code.script,
-      return: 'response',
-    };
-    return this.app.nestServer.http.post(url, data);
   }
 
   /*
@@ -468,8 +440,8 @@ export class Project extends Config {
     data.forEach((activity: any, idx: number) => {
       activities[idx].update(activity);
     });
+    this.activityGraph.update();
     this.checkActivities();
-    this.updateActivityGraph();
   }
 
   /**
@@ -501,60 +473,6 @@ export class Project extends Config {
    */
   get hasSpatialActivities(): boolean {
     return this._hasSpatialActivities;
-  }
-
-  /*
-   * Activity graph
-   */
-
-  get activityAnimationGraph(): ActivityAnimationGraph {
-    return this._activityAnimationGraph;
-  }
-
-  get activityChartGraph(): ActivityChartGraph {
-    return this._activityChartGraph;
-  }
-
-  /**
-   * Initialize activity graph.
-   */
-  initActivityGraph(): void {
-    this.initActivityChartGraph();
-    this.initActivityAnimationGraph();
-  }
-
-  /**
-   * Initialize activity animation graph (Three).
-   */
-  initActivityAnimationGraph(): void {
-    this._activityAnimationGraph = new ActivityAnimationGraph(this);
-  }
-
-  /**
-   * Initialize activity chart graph (plotly).
-   */
-  initActivityChartGraph(panels: any[] = []): void {
-    if (this._activityChartGraph === undefined) {
-      this._activityChartGraph = new ActivityChartGraph(this, panels);
-    } else {
-      this._activityChartGraph.init(panels);
-    }
-  }
-
-  /**
-   * Empty activity graph.
-   */
-  emptyActivityGraph(): void {
-    this._activityChartGraph.empty();
-  }
-
-  /**
-   * Update activity graph.
-   */
-  updateActivityGraph(): void {
-    // console.log('Update activity graph');
-    this._activityChartGraph.update();
-    this._activityAnimationGraph.update();
   }
 
   /**

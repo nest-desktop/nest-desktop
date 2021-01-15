@@ -4,7 +4,6 @@ import { Network } from '../network/network';
 import { Parameter } from '../parameter';
 import { ModelCode } from './modelCode';
 
-
 enum ElementType {
   neuron = 'neuron',
   recorder = 'recorder',
@@ -16,16 +15,16 @@ export class Model {
   private readonly _name = 'Model';
 
   private _abbreviation: string;
-  private _app: App;                             // parent
-  private _code: ModelCode;                      // code for model
-  private _doc: any;                             // doc data of the database
-  private _elementType: string;                  // element type of the model
-  private _existing: string;                     // existing model in NEST
-  private _id: string;                           // model id
-  private _idx: number;                          // generative
-  private _label: string;                        // model label for view
-  private _params: Parameter[] = [];             // model parameters
-  private _recordables: string[];                // recordables for multimeter
+  private _app: App; // parent
+  private _code: ModelCode; // code for model
+  private _doc: any; // doc data of the database
+  private _elementType: string; // element type of the model
+  private _existing: string; // existing model in NEST
+  private _id: string; // model id
+  private _idx: number; // generative
+  private _label: string; // model label for view
+  private _params: Parameter[] = []; // model parameters
+  private _recordables: string[]; // recordables for multimeter
 
   constructor(app: App, model: any) {
     this._app = app;
@@ -34,7 +33,8 @@ export class Model {
     this._doc = model;
     this._id = model.id;
     this._idx = this.app.models.length;
-    this._elementType = model.elementType !== undefined ? model.elementType : model.element_type;
+    this._elementType =
+      model.elementType !== undefined ? model.elementType : model.element_type;
     this._existing = model.existing || model.id;
 
     this._label = model.label || '';
@@ -83,10 +83,6 @@ export class Model {
     return this._name;
   }
 
-  get network(): Network {
-    return;
-  }
-
   get params(): Parameter[] {
     return this._params;
   }
@@ -116,7 +112,7 @@ export class Model {
       input: 'valueSlider',
       min: 0,
       max: 100,
-      step: 1
+      step: 1,
     };
     if (Array.isArray(value)) {
       param.input = 'arrayInput';
@@ -126,11 +122,15 @@ export class Model {
   }
 
   removeParameter(paramId: string): void {
-    this._params = this.params.filter((param: Parameter) => param.id !== paramId);
+    this._params = this.params.filter(
+      (param: Parameter) => param.id !== paramId
+    );
   }
 
   updateParameter(param: any): void {
-    const idx: number = this._params.map((p: Parameter) => p.id).indexOf(param.id);
+    const idx: number = this._params
+      .map((p: Parameter) => p.id)
+      .indexOf(param.id);
     this._params[idx] = new Parameter(this, param);
   }
 
@@ -169,7 +169,9 @@ export class Model {
     if (target === 'simulator') {
       model.new = this._id;
       model.params = {};
-      this._params.forEach((param: Parameter) => model.params[param.id] = param.value);
+      this._params.forEach(
+        (param: Parameter) => (model.params[param.id] = param.value)
+      );
     } else {
       model.id = this._id;
       model.elementType = this._elementType;
@@ -183,5 +185,4 @@ export class Model {
     }
     return model;
   }
-
 }

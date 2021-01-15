@@ -1,0 +1,82 @@
+import { ActivityChartGraph } from '../activity/activityChartGraph';
+import { ActivityAnimationGraph } from '../activity/activityAnimationGraph';
+import { Project } from '../project/project';
+
+export class ActivityGraph {
+  private _activityAnimationGraph: ActivityAnimationGraph;
+  private _activityChartGraph: ActivityChartGraph;
+  private _hash: string;
+  private _project: Project;
+
+  constructor(project: Project) {
+    this._project = project;
+    this._hash = project.getHash();
+    this.init();
+  }
+
+  get activityAnimationGraph(): ActivityAnimationGraph {
+    return this._activityAnimationGraph;
+  }
+
+  get activityChartGraph(): ActivityChartGraph {
+    return this._activityChartGraph;
+  }
+
+  get hash(): string {
+    return this._hash;
+  }
+
+  get project(): Project {
+    return this._project;
+  }
+
+  /**
+   * Initialize activity graph.
+   */
+  init(): void {
+    this.initActivityChartGraph();
+    this.initActivityAnimationGraph();
+  }
+
+  /**
+   * Update activity graph.
+   */
+  update(): void {
+    // console.log('Update activity graph');
+    this._activityChartGraph.update();
+    this._activityAnimationGraph.update();
+    this._hash = this.project.getHash();
+  }
+
+  /**
+   * Initialize activity animation graph (Three).
+   */
+  initActivityAnimationGraph(): void {
+    this._activityAnimationGraph = new ActivityAnimationGraph(this._project);
+  }
+
+  /**
+   * Initialize activity chart graph (plotly).
+   */
+  initActivityChartGraph(panels: any[] = []): void {
+    if (this._activityChartGraph === undefined) {
+      this._activityChartGraph = new ActivityChartGraph(this._project, panels);
+    } else {
+      this._activityChartGraph.init(panels);
+    }
+  }
+
+  /**
+   * Empty activity graph.
+   */
+  emptyActivityGraph(): void {
+    this._activityChartGraph.empty();
+  }
+
+  /**
+   * Update color in activity graph.
+   */
+  updateColor(): void {
+    this._activityChartGraph.updateColor();
+  }
+}

@@ -2,7 +2,6 @@ import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
 
-
 export class CVISIHistogramPanel extends SpikeTimesPanel {
   private _state: any = {
     binsize: 1.0,
@@ -28,7 +27,9 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
 
   init(): void {
     // console.log('Init histogram panel for inter-spike interval');
-    this.activities = this.graph.project.activities.filter((activity: SpikeActivity) => activity.hasSpikeData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: SpikeActivity) => activity.hasSpikeData()
+    );
     this.data = [];
   }
 
@@ -62,7 +63,7 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
         line: {
           color: 'white',
           width: 1,
-        }
+        },
       },
       x: [],
     });
@@ -73,14 +74,17 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
       this.addCVISIHistogram(activity);
     }
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
     const isi: number[][] = activity.ISI();
-    data.x = isi.map((i: number[]) => (activity.getStandardDeviation(i) / activity.getAverage(i)));
+    data.x = isi.map(
+      (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
+    );
     data.xbins.start = 0;
     data.xbins.end = 3;
     data.xbins.size = 0.01;
     data.marker.line.width = 1;
     data.marker.color = activity.recorder.view.color;
   }
-
 }
