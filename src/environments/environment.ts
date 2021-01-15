@@ -4,7 +4,6 @@
 // The list of which env maps to which file can be found in `.angular.json`.
 import { version } from '../../package.json';
 
-
 export const environment = {
   baseUrl: '',
   production: false,
