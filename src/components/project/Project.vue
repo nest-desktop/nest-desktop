@@ -26,17 +26,62 @@
         <v-icon class="ma-2">mdi-brain</v-icon>
       </v-toolbar-title>
 
-      <v-btn-toggle dense group class="ma-2">
-        <v-btn outlined text>
-          <v-icon>mdi-pencil-outline</v-icon>
+      <v-btn-toggle class="ma-2" group light mandatory v-model="state.modeIdx">
+        <v-btn class="mx-0 px-6">
+          <v-col>
+            <v-row style="place-content: center;">
+              <v-icon>$network</v-icon>
+            </v-row>
+            <v-row style="place-content: center; font-size:10px">
+              Editor
+            </v-row>
+          </v-col>
         </v-btn>
 
-        <v-btn outlined text>
-          <v-icon>mdi-chart-line</v-icon>
-        </v-btn>
+        <v-menu open-on-hover offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" class="mx-0 px-6">
+              <v-col>
+                <v-row style="place-content: center;">
+                  <v-icon>mdi-chart-line</v-icon>
+                </v-row>
+                <v-row style="place-content: center; font-size:10px">
+                  Explorer
+                </v-row>
+              </v-col>
+            </v-btn>
+          </template>
 
-        <v-btn outlined text>
-          <v-icon>mdi-eye-outline</v-icon>
+          <v-list dense>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon v-text="'mdi-chart-scatter-plot'" />
+              </v-list-item-icon>
+              <v-list-item-title>
+                abstract
+              </v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon v-text="'mdi-axis-arrow'" />
+              </v-list-item-icon>
+              <v-list-item-title>
+                spatial
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <v-btn class="mx-0 px-6">
+          <v-col>
+            <v-row style="place-content: center;">
+              <v-icon>mdi-eye-outline</v-icon>
+            </v-row>
+            <v-row style="place-content: center; font-size:10px">
+              Lab book
+            </v-row>
+          </v-col>
         </v-btn>
       </v-btn-toggle>
 
@@ -45,43 +90,92 @@
       </v-toolbar-title>
 
       <v-spacer />
+      <div class="mx-4" style="width:176px">
+        <v-row no-gutters>
+          <v-col col="3">
+            <v-btn
+              :disabled="countBefore() <= 0"
+              @click="state.project.network.oldest()"
+              fab
+              light
+              small
+            >
+              <v-icon>mdi-page-first</v-icon>
+            </v-btn>
+          </v-col>
 
-      <div class="mx-4">
-        <v-btn class="ma-1" outlined small text>
-          <v-icon>mdi-page-first</v-icon>
-        </v-btn>
+          <v-col col="3">
+            <v-btn
+              :disabled="countBefore() <= 0"
+              @click="state.project.network.older()"
+              fab
+              light
+              small
+            >
+              <v-badge
+                :content="countBefore()"
+                :value="countBefore()"
+                color="project"
+                offset-y="8"
+              >
+                <v-icon>mdi-undo-variant</v-icon>
+              </v-badge>
+            </v-btn>
+          </v-col>
 
-        <v-btn class="ma-1" outlined small text>
-          <v-badge offset-y="8" content="6">
-            <v-icon>mdi-undo-variant</v-icon>
-          </v-badge>
-        </v-btn>
+          <v-col col="3">
+            <v-btn
+              :disabled="countAfter() <= 0"
+              @click="state.project.network.newer()"
+              fab
+              light
+              small
+            >
+              <v-badge
+                :content="countAfter()"
+                :value="countAfter()"
+                color="project"
+                offset-y="8"
+              >
+                <v-icon>mdi-redo-variant</v-icon>
+              </v-badge>
+            </v-btn>
+          </v-col>
 
-        <v-btn class="ma-1" outlined small text>
-          <v-badge color="accent" offset-y="8" content="6">
-            <v-icon>mdi-redo-variant</v-icon>
-          </v-badge>
-        </v-btn>
-
-        <v-btn class="ma-1" outlined small text>
-          <v-icon>mdi-page-last</v-icon>
-        </v-btn>
+          <v-col col="3">
+            <v-btn
+              :disabled="countAfter() <= 0"
+              @click="state.project.network.newest()"
+              fab
+              light
+              small
+            >
+              <v-icon>mdi-page-last</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
       </div>
+      <v-chip
+        class="mx-2"
+        outlined
+        small
+        v-text="state.project.network.hash.slice(0, 6)"
+      />
 
-      <v-btn :loading="state.loading" @click="simulate" outlined>
-        <v-icon>mdi-play</v-icon>
+      <v-btn @click="state.project.runSimulation()" outlined>
+        <v-icon left>mdi-play</v-icon>
         Simulate
       </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
-      :mini-variant="state.miniVariant"
+      :mini-variant="!core.app.view.project.toolOpened"
+      :width="core.app.view.project.toolMode === 'codeEditor' ? '568' : '377.6'"
       app
       clipped
       mobile-breakpoint="56"
       permanent
       right
-      :width="state.tool === 'simulationCodeEditor' ? '520' : '360'"
     >
       <v-row class="fill-height ml-0" no-gutters>
         <v-navigation-drawer
@@ -93,13 +187,17 @@
         >
           <v-list nav dense>
             <v-list-item
-              @click="state.miniVariant = !state.miniVariant"
+              @click="
+                core.app.view.project.toolOpened = !core.app.view.project
+                  .toolOpened
+              "
               title="Toggle navigation"
             >
               <v-list-item-icon>
                 <v-icon
                   v-text="
-                    'mdi-chevron-' + (state.miniVariant ? 'left' : 'right')
+                    'mdi-chevron-' +
+                      (core.app.view.project.toolOpened ? 'right' : 'left')
                   "
                 />
               </v-list-item-icon>
@@ -111,14 +209,19 @@
 
           <v-list dense nav>
             <v-list-item
-              :key="tool.id"
+              :class="{
+                'v-list-item--active':
+                  core.app.view.project.toolMode === tool.name &&
+                  core.app.view.project.toolOpened,
+              }"
+              :key="tool.name"
               :title="tool.title"
+              @click="onClick(tool.name)"
               v-for="tool in state.tools"
-              @click="onClick(tool)"
             >
               <v-list-item-icon>
                 <v-list-item-group
-                  style="margin-top:-2px; text-align:center; width:100%; font-size: 7px"
+                  style="text-align:center; width:100%; font-size: 7px"
                 >
                   <v-icon small v-text="tool.icon" />
                   <div v-text="tool.title" />
@@ -129,93 +232,133 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width:100%; padding-right:56px" v-show="!state.miniVariant">
-          <networkParamSelect
+        <div
+          style="width:100%; padding-right:48px"
+          v-if="core.app.view.project.toolOpened"
+        >
+          <networkParamsSelect
             :network="state.project.network"
-            v-if="state.tool === 'networkParamSelect'"
+            v-if="core.app.view.project.toolMode === 'networkParamSelect'"
           />
-          <NetworkEdit
+
+          <NetworkParamsEdit
+            :projectId="state.projectId"
             :network="state.project.network"
-            v-if="state.tool === 'networkEdit'"
+            v-if="core.app.view.project.toolMode === 'networkParamEdit'"
           />
+
           <SimulationCodeEditor
             :code="state.project.code"
-            v-if="state.tool === 'simulationCodeEditor'"
+            v-if="core.app.view.project.toolMode === 'codeEditor'"
           />
         </div>
       </v-row>
     </v-navigation-drawer>
 
     <v-main>
-      <NetworkGraph
-        :projectId="state.project.id"
-        :network="state.project.network"
+      <span style="position:absolute;" class="ma-1">
+        {{ state.project.network.view.selectedNode }}
+      </span>
+      <NetworkGraph :projectId="state.projectId" v-if="state.modeIdx === 0" />
+
+      <ActivityGraph
+        :graph="state.project.activityGraph"
+        v-if="state.modeIdx === 1"
       />
     </v-main>
+
+    <v-overlay :value="state.project.simulation.running">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="amber"
+        dark
+        indeterminate
+      />
+    </v-overlay>
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
-import NetworkEdit from '@/components/network/NetworkEdit';
-import NetworkParamSelect from '@/components/network/NetworkParamSelect';
-import NetworkGraph from '@/components/network/NetworkGraph';
-import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor';
+import { reactive, watch, onMounted } from '@vue/composition-api';
+import ActivityGraph from '@/components/activity/ActivityGraph.vue';
+import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
+import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
+import NetworkGraph from '@/components/network/NetworkGraph.vue';
+import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
 import core from '@/core/index';
 
 export default Vue.extend({
   name: 'Project',
-  props: {
-    id: String,
-  },
   components: {
-    NetworkEdit,
-    NetworkParamSelect,
+    ActivityGraph,
+    NetworkParamsEdit,
+    NetworkParamsSelect,
     NetworkGraph,
     SimulationCodeEditor,
   },
+  props: {
+    id: String,
+  },
   setup(props) {
     const state = reactive({
-      loading: false,
-      miniVariant: false,
+      projectId: props.id,
       project: null,
-      tool: 'networkEdit',
       tools: [
+        // {
+        //   icon: '$network',
+        //   name: 'networkParamSelect',
+        //   title: 'Network',
+        // },
         {
-          icon: 'mdi-checkbox-marked-outline',
-          name: 'networkParamSelect',
+          icon: '$network',
+          name: 'networkParamEdit',
           title: 'Network',
         },
-        { icon: 'mdi-tune', name: 'networkEdit', title: 'Network' },
+        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code' },
         { icon: 'mdi-chart-line', name: 'activityEdit', title: 'Activity' },
-        { icon: 'mdi-xml', name: 'simulationCodeEditor', title: 'Code' },
       ],
+      modeIdx: 0,
     });
+
     const loadProject = id => {
+      // console.log('Load project: ' + id);
       core.app.initProject(id).then(() => {
-        if (core.app.project) {
-          state.project = core.app.project;
-        }
+        state.project = core.app.project;
+        state.project.network.view.reset();
       });
     };
+
+    const onClick = tool => {
+      state.project.app.view.setProjectTool(tool);
+    };
+
+    const countBefore = () => {
+      return state.project.networkRevisionIdx;
+    };
+
+    const countAfter = () => {
+      return (
+        state.project.networkRevisions.length -
+        state.project.networkRevisionIdx -
+        1
+      );
+    };
+
+    onMounted(() => {
+      loadProject(props.id);
+    });
+
     watch(
       () => props.id,
       id => {
+        state.projectId = id;
         loadProject(id);
       }
     );
-    const onClick = e => {
-      state.tool = e.name;
-    };
-    const simulate = () => {
-      state.loading = true;
-      setTimeout(() => {
-        state.loading = false;
-      }, 2000);
-    };
-    loadProject(props.id);
-    return { onClick, simulate, state };
+
+    return { core, countBefore, countAfter, onClick, state };
   },
 });
 </script>
