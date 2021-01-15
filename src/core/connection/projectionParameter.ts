@@ -1,15 +1,14 @@
 import { ConnectionProjections } from './connectionProjections';
 
-
 export class ProjectionParameter {
-  private _factors: string[];                    // not functional yet
+  private _factors: string[]; // not functional yet
   private _id: string;
   private _input: string;
   private _label: string;
   private _level: number;
   private _max: number;
   private _min: number;
-  private _projections: ConnectionProjections;    // parent
+  private _projections: ConnectionProjections; // parent
   private _step: number;
   private _ticks: any[];
   private _unit: string;
@@ -184,5 +183,4 @@ export class ProjectionParameter {
     }
     return params;
   }
-
 }

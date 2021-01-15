@@ -3,7 +3,6 @@ import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
 
-
 export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   private _state: any = {
     binsize: 25.0,
@@ -28,7 +27,9 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
 
   init(): void {
     // console.log('Init histogram panel for spike times');
-    this.activities = this.graph.project.activities.filter((activity: SpikeActivity) => activity.hasSpikeData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: SpikeActivity) => activity.hasSpikeData()
+    );
     this.data = [];
   }
 
@@ -62,7 +63,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
         line: {
           color: 'white',
           width: 1,
-        }
+        },
       },
       x: [],
     });
@@ -73,7 +74,9 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
       this.addSpikeTimesHistogram(activity);
     }
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
     const start = 1;
     const end: number = activity.endtime + 1;
     const size: number = this.state.binsize;
@@ -83,5 +86,4 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
     data.marker.color = activity.recorder.view.color;
   }
-
 }

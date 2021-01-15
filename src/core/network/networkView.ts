@@ -2,11 +2,10 @@ import { Connection } from '../connection/connection';
 import { Network } from './network';
 import { Node } from '../node/node';
 
-
 export class NetworkView {
   private _focusedConnection: number | null = null;
   private _focusedNode: number | null = null;
-  private _network: Network;                    // parent
+  private _network: Network; // parent
   private _selectedConnection: number | null = null;
   private _selectedElementType: string | null = null;
   private _selectedNode: number | null = null;
@@ -40,7 +39,8 @@ export class NetworkView {
   set selectedConnection(connection: Connection | null) {
     this._selectedElementType = null;
     this._selectedNode = null;
-    this._selectedConnection = this._selectedConnection === connection.idx ? null : connection.idx;
+    this._selectedConnection =
+      this._selectedConnection === connection.idx ? null : connection.idx;
   }
 
   get selectedElementType(): string | null {
@@ -60,7 +60,7 @@ export class NetworkView {
   set selectedNode(node: Node | null) {
     this._selectedElementType = null;
     this._selectedConnection = null;
-    this._selectedNode = (this._selectedNode === node.idx) ? null : node.idx;
+    this._selectedNode = this._selectedNode === node.idx ? null : node.idx;
   }
 
   get colors(): string[] {
@@ -71,6 +71,11 @@ export class NetworkView {
     const color: any = this._network.config.color;
     color.cycle = value;
     this._network.config.update({ color });
+  }
+
+  reset(): void {
+    this.resetFocus();
+    this.resetSelection();
   }
 
   resetFocus(): void {
@@ -84,12 +89,16 @@ export class NetworkView {
   }
 
   isElementTypeSelected(elementType: string): boolean {
-    if (this._selectedElementType === null) { return true; }
+    if (this._selectedElementType === null) {
+      return true;
+    }
     return this._selectedElementType === elementType;
   }
 
   hasPositions(): boolean {
-    return this._network.nodes.some((node: Node) => node.spatial.hasPositions());
+    return this._network.nodes.some((node: Node) =>
+      node.spatial.hasPositions()
+    );
   }
 
   //
@@ -100,24 +109,36 @@ export class NetworkView {
     return this._focusedNode === node.idx;
   }
 
-  isNodeSelected(node: Node, unselected: boolean = true, withConnection: boolean = true): boolean {
+  isNodeSelected(
+    node: Node,
+    unselected: boolean = true,
+    withConnection: boolean = true
+  ): boolean {
     if (this._selectedNode !== null) {
       return this._selectedNode === node.idx;
     } else if (this._selectedConnection !== null) {
-      if (!withConnection) { return false; }
-      const connections: Connection[] = node.network.connections
-        .filter((connection: Connection) => connection.sourceIdx === node.idx || connection.targetIdx === node.idx);
-      return connections.some((connection: Connection) => connection === this.selectedConnection);
+      if (!withConnection) {
+        return false;
+      }
+      const connections: Connection[] = node.network.connections.filter(
+        (connection: Connection) =>
+          connection.sourceIdx === node.idx || connection.targetIdx === node.idx
+      );
+      return connections.some(
+        (connection: Connection) => connection === this.selectedConnection
+      );
     }
     return unselected;
   }
-
 
   //
   // Connection
   //
 
-  isConnectionFocused(connection: Connection, unselected: boolean = true): boolean {
+  isConnectionFocused(
+    connection: Connection,
+    unselected: boolean = true
+  ): boolean {
     if (this._focusedConnection !== null) {
       return this._focusedConnection === connection.idx;
     } else if (this._focusedNode !== null) {
@@ -126,7 +147,10 @@ export class NetworkView {
     return unselected;
   }
 
-  isConnectionSelected(connection: Connection, unselected: boolean = true): boolean {
+  isConnectionSelected(
+    connection: Connection,
+    unselected: boolean = true
+  ): boolean {
     if (this._selectedConnection !== null) {
       return this._selectedConnection === connection.idx;
     } else if (this._selectedNode !== null) {
@@ -134,5 +158,4 @@ export class NetworkView {
     }
     return unselected;
   }
-
 }

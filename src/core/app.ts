@@ -1,16 +1,16 @@
-import { AppView } from "./appView";
-import { Config } from "./config";
-import { DatabaseService } from "./database";
-import { Model } from "./model/model";
-import { NESTServer } from "./server/nestServer";
-import { Project } from "./project/project";
+import { AppView } from './appView';
+import { Config } from './config';
+import { DatabaseService } from './database';
+import { Model } from './model/model';
+import { NESTServer } from './server/nestServer';
+import { Project } from './project/project';
 
-import { environment } from "../environments/environment";
+import { environment } from '../environments/environment';
 
 const pad = (num: number, size: number = 2): string => {
-  let s: string = num + "";
+  let s: string = num + '';
   while (s.length < size) {
-    s = "0" + s;
+    s = '0' + s;
   }
   return s;
 };
@@ -29,7 +29,7 @@ export class App extends Config {
   private _view: AppView;
 
   constructor() {
-    super("App");
+    super('App');
     this._version = environment.VERSION;
     this._view = new AppView(this);
     this._nestServer = new NESTServer();
@@ -40,14 +40,14 @@ export class App extends Config {
     const date: any[] = [
       now.getFullYear() - 2000,
       pad(now.getMonth() + 1),
-      pad(now.getDate())
+      pad(now.getDate()),
     ];
     const time: any[] = [
       pad(now.getHours()),
       pad(now.getMinutes()),
-      pad(now.getSeconds())
+      pad(now.getSeconds()),
     ];
-    const datetime: string = date.join("") + "_" + time.join("");
+    const datetime: string = date.join('') + '_' + time.join('');
     return datetime;
   }
 
@@ -85,10 +85,6 @@ export class App extends Config {
 
   get projectReady(): boolean {
     return this._projectReady;
-  }
-
-  set projectReady(value: boolean) {
-    this._projectReady = value;
   }
 
   get version(): string {
@@ -151,7 +147,7 @@ export class App extends Config {
   initModels(): Promise<any> {
     // console.log('Initialize models');
     this._models = [];
-    this._modelDB = new DatabaseService(this, "MODEL_STORE");
+    this._modelDB = new DatabaseService(this, 'MODEL_STORE');
     return this._modelDB.count().then((count: number) => {
       // console.log('Models in db:', count);
       if (count === 0) {
@@ -166,8 +162,8 @@ export class App extends Config {
     // console.log('Load models from files');
     let promise: Promise<any> = Promise.resolve();
     this.config.models.forEach((file: string) => {
-      console.log("Load model from file:", file);
-      const data: any = require("../assets/models/" + file + ".json");
+      console.log('Load model from file:', file);
+      const data: any = require('../assets/models/' + file + '.json');
       promise = promise.then(() => this.addModel(data));
     });
     return promise;
@@ -183,7 +179,7 @@ export class App extends Config {
   }
 
   updateModels(): Promise<any> {
-    return this._modelDB.list("id").then((models: any[]) =>
+    return this._modelDB.list('id').then((models: any[]) =>
       models.forEach((model: any) => {
         this._models.push(new Model(this, model));
       })
@@ -255,7 +251,7 @@ export class App extends Config {
       projectIds.includes(project.id)
     );
     const data: any[] = projects.map((project: Project) => project.toJSON());
-    this.download(data, "projects");
+    this.download(data, 'projects');
   }
 
   // Initialize project list either from database or from files.
@@ -263,7 +259,7 @@ export class App extends Config {
     // console.log('Initialize projects');
     this._projects = [];
     this._projectRevisions = [];
-    this._projectDB = new DatabaseService(this, "PROJECT_STORE");
+    this._projectDB = new DatabaseService(this, 'PROJECT_STORE');
     return this._projectDB.count().then((count: number) => {
       // console.log('Projects in db:', count);
       if (count > 0) {
@@ -280,7 +276,7 @@ export class App extends Config {
     let promise: Promise<any> = Promise.resolve();
     this.config.projects.forEach((file: string) => {
       // console.log('Load project from file:', file);
-      const data: any = require("../assets/projects/" + file + ".json");
+      const data: any = require('../assets/projects/' + file + '.json');
       promise = promise.then(() => this.addProject(data));
     });
     return promise;
@@ -289,7 +285,7 @@ export class App extends Config {
   // Load projects from database and then update list
   updateProjects(): Promise<any> {
     return this._projectDB
-      .list("createdAt", true)
+      .list('createdAt', true)
       .then(
         (projects: any[]) =>
           (this._projects = projects.map(
@@ -348,12 +344,13 @@ export class App extends Config {
     const project: Project = this._projects.find(
       (p: Project) => p.id === projectId
     );
-    this.download(project.toJSON("file"), "projects");
+    this.download(project.toJSON('file'), 'projects');
   }
 
   // Initialize project or project revision from the list.
-  initProject(id: string = "", rev: string = ""): Promise<any> {
+  initProject(id: string = '', rev: string = ''): Promise<any> {
     // console.log(`Initialize project: id=${id}, rev=${rev}`);
+    this._projectReady = false;
     return new Promise((resolve, reject) => {
       try {
         if (id && rev) {
@@ -370,7 +367,7 @@ export class App extends Config {
         this._projectReady = true;
         resolve(true);
       } catch {
-        console.log("Error in project initialization");
+        console.log('Error in project initialization');
         this.newProject();
         this._projectReady = true;
         reject(true);
@@ -427,18 +424,18 @@ export class App extends Config {
   General
   */
 
-  download(data: any, filenameSuffix: string = "") {
+  download(data: any, filenameSuffix: string = '') {
     const dataJSON: string = JSON.stringify(data);
-    const element: any = document.createElement("a");
+    const element: any = document.createElement('a');
     element.setAttribute(
-      "href",
-      "data:text/json;charset=UTF-8," + encodeURIComponent(dataJSON)
+      'href',
+      'data:text/json;charset=UTF-8,' + encodeURIComponent(dataJSON)
     );
     element.setAttribute(
-      "download",
+      'download',
       `nest-desktop-${filenameSuffix}-${this.datetime}.json`
     );
-    element.style.display = "none";
+    element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);

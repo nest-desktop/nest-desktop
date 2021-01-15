@@ -1,13 +1,11 @@
 export class Code {
-
   private _modelLabel: any = {
     stimulator: 'stim',
     neuron: 'neuron',
     recorder: 'rec',
   };
 
-  constructor() {
-  }
+  constructor() {}
 
   _(n: number = 1): string {
     return '\n' + '  '.repeat(n);
@@ -26,5 +24,4 @@ export class Code {
       return value;
     }
   }
-
 }

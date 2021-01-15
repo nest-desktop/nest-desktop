@@ -3,10 +3,9 @@ import { Model } from '../model/model';
 import { Parameter } from '../parameter';
 import { SynapseCode } from './synapseCode';
 
-
 export class Synapse {
   private _code: SynapseCode;
-  private _connection: Connection;                // parent
+  private _connection: Connection; // parent
   private _modelId: string;
   private _params: Parameter[] = [];
 
@@ -65,22 +64,30 @@ export class Synapse {
   }
 
   get weight(): number {
-    const weight: any = this._params.find((param: Parameter) => param.id === 'weight');
+    const weight: any = this._params.find(
+      (param: Parameter) => param.id === 'weight'
+    );
     return weight ? weight.value : 1;
   }
 
   set weight(value: number) {
-    const weight: any = this._params.find((param: Parameter) => param.id === 'weight');
+    const weight: any = this._params.find(
+      (param: Parameter) => param.id === 'weight'
+    );
     weight.value = value;
   }
 
   get delay(): number {
-    const delay: any = this._params.find((param: Parameter) => param.id === 'delay');
+    const delay: any = this._params.find(
+      (param: Parameter) => param.id === 'delay'
+    );
     return delay ? delay.value : 1;
   }
 
   set delay(value: number) {
-    const delay: any = this._params.find((param: Parameter) => param.id === 'delay');
+    const delay: any = this._params.find(
+      (param: Parameter) => param.id === 'delay'
+    );
     delay.value = value;
   }
 
@@ -92,7 +99,9 @@ export class Synapse {
     this._params = [];
     if (this.model && synapse && synapse.hasOwnProperty('params')) {
       this.model.params.forEach((modelParam: Parameter) => {
-        const synParam = synapse.params.find((param: Parameter) => param.id === modelParam.id);
+        const synParam = synapse.params.find(
+          (param: Parameter) => param.id === modelParam.id
+        );
         this.addParameter(synParam || modelParam);
       });
     } else if (this.model) {
@@ -132,14 +141,11 @@ export class Synapse {
         .filter(
           (param: Parameter) => param.visible === undefined || param.visible
         )
-        .forEach(
-          (param: Parameter) => synapse[param.id] = param.value
-        );
+        .forEach((param: Parameter) => (synapse[param.id] = param.value));
     } else {
       synapse.params = this._params.map((param: Parameter) => param.toJSON());
     }
 
     return synapse;
   }
-
 }

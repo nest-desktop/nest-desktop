@@ -2,7 +2,6 @@ import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
 
-
 export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
   private _state: any = {
     binsize: 1.0,
@@ -29,7 +28,9 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
 
   init(): void {
     // console.log('Init histogram panel for inter-spike interval');
-    this.activities = this.graph.project.activities.filter((activity: SpikeActivity) => activity.hasSpikeData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: SpikeActivity) => activity.hasSpikeData()
+    );
     this.data = [];
   }
 
@@ -64,7 +65,7 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
         line: {
           color: 'white',
           width: 1,
-        }
+        },
       },
       x: [],
     });
@@ -78,7 +79,9 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     const start = 0.0;
     const end = 1000.0;
     const size = 1.0;
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
     const isi: number[][] = activity.ISI();
     data.x = [].concat.apply([], isi);
     data.xbins.start = start;
@@ -87,5 +90,4 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
     data.marker.color = activity.recorder.view.color;
   }
-
 }

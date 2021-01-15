@@ -5,7 +5,7 @@ export function CodeFICurve(model: string): string {
   lines.push('dc = nest.Create("dc_generator", 1000)');
   lines.push('amplitude = np.arange(1.,1001.).tolist()');
   lines.push('nest.SetStatus(dc, {"amplitude": amplitude})');
-  lines.push('sd = nest.Create("spike_detector")');
+  lines.push('sd = nest.Create("spike_recorder")');
   lines.push('nest.Connect(dc, neurons, "one_to_one")');
   lines.push('nest.Connect(neurons, sd)');
   lines.push('nest.Simulate(1000.)');

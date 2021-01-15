@@ -3,7 +3,6 @@ import { HttpClient } from './httpClient';
 
 import { environment } from '../../environments/environment';
 
-
 export class NESTServer extends Config {
   private _http: HttpClient;
   private _state: any = {
@@ -76,11 +75,13 @@ export class NESTServer extends Config {
   check(): void {
     // console.log('Check server')
     if (this.config.hostname) {
-      this._http.get(this.url)
+      this._http
+        .get(this.url)
         .then((req: any) => {
+          let resp: any;
           switch (req.status) {
             case 200:
-              const resp: any = JSON.parse(req.responseText);
+              resp = JSON.parse(req.responseText);
               this.checkVersion(resp);
               break;
             default:
@@ -104,23 +105,25 @@ export class NESTServer extends Config {
       hostname + '/server',
       hostname + ':' + (this.port || '5000'),
     ];
-    const hostPromises: any[] = hosts.map((host: string) =>
-      new Promise((resolve, reject) => {
-        const url: string = protocol + '//' + host;
-        this._http.ping(url, (req: any) => {
-          switch (req.status) {
-            case 200:
-              this.url = url;
-              const resp: any = JSON.parse(req.responseText);
-              this.checkVersion(resp);
-              resolve();
-              break;
-            case 502:
-              this.oidcLoginFailed(req);
-              break;
-          }
-        });
-      })
+    const hostPromises: any[] = hosts.map(
+      (host: string) =>
+        new Promise((resolve, reject) => {
+          const url: string = protocol + '//' + host;
+          this._http.ping(url, (req: any) => {
+            let resp: any;
+            switch (req.status) {
+              case 200:
+                this.url = url;
+                resp = JSON.parse(req.responseText);
+                this.checkVersion(resp);
+                resolve();
+                break;
+              case 502:
+                this.oidcLoginFailed(req);
+                break;
+            }
+          });
+        })
     );
     Promise.all(hostPromises);
   }
@@ -141,11 +144,12 @@ export class NESTServer extends Config {
     if (resp.hasOwnProperty('simulator')) {
       this._state.simulatorReady = true;
       this._state.simulatorVersion = resp.simulator.version;
-      const simulatorVersion: string[] = this._state.simulatorVersion.split('.');
+      const simulatorVersion: string[] = this._state.simulatorVersion.split(
+        '.'
+      );
       if (simulatorVersion.length === 3) {
         this._state.simulatorValid =
-          simulatorVersion[0] === '2' &&
-          simulatorVersion[1] >= '18';
+          simulatorVersion[0] === '2' && simulatorVersion[1] >= '18';
       }
     }
   }
@@ -159,5 +163,4 @@ export class NESTServer extends Config {
       window.location.reload();
     }
   }
-
 }

@@ -3,9 +3,8 @@ import { Model } from '../model/model';
 import { Parameter } from '../parameter';
 import { Synapse } from './synapse';
 
-
 export class SynapseCode extends Code {
-  private _synapse: Synapse;                 // parent
+  private _synapse: Synapse; // parent
 
   constructor(synapse: Synapse) {
     super();
@@ -19,9 +18,11 @@ export class SynapseCode extends Code {
     }
     this._synapse.params
       .filter((param: Parameter) => param.visible)
-      .forEach((param: Parameter) => synSpecList.push(
-        this._() + `"${param.id}": ${this.format(param.value)}`
-      ));
+      .forEach((param: Parameter) =>
+        synSpecList.push(
+          this._() + `"${param.id}": ${this.format(param.value)}`
+        )
+      );
 
     let script = '';
     if (synSpecList.length > 0) {
@@ -31,5 +32,4 @@ export class SynapseCode extends Code {
     }
     return script;
   }
-
 }

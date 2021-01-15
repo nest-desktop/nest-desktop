@@ -1,6 +1,5 @@
 import { Config } from './config';
 
-
 export class ParameterRandom extends Config {
   private _defaults: any;
   private _distribution: string;
@@ -42,5 +41,4 @@ export class ParameterRandom extends Config {
       specs,
     };
   }
-
 }

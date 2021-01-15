@@ -4,12 +4,11 @@ import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { Config } from '../../config';
 
-
 export class ActivityGraphPanel extends Config {
   private static readonly _name = 'ActivityGraphPanel';
   private _activities: Activity[] = [];
   private _data: any[] = [];
-  private _graph: ActivityChartGraph;        // parent
+  private _graph: ActivityChartGraph; // parent
   private _icon = 'chart-line';
   private _label = 'graph panel of activity';
   private _layout: any = {
@@ -117,27 +116,31 @@ export class ActivityGraphPanel extends Config {
     this.data = [];
   }
 
-  update(): void {
-  }
+  update(): void {}
 
-  updateColor(): void {
-  }
+  updateColor(): void {}
 
   updateLayout(): void {
     const height: number = this.layout.yaxis.height;
     const panels: ActivityGraphPanel[] = this.graph.panels;
-    const heights: number[] = panels.map((panel: ActivityGraphPanel) => panel.layout.yaxis.height);
+    const heights: number[] = panels.map(
+      (panel: ActivityGraphPanel) => panel.layout.yaxis.height
+    );
     const heightTotal: number = math.sum(heights);
     heights.reverse();
-    const ratio: number = 1. / heightTotal - (panels.length * 0.02);
-    const heightCumsum: number[] = heights.map(((sum: number) => (value: number) => sum += value)(0));
+    const ratio: number = 1 / heightTotal - panels.length * 0.02;
+    const heightCumsum: number[] = heights.map(
+      ((sum: number) => (value: number) => (sum += value))(0)
+    );
     const steps = heightCumsum.map((h: number) => h / heightTotal);
     steps.unshift(0);
     steps.reverse();
     const margin: number = this.xaxis === 1 ? 0.02 : 0.07;
-    const domain: number[] = [steps[this.yaxis], steps[this.yaxis - 1] - margin];
+    const domain: number[] = [
+      steps[this.yaxis],
+      steps[this.yaxis - 1] - margin,
+    ];
     this.layout.yaxis.domain = domain;
     this.layout.xaxis.anchor = 'y' + this.yaxis;
   }
-
 }

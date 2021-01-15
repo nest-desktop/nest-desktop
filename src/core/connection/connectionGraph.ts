@@ -1,5 +1,4 @@
 export function drawPath(source: any, target: any, config: any = {}): string {
-
   const r: number = config.radius || 18;
 
   const x1: number = source.x;
@@ -42,7 +41,6 @@ export function drawPath(source: any, target: any, config: any = {}): string {
 
     mx2 = x2 + 1;
     my2 = y2 - r - 4;
-
   } else if (!config.isTargetMouse) {
     const a: number = Math.atan2(dy, dx);
     const tr: number = r + 6;

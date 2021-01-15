@@ -1,9 +1,8 @@
 import { Code } from '../code';
 import { Project } from './project';
 
-
 export class ProjectCode extends Code {
-  private _project: Project;                           // parent
+  private _project: Project; // parent
   private _script: string;
 
   constructor(project: Project) {
@@ -49,8 +48,7 @@ export class ProjectCode extends Code {
   importModules(): string {
     let script = '';
     script += 'import nest\n';
-    script += 'import numpy as np\n';
+    script += 'import numpy\n';
     return script + '\n';
   }
-
 }

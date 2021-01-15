@@ -1,6 +1,6 @@
-import { Connection } from "../connection/connection";
-import { Node } from "./node";
-import { Parameter } from "../parameter";
+import { Connection } from '../connection/connection';
+import { Node } from './node';
+import { Parameter } from '../parameter';
 
 export class NodeView {
   private _color: any; // color of node
@@ -16,11 +16,11 @@ export class NodeView {
   }
 
   get color(): string {
-    if (typeof this._color === "string") {
+    if (typeof this._color === 'string') {
       return this._color;
     }
 
-    if (this.node.model.elementType === "recorder") {
+    if (this.node.model.elementType === 'recorder') {
       const connections: Connection[] = this.node.network.connections.filter(
         (connection: Connection) =>
           connection.sourceIdx === this.node.idx ||
@@ -44,7 +44,7 @@ export class NodeView {
   }
 
   set color(value: string) {
-    this._color = value === "none" ? undefined : value;
+    this._color = value === 'none' ? undefined : value;
     this.node.network.clean();
   }
 
@@ -56,10 +56,10 @@ export class NodeView {
     const elementType: string = this.node.model.elementType;
     if (elementType === undefined) {
       const idx: number = this.node.network.nodes.indexOf(this.node);
-      return "n" + (idx + 1);
-    } else if (elementType === "neuron") {
+      return 'n' + (idx + 1);
+    } else if (elementType === 'neuron') {
       const idx: number = this.node.network.neurons.indexOf(this.node);
-      return "n" + (idx + 1);
+      return 'n' + (idx + 1);
     } else {
       const nodes: Node[] = this.node.network.nodes.filter(
         (node: Node) => node.modelId === this.node.modelId
@@ -68,9 +68,9 @@ export class NodeView {
       const label: string =
         this.node.model.abbreviation ||
         this.node.modelId
-          .split("_")
+          .split('_')
           .map((d: string) => d[0])
-          .join("");
+          .join('');
       return label + (idx + 1);
     }
   }
@@ -92,33 +92,34 @@ export class NodeView {
   }
 
   get weight(): string {
-    if (this._node.model.elementType === "recorder") {
-      return "";
+    if (this._node.model.elementType === 'recorder') {
+      return '';
     }
     const connections: Connection[] = this._node.network.connections.filter(
       (connection: Connection) =>
         connection.source.idx === this._node.idx &&
-        connection.target.model.elementType !== "recorder"
+        connection.target.model.elementType !== 'recorder'
     );
     if (connections.length > 0) {
       const weights: number[] = connections.map(
         (connection: Connection) => connection.synapse.weight
       );
       if (weights.every((weight: number) => weight > 0)) {
-        return "excitatory";
+        return 'excitatory';
       }
       if (weights.every((weight: number) => weight < 0)) {
-        return "inhibitory";
+        return 'inhibitory';
       }
-      return "mixed";
+      return 'mixed';
     }
+    return '';
   }
 
   get backgroundImage(): string {
-    const bg = "#fafafa";
+    const bg = '#fafafa';
     const color: string = this.color;
-    const gradient: string = ["90deg", color, color, bg].join(", ");
-    return "linear-gradient(" + gradient + ")";
+    const gradient: string = ['90deg', color, color, bg].join(', ');
+    return 'linear-gradient(' + gradient + ')';
   }
 
   paramsVisible(): string[] {
@@ -131,6 +132,14 @@ export class NodeView {
     this._node.params.map(
       (param: Parameter) => (param.visible = param.options.level <= level)
     );
+  }
+
+  hideAllParams(): void {
+    this._node.params.map((param: Parameter) => (param.visible = false));
+  }
+
+  showAllParams(): void {
+    this._node.params.map((param: Parameter) => (param.visible = true));
   }
 
   clean(): void {}
@@ -154,7 +163,7 @@ export class NodeView {
   toJSON(): any {
     const nodeView: any = {
       color: this._color,
-      position: this._position
+      position: this._position,
     };
     return nodeView;
   }

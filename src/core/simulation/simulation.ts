@@ -3,21 +3,20 @@ import { Project } from '../project/project';
 import { SimulationKernel } from './simulationKernel';
 import { SimulationCode } from './simulationCode';
 
-
 export class Simulation extends Config {
   private _code: SimulationCode;
-  private _kernel: SimulationKernel;             // simulation kernel
-  private _project: Project;                     // parent
-  private _randomSeed: number;                   // seed for random renerator of numpy
+  private _kernel: SimulationKernel; // simulation kernel
+  private _project: Project; // parent
+  private _randomSeed: number; // seed for random renerator of numpy
   private _running = false;
-  private _time: number;                         // simulation time
+  private _time: number; // simulation time
 
   constructor(project: Project, simulation: any = {}) {
     super('Simulation');
     this._project = project;
     this._kernel = new SimulationKernel(this, simulation.kernel);
     this._code = new SimulationCode(this);
-    this._time = parseFloat(simulation.time) || 1000.;
+    this._time = parseFloat(simulation.time) || 1000;
     this._randomSeed = parseInt(simulation.randomSeed, 0) || 0;
   }
 
@@ -69,5 +68,4 @@ export class Simulation extends Config {
     }
     return simulation;
   }
-
 }

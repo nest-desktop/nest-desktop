@@ -1,12 +1,11 @@
 import { Config } from '../config';
 import { Simulation } from './simulation';
 
-
 export class SimulationKernel extends Config {
-  private _localNumThreads: number;              // number of threads
-  private _resolution: number;                   // time resolution of simulation steps
-  private _simulation: Simulation;               // parent
-  private _time: number;                         // endtime of the simulation
+  private _localNumThreads: number; // number of threads
+  private _resolution: number; // time resolution of simulation steps
+  private _simulation: Simulation; // parent
+  private _time: number; // endtime of the simulation
 
   constructor(simulation: Simulation, kernel: any = {}) {
     super('SimulationKernel');
@@ -51,5 +50,4 @@ export class SimulationKernel extends Config {
     }
     return kernel;
   }
-
 }

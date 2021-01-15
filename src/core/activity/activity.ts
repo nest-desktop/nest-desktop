@@ -1,13 +1,12 @@
 // import { Config } from '../config';
 import { Node } from '../node/node';
 
-
 export class Activity {
   private _events: any = {};
-  private _idx: number;                          // generative
+  private _idx: number; // generative
   private _nodeIds: number[] = [];
-  private _nodePositions: number[][] = [];       // if spatial
-  private _recorder: Node;                       // parent
+  private _nodePositions: number[][] = []; // if spatial
+  private _recorder: Node; // parent
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
@@ -93,7 +92,7 @@ export class Activity {
   }
 
   hasSpikeData(): boolean {
-    return this._recorder.model.existing === 'spike_detector';
+    return this._recorder.model.existing === 'spike_recorder';
   }
 
   download(): void {
@@ -115,5 +114,4 @@ export class Activity {
       nodePositions: this._nodePositions,
     };
   }
-
 }

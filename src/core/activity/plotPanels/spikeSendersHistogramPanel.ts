@@ -3,9 +3,7 @@ import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
 
-
 export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
-
   constructor(graph: ActivityChartGraph) {
     super(graph);
     this.name = 'SpikeSendersHistogramPanel';
@@ -20,7 +18,9 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
 
   init(): void {
     // console.log('Init histogram panel for spike times');
-    this.activities = this.graph.project.activities.filter((activity: SpikeActivity) => activity.hasSpikeData());
+    this.activities = this.graph.project.activities.filter(
+      (activity: SpikeActivity) => activity.hasSpikeData()
+    );
     this.data = [];
   }
 
@@ -54,7 +54,7 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
         line: {
           color: 'white',
           width: 0,
-        }
+        },
       },
       x: [],
     });
@@ -65,7 +65,9 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
       this.addSpikeSendersHistogram(activity);
     }
-    const data: any = this.data.find((d: any) => d.activityIdx === activity.idx);
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
     const start: number = Math.min(activity.events.senders);
     const end: number = Math.max(activity.events.senders) + 1;
     data.x = activity.events.senders;
@@ -74,5 +76,4 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
     data.marker.color = activity.recorder.view.color;
     // data.marker.line.width = (end - start) > 200 ? 0 : 1;
   }
-
 }

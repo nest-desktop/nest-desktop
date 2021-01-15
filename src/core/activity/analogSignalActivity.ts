@@ -2,9 +2,7 @@
 import { Activity } from './activity';
 import { Node } from '../node/node';
 
-
 export class AnalogSignalActivity extends Activity {
-
   constructor(recorder: Node, activity: any = {}) {
     super(recorder, activity);
   }
@@ -12,5 +10,4 @@ export class AnalogSignalActivity extends Activity {
   clone(): AnalogSignalActivity {
     return new AnalogSignalActivity(this.recorder, this.toJSON());
   }
-
 }

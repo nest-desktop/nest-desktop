@@ -3,9 +3,7 @@ import * as THREE from 'three';
 import { ActivityAnimationGraph } from '../activityAnimationGraph';
 import { ActivityAnimationScene } from './activityAnimationScene';
 
-
 export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
-
   constructor(graph: ActivityAnimationGraph, containerId: string) {
     super('timeSphere', graph, containerId);
   }
@@ -18,7 +16,9 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
   }
 
   renderScatter(data: any, options: any = {}): void {
-    if (data === undefined) { return; }
+    if (data === undefined) {
+      return;
+    }
 
     const extent: number[][] = this.graph.layout.extent || [
       [-0.5, 0.5],
@@ -27,7 +27,9 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
     const ndim: number = extent.length;
     const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(0.01);
 
-    const opacity: number = options.hasOwnProperty('opacity') ? options.opacity : data.opacity || 1;
+    const opacity: number = options.hasOwnProperty('opacity')
+      ? options.opacity
+      : data.opacity || 1;
     const scale: number = this.graph.config.objectSize * (options.scale || 1);
     const layerOffset: any = this.graph.config.layer.offset;
 
@@ -41,10 +43,7 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
         transparent: true,
         opacity,
       });
-      const object: THREE.Mesh = new THREE.Mesh(
-        geometry,
-        material
-      );
+      const object: THREE.Mesh = new THREE.Mesh(geometry, material);
 
       let x: number;
       if (trail.mode === 'temporal') {
@@ -68,7 +67,9 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
 
   renderTrail(): void {
     const trail: any = this.graph.config.trail;
-    if (trail.mode === 'off') { return; }
+    if (trail.mode === 'off') {
+      return;
+    }
 
     let ratio: number;
     let scale: number;
@@ -97,5 +98,4 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
       }
     }
   }
-
 }

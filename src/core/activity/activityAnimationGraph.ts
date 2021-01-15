@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import { Activity } from './activity';
 import { Project } from '../project/project';
 
-
 export class ActivityAnimationGraph {
   private _config: any;
   private _frameIdx = 0;
@@ -31,7 +30,7 @@ export class ActivityAnimationGraph {
         distance: 12,
         rotation: {
           theta: 0,
-          speed: 0
+          speed: 0,
         },
         control: false,
       },
@@ -39,8 +38,8 @@ export class ActivityAnimationGraph {
         offset: {
           x: 0,
           y: 0,
-          z: 0
-        }
+          z: 0,
+        },
       },
       colorMap: {
         min: -70,
@@ -71,9 +70,9 @@ export class ActivityAnimationGraph {
     this._layout = {
       extent: [
         [-1, 0],
-        [-.5, .5],
-        [.5, -.5]
-      ]
+        [-0.5, 0.5],
+        [0.5, -0.5],
+      ],
     };
 
     this._trailModes = ['off', 'growing', 'shrinking'];
@@ -146,11 +145,15 @@ export class ActivityAnimationGraph {
   }
 
   hasAnyAnalogData(): boolean {
-    return this.project.activities.some((activity: Activity) => activity.hasAnalogData());
+    return this.project.activities.some((activity: Activity) =>
+      activity.hasAnalogData()
+    );
   }
 
   hasAnySpikeData(): boolean {
-    return this.project.activities.some((activity: Activity) => activity.hasSpikeData());
+    return this.project.activities.some((activity: Activity) =>
+      activity.hasSpikeData()
+    );
   }
 
   /**
@@ -167,7 +170,7 @@ export class ActivityAnimationGraph {
    */
   colorRGB(value: number): string {
     const colorScale: any = d3['interpolate' + this._config.colorMap.scale];
-    return colorScale((this._config.colorMap.reverse ? 1 - value : value));
+    return colorScale(this._config.colorMap.reverse ? 1 - value : value);
   }
 
   /**
@@ -218,9 +221,9 @@ export class ActivityAnimationGraph {
       this.updateLayers(activity);
       this.updateFrames(activity);
     });
-    this._recordablesOptions = this._recordables.map(
-      (recordable: string) => ({ value: recordable })
-    );
+    this._recordablesOptions = this._recordables.map((recordable: string) => ({
+      value: recordable,
+    }));
   }
 
   /**
@@ -235,13 +238,11 @@ export class ActivityAnimationGraph {
     };
     if (activity.nodePositions.length > 0) {
       layer.ndim = activity.nodePositions[0].length;
-      layer.positions = activity.nodePositions.map(
-        (pos: number[]) => ({
-          x: pos[0],
-          y: pos.length === 3 ? pos[1] : 0,
-          z: pos.length === 3 ? pos[2] : pos[1],
-        })
-      );
+      layer.positions = activity.nodePositions.map((pos: number[]) => ({
+        x: pos[0],
+        y: pos.length === 3 ? pos[1] : 0,
+        z: pos.length === 3 ? pos[2] : pos[1],
+      }));
     }
     this._layers.push(layer);
   }
@@ -251,10 +252,18 @@ export class ActivityAnimationGraph {
    */
   updateFrames(activity: Activity): void {
     const events: any = JSON.parse(JSON.stringify(activity.events));
-    events.senders = events.senders.map((sender: number) => activity.nodeIds.indexOf(sender));
+    if (events.senders === undefined) {
+      return;
+    }
+    events.senders = events.senders.map((sender: number) =>
+      activity.nodeIds.indexOf(sender)
+    );
     const eventKeys: string[] = Object.keys(events);
     eventKeys.forEach((eventKey: string) => {
-      if (!this._recordables.includes(eventKey) && !['senders', 'times'].includes(eventKey)) {
+      if (
+        !this._recordables.includes(eventKey) &&
+        !['senders', 'times'].includes(eventKey)
+      ) {
         this._recordables.push(eventKey);
       }
     });
@@ -275,7 +284,9 @@ export class ActivityAnimationGraph {
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);
       const frame: any = this._frames[frameIdx - 1];
-      if (frame === undefined) { return; }
+      if (frame === undefined) {
+        return;
+      }
       const data: any = frame.data[activity.idx];
       eventKeys.forEach((eventKey: string) => {
         data[eventKey].push(events[eventKey][idx]);

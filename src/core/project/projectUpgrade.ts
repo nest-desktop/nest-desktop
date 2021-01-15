@@ -1,7 +1,6 @@
 import { App } from '../app';
 import { Model } from '../model/model';
 
-
 /**
  * Make network compatible
  */
@@ -11,17 +10,21 @@ function upgradeNetwork(app: App, project: any): any {
     nodes: [],
     connections: [],
   };
-  if (Object.keys(project).length === 0) { return network; }
+  if (Object.keys(project).length === 0) {
+    return network;
+  }
 
   project.app.nodes.forEach((appNode: any) => {
     const simNode: any = project.simulation.collections[appNode.idx];
     const simModel: any = project.simulation.models[simNode.model];
     const appModel: any = project.app.models[simNode.model];
-    const params: any[] = Object.entries(simModel.params).map((param: any[]) => ({
-      id: param[0],
-      value: param[1],
-      visible: appModel ? appModel.display.includes(param[0]) : false,
-    }));
+    const params: any[] = Object.entries(simModel.params).map(
+      (param: any[]) => ({
+        id: param[0],
+        value: param[1],
+        visible: appModel ? appModel.display.includes(param[0]) : false,
+      })
+    );
     const view: any = {
       elementType: simNode.element_type,
       color: appNode.color,
@@ -105,7 +108,6 @@ function upgradeSimulation(project: any): any {
   return simulation;
 }
 
-
 /**
  * Make the old projects compatible.
  */
@@ -115,10 +117,12 @@ export function upgradeProject(app: App, project: any): any {
     return {};
   }
 
-  let valid = false;       // only true when version is 2.5 or newer
+  let valid = false; // only true when version is 2.5 or newer
   if (project.hasOwnProperty('version')) {
     const version: string[] = project.version.split('.');
-    valid = (Number(version[0]) === 2 && Number(version[1]) >= 5) || Number(version[0]) > 2;
+    valid =
+      (Number(version[0]) === 2 && Number(version[1]) >= 5) ||
+      Number(version[0]) > 2;
   }
 
   const projectUpgraded: any = {
