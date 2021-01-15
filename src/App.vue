@@ -21,7 +21,7 @@
 <script>
 import Vue from 'vue';
 import Navigation from '@/components/Navigation.vue';
-// import Navigation from "@/components/NavigationTemporary.vue";
+// import Navigation from '@/components/NavigationTemporary.vue';
 import core from '@/core/index';
 
 export default Vue.extend({
@@ -40,7 +40,8 @@ export default Vue.extend({
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
