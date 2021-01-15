@@ -112,6 +112,13 @@ dist
 *.sln
 *.sw?
 
+/tests/e2e/reports/
+selenium-debug.log
+
+# local env files
+.env.local
+.env.*.local
+
 # Output for pip
 /nest_desktop/app
 __pycache__
