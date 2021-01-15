@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "Settings",
+  name: 'Settings',
   data: () => ({
-    settings: ["App", "NEST Server", "Model", "Project"]
-  })
+    settings: ['App', 'NEST Server', 'Model', 'Project'],
+  }),
 });
 </script>
