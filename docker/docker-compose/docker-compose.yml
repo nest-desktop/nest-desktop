@@ -7,10 +7,8 @@ services:
   #   ports:
   #     - '8000:8000'
   nest-server:
-    # build: nest-server
-    image: nestsim/nest:3.0
-    command: 'nest-server start'
-    container_name: 'nest-server'
+    image: babsey/nest-server:dev
+    container_name: '../nest-server'
     environment:
       USER: 'root'
       NEST_SERVER_MODULES: 'nest,numpy'
