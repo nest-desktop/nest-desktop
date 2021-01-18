@@ -11,4 +11,4 @@ oc delete is,dc,svc,configMap,route nest-desktop nest-server
 oc apply -f ./build/nest-server-imagestream.yaml
 oc apply -f ./build/nest-server-deploymentconfig.yaml
 oc apply -f ./build/nest-server-service.yaml
-oc create route edge --hostname='nest-server-v3.apps-dev.hbp.eu' --service='nest-server'
+oc create route edge --hostname='nest-server.apps-dev.hbp.eu' --service='nest-server'
