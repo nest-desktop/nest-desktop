@@ -11,4 +11,4 @@ RUN export LC_CTYPE=C.UTF-8 && \
 COPY ./entrypoint.sh .
 
 EXPOSE 8000
-ENTRYPOINT ["entrypoint.sh"]
+CMD ["nest-desktop", "start", "-h 0.0.0.0"]
