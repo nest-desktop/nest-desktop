@@ -1,3 +1,5 @@
 #!/bin/bash
 
-source /opt/nest/bin/nest_vars.sh
+. /opt/nest/bin/nest_vars.sh
+
+export USER=root
