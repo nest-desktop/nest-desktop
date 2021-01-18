@@ -1,7 +1,7 @@
 version: '3'
 services:
   nest-desktop:
-    image: nest-desktop:dev
+    image: nestsim/nest-desktop:dev
     command: 'nest-desktop start -h 0.0.0.0 -p 8000'
     container_name: 'nest-desktop'
     ports:
