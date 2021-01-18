@@ -8,7 +8,5 @@ RUN python3 -m pip install --upgrade pip && \
 RUN export LC_CTYPE=C.UTF-8 && \
     python3 -m pip install -i https://test.pypi.org/simple/ nest-desktop==3.0.0.dev1
 
-COPY ./entrypoint.sh .
-
 EXPOSE 8000
 CMD ["nest-desktop", "start", "-h 0.0.0.0"]

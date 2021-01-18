@@ -5,3 +5,4 @@ COPY ./entrypoint.sh .
 
 EXPOSE 5000
 ENTRYPOINT ["bash", "entrypoint.sh"]
+CMD ["nest-server", "start", "-h 0.0.0.0", "-o"]
