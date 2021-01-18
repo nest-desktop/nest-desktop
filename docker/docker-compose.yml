@@ -1,14 +1,15 @@
 version: '3'
 services:
-  # nest-desktop:
-  #   image: babsey/nest-desktop:3.0-dev0
-  #   command: 'nest-desktop start -p 8000'
-  #   container_name: 'nest-desktop'
-  #   ports:
-  #     - '8000:8000'
+  nest-desktop:
+    image: nest-desktop:dev
+    command: 'nest-desktop start -h 0.0.0.0 -p 8000'
+    container_name: 'nest-desktop'
+    ports:
+      - '8000:8000'
   nest-server:
     image: babsey/nest-server:dev
-    container_name: '../nest-server'
+    container_name: 'nest-server'
+    command: 'nest-server start -h 0.0.0.0 -p 5000 -o'
     environment:
       USER: 'root'
       NEST_SERVER_MODULES: 'nest,numpy'
