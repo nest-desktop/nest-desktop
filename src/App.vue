@@ -20,6 +20,7 @@
 
 <script>
 import Vue from 'vue';
+import { onMounted } from '@vue/composition-api';
 import Navigation from '@/components/Navigation.vue';
 // import Navigation from '@/components/NavigationTemporary.vue';
 import core from '@/core/index';
@@ -30,7 +31,9 @@ export default Vue.extend({
     Navigation,
   },
   setup() {
-    core.app.init();
+    onMounted(() => {
+      core.app.init();
+    });
   },
 });
 </script>
@@ -39,7 +42,6 @@ export default Vue.extend({
 .fade-enter-active {
   transition: opacity 0.5s;
 }
-
 .fade-leave-active {
   opacity: 0;
 }
