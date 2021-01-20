@@ -7,30 +7,64 @@
       </v-toolbar-title>
     </v-app-bar>
 
-    <v-container>
-      <v-list class="pa-0" dense>
-        <v-list-item
-          :key="setting"
-          @click="() => alert('bla')"
-          v-for="setting in settings"
-          v-text="setting"
-        >
-          <v-list-item-content>
-            <v-list-item-title v-text="setting" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-container>
+    <v-main>
+      <v-container>
+        <v-card flat tile>
+          <v-card-title>
+            Backend
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              label="NEST Server"
+              v-model="core.app.nestServer.url"
+            />
+            <span v-if="state.nestVersion">
+              Response:
+              <v-chip small>
+                {{ state.nestVersion }}
+              </v-chip>
+            </span>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="checkNEST">Check</v-btn>
+            <!-- <v-btn @click="() => core.app.nestServer.seek()">seek</v-btn> -->
+          </v-card-actions>
+        </v-card>
+      </v-container>
+    </v-main>
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
+import { reactive, watch } from '@vue/composition-api';
+import core from '@/core/index';
 
 export default Vue.extend({
   name: 'Settings',
-  data: () => ({
-    settings: ['App', 'NEST Server', 'Model', 'Project'],
-  }),
+  props: {
+    id: String,
+  },
+  setup(props) {
+    const state = reactive({ nestVersion: '' });
+
+    const checkNEST = () => {
+      core.app.nestServer.check();
+      state.nestVersion = core.app.nestServer.simulatorVersion;
+    };
+
+    watch(
+      () => props.id,
+      () => {
+        console.log(props.id);
+      }
+    );
+    return {
+      checkNEST,
+      core,
+      state,
+    };
+  },
 });
 </script>
