@@ -1,9 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 
-// Font awesome
-import '@fortawesome/fontawesome-free/css/all.css';
-
 // Colors
 import colors from 'vuetify/lib/util/colors';
 
@@ -14,7 +11,6 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
   icons: {
-    iconfont: 'fa',
     values: {
       github: {
         component: GithubIcon,
