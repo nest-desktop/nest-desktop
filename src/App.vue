@@ -36,12 +36,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
+.fade-enter-active {
   transition: opacity 0.5s;
 }
-.fade-enter,
-.fade-leave-to {
+
+.fade-leave-active {
+  opacity: 0;
+}
+.fade-enter {
   opacity: 0;
 }
 </style>
