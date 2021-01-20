@@ -95,18 +95,18 @@ export class NESTServer extends Config {
     Promise.all(hostPromises);
   }
 
-  ping(url: String, callback: any = false): void {
-    this.serverReady = false;
+  ping(url: string, callback: any = false): void {
+    this._state.serverReady = false;
     this._http.ping(url, (req: any) => {
       let resp: any;
       switch (req.status) {
         case 200:
           this.url = url;
           resp = JSON.parse(req.responseText);
-          console.log(resp)
-          this.serverReady = true;
-          this.simulatorReady = 'nest' in resp;
-          this.simulatorVersion = resp.nest;
+          console.log(resp);
+          this._state.serverReady = true;
+          this._state.simulatorReady = 'nest' in resp;
+          this._state.simulatorVersion = resp.nest;
           if (callback) {
             callback();
           }
