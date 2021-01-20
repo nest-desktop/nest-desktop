@@ -74,7 +74,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="padding-left:56px" v-show="!state.miniVariant">
+        <div style="padding-left:56px; width:320px" v-show="!state.miniVariant">
           <ProjectNavList v-if="state.navList === 'project'" />
           <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />
