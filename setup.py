@@ -25,7 +25,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
     ],
     python_requires=">=3.6",
-    install_requires=[
-        "nest-server==" + ".".join(__version__.split('.')[:-1]) + ".*"
-    ],
+    install_requires=[],
 )
