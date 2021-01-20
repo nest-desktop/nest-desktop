@@ -7,17 +7,14 @@ export class NESTServer extends Config {
   private _http: HttpClient;
   private _state: any = {
     serverReady: false,
-    serverValid: false,
-    serverVersion: '',
     simulatorReady: false,
-    simulatorValid: false,
-    simulatorVersion: '',
+    nestVersion: '',
   };
 
   constructor() {
     super('NESTServer');
     this._http = new HttpClient();
-    // this.check();
+    this.check();
   }
 
   get host(): string {
@@ -75,24 +72,7 @@ export class NESTServer extends Config {
   check(): void {
     // console.log('Check server')
     if (this.config.hostname) {
-      this._http
-        .get(this.url)
-        .then((req: any) => {
-          let resp: any;
-          switch (req.status) {
-            case 200:
-              resp = JSON.parse(req.responseText);
-              this.checkVersion(resp);
-              break;
-            default:
-              console.log(req);
-              this.oidcLoginFailed(req);
-              break;
-          }
-        })
-        .catch((req: any) => {
-          console.log(req);
-        });
+      this.ping(this.url);
     } else {
       this.seek();
     }
@@ -109,49 +89,33 @@ export class NESTServer extends Config {
       (host: string) =>
         new Promise((resolve, reject) => {
           const url: string = protocol + '//' + host;
-          this._http.ping(url, (req: any) => {
-            let resp: any;
-            switch (req.status) {
-              case 200:
-                this.url = url;
-                resp = JSON.parse(req.responseText);
-                this.checkVersion(resp);
-                resolve();
-                break;
-              case 502:
-                this.oidcLoginFailed(req);
-                break;
-            }
-          });
+          this.ping(url, () => resolve());
         })
     );
     Promise.all(hostPromises);
   }
 
-  checkVersion(resp: any): void {
-    // console.log('Fetch info', info)
-    const appVersion: string[] = environment.VERSION.split('.');
-
-    if (resp.hasOwnProperty('server')) {
-      this._state.serverReady = true;
-      this._state.serverVersion = resp.server.version;
-      const serverVersion: string[] = this._state.serverVersion.split('.');
-      this._state.serverValid =
-        appVersion[0] === serverVersion[0] &&
-        appVersion[1] === serverVersion[1];
-    }
-
-    if (resp.hasOwnProperty('simulator')) {
-      this._state.simulatorReady = true;
-      this._state.simulatorVersion = resp.simulator.version;
-      const simulatorVersion: string[] = this._state.simulatorVersion.split(
-        '.'
-      );
-      if (simulatorVersion.length === 3) {
-        this._state.simulatorValid =
-          simulatorVersion[0] === '2' && simulatorVersion[1] >= '18';
+  ping(url: String, callback: any = false): void {
+    this.serverReady = false;
+    this._http.ping(url, (req: any) => {
+      let resp: any;
+      switch (req.status) {
+        case 200:
+          this.url = url;
+          resp = JSON.parse(req.responseText);
+          console.log(resp)
+          this.serverReady = true;
+          this.simulatorReady = 'nest' in resp;
+          this.simulatorVersion = resp.nest;
+          if (callback) {
+            callback();
+          }
+          break;
+        case 502:
+          this.oidcLoginFailed(req);
+          break;
       }
-    }
+    });
   }
 
   // TODO: not a permament solution
