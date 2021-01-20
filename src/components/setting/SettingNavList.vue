@@ -5,9 +5,9 @@
         <v-list dense>
           <v-list-item
             :key="setting"
+            :to="'/setting/' + setting"
             v-for="setting in settings"
             v-text="setting"
-            :to="'/setting/' + setting"
           >
             <v-list-item-content>
               <v-list-item-title v-text="setting" />
