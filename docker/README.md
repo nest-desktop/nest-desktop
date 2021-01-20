@@ -1,13 +1,23 @@
-Setup docker image with custom port for nest-server 
+Start docker containers
 
 ```
-docker build -f ./nest-desktop-custom-port.Dockerfile -t nest-desktop-custom-port .
+docker-compose up --build
 ```
 
-Start docker container
+Go to ```http://localhost:8000```
+
+
+
+Shut down docker containers
+
 ```
-docker run -it -p 7000:5000 -p 7001:8000 nest-desktop-custom-port
+docker-compose down
 ```
 
-Go to ```http://localhost:7001```
 
+
+Run only nest-server container
+
+```
+docker-compose run nest-server
+```

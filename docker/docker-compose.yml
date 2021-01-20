@@ -10,10 +10,6 @@ services:
     image: babsey/nest-server:dev
     container_name: 'nest-server'
     command: 'nest-server start -h 0.0.0.0 -p 5000 -o'
-    environment:
-      USER: 'root'
-      NEST_SERVER_MODULES: 'nest,numpy'
-      NEST_SERVER_RESTRICTION_OFF: 'true'
     ports:
       - '5000:5000'
   # elephant-server:
