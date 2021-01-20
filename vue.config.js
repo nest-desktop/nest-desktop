@@ -2,6 +2,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { NewLineKind } = require('typescript');
 
 module.exports = {
+  productionSourceMap: false,
   transpileDependencies: ['vuetify'],
   outputDir: './nest_desktop/app',
   // https://stackoverflow.com/questions/55258355/vue-clis-type-checking-service-ignores-memory-limits#55810460
