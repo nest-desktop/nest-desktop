@@ -48,6 +48,7 @@ export default new Router({
       path: '/setting/:id',
       name: 'SettingId',
       component: () => import('@/components/setting/Setting.vue'),
+      props: true,
     },
   ],
 });
