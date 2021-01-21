@@ -40,15 +40,9 @@ export default new Router({
       props: true,
     },
     {
-      path: '/setting',
-      name: 'Setting',
-      component: () => import('@/components/setting/Setting.vue'),
-    },
-    {
-      path: '/setting/:id',
-      name: 'SettingId',
-      component: () => import('@/components/setting/Setting.vue'),
-      props: true,
+      path: '/settings',
+      name: 'Settings',
+      component: () => import('@/components/setting/Settings.vue'),
     },
   ],
 });
