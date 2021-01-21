@@ -53,7 +53,10 @@
           </template>
 
           <v-list dense>
-            <v-list-item>
+            <v-list-item
+              :disabled="!state.project.hasActivities"
+              @click="selectActivityView('abstract')"
+            >
               <v-list-item-icon>
                 <v-icon v-text="'mdi-chart-scatter-plot'" />
               </v-list-item-icon>
@@ -62,7 +65,10 @@
               </v-list-item-title>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item
+              :disabled="!state.project.hasSpatialActivities"
+              @click="selectActivityView('spatial')"
+            >
               <v-list-item-icon>
                 <v-icon v-text="'mdi-axis-arrow'" />
               </v-list-item-icon>
@@ -262,6 +268,8 @@
       <NetworkGraph :projectId="state.projectId" v-if="state.modeIdx === 0" />
 
       <ActivityGraph
+        :projectId="state.projectId"
+        :view="state.activityView"
         :graph="state.project.activityGraph"
         v-if="state.modeIdx === 1"
       />
@@ -303,6 +311,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
+      activityView: 'abstract',
       projectId: props.id,
       project: null,
       tools: [
@@ -346,6 +355,11 @@ export default Vue.extend({
       );
     };
 
+    const selectActivityView = mode => {
+      state.activityView = mode;
+      state.modeIdx = 1;
+    };
+
     onMounted(() => {
       loadProject(props.id);
     });
@@ -358,7 +372,14 @@ export default Vue.extend({
       }
     );
 
-    return { core, countBefore, countAfter, onClick, state };
+    return {
+      core,
+      countBefore,
+      countAfter,
+      onClick,
+      selectActivityView,
+      state,
+    };
   },
 });
 </script>
