@@ -23,55 +23,74 @@
               "
             />
           </v-toolbar> -->
+          <div style="display:flex; flex-direction:column; height: 100%">
+            <v-list nav dense>
+              <v-list-item
+                :disabled="state.navList.length === 0"
+                @click="state.miniVariant = !state.miniVariant"
+                title="Toggle navigation"
+              >
+                <v-list-item-icon>
+                  <v-icon
+                    v-text="
+                      'mdi-chevron-' + (state.miniVariant ? 'right' : 'left')
+                    "
+                  />
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="'Close'" />
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
 
-          <v-list nav dense>
-            <v-list-item
-              :disabled="state.navList.length === 0"
-              @click="state.miniVariant = !state.miniVariant"
-              title="Toggle navigation"
-            >
-              <v-list-item-icon>
-                <v-icon
-                  v-text="
-                    'mdi-chevron-' + (state.miniVariant ? 'right' : 'left')
-                  "
-                />
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="'Close'" />
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+            <v-list nav>
+              <v-list-item @click="reset" title="Home" to="/">
+                <v-list-item-icon>
+                  <v-icon v-text="'mdi-home'" />
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="'Home'" />
+                </v-list-item-content>
+              </v-list-item>
 
-          <v-list nav>
-            <v-list-item @click="reset" title="Home" to="/">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-home'" />
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="'Home'" />
-              </v-list-item-content>
-            </v-list-item>
+              <v-list-item
+                :key="route.id"
+                :title="route.title"
+                @click="() => open(route.id)"
+                v-for="route in routes"
+                :class="{ 'v-list-item--active': state.navList === route.id }"
+                :color="route.id"
+              >
+                <v-list-item-icon>
+                  <v-list-item-group
+                    style="font-size:7px; text-align:center; width:100%"
+                  >
+                    <v-icon v-text="route.icon" />
+                    <div v-text="route.title" />
+                  </v-list-item-group>
+                </v-list-item-icon>
+                <v-list-item-content />
+              </v-list-item>
+            </v-list>
 
-            <v-list-item
-              :key="route.id"
-              :title="route.title"
-              @click="() => open(route.id)"
-              v-for="route in routes"
-              :class="{ 'v-list-item--active': state.navList === route.id }"
-              :color="route.id"
-            >
-              <v-list-item-icon>
-                <v-list-item-group
-                  style="font-size:7px; text-align:center; width:100%"
-                >
-                  <v-icon v-text="route.icon" />
-                  <div v-text="route.title" />
-                </v-list-item-group>
-              </v-list-item-icon>
-              <v-list-item-content />
-            </v-list-item>
-          </v-list>
+            <v-spacer />
+
+            <v-list nav dense>
+              <v-list-item @click="reset" title="Settings" to="/settings">
+                <v-list-item-icon>
+                  <v-list-item-group
+                    style="font-size:7px; text-align:center; width:100%"
+                  >
+                    <v-icon small v-text="'mdi-cogs'" />
+                    Settings
+                  </v-list-item-group>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="'Settings'" />
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </div>
         </v-navigation-drawer>
 
         <div style="padding-left:56px; width:320px" v-show="!state.miniVariant">
@@ -108,11 +127,6 @@ export default {
         id: 'model',
         icon: 'mdi-engine-outline',
         title: 'Models',
-      },
-      {
-        id: 'setting',
-        icon: 'mdi-cogs',
-        title: 'Settings',
       },
     ];
     const state = reactive({
