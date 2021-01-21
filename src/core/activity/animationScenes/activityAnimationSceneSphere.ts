@@ -5,8 +5,8 @@ import { ActivityAnimationGraph } from '../activityAnimationGraph';
 import { ActivityAnimationScene } from './activityAnimationScene';
 
 export class ActivityAnimationSceneSphere extends ActivityAnimationScene {
-  constructor(graph: ActivityAnimationGraph, containerId: string) {
-    super('sphere', graph, containerId);
+  constructor(graph: ActivityAnimationGraph, container: any) {
+    super('sphere', graph, container);
   }
 
   createLayer(layer: any, activity: Activity): THREE.Group {
@@ -42,6 +42,10 @@ export class ActivityAnimationSceneSphere extends ActivityAnimationScene {
       this.graph.frame.data.forEach((data: any, idx: number) => {
         // @ts-ignore
         const layerGraph: THREE.Group = this.activityLayers.children[idx];
+        // @ts-ignore
+        if (layerGraph === undefined) {
+          return;
+        }
         // @ts-ignore
         const activityLayerGraph: THREE.Group = layerGraph.children[1];
         activityLayerGraph.children.forEach((object: THREE.Mesh) => {

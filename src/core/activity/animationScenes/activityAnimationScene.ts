@@ -22,13 +22,9 @@ export class ActivityAnimationScene {
   private _stats: STATS;
   private _useStats = false;
 
-  constructor(
-    name: string,
-    graph: ActivityAnimationGraph,
-    containerId: string
-  ) {
+  constructor(name: string, graph: ActivityAnimationGraph, container: any) {
     this._name = name;
-    this._container = document.getElementById(containerId);
+    this._container = container;
     this._graph = graph;
 
     this._animationFrameIdx = -1;
@@ -185,10 +181,12 @@ export class ActivityAnimationScene {
 
   destroy() {
     this.stop();
-    try {
-      this.container.removeChild(this._renderer.domElement);
-      document.body.removeChild(this._stats.dom);
-    } catch {}
+    // try {
+    //   this.container.removeChild(this._renderer.domElement);
+    //   document.body.removeChild(this._stats.dom);
+    // } catch {
+    //   throw new Error('Elements not found.');
+    // }
   }
 
   stop(): void {

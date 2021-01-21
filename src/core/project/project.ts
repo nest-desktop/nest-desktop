@@ -391,6 +391,14 @@ export class Project extends Config {
             this._errorMessage = '';
             data = JSON.parse(resp.responseText).data;
             this._simulation.kernel.time = data.kernel.time;
+            if (data.positions) {
+              data.activities.forEach((activity: any) => {
+                const positions = activity.nodeIds.map(
+                  nodeId => data.positions[nodeId]
+                );
+                activity.nodePositions = positions;
+              });
+            }
             this.updateActivities(data.activities);
             this.commitNetwork(this._network);
             break;

@@ -33,26 +33,6 @@ export class NodeCode extends Code {
     return script + '\n';
   }
 
-  getActivity(): string {
-    let script = '{';
-    const model: string = this._node.model
-      ? this._node.model.existing
-      : this._node.modelId;
-    // Make it backward compatible with older NEST Server.
-    script += this._(2) + `"events": ${this.label}.get("events"),`; // NEST 3
-    if (model === 'spike_recorder') {
-      script +=
-        this._(2) +
-        `"nodeIds": list(nest.GetConnections(None, ${this.label}).sources()),`;
-    } else {
-      script +=
-        this._(2) +
-        `"nodeIds": list(nest.GetConnections(${this.label}).targets())`;
-    }
-    script += this._() + '}';
-    return script;
-  }
-
   isRandom(value: any): boolean {
     return (
       value.constructor === Object && value.hasOwnProperty('parametertype')

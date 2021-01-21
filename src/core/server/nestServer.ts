@@ -103,7 +103,6 @@ export class NESTServer extends Config {
         case 200:
           this.url = url;
           resp = JSON.parse(req.responseText);
-          console.log(resp);
           this._state.serverReady = true;
           this._state.simulatorReady = 'nest' in resp;
           this._state.simulatorVersion = resp.nest;
@@ -120,9 +119,10 @@ export class NESTServer extends Config {
 
   // TODO: not a permament solution
   oidcLoginFailed(req: any): void {
+    console.log(req);
     if (
       req.ok === false &&
-      req.url === 'https://services.humanbrainproject.eu/oidc/login'
+      req.url.includes('https://services.humanbrainproject.eu/oidc')
     ) {
       window.location.reload();
     }

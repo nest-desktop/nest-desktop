@@ -67,6 +67,12 @@ export class Network extends Config {
     return this._view;
   }
 
+  hasSpatialNodes(): boolean {
+    return (
+      this._nodes.filter((node: Node) => node.spatial.hasPositions()).length > 0
+    );
+  }
+
   /**
    * Observer for network changes
    *
