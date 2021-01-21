@@ -41,14 +41,59 @@ export class ProjectCode extends Code {
     this._script += '\n\n# Run simulation\n';
     this._script += this._project.simulation.code.simulate();
 
+    this._script +=
+      '\n\n# Define function getting activity from the recorder\n';
+    this._script += this.defineGetActivity();
+
+    if (this._project.network.hasSpatialNodes()) {
+      this._script += '\n\n# Define function getting node positions\n';
+      this._script += this.defineGetNodePositions();
+    }
+
     this._script += '\n\n# Collect activities\n';
-    this._script += this._project.network.code.getActivities();
+    this._script += this.response();
   }
 
   importModules(): string {
     let script = '';
     script += 'import nest\n';
     script += 'import numpy\n';
+    return script + '\n';
+  }
+
+  defineGetActivity(): string {
+    let script = '';
+    script += 'def getActivity(node):';
+    script += this._() + 'activity = {}';
+    script += this._() + 'activity["events"] = node.get("events")';
+    script += this._() + 'if node.get("model") == "spike_recorder":';
+    script += this._(2) + 'activity["nodeIds"] = list(';
+    script += this._(3) + 'nest.GetConnections(None, node).sources()';
+    script += this._(2) + ')';
+    script += this._() + 'else:';
+    script += this._(2) + 'activity["nodeIds"] = list(';
+    script += this._(3) + 'nest.GetConnections(node).targets()';
+    script += this._(2) + ')';
+    script += this._() + 'return activity';
+    return script;
+  }
+
+  defineGetNodePositions(): string {
+    let script = 'def getPosition(node):';
+    script += this._() + 'return list(zip(node.tolist(), nest.GetPosition(node)))';
+    return script + '\n';
+  }
+
+  response(): string {
+    let script = '';
+    script += 'response = {';
+    script += this._() + '"kernel": {"time": nest.GetKernelStatus("time")},';
+    script +=
+      this._() + '"activities": ' + this._project.network.code.getActivities();
+    if (this._project.network.hasSpatialNodes()) {
+      script += ',' + this._() + '"positions": ' + this._project.network.code.getNodePositions();
+    }
+    script += this.end() + '}';
     return script + '\n';
   }
 }

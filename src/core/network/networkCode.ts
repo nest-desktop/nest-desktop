@@ -13,29 +13,38 @@ export class NetworkCode extends Code {
 
   createNodes(): string {
     let script = '';
-    this._network.nodes.forEach((node: Node) => (script += node.code.create()));
+    this._network.nodes.forEach((node: Node) => {
+      script += node.code.create();
+    });
     return script;
   }
 
   connectNodes(): string {
     let script = '';
-    this._network.connections.forEach(
-      (connection: Connection) => (script += connection.code.connect())
-    );
+    this._network.connections.forEach((connection: Connection) => {
+      script += connection.code.connect();
+    });
+    return script;
+  }
+
+  getNodePositions(): string {
+    let script = 'dict(numpy.concatenate([';
+    const nodes = this._network.nodes
+      .filter((node: Node) => node.spatial.hasPositions())
+      .map((node: Node) => this._(2) + `getPosition(${node.view.label})`);
+    script += `${nodes.join(',\n')}`;
+    script += this._() + ']))';
     return script;
   }
 
   getActivities(): string {
-    let script = '';
-    script += 'response = {';
-    script += this._() + '"kernel": {"time": nest.GetKernelStatus("time")},';
-    script += this._() + '"activities": [';
-    const activities: string[] = this._network.recorders.map((node: Node) =>
-      node.code.getActivity()
+    let script = '[';
+    script += this._(2);
+    const activities: string[] = this._network.recorders.map(
+      (node: Node) => `getActivity(${node.view.label})`
     );
-    script += activities.join(',');
-    script += ']';
-    script += this.end() + '}';
-    return script + '\n';
+    script += activities.join(',' + this._(2));
+    script += this._() + ']';
+    return script;
   }
 }

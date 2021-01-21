@@ -8,9 +8,9 @@ export class Activity {
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
 
-  constructor(recorder: Node, activity: any = {}) {
+  constructor(recorder: Node, activity: any = {}, positions: any[] = []) {
     this._recorder = recorder;
-    this.update(activity);
+    this.update(activity, positions);
   }
 
   get elementTypes(): string[] {
