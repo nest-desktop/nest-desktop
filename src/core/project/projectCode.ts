@@ -80,7 +80,8 @@ export class ProjectCode extends Code {
 
   defineGetNodePositions(): string {
     let script = 'def getPosition(node):';
-    script += this._() + 'return list(zip(node.tolist(), nest.GetPosition(node)))';
+    script +=
+      this._() + 'return list(zip(node.tolist(), nest.GetPosition(node)))';
     return script + '\n';
   }
 
@@ -91,7 +92,11 @@ export class ProjectCode extends Code {
     script +=
       this._() + '"activities": ' + this._project.network.code.getActivities();
     if (this._project.network.hasSpatialNodes()) {
-      script += ',' + this._() + '"positions": ' + this._project.network.code.getNodePositions();
+      script +=
+        ',' +
+        this._() +
+        '"positions": ' +
+        this._project.network.code.getNodePositions();
     }
     script += this.end() + '}';
     return script + '\n';
