@@ -11,6 +11,34 @@
       <v-container>
         <v-card flat tile>
           <v-card-title>
+            App
+          </v-card-title>
+          <v-card-text>
+            <v-checkbox
+              label="Development mode"
+              v-model="core.app.config.devMode"
+            />
+          </v-card-text>
+        </v-card>
+
+        <v-card flat tile>
+          <v-card-title>
+            Database
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              label="Model database"
+              v-model="core.app.config.databases.model.name"
+            />
+            <v-text-field
+              label="Project database"
+              v-model="core.app.config.databases.project.name"
+            />
+          </v-card-text>
+        </v-card>
+
+        <v-card flat tile>
+          <v-card-title>
             Backend
           </v-card-title>
           <v-card-text>
@@ -51,7 +79,7 @@ export default Vue.extend({
 
     const checkNEST = () => {
       core.app.nestServer.check();
-      state.nestVersion = core.app.nestServer.simulatorVersion;
+      state.nestVersion = core.app.nestServer.state.simulatorVersion;
     };
 
     watch(

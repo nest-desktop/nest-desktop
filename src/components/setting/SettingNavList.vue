@@ -26,7 +26,7 @@ export default Vue.extend({
   name: 'SettingNavList',
   setup() {
     return {
-      settings: ['app', 'backend', 'model', 'project'],
+      settings: ['app', 'backend'],
     };
   },
 });
