@@ -6,9 +6,7 @@ RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install uwsgi
 
 RUN export LC_CTYPE=C.UTF-8 && \
-    python3 -m pip install nest-desktop==3.0.*
-
-COPY ./entrypoint.sh .
+    python3 -m pip install -i https://test.pypi.org/simple/ nest-desktop==3.0.0.dev2
 
 EXPOSE 8000
-ENTRYPOINT ["entrypoint.sh"]
+CMD ["nest-desktop", "start", "-h 0.0.0.0"]
