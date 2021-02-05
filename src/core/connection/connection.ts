@@ -212,7 +212,7 @@ export class Connection extends Config {
   /**
    * Delete connection from the network.
    */
-  delete(): void {
+  remove(): void {
     this._network.deleteConnection(this);
   }
 
