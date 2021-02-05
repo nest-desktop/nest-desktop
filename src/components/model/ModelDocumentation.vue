@@ -1,6 +1,6 @@
 <template>
   <div class="model" v-if="state.modelId">
-    <v-card flat tile style="height:calc(100vh - 48px); overflow-y:auto">
+    <v-card flat tile style="height:calc(100vh - 64px); overflow-y:auto">
       <v-card :key="block.title" flat tile v-for="block of state.blocks">
         <v-card-title v-text="block.title" />
         <v-card-text>
