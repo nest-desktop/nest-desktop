@@ -126,6 +126,22 @@ export class Network extends Config {
   }
 
   /**
+   * Create node component by user interaction.
+   */
+  createNode(view: any): void {
+    const defaultModels: any = {
+      neuron: 'iaf_psc_alpha',
+      recorder: 'voltmeter',
+      stimulator: 'dc_generator',
+    };
+    this.addNode({
+      model: defaultModels[view.elementType],
+      view: view,
+    });
+    this.networkChanges();
+  }
+
+  /**
    * Add connection component to the network.
    *
    * @remarks
@@ -133,9 +149,21 @@ export class Network extends Config {
    */
   addConnection(connection: any): void {
     this._connections.push(new Connection(this, connection));
-    if (connection.elementType === 'recorder') {
+    if (connection.source.elementType === 'recorder') {
       this._project.activityGraph.init();
     }
+  }
+
+  /**
+   * Connect node components by user interaction.
+   */
+  connectNodes(source: Node, target: Node): void {
+    const connection: any = {
+      source: source.idx,
+      target: target.idx,
+    };
+    this.addConnection(connection);
+    this.networkChanges();
   }
 
   /**
@@ -145,8 +173,7 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteNode(node: Node): void {
-    this._view.resetFocus();
-    this._view.resetSelection();
+    this._view.reset();
     this._connections = this._connections.filter(
       (c: Connection) => c.source !== node && c.target !== node
     );
@@ -164,8 +191,7 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteConnection(connection: Connection): void {
-    this._view.resetFocus();
-    this._view.resetSelection();
+    this._view.reset();
     // this.connections = this.connections.filter((c: Connection) => c.idx !== connection.idx);
     const idx: number = connection.idx;
     this._connections = this._connections

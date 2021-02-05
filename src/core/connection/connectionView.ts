@@ -69,6 +69,16 @@ export class ConnectionView {
   //   return 'linear-gradient(' + gradient + ')';
   // }
 
+  markerEnd(): string {
+    if (this._connection.synapse.weight > 0 && !this.connectRecorder()) {
+      return 'url(#exc' + this._connection.idx + ')';
+    } else if (this._connection.synapse.weight < 0 && !this.connectRecorder()) {
+      return 'url(#inh' + this._connection.idx + ')';
+    } else {
+      return 'url(#generic' + this._connection.idx + ')';
+    }
+  }
+
   select(): void {
     this._connection.network.view.selectedConnection = this._connection;
   }

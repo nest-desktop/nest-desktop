@@ -30,6 +30,10 @@ export class Synapse {
     return this._connection.network.project.app.getModel(this._modelId);
   }
 
+  get filteredParams(): Parameter[] {
+    return this._params.filter((param: Parameter) => param.visible);
+  }
+
   /**
    * Set model.
    *

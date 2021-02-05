@@ -332,6 +332,14 @@ export class App extends Config {
     return this._projectDB.create(project);
   }
 
+  // Add project to list.
+  addProjectTemporary(data: any): Project {
+    // console.log('Add project:', data.name);
+    const project: Project = new Project(this, data);
+    this._projects.unshift(project);
+    return project;
+  }
+
   // Delete project in database and remove it from the list.
   deleteProject(projectId: string): Promise<any> {
     // console.log('Delete project:', projectId);
@@ -394,7 +402,7 @@ export class App extends Config {
 
   // Save the project in the database and then update the list.
   saveProject(project: Project): Promise<any> {
-    // console.log('Save project:', project.name);
+    console.log('Save project:', project.name);
     project.clean();
     const promise: Promise<any> = project.id
       ? this._projectDB.update(project)
