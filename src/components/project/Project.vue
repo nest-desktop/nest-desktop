@@ -96,14 +96,14 @@
       </v-toolbar-title>
 
       <v-spacer />
-      <div class="mx-4" style="width:176px">
+      <div class="mx-4" style="width:144px">
         <v-row no-gutters>
           <v-col col="3">
             <v-btn
               :disabled="countBefore() <= 0"
               @click="state.project.network.oldest()"
-              fab
-              light
+              dark
+              icon
               small
             >
               <v-icon>mdi-page-first</v-icon>
@@ -114,8 +114,8 @@
             <v-btn
               :disabled="countBefore() <= 0"
               @click="state.project.network.older()"
-              fab
-              light
+              dark
+              icon
               small
             >
               <v-badge
@@ -133,8 +133,8 @@
             <v-btn
               :disabled="countAfter() <= 0"
               @click="state.project.network.newer()"
-              fab
-              light
+              dark
+              icon
               small
             >
               <v-badge
@@ -152,8 +152,8 @@
             <v-btn
               :disabled="countAfter() <= 0"
               @click="state.project.network.newest()"
-              fab
-              light
+              dark
+              icon
               small
             >
               <v-icon>mdi-page-last</v-icon>
@@ -290,12 +290,15 @@
 <script>
 import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
+import axios from 'axios';
+
+import core from '@/core/index';
+
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
-import core from '@/core/index';
 
 export default Vue.extend({
   name: 'Project',
@@ -309,7 +312,7 @@ export default Vue.extend({
   props: {
     id: String,
   },
-  setup(props) {
+  setup(props, { root }) {
     const state = reactive({
       activityView: 'abstract',
       projectId: props.id,
@@ -333,10 +336,21 @@ export default Vue.extend({
 
     const loadProject = id => {
       // console.log('Load project: ' + id);
-      core.app.initProject(id).then(() => {
-        state.project = core.app.project;
-        state.project.network.view.reset();
-      });
+
+      if (root._route.query.from) {
+        // http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
+        axios.get(root._route.query.from).then(response => {
+          const project = core.app.addProjectTemporary(response.data);
+          root._router.replace({ path: `/project/${project.id}` });
+        });
+      } else {
+        core.app.initProject(id).then(() => {
+          state.project = core.app.project;
+          if (state.project) {
+            state.project.network.view.reset();
+          }
+        });
+      }
     };
 
     const onClick = tool => {
