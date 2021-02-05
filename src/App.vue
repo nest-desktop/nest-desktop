@@ -1,15 +1,5 @@
 <template>
   <v-app>
-    <!-- <v-system-bar app flat color="white">
-      NEST Desktop
-    </v-system-bar> -->
-
-    <!-- <v-app-bar app dense flat dark color="primary">
-      <v-toolbar-title>
-        NEST Desktop
-      </v-toolbar-title>
-    </v-app-bar> -->
-
     <Navigation />
 
     <transition name="fade">
