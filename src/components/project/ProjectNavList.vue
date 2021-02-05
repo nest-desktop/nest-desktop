@@ -5,21 +5,50 @@
     </v-toolbar> -->
 
     <v-list dense class="pa-0">
-      <v-list-item to="/project/new">
+      <v-list-item exact to="/project/">
         <v-list-item-icon>
-          <v-icon>mdi-plus</v-icon>
+          <v-icon left v-text="'mdi-plus'" />
         </v-list-item-icon>
-        New project
+        <v-list-item-title>
+          New project
+        </v-list-item-title>
       </v-list-item>
     </v-list>
+
+    <v-form>
+      <v-container class="py-0" v-if="state.app.project" :key="state.projectId">
+        <v-text-field
+          clearable
+          hide-details
+          placeholder="Project name"
+          v-model="state.app.project.name"
+        >
+          <template v-slot:append-outer>
+            <v-row>
+              <v-btn
+                @click="state.app.project.save()"
+                class="mx-2"
+                icon
+                small
+                style="top:-3px"
+                title="Save the current project"
+              >
+                <v-icon v-text="'mdi-content-save-outline'" />
+              </v-btn>
+            </v-row>
+          </template>
+        </v-text-field>
+      </v-container>
+    </v-form>
 
     <v-form>
       <v-container class="py-0">
         <v-text-field
           clearable
           hide-details
-          label="Search project"
+          placeholder="Search project"
           prepend-inner-icon="mdi-magnify"
+          v-model="state.app.view.project.searchTerm"
         />
       </v-container>
     </v-form>
@@ -28,7 +57,8 @@
       <v-list-item
         :key="project.id"
         :to="'/project/' + project.id"
-        v-for="project in core.app.projects"
+        @click="state.projectId = project.id"
+        v-for="project in state.app.view.filteredProjects"
       >
         <v-list-item-content>
           <v-list-item-title v-text="project.name" />
@@ -38,6 +68,10 @@
             {{ project.network.connections.length }} connections
           </v-list-item-subtitle>
         </v-list-item-content>
+
+        <v-list-item-icon v-if="!project.rev">
+          <v-icon v-text="'mdi-flash-off'" />
+        </v-list-item-icon>
       </v-list-item>
     </v-list>
   </div>
@@ -45,11 +79,16 @@
 
 <script>
 import Vue from 'vue';
+import { reactive, watch } from '@vue/composition-api';
 import core from '@/core/index';
 
 export default Vue.extend({
   name: 'ProjectNavList',
   setup() {
+    const state = reactive({
+      app: core.app,
+      projectId: '',
+    });
     const timeSince = date => {
       const seconds = Math.floor((+new Date() - +new Date(date)) / 1000);
       if (seconds < 60) {
@@ -77,8 +116,7 @@ export default Vue.extend({
     };
 
     return {
-      core,
-      timeSince,
+      state,
     };
   },
 });
