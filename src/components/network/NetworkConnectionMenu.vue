@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.node">
+  <div v-if="state.connection">
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -8,13 +8,12 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width:300px">
-        <v-card-title
-          :style="{ backgroundColor: state.node.view.color }"
+        <!-- <v-card-title
+          :style="{ backgroundColor: state.connection.source.view.color }"
           class="py-1"
           style="color:white; height:40px"
-          v-text="state.node.model.label"
         >
-        </v-card-title>
+        </v-card-title> -->
 
         <span v-if="state.content === null">
           <v-list dense>
@@ -35,34 +34,13 @@
           </v-list>
         </span>
 
-        <span v-if="state.content === 'nodeColor'">
-          <v-color-picker
-            @update:color="updateColor"
-            flat
-            show-swatches
-            style="border-radius:0"
-            v-model="state.node.view.color"
-          ></v-color-picker>
-
-          <v-card-actions>
-            <v-btn @click="back" text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
-            </v-btn>
-            <v-btn @click="resetColor" text>reset</v-btn>
-          </v-card-actions>
-        </span>
-
-        <span v-if="state.content === 'modelDocumentation'">
-          <ModelDocumentation :id="state.node.modelId" />
-        </span>
-
         <span v-if="state.content === 'paramsSelect'">
           <v-card
             :key="param.id"
             class="param"
             flat
             tile
-            v-for="param of state.node.params"
+            v-for="param of state.connection.synapse.params"
             v-show="param.visible || true"
           >
             <v-row>
@@ -94,49 +72,25 @@
             <v-btn @click="back" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="state.node.view.hideAllParams()" text>none</v-btn>
-            <v-btn @click="state.node.view.showAllParams()" text>all</v-btn>
+            <v-btn @click="state.connection.view.hideAllParams()" text
+              >none</v-btn
+            >
+            <v-btn @click="state.connection.view.showAllParams()" text
+              >all</v-btn
+            >
           </v-card-actions>
         </span>
 
-        <span v-if="state.content === 'nodeWeights'">
-          <v-list dense>
-            <v-list-item @click="setWeights('excitatory')">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-plus'" />
-              </v-list-item-icon>
-              <v-list-item-title>
-                excitatory
-              </v-list-item-title>
-            </v-list-item>
-
-            <v-list-item @click="setWeights('inhibitory')">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-minus'" />
-              </v-list-item-icon>
-              <v-list-item-title>
-                inhibitory
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-
-          <v-card-actions>
-            <v-btn @click="back" text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
-            </v-btn>
-          </v-card-actions>
-        </span>
-
-        <span v-if="state.content === 'nodeDelete'">
+        <span v-if="state.content === 'connectionDelete'">
           <v-card-title>
-            Are you sure to delete node?
+            Are you sure to delete it?
           </v-card-title>
 
           <v-card-actions>
             <v-btn @click="back" text>
               <v-icon left v-text="'mdi-menu-left'" /> no
             </v-btn>
-            <v-btn @click="deleteNode" text>yes</v-btn>
+            <v-btn @click="deleteConnection" text>yes</v-btn>
           </v-card-actions>
         </span>
       </v-card>
@@ -147,54 +101,20 @@
 <script>
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
-import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 
 export default Vue.extend({
   name: 'NetworkParamEdit',
-  components: {
-    ModelDocumentation,
-  },
   props: {
-    node: Object,
+    connection: Object,
     position: Object,
   },
   setup(props, { root }) {
     const state = reactive({
       content: null,
-      node: props.node,
+      connection: props.connection,
       position: props.position,
       show: true,
       items: [
-        {
-          id: 'nodeColor',
-          icon: 'mdi-format-color-fill',
-          title: 'Colorize node',
-          onClick: () => {
-            state.content = 'nodeColor';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-        },
-        {
-          id: 'modelDescription',
-          icon: 'mdi-information-outline',
-          title: 'Model documentation',
-          onClick: () => {
-            state.content = 'modelDocumentation';
-            setTimeout(() => {
-              window.dispatchEvent(new Event('resize'));
-            }, 300);
-          },
-        },
-        {
-          id: 'setWeights',
-          icon: 'mdi-dumbbell',
-          title: 'Set weights',
-          onClick: () => {
-            state.content = 'nodeWeights';
-          },
-          append: true,
-        },
         {
           id: 'paramsSelect',
           icon: 'mdi-checkbox-marked-outline',
@@ -206,63 +126,54 @@ export default Vue.extend({
           append: true,
         },
         {
-          id: 'setSpatial',
-          icon: 'mdi-axis-arrow',
-          title: 'Set spatial',
+          id: 'connectionReverse',
+          icon: 'mdi-rotate-3d-variant',
+          title: 'Reverse connection',
           onClick: () => {
-            state.node.initSpatial({ pos: [] });
+            state.connection.reverse();
             state.show = false;
           },
           append: false,
         },
         {
-          id: 'paramsReset',
+          id: 'connectionReverse',
+          icon: 'mdi-contrast',
+          title: 'Inverse synaptic weight',
+          onClick: () => {
+            state.connection.synapse.inverseWeight();
+            state.show = false;
+          },
+          append: false,
+        },
+        {
+          id: 'connectionReset',
           icon: 'mdi-restart',
-          title: 'Reset parameters',
+          title: 'Reset connection',
           onClick: () => {
-            state.node.resetParameters();
+            state.connection.reset();
             state.show = false;
           },
           append: false,
         },
         {
-          id: 'nodeDelete',
+          id: 'connectionDelete',
           icon: 'mdi-trash-can-outline',
-          title: 'Delete node',
+          title: 'Delete connection',
           onClick: () => {
-            state.content = 'nodeDelete';
+            state.content = 'connectionDelete';
           },
           append: false,
         },
       ],
     });
 
-    const updateColor = () => {
-      state.node.network.networkChanges();
-      state.node.network.project.activityGraph.updateColor();
-    };
-
-    const resetColor = () => {
-      state.node.view.color = null;
-      updateColor();
-    };
-
     const paramChange = () => {
-      state.node.nodeChanges();
+      state.connection.connectionChanges();
     };
 
-    const setSpatial = () => {
-      state.node.initSpatial({ pos: [] });
-    };
-
-    const deleteNode = () => {
+    const deleteConnection = () => {
       state.show = false;
-      state.node.remove();
-    };
-
-    const setWeights = mode => {
-      state.node.setWeights(mode);
-      state.show = false;
+      state.connection.remove();
     };
 
     const back = () => {
@@ -270,24 +181,20 @@ export default Vue.extend({
     };
 
     watch(
-      () => props.node,
+      () => props.connection,
       () => {
         state.content = null;
         state.show = true;
-        state.node = props.node;
+        state.connection = props.connection;
         state.position = props.position;
       }
     );
 
     return {
       back,
-      deleteNode,
+      deleteConnection,
       paramChange,
-      resetColor,
-      setSpatial,
-      setWeights,
       state,
-      updateColor,
     };
   },
 });
