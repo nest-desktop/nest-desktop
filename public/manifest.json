@@ -1,6 +1,6 @@
 {
-  "name": "nest-desktop-v3",
-  "short_name": "nest-desktop-v3",
+  "name": "nest-desktop",
+  "short_name": "nest-desktop",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
