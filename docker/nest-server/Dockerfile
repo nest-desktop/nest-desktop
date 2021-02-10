@@ -6,3 +6,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 5000
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["0.0.0.0:5000"]
