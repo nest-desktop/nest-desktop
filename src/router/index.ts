@@ -20,29 +20,29 @@ export default new Router({
     {
       path: '/project',
       name: 'Project',
-      component: () => import('@/components/project/Project.vue'),
+      component: () => import('@/views/Project.vue'),
     },
     {
       path: '/project/:id',
       name: 'ProjectId',
-      component: () => import('@/components/project/Project.vue'),
+      component: () => import('@/views/Project.vue'),
       props: true,
     },
     {
       path: '/model',
       name: 'Model',
-      component: () => import('@/components/model/Model.vue'),
+      component: () => import('@/views/Model.vue'),
     },
     {
       path: '/model/:id',
       name: 'ModelId',
-      component: () => import('@/components/model/Model.vue'),
+      component: () => import('@/views/Model.vue'),
       props: true,
     },
     {
       path: '/settings',
       name: 'Settings',
-      component: () => import('@/components/setting/Settings.vue'),
+      component: () => import('@/views/Settings.vue'),
     },
   ],
 });
