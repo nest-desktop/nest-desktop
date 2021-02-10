@@ -11,8 +11,8 @@
 <script>
 import Vue from 'vue';
 import { onMounted } from '@vue/composition-api';
-import Navigation from '@/components/Navigation.vue';
-// import Navigation from '@/components/NavigationTemporary.vue';
+import Navigation from '@/components/navigation/Navigation.vue';
+// import Navigation from '@/components/navigation/NavigationTemporary.vue';
 import core from '@/core/index';
 
 export default Vue.extend({
