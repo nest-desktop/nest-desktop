@@ -369,12 +369,18 @@ export class App extends Config {
   /**
    * Download project from the list.
    */
-  downloadProject(projectId: string): void {
+  downloadProject(projectId: string, withActivities: boolean = false): void {
     // console.log('Download project:', projectId);
     const project: Project = this._projects.find(
       (p: Project) => p.id === projectId
     );
-    this.download(project.toJSON('file'), 'projects');
+    const projectData: any = project.toJSON();
+    if (withActivities) {
+      projectData.activities = project.activities.map(activity =>
+        activity.toJSON()
+      );
+    }
+    this.download(projectData, 'project');
   }
 
   /**

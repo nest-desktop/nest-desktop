@@ -162,26 +162,20 @@ export class Model {
     return this._app.saveModel(this);
   }
 
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const model: any = {
+      abbreviation: this._abbreviation,
+      elementType: this._elementType,
       existing: this._existing,
+      id: this._id,
+      label: this._label,
+      params: this._params.map((param: Parameter) => param.toJSON()),
+      version: this._app.version,
     };
-    if (target === 'simulator') {
-      model.new = this._id;
-      model.params = {};
-      this._params.forEach(
-        (param: Parameter) => (model.params[param.id] = param.value)
-      );
-    } else {
-      model.id = this._id;
-      model.elementType = this._elementType;
-      model.label = this._label;
-      model.abbreviation = this._abbreviation;
-      model.params = this._params.map((param: Parameter) => param.toJSON());
-      if (this.recordables.length > 0) {
-        model.recordables = this._recordables;
-      }
-      model.version = this._app.version;
+
+    // Add recordables if provided.
+    if (this.recordables.length > 0) {
+      model.recordables = this._recordables;
     }
     return model;
   }

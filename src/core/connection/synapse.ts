@@ -137,22 +137,11 @@ export class Synapse {
    * Serialize for JSON.
    * @return synapse object
    */
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const synapse: any = {
       model: this._modelId,
+      params: this._params.map((param: Parameter) => param.toJSON()),
     };
-
-    if (target === 'simulator') {
-      // Collect specifications of the synapse
-      this._params
-        .filter(
-          (param: Parameter) => param.visible === undefined || param.visible
-        )
-        .forEach((param: Parameter) => (synapse[param.id] = param.value));
-    } else {
-      synapse.params = this._params.map((param: Parameter) => param.toJSON());
-    }
-
     return synapse;
   }
 }

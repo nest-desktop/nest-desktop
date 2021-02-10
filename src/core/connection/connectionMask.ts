@@ -204,14 +204,11 @@ export class ConnectionMask extends Config {
     ];
   }
 
-  toJSON(target: string = 'db') {
-    const mask: any = {};
-    if (target === 'simulator') {
-      mask[this._masktype] = this._specs;
-    } else {
-      mask.masktype = this._masktype;
-      mask.specs = this._specs;
-    }
+  toJSON() {
+    const mask: any = {
+      masktype: this._masktype,
+      specs: this._specs,
+    };
     return mask;
   }
 }
