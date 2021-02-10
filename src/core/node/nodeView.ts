@@ -11,20 +11,16 @@ export class NodeView {
 
   constructor(node: Node, view: any) {
     this._node = node;
-    this._color = view.color;
+    this._color = view.color || this._node.network.view.getColor(this._node.idx);
     this._position = view.position;
   }
 
   get color(): string {
-    if (typeof this._color === 'string') {
-      return this._color;
-    }
-
-    if (this.node.model.elementType === 'recorder') {
-      const connections: Connection[] = this.node.network.connections.filter(
+    if (this._node.model.elementType === 'recorder') {
+      const connections: Connection[] = this._node.network.connections.filter(
         (connection: Connection) =>
-          connection.sourceIdx === this.node.idx ||
-          connection.targetIdx === this.node.idx
+          connection.sourceIdx === this._node.idx ||
+          connection.targetIdx === this._node.idx
       );
       if (
         connections.length === 1 &&
@@ -32,20 +28,23 @@ export class NodeView {
       ) {
         const connection: Connection = connections[0];
         const node: Node =
-          connection.sourceIdx === this.node.idx
+          connection.sourceIdx === this._node.idx
             ? connection.target
             : connection.source;
         return node.view.color;
       }
     }
 
-    const colors: string[] = this.node.network.view.colors;
-    return colors[this.node.idx % colors.length];
+    if (typeof this._color === 'string') {
+      return this._color;
+    } else {
+      return this._node.network.view.getColor(this._node.idx);
+    }
   }
 
   set color(value: string) {
     this._color = value === 'none' ? undefined : value;
-    this.node.network.clean();
+    this._node.network.clean();
   }
 
   get label(): string {
@@ -53,21 +52,21 @@ export class NodeView {
       return this._label;
     }
 
-    const elementType: string = this.node.model.elementType;
+    const elementType: string = this._node.model.elementType;
     if (elementType === undefined) {
-      const idx: number = this.node.network.nodes.indexOf(this.node);
+      const idx: number = this._node.network.nodes.indexOf(this._node);
       return 'n' + (idx + 1);
     } else if (elementType === 'neuron') {
-      const idx: number = this.node.network.neurons.indexOf(this.node);
+      const idx: number = this._node.network.neurons.indexOf(this._node);
       return 'n' + (idx + 1);
     } else {
-      const nodes: Node[] = this.node.network.nodes.filter(
-        (node: Node) => node.modelId === this.node.modelId
+      const nodes: Node[] = this._node.network.nodes.filter(
+        (node: Node) => node.modelId === this._node.modelId
       );
-      const idx: number = nodes.indexOf(this.node);
+      const idx: number = nodes.indexOf(this._node);
       const label: string =
-        this.node.model.abbreviation ||
-        this.node.modelId
+        this._node.model.abbreviation ||
+        this._node.modelId
           .split('_')
           .map((d: string) => d[0])
           .join('');

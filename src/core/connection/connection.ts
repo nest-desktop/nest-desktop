@@ -108,6 +108,10 @@ export class Connection extends Config {
     return this._sourceIdx;
   }
 
+  set sourceIdx(value: number) {
+    this._sourceIdx = value;
+  }
+
   get synapse(): Synapse {
     return this._synapse;
   }
@@ -122,6 +126,10 @@ export class Connection extends Config {
 
   get targetIdx(): number {
     return this._targetIdx;
+  }
+
+  set targetIdx(value: number) {
+    this._targetIdx = value;
   }
 
   get view(): ConnectionView {
@@ -220,32 +228,21 @@ export class Connection extends Config {
    * Serialize for JSON.
    * @return connection object
    */
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const connection: any = {
       source: this._sourceIdx,
       target: this._targetIdx,
     };
 
     if (this.isBothSpatial()) {
-      connection.projections = this._projections.toJSON(target);
+      connection.projections = this._projections.toJSON();
       if (this._mask.hasMask()) {
-        connection.projections.mask = this._mask.toJSON(target);
+        connection.projections.mask = this._mask.toJSON();
       }
     } else {
-      if (target === 'simulator') {
-        // Collect specifications of the connection
-        connection.conn_spec = {
-          rule: this._rule,
-        };
-        this._params.forEach(
-          (param: Parameter) => (connection.conn_spec[param.id] = param.value)
-        );
-        connection.syn_spec = this._synapse.toJSON(target); // Collect specifications of the synapse
-      } else {
-        connection.rule = this._rule;
-        connection.params = this._params;
-        connection.synapse = this._synapse.toJSON(target);
-      }
+      connection.rule = this._rule;
+      connection.params = this._params;
+      connection.synapse = this._synapse.toJSON();
     }
 
     return connection;

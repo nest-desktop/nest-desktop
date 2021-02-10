@@ -39,15 +39,11 @@ export class SimulationKernel extends Config {
     this._time = value;
   }
 
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const kernel: any = {
+      localNumThreads: this._localNumThreads,
       resolution: this._resolution,
     };
-    if (target === 'simulator') {
-      kernel.local_num_threads = this._localNumThreads;
-    } else {
-      kernel.localNumThreads = this._localNumThreads;
-    }
     return kernel;
   }
 }

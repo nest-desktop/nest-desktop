@@ -100,20 +100,14 @@ export class FreePositions {
     });
   }
 
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const positions: any = {
       center: this._center,
+      edgeWrap: this._edgeWrap,
       extent: this._extent,
+      numDimensions: this._numDimensions,
+      pos: this._pos,
     };
-    if (target === 'simulator') {
-      positions.positions = this._pos;
-      positions.edge_wrap = this._edgeWrap;
-      positions.num_dimensions = this._numDimensions;
-    } else {
-      positions.pos = this._pos;
-      positions.edgeWrap = this._edgeWrap;
-      positions.numDimensions = this._numDimensions;
-    }
     return positions;
   }
 }
@@ -223,19 +217,13 @@ export class GridPositions {
     return Math.floor(value * 100) / 100;
   }
 
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const positions: any = {
       center: this._center,
+      edgeWrap: this._edgeWrap,
       extent: this._extent,
+      shape: this._shape,
     };
-    if (target === 'simulator') {
-      positions.rows = this.rows;
-      positions.columns = this.columns;
-      positions.edge_wrap = this._edgeWrap;
-    } else {
-      positions.shape = this._shape;
-      positions.edgeWrap = this._edgeWrap;
-    }
     return positions;
   }
 }
@@ -276,7 +264,8 @@ export class NodeSpatial extends Config {
     return this.hasPositions() && this._positions.name === 'free';
   }
 
-  toJSON(target: string = 'db'): any {
-    return this._positions.toJSON(target);
+  toJSON(): any {
+    const nodeSpatial: any = this._positions.toJSON();
+    return nodeSpatial;
   }
 }

@@ -114,41 +114,17 @@ export class ConnectionProjections extends Config {
     this._weights.reset();
   }
 
-  toJSON(target: string = 'db') {
-    const projections: any = {};
-    if (target === 'simulator') {
-      projections.connection_type = this._connectionType;
-      if (this._allowAutapses.visible) {
-        projections.allow_autapses = this._allowAutapses.value;
-      }
-      if (this._allowMultapses.visible) {
-        projections.allow_multapses = this._allowMultapses.value;
-      }
-      if (this._allowOversizedMask.visible) {
-        projections.allow_oversized_mask = this._allowOversizedMask.value;
-      }
-      if (this._delays.visible) {
-        projections.delays = this._delays.value;
-      }
-      if (this._kernel.visible) {
-        projections.kernel = this._kernel.value;
-      }
-      if (this._numberOfConnections.visible) {
-        projections.number_of_connections = this._numberOfConnections.value;
-      }
-      if (this._weights.visible) {
-        projections.weights = this._weights.value;
-      }
-    } else {
-      projections.connectionType = this._connectionType;
-      projections.allowAutapses = this._allowAutapses.toJSON();
-      projections.allowMultapses = this._allowMultapses.toJSON();
-      projections.allowOversizedMask = this._allowOversizedMask.toJSON();
-      projections.delays = this._delays.toJSON();
-      projections.kernel = this._kernel.toJSON();
-      projections.numberOfConnections = this._numberOfConnections.toJSON();
-      projections.weights = this._weights.toJSON();
-    }
+  toJSON() {
+    const projections: any = {
+      allowAutapses: this._allowAutapses.toJSON(),
+      allowMultapses: this._allowMultapses.toJSON(),
+      allowOversizedMask: this._allowOversizedMask.toJSON(),
+      connectionType: this._connectionType,
+      delays: this._delays.toJSON(),
+      kernel: this._kernel.toJSON(),
+      numberOfConnections: this._numberOfConnections.toJSON(),
+      weights: this._weights.toJSON(),
+    };
     return projections;
   }
 }
