@@ -21,6 +21,7 @@
           clearable
           hide-details
           placeholder="Project name"
+          title="Rename the current project"
           v-model="state.app.project.name"
         >
           <template v-slot:append-outer>
@@ -30,7 +31,6 @@
                 class="mx-2"
                 icon
                 small
-                style="top:-3px"
                 title="Save the current project"
               >
                 <v-icon v-text="'mdi-content-save-outline'" />

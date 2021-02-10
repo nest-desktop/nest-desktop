@@ -226,7 +226,9 @@ export class App extends Config {
   Projects
   */
 
-  // Add projects to list and database.
+  /**
+   * Add projects to list and database.
+   */
   addProjects(data: any[]): Promise<any> {
     // console.log('Add projects');
     const projects: any[] = data.map(
@@ -240,12 +242,16 @@ export class App extends Config {
     return Promise.all(projects);
   }
 
-  // Delete projects from database and then update the list.
+  /**
+   * Delete projects from database and then update the list.
+   */
   deleteProjects(projectIds: string[]): Promise<any> {
     return this._projectDB.deleteBulk(projectIds).then(this.updateProjects());
   }
 
-  // Downloads projects from the list.
+  /**
+   * Downloads projects from the list.
+   */
   downloadProjects(projectIds: string[]): void {
     const projects: Project[] = this._projects.filter((project: Project) =>
       projectIds.includes(project.id)
@@ -254,7 +260,9 @@ export class App extends Config {
     this.download(data, 'projects');
   }
 
-  // Initialize project list either from database or from files.
+  /**
+   * Initialize project list either from database or from files.
+   */
   initProjects(): Promise<any> {
     // console.log('Initialize projects');
     this._projects = [];
@@ -270,7 +278,9 @@ export class App extends Config {
     });
   }
 
-  // Load projects from files and adds them to list and database.
+  /**
+   * Load projects from files and adds them to list and database.
+   */
   loadProjectsFromFiles(): Promise<any> {
     // console.log('Load projects from files');
     let promise: Promise<any> = Promise.resolve();
@@ -282,7 +292,9 @@ export class App extends Config {
     return promise;
   }
 
-  // Load projects from database and then update list
+  /**
+   * Load projects from database and then update list.
+   */
   updateProjects(): Promise<any> {
     return this._projectDB
       .list('createdAt', true)
@@ -294,7 +306,9 @@ export class App extends Config {
       );
   }
 
-  // Load project revision from database and then update revision list
+  /**
+   * Load project revision from database and then update revision list.
+   */
   updateProjectRevisions(id: string = null): Promise<any> {
     this._projectRevisions = [];
     if (id === null) {
@@ -324,7 +338,9 @@ export class App extends Config {
     );
   }
 
-  // Add project to list and database.
+  /**
+   * Add project to list and database.
+   */
   addProject(data: any): Promise<any> {
     // console.log('Add project:', data.name);
     const project: Project = new Project(this, data);
@@ -332,7 +348,9 @@ export class App extends Config {
     return this._projectDB.create(project);
   }
 
-  // Add project to list.
+  /**
+   * Add project to list.
+   */
   addProjectTemporary(data: any): Project {
     // console.log('Add project:', data.name);
     const project: Project = new Project(this, data);
@@ -340,13 +358,17 @@ export class App extends Config {
     return project;
   }
 
-  // Delete project in database and remove it from the list.
+  /**
+   * Delete project in database and remove it from the list.
+   */
   deleteProject(projectId: string): Promise<any> {
     // console.log('Delete project:', projectId);
     return this._projectDB.delete(projectId).then(this.updateProjects());
   }
 
-  // Download project from the list.
+  /**
+   * Download project from the list.
+   */
   downloadProject(projectId: string): void {
     // console.log('Download project:', projectId);
     const project: Project = this._projects.find(
@@ -355,7 +377,9 @@ export class App extends Config {
     this.download(project.toJSON('file'), 'projects');
   }
 
-  // Initialize project or project revision from the list.
+  /**
+   * Initialize project or project revision from the list.
+   */
   initProject(id: string = '', rev: string = ''): Promise<any> {
     // console.log(`Initialize project: id=${id}, rev=${rev}`);
     this._projectReady = false;
@@ -383,13 +407,17 @@ export class App extends Config {
     });
   }
 
-  // Create a new project and add it to the list but not to the database.
+  /**
+   * Create a new project and add it to the list but not to the database.
+   */
   newProject(): void {
     this._project = new Project(this);
     this.updateProject(this._project);
   }
 
-  // Reload the current project in the list from the database.
+  /**
+   * Reload the current project in the list from the database.
+   */
   reloadProject(project: Project): Promise<any> {
     return this._projectDB.read(project.id).then((doc: any) => {
       this._project = new Project(this, doc);
@@ -400,7 +428,9 @@ export class App extends Config {
     });
   }
 
-  // Save the project in the database and then update the list.
+  /**
+   * Save the project in the database and then update the list.
+   */
   saveProject(project: Project): Promise<any> {
     console.log('Save project:', project.name);
     project.clean();
@@ -410,7 +440,9 @@ export class App extends Config {
     return promise.then(() => this.updateProject(this._project));
   }
 
-  // Remove project from the list.
+  /**
+   * Remove project from the list.
+   */
   unloadProject(project: Project): void {
     const idx: number = this._projects
       .map((p: Project) => p.id)
@@ -422,7 +454,9 @@ export class App extends Config {
     }
   }
 
-  // Add project to the top of the list.
+  /**
+   * Add project to the top of the list.
+   */
   updateProject(project: Project): void {
     this.unloadProject(project);
     this._projects.unshift(project);

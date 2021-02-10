@@ -15,7 +15,7 @@
         >
         </v-card-title> -->
 
-        <span v-if="state.content === null">
+        <span v-if="state.content === undefined">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -45,7 +45,7 @@
           >
             <v-row>
               <v-list-item style="font-size:12px; min-height:32px">
-                <template v-slot:default="{ active }">
+                <template v-slot:default>
                   <v-list-item-content style="padding: 4px">
                     <v-row no-gutters>
                       {{ param.options.label }}
@@ -98,9 +98,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+import { Connection } from '@/core/connection/connection';
 
 export default Vue.extend({
   name: 'NetworkParamEdit',
@@ -108,10 +109,10 @@ export default Vue.extend({
     connection: Object,
     position: Object,
   },
-  setup(props, { root }) {
+  setup(props) {
     const state = reactive({
-      content: null,
-      connection: props.connection,
+      content: undefined as string | undefined,
+      connection: props.connection as Connection,
       position: props.position,
       show: true,
       items: [
@@ -177,15 +178,15 @@ export default Vue.extend({
     };
 
     const back = () => {
-      state.content = null;
+      state.content = undefined;
     };
 
     watch(
       () => props.connection,
       () => {
-        state.content = null;
+        state.content = undefined;
         state.show = true;
-        state.connection = props.connection;
+        state.connection = props.connection as Connection;
         state.position = props.position;
       }
     );
