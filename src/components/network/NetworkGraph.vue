@@ -30,48 +30,48 @@
     </span>
 
     <svg id="networkGraph" width="800" height="600">
-      <defs>
-        <span
+      <g class="marker">
+        <defs
+          :key="'defs' + connection.idx"
           v-for="connection of state.network.connections"
-          :key="'marker' + connection.idx"
         >
           <marker
             :id="'generic' + connection.idx"
-            refY="4"
-            refX="6"
-            markerWidth="8"
             markerHeight="8"
+            markerWidth="8"
             orient="auto"
+            refX="6"
+            refY="4"
           >
             <path
               :style="{ stroke: connection.source.view.color }"
-              fill="transparent"
               d="M2,2L6,4L2,6"
+              fill="transparent"
             />
           </marker>
 
           <marker
             :id="'exc' + connection.idx"
-            refY="4"
-            refX="6"
-            markerWidth="8"
             markerHeight="8"
+            markerWidth="8"
             orient="auto"
+            refX="6"
+            refY="4"
           >
             <path
               :style="{ stroke: connection.source.view.color }"
-              fill="white"
               d="M2,2L6,4L2,6L2,2L6,4"
+              fill="white"
             />
           </marker>
 
           <marker
             :id="'inh' + connection.idx"
-            refY="4"
-            refX="6"
-            markerWidth="8"
             markerHeight="8"
+            markerWidth="8"
             orient="auto"
+            refX="6"
+            refY="4"
           >
             <circle
               :style="{ stroke: connection.source.view.color }"
@@ -80,8 +80,8 @@
               transform="translate(4,4)"
             />
           </marker>
-        </span>
-      </defs>
+        </defs>
+      </g>
 
       <rect id="background" fill="white" />
 
@@ -148,14 +148,14 @@ export default Vue.extend({
   setup(props, { root, refs }) {
     const state = reactive({
       network: core.app.project.network,
-      graph: null,
+      graph: undefined,
       nodeMenu: {
-        node: null,
+        node: undefined,
         position: { x: 0, y: 0 },
         show: false,
       },
       connectionMenu: {
-        connection: null,
+        connection: undefined,
         position: { x: 0, y: 0 },
         show: false,
       },

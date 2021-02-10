@@ -72,7 +72,7 @@ export class NetworkGraph {
 
     elem.on('mouseover', () => {
       this._network.view.focusedNode = node;
-      const selectedNode: Node = this._network.view.selectedNode;
+      const selectedNode: Node | null = this._network.view.selectedNode;
       if (selectedNode && this._state.connectNode) {
         this._selector
           .selectAll('.dragline')
@@ -198,21 +198,25 @@ export class NetworkGraph {
   }
 
   dragLine(e: MouseEvent): void {
-    const selectedNode: Node = this._network.view.selectedNode;
-    const source: any = selectedNode.view.position;
-    const position: number[] = d3.pointer(
-      e,
-      this._selector.select('g#network').node()
-    );
-    const target: any = {
-      x: position[0],
-      y: position[1],
-    };
-    this._selector
-      .selectAll('.dragline')
-      .style('opacity', 0.5)
-      .style('stroke', selectedNode.view.color)
-      .attr('d', () => drawPath(source, target, { isTargetMouse: true }));
+    if (this._network.view.selectedNode !== null) {
+      const selectedNode: Node = this._network.view.selectedNode;
+      const source: any = selectedNode.view.position;
+      const position: number[] = d3.pointer(
+        e,
+        this._selector.select('g#network').node()
+      );
+      const target: any = {
+        x: position[0],
+        y: position[1],
+      };
+      this._selector
+        .selectAll('.dragline')
+        .style('opacity', 0.5)
+        .style('stroke', selectedNode.view.color)
+        .attr('d', () => drawPath(source, target, { isTargetMouse: true }));
+    } else {
+      console.error('No node was selected when dragLine() got executed!');
+    }
   }
 
   initZoom(): void {
@@ -432,7 +436,7 @@ export class NetworkGraph {
     this._networkCenter.y = (d3.min(y) + d3.max(y)) / 2;
   }
 
-  resize(width: number = null, height: number = null): void {
+  resize(width: number = 0, height: number = 0): void {
     this._state.resizing = true;
     this._width = width || this._width;
     this._height = height || this._height;

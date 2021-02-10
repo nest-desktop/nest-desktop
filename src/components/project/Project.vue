@@ -293,7 +293,6 @@ import { reactive, watch, onMounted } from '@vue/composition-api';
 import axios from 'axios';
 
 import core from '@/core/index';
-
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';

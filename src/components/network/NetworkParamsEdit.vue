@@ -294,7 +294,7 @@ export default Vue.extend({
       network: core.app.project.network,
       elementType: 0,
       connectionMenu: {
-        connection: null,
+        connection: undefined,
         position: {
           x: 0,
           y: 0,
@@ -302,7 +302,7 @@ export default Vue.extend({
         show: false,
       },
       nodeMenu: {
-        node: null,
+        node: undefined,
         position: {
           x: 0,
           y: 0,
