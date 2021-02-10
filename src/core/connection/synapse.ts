@@ -31,6 +31,13 @@ export class Synapse {
   }
 
   /**
+   * Returns all visible parameters.
+   */
+  get filteredParams(): Parameter[] {
+    return this._params.filter((param: Parameter) => param.visible);
+  }
+
+  /**
    * Set model.
    *
    * @remarks

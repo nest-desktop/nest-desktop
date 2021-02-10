@@ -8,12 +8,13 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width:300px">
-        <!-- <v-card-title
+        <v-card-title
           :style="{ backgroundColor: state.node.view.color }"
+          class="py-1"
+          style="color:white; height:40px"
           v-text="state.node.model.label"
-          style="color:white"
         >
-        </v-card-title> -->
+        </v-card-title>
 
         <span v-if="state.content === null">
           <v-list dense>
@@ -28,7 +29,7 @@
               <v-list-item-title>{{ item.title }}</v-list-item-title>
 
               <v-list-item-action v-show="item.append"
-                ><v-icon v-text="'mdi-chevron-right'"
+                ><v-icon v-text="'mdi-menu-right'"
               /></v-list-item-action>
             </v-list-item>
           </v-list>
@@ -44,7 +45,9 @@
           ></v-color-picker>
 
           <v-card-actions>
-            <v-btn @click="back" text>back</v-btn>
+            <v-btn @click="back" text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
             <v-btn @click="resetColor" text>reset</v-btn>
           </v-card-actions>
         </span>
@@ -88,7 +91,9 @@
             </v-row>
           </v-card>
           <v-card-actions>
-            <v-btn @click="back" text>back</v-btn>
+            <v-btn @click="back" text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
             <v-btn @click="state.node.view.hideAllParams()" text>none</v-btn>
             <v-btn @click="state.node.view.showAllParams()" text>all</v-btn>
           </v-card-actions>
@@ -116,7 +121,9 @@
           </v-list>
 
           <v-card-actions>
-            <v-btn @click="back" text>back</v-btn>
+            <v-btn @click="back" text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
           </v-card-actions>
         </span>
 
@@ -126,7 +133,9 @@
           </v-card-title>
 
           <v-card-actions>
-            <v-btn @click="back" text>back</v-btn>
+            <v-btn @click="back" text>
+              <v-icon left v-text="'mdi-menu-left'" /> no
+            </v-btn>
             <v-btn @click="deleteNode" text>yes</v-btn>
           </v-card-actions>
         </span>
@@ -239,7 +248,7 @@ export default Vue.extend({
     };
 
     const paramChange = () => {
-      state.node.network.networkChanges();
+      state.node.nodeChanges();
     };
 
     const setSpatial = () => {

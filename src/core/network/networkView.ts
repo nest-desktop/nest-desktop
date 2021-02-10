@@ -105,6 +105,11 @@ export class NetworkView {
   // Node
   //
 
+  getNodeColor(idx: number): string {
+    const colors: string[] = this._network.config.color.cycle;
+    return colors[idx % colors.length];
+  }
+
   isNodeFocused(node: Node): boolean {
     return this._focusedNode === node.idx;
   }

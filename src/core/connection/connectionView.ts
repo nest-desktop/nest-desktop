@@ -1,4 +1,5 @@
 import { Connection } from './connection';
+import { Parameter } from '../parameter';
 import { drawPath } from './connectionGraph';
 
 export class ConnectionView {
@@ -68,6 +69,37 @@ export class ConnectionView {
   //   const gradient: string = ['150deg', srcColor, srcColor, bg, bg, tgtColor, tgtColor].join(', ');
   //   return 'linear-gradient(' + gradient + ')';
   // }
+
+  /**
+   * Generates a string describing the end of this connections' marker.
+   */
+  markerEnd(): string {
+    if (this._connection.synapse.weight > 0 && !this.connectRecorder()) {
+      return 'url(#exc' + this._connection.idx + ')';
+    } else if (this._connection.synapse.weight < 0 && !this.connectRecorder()) {
+      return 'url(#inh' + this._connection.idx + ')';
+    } else {
+      return 'url(#generic' + this._connection.idx + ')';
+    }
+  }
+
+  /**
+   * Sets all params to visible.
+   */
+  public showAllParams(): void {
+    this._connection.params.forEach(
+      (param: Parameter) => (param.visible = true)
+    );
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  public hideAllParams(): void {
+    this._connection.params.forEach(
+      (param: Parameter) => (param.visible = false)
+    );
+  }
 
   select(): void {
     this._connection.network.view.selectedConnection = this._connection;
