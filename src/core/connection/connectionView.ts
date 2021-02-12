@@ -16,15 +16,11 @@ export class ConnectionView {
     const srcColor: string = this._connection.source.view.color;
     const tgtColor: string = this._connection.target.view.color;
     const gradient: string = [
-      '120deg',
-      srcColor,
-      srcColor,
+      new Array(8).fill(srcColor).join(', '),
       bg,
-      bg,
-      tgtColor,
-      tgtColor,
+      new Array(4).fill(tgtColor).join(', '),
     ].join(', ');
-    return 'linear-gradient(' + gradient + ')';
+    return gradient;
   }
 
   colorWeight(): string {
