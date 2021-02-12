@@ -41,6 +41,10 @@ export class NetworkGraph {
     this._network = value;
   }
 
+  get state(): any {
+    return this._state;
+  }
+
   get strokeWidth(): number {
     return this._strokeWidth;
   }

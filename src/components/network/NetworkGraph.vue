@@ -13,19 +13,21 @@
 
     <span style="position:absolute;right:0" class="ma-1" v-if="state.graph">
       <v-btn
-        :color="state.graph.autofocus ? 'amber' : 'grey'"
-        @click="() => state.graph.toggleAutofocus()"
+        :color="state.graph.state.centerFocus ? 'amber' : 'grey'"
+        @click="() => state.graph.toggleCenterFocus()"
         icon
         small
         tile
         title="Autofocus network graph"
       >
-        <v-icon v-if="state.graph.autofocus"
-          >mdi-image-filter-center-focus</v-icon
-        >
-        <v-icon v-if="!state.graph.autofocus"
-          >mdi-image-filter-center-focus-strong-outline</v-icon
-        >
+        <v-icon
+          v-if="state.graph.state.centerFocus"
+          v-text="'mdi-image-filter-center-focus'"
+        />
+        <v-icon
+          v-if="!state.graph.state.centerFocus"
+          v-text="'mdi-image-filter-center-focus-strong-outline'"
+        />
       </v-btn>
     </span>
 
