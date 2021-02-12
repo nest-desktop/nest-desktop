@@ -105,16 +105,14 @@
 
 <script>
 import { reactive } from '@vue/composition-api';
-import ModelNavList from '@/components/model/ModelNavList';
-import ProjectNavList from '@/components/project/ProjectNavList';
-import SettingNavList from '@/components/setting/SettingNavList';
+import ModelNavList from '@/components/navigation/ModelNavList';
+import ProjectNavList from '@/components/navigation/ProjectNavList';
 
 export default {
   name: 'Navigation',
   components: {
     ModelNavList,
     ProjectNavList,
-    SettingNavList,
   },
   setup(props) {
     const routes = [
