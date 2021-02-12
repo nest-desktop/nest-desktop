@@ -11,14 +11,18 @@
       v-if="state.nodeMenu.show"
     />
 
-    <span style="position:absolute;right:0" class="ma-1" v-if="state.graph">
+    <span
+      style="position:absolute;right:0"
+      class="ma-1 no-print"
+      v-if="state.graph"
+    >
       <v-btn
         :color="state.graph.state.centerFocus ? 'amber' : 'grey'"
         @click="() => state.graph.toggleCenterFocus()"
         icon
         small
         tile
-        title="Autofocus network graph"
+        title="Auto center focus network graph"
       >
         <v-icon
           v-if="state.graph.state.centerFocus"
@@ -88,13 +92,13 @@
       <rect id="background" fill="white" />
 
       <g id="network">
-        <g>
+        <g v-if="state.graph">
           <path
+            :style="{ strokeWidth: state.graph.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
             stroke-linecap="round"
             fill="none"
-            style="stroke-width:4px"
           />
         </g>
 

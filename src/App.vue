@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navigation />
+    <Navigation class="no-print" />
 
     <transition name="fade">
       <router-view />
@@ -29,6 +29,24 @@ export default Vue.extend({
 </script>
 
 <style>
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print {
+    display: block !important;
+  }
+
+  .v-main {
+    padding: 0 !important;
+  }
+
+  @page {
+    size: landscape;
+  }
+}
+
 .fade-enter-active {
   transition: opacity 0.5s;
 }
