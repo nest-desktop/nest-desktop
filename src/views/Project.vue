@@ -1,6 +1,15 @@
 <template>
   <div class="project-container" v-if="state.project">
-    <v-app-bar app clipped-left clipped-right color="project" dark dense flat>
+    <v-app-bar
+      app
+      class="no-print"
+      clipped-left
+      clipped-right
+      color="project"
+      dark
+      dense
+      flat
+    >
       <!-- <v-tabs hide-slider optional style="max-width:270px">
         <v-tab>
           <v-icon color="accent" large>mdi-brain</v-icon>
@@ -178,6 +187,7 @@
       :mini-variant="!core.app.view.project.toolOpened"
       :width="core.app.view.project.toolMode === 'codeEditor' ? '568' : '377.6'"
       app
+      class="no-print"
       clipped
       mobile-breakpoint="56"
       permanent
@@ -262,9 +272,6 @@
     </v-navigation-drawer>
 
     <v-main>
-      <span style="position:absolute;" class="ma-1">
-        {{ state.project.network.view.selectedNode }}
-      </span>
       <NetworkGraph :projectId="state.projectId" v-if="state.modeIdx === 0" />
 
       <ActivityGraph
@@ -273,6 +280,8 @@
         :graph="state.project.activityGraph"
         v-if="state.modeIdx === 1"
       />
+
+      <LabBook :hash="state.project.network.hash" v-if="state.modeIdx === 2" />
     </v-main>
 
     <v-overlay :value="state.project.simulation.running">
@@ -294,6 +303,7 @@ import axios from 'axios';
 
 import core from '@/core/index';
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
+import LabBook from '@/components/network/LabBook.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
@@ -303,6 +313,7 @@ export default Vue.extend({
   name: 'Project',
   components: {
     ActivityGraph,
+    LabBook,
     NetworkParamsEdit,
     NetworkParamsSelect,
     NetworkGraph,
