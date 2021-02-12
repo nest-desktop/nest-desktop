@@ -41,6 +41,10 @@ export default Vue.extend({
   .v-main {
     padding: 0 !important;
   }
+
+  @page {
+    size: landscape;
+  }
 }
 
 .fade-enter-active {

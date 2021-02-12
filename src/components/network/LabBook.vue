@@ -149,7 +149,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 
@@ -164,10 +164,10 @@ export default Vue.extend({
   props: {
     hash: String,
   },
-  setup(props, { refs }) {
+  setup(props) {
     const state = reactive({
       hash: props.hash,
-      project: null,
+      project: undefined,
     });
 
     watch(
