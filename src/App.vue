@@ -30,9 +30,16 @@ export default Vue.extend({
 
 <style>
 @media print {
-  .no-print,
-  .no-print * {
+  .no-print {
     display: none !important;
+  }
+
+  .print {
+    display: block !important;
+  }
+
+  .v-main {
+    padding: 0 !important;
   }
 }
 
