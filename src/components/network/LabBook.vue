@@ -3,7 +3,17 @@
     <v-container>
       <NetworkGraph :projectId="state.project.id" style="height:calc(30vh)" />
 
-      <div style="height:calc(70vh - 48px); overflow-y:auto">
+      <v-card
+        flat
+        style="height:calc(70vh - 48px); overflow-y:auto; overflow-x:hidden"
+        tile
+      >
+        <v-card-title
+          class="print"
+          style="display: none"
+          v-text="state.project.name"
+        />
+
         <v-row dense>
           <v-col cols="6">
             <v-card
@@ -134,7 +144,7 @@
             </v-card>
           </v-col>
         </v-row>
-      </div>
+      </v-card>
     </v-container>
   </div>
 </template>
