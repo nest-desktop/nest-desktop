@@ -11,7 +11,8 @@ export class NodeView {
 
   constructor(node: Node, view: any) {
     this._node = node;
-    this._color = view.color || this._node.network.view.getColor(this._node.idx);
+    this._color =
+      view.color || this._node.network.view.getNodeColor(this._node.idx);
     this._position = view.position;
   }
 
@@ -38,7 +39,7 @@ export class NodeView {
     if (typeof this._color === 'string') {
       return this._color;
     } else {
-      return this._node.network.view.getColor(this._node.idx);
+      return this._node.network.view.getNodeColor(this._node.idx);
     }
   }
 
