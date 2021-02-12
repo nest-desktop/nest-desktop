@@ -308,8 +308,11 @@ export class Node extends Config {
         connection.target.model.elementType !== 'recorder'
     );
     connections.forEach((connection: Connection) => {
-      const value: number = Math.abs(connection.synapse.weight);
-      connection.synapse.weight = (term === 'inhibitory' ? -1 : 1) * value;
+      const weight: any = connection.synapse.params.find(
+        (param: Parameter) => param.id === 'weight'
+      );
+      weight.value = (term === 'inhibitory' ? -1 : 1) * Math.abs(weight.value);
+      weight.visible = true;
     });
     this.nodeChanges();
   }

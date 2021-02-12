@@ -14,12 +14,13 @@ export class NetworkGraph {
   private _nodeRadius: number = 20;
   private _selector: d3.Selection<any, any, any, any>;
   private _state: any = {
-    autofocus: true,
+    nodeClicked: false,
+    centerFocus: true,
     dragging: false,
     keyCode: null,
     resizing: false,
   };
-  private _strokeWidth: number = 4;
+  private _strokeWidth: number = 3;
   private _width: number = 800;
   private _zoom: any;
 
@@ -28,8 +29,8 @@ export class NetworkGraph {
     this.init();
   }
 
-  get autofocus(): boolean {
-    return this._state.autofocus;
+  get centerFocus(): boolean {
+    return this._state.centerFocus;
   }
 
   get network(): Network {
@@ -38,6 +39,10 @@ export class NetworkGraph {
 
   set network(value: Network) {
     this._network = value;
+  }
+
+  get strokeWidth(): number {
+    return this._strokeWidth;
   }
 
   drawNode(node: Node, elem: d3.Selection<any, any, any, any>): void {
@@ -90,19 +95,24 @@ export class NetworkGraph {
     });
 
     elem.on('click', () => {
-      if (this._network.view.selectedNode && this._state.connectNode) {
+      if (
+        this._network.view.selectedNode &&
+        this._state.connectNode &&
+        this._state.nodeClicked
+      ) {
         this._network.connectNodes(this._network.view.selectedNode, node);
-        this.initNetworkGraph();
-        if (this._state.keyCode !== 17) {
-          this.reset();
-        }
-      } else if (this._network.view.selectedNode) {
         this.reset();
+        node.view.focus();
+      } else if (this._network.view.selectedNode === node) {
+        this.reset();
+        node.view.focus();
+        this._state.nodeClicked = true;
       } else {
         this.reset();
-        this._network.view.selectedNode = node;
+        node.view.select();
+        node.view.focus();
+        this._state.nodeClicked = true;
       }
-      this._network.view.focusedNode = node;
       this.updateNetworkGraph();
       this.centerNetworkGraph();
       this.resize();
@@ -136,8 +146,9 @@ export class NetworkGraph {
     const elementTypes: string[] = ['recorder', 'neuron', 'stimulator'];
     elementTypes.forEach((elementType: string, idx: number) => {
       const panel: d3.Selection<any, any, any, any> = selectPanel
-        .append('path')
+        .append('g')
         .attr('class', 'select ' + elementType)
+        .append('path')
         .datum({
           startAngle: (Math.PI * idx * 2) / 3,
           endAngle: (Math.PI * (idx + 1) * 2) / 3,
@@ -153,10 +164,12 @@ export class NetworkGraph {
         .style('stroke-width', this._strokeWidth)
         .attr('d', arcFrame)
         .on('mouseover', () => {
-          // tooltip
-          //   .style('visibility', 'visible')
-          //   .select('.label')
-          //   .text(elementType);
+          this._selector
+            .select('g#panel')
+            .select('g.tooltip')
+            .style('visibility', 'visible')
+            .select('text.label')
+            .text(elementType);
           panel.style('fill', () => {
             return this._network
               ? this._network.view.getNodeColor(this._network.nodes.length)
@@ -164,10 +177,12 @@ export class NetworkGraph {
           });
         })
         .on('mouseout', () => {
-          // tooltip
-          //   .style('visibility', 'hidden')
-          //   .select('.label')
-          //   .text('');
+          this._selector
+            .select('g#panel')
+            .select('g.tooltip')
+            .style('visibility', 'hidden')
+            .select('text.label')
+            .text('');
           panel.style('fill', 'white');
         })
         .on('mouseup', () => {
@@ -191,6 +206,26 @@ export class NetworkGraph {
         .attr('dy', -Math.cos(Math.PI * f) * 28 + 5)
         .text(elementType.slice(0, 1).toUpperCase());
     });
+
+    selectPanel
+      .append('g')
+      .attr('class', 'tooltip')
+      .attr('transform', 'translate(0, -45)')
+      .style('visibility', 'hidden');
+
+    selectPanel
+      .select('g.tooltip')
+      .append('rect')
+      .attr('transform', 'translate(-37, -14)')
+      .attr('width', '74px')
+      .attr('height', '16px')
+      .attr('fill', 'white');
+
+    selectPanel
+      .select('g.tooltip')
+      .append('text')
+      .attr('class', 'label')
+      .style('text-anchor', 'middle');
   }
 
   resetDragLine(): void {
@@ -244,12 +279,15 @@ export class NetworkGraph {
       .select('rect#background')
       .on('mousemove', (e: MouseEvent) => {
         this._network.view.resetFocus();
-        if (this._network.view.selectedNode) {
+        if (this._network.view.selectedNode && this._state.nodeClicked) {
           this._state.connectNode = true;
           this.dragLine(e);
         }
       })
-      .on('click', () => this.reset())
+      .on('click', () => {
+        this.reset();
+        this.updateNetworkGraph();
+      })
       .on('contextmenu', (e: MouseEvent) => {
         // console.log(event);
         e.preventDefault();
@@ -260,18 +298,13 @@ export class NetworkGraph {
         this._cursorPosition.x = position[0];
         this._cursorPosition.y = position[1];
 
-        // if (
-        //   this._network.view.selectedNode ||
-        //   this._network.view.selectedConnection
-        // ) {
-        //   return;
-        // }
         this._selector
           .select('g#panel')
           .selectAll('path')
           .style('stroke', () =>
             this._network.view.getNodeColor(this._network.nodes.length)
           );
+
         this._selector
           .select('g#panel')
           .style('display', 'block')
@@ -281,12 +314,6 @@ export class NetworkGraph {
               `translate(${this._cursorPosition.x},${this._cursorPosition.y})`
           )
           .style('opacity', '0.8');
-
-        // const tooltip = selectPanel.select('.tooltip');
-        // var tooltip = select.append('svg:text')
-        //   .attr('class', 'tooltip')
-        //   .attr('transform', 'translate(0, -45)')
-        //   .style('visibility', 'hidden');
       })
       .call(this._zoom);
   }
@@ -306,7 +333,17 @@ export class NetworkGraph {
       .style('stroke-width', this._strokeWidth)
       .style('opacity', 0)
       .attr('d', (d: Connection) => d.view.drawPath())
-      .merge(connections);
+      .merge(connections)
+      .on('click', (event, connection) => {
+        if (this._network.view.selectedConnection === connection) {
+          this.reset();
+        } else {
+          this.reset();
+          connection.view.select();
+        }
+        connection.view.focus();
+        this.updateNetworkGraph();
+      });
 
     connections.exit().remove();
 
@@ -446,7 +483,7 @@ export class NetworkGraph {
       .attr('width', this._width)
       .attr('height', this._height);
 
-    if (this._state.autofocus) {
+    if (this._state.centerFocus) {
       const x = this._width / 2 - this._networkCenter.x;
       const y = this._height / 2 - this._networkCenter.y;
       this._selector
@@ -456,8 +493,8 @@ export class NetworkGraph {
     this._state.resizing = false;
   }
 
-  toggleAutofocus(): void {
-    this._state.autofocus = !this._state.autofocus;
+  toggleCenterFocus(): void {
+    this._state.centerFocus = !this._state.centerFocus;
     this.centerNetworkGraph();
     this.resize();
   }
@@ -466,10 +503,11 @@ export class NetworkGraph {
     // console.log('Init');
     d3.select('body')
       .on('keyup', (event: any) => {
+        this._state.keyCode = null;
         if (event.keyCode === 27) {
           this.reset();
+          this.updateNetworkGraph();
         }
-        this._state.keyCode = null;
       })
       .on('keydown', (event: any) => {
         this._state.keyCode = event.keyCode;
@@ -488,12 +526,16 @@ export class NetworkGraph {
 
   reset(): void {
     // console.log('Reset network graph');
-    this._state.connectNode = false;
     this._selector
       .select('g#panel')
       .style('display', 'none')
       .style('opacity', '0');
-    this._network.view.reset();
-    this.resetDragLine();
+
+    if (this._state.keyCode !== 17) {
+      this.resetDragLine();
+      this._state.nodeClicked = false;
+      this._state.connectNode = false;
+      this._network.view.reset();
+    }
   }
 }

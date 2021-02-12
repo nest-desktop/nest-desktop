@@ -13,11 +13,6 @@
     />
 
     <v-toolbar class="elementType" dense flat tile>
-      <!-- <v-tabs slider-size="5">
-        <v-tab class="px-1">Simulator</v-tab>
-        <v-tab class="px-1">Neuron</v-tab>
-        <v-tab class="px-1">Recorder</v-tab>
-      </v-tabs> -->
       <v-row class="fill-height">
         <v-btn-toggle dense group mandatory tile v-model="state.elementType">
           <v-btn small> All </v-btn>
@@ -39,11 +34,11 @@
           v-for="node of state.network.nodes"
           v-show="showNode(node)"
         >
-          <v-card-title @contextmenu="e => showNodeMenu(e, node)" class="pa-0">
+          <v-img @contextmenu="e => showNodeMenu(e, node)" class="pa-0">
             <v-row no-gutters>
               <v-col cols="3">
                 <v-btn
-                  @click="() => (state.network.view.selectedNode = node)"
+                  @click="() => node.view.select()"
                   block
                   dark
                   height="40"
@@ -68,10 +63,13 @@
                 />
               </v-col>
             </v-row>
-          </v-card-title>
 
-          <v-card-text class="pa-0 pl-1" v-if="node.params.length > 0">
-            <v-card flat tile v-if="!node.model.isRecorder()">
+            <v-card
+              class="ml-1"
+              flat
+              tile
+              v-if="(node.params.length > 0) & !node.model.isRecorder()"
+            >
               <v-row class="mx-1 my-0" no-gutters>
                 <v-col cols="12">
                   <v-subheader class="paramLabel">
@@ -106,6 +104,7 @@
 
             <v-card
               :key="param.id"
+              class="ml-1"
               flat
               tile
               v-for="param of node.filteredParams"
@@ -141,7 +140,7 @@
                 </v-col>
               </v-row>
             </v-card>
-          </v-card-text>
+          </v-img>
         </v-card>
 
         <v-card
@@ -152,86 +151,57 @@
           v-for="connection of state.network.connections"
           v-show="showConnection(connection)"
         >
-          <v-card-title
+          <v-img
+            :gradient="'to right, ' + connection.view.backgroundImage"
             @contextmenu="e => showConnectionMenu(e, connection)"
-            class="pa-0"
+            dark
+            width="320"
           >
-            <v-img
-              dark
-              height="40"
-              width="320"
-              :gradient="
-                'to right, ' +
-                  connection.source.view.color +
-                  ',' +
-                  connection.source.view.color +
-                  ',' +
-                  connection.source.view.color +
-                  ',' +
-                  connection.source.view.color +
-                  ',' +
-                  connection.source.view.color +
-                  ',' +
-                  'white' +
-                  ',' +
-                  /* connection.target.view.color + */
-                  /* ',' + */
-                  connection.target.view.color +
-                  ',' +
-                  connection.target.view.color
-              "
-            >
-              <v-row no-gutters>
-                <v-col cols="3" class="py-0" style="text-align:center">
-                  <v-btn
-                    @click="
-                      () =>
-                        (state.network.view.selectedNode = connection.source)
-                    "
-                    block
-                    dark
-                    height="40"
-                    text
-                    tile
-                    v-text="connection.source.view.label"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-btn
-                    @click="
-                      () => (state.network.view.selectedConnection = connection)
-                    "
-                    block
-                    dark
-                    height="40"
-                    text
-                    tile
-                  >
-                    <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                  </v-btn>
-                </v-col>
-                <v-col cols="3" class="py-0" style="text-align:center">
-                  <v-btn
-                    @click="
-                      () =>
-                        (state.network.view.selectedNode = connection.target)
-                    "
-                    block
-                    dark
-                    height="40"
-                    text
-                    tile
-                    v-text="connection.target.view.label"
-                  />
-                </v-col>
-              </v-row>
-            </v-img>
-          </v-card-title>
+            <v-row no-gutters>
+              <v-col cols="3" class="py-0" style="text-align:center">
+                <v-btn
+                  @click="() => connection.source.view.select()"
+                  block
+                  dark
+                  height="40"
+                  text
+                  tile
+                  v-text="connection.source.view.label"
+                />
+              </v-col>
+              <v-col cols="5">
+                <v-btn
+                  @click="() => connection.view.select()"
+                  block
+                  dark
+                  height="40"
+                  text
+                  tile
+                >
+                  <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                </v-btn>
+              </v-col>
+              <v-col cols="4" class="py-0" style="text-align:center">
+                <v-btn
+                  @click="
+                    () => connection.targetconnection.target.view.select()
+                  "
+                  block
+                  dark
+                  height="40"
+                  text
+                  tile
+                  v-text="connection.target.view.label"
+                />
+              </v-col>
+            </v-row>
 
-          <v-card-text class="pa-0 pl-1">
             <v-card
               :key="param.id"
+              class="mx-1"
+              color="white"
               flat
+              light
               tile
               v-for="param in connection.synapse.filteredParams"
             >
@@ -266,7 +236,7 @@
                 </v-col>
               </v-row>
             </v-card>
-          </v-card-text>
+          </v-img>
         </v-card>
       </v-col>
     </v-row>
