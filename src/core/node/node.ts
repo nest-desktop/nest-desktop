@@ -373,34 +373,24 @@ export class Node extends Config {
    * Serialize for JSON.
    * @return node object
    */
-  toJSON(target: string = 'db'): any {
+  toJSON(): any {
     const node: any = {
       model: this._modelId,
+      params: this._params.map((param: Parameter) => param.toJSON()),
+      size: this._size,
+      view: this._view.toJSON(),
     };
-    if (target === 'simulator') {
-      node.n = this._size;
-      node.element_type = this.model.elementType;
-      node.params = {};
-      this._params
-        .filter((param: Parameter) => param.visible)
-        .forEach((param: Parameter) => (node.params[param.id] = param.value));
-      if (this.model.existing === 'multimeter' && this._recordFrom.length > 0) {
-        node.params.record_from = this._recordFrom;
-      }
-    } else {
-      node.size = this._size;
-      node.view = this._view.toJSON();
-      node.params = this._params.map((param: Parameter) => param.toJSON());
-      if (this.model.existing === 'multimeter') {
-        node.recordFrom = this._recordFrom;
-      }
+
+    // Add recordFrom if this model is multimeter.
+    if (this.model.existing === 'multimeter') {
+      node.recordFrom = this._recordFrom;
     }
+
+    // Add positions if this node is spatial.
     if (this._spatial.hasPositions()) {
-      node.spatial = this._spatial.toJSON(target);
+      node.spatial = this._spatial.toJSON();
     }
-    if (target === 'revision' && this.model.isRecorder()) {
-      node.activity = this._activity.toJSON();
-    }
+
     return node;
   }
 }

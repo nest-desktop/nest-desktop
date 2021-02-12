@@ -56,16 +56,16 @@ export class Simulation extends Config {
     this._time = value;
   }
 
-  toJSON(target: string = 'db'): any {
+  /**
+   * Serialize for JSON.
+   * @return simulation object
+   */
+  toJSON(): any {
     const simulation: any = {
-      kernel: this._kernel.toJSON(target),
+      kernel: this._kernel.toJSON(),
+      randomSeed: this._randomSeed,
       time: this._time,
     };
-    if (target === 'simulator') {
-      simulation.random_seed = this._randomSeed;
-    } else {
-      simulation.randomSeed = this._randomSeed;
-    }
     return simulation;
   }
 }

@@ -183,6 +183,13 @@ export class Project extends Config {
   }
 
   /**
+   * Download this project and activities.
+   */
+  downloadWithActivities(): void {
+    this._app.downloadProject(this._id, true);
+  }
+
+  /**
    * Reload this project.
    */
   reload(): Promise<any> {
@@ -260,7 +267,18 @@ export class Project extends Config {
         this._networkRevisions.length - maxRev
       );
     }
-    const currentNetwork: any = network.toJSON('revision');
+
+    // Get network object
+    const currentNetwork: any = network.toJSON();
+
+    // Add activity to recorder nodes
+    network.nodes
+      .filter(node => node.model.isRecorder())
+      .forEach(node => {
+        currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+      });
+
+
     if (this._networkRevisions.length === 0) {
       this._networkRevisions.push(currentNetwork);
     } else {
@@ -505,32 +523,26 @@ export class Project extends Config {
    * Calculate hash of this component.
    */
   getHash(): string {
-    return objectHash(this.toJSON('simulator'));
+    const project: any = this.toJSON();
+    return objectHash(project);
   }
 
   /**
    * Serialize for JSON.
    * @return project object
    */
-  toJSON(target: string = 'db'): any {
-    // this.hash = objectHash(this.network.toJSON('simulator'));
+  toJSON(): any {
     const project: any = {
+      createdAt: this._createdAt,
+      description: this._description,
+      hash: this._hash,
+      id: this._id,
       name: this._name,
-      network: this._network.toJSON(target),
-      simulation: this._simulation.toJSON(target),
+      network: this._network.toJSON(),
+      simulation: this._simulation.toJSON(),
+      updatedAt: this._updatedAt,
+      version: this._app.version,
     };
-    if (target === 'db') {
-      const meta: any = {
-        _id: this._id,
-        createdAt: this._createdAt,
-        description: this._description,
-        hash: this._hash,
-        updatedAt: this._updatedAt,
-        version: this._app.version,
-      };
-      return { ...project, ...meta };
-    } else {
-      return project;
-    }
+    return project;
   }
 }
