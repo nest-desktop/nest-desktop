@@ -129,7 +129,11 @@ export class Synapse {
    * Inverse synaptic weight.
    */
   inverseWeight(): void {
-    this.weight = -1 * this.weight;
+    const weight: Parameter = this._params.find(
+      (param: Parameter) => param.id === 'weight'
+    );
+    weight.visible = true;
+    weight.value = -1 * weight.value;
     this._connection.connectionChanges();
   }
 

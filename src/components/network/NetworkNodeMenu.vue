@@ -28,9 +28,9 @@
               </v-list-item-icon>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
 
-              <v-list-item-action v-show="item.append"
-                ><v-icon v-text="'mdi-menu-right'"
-              /></v-list-item-action>
+              <v-list-item-action v-show="item.append">
+                <v-icon small v-text="'mdi-menu-right'" />
+              </v-list-item-action>
             </v-list-item>
           </v-list>
         </span>
@@ -304,5 +304,9 @@ export default Vue.extend({
   position: absolute;
   top: 2px;
   z-index: 1000;
+}
+
+.v-list-item__action {
+  margin: 0;
 }
 </style>

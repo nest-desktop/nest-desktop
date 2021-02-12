@@ -213,4 +213,8 @@ export default Vue.extend({
   top: 2px;
   z-index: 1000;
 }
+
+.v-list-item__action {
+  margin: 0;
+}
 </style>
