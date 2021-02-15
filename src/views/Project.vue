@@ -64,7 +64,7 @@
           <v-list dense>
             <v-list-item
               :disabled="!state.project.hasActivities"
-              @click="selectActivityView('abstract')"
+              @click="selectActivityGraph('abstract')"
             >
               <v-list-item-icon>
                 <v-icon v-text="'mdi-chart-scatter-plot'" />
@@ -76,7 +76,7 @@
 
             <v-list-item
               :disabled="!state.project.hasSpatialActivities"
-              @click="selectActivityView('spatial')"
+              @click="selectActivityGraph('spatial')"
             >
               <v-list-item-icon>
                 <v-icon v-text="'mdi-axis-arrow'" />
@@ -185,7 +185,7 @@
 
     <v-navigation-drawer
       :mini-variant="!core.app.view.project.toolOpened"
-      :width="core.app.view.project.toolMode === 'codeEditor' ? '568' : '377.6'"
+      :width="core.app.view.project.toolMode.width"
       app
       class="no-print"
       clipped
@@ -227,12 +227,12 @@
             <v-list-item
               :class="{
                 'v-list-item--active':
-                  core.app.view.project.toolMode === tool.name &&
+                  core.app.view.project.toolMode === tool &&
                   core.app.view.project.toolOpened,
               }"
               :key="tool.name"
               :title="tool.title"
-              @click="onClick(tool.name)"
+              @click="selectTool(tool)"
               v-for="tool in state.tools"
             >
               <v-list-item-icon>
@@ -254,19 +254,23 @@
         >
           <networkParamsSelect
             :network="state.project.network"
-            v-if="core.app.view.project.toolMode === 'networkParamSelect'"
+            v-if="core.app.view.project.toolMode.name === 'networkParamSelect'"
           />
 
           <NetworkParamsEdit
-            :projectId="state.projectId"
             :network="state.project.network"
-            v-if="core.app.view.project.toolMode === 'networkParamEdit'"
+            :projectId="state.projectId"
+            v-if="core.app.view.project.toolMode.name === 'networkParamEdit'"
           />
 
           <SimulationCodeEditor
             :code="state.project.code"
-            v-if="core.app.view.project.toolMode === 'codeEditor'"
+            v-if="core.app.view.project.toolMode.name === 'codeEditor'"
           />
+
+          <span v-if="core.app.view.project.toolMode.name === 'activityStats'">
+            <ActivityStats :project="core.app.project" />
+          </span>
         </div>
       </v-row>
     </v-navigation-drawer>
@@ -275,9 +279,9 @@
       <NetworkGraph :projectId="state.projectId" v-if="state.modeIdx === 0" />
 
       <ActivityGraph
-        :projectId="state.projectId"
-        :view="state.activityView"
         :graph="state.project.activityGraph"
+        :projectId="state.projectId"
+        :view="state.activityGraph"
         v-if="state.modeIdx === 1"
       />
 
@@ -303,6 +307,7 @@ import axios from 'axios';
 
 import core from '@/core/index';
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
+import ActivityStats from '@/components/activity/ActivityStats.vue';
 import LabBook from '@/components/network/LabBook.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
@@ -313,6 +318,7 @@ export default Vue.extend({
   name: 'Project',
   components: {
     ActivityGraph,
+    ActivityStats,
     LabBook,
     NetworkParamsEdit,
     NetworkParamsSelect,
@@ -324,7 +330,7 @@ export default Vue.extend({
   },
   setup(props, { root }) {
     const state = reactive({
-      activityView: 'abstract',
+      activityGraph: 'abstract',
       projectId: props.id,
       project: null,
       tools: [
@@ -337,9 +343,21 @@ export default Vue.extend({
           icon: '$network',
           name: 'networkParamEdit',
           title: 'Network',
+          width: '377.6',
         },
-        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code' },
-        { icon: 'mdi-chart-line', name: 'activityEdit', title: 'Activity' },
+        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '568' },
+        {
+          icon: 'mdi-chart-line',
+          name: 'activityEdit',
+          title: 'Activity',
+          width: '56',
+        },
+        {
+          icon: 'mdi-table',
+          name: 'activityStats',
+          title: 'Statistics',
+          width: '500',
+        },
       ],
       modeIdx: 0,
     });
@@ -363,10 +381,6 @@ export default Vue.extend({
       }
     };
 
-    const onClick = tool => {
-      state.project.app.view.setProjectTool(tool);
-    };
-
     const countBefore = () => {
       return state.project.networkRevisionIdx;
     };
@@ -379,9 +393,13 @@ export default Vue.extend({
       );
     };
 
-    const selectActivityView = mode => {
-      state.activityView = mode;
+    const selectActivityGraph = mode => {
+      state.activityGraph = mode;
       state.modeIdx = 1;
+    };
+
+    const selectTool = tool => {
+      state.project.app.view.setProjectTool(tool);
     };
 
     onMounted(() => {
@@ -400,8 +418,8 @@ export default Vue.extend({
       core,
       countBefore,
       countAfter,
-      onClick,
-      selectActivityView,
+      selectActivityGraph,
+      selectTool,
       state,
     };
   },

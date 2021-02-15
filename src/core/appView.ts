@@ -20,7 +20,9 @@ export class AppView {
     this._project = {
       searchTerm: '',
       mode: 'networkEditor',
-      toolMode: 'networkParamEdit',
+      toolMode: {
+        name: 'networkParamEdit',
+      },
       toolOpened: false,
     };
   }
@@ -53,8 +55,8 @@ export class AppView {
     setTimeout(() => window.dispatchEvent(new Event('resize')), 10);
   }
 
-  setProjectTool(mode: string): void {
-    if (this._project.toolMode === mode) {
+  setProjectTool(mode: any): void {
+    if (this._project.toolMode.name === mode.name) {
       this._project.toolOpened = !this._project.toolOpened;
     } else {
       this._project.toolMode = mode;
