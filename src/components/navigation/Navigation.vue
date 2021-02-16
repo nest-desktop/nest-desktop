@@ -1,5 +1,10 @@
 <template>
   <div class="navigation">
+    <ProjectsMenu
+      :position="state.projectsMenu.position"
+      v-if="state.projectsMenu.show"
+    />
+
     <v-navigation-drawer
       :mini-variant="state.miniVariant"
       app
@@ -54,12 +59,13 @@
               </v-list-item>
 
               <v-list-item
+                :class="{ 'v-list-item--active': state.navList === route.id }"
+                :color="route.id"
                 :key="route.id"
                 :title="route.title"
                 @click="() => open(route.id)"
+                @contextmenu="e => route.contextmenu(e)"
                 v-for="route in routes"
-                :class="{ 'v-list-item--active': state.navList === route.id }"
-                :color="route.id"
               >
                 <v-list-item-icon>
                   <v-list-item-group
@@ -105,40 +111,64 @@
 
 <script>
 import { reactive } from '@vue/composition-api';
+
 import ModelNavList from '@/components/navigation/ModelNavList';
 import ProjectNavList from '@/components/navigation/ProjectNavList';
+import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
 
 export default {
   name: 'Navigation',
   components: {
     ModelNavList,
     ProjectNavList,
+    ProjectsMenu,
   },
   setup(props) {
+    const state = reactive({
+      navList: '',
+      miniVariant: true,
+      projectsMenu: {
+        position: { x: 0, y: 0 },
+        show: false,
+      },
+    });
+
+    const open = navList => {
+      state.navList = navList;
+      state.miniVariant = false;
+    };
+
+    const reset = () => {
+      state.navList = '';
+      state.miniVariant = true;
+    };
+
+    const showProjectsMenu = e => {
+      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
+      e.preventDefault();
+      state.projectsMenu.show = false;
+      state.projectsMenu.position.x = e.clientX;
+      state.projectsMenu.position.y = e.clientY;
+      setTimeout(() => {
+        state.projectsMenu.show = true;
+      }, 1);
+    };
+
     const routes = [
       {
         id: 'project',
         icon: 'mdi-brain',
         title: 'Projects',
+        contextmenu: showProjectsMenu,
       },
       {
         id: 'model',
         icon: 'mdi-engine-outline',
         title: 'Models',
+        contextmenu: e => {},
       },
     ];
-    const state = reactive({
-      navList: '',
-      miniVariant: true,
-    });
-    const open = navList => {
-      state.navList = navList;
-      state.miniVariant = false;
-    };
-    const reset = () => {
-      state.navList = '';
-      state.miniVariant = true;
-    };
+
     return {
       open,
       reset,
