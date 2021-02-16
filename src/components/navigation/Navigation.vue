@@ -162,7 +162,7 @@ export default {
       },
       {
         id: 'model',
-        icon: 'mdi-engine-outline',
+        icon: 'mdi-square-root',
         title: 'Models',
         contextmenu: e => {},
       },
