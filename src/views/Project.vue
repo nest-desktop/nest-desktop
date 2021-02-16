@@ -1,5 +1,11 @@
 <template>
   <div class="project-container" v-if="state.project">
+    <SimulationMenu
+      :simulation="state.project.simulation"
+      :position="state.simulationMenu.position"
+      v-if="state.simulationMenu.show"
+    />
+
     <v-app-bar
       app
       class="no-print"
@@ -91,7 +97,7 @@
         <v-btn class="mx-0 px-6">
           <v-col>
             <v-row style="place-content: center;">
-              <v-icon>mdi-eye-outline</v-icon>
+              <v-icon v-text="'mdi-book-open-outline'" />
             </v-row>
             <v-row style="place-content: center; font-size:10px">
               Lab book
@@ -177,7 +183,11 @@
         v-text="state.project.network.hash.slice(0, 6)"
       />
 
-      <v-btn @click="state.project.runSimulation()" outlined>
+      <v-btn
+        @click="state.project.runSimulation()"
+        @contextmenu="e => showSimulationMenu(e)"
+        outlined
+      >
         <v-icon left>mdi-play</v-icon>
         Simulate
       </v-btn>
@@ -263,6 +273,11 @@
             v-if="core.app.view.project.toolMode.name === 'networkParamEdit'"
           />
 
+          <SimulationKernel
+            :simulation="state.project.simulation"
+            v-if="core.app.view.project.toolMode === 'simulationKernel'"
+          />
+
           <SimulationCodeEditor
             :code="state.project.code"
             v-if="core.app.view.project.toolMode.name === 'codeEditor'"
@@ -313,6 +328,8 @@ import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
+import SimulationKernel from '@/components/simulation/SimulationKernel.vue';
+import SimulationMenu from '@/components/simulation/SimulationMenu.vue';
 
 export default Vue.extend({
   name: 'Project',
@@ -324,15 +341,22 @@ export default Vue.extend({
     NetworkParamsSelect,
     NetworkGraph,
     SimulationCodeEditor,
+    SimulationKernel,
+    SimulationMenu,
   },
   props: {
     id: String,
   },
   setup(props, { root }) {
     const state = reactive({
-      activityGraph: 'abstract',
+      activityView: 'abstract',
+      modeIdx: 0,
       projectId: props.id,
       project: null,
+      simulationMenu: {
+        position: { x: 0, y: 0 },
+        show: false,
+      },
       tools: [
         // {
         //   icon: '$network',
@@ -344,6 +368,11 @@ export default Vue.extend({
           name: 'networkParamEdit',
           title: 'Network',
           width: '377.6',
+        },
+        {
+          icon: 'mdi-engine-outline',
+          name: 'simulationKernel',
+          title: 'Kernel',
         },
         { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '568' },
         {
@@ -359,7 +388,6 @@ export default Vue.extend({
           width: '500',
         },
       ],
-      modeIdx: 0,
     });
 
     const loadProject = id => {
@@ -402,6 +430,17 @@ export default Vue.extend({
       state.project.app.view.setProjectTool(tool);
     };
 
+    const showSimulationMenu = function(e) {
+      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
+      e.preventDefault();
+      state.simulationMenu.show = false;
+      state.simulationMenu.position.x = e.clientX;
+      state.simulationMenu.position.y = e.clientY;
+      this.$nextTick(() => {
+        state.simulationMenu.show = true;
+      });
+    };
+
     onMounted(() => {
       loadProject(props.id);
     });
@@ -416,10 +455,11 @@ export default Vue.extend({
 
     return {
       core,
-      countBefore,
       countAfter,
+      countBefore,
       selectActivityGraph,
       selectTool,
+      showSimulationMenu,
       state,
     };
   },
