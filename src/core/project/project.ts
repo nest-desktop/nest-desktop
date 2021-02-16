@@ -171,8 +171,8 @@ export class Project extends Config {
   /**
    * Delete this project from the list and database.
    */
-  delete(): void {
-    this._app.deleteProject(this._id);
+  delete(): Promise<any> {
+    return this._app.deleteProject(this._id);
   }
 
   /**
@@ -277,7 +277,6 @@ export class Project extends Config {
       .forEach(node => {
         currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
       });
-
 
     if (this._networkRevisions.length === 0) {
       this._networkRevisions.push(currentNetwork);

@@ -4,6 +4,12 @@
       Projects
     </v-toolbar> -->
 
+    <ProjectMenu
+      :project="state.projectMenu.project"
+      :position="state.projectMenu.position"
+      v-if="state.projectMenu.show"
+    />
+
     <v-list dense class="pa-0">
       <v-list-item exact to="/project/">
         <v-list-item-icon>
@@ -16,7 +22,7 @@
     </v-list>
 
     <v-form>
-      <v-container class="py-0" v-if="state.app.project" :key="state.projectId">
+      <v-container :key="state.projectId" class="py-0" v-if="state.app.project">
         <v-text-field
           clearable
           hide-details
@@ -53,11 +59,12 @@
       </v-container>
     </v-form>
 
-    <v-list dense two-line>
+    <v-list :key="state.app.projects.length" dense two-line>
       <v-list-item
         :key="project.id"
         :to="'/project/' + project.id"
         @click="state.projectId = project.id"
+        @contextmenu="e => showProjectMenu(e, project)"
         v-for="project in state.app.view.filteredProjects"
       >
         <v-list-item-content>
@@ -70,7 +77,7 @@
         </v-list-item-content>
 
         <v-list-item-icon v-if="!project.rev">
-          <v-icon v-text="'mdi-flash-off'" />
+          <v-icon v-text="'mdi-alert-circle-outline'" />
         </v-list-item-icon>
       </v-list-item>
     </v-list>
@@ -80,14 +87,24 @@
 <script>
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
 import core from '@/core/index';
+import ProjectMenu from '@/components/project/ProjectMenu.vue';
 
 export default Vue.extend({
   name: 'ProjectNavList',
+  components: {
+    ProjectMenu,
+  },
   setup() {
     const state = reactive({
       app: core.app,
       projectId: '',
+      projectMenu: {
+        position: { x: 0, y: 0 },
+        project: undefined,
+        show: false,
+      },
     });
     const timeSince = date => {
       const seconds = Math.floor((+new Date() - +new Date(date)) / 1000);
@@ -115,7 +132,20 @@ export default Vue.extend({
       }
     };
 
+    const showProjectMenu = function(e, project) {
+      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
+      e.preventDefault();
+      state.projectMenu.show = false;
+      state.projectMenu.project = project;
+      state.projectMenu.position.x = e.clientX;
+      state.projectMenu.position.y = e.clientY;
+      this.$nextTick(() => {
+        state.projectMenu.show = true;
+      });
+    };
+
     return {
+      showProjectMenu,
       state,
     };
   },
