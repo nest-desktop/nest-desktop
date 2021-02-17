@@ -184,7 +184,7 @@
       />
 
       <v-btn
-        @click="state.project.runSimulation()"
+        @click="simulate"
         @contextmenu="e => showSimulationMenu(e)"
         outlined
       >
@@ -199,6 +199,7 @@
       app
       class="no-print"
       clipped
+      floating
       mobile-breakpoint="56"
       permanent
       right
@@ -291,6 +292,21 @@
     </v-navigation-drawer>
 
     <v-main>
+      <div style="position:absolute; right: 0; z-index:1000; cursor: pointer">
+        <v-alert
+          :max-width="500"
+          @click="state.error = false"
+          dark
+          class="ma-1"
+          color="orange darken-3"
+          dense
+          icon="mdi-fire"
+          transition="slide-x-reverse-transition"
+          v-model="state.error"
+          v-text="state.project.errorMessage"
+        />
+      </div>
+
       <NetworkGraph :projectId="state.projectId" v-if="state.modeIdx === 0" />
 
       <ActivityGraph
@@ -350,6 +366,7 @@ export default Vue.extend({
   setup(props, { root }) {
     const state = reactive({
       activityView: 'abstract',
+      error: false,
       modeIdx: 0,
       projectId: props.id,
       project: null,
@@ -441,6 +458,26 @@ export default Vue.extend({
       });
     };
 
+    const simulate = () => {
+      state.error = false;
+      state.project.runSimulation().then(resp => {
+        switch (resp.status) {
+          case 0:
+            state.project.errorMessage =
+              'NEST Server not found. See NEST Desktop documentation for details.';
+            state.error = true;
+            break;
+          case 200:
+            state.modeIdx = 1;
+            state.error = false;
+            break;
+          case 400:
+            state.error = true;
+            break;
+        }
+      });
+    };
+
     onMounted(() => {
       loadProject(props.id);
     });
@@ -460,6 +497,7 @@ export default Vue.extend({
       selectActivityGraph,
       selectTool,
       showSimulationMenu,
+      simulate,
       state,
     };
   },
