@@ -18,6 +18,8 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import axios from 'axios';
 
+import core from '@/core/index';
+
 export default Vue.extend({
   name: 'ModelDocumentation',
   props: {
@@ -55,11 +57,10 @@ export default Vue.extend({
       if (!state.modelId) {
         return;
       }
-      state.url = `https://raw.githubusercontent.com/nest/nest-simulator/master/models/${state.modelId}.h`;
-      (async () => {
-        let resp = null;
-        try {
-          resp = await axios.get(state.url);
+      state.url = `${core.app.nestServer.url}/api/help?return_text=true&obj=${state.modelId}`;
+      axios
+        .get(state.url)
+        .then(resp => {
           if (resp.status !== 200) {
             return;
           }
@@ -74,7 +75,7 @@ export default Vue.extend({
             const end =
               i < blocks.length - 1
                 ? parseInt(blocks[i + 1][0], 0) - 1
-                : blocks.length;
+                : lines.length;
             content[block[1]] = lines.slice(start, end).join('\n');
           });
 
@@ -86,10 +87,12 @@ export default Vue.extend({
                 content: content[title],
               };
             });
-        } catch (error) {
-          reset();
-        }
-      })();
+        })
+        .catch(error => {
+          state.blocks.push({
+            content: `Sorry, there is no help for '${state.modelId}'.`,
+          });
+        });
     };
 
     onMounted(() => {
