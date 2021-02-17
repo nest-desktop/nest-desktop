@@ -12,16 +12,18 @@
       v-if="state.connectionMenu.show"
     />
 
-    <v-toolbar class="elementType" dense flat tile>
-      <v-row class="fill-height">
-        <v-btn-toggle dense group mandatory tile v-model="state.elementType">
-          <v-btn small> All </v-btn>
-          <v-btn small> Stimulator </v-btn>
-          <v-btn small> Neuron </v-btn>
-          <v-btn small> Recorder </v-btn>
-        </v-btn-toggle>
-      </v-row>
-    </v-toolbar>
+    <v-banner single-line sticky>
+      <v-toolbar class="elementType" dense flat tile>
+        <v-row class="fill-height">
+          <v-btn-toggle dense group mandatory tile v-model="state.elementType">
+            <v-btn small> All </v-btn>
+            <v-btn small> Stimulator </v-btn>
+            <v-btn small> Neuron </v-btn>
+            <v-btn small> Recorder </v-btn>
+          </v-btn-toggle>
+        </v-row>
+      </v-toolbar>
+    </v-banner>
 
     <v-row style="overflow-y:auto; height: calc(100vh - 78px)" no-gutters>
       <v-col>
@@ -406,5 +408,9 @@ export default Vue.extend({
 .v-image__image--preload {
   filter: none;
   --webkit-filter: none;
+}
+
+.v-banner__wrapper {
+  padding: 0 !important;
 }
 </style>
