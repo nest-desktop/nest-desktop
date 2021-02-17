@@ -6,11 +6,17 @@
     />
 
     <v-navigation-drawer
-      :mini-variant="state.miniVariant"
+      :miniVariant="state.miniVariant"
       app
       clipped
       mobile-breakpoint="56"
       permanent
+      v-click-outside="
+        () => {
+          state.miniVariant = true;
+          state.navList = '';
+        }
+      "
       width="320"
     >
       <v-row class="fill-height" no-gutters>
@@ -20,27 +26,20 @@
           mini-variant-width="56"
           mobile-breakpoint="56"
         >
-          <!-- <v-toolbar dense flat>
-            <v-icon
-              @click="state.miniVariant = !state.miniVariant"
-              v-text="
-                state.miniVariant ? 'mdi-chevron-right' : 'mdi-chevron-left'
-              "
-            />
-          </v-toolbar> -->
           <div style="display:flex; flex-direction:column; height: 100%">
             <v-list nav dense>
               <v-list-item
-                :disabled="state.navList.length === 0"
-                @click="state.miniVariant = !state.miniVariant"
+                :disabled="state.miniVariant"
+                @click="
+                  () => {
+                    state.miniVariant = !state.miniVariant;
+                    state.navList = '';
+                  }
+                "
                 title="Toggle navigation"
               >
                 <v-list-item-icon>
-                  <v-icon
-                    v-text="
-                      'mdi-chevron-' + (state.miniVariant ? 'right' : 'left')
-                    "
-                  />
+                  <v-icon v-text="'mdi-chevron-left'" />
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-text="'Close'" />
@@ -63,7 +62,7 @@
                 :color="route.id"
                 :key="route.id"
                 :title="route.title"
-                @click="() => open(route.id)"
+                @click="() => toggle(route.id)"
                 @contextmenu="e => route.contextmenu(e)"
                 v-for="route in routes"
               >
@@ -99,7 +98,7 @@
           </div>
         </v-navigation-drawer>
 
-        <div style="padding-left:56px; width:320px" v-show="!state.miniVariant">
+        <div style="padding-left:56px">
           <ProjectNavList v-if="state.navList === 'project'" />
           <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />
@@ -133,9 +132,9 @@ export default {
       },
     });
 
-    const open = navList => {
-      state.navList = navList;
-      state.miniVariant = false;
+    const toggle = navList => {
+      state.miniVariant = state.navList === navList;
+      state.navList = state.navList === navList ? '' : navList;
     };
 
     const reset = () => {
@@ -170,7 +169,7 @@ export default {
     ];
 
     return {
-      open,
+      toggle,
       reset,
       routes,
       state,
