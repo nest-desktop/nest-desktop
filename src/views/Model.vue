@@ -5,19 +5,6 @@
         <v-icon class="ma-2">mdi-engine-outline</v-icon>
         {{ state.model.label }}
       </v-toolbar-title>
-      <v-btn
-        :href="state.url"
-        absolute
-        bottom
-        fab
-        light
-        right
-        small
-        target="_blank"
-        v-show="state.url.length > 0"
-      >
-        <v-icon v-text="'$github'" />
-      </v-btn>
     </v-app-bar>
 
     <v-main>
@@ -44,7 +31,6 @@ export default Vue.extend({
     const state = reactive({
       modelId: '',
       model: {},
-      url: '',
     });
 
     const reset = () => {
@@ -54,7 +40,6 @@ export default Vue.extend({
     onMounted(() => {
       state.modelId = props.id;
       state.model = core.app.getModel(state.modelId);
-      state.url = `https://raw.githubusercontent.com/nest/nest-simulator/master/models/${state.modelId}.h`;
     });
 
     watch(
@@ -62,7 +47,6 @@ export default Vue.extend({
       id => {
         state.modelId = id;
         state.model = core.app.getModel(state.modelId);
-        state.url = `https://raw.githubusercontent.com/nest/nest-simulator/master/models/${state.modelId}.h`;
       }
     );
     return { state };
