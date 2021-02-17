@@ -4,7 +4,6 @@ import Vuetify from 'vuetify/lib';
 // Colors
 import colors from 'vuetify/lib/util/colors';
 
-import GithubIcon from '@/components/icons/GithubIcon.vue';
 import NetworkIcon from '@/components/icons/NetworkIcon.vue';
 
 Vue.use(Vuetify);
@@ -12,9 +11,6 @@ Vue.use(Vuetify);
 export default new Vuetify({
   icons: {
     values: {
-      github: {
-        component: GithubIcon,
-      },
       network: {
         component: NetworkIcon,
       },
