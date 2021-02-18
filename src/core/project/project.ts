@@ -278,7 +278,6 @@ export class Project extends Config {
         currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
       });
 
-
     if (this._networkRevisions.length === 0) {
       this._networkRevisions.push(currentNetwork);
     } else {

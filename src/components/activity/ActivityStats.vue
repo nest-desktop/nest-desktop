@@ -61,10 +61,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
+import { Activity } from '@/core/activity/activity';
 import { Project } from '@/core/project/project';
 import ActivityAnalogStats from '@/components/activity/ActivityAnalogStats.vue';
 import ActivitySpikeStats from '@/components/activity/ActivitySpikeStats.vue';
@@ -80,7 +81,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      activity: undefined,
+      activity: undefined as Activity | undefined,
       project: props.project,
     });
 
