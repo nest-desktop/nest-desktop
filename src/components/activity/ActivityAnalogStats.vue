@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 import * as d3 from 'd3';
@@ -35,7 +35,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      activity: undefined,
+      activity: undefined as Activity | undefined,
       headers: [
         {
           text: 'ID',
@@ -55,24 +55,26 @@ export default Vue.extend({
       if (state.selectedRecordFrom === undefined) {
         return;
       }
-      const activityData = state.activity.events[state.selectedRecordFrom];
-      const data = Object.create(null);
-      state.activity.nodeIds.forEach(id => (data[id] = []));
-      state.activity.events.senders.forEach((sender, idx) => {
-        data[sender].push(activityData[idx]);
-      });
-      state.items = state.activity.nodeIds.map(id => {
-        const d = data[id];
-        return {
-          id,
-          mean: d.length > 0 ? d3.mean(d).toFixed(2) : 0,
-          std: d.length > 0 ? d3.deviation(d).toFixed(2) : 0,
-        };
-      });
+      if (state.activity != undefined) {
+        const activityData = state.activity.events[state.selectedRecordFrom];
+        const data = Object.create(null);
+        state.activity.nodeIds.forEach(id => (data[id] = []));
+        state.activity.events.senders.forEach((sender, idx) => {
+          data[sender].push(activityData[idx]);
+        });
+        state.items = state.activity.nodeIds.map(id => {
+          const d = data[id];
+          return {
+            id,
+            mean: d.length > 0 ? d3.mean(d).toFixed(2) : 0,
+            std: d.length > 0 ? d3.deviation(d).toFixed(2) : 0,
+          };
+        });
+      }
     };
 
     onMounted(() => {
-      state.activity = props.activity;
+      state.activity = props.activity as Activity;
       update();
     });
 

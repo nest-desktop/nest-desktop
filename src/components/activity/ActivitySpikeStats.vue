@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 import * as d3 from 'd3';
@@ -35,7 +35,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      activity: undefined,
+      activity: undefined as Activity | undefined,
       headers: [
         {
           text: 'ID',
@@ -76,24 +76,28 @@ export default Vue.extend({
         { text: 'CV (ISI)', value: 'cvISI' },
       ];
 
-      const times = Object.create(null);
-      state.activity.nodeIds.forEach(id => (times[id] = []));
-      state.activity.events.senders.forEach((sender, idx) => {
-        times[sender].push(state.activity.events.times[idx]);
-      });
-      state.items = state.activity.nodeIds.map(id => {
-        const timesSorted = times[id].sort((a, b) => a - b);
-        const isi = diff(timesSorted);
-        const isiMean = isi.length > 1 ? d3.mean(isi).toFixed(2) : 0;
-        const isiStd = isi.length > 1 ? d3.deviation(isi).toFixed(2) : 0;
-        return {
-          id,
-          count: timesSorted.length,
-          meanISI: isiMean,
-          stdISI: isiStd,
-          cvISI: isiMean > 0 ? (isiStd / isiMean).toFixed(2) : 0,
-        };
-      });
+      if (state.activity != undefined) {
+        const times = Object.create(null);
+        state.activity.nodeIds.forEach(id => (times[id] = []));
+        state.activity.events.senders.forEach((sender, idx) => {
+          times[sender].push(state.activity.events.times[idx]);
+        });
+        state.items = state.activity.nodeIds.map(id => {
+          const timesSorted = times[id].sort((a, b) => a - b);
+          const isi = diff(timesSorted);
+          const isiMean: number =
+            isi.length > 1 ? parseFloat(d3.mean(isi).toFixed(2)) : 0;
+          const isiStd: number =
+            isi.length > 1 ? parseFloat(d3.deviation(isi).toFixed(2)) : 0;
+          return {
+            id,
+            count: timesSorted.length,
+            meanISI: isiMean,
+            stdISI: isiStd,
+            cvISI: isiMean > 0 ? (isiStd / isiMean).toFixed(2) : 0,
+          };
+        });
+      }
     };
 
     // const sum = element => {
@@ -110,7 +114,7 @@ export default Vue.extend({
     // };
 
     onMounted(() => {
-      state.activity = props.activity;
+      state.activity = props.activity as Activity;
       update();
     });
 
