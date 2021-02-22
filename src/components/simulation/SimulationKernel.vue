@@ -17,7 +17,7 @@
                 dense
                 height="40"
                 hide-details
-                v-model="simulation.localNumThreads"
+                v-model="simulation.kernel.localNumThreads"
               >
                 <template v-slot:append>
                   <v-text-field
@@ -50,7 +50,7 @@
                 dense
                 height="40"
                 hide-details
-                v-model="simulation.resolution"
+                v-model="simulation.kernel.resolution"
               >
                 <template v-slot:append>
                   <v-text-field
@@ -134,18 +134,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
+import { Simulation } from '@/core/simulation/simulation';
 
 export default Vue.extend({
   name: 'SimulationKernel',
   props: {
-    simulation: Object,
+    simulation: Simulation,
   },
   setup(props) {
     const state = reactive({
-      simulation: props.simulation,
+      simulation: props.simulation as Simulation,
     });
 
     const paramChange = () => {
@@ -155,7 +157,7 @@ export default Vue.extend({
     watch(
       () => props.simulation,
       () => {
-        state.simulation = props.simulation;
+        state.simulation = props.simulation as Simulation;
       }
     );
 
