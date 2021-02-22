@@ -31,65 +31,58 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
+import { Simulation } from '@/core/simulation/simulation';
 
 export default Vue.extend({
   name: 'ProjectMenu',
   props: {
-    simulation: Object,
+    simulation: Simulation,
     position: Object,
   },
-  setup(props, { root }) {
+  setup(props) {
     const state = reactive({
       content: null,
-      simulation: props.simulation,
-      position: props.position,
-      show: true,
       items: [
         {
-          id: 'simulationAfterChange',
           icon: 'mdi-reload',
+          id: 'simulationAfterChange',
           title: 'Simulate after change',
           onClick: () => {
-            state.project.reload();
             state.show = false;
           },
         },
         {
-          id: 'simulationAfterLoad',
           icon: 'mdi-download',
+          id: 'simulationAfterLoad',
           title: 'Simulate after load',
           onClick: () => {
-            state.project.download();
             state.show = false;
           },
         },
         {
-          id: 'simulationAfterCheckout',
           icon: 'mdi-delete',
+          id: 'simulationAfterCheckout',
           title: 'Simulation after checkout',
           onClick: () => {
-            state.project.delete().then(() => {
-              state.project.app.updateProjects();
-            });
             state.show = false;
           },
         },
       ],
+      position: props.position,
+      show: true,
+      simulation: props.simulation as Simulation,
     });
-
-    const back = () => {
-      state.content = null;
-    };
 
     watch(
       () => props.simulation,
       () => {
         state.content = null;
         state.show = true;
-        state.simulation = props.simulation;
+        state.simulation = props.simulation as Simulation;
         state.position = props.position;
       }
     );
