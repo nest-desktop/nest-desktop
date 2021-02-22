@@ -89,6 +89,10 @@ export class Project extends Config {
     return this._errorMessage;
   }
 
+  set errorMessage(value: string) {
+    this._errorMessage = value;
+  }
+
   get hash(): string {
     return this._hash;
   }
