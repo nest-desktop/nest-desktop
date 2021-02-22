@@ -62,7 +62,7 @@ export class ActivityChartGraph {
       name: 'image_settings',
       title: 'Edit image settings',
       icon: PlotlyJS.Icons.pencil,
-      click: (_: any) => {},
+      click: () => {},
     };
 
     this._layout = {

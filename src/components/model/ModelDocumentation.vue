@@ -91,7 +91,7 @@ export default Vue.extend({
               };
             });
         })
-        .catch(_ => {
+        .catch(() => {
           state.blocks.push({
             content: `Sorry, there is no help for '${state.modelId}'.`,
           });
