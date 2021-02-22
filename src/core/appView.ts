@@ -39,5 +39,4 @@ export class AppView {
   get project(): any {
     return this._project;
   }
-
 }
