@@ -56,14 +56,15 @@ export default Vue.extend({
         return;
       }
       if (state.activity != undefined) {
-        const activityData = state.activity.events[state.selectedRecordFrom];
-        const data = Object.create(null);
+        const activityData: any[] =
+          state.activity.events[state.selectedRecordFrom];
+        const data: any[] = Object.create(null);
         state.activity.nodeIds.forEach(id => (data[id] = []));
-        state.activity.events.senders.forEach((sender, idx) => {
+        state.activity.events.senders.forEach((sender: number, idx: number) => {
           data[sender].push(activityData[idx]);
         });
         state.items = state.activity.nodeIds.map(id => {
-          const d = data[id];
+          const d: any = data[id];
           return {
             id,
             mean: d.length > 0 ? d3.mean(d).toFixed(2) : 0,

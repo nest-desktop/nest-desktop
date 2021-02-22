@@ -33,20 +33,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
+import { Project } from '@/core/project/project';
 
 export default Vue.extend({
   name: 'ProjectMenu',
   props: {
-    project: Object,
+    project: Project,
     position: Object,
   },
-  setup(props, { root }) {
+  setup(props) {
     const state = reactive({
       content: null,
-      project: props.project,
+      project: props.project as Project,
       position: props.position,
       show: true,
 
@@ -83,16 +85,12 @@ export default Vue.extend({
       ],
     });
 
-    const back = () => {
-      state.content = null;
-    };
-
     watch(
       () => props.project,
       () => {
         state.content = null;
         state.show = true;
-        state.project = props.project;
+        state.project = props.project as Project;
         state.position = props.position;
       }
     );

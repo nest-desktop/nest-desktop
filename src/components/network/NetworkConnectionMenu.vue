@@ -101,12 +101,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
 import { Connection } from '@/core/connection/connection';
 
 export default Vue.extend({
   name: 'NetworkParamEdit',
   props: {
-    connection: Object,
+    connection: Connection,
     position: Object,
   },
   setup(props) {

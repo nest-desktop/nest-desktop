@@ -25,7 +25,10 @@
       </v-toolbar>
     </v-banner>
 
-    <v-row style="overflow-y:auto; height: calc(100vh - 78px)" no-gutters>
+    <v-row
+      no-gutters
+      style="overflow-y:auto; height: calc(100vh - 78px); margin-right: -8px"
+    >
       <v-col>
         <v-card
           :color="node.view.color"
@@ -157,7 +160,6 @@
             :gradient="'to right, ' + connection.view.backgroundImage"
             @contextmenu="e => showConnectionMenu(e, connection)"
             dark
-            width="320"
           >
             <v-row no-gutters>
               <v-col cols="3" class="py-0" style="text-align:center">
@@ -245,12 +247,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
+import { Connection } from '@/core/connection/connection';
+import { Network } from '@/core/network/network';
+import { Node } from '@/core/node/node';
+import { Parameter } from '@/core/parameter';
+import core from '@/core/index';
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
-import core from '@/core/index';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
@@ -263,18 +270,18 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      network: core.app.project.network,
-      elementType: 0,
       connectionMenu: {
-        connection: undefined,
+        connection: undefined as Connection | undefined,
         position: {
           x: 0,
           y: 0,
         },
         show: false,
       },
+      elementType: 0,
+      network: core.app.project.network as Network,
       nodeMenu: {
-        node: undefined,
+        node: undefined as Node | undefined,
         position: {
           x: 0,
           y: 0,
@@ -283,31 +290,31 @@ export default Vue.extend({
       },
     });
 
-    const paramLabel = param => {
+    const paramLabel = (param: Parameter) => {
       return `${param.options.label} (${param.options.unit})` || param.id;
     };
 
-    const showNode = node => {
+    const showNode = (node: Node) => {
       if (
         state.network.view.selectedConnection ||
         state.network.view.selectedNode
       ) {
         return state.network.view.isNodeSelected(node);
       } else {
-        const elementTypes = ['', 'stimulator', 'neuron', 'recorder'];
+        const elementTypes: string[] = ['', 'stimulator', 'neuron', 'recorder'];
         if (state.elementType === 0) return true;
         return elementTypes[state.elementType] === node.model.elementType;
       }
     };
 
-    const showConnection = connection => {
+    const showConnection = (connection: Connection) => {
       if (
         state.network.view.selectedConnection ||
         state.network.view.selectedNode
       ) {
         return state.network.view.isConnectionSelected(connection);
       } else {
-        const elementTypes = ['', 'stimulator', 'neuron', 'recorder'];
+        const elementTypes: string[] = ['', 'stimulator', 'neuron', 'recorder'];
         if (state.elementType === 0) return true;
         return (
           elementTypes[state.elementType] ===
@@ -316,7 +323,7 @@ export default Vue.extend({
       }
     };
 
-    const showConnectionMenu = function(e, connection) {
+    const showConnectionMenu = function(e: MouseEvent, connection: Connection) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.connectionMenu.show = false;
@@ -328,7 +335,7 @@ export default Vue.extend({
       });
     };
 
-    const showNodeMenu = function(e, node) {
+    const showNodeMenu = function(e: MouseEvent, node: Node) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.nodeMenu.show = false;
@@ -348,16 +355,9 @@ export default Vue.extend({
     };
 
     watch(
-      () => props.projectId,
+      () => props.projectId + core.app.project.network.hash,
       () => {
-        state.network = core.app.project.network;
-      }
-    );
-
-    watch(
-      () => core.app.project.network.hash,
-      () => {
-        state.network = core.app.project.network;
+        state.network = core.app.project.network as Network;
       }
     );
 

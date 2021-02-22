@@ -59,7 +59,7 @@
 
               <v-list-item
                 :class="{ 'v-list-item--active': state.navList === route.id }"
-                :color="route.id"
+                :color="route.color"
                 :key="route.id"
                 :title="route.title"
                 @click="() => toggle(route.id)"
@@ -81,7 +81,12 @@
             <v-spacer />
 
             <v-list nav dense>
-              <v-list-item @click="reset" title="Settings" to="/settings">
+              <v-list-item
+                @click="reset"
+                color="settings darken"
+                title="Settings"
+                to="/settings"
+              >
                 <v-list-item-icon>
                   <v-list-item-group
                     style="font-size:7px; text-align:center; width:100%"
@@ -108,11 +113,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from '@vue/composition-api';
 
-import ModelNavList from '@/components/navigation/ModelNavList';
-import ProjectNavList from '@/components/navigation/ProjectNavList';
+import ModelNavList from '@/components/navigation/ModelNavList.vue';
+import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
 
 export default {
@@ -122,7 +127,7 @@ export default {
     ProjectNavList,
     ProjectsMenu,
   },
-  setup(props) {
+  setup() {
     const state = reactive({
       navList: '',
       miniVariant: true,
@@ -132,7 +137,7 @@ export default {
       },
     });
 
-    const toggle = navList => {
+    const toggle = (navList: string) => {
       state.miniVariant = state.navList === navList;
       state.navList = state.navList === navList ? '' : navList;
     };
@@ -142,7 +147,7 @@ export default {
       state.miniVariant = true;
     };
 
-    const showProjectsMenu = e => {
+    const showProjectsMenu = (e: MouseEvent) => {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.projectsMenu.show = false;
@@ -153,18 +158,20 @@ export default {
       }, 1);
     };
 
-    const routes = [
+    const routes: any[] = [
       {
         id: 'project',
+        color: 'project darken',
         icon: 'mdi-brain',
         title: 'Projects',
         contextmenu: showProjectsMenu,
       },
       {
         id: 'model',
+        color: 'model',
         icon: 'mdi-square-root',
         title: 'Models',
-        contextmenu: e => {},
+        contextmenu: () => {},
       },
     ];
 

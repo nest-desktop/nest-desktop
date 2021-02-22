@@ -4,31 +4,34 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, onMounted, onUnmounted, watch } from '@vue/composition-api';
 
+import { ActivityAnimationGraph } from '@/core/activity/activityAnimationGraph';
 import { ActivityAnimationSceneSphere } from '@/core/activity/animationScenes/activityAnimationSceneSphere';
 
 export default Vue.extend({
   name: 'ActivityAnimationGraph',
   props: {
-    graph: Object,
+    graph: ActivityAnimationGraph,
   },
   setup(props, { refs }) {
     const state = reactive({
-      graph: props.graph,
+      graph: props.graph as ActivityAnimationGraph,
       scene: null,
     });
 
     const update = () => {
-      state.graph = props.graph;
-      setTimeout(() => {
-        state.scene = new ActivityAnimationSceneSphere(
-          state.graph,
-          refs.activityAnimationScene
-        );
-      }, 1);
+      state.graph = props.graph as ActivityAnimationGraph;
+      if (state.graph) {
+        setTimeout(() => {
+          state.scene = new ActivityAnimationSceneSphere(
+            state.graph as ActivityAnimationGraph,
+            refs.activityAnimationScene
+          );
+        }, 1);
+      }
     };
 
     watch(
