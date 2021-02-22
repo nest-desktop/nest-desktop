@@ -5,8 +5,9 @@ import { AnalogSignalPlotPanel } from './analogSignalPlotPanel';
 export class InputAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph);
+    this.icon = 'mdi-chart-line';
     this.name = 'InputAnalogSignalPlotPanel';
-    this.label = 'plot of input analog signals';
+    this.label = 'line of input analog signals';
     this.init();
   }
 

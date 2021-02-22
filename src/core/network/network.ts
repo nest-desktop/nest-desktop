@@ -1,8 +1,7 @@
-import * as objectHash from 'object-hash';
+import { sha1 } from 'object-hash';
 
 import { Config } from '../config';
 import { Connection } from '../connection/connection';
-import { Model } from '../model/model';
 import { NetworkCode } from './networkCode';
 import { NetworkView } from './networkView';
 import { Node } from '../node/node';
@@ -83,9 +82,7 @@ export class Network extends Config {
    */
   networkChanges(): void {
     this.updateHash();
-    if (this._project.app.view.project.mode === 'networkEditor') {
-      this._project.commitNetwork(this);
-    }
+    this._project.commitNetwork(this);
     this._project.code.generate();
     // this._project.activityGraph.init();
   }
@@ -282,7 +279,7 @@ export class Network extends Config {
    * Calculate hash of this component.
    */
   updateHash(): void {
-    this._hash = objectHash(this.toJSON());
+    this._hash = sha1(this.toJSON());
   }
 
   /**

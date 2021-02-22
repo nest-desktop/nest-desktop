@@ -4,7 +4,6 @@ import { Node } from '../node/node';
 
 export class SpikeActivity extends Activity {
   private _times: any;
-  private _stats: any[];
 
   constructor(recorder: Node, activity: any = {}) {
     super(recorder, activity);
@@ -27,21 +26,21 @@ export class SpikeActivity extends Activity {
     });
   }
 
-  updateStats(): void {
-    this._stats = this.nodeIds.map((id: number) => {
-      const isi: number[] = this.getISI(this._times[id]);
-      const isiMean: number = isi.length > 1 ? this.getAverage(isi) : 0;
-      const isiStd: number =
-        isi.length > 1 ? this.getStandardDeviation(isi) : 0;
-      return {
-        id,
-        count: this._times[id].length,
-        isi_mean: isiMean,
-        isi_std: isiStd,
-        cv_isi: isiMean > 0 ? isiStd / isiMean : 0,
-      };
-    });
-  }
+  // updateStats(): void {
+  //   this._stats = this.nodeIds.map((id: number) => {
+  //     const isi: number[] = this.getISI(this._times[id]);
+  //     const isiMean: number = isi.length > 1 ? this.getAverage(isi) : 0;
+  //     const isiStd: number =
+  //       isi.length > 1 ? this.getStandardDeviation(isi) : 0;
+  //     return {
+  //       id,
+  //       count: this._times[id].length,
+  //       isi_mean: isiMean,
+  //       isi_std: isiStd,
+  //       cv_isi: isiMean > 0 ? isiStd / isiMean : 0,
+  //     };
+  //   });
+  // }
 
   ISI(): number[][] {
     return this.nodeIds.map((id: number) => this.getISI(this._times[id]));
