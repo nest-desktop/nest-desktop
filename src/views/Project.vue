@@ -202,7 +202,6 @@
       app
       class="no-print"
       clipped
-      floating
       mobile-breakpoint="56"
       permanent
       right
@@ -270,7 +269,7 @@
 
           <SimulationKernel
             :simulation="state.project.simulation"
-            v-if="core.app.view.project.toolMode === 'simulationKernel'"
+            v-if="state.tool.name === 'simulationKernel'"
           />
 
           <SimulationCodeEditor
@@ -411,6 +410,7 @@ export default Vue.extend({
           icon: 'mdi-engine-outline',
           name: 'simulationKernel',
           title: 'Kernel',
+          width: '378',
         },
         { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '568' },
         {
