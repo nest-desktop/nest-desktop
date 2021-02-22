@@ -35,7 +35,6 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
 
     const configFrames: any = this.graph.config.frames;
     const trail: any = this.graph.config.trail;
-    const ts: number = this.graph.frameIdx / configFrames.sampleRate;
 
     for (let i = 0; i < data.x.length; i++) {
       const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({

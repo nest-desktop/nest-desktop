@@ -12,7 +12,7 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph);
     this.name = 'CVISIHistogramPanel';
-    this.icon = 'chart-bar';
+    this.icon = 'mdi-chart-bar';
     this.label = 'histogram of CV of ISI';
     this.layout.barmode = this.state.barmode;
     this.layout.xaxis.title = 'CV of ISI';

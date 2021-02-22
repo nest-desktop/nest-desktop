@@ -43,6 +43,10 @@ export class Parameter {
     return this._id;
   }
 
+  get idx(): number {
+    return this._idx;
+  }
+
   get input(): string {
     return this._input;
   }

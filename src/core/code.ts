@@ -1,10 +1,4 @@
 export class Code {
-  private _modelLabel: any = {
-    stimulator: 'stim',
-    neuron: 'neuron',
-    recorder: 'rec',
-  };
-
   constructor() {}
 
   _(n: number = 1): string {

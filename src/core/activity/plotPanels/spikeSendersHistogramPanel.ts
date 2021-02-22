@@ -1,4 +1,3 @@
-import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
@@ -7,7 +6,7 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph);
     this.name = 'SpikeSendersHistogramPanel';
-    this.icon = 'chart-bar';
+    this.icon = 'mdi-chart-bar';
     this.label = 'histogram of spike senders';
     this.layout.xaxis.title = 'Neuron ID';
     this.layout.yaxis.title = 'Spike count';

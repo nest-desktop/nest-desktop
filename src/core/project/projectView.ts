@@ -1,4 +1,3 @@
-import { AppView } from '../appView';
 import { Project } from './project';
 
 export class ProjectView {

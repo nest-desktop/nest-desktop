@@ -1,15 +1,6 @@
 import { App } from '../app';
-import { Config } from '../config';
-import { Network } from '../network/network';
 import { Parameter } from '../parameter';
 import { ModelCode } from './modelCode';
-
-enum ElementType {
-  neuron = 'neuron',
-  recorder = 'recorder',
-  stimulator = 'stimulator',
-  synapse = 'synapse',
-}
 
 export class Model {
   private readonly _name = 'Model';
@@ -65,6 +56,10 @@ export class Model {
 
   get id(): string {
     return this._id;
+  }
+
+  get idx(): number {
+    return this._idx;
   }
 
   get label(): string {

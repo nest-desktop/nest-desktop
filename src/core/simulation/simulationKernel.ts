@@ -31,6 +31,10 @@ export class SimulationKernel extends Config {
     this._resolution = value;
   }
 
+  get simulation(): Simulation {
+    return this._simulation;
+  }
+
   get time(): number {
     return this._time;
   }
