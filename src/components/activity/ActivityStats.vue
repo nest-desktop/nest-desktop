@@ -1,5 +1,5 @@
 <template>
-  <div class="activityStats pr-2">
+  <div class="activityStats">
     <span v-if="state.activity === undefined">
       <v-card
         :key="activity.idx"

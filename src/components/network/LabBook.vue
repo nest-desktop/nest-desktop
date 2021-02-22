@@ -1,8 +1,6 @@
 <template>
   <div class="lab-book" v-if="state.project">
     <v-container>
-      <NetworkGraph :projectId="state.project.id" style="height:calc(30vh)" />
-
       <v-card
         flat
         style="height:calc(70vh - 48px); overflow-y:auto; overflow-x:hidden"
@@ -152,15 +150,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
-
 import core from '@/core/index';
-import NetworkGraph from '@/components/network/NetworkGraph.vue';
 
 export default Vue.extend({
   name: 'LabBook',
-  components: {
-    NetworkGraph,
-  },
   props: {
     hash: String,
   },

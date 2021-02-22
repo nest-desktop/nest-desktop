@@ -123,10 +123,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
+import { Project } from '@/core/project/project';
 import core from '@/core/index';
 
 export default Vue.extend({
@@ -134,11 +135,11 @@ export default Vue.extend({
   props: {
     position: Object,
   },
-  setup(props, { root }) {
+  setup(props) {
     const state = reactive({
       content: null,
       selectedProjects: [],
-      projects: core.app.projects,
+      projects: core.app.projects as Project[],
       position: props.position,
       show: true,
       items: [
@@ -171,7 +172,7 @@ export default Vue.extend({
         },
         {
           id: 'projectsDelete',
-          icon: 'mdi-delete',
+          icon: 'mdi-trash-can-outline',
           title: 'Delete projects',
           onClick: () => {
             state.content = 'projectsDelete';
@@ -180,7 +181,7 @@ export default Vue.extend({
         },
         {
           id: 'projectsReset',
-          icon: 'mdi-database-refresh',
+          icon: '$mdiDatabaseRefreshOutline',
           title: 'Reset projects',
           onClick: () => {
             state.content = 'projectsReset';
@@ -205,19 +206,18 @@ export default Vue.extend({
 
     const downloadProjects = () => {
       state.show = false;
-      const projectIds = state.projects
-        .filter((project, idx) => state.selectedProjects.includes(idx))
-        .map(project => project.id);
-      core.app.downloadProjects(projectIds).then(() => {
-        reset();
-      });
+      const projectIds: string[] = state.projects
+        .filter((_, idx: number) => state.selectedProjects.includes(idx))
+        .map((project: Project) => project.id);
+      core.app.downloadProjects(projectIds);
+      reset();
     };
 
     const deleteProjects = () => {
       state.show = false;
-      const projectIds = state.projects
-        .filter((project, idx) => state.selectedProjects.includes(idx))
-        .map(project => project.id);
+      const projectIds: string[] = state.projects
+        .filter((_, idx: number) => state.selectedProjects.includes(idx))
+        .map((project: Project) => project.id);
       core.app.deleteProjects(projectIds).then(() => {
         core.app.updateProjects();
         reset();

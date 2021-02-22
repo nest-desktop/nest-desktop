@@ -63,11 +63,10 @@
             flat
             tile
             v-for="param of state.node.params"
-            v-show="param.visible || true"
           >
             <v-row>
               <v-list-item style="font-size:12px; min-height:32px">
-                <template v-slot:default="{ active }">
+                <template v-slot:default="">
                   <v-list-item-content style="padding: 4px">
                     <v-row no-gutters>
                       {{ param.options.label }}
@@ -144,9 +143,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
+import { Node } from '@/core/node/node';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 
 export default Vue.extend({
@@ -155,16 +156,46 @@ export default Vue.extend({
     ModelDocumentation,
   },
   props: {
-    node: Object,
+    node: Node,
     position: Object,
   },
-  setup(props, { root }) {
+  setup(props) {
     const state = reactive({
       content: null,
-      node: props.node,
+      node: props.node as Node,
       position: props.position,
       show: true,
       items: [
+        {
+          id: 'paramsSelect',
+          icon: 'mdi-checkbox-marked-outline',
+          title: 'Set parameter view',
+          onClick: () => {
+            state.content = 'paramsSelect';
+            window.dispatchEvent(new Event('resize'));
+          },
+          append: true,
+        },
+
+        {
+          id: 'setWeights',
+          icon: 'mdi-contrast',
+          title: 'Set all synaptic weights',
+          onClick: () => {
+            state.content = 'nodeWeights';
+          },
+          append: true,
+        },
+        {
+          id: 'paramsReset',
+          icon: 'mdi-restart',
+          title: 'Reset parameters',
+          onClick: () => {
+            state.node.resetParameters();
+            state.show = false;
+          },
+          append: false,
+        },
         {
           id: 'nodeColor',
           icon: 'mdi-format-color-fill',
@@ -187,40 +218,11 @@ export default Vue.extend({
           },
         },
         {
-          id: 'setWeights',
-          icon: 'mdi-dumbbell',
-          title: 'Set weights',
-          onClick: () => {
-            state.content = 'nodeWeights';
-          },
-          append: true,
-        },
-        {
-          id: 'paramsSelect',
-          icon: 'mdi-checkbox-marked-outline',
-          title: 'Set parameter view',
-          onClick: () => {
-            state.content = 'paramsSelect';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-        },
-        {
           id: 'setSpatial',
           icon: 'mdi-axis-arrow',
           title: 'Set spatial',
           onClick: () => {
             state.node.initSpatial({ pos: [] });
-            state.show = false;
-          },
-          append: false,
-        },
-        {
-          id: 'paramsReset',
-          icon: 'mdi-restart',
-          title: 'Reset parameters',
-          onClick: () => {
-            state.node.resetParameters();
             state.show = false;
           },
           append: false,
@@ -260,7 +262,7 @@ export default Vue.extend({
       state.node.remove();
     };
 
-    const setWeights = mode => {
+    const setWeights = (mode: string) => {
       state.node.setWeights(mode);
       state.show = false;
     };
@@ -274,7 +276,7 @@ export default Vue.extend({
       () => {
         state.content = null;
         state.show = true;
-        state.node = props.node;
+        state.node = props.node as Node;
         state.position = props.position;
       }
     );

@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import axios from 'axios';
@@ -65,14 +65,17 @@ export default Vue.extend({
             return;
           }
           state.helptext = resp.data;
-          const lines = state.helptext.split('\n');
-          let blocks = titles.map(title => [lines.indexOf(title), title]);
-          blocks = blocks.sort((a, b) => a[0] - b[0]);
+          const lines: string[] = state.helptext.split('\n');
+          let blocks: any[] = titles.map(title => [
+            lines.indexOf(title),
+            title,
+          ]);
+          blocks = blocks.sort((a: any[], b: any[]) => a[0] - b[0]);
           blocks = blocks.filter(block => block[0] !== -1);
-          const content = {};
-          blocks.map((block, i) => {
-            const start = parseInt(block[0], 0) + 2;
-            const end =
+          const content: any = {};
+          blocks.map((block: any, i: number) => {
+            const start: number = parseInt(block[0], 0) + 2;
+            const end: number =
               i < blocks.length - 1
                 ? parseInt(blocks[i + 1][0], 0) - 1
                 : lines.length;
@@ -80,15 +83,15 @@ export default Vue.extend({
           });
 
           state.blocks = titles
-            .filter(title => content[title])
-            .map(title => {
+            .filter((title: string) => content[title])
+            .map((title: string) => {
               return {
                 title,
                 content: content[title],
               };
             });
         })
-        .catch(error => {
+        .catch(_ => {
           state.blocks.push({
             content: `Sorry, there is no help for '${state.modelId}'.`,
           });
@@ -102,7 +105,7 @@ export default Vue.extend({
 
     watch(
       () => props.id,
-      id => {
+      (id: string) => {
         state.modelId = id;
         updateModelDoc();
       }
