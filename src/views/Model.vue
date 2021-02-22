@@ -1,5 +1,5 @@
 <template>
-  <div class="model" v-if="state.model">
+  <div model="model" v-if="state.model">
     <v-app-bar app clipped-left color="model" dark dense flat>
       <v-toolbar-title>
         <v-icon class="ma-2">mdi-engine-outline</v-icon>
@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
@@ -33,19 +33,15 @@ export default Vue.extend({
       model: {},
     });
 
-    const reset = () => {
-      state.url = '';
-    };
-
     onMounted(() => {
-      state.modelId = props.id;
+      state.modelId = props.id as string;
       state.model = core.app.getModel(state.modelId);
     });
 
     watch(
       () => props.id,
       id => {
-        state.modelId = id;
+        state.modelId = id as string;
         state.model = core.app.getModel(state.modelId);
       }
     );

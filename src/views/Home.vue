@@ -162,7 +162,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 import core from '@/core/index';
