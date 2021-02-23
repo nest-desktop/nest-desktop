@@ -10,6 +10,7 @@
             ticks: [1, 2, 4, 6, 8, 16],
           }"
           :value.sync="simulation.kernel.localNumThreads"
+          class="mx-1"
           @update:value="paramChange"
         />
 
@@ -20,6 +21,7 @@
             ticks: [0.001, 0.01, 0.1, 1, 10],
           }"
           :value.sync="simulation.kernel.resolution"
+          class="mx-1"
           @update:value="paramChange"
         />
 
@@ -33,6 +35,7 @@
             value: 1,
           }"
           :value.sync="simulation.randomSeed"
+          class="mx-1"
           @update:value="paramChange"
         />
 
@@ -46,6 +49,7 @@
             value: 1000,
           }"
           :value.sync="simulation.time"
+          class="mx-1"
           @update:value="paramChange"
         />
 

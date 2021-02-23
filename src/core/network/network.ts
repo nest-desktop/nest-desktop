@@ -34,6 +34,14 @@ export class Network extends Config {
     return this._connections;
   }
 
+  set connections(values: Connection[]) {
+    this._connections = values;
+    this._connections.forEach((connection: Connection) => {
+      connection.clean();
+    });
+    this.networkChanges();
+  }
+
   get hash(): string {
     return this._hash;
   }
@@ -46,6 +54,20 @@ export class Network extends Config {
 
   get nodes(): Node[] {
     return this._nodes;
+  }
+
+  set nodes(values: Node[]) {
+    const nodeIdx: number[] = values.map((node: Node) => node.idx);
+    this._nodes = values;
+    this._nodes.forEach((node: Node) => {
+      node.clean();
+    });
+    this._connections.forEach((connection: Connection) => {
+      connection.sourceIdx = nodeIdx.indexOf(connection.sourceIdx);
+      connection.targetIdx = nodeIdx.indexOf(connection.targetIdx);
+      connection.clean();
+    });
+    this.networkChanges();
   }
 
   get project(): Project {

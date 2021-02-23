@@ -75,6 +75,10 @@ export class App extends Config {
     return this._projects;
   }
 
+  set projects(values: Project[]) {
+    this._projects = values;
+  }
+
   get projectDB(): DatabaseService {
     return this._projectDB;
   }

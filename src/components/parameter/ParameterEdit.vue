@@ -35,14 +35,7 @@
       </v-card>
     </v-menu>
 
-    <v-card
-      @contextmenu="e => showMenu(e)"
-      class="ml-1"
-      color="white"
-      flat
-      light
-      tile
-    >
+    <v-card @contextmenu="e => showMenu(e)" color="white" flat light tile>
       <v-row class="mx-1 my-0" no-gutters>
         <v-col cols="12">
           <template v-if="state.options.input === 'arrayInput'">
