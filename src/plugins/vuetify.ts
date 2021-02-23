@@ -26,7 +26,7 @@ export default new Vuetify({
         accent: colors.grey.darken2,
         project: {
           base: colors.teal.base, //'#93b5ad',
-          darken: colors.teal.darken1,
+          darken1: colors.teal.darken1,
           // darken1: '#84A29B',
         },
         model: {
