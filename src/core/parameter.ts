@@ -1,6 +1,7 @@
 import { Node } from './node/node';
 import { Model } from './model/model';
 import { Connection } from './connection/connection';
+import { Synapse } from './connection/synapse';
 
 export class Parameter {
   private _factors: string[]; // not functional yet
@@ -28,10 +29,8 @@ export class Parameter {
     this._visible = param.visible !== undefined ? param.visible : false;
     this._factors = param.factors || [];
 
-    // For model
     this._input = param.input;
-    this._label = param.label || '';
-    this._level = param.level;
+    this._label = param.label;
     this._max = param.max;
     this._min = param.min;
     this._step = param.step;
@@ -134,10 +133,6 @@ export class Parameter {
   set value(value: any) {
     // console.log('Set parameter value');
     this._value = value;
-    // if (['Node', 'Connection'].includes(this._parent.name)) {
-    //   this._parent.network.networkChanges();
-    // }
-    // this._parent.network.project.simulateAfterChange();
   }
 
   get visible(): boolean {
@@ -154,6 +149,16 @@ export class Parameter {
 
   reset(): void {
     this._value = this.options.value;
+  }
+
+  paramChanges(): void {
+    if (this.parent.name === 'Node') {
+      const node: Node = this._parent as Node;
+      node.nodeChanges();
+    } else if (this.parent.name === 'Connection') {
+      const connection: Connection = this._parent as Connection;
+      connection.connectionChanges();
+    }
   }
 
   toJSON(): any {

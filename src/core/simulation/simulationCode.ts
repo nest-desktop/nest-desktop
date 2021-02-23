@@ -21,7 +21,7 @@ export class SimulationCode extends Code {
       `"local_num_threads": ${this._simulation.kernel.localNumThreads},`;
     script +=
       this._() +
-      `"resolution": ${this._simulation.kernel.resolution.toFixed(1)},`;
+      `"resolution": ${this.format(this._simulation.kernel.resolution)},`;
     script +=
       this._() +
       `"rng_seeds": numpy.random.randint(0, 1000, ${this._simulation.kernel.localNumThreads}).tolist()`;
@@ -30,6 +30,6 @@ export class SimulationCode extends Code {
   }
 
   simulate(): string {
-    return `nest.Simulate(${this._simulation.time.toFixed(1)})\n`;
+    return `nest.Simulate(${this.format(this._simulation.time)})\n`;
   }
 }
