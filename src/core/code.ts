@@ -11,11 +11,17 @@ export class Code {
 
   format(value: any): any {
     if (Number.isInteger(value)) {
-      return parseFloat(value).toFixed(1);
+      return this.toFixed(value);
     } else if (Array.isArray(value)) {
       return `[${String(value.map((v: any) => this.format(v)))}]`;
     } else {
       return value;
     }
+  }
+
+  toFixed(value: number): string {
+    const valString: string = JSON.stringify(value);
+    const valList: string[] = valString.split('.');
+    return value.toFixed(valList.length === 2 ? valList[1].length : 1);
   }
 }
