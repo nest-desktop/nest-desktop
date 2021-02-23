@@ -134,10 +134,16 @@ export class NodeView {
     );
   }
 
+  /**
+   * Sets all params to invisible.
+   */
   hideAllParams(): void {
     this._node.params.map((param: Parameter) => (param.visible = false));
   }
 
+  /**
+   * Sets all params to visible.
+   */
   showAllParams(): void {
     this._node.params.map((param: Parameter) => (param.visible = true));
   }
