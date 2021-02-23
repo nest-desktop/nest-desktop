@@ -89,6 +89,7 @@
           </v-list>
         </v-menu>
       </v-card-actions>
+
       <v-card-text class="pa-0">
         <v-list dense>
           <draggable v-model="state.graph.activityChartGraph.panels">
