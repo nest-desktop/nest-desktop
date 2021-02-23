@@ -101,6 +101,9 @@ export default Vue.extend({
       network: new Config('Network'),
     });
 
+    /**
+     * Check if NEST is running in the backend.
+     */
     const checkNEST = () => {
       core.app.nestServer.check();
       state.nestVersion = core.app.nestServer.state.simulatorVersion;
