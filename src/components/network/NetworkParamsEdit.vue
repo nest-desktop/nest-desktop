@@ -39,8 +39,8 @@
           v-for="node of state.network.nodes"
           v-show="showNode(node)"
         >
-          <v-img @contextmenu="e => showNodeMenu(e, node)" class="pa-0">
-            <v-row no-gutters>
+          <v-img class="pa-0">
+            <v-row @contextmenu="e => showNodeMenu(e, node)" no-gutters>
               <v-col cols="3">
                 <v-btn
                   @click="() => node.view.select()"
@@ -107,44 +107,14 @@
               </v-row>
             </v-card>
 
-            <v-card
+            <ParameterEdit
+              :color="node.view.color"
               :key="param.id"
-              class="ml-1"
-              flat
-              tile
+              :param="param"
+              :value.sync="param.value"
+              @update:value="paramChange()"
               v-for="param of node.filteredParams"
-            >
-              <v-row class="mx-1 my-0" no-gutters>
-                <v-col cols="12">
-                  <v-subheader class="paramLabel">
-                    {{ paramLabel(param) }}
-                  </v-subheader>
-                  <v-slider
-                    :max="param.options.max"
-                    :min="param.options.min"
-                    :thumb-color="node.view.color"
-                    @change="paramChange"
-                    dense
-                    height="40"
-                    hide-details
-                    v-model="param.value"
-                  >
-                    <template v-slot:append>
-                      <v-text-field
-                        @change="paramChange"
-                        class="mt-0 pt-0"
-                        height="32"
-                        hide-details
-                        single-line
-                        style="width: 60px; font-size:12px"
-                        type="number"
-                        v-model="param.value"
-                      />
-                    </template>
-                  </v-slider>
-                </v-col>
-              </v-row>
-            </v-card>
+            />
           </v-img>
         </v-card>
 
@@ -158,10 +128,12 @@
         >
           <v-img
             :gradient="'to right, ' + connection.view.backgroundImage"
-            @contextmenu="e => showConnectionMenu(e, connection)"
             dark
           >
-            <v-row no-gutters>
+            <v-row
+              @contextmenu="e => showConnectionMenu(e, connection)"
+              no-gutters
+            >
               <v-col cols="3" class="py-0" style="text-align:center">
                 <v-btn
                   @click="() => connection.source.view.select()"
@@ -200,46 +172,14 @@
               </v-col>
             </v-row>
 
-            <v-card
+            <ParameterEdit
+              :color="connection.source.view.color"
               :key="param.id"
-              class="mx-1"
-              color="white"
-              flat
-              light
-              tile
+              :param="param"
+              :value.sync="param.value"
+              @update:value="paramChange()"
               v-for="param in connection.synapse.filteredParams"
-            >
-              <v-row class="mx-1 my-0" no-gutters>
-                <v-col cols="12">
-                  <v-subheader class="paramLabel">
-                    {{ paramLabel(param) }}
-                  </v-subheader>
-                  <v-slider
-                    :max="param.options.max"
-                    :min="param.options.min"
-                    :thumb-color="connection.source.view.color"
-                    @change="paramChange"
-                    dense
-                    height="40"
-                    hide-details
-                    v-model="param.value"
-                  >
-                    <template v-slot:append>
-                      <v-text-field
-                        @change="paramChange"
-                        class="mt-0 pt-0"
-                        height="32"
-                        hide-details
-                        single-line
-                        style="width: 60px; font-size:12px"
-                        type="number"
-                        v-model="param.value"
-                      />
-                    </template>
-                  </v-slider>
-                </v-col>
-              </v-row>
-            </v-card>
+            />
           </v-img>
         </v-card>
       </v-col>
@@ -254,16 +194,17 @@ import { reactive, watch } from '@vue/composition-api';
 import { Connection } from '@/core/connection/connection';
 import { Network } from '@/core/network/network';
 import { Node } from '@/core/node/node';
-import { Parameter } from '@/core/parameter';
 import core from '@/core/index';
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
   components: {
     NetworkConnectionMenu,
     NetworkNodeMenu,
+    ParameterEdit,
   },
   props: {
     projectId: String,
@@ -290,10 +231,9 @@ export default Vue.extend({
       },
     });
 
-    const paramLabel = (param: Parameter) => {
-      return `${param.options.label} (${param.options.unit})` || param.id;
-    };
-
+    /**
+     * Show node in list.
+     */
     const showNode = (node: Node) => {
       if (
         state.network.view.selectedConnection ||
@@ -307,6 +247,9 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Show connection in list.
+     */
     const showConnection = (connection: Connection) => {
       if (
         state.network.view.selectedConnection ||
@@ -323,6 +266,9 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Show connection menu.
+     */
     const showConnectionMenu = function(e: MouseEvent, connection: Connection) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
@@ -335,6 +281,9 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Show node menu.
+     */
     const showNodeMenu = function(e: MouseEvent, node: Node) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
@@ -347,15 +296,18 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.network.networkChanges();
-      if (!state.network.project.simulation.running) {
-        state.network.project.simulateAfterChange();
-      }
+      // if (!state.network.project.simulation.running) {
+      //   state.network.project.simulateAfterChange();
+      // }
     };
 
     watch(
-      () => props.projectId + core.app.project.network.hash,
+      () => [props.projectId, core.app.project.network.hash],
       () => {
         state.network = core.app.project.network as Network;
       }
@@ -363,7 +315,6 @@ export default Vue.extend({
 
     return {
       paramChange,
-      paramLabel,
       showConnection,
       showConnectionMenu,
       showNode,

@@ -46,12 +46,18 @@ export default Vue.extend({
       url: '',
     });
 
+    /**
+     * Reset model documentation.
+     */
     const reset = () => {
       state.url = '';
       state.helptext = '';
       state.blocks = [];
     };
 
+    /**
+     * Update model documentation.
+     */
     const updateModelDoc = () => {
       reset();
       if (!state.modelId) {

@@ -191,11 +191,17 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Reset states.
+     */
     const reset = () => {
       state.content = null;
       state.selectedProjects = [];
     };
 
+    /**
+     * Reset project database.
+     */
     const resetProjects = () => {
       state.show = false;
       core.app.resetProjectDatabase().then(() => {
@@ -204,6 +210,9 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Download projects.
+     */
     const downloadProjects = () => {
       state.show = false;
       const projectIds: string[] = state.projects
@@ -213,6 +222,9 @@ export default Vue.extend({
       reset();
     };
 
+    /**
+     * Delete projects.
+     */
     const deleteProjects = () => {
       state.show = false;
       const projectIds: string[] = state.projects
