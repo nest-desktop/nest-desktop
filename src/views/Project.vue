@@ -428,6 +428,9 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Load project using query or projectId
+     */
     const loadProject = () => {
       // console.log('Load project: ' + id);
 
@@ -448,10 +451,16 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Count networks before the current.
+     */
     const countBefore = () => {
       return state.project.networkRevisionIdx;
     };
 
+    /**
+     * Count networks after the current.
+     */
     const countAfter = () => {
       return (
         state.project.networkRevisions.length -
@@ -460,11 +469,17 @@ export default Vue.extend({
       );
     };
 
+    /**
+     * Select view for activity graph.
+     */
     const selectActivityGraph = (mode: string) => {
       state.activityGraph = mode;
       state.modeIdx = 1;
     };
 
+    /**
+     * Select view mode of the project.
+     */
     const selectMode = (modeIdx: number) => {
       if ([0, 2].includes(modeIdx)) {
         state.toolOpened = state.toolOpened ? modeIdx != 2 : state.toolOpened;
@@ -479,11 +494,17 @@ export default Vue.extend({
       }, 10);
     };
 
+    /**
+     * Select tool for this project.
+     */
     const selectTool = (tool: any) => {
       state.toolOpened = state.toolOpened ? state.tool != tool : true;
       state.tool = tool;
     };
 
+    /**
+     * Reset view.
+     */
     const reset = () => {
       state.modeIdx = 0;
       state.activityGraph = 'abstract';
@@ -491,7 +512,10 @@ export default Vue.extend({
       state.tool = state.tools[0];
     };
 
-    const showSimulationMenu = function(e) {
+    /**
+     * Show simulation menu
+     */
+    const showSimulationMenu = function(e: MouseEvent) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.simulationMenu.show = false;
@@ -502,6 +526,9 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Start simulation.
+     */
     const simulate = () => {
       state.error = false;
       state.project.runSimulation().then(resp => {
