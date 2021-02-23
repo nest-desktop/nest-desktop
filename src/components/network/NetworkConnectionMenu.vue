@@ -169,21 +169,30 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.connection.connectionChanges();
     };
 
+    /**
+     * Delete connection.
+     */
     const deleteConnection = () => {
       state.show = false;
       state.connection.remove();
     };
 
+    /**
+     * Return to main menu content.
+     */
     const back = () => {
       state.content = undefined;
     };
 
     watch(
-      () => props.connection,
+      () => [props.connection, props.position],
       () => {
         state.content = undefined;
         state.show = true;

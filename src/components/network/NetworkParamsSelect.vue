@@ -124,15 +124,25 @@ export default Vue.extend({
       },
     });
 
+    /**
+     * Label parameter (with unit).
+     */
     const paramLabel = (param: Parameter) => {
       return `${param.options.label} (${param.options.unit})` || param.id;
     };
+
+    /**
+     * Show node in list.
+     */
     const showNode = (node: Node) => {
       const elementTypes = ['', 'stimulator', 'neuron', 'recorder'];
       if (state.elementType === 0) return true;
       return elementTypes[state.elementType] === node.model.elementType;
     };
 
+    /**
+     * Show node menu.
+     */
     const showMenu = function(e: MouseEvent, node: Node) {
       e.preventDefault();
       state.menu.show = false;
@@ -144,6 +154,9 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.network.networkChanges();
       if (!state.network.project.simulation.running) {

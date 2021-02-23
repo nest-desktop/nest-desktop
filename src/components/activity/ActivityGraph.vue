@@ -53,6 +53,9 @@ export default Vue.extend({
       view: props.view,
     });
 
+    /**
+     * Update activity graph.
+     */
     const update = () => {
       state.graph = undefined;
       setTimeout(() => {
@@ -64,7 +67,7 @@ export default Vue.extend({
     };
 
     watch(
-      () => props.graph,
+      () => [props.graph, props.view],
       () => update()
     );
 

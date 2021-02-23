@@ -137,16 +137,25 @@ export default {
       },
     });
 
+    /**
+     * Toggle navigation drawer.
+     */
     const toggle = (navList: string) => {
       state.miniVariant = state.navList === navList;
       state.navList = state.navList === navList ? '' : navList;
     };
 
+    /**
+     * Reset navigation drawer.
+     */
     const reset = () => {
       state.navList = '';
       state.miniVariant = true;
     };
 
+    /**
+     * Show project menu.
+     */
     const showProjectsMenu = (e: MouseEvent) => {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
@@ -158,6 +167,9 @@ export default {
       }, 1);
     };
 
+    /**
+     * List of routes in navigation.
+     */
     const routes: any[] = [
       {
         id: 'project',

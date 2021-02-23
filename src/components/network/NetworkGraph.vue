@@ -168,6 +168,9 @@ export default Vue.extend({
       },
     });
 
+    /**
+     * Show Menu for connection.
+     */
     const showConnectionMenu = (e: MouseEvent, connection: Connection) => {
       e.preventDefault();
       state.connectionMenu.show = false;
@@ -179,6 +182,9 @@ export default Vue.extend({
       }, 1);
     };
 
+    /**
+     * Show Menu for node.
+     */
     const showNodeMenu = (e: MouseEvent, node: Node) => {
       e.preventDefault();
       state.nodeMenu.show = false;
@@ -190,6 +196,9 @@ export default Vue.extend({
       }, 1);
     };
 
+    /**
+     * Tigger Menu for node or connection.
+     */
     const setMenuTrigger = () => {
       d3.selectAll('g.node').each(
         (node: Node, idx: number, elements: any[]) => {
@@ -208,6 +217,9 @@ export default Vue.extend({
       );
     };
 
+    /**
+     * Update network graph.
+     */
     const update = () => {
       state.network = core.app.project.network;
       state.graph.network = state.network;
@@ -217,6 +229,9 @@ export default Vue.extend({
       setMenuTrigger();
     };
 
+    /**
+     * Resize network graph.
+     */
     const resize = () => {
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
@@ -236,7 +251,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.projectId + state.network.hash,
+      () => [props.projectId, state.network.hash],
       () => update()
     );
 

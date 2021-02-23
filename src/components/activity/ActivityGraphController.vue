@@ -192,6 +192,9 @@ export default Vue.extend({
       selectedPanel: undefined as ActivityGraphPanel | undefined,
     });
 
+    /**
+     * Update activity graph controller.
+     */
     const update = () => {
       state.graph = undefined;
       setTimeout(() => {
@@ -204,6 +207,9 @@ export default Vue.extend({
 
     const imageFormats: string[] = ['png', 'svg'];
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.graph.update();
     };

@@ -13,8 +13,7 @@
           class="py-1"
           style="color:white; height:40px"
           v-text="state.node.model.label"
-        >
-        </v-card-title>
+        />
 
         <span v-if="state.content === null">
           <v-list dense>
@@ -71,7 +70,7 @@
                     <v-row no-gutters>
                       {{ param.options.label }}
                       <v-spacer />
-                      {{ param.value }}
+                      {{ param.toJSON().value }}
                       {{ param.options.unit }}
                     </v-row>
                   </v-list-item-content>
@@ -239,40 +238,61 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Update colors of network and activity.
+     */
     const updateColor = () => {
       state.node.network.networkChanges();
       state.node.network.project.activityGraph.updateColor();
     };
 
+    /**
+     * Reset node color.
+     */
     const resetColor = () => {
       state.node.view.color = null;
       updateColor();
     };
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.node.nodeChanges();
     };
 
+    /**
+     * Set node spatial.
+     */
     const setSpatial = () => {
       state.node.initSpatial({ pos: [] });
     };
 
+    /**
+     * Delete node.
+     */
     const deleteNode = () => {
       state.show = false;
       state.node.remove();
     };
 
+    /**
+     * Set weigths of all connection in this node.
+     */
     const setWeights = (mode: string) => {
       state.node.setWeights(mode);
       state.show = false;
     };
 
+    /**
+     * Return to main menu content.
+     */
     const back = () => {
       state.content = null;
     };
 
     watch(
-      () => props.node,
+      () => [props.node, props.position],
       () => {
         state.content = null;
         state.show = true;

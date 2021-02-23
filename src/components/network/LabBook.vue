@@ -63,7 +63,7 @@
                     </span>
                     <v-spacer />
                     <span class="mx-1" style="font-weight: bold">
-                      {{ param.value }}
+                      {{ param.toJSON().value }}
                     </span>
                     <v-col cols="1" class="text-no-wrap">{{
                       param.options.unit

@@ -3,104 +3,53 @@
     <v-row class="full-height mr-2" no-gutters>
       <v-col>
         <v-subheader v-text="'Simulation kernel'" />
-        <v-card flat tile>
-          <v-row class="mx-1 my-0" no-gutters>
-            <v-col cols="12">
-              <v-subheader
-                class="paramLabel"
-                v-text="'local number of threads'"
-              />
-              <v-slider
-                :max="8"
-                :min="1"
-                @change="paramChange"
-                dense
-                height="40"
-                hide-details
-                v-model="simulation.kernel.localNumThreads"
-              >
-                <template v-slot:append>
-                  <v-text-field
-                    @change="paramChange"
-                    class="mt-0 pt-0"
-                    height="32"
-                    hide-details
-                    single-line
-                    style="width: 60px; font-size:12px"
-                    type="number"
-                    v-model="simulation.kernel.localNumThreads"
-                  />
-                </template>
-              </v-slider>
-            </v-col>
-          </v-row>
-        </v-card>
+        <ParameterEdit
+          :options="{
+            input: 'tickSlider',
+            label: 'local number of threads',
+            ticks: [1, 2, 4, 6, 8, 16],
+          }"
+          :value.sync="simulation.kernel.localNumThreads"
+          @update:value="paramChange"
+        />
 
-        <v-card flat tile>
-          <v-row class="mx-1 my-0" no-gutters>
-            <v-col cols="12">
-              <v-subheader
-                class="paramLabel"
-                v-text="'simulation resolution'"
-              />
-              <v-slider
-                :max="8"
-                :min="1"
-                @change="paramChange"
-                dense
-                height="40"
-                hide-details
-                v-model="simulation.kernel.resolution"
-              >
-                <template v-slot:append>
-                  <v-text-field
-                    @change="paramChange"
-                    class="mt-0 pt-0"
-                    height="32"
-                    hide-details
-                    single-line
-                    style="width: 60px; font-size:12px"
-                    type="number"
-                    v-model="simulation.kernel.resolution"
-                  />
-                </template>
-              </v-slider>
-            </v-col>
-          </v-row>
-        </v-card>
+        <ParameterEdit
+          :options="{
+            input: 'tickSlider',
+            label: 'simulation resolution',
+            ticks: [0.001, 0.01, 0.1, 1, 10],
+          }"
+          :value.sync="simulation.kernel.resolution"
+          @update:value="paramChange"
+        />
 
         <v-subheader v-text="'Simulation'" />
-        <v-card flat tile>
-          <v-row class="mx-1 my-0" no-gutters>
-            <v-col cols="12">
-              <v-subheader class="paramLabel" v-text="'simulation time'" />
-              <v-slider
-                :max="10000"
-                :min="1"
-                @change="paramChange"
-                dense
-                height="40"
-                hide-details
-                v-model="simulation.time"
-              >
-                <template v-slot:append>
-                  <v-text-field
-                    @change="paramChange"
-                    class="mt-0 pt-0"
-                    height="32"
-                    hide-details
-                    single-line
-                    style="width: 60px; font-size:12px"
-                    type="number"
-                    v-model="simulation.time"
-                  />
-                </template>
-              </v-slider>
-            </v-col>
-          </v-row>
-        </v-card>
+        <ParameterEdit
+          :options="{
+            input: 'valueSlider',
+            label: 'random seed',
+            max: 10000,
+            min: 1,
+            value: 1,
+          }"
+          :value.sync="simulation.randomSeed"
+          @update:value="paramChange"
+        />
 
-        <v-card flat tile>
+        <ParameterEdit
+          :options="{
+            input: 'valueSlider',
+            label: 'simulation time',
+            max: 10000,
+            min: 10,
+            step: 10,
+            value: 1000,
+          }"
+          :value.sync="simulation.time"
+          @update:value="paramChange"
+        />
+
+        <!-- <v-card flat tile>
           <v-row class="mx-1 my-0" no-gutters>
             <v-col cols="12">
               <v-subheader class="paramLabel" v-text="'random seed'" />
@@ -128,7 +77,7 @@
               </v-slider>
             </v-col>
           </v-row>
-        </v-card>
+        </v-card> -->
       </v-col>
     </v-row>
   </div>
@@ -139,9 +88,13 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Simulation } from '@/core/simulation/simulation';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
   name: 'SimulationKernel',
+  components: {
+    ParameterEdit,
+  },
   props: {
     simulation: Simulation,
   },
@@ -150,6 +103,9 @@ export default Vue.extend({
       simulation: props.simulation as Simulation,
     });
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.simulation.project.code.generate();
     };

@@ -50,6 +50,9 @@ export default Vue.extend({
       selectedRecordFrom: 'V_m',
     });
 
+    /**
+     * Update stats of analog activity.
+     */
     const update = () => {
       state.items = [];
       if (state.selectedRecordFrom === undefined) {

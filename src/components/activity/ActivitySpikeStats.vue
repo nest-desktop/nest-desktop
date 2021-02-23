@@ -51,6 +51,9 @@ export default Vue.extend({
       search: '',
     });
 
+    /**
+     * Calculate difference of values in an array.
+     */
     const diff = (data: any[]) => {
       if (data.length <= 1) {
         return [0];
@@ -62,6 +65,9 @@ export default Vue.extend({
       return values;
     };
 
+    /**
+     * Update stats of spike activity.
+     */
     const update = () => {
       state.items = [];
       state.headers = [
