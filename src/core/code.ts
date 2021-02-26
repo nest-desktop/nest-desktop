@@ -22,6 +22,8 @@ export class Code {
   toFixed(value: number): string {
     const valString: string = JSON.stringify(value);
     const valList: string[] = valString.split('.');
-    return value.toFixed(valList.length === 2 ? valList[1].length : 1);
+    return value.toFixed(
+      valList.length === 2 ? Math.min(valList[1].length, 20) : 1
+    );
   }
 }
