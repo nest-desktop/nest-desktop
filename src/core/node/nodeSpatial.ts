@@ -5,7 +5,6 @@ import { Node } from './node';
 
 export class FreePositions {
   private readonly _name = 'free';
-  private _center: number[]; // FreePositions has no argument for center in NEST 3.
   private _edgeWrap: boolean;
   private _extent: number[];
   private _numDimensions: number;
@@ -18,19 +17,10 @@ export class FreePositions {
   constructor(spatial: NodeSpatial, positions: any = {}) {
     this._spatial = spatial;
 
-    this._pos = positions.pos;
+    this._pos = positions.pos || [];
     this._numDimensions = positions.numDimensions || 2;
-    this._center = positions.center || [0, 0];
     this._extent = positions.extent || [1, 1];
     this._edgeWrap = positions.edgeWrap || false;
-  }
-
-  get center(): number[] {
-    return this._center;
-  }
-
-  set center(value: number[]) {
-    this._center = value;
   }
 
   get edgeWrap(): boolean {
@@ -59,7 +49,6 @@ export class FreePositions {
 
   set numDimensions(value: number) {
     this._numDimensions = value;
-    this._center = new Array(this._numDimensions).fill(0);
     this._extent = new Array(this._numDimensions).fill(1);
   }
 
@@ -102,7 +91,6 @@ export class FreePositions {
 
   toJSON(): any {
     const positions: any = {
-      center: this._center,
       edgeWrap: this._edgeWrap,
       extent: this._extent,
       numDimensions: this._numDimensions,
@@ -124,10 +112,10 @@ export class GridPositions {
   constructor(spatial: NodeSpatial, positions: any = {}) {
     this._spatial = spatial;
 
-    this._shape = positions.shape || [1, 1];
     this._center = positions.center || [0, 0];
-    this._extent = positions.extent || [1, 1];
     this._edgeWrap = positions.edgeWrap || false;
+    this._extent = positions.extent || [1, 1];
+    this._shape = positions.shape || [1, 1];
   }
 
   get center(): number[] {
@@ -136,14 +124,6 @@ export class GridPositions {
 
   set center(value: number[]) {
     this._center = value;
-  }
-
-  get columns(): number {
-    return this._shape[1];
-  }
-
-  set columns(value: number) {
-    this._shape[1] = value;
   }
 
   get edgeWrap(): boolean {
@@ -166,14 +146,6 @@ export class GridPositions {
     return this._name;
   }
 
-  get rows(): number {
-    return this._shape[0];
-  }
-
-  set rows(value: number) {
-    this._shape[0] = value;
-  }
-
   get pos(): number[][] {
     return this._pos;
   }
@@ -182,23 +154,25 @@ export class GridPositions {
     this._pos = value;
   }
 
+  get shape(): number[] {
+    return this._shape;
+  }
+
+  set shape(values: number[]) {
+    this._shape = values;
+  }
+
   get spatial(): NodeSpatial {
     return this._spatial;
   }
-
-  get numDimensions(): number {
-    return 2;
-  }
-
-  set numDimensions(value: number) {}
 
   generate(): void {
     const minX: number = this._center[0] - this._extent[0] / 2;
     const maxX: number = this._center[0] + this._extent[0] / 2;
     const minY: number = this._center[1] - this._extent[1] / 2;
     const maxY: number = this._center[1] + this._extent[1] / 2;
-    const X: number[] = this.range(minX, maxX, this.rows);
-    const Y: number[] = this.range(minY, maxY, this.columns);
+    const X: number[] = this.range(minX, maxX, this._shape[0]);
+    const Y: number[] = this.range(minY, maxY, this._shape[1]);
     this._pos = [];
     X.forEach((x: number) => {
       Y.forEach((y: number) => {

@@ -71,43 +71,24 @@
                   </v-col>
                 </v-row>
 
-                <v-card
-                  class="ml-1"
-                  flat
-                  tile
-                  v-if="(node.params.length > 0) & !node.model.isRecorder()"
-                >
-                  <v-row class="mx-1 my-0" no-gutters>
-                    <v-col cols="12">
-                      <v-subheader class="paramLabel">
-                        population size
-                      </v-subheader>
-                      <v-slider
-                        :max="1000"
-                        :min="1"
-                        :thumb-color="node.view.color"
-                        @change="paramChange"
-                        dense
-                        height="40"
-                        hide-details
-                        v-model="node.size"
-                      >
-                        <template v-slot:append>
-                          <v-text-field
-                            @change="paramChange"
-                            class="mt-0 pt-0"
-                            height="32"
-                            hide-details
-                            single-line
-                            style="width: 60px; font-size:12px"
-                            type="number"
-                            v-model="node.size"
-                          />
-                        </template>
-                      </v-slider>
-                    </v-col>
-                  </v-row>
-                </v-card>
+                <div v-if="!node.model.isRecorder()" class="ml-1">
+                  <NodePosition
+                    :node="node"
+                    v-if="node.spatial.hasPositions()"
+                  />
+                  <ParameterEdit
+                    :color="node.view.color"
+                    :options="{
+                      input: 'valueSlider',
+                      label: 'population size',
+                      max: 1000,
+                      value: 1,
+                    }"
+                    :value.sync="node.size"
+                    @update:value="paramChange()"
+                    v-else
+                  />
+                </div>
 
                 <ParameterEdit
                   :color="node.view.color"
@@ -208,6 +189,7 @@ import { Node } from '@/core/node/node';
 import core from '@/core/index';
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
+import NodePosition from '@/components/network/NodePosition.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
@@ -216,6 +198,7 @@ export default Vue.extend({
     draggable,
     NetworkConnectionMenu,
     NetworkNodeMenu,
+    NodePosition,
     ParameterEdit,
   },
   props: {
