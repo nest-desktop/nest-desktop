@@ -143,14 +143,23 @@ export class Parameter {
     this._visible = value;
   }
 
+  /**
+   * Copy paramter component
+   */
   copy(): any {
     return new Parameter(this._parent, this);
   }
 
+  /**
+   * Reset value taken from options.
+   */
   reset(): void {
     this._value = this.options.value;
   }
 
+  /**
+   * Updates when parameter is changed.
+   */
   paramChanges(): void {
     if (this._parent.name === 'Node') {
       const node: Node = this._parent as Node;
@@ -161,6 +170,9 @@ export class Parameter {
     }
   }
 
+  /**
+   * Serialize for JSON.
+   */
   toJSON(): any {
     const params: any = {
       id: this._id,
