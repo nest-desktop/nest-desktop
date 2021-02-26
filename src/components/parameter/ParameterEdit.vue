@@ -187,7 +187,7 @@ export default Vue.extend({
      */
     const serialize = (value: any) => {
       if (state.options.input === 'tickSlider') {
-        return state.options.ticks.indexOf(value);    // returns tick index in ticks
+        return state.options.ticks.indexOf(value); // returns tick index in ticks
       } else {
         return value;
       }
@@ -198,9 +198,9 @@ export default Vue.extend({
      */
     const deserialize = (value: any) => {
       if (state.options.input === 'tickSlider') {
-        return state.options.ticks[value];       // returns tick values
+        return state.options.ticks[value]; // returns tick values
       } else if (state.options.input === 'arrayInput') {
-        return JSON.parse(`[${value}]`);        // returns array and not string
+        return JSON.parse(`[${value}]`); // returns array and not string
       } else {
         return value;
       }
