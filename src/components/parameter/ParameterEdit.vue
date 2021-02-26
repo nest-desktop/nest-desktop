@@ -148,20 +148,26 @@ export default Vue.extend({
           icon: 'mdi-refresh',
           title: 'Set default value',
           onClick: () => {
-            if (state.param) {
-              state.param.reset();
-              state.param.paramChanges();
-            }
+            state.param.reset();
+            state.param.paramChanges();
+          },
+        },
+        {
+          icon: 'mdi-dice-multiple-outline',
+          title: 'Set random mode',
+          onClick: () => {
+            state.param.value = {
+              parametertype: 'constant',
+              specs: { value: state.value },
+            };
           },
         },
         {
           icon: 'mdi-eye-off-outline',
           title: 'Hide parameter',
           onClick: () => {
-            if (state.param) {
-              state.param.visible = false;
-              state.param.paramChanges();
-            }
+            state.param.visible = false;
+            state.param.paramChanges();
           },
         },
       ],
@@ -181,7 +187,7 @@ export default Vue.extend({
      */
     const serialize = (value: any) => {
       if (state.options.input === 'tickSlider') {
-        return state.options.ticks.indexOf(value);
+        return state.options.ticks.indexOf(value);    // returns tick index in ticks
       } else {
         return value;
       }
@@ -192,9 +198,9 @@ export default Vue.extend({
      */
     const deserialize = (value: any) => {
       if (state.options.input === 'tickSlider') {
-        return state.options.ticks[value];
+        return state.options.ticks[value];       // returns tick values
       } else if (state.options.input === 'arrayInput') {
-        return JSON.parse(`[${value}]`);
+        return JSON.parse(`[${value}]`);        // returns array and not string
       } else {
         return value;
       }
@@ -222,14 +228,16 @@ export default Vue.extend({
      * Show parameter menu.
      */
     const showMenu = function(e: MouseEvent) {
-      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-      e.preventDefault();
-      state.menu.show = false;
-      state.menu.position.x = e.clientX;
-      state.menu.position.y = e.clientY;
-      this.$nextTick(() => {
-        state.menu.show = true;
-      });
+      if (this.param) {
+        // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
+        e.preventDefault();
+        state.menu.show = false;
+        state.menu.position.x = e.clientX;
+        state.menu.position.y = e.clientY;
+        this.$nextTick(() => {
+          state.menu.show = true;
+        });
+      }
     };
 
     onMounted(() => {
@@ -240,6 +248,7 @@ export default Vue.extend({
       () => [props.color, props.options, props.param, props.value],
       ([color, options, param, value]) => {
         state.color = color;
+        // It obtains setting from model parameter or from options props.
         state.options = param ? param['options'] : options;
         state.value = serialize(value);
       }
