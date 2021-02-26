@@ -9,9 +9,9 @@ export class ParameterRandom extends Config {
     super('ParameterRandom');
     this._defaults = {
       exponential: { beta: 1 },
-      uniform: { min: 0, max: 1 },
-      normal: { mean: 0, std: 1 },
       lognormal: { mean: 0, std: 1 },
+      normal: { mean: 0, std: 1 },
+      uniform: { min: 0, max: 1 },
     };
     this._distribution = random.distribution || 'uniform';
     this._specs = random.specs || this._defaults[random.distribution];

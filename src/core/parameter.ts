@@ -1,7 +1,7 @@
 import { Node } from './node/node';
 import { Model } from './model/model';
 import { Connection } from './connection/connection';
-import { Synapse } from './connection/synapse';
+import { ParameterRandom } from './parameterRandom';
 
 export class Parameter {
   private _factors: string[]; // not functional yet
@@ -16,7 +16,7 @@ export class Parameter {
   private _step: number;
   private _ticks: any[];
   private _unit: string;
-  private _value: any;
+  private _value: number | number[] | ParameterRandom; // constant or random
   private _visible: boolean;
 
   constructor(parent: Model | Node | Connection, param: any) {
@@ -152,7 +152,7 @@ export class Parameter {
   }
 
   paramChanges(): void {
-    if (this.parent.name === 'Node') {
+    if (this._parent.name === 'Node') {
       const node: Node = this._parent as Node;
       node.nodeChanges();
     } else if (this.parent.name === 'Connection') {
