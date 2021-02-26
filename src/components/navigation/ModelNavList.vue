@@ -19,7 +19,7 @@
       <v-list-item
         :key="model.id"
         :to="'/model/' + model.id"
-        v-for="model in models"
+        v-for="model in state.models"
       >
         <v-list-item-content>
           <v-list-item-title v-text="model.label" />
@@ -29,15 +29,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
+import { reactive } from '@vue/composition-api';
+
 import core from '@/core/index';
 
 export default Vue.extend({
   name: 'Models',
   setup() {
-    const models = core.app.models;
-    return { models };
+    const state = reactive({
+      models: core.app.models,
+    });
+    return { state };
   },
 });
 </script>

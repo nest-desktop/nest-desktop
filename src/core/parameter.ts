@@ -1,6 +1,7 @@
 import { Node } from './node/node';
 import { Model } from './model/model';
 import { Connection } from './connection/connection';
+import { ParameterRandom } from './parameterRandom';
 
 export class Parameter {
   private _factors: string[]; // not functional yet
@@ -15,7 +16,7 @@ export class Parameter {
   private _step: number;
   private _ticks: any[];
   private _unit: string;
-  private _value: any;
+  private _value: number | number[] | ParameterRandom; // constant or random
   private _visible: boolean;
 
   constructor(parent: Model | Node | Connection, param: any) {
@@ -28,10 +29,8 @@ export class Parameter {
     this._visible = param.visible !== undefined ? param.visible : false;
     this._factors = param.factors || [];
 
-    // For model
     this._input = param.input;
-    this._label = param.label || '';
-    this._level = param.level;
+    this._label = param.label;
     this._max = param.max;
     this._min = param.min;
     this._step = param.step;
@@ -41,6 +40,10 @@ export class Parameter {
 
   get id(): string {
     return this._id;
+  }
+
+  get idx(): number {
+    return this._idx;
   }
 
   get input(): string {
@@ -130,10 +133,6 @@ export class Parameter {
   set value(value: any) {
     // console.log('Set parameter value');
     this._value = value;
-    // if (['Node', 'Connection'].includes(this._parent.name)) {
-    //   this._parent.network.networkChanges();
-    // }
-    // this._parent.network.project.simulateAfterChange();
   }
 
   get visible(): boolean {
@@ -144,14 +143,36 @@ export class Parameter {
     this._visible = value;
   }
 
+  /**
+   * Copy paramter component
+   */
   copy(): any {
     return new Parameter(this._parent, this);
   }
 
+  /**
+   * Reset value taken from options.
+   */
   reset(): void {
     this._value = this.options.value;
   }
 
+  /**
+   * Updates when parameter is changed.
+   */
+  paramChanges(): void {
+    if (this._parent.name === 'Node') {
+      const node: Node = this._parent as Node;
+      node.nodeChanges();
+    } else if (this.parent.name === 'Connection') {
+      const connection: Connection = this._parent as Connection;
+      connection.connectionChanges();
+    }
+  }
+
+  /**
+   * Serialize for JSON.
+   */
   toJSON(): any {
     const params: any = {
       id: this._id,

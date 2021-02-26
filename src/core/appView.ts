@@ -14,16 +14,9 @@ export class AppView {
     this._app = app;
     this._model = {
       selectedModel: '',
-      sidenavMode: 'list',
-      sidenavOpened: true,
     };
     this._project = {
       searchTerm: '',
-      mode: 'networkEditor',
-      toolMode: {
-        name: 'networkParamEdit',
-      },
-      toolOpened: false,
     };
   }
 
@@ -45,22 +38,5 @@ export class AppView {
 
   get project(): any {
     return this._project;
-  }
-
-  setProjectMode(value: string) {
-    this._project.mode = value;
-    if (this._project.mode === 'labBook') {
-      this._project.toolOpened = false;
-    }
-    setTimeout(() => window.dispatchEvent(new Event('resize')), 10);
-  }
-
-  setProjectTool(mode: any): void {
-    if (this._project.toolMode.name === mode.name) {
-      this._project.toolOpened = !this._project.toolOpened;
-    } else {
-      this._project.toolMode = mode;
-      this._project.toolOpened = true;
-    }
   }
 }

@@ -8,12 +8,13 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { onMounted } from '@vue/composition-api';
+
+import core from '@/core/index';
 import Navigation from '@/components/navigation/Navigation.vue';
 // import Navigation from '@/components/navigation/NavigationTemporary.vue';
-import core from '@/core/index';
 
 export default Vue.extend({
   name: 'App',

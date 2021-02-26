@@ -1,18 +1,16 @@
-import * as objectHash from 'object-hash';
-import { environment } from '../../environments/environment';
+import { sha1 } from 'object-hash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from '../activity/activity';
 import { ActivityGraph } from '../activity/activityGraph';
 import { App } from '../app';
 import { Config } from '../config';
-import { Model } from '../model/model';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
 import { ProjectView } from './projectView';
 import { Simulation } from '../simulation/simulation';
-import { upgradeProject } from './projectUpgrade';
+// import { upgradeProject } from './projectUpgrade';
 
 export class Project extends Config {
   private _activityGraph: ActivityGraph;
@@ -289,8 +287,8 @@ export class Project extends Config {
         this._networkRevisions.length - 1
       ];
       if (
-        objectHash(JSON.stringify(lastNetwork)) !==
-        objectHash(JSON.stringify(currentNetwork))
+        sha1(JSON.stringify(lastNetwork)) !==
+        sha1(JSON.stringify(currentNetwork))
       ) {
         this._networkRevisions.push(currentNetwork);
       }
@@ -315,10 +313,7 @@ export class Project extends Config {
       (node: Node) => node.modelId
     );
 
-    if (
-      objectHash(JSON.stringify(oldModels)) ===
-      objectHash(JSON.stringify(newModels))
-    ) {
+    if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
       this._activityGraph.activityChartGraph.initPanels();
     } else {
       this._activityGraph.activityChartGraph.init();
@@ -384,9 +379,7 @@ export class Project extends Config {
    * Start the simulation when a parameter is changed.
    */
   simulateAfterChange(): void {
-    const viewActivityExplorer: boolean =
-      this._app.view.project.mode === 'activityExplorer';
-    if (viewActivityExplorer && this.config.runAfterChange) {
+    if (this.config.runAfterChange) {
       setTimeout(() => this.runSimulation(), 1);
     }
   }
@@ -415,7 +408,7 @@ export class Project extends Config {
             if (data.positions) {
               data.activities.forEach((activity: any) => {
                 const positions = activity.nodeIds.map(
-                  nodeId => data.positions[nodeId]
+                  (nodeId: number) => data.positions[nodeId]
                 );
                 activity.nodePositions = positions;
               });
@@ -527,7 +520,7 @@ export class Project extends Config {
    */
   getHash(): string {
     const project: any = this.toJSON();
-    return objectHash(project);
+    return sha1(project);
   }
 
   /**

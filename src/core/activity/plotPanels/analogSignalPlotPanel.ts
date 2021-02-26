@@ -6,8 +6,9 @@ import { ActivityGraphPanel } from './activityGraphPanel';
 export class AnalogSignalPlotPanel extends ActivityGraphPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph);
+    this.icon = 'mdi-chart-line';
     this.name = 'AnalogSignalPlotPanel';
-    this.label = 'plot of analog signals';
+    this.label = 'line of analog signals';
     this.init();
   }
 
@@ -63,7 +64,7 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       if (data.length == 0) {
         return;
       }
-      data.forEach(d => {
+      data.forEach((d: any) => {
         d.line.color = activity.recorder.view.color;
       });
     });
@@ -283,11 +284,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
 
     const x: any[] = events[0].x;
-    const y: any[] = x.map((d: any, i: number) => {
+    const y: any[] = x.map((_: any, i: number) => {
       const yi: any[] = [];
-      senders.forEach((sender: number, idx: number) =>
-        yi.push(events[idx].y[i])
-      );
+      senders.forEach((_: number, idx: number) => yi.push(events[idx].y[i]));
       const sum: number = yi.reduce((a: number, b: number) => a + b);
       const avg: number = sum / senders.length;
       return avg;

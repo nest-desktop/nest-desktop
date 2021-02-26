@@ -1,8 +1,7 @@
-import * as objectHash from 'object-hash';
+import { sha1 } from 'object-hash';
 
 import { Config } from '../config';
 import { Connection } from '../connection/connection';
-import { Model } from '../model/model';
 import { NetworkCode } from './networkCode';
 import { NetworkView } from './networkView';
 import { Node } from '../node/node';
@@ -35,6 +34,14 @@ export class Network extends Config {
     return this._connections;
   }
 
+  set connections(values: Connection[]) {
+    this._connections = values;
+    this._connections.forEach((connection: Connection) => {
+      connection.clean();
+    });
+    this.networkChanges();
+  }
+
   get hash(): string {
     return this._hash;
   }
@@ -47,6 +54,20 @@ export class Network extends Config {
 
   get nodes(): Node[] {
     return this._nodes;
+  }
+
+  set nodes(values: Node[]) {
+    const nodeIdx: number[] = values.map((node: Node) => node.idx);
+    this._nodes = values;
+    this._nodes.forEach((node: Node) => {
+      node.clean();
+    });
+    this._connections.forEach((connection: Connection) => {
+      connection.sourceIdx = nodeIdx.indexOf(connection.sourceIdx);
+      connection.targetIdx = nodeIdx.indexOf(connection.targetIdx);
+      connection.clean();
+    });
+    this.networkChanges();
   }
 
   get project(): Project {
@@ -83,9 +104,7 @@ export class Network extends Config {
    */
   networkChanges(): void {
     this.updateHash();
-    if (this._project.app.view.project.mode === 'networkEditor') {
-      this._project.commitNetwork(this);
-    }
+    this._project.commitNetwork(this);
     this._project.code.generate();
     // this._project.activityGraph.init();
   }
@@ -282,7 +301,7 @@ export class Network extends Config {
    * Calculate hash of this component.
    */
   updateHash(): void {
-    this._hash = objectHash(this.toJSON());
+    this._hash = sha1(this.toJSON());
   }
 
   /**

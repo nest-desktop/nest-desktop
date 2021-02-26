@@ -51,7 +51,10 @@ export default Vue.extend({
       search: '',
     });
 
-    const diff = data => {
+    /**
+     * Calculate difference of values in an array.
+     */
+    const diff = (data: any[]) => {
       if (data.length <= 1) {
         return [0];
       }
@@ -62,6 +65,9 @@ export default Vue.extend({
       return values;
     };
 
+    /**
+     * Update stats of spike activity.
+     */
     const update = () => {
       state.items = [];
       state.headers = [
@@ -77,14 +83,18 @@ export default Vue.extend({
       ];
 
       if (state.activity != undefined) {
-        const times = Object.create(null);
-        state.activity.nodeIds.forEach(id => (times[id] = []));
-        state.activity.events.senders.forEach((sender, idx) => {
+        const times: any[] = Object.create(null);
+        state.activity.nodeIds.forEach((id: number) => {
+          times[id] = [];
+        });
+        state.activity.events.senders.forEach((sender: number, idx: number) => {
           times[sender].push(state.activity.events.times[idx]);
         });
         state.items = state.activity.nodeIds.map(id => {
-          const timesSorted = times[id].sort((a, b) => a - b);
-          const isi = diff(timesSorted);
+          const timesSorted: number[] = times[id].sort(
+            (a: number, b: number) => a - b
+          );
+          const isi: number[] = diff(timesSorted);
           const isiMean: number =
             isi.length > 1 ? parseFloat(d3.mean(isi).toFixed(2)) : 0;
           const isiStd: number =

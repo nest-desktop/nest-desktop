@@ -13,8 +13,7 @@
           class="py-1"
           style="color:white; height:40px"
           v-text="state.node.model.label"
-        >
-        </v-card-title>
+        />
 
         <span v-if="state.content === null">
           <v-list dense>
@@ -63,16 +62,15 @@
             flat
             tile
             v-for="param of state.node.params"
-            v-show="param.visible || true"
           >
             <v-row>
               <v-list-item style="font-size:12px; min-height:32px">
-                <template v-slot:default="{ active }">
+                <template v-slot:default="">
                   <v-list-item-content style="padding: 4px">
                     <v-row no-gutters>
                       {{ param.options.label }}
                       <v-spacer />
-                      {{ param.value }}
+                      {{ param.toJSON().value }}
                       {{ param.options.unit }}
                     </v-row>
                   </v-list-item-content>
@@ -144,9 +142,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
+import { Node } from '@/core/node/node';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 
 export default Vue.extend({
@@ -155,16 +155,46 @@ export default Vue.extend({
     ModelDocumentation,
   },
   props: {
-    node: Object,
+    node: Node,
     position: Object,
   },
-  setup(props, { root }) {
+  setup(props) {
     const state = reactive({
       content: null,
-      node: props.node,
+      node: props.node as Node,
       position: props.position,
       show: true,
       items: [
+        {
+          id: 'paramsSelect',
+          icon: 'mdi-checkbox-marked-outline',
+          title: 'Set parameter view',
+          onClick: () => {
+            state.content = 'paramsSelect';
+            window.dispatchEvent(new Event('resize'));
+          },
+          append: true,
+        },
+
+        {
+          id: 'setWeights',
+          icon: 'mdi-contrast',
+          title: 'Set all synaptic weights',
+          onClick: () => {
+            state.content = 'nodeWeights';
+          },
+          append: true,
+        },
+        {
+          id: 'paramsReset',
+          icon: 'mdi-restart',
+          title: 'Reset parameters',
+          onClick: () => {
+            state.node.resetParameters();
+            state.show = false;
+          },
+          append: false,
+        },
         {
           id: 'nodeColor',
           icon: 'mdi-format-color-fill',
@@ -187,40 +217,11 @@ export default Vue.extend({
           },
         },
         {
-          id: 'setWeights',
-          icon: 'mdi-dumbbell',
-          title: 'Set weights',
-          onClick: () => {
-            state.content = 'nodeWeights';
-          },
-          append: true,
-        },
-        {
-          id: 'paramsSelect',
-          icon: 'mdi-checkbox-marked-outline',
-          title: 'Set parameter view',
-          onClick: () => {
-            state.content = 'paramsSelect';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-        },
-        {
           id: 'setSpatial',
           icon: 'mdi-axis-arrow',
           title: 'Set spatial',
           onClick: () => {
             state.node.initSpatial({ pos: [] });
-            state.show = false;
-          },
-          append: false,
-        },
-        {
-          id: 'paramsReset',
-          icon: 'mdi-restart',
-          title: 'Reset parameters',
-          onClick: () => {
-            state.node.resetParameters();
             state.show = false;
           },
           append: false,
@@ -237,44 +238,65 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Update colors of network and activity.
+     */
     const updateColor = () => {
       state.node.network.networkChanges();
       state.node.network.project.activityGraph.updateColor();
     };
 
+    /**
+     * Reset node color.
+     */
     const resetColor = () => {
       state.node.view.color = null;
       updateColor();
     };
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.node.nodeChanges();
     };
 
+    /**
+     * Set node spatial.
+     */
     const setSpatial = () => {
       state.node.initSpatial({ pos: [] });
     };
 
+    /**
+     * Delete node.
+     */
     const deleteNode = () => {
       state.show = false;
       state.node.remove();
     };
 
-    const setWeights = mode => {
+    /**
+     * Set weigths of all connection in this node.
+     */
+    const setWeights = (mode: string) => {
       state.node.setWeights(mode);
       state.show = false;
     };
 
+    /**
+     * Return to main menu content.
+     */
     const back = () => {
       state.content = null;
     };
 
     watch(
-      () => props.node,
+      () => [props.node, props.position],
       () => {
         state.content = null;
         state.show = true;
-        state.node = props.node;
+        state.node = props.node as Node;
         state.position = props.position;
       }
     );

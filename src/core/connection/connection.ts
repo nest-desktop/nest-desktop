@@ -6,7 +6,6 @@ import { ConnectionView } from './connectionView';
 import { Model } from '../model/model';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
-import { Parameter } from '../parameter';
 import { Synapse } from './synapse';
 
 enum Rule {

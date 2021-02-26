@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
@@ -24,7 +24,7 @@ export default Vue.extend({
       code: props.code,
     });
 
-    const options = {
+    const options: any = {
       cursorBlinkRate: 700,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],

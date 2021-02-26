@@ -14,7 +14,7 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph, 'AnalogSignalHistogramPanel');
     this.name = 'AnalogSignalHistogramPanel';
-    this.icon = 'chart-bar';
+    this.icon = 'mdi-chart-bar';
     this.label = 'histogram of analog signals';
     this.layout.xaxis.title = 'Membrane potential [mV]';
     this.layout.barmode = this.state.barmode;

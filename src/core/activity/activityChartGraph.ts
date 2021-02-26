@@ -13,60 +13,56 @@ import { InterSpikeIntervalHistogramPanel } from './plotPanels/interSpikeInterva
 import { CVISIHistogramPanel } from './plotPanels/CVISIHistogramPanel';
 
 export class ActivityChartGraph {
-  private _config: any = {};
+  private _options: any = {};
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
   private _panels: ActivityGraphPanel[] = [];
-  private _panelsVisible: string[] = [];
+  private _panelsAll: ActivityGraphPanel[] = [];
   private _project: Project;
   private _registerPanels: any[] = [];
-  private _style: any = {};
 
   constructor(project: Project, registerPanels: any[] = []) {
     this._project = project;
-    this._config = {
-      scrollZoom: true,
-      editable: true,
-      // displayModeBar: true,
-      displaylogo: false,
-      responsive: true,
-      // showLink: true,
+    this._options = {
       toImageButtonOptions: {
+        filename: 'nest-desktop',
         format: 'svg', // png, svg, jpeg, webp
-        width: 800,
         height: 600,
         scale: 1, // Multiply title/legend/axis/canvas sizes by this factor
+        width: 800,
       },
-      modeBarButtons: [
-        // "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
-        // "hoverClosestCartesian", "hoverCompareCartesian", "zoom3d", "pan3d", "resetCameraDefault3d",
-        // "resetCameraLastSave3d", "hoverClosest3d", "orbitRotation", "tableRotation", "zoomInGeo",
-        // "zoomOutGeo", "resetGeo", "hoverClosestGeo", "toImage", "sendDataToCloud", "hoverClosestGl2d",
-        // "hoverClosestPie", "toggleHover", "resetViews", "toggleSpikelines", "resetViewMapbox"
-        [
-          {
-            name: 'graph-reload',
-            title: 'Reload image graph',
-            icon: PlotlyJS.Icons.undo,
-            click: () => {
-              this.init();
-            },
-          },
-        ],
-        // [this.imageButtonOptions, "toImage"],
-        ['toImage'],
-        ['zoom2d', 'pan2d'],
-        ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
-        ['hoverClosestCartesian', 'hoverCompareCartesian'],
-      ],
+      // showLink: true,
+
+      // modeBarButtons: [
+      // "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
+      // "hoverClosestCartesian", "hoverCompareCartesian", "zoom3d", "pan3d", "resetCameraDefault3d",
+      // "resetCameraLastSave3d", "hoverClosest3d", "orbitRotation", "tableRotation", "zoomInGeo",
+      // "zoomOutGeo", "resetGeo", "hoverClosestGeo", "toImage", "sendDataToCloud", "hoverClosestGl2d",
+      // "hoverClosestPie", "toggleHover", "resetViews", "toggleSpikelines", "resetViewMapbox"
+      // [
+      //   {
+      //     name: 'graph-reload',
+      //     title: 'Reload image graph',
+      //     icon: PlotlyJS.Icons.undo,
+      //     click: () => {
+      //       this.init();
+      //     },
+      //   },
+      // ],
+      // [this.imageButtonOptions, "toImage"],
+      // ['toImage'],
+      // ['zoom2d', 'pan2d'],
+      // ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
+      // ['hoverClosestCartesian', 'hoverCompareCartesian'],
+      // ],
     };
 
     this._imageButtonOptions = {
       name: 'image_settings',
       title: 'Edit image settings',
       icon: PlotlyJS.Icons.pencil,
-      click: (gd: any) => {},
+      click: () => {},
     };
 
     this._layout = {
@@ -78,12 +74,6 @@ export class ActivityChartGraph {
         xref: 'paper',
         x: 0,
       },
-    };
-
-    this._style = {
-      position: 'relative',
-      width: '100%',
-      height: 'calc(100vh - 40px)',
     };
 
     this._registerPanels = [
@@ -101,8 +91,8 @@ export class ActivityChartGraph {
     this.init(registerPanels);
   }
 
-  get config(): any {
-    return this._config;
+  get options(): any {
+    return this._options;
   }
 
   get data(): any[] {
@@ -122,30 +112,30 @@ export class ActivityChartGraph {
   }
 
   get panels(): ActivityGraphPanel[] {
-    return this._panels.filter((panel: ActivityGraphPanel) => panel.visible);
-  }
-
-  get panelsAll(): ActivityGraphPanel[] {
     return this._panels;
   }
 
-  get panelsVisible(): string[] {
-    return this._panelsVisible;
+  set panels(values: ActivityGraphPanel[]) {
+    this._panels = values;
+    this.update();
   }
 
-  set panelsVisible(value: string[]) {
-    this._panelsVisible = value;
-    this.panelsAll.forEach((panel: ActivityGraphPanel) => {
-      panel.visible = this.panelsVisible.includes(panel.name);
-    });
+  get panelsAll(): ActivityGraphPanel[] {
+    return this._panelsAll;
+  }
+
+  get panelsInvisible(): ActivityGraphPanel[] {
+    return this._panelsAll.filter(
+      (panel: ActivityGraphPanel) => !panel.visible
+    );
   }
 
   get project(): Project {
     return this._project;
   }
 
-  get style(): any {
-    return this._style;
+  empty(): void {
+    this._data = [];
   }
 
   init(registerPanels: any[] = []): void {
@@ -154,30 +144,61 @@ export class ActivityChartGraph {
       this._registerPanels = registerPanels;
     }
 
-    this._panels = [];
+    this._panelsAll = [];
     for (const registerPanel of this._registerPanels) {
       const panel: ActivityGraphPanel = registerPanel(this);
       if (panel.hasActivities()) {
-        this._panels.push(panel);
+        this._panelsAll.push(panel);
       }
     }
-    this._panelsVisible = this.panels.map(
-      (panel: ActivityGraphPanel) => panel.name
+    this._panels = this._panelsAll.filter(
+      (panel: ActivityGraphPanel) => panel.visible
     );
+    this.updateLayout();
   }
 
   initPanels(): void {
     this._panels.forEach((panel: ActivityGraphPanel) => panel.init());
   }
 
-  empty(): void {
-    this._data = [];
+  addPanel(panel: ActivityGraphPanel): void {
+    panel.visible = true;
+    this._panels.push(panel);
+    this.update();
   }
+
+  removePanel(panel: ActivityGraphPanel): void {
+    panel.visible = false;
+    this._panels = this._panels.filter(
+      (panel: ActivityGraphPanel) => panel.visible
+    );
+    this.update();
+  }
+
+  updateColor(): void {
+    this._panels.forEach((panel: ActivityGraphPanel) => panel.updateColor());
+  }
+
+  resetLayout(): void {
+    this._layout = {
+      margin: this._layout.margin,
+      title: this._layout.title,
+    };
+  }
+
+  updateLayout(): void {
+    this._panels.forEach((panel: ActivityGraphPanel) => panel.updateLayout());
+  }
+
+  // With data
 
   update(): void {
     // console.log('Update activity chart graph');
+    const date: string = new Date().toISOString();
+    this._options.toImageButtonOptions.filename = `nest_desktop-${this.project.name}-${date}`;
     this._data = [];
-    this.panels.forEach((panel: ActivityGraphPanel) => {
+    this.resetLayout();
+    this._panels.forEach((panel: ActivityGraphPanel) => {
       panel.update();
       panel.updateLayout();
       this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
@@ -194,13 +215,5 @@ export class ActivityChartGraph {
         this._data.push(data);
       });
     });
-  }
-
-  updateColor(): void {
-    this.panels.forEach((panel: ActivityGraphPanel) => panel.updateColor());
-  }
-
-  updateLayout(): void {
-    this.panels.forEach((panel: ActivityGraphPanel) => panel.updateLayout());
   }
 }

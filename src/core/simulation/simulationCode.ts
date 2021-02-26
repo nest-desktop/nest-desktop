@@ -14,6 +14,15 @@ export class SimulationCode extends Code {
     return script + '\n';
   }
 
+  setRandomStates(): string {
+    let script = '';
+    script += `msd = ${this._simulation.randomSeed}\n`;
+    script += 'N_vp = nest.GetKernelStatus(["total_num_virtual_procs"])[0]\n';
+    script +=
+      'pyrngs = [numpy.random.RandomState(s) for s in range(msd, msd+N_vp)]';
+    return script + '\n';
+  }
+
   setKernelStatus(): string {
     let script = 'nest.SetKernelStatus({';
     script +=
@@ -21,15 +30,18 @@ export class SimulationCode extends Code {
       `"local_num_threads": ${this._simulation.kernel.localNumThreads},`;
     script +=
       this._() +
-      `"resolution": ${this._simulation.kernel.resolution.toFixed(1)},`;
+      `"resolution": ${this.format(this._simulation.kernel.resolution)},`;
+    // script += this._() + '"grng_seed": msd+N_vp';
     script +=
       this._() +
       `"rng_seeds": numpy.random.randint(0, 1000, ${this._simulation.kernel.localNumThreads}).tolist()`;
+    // '"rng_seeds": range(msd+N_vp+1, msd+2*N_vp+1)';
+
     script += this.end() + '})';
     return script + '\n';
   }
 
   simulate(): string {
-    return `nest.Simulate(${this._simulation.time.toFixed(1)})\n`;
+    return `nest.Simulate(${this.format(this._simulation.time)})\n`;
   }
 }

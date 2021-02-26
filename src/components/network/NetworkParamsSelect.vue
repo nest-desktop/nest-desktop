@@ -63,7 +63,7 @@
         >
           <v-row>
             <v-list-item style="font-size:12px; min-height:32px">
-              <template v-slot:default="{ active }">
+              <template v-slot:default="">
                 <v-list-item-content style="padding: 4px">
                   <v-row no-gutters>
                     {{ param.options.label }}
@@ -91,9 +91,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
+
+// import { Connection } from '@/core/connection/connection';
+import { Network } from '@/core/network/network';
+import { Node } from '@/core/node/node';
+import { Parameter } from '@/core/parameter';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
 
 export default Vue.extend({
@@ -103,14 +108,14 @@ export default Vue.extend({
   },
   props: {
     projectId: String,
-    network: Object,
+    network: Network,
   },
   setup(props) {
     const state = reactive({
-      network: props.network,
+      network: props.network as Network,
       elementType: 0,
       menu: {
-        node: null,
+        node: undefined as Node,
         show: false,
         position: {
           x: 0,
@@ -119,16 +124,26 @@ export default Vue.extend({
       },
     });
 
-    const paramLabel = param => {
+    /**
+     * Label parameter (with unit).
+     */
+    const paramLabel = (param: Parameter) => {
       return `${param.options.label} (${param.options.unit})` || param.id;
     };
-    const showNode = node => {
+
+    /**
+     * Show node in list.
+     */
+    const showNode = (node: Node) => {
       const elementTypes = ['', 'stimulator', 'neuron', 'recorder'];
       if (state.elementType === 0) return true;
       return elementTypes[state.elementType] === node.model.elementType;
     };
 
-    const showMenu = function(e, node) {
+    /**
+     * Show node menu.
+     */
+    const showMenu = function(e: MouseEvent, node: Node) {
       e.preventDefault();
       state.menu.show = false;
       state.menu.node = node;
@@ -139,6 +154,9 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.network.networkChanges();
       if (!state.network.project.simulation.running) {

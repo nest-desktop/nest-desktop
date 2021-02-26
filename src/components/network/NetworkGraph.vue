@@ -125,7 +125,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import {
   reactive,
@@ -133,11 +133,12 @@ import {
   onMounted,
   watch,
 } from '@vue/composition-api';
-
 import * as d3 from 'd3';
 
-import core from '@/core/index';
+import { Connection } from '@/core/connection/connection';
 import { NetworkGraph } from '@/core/network/networkGraph';
+import { Node } from '@/core/node/node';
+import core from '@/core/index';
 
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
@@ -151,7 +152,7 @@ export default Vue.extend({
   props: {
     projectId: String,
   },
-  setup(props, { root, refs }) {
+  setup(props, { refs }) {
     const state = reactive({
       network: core.app.project.network,
       graph: undefined,
@@ -167,7 +168,10 @@ export default Vue.extend({
       },
     });
 
-    const showConnectionMenu = (e, connection) => {
+    /**
+     * Show Menu for connection.
+     */
+    const showConnectionMenu = (e: MouseEvent, connection: Connection) => {
       e.preventDefault();
       state.connectionMenu.show = false;
       state.connectionMenu.connection = connection;
@@ -178,7 +182,10 @@ export default Vue.extend({
       }, 1);
     };
 
-    const showNodeMenu = (e, node) => {
+    /**
+     * Show Menu for node.
+     */
+    const showNodeMenu = (e: MouseEvent, node: Node) => {
       e.preventDefault();
       state.nodeMenu.show = false;
       state.nodeMenu.node = node;
@@ -189,20 +196,30 @@ export default Vue.extend({
       }, 1);
     };
 
+    /**
+     * Tigger Menu for node or connection.
+     */
     const setMenuTrigger = () => {
-      d3.selectAll('g.node').each((node, idx, elements) => {
-        d3.select(elements[idx]).on('contextmenu', e => {
-          showNodeMenu(e, node);
-        });
-      });
+      d3.selectAll('g.node').each(
+        (node: Node, idx: number, elements: any[]) => {
+          d3.select(elements[idx]).on('contextmenu', e => {
+            showNodeMenu(e, node);
+          });
+        }
+      );
 
-      d3.selectAll('path.connection').each((connection, idx, elements) => {
-        d3.select(elements[idx]).on('contextmenu', e => {
-          showConnectionMenu(e, connection);
-        });
-      });
+      d3.selectAll('path.connection').each(
+        (connection: Connection, idx: number, elements: any[]) => {
+          d3.select(elements[idx]).on('contextmenu', e => {
+            showConnectionMenu(e, connection);
+          });
+        }
+      );
     };
 
+    /**
+     * Update network graph.
+     */
     const update = () => {
       state.network = core.app.project.network;
       state.graph.network = state.network;
@@ -212,9 +229,12 @@ export default Vue.extend({
       setMenuTrigger();
     };
 
+    /**
+     * Resize network graph.
+     */
     const resize = () => {
-      if (refs.networkGraph) {
-        const elem = refs.networkGraph;
+      const elem: any = refs.networkGraph['parentNode'];
+      if (elem) {
         state.graph.resize(elem.clientWidth, elem.clientHeight);
       }
     };
@@ -231,7 +251,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.projectId + state.network.hash,
+      () => [props.projectId, state.network.hash],
       () => update()
     );
 
@@ -245,7 +265,6 @@ export default Vue.extend({
   display: inline-block;
   position: relative;
   width: 100%;
-  height: calc(100vh - 48px);
   overflow: hidden;
 }
 

@@ -25,256 +25,216 @@
       </v-toolbar>
     </v-banner>
 
-    <v-row style="overflow-y:auto; height: calc(100vh - 78px)" no-gutters>
+    <v-row
+      no-gutters
+      style="overflow-y:auto; height: calc(100vh - 78px); margin-right: -8px"
+    >
       <v-col>
-        <v-card
-          :color="node.view.color"
-          :key="'node' + node.idx"
-          class="mb-1"
-          flat
-          tile
-          v-for="node of state.network.nodes"
-          v-show="showNode(node)"
-        >
-          <v-img @contextmenu="e => showNodeMenu(e, node)" class="pa-0">
-            <v-row no-gutters>
-              <v-col cols="3">
-                <v-btn
-                  @click="() => node.view.select()"
-                  block
-                  dark
-                  height="40"
-                  text
-                  tile
-                  v-text="node.view.label"
-                />
-              </v-col>
-              <v-col cols="9">
-                <v-overflow-btn
-                  :items="node.models"
-                  class="ma-0"
-                  dark
-                  dense
-                  editable
-                  hide-details
-                  item-text="label"
-                  item-value="id"
-                  style="font-weight:700"
-                  tile
-                  v-model="node.modelId"
-                />
-              </v-col>
-            </v-row>
-
+        <draggable v-model="state.network.nodes">
+          <transition-group>
             <v-card
-              class="ml-1"
+              :color="node.view.color"
+              :key="'node' + node.idx"
+              class="mb-1"
               flat
               tile
-              v-if="(node.params.length > 0) & !node.model.isRecorder()"
+              v-for="node of state.network.nodes"
+              v-show="showNode(node)"
             >
-              <v-row class="mx-1 my-0" no-gutters>
-                <v-col cols="12">
-                  <v-subheader class="paramLabel">
-                    population size
-                  </v-subheader>
-                  <v-slider
-                    :max="1000"
-                    :min="1"
-                    :thumb-color="node.view.color"
-                    @change="paramChange"
-                    dense
-                    height="40"
-                    hide-details
-                    v-model="node.size"
-                  >
-                    <template v-slot:append>
-                      <v-text-field
-                        @change="paramChange"
-                        class="mt-0 pt-0"
-                        height="32"
-                        hide-details
-                        single-line
-                        style="width: 60px; font-size:12px"
-                        type="number"
-                        v-model="node.size"
-                      />
-                    </template>
-                  </v-slider>
-                </v-col>
-              </v-row>
-            </v-card>
+              <v-img class="pa-0">
+                <v-row @contextmenu="e => showNodeMenu(e, node)" no-gutters>
+                  <v-col cols="3">
+                    <v-btn
+                      @click="() => node.view.select()"
+                      block
+                      dark
+                      height="40"
+                      text
+                      tile
+                      v-text="node.view.label"
+                    />
+                  </v-col>
+                  <v-col cols="9">
+                    <v-overflow-btn
+                      :items="node.models"
+                      class="ma-0"
+                      dark
+                      dense
+                      editable
+                      hide-details
+                      item-text="label"
+                      item-value="id"
+                      style="font-weight:700"
+                      tile
+                      v-model="node.modelId"
+                    />
+                  </v-col>
+                </v-row>
 
-            <v-card
-              :key="param.id"
-              class="ml-1"
-              flat
-              tile
-              v-for="param of node.filteredParams"
-            >
-              <v-row class="mx-1 my-0" no-gutters>
-                <v-col cols="12">
-                  <v-subheader class="paramLabel">
-                    {{ paramLabel(param) }}
-                  </v-subheader>
-                  <v-slider
-                    :max="param.options.max"
-                    :min="param.options.min"
-                    :thumb-color="node.view.color"
-                    @change="paramChange"
-                    dense
-                    height="40"
-                    hide-details
-                    v-model="param.value"
-                  >
-                    <template v-slot:append>
-                      <v-text-field
-                        @change="paramChange"
-                        class="mt-0 pt-0"
-                        height="32"
-                        hide-details
-                        single-line
-                        style="width: 60px; font-size:12px"
-                        type="number"
-                        v-model="param.value"
-                      />
-                    </template>
-                  </v-slider>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-img>
-        </v-card>
-
-        <v-card
-          :key="'connection' + connection.idx"
-          class="mb-1"
-          flat
-          tile
-          v-for="connection of state.network.connections"
-          v-show="showConnection(connection)"
-        >
-          <v-img
-            :gradient="'to right, ' + connection.view.backgroundImage"
-            @contextmenu="e => showConnectionMenu(e, connection)"
-            dark
-            width="320"
-          >
-            <v-row no-gutters>
-              <v-col cols="3" class="py-0" style="text-align:center">
-                <v-btn
-                  @click="() => connection.source.view.select()"
-                  block
-                  dark
-                  height="40"
-                  text
+                <v-card
+                  class="ml-1"
+                  flat
                   tile
-                  v-text="connection.source.view.label"
-                />
-              </v-col>
-              <v-col cols="5">
-                <v-btn
-                  @click="() => connection.view.select()"
-                  block
-                  dark
-                  height="40"
-                  text
-                  tile
+                  v-if="(node.params.length > 0) & !node.model.isRecorder()"
                 >
-                  <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                </v-btn>
-              </v-col>
-              <v-col cols="4" class="py-0" style="text-align:center">
-                <v-btn
-                  @click="
-                    () => connection.targetconnection.target.view.select()
-                  "
-                  block
-                  dark
-                  height="40"
-                  text
-                  tile
-                  v-text="connection.target.view.label"
-                />
-              </v-col>
-            </v-row>
-
-            <v-card
-              :key="param.id"
-              class="mx-1"
-              color="white"
-              flat
-              light
-              tile
-              v-for="param in connection.synapse.filteredParams"
-            >
-              <v-row class="mx-1 my-0" no-gutters>
-                <v-col cols="12">
-                  <v-subheader class="paramLabel">
-                    {{ paramLabel(param) }}
-                  </v-subheader>
-                  <v-slider
-                    :max="param.options.max"
-                    :min="param.options.min"
-                    :thumb-color="connection.source.view.color"
-                    @change="paramChange"
-                    dense
-                    height="40"
-                    hide-details
-                    v-model="param.value"
-                  >
-                    <template v-slot:append>
-                      <v-text-field
+                  <v-row class="mx-1 my-0" no-gutters>
+                    <v-col cols="12">
+                      <v-subheader class="paramLabel">
+                        population size
+                      </v-subheader>
+                      <v-slider
+                        :max="1000"
+                        :min="1"
+                        :thumb-color="node.view.color"
                         @change="paramChange"
-                        class="mt-0 pt-0"
-                        height="32"
+                        dense
+                        height="40"
                         hide-details
-                        single-line
-                        style="width: 60px; font-size:12px"
-                        type="number"
-                        v-model="param.value"
-                      />
-                    </template>
-                  </v-slider>
-                </v-col>
-              </v-row>
+                        v-model="node.size"
+                      >
+                        <template v-slot:append>
+                          <v-text-field
+                            @change="paramChange"
+                            class="mt-0 pt-0"
+                            height="32"
+                            hide-details
+                            single-line
+                            style="width: 60px; font-size:12px"
+                            type="number"
+                            v-model="node.size"
+                          />
+                        </template>
+                      </v-slider>
+                    </v-col>
+                  </v-row>
+                </v-card>
+
+                <ParameterEdit
+                  :color="node.view.color"
+                  :key="param.id"
+                  :param="param"
+                  :value.sync="param.value"
+                  @update:value="paramChange()"
+                  class="ml-1"
+                  v-for="param of node.filteredParams"
+                />
+              </v-img>
             </v-card>
-          </v-img>
-        </v-card>
+          </transition-group>
+        </draggable>
+
+        <draggable v-model="state.network.connections">
+          <transition-group>
+            <v-card
+              :key="'connection' + connection.idx"
+              class="mb-1"
+              flat
+              tile
+              v-for="connection of state.network.connections"
+              v-show="showConnection(connection)"
+            >
+              <v-img
+                :gradient="'to right, ' + connection.view.backgroundImage"
+                dark
+              >
+                <v-row
+                  @contextmenu="e => showConnectionMenu(e, connection)"
+                  no-gutters
+                >
+                  <v-col cols="3" class="py-0" style="text-align:center">
+                    <v-btn
+                      @click="() => connection.source.view.select()"
+                      block
+                      dark
+                      height="40"
+                      text
+                      tile
+                      v-text="connection.source.view.label"
+                    />
+                  </v-col>
+                  <v-col cols="5">
+                    <v-btn
+                      @click="() => connection.view.select()"
+                      block
+                      dark
+                      height="40"
+                      text
+                      tile
+                    >
+                      <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="4" class="py-0" style="text-align:center">
+                    <v-btn
+                      @click="
+                        () => connection.targetconnection.target.view.select()
+                      "
+                      block
+                      dark
+                      height="40"
+                      text
+                      tile
+                      v-text="connection.target.view.label"
+                    />
+                  </v-col>
+                </v-row>
+
+                <ParameterEdit
+                  :color="connection.source.view.color"
+                  :key="param.id"
+                  :param="param"
+                  :value.sync="param.value"
+                  @update:value="paramChange()"
+                  class="mx-1"
+                  v-for="param in connection.synapse.filteredParams"
+                />
+              </v-img>
+            </v-card>
+          </transition-group>
+        </draggable>
       </v-col>
     </v-row>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+import draggable from 'vuedraggable';
+
+import { Connection } from '@/core/connection/connection';
+import { Network } from '@/core/network/network';
+import { Node } from '@/core/node/node';
+import core from '@/core/index';
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
-import core from '@/core/index';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
   components: {
+    draggable,
     NetworkConnectionMenu,
     NetworkNodeMenu,
+    ParameterEdit,
   },
   props: {
     projectId: String,
   },
   setup(props) {
     const state = reactive({
-      network: core.app.project.network,
-      elementType: 0,
       connectionMenu: {
-        connection: undefined,
+        connection: undefined as Connection | undefined,
         position: {
           x: 0,
           y: 0,
         },
         show: false,
       },
+      elementType: 0,
+      network: core.app.project.network as Network,
       nodeMenu: {
-        node: undefined,
+        node: undefined as Node | undefined,
         position: {
           x: 0,
           y: 0,
@@ -283,31 +243,33 @@ export default Vue.extend({
       },
     });
 
-    const paramLabel = param => {
-      return `${param.options.label} (${param.options.unit})` || param.id;
-    };
-
-    const showNode = node => {
+    /**
+     * Show node in list.
+     */
+    const showNode = (node: Node) => {
       if (
         state.network.view.selectedConnection ||
         state.network.view.selectedNode
       ) {
         return state.network.view.isNodeSelected(node);
       } else {
-        const elementTypes = ['', 'stimulator', 'neuron', 'recorder'];
+        const elementTypes: string[] = ['', 'stimulator', 'neuron', 'recorder'];
         if (state.elementType === 0) return true;
         return elementTypes[state.elementType] === node.model.elementType;
       }
     };
 
-    const showConnection = connection => {
+    /**
+     * Show connection in list.
+     */
+    const showConnection = (connection: Connection) => {
       if (
         state.network.view.selectedConnection ||
         state.network.view.selectedNode
       ) {
         return state.network.view.isConnectionSelected(connection);
       } else {
-        const elementTypes = ['', 'stimulator', 'neuron', 'recorder'];
+        const elementTypes: string[] = ['', 'stimulator', 'neuron', 'recorder'];
         if (state.elementType === 0) return true;
         return (
           elementTypes[state.elementType] ===
@@ -316,7 +278,10 @@ export default Vue.extend({
       }
     };
 
-    const showConnectionMenu = function(e, connection) {
+    /**
+     * Show connection menu.
+     */
+    const showConnectionMenu = function(e: MouseEvent, connection: Connection) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.connectionMenu.show = false;
@@ -328,7 +293,10 @@ export default Vue.extend({
       });
     };
 
-    const showNodeMenu = function(e, node) {
+    /**
+     * Show node menu.
+     */
+    const showNodeMenu = function(e: MouseEvent, node: Node) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.nodeMenu.show = false;
@@ -340,30 +308,25 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.network.networkChanges();
-      if (!state.network.project.simulation.running) {
-        state.network.project.simulateAfterChange();
-      }
+      // if (!state.network.project.simulation.running) {
+      //   state.network.project.simulateAfterChange();
+      // }
     };
 
     watch(
-      () => props.projectId,
+      () => [props.projectId, core.app.project.network.hash],
       () => {
-        state.network = core.app.project.network;
-      }
-    );
-
-    watch(
-      () => core.app.project.network.hash,
-      () => {
-        state.network = core.app.project.network;
+        state.network = core.app.project.network as Network;
       }
     );
 
     return {
       paramChange,
-      paramLabel,
       showConnection,
       showConnectionMenu,
       showNode,

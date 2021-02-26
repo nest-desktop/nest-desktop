@@ -17,7 +17,7 @@ export class ActivityAnimationGraph {
   private _style: any = {};
   private _trailModes: string[];
 
-  constructor(project: Project, config: any = {}) {
+  constructor(project: Project) {
     this._project = project;
     this._hash = project.hash;
     this._config = {

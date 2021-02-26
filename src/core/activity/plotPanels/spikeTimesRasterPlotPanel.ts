@@ -1,4 +1,3 @@
-import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
@@ -6,8 +5,8 @@ import { SpikeTimesPanel } from './spikeTimesPanel';
 export class SpikeTimesRasterPlotPanel extends SpikeTimesPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph);
+    this.icon = 'mdi-chart-scatter-plot';
     this.name = 'SpikeTimesRasterPlotPanel';
-    this.icon = 'ellipsis-h'; // 'chart-scatter';
     this.label = 'raster plot of spike times';
     this.layout.yaxis.title = 'Neuron ID';
     this.layout.yaxis.height = 3;

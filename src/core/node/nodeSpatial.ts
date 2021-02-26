@@ -210,7 +210,7 @@ export class GridPositions {
   range(min: number, max: number, size: number): number[] {
     const step: number = (max - min) / size / 2;
     const range: any = math.range(min, max, step);
-    return range._data.filter((v: number, i: number) => i % 2 === 1);
+    return range._data.filter((_: number, i: number) => i % 2 === 1);
   }
 
   round(value: number): number {

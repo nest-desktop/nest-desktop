@@ -4,6 +4,7 @@ import Vuetify from 'vuetify/lib';
 // Colors
 import colors from 'vuetify/lib/util/colors';
 
+import { mdiDatabaseRefreshOutline } from '@mdi/js';
 import NetworkIcon from '@/components/icons/NetworkIcon.vue';
 
 Vue.use(Vuetify);
@@ -11,6 +12,7 @@ Vue.use(Vuetify);
 export default new Vuetify({
   icons: {
     values: {
+      mdiDatabaseRefreshOutline,
       network: {
         component: NetworkIcon,
       },
@@ -23,14 +25,15 @@ export default new Vuetify({
         secondary: colors.grey.lighten2,
         accent: colors.grey.darken2,
         project: {
-          base: '#93b5ad',
-          darken1: '#84A29B',
+          base: colors.teal.base, //'#93b5ad',
+          darken1: colors.teal.darken1,
+          // darken1: '#84A29B',
         },
         model: {
-          base: '#be6442',
+          base: colors.orange.darken4, //'#be6442',
         },
-        setting: {
-          base: '#ce934a',
+        settings: {
+          base: colors.deepPurple.base, //'#ce934a',
         },
       },
     },

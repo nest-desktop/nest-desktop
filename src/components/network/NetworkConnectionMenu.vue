@@ -101,12 +101,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+
 import { Connection } from '@/core/connection/connection';
 
 export default Vue.extend({
   name: 'NetworkParamEdit',
   props: {
-    connection: Object,
+    connection: Connection,
     position: Object,
   },
   setup(props) {
@@ -168,21 +169,30 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Triggers when parameter is changed.
+     */
     const paramChange = () => {
       state.connection.connectionChanges();
     };
 
+    /**
+     * Delete connection.
+     */
     const deleteConnection = () => {
       state.show = false;
       state.connection.remove();
     };
 
+    /**
+     * Return to main menu content.
+     */
     const back = () => {
       state.content = undefined;
     };
 
     watch(
-      () => props.connection,
+      () => [props.connection, props.position],
       () => {
         state.content = undefined;
         state.show = true;

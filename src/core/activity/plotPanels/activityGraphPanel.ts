@@ -28,6 +28,7 @@ export class ActivityGraphPanel extends Config {
 
   constructor(graph: ActivityChartGraph, configName: string = null) {
     super(configName || 'ActivityGraphPanel');
+    this.name = configName;
     this._graph = graph;
   }
 
@@ -49,6 +50,14 @@ export class ActivityGraphPanel extends Config {
 
   get graph(): ActivityChartGraph {
     return this._graph;
+  }
+
+  get height(): number {
+    return this._layout.yaxis.height;
+  }
+
+  set height(value: number) {
+    this._layout.yaxis.height = value;
   }
 
   get icon(): string {
@@ -104,7 +113,7 @@ export class ActivityGraphPanel extends Config {
   }
 
   get yaxis(): number {
-    return this.idx + 1;
+    return this.graph.panels.indexOf(this) + 1;
   }
 
   hasActivities(): boolean {
@@ -121,14 +130,12 @@ export class ActivityGraphPanel extends Config {
   updateColor(): void {}
 
   updateLayout(): void {
-    const height: number = this.layout.yaxis.height;
     const panels: ActivityGraphPanel[] = this.graph.panels;
     const heights: number[] = panels.map(
       (panel: ActivityGraphPanel) => panel.layout.yaxis.height
     );
     const heightTotal: number = math.sum(heights);
     heights.reverse();
-    const ratio: number = 1 / heightTotal - panels.length * 0.02;
     const heightCumsum: number[] = heights.map(
       ((sum: number) => (value: number) => (sum += value))(0)
     );

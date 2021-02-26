@@ -13,7 +13,7 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph, 'InterSpikeIntervalHistogramPanel');
     this.name = 'InterSpikeIntervalHistogramPanel';
-    this.icon = 'chart-bar';
+    this.icon = 'mdi-chart-bar';
     this.label = 'histogram of inter-spike interval';
     this.layout.barmode = this.state.barmode;
     this.layout.xaxis.title = 'Inter-spike interval [ms]';

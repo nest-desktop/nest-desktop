@@ -1,4 +1,3 @@
-import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
@@ -13,7 +12,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph, 'SpikeTimesHistogramPanel');
     this.name = 'SpikeTimesHistogramPanel';
-    this.icon = 'chart-bar';
+    this.icon = 'mdi-chart-bar';
     this.label = 'histogram of spike times';
     this.layout.yaxis.title = 'Spike count';
     this.layout.barmode = this.state.barmode;

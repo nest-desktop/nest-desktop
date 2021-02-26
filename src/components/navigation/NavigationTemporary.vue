@@ -50,48 +50,45 @@
     >
       <ModelNavList v-if="state.navList === 'models'" />
       <ProjectNavList v-if="state.navList === 'projects'" />
-      <SettingNavList v-if="state.navList === 'settings'" />
     </v-navigation-drawer>
   </div>
 </template>
 
-<script>
-import { reactive } from "@vue/composition-api";
-import ModelNavList from "@/components/model/ModelNavList";
-import ProjectNavList from "@/components/project/ProjectNavList";
-import SettingNavList from "@/components/setting/SettingNavList";
+<script lang="ts">
+import { reactive } from '@vue/composition-api';
+import ModelNavList from '@/components/navigation/ModelNavList.vue';
+import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 
 export default {
-  name: "Navigation",
+  name: 'Navigation',
   components: {
     ModelNavList,
     ProjectNavList,
-    SettingNavList
   },
-  setup(props) {
-    const routes = [
+  setup() {
+    const routes: any[] = [
       {
-        id: "models",
-        icon: "mdi-engine-outline",
-        title: "Models"
+        id: 'models',
+        icon: 'mdi-engine-outline',
+        title: 'Models',
       },
       {
-        id: "projects",
-        icon: "mdi-brain",
-        title: "Projects"
+        id: 'projects',
+        icon: 'mdi-brain',
+        title: 'Projects',
       },
       {
-        id: "settings",
-        icon: "mdi-cogs",
-        title: "Settings"
-      }
+        id: 'settings',
+        icon: 'mdi-cogs',
+        title: 'Settings',
+      },
     ];
     const state = reactive({
-      navList: "projects",
+      navList: 'projects',
       show: false,
-      miniVariant: true
+      miniVariant: true,
     });
-    const open = navList => {
+    const open = (navList: string) => {
       state.navList = navList;
       state.show = true;
     };
@@ -102,8 +99,8 @@ export default {
       routes,
       state,
       open,
-      onClickOutside
+      onClickOutside,
     };
-  }
+  },
 };
 </script>

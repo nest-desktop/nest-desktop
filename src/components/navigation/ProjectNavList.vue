@@ -60,40 +60,47 @@
     </v-form>
 
     <v-list :key="state.app.projects.length" dense two-line>
-      <v-list-item
-        :key="project.id"
-        :to="'/project/' + project.id"
-        @click="state.projectId = project.id"
-        @contextmenu="e => showProjectMenu(e, project)"
-        v-for="project in state.app.view.filteredProjects"
-      >
-        <v-list-item-content>
-          <v-list-item-title v-text="project.name" />
-          <!-- <v-list-item-subtitle v-html="timeSince(project.createdAt)" /> -->
-          <v-list-item-subtitle>
-            {{ project.network.nodes.length }} nodes;
-            {{ project.network.connections.length }} connections
-          </v-list-item-subtitle>
-        </v-list-item-content>
+      <draggable v-model="state.app.projects">
+        <transition-group>
+          <v-list-item
+            :key="project.id"
+            :to="'/project/' + project.id"
+            @click="state.projectId = project.id"
+            @contextmenu="e => showProjectMenu(e, project)"
+            v-for="project in state.app.view.filteredProjects"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="project.name" />
+              <!-- <v-list-item-subtitle v-html="timeSince(project.createdAt)" /> -->
+              <v-list-item-subtitle>
+                {{ project.network.nodes.length }} nodes;
+                {{ project.network.connections.length }} connections
+              </v-list-item-subtitle>
+            </v-list-item-content>
 
-        <v-list-item-icon v-if="!project.rev">
-          <v-icon v-text="'mdi-alert-circle-outline'" />
-        </v-list-item-icon>
-      </v-list-item>
+            <v-list-item-icon v-if="!project.rev">
+              <v-icon v-text="'mdi-alert-circle-outline'" />
+            </v-list-item-icon>
+          </v-list-item>
+        </transition-group>
+      </draggable>
     </v-list>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive } from '@vue/composition-api';
+import draggable from 'vuedraggable';
 
+import { Project } from '@/core/project/project';
 import core from '@/core/index';
 import ProjectMenu from '@/components/project/ProjectMenu.vue';
 
 export default Vue.extend({
   name: 'ProjectNavList',
   components: {
+    draggable,
     ProjectMenu,
   },
   setup() {
@@ -106,33 +113,37 @@ export default Vue.extend({
         show: false,
       },
     });
-    const timeSince = date => {
-      const seconds = Math.floor((+new Date() - +new Date(date)) / 1000);
-      if (seconds < 60) {
-        return 'Just now';
-      }
-      const intervals = {
-        year: 31536000,
-        month: 2592000,
-        week: 604800,
-        day: 86400,
-        hour: 3600,
-        minute: 60,
-      };
-      let counter;
-      for (const i in intervals) {
-        counter = Math.floor(seconds / intervals[i]);
-        if (counter > 0) {
-          if (counter === 1) {
-            return counter + ' ' + i + ' ago'; // singular (1 day ago)
-          } else {
-            return counter + ' ' + i + 's ago'; // plural (2 days ago)
-          }
-        }
-      }
-    };
 
-    const showProjectMenu = function(e, project) {
+    // const timeSince = date => {
+    //   const seconds = Math.floor((+new Date() - +new Date(date)) / 1000);
+    //   if (seconds < 60) {
+    //     return 'Just now';
+    //   }
+    //   const intervals = {
+    //     year: 31536000,
+    //     month: 2592000,
+    //     week: 604800,
+    //     day: 86400,
+    //     hour: 3600,
+    //     minute: 60,
+    //   };
+    //   let counter;
+    //   for (const i in intervals) {
+    //     counter = Math.floor(seconds / intervals[i]);
+    //     if (counter > 0) {
+    //       if (counter === 1) {
+    //         return counter + ' ' + i + ' ago'; // singular (1 day ago)
+    //       } else {
+    //         return counter + ' ' + i + 's ago'; // plural (2 days ago)
+    //       }
+    //     }
+    //   }
+    // };
+
+    /**
+     * Show project menu.
+     */
+    const showProjectMenu = function(e: MouseEvent, project: Project) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.projectMenu.show = false;
