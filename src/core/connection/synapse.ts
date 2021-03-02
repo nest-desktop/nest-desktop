@@ -126,6 +126,20 @@ export class Synapse {
   }
 
   /**
+   * Sets all params to visible.
+   */
+  public showAllParams(): void {
+    this.params.forEach((param: Parameter) => (param.visible = true));
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  public hideAllParams(): void {
+    this.params.forEach((param: Parameter) => (param.visible = false));
+  }
+
+  /**
    * Inverse synaptic weight.
    */
   inverseWeight(): void {

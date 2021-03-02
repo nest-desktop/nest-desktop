@@ -79,24 +79,6 @@ export class ConnectionView {
     }
   }
 
-  /**
-   * Sets all params to visible.
-   */
-  public showAllParams(): void {
-    this._connection.params.forEach(
-      (param: Parameter) => (param.visible = true)
-    );
-  }
-
-  /**
-   * Sets all params to invisible.
-   */
-  public hideAllParams(): void {
-    this._connection.params.forEach(
-      (param: Parameter) => (param.visible = false)
-    );
-  }
-
   select(): void {
     this._connection.network.view.selectedConnection = this._connection;
   }
