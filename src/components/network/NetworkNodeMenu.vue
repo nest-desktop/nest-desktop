@@ -66,7 +66,7 @@
             <v-list>
               <v-row>
                 <v-list-item style="font-size:12px; min-height:32px">
-                  <template v-slot:default="">
+                  <template v-slot:default="{ active }">
                     <v-list-item-content style="padding: 4px">
                       <v-row no-gutters>
                         {{ param.options.label }}
@@ -78,12 +78,13 @@
 
                     <v-list-item-action style="margin: 4px 0">
                       <v-checkbox
+                        :input-value="active"
                         @change="paramChange"
                         class="shrink mr-2"
                         color="black"
                         hide-details
                         v-model="param.visible"
-                      ></v-checkbox>
+                      />
                     </v-list-item-action>
                   </template>
                 </v-list-item>
@@ -221,9 +222,11 @@ export default Vue.extend({
         {
           id: 'setSpatial',
           icon: 'mdi-axis-arrow',
-          title: 'Set spatial',
+          title: 'Toggle spatial',
           onClick: () => {
-            state.node.initSpatial({ pos: [] });
+            state.node.initSpatial(
+              state.node.spatial.hasPositions() ? {} : { numDimensions: 2 }
+            );
             state.show = false;
           },
           append: false,
@@ -264,13 +267,6 @@ export default Vue.extend({
     };
 
     /**
-     * Set node spatial.
-     */
-    const setSpatial = () => {
-      state.node.initSpatial({ pos: [] });
-    };
-
-    /**
      * Delete node.
      */
     const deleteNode = () => {
@@ -308,7 +304,6 @@ export default Vue.extend({
       deleteNode,
       paramChange,
       resetColor,
-      setSpatial,
       setWeights,
       state,
       updateColor,
