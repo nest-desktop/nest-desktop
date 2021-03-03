@@ -63,31 +63,33 @@
             tile
             v-for="param of state.node.params"
           >
-            <v-row>
-              <v-list-item style="font-size:12px; min-height:32px">
-                <template v-slot:default="{ active }">
-                  <v-list-item-content style="padding: 4px">
-                    <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
-                    </v-row>
-                  </v-list-item-content>
+            <v-list>
+              <v-row>
+                <v-list-item style="font-size:12px; min-height:32px">
+                  <template v-slot:default="{ active }">
+                    <v-list-item-content style="padding: 4px">
+                      <v-row no-gutters>
+                        {{ param.options.label }}
+                        <v-spacer />
+                        {{ param.toJSON().value }}
+                        {{ param.options.unit }}
+                      </v-row>
+                    </v-list-item-content>
 
-                  <v-list-item-action style="margin: 4px 0">
-                    <v-checkbox
-                      :input-value="active"
-                      @change="paramChange"
-                      class="shrink mr-2"
-                      color="black"
-                      hide-details
-                      v-model="param.visible"
-                    />
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </v-row>
+                    <v-list-item-action style="margin: 4px 0">
+                      <v-checkbox
+                        :input-value="active"
+                        @change="paramChange"
+                        class="shrink mr-2"
+                        color="black"
+                        hide-details
+                        v-model="param.visible"
+                      />
+                    </v-list-item-action>
+                  </template>
+                </v-list-item>
+              </v-row>
+            </v-list>
           </v-card>
           <v-card-actions>
             <v-btn @click="back" text>
