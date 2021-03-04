@@ -49,10 +49,13 @@
                   <template v-slot:default>
                     <v-list-item-content style="padding: 4px">
                       <v-row no-gutters>
-                        {{ param.options.label }}
+                        <span v-text="param.options.label" />
                         <v-spacer />
-                        {{ param.value }}
-                        {{ param.options.unit }}
+                        <span class="mx-1" v-text="param.value" />
+                        <span
+                          style="min-width:24px"
+                          v-text="param.options.unit"
+                        />
                       </v-row>
                     </v-list-item-content>
 
@@ -63,7 +66,7 @@
                         color="black"
                         hide-details
                         v-model="param.visible"
-                      ></v-checkbox>
+                      />
                     </v-list-item-action>
                   </template>
                 </v-list-item>

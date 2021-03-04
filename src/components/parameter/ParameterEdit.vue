@@ -108,6 +108,9 @@
               <template v-slot:append>
                 <v-text-field
                   @change="paramChange"
+                  :max="state.options.max || 1"
+                  :min="state.options.min || 0"
+                  :step="state.options.step || 1"
                   class="mt-0 pt-0"
                   height="32"
                   hide-details
