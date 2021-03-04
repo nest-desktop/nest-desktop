@@ -63,17 +63,21 @@
             tile
             v-for="param of state.node.params"
           >
-            <v-row>
-              <v-list-item style="font-size:12px; min-height:32px">
-                <template v-slot:default="{ active }">
-                  <v-list-item-content style="padding: 4px">
-                    <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
-                    </v-row>
-                  </v-list-item-content>
+            <v-list>
+              <v-row>
+                <v-list-item style="font-size:12px; min-height:32px">
+                  <template v-slot:default="{ active }">
+                    <v-list-item-content style="padding: 4px">
+                      <v-row no-gutters>
+                        <span v-text="param.options.label" />
+                        <v-spacer />
+                        <span class="mx-1" v-text="param.value" />
+                        <span
+                          style="min-width:24px"
+                          v-text="param.options.unit"
+                        />
+                      </v-row>
+                    </v-list-item-content>
 
                   <v-list-item-action style="margin: 4px 0">
                     <v-checkbox
@@ -89,6 +93,7 @@
               </v-list-item>
             </v-row>
           </v-card>
+
           <v-card-actions>
             <v-btn @click="back" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
