@@ -1,25 +1,29 @@
 import * as d3 from 'd3';
 
 import { Activity } from './activity';
+import { ActivityAnimationSceneBox } from './animationScenes/activityAnimationSceneBox';
+import { ActivityAnimationSceneBoxHistogram } from './animationScenes/activityAnimationSceneBoxHistogram';
+import { ActivityAnimationSceneSphere } from './animationScenes/activityAnimationSceneSphere';
 import { Project } from '../project/project';
 
 export class ActivityAnimationGraph {
   private _config: any;
   private _frameIdx = 0;
   private _frames: any[] = [];
-  private _hash: string;
   private _layers: any[] = [];
   private _layout: any = {};
   private _project: Project;
   private _recordables: string[] = [];
   private _recordablesOptions: any[] = [];
   private _recordFrom = 'V_m';
+  private _ref: any;
+  private _scene: any;
+  private _sceneIdx: number = 0;
+  private _scenes: any[] = [];
   private _style: any = {};
-  private _trailModes: string[];
 
   constructor(project: Project) {
     this._project = project;
-    this._hash = project.hash;
     this._config = {
       camera: {
         position: {
@@ -75,8 +79,23 @@ export class ActivityAnimationGraph {
       ],
     };
 
-    this._trailModes = ['off', 'growing', 'shrinking'];
-
+    this._scenes = [
+      {
+        idx: 0,
+        label: 'Sphere',
+        scene: () => new ActivityAnimationSceneSphere(this),
+      },
+      {
+        idx: 1,
+        label: 'Box',
+        scene: () => new ActivityAnimationSceneBox(this),
+      },
+      {
+        idx: 2,
+        label: 'Box Histogram',
+        scene: () => new ActivityAnimationSceneBoxHistogram(this),
+      },
+    ];
     this.init();
   }
 
@@ -104,14 +123,6 @@ export class ActivityAnimationGraph {
     return this._frames;
   }
 
-  get hash(): string {
-    return this._hash;
-  }
-
-  set hash(value: string) {
-    this._hash = value;
-  }
-
   get layers(): any[] {
     return this._layers;
   }
@@ -122,6 +133,10 @@ export class ActivityAnimationGraph {
 
   get project(): Project {
     return this._project;
+  }
+
+  get ref(): any {
+    return this._ref;
   }
 
   get recordables(): string[] {
@@ -140,20 +155,25 @@ export class ActivityAnimationGraph {
     this._recordFrom = value;
   }
 
+  get sceneIdx(): number {
+    return this._sceneIdx;
+  }
+
+  set sceneIdx(idx: number) {
+    this._sceneIdx = idx;
+    this.initScene();
+  }
+
+  get scene(): any {
+    return this._scene;
+  }
+
+  get scenes(): any[] {
+    return this._scenes;
+  }
+
   get style(): any {
     return this._style;
-  }
-
-  hasAnyAnalogData(): boolean {
-    return this.project.activities.some((activity: Activity) =>
-      activity.hasAnalogData()
-    );
-  }
-
-  hasAnySpikeData(): boolean {
-    return this.project.activities.some((activity: Activity) =>
-      activity.hasSpikeData()
-    );
   }
 
   /**
@@ -186,6 +206,21 @@ export class ActivityAnimationGraph {
     this._recordablesOptions = [];
     this._recordFrom = 'V_m';
     this._frames = this.createEmptyFrames();
+  }
+
+  /**
+   * Initialize animation scene.
+   */
+  initScene(ref: any = undefined): void {
+    if (this._scene) {
+      this._scene.destroy();
+    }
+    if (ref) {
+      this._ref = ref;
+    }
+    setTimeout(() => {
+      this._scene = this._scenes[this._sceneIdx].scene();
+    }, 1);
   }
 
   /**

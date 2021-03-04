@@ -5,14 +5,17 @@ import { ActivityAnimationGraph } from '../activityAnimationGraph';
 import { ActivityAnimationScene } from './activityAnimationScene';
 
 export class ActivityAnimationSceneBox extends ActivityAnimationScene {
-  constructor(graph: ActivityAnimationGraph, containerId: string) {
-    super('box', graph, containerId);
+  constructor(graph: ActivityAnimationGraph) {
+    super('box', graph);
   }
 
-  createLayer(layer: any, activity: Activity): THREE.Group {
+  /**
+   * Create layer group in update.
+   */
+  createLayerGroup(layer: any, activity: Activity): THREE.Group {
     // console.log('Create activity layer');
-    const layerGraph: THREE.Group = new THREE.Group();
-    const activityLayerGraph: THREE.Group = new THREE.Group();
+    const layerGroup: THREE.Group = new THREE.Group();
+    const activityLayerGroup: THREE.Group = new THREE.Group();
 
     const scale = 0.01;
     const geometry: THREE.BoxGeometry = new THREE.BoxGeometry(
@@ -31,47 +34,58 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
       object.userData.position = position;
       object.position.set(position.x, position.y, position.z);
       object.layers.set(activity.idx + 1);
-      activityLayerGraph.add(object);
+      activityLayerGroup.add(object);
     });
 
-    layerGraph.add(this.grids(layer.ndim));
-    layerGraph.add(activityLayerGraph);
-    return layerGraph;
+    layerGroup.add(this.grids(layer.ndim));
+    layerGroup.add(activityLayerGroup);
+    return layerGroup;
   }
 
-  renderFrame(): void {
+  /**
+   * Render scene.
+   */
+  render(): void {
     if (this.graph.frame) {
       const scale: number = this.graph.config.objectSize;
       this.graph.frame.data.forEach((data: any, idx: number) => {
         // @ts-ignore
-        const layerGraph: THREE.Group = this.activityLayers.children[idx];
+        const layerGroup: THREE.Group = this.activityLayers.children[idx];
         // @ts-ignore
-        const activityLayerGraph: THREE.Group = layerGraph.children[1];
-        activityLayerGraph.children.forEach((object: THREE.Mesh) => {
+        const activityLayerGroup: THREE.Group = layerGroup.children[1];
+        activityLayerGroup.children.forEach((object: THREE.Mesh) => {
           // @ts-ignore
           object.material.opacity = 0;
           object.scale.set(scale, scale, scale);
         });
 
-        const trail: any = this.graph.config.trail;
-        if (trail.length > 0) {
-          for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
-            const frame: any = this.graph.frames[
-              this.graph.frameIdx - trailIdx
-            ];
-            if (frame) {
-              const trailData: any = frame.data[idx];
-              this.updateGraphObjects(activityLayerGraph, trailData, trailIdx);
-            }
-          }
-        }
-        this.updateGraphObjects(activityLayerGraph, data);
+        this.renderTrails(activityLayerGroup, idx);
+        this.renderObjects(activityLayerGroup, data);
       });
     }
   }
 
-  updateGraphObjects(
-    activityLayerGraph: THREE.Group,
+  /**
+   * Render trails.
+   */
+  renderTrails(activityLayerGroup: THREE.Group, idx: number): void {
+    const trail: any = this.graph.config.trail;
+    if (trail.length > 0) {
+      for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
+        const frame: any = this.graph.frames[this.graph.frameIdx - trailIdx];
+        if (frame) {
+          const trailData: any = frame.data[idx];
+          this.renderObjects(activityLayerGroup, trailData, trailIdx);
+        }
+      }
+    }
+  }
+
+  /**
+   * Render objects.
+   */
+  renderObjects(
+    activityLayerGroup: THREE.Group,
     data: any,
     trailIdx: number = null
   ): void {
@@ -84,7 +98,7 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
           ? 1 - ratio
           : 1
         : this.graph.config.opacity;
-    let colorRGB: string = activityLayerGraph.userData.color;
+    let colorRGB: string = activityLayerGroup.userData.color;
     let scale: number;
     switch (trail.mode) {
       case 'growing':
@@ -99,7 +113,7 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
 
     data.senders.forEach((sender: number, senderIdx: number) => {
       // @ts-ignore
-      const object: THREE.Mesh = activityLayerGraph.children[sender];
+      const object: THREE.Mesh = activityLayerGroup.children[sender];
       let value: number;
       if (data.hasOwnProperty(this.graph.recordFrom)) {
         value = this.graph.normalize(data[this.graph.recordFrom][senderIdx]);

@@ -4,10 +4,16 @@ import { SpikeTimesPanel } from './spikeTimesPanel';
 
 export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
   private _state: any = {
-    binsize: 1.0,
+    binsize: {
+      input: 'tickSlider',
+      label: 'bin size',
+      ticks: [1, 2, 5, 10, 20, 50],
+      value: 5,
+      unit: 'ms',
+    },
     barmode: 'overlay',
     barnorm: '',
-    xaxisType: 'log',
+    xaxisType: 'linear',
   };
 
   constructor(graph: ActivityChartGraph) {
@@ -34,6 +40,12 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     this.data = [];
   }
 
+  /**
+   * Update histogram panel for ISI of spike data.
+   *
+   * @remarks
+   * It requires activity data.
+   */
   update(): void {
     // console.log('Init histogram panel of spike times')
     this.activities.forEach((activity: SpikeActivity) => {
@@ -58,7 +70,7 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
       xbins: {
         start: 0,
         end: 1,
-        size: 0.1,
+        size: this._state.binsize.value,
       },
       marker: {
         color: 'black',
@@ -77,8 +89,8 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
       this.addInterSpikeIntervalHistogram(activity);
     }
     const start = 0.0;
-    const end = 1000.0;
-    const size = 1.0;
+    const end: number = activity.endtime + 1;
+    const size: number = this.state.binsize.value;
     const data: any = this.data.find(
       (d: any) => d.activityIdx === activity.idx
     );

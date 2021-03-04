@@ -24,47 +24,6 @@ export class ActivityChartGraph {
 
   constructor(project: Project, registerPanels: any[] = []) {
     this._project = project;
-    this._options = {
-      toImageButtonOptions: {
-        filename: 'nest-desktop',
-        format: 'svg', // png, svg, jpeg, webp
-        height: 600,
-        scale: 1, // Multiply title/legend/axis/canvas sizes by this factor
-        width: 800,
-      },
-      // showLink: true,
-
-      // modeBarButtons: [
-      // "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
-      // "hoverClosestCartesian", "hoverCompareCartesian", "zoom3d", "pan3d", "resetCameraDefault3d",
-      // "resetCameraLastSave3d", "hoverClosest3d", "orbitRotation", "tableRotation", "zoomInGeo",
-      // "zoomOutGeo", "resetGeo", "hoverClosestGeo", "toImage", "sendDataToCloud", "hoverClosestGl2d",
-      // "hoverClosestPie", "toggleHover", "resetViews", "toggleSpikelines", "resetViewMapbox"
-      // [
-      //   {
-      //     name: 'graph-reload',
-      //     title: 'Reload image graph',
-      //     icon: PlotlyJS.Icons.undo,
-      //     click: () => {
-      //       this.init();
-      //     },
-      //   },
-      // ],
-      // [this.imageButtonOptions, "toImage"],
-      // ['toImage'],
-      // ['zoom2d', 'pan2d'],
-      // ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
-      // ['hoverClosestCartesian', 'hoverCompareCartesian'],
-      // ],
-    };
-
-    this._imageButtonOptions = {
-      name: 'image_settings',
-      title: 'Edit image settings',
-      icon: PlotlyJS.Icons.pencil,
-      click: () => {},
-    };
-
     this._layout = {
       margin: {
         t: 40,
@@ -194,8 +153,6 @@ export class ActivityChartGraph {
 
   update(): void {
     // console.log('Update activity chart graph');
-    const date: string = new Date().toISOString();
-    this._options.toImageButtonOptions.filename = `nest_desktop-${this.project.name}-${date}`;
     this._data = [];
     this.resetLayout();
     this._panels.forEach((panel: ActivityGraphPanel) => {
