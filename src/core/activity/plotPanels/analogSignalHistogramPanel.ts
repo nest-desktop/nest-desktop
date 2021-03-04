@@ -1,14 +1,21 @@
+import * as d3 from 'd3';
+
 import { AnalogSignalActivity } from '../analogSignalActivity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { ActivityGraphPanel } from './activityGraphPanel';
 
 export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
   private _state: any = {
-    bins: 250,
+    bins: {
+      input: 'tickSlider',
+      label: 'number of bins',
+      ticks: [1, 5, 10, 20, 50, 100, 200],
+      value: 50,
+    },
     barmode: 'overlay',
     barnorm: '',
-    start: -100,
-    end: 0,
+    start: 0,
+    end: 1,
   };
 
   constructor(graph: ActivityChartGraph) {
@@ -27,6 +34,9 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
     return this._state;
   }
 
+  /**
+   * Initialize histogram panel for analog signal.
+   */
   init(): void {
     this.activities = this.graph.project.activities.filter(
       (activity: AnalogSignalActivity) => activity.hasAnalogData()
@@ -34,6 +44,12 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
     this.data = [];
   }
 
+  /**
+   * Update histogram panel for analog signal.
+   *
+   * @remarks
+   * It requires activity data.
+   */
   update(): void {
     // console.log('Init histogram panel of spike times')
     this.activities.forEach((activity: AnalogSignalActivity) => {
@@ -91,9 +107,9 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
       (d: any) => d.activityIdx === activity.idx
     );
     const event: number[] = activity.events[recordFrom];
-    const start: number = this.state.start;
-    const end: number = this.state.end;
-    const size: number = (end - start) / this.state.bins;
+    const start: number = d3.min(event);
+    const end: number = d3.max(event) + 1;
+    const size: number = (end - start) / this.state.bins.value;
     data.x = event;
     data.xbins.end = end;
     data.xbins.size = size;

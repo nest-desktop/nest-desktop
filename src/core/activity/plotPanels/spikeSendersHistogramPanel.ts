@@ -15,6 +15,9 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
     this.init();
   }
 
+  /**
+   * Initialize sender histogram panel for spike data.
+   */
   init(): void {
     // console.log('Init histogram panel for spike times');
     this.activities = this.graph.project.activities.filter(
@@ -23,6 +26,12 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
     this.data = [];
   }
 
+  /**
+   * Update sender histogram panel for spike data.
+   *
+   * @remarks
+   * It requires activity data.
+   */
   update(): void {
     // console.log('Init histogram panel of spike times')
     this.activities.forEach((activity: SpikeActivity) => {

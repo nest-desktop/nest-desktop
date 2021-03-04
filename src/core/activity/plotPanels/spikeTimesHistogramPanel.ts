@@ -4,7 +4,13 @@ import { SpikeTimesPanel } from './spikeTimesPanel';
 
 export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   private _state: any = {
-    binsize: 25.0,
+    binsize: {
+      input: 'tickSlider',
+      label: 'bin size',
+      ticks: [5, 10, 25, 50, 100, 250, 500, 1000],
+      value: 25,
+      unit: 'ms',
+    },
     barmode: 'overlay',
     barnorm: '',
   };
@@ -24,6 +30,9 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     return this._state;
   }
 
+  /**
+   * Initialize time histogram panel for spike data.
+   */
   init(): void {
     // console.log('Init histogram panel for spike times');
     this.activities = this.graph.project.activities.filter(
@@ -32,6 +41,12 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     this.data = [];
   }
 
+  /**
+   * Update time histogram panel for spike data.
+   *
+   * @remarks
+   * It requires activity data.
+   */
   update(): void {
     // console.log('Init histogram panel of spike times')
     this.activities.forEach((activity: SpikeActivity) => {
@@ -78,7 +93,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     );
     const start = 1;
     const end: number = activity.endtime + 1;
-    const size: number = this.state.binsize;
+    const size: number = this.state.binsize.value;
     data.x = activity.events.times;
     data.xbins.size = size;
     data.xbins.end = end;

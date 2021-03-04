@@ -12,19 +12,17 @@ export class ActivityAnimationScene {
   private _camera: THREE.PerspectiveCamera;
   private _clippingPlanes: THREE.Plane[] = [];
   private _clock: THREE.Clock;
-  private _container: any;
   private _controls: OrbitControls;
-  private _delta: number;
+  private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
   private _name: string;
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
   private _stats: STATS;
-  private _useStats = false;
+  private _useStats = true;
 
-  constructor(name: string, graph: ActivityAnimationGraph, container: any) {
+  constructor(name: string, graph: ActivityAnimationGraph) {
     this._name = name;
-    this._container = container;
     this._graph = graph;
 
     this._animationFrameIdx = -1;
@@ -40,6 +38,7 @@ export class ActivityAnimationScene {
     this._useStats = this._graph.project.app.config.devMode;
 
     this.init();
+    this.update();
     this.animate();
   }
 
@@ -48,15 +47,11 @@ export class ActivityAnimationScene {
   }
 
   get aspect(): number {
-    return this.container.clientWidth / this.container.clientHeight;
+    return this.graph.ref.clientWidth / this.graph.ref.clientHeight;
   }
 
   get config(): any {
     return this._graph.config;
-  }
-
-  get container(): any {
-    return this._container;
   }
 
   get name(): string {
@@ -71,32 +66,33 @@ export class ActivityAnimationScene {
     return this._scene;
   }
 
+  /**
+   * Initialize animation scene.
+   */
   init(): void {
     // console.log('Init animation scene');
     this._scene.background = new THREE.Color(0xfefefe);
 
-    this.updateCameraPosition();
+    this.setCameraPosition();
     this._scene.add(this._camera);
-    this._scene.add(this.axesHelper());
-    this._scene.add(this.helpers());
-    this._scene.add(this.lights());
+    this._scene.add(this.initAxesHelper());
+    this._scene.add(this.initLights());
+    this._scene.add(this.initPlaneHelpers());
 
     this._renderer.setPixelRatio(window.devicePixelRatio);
     this._renderer.setSize(
-      this.container.clientWidth,
-      this.container.clientHeight
+      this.graph.ref.clientWidth,
+      this.graph.ref.clientHeight
     );
     this.resize();
-    this.container.appendChild(this._renderer.domElement);
+    window.addEventListener('resize', () => this.resize());
+
+    // Append dom element in container.
+    this.graph.ref.appendChild(this._renderer.domElement);
 
     // this._controls.rotateSpeed = 1;
     // this._controls.zoomSpeed = 1.2;
     // this._controls.enableKeys = false;
-  }
-
-  update(): void {
-    // console.log('Update animation scene');
-    this.initActivityLayers();
 
     if (this._useStats) {
       this._stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -104,7 +100,18 @@ export class ActivityAnimationScene {
     }
   }
 
-  lights(): THREE.Group {
+  /**
+   * Create and return axes helper in init.
+   */
+  initAxesHelper(): THREE.AxesHelper {
+    const axesHelper: THREE.AxesHelper = new THREE.AxesHelper(0.1);
+    return axesHelper;
+  }
+
+  /**
+   * Create and return lights group in init.
+   */
+  initLights(): THREE.Group {
     const lights: THREE.Group = new THREE.Group();
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(1, 1, 0.5).normalize();
@@ -113,12 +120,10 @@ export class ActivityAnimationScene {
     return lights;
   }
 
-  axesHelper(): THREE.AxesHelper {
-    const axesHelper: THREE.AxesHelper = new THREE.AxesHelper(0.1);
-    return axesHelper;
-  }
-
-  helpers(): THREE.Group {
+  /**
+   * Create and return plane helper in init.
+   */
+  initPlaneHelpers(): THREE.Group {
     this._clippingPlanes.push(new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1));
     this._clippingPlanes.push(new THREE.Plane(new THREE.Vector3(0, -1, 0), 1));
     this._clippingPlanes.push(new THREE.Plane(new THREE.Vector3(0, 0, -1), 1));
@@ -131,18 +136,34 @@ export class ActivityAnimationScene {
     return helpers;
   }
 
-  initActivityLayers(): void {
+  /**
+   * Resize renderer with aspect in init.
+   */
+  resize(): void {
+    this._camera.aspect = this.aspect;
+    this._camera.updateProjectionMatrix();
+    this._renderer.setSize(
+      this.graph.ref.clientWidth,
+      this.graph.ref.clientHeight
+    );
+    this._renderer.render(this._scene, this._camera);
+  }
+
+  /**
+   * Update animation scene.
+   */
+  update(): void {
     this._scene.remove(this.activityLayers);
     const layersGraph: THREE.Group = new THREE.Group();
     this._graph.project.activities.forEach((activity: Activity) => {
       const layer: any = this._graph.layers[activity.idx];
       if (layer.ndim !== -1) {
-        const activityLayerGraph: THREE.Group = this.createLayer(
+        const activityLayerGroup: THREE.Group = this.createLayerGroup(
           layer,
           activity
         );
-        activityLayerGraph.userData = layer;
-        layersGraph.add(activityLayerGraph);
+        activityLayerGroup.userData = layer;
+        layersGraph.add(activityLayerGroup);
         this._camera.layers.enable(activity.idx + 1);
       }
     });
@@ -150,10 +171,18 @@ export class ActivityAnimationScene {
     this._scene.add(this._activityLayers);
   }
 
-  createLayer(layer: any, activity: Activity): THREE.Group {
-    return new THREE.Group();
+  /**
+   * Create layer group.
+   */
+  createLayerGroup(layer: any, activity: Activity): THREE.Group {
+    const layerGraph: THREE.Group = new THREE.Group();
+    layerGraph.add(this.grids());
+    return layerGraph;
   }
 
+  /**
+   * Create and return grids.
+   */
   grids(numDimensions: number = 2): THREE.Group {
     const grid: THREE.Group = new THREE.Group();
     const divisions = this.config.grid.divisions;
@@ -179,86 +208,79 @@ export class ActivityAnimationScene {
     return grid;
   }
 
-  destroy() {
-    this.stop();
-    // try {
-    //   this.container.removeChild(this._renderer.domElement);
-    //   document.body.removeChild(this._stats.dom);
-    // } catch {
-    //   throw new Error('Elements not found.');
-    // }
-  }
-
-  stop(): void {
-    // console.log('Stop animation');
-    cancelAnimationFrame(this._animationFrameIdx);
-  }
-
+  /**
+   * Animate scene.
+   */
   animate(): void {
     // console.log('Start animation');
-    this.update();
+    this._animationFrameIdx = requestAnimationFrame(() => this.animate());
 
-    this._delta = 0;
+    // Set frame rate.
+    this._delta += this._clock.getDelta();
     const interval: number = 1 / this._graph.config.frames.rate;
-
-    const that = this;
-    function render(): void {
-      // console.log('render', that._scene.uuid);
-      that._animationFrameIdx = requestAnimationFrame(render);
-      that._delta += that._clock.getDelta();
-
-      if (that._delta > interval) {
-        if (that._stats) {
-          that._stats.begin();
-        }
-
-        const framesLength: number = that._graph.frames.length;
-        const frames: any = that._graph.config.frames;
-        const framesSpeed: number = frames.speed;
-        that._graph.frameIdx =
-          (that._graph.frameIdx +
-            framesSpeed * frames.windowSize +
-            framesLength) %
-          framesLength;
-        that.renderFrame();
-
-        const camera: any = that._graph.config.camera;
-        if (camera.control) {
-          if (camera.rotation.speed > 0) {
-            that.moveCamera();
-          }
-          that.updateCameraPosition();
-        }
-
-        if (that._stats) {
-          that._stats.end();
-        }
-
-        that._renderer.render(that._scene, that._camera);
-        that._delta = that._delta % interval;
+    if (this._delta > interval) {
+      if (this._stats) {
+        this._stats.begin();
       }
+
+      // Update frame idx.
+      this.updateFrameIdx();
+
+      // Render scene.
+      this.render();
+
+      // Update camera.
+      const camera: any = this._graph.config.camera;
+      if (camera.control) {
+        if (camera.rotation.speed > 0) {
+          this.moveCamera();
+        }
+        this.setCameraPosition();
+      }
+
+      if (this._stats) {
+        this._stats.end();
+      }
+      this._renderer.render(this._scene, this._camera);
+      this._delta = this._delta % interval;
     }
-
-    render();
   }
 
-  renderFrame(): void {}
-
-  updateCameraPosition(): void {
-    const position: any = this.graph.config.camera.position;
-    this._camera.position.set(position.x, position.y, position.z);
-    this._camera.lookAt(this._scene.position);
+  updateFrameIdx(): void {
+    const framesLength: number = this._graph.frames.length;
+    const frames: any = this._graph.config.frames;
+    const framesSpeed: number = frames.speed;
+    this._graph.frameIdx =
+      (this._graph.frameIdx + framesSpeed * frames.windowSize + framesLength) %
+      framesLength;
   }
 
-  degToRad(deg: number) {
-    return deg * (Math.PI / 180);
+  /**
+   * Render scene.
+   */
+  render(): void {
+    if (this.graph.frame) {
+      this.graph.frame.data.forEach((data: any, idx: number) => {
+        // @ts-ignore
+        const layerGroup: THREE.Group = this.activityLayers.children[idx];
+        // @ts-ignore
+        const activityLayerGroup: THREE.Group = layerGroup.children[1];
+        activityLayerGroup.children.forEach((object: THREE.Mesh) => {
+          // @ts-ignore
+          object.material.opacity = 1;
+        });
+      });
+    }
   }
 
+  /**
+   * Move camera in render.
+   */
   moveCamera(): void {
     const camera: any = this.graph.config.camera;
     camera.rotation.theta += camera.rotation.speed;
     camera.rotation.theta = camera.rotation.theta % 360;
-    const thetaRad: number = this.degToRad(camera.rotation.theta);
+    const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
     const position: any = this.graph.config.camera.position;
     position.x =
       camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
@@ -267,23 +289,49 @@ export class ActivityAnimationScene {
     this._camera.lookAt(this._scene.position);
   }
 
+  /**
+   * Update camera position in init and in render.
+   */
+  setCameraPosition(): void {
+    const position: any = this.graph.config.camera.position;
+    this._camera.position.set(position.x, position.y, position.z);
+    this._camera.lookAt(this._scene.position);
+  }
+
+  /**
+   * Destroy animation scene.
+   */
+  destroy() {
+    this.stop();
+    if (this.graph.ref.firstChild === this._renderer.domElement) {
+      this.graph.ref.removeChild(this._renderer.domElement);
+    }
+    // https://stackoverflow.com/questions/21548247/clean-up-threejs-webgl-contexts
+    this._renderer.forceContextLoss();
+    // document.body.removeChild(this._stats.dom);
+  }
+
+  /**
+   * Stop animation.
+   */
+  stop(): void {
+    // console.log('Stop animation');
+    cancelAnimationFrame(this._animationFrameIdx);
+  }
+
+  /**
+   * Disable camera control.
+   */
   disableCameraControl(): void {
     this.graph.config.camera.rotation.theta = 0;
     this.graph.config.camera.control = true;
   }
 
+  /**
+   * Enable camera control.
+   */
   enableCameraControl(): void {
     this.graph.config.camera.control = false;
-  }
-
-  resize(): void {
-    this._camera.aspect = this.aspect;
-    this._camera.updateProjectionMatrix();
-    this._renderer.setSize(
-      this.container.clientWidth,
-      this.container.clientHeight
-    );
-    this._renderer.render(this._scene, this._camera);
   }
 
   // TODO: @security Permitting direct access to the DOM can make your application more vulnerable to XSS attacks.

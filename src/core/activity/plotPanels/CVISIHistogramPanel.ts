@@ -4,7 +4,12 @@ import { SpikeTimesPanel } from './spikeTimesPanel';
 
 export class CVISIHistogramPanel extends SpikeTimesPanel {
   private _state: any = {
-    binsize: 1.0,
+    binsize: {
+      input: 'tickSlider',
+      label: 'bin size',
+      ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
+      value: 0.05,
+    },
     barmode: 'overlay',
     barnorm: '',
   };
@@ -33,6 +38,12 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     this.data = [];
   }
 
+  /**
+   * Update CV panel for spike data.
+   *
+   * @remarks
+   * It requires activity data.
+   */
   update(): void {
     // console.log('Init histogram panel of spike times')
     this.activities.forEach((activity: SpikeActivity) => {
@@ -56,7 +67,7 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
       xbins: {
         start: 0,
         end: 1,
-        size: 0.1,
+        size: this._state.binsize.value,
       },
       marker: {
         color: 'black',
@@ -82,8 +93,8 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
       (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
     );
     data.xbins.start = 0;
-    data.xbins.end = 3;
-    data.xbins.size = 0.01;
+    data.xbins.end = 5;
+    data.xbins.size = this._state.binsize.value;
     data.marker.line.width = 1;
     data.marker.color = activity.recorder.view.color;
   }
