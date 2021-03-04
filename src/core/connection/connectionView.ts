@@ -11,18 +11,6 @@ export class ConnectionView {
     this._connection = connection;
   }
 
-  get backgroundImage(): string {
-    const bg = 'white'; // '#fafafa';
-    const srcColor: string = this._connection.source.view.color;
-    const tgtColor: string = this._connection.target.view.color;
-    const gradient: string = [
-      new Array(8).fill(srcColor).join(', '),
-      bg,
-      new Array(4).fill(tgtColor).join(', '),
-    ].join(', ');
-    return gradient;
-  }
-
   colorWeight(): string {
     const value: number = this._connection.synapse.weight;
     if (value === 0) {
