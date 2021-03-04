@@ -277,11 +277,20 @@
             v-if="state.tool.name === 'codeEditor'"
           />
 
-          <ActivityGraphController
+          <ActivityChartController
             :graph="state.project.activityGraph"
-            :projectId="state.project.id"
-            :view="state.activityGraph"
-            v-if="state.tool.name === 'activityEdit'"
+            v-if="
+              state.tool.name === 'activityEdit' &&
+                state.activityGraph === 'abstract'
+            "
+          />
+
+          <ActivityAnimationController
+            :graph="state.project.activityGraph"
+            v-if="
+              state.tool.name === 'activityEdit' &&
+                state.activityGraph === 'spatial'
+            "
           />
 
           <span v-if="state.tool.name === 'activityStats'">
@@ -352,7 +361,8 @@ import axios from 'axios';
 
 import { Project } from '@/core/project/project';
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
-import ActivityGraphController from '@/components/activity/ActivityGraphController.vue';
+import ActivityChartController from '@/components/activity/ActivityChartController.vue';
+import ActivityAnimationController from '@/components/activity/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/ActivityStats.vue';
 import core from '@/core/index';
 import LabBook from '@/components/network/LabBook.vue';
@@ -366,8 +376,9 @@ import SimulationMenu from '@/components/simulation/SimulationMenu.vue';
 export default Vue.extend({
   name: 'Project',
   components: {
+    ActivityAnimationController,
     ActivityGraph,
-    ActivityGraphController,
+    ActivityChartController,
     ActivityStats,
     LabBook,
     NetworkParamsEdit,
@@ -447,6 +458,9 @@ export default Vue.extend({
           if (state.project) {
             state.project.network.view.reset();
           }
+          state.activityGraph = state.project.network.view.hasPositions()
+            ? state.activityGraph
+            : 'abstract';
         });
       }
     };
