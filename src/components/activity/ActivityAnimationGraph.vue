@@ -1,6 +1,6 @@
 <template>
   <div id="activityAnimationGraph">
-    <div ref="activityAnimationScene" style="width:100%; height:800px"></div>
+    <div ref="activityAnimationScene" style="width:100%; height:800px" />
   </div>
 </template>
 
@@ -9,7 +9,6 @@ import Vue from 'vue';
 import { reactive, onMounted, onUnmounted, watch } from '@vue/composition-api';
 
 import { ActivityAnimationGraph } from '@/core/activity/activityAnimationGraph';
-import { ActivityAnimationSceneSphere } from '@/core/activity/animationScenes/activityAnimationSceneSphere';
 
 export default Vue.extend({
   name: 'ActivityAnimationGraph',
@@ -19,33 +18,25 @@ export default Vue.extend({
   setup(props, { refs }) {
     const state = reactive({
       graph: props.graph as ActivityAnimationGraph,
-      scene: null,
     });
 
     const update = () => {
       state.graph = props.graph as ActivityAnimationGraph;
-      if (state.graph) {
-        setTimeout(() => {
-          state.scene = new ActivityAnimationSceneSphere(
-            state.graph as ActivityAnimationGraph,
-            refs.activityAnimationScene
-          );
-        }, 1);
-      }
+      state.graph.initScene(refs['activityAnimationScene']);
     };
-
-    watch(
-      () => props.graph,
-      () => update()
-    );
 
     onMounted(() => {
       update();
     });
 
     onUnmounted(() => {
-      state.scene.destroy();
+      state.graph.scene.destroy();
     });
+
+    watch(
+      () => props.graph,
+      () => update()
+    );
 
     return { state };
   },
