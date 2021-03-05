@@ -121,7 +121,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card flat tile>
+    <!-- <v-card flat tile>
       <v-card-text class="pa-0">
         <ParameterEdit
           :options="{
@@ -134,7 +134,7 @@
           :value.sync="state.graph.activityAnimationGraph.frameIdx"
         />
       </v-card-text>
-    </v-card>
+    </v-card> -->
 
     <v-card flat tile>
       <v-subheader v-text="'Frames'" />

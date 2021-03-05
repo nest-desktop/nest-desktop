@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as STATS from 'stats.js';
+import Stats from 'stats.js';
 import { GUI } from 'dat.gui';
 
 import { Activity } from '../activity';
@@ -18,8 +18,8 @@ export class ActivityAnimationScene {
   private _name: string;
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
-  private _stats: STATS;
-  private _useStats = true;
+  private _stats: Stats;
+  private _useStats = false;
 
   constructor(name: string, graph: ActivityAnimationGraph) {
     this._name = name;
@@ -34,7 +34,7 @@ export class ActivityAnimationScene {
     this._clock = new THREE.Clock();
     this._scene = new THREE.Scene();
 
-    // this._stats = new STATS();
+    this._stats = new Stats();
     this._useStats = this._graph.project.app.config.devMode;
 
     this.init();
@@ -215,19 +215,16 @@ export class ActivityAnimationScene {
     // console.log('Start animation');
     this._animationFrameIdx = requestAnimationFrame(() => this.animate());
 
-    // Set frame rate.
+    // Cumulate interval for frame rate.
     this._delta += this._clock.getDelta();
     const interval: number = 1 / this._graph.config.frames.rate;
+
+    // Render only in fixed frame rate or lower.
     if (this._delta > interval) {
+      // Start time step for stats.
       if (this._stats) {
         this._stats.begin();
       }
-
-      // Update frame idx.
-      this.updateFrameIdx();
-
-      // Render scene.
-      this.render();
 
       // Update camera.
       const camera: any = this._graph.config.camera;
@@ -238,10 +235,19 @@ export class ActivityAnimationScene {
         this.setCameraPosition();
       }
 
+      // Update frame idx.
+      this.updateFrameIdx();
+
+      // Render scene.
+      this.render();
+      this._renderer.render(this._scene, this._camera);
+
+      // End time step for stats.
       if (this._stats) {
         this._stats.end();
       }
-      this._renderer.render(this._scene, this._camera);
+
+      // Modulo delta
       this._delta = this._delta % interval;
     }
   }
