@@ -4,11 +4,11 @@ import { ActivityAnimationGraph } from '../activityAnimationGraph';
 import { ActivityAnimationScene } from './activityAnimationScene';
 
 export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
-  constructor(graph: ActivityAnimationGraph, containerId: string) {
-    super('timeSphere', graph, containerId);
+  constructor(graph: ActivityAnimationGraph) {
+    super('timeSphere', graph);
   }
 
-  renderFrame(): void {
+  render(): void {
     if (this.graph.frame) {
       this.graph.frame.data.forEach((data: any) => this.renderScatter(data));
       this.renderTrail();

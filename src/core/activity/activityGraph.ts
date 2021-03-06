@@ -1,3 +1,4 @@
+import { Activity } from './activity';
 import { ActivityChartGraph } from '../activity/activityChartGraph';
 import { ActivityAnimationGraph } from '../activity/activityAnimationGraph';
 import { Project } from '../project/project';
@@ -78,5 +79,23 @@ export class ActivityGraph {
    */
   updateColor(): void {
     this._activityChartGraph.updateColor();
+  }
+
+  /**
+   * Check if it has any analog data.
+   */
+  hasAnyAnalogData(): boolean {
+    return this.project.activities.some((activity: Activity) =>
+      activity.hasAnalogData()
+    );
+  }
+
+  /**
+   * Check if it has any spike data.
+   */
+  hasAnySpikeData(): boolean {
+    return this.project.activities.some((activity: Activity) =>
+      activity.hasSpikeData()
+    );
   }
 }

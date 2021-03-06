@@ -19,6 +19,12 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     this.data = [];
   }
 
+  /**
+   * Update panel for analog signal.
+   *
+   * @remarks
+   * It requires activity data.
+   */
   update(): void {
     this.activities.forEach((activity: AnalogSignalActivity) => {
       const recordables: string[] = Object.keys(activity.events).filter(
