@@ -19,8 +19,9 @@
             <v-card-title v-text="'App'" />
             <v-card-text>
               <v-checkbox
+                :value="core.app.config.devMode"
+                @change="e => updateConfig({ devMode: e })"
                 label="Development mode"
-                v-model="core.app.config.devMode"
               />
             </v-card-text>
           </v-card>
@@ -109,6 +110,11 @@ export default Vue.extend({
       state.nestVersion = core.app.nestServer.state.simulatorVersion;
     };
 
+    const updateConfig = (d: any) => {
+      console.log(d);
+      core.app.updateConfig(d);
+    };
+
     watch(
       () => props.id,
       () => {
@@ -120,6 +126,7 @@ export default Vue.extend({
       checkNEST,
       core,
       state,
+      updateConfig,
     };
   },
 });

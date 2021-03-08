@@ -241,6 +241,7 @@
               :title="tool.title"
               @click="selectTool(tool)"
               v-for="tool in state.tools"
+              v-show="tool.devMode ? core.app.config.devMode : true"
             >
               <v-list-item-icon>
                 <v-list-item-group
@@ -293,9 +294,20 @@
             "
           />
 
-          <span v-if="state.tool.name === 'activityStats'">
-            <ActivityStats :project="core.app.project" />
-          </span>
+          <ActivityStats
+            :project="core.app.project"
+            v-if="state.tool.name === 'activityStats'"
+          />
+
+          <v-treeview
+            :items="core.app.project.treeview()"
+            dense
+            v-if="state.tool.name === 'treeview'"
+          />
+
+          <v-card flat tile v-if="state.tool.name === 'dataJSON'">
+            <pre v-text="core.app.project.toJSON()" style="font-size:11px" />
+          </v-card>
         </div>
       </v-row>
     </v-navigation-drawer>
@@ -377,13 +389,13 @@ export default Vue.extend({
   name: 'Project',
   components: {
     ActivityAnimationController,
-    ActivityGraph,
     ActivityChartController,
+    ActivityGraph,
     ActivityStats,
     LabBook,
+    NetworkGraph,
     NetworkParamsEdit,
     NetworkParamsSelect,
-    NetworkGraph,
     SimulationCodeEditor,
     SimulationKernel,
     SimulationMenu,
@@ -424,6 +436,20 @@ export default Vue.extend({
           width: '378',
         },
         { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '568' },
+        {
+          icon: 'mdi-file-tree',
+          name: 'treeview',
+          title: 'Treeview',
+          width: '500',
+          devMode: true,
+        },
+        {
+          icon: 'mdi-code-braces',
+          name: 'dataJSON',
+          title: 'JSON',
+          width: '500',
+          devMode: true,
+        },
         {
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
