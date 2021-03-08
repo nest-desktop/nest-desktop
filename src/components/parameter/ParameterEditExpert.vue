@@ -105,7 +105,7 @@ export default Vue.extend({
   },
   setup(props, { emit }) {
     const state = reactive({
-      param: props.param as ModelParameter | Parameter ,
+      param: props.param as ModelParameter | Parameter,
     });
 
     const paramChange = () => {

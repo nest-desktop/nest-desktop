@@ -95,5 +95,4 @@ export class ConnectionView {
     };
     return drawPath(source, target, config);
   }
-
 }
