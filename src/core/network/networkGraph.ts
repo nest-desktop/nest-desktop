@@ -385,6 +385,7 @@ export class NetworkGraph {
               true
             );
             // .raise();
+            d3.select(event.sourceEvent.srcElement).style('cursor', 'grabbing');
           })
           .on('drag', (event: MouseEvent, d: Node) => {
             d.view.position.x = event.x;
@@ -397,6 +398,7 @@ export class NetworkGraph {
               'active',
               false
             );
+            d3.select(event.sourceEvent.srcElement).style('cursor', 'default');
             // d3.selectAll("g.node").sort((a,b) => d3.ascending(a.idx, b.idx))
             this.centerNetworkGraph();
             this.resize();
