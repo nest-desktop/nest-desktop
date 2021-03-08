@@ -277,6 +277,7 @@ export class NetworkGraph {
         }
       })
       .on('end', () => {
+        // necessary to reset the cursor when dragging the background
         this._selector.select('rect#background').style('cursor', 'default');
         //document.getElementsByTagName('body')[0].style.cursor = 'move';
       });
@@ -298,6 +299,8 @@ export class NetworkGraph {
       })
       .on('mousedown', () => {
         this._selector.select('rect#background').style('cursor', 'move');
+        // Beware: Setting default with "on('mouseup', ...)" does not work,
+        // therefore the resetting takes place in the zoom method ('end').
       })
       .on('contextmenu', (e: MouseEvent) => {
         // console.log(event);
@@ -398,7 +401,7 @@ export class NetworkGraph {
               'active',
               false
             );
-            d3.select(event.sourceEvent.srcElement).style('cursor', 'default');
+            d3.select(event.sourceEvent.srcElement).style('cursor', 'pointer');
             // d3.selectAll("g.node").sort((a,b) => d3.ascending(a.idx, b.idx))
             this.centerNetworkGraph();
             this.resize();
