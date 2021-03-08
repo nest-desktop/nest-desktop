@@ -6,13 +6,11 @@
   "params": [{
     "id": "spike_times",
     "label": "spike times",
-    "level": 1,
     "unit": "ms",
     "input": "arrayInput"
   }, {
     "id": "spike_weights",
     "label": "weights of spike",
-    "level": 3,
     "unit": "pA",
     "input": "arrayInput"
   }]

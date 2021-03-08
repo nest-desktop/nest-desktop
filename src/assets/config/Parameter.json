@@ -1,0 +1,68 @@
+{
+  "types": [
+    {
+      "specs": [{ "id": "value", "title": "constant", "value": 1 }],
+      "value": "constant"
+    },
+    {
+      "specs": [{ "id": "beta", "title": "scale", "value": 1 }],
+      "value": "random.exponential"
+    },
+    {
+      "specs": [
+        { "id": "mean", "title": "mean", "value": 0 },
+        { "id": "std", "title": "standard deviation", "value": 1 }
+      ],
+      "value": "random.lognormal"
+    },
+    {
+      "specs": [
+        { "id": "mean", "title": "mean", "value": 0 },
+        { "id": "std", "title": "standard deviation", "value": 1 }
+      ],
+      "value": "random.normal"
+    },
+    {
+      "specs": [
+        { "id": "min", "title": "lower boundary", "value": 0 },
+        { "id": "max", "title": "upper boundary", "value": 1 }
+      ],
+      "value": "random.uniform"
+    },
+    {
+      "specs": [
+        { "id": "a", "title": "slope", "value": 1 },
+        { "id": "c", "title": "shift", "value": 0 }
+      ],
+      "value": "spatial.distance"
+    },
+    {
+      "specs": [{ "id": "beta", "title": "scale", "value": 1 }],
+      "value": "spatial_distributions.exponential"
+    },
+    {
+      "specs": [
+        { "id": "kappa", "title": "shape", "value": 1 },
+        { "id": "theta", "title": "scale", "value": 1 }
+      ],
+      "value": "spatial_distributions.gamma"
+    },
+    {
+      "specs": [
+        { "id": "mean", "title": "mean", "value": 0 },
+        { "id": "std", "title": "standard deviation", "value": 1 }
+      ],
+      "value": "spatial_distributions.gaussian"
+    },
+    {
+      "specs": [
+        { "id": "mean_x", "title": "mean x", "value": 0 },
+        { "id": "mean_y", "title": "mean y", "value": 0 },
+        { "id": "std_x", "title": "std x", "value": 1 },
+        { "id": "std_y", "title": "std y", "value": 1 },
+        { "id": "rho", "title": "correlation of x and y", "value": 0 }
+      ],
+      "value": "spatial_distributions.gaussian2D"
+    }
+  ]
+}

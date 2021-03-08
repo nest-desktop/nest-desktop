@@ -41,63 +41,100 @@
       "value": 0
     }
   },
-  "rules": [{
-    "value": "all_to_all",
-    "label": "All to all",
-    "level": 1,
-    "params": []
-  }, {
-    "value": "fixed_indegree",
-    "label": "fixed indegree",
-    "params": [{
-      "id": "indegree",
-      "input": "valueSlider",
-      "label": "indegree",
-      "max": 100,
-      "min": 1,
-      "step": 1,
-      "value": 1
-    }]
-  }, {
-    "value": "fixed_outdegree",
-    "label": "fixed outdegree",
-    "params": [{
-      "id": "outdegree",
-      "input": "valueSlider",
-      "label": "outdegree",
-      "max": 100,
-      "min": 1,
-      "step": 1,
-      "value": 1
-    }]
-  }, {
-    "value": "fixed_total_number",
-    "label": "fixed total number",
-    "params": [{
-      "id": "N",
-      "input": "valueSlider",
-      "label": "N",
-      "max": 1000,
-      "min": 1,
-      "step": 1,
-      "value": 1
-    }]
-  }, {
-    "value": "one_to_one",
-    "label": "one to one",
-    "level": 1,
-    "params": []
-  }, {
-    "value": "pairwise_bernoulli",
-    "label": "pairwise Bernoulli",
-    "params": [{
-      "id": "p",
-      "input": "valueSlider",
-      "label": "p",
-      "max": 0.99,
-      "min": 0.01,
-      "step": 0.01,
-      "value": 0.1
-    }]
-  }]
+  "rules": [
+    {
+      "value": "all_to_all",
+      "label": "all to all",
+      "params": []
+    },
+    {
+      "value": "fixed_indegree",
+      "label": "fixed indegree",
+      "params": [
+        {
+          "id": "indegree",
+          "input": "valueSlider",
+          "label": "indegree",
+          "max": 100,
+          "min": 1,
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "id": "p",
+          "input": "valueSlider",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "step": 0.01,
+          "value": 0.1,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "fixed_outdegree",
+      "label": "fixed outdegree",
+      "params": [
+        {
+          "id": "outdegree",
+          "input": "valueSlider",
+          "label": "outdegree",
+          "max": 100,
+          "min": 1,
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "id": "p",
+          "input": "valueSlider",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "step": 0.01,
+          "value": 0.1,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "fixed_total_number",
+      "label": "fixed total number",
+      "params": [
+        {
+          "id": "N",
+          "input": "valueSlider",
+          "label": "N",
+          "max": 1000,
+          "min": 1,
+          "step": 1,
+          "value": 1,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "value": "one_to_one",
+      "label": "one to one",
+      "params": []
+    },
+    {
+      "value": "pairwise_bernoulli",
+      "label": "pairwise Bernoulli",
+      "params": [
+        {
+          "id": "p",
+          "input": "valueSlider",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        }
+      ]
+    }
+  ]
 }

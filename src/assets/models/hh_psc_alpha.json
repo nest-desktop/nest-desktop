@@ -6,7 +6,6 @@
   "params": [{
     "id": "C_m",
     "label": "capacitance of the membrane",
-    "level": 2,
     "unit": "pF",
     "value": 100,
     "input": "valueSlider",
@@ -16,7 +15,6 @@
   }, {
     "id": "E_K",
     "label": "potassium reversal potential",
-    "level": 2,
     "unit": "mV",
     "value": -77,
     "input": "valueSlider",
@@ -26,7 +24,6 @@
   }, {
     "id": "E_L",
     "label": "leak reversal potential",
-    "level": 2,
     "unit": "mV",
     "value": -54.4,
     "input": "valueSlider",
@@ -36,7 +33,6 @@
   }, {
     "id": "E_Na",
     "label": "sodium reversal potential",
-    "level": 2,
     "unit": "mV",
     "value": 50,
     "input": "valueSlider",
@@ -46,7 +42,6 @@
   }, {
     "id": "I_e",
     "label": "constant external input current",
-    "level": 2,
     "unit": "pA",
     "value": 0,
     "input": "valueSlider",
@@ -56,7 +51,6 @@
   }, {
     "id": "V_m",
     "label": "initial membrane potential",
-    "level": 3,
     "unit": "mV",
     "value": -70,
     "input": "valueSlider",
@@ -66,7 +60,6 @@
   }, {
     "id": "g_K",
     "label": "potassium conductance",
-    "level": 2,
     "unit": "nS",
     "value": 3600,
     "input": "valueSlider",
@@ -76,7 +69,6 @@
   }, {
     "id": "g_L",
     "label": "leak conductance",
-    "level": 2,
     "unit": "nS",
     "value": 30,
     "input": "valueSlider",
@@ -86,7 +78,6 @@
   }, {
     "id": "g_Na",
     "label": "sodium conductance",
-    "level": 2,
     "unit": "nS",
     "value": 12000,
     "input": "valueSlider",
@@ -96,7 +87,6 @@
   }, {
     "id": "t_ref",
     "label": "duration of refractory period",
-    "level": 3,
     "unit": "ms",
     "value": 2,
     "input": "valueSlider",
@@ -106,7 +96,6 @@
   }, {
     "id": "tau_syn_ex",
     "label": "time constant of the excitatory synapse",
-    "level": 4,
     "unit": "ms",
     "value": 0.2,
     "input": "valueSlider",
@@ -116,7 +105,6 @@
   }, {
     "id": "tau_syn_in",
     "label": "time constant of the inhibitory synapse",
-    "level": 4,
     "unit": "ms",
     "value": 2,
     "input": "valueSlider",

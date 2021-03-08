@@ -7,7 +7,6 @@
   "params": [{
     "id": "amplitude",
     "label": "Amplitude of sine current",
-    "level": 1,
     "unit": "pA",
     "value": 0,
     "input": "valueSlider",
@@ -17,7 +16,6 @@
   }, {
     "id": "frequency",
     "label": "frequency",
-    "level": 1,
     "unit": "Hz",
     "value": 0,
     "input": "valueSlider",
@@ -27,7 +25,6 @@
   }, {
     "id": "offset",
     "label": "constant amplitude offset",
-    "level": 3,
     "unit": "pA",
     "value": 0,
     "input": "valueSlider",
@@ -37,7 +34,6 @@
   }, {
     "id": "phase",
     "label": "phase of sine current",
-    "level": 3,
     "unit": "deg",
     "value": 0,
     "input": "valueSlider",
@@ -47,7 +43,6 @@
   }, {
     "id": "start",
     "label": "start time",
-    "level": 2,
     "unit": "ms",
     "value": 0,
     "input": "valueSlider",
@@ -57,7 +52,6 @@
   }, {
     "id": "stop",
     "label": "stop time",
-    "level": 2,
     "unit": "ms",
     "value": 10000,
     "input": "valueSlider",
