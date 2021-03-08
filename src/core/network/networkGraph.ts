@@ -275,6 +275,11 @@ export class NetworkGraph {
         } else {
           this._selector.select('g#network').attr('transform', transform);
         }
+      })
+      .on('end', () => {
+        // necessary to reset the cursor when dragging the background
+        this._selector.select('rect#background').style('cursor', 'default');
+        //document.getElementsByTagName('body')[0].style.cursor = 'move';
       });
   }
 
@@ -291,6 +296,11 @@ export class NetworkGraph {
       .on('click', () => {
         this.reset();
         this.updateNetworkGraph();
+      })
+      .on('mousedown', () => {
+        this._selector.select('rect#background').style('cursor', 'move');
+        // Beware: Setting default with "on('mouseup', ...)" does not work,
+        // therefore the resetting takes place in the zoom method ('end').
       })
       .on('contextmenu', (e: MouseEvent) => {
         // console.log(event);
@@ -378,6 +388,7 @@ export class NetworkGraph {
               true
             );
             // .raise();
+            d3.select(event.sourceEvent.srcElement).style('cursor', 'grabbing');
           })
           .on('drag', (event: MouseEvent, d: Node) => {
             d.view.position.x = event.x;
@@ -390,6 +401,7 @@ export class NetworkGraph {
               'active',
               false
             );
+            d3.select(event.sourceEvent.srcElement).style('cursor', 'pointer');
             // d3.selectAll("g.node").sort((a,b) => d3.ascending(a.idx, b.idx))
             this.centerNetworkGraph();
             this.resize();
