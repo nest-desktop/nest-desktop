@@ -29,18 +29,6 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Only when the connection is spatial (both source and target are spatial).
-   */
-  isSpatial(): boolean {
-    if (this.parent.name === 'Synapse') {
-      const synapse = this.parent as Synapse;
-      return synapse.connection.isBothSpatial();
-    } else {
-      return false;
-    }
-  }
-
-  /**
    * Reset value taken from options.
    */
   reset(): void {

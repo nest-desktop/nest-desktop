@@ -77,6 +77,9 @@
             >
               <v-text-field
                 :label="spec.id"
+                :max="spec.max"
+                :min="spec.min"
+                :step="spec.step"
                 @change="paramChange"
                 hide-details
                 type="number"
