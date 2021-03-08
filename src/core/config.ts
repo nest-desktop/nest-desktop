@@ -36,6 +36,10 @@ export class Config {
     return 'nest-desktop-' + this._configName;
   }
 
+  copy(item: any): any {
+    return JSON.parse(JSON.stringify(item));
+  }
+
   isConfigReady(): boolean {
     return true;
   }

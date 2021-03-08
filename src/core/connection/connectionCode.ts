@@ -1,8 +1,8 @@
 import { Code } from '../code';
 import { Connection } from './connection';
-import { Node } from '../node/node';
 import { Model } from '../model/model';
-import { Parameter } from '../parameter';
+import { Node } from '../node/node';
+import { Parameter } from '../parameter/parameter';
 
 export class ConnectionCode extends Code {
   private _connection: Connection; // parent
@@ -24,9 +24,37 @@ export class ConnectionCode extends Code {
     const connSpecList: string[] = [
       this._() + `"rule": "${this._connection.rule}"`,
     ];
-    this._connection.params.forEach((param: Parameter) =>
-      connSpecList.push(this._() + `"${param.id}": ${param.value}`)
-    );
+    this._connection.filteredParams.forEach((param: Parameter) => {
+      if (!param.isRandom()) {
+        const value: string = ['p'].includes(param.id)
+          ? this.format(param.value)
+          : param.value.toFixed();
+        connSpecList.push(this._() + `"${param.id}": ${value}`);
+      } else {
+        const specs: string = param.specs
+          .map(spec => this.format(spec.value))
+          .join(', ');
+        if (!param.type.startsWith('spatial')) {
+          connSpecList.push(
+            this._() + `"${param.id}": nest.${param.type}(${specs})`
+          );
+        } else if (param.type === 'spatial.distance') {
+          let value = `nest.${param.type}`;
+          if (param.specs[0].value !== 1) {
+            value += ` * ${param.specs[0].value}`;
+          }
+          if (param.specs[1].value !== 0) {
+            value += ` + ${param.specs[1].value}`;
+          }
+          connSpecList.push(this._() + `"${param.id}": ${value}`);
+        } else {
+          connSpecList.push(
+            this._() +
+              `"${param.id}": nest.${param.type}(nest.spatial.distance, ${specs})`
+          );
+        }
+      }
+    });
 
     let script = ', conn_spec={';
     script += connSpecList.join(',');
