@@ -210,21 +210,26 @@ export class Parameter extends Config {
    * Updates when parameter is changed.
    */
   paramChanges(): void {
+    let node: Node;
+    let connection: Connection;
+    let synapse: Synapse;
+    let model: Model;
+
     switch (this.parent.name) {
       case 'Node':
-        const node = this.parent as Node;
+        node = this.parent as Node;
         node.nodeChanges();
         break;
       case 'Connection':
-        const connection = this.parent as Connection;
+        connection = this.parent as Connection;
         connection.connectionChanges();
         break;
       case 'Synapse':
-        const synapse = this.parent as Synapse;
+        synapse = this.parent as Synapse;
         synapse.synapseChanges();
         break;
       case 'Model':
-        const model = this.parent as Model;
+        model = this.parent as Model;
         model.modelChanges();
         break;
     }
