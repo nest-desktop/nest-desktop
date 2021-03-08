@@ -1,6 +1,6 @@
 import { Connection } from '../connection/connection';
+import { ModelParameter } from '../parameter/modelParameter';
 import { Node } from './node';
-import { Parameter } from '../parameter';
 
 export class NodeView {
   private _color: any; // color of node
@@ -124,28 +124,14 @@ export class NodeView {
 
   paramsVisible(): string[] {
     return this._node.params
-      .filter((param: Parameter) => param.visible)
+      .filter((param: ModelParameter) => param.visible)
       .map(param => param.id);
   }
 
   setLevel(level: number): void {
     this._node.params.map(
-      (param: Parameter) => (param.visible = param.options.level <= level)
+      (param: ModelParameter) => (param.visible = param.options.level <= level)
     );
-  }
-
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    this._node.params.map((param: Parameter) => (param.visible = false));
-  }
-
-  /**
-   * Sets all params to visible.
-   */
-  showAllParams(): void {
-    this._node.params.map((param: Parameter) => (param.visible = true));
   }
 
   clean(): void {}

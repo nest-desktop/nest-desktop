@@ -1,6 +1,6 @@
 import { Code } from '../code';
 import { Model } from './model';
-import { Parameter } from '../parameter';
+import { ModelParameter } from '../parameter/modelParameter';
 
 export class ModelCode extends Code {
   private _model: Model;
@@ -25,8 +25,8 @@ export class ModelCode extends Code {
     }
     const paramsList: string[] = [];
     this._model.params
-      .filter((param: Parameter) => param.visible)
-      .map((param: Parameter) => {
+      .filter((param: ModelParameter) => param.visible)
+      .map((param: ModelParameter) => {
         if (param.id === 'record_from') {
           const recordFrom: string[] = param.value.map(
             (val: string) => `"${val}"`

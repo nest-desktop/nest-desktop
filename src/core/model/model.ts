@@ -1,6 +1,6 @@
 import { App } from '../app';
-import { Parameter } from '../parameter';
 import { ModelCode } from './modelCode';
+import { ModelParameter } from '../parameter/modelParameter';
 
 export class Model {
   private readonly _name = 'Model';
@@ -14,7 +14,7 @@ export class Model {
   private _id: string; // model id
   private _idx: number; // generative
   private _label: string; // model label for view
-  private _params: Parameter[] = []; // model parameters
+  private _params: ModelParameter[] = []; // model parameters
   private _recordables: string[]; // recordables for multimeter
 
   constructor(app: App, model: any) {
@@ -70,15 +70,11 @@ export class Model {
     this._label = value;
   }
 
-  get model(): Model {
-    return this;
-  }
-
   get name(): string {
     return this._name;
   }
 
-  get params(): Parameter[] {
+  get params(): ModelParameter[] {
     return this._params;
   }
 
@@ -90,12 +86,12 @@ export class Model {
     return this.id;
   }
 
-  getParameter(id: string): Parameter {
-    return this._params.find((param: Parameter) => param.id === id);
+  getParameter(id: string): ModelParameter {
+    return this._params.find((param: ModelParameter) => param.id === id);
   }
 
   addParameter(param: any): void {
-    this._params.push(new Parameter(this, param));
+    this._params.push(new ModelParameter(this, param));
   }
 
   newParameter(paramId: string, value: any): void {
@@ -118,16 +114,18 @@ export class Model {
 
   removeParameter(paramId: string): void {
     this._params = this.params.filter(
-      (param: Parameter) => param.id !== paramId
+      (param: ModelParameter) => param.id !== paramId
     );
   }
 
   updateParameter(param: any): void {
     const idx: number = this._params
-      .map((p: Parameter) => p.id)
+      .map((p: ModelParameter) => p.id)
       .indexOf(param.id);
-    this._params[idx] = new Parameter(this, param);
+    this._params[idx] = new ModelParameter(this, param);
   }
+
+  modelChanges(): void {}
 
   clean(): void {
     this._idx = this._app.models.indexOf(this);
@@ -164,7 +162,7 @@ export class Model {
       existing: this._existing,
       id: this._id,
       label: this._label,
-      params: this._params.map((param: Parameter) => param.toJSON()),
+      params: this._params.map((param: ModelParameter) => param.toJSON()),
       version: this._app.version,
     };
 

@@ -1,6 +1,6 @@
 import { Code } from '../code';
+import { ModelParameter } from '../parameter/modelParameter';
 import { Node } from './node';
-import { Parameter } from '../parameter';
 // import { ParameterRandom } from '../parameterRandom';
 
 export class NodeCode extends Code {
@@ -22,7 +22,7 @@ export class NodeCode extends Code {
   create(): string {
     let script = '';
     script += `${this.label} = nest.Create("${this._node.modelId}"`;
-    if (!this._node.spatial.hasPositions() || this._node.spatial.isRandom()) {
+    if (!this._node.spatial.hasPositions()) {
       script += `, ${this._node.size}`;
     }
     script += this.nodeParams();
@@ -31,12 +31,6 @@ export class NodeCode extends Code {
     }
     script += ')';
     return script + '\n';
-  }
-
-  isRandom(value: any): boolean {
-    return (
-      value.constructor === Object && value.hasOwnProperty('parametertype')
-    );
   }
 
   XOR(a: boolean, b: boolean): boolean {
@@ -50,11 +44,20 @@ export class NodeCode extends Code {
     }
     const paramsList: string[] = [];
     this._node.params
-      .filter((param: Parameter) => param.visible)
-      .forEach((param: Parameter) => {
-        paramsList.push(
-          this._() + `"${param.id}": ${this.format(param.value)}`
-        );
+      .filter((param: ModelParameter) => param.visible)
+      .forEach((param: ModelParameter) => {
+        if (param.type === 'constant') {
+          paramsList.push(
+            this._() + `"${param.id}": ${this.format(param.value)}`
+          );
+        } else {
+          const specs: string = param.specs
+            .map(spec => this.format(spec.value))
+            .join(', ');
+          paramsList.push(
+            this._() + `"${param.id}": nest.${param.type}(${specs})`
+          );
+        }
       });
     if (this._node.model.existing === 'multimeter') {
       const recordFrom: string[] = this._node.recordFrom.map(

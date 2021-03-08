@@ -1,5 +1,4 @@
 import { Connection } from './connection';
-import { Parameter } from '../parameter';
 import { drawPath } from './connectionGraph';
 
 export class ConnectionView {
@@ -97,19 +96,4 @@ export class ConnectionView {
     return drawPath(source, target, config);
   }
 
-  getRuleParams(): any[] {
-    const rule: any = this._connection.config.rules.find(
-      (r: any) => r.value === this._connection.rule
-    );
-    return this.copy(rule.params) || [];
-  }
-
-  copy(item: any): any {
-    return JSON.parse(JSON.stringify(item));
-  }
-
-  getRuleParamConfig(id: string): any {
-    const params: any[] = this.getRuleParams();
-    return params.find((param: any) => param.id === id) || {};
-  }
 }
