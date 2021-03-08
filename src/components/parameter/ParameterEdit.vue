@@ -12,7 +12,7 @@
           :style="{ backgroundColor: state.color }"
           class="py-1"
           style="color:white; height:40px"
-          v-text="paramLabel()"
+          v-text="param.title"
         /> -->
         <v-subheader v-text="state.options.label" />
 
@@ -21,6 +21,7 @@
             :key="index"
             @click="item.onClick"
             v-for="(item, index) in state.items"
+            v-show="item.visible"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon" />
@@ -36,35 +37,43 @@
     </v-menu>
 
     <v-card @contextmenu="e => showMenu(e)" color="white" flat light tile>
-      <v-row class="mx-1 my-0" no-gutters>
+      <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
-          <template v-if="state.options.input === 'arrayInput'">
-            <v-textarea
-              :label="paramLabel()"
-              @change="paramChange"
-              auto-grow
-              hide-details
-              outlined
-              small
-              v-model="state.value"
+          <template v-if="state.expertMode">
+            <ParameterEditExpert
+              :param="state.param"
+              @update:param="paramExpertChange"
             />
           </template>
 
-          <template v-if="state.options.input === 'tickSlider'">
-            <v-subheader class="paramLabel" v-text="paramLabel()" />
-            <v-slider
-              :max="state.options.ticks.length - 1"
-              :thumb-color="state.color"
-              :tick-labels="state.options.ticks"
-              @change="paramChange"
-              dense
-              height="40"
-              hide-details
-              ticks="always"
-              tick-size="4"
-              v-model="state.value"
-            >
-              <!-- <template v-slot:append>
+          <template v-else>
+            <template v-if="state.options.input === 'arrayInput'">
+              <v-textarea
+                :label="label()"
+                @change="paramChange"
+                auto-grow
+                hide-details
+                outlined
+                small
+                v-model="state.value"
+              />
+            </template>
+
+            <template v-if="state.options.input === 'tickSlider'">
+              <v-subheader class="paramLabel" v-text="label()" />
+              <v-slider
+                :max="state.options.ticks.length - 1"
+                :thumb-color="state.color"
+                :tick-labels="state.options.ticks"
+                @change="paramChange"
+                dense
+                height="40"
+                hide-details
+                ticks="always"
+                tick-size="4"
+                v-model="state.value"
+              >
+                <!-- <template v-slot:append>
                 <v-text-field
                   @change="paramChange"
                   class="mt-0 pt-0"
@@ -77,50 +86,48 @@
                   :value="state.options.ticks[state.value]"
                 />
               </template> -->
-            </v-slider>
-          </template>
+              </v-slider>
+            </template>
 
-          <template v-if="state.options.input === 'valueInput'">
-            <v-text-field
-              :label="paramLabel()"
-              @change="paramChange"
-              auto-grow
-              hide-details
-              outlined
-              small
-              v-model="state.value"
-            />
-          </template>
+            <template v-if="state.options.input === 'valueInput'">
+              <v-text-field
+                :label="label()"
+                @change="paramChange"
+                auto-grow
+                hide-details
+                outlined
+                small
+                v-model="state.value"
+              />
+            </template>
 
-          <template v-if="state.options.input === 'valueSlider'">
-            <v-subheader class="paramLabel" v-text="paramLabel()" />
-            <v-slider
-              :max="state.options.max || 1"
-              :min="state.options.min || 0"
-              :step="state.options.step || 1"
-              :thumb-color="state.color"
-              @change="paramChange"
-              dense
-              height="40"
-              hide-details
-              v-model="state.value"
-            >
-              <template v-slot:append>
-                <v-text-field
-                  @change="paramChange"
-                  :max="state.options.max || 1"
-                  :min="state.options.min || 0"
-                  :step="state.options.step || 1"
-                  class="mt-0 pt-0"
-                  height="32"
-                  hide-details
-                  single-line
-                  style="width: 60px; font-size:12px"
-                  type="number"
-                  v-model="state.value"
-                />
-              </template>
-            </v-slider>
+            <template v-if="state.options.input === 'valueSlider'">
+              <v-subheader class="paramLabel" v-text="label()" />
+              <v-slider
+                :max="state.options.max || 1"
+                :min="state.options.min || 0"
+                :step="state.options.step || 1"
+                :thumb-color="state.color"
+                @change="paramChange"
+                dense
+                height="40"
+                hide-details
+                v-model="state.value"
+              >
+                <template v-slot:append>
+                  <v-text-field
+                    @change="paramChange"
+                    class="mt-0 pt-0"
+                    height="32"
+                    hide-details
+                    single-line
+                    style="width: 60px; font-size:12px"
+                    type="number"
+                    v-model="state.value"
+                  />
+                </template>
+              </v-slider>
+            </template>
           </template>
         </v-col>
       </v-row>
@@ -132,20 +139,26 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
-import { Parameter } from '@/core/parameter';
+import { ModelParameter } from '@/core/parameter/modelParameter';
+import { Parameter } from '@/core/parameter/parameter';
+import ParameterEditExpert from '@/components/parameter/ParameterEditExpert.vue';
 
 export default Vue.extend({
   name: 'ParameterEdit',
+  components: {
+    ParameterEditExpert,
+  },
   props: {
     color: String,
     value: [Object, Array, Number],
-    param: Parameter,
+    param: [ModelParameter, Parameter],
     options: Object,
   },
   setup(props, { emit }) {
     const state = reactive({
       value: undefined,
-      param: props.param as Parameter | undefined,
+      expertMode: false,
+      param: props.param as ModelParameter | Parameter | undefined,
       items: [
         {
           icon: 'mdi-refresh',
@@ -154,16 +167,18 @@ export default Vue.extend({
             state.param.reset();
             state.param.paramChanges();
           },
+          visible: true,
         },
         {
-          icon: 'mdi-dice-multiple-outline',
-          title: 'Set random mode',
+          icon: 'mdi-dice-multiple',
+          title: 'Toggle expert mode',
           onClick: () => {
-            state.param.value = {
-              parametertype: 'constant',
-              specs: { value: state.value },
-            };
+            state.param.value = state.value;
+            state.param.type = 'constant';
+            state.expertMode = !state.expertMode;
+            paramChange();
           },
+          visible: () => state.param !== undefined,
         },
         {
           icon: 'mdi-eye-off-outline',
@@ -172,6 +187,7 @@ export default Vue.extend({
             state.param.visible = false;
             state.param.paramChanges();
           },
+          visible: true,
         },
       ],
       menu: {
@@ -214,17 +230,16 @@ export default Vue.extend({
      */
     const paramChange = () => {
       emit('update:value', deserialize(state.value));
+      // state.param.value = deserialize(state.value);
+      // state.param.paramChanges();
     };
 
     /**
-     * Label parameter (with unit).
+     * Triggers when parameter in expert mode is changed.
      */
-    const paramLabel = () => {
-      let label: String = `${state.options['label']}` || state.options.id;
-      if (state.options.unit) {
-        label += ` (${state.options['unit']})`;
-      }
-      return label;
+    const paramExpertChange = () => {
+      // state.expertMode = state.param.type !== 'constant';
+      state.param.paramChanges();
     };
 
     /**
@@ -243,8 +258,16 @@ export default Vue.extend({
       }
     };
 
+    const label = () => {
+      return state.param ? state.param.title : state.options.label;
+    };
+
     onMounted(() => {
       state.value = serialize(props.value);
+      if (props.param) {
+        state.param = props.param as ModelParameter | Parameter;
+        state.expertMode = state.param.type !== 'constant';
+      }
     });
 
     watch(
@@ -252,12 +275,16 @@ export default Vue.extend({
       ([color, options, param, value]) => {
         state.color = color;
         // It obtains setting from model parameter or from options props.
+        if (param) {
+          state.param = param as ModelParameter | Parameter;
+          state.expertMode = state.param.type !== 'constant';
+        }
         state.options = param ? param['options'] : options;
         state.value = serialize(value);
       }
     );
 
-    return { paramChange, paramLabel, showMenu, state };
+    return { label, paramChange, paramExpertChange, showMenu, state };
   },
 });
 </script>

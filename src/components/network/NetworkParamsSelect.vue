@@ -98,7 +98,7 @@ import { reactive } from '@vue/composition-api';
 // import { Connection } from '@/core/connection/connection';
 import { Network } from '@/core/network/network';
 import { Node } from '@/core/node/node';
-import { Parameter } from '@/core/parameter';
+import { Parameter } from '@/core/parameter/parameter';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
 
 export default Vue.extend({

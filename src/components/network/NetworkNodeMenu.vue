@@ -56,50 +56,48 @@
         </span>
 
         <span v-if="state.content === 'paramsSelect'">
-          <v-card
-            :key="param.id"
-            class="param"
-            flat
-            tile
-            v-for="param of state.node.params"
-          >
-            <v-list>
-              <v-row>
-                <v-list-item style="font-size:12px; min-height:32px">
-                  <template v-slot:default="{ active }">
-                    <v-list-item-content style="padding: 4px">
-                      <v-row no-gutters>
-                        <span v-text="param.options.label" />
-                        <v-spacer />
-                        <span class="mx-1" v-text="param.value" />
-                        <span
-                          style="min-width:24px"
-                          v-text="param.options.unit"
-                        />
-                      </v-row>
-                    </v-list-item-content>
+          <v-list dense>
+            <v-list-item-group
+              @change="selectionChange"
+              active-class=""
+              multiple
+              v-model="state.visibleParams"
+            >
+              <v-list-item
+                :key="param.id"
+                class="mx-0"
+                style="font-size:12px;"
+                v-for="param of state.node.params"
+              >
+                <template v-slot:default="{ active }">
+                  <v-list-item-content style="padding: 4px">
+                    <v-row no-gutters>
+                      {{ param.options.label }}
+                      <v-spacer />
+                      {{ param.toJSON().value }}
+                      {{ param.options.unit }}
+                    </v-row>
+                  </v-list-item-content>
 
                   <v-list-item-action style="margin: 4px 0">
                     <v-checkbox
                       :input-value="active"
-                      @change="paramChange"
                       class="shrink mr-2"
                       color="black"
                       hide-details
-                      v-model="param.visible"
                     />
                   </v-list-item-action>
                 </template>
               </v-list-item>
-            </v-row>
-          </v-card>
+            </v-list-item-group>
+          </v-list>
 
           <v-card-actions>
             <v-btn @click="back" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="state.node.view.hideAllParams()" text>none</v-btn>
-            <v-btn @click="state.node.view.showAllParams()" text>all</v-btn>
+            <v-btn @click="hideAllParams" text>none</v-btn>
+            <v-btn @click="showAllParams" text>all</v-btn>
           </v-card-actions>
         </span>
 
@@ -150,9 +148,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
+import { ModelParameter } from '@/core/parameter/modelParameter';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 
 export default Vue.extend({
@@ -169,6 +168,7 @@ export default Vue.extend({
       content: null,
       node: props.node as Node,
       position: props.position,
+      visibleParams: [],
       show: true,
       items: [
         {
@@ -270,6 +270,17 @@ export default Vue.extend({
     };
 
     /**
+     * Triggers when parameter is changed.
+     */
+    const selectionChange = () => {
+      state.node.params.forEach(
+        (param: ModelParameter) =>
+          (param.visible = state.visibleParams.includes(param.idx))
+      );
+      state.node.nodeChanges();
+    };
+
+    /**
      * Delete node.
      */
     const deleteNode = () => {
@@ -286,11 +297,34 @@ export default Vue.extend({
     };
 
     /**
+     * Set an array of visible parameter for checkbox.
+     */
+    const setVisibleParams = () => {
+      state.visibleParams = state.node.params
+        .filter((param: ModelParameter) => param.visible)
+        .map((param: ModelParameter) => param.idx);
+    };
+
+    const showAllParams = () => {
+      state.node.showAllParams();
+      setVisibleParams();
+    };
+
+    const hideAllParams = () => {
+      state.node.hideAllParams();
+      setVisibleParams();
+    };
+
+    /**
      * Return to main menu content.
      */
     const back = () => {
       state.content = null;
     };
+
+    onMounted(() => {
+      setVisibleParams();
+    });
 
     watch(
       () => [props.node, props.position],
@@ -299,15 +333,19 @@ export default Vue.extend({
         state.show = true;
         state.node = props.node as Node;
         state.position = props.position;
+        setVisibleParams();
       }
     );
 
     return {
       back,
       deleteNode,
+      hideAllParams,
       paramChange,
       resetColor,
+      selectionChange,
       setWeights,
+      showAllParams,
       state,
       updateColor,
     };
