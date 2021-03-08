@@ -176,6 +176,9 @@ export class Parameter extends Config {
     if (this._parent.name === 'Connection') {
       const connection = this._parent as Connection;
       return connection.isBothSpatial();
+    } else if (this._parent.name === 'Synapse') {
+      const synapse = this._parent as Synapse;
+      return synapse.connection.isBothSpatial();
     } else {
       return false;
     }
@@ -186,7 +189,7 @@ export class Parameter extends Config {
    */
   getTypes(): string[] {
     const types: any[] = this.config.types;
-    return !this.isSpatial() && true // it doesnt work with spatial distributions.
+    return !this.isSpatial()
       ? types.filter((type: any) => !type.value.startsWith('spatial'))
       : types;
   }

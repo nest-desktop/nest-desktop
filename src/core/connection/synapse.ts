@@ -4,7 +4,7 @@ import { ModelParameter } from '../parameter/modelParameter';
 import { SynapseCode } from './synapseCode';
 
 export class Synapse {
-  private readonly _name = 'Synaspe';
+  private readonly _name = 'Synapse';
   private _code: SynapseCode;
   private _connection: Connection; // parent
   private _modelId: string;
