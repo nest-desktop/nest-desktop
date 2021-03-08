@@ -275,6 +275,10 @@ export class NetworkGraph {
         } else {
           this._selector.select('g#network').attr('transform', transform);
         }
+      })
+      .on('end', () => {
+        this._selector.select('rect#background').style('cursor', 'default');
+        //document.getElementsByTagName('body')[0].style.cursor = 'move';
       });
   }
 
@@ -291,6 +295,9 @@ export class NetworkGraph {
       .on('click', () => {
         this.reset();
         this.updateNetworkGraph();
+      })
+      .on('mousedown', () => {
+        this._selector.select('rect#background').style('cursor', 'move');
       })
       .on('contextmenu', (e: MouseEvent) => {
         // console.log(event);
