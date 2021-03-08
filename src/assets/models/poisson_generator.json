@@ -6,7 +6,6 @@
   "params": [{
     "id": "rate",
     "label": "mean firing rate",
-    "level": 1,
     "unit": "Hz",
     "value": 0,
     "input": "valueSlider",
@@ -16,7 +15,6 @@
   }, {
     "id": "start",
     "label": "start time",
-    "level": 2,
     "unit": "ms",
     "value": 0,
     "input": "valueSlider",
@@ -26,7 +24,6 @@
   }, {
     "id": "stop",
     "label": "stop time",
-    "level": 2,
     "unit": "ms",
     "value": 10000,
     "input": "valueSlider",

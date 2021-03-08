@@ -6,7 +6,6 @@
   "params": [{
     "id": "interval",
     "label": "time interval of recording",
-    "level": 3,
     "unit": "ms",
     "value": 1,
     "input": "tickSlider",
@@ -20,7 +19,6 @@
   }, {
     "id": "start",
     "label": "start time",
-    "level": 2,
     "unit": "ms",
     "value": 0,
     "input": "valueSlider",
@@ -30,7 +28,6 @@
   }, {
     "id": "stop",
     "label": "stop time",
-    "level": 2,
     "unit": "ms",
     "value": 10000,
     "input": "valueSlider",
