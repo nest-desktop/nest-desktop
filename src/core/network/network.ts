@@ -104,8 +104,8 @@ export class Network extends Config {
    */
   networkChanges(): void {
     this.updateHash();
-    this._project.commitNetwork(this);
     this._project.code.generate();
+    this._project.commitNetwork(this);
     // this._project.activityGraph.init();
   }
 

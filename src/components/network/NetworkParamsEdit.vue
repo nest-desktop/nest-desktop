@@ -33,7 +33,6 @@
         <draggable v-model="state.network.nodes">
           <transition-group>
             <v-card
-              :color="node.view.color"
               :key="'node' + node.idx"
               class="mb-1"
               flat
@@ -41,9 +40,9 @@
               v-for="node of state.network.nodes"
               v-show="showNode(node)"
             >
-              <v-img class="pa-0">
+              <v-sheet :color="node.view.color">
                 <v-row @contextmenu="e => showNodeMenu(e, node)" no-gutters>
-                  <v-col cols="3">
+                  <v-col cols="4">
                     <v-btn
                       @click="() => node.view.select()"
                       block
@@ -54,7 +53,7 @@
                       v-text="node.view.label"
                     />
                   </v-col>
-                  <v-col cols="9">
+                  <v-col cols="8">
                     <v-overflow-btn
                       :items="node.models"
                       class="ma-0"
@@ -70,8 +69,15 @@
                     />
                   </v-col>
                 </v-row>
+              </v-sheet>
 
-                <div v-if="!node.model.isRecorder()" class="ml-1">
+              <v-card-text
+                :style="{
+                  borderLeft: `4px solid ${node.view.color}`,
+                }"
+                class="pa-0"
+              >
+                <div v-if="!node.model.isRecorder()">
                   <NodePosition
                     :node="node"
                     v-if="node.spatial.hasPositions()"
@@ -96,10 +102,9 @@
                   :param="param"
                   :value.sync="param.value"
                   @update:value="paramChange()"
-                  class="ml-1"
                   v-for="param of node.filteredParams"
                 />
-              </v-img>
+              </v-card-text>
             </v-card>
           </transition-group>
         </draggable>
@@ -114,62 +119,66 @@
               v-for="connection of state.network.connections"
               v-show="showConnection(connection)"
             >
-              <v-img
-                :gradient="'to right, ' + connection.view.backgroundImage"
-                dark
+              <v-row
+                @contextmenu="e => showConnectionMenu(e, connection)"
+                no-gutters
               >
-                <v-row
-                  @contextmenu="e => showConnectionMenu(e, connection)"
-                  no-gutters
-                >
-                  <v-col cols="3" class="py-0" style="text-align:center">
-                    <v-btn
-                      @click="() => connection.source.view.select()"
-                      block
-                      dark
-                      height="40"
-                      text
-                      tile
-                      v-text="connection.source.view.label"
-                    />
-                  </v-col>
-                  <v-col cols="5">
-                    <v-btn
-                      @click="() => connection.view.select()"
-                      block
-                      dark
-                      height="40"
-                      text
-                      tile
-                    >
-                      <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                    </v-btn>
-                  </v-col>
-                  <v-col cols="4" class="py-0" style="text-align:center">
-                    <v-btn
-                      @click="
-                        () => connection.targetconnection.target.view.select()
-                      "
-                      block
-                      dark
-                      height="40"
-                      text
-                      tile
-                      v-text="connection.target.view.label"
-                    />
-                  </v-col>
-                </v-row>
+                <v-col cols="4" class="py-0" style="text-align:center">
+                  <v-btn
+                    :color="connection.source.view.color"
+                    @click="() => connection.source.view.select()"
+                    block
+                    dark
+                    depressed
+                    height="40"
+                    tile
+                    v-text="connection.source.view.label"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    @click="() => connection.view.select()"
+                    block
+                    color="white"
+                    depressed
+                    height="40"
+                    tile
+                  >
+                    <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                  </v-btn>
+                </v-col>
+                <v-col cols="4" class="py-0" style="text-align:center">
+                  <v-btn
+                    :color="connection.target.view.color"
+                    @click="
+                      () => connection.targetconnection.target.view.select()
+                    "
+                    block
+                    dark
+                    depressed
+                    height="40"
+                    tile
+                    v-text="connection.target.view.label"
+                  />
+                </v-col>
+              </v-row>
 
+              <v-card-text
+                :style="{
+                  borderLeft: `4px solid ${connection.source.view.color}`,
+                  borderRight: `4px solid ${connection.target.view.color}`,
+                }"
+                class="pa-0"
+              >
                 <ParameterEdit
                   :color="connection.source.view.color"
                   :key="param.id"
                   :param="param"
                   :value.sync="param.value"
                   @update:value="paramChange()"
-                  class="mx-1"
                   v-for="param in connection.synapse.filteredParams"
                 />
-              </v-img>
+              </v-card-text>
             </v-card>
           </transition-group>
         </draggable>

@@ -69,10 +69,13 @@
                   <template v-slot:default="{ active }">
                     <v-list-item-content style="padding: 4px">
                       <v-row no-gutters>
-                        {{ param.options.label }}
+                        <span v-text="param.options.label" />
                         <v-spacer />
-                        {{ param.toJSON().value }}
-                        {{ param.options.unit }}
+                        <span class="mx-1" v-text="param.value" />
+                        <span
+                          style="min-width:24px"
+                          v-text="param.options.unit"
+                        />
                       </v-row>
                     </v-list-item-content>
 
@@ -91,6 +94,7 @@
               </v-row>
             </v-list>
           </v-card>
+
           <v-card-actions>
             <v-btn @click="back" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
