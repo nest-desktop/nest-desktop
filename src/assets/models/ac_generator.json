@@ -4,59 +4,66 @@
   "element_type": "stimulator",
   "label": "alternating current",
   "recordables": ["I"],
-  "params": [{
-    "id": "amplitude",
-    "label": "Amplitude of sine current",
-    "unit": "pA",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 1000,
-    "min": -1000,
-    "step": 1
-  }, {
-    "id": "frequency",
-    "label": "frequency",
-    "unit": "Hz",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 100,
-    "min": 0,
-    "step": 1
-  }, {
-    "id": "offset",
-    "label": "constant amplitude offset",
-    "unit": "pA",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 1000,
-    "min": 0,
-    "step": 1
-  }, {
-    "id": "phase",
-    "label": "phase of sine current",
-    "unit": "deg",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 360,
-    "min": 0,
-    "step": 1
-  }, {
-    "id": "start",
-    "label": "start time",
-    "unit": "ms",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 10000,
-    "min": 0,
-    "step": 10
-  }, {
-    "id": "stop",
-    "label": "stop time",
-    "unit": "ms",
-    "value": 10000,
-    "input": "valueSlider",
-    "max": 10000,
-    "min": 0,
-    "step": 10
-  }]
+  "params": [
+    {
+      "id": "amplitude",
+      "label": "Amplitude of sine current",
+      "unit": "pA",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 1000,
+      "min": -1000,
+      "step": 1
+    },
+    {
+      "id": "frequency",
+      "label": "frequency",
+      "unit": "Hz",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 100,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "id": "offset",
+      "label": "constant amplitude offset",
+      "unit": "pA",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 1000,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "id": "phase",
+      "label": "phase of sine current",
+      "unit": "deg",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 360,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "id": "start",
+      "label": "start time",
+      "unit": "ms",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 10000,
+      "min": 0,
+      "step": 10
+    },
+    {
+      "id": "stop",
+      "label": "stop time",
+      "unit": "ms",
+      "value": 10000,
+      "input": "valueSlider",
+      "max": 10000,
+      "min": 0,
+      "step": 10
+    }
+  ]
 }
