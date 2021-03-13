@@ -4,17 +4,14 @@ import { Parameter } from './parameter';
 import { Synapse } from '../connection/synapse';
 
 export class ModelParameter extends Parameter {
-  // private _parent: Model | Node | Synapse; // parent
-
   constructor(parent: Model | Node | Synapse, param: any) {
     super(parent, param);
   }
 
-  // get parent(): Model | Node | Synapse {
-  //   return this._parent;
-  // }
-
-  get options(): any {
+  /**
+   * Get options from model component.
+   */
+  get options(): ModelParameter | undefined {
     let model: Model;
     if (this.parent.name === 'Model') {
       model = this.parent as Model;
@@ -24,12 +21,12 @@ export class ModelParameter extends Parameter {
     }
     const param: ModelParameter = model
       ? model.params.find((p: ModelParameter) => p.id === this.id)
-      : null;
+      : undefined;
     return param;
   }
 
   /**
-   * Reset value taken from options.
+   * Reset constant value taken from model component.
    */
   reset(): void {
     this.type = 'constant';
@@ -37,7 +34,7 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Updates when parameter is changed.
+   * Trigger changes when parameter is changed.
    */
   paramChanges(): void {
     if (this.parent.name === 'Node') {
@@ -59,6 +56,7 @@ export class ModelParameter extends Parameter {
       value: this.value,
     };
     if (this.parent.name === 'Model') {
+      // For model component
       params.input = this.input;
       params.label = this.label;
       params.unit = this.unit;
@@ -70,9 +68,12 @@ export class ModelParameter extends Parameter {
         params.ticks = this.ticks;
       }
     } else {
+      // For node or synapse components
       params.factors = this.factors;
       params.visible = this.visible;
-      if (this.isRandom()) {
+
+      // Add specs for distribution if random.
+      if (!this.isConstant()) {
         params.specs = this.specs;
       }
     }
