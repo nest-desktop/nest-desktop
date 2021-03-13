@@ -6,12 +6,11 @@ import { Project } from '../project/project';
 export class ActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;
   private _activityChartGraph: ActivityChartGraph;
-  private _hash: string;
+  private _codeHash: string;
   private _project: Project;
 
   constructor(project: Project) {
     this._project = project;
-    this._hash = project.getHash();
     this.init();
   }
 
@@ -23,8 +22,8 @@ export class ActivityGraph {
     return this._activityChartGraph;
   }
 
-  get hash(): string {
-    return this._hash;
+  get codeHash(): string {
+    return this._codeHash;
   }
 
   get project(): Project {
@@ -46,7 +45,7 @@ export class ActivityGraph {
     // console.log('Update activity graph');
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
-    this._hash = this.project.getHash();
+    this._codeHash = this._project.code.hash;
   }
 
   /**

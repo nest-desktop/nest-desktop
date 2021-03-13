@@ -154,9 +154,11 @@ export class ActivityAnimationScene {
    */
   update(): void {
     this._scene.remove(this.activityLayers);
+
     const layersGraph: THREE.Group = new THREE.Group();
-    this._graph.project.activities.forEach((activity: Activity) => {
-      const layer: any = this._graph.layers[activity.idx];
+    const activities = this._graph.project.activities;
+    this._graph.layers.forEach((layer: any, idx: number) => {
+      const activity: Activity = activities[idx];
       if (layer.ndim !== -1) {
         const activityLayerGroup: THREE.Group = this.createLayerGroup(
           layer,
@@ -312,9 +314,11 @@ export class ActivityAnimationScene {
     if (this.graph.ref.firstChild === this._renderer.domElement) {
       this.graph.ref.removeChild(this._renderer.domElement);
     }
+    if (document.body.lastChild === this._stats.dom) {
+      document.body.removeChild(this._stats.dom);
+    }
     // https://stackoverflow.com/questions/21548247/clean-up-threejs-webgl-contexts
     this._renderer.forceContextLoss();
-    // document.body.removeChild(this._stats.dom);
   }
 
   /**

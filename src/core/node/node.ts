@@ -98,7 +98,6 @@ export class Node extends Config {
     this._modelId = value;
     this._size = 1;
     this.initParameters();
-    this.initSpatial();
     this._network.clean();
     this.initActivity();
     if (this.model.isRecorder()) {
@@ -209,6 +208,7 @@ export class Node extends Config {
    * It emits network changes
    */
   nodeChanges(): void {
+    this._spatial.updateHash();
     this._network.networkChanges();
   }
 
@@ -337,16 +337,32 @@ export class Node extends Config {
    * Initialize spatial component.
    * @param spatial - spatial specifications
    */
-  initSpatial(spatial: any = {}) {
+  initSpatial(spatial: any = {}): void {
     this._spatial = new NodeSpatial(this, spatial);
   }
 
+  /**
+   * Toggle spatial mode.
+   */
+  toggleSpatial(): void {
+    this.initSpatial({
+      positions: this.spatial.hasPositions() ? undefined : 'grid',
+    });
+    this.nodeChanges();
+  }
+
+  /**
+   * Clean node component.
+   */
   clean(): void {
     this._idx = this._network.nodes.indexOf(this);
     this.collectRecordFromTargets();
     this.view.clean();
   }
 
+  /**
+   * Collect record data from target nodes.
+   */
   collectRecordFromTargets(): void {
     if (this.model.existing !== 'multimeter') {
       return;
