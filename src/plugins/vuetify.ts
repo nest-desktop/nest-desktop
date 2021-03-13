@@ -5,6 +5,8 @@ import Vuetify from 'vuetify/lib';
 import colors from 'vuetify/lib/util/colors';
 
 import { mdiDatabaseRefreshOutline } from '@mdi/js';
+import DiceMultipleOutlineIcon from '@/components/icons/DiceMultipleOutlineIcon.vue';
+import DotsGridIcon from '@/components/icons/DotsGridIcon.vue';
 import NetworkIcon from '@/components/icons/NetworkIcon.vue';
 
 Vue.use(Vuetify);
@@ -13,6 +15,12 @@ export default new Vuetify({
   icons: {
     values: {
       mdiDatabaseRefreshOutline,
+      diceMultipleOutline: {
+        component: DiceMultipleOutlineIcon,
+      },
+      dotsGrid: {
+        component: DotsGridIcon,
+      },
       network: {
         component: NetworkIcon,
       },
