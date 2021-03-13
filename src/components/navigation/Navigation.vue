@@ -13,8 +13,10 @@
       permanent
       v-click-outside="
         () => {
-          state.miniVariant = true;
-          state.navList = '';
+          if (!state.pinned) {
+            state.miniVariant = true;
+            state.navList = '';
+          }
         }
       "
       width="320"
@@ -29,17 +31,22 @@
           <div style="display:flex; flex-direction:column; height: 100%">
             <v-list nav dense>
               <v-list-item
-                :disabled="state.miniVariant"
+                :title="state.pinned ? 'Unpin' : 'Pin' + ' navigation'"
                 @click="
                   () => {
-                    state.miniVariant = !state.miniVariant;
-                    state.navList = '';
+                    state.pinned = !state.pinned;
+                    state.miniVariant = false;
+                    state.navList =
+                      state.navList === '' ? 'project' : state.navList;
                   }
                 "
-                title="Toggle navigation"
               >
                 <v-list-item-icon>
-                  <v-icon v-text="'mdi-chevron-left'" />
+                  <v-icon
+                    v-text="
+                      state.pinned ? 'mdi-pin-outline' : 'mdi-pin-off-outline'
+                    "
+                  />
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-text="'Close'" />
@@ -81,6 +88,19 @@
             <v-spacer />
 
             <v-list nav dense>
+              <template v-if="state.app.config.devMode">
+                <v-tooltip right>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-list-item v-bind="attrs" v-on="on">
+                      <v-list-item-icon v-bind="attrs" v-on="on">
+                        <v-icon v-text="'mdi-dev-to'" />
+                      </v-list-item-icon>
+                    </v-list-item>
+                  </template>
+                  <span v-text="'Dev mode is on.'" />
+                </v-tooltip>
+              </template>
+
               <v-list-item
                 @click="reset"
                 color="settings darken"
@@ -116,6 +136,8 @@
 <script lang="ts">
 import { reactive } from '@vue/composition-api';
 
+import core from '@/core';
+
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
@@ -129,12 +151,14 @@ export default {
   },
   setup() {
     const state = reactive({
+      app: core.app,
       navList: '',
       miniVariant: true,
       projectsMenu: {
         position: { x: 0, y: 0 },
         show: false,
       },
+      pinned: true,
     });
 
     /**

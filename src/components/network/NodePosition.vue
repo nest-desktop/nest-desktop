@@ -4,17 +4,21 @@
       <template v-slot:activator="{ on, attrs }">
         <v-card height="40" tile flat v-bind="attrs" v-on="on">
           <v-card-text class="px-2" style="padding: 10px 0">
-            <v-row no-gutters>
-              <span v-text="'Positions'" />
-              <v-spacer />
-              <span v-text="state.node.spatial.positions.pos.length" />
-            </v-row>
+            <NodePositionTitle
+              :key="state.node.spatial.hash"
+              :spatial="state.node.spatial"
+            />
           </v-card-text>
         </v-card>
       </template>
 
       <v-card tile style="width:315px">
-        <v-card-subtitle v-text="'Positions'" />
+        <v-card-subtitle>
+          <NodePositionTitle
+            :key="state.node.spatial.hash"
+            :spatial="state.node.spatial"
+          />
+        </v-card-subtitle>
 
         <v-card-text class="py-0">
           <v-select
@@ -26,29 +30,36 @@
             v-model="state.selectedPositions"
           />
 
-          <span v-if="state.node.spatial.positions.name === 'free'">
-            <!-- <v-row>
-              <v-col class="py-3" cols="8" v-text="'pos'" />
-              <v-text-field :value="state.node.spatial.positions.pos" />
-            </v-row> -->
+          <v-row>
+            <v-col class="py-3" cols="8" v-text="'number of dimensions'" />
+            <v-col class="py-0" cols="4">
+              <v-slider
+                :tick-labels="[2, 3]"
+                min="2"
+                max="3"
+                ticks="always"
+                v-model="state.node.spatial.positions.numDimensions"
+              />
+            </v-col>
+          </v-row>
 
-            <v-row>
-              <v-col class="py-3" cols="8" v-text="'number of dimensions'" />
-              <v-col class="py-0" cols="4">
-                <v-slider
-                  :tick-labels="[2, 3]"
-                  min="2"
-                  max="3"
-                  ticks="always"
-                  v-model="state.node.spatial.positions.numDimensions"
-                />
-              </v-col>
-            </v-row>
+          <span v-if="state.node.spatial.positions.name === 'free'">
+            <ParameterEdit
+              :color="state.node.view.color"
+              :options="{
+                input: 'valueSlider',
+                label: 'population size',
+                max: 1000,
+                value: 1,
+              }"
+              :value.sync="state.node.size"
+            />
           </span>
 
           <span v-if="state.node.spatial.positions.name === 'grid'">
             <v-row>
-              <v-col class="py-4" cols="6" v-text="'shape'" />
+              <v-col class="py-4" cols="3" v-text="'shape'" />
+              <v-spacer />
               <v-col
                 :key="idx"
                 class="py-1"
@@ -56,8 +67,13 @@
                 v-for="(item, idx) of state.node.spatial.positions.shape"
               >
                 <v-text-field
+                  :label="
+                    (state.node.spatial.positions.numDimensions === 2
+                      ? ['rows', 'columns']
+                      : ['x', 'y', 'z'])[idx]
+                  "
+                  :min="1"
                   :value="item"
-                  :label="['rows', 'columns'][idx]"
                   @change="
                     value => {
                       state.node.spatial.positions.shape[idx] = parseInt(value);
@@ -79,7 +95,8 @@
                 v-for="(item, idx) of state.node.spatial.positions.center"
               >
                 <v-text-field
-                  :label="['x', 'y'][idx]"
+                  :label="['x', 'y', 'z'][idx]"
+                  :step="0.1"
                   :value="item"
                   @change="
                     value => {
@@ -106,10 +123,13 @@
             >
               <v-text-field
                 :label="['x', 'y', 'z'][idx]"
+                :min="0"
+                :step="0.1"
                 :value="item"
                 @change="
                   value => {
                     state.node.spatial.positions.extent[idx] = parseInt(value);
+                    updatePositions();
                   }
                 "
                 hide-details
@@ -133,12 +153,12 @@
           <v-btn
             @click="updatePositions"
             outlined
-            v-text="'Generate positions'"
+            v-text="'Update positions'"
           />
-          <v-spacer />
+          <!-- <v-spacer />
           <v-btn :title="state.node.spatial.positions.pos" icon>
             <v-icon v-text="'mdi-map-outline'" />
-          </v-btn>
+          </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -147,12 +167,18 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
+import NodePositionTitle from '@/components/network/NodePositionTitle.vue';
 
 export default Vue.extend({
   name: 'NodePosition',
+  components: {
+    NodePositionTitle,
+    ParameterEdit,
+  },
   props: {
     node: Node,
   },
@@ -168,18 +194,21 @@ export default Vue.extend({
 
     const initPositions = () => {
       // console.log(this.positionType, event);
-      const config: any =
-        state.selectedPositions === 'free'
-          ? { numDimensions: 2 }
-          : { shape: [1, 1] };
-      state.node.initSpatial(config);
-      updatePositions();
+      const specs: any = state.node.spatial.positions.toJSON();
+      state.node.initSpatial({
+        positions: state.selectedPositions,
+        specs: specs,
+      });
     };
 
     const updatePositions = () => {
-      state.node.spatial.positions.generate();
+      // state.node.spatial.positions.generate();
       state.node.nodeChanges();
     };
+
+    onMounted(() => {
+      state.selectedPositions = state.node.spatial.positions.name;
+    });
 
     return {
       state,

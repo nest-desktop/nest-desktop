@@ -12,6 +12,20 @@
     />
 
     <span
+      style="position:absolute;left:0"
+      v-if="state.graph && state.network.project.app.config.devMode"
+    >
+      <v-chip
+        class="ma-1"
+        label
+        outlined
+        small
+        v-text="state.network.hash.slice(0, 6)"
+        v-if="state.network.hash"
+      />
+    </span>
+
+    <span
       style="position:absolute;right:0"
       class="ma-1 no-print"
       v-if="state.graph"
@@ -122,6 +136,31 @@
         </g>
       </g>
     </svg>
+
+    <v-snackbar :timeout="-1" v-model="state.snackbar.show">
+      {{ state.snackbar.text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          @click="state.snackbar.show = false"
+          text
+          v-bind="attrs"
+          v-if="state.snackbar.actions.length === 0"
+        >
+          Close
+        </v-btn>
+        <template v-if="state.snackbar.actions.length > 0">
+          <v-btn
+            :key="actionIdx"
+            @click="action.onClick"
+            text
+            v-bind="attrs"
+            v-for="(action, actionIdx) in state.snackbar.actions"
+            v-text="action.text"
+          />
+        </template>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -138,7 +177,7 @@ import * as d3 from 'd3';
 import { Connection } from '@/core/connection/connection';
 import { NetworkGraph } from '@/core/network/networkGraph';
 import { Node } from '@/core/node/node';
-import core from '@/core/index';
+import core from '@/core';
 
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
@@ -165,6 +204,11 @@ export default Vue.extend({
         connection: undefined,
         position: { x: 0, y: 0 },
         show: false,
+      },
+      snackbar: {
+        actions: [],
+        show: false,
+        text: '',
       },
     });
 
@@ -218,6 +262,38 @@ export default Vue.extend({
     };
 
     /**
+     * Show snackbar
+     */
+    const showSnackbar = (text: string, actions: any[] = []) => {
+      state.snackbar.text = text;
+      state.snackbar.actions = actions;
+      state.snackbar.show = true;
+    };
+
+    const hasAllNodeTypes = () => {
+      const types: string[] = state.network.nodes.map(
+        node => node.model.elementType
+      );
+      return (
+        types.includes('stimulator') &&
+        types.includes('neuron') &&
+        types.includes('recorder')
+      );
+    };
+
+    const showHelp = () => {
+      if (state.network.nodes.length === 0) {
+        showSnackbar('Click right mouse button to create nodes.');
+      } else if (!hasAllNodeTypes()) {
+        showSnackbar('Add at least a stimulator, a neuron and a recorder.');
+      } else if (state.network.connections.length === 0) {
+        showSnackbar('Click a node and then click other node to connect them.');
+      } else {
+        state.snackbar.show = false;
+      }
+    };
+
+    /**
      * Update network graph.
      */
     const update = () => {
@@ -227,6 +303,7 @@ export default Vue.extend({
       state.graph.update();
       state.graph.resize();
       setMenuTrigger();
+      showHelp();
     };
 
     /**

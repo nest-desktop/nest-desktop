@@ -33,7 +33,7 @@
 import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 
-import core from '@/core/index';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'Models',

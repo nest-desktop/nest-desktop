@@ -59,6 +59,19 @@
               />
             </template>
 
+            <template v-if="state.options.input === 'checkbox'">
+              <v-checkbox
+                :color="state.color"
+                :readonly="state.options.readonly"
+                :label="label()"
+                @change="paramChange"
+                class="ma-1"
+                dense
+                hide-details
+                v-model="state.value"
+              />
+            </template>
+
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
@@ -153,7 +166,7 @@ export default Vue.extend({
   },
   props: {
     color: String,
-    value: [Object, Array, Number],
+    value: [Object, Array, Number, String, Boolean],
     param: [ModelParameter, Parameter],
     options: Object,
   },
@@ -173,7 +186,7 @@ export default Vue.extend({
           visible: true,
         },
         {
-          icon: 'mdi-dice-multiple',
+          icon: '$diceMultipleOutline',
           title: 'Toggle expert mode',
           onClick: () => {
             state.param.value = state.value;
@@ -181,7 +194,7 @@ export default Vue.extend({
             state.expertMode = !state.expertMode;
             paramChange();
           },
-          visible: () => state.param !== undefined,
+          visible: true,
         },
         {
           icon: 'mdi-eye-off-outline',
@@ -208,10 +221,11 @@ export default Vue.extend({
      * Serialize for view.
      */
     const serialize = (value: any) => {
-      if (state.options.input === 'tickSlider') {
-        return state.options.ticks.indexOf(value); // returns tick index in ticks
-      } else {
-        return value;
+      switch (state.options.input) {
+        case 'tickSlider':
+          return state.options.ticks.indexOf(value);
+        default:
+          return value;
       }
     };
 
@@ -219,12 +233,13 @@ export default Vue.extend({
      * Deserialize for data objects.
      */
     const deserialize = (value: any) => {
-      if (state.options.input === 'tickSlider') {
-        return state.options.ticks[value]; // returns tick values
-      } else if (state.options.input === 'arrayInput') {
-        return JSON.parse(`[${value}]`); // returns array and not string
-      } else {
-        return value;
+      switch (state.options.input) {
+        case 'tickSlider':
+          return state.options.ticks[value]; // returns tick values
+        case 'arrayInput':
+          return JSON.parse(`[${value}]`); // returns array and not string
+        default:
+          return value;
       }
     };
 
@@ -270,6 +285,7 @@ export default Vue.extend({
       if (props.param) {
         state.param = props.param as ModelParameter | Parameter;
         state.expertMode = state.param.type !== 'constant';
+        state.items[1].visible = state.param.options.input === 'valueSlider';
       }
     });
 
@@ -278,11 +294,12 @@ export default Vue.extend({
       ([color, options, param, value]) => {
         state.color = color;
         // It obtains setting from model parameter or from options props.
+        state.options = param ? param['options'] : options;
         if (param) {
           state.param = param as ModelParameter | Parameter;
           state.expertMode = state.param.type !== 'constant';
+          state.items[1].visible = state.options.input === 'valueSlider';
         }
-        state.options = param ? param['options'] : options;
         state.value = serialize(value);
       }
     );

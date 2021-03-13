@@ -173,7 +173,7 @@ import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
-import core from '@/core/index';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'LabBook',
