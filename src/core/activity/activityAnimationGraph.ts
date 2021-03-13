@@ -12,6 +12,7 @@ export class ActivityAnimationGraph {
   private _frames: any[] = [];
   private _layers: any[] = [];
   private _layout: any = {};
+  private _loading: boolean = false;
   private _project: Project;
   private _recordables: string[] = [];
   private _recordablesOptions: any[] = [];
@@ -129,6 +130,10 @@ export class ActivityAnimationGraph {
 
   get layout(): any {
     return this._layout;
+  }
+
+  get loading(): boolean {
+    return this._loading;
   }
 
   get project(): Project {
@@ -252,10 +257,19 @@ export class ActivityAnimationGraph {
   update(): void {
     // console.log('Update activity animation graph');
     this.init();
+
+    // Update activity layers and frames.
     this.project.activities.forEach((activity: Activity) => {
       this.updateLayers(activity);
       this.updateFrames(activity);
     });
+
+    // Update scene if loaded.
+    if (this._scene) {
+      this._scene.update();
+    }
+
+    // Update options for recordables.
     this._recordablesOptions = this._recordables.map((recordable: string) => ({
       value: recordable,
     }));
@@ -290,9 +304,13 @@ export class ActivityAnimationGraph {
     if (events.senders === undefined) {
       return;
     }
+
+    // Collect senders based on events.
     events.senders = events.senders.map((sender: number) =>
       activity.nodeIds.indexOf(sender)
     );
+
+    // Collect recordables from event keys.
     const eventKeys: string[] = Object.keys(events);
     eventKeys.forEach((eventKey: string) => {
       if (
