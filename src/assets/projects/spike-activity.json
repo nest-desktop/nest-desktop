@@ -139,7 +139,6 @@
       },
       {
         "model": "spike_recorder",
-        "size": 1,
         "view": {
           "position": {
             "x": 350,

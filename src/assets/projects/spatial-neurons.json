@@ -135,15 +135,17 @@
           }
         ],
         "spatial": {
-          "center": [0, 0],
-          "extent": [1, 1],
-          "edgeWrap": false,
-          "numDimensions": 2
+          "positions": "free",
+          "specs": {
+            "center": [0, 0],
+            "extent": [1, 1],
+            "edgeWrap": false,
+            "numDimensions": 2
+          }
         }
       },
       {
         "model": "voltmeter",
-        "size": 1,
         "view": {
           "position": {
             "x": 350,
@@ -154,17 +156,17 @@
           {
             "id": "interval",
             "value": 1,
-            "visible": true
+            "visible": false
           },
           {
             "id": "start",
             "value": 0,
-            "visible": true
+            "visible": false
           },
           {
             "id": "stop",
             "value": 10000,
-            "visible": true
+            "visible": false
           }
         ]
       }

@@ -63,7 +63,7 @@
           },
           {
             "id": "spike_weights",
-            "value": 0,
+            "value": [1],
             "visible": false
           }
         ]
@@ -132,7 +132,6 @@
       },
       {
         "model": "voltmeter",
-        "size": 1,
         "view": {
           "position": {
             "x": 350,
