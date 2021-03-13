@@ -19,9 +19,9 @@
             <v-card-title v-text="'App'" />
             <v-card-text>
               <v-checkbox
-                :value="core.app.config.devMode"
-                @change="e => updateConfig({ devMode: e })"
+                @change="e => updateConfig({ devMode: e || false })"
                 label="Development mode"
+                v-model="state.devMode"
               />
             </v-card-text>
           </v-card>
@@ -31,11 +31,11 @@
             <v-card-text>
               <v-text-field
                 label="Model database"
-                v-model="core.app.config.databases.model.name"
+                v-model="state.app.config.databases.model.name"
               />
               <v-text-field
                 label="Project database"
-                v-model="core.app.config.databases.project.name"
+                v-model="state.app.config.databases.project.name"
               />
             </v-card-text>
           </v-card>
@@ -45,12 +45,17 @@
             <v-card-text>
               <v-text-field
                 label="NEST Server"
-                v-model="core.app.nestServer.url"
+                v-model="state.app.nestServer.url"
               />
               <span v-if="state.nestVersion">
                 Response:
-                <v-chip small>
-                  {{ state.nestVersion }}
+                <v-chip color="orange darken-3" dark small>
+                  <v-avatar left>
+                    <v-icon small
+                      v-text="'mdi-checkbox-marked-circle'"
+                    />
+                  </v-avatar>
+                  NEST version: {{ state.nestVersion }}
                 </v-chip>
               </span>
             </v-card-text>
@@ -89,15 +94,14 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Config } from '@/core/config';
-import core from '@/core/index';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'Settings',
-  props: {
-    id: String,
-  },
-  setup(props) {
+  setup() {
     const state = reactive({
+      devMode: core.app.config.devMode,
+      app: core.app,
       nestVersion: '',
       network: new Config('Network'),
     });
@@ -106,25 +110,24 @@ export default Vue.extend({
      * Check if NEST is running in the backend.
      */
     const checkNEST = () => {
-      core.app.nestServer.check();
-      state.nestVersion = core.app.nestServer.state.simulatorVersion;
+      core.app.nestServer.check().then(nestServer => {
+        state.nestVersion = nestServer.state.simulatorVersion;
+      });
     };
 
     const updateConfig = (d: any) => {
-      console.log(d);
       core.app.updateConfig(d);
     };
 
     watch(
-      () => props.id,
+      () => core.app.config.devMode,
       () => {
-        console.log(props.id);
+        console.log(core.app.config.devMode);
       }
     );
 
     return {
       checkNEST,
-      core,
       state,
       updateConfig,
     };

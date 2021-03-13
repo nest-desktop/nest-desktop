@@ -49,20 +49,25 @@
         light
         mandatory
       >
-        <v-btn class="mx-0 px-6">
-          <v-col>
-            <v-row style="place-content: center;">
-              <v-icon v-text="'$network'" />
-            </v-row>
-            <v-row style="place-content: center; font-size:10px">
-              Editor
-            </v-row>
-          </v-col>
-        </v-btn>
+        <v-tooltip :open-delay="1000" bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
+              <v-col>
+                <v-row style="place-content: center;">
+                  <v-icon v-text="'$network'" />
+                </v-row>
+                <v-row style="place-content: center; font-size:10px">
+                  Editor
+                </v-row>
+              </v-col>
+            </v-btn>
+          </template>
+          <span>Construct network</span>
+        </v-tooltip>
 
         <v-menu open-on-hover offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" class="mx-0 px-6">
+            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
                 <v-row style="place-content: center;">
                   <v-icon v-text="'mdi-chart-scatter-plot'" />
@@ -179,12 +184,6 @@
           </v-col>
         </v-row>
       </div>
-      <v-chip
-        class="mx-2"
-        outlined
-        small
-        v-text="state.project.network.hash.slice(0, 6)"
-      />
 
       <v-btn
         @click="simulate"
@@ -299,14 +298,8 @@
             v-if="state.tool.name === 'activityStats'"
           />
 
-          <v-treeview
-            :items="core.app.project.treeview()"
-            dense
-            v-if="state.tool.name === 'treeview'"
-          />
-
           <v-card flat tile v-if="state.tool.name === 'dataJSON'">
-            <pre v-text="core.app.project.toJSON()" style="font-size:11px" />
+            <ProjectRawData :project="state.project" />
           </v-card>
         </div>
       </v-row>
@@ -339,7 +332,9 @@
 
       <transition name="fade">
         <ActivityGraph
+          :codeHash="state.project.code.hash"
           :graph="state.project.activityGraph"
+          :graphHash="state.project.activityGraph.codeHash"
           :projectId="state.projectId"
           :view="state.activityGraph"
           v-if="state.modeIdx === 1"
@@ -376,11 +371,12 @@ import ActivityGraph from '@/components/activity/ActivityGraph.vue';
 import ActivityChartController from '@/components/activity/ActivityChartController.vue';
 import ActivityAnimationController from '@/components/activity/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/ActivityStats.vue';
-import core from '@/core/index';
+import core from '@/core';
 import LabBook from '@/components/network/LabBook.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
+import ProjectRawData from '@/components/project/ProjectRawData.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
 import SimulationKernel from '@/components/simulation/SimulationKernel.vue';
 import SimulationMenu from '@/components/simulation/SimulationMenu.vue';
@@ -396,6 +392,7 @@ export default Vue.extend({
     NetworkGraph,
     NetworkParamsEdit,
     NetworkParamsSelect,
+    ProjectRawData,
     SimulationCodeEditor,
     SimulationKernel,
     SimulationMenu,
@@ -435,21 +432,14 @@ export default Vue.extend({
           title: 'Kernel',
           width: '378',
         },
-        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '568' },
-        {
-          icon: 'mdi-file-tree',
-          name: 'treeview',
-          title: 'Treeview',
-          width: '500',
-          devMode: true,
-        },
         {
           icon: 'mdi-code-braces',
           name: 'dataJSON',
-          title: 'JSON',
-          width: '500',
+          title: 'Data',
+          width: '568',
           devMode: true,
         },
+        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '568' },
         {
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
@@ -477,16 +467,18 @@ export default Vue.extend({
         axios.get(url).then((response: any) => {
           const project = core.app.addProjectTemporary(response.data);
           root.$router.replace({ path: `/project/${project.id}` });
+          selectMode(state.modeIdx);
         });
       } else {
         core.app.initProject(state.projectId).then(() => {
           state.project = core.app.project;
           if (state.project) {
             state.project.network.view.reset();
+            state.activityGraph = state.project.network.view.hasPositions()
+              ? state.activityGraph
+              : 'abstract';
+            selectMode(state.modeIdx);
           }
-          state.activityGraph = state.project.network.view.hasPositions()
-            ? state.activityGraph
-            : 'abstract';
         });
       }
     };
@@ -518,16 +510,23 @@ export default Vue.extend({
     };
 
     /**
+     * Set height and width for network graph.
+     */
+    const resizeNetworkGraph = (modeIdx: number) => {
+      state.networkGraphHeight =
+        modeIdx == 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 1);
+    };
+
+    /**
      * Select view mode of the project.
      */
     const selectMode = (modeIdx: number) => {
       if ([0, 2].includes(modeIdx)) {
         state.toolOpened = state.toolOpened ? modeIdx != 2 : state.toolOpened;
-        state.networkGraphHeight =
-          modeIdx == 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 1);
+        resizeNetworkGraph(modeIdx);
       }
       setTimeout(() => {
         state.modeIdx = modeIdx;
@@ -570,21 +569,9 @@ export default Vue.extend({
      * Start simulation.
      */
     const simulate = () => {
-      state.error = false;
       state.project.runSimulation().then(resp => {
-        switch (resp.status) {
-          case 0:
-            state.project.errorMessage =
-              'NEST Server not found. See NEST Desktop documentation for details.';
-            state.error = true;
-            break;
-          case 200:
-            state.modeIdx = 1;
-            state.error = false;
-            break;
-          case 400:
-            state.error = true;
-            break;
+        if (resp.status === 200) {
+          state.modeIdx = 1;
         }
       });
     };
