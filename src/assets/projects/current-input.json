@@ -137,7 +137,6 @@
       },
       {
         "model": "voltmeter",
-        "size": 1,
         "view": {
           "position": {
             "x": 350,
@@ -147,8 +146,8 @@
         "params": [
           {
             "id": "interval",
-            "value": 1,
-            "visible": false
+            "value": 0.1,
+            "visible": true
           },
           {
             "id": "start",
