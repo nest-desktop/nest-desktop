@@ -14,9 +14,16 @@ import '@mdi/font/css/materialdesignicons.css';
 import VueCompositionAPI from '@vue/composition-api';
 Vue.use(VueCompositionAPI);
 
+// Toast notification
+import VueToast from 'vue-toast-notification';
+// import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-sugar.css';
+Vue.use(VueToast);
+
 // CodeMirror
 import VueCodemirror from 'vue-codemirror';
 import 'codemirror/mode/python/python.js';
+import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/selection/active-line.js';
 // import '@/assets/codemirror/addon/hint/pyNEST-hint.js';
 
