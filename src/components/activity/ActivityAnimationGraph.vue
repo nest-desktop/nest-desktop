@@ -1,6 +1,10 @@
 <template>
   <div id="activityAnimationGraph">
-    <div ref="activityAnimationScene" style="width:100%; height:800px" />
+    <div
+      ref="activityAnimationScene"
+      style="width:100%; height:800px"
+      v-if="!state.graph.loading"
+    />
   </div>
 </template>
 

@@ -1,5 +1,7 @@
 <template>
   <div class="projectsMenu">
+    <UploadProjectsDialog :open="state.openUploadDialog" />
+
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -98,12 +100,13 @@
             Upload projects from
           </v-card-subtitle>
           <v-list dense>
-            <v-list-item>
+            <v-list-item @click="state.openUploadDialog = true">
               <v-list-item-icon left>
                 <v-icon v-text="'mdi-file'" />
               </v-list-item-icon>
-              file
+              <v-list-item-content v-text="'file'" />
             </v-list-item>
+
             <v-list-item>
               <v-list-item-icon left>
                 <v-icon v-text="'mdi-web'" />
@@ -128,10 +131,14 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Project } from '@/core/project/project';
-import core from '@/core/index';
+import core from '@/core';
+import UploadProjectsDialog from '@/components/project/UploadProjectsDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectsMenu',
+  components: {
+    UploadProjectsDialog,
+  },
   props: {
     position: Object,
   },
@@ -142,6 +149,7 @@ export default Vue.extend({
       projects: core.app.projects as Project[],
       position: props.position,
       show: true,
+      openUploadDialog: false,
       items: [
         {
           id: 'projectsReload',
@@ -246,7 +254,13 @@ export default Vue.extend({
       }
     );
 
-    return { deleteProjects, downloadProjects, reset, resetProjects, state };
+    return {
+      deleteProjects,
+      downloadProjects,
+      reset,
+      resetProjects,
+      state,
+    };
   },
 });
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div
-    :key="state.graph.hash"
+    :key="state.graph.codeHash"
     class="activityAnimationController"
     v-if="state.graph.activityAnimationGraph.scene"
   >

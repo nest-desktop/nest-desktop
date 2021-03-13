@@ -78,8 +78,15 @@
               </v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-list-item-icon v-if="!project.rev">
-              <v-icon v-text="'mdi-alert-circle-outline'" />
+            <v-list-item-icon>
+              <!-- <v-icon
+                v-show="project.activityGraph.codeHash !== undefined"
+                v-text="'mdi-chart-scatter-plot'"
+              /> -->
+              <v-icon
+                v-show="!project.rev"
+                v-text="'mdi-alert-circle-outline'"
+              />
             </v-list-item-icon>
           </v-list-item>
         </transition-group>
@@ -94,7 +101,7 @@ import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import { Project } from '@/core/project/project';
-import core from '@/core/index';
+import core from '@/core';
 import ProjectMenu from '@/components/project/ProjectMenu.vue';
 
 export default Vue.extend({

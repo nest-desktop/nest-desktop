@@ -227,9 +227,7 @@ export default Vue.extend({
           icon: 'mdi-axis-arrow',
           title: 'Toggle spatial',
           onClick: () => {
-            state.node.initSpatial(
-              state.node.spatial.hasPositions() ? {} : { numDimensions: 2 }
-            );
+            state.node.toggleSpatial();
             state.show = false;
           },
           append: false,
