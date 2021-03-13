@@ -21,43 +21,13 @@ export class ConnectionCode extends Code {
   }
 
   connSpec(): string {
-    const connSpecList: string[] = [
-      this._() + `"rule": "${this._connection.rule}"`,
-    ];
-    this._connection.filteredParams.forEach((param: Parameter) => {
-      if (!param.isRandom()) {
-        const value: string = ['p'].includes(param.id)
-          ? this.format(param.value)
-          : param.value.toFixed();
-        connSpecList.push(this._() + `"${param.id}": ${value}`);
-      } else {
-        const specs: string = param.specs
-          .map(spec => this.format(spec.value))
-          .join(', ');
-        if (!param.type.startsWith('spatial')) {
-          connSpecList.push(
-            this._() + `"${param.id}": nest.${param.type}(${specs})`
-          );
-        } else if (param.type === 'spatial.distance') {
-          let value = `nest.${param.type}`;
-          if (param.specs[0].value !== 1) {
-            value += ` * ${param.specs[0].value}`;
-          }
-          if (param.specs[1].value !== 0) {
-            value += ` + ${param.specs[1].value}`;
-          }
-          connSpecList.push(this._() + `"${param.id}": ${value}`);
-        } else {
-          connSpecList.push(
-            this._() +
-              `"${param.id}": nest.${param.type}(nest.spatial.distance, ${specs})`
-          );
-        }
-      }
-    });
+    const connSpecList: string[] = [`"rule": "${this._connection.rule}"`];
+    this._connection.filteredParams.forEach((param: Parameter) =>
+      connSpecList.push(param.toCode())
+    );
 
-    let script = ', conn_spec={';
-    script += connSpecList.join(',');
+    let script = ', conn_spec={' + this._();
+    script += connSpecList.join(',' + this._());
     script += this.end() + '}';
     return script;
   }
