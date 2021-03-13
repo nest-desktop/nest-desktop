@@ -8,7 +8,7 @@
     <v-main style="height:100vh; overflow-y:auto">
       <v-container class="fill-height">
         <v-row>
-          <v-col class="text-center pa-12" cols="12">
+          <v-col class="text-center pa-12">
             <v-img
               :src="require('@/assets/img/logo/nest-desktop-logo.png')"
               class="my-6"
@@ -21,6 +21,32 @@
             <p class="subheading font-weight-regular ma-3">
               An educational GUI for neuroscience
             </p>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col class="text-center">
+            <v-btn class="mx-3" to="project" v-text="'Start a new project'" />
+            <v-menu>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  @click="loadProjects"
+                  class="mx-3"
+                  v-bind="attrs"
+                  v-on="on"
+                  v-text="'Load a project'"
+                />
+              </template>
+              <v-list dense>
+                <v-list-item
+                  :key="index"
+                  :to="`project/${project.id}`"
+                  v-for="(project, index) in state.projects"
+                >
+                  <v-list-item-title v-text="project.name" />
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </v-col>
         </v-row>
 
@@ -48,7 +74,7 @@
           </v-col>
 
           <v-col cols="12" md="5">
-            <v-card flat tile class="app-details">
+            <v-card flat class="app-details">
               <v-card-text class="py-0">
                 <v-list dense>
                   <v-list-item>
@@ -165,13 +191,24 @@
 <script lang="ts">
 import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
-import core from '@/core/index';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'Home',
   setup() {
-    const state = reactive({ version: core.app.version });
-    return { state };
+    const state = reactive({
+      projects: core.app.projects,
+      version: core.app.version,
+    });
+
+    /**
+     * Load projects from app core component
+     */
+    const loadProjects = () => {
+      state.projects = core.app.projects;
+    };
+
+    return { loadProjects, state };
   },
 });
 </script>

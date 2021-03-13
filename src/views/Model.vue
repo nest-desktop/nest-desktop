@@ -17,7 +17,7 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
-import core from '@/core/index';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'Model',
