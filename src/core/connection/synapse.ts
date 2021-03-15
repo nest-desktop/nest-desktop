@@ -1,29 +1,34 @@
 import { Connection } from './connection';
 import { Model } from '../model/model';
-import { Parameter } from '../parameter';
+import { ModelParameter } from '../parameter/modelParameter';
 import { SynapseCode } from './synapseCode';
 
 export class Synapse {
+  private readonly _name = 'Synapse';
   private _code: SynapseCode;
   private _connection: Connection; // parent
   private _modelId: string;
-  private _params: Parameter[] = [];
+  private _params: ModelParameter[] = [];
 
   constructor(connection: any, synapse: any) {
     this._connection = connection;
     this._code = new SynapseCode(this);
-    this._modelId = '';
 
     if (synapse !== undefined && synapse.params.length > 0) {
       this._modelId = synapse.model || 'static_synapse';
       this.initParameters(synapse);
     } else {
-      this.modelId = 'static_synapse';
+      this._modelId = 'static_synapse';
+      this.initParameters();
     }
   }
 
   get code(): SynapseCode {
     return this._code;
+  }
+
+  get connection(): Connection {
+    return this._connection;
   }
 
   get model(): Model {
@@ -33,8 +38,8 @@ export class Synapse {
   /**
    * Returns all visible parameters.
    */
-  get filteredParams(): Parameter[] {
-    return this._params.filter((param: Parameter) => param.visible);
+  get filteredParams(): ModelParameter[] {
+    return this._params.filter((param: ModelParameter) => param.visible);
   }
 
   /**
@@ -66,36 +71,50 @@ export class Synapse {
     this.initParameters();
   }
 
-  get params(): Parameter[] {
+  get name(): string {
+    return this._name;
+  }
+
+  get params(): ModelParameter[] {
     return this._params;
   }
 
   get weight(): number {
     const weight: any = this._params.find(
-      (param: Parameter) => param.id === 'weight'
+      (param: ModelParameter) => param.id === 'weight'
     );
     return weight ? weight.value : 1;
   }
 
   set weight(value: number) {
     const weight: any = this._params.find(
-      (param: Parameter) => param.id === 'weight'
+      (param: ModelParameter) => param.id === 'weight'
     );
     weight.value = value;
   }
 
   get delay(): number {
     const delay: any = this._params.find(
-      (param: Parameter) => param.id === 'delay'
+      (param: ModelParameter) => param.id === 'delay'
     );
     return delay ? delay.value : 1;
   }
 
   set delay(value: number) {
     const delay: any = this._params.find(
-      (param: Parameter) => param.id === 'delay'
+      (param: ModelParameter) => param.id === 'delay'
     );
     delay.value = value;
+  }
+
+  /**
+   * Observer for synaspe changes.
+   *
+   * @remarks
+   * It emits connection changes.
+   */
+  synapseChanges(): void {
+    this._connection.connectionChanges();
   }
 
   /**
@@ -105,16 +124,20 @@ export class Synapse {
     // Update parameters from model or node
     this._params = [];
     if (this.model && synapse && synapse.hasOwnProperty('params')) {
-      this.model.params.forEach((modelParam: Parameter) => {
+      this.model.params.forEach((modelParam: ModelParameter) => {
         const synParam = synapse.params.find(
-          (param: Parameter) => param.id === modelParam.id
+          (param: ModelParameter) => param.id === modelParam.id
         );
         this.addParameter(synParam || modelParam);
       });
     } else if (this.model) {
-      this.model.params.forEach((param: Parameter) => this.addParameter(param));
+      this.model.params.forEach((param: ModelParameter) =>
+        this.addParameter(param)
+      );
     } else if (synapse.hasOwnProperty('params')) {
-      synapse.params.forEach((param: Parameter) => this.addParameter(param));
+      synapse.params.forEach((param: ModelParameter) =>
+        this.addParameter(param)
+      );
     }
   }
 
@@ -122,29 +145,29 @@ export class Synapse {
    * Add synapse parameter.
    */
   addParameter(param: any): void {
-    this._params.push(new Parameter(this._connection, param));
+    this._params.push(new ModelParameter(this, param));
   }
 
   /**
    * Sets all params to visible.
    */
   public showAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.visible = true));
+    this.params.forEach((param: ModelParameter) => (param.visible = true));
   }
 
   /**
    * Sets all params to invisible.
    */
   public hideAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.visible = false));
+    this.params.forEach((param: ModelParameter) => (param.visible = false));
   }
 
   /**
    * Inverse synaptic weight.
    */
   inverseWeight(): void {
-    const weight: Parameter = this._params.find(
-      (param: Parameter) => param.id === 'weight'
+    const weight: ModelParameter = this._params.find(
+      (param: ModelParameter) => param.id === 'weight'
     );
     weight.visible = true;
     weight.value = -1 * weight.value;
@@ -158,7 +181,7 @@ export class Synapse {
   toJSON(): any {
     const synapse: any = {
       model: this._modelId,
-      params: this._params.map((param: Parameter) => param.toJSON()),
+      params: this._params.map((param: ModelParameter) => param.toJSON()),
     };
     return synapse;
   }

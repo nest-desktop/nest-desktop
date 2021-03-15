@@ -168,8 +168,29 @@
                   borderLeft: `4px solid ${connection.source.view.color}`,
                   borderRight: `4px solid ${connection.target.view.color}`,
                 }"
-                class="pa-0"
+                class="pa-0 pt-2 ma-0"
               >
+                <v-select
+                  :items="connection.config.rules"
+                  @change="paramChange()"
+                  dense
+                  hide-details
+                  item-value="value"
+                  item-text="label"
+                  label="Connection rule"
+                  class="ml-1 px-1"
+                  v-model="connection.rule"
+                />
+
+                <ParameterEdit
+                  :color="connection.source.view.color"
+                  :key="param.id"
+                  :param="param"
+                  :value.sync="param.value"
+                  @update:value="paramChange()"
+                  v-for="param in connection.filteredParams"
+                />
+
                 <ParameterEdit
                   :color="connection.source.view.color"
                   :key="param.id"

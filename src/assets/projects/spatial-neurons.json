@@ -18,7 +18,7 @@
             {
               "id": "delay",
               "value": 1,
-              "visible": true
+              "visible": false
             }
           ]
         }
@@ -34,12 +34,12 @@
             {
               "id": "weight",
               "value": 1,
-              "visible": true
+              "visible": false
             },
             {
               "id": "delay",
               "value": 1,
-              "visible": true
+              "visible": false
             }
           ]
         }

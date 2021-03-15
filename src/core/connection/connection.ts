@@ -1,11 +1,11 @@
 import { Config } from '../config';
 import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
-import { ConnectionProjections } from './connectionProjections';
 import { ConnectionView } from './connectionView';
 import { Model } from '../model/model';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
+import { Parameter } from '../parameter/parameter';
 import { Synapse } from './synapse';
 
 enum Rule {
@@ -24,16 +24,12 @@ export class Connection extends Config {
   private _idx: number; // generative
   private _mask: ConnectionMask;
   private _network: Network; // parent
-  private _params: any[];
-  private _projections: ConnectionProjections; // only for NEST 2, will be deprecated in NEST 3;
+  private _params: Parameter[];
   private _rule: string;
   private _sourceIdx: number; // Node index
   private _synapse: Synapse;
   private _targetIdx: number; // Node index
   private _view: ConnectionView;
-
-  srcIdx?: number[];
-  tgtIdx?: number[];
 
   constructor(network: any, connection: any) {
     super('Connection');
@@ -46,15 +42,24 @@ export class Connection extends Config {
     this._targetIdx = connection.target;
 
     this._rule = connection.rule || Rule.AllToAll;
-    this._params = connection.params || [];
+    this.initParameters(connection);
+    this._params = connection.params
+      ? connection.params.map((param: any) => new Parameter(this, param))
+      : [];
 
     this._mask = new ConnectionMask(this, connection.mask);
-    this._projections = new ConnectionProjections(this, connection.projections);
     this._synapse = new Synapse(this, connection.synapse);
   }
 
   get code(): ConnectionCode {
     return this._code;
+  }
+
+  /**
+   * Returns all visible parameters.
+   */
+  get filteredParams(): Parameter[] {
+    return this._params.filter((param: Parameter) => param.visible);
   }
 
   get idx(): number {
@@ -81,18 +86,13 @@ export class Connection extends Config {
     return this._params;
   }
 
-  get projections(): ConnectionProjections {
-    return this._projections;
-  }
-
   get rule(): string {
     return this._rule;
   }
 
   set rule(value: string) {
     this._rule = value;
-    this._params = this.view.getRuleParams();
-    this.connectionChanges();
+    this.initParameters(this.getRuleConfig());
   }
 
   get source(): Node {
@@ -136,6 +136,20 @@ export class Connection extends Config {
   }
 
   /**
+   * Sets all params to visible.
+   */
+  public showAllParams(): void {
+    this.params.forEach((param: Parameter) => (param.visible = true));
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  public hideAllParams(): void {
+    this.params.forEach((param: Parameter) => (param.visible = false));
+  }
+
+  /**
    * Observer for connection changes.
    *
    * @remarks
@@ -143,6 +157,38 @@ export class Connection extends Config {
    */
   connectionChanges(): void {
     this._network.networkChanges();
+  }
+
+  /**
+   * Initialize parameters.
+   */
+  initParameters(connection: any = null): void {
+    // Update parameters from model or node
+    this._params = [];
+    if (connection.hasOwnProperty('params')) {
+      connection.params.forEach((param: any) => {
+        this.addParameter(param);
+      });
+    } else {
+      const rule: any = this.getRuleConfig();
+      rule.params.forEach((param: any) => {
+        this.addParameter(param);
+      });
+    }
+  }
+
+  /**
+   * Add connection parameter.
+   */
+  addParameter(param: any): void {
+    this._params.push(new Parameter(this, param));
+  }
+
+  /**
+   * Get all parameter of the rule.
+   */
+  getRuleConfig(): any {
+    return this.config.rules.find((r: any) => r.value === this._rule);
   }
 
   /**
@@ -180,40 +226,17 @@ export class Connection extends Config {
   }
 
   /**
-   * Check if it has projection.
-   */
-  hasProjections(): boolean {
-    return false;
-  }
-
-  /**
    * Set defaults.
    *
    * @remarks
    * It emits connection changes.
    */
   reset(): void {
-    this.srcIdx = undefined;
-    this.tgtIdx = undefined;
     this.rule = Rule.AllToAll;
+    this.initParameters(this.getRuleConfig());
     this.synapse.modelId = 'static_synapse';
-    this._projections.reset();
     this._mask.unmask();
     this.connectionChanges();
-  }
-
-  /**
-   * Check if it has selective source indices.
-   */
-  hasSourceIndices(): boolean {
-    return this.srcIdx !== undefined;
-  }
-
-  /**
-   * Check if it has selective target indices.
-   */
-  hasTargetIndices(): boolean {
-    return this.tgtIdx !== undefined;
   }
 
   /**
@@ -231,17 +254,13 @@ export class Connection extends Config {
     const connection: any = {
       source: this._sourceIdx,
       target: this._targetIdx,
+      rule: this._rule,
+      params: this._params.map((param: Parameter) => param.toJSON()),
+      synapse: this._synapse.toJSON(),
     };
 
-    if (this.isBothSpatial()) {
-      connection.projections = this._projections.toJSON();
-      if (this._mask.hasMask()) {
-        connection.projections.mask = this._mask.toJSON();
-      }
-    } else {
-      connection.rule = this._rule;
-      connection.params = this._params;
-      connection.synapse = this._synapse.toJSON();
+    if (this._mask.hasMask()) {
+      connection.mask = this._mask.toJSON();
     }
 
     return connection;

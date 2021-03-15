@@ -1,14 +1,14 @@
 import { Activity } from '../activity/activity';
-import { SpikeActivity } from '../activity/spikeActivity';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { Config } from '../config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
+import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { NodeCode } from './nodeCode';
 import { NodeSpatial } from './nodeSpatial';
 import { NodeView } from './nodeView';
-import { Parameter } from '../parameter';
+import { SpikeActivity } from '../activity/spikeActivity';
 
 export class Node extends Config {
   private readonly _name = 'Node';
@@ -18,7 +18,7 @@ export class Node extends Config {
   private _idx: number; // generative
   private _modelId: string;
   private _network: Network; // parent
-  private _params: Parameter[];
+  private _params: ModelParameter[];
   private _positions: number[][] = [];
   private _recordFrom: string[]; // only for multimeter
   private _size: number;
@@ -52,8 +52,8 @@ export class Node extends Config {
     return this._code;
   }
 
-  get filteredParams(): Parameter[] {
-    return this._params.filter((param: Parameter) => param.visible);
+  get filteredParams(): ModelParameter[] {
+    return this._params.filter((param: ModelParameter) => param.visible);
   }
 
   get idx(): number {
@@ -129,7 +129,7 @@ export class Node extends Config {
     return [];
   }
 
-  get params(): Parameter[] {
+  get params(): ModelParameter[] {
     return this._params;
   }
 
@@ -237,14 +237,16 @@ export class Node extends Config {
     // Update parameters from model or node
     this._params = [];
     if (this.model && node && node.hasOwnProperty('params')) {
-      this.model.params.forEach((modelParam: Parameter) => {
+      this.model.params.forEach((modelParam: ModelParameter) => {
         const nodeParam = node.params.find((p: any) => p.id === modelParam.id);
         this.addParameter(nodeParam || modelParam);
       });
     } else if (this.model) {
-      this.model.params.forEach((param: Parameter) => this.addParameter(param));
+      this.model.params.forEach((param: ModelParameter) =>
+        this.addParameter(param)
+      );
     } else if (node.hasOwnProperty('params')) {
-      node.params.forEach((param: Parameter) => this.addParameter(param));
+      node.params.forEach((param: ModelParameter) => this.addParameter(param));
     }
     if (this.model.existing === 'multimeter') {
       this._recordFrom = node !== null ? node.recordFrom || ['V_m'] : ['V_m'];
@@ -256,7 +258,7 @@ export class Node extends Config {
    * @param param - parameter object
    */
   addParameter(param: any): void {
-    this._params.push(new Parameter(this, param));
+    this._params.push(new ModelParameter(this, param));
   }
 
   /**
@@ -265,7 +267,7 @@ export class Node extends Config {
    */
   hasParameter(paramId: string): boolean {
     return (
-      this._params.find((param: Parameter) => param.id === paramId) !==
+      this._params.find((param: ModelParameter) => param.id === paramId) !==
       undefined
     );
   }
@@ -277,7 +279,7 @@ export class Node extends Config {
    */
   getParameter(paramId: string): any {
     if (this.hasParameter(paramId)) {
-      return this._params.find((param: Parameter) => param.id === paramId)
+      return this._params.find((param: ModelParameter) => param.id === paramId)
         .value;
     }
   }
@@ -289,8 +291,22 @@ export class Node extends Config {
    * It emits node changes.
    */
   resetParameters(): void {
-    this._params.forEach((param: Parameter) => param.reset());
+    this._params.forEach((param: ModelParameter) => param.reset());
     this.nodeChanges();
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    this.params.map((param: ModelParameter) => (param.visible = false));
+  }
+
+  /**
+   * Sets all params to visible.
+   */
+  showAllParams(): void {
+    this.params.map((param: ModelParameter) => (param.visible = true));
   }
 
   /**
@@ -309,7 +325,7 @@ export class Node extends Config {
     );
     connections.forEach((connection: Connection) => {
       const weight: any = connection.synapse.params.find(
-        (param: Parameter) => param.id === 'weight'
+        (param: ModelParameter) => param.id === 'weight'
       );
       weight.value = (term === 'inhibitory' ? -1 : 1) * Math.abs(weight.value);
       weight.visible = true;
@@ -379,7 +395,7 @@ export class Node extends Config {
   toJSON(): any {
     const node: any = {
       model: this._modelId,
-      params: this._params.map((param: Parameter) => param.toJSON()),
+      params: this._params.map((param: ModelParameter) => param.toJSON()),
       size: this._size,
       view: this._view.toJSON(),
     };

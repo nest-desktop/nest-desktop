@@ -4,45 +4,46 @@
   "element_type": "stimulator",
   "label": "Gaussian white noise",
   "recordables": ["I"],
-  "params": [{
-    "id": "mean",
-    "label": "mean value of the noise current",
-    "level": 1,
-    "unit": "pA",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 1000,
-    "min": -1000,
-    "step": 1
-  }, {
-    "id": "std",
-    "label": "standard deviation of noise current",
-    "level": 1,
-    "unit": "pA",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 100,
-    "min": 0,
-    "step": 1
-  }, {
-    "id": "start",
-    "label": "start time",
-    "level": 2,
-    "unit": "ms",
-    "value": 0,
-    "input": "valueSlider",
-    "max": 10000,
-    "min": 0,
-    "step": 10
-  }, {
-    "id": "stop",
-    "label": "stop time",
-    "level": 2,
-    "unit": "ms",
-    "value": 10000,
-    "input": "valueSlider",
-    "max": 10000,
-    "min": 0,
-    "step": 10
-  }]
+  "params": [
+    {
+      "id": "mean",
+      "label": "mean value of the noise current",
+      "unit": "pA",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 1000,
+      "min": -1000,
+      "step": 1
+    },
+    {
+      "id": "std",
+      "label": "standard deviation of noise current",
+      "unit": "pA",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 100,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "id": "start",
+      "label": "start time",
+      "unit": "ms",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 10000,
+      "min": 0,
+      "step": 10
+    },
+    {
+      "id": "stop",
+      "label": "stop time",
+      "unit": "ms",
+      "value": 10000,
+      "input": "valueSlider",
+      "max": 10000,
+      "min": 0,
+      "step": 10
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 import { Code } from '../code';
 import { Connection } from './connection';
-import { Node } from '../node/node';
 import { Model } from '../model/model';
-import { Parameter } from '../parameter';
+import { Node } from '../node/node';
+import { Parameter } from '../parameter/parameter';
 
 export class ConnectionCode extends Code {
   private _connection: Connection; // parent
@@ -21,15 +21,13 @@ export class ConnectionCode extends Code {
   }
 
   connSpec(): string {
-    const connSpecList: string[] = [
-      this._() + `"rule": "${this._connection.rule}"`,
-    ];
-    this._connection.params.forEach((param: Parameter) =>
-      connSpecList.push(this._() + `"${param.id}": ${param.value}`)
+    const connSpecList: string[] = [`"rule": "${this._connection.rule}"`];
+    this._connection.filteredParams.forEach((param: Parameter) =>
+      connSpecList.push(param.toCode())
     );
 
-    let script = ', conn_spec={';
-    script += connSpecList.join(',');
+    let script = ', conn_spec={' + this._();
+    script += connSpecList.join(',' + this._());
     script += this.end() + '}';
     return script;
   }

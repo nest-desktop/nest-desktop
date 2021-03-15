@@ -1,4 +1,4 @@
-import { Config } from './config';
+import { Config } from '../config';
 
 export class ParameterRandom extends Config {
   private _defaults: any;

@@ -1,4 +1,5 @@
 import * as math from 'mathjs';
+import { sha1 } from 'object-hash';
 
 import { Config } from '../config';
 import { Node } from './node';
@@ -11,15 +12,12 @@ export class FreePositions {
   private _pos: any;
   private _spatial: NodeSpatial;
 
-  rows?: number;
-  columns?: number;
-
   constructor(spatial: NodeSpatial, positions: any = {}) {
     this._spatial = spatial;
 
     this._pos = positions.pos || [];
     this._numDimensions = positions.numDimensions || 2;
-    this._extent = positions.extent || [1, 1];
+    this._extent = positions.extent || new Array(this._numDimensions).fill(1);
     this._edgeWrap = positions.edgeWrap || false;
   }
 
@@ -89,6 +87,35 @@ export class FreePositions {
     });
   }
 
+  /**
+   * Write code for free positons.
+   */
+  toCode(): any {
+    let args: string[] = [];
+    if (this._pos.length > 0) {
+      args.push(
+        '[' +
+          this._pos
+            .map((p: number[]) => {
+              const plist: string[] = p.map((pp: number) => pp.toFixed(2));
+              return '[' + plist.join(',') + ']';
+            })
+            .join(',') +
+          ']'
+      );
+    } else {
+      args.push(`nest.random.uniform(-0.5, 0.5)`);
+      args.push(`num_dimensions=${this._numDimensions}`);
+    }
+    const script: string =
+      'nest.spatial.free(' +
+      this.spatial.node.code._(2) +
+      args.join(',' + this.spatial.node.code._(2)) +
+      this.spatial.node.code._(1) +
+      ')';
+    return script;
+  }
+
   toJSON(): any {
     const positions: any = {
       edgeWrap: this._edgeWrap,
@@ -105,6 +132,7 @@ export class GridPositions {
   private _center: number[];
   private _edgeWrap: boolean;
   private _extent: number[];
+  private _numDimensions: number;
   private _pos: number[][];
   private _shape: number[];
   private _spatial: NodeSpatial;
@@ -112,10 +140,11 @@ export class GridPositions {
   constructor(spatial: NodeSpatial, positions: any = {}) {
     this._spatial = spatial;
 
-    this._center = positions.center || [0, 0];
+    this._numDimensions = positions.numDimensions || 2;
+    this._center = positions.center || new Array(this._numDimensions).fill(0);
+    this._extent = positions.extent || new Array(this._numDimensions).fill(1);
+    this._shape = positions.shape || new Array(this._numDimensions).fill(1);
     this._edgeWrap = positions.edgeWrap || false;
-    this._extent = positions.extent || [1, 1];
-    this._shape = positions.shape || [1, 1];
   }
 
   get center(): number[] {
@@ -146,6 +175,17 @@ export class GridPositions {
     return this._name;
   }
 
+  get numDimensions(): number {
+    return this._numDimensions;
+  }
+
+  set numDimensions(value: number) {
+    this._numDimensions = value;
+    this._center = new Array(this._numDimensions).fill(0);
+    this._extent = new Array(this._numDimensions).fill(1);
+    this._shape = new Array(this._numDimensions).fill(1);
+  }
+
   get pos(): number[][] {
     return this._pos;
   }
@@ -173,6 +213,7 @@ export class GridPositions {
     const maxY: number = this._center[1] + this._extent[1] / 2;
     const X: number[] = this.range(minX, maxX, this._shape[0]);
     const Y: number[] = this.range(minY, maxY, this._shape[1]);
+
     this._pos = [];
     X.forEach((x: number) => {
       Y.forEach((y: number) => {
@@ -191,11 +232,20 @@ export class GridPositions {
     return Math.floor(value * 100) / 100;
   }
 
+  /**
+   * Write code for grid positons.
+   */
+  toCode(): string {
+    const script: string = `nest.spatial.grid(${JSON.stringify(this._shape)})`;
+    return script;
+  }
+
   toJSON(): any {
     const positions: any = {
       center: this._center,
       edgeWrap: this._edgeWrap,
       extent: this._extent,
+      numDimensions: this._numDimensions,
       shape: this._shape,
     };
     return positions;
@@ -203,43 +253,68 @@ export class GridPositions {
 }
 
 export class NodeSpatial extends Config {
-  node: Node;
-  private _positions: FreePositions | GridPositions;
+  private _hash: string;
+  private _node: Node;
+  private _positions: FreePositions | GridPositions | undefined;
 
-  constructor(node: Node, spatial: any = {}) {
+  constructor(node: Node, spatial: any) {
     super('NodeSpatial');
-    this.node = node;
-    this.initPositions(spatial);
+    this._node = node;
+    this.init(spatial);
   }
 
-  get positions(): FreePositions | GridPositions {
+  get hash(): string {
+    return this._hash;
+  }
+
+  get node(): Node {
+    return this._node;
+  }
+
+  get positions(): FreePositions | GridPositions | undefined {
     return this._positions;
   }
 
-  initPositions(spatial: any) {
-    this._positions = undefined;
-    if (Object.keys(spatial).length > 0) {
-      if (spatial.hasOwnProperty('numDimensions')) {
-        this._positions = new FreePositions(this, spatial);
-      } else if (spatial.hasOwnProperty('shape')) {
-        this._positions = new GridPositions(this, spatial);
-      }
-    }
-    if (this.hasPositions()) {
-      this._positions.generate();
+  /**
+   * Update hash of the spatial node.
+   */
+  updateHash(): void {
+    this._hash = sha1(JSON.stringify(this.toJSON()));
+  }
+
+  /**
+   * Initialize spatial node.
+   */
+  init(spatial: any) {
+    switch (spatial.positions) {
+      case 'free':
+        this._positions = new FreePositions(this, spatial.specs);
+        break;
+      case 'grid':
+        this._positions = new GridPositions(this, spatial.specs);
+        break;
+      default:
+        this._positions = undefined;
     }
   }
 
+  /**
+   * Check if it has positions (free or grid) component.
+   */
   hasPositions(): boolean {
     return this._positions !== undefined;
   }
 
-  isRandom(): boolean {
-    return this.hasPositions() && this._positions.name === 'free';
-  }
-
   toJSON(): any {
-    const nodeSpatial: any = this._positions.toJSON();
-    return nodeSpatial;
+    let spatial: any;
+    if (this._positions === undefined) {
+      spatial = {};
+    } else {
+      spatial = {
+        positions: this._positions.name,
+        specs: this._positions.toJSON(),
+      };
+    }
+    return spatial;
   }
 }

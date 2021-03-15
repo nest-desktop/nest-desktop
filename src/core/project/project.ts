@@ -523,6 +523,46 @@ export class Project extends Config {
     return sha1(project);
   }
 
+  treeview(): any[] {
+    let id = 1;
+    const treeview = [
+      {
+        id: id++,
+        name: 'Nodes',
+        children: this.network.nodes.map(node => {
+          return {
+            id: id++,
+            name: node.modelId,
+            children: node.params.map(param => {
+              return {
+                id: id++,
+                name: `${param.id}: ${param.value} ${param.unit}`,
+              };
+            }),
+          };
+        }),
+      },
+      {
+        id: id++,
+        name: 'Connections',
+        children: this.network.connections.map(connection => {
+          return {
+            id: id++,
+            name: connection.rule,
+            children: connection.params.map(param => {
+              return {
+                id: id++,
+                name: `${param.id}: ${param.value} ${param.unit}`,
+              };
+            }),
+          };
+        }),
+      },
+    ];
+    console.log(treeview);
+    return treeview;
+  }
+
   /**
    * Serialize for JSON.
    * @return project object

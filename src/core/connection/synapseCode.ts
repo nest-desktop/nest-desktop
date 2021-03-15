@@ -1,6 +1,6 @@
 import { Code } from '../code';
-import { Model } from '../model/model';
-import { Parameter } from '../parameter';
+// import { Model } from '../model/model';
+import { ModelParameter } from '../parameter/modelParameter';
 import { Synapse } from './synapse';
 
 export class SynapseCode extends Code {
@@ -14,20 +14,17 @@ export class SynapseCode extends Code {
   synSpec(): string {
     const synSpecList: string[] = [];
     if (this._synapse.modelId !== 'static_synapse') {
-      synSpecList.push(this._() + `"model": "${this._synapse.modelId}"`);
+      synSpecList.push(`"model": "${this._synapse.modelId}"`);
     }
-    this._synapse.params
-      .filter((param: Parameter) => param.visible)
-      .forEach((param: Parameter) =>
-        synSpecList.push(
-          this._() + `"${param.id}": ${this.format(param.value)}`
-        )
-      );
+
+    this._synapse.filteredParams.forEach((param: ModelParameter) =>
+      synSpecList.push(param.toCode())
+    );
 
     let script = '';
     if (synSpecList.length > 0) {
-      script += ', syn_spec={';
-      script += synSpecList.join(',');
+      script += ', syn_spec={' + this._();
+      script += synSpecList.join(',' + this._());
       script += this.end() + '}';
     }
     return script;

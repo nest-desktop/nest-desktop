@@ -35,54 +35,82 @@
         </span>
 
         <span v-if="state.content === 'paramsSelect'">
-          <v-card
-            :key="param.id"
-            class="param"
-            flat
-            tile
-            v-for="param of state.connection.synapse.params"
-            v-show="param.visible || true"
-          >
-            <v-list>
-              <v-row>
-                <v-list-item style="font-size:12px; min-height:32px">
-                  <template v-slot:default>
-                    <v-list-item-content style="padding: 4px">
-                      <v-row no-gutters>
-                        <span v-text="param.options.label" />
-                        <v-spacer />
-                        <span class="mx-1" v-text="param.value" />
-                        <span
-                          style="min-width:24px"
-                          v-text="param.options.unit"
-                        />
-                      </v-row>
-                    </v-list-item-content>
+          <v-list dense>
+            <v-list-item-group
+              @change="selectionChange"
+              active-class=""
+              multiple
+              v-model="state.visibleParams.connection"
+            >
+              <v-list-item
+                :key="param.id"
+                class="mx-0"
+                style="font-size:12px;"
+                v-for="param of state.connection.params"
+              >
+                <template v-slot:default="{ active }">
+                  <v-list-item-content style="padding: 4px">
+                    <v-row no-gutters>
+                      {{ param.options.label }}
+                      <v-spacer />
+                      {{ param.toJSON().value }}
+                      {{ param.options.unit }}
+                    </v-row>
+                  </v-list-item-content>
 
-                    <v-list-item-action style="margin: 4px 0">
-                      <v-checkbox
-                        @change="paramChange"
-                        class="shrink mr-2"
-                        color="black"
-                        hide-details
-                        v-model="param.visible"
-                      />
-                    </v-list-item-action>
-                  </template>
-                </v-list-item>
-              </v-row>
-            </v-list>
-          </v-card>
+                  <v-list-item-action style="margin: 4px 0">
+                    <v-checkbox
+                      :input-value="active"
+                      class="shrink mr-2"
+                      color="black"
+                      hide-details
+                    />
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+            </v-list-item-group>
+
+            <v-list-item-group
+              @change="selectionChange"
+              active-class=""
+              multiple
+              v-model="state.visibleParams.synapse"
+            >
+              <v-list-item
+                :key="param.id"
+                class="mx-0"
+                style="font-size:12px;"
+                v-for="param of state.connection.synapse.params"
+              >
+                <template v-slot:default="{ active }">
+                  <v-list-item-content style="padding: 4px">
+                    <v-row no-gutters>
+                      {{ param.options.label }}
+                      <v-spacer />
+                      {{ param.toJSON().value }}
+                      {{ param.options.unit }}
+                    </v-row>
+                  </v-list-item-content>
+
+                  <v-list-item-action style="margin: 4px 0">
+                    <v-checkbox
+                      :input-value="active"
+                      class="shrink mr-2"
+                      color="black"
+                      hide-details
+                    />
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+
           <v-card-actions>
             <v-btn @click="back" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="state.connection.synapse.hideAllParams()" text
-              >none</v-btn
-            >
-            <v-btn @click="state.connection.synapse.showAllParams()" text
-              >all</v-btn
-            >
+            <v-btn @click="hideAllParams" text>none</v-btn>
+            <v-btn @click="showAllParams" text>all</v-btn>
           </v-card-actions>
         </span>
 
@@ -105,9 +133,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Connection } from '@/core/connection/connection';
+import { ModelParameter } from '@/core/parameter/modelParameter';
+import { Parameter } from '@/core/parameter/parameter';
 
 export default Vue.extend({
   name: 'NetworkParamEdit',
@@ -120,6 +150,7 @@ export default Vue.extend({
       content: undefined as string | undefined,
       connection: props.connection as Connection,
       position: props.position,
+      visibleParams: { connection: [], synapse: [] },
       show: true,
       items: [
         {
@@ -182,6 +213,21 @@ export default Vue.extend({
     };
 
     /**
+     * Triggers when parameter is changed.
+     */
+    const selectionChange = () => {
+      state.connection.params.forEach(
+        (param: Parameter) =>
+          (param.visible = state.visibleParams.connection.includes(param.idx))
+      );
+      state.connection.synapse.params.forEach(
+        (param: Parameter) =>
+          (param.visible = state.visibleParams.synapse.includes(param.idx))
+      );
+      state.connection.connectionChanges();
+    };
+
+    /**
      * Delete connection.
      */
     const deleteConnection = () => {
@@ -196,6 +242,34 @@ export default Vue.extend({
       state.content = undefined;
     };
 
+    /**
+     * Set an array of visible parameter for checkbox.
+     */
+    const setVisibleParams = () => {
+      state.visibleParams.connection = state.connection.params
+        .filter((param: ModelParameter) => param.visible)
+        .map((param: ModelParameter) => param.idx);
+      state.visibleParams.synapse = state.connection.synapse.params
+        .filter((param: ModelParameter) => param.visible)
+        .map((param: ModelParameter) => param.idx);
+    };
+
+    const showAllParams = () => {
+      state.connection.showAllParams();
+      state.connection.synapse.showAllParams();
+      setVisibleParams();
+    };
+
+    const hideAllParams = () => {
+      state.connection.hideAllParams();
+      state.connection.synapse.hideAllParams();
+      setVisibleParams();
+    };
+
+    onMounted(() => {
+      setVisibleParams();
+    });
+
     watch(
       () => [props.connection, props.position],
       () => {
@@ -209,7 +283,10 @@ export default Vue.extend({
     return {
       back,
       deleteConnection,
+      hideAllParams,
       paramChange,
+      showAllParams,
+      selectionChange,
       state,
     };
   },
