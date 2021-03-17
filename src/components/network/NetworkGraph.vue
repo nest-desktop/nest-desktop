@@ -11,43 +11,55 @@
       v-if="state.nodeMenu.show"
     />
 
-    <span
-      style="position:absolute;left:0"
-      v-if="state.graph && state.network.project.app.config.devMode"
-    >
-      <v-chip
-        class="ma-1"
-        label
-        outlined
-        small
-        v-text="state.network.hash.slice(0, 6)"
-        v-if="state.network.hash"
-      />
-    </span>
+    <NetworkGraphToolbar
+      :graph="state.graph"
+      :network="state.network"
+      class="no-print"
+    />
 
-    <span
-      style="position:absolute;right:0"
-      class="ma-1 no-print"
-      v-if="state.graph"
-    >
-      <v-btn
-        :color="state.graph.state.centerFocus ? 'amber' : 'grey'"
-        @click="() => state.graph.toggleCenterFocus()"
-        icon
-        small
-        tile
-        title="Auto center focus network graph"
+    <transition name="fade">
+      <div
+        v-if="
+          state.graph &&
+            state.network.view.selectedNode &&
+            !state.graph.state.dragging
+        "
+        :style="{
+          position: 'absolute',
+          top:
+            state.graph.transform.y +
+            state.network.view.selectedNode.view.position.y -
+            14 +
+            'px',
+          left:
+            state.graph.transform.x +
+            state.network.view.selectedNode.view.position.x -
+            18 +
+            'px',
+        }"
       >
-        <v-icon
-          v-if="state.graph.state.centerFocus"
-          v-text="'mdi-image-filter-center-focus'"
-        />
-        <v-icon
-          v-if="!state.graph.state.centerFocus"
-          v-text="'mdi-image-filter-center-focus-strong-outline'"
-        />
-      </v-btn>
-    </span>
+        <div style="position:relative">
+          <transition name="fade">
+            <v-btn
+              @click="enableConnection"
+              icon
+              small
+              style="position:absolute; top:32px; left:32px"
+              v-show="!state.graph.state.enableConnection"
+            >
+              <v-icon v-text="'mdi-plus'" />
+            </v-btn>
+          </transition>
+          <!-- <v-btn
+            @click="deleteNode"
+            icon
+            style="position:absolute; top:32px; left:-32px"
+          >
+            <v-icon v-text="'mdi-trash-can-outline'" />
+          </v-btn> -->
+        </div>
+      </div>
+    </transition>
 
     <svg id="networkGraph" width="800" height="600">
       <g class="marker">
@@ -105,7 +117,7 @@
 
       <rect id="background" fill="white" />
 
-      <g id="network">
+      <g id="network" ref="network">
         <g v-if="state.graph">
           <path
             :style="{ strokeWidth: state.graph.strokeWidth }"
@@ -181,11 +193,13 @@ import core from '@/core';
 
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
+import NetworkGraphToolbar from '@/components/network/NetworkGraphToolbar.vue';
 
 export default Vue.extend({
   name: 'NetworkGraph',
   components: {
     NetworkConnectionMenu,
+    NetworkGraphToolbar,
     NetworkNodeMenu,
   },
   props: {
@@ -194,6 +208,11 @@ export default Vue.extend({
   setup(props, { refs }) {
     const state = reactive({
       network: core.app.project.network,
+      nodePosition: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+      },
       graph: undefined,
       nodeMenu: {
         node: undefined,
@@ -252,7 +271,7 @@ export default Vue.extend({
         }
       );
 
-      d3.selectAll('path.connection').each(
+      d3.selectAll('g.connection').each(
         (connection: Connection, idx: number, elements: any[]) => {
           d3.select(elements[idx]).on('contextmenu', e => {
             showConnectionMenu(e, connection);
@@ -281,6 +300,9 @@ export default Vue.extend({
       );
     };
 
+    /**
+     * Show help in snackbar.
+     */
     const showHelp = () => {
       if (state.network.nodes.length === 0) {
         showSnackbar('Click right mouse button to create nodes.');
@@ -293,15 +315,40 @@ export default Vue.extend({
       }
     };
 
+    const nodePosition = () => {
+      const networkPos: any = d3.pointer(state.graph.transform);
+      const nodePos: any = state.network.view.selectedNode.view.position;
+      state.nodePosition.top = networkPos.y + nodePos.y - 14 + 'px';
+      state.nodePosition.left = networkPos.x + nodePos.x - 18 + 'px';
+    };
+
+    /**
+     * Remove node.
+     */
+    const deleteNode = () => {
+      state.network.view.selectedNode.remove();
+    };
+
+    /**
+     * Enable connection.
+     */
+    const enableConnection = (e: MouseEvent) => {
+      state.graph.enableConnection(e);
+    };
+
     /**
      * Update network graph.
      */
     const update = () => {
+      // console.log('Update network graph');
       state.network = core.app.project.network;
       state.graph.network = state.network;
       state.graph.reset();
       state.graph.update();
       state.graph.resize();
+      if (state.network.view.selectedNode) {
+        nodePosition();
+      }
       setMenuTrigger();
       showHelp();
     };
@@ -332,7 +379,7 @@ export default Vue.extend({
       () => update()
     );
 
-    return { state };
+    return { deleteNode, enableConnection, nodePosition, state };
   },
 });
 </script>
