@@ -27,8 +27,11 @@
               </v-list-item-icon>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
 
-              <v-list-item-action v-show="item.append">
+              <v-list-item-action v-if="item.append">
                 <v-icon small v-text="'mdi-menu-right'" />
+              </v-list-item-action>
+              <v-list-item-action v-if="item.input === 'checkbox'">
+                <v-checkbox :value="state[item.value]" />
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -44,7 +47,7 @@
           ></v-color-picker>
 
           <v-card-actions>
-            <v-btn @click="back" text>
+            <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-btn @click="resetColor" text>reset</v-btn>
@@ -82,7 +85,6 @@
                   <v-list-item-action style="margin: 4px 0">
                     <v-checkbox
                       :input-value="active"
-                      class="shrink mr-2"
                       color="black"
                       hide-details
                     />
@@ -93,7 +95,7 @@
           </v-list>
 
           <v-card-actions>
-            <v-btn @click="back" text>
+            <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-btn @click="hideAllParams" text>none</v-btn>
@@ -123,7 +125,7 @@
           </v-list>
 
           <v-card-actions>
-            <v-btn @click="back" text>
+            <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
           </v-card-actions>
@@ -135,7 +137,7 @@
           </v-card-title>
 
           <v-card-actions>
-            <v-btn @click="back" text>
+            <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> no
             </v-btn>
             <v-btn @click="deleteNode" text>yes</v-btn>
@@ -148,7 +150,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
 import { ModelParameter } from '@/core/parameter/modelParameter';
@@ -161,15 +163,16 @@ export default Vue.extend({
   },
   props: {
     node: Node,
-    position: Object,
+    position: Object, // Menu position
   },
   setup(props) {
     const state = reactive({
       content: null,
       node: props.node as Node,
       position: props.position,
-      visibleParams: [],
       show: true,
+      spatialNode: false,
+      visibleParams: [],
       items: [
         {
           id: 'paramsSelect',
@@ -181,25 +184,27 @@ export default Vue.extend({
           },
           append: true,
         },
-
-        {
-          id: 'setWeights',
-          icon: 'mdi-contrast',
-          title: 'Set all synaptic weights',
-          onClick: () => {
-            state.content = 'nodeWeights';
-          },
-          append: true,
-        },
         {
           id: 'paramsReset',
           icon: 'mdi-restart',
           title: 'Reset parameters',
           onClick: () => {
             state.node.resetParameters();
-            state.show = false;
+            closeMenu();
           },
           append: false,
+        },
+        {
+          id: 'nodeSpatial',
+          icon: 'mdi-axis-arrow',
+          input: 'checkbox',
+          title: 'Spatial node',
+          value: 'spatialNode',
+          onClick: () => {
+            state.node.toggleSpatial();
+            state.spatialNode = state.node.spatial.hasPositions();
+            closeMenu();
+          },
         },
         {
           id: 'nodeColor',
@@ -208,6 +213,15 @@ export default Vue.extend({
           onClick: () => {
             state.content = 'nodeColor';
             window.dispatchEvent(new Event('resize'));
+          },
+          append: true,
+        },
+        {
+          id: 'setWeights',
+          icon: 'mdi-contrast',
+          title: 'Set all synaptic weights',
+          onClick: () => {
+            state.content = 'nodeWeights';
           },
           append: true,
         },
@@ -223,16 +237,6 @@ export default Vue.extend({
           },
         },
         {
-          id: 'setSpatial',
-          icon: 'mdi-axis-arrow',
-          title: 'Toggle spatial',
-          onClick: () => {
-            state.node.toggleSpatial();
-            state.show = false;
-          },
-          append: false,
-        },
-        {
           id: 'nodeDelete',
           icon: 'mdi-trash-can-outline',
           title: 'Delete node',
@@ -243,22 +247,6 @@ export default Vue.extend({
         },
       ],
     });
-
-    /**
-     * Update colors of network and activity.
-     */
-    const updateColor = () => {
-      state.node.network.networkChanges();
-      state.node.network.project.activityGraph.updateColor();
-    };
-
-    /**
-     * Reset node color.
-     */
-    const resetColor = () => {
-      state.node.view.color = null;
-      updateColor();
-    };
 
     /**
      * Triggers when parameter is changed.
@@ -279,11 +267,27 @@ export default Vue.extend({
     };
 
     /**
+     * Update colors of network and activity.
+     */
+    const updateColor = () => {
+      state.node.network.networkChanges();
+      state.node.network.project.activityGraph.updateColor();
+    };
+
+    /**
+     * Reset node color.
+     */
+    const resetColor = () => {
+      state.node.view.color = null;
+      updateColor();
+    };
+
+    /**
      * Delete node.
      */
     const deleteNode = () => {
-      state.show = false;
       state.node.remove();
+      closeMenu();
     };
 
     /**
@@ -291,7 +295,7 @@ export default Vue.extend({
      */
     const setWeights = (mode: string) => {
       state.node.setWeights(mode);
-      state.show = false;
+      closeMenu();
     };
 
     /**
@@ -314,29 +318,43 @@ export default Vue.extend({
     };
 
     /**
+     * Reset states.
+     */
+    const resetStates = () => {
+      state.content = null;
+      state.show = true;
+    };
+
+    /**
+     * Update states.
+     */
+    const updateStates = () => {
+      state.spatialNode = state.node.spatial.hasPositions();
+      setVisibleParams();
+    };
+
+    /**
      * Return to main menu content.
      */
-    const back = () => {
+    const backMenu = () => {
       state.content = null;
     };
 
+    /**
+     * Close menu.
+     */
+    const closeMenu = () => {
+      resetStates();
+      state.show = false;
+    };
+
     onMounted(() => {
-      setVisibleParams();
+      resetStates();
+      updateStates();
     });
 
-    watch(
-      () => [props.node, props.position],
-      () => {
-        state.content = null;
-        state.show = true;
-        state.node = props.node as Node;
-        state.position = props.position;
-        setVisibleParams();
-      }
-    );
-
     return {
-      back,
+      backMenu,
       deleteNode,
       hideAllParams,
       paramChange,
