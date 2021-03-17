@@ -272,7 +272,9 @@ export default Vue.extend({
     /**
      * Update states.
      */
-    const updateStates = () => {};
+    const updateStates = () => {
+      setVisibleParams();
+    };
 
     /**
      * Return to main menu content.
