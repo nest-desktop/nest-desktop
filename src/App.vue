@@ -12,7 +12,7 @@
 import Vue from 'vue';
 import { onMounted } from '@vue/composition-api';
 
-import core from '@/core/index';
+import core from '@/core';
 import Navigation from '@/components/navigation/Navigation.vue';
 // import Navigation from '@/components/navigation/NavigationTemporary.vue';
 
@@ -46,6 +46,14 @@ export default Vue.extend({
   @page {
     size: landscape;
   }
+}
+
+.v-toast__text h1 {
+  font-size: 20px;
+}
+
+.v-toast__text p {
+  margin: 4px 0;
 }
 
 .fade-enter-active {

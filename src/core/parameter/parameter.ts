@@ -6,10 +6,10 @@ import { Synapse } from '../connection/synapse';
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
+  private _format: string;
   private _id: string;
   private _idx: number; // generative
   private _input: string;
-  private _format: string;
   private _label: string;
   private _max: number;
   private _min: number;

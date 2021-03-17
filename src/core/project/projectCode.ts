@@ -1,7 +1,9 @@
+import { sha1 } from 'object-hash';
 import { Code } from '../code';
 import { Project } from './project';
 
 export class ProjectCode extends Code {
+  private _hash: string;
   private _project: Project; // parent
   private _script: string;
 
@@ -11,14 +13,26 @@ export class ProjectCode extends Code {
     this.generate();
   }
 
+  get hash(): string {
+    return this._hash;
+  }
+
+  get project(): Project {
+    return this._project;
+  }
+
   get script(): string {
     return this._script;
   }
 
   set script(value: string) {
     this._script = value;
+    this._hash = sha1(this._script);
   }
 
+  /**
+   * Generate script code.
+   */
   generate(): void {
     // console.log('Generate script');
     this._script = '';
@@ -52,8 +66,13 @@ export class ProjectCode extends Code {
 
     this._script += '\n\n# Collect activities\n';
     this._script += this.response();
+
+    this._hash = sha1(this._script);
   }
 
+  /**
+   * Generate script to import modules.
+   */
   importModules(): string {
     let script = '';
     script += 'import nest\n';
@@ -61,6 +80,9 @@ export class ProjectCode extends Code {
     return script + '\n';
   }
 
+  /**
+   * Generate script to define a function to get activity.
+   */
   defineGetActivity(): string {
     let script = '';
     script += 'def getActivity(node):';
@@ -78,6 +100,9 @@ export class ProjectCode extends Code {
     return script;
   }
 
+  /**
+   * Generate script to define a function to get node positions.
+   */
   defineGetNodePositions(): string {
     let script = 'def getPosition(node):';
     script +=
@@ -85,6 +110,9 @@ export class ProjectCode extends Code {
     return script + '\n';
   }
 
+  /**
+   *  Generate script for response data.
+   */
   response(): string {
     let script = '';
     script += 'response = {';

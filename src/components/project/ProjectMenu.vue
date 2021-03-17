@@ -51,7 +51,6 @@ export default Vue.extend({
       project: props.project as Project,
       position: props.position,
       show: true,
-
       items: [
         {
           id: 'projectReload',
@@ -59,6 +58,15 @@ export default Vue.extend({
           title: 'Reload project',
           onClick: () => {
             state.project.reload();
+            state.show = false;
+          },
+        },
+        {
+          id: 'projectDuplicate',
+          icon: 'mdi-content-duplicate',
+          title: 'Duplicate project',
+          onClick: () => {
+            state.project.duplicate();
             state.show = false;
           },
         },

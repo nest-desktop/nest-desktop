@@ -25,7 +25,6 @@
       },
       {
         "model": "iaf_psc_alpha",
-        "size": 1,
         "view": {
           "position": {
             "x": 200,
@@ -47,7 +46,7 @@
           {
             "id": "interval",
             "value": 0.1,
-            "visible": false
+            "visible": true
           }
         ]
       }
@@ -65,7 +64,8 @@
   },
   "simulation": {
     "kernel": {
-      "resolution": 0.1
+      "resolution": 0.1,
+      "localNumThreads": 1
     },
     "time": 500,
     "randomSeed": 0

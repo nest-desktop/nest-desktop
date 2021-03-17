@@ -216,7 +216,7 @@ import draggable from 'vuedraggable';
 import { Connection } from '@/core/connection/connection';
 import { Network } from '@/core/network/network';
 import { Node } from '@/core/node/node';
-import core from '@/core/index';
+import core from '@/core';
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
 import NodePosition from '@/components/network/NodePosition.vue';

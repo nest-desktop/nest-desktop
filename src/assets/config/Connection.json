@@ -54,6 +54,7 @@
         {
           "id": "indegree",
           "input": "valueSlider",
+          "format": "integer",
           "label": "indegree",
           "max": 100,
           "min": 1,
@@ -70,6 +71,22 @@
           "step": 0.01,
           "value": 0.1,
           "visible": false
+        },
+        {
+          "format": "boolean",
+          "id": "allow_autapses",
+          "input": "checkbox",
+          "label": "allow autapses",
+          "value": false,
+          "visible": false
+        },
+        {
+          "format": "boolean",
+          "id": "allow_multapses",
+          "input": "checkbox",
+          "label": "allow multapses",
+          "value": false,
+          "visible": false
         }
       ]
     },
@@ -80,6 +97,7 @@
         {
           "id": "outdegree",
           "input": "valueSlider",
+          "format": "integer",
           "label": "outdegree",
           "max": 100,
           "min": 1,
@@ -96,6 +114,22 @@
           "step": 0.01,
           "value": 0.1,
           "visible": false
+        },
+        {
+          "format": "boolean",
+          "id": "allow_autapses",
+          "input": "checkbox",
+          "label": "allow autapses",
+          "value": false,
+          "visible": false
+        },
+        {
+          "format": "boolean",
+          "id": "allow_multapses",
+          "input": "checkbox",
+          "label": "allow multapses",
+          "value": false,
+          "visible": false
         }
       ]
     },
@@ -104,6 +138,7 @@
       "label": "fixed total number",
       "params": [
         {
+          "format": "integer",
           "id": "N",
           "input": "valueSlider",
           "label": "N",
@@ -112,6 +147,22 @@
           "step": 1,
           "value": 1,
           "visible": true
+        },
+        {
+          "format": "boolean",
+          "id": "allow_autapses",
+          "input": "checkbox",
+          "label": "allow autapses",
+          "value": false,
+          "visible": false
+        },
+        {
+          "format": "boolean",
+          "id": "allow_multapses",
+          "input": "checkbox",
+          "label": "allow multapses",
+          "value": false,
+          "visible": false
         }
       ]
     },
@@ -133,6 +184,63 @@
           "step": 0.01,
           "value": 0.1,
           "visible": true
+        },
+        {
+          "id": "allow_autapses",
+          "input": "checkbox",
+          "label": "allow autapses",
+          "value": false,
+          "visible": false
+        },
+        {
+          "format": "boolean",
+          "id": "use_on_source",
+          "input": "checkbox",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "symmetric_pairwise_bernoulli",
+      "label": "symmetric pairwise Bernoulli",
+      "params": [
+        {
+          "id": "p",
+          "input": "valueSlider",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "format": "boolean",
+          "id": "allow_autapses",
+          "input": "checkbox",
+          "label": "allow autapses",
+          "readonly": true,
+          "value": false,
+          "visible": true
+        },
+        {
+          "format": "boolean",
+          "id": "make_symmetric",
+          "input": "checkbox",
+          "label": "make symmetric",
+          "readonly": true,
+          "value": true,
+          "visible": true
+        },
+        {
+          "format": "boolean",
+          "id": "use_on_source",
+          "input": "checkbox",
+          "label": "use on source",
+          "value": false,
+          "visible": false
         }
       ]
     }

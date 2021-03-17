@@ -128,26 +128,32 @@ export class NodeView {
       .map(param => param.id);
   }
 
-  setLevel(level: number): void {
-    this._node.params.map(
-      (param: ModelParameter) => (param.visible = param.options.level <= level)
-    );
-  }
-
   clean(): void {}
 
+  /**
+   * Select node.
+   */
   select(): void {
     this._node.network.view.selectedNode = this._node;
   }
 
+  /**
+   * Focus node.
+   */
   focus(): void {
     this._node.network.view.focusedNode = this._node;
   }
 
+  /**
+   * Check if this node is selected.
+   */
   isSelected(unselected: boolean = false): boolean {
     return this._node.network.view.isNodeSelected(this._node, unselected);
   }
 
+  /**
+   * Check if this node is focused.
+   */
   isFocused(): boolean {
     return this._node.network.view.isNodeFocused(this._node);
   }

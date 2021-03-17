@@ -22,8 +22,6 @@ export class Network extends Config {
     this._view = new NetworkView(this);
 
     this.update(network);
-    this.clean();
-    this.updateHash();
   }
 
   get code(): NetworkCode {
@@ -88,6 +86,9 @@ export class Network extends Config {
     return this._view;
   }
 
+  /**
+   * Check if the network has any spatial nodes.
+   */
   hasSpatialNodes(): boolean {
     return (
       this._nodes.filter((node: Node) => node.spatial.hasPositions()).length > 0
@@ -98,15 +99,14 @@ export class Network extends Config {
    * Observer for network changes
    *
    * @remarks
-   * It commits network in the network editor.
    * It updates hash of the network.
    * It generates simulation code in the code editor.
+   * It commits the network in the network history.
    */
   networkChanges(): void {
     this.updateHash();
     this._project.code.generate();
     this._project.commitNetwork(this);
-    // this._project.activityGraph.init();
   }
 
   /**
@@ -258,24 +258,25 @@ export class Network extends Config {
   /**
    * Update network component.
    *
-   * @remarks
-   * It generates simulation code in the code editor.
-   *
    * @param network - network object
    */
   update(network: any): void {
+    // add nodes to network.
     this._nodes = [];
     if (network.nodes) {
       network.nodes.forEach((node: any) => this.addNode(node));
     }
+
+    // add connections to network.
     this._connections = [];
     if (network.connections) {
       network.connections.forEach((connection: any) =>
         this.addConnection(connection)
       );
     }
+
+    this.clean();
     this.updateHash();
-    // this._project.code.generate();
   }
 
   /**

@@ -69,16 +69,18 @@ export class NESTServer extends Config {
     this.host = values[1];
   }
 
-  check(): void {
-    // console.log('Check server')
-    if (this.config.hostname) {
-      this.ping(this.url);
-    } else {
-      this.seek();
-    }
+  check(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // console.log('Check server')
+      if (this.config.hostname) {
+        this.ping(this.url, () => resolve(this));
+      } else {
+        this.seek().then(() => resolve(this));
+      }
+    });
   }
 
-  seek(): void {
+  seek(): Promise<any> {
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
     const hosts: string[] = [
@@ -92,12 +94,12 @@ export class NESTServer extends Config {
           this.ping(url, () => resolve());
         })
     );
-    Promise.all(hostPromises);
+    return Promise.all(hostPromises);
   }
 
   ping(url: string, callback: any = false): void {
     this._state.serverReady = false;
-    this._http.ping(url, (req: any) => {
+    return this._http.ping(url, (req: any) => {
       let resp: any;
       switch (req.status) {
         case 200:

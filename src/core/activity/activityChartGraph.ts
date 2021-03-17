@@ -93,10 +93,16 @@ export class ActivityChartGraph {
     return this._project;
   }
 
+  /**
+   * Empty graph data.
+   */
   empty(): void {
     this._data = [];
   }
 
+  /**
+   * Initialize network chart graph.
+   */
   init(registerPanels: any[] = []): void {
     // console.log('Init activity chart graph for', this.project.name);
     if (registerPanels.length > 0) {
@@ -116,16 +122,25 @@ export class ActivityChartGraph {
     this.updateLayout();
   }
 
+  /**
+   * Initialize panels.
+   */
   initPanels(): void {
     this._panels.forEach((panel: ActivityGraphPanel) => panel.init());
   }
 
+  /**
+   * Add panel.
+   */
   addPanel(panel: ActivityGraphPanel): void {
     panel.visible = true;
     this._panels.push(panel);
     this.update();
   }
 
+  /**
+   * Remove panel.
+   */
   removePanel(panel: ActivityGraphPanel): void {
     panel.visible = false;
     this._panels = this._panels.filter(
@@ -134,10 +149,16 @@ export class ActivityChartGraph {
     this.update();
   }
 
+  /**
+   * Update colors of the chart graph.
+   */
   updateColor(): void {
     this._panels.forEach((panel: ActivityGraphPanel) => panel.updateColor());
   }
 
+  /**
+   * Reset layout of the chart graph.
+   */
   resetLayout(): void {
     this._layout = {
       margin: this._layout.margin,
@@ -145,12 +166,16 @@ export class ActivityChartGraph {
     };
   }
 
+  /**
+   * Update layout of the chart graph.
+   */
   updateLayout(): void {
     this._panels.forEach((panel: ActivityGraphPanel) => panel.updateLayout());
   }
 
-  // With data
-
+  /**
+   * Updates chart graph with activities.
+   */
   update(): void {
     // console.log('Update activity chart graph');
     this._data = [];

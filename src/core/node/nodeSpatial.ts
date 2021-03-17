@@ -90,7 +90,7 @@ export class FreePositions {
   /**
    * Write code for free positons.
    */
-  toCode(): any {
+  toCode(): string {
     let args: string[] = [];
     if (this._pos.length > 0) {
       args.push(

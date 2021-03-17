@@ -1,5 +1,5 @@
 <template>
-  <div class="activityGraph" v-if="state.graph">
+  <div class="activityGraph">
     <v-dialog v-model="state.dialog" max-width="290">
       <v-card>
         <v-card-title v-text="'Download plot'" />
@@ -24,48 +24,48 @@
           </v-row>
 
           <!-- <v-row no-gutters>
-            <v-col cols="5">
-              <v-subheader>
-                Image size
-              </v-subheader>
-            </v-col>
+                  <v-col cols="5">
+                    <v-subheader>
+                      Image size
+                    </v-subheader>
+                  </v-col>
 
-            <v-col cols="3">
-              <v-text-field
-                dense
-                hide-details
-                label="width"
-                outlined
-                single-line
-                v-model="state.toImageButtonOptions.width"
-              />
-            </v-col>
-            <v-col cols="1" class="py-2 text-center" v-text="'x'" />
-            <v-col cols="3">
-              <v-text-field
-                dense
-                hide-details
-                label="height"
-                outlined
-                single-line
-                v-model="state.toImageButtonOptions.height"
-              />
-            </v-col>
-          </v-row> -->
+                  <v-col cols="3">
+                    <v-text-field
+                      dense
+                      hide-details
+                      label="width"
+                      outlined
+                      single-line
+                      v-model="state.toImageButtonOptions.width"
+                    />
+                  </v-col>
+                  <v-col cols="1" class="py-2 text-center" v-text="'x'" />
+                  <v-col cols="3">
+                    <v-text-field
+                      dense
+                      hide-details
+                      label="height"
+                      outlined
+                      single-line
+                      v-model="state.toImageButtonOptions.height"
+                    />
+                  </v-col>
+                </v-row> -->
 
           <!-- <v-row no-gutters>
-            <v-col cols="10">
-              <v-slider
-                hide-details
-                label="scale"
-                min="0.5"
-                max="2"
-                step="0.5"
-                v-model="state.toImageButtonOptions.scale"
-              />
-            </v-col>
-            <v-col cols="2" v-text="state.toImageButtonOptions.scale" />
-          </v-row> -->
+                  <v-col cols="10">
+                    <v-slider
+                      hide-details
+                      label="scale"
+                      min="0.5"
+                      max="2"
+                      step="0.5"
+                      v-model="state.toImageButtonOptions.scale"
+                    />
+                  </v-col>
+                  <v-col cols="2" v-text="state.toImageButtonOptions.scale" />
+                </v-row> -->
         </v-card-text>
 
         <v-card-actions>
@@ -76,11 +76,25 @@
       </v-card>
     </v-dialog>
 
+    <div
+      style="position:absolute; left: 0; top: 0; z-index:1000"
+      v-if="state.graph.project.app.config.devMode"
+    >
+      <v-chip
+        class="ma-1"
+        label
+        outlined
+        small
+        v-if="state.graph.codeHash"
+        v-text="state.graph.codeHash.slice(0, 6)"
+      />
+    </div>
+
     <transition name="fade">
-      <div v-if="state.graph.activityChartGraph.data.length > 0">
+      <div v-if="!state.loading">
         <Plotly
           :autoResize="true"
-          :autosizable="true"
+          :autoSizable="true"
           :data="state.graph.activityChartGraph.data"
           :displaylogo="false"
           :displayModeBar="true"
@@ -92,14 +106,38 @@
           style="position: relative; width: 100%; height: calc(100vh - 48px)"
           v-if="state.view == 'abstract'"
         />
+
+        <ActivityAnimationGraph
+          :graph="state.graph.activityAnimationGraph"
+          v-if="state.view == 'spatial'"
+        />
       </div>
-      <template v-else>No data found. Please simulate first.</template>
     </transition>
 
-    <ActivityAnimationGraph
-      :graph="state.graph.activityAnimationGraph"
-      v-if="state.view == 'spatial'"
-    />
+    <v-snackbar :timeout="-1" v-model="state.snackbar.show">
+      {{ state.snackbar.text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          @click="state.snackbar.show = false"
+          text
+          v-bind="attrs"
+          v-if="state.snackbar.actions.length === 0"
+        >
+          Close
+        </v-btn>
+        <template v-if="state.snackbar.actions.length > 0">
+          <v-btn
+            :key="actionIdx"
+            @click="action.onClick"
+            text
+            v-bind="attrs"
+            v-for="(action, actionIdx) in state.snackbar.actions"
+            v-text="action.text"
+          />
+        </template>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -119,8 +157,9 @@ export default Vue.extend({
     ActivityAnimationGraph,
   },
   props: {
+    codeHash: String,
     graph: ActivityGraph,
-    projectId: String,
+    graphHash: String,
     view: String,
   },
   setup(props) {
@@ -129,6 +168,12 @@ export default Vue.extend({
       gd: undefined,
       graph: props.graph as ActivityGraph,
       imageFormats: ['jpeg', 'png', 'svg', 'webp'],
+      loading: false,
+      snackbar: {
+        actions: [],
+        show: false,
+        text: '',
+      },
       toImageButtonOptions: {
         filename: 'nest-desktop',
         format: 'png', // png, svg, jpeg, webp
@@ -166,21 +211,78 @@ export default Vue.extend({
      * Update activity graph.
      */
     const update = () => {
-      state.graph = undefined;
-      setTimeout(() => {
-        state.graph = props.graph as ActivityGraph;
-        state.view = props.view;
-      }, 1);
+      state.graph = props.graph as ActivityGraph;
+      state.view = props.view;
     };
 
-    watch(
-      () => [props.graph, props.view],
-      () => update()
-    );
+    /**
+     * Check if there are changes to the graph which should be displayed via snackbar message.
+     */
+    const validateGraph = () => {
+      state.snackbar.show = false;
+      if (!state.graph.project.hasActivities) {
+        showSnackbar('No activity found. Please simulate.', [
+          {
+            text: 'Simulate',
+            onClick: () => {
+              simulate();
+            },
+          },
+        ]);
+      } else if (state.graph.project.code.hash !== state.graph.codeHash) {
+        showSnackbar(
+          'Code changes detected. Activity might be not correctly displayed.',
+          [
+            {
+              text: 'Simulate',
+              onClick: () => {
+                simulate();
+              },
+            },
+          ]
+        );
+      }
+    };
+
+    /**
+     * Show snackbar
+     */
+    const showSnackbar = (text: string, actions: any[] = []) => {
+      state.snackbar.text = text;
+      state.snackbar.actions = actions;
+      state.snackbar.show = true;
+    };
+
+    const simulate = () => {
+      state.graph.project.runSimulation();
+    };
 
     onMounted(() => {
-      update();
+      state.loading = true;
+      setTimeout(() => {
+        update();
+        validateGraph();
+        state.loading = false;
+      }, 1);
     });
+
+    watch(
+      () => [props.graph, props.view, props.codeHash, props.graphHash],
+      (newProps, oldProps) => {
+        if (oldProps[0] !== newProps[0] || oldProps[1] !== newProps[1]) {
+          state.loading = true;
+          setTimeout(() => {
+            update();
+            state.loading = false;
+          }, 1);
+        }
+        if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
+          setTimeout(() => {
+            validateGraph();
+          }, 10);
+        }
+      }
+    );
 
     return { downloadImage, state };
   },

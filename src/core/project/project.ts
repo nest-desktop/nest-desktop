@@ -1,5 +1,6 @@
 import { sha1 } from 'object-hash';
 import { v4 as uuidv4 } from 'uuid';
+import Vue from 'vue';
 
 import { Activity } from '../activity/activity';
 import { ActivityGraph } from '../activity/activityGraph';
@@ -46,17 +47,20 @@ export class Project extends Config {
     this._name = project.name || '';
     this._description = project.description || '';
     this._hash = project.hash || '';
-    // this.user = project.user || '';
-    // this.group = project.group || '';
 
     // Upgrade old projects
     // const projectUpgraded: any = upgradeProject(this._app, project);
+
+    // Initialize simulation and network.
     this.initSimulation(project.simulation);
     this.initNetwork(project.network);
 
-    this.clean();
+    // Initialize code and activity graph.
     this._code = new ProjectCode(this);
     this._activityGraph = new ActivityGraph(this);
+
+    this.clean();
+    this.commitNetwork(this._network);
   }
 
   get activityGraph(): ActivityGraph {
@@ -222,7 +226,6 @@ export class Project extends Config {
   initNetwork(network: any = {}): void {
     this.clearNetworkHistory();
     this._network = new Network(this, network);
-    this.commitNetwork(this._network);
   }
 
   /**
@@ -239,13 +242,6 @@ export class Project extends Config {
     return this._networkRevisions;
   }
 
-  /** Check if network is changed
-   * Use object hash.
-   */
-  isNetworkChanged(): boolean {
-    return this._network.hash !== this._activityGraph.hash;
-  }
-
   /**
    * Clear network history list.
    */
@@ -259,68 +255,101 @@ export class Project extends Config {
    */
   commitNetwork(network: Network): void {
     // console.log('Commit network');
-    const maxRev: number = this.config.maxNetworkRevisions || 5;
+
+    // Remove networks after the current.
     this._networkRevisions = this._networkRevisions.slice(
       0,
       this._networkRevisionIdx + 1
     );
+
+    // Limit max amount of network revisions;
+    const maxRev: number = this.config.maxNetworkRevisions || 5;
     if (this._networkRevisions.length > maxRev) {
       this._networkRevisions = this._networkRevisions.slice(
         this._networkRevisions.length - maxRev
       );
     }
 
-    // Get network object
-    const currentNetwork: any = network.toJSON();
+    // Get last network of the revisions.
+    const lastNetwork: any =
+      this._networkRevisions.length > 0
+        ? this._networkRevisions[this._networkRevisions.length - 1]
+        : {};
 
-    // Add activity to recorder nodes
-    network.nodes
-      .filter(node => node.model.isRecorder())
-      .forEach(node => {
-        currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
-      });
+    let currentNetwork: any;
+    if (lastNetwork.codeHash === this._code.hash) {
+      currentNetwork = this._networkRevisions.pop();
 
-    if (this._networkRevisions.length === 0) {
-      this._networkRevisions.push(currentNetwork);
+      // Add activity to recorder nodes
+      network.nodes
+        .filter(node => node.model.isRecorder())
+        .forEach(node => {
+          currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+        });
     } else {
-      const lastNetwork: any = this._networkRevisions[
-        this._networkRevisions.length - 1
-      ];
-      if (
-        sha1(JSON.stringify(lastNetwork)) !==
-        sha1(JSON.stringify(currentNetwork))
-      ) {
-        this._networkRevisions.push(currentNetwork);
+      // Get network object
+      currentNetwork = network.toJSON();
+      currentNetwork.codeHash = this._code.hash; // Copy code hash to current network
+
+      // Add activity to recorder nodes only if hashes is matched.
+      if (this._code.hash === this._activityGraph.codeHash) {
+        network.nodes
+          .filter(node => node.model.isRecorder())
+          .forEach(node => {
+            currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+          });
       }
     }
+
+    // Push current network to the revisions.
+    this._networkRevisions.push(currentNetwork);
+
+    // Update idx of the latest network revision.
     this._networkRevisionIdx = this._networkRevisions.length - 1;
   }
 
   /**
    * Load network from the history list.
+   *
+   * @remarks It generates code.
    */
   checkoutNetwork(): void {
     // console.log('Checkout network');
+
+    // Update revision idx.
     if (this._networkRevisionIdx >= this._networkRevisions.length) {
       this._networkRevisionIdx = this._networkRevisions.length - 1;
     }
+
+    // Collect recorder models of old network.
     const oldModels: string[] = this._network.recorders.map(
       (node: Node) => node.modelId
     );
+
+    // Update network.
     const network: any = this._networkRevisions[this._networkRevisionIdx];
     this._network.update(network);
+
+    // Generate simulation code.
+    this.code.generate();
+
+    // Collect recorder models of new network.
     const newModels: string[] = this._network.recorders.map(
       (node: Node) => node.modelId
     );
 
+    // Compare recorder models and then update chart graph.
     if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
       this._activityGraph.activityChartGraph.initPanels();
     } else {
       this._activityGraph.activityChartGraph.init();
     }
+
     if (this.config.runAfterCheckout) {
+      // Run simulation.
       setTimeout(() => this.runSimulation(), 1);
     } else {
+      // Update activities.
       const activities: any[] = this.activities.map((activity: Activity) =>
         activity.toJSON()
       );
@@ -384,6 +413,11 @@ export class Project extends Config {
     }
   }
 
+  setErrorMessage(title: string, text: string) {
+    this._errorMessage = text;
+    // this._errorMessage = `<h1>${title}</h1><p>${text}</p>`;
+  }
+
   /**
    * Start simulation.
    *
@@ -392,6 +426,7 @@ export class Project extends Config {
    */
   runSimulation(): Promise<any> {
     // console.log('Run simulation');
+    this._errorMessage = '';
     this._simulation.running = true;
     return this.app.nestServer.http
       .post(this._app.nestServer.url + '/exec', {
@@ -401,9 +436,14 @@ export class Project extends Config {
       .then((resp: any) => {
         let data: any;
         switch (resp.status) {
+          case 0:
+            this.setErrorMessage(
+              'Internal Server Error',
+              'Failed to find NEST Server.'
+            );
+            break;
           case 200:
-            this._errorMessage = '';
-            data = JSON.parse(resp.responseText).data;
+            data = JSON.parse(resp.response).data;
             this._simulation.kernel.time = data.kernel.time;
             if (data.positions) {
               data.activities.forEach((activity: any) => {
@@ -417,9 +457,20 @@ export class Project extends Config {
             this.commitNetwork(this._network);
             break;
           default:
-            this._errorMessage = resp.responseText;
+            this.setErrorMessage('Bad request', resp.response);
             break;
         }
+
+        // Show error message via toast notification.
+        if (this._errorMessage) {
+          Vue.$toast.open({
+            message: this._errorMessage,
+            pauseOnHover: true,
+            position: 'top-right',
+            type: 'error',
+          });
+        }
+
         setTimeout(() => {
           this._simulation.running = false;
         }, 100);
@@ -457,13 +508,19 @@ export class Project extends Config {
    */
   updateActivities(data: any): void {
     // console.log('Update activities');
-    // Update recorded activity
+
+    // Update recorded activity.
     const activities: Activity[] = this.activities;
-    data.forEach((activity: any, idx: number) => {
-      activities[idx].update(activity);
+    data.forEach((activityData: any, idx: number) => {
+      const activity: Activity = activities[idx];
+      activity.update(activityData);
     });
-    this.activityGraph.update();
+
+    // Check if project has activities.
     this.checkActivities();
+
+    // Update activity graph.
+    this.activityGraph.update();
   }
 
   /**
@@ -521,46 +578,6 @@ export class Project extends Config {
   getHash(): string {
     const project: any = this.toJSON();
     return sha1(project);
-  }
-
-  treeview(): any[] {
-    let id = 1;
-    const treeview = [
-      {
-        id: id++,
-        name: 'Nodes',
-        children: this.network.nodes.map(node => {
-          return {
-            id: id++,
-            name: node.modelId,
-            children: node.params.map(param => {
-              return {
-                id: id++,
-                name: `${param.id}: ${param.value} ${param.unit}`,
-              };
-            }),
-          };
-        }),
-      },
-      {
-        id: id++,
-        name: 'Connections',
-        children: this.network.connections.map(connection => {
-          return {
-            id: id++,
-            name: connection.rule,
-            children: connection.params.map(param => {
-              return {
-                id: id++,
-                name: `${param.id}: ${param.value} ${param.unit}`,
-              };
-            }),
-          };
-        }),
-      },
-    ];
-    console.log(treeview);
-    return treeview;
   }
 
   /**
