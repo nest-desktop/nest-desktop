@@ -255,7 +255,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width:100%; padding-right:56px" v-if="state.toolOpened">
+        <div style="width:100%; padding-right:48px" v-if="state.toolOpened">
           <networkParamsSelect
             :network="state.project.network"
             v-if="state.tool.name === 'networkParamSelect'"
@@ -424,13 +424,13 @@ export default Vue.extend({
           icon: '$network',
           name: 'networkParamEdit',
           title: 'Network',
-          width: '378',
+          width: '382',
         },
         {
           icon: 'mdi-engine-outline',
           name: 'simulationKernel',
           title: 'Kernel',
-          width: '378',
+          width: '382',
         },
         {
           icon: 'mdi-code-braces',
@@ -444,7 +444,7 @@ export default Vue.extend({
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
           title: 'Activity',
-          width: '378',
+          width: '382',
         },
         {
           icon: 'mdi-table-large',
