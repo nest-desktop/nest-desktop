@@ -3,9 +3,9 @@ import { Code } from '../code';
 import { Project } from './project';
 
 export class ProjectCode extends Code {
+  private _hash: string;
   private _project: Project; // parent
   private _script: string;
-  private _hash: string;
 
   constructor(project: Project) {
     super();
@@ -71,7 +71,7 @@ export class ProjectCode extends Code {
   }
 
   /**
-   * Script to import modules.
+   * Generate script to import modules.
    */
   importModules(): string {
     let script = '';
@@ -81,7 +81,7 @@ export class ProjectCode extends Code {
   }
 
   /**
-   * Script to define function to get activity.
+   * Generate script to define a function to get activity.
    */
   defineGetActivity(): string {
     let script = '';
@@ -101,7 +101,7 @@ export class ProjectCode extends Code {
   }
 
   /**
-   * Script to define function to get node positions.
+   * Generate script to define a function to get node positions.
    */
   defineGetNodePositions(): string {
     let script = 'def getPosition(node):';
@@ -111,7 +111,7 @@ export class ProjectCode extends Code {
   }
 
   /**
-   * Script for response data.
+   *  Generate script for response data.
    */
   response(): string {
     let script = '';

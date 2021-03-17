@@ -143,7 +143,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted } from '@vue/composition-api';
+import { reactive, onMounted, watch } from '@vue/composition-api';
 import { Plotly } from 'vue-plotly';
 import * as PlotlyJS from 'plotly.js-dist';
 
@@ -216,7 +216,7 @@ export default Vue.extend({
     };
 
     /**
-     * Check if the message should be displayed via snackbar
+     * Check if there are changes to the graph which should be displayed via snackbar message.
      */
     const validateGraph = () => {
       state.snackbar.show = false;

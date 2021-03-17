@@ -29,7 +29,7 @@ export class Code {
   }
 
   /**
-   * Fixed float value with correct amount of decimals.
+   * Generate fixed float value with correct amount of decimals.
    */
   floatToFixed(value: number): string {
     const valString: string = JSON.stringify(value);
