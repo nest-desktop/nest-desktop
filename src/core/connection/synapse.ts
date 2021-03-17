@@ -108,7 +108,7 @@ export class Synapse {
   }
 
   /**
-   * Observer for synaspe changes.
+   * Observer for synapse changes.
    *
    * @remarks
    * It emits connection changes.

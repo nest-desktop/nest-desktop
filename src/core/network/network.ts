@@ -101,7 +101,7 @@ export class Network extends Config {
    * @remarks
    * It updates hash of the network.
    * It generates simulation code in the code editor.
-   * It commits network in the network history.
+   * It commits the network in the network history.
    */
   networkChanges(): void {
     this.updateHash();
