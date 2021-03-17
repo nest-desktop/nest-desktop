@@ -11,6 +11,9 @@ export class NetworkCode extends Code {
     this._network = network;
   }
 
+  /**
+   * Script to create nodes.
+   */
   createNodes(): string {
     let script = '';
     this._network.nodes.forEach((node: Node) => {
@@ -19,6 +22,9 @@ export class NetworkCode extends Code {
     return script;
   }
 
+  /**
+   * Script to connect nodes.
+   */
   connectNodes(): string {
     let script = '';
     this._network.connections.forEach((connection: Connection) => {
@@ -27,6 +33,9 @@ export class NetworkCode extends Code {
     return script;
   }
 
+  /**
+   * Script to get node positions.
+   */
   getNodePositions(): string {
     let script = 'dict(numpy.concatenate([';
     const nodes = this._network.nodes
@@ -37,6 +46,9 @@ export class NetworkCode extends Code {
     return script;
   }
 
+  /**
+   * Script to get activities.
+   */
   getActivities(): string {
     let script = '[';
     script += this._(2);
