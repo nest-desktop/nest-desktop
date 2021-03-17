@@ -51,9 +51,7 @@
                 Response:
                 <v-chip color="orange darken-3" dark small>
                   <v-avatar left>
-                    <v-icon small
-                      v-text="'mdi-checkbox-marked-circle'"
-                    />
+                    <v-icon small v-text="'mdi-checkbox-marked-circle'" />
                   </v-avatar>
                   NEST version: {{ state.nestVersion }}
                 </v-chip>
