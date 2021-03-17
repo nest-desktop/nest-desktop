@@ -8,12 +8,14 @@ export class NodeView {
   private _node: Node; // parent
   private _position: any = { x: 0, y: 0 };
   private _positions: number[][] = [];
+  private _visible: boolean = true;
 
   constructor(node: Node, view: any) {
     this._node = node;
     this._color =
       view.color || this._node.network.view.getNodeColor(this._node.idx);
     this._position = view.position;
+    this._visible = view.visible || true;
   }
 
   get color(): string {
@@ -91,6 +93,17 @@ export class NodeView {
     this._positions = value;
   }
 
+  get visible(): boolean {
+    return this._visible;
+  }
+
+  set visible(value: boolean) {
+    this._visible = value;
+  }
+
+  /**
+   * Get term based on synapse weight.
+   */
   get weight(): string {
     if (this._node.model.elementType === 'recorder') {
       return '';
@@ -115,27 +128,19 @@ export class NodeView {
     return '';
   }
 
-  get backgroundImage(): string {
-    const bg = '#fafafa';
-    const color: string = this.color;
-    const gradient: string = ['90deg', color, color, bg].join(', ');
-    return 'linear-gradient(' + gradient + ')';
-  }
-
+  /**
+   * Get ids of visible parameter.
+   */
   paramsVisible(): string[] {
     return this._node.params
       .filter((param: ModelParameter) => param.visible)
       .map(param => param.id);
   }
 
-  clean(): void {}
-
   /**
-   * Select node.
+   * Clean node.
    */
-  select(): void {
-    this._node.network.view.selectedNode = this._node;
-  }
+  clean(): void {}
 
   /**
    * Focus node.
@@ -145,23 +150,31 @@ export class NodeView {
   }
 
   /**
-   * Check if this node is selected.
-   */
-  isSelected(unselected: boolean = false): boolean {
-    return this._node.network.view.isNodeSelected(this._node, unselected);
-  }
-
-  /**
    * Check if this node is focused.
    */
   isFocused(): boolean {
     return this._node.network.view.isNodeFocused(this._node);
   }
 
+  /**
+   * Select node.
+   */
+  select(): void {
+    this._node.network.view.selectedNode = this._node;
+  }
+
+  /**
+   * Check if this node is selected.
+   */
+  isSelected(unselected: boolean = false): boolean {
+    return this._node.network.view.isNodeSelected(this._node, unselected);
+  }
+
   toJSON(): any {
     const nodeView: any = {
       color: this._color,
       position: this._position,
+      visible: this._visible,
     };
     return nodeView;
   }
