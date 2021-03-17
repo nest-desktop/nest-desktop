@@ -208,11 +208,6 @@ export default Vue.extend({
   setup(props, { refs }) {
     const state = reactive({
       network: core.app.project.network,
-      nodePosition: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-      },
       graph: undefined,
       nodeMenu: {
         node: undefined,
@@ -315,13 +310,6 @@ export default Vue.extend({
       }
     };
 
-    const nodePosition = () => {
-      const networkPos: any = d3.pointer(state.graph.transform);
-      const nodePos: any = state.network.view.selectedNode.view.position;
-      state.nodePosition.top = networkPos.y + nodePos.y - 14 + 'px';
-      state.nodePosition.left = networkPos.x + nodePos.x - 18 + 'px';
-    };
-
     /**
      * Remove node.
      */
@@ -346,9 +334,6 @@ export default Vue.extend({
       state.graph.reset();
       state.graph.update();
       state.graph.resize();
-      if (state.network.view.selectedNode) {
-        nodePosition();
-      }
       setMenuTrigger();
       showHelp();
     };
@@ -379,7 +364,7 @@ export default Vue.extend({
       () => update()
     );
 
-    return { deleteNode, enableConnection, nodePosition, state };
+    return { deleteNode, enableConnection, state };
   },
 });
 </script>
