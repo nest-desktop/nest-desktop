@@ -460,10 +460,14 @@ export class NetworkGraph {
           })
           .on('end', (event: any) => {
             this._state.dragging = false;
-            d3.select(event.sourceEvent.srcElement.parentNode).classed(
-              'active',
-              false
-            );
+            // If-clause to prevent the error message when mouseup happens
+            // outside the window:
+            if (event.sourceEvent.srcElement.parentNode instanceof Node) {
+              d3.select(event.sourceEvent.srcElement.parentNode).classed(
+                'active',
+                false
+              );
+            }
             d3.select(event.sourceEvent.srcElement).style('cursor', 'pointer');
             // d3.selectAll("g.node").sort((a,b) => d3.ascending(a.idx, b.idx))
             this.centerNetworkGraph();
