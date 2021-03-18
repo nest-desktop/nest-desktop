@@ -12,7 +12,7 @@ export class NetworkCode extends Code {
   }
 
   /**
-   * Script to create nodes.
+   * Generate script to create nodes.
    */
   createNodes(): string {
     let script = '';
@@ -23,7 +23,7 @@ export class NetworkCode extends Code {
   }
 
   /**
-   * Script to connect nodes.
+   * Generate script to connect nodes.
    */
   connectNodes(): string {
     let script = '';
@@ -34,7 +34,7 @@ export class NetworkCode extends Code {
   }
 
   /**
-   * Script to get node positions.
+   * Generate script to get node positions.
    */
   getNodePositions(): string {
     let script = 'dict(numpy.concatenate([';
@@ -47,7 +47,7 @@ export class NetworkCode extends Code {
   }
 
   /**
-   * Script to get activities.
+   * Generate script to get activities.
    */
   getActivities(): string {
     let script = '[';

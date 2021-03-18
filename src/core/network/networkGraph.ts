@@ -541,7 +541,7 @@ export class NetworkGraph {
   }
 
   /**
-   * Centering network graph.
+   * Center network graph.
    */
   centerNetworkGraph(): void {
     // console.log('center network graph');

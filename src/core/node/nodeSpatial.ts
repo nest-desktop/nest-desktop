@@ -63,7 +63,7 @@ export class FreePositions {
   }
 
   /**
-   * Round value.
+   * Rounds down the value (to two places after the comma).
    */
   round(value: number): number {
     return Math.floor(value * 100) / 100;
