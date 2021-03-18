@@ -27,9 +27,12 @@
               </v-list-item-icon>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
 
-              <v-list-item-action v-show="item.append"
-                ><v-icon v-text="'mdi-menu-right'"
-              /></v-list-item-action>
+              <v-list-item-action v-show="item.append">
+                <v-icon v-text="'mdi-menu-right'" />
+              </v-list-item-action>
+              <v-list-item-action v-if="item.input === 'checkbox'">
+                <v-checkbox :value="state[item.value]" />
+              </v-list-item-action>
             </v-list-item>
           </v-list>
         </span>
@@ -61,7 +64,6 @@
                   <v-list-item-action style="margin: 4px 0">
                     <v-checkbox
                       :input-value="active"
-                      class="shrink mr-2"
                       color="black"
                       hide-details
                     />
@@ -106,7 +108,7 @@
           </v-list>
 
           <v-card-actions>
-            <v-btn @click="back" text>
+            <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-btn @click="hideAllParams" text>none</v-btn>
@@ -120,7 +122,7 @@
           </v-card-title>
 
           <v-card-actions>
-            <v-btn @click="back" text>
+            <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> no
             </v-btn>
             <v-btn @click="deleteConnection" text>yes</v-btn>
@@ -133,7 +135,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 
 import { Connection } from '@/core/connection/connection';
 import { ModelParameter } from '@/core/parameter/modelParameter';
@@ -169,7 +171,7 @@ export default Vue.extend({
           title: 'Reverse connection',
           onClick: () => {
             state.connection.reverse();
-            state.show = false;
+            closeMenu();
           },
           append: false,
         },
@@ -179,7 +181,7 @@ export default Vue.extend({
           title: 'Inverse synaptic weight',
           onClick: () => {
             state.connection.synapse.inverseWeight();
-            state.show = false;
+            closeMenu();
           },
           append: false,
         },
@@ -189,7 +191,7 @@ export default Vue.extend({
           title: 'Reset connection',
           onClick: () => {
             state.connection.reset();
-            state.show = false;
+            closeMenu();
           },
           append: false,
         },
@@ -228,21 +230,6 @@ export default Vue.extend({
     };
 
     /**
-     * Delete connection.
-     */
-    const deleteConnection = () => {
-      state.show = false;
-      state.connection.remove();
-    };
-
-    /**
-     * Return to main menu content.
-     */
-    const back = () => {
-      state.content = undefined;
-    };
-
-    /**
      * Set an array of visible parameter for checkbox.
      */
     const setVisibleParams = () => {
@@ -266,22 +253,50 @@ export default Vue.extend({
       setVisibleParams();
     };
 
-    onMounted(() => {
+    /**
+     * Delete connection.
+     */
+    const deleteConnection = () => {
+      state.connection.remove();
+      closeMenu();
+    };
+
+    /**
+     * Reset states.
+     */
+    const resetStates = () => {
+      state.content = null;
+      state.show = true;
+    };
+
+    /**
+     * Update states.
+     */
+    const updateStates = () => {
       setVisibleParams();
+    };
+
+    /**
+     * Return to main menu content.
+     */
+    const backMenu = () => {
+      state.content = undefined;
+    };
+
+    /**
+     * Close menu.
+     */
+    const closeMenu = () => {
+      resetStates();
+      state.show = false;
+    };
+
+    onMounted(() => {
+      updateStates();
     });
 
-    watch(
-      () => [props.connection, props.position],
-      () => {
-        state.content = undefined;
-        state.show = true;
-        state.connection = props.connection as Connection;
-        state.position = props.position;
-      }
-    );
-
     return {
-      back,
+      backMenu,
       deleteConnection,
       hideAllParams,
       paramChange,

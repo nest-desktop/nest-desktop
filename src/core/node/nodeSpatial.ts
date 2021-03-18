@@ -62,10 +62,16 @@ export class FreePositions {
     return this._spatial;
   }
 
+  /**
+   * Rounds down the value (to two places after the comma).
+   */
   round(value: number): number {
     return Math.floor(value * 100) / 100;
   }
 
+  /**
+   * Generate positions.
+   */
   generate(): void {
     const minX: number = (-1 * this._extent[0]) / 2;
     const maxX: number = this._extent[0] / 2;

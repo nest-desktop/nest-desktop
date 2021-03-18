@@ -73,21 +73,33 @@ export class NetworkView {
     this._network.config.update({ color });
   }
 
+  /**
+   * Reset focus and selection.
+   */
   reset(): void {
     this.resetFocus();
     this.resetSelection();
   }
 
+  /**
+   * Reset focus.
+   */
   resetFocus(): void {
     this._focusedNode = null;
     this._focusedConnection = null;
   }
 
+  /**
+   * Reset selection.
+   */
   resetSelection(): void {
     this._selectedNode = null;
     this._selectedConnection = null;
   }
 
+  /**
+   * Check if an element type is selected.
+   */
   isElementTypeSelected(elementType: string): boolean {
     if (this._selectedElementType === null) {
       return true;
@@ -95,6 +107,9 @@ export class NetworkView {
     return this._selectedElementType === elementType;
   }
 
+  /**
+   * Check if network has any spatial nodes.
+   */
   hasPositions(): boolean {
     return this._network.nodes.some((node: Node) =>
       node.spatial.hasPositions()
@@ -105,15 +120,24 @@ export class NetworkView {
   // Node
   //
 
+  /**
+   * Get node color.
+   */
   getNodeColor(idx: number): string {
     const colors: string[] = this._network.config.color.cycle;
     return colors[idx % colors.length];
   }
 
+  /**
+   * Check if node is focused.
+   */
   isNodeFocused(node: Node): boolean {
     return this._focusedNode === node.idx;
   }
 
+  /**
+   * Check if node is selected.
+   */
   isNodeSelected(
     node: Node,
     unselected: boolean = true,
@@ -140,6 +164,9 @@ export class NetworkView {
   // Connection
   //
 
+  /**
+   * Check if connection is focused.
+   */
   isConnectionFocused(
     connection: Connection,
     unselected: boolean = true
@@ -152,6 +179,9 @@ export class NetworkView {
     return unselected;
   }
 
+  /**
+   * Check if connection is selected.
+   */
   isConnectionSelected(
     connection: Connection,
     unselected: boolean = true
