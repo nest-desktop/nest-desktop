@@ -17,50 +17,6 @@
       class="no-print"
     />
 
-    <transition name="fade">
-      <div
-        v-if="
-          state.graph &&
-            state.network.view.selectedNode &&
-            !state.graph.state.dragging
-        "
-        :style="{
-          position: 'absolute',
-          top:
-            state.graph.transform.y +
-            state.network.view.selectedNode.view.position.y -
-            14 +
-            'px',
-          left:
-            state.graph.transform.x +
-            state.network.view.selectedNode.view.position.x -
-            18 +
-            'px',
-        }"
-      >
-        <div style="position:relative">
-          <transition name="fade">
-            <v-btn
-              @click="enableConnection"
-              icon
-              small
-              style="position:absolute; top:32px; left:32px"
-              v-show="!state.graph.state.enableConnection"
-            >
-              <v-icon v-text="'mdi-plus'" />
-            </v-btn>
-          </transition>
-          <!-- <v-btn
-            @click="deleteNode"
-            icon
-            style="position:absolute; top:32px; left:-32px"
-          >
-            <v-icon v-text="'mdi-trash-can-outline'" />
-          </v-btn> -->
-        </div>
-      </div>
-    </transition>
-
     <svg id="networkGraph" width="800" height="600">
       <g class="marker">
         <defs
@@ -311,20 +267,6 @@ export default Vue.extend({
     };
 
     /**
-     * Remove node.
-     */
-    const deleteNode = () => {
-      state.network.view.selectedNode.remove();
-    };
-
-    /**
-     * Enable connection.
-     */
-    const enableConnection = (e: MouseEvent) => {
-      state.graph.enableConnection(e);
-    };
-
-    /**
      * Update network graph.
      */
     const update = () => {
@@ -364,7 +306,7 @@ export default Vue.extend({
       () => update()
     );
 
-    return { deleteNode, enableConnection, state };
+    return { state };
   },
 });
 </script>

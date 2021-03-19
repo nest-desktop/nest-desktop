@@ -237,13 +237,27 @@ export default Vue.extend({
           },
         },
         {
+          id: 'nodeClone',
+          icon: 'mdi-content-copy',
+          title: 'Clone node',
+          onClick: () => {
+            const newNode: any = JSON.parse(
+              JSON.stringify(state.node.toJSON())
+            );
+            newNode.view.position.x += 50;
+            newNode.view.color = undefined;
+            state.node.network.addNode(newNode);
+            state.node.network.networkChanges();
+            closeMenu();
+          },
+        },
+        {
           id: 'nodeDelete',
           icon: 'mdi-trash-can-outline',
           title: 'Delete node',
           onClick: () => {
             state.content = 'nodeDelete';
           },
-          append: false,
         },
       ],
     });
