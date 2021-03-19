@@ -23,7 +23,7 @@ export function drawPath(source: any, target: any, config: any = {}): string {
   let my2: number = y2;
 
   // Self edge.
-  if (dx === 0 && dy === 0) {
+  if (dx === 0 && dy === 0 && !config.isTargetMouse) {
     // Fiddle with this angle to get loop oriented.
 
     // Needs to be 1.

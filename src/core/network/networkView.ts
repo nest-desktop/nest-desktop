@@ -145,10 +145,7 @@ export class NetworkView {
   ): boolean {
     if (this._selectedNode !== null) {
       return this._selectedNode === node.idx;
-    } else if (this._selectedConnection !== null) {
-      if (!withConnection) {
-        return false;
-      }
+    } else if (this._selectedConnection !== null && withConnection) {
       const connections: Connection[] = node.network.connections.filter(
         (connection: Connection) =>
           connection.sourceIdx === node.idx || connection.targetIdx === node.idx
