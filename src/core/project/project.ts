@@ -345,7 +345,7 @@ export class Project extends Config {
       this._activityGraph.activityChartGraph.init();
     }
 
-    if (this.config.runAfterCheckout) {
+    if (this.config.simulateAfterCheckout) {
       // Run simulation.
       setTimeout(() => this.runSimulation(), 1);
     } else {
@@ -404,15 +404,6 @@ export class Project extends Config {
     this._simulation = new Simulation(this, simulation);
   }
 
-  /**
-   * Start the simulation when a parameter is changed.
-   */
-  simulateAfterChange(): void {
-    if (this.config.runAfterChange) {
-      setTimeout(() => this.runSimulation(), 1);
-    }
-  }
-
   setErrorMessage(title: string, text: string) {
     this._errorMessage = text;
     // this._errorMessage = `<h1>${title}</h1><p>${text}</p>`;
@@ -427,6 +418,10 @@ export class Project extends Config {
   runSimulation(): Promise<any> {
     // console.log('Run simulation');
     this._errorMessage = '';
+    if (this._simulation.config.randomSeed) {
+      this._simulation.randomSeed = Math.round(Math.random() * 1000);
+      this._code.generate();
+    }
     this._simulation.running = true;
     return this.app.nestServer.http
       .post(this._app.nestServer.url + '/exec', {
