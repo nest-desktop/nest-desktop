@@ -107,6 +107,15 @@ export class Network extends Config {
     this.updateHash();
     this._project.code.generate();
     this._project.commitNetwork(this);
+
+    // Simulate when the configuration is set
+    // and the view mode is activity explorer.
+    if (
+      this._project.config.simulateAfterChange &&
+      this._project.view.modeIdx === 1
+    ) {
+      setTimeout(() => this._project.runSimulation(), 1);
+    }
   }
 
   /**
