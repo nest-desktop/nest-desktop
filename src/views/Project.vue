@@ -324,9 +324,13 @@
       <transition name="fade">
         <div
           :style="{ height: state.networkGraphHeight }"
+          ref="networkGraph"
           v-if="[0, 2].includes(state.modeIdx)"
         >
-          <NetworkGraph :projectId="state.projectId" />
+          <NetworkGraph
+            :height="state.networkGraphClientHeight"
+            :networkHash="state.project.network.hash"
+          />
         </div>
       </transition>
 
@@ -400,12 +404,13 @@ export default Vue.extend({
   props: {
     id: String,
   },
-  setup(props, { root }) {
+  setup(props, { refs, root }) {
     const state = reactive({
       activityGraph: 'abstract',
       error: false,
       modeIdx: 0,
       networkGraphHeight: 'calc(100vh - 48px)',
+      networkGraphClientHeight: 600,
       projectId: props.id as string,
       project: undefined as Project | undefined,
       simulationMenu: {
@@ -510,27 +515,28 @@ export default Vue.extend({
     };
 
     /**
-     * Set height and width for network graph.
+     * Set height for network graph.
      */
-    const resizeNetworkGraph = (modeIdx: number) => {
-      state.networkGraphHeight =
-        modeIdx == 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 1);
+    const resizeNetworkGraph = () => {
+      if (refs['networkGraph']) {
+        const networkGraph = refs['networkGraph'] as any;
+        state.networkGraphClientHeight = networkGraph.clientHeight;
+      }
     };
 
     /**
      * Select view mode of the project.
      */
     const selectMode = (modeIdx: number) => {
+      state.modeIdx = modeIdx;
       if ([0, 2].includes(modeIdx)) {
-        state.toolOpened = state.toolOpened ? modeIdx != 2 : state.toolOpened;
-        resizeNetworkGraph(modeIdx);
+        state.toolOpened = state.toolOpened
+          ? state.modeIdx !== 2
+          : state.toolOpened;
+        state.networkGraphHeight =
+          state.modeIdx == 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
+        setTimeout(() => resizeNetworkGraph(), 1);
       }
-      setTimeout(() => {
-        state.modeIdx = modeIdx;
-      }, 10);
     };
 
     /**

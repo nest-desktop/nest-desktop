@@ -17,6 +17,7 @@ export class NetworkGraph {
     centerFocus: true,
     dragging: false,
     enableConnection: false,
+    connected: false,
     keyCode: null,
     resizing: false,
   };
@@ -52,115 +53,6 @@ export class NetworkGraph {
 
   get transform(): any {
     return this._transform;
-  }
-
-  /**
-   * Draw node.
-   *
-   * @remark It is only been executed in initNetworkGraph.
-   * For changing in network graph, use updateNetworkGraph.
-   */
-  drawNode(node: Node, elem: d3.Selection<any, any, any, any>): void {
-    const axon: d3.Selection<any, any, any, any> = elem
-      .append('g')
-      .attr('class', 'axon')
-      .on('mousedown.drag', null);
-
-    axon
-      .append('path')
-      .attr('fill', 'none')
-      .attr('stroke', 'white')
-      .style('opacity', '0')
-      .attr('stroke-width', '16');
-
-    axon
-      .append('path')
-      .attr('class', 'display')
-      .attr('fill', 'none')
-      .attr('stroke-width', this._strokeWidth)
-      .style('pointer-events', 'none');
-
-    axon
-      .append('circle')
-      .attr('cx', 0)
-      .attr('cy', 0)
-      .attr('fill', 'white')
-      .attr('r', '6px')
-      .attr('stroke-width', this._strokeWidth)
-      .style('cursor', 'pointer')
-      .on('mousedown', (e: MouseEvent) => {
-        this.reset();
-        this._network.view.selectedNode = node;
-        this._state.enableConnection = true;
-        this.dragLine(e);
-        this.updateNetworkGraph();
-      });
-
-    const soma: d3.Selection<any, any, any, any> = elem
-      .append('g')
-      .attr('class', 'soma');
-
-    if (
-      node.model.elementType == 'neuron' &&
-      node.view.weight == 'inhibitory'
-    ) {
-      soma
-        .append('circle')
-        .attr('class', 'shape')
-        .attr('r', this._nodeRadius);
-    } else {
-      soma
-        .append('polygon')
-        .attr('class', 'shape')
-        .attr('points', getPoints(node, this._nodeRadius));
-    }
-
-    soma
-      .selectAll('.shape')
-      .style('stroke', node.view.color)
-      .style('stroke-width', this._strokeWidth);
-
-    soma
-      .append('text')
-      .attr('dy', () =>
-        node.model.elementType == 'neuron' && node.view.weight == 'inhibitory'
-          ? '0.4em'
-          : '0.7em'
-      )
-      .text(() => node.view.label);
-
-    soma.on('click', () => {
-      if (this._network.view.selectedNode && this._state.enableConnection) {
-        this._network.connectNodes(this._network.view.selectedNode, node);
-        this.reset();
-        node.view.focus();
-      } else if (this._network.view.selectedNode === node) {
-        this.reset();
-        node.view.focus();
-      } else {
-        this.reset();
-        node.view.select();
-        node.view.focus();
-      }
-      this._state.enableConnection =
-        this._state.keyCode === 17 && this._network.view.selectedNode;
-      this.updateNetworkGraph();
-      this.centerNetworkGraph();
-      this.resize();
-    });
-
-    elem.on('mouseover', () => {
-      this._network.view.focusedNode = node;
-      if (this._network.view.selectedNode && this._state.enableConnection) {
-        this.drawLineNodes(this._network.view.selectedNode, node);
-      }
-      this.updateNetworkGraph();
-    });
-
-    elem.on('mouseout', () => {
-      this._network.view.resetFocus();
-      this.updateNetworkGraph();
-    });
   }
 
   /**
@@ -347,12 +239,25 @@ export class NetworkGraph {
   }
 
   /**
+   * Update cursor position.
+   */
+  updateCursorPosition(e: MouseEvent): void {
+    const position: number[] = d3.pointer(
+      e,
+      this._selector.select('g#network').node()
+    );
+    this._cursorPosition.x = position[0];
+    this._cursorPosition.y = position[1];
+  }
+
+  /**
    * Initialize background.
    */
   initBackground(): void {
     this._selector
       .select('rect#background')
       .on('mousemove', (e: MouseEvent) => {
+        this.updateCursorPosition(e);
         this._network.view.resetFocus();
         if (this._state.enableConnection) {
           this.dragLine(e);
@@ -375,12 +280,7 @@ export class NetworkGraph {
       .on('contextmenu', (e: MouseEvent) => {
         // console.log(event);
         e.preventDefault();
-        const position: number[] = d3.pointer(
-          e,
-          this._selector.select('g#network').node()
-        );
-        this._cursorPosition.x = position[0];
-        this._cursorPosition.y = position[1];
+        this.updateCursorPosition(e);
 
         this._selector
           .select('g#panel')
@@ -403,6 +303,169 @@ export class NetworkGraph {
   }
 
   /**
+   * Initialize node graph.
+   *
+   * @remark It is only been executed in initNetworkGraph.
+   * For changing in node graph, use updateNodeGraph.
+   */
+  initNodeGraph(
+    node: Node,
+    idx: number,
+    elements: SVGGElement[] | ArrayLike<SVGGElement>
+  ): void {
+    const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
+    elem.selectAll('*').remove();
+
+    const axon: d3.Selection<any, any, any, any> = elem
+      .append('g')
+      .attr('class', 'axon')
+      .on('mousedown.drag', null);
+
+    axon
+      .append('path')
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .style('opacity', 0)
+      .attr('stroke-width', 16);
+
+    axon
+      .append('path')
+      .attr('class', 'display')
+      .attr('fill', 'none')
+      .attr('stroke-width', this._strokeWidth)
+      .style('pointer-events', 'none');
+
+    axon
+      .append('circle')
+      .attr('cx', 0)
+      .attr('cy', 0)
+      .attr('fill', 'white')
+      .attr('r', '6px')
+      .attr('stroke-width', this._strokeWidth)
+      .style('cursor', 'pointer')
+      .on('mousedown', (e: MouseEvent) => {
+        this.reset();
+        this._network.view.selectedNode = node;
+        this._state.enableConnection = true;
+        this.dragLine(e);
+        this.updateNetworkGraph();
+      });
+
+    const soma: d3.Selection<any, any, any, any> = elem
+      .append('g')
+      .attr('class', 'soma');
+
+    if (
+      node.model.elementType == 'neuron' &&
+      node.view.weight == 'inhibitory'
+    ) {
+      soma
+        .append('circle')
+        .attr('class', 'shape')
+        .attr('r', this._nodeRadius);
+    } else {
+      soma
+        .append('polygon')
+        .attr('class', 'shape')
+        .attr('points', getPoints(node, this._nodeRadius));
+    }
+
+    soma
+      .selectAll('.shape')
+      .style('stroke', node.view.color)
+      .style('stroke-width', this._strokeWidth);
+
+    soma
+      .append('text')
+      .attr('dy', () =>
+        node.model.elementType == 'neuron' && node.view.weight == 'inhibitory'
+          ? '0.4em'
+          : '0.7em'
+      )
+      .text(() => node.view.label);
+
+    soma.on('click', () => {
+      if (this._network.view.selectedNode && this._state.enableConnection) {
+        this._cursorPosition = JSON.parse(JSON.stringify(node.view.position));
+        this._state.connected = true;
+        this._network.connectNodes(this._network.view.selectedNode, node);
+        this.reset();
+        node.view.focus();
+      } else if (this._network.view.selectedNode === node) {
+        this.reset();
+        node.view.focus();
+      } else {
+        this.reset();
+        node.view.select();
+        node.view.focus();
+      }
+      this._state.enableConnection =
+        this._state.keyCode === 17 && this._network.view.selectedNode;
+      this.updateNetworkGraph();
+      this.centerNetworkGraph();
+      this.resize();
+    });
+
+    elem.on('mouseover', () => {
+      this._network.view.focusedNode = node;
+      if (this._network.view.selectedNode && this._state.enableConnection) {
+        this.drawLineNodes(this._network.view.selectedNode, node);
+      }
+      this.updateNetworkGraph();
+    });
+
+    elem.on('mouseout', () => {
+      this._network.view.resetFocus();
+      this.updateNetworkGraph();
+    });
+  }
+
+  /**
+   * Initialize connection graph.
+   *
+   * @remark It is only been executed in initNetworkGraph.
+   * For changing in connection graph, use updateConnectionGraph.
+   */
+  initConnectionGraph(
+    connection: Connection,
+    idx: number,
+    elements: SVGGElement[] | ArrayLike<SVGGElement>
+  ): void {
+    const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
+
+    const initPos = {
+      source: connection.source.view.position,
+      target: this._state.connected
+        ? this._cursorPosition
+        : connection.source.view.position,
+    };
+    if (elements[idx].childNodes.length === 2) {
+      const data = elements[idx].firstChild['__data__'];
+      initPos.source = data.source.view.position;
+      initPos.target = data.target.view.position || 0;
+    }
+
+    elem.selectAll('*').remove();
+    elem
+      .append('path')
+      .style('fill', 'none')
+      .style('stroke', 'black')
+      .style('opacity', 0)
+      .style('stroke-width', 40);
+
+    elem
+      .append('path')
+      .attr('class', 'display')
+      .style('fill', 'none')
+      .style('stroke-width', this._strokeWidth)
+      .style('pointer-events', 'none');
+
+    elem
+      .selectAll('path')
+      .attr('d', () => drawPath(initPos.source, initPos.target));
+  }
+
+  /**
    * Initialize network graph.
    */
   initNetworkGraph() {
@@ -412,23 +475,12 @@ export class NetworkGraph {
       .selectAll('g.connection')
       .data(this._network.connections);
 
-    const connectionGroup: d3.Selection<any, any, any, any> = connections
+    connections
       .enter()
       .append('g')
       .attr('class', 'connection')
+      .attr('idx', (connection: Connection) => connection.idx)
       .style('opacity', 0)
-      .merge(connections);
-
-    connectionGroup.selectAll('path').remove();
-
-    connectionGroup
-      .append('path')
-      .style('fill', 'none')
-      .style('stroke', 'white')
-      .style('opacity', 0.1)
-      .style('stroke-width', 20)
-      .attr('d', (connection: Connection) => connection.view.drawPath())
-      .merge(connections)
       .on('mouseover', (_, connection: Connection) => {
         connection.view.focus();
         this.updateNetworkGraph();
@@ -446,16 +498,9 @@ export class NetworkGraph {
         }
         connection.view.focus();
         this.updateNetworkGraph();
-      });
-
-    connectionGroup
-      .append('path')
-      .attr('class', 'display')
-      .style('fill', 'none')
-      .style('stroke-width', this._strokeWidth)
-      .style('pointer-events', 'none')
-      .attr('d', (connection: Connection) => connection.view.drawPath())
-      .merge(connections);
+      })
+      .merge(connections)
+      .each((c, i, e) => this.initConnectionGraph(c, i, e));
 
     connections.exit().remove();
 
@@ -515,23 +560,21 @@ export class NetworkGraph {
       .style('opacity', 0)
       .call(dragNode)
       .merge(nodes)
-      .each((node: Node, idx: number, elements: any[]) => {
-        const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
-        elem.selectAll('*').remove();
-        this.drawNode(node, elem);
-      });
+      .each((n, i, e) => this.initNodeGraph(n, i, e));
 
     nodes.exit().remove();
+
+    this._state.connected = false;
   }
 
   /**
-   * Update network graph.
+   * Update connection graph.
    */
-  updateNetworkGraph() {
-    // console.log('Update network graph');
+  updateConnectionGraph() {
+    const duration: number = this._state.dragging ? 0 : 250;
     const t: d3.Transition<any, any, any, any> = d3
       .transition()
-      .duration(this._state.dragging ? 0 : 250);
+      .duration(duration);
 
     // update connection path
     this._selector
@@ -558,20 +601,36 @@ export class NetworkGraph {
     this._selector
       .selectAll('g.connection')
       .selectAll('path')
-      .attr('d', (connection: Connection) => connection.view.drawPath());
+      .transition(t)
+      .attr('d', (connection: Connection) =>
+        drawPath(
+          connection.source.view.position,
+          connection.target.view.position
+        )
+      );
+  }
+
+  /**
+   * Update node graph.
+   */
+  updateNodeGraph() {
+    const duration: number = this._state.dragging ? 0 : 250;
+    const t: d3.Transition<any, any, any, any> = d3
+      .transition()
+      .duration(duration);
 
     // update node group
     this._selector
       .selectAll('g.node')
       .transition(t)
+      .style('opacity', 1)
       .attr(
         'transform',
         (node: Node) =>
           `translate(${node.view.position.x},${node.view.position.y}) scale( ${
             node.view.isFocused() ? 1.2 : 1
           })`
-      )
-      .style('opacity', 1);
+      );
 
     // update node shape
     this._selector
@@ -633,6 +692,15 @@ export class NetworkGraph {
           : 0
       )
       .style('stroke', (node: Node) => node.view.color);
+  }
+
+  /**
+   * Update network graph.
+   */
+  updateNetworkGraph() {
+    // console.log('Update network graph');
+    this.updateConnectionGraph();
+    this.updateNodeGraph();
   }
 
   /**
