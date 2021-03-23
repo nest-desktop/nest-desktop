@@ -159,7 +159,8 @@ export default Vue.extend({
     NetworkNodeMenu,
   },
   props: {
-    projectId: String,
+    height: Number,
+    networkHash: String,
   },
   setup(props, { refs }) {
     const state = reactive({
@@ -275,7 +276,7 @@ export default Vue.extend({
       state.graph.network = state.network;
       state.graph.reset();
       state.graph.update();
-      state.graph.resize();
+      resize();
       setMenuTrigger();
       showHelp();
     };
@@ -286,13 +287,12 @@ export default Vue.extend({
     const resize = () => {
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
-        state.graph.resize(elem.clientWidth, elem.clientHeight);
+        state.graph.resize(elem.clientWidth, props.height);
       }
     };
 
     onMounted(() => {
       state.graph = new NetworkGraph('svg#networkGraph');
-      resize();
       update();
       window.addEventListener('resize', resize);
     });
@@ -302,7 +302,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => [props.projectId, state.network.hash],
+      () => [props.height, props.networkHash],
       () => update()
     );
 
