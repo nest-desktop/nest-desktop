@@ -1,0 +1,22 @@
+# Name the node stage "builder"
+FROM ubuntu:bionic AS builder
+LABEL maintainer="Sebastian Spreizer <spreizer@web.de>"
+
+RUN apt-get update && apt-get install -y python3-pip
+RUN python3 -m pip install --upgrade pip uwsgi
+
+RUN export LC_CTYPE=C.UTF-8 && \
+    python3 -m pip install -i https://test.pypi.org/simple/ nest-desktop==3.0.0.dev3 && \
+    ls /usr/local/lib/python3.6/dist-packages/nest_desktop
+
+
+# nginx state for serving content
+FROM nginx:alpine
+# Set working directory to nginx asset directory
+WORKDIR /usr/share/nginx/html
+# Remove default nginx static assets
+RUN rm -rf ./*
+# Copy static assets from builder stage
+COPY --from=builder /usr/local/lib/python3.6/dist-packages/nest_desktop/app/ .
+# Containers run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
