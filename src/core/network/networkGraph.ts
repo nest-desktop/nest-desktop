@@ -316,26 +316,26 @@ export class NetworkGraph {
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
     elem.selectAll('*').remove();
 
-    const axon: d3.Selection<any, any, any, any> = elem
+    const connector: d3.Selection<any, any, any, any> = elem
       .append('g')
-      .attr('class', 'axon')
+      .attr('class', 'connector')
       .on('mousedown.drag', null);
 
-    axon
+    connector
       .append('path')
       .attr('fill', 'none')
       .attr('stroke', 'black')
       .style('opacity', 0)
       .attr('stroke-width', 16);
 
-    axon
+    connector
       .append('path')
       .attr('class', 'display')
       .attr('fill', 'none')
       .attr('stroke-width', this._strokeWidth)
       .style('pointer-events', 'none');
 
-    axon
+    connector
       .append('circle')
       .attr('cx', 0)
       .attr('cy', 0)
@@ -400,7 +400,8 @@ export class NetworkGraph {
         node.view.focus();
       }
       this._state.enableConnection =
-        this._state.keyCode === 17 && this._network.view.selectedNode;
+        [18, 225].includes(this._state.keyCode) &&
+        this._network.view.selectedNode;
       this.updateNetworkGraph();
       this.centerNetworkGraph();
       this.resize();
@@ -536,6 +537,7 @@ export class NetworkGraph {
         // d3.selectAll('g.node').sort((a: Node, b: Node) =>
         //   d3.ascending(a.idx, b.idx)
         // );
+        this.updateNetworkGraph();
         this.centerNetworkGraph();
         this.resize();
       });
@@ -641,54 +643,54 @@ export class NetworkGraph {
         node.view.isSelected() ? '7.85' : ''
       );
 
-    const axon: d3.Selection<any, any, any, any> = this._selector.selectAll(
-      'g.axon'
+    const connector: d3.Selection<any, any, any, any> = this._selector.selectAll(
+      'g.connector'
     );
 
-    axon.style('opacity', (node: Node) =>
+    connector.style('opacity', (node: Node) =>
       (node.view.isFocused() || node.view.isSelected()) &&
-      !this._state.enableConnection
+      !this._state.enableConnection && !this.state.dragging
         ? '1'
         : '0'
     );
 
-    const axonTerminalPos: any = {
+    const connectorEndPos: any = {
       x: this._nodeRadius + 8,
       y: this._nodeRadius + 12,
     };
 
-    axon
+    connector
       .selectAll('path')
       .transition(t)
       .attr('d', (node: Node) =>
         drawPath(
           { x: 0, y: 0 },
           (node.view.isFocused() || node.view.isSelected()) &&
-            !this._state.enableConnection
-            ? axonTerminalPos
+            !this._state.enableConnection && !this.state.dragging
+            ? connectorEndPos
             : { x: 0, y: 0 },
           { isTargetMouse: true }
         )
       );
 
-    axon
+    connector
       .selectAll('path.display')
       .transition(t)
       .style('stroke', (node: Node) => node.view.color);
 
-    axon
+    connector
       .selectAll('circle')
       .transition(t)
       .attr('cx', (node: Node) =>
         (node.view.isFocused() || node.view.isSelected()) &&
-        !this._state.enableConnection
-          ? axonTerminalPos.x
+        !this._state.enableConnection && !this.state.dragging
+          ? connectorEndPos.x
           : 0
       )
       .attr('cy', (node: Node) =>
         (node.view.isFocused() || node.view.isSelected()) &&
-        !this._state.enableConnection
-          ? axonTerminalPos.y
+        !this._state.enableConnection && !this.state.dragging
+          ? connectorEndPos.y
           : 0
       )
       .style('stroke', (node: Node) => node.view.color);
@@ -759,6 +761,7 @@ export class NetworkGraph {
       .on('keyup', (event: any) => {
         this._state.keyCode = null;
         if (event.keyCode === 27) {
+          // Escape
           this.reset();
           this.updateNetworkGraph();
         }
@@ -791,7 +794,8 @@ export class NetworkGraph {
       .style('display', 'none')
       .style('opacity', '0');
 
-    if (this._state.keyCode !== 17) {
+    if (![18, 225].includes(this._state.keyCode)) {
+      // Alt
       this.resetDragLine();
       this._state.enableConnection = false;
       this._network.view.reset();
