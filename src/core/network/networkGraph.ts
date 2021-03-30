@@ -10,16 +10,16 @@ export class NetworkGraph {
   private _cursorPosition: any = { x: 0, y: 0 };
   private _height: number = 600;
   private _network: Network;
-  private _networkCenter: any = { x: 0, y: 0 };
   private _nodeRadius: number = 20;
   private _selector: d3.Selection<any, any, any, any>;
   private _state: any = {
-    centerFocus: true,
+    centerNetwork: true,
+    centerSelected: false,
     connected: false,
     dragging: false,
     enableConnection: false,
     keyCode: null,
-    resizing: false,
+    transforming: false,
     showGrid: false,
   };
   private _strokeWidth: number = 3;
@@ -30,10 +30,6 @@ export class NetworkGraph {
   constructor(selector: string) {
     this._selector = d3.select(selector);
     this.init();
-  }
-
-  get centerFocus(): boolean {
-    return this._state.centerFocus;
   }
 
   get network(): Network {
@@ -50,10 +46,6 @@ export class NetworkGraph {
 
   get strokeWidth(): number {
     return this._strokeWidth;
-  }
-
-  get transform(): any {
-    return this._transform;
   }
 
   /**
@@ -131,7 +123,6 @@ export class NetworkGraph {
             elementType,
             position: JSON.parse(JSON.stringify(this._cursorPosition)),
           });
-          this.update();
         });
 
       const f: number = (idx * 2) / 3 + 1 / 3;
@@ -223,7 +214,7 @@ export class NetworkGraph {
       .scaleExtent([0.5, 2])
       .on('zoom', ({ transform }) => {
         this._transform = transform;
-        if (this._state.resizing) {
+        if (this._state.transforming) {
           this._selector
             .select('g#network')
             .transition()
@@ -404,8 +395,7 @@ export class NetworkGraph {
         [18, 225].includes(this._state.keyCode) &&
         this._network.view.selectedNode;
       this.updateNetworkGraph();
-      this.centerNetworkGraph();
-      this.resize();
+      this.transformNetworkGraph();
     });
 
     elem.on('mouseover', () => {
@@ -501,6 +491,7 @@ export class NetworkGraph {
         }
         connection.view.focus();
         this.updateNetworkGraph();
+        this.transformNetworkGraph();
       })
       .merge(connections)
       .each((c, i, e) => this.initConnectionGraph(c, i, e));
@@ -540,8 +531,7 @@ export class NetworkGraph {
         //   d3.ascending(a.idx, b.idx)
         // );
         this.updateNetworkGraph();
-        this.centerNetworkGraph();
-        this.resize();
+        this.transformNetworkGraph();
       });
 
     const nodes: d3.Selection<any, any, any, any> = this._selector
@@ -775,50 +765,76 @@ export class NetworkGraph {
   }
 
   /**
-   * Center network graph.
+   * Center position of network graph.
    */
-  centerNetworkGraph(): void {
-    // console.log('center network graph');
-    const x: number[] = [];
-    const y: number[] = [];
+  centerNetworkPos(): any {
+    // console.log('Center network pos');
+    const X: number[] = [];
+    const Y: number[] = [];
     this._network.nodes.forEach((node: Node) => {
-      x.push(node.view.position.x);
-      y.push(node.view.position.y);
+      X.push(node.view.position.x);
+      Y.push(node.view.position.y);
     });
-    this._networkCenter.x = (d3.min(x) + d3.max(x)) / 2;
-    this._networkCenter.y = (d3.min(y) + d3.max(y)) / 2;
+    const x: number = (d3.min(X) + d3.max(X)) / 2;
+    const y: number = (d3.min(Y) + d3.max(Y)) / 2;
+    return { x, y };
   }
 
   /**
-   * Resize graph.
+   * Transform network graph.
    */
-  resize(width: number = 0, height: number = 0): void {
-    this._state.resizing = true;
-    this._width = width || this._width;
-    this._height = height || this._height;
-    this._selector.attr('width', this._width).attr('height', this._height);
-    this._selector
-      .select('rect#background')
-      .attr('width', this._width)
-      .attr('height', this._height);
+  transformNetworkGraph(): void {
+    // console.log('Transform network graph');
+    if (this._state.centerNetwork || this._state.centerSelected) {
+      let x: number, y: number;
+      if (this._state.centerSelected && this._network.view.selectedNode) {
+        x = this._network.view.selectedNode.view.position.x;
+        y = this._network.view.selectedNode.view.position.y;
+      } else if (
+        this._state.centerSelected &&
+        this._network.view.selectedConnection
+      ) {
+        const source: any = this._network.view.selectedConnection.source.view
+          .position;
+        const target: any = this._network.view.selectedConnection.target.view
+          .position;
+        x = d3.mean([source.x, target.x]);
+        y = d3.mean([source.y, target.y]);
+      } else {
+        const networkCenterPos: any = this.centerNetworkPos();
+        x = networkCenterPos.x;
+        y = networkCenterPos.y;
+      }
+      this._transform.x = this._width / 2 - x * this._transform.k;
+      this._transform.y = this._height / 2 - y * this._transform.k;
 
-    if (this._state.centerFocus) {
-      const x = this._width / 2 - this._networkCenter.x;
-      const y = this._height / 2 - this._networkCenter.y;
+      this._state.transforming = true;
       this._selector
         .select('rect#background')
-        .call(this._zoom.transform, d3.zoomIdentity.translate(x, y));
+        .call(
+          this._zoom.transform,
+          d3.zoomIdentity
+            .translate(this._transform.x, this._transform.y)
+            .scale(this._transform.k)
+        );
+      this._state.transforming = false;
     }
-    this._state.resizing = false;
   }
 
   /**
-   * Toggle center focus of network graph.
+   * Toggle center of network graph.
    */
-  toggleCenterFocus(): void {
-    this._state.centerFocus = !this._state.centerFocus;
-    this.centerNetworkGraph();
-    this.resize();
+  toggleCenterNetwork(): void {
+    this._state.centerNetwork = !this._state.centerNetwork;
+    this.transformNetworkGraph();
+  }
+
+  /**
+   * Toggle center of selected.
+   */
+  toggleCenterSelected(): void {
+    this._state.centerSelected = !this._state.centerSelected;
+    this.transformNetworkGraph();
   }
 
   /**
@@ -830,10 +846,23 @@ export class NetworkGraph {
   }
 
   /**
+   * Resize graph.
+   */
+  resize(width: number = 0, height: number = 0): void {
+    this._width = width || this._width;
+    this._height = height || this._height;
+    this._selector.attr('width', this._width).attr('height', this._height);
+    this._selector
+      .select('rect#background')
+      .attr('width', this._width)
+      .attr('height', this._height);
+  }
+
+  /**
    * Initialize graph.
    */
   init(): void {
-    // console.log('Init network graph');
+    // console.log('Init graph');
     d3.select('body')
       .on('keyup', (event: any) => {
         this._state.keyCode = null;
@@ -855,17 +884,17 @@ export class NetworkGraph {
    * Update graph.
    */
   update(): void {
-    // console.log('Update');
+    // console.log('Update graph');
     this.initNetworkGraph();
     this.updateNetworkGraph();
-    this.centerNetworkGraph();
+    this.transformNetworkGraph();
   }
 
   /**
    * Reset graph.
    */
   reset(): void {
-    // console.log('Reset network graph');
+    // console.log('Reset graph');
     this._selector
       .select('g#panel')
       .style('display', 'none')

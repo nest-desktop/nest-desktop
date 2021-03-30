@@ -69,6 +69,33 @@
 
         <span>
           <v-btn
+            :color="state.graph.state.centerSelected ? 'amber' : 'grey'"
+            @click="() => state.graph.toggleCenterSelected()"
+            icon
+            small
+            title="Auto-centering selected"
+          >
+            <v-icon
+              small
+              v-text="
+                state.graph.state.centerSelected
+                  ? 'mdi-image-filter-center-focus'
+                  : 'mdi-image-filter-center-focus-strong-outline'
+              "
+            />
+          </v-btn>
+
+          <v-btn
+            :color="state.graph.state.centerNetwork ? 'amber' : 'grey'"
+            @click="() => state.graph.toggleCenterNetwork()"
+            icon
+            small
+            title="Auto-centering network graph"
+          >
+            <v-icon small v-text="'mdi-focus-field'" />
+          </v-btn>
+
+          <v-btn
             :color="state.graph.state.showGrid ? 'amber' : 'grey'"
             @click="() => state.graph.toggleGrid()"
             icon
@@ -78,23 +105,6 @@
             <v-icon
               small
               v-text="state.graph.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
-            />
-          </v-btn>
-
-          <v-btn
-            :color="state.graph.state.centerFocus ? 'amber' : 'grey'"
-            @click="() => state.graph.toggleCenterFocus()"
-            icon
-            small
-            title="Auto center focus network graph"
-          >
-            <v-icon
-              small
-              v-text="
-                state.graph.state.centerFocus
-                  ? 'mdi-image-filter-center-focus'
-                  : 'mdi-image-filter-center-focus-strong-outline'
-              "
             />
           </v-btn>
         </span>
