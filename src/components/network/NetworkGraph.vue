@@ -18,7 +18,7 @@
     />
 
     <svg id="networkGraph" width="800" height="600">
-      <g class="marker">
+      <g class="marker" v-if="state.network">
         <defs
           :key="'defs' + connection.idx"
           v-for="connection of state.network.connections"
@@ -72,8 +72,10 @@
       </g>
 
       <rect id="background" fill="white" />
+      <!-- <g class="grid no-print" /> -->
 
       <g id="network" ref="network">
+        <g class="grid no-print" />
         <g v-if="state.graph">
           <path
             :style="{ strokeWidth: state.graph.strokeWidth }"
@@ -86,22 +88,7 @@
 
         <g id="connections" />
         <g id="nodes" />
-        <g id="panel">
-          <!-- <g
-          class="tooltip"
-          style="visibility:hidden;"
-          transform="translate(0, -45)"
-          >
-          <rect
-          fill-opacity="0.75"
-          fill="white"
-          height="12"
-          transform="translate(-25,-10)"
-          width="50"
-          />
-          <text class="label" />
-        </g> -->
-        </g>
+        <g id="panel" />
       </g>
     </svg>
 
@@ -288,6 +275,7 @@ export default Vue.extend({
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
         state.graph.resize(elem.clientWidth, props.height);
+        setTimeout(() => state.graph.updateGridGraph(), 1);
       }
     };
 
