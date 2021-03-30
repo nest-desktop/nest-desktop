@@ -262,7 +262,6 @@ export class NetworkGraph {
         } else {
           this.reset();
         }
-        this.updateNetworkGraph();
       })
       .on('mousedown', () => {
         this._selector.select('rect#background').style('cursor', 'move');
