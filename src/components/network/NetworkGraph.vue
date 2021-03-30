@@ -261,9 +261,10 @@ export default Vue.extend({
       // console.log('Update network graph');
       state.network = core.app.project.network;
       state.graph.network = state.network;
+      const elem: any = refs.networkGraph['parentNode'];
+      state.graph.resize(elem.clientWidth, props.height);
       state.graph.reset();
       state.graph.update();
-      resize();
       setMenuTrigger();
       showHelp();
     };
@@ -271,27 +272,43 @@ export default Vue.extend({
     /**
      * Resize network graph.
      */
-    const resize = () => {
+    const onResize = () => {
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
         state.graph.resize(elem.clientWidth, props.height);
-        setTimeout(() => state.graph.updateGridGraph(), 1);
+        state.graph.transformNetworkGraph();
       }
     };
 
     onMounted(() => {
       state.graph = new NetworkGraph('svg#networkGraph');
       update();
-      window.addEventListener('resize', resize);
+      window.addEventListener('resize', onResize);
     });
 
     onBeforeUnmount(() => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', onResize);
     });
 
     watch(
-      () => [props.height, props.networkHash],
+      () => props.networkHash,
       () => update()
+    );
+
+    watch(
+      () => props.height,
+      () => onResize()
+    );
+
+    watch(
+      () => [
+        state.network.view.selectedNode,
+        state.network.view.selectedConnection,
+      ],
+      () => {
+        state.graph.updateNetworkGraph();
+        state.graph.transformNetworkGraph();
+      }
     );
 
     return { state };
