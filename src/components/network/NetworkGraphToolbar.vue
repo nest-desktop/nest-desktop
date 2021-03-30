@@ -67,22 +67,34 @@
           />
         </span>
 
-        <span class="ma-1">
+        <span>
+          <v-btn
+            :color="state.graph.state.showGrid ? 'amber' : 'grey'"
+            @click="() => state.graph.toggleGrid()"
+            icon
+            small
+            title="Show grid"
+          >
+            <v-icon
+              small
+              v-text="state.graph.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
+            />
+          </v-btn>
+
           <v-btn
             :color="state.graph.state.centerFocus ? 'amber' : 'grey'"
             @click="() => state.graph.toggleCenterFocus()"
             icon
             small
-            tile
             title="Auto center focus network graph"
           >
             <v-icon
-              v-if="state.graph.state.centerFocus"
-              v-text="'mdi-image-filter-center-focus'"
-            />
-            <v-icon
-              v-if="!state.graph.state.centerFocus"
-              v-text="'mdi-image-filter-center-focus-strong-outline'"
+              small
+              v-text="
+                state.graph.state.centerFocus
+                  ? 'mdi-image-filter-center-focus'
+                  : 'mdi-image-filter-center-focus-strong-outline'
+              "
             />
           </v-btn>
         </span>

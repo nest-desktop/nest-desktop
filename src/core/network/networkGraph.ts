@@ -15,11 +15,12 @@ export class NetworkGraph {
   private _selector: d3.Selection<any, any, any, any>;
   private _state: any = {
     centerFocus: true,
+    connected: false,
     dragging: false,
     enableConnection: false,
-    connected: false,
     keyCode: null,
     resizing: false,
+    showGrid: false,
   };
   private _strokeWidth: number = 3;
   private _width: number = 800;
@@ -471,6 +472,7 @@ export class NetworkGraph {
    */
   initNetworkGraph() {
     // console.log('Init network graph');
+
     const connections: d3.Selection<any, any, any, any> = this._selector
       .select('g#connections')
       .selectAll('g.connection')
@@ -570,6 +572,66 @@ export class NetworkGraph {
   }
 
   /**
+   * Generate data for the grid.
+   */
+  gridData() {
+    const data = new Array();
+    const offset = 10;
+    const width = 25;
+    const height = 25;
+    const nrows = (this._height / height) * 3;
+    const ncolumns = (this._width / width) * 3;
+
+    // iterate for rows
+    for (let row = 0; row < nrows - 1; row++) {
+      data.push({
+        x1: -this._width,
+        x2: this._width * 2,
+        y1: offset + row * height - this._height,
+        y2: offset + row * height - this._height,
+      });
+    }
+
+    // iterate for columns
+    for (let column = 0; column < ncolumns - 1; column++) {
+      data.push({
+        x1: offset + column * width - this._width,
+        x2: offset + column * width - this._width,
+        y1: -this._height,
+        y2: this._height * 2,
+      });
+    }
+    return data;
+  }
+
+  /**
+   * Update graph for the grid.
+   */
+  updateGridGraph() {
+    const gridData: any[] = this.gridData();
+
+    const gridLines: d3.Selection<any, any, any, any> = this._selector
+      .selectAll('.grid')
+      .selectAll('.gridLine')
+      .data(gridData);
+
+    gridLines
+      .enter()
+      .append('line')
+      .attr('class', 'gridLine')
+      .attr('stroke', '#eee')
+      .style('pointer-events', 'none')
+      .merge(gridLines)
+      .attr('x1', (d: any) => d.x1)
+      .attr('x2', (d: any) => d.x2)
+      .attr('y1', (d: any) => d.y1)
+      .attr('y2', (d: any) => d.y2)
+      .style('opacity', this._state.showGrid ? 1 : 0);
+
+    gridLines.exit().remove();
+  }
+
+  /**
    * Update connection graph.
    */
   updateConnectionGraph() {
@@ -643,13 +705,17 @@ export class NetworkGraph {
         node.view.isSelected() ? '7.85' : ''
       );
 
-    const connector: d3.Selection<any, any, any, any> = this._selector.selectAll(
-      'g.connector'
-    );
+    const connector: d3.Selection<
+      any,
+      any,
+      any,
+      any
+    > = this._selector.selectAll('g.connector');
 
     connector.style('opacity', (node: Node) =>
       (node.view.isFocused() || node.view.isSelected()) &&
-      !this._state.enableConnection && !this.state.dragging
+      !this._state.enableConnection &&
+      !this.state.dragging
         ? '1'
         : '0'
     );
@@ -666,7 +732,8 @@ export class NetworkGraph {
         drawPath(
           { x: 0, y: 0 },
           (node.view.isFocused() || node.view.isSelected()) &&
-            !this._state.enableConnection && !this.state.dragging
+            !this._state.enableConnection &&
+            !this.state.dragging
             ? connectorEndPos
             : { x: 0, y: 0 },
           { isTargetMouse: true }
@@ -683,13 +750,15 @@ export class NetworkGraph {
       .transition(t)
       .attr('cx', (node: Node) =>
         (node.view.isFocused() || node.view.isSelected()) &&
-        !this._state.enableConnection && !this.state.dragging
+        !this._state.enableConnection &&
+        !this.state.dragging
           ? connectorEndPos.x
           : 0
       )
       .attr('cy', (node: Node) =>
         (node.view.isFocused() || node.view.isSelected()) &&
-        !this._state.enableConnection && !this.state.dragging
+        !this._state.enableConnection &&
+        !this.state.dragging
           ? connectorEndPos.y
           : 0
       )
@@ -750,6 +819,14 @@ export class NetworkGraph {
     this._state.centerFocus = !this._state.centerFocus;
     this.centerNetworkGraph();
     this.resize();
+  }
+
+  /**
+   * Toggle grid graph.
+   */
+  toggleGrid(): void {
+    this._state.showGrid = !this._state.showGrid;
+    this.updateGridGraph();
   }
 
   /**
