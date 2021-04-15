@@ -709,6 +709,7 @@ export class NetworkGraph {
         : '0'
     );
 
+    // connector animation
     const connectorEndPos: any = {
       x: this._nodeRadius + 8,
       y: this._nodeRadius + 12,
