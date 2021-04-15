@@ -766,7 +766,7 @@ export class NetworkGraph {
   /**
    * Center position of network graph.
    */
-  centerNetworkPos(): any {
+  centerNetworkPos(): { x: number; y: number } {
     // console.log('Center network pos');
     const X: number[] = [];
     const Y: number[] = [];
@@ -800,7 +800,7 @@ export class NetworkGraph {
         x = d3.mean([source.x, target.x]);
         y = d3.mean([source.y, target.y]);
       } else {
-        const networkCenterPos: any = this.centerNetworkPos();
+        const networkCenterPos = this.centerNetworkPos();
         x = networkCenterPos.x;
         y = networkCenterPos.y;
       }
