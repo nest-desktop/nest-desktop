@@ -379,7 +379,7 @@ export class Node extends Config {
    * @return cloned node component
    */
   clone(): Node {
-    return new Node(this._network, this);
+    return new Node(this._network, this.copy(this.toJSON()));
   }
 
   /**

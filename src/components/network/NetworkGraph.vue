@@ -17,52 +17,8 @@
       class="no-print"
     />
 
-    <transition name="fade">
-      <div
-        v-if="
-          state.graph &&
-            state.network.view.selectedNode &&
-            !state.graph.state.dragging
-        "
-        :style="{
-          position: 'absolute',
-          top:
-            state.graph.transform.y +
-            state.network.view.selectedNode.view.position.y -
-            14 +
-            'px',
-          left:
-            state.graph.transform.x +
-            state.network.view.selectedNode.view.position.x -
-            18 +
-            'px',
-        }"
-      >
-        <div style="position:relative">
-          <transition name="fade">
-            <v-btn
-              @click="enableConnection"
-              icon
-              small
-              style="position:absolute; top:32px; left:32px"
-              v-show="!state.graph.state.enableConnection"
-            >
-              <v-icon v-text="'mdi-plus'" />
-            </v-btn>
-          </transition>
-          <!-- <v-btn
-            @click="deleteNode"
-            icon
-            style="position:absolute; top:32px; left:-32px"
-          >
-            <v-icon v-text="'mdi-trash-can-outline'" />
-          </v-btn> -->
-        </div>
-      </div>
-    </transition>
-
     <svg id="networkGraph" width="800" height="600">
-      <g class="marker">
+      <g class="marker" v-if="state.network">
         <defs
           :key="'defs' + connection.idx"
           v-for="connection of state.network.connections"
@@ -116,8 +72,10 @@
       </g>
 
       <rect id="background" fill="white" />
+      <!-- <g class="grid no-print" /> -->
 
       <g id="network" ref="network">
+        <g class="grid no-print" />
         <g v-if="state.graph">
           <path
             :style="{ strokeWidth: state.graph.strokeWidth }"
@@ -130,22 +88,7 @@
 
         <g id="connections" />
         <g id="nodes" />
-        <g id="panel">
-          <!-- <g
-          class="tooltip"
-          style="visibility:hidden;"
-          transform="translate(0, -45)"
-          >
-          <rect
-          fill-opacity="0.75"
-          fill="white"
-          height="12"
-          transform="translate(-25,-10)"
-          width="50"
-          />
-          <text class="label" />
-        </g> -->
-        </g>
+        <g id="panel" />
       </g>
     </svg>
 
@@ -203,7 +146,8 @@ export default Vue.extend({
     NetworkNodeMenu,
   },
   props: {
-    projectId: String,
+    height: Number,
+    networkHash: String,
   },
   setup(props, { refs }) {
     const state = reactive({
@@ -311,29 +255,16 @@ export default Vue.extend({
     };
 
     /**
-     * Remove node.
-     */
-    const deleteNode = () => {
-      state.network.view.selectedNode.remove();
-    };
-
-    /**
-     * Enable connection.
-     */
-    const enableConnection = (e: MouseEvent) => {
-      state.graph.enableConnection(e);
-    };
-
-    /**
      * Update network graph.
      */
     const update = () => {
       // console.log('Update network graph');
       state.network = core.app.project.network;
       state.graph.network = state.network;
+      const elem: any = refs.networkGraph['parentNode'];
+      state.graph.resize(elem.clientWidth, props.height);
       state.graph.reset();
       state.graph.update();
-      state.graph.resize();
       setMenuTrigger();
       showHelp();
     };
@@ -341,30 +272,46 @@ export default Vue.extend({
     /**
      * Resize network graph.
      */
-    const resize = () => {
+    const onResize = () => {
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
-        state.graph.resize(elem.clientWidth, elem.clientHeight);
+        state.graph.resize(elem.clientWidth, props.height);
+        state.graph.transformNetworkGraph();
       }
     };
 
     onMounted(() => {
       state.graph = new NetworkGraph('svg#networkGraph');
-      resize();
       update();
-      window.addEventListener('resize', resize);
+      window.addEventListener('resize', onResize);
     });
 
     onBeforeUnmount(() => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', onResize);
     });
 
     watch(
-      () => [props.projectId, state.network.hash],
+      () => props.networkHash,
       () => update()
     );
 
-    return { deleteNode, enableConnection, state };
+    watch(
+      () => props.height,
+      () => onResize()
+    );
+
+    watch(
+      () => [
+        state.network.view.selectedNode,
+        state.network.view.selectedConnection,
+      ],
+      () => {
+        state.graph.updateNetworkGraph();
+        state.graph.transformNetworkGraph();
+      }
+    );
+
+    return { state };
   },
 });
 </script>

@@ -8,27 +8,50 @@
       style="width:100%; background-color:transparent"
     >
       <div v-if="state.network">
-        <transition-group
-          :key="node.idx"
-          name="list"
-          v-for="node in state.network.nodes"
-        >
-          <v-chip
-            :color="node.view.color"
-            :key="node.idx"
-            class="ma-1"
-            dark
-            small
-            tile
-            v-if="state.network.view.isNodeSelected(node, false)"
-          >
-            {{ node.model.label }}
-            <span class="mx-1" v-if="state.network.project.app.config.devMode">
-              (x: {{ node.view.position.x.toFixed() }} y:
-              {{ node.view.position.y.toFixed() }})
-            </span>
-          </v-chip>
-        </transition-group>
+        <v-row>
+          <v-col>
+            <transition-group name="list" style="display:inline-flex">
+              <span
+                key="sourceNode"
+                v-if="
+                  state.network.view.selectedNode ||
+                    state.network.view.selectedConnection
+                "
+              >
+                <NetworkNodeChip
+                  :graph="state.graph"
+                  :node="state.network.view.selectedNode"
+                  v-if="state.network.view.selectedNode"
+                />
+                <NetworkNodeChip
+                  :graph="state.graph"
+                  :node="state.network.view.selectedConnection.source"
+                  v-if="state.network.view.selectedConnection"
+                />
+              </span>
+
+              <span
+                key="connection"
+                v-if="
+                  state.network.view.selectedConnection ||
+                    state.graph.state.enableConnection
+                "
+              >
+                <v-icon class="ma-1" small v-text="'mdi-arrow-right'" />
+              </span>
+
+              <span
+                key="targetNode"
+                v-if="state.network.view.selectedConnection"
+              >
+                <NetworkNodeChip
+                  :graph="state.graph"
+                  :node="state.network.view.selectedConnection.target"
+                />
+              </span>
+            </transition-group>
+          </v-col>
+        </v-row>
       </div>
 
       <v-spacer />
@@ -44,22 +67,44 @@
           />
         </span>
 
-        <span class="ma-1">
+        <span>
           <v-btn
-            :color="state.graph.state.centerFocus ? 'amber' : 'grey'"
-            @click="() => state.graph.toggleCenterFocus()"
+            :color="state.graph.state.centerSelected ? 'amber' : 'grey'"
+            @click="() => state.graph.toggleCenterSelected()"
             icon
             small
-            tile
-            title="Auto center focus network graph"
+            title="Auto-centering selected"
           >
             <v-icon
-              v-if="state.graph.state.centerFocus"
-              v-text="'mdi-image-filter-center-focus'"
+              small
+              v-text="
+                state.graph.state.centerSelected
+                  ? 'mdi-image-filter-center-focus'
+                  : 'mdi-image-filter-center-focus-strong-outline'
+              "
             />
+          </v-btn>
+
+          <v-btn
+            :color="state.graph.state.centerNetwork ? 'amber' : 'grey'"
+            @click="() => state.graph.toggleCenterNetwork()"
+            icon
+            small
+            title="Auto-centering network graph"
+          >
+            <v-icon small v-text="'mdi-focus-field'" />
+          </v-btn>
+
+          <v-btn
+            :color="state.graph.state.showGrid ? 'amber' : 'grey'"
+            @click="() => state.graph.toggleGrid()"
+            icon
+            small
+            title="Show grid"
+          >
             <v-icon
-              v-if="!state.graph.state.centerFocus"
-              v-text="'mdi-image-filter-center-focus-strong-outline'"
+              small
+              v-text="state.graph.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
             />
           </v-btn>
         </span>
@@ -74,9 +119,13 @@ import { reactive, watch } from '@vue/composition-api';
 
 import { Network } from '@/core/network/network';
 import { NetworkGraph } from '@/core/network/networkGraph';
+import NetworkNodeChip from '@/components/network/NetworkNodeChip.vue';
 
 export default Vue.extend({
   name: 'NetworkGraphToolbar',
+  components: {
+    NetworkNodeChip,
+  },
   props: {
     graph: NetworkGraph,
     network: Network,
@@ -103,10 +152,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.list-item {
-  display: inline-block;
-  margin-right: 10px;
-}
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s;
@@ -114,6 +159,6 @@ export default Vue.extend({
 .list-enter,
 .list-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateX(-10px);
 }
 </style>

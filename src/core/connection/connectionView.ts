@@ -1,5 +1,4 @@
 import { Connection } from './connection';
-import { drawPath } from './connectionGraph';
 
 export class ConnectionView {
   private _colorExcitation = '#595289'; // '#467ab3';
@@ -117,19 +116,5 @@ export class ConnectionView {
    */
   connectSpikeRecorder(): boolean {
     return this._connection.target.model.existing === 'spike_recorder';
-  }
-
-  /**
-   * Draw path of this connection.
-   */
-  drawPath(): string {
-    const source: any = this._connection.source.view.position;
-    const target: any = this._connection.target.view.position;
-    const config: any = {
-      radius: this._connection.source.config.graph.radius.value,
-      ellipticalArc: this._connection.config.graph.ellipticalArc.value,
-      xAxisRotation: this._connection.config.graph.xAxisRotation.value,
-    };
-    return drawPath(source, target, config);
   }
 }
