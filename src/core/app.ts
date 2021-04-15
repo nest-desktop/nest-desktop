@@ -1,3 +1,4 @@
+import { Activity } from './activity/activity';
 import { AppView } from './appView';
 import { Config } from './config';
 import { DatabaseService } from './database';
@@ -21,7 +22,6 @@ export class App extends Config {
   private _nestServer: NESTServer;
   private _project: Project;
   private _projectDB: DatabaseService;
-  private _projectReady = false;
   private _projectRevisions: Project[] = [];
   private _projects: Project[] = [];
   private _ready = false;
@@ -85,10 +85,6 @@ export class App extends Config {
 
   get projectRevisions(): Project[] {
     return this._projectRevisions;
-  }
-
-  get projectReady(): boolean {
-    return this._projectReady;
   }
 
   get version(): string {
@@ -254,17 +250,6 @@ export class App extends Config {
   }
 
   /**
-   * Downloads projects from the list.
-   */
-  downloadProjects(projectIds: string[]): void {
-    const projects: Project[] = this._projects.filter((project: Project) =>
-      projectIds.includes(project.id)
-    );
-    const data: any[] = projects.map((project: Project) => project.toJSON());
-    this.download(data, 'projects');
-  }
-
-  /**
    * Initialize project list either from database or from files.
    */
   initProjects(): Promise<any> {
@@ -300,14 +285,11 @@ export class App extends Config {
    * Load projects from database and then update list.
    */
   updateProjects(): Promise<any> {
-    return this._projectDB
-      .list('createdAt', true)
-      .then(
-        (projects: any[]) =>
-          (this._projects = projects.map(
-            (project: any) => new Project(this, project)
-          ))
+    return this._projectDB.list('createdAt', true).then((projects: any[]) => {
+      this._projects = projects.map(
+        (project: any) => new Project(this, project)
       );
+    });
   }
 
   /**
@@ -334,7 +316,6 @@ export class App extends Config {
   /*
   Current project
   */
-
   getProject(projectId: string): Project {
     return (
       this._projects.find((project: Project) => project.id === projectId) ||
@@ -380,7 +361,7 @@ export class App extends Config {
     );
     const projectData: any = project.toJSON();
     if (withActivities) {
-      projectData.activities = project.activities.map(activity =>
+      projectData.activities = project.activities.map((activity: Activity) =>
         activity.toJSON()
       );
     }
@@ -392,7 +373,6 @@ export class App extends Config {
    */
   initProject(id: string = '', rev: string = ''): Promise<any> {
     // console.log(`Initialize project: id=${id}, rev=${rev}`);
-    this._projectReady = false;
     return new Promise((resolve, reject) => {
       try {
         if (id && rev) {
@@ -406,12 +386,10 @@ export class App extends Config {
         } else {
           this.newProject();
         }
-        this._projectReady = true;
         resolve(true);
       } catch {
         console.log('Error in project initialization');
         this.newProject();
-        this._projectReady = true;
         reject(true);
       }
     });
