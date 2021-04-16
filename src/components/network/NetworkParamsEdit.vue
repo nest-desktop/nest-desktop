@@ -513,7 +513,6 @@ export default Vue.extend({
   line-height: 12px;
   position: absolute;
   top: 2px;
-  z-index: 1000;
 }
 
 .v-overflow-btn .v-input__slot {
