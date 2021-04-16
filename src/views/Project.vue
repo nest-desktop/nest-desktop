@@ -1,11 +1,5 @@
 <template>
   <div class="project-container" v-if="state.project">
-    <SimulationMenu
-      :simulation="state.project.simulation"
-      :position="state.simulationMenu.position"
-      v-if="state.simulationMenu.show"
-    />
-
     <v-app-bar
       app
       class="no-print"
@@ -42,12 +36,12 @@
       </v-toolbar-title>
 
       <v-btn-toggle
-        :value="state.modeIdx"
-        @change="e => selectMode(e)"
+        @change="updateProjectMode"
         class="ma-2"
         group
         light
         mandatory
+        v-model="state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -65,7 +59,7 @@
           <span>Construct network</span>
         </v-tooltip>
 
-        <v-menu open-on-hover offset-y>
+        <v-menu offset-y open-on-hover>
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
@@ -185,14 +179,9 @@
         </v-row>
       </div>
 
-      <v-btn
-        @click="simulate"
-        @contextmenu="e => showSimulationMenu(e)"
-        outlined
-      >
-        <v-icon left>mdi-play</v-icon>
-        Simulate
-      </v-btn>
+      <div @click="state.modeIdx = 1">
+        <SimulationButton :project="state.project" />
+      </div>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -306,31 +295,13 @@
     </v-navigation-drawer>
 
     <v-main>
-      <div style="position:absolute; right: 0; z-index:1000; cursor: pointer">
-        <v-alert
-          :max-width="500"
-          @click="state.error = false"
-          dark
-          class="ma-1"
-          color="orange darken-3"
-          dense
-          icon="mdi-fire"
-          transition="slide-x-reverse-transition"
-          v-model="state.error"
-          v-text="state.project.errorMessage"
-        />
-      </div>
-
       <transition name="fade">
         <div
           :style="{ height: state.networkGraphHeight }"
           ref="networkGraph"
           v-if="[0, 2].includes(state.modeIdx)"
         >
-          <NetworkGraph
-            :height="state.networkGraphClientHeight"
-            :networkHash="state.project.network.hash"
-          />
+          <NetworkGraph :networkHash="state.project.network.hash" />
         </div>
       </transition>
 
@@ -353,7 +324,7 @@
       </transition>
     </v-main>
 
-    <v-overlay :value="state.project.simulation.running">
+    <v-overlay :value="state.loading || state.project.simulation.running">
       <v-progress-circular
         :size="70"
         :width="7"
@@ -381,9 +352,9 @@ import NetworkGraph from '@/components/network/NetworkGraph.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
 import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
 import ProjectRawData from '@/components/project/ProjectRawData.vue';
+import SimulationButton from '@/components/simulation/SimulationButton.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
 import SimulationKernel from '@/components/simulation/SimulationKernel.vue';
-import SimulationMenu from '@/components/simulation/SimulationMenu.vue';
 
 export default Vue.extend({
   name: 'Project',
@@ -397,20 +368,27 @@ export default Vue.extend({
     NetworkParamsEdit,
     NetworkParamsSelect,
     ProjectRawData,
+    SimulationButton,
     SimulationCodeEditor,
     SimulationKernel,
-    SimulationMenu,
   },
   props: {
     id: String,
   },
-  setup(props, { refs, root }) {
+  setup(props, { root }) {
+    let _modeIdx: number = 0;
     const state = reactive({
       activityGraph: 'abstract',
       error: false,
-      modeIdx: 0,
+      loading: false,
+      get modeIdx(): number {
+        return _modeIdx;
+      },
+      set modeIdx(value: number) {
+        _modeIdx = value;
+        state.project.view.modeIdx = value;
+      },
       networkGraphHeight: 'calc(100vh - 48px)',
-      networkGraphClientHeight: 600,
       projectId: props.id as string,
       project: undefined as Project | undefined,
       simulationMenu: {
@@ -472,17 +450,21 @@ export default Vue.extend({
         axios.get(url).then((response: any) => {
           const project = core.app.addProjectTemporary(response.data);
           root.$router.replace({ path: `/project/${project.id}` });
-          selectMode(state.modeIdx);
         });
       } else {
+        state.loading = true;
         core.app.initProject(state.projectId).then(() => {
           state.project = core.app.project;
           if (state.project) {
+            updateProjectMode();
             state.project.network.view.reset();
             state.activityGraph = state.project.network.view.hasPositions()
               ? state.activityGraph
               : 'abstract';
-            selectMode(state.modeIdx);
+            state.loading = false;
+            if (state.project.config.simulateAfterLoad) {
+              state.project.runSimulation();
+            }
           }
         });
       }
@@ -518,24 +500,23 @@ export default Vue.extend({
      * Set height for network graph.
      */
     const resizeNetworkGraph = () => {
-      if (refs['networkGraph']) {
-        const networkGraph = refs['networkGraph'] as any;
-        state.networkGraphClientHeight = networkGraph.clientHeight;
-      }
+      state.networkGraphHeight =
+        state.modeIdx === 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 1);
     };
 
     /**
-     * Select view mode of the project.
+     * Update view mode of the project.
      */
-    const selectMode = (modeIdx: number) => {
-      state.modeIdx = modeIdx;
-      if ([0, 2].includes(modeIdx)) {
+    const updateProjectMode = () => {
+      state.project.view.modeIdx = state.modeIdx;
+      if ([0, 2].includes(state.modeIdx)) {
         state.toolOpened = state.toolOpened
           ? state.modeIdx !== 2
           : state.toolOpened;
-        state.networkGraphHeight =
-          state.modeIdx == 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
-        setTimeout(() => resizeNetworkGraph(), 1);
+        resizeNetworkGraph();
       }
     };
 
@@ -551,35 +532,9 @@ export default Vue.extend({
      * Reset view.
      */
     const reset = () => {
-      state.modeIdx = 0;
       state.activityGraph = 'abstract';
       state.toolOpened = false;
       state.tool = state.tools[0];
-    };
-
-    /**
-     * Show simulation menu
-     */
-    const showSimulationMenu = function(e: MouseEvent) {
-      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-      e.preventDefault();
-      state.simulationMenu.show = false;
-      state.simulationMenu.position.x = e.clientX;
-      state.simulationMenu.position.y = e.clientY;
-      this.$nextTick(() => {
-        state.simulationMenu.show = true;
-      });
-    };
-
-    /**
-     * Start simulation.
-     */
-    const simulate = () => {
-      state.project.runSimulation().then(resp => {
-        if (resp.status === 200) {
-          state.modeIdx = 1;
-        }
-      });
     };
 
     onMounted(() => {
@@ -601,11 +556,9 @@ export default Vue.extend({
       countAfter,
       countBefore,
       selectActivityGraph,
-      selectMode,
       selectTool,
-      showSimulationMenu,
-      simulate,
       state,
+      updateProjectMode,
     };
   },
 });

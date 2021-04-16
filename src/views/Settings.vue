@@ -19,9 +19,14 @@
             <v-card-title v-text="'App'" />
             <v-card-text>
               <v-checkbox
-                @change="e => updateConfig({ devMode: e || false })"
+                @change="e => updateAppConfig({ devMode: e || false })"
                 label="Development mode"
                 v-model="state.devMode"
+              />
+              <v-checkbox
+                @change="e => updateProjectConfig({ showHelp: e || false })"
+                label="Show help"
+                v-model="state.showHelp"
               />
             </v-card-text>
           </v-card>
@@ -89,7 +94,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive } from '@vue/composition-api';
 
 import { Config } from '@/core/config';
 import core from '@/core';
@@ -98,10 +103,11 @@ export default Vue.extend({
   name: 'Settings',
   setup() {
     const state = reactive({
-      devMode: core.app.config.devMode,
       app: core.app,
+      devMode: core.app.config.devMode,
       nestVersion: '',
       network: new Config('Network'),
+      showHelp: core.app.project.config.showHelp,
     });
 
     /**
@@ -112,22 +118,25 @@ export default Vue.extend({
         state.nestVersion = nestServer.state.simulatorVersion;
       });
     };
-
-    const updateConfig = (d: any) => {
+    /**
+     * Update app configuration.
+     */
+    const updateAppConfig = (d: any) => {
       core.app.updateConfig(d);
     };
+    /**
 
-    watch(
-      () => core.app.config.devMode,
-      () => {
-        console.log(core.app.config.devMode);
-      }
-    );
+     * Update project configuration.
+     */
+    const updateProjectConfig = (d: any) => {
+      core.app.project.updateConfig(d);
+    };
 
     return {
       checkNEST,
       state,
-      updateConfig,
+      updateAppConfig,
+      updateProjectConfig,
     };
   },
 });
