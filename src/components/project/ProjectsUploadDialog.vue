@@ -1,13 +1,6 @@
 <template>
-  <div class="UploadProjectsDialog">
-    <input
-      @change="displayProjectsToUpload"
-      ref="file"
-      style="display: none"
-      type="file"
-    />
-
-    <v-dialog v-model="state.dialog" max-width="800">
+  <div class="ProjectsUploadDialog">
+    <v-dialog v-model="state.dialog" max-width="1024">
       <v-card>
         <v-card-title
           v-if="state.projects.length !== 0"
@@ -20,43 +13,74 @@
         <v-card-title v-else v-text="'No project found.'" />
 
         <v-card-subtitle
-          v-text="'Select to upload.'"
+          v-text="'Select projects to upload.'"
           v-if="state.projects.length !== 0"
         />
 
         <v-card-text>
+          <v-row>
+            <v-col cols="2">
+              <v-btn-toggle mandatory v-model="state.source">
+                <v-btn
+                  :key="item.value"
+                  :title="item.value"
+                  :value="item.value"
+                  v-for="item in state.items"
+                >
+                  <v-icon v-text="item.icon" />
+                </v-btn>
+              </v-btn-toggle>
+            </v-col>
+            <v-col class="pa-3" cols="10" style="height:60px; line-height:60px">
+              <input
+                @change="fetchProjectsFromFile"
+                ref="file"
+                type="file"
+                v-show="state.source === 'file'"
+              />
+              <v-text-field
+                @change="fetchProjectsFromUrl"
+                clearable
+                dense
+                full-width
+                height="40"
+                hide-details
+                label="url"
+                ref="url"
+                v-show="state.source === 'url'"
+              />
+            </v-col>
+          </v-row>
+
           <v-simple-table v-if="state.projects.length !== 0">
             <template v-slot:default>
               <thead>
                 <tr>
-                  <th class="text-left">
-                    Name
-                  </th>
-                  <th class="text-left">
-                    Version
-                  </th>
-                  <th class="text-left">
-                    Created at
-                  </th>
-                  <th class="text-left">
-                    Valid
-                  </th>
-                  <th>Upload</th>
+                  <th v-text="'Name'" />
+                  <th v-text="'Created at'" />
+                  <th v-text="'Version'" />
+                  <th class="text-center" v-text="'Valid'" />
+                  <th class="text-center" v-text="'Selected'" />
                 </tr>
               </thead>
               <tbody>
                 <tr :key="index" v-for="(project, index) in state.projects">
+                  <td v-text="project.name" />
                   <td>
-                    {{ project.name }}
+                    <span
+                      v-if="project.createdAt"
+                      v-text="new Date(project.createdAt).toLocaleString()"
+                    />
+                    <span v-else v-text="'undefined'" />
                   </td>
-                  <td>{{ project.version }}</td>
-                  <td>{{ new Date(project.createdAt).toLocaleString() }}</td>
-                  <td>
+                  <td v-text="project.version" />
+                  <td class="text-center">
                     <v-icon
+                      :color="project.valid ? 'green' : 'red'"
                       v-text="project.valid ? 'mdi-check' : 'mdi-cancel'"
                     />
                   </td>
-                  <td>
+                  <td class="text-center">
                     <v-checkbox
                       class="ma-0"
                       color="project"
@@ -74,13 +98,8 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn @click="openDialogFromFile" text>
-            Select file
-          </v-btn>
-          <v-btn @click="state.dialog = false" text>
-            Cancel
-          </v-btn>
           <v-spacer />
+          <v-btn @click="state.dialog = false" text v-text="'Cancel'" />
           <v-btn
             :disabled="state.projects.length === 0"
             @click="uploadProjects"
@@ -98,33 +117,31 @@
 <script lang="ts">
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
+import axios from 'axios';
 
 import { Project } from '@/core/project/project';
 import core from '@/core';
 import { App } from '@/core/app';
 
 export default Vue.extend({
-  name: 'UploadProjectsDialog',
+  name: 'ProjectsUploadDialog',
   props: {
     open: Boolean,
   },
   setup(props, { refs }) {
     const state = reactive({
-      selectedProjects: [],
-      projects: [] as Project[],
-      open: props.open,
       dialog: false,
+      items: [
+        { icon: 'mdi-file-outline', value: 'file' },
+        { icon: 'mdi-web', value: 'url' },
+      ],
+      open: props.open,
+      projects: [] as Project[],
+      selectedProjects: [],
+      source: 'file',
     });
 
     const app = new App();
-
-    /**
-     * Upload projects from files.
-     */
-    const openDialogFromFile = () => {
-      const file = refs.file as any;
-      file.click();
-    };
 
     /**
      * Validate projects.
@@ -132,17 +149,36 @@ export default Vue.extend({
     const validateProject = (project: any) => {
       try {
         new Project(app, project);
-        project.valid = true;
+        project.valid =
+          project.network.nodes.length > 0 &&
+          project.network.connections.length > 0;
       } catch (e) {
         project.valid = false;
       }
     };
 
     /**
-     * Display projects to select for upload.
+     * Fetch projects from url.
      */
-    const displayProjectsToUpload = () => {
-      state.dialog = true;
+    const fetchProjectsFromUrl = (url: string) => {
+      state.projects = [];
+      axios.get(url).then((response: any) => {
+        const data: any = response.data;
+        const projects: any[] = Array.isArray(data) ? data : [data];
+        projects.forEach((project: any) => {
+          if (project.name) {
+            state.projects.push(project);
+            validateProject(project);
+          }
+        });
+      });
+    };
+
+    /**
+     * Fetch projects from file.
+     */
+    const fetchProjectsFromFile = () => {
+      state.projects = [];
       const fileReader = new FileReader();
       const file = refs.file as any;
       fileReader.readAsText(file.files[0]);
@@ -176,13 +212,13 @@ export default Vue.extend({
     watch(
       () => props.open,
       () => {
-        openDialogFromFile();
+        state.dialog = props.open as boolean;
       }
     );
 
     return {
-      displayProjectsToUpload,
-      openDialogFromFile,
+      fetchProjectsFromFile,
+      fetchProjectsFromUrl,
       state,
       uploadProjects,
     };

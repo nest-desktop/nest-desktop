@@ -25,13 +25,13 @@
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
               </v-list-item-icon>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title v-text="item.title" />
 
               <v-list-item-action v-if="item.append">
                 <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :value="state[item.value]" />
+                <v-checkbox :input-value="state[item.value]" />
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -44,13 +44,13 @@
             show-swatches
             style="border-radius:0"
             v-model="state.node.view.color"
-          ></v-color-picker>
+          />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="resetColor" text>reset</v-btn>
+            <v-btn @click="resetColor" text v-text="'reset'" />
           </v-card-actions>
         </span>
 
@@ -98,8 +98,8 @@
             <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="hideAllParams" text>none</v-btn>
-            <v-btn @click="showAllParams" text>all</v-btn>
+            <v-btn @click="hideAllParams" text v-text="'none'" />
+            <v-btn @click="showAllParams" text v-text="'all'" />
           </v-card-actions>
         </span>
 
@@ -109,18 +109,14 @@
               <v-list-item-icon>
                 <v-icon v-text="'mdi-plus'" />
               </v-list-item-icon>
-              <v-list-item-title>
-                excitatory
-              </v-list-item-title>
+              <v-list-item-title v-text="'excitatory'" />
             </v-list-item>
 
             <v-list-item @click="setWeights('inhibitory')">
               <v-list-item-icon>
                 <v-icon v-text="'mdi-minus'" />
               </v-list-item-icon>
-              <v-list-item-title>
-                inhibitory
-              </v-list-item-title>
+              <v-list-item-title v-text="'inhibitory'" />
             </v-list-item>
           </v-list>
 
@@ -132,9 +128,7 @@
         </span>
 
         <span v-if="state.content === 'nodeDelete'">
-          <v-card-title>
-            Are you sure to delete node?
-          </v-card-title>
+          <v-card-title v-text="'Are you sure to delete node?'" />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
@@ -236,6 +230,15 @@ export default Vue.extend({
             }, 300);
           },
         },
+        // {
+        //   id: 'eventsDownload',
+        //   icon: 'mdi-download',
+        //   title: 'Download events',
+        //   onClick: () => {
+        //     state.node.activity.downloadEvents();
+        //     closeMenu();
+        //   },
+        // },
         {
           id: 'nodeClone',
           icon: 'mdi-content-copy',

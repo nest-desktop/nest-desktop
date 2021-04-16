@@ -75,12 +75,12 @@
 
                 <v-list-item-action style="margin: 4px 0">
                   <v-checkbox
-                    color="black"
+                    @change="paramChange"
                     class="shrink mr-2"
+                    color="black"
                     hide-details
                     v-model="param.visible"
-                    @change="paramChange"
-                  ></v-checkbox>
+                  />
                 </v-list-item-action>
               </template>
             </v-list-item>
@@ -159,9 +159,6 @@ export default Vue.extend({
      */
     const paramChange = () => {
       state.network.networkChanges();
-      if (!state.network.project.simulation.running) {
-        state.network.project.simulateAfterChange();
-      }
     };
 
     return { paramChange, paramLabel, showNode, state, showMenu };
