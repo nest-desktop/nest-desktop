@@ -223,9 +223,7 @@ export class ActivityAnimationGraph {
     if (ref) {
       this._ref = ref;
     }
-    setTimeout(() => {
-      this._scene = this._scenes[this._sceneIdx].scene();
-    }, 1);
+    this._scene = this._scenes[this._sceneIdx].scene();
   }
 
   /**
