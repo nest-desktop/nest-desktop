@@ -34,7 +34,6 @@
               <v-list dense>
                 <v-list-item-group
                   @change="nodeDisplayChange"
-                  active-class=""
                   multiple
                   v-model="state.displayNodes"
                 >
@@ -45,9 +44,7 @@
                   >
                     <template v-slot:default="{ active }">
                       <v-list-item-content style="padding: 4px">
-                        <v-row no-gutters>
-                          {{ node.view.label }}
-                        </v-row>
+                        <v-row no-gutters v-text="node.view.label" />
                       </v-list-item-content>
 
                       <v-list-item-action style="margin: 4px 0">
@@ -63,7 +60,6 @@
 
                 <v-list-item-group
                   @change="connectionDisplayChange"
-                  active-class=""
                   multiple
                   v-model="state.displayConnections"
                 >
@@ -168,6 +164,26 @@
                       v-else
                     />
                   </div>
+
+                  <template v-if="node.model.existing === 'multimeter'">
+                    <v-row no-gutters>
+                      <v-col>
+                        <v-select
+                          :color="node.view.color"
+                          :items="node.recordables"
+                          @change="paramChange()"
+                          attach
+                          class="ma-0 pt-4 px-1"
+                          dense
+                          hide-details
+                          label="Record from"
+                          multiple
+                          persistent-hint
+                          v-model="node.recordFrom"
+                        />
+                      </v-col>
+                    </v-row>
+                  </template>
 
                   <ParameterEdit
                     :color="node.view.color"
@@ -355,7 +371,7 @@ export default Vue.extend({
       } else if (state.elementType === 4) {
         return node.view.visible;
       } else {
-        const elementTypes: string[] = ['', 'stimulator', 'neuron', 'recorder'];
+        const elementTypes: string[] = ['', 'neuron', 'stimulator', 'recorder'];
         if (state.elementType === 0) return true;
         return elementTypes[state.elementType] === node.model.elementType;
       }

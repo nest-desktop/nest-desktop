@@ -25,13 +25,13 @@
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
               </v-list-item-icon>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title v-text="item.title" />
 
               <v-list-item-action v-show="item.append">
                 <v-icon v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :value="state[item.value]" />
+                <v-checkbox :input-value="state[item.value]" />
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -111,21 +111,19 @@
             <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="hideAllParams" text>none</v-btn>
-            <v-btn @click="showAllParams" text>all</v-btn>
+            <v-btn @click="hideAllParams" text v-text="'none'" />
+            <v-btn @click="showAllParams" text v-text="'all'" />
           </v-card-actions>
         </span>
 
         <span v-if="state.content === 'connectionDelete'">
-          <v-card-title>
-            Are you sure to delete it?
-          </v-card-title>
+          <v-card-title v-text="'Are you sure to delete it?'" />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
               <v-icon left v-text="'mdi-menu-left'" /> no
             </v-btn>
-            <v-btn @click="deleteConnection" text>yes</v-btn>
+            <v-btn @click="deleteConnection" text v-text="'yes'" />
           </v-card-actions>
         </span>
       </v-card>

@@ -101,8 +101,8 @@
           :editable="state.graph.activityChartGraph.options.editable"
           :layout="state.graph.activityChartGraph.layout"
           :modeBarButtons="state.modeBarButtons"
-          :toImageButtonOptions="state.toImageButtonOptions"
           :scrollZoom="true"
+          :toImageButtonOptions="state.toImageButtonOptions"
           style="position: relative; width: 100%; height: calc(100vh - 48px)"
           v-if="state.view == 'abstract'"
         />
@@ -200,6 +200,9 @@ export default Vue.extend({
       ],
     });
 
+    /**
+     * Download image of the activity chart graph.
+     */
     const downloadImage = () => {
       state.dialog = false;
       const date: string = new Date().toISOString();
@@ -211,15 +214,27 @@ export default Vue.extend({
      * Update activity graph.
      */
     const update = () => {
-      state.graph = props.graph as ActivityGraph;
+      state.loading = true;
       state.view = props.view;
+      state.graph = props.graph as ActivityGraph;
+      if (state.view === 'abstract') {
+        state.loading = false;
+      } else {
+        setTimeout(() => {
+          state.loading = false;
+        }, 1);
+      }
     };
 
     /**
-     * Check if there are changes to the graph which should be displayed via snackbar message.
+     * Check if there are any activities or changes to the network
+     * which should be displayed via snackbar message.
      */
-    const validateGraph = () => {
+    const showHelp = () => {
       state.snackbar.show = false;
+      if (!state.graph.project.config.showHelp) {
+        return;
+      }
       if (!state.graph.project.hasActivities) {
         showSnackbar('No activity found. Please simulate.', [
           {
@@ -245,7 +260,7 @@ export default Vue.extend({
     };
 
     /**
-     * Show snackbar
+     * Show snackbar.
      */
     const showSnackbar = (text: string, actions: any[] = []) => {
       state.snackbar.text = text;
@@ -258,28 +273,18 @@ export default Vue.extend({
     };
 
     onMounted(() => {
-      state.loading = true;
-      setTimeout(() => {
-        update();
-        validateGraph();
-        state.loading = false;
-      }, 1);
+      update();
+      showHelp();
     });
 
     watch(
       () => [props.graph, props.view, props.codeHash, props.graphHash],
       (newProps, oldProps) => {
         if (oldProps[0] !== newProps[0] || oldProps[1] !== newProps[1]) {
-          state.loading = true;
-          setTimeout(() => {
-            update();
-            state.loading = false;
-          }, 1);
+          update();
         }
         if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
-          setTimeout(() => {
-            validateGraph();
-          }, 10);
+          showHelp();
         }
       }
     );
