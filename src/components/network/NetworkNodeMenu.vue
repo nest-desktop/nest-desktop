@@ -151,7 +151,7 @@ import { ModelParameter } from '@/core/parameter/modelParameter';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 
 export default Vue.extend({
-  name: 'NetworkParamEdit',
+  name: 'NetworkNodeMenu',
   components: {
     ModelDocumentation,
   },

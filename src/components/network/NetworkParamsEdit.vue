@@ -285,8 +285,8 @@
 
                 <ParameterEdit
                   :color="connection.source.view.color"
-                  :key="param.id"
-                  :param="param"
+                  :key="'conn' + connection.idx + '-' + param.id"
+                  :options="param"
                   :value.sync="param.value"
                   @update:value="paramChange()"
                   v-for="param in connection.filteredParams"
@@ -294,7 +294,7 @@
 
                 <ParameterEdit
                   :color="connection.source.view.color"
-                  :key="param.id"
+                  :key="'syn' + connection.idx + '-' + param.id"
                   :param="param"
                   :value.sync="param.value"
                   @update:value="paramChange()"
@@ -414,7 +414,7 @@ export default Vue.extend({
       } else if (state.elementType === 4) {
         return connection.view.visible;
       } else {
-        const elementTypes: string[] = ['', 'stimulator', 'neuron', 'recorder'];
+        const elementTypes: string[] = ['', 'neuron', 'stimulator', 'recorder'];
         if (state.elementType === 0) return true;
         return (
           elementTypes[state.elementType] ===
