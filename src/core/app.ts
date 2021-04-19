@@ -3,7 +3,7 @@ import { AppView } from './appView';
 import { Config } from './config';
 import { DatabaseService } from './database';
 import { Model } from './model/model';
-import { NESTServer } from './server/nestServer';
+import { NESTServer } from './backends/nest';
 import { Project } from './project/project';
 
 import { environment } from '../environments/environment';
