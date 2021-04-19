@@ -140,7 +140,7 @@ import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
 
 export default Vue.extend({
-  name: 'NetworkParamEdit',
+  name: 'NetworkConnectionMenu',
   props: {
     connection: Connection,
     position: Object,
@@ -221,7 +221,7 @@ export default Vue.extend({
           (param.visible = state.visibleParams.connection.includes(param.idx))
       );
       state.connection.synapse.params.forEach(
-        (param: Parameter) =>
+        (param: ModelParameter) =>
           (param.visible = state.visibleParams.synapse.includes(param.idx))
       );
       state.connection.connectionChanges();
@@ -232,8 +232,8 @@ export default Vue.extend({
      */
     const setVisibleParams = () => {
       state.visibleParams.connection = state.connection.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
+        .filter((param: Parameter) => param.visible)
+        .map((param: Parameter) => param.idx);
       state.visibleParams.synapse = state.connection.synapse.params
         .filter((param: ModelParameter) => param.visible)
         .map((param: ModelParameter) => param.idx);
@@ -291,6 +291,7 @@ export default Vue.extend({
 
     onMounted(() => {
       updateStates();
+      console.log(state.visibleParams.connection, state.visibleParams.synapse);
     });
 
     return {
