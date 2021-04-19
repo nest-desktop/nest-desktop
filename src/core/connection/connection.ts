@@ -42,11 +42,7 @@ export class Connection extends Config {
     this._targetIdx = connection.target;
 
     this._rule = connection.rule || Rule.AllToAll;
-    this.initParameters(connection);
-    this._params = connection.params
-      ? connection.params.map((param: any) => new Parameter(this, param))
-      : [];
-
+    this.initParameters(connection.params);
     this._mask = new ConnectionMask(this, connection.mask);
     this._synapse = new Synapse(this, connection.synapse);
   }
@@ -92,7 +88,7 @@ export class Connection extends Config {
 
   set rule(value: string) {
     this._rule = value;
-    this.initParameters(this.getRuleConfig());
+    this.initParameters();
   }
 
   get source(): Node {
@@ -162,19 +158,19 @@ export class Connection extends Config {
   /**
    * Initialize parameters.
    */
-  initParameters(connection: any = null): void {
-    // Update parameters from model or node
+  initParameters(params: any[] = undefined): void {
     this._params = [];
-    if (connection.hasOwnProperty('params')) {
-      connection.params.forEach((param: any) => {
-        this.addParameter(param);
-      });
-    } else {
-      const rule: any = this.getRuleConfig();
-      rule.params.forEach((param: any) => {
-        this.addParameter(param);
-      });
-    }
+    const ruleConfig: any = this.getRuleConfig();
+    ruleConfig.params.forEach((param: any) => {
+      if (params !== undefined) {
+        const p: any = params.find((p: any) => p.id === param.id);
+        if (p !== undefined) {
+          param.value = p.value;
+          param.visible = p.visible;
+        }
+      }
+      this.addParameter(param);
+    });
   }
 
   /**
@@ -233,7 +229,7 @@ export class Connection extends Config {
    */
   reset(): void {
     this.rule = Rule.AllToAll;
-    this.initParameters(this.getRuleConfig());
+    this.initParameters();
     this.synapse.modelId = 'static_synapse';
     this._mask.unmask();
     this.connectionChanges();
