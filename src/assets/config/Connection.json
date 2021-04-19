@@ -77,7 +77,7 @@
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
-          "value": false,
+          "value": true,
           "visible": false
         },
         {
@@ -85,7 +85,7 @@
           "id": "allow_multapses",
           "input": "checkbox",
           "label": "allow multapses",
-          "value": false,
+          "value": true,
           "visible": false
         }
       ]
@@ -120,7 +120,7 @@
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
-          "value": false,
+          "value": true,
           "visible": false
         },
         {
@@ -128,7 +128,7 @@
           "id": "allow_multapses",
           "input": "checkbox",
           "label": "allow multapses",
-          "value": false,
+          "value": true,
           "visible": false
         }
       ]
@@ -153,7 +153,7 @@
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
-          "value": false,
+          "value": true,
           "visible": false
         },
         {
@@ -161,7 +161,7 @@
           "id": "allow_multapses",
           "input": "checkbox",
           "label": "allow multapses",
-          "value": false,
+          "value": true,
           "visible": false
         }
       ]
@@ -189,7 +189,7 @@
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
-          "value": false,
+          "value": true,
           "visible": false
         },
         {
