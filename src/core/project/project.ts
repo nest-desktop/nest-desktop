@@ -423,7 +423,7 @@ export class Project extends Config {
       this._code.generate();
     }
     this._simulation.running = true;
-    return this.app.nestServer.http
+    return this.app.nestServer.httpClient
       .post(this._app.nestServer.url + '/exec', {
         source: this._code.script,
         return: 'response',
