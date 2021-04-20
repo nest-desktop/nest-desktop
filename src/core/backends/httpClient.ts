@@ -25,8 +25,7 @@ export class HttpClient {
     try {
       req.send(null);
     } catch (exception) {
-      // this is expected
-      console.log(exception);
+      // console.log(exception);
     }
   }
 
@@ -36,7 +35,10 @@ export class HttpClient {
       req.open('GET', url, /*async*/ true);
       req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
       req.setRequestHeader('Access-Control-Allow-Methods', 'GET');
-      req.setRequestHeader('Access-Control-Allow-Origin', window.location.origin);
+      req.setRequestHeader(
+        'Access-Control-Allow-Origin',
+        window.location.origin
+      );
       req.onreadystatechange = () => {
         switch (req.readyState) {
           // TODO: Verify need for switch
@@ -63,8 +65,7 @@ export class HttpClient {
       try {
         req.send(null);
       } catch (exception) {
-        console.log(exception);
-        // this is expected
+        // console.log(exception);
         reject(req);
       }
     });
@@ -79,7 +80,10 @@ export class HttpClient {
         'Origin, Content-Type'
       );
       req.setRequestHeader('Access-Control-Allow-Methods', 'POST');
-      req.setRequestHeader('Access-Control-Allow-Origin', '*');
+      req.setRequestHeader(
+        'Access-Control-Allow-Origin',
+        window.location.origin
+      );
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = () => {
         switch (req.readyState) {
@@ -107,8 +111,7 @@ export class HttpClient {
       try {
         req.send(JSON.stringify(data));
       } catch (exception) {
-        console.log(exception);
-        // this is expected
+        // console.log(exception);
         reject(req);
       }
     });
