@@ -1,9 +1,5 @@
 <template>
   <div class="projects">
-    <!-- <v-toolbar dense flat dark color="secondary">
-      Projects
-    </v-toolbar> -->
-
     <ProjectMenu
       :project="state.projectMenu.project"
       :position="state.projectMenu.position"

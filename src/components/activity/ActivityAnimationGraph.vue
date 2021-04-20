@@ -1,16 +1,14 @@
 <template>
-  <div id="activityAnimationGraph">
-    <div
-      ref="activityAnimationScene"
-      style="width:100%; height:800px"
-      v-if="!state.graph.loading"
-    />
-  </div>
+  <div
+    class="activityAnimationGraph"
+    ref="activityAnimationGraph"
+    style="width:100%; height:800px"
+  />
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted, onUnmounted, watch } from '@vue/composition-api';
+import { onMounted, onUnmounted } from '@vue/composition-api';
 
 import { ActivityAnimationGraph } from '@/core/activity/activityAnimationGraph';
 
@@ -20,29 +18,18 @@ export default Vue.extend({
     graph: ActivityAnimationGraph,
   },
   setup(props, { refs }) {
-    const state = reactive({
-      graph: props.graph as ActivityAnimationGraph,
-    });
-
-    const update = () => {
-      state.graph = props.graph as ActivityAnimationGraph;
-      state.graph.initScene(refs['activityAnimationScene']);
-    };
+    let graph: ActivityAnimationGraph;
 
     onMounted(() => {
-      update();
+      graph = props.graph as ActivityAnimationGraph;
+      graph.initScene(refs['activityAnimationGraph']);
     });
 
     onUnmounted(() => {
-      state.graph.scene.destroy();
+      graph.scene.destroy();
     });
 
-    watch(
-      () => props.graph,
-      () => update()
-    );
-
-    return { state };
+    return {};
   },
 });
 </script>

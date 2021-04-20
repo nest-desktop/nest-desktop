@@ -50,8 +50,11 @@
             <template v-if="state.options.input === 'arrayInput'">
               <v-textarea
                 :label="label()"
+                :row-height="12"
+                :rows="1"
                 @change="paramChange"
                 auto-grow
+                class="my-1"
                 hide-details
                 outlined
                 small
@@ -312,6 +315,10 @@ export default Vue.extend({
 <style>
 .parameterEdit .v-text-field {
   font-size: 12px;
+}
+
+.parameterEdit .v-textarea textarea {
+  line-height: 1.4em !important;
 }
 
 .parameterEdit .v-slider__tick {

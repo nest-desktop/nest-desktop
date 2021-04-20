@@ -5,6 +5,7 @@
       :position="state.connectionMenu.position"
       v-if="state.connectionMenu.show"
     />
+
     <NetworkNodeMenu
       :node="state.nodeMenu.node"
       :position="state.nodeMenu.position"
@@ -146,7 +147,6 @@ export default Vue.extend({
     NetworkNodeMenu,
   },
   props: {
-    height: Number,
     networkHash: String,
   },
   setup(props, { refs }) {
@@ -243,14 +243,16 @@ export default Vue.extend({
      * Show help in snackbar.
      */
     const showHelp = () => {
+      state.snackbar.show = false;
+      if (!state.network.project.config.showHelp) {
+        return;
+      }
       if (state.network.nodes.length === 0) {
-        showSnackbar('Click right mouse button to create nodes.');
+        showSnackbar('Create nodes (use right mouse button).');
       } else if (!hasAllNodeTypes()) {
         showSnackbar('Add at least a stimulator, a neuron and a recorder.');
-      } else if (state.network.connections.length === 0) {
-        showSnackbar('Click a node and then click other node to connect them.');
-      } else {
-        state.snackbar.show = false;
+      } else if (state.network.connections.length < 2) {
+        showSnackbar('Connect neuron to stimulator and recorder.');
       }
     };
 
@@ -262,7 +264,7 @@ export default Vue.extend({
       state.network = core.app.project.network;
       state.graph.network = state.network;
       const elem: any = refs.networkGraph['parentNode'];
-      state.graph.resize(elem.clientWidth, props.height);
+      state.graph.resize(elem.clientWidth, elem.clientHeight);
       state.graph.reset();
       state.graph.update();
       setMenuTrigger();
@@ -275,7 +277,7 @@ export default Vue.extend({
     const onResize = () => {
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
-        state.graph.resize(elem.clientWidth, props.height);
+        state.graph.resize(elem.clientWidth, elem.clientHeight);
         state.graph.transformNetworkGraph();
       }
     };
@@ -293,11 +295,6 @@ export default Vue.extend({
     watch(
       () => props.networkHash,
       () => update()
-    );
-
-    watch(
-      () => props.height,
-      () => onResize()
     );
 
     watch(

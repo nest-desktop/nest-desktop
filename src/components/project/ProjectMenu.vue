@@ -1,5 +1,11 @@
 <template>
   <div class="projectMenu" v-if="state.project">
+    <ProjectsDialog
+      :open="state.openProjectsDialog"
+      :projects="[state.project]"
+      action="download"
+    />
+
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -38,9 +44,13 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Project } from '@/core/project/project';
+import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectMenu',
+  components: {
+    ProjectsDialog,
+  },
   props: {
     project: Project,
     position: Object,
@@ -50,6 +60,7 @@ export default Vue.extend({
       content: null,
       project: props.project as Project,
       position: props.position,
+      openProjectsDialog: false,
       show: true,
       items: [
         {
@@ -75,7 +86,8 @@ export default Vue.extend({
           icon: 'mdi-download',
           title: 'Download project',
           onClick: () => {
-            state.project.download();
+            state.project.view.selected = true;
+            state.openProjectsDialog = true;
             state.show = false;
           },
         },
