@@ -418,23 +418,10 @@ export class NetworkGraph {
    * For changing in connection graph, use updateConnectionGraph.
    */
   initConnectionGraph(
-    connection: Connection,
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
-
-    const initPos = {
-      source: connection.source.view.position,
-      target: this._state.connected
-        ? this._cursorPosition
-        : connection.source.view.position,
-    };
-    if (elements[idx].childNodes.length === 2) {
-      const data = elements[idx].firstChild['__data__'];
-      initPos.source = data.source.view.position;
-      initPos.target = data.target.view.position || 0;
-    }
 
     elem.selectAll('*').remove();
     elem
@@ -450,10 +437,6 @@ export class NetworkGraph {
       .style('fill', 'none')
       .style('stroke-width', this._strokeWidth)
       .style('pointer-events', 'none');
-
-    elem
-      .selectAll('path')
-      .attr('d', () => drawPath(initPos.source, initPos.target));
   }
 
   /**
@@ -493,7 +476,7 @@ export class NetworkGraph {
         this.transformNetworkGraph();
       })
       .merge(connections)
-      .each((c, i, e) => this.initConnectionGraph(c, i, e));
+      .each((_, i, e) => this.initConnectionGraph(i, e));
 
     connections.exit().remove();
 
@@ -786,7 +769,8 @@ export class NetworkGraph {
   transformNetworkGraph(): void {
     // console.log('Transform network graph');
     if (this._state.centerNetwork || this._state.centerSelected) {
-      let x: number, y: number;
+      let x: number = 0,
+        y: number = 0;
       if (this._state.centerSelected && this._network.view.selectedNode) {
         x = this._network.view.selectedNode.view.position.x;
         y = this._network.view.selectedNode.view.position.y;
@@ -800,7 +784,7 @@ export class NetworkGraph {
           .position;
         x = d3.mean([source.x, target.x]);
         y = d3.mean([source.y, target.y]);
-      } else {
+      } else if (this._network.nodes.length > 0) {
         const networkCenterPos = this.centerNetworkPos();
         x = networkCenterPos.x;
         y = networkCenterPos.y;

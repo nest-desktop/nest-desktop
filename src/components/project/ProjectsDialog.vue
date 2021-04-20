@@ -1,5 +1,5 @@
 <template>
-  <div class="ProjectsDownloadDialog">
+  <div class="ProjectsDialog">
     <v-dialog v-model="state.dialog" max-width="1024">
       <v-card>
         <v-card-title

@@ -318,7 +318,7 @@ export class ActivityAnimationScene {
       document.body.removeChild(this._stats.dom);
     }
     // https://stackoverflow.com/questions/21548247/clean-up-threejs-webgl-contexts
-    // It shows message in the debug:
+    // TODO: It shows message in the debug:
     // WebGL context was lost. three.module.js:23546
     // THREE.WebGLRenderer: Context Lost.
     this._renderer.forceContextLoss();
