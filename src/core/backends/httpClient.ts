@@ -1,13 +1,13 @@
 export class HttpClient {
   constructor() {}
 
-  ping(url: string, callback: any): void {
+  ping(url: string, callback: any = undefined): void {
     const started: number = new Date().getTime();
     const req: XMLHttpRequest = new XMLHttpRequest();
     req.open('GET', url, /*async*/ true);
     req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
     req.setRequestHeader('Access-Control-Allow-Methods', 'GET');
-    req.setRequestHeader('Access-Control-Allow-Origin', '*');
+    req.setRequestHeader('Access-Control-Allow-Origin', window.location.origin);
     req.timeout = 1000;
     req.onreadystatechange = () => {
       let ended: number;
@@ -16,7 +16,7 @@ export class HttpClient {
         case 4:
           ended = new Date().getTime();
           milliseconds = ended - started;
-          if (callback !== null) {
+          if (callback !== undefined) {
             callback(req, milliseconds);
           }
           break;
@@ -36,7 +36,7 @@ export class HttpClient {
       req.open('GET', url, /*async*/ true);
       req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
       req.setRequestHeader('Access-Control-Allow-Methods', 'GET');
-      req.setRequestHeader('Access-Control-Allow-Origin', '*');
+      req.setRequestHeader('Access-Control-Allow-Origin', window.location.origin);
       req.onreadystatechange = () => {
         switch (req.readyState) {
           // TODO: Verify need for switch
