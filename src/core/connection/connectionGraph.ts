@@ -48,5 +48,6 @@ export function drawPath(source: any, target: any, config: any = {}): string {
     my2 = y2 - Math.sin(a) * tr;
   }
 
-  return `M${x1.toFixed()},${y1.toFixed()}A${drx},${dry} ${xAxisRotation},${largeArc},${sweep} ${mx2.toFixed()},${my2.toFixed()}`;
+  const d: string = `M${x1.toFixed()},${y1.toFixed()}A${drx},${dry} ${xAxisRotation},${largeArc},${sweep} ${mx2.toFixed()},${my2.toFixed()}`;
+  return d;
 }
