@@ -175,9 +175,13 @@ export class Network extends Config {
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
    */
-  addConnection(connection: any): void {
-    this._connections.push(new Connection(this, connection));
-    if (connection.source.elementType === 'recorder') {
+  addConnection(conn: any): void {
+    const connection: Connection = new Connection(this, conn);
+    this._connections.push(connection);
+
+    // Initialize activity and activity graph.
+    if (connection.view.connectRecorder()) {
+      connection.recorder.initActivity();
       this._project.activityGraph.init();
     }
   }
@@ -186,11 +190,10 @@ export class Network extends Config {
    * Connect node components by user interaction.
    */
   connectNodes(source: Node, target: Node): void {
-    const connection: any = {
+    this.addConnection({
       source: source.idx,
       target: target.idx,
-    };
-    this.addConnection(connection);
+    });
     this.networkChanges();
   }
 

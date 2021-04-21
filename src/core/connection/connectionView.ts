@@ -106,8 +106,8 @@ export class ConnectionView {
    */
   connectRecorder(): boolean {
     return (
-      this._connection.source.model.elementType === 'recorder' ||
-      this._connection.target.model.elementType === 'recorder'
+      this._connection.source.model.isRecorder() ||
+      this._connection.target.model.isRecorder()
     );
   }
 
