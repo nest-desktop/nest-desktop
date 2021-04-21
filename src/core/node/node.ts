@@ -37,7 +37,6 @@ export class Node extends Config {
 
     this.initParameters(node);
     this.initSpatial(node.spatial);
-    this.initActivity(node.activity);
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity {
@@ -217,7 +216,7 @@ export class Node extends Config {
    */
   initActivity(activity: any = {}): void {
     if (this.model.existing === 'spike_recorder') {
-      this._activity = new SpikeActivity(this, activity);
+      this._activity = new SpikeActivity(this);
     } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
       this._activity = new AnalogSignalActivity(this, activity);
     } else if (this.model.isRecorder()) {

@@ -424,7 +424,6 @@ export class Project extends Config {
       this._simulation.randomSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
-    this._app.nestServer.reloadIFrame();
     this._simulation.running = true;
     return this.app.nestServer.httpClient
       .post(this._app.nestServer.url + '/exec', {
