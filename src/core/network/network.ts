@@ -182,7 +182,9 @@ export class Network extends Config {
     // Initialize activity and activity graph.
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
-      this._project.activityGraph.init();
+      if (this._project.activityGraph !== undefined) {
+        this._project.activityGraph.init();
+      }
     }
   }
 

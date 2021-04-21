@@ -7,7 +7,7 @@ export class HttpClient {
     req.open('GET', url, /*async*/ true);
     req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
     req.setRequestHeader('Access-Control-Allow-Methods', 'GET');
-    req.setRequestHeader('Access-Control-Allow-Origin', window.location.origin);
+    req.setRequestHeader('Access-Control-Allow-Origin', '*');
     req.timeout = 1000;
     req.onreadystatechange = () => {
       let ended: number;
@@ -35,10 +35,7 @@ export class HttpClient {
       req.open('GET', url, /*async*/ true);
       req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
       req.setRequestHeader('Access-Control-Allow-Methods', 'GET');
-      req.setRequestHeader(
-        'Access-Control-Allow-Origin',
-        window.location.origin
-      );
+      req.setRequestHeader('Access-Control-Allow-Origin', '*');
       req.onreadystatechange = () => {
         switch (req.readyState) {
           // TODO: Verify need for switch
@@ -80,10 +77,7 @@ export class HttpClient {
         'Origin, Content-Type'
       );
       req.setRequestHeader('Access-Control-Allow-Methods', 'POST');
-      req.setRequestHeader(
-        'Access-Control-Allow-Origin',
-        window.location.origin
-      );
+      req.setRequestHeader('Access-Control-Allow-Origin', '*');
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = () => {
         switch (req.readyState) {
