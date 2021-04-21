@@ -5,7 +5,6 @@ export class HttpClient {
     const started: number = new Date().getTime();
     const req: XMLHttpRequest = new XMLHttpRequest();
     req.open('GET', url, /*async*/ true);
-    req.withCredentials = true;
     req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
     req.setRequestHeader('Access-Control-Allow-Methods', 'GET');
     req.setRequestHeader('Access-Control-Allow-Origin', window.location.origin);
