@@ -9,18 +9,15 @@ export class NESTServer extends Backend {
 
   constructor() {
     super('NESTServer');
-    this.check().then(() => this.setUrlIFrame());
+    this.check();
   }
 
   get state(): any {
     return this._state;
   }
 
-  /**
-   * It pings nest server if hostname provided, else it seeks the url.
-   */
-  check(): Promise<void> {
-    return new Promise<void>(resolve => {
+  check(): Promise<any> {
+    return new Promise((resolve, reject) => {
       // console.log('Check backend')
       if (this.config.hostname) {
         this.ping(this.url, () => resolve());
@@ -55,7 +52,6 @@ export class NESTServer extends Backend {
    */
   ping(url: string, callback: any = false): void {
     this._state.serverReady = false;
-    this.reloadIFrame();
     return this.httpClient.ping(url, (req: any) => {
       let resp: any;
       switch (req.status) {
