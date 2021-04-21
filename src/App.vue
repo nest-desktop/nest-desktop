@@ -6,6 +6,8 @@
     <transition name="fade">
       <router-view />
     </transition>
+
+    <iframe id="NESTFrame" style="display:none;position:absolute" />
   </v-app>
 </template>
 
