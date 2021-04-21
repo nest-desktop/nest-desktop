@@ -63,7 +63,6 @@ export default Vue.extend({
       if (!state.modelId) {
         return;
       }
-      core.app.nestServer.reloadIFrame();
       state.url = `${core.app.nestServer.url}/api/help?return_text=true&obj=${state.modelId}`;
       axios
         .get(state.url)

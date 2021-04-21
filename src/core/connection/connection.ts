@@ -82,6 +82,10 @@ export class Connection extends Config {
     return this._params;
   }
 
+  get recorder(): Node {
+    return this.source.model.isRecorder() ? this.source : this.target;
+  }
+
   get rule(): string {
     return this._rule;
   }

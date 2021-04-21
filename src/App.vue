@@ -1,12 +1,11 @@
 <template>
   <v-app>
+    <iframe id="NESTFrame" class="iframe" />
     <Navigation class="no-print" />
 
     <transition name="fade">
       <router-view />
     </transition>
-
-    <iframe id="NESTFrame" style="display:none;position:absolute" />
   </v-app>
 </template>
 
@@ -24,8 +23,20 @@ export default Vue.extend({
     Navigation,
   },
   setup() {
+    const keepNESTServerConnected = () => {
+      const NESTFrame = document.getElementById(
+        'NESTFrame'
+      ) as HTMLIFrameElement;
+      NESTFrame.src = core.app.nestServer.url;
+      setInterval(
+        () => NESTFrame.contentDocument.location.reload(true),
+        300000
+      );
+    };
+
     onMounted(() => {
       core.app.init();
+      keepNESTServerConnected();
     });
   },
 });
@@ -48,6 +59,13 @@ export default Vue.extend({
   @page {
     size: landscape;
   }
+}
+
+.iframe {
+  background-color: white;
+  display: none;
+  position: absolute;
+  z-index: 1000;
 }
 
 .v-toast__text h1 {
