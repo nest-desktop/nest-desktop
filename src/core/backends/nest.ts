@@ -9,7 +9,7 @@ export class NESTServer extends Backend {
 
   constructor() {
     super('NESTServer');
-    this.check();
+    this.check().then(() => this.setUrlIFrame());
   }
 
   get state(): any {
@@ -55,6 +55,7 @@ export class NESTServer extends Backend {
    */
   ping(url: string, callback: any = false): void {
     this._state.serverReady = false;
+    this.reloadIFrame();
     return this.httpClient.ping(url, (req: any) => {
       let resp: any;
       switch (req.status) {
