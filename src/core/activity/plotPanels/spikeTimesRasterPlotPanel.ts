@@ -18,9 +18,7 @@ export class SpikeTimesRasterPlotPanel extends SpikeTimesPanel {
    */
   init(): void {
     // console.log('Init raster plot panel for spike times');
-    this.activities = this.graph.project.activities.filter(
-      (activity: SpikeActivity) => activity.hasSpikeData()
-    );
+    this.activities = this.graph.project.spikeActivities;
     this.data = [];
   }
 

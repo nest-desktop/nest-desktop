@@ -1,6 +1,6 @@
-import { SpikeActivity } from '../spikeActivity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { ActivityGraphPanel } from './activityGraphPanel';
+import { SpikeActivity } from '../spikeActivity';
 
 export class SpikeTimesPanel extends ActivityGraphPanel {
   constructor(graph: ActivityChartGraph, configName: string = null) {
@@ -11,9 +11,7 @@ export class SpikeTimesPanel extends ActivityGraphPanel {
   }
 
   init(): void {
-    this.activities = this.graph.project.activities.filter(
-      (activity: SpikeActivity) => activity.hasSpikeData()
-    );
+    this.activities = this.graph.project.spikeActivities;
     this.data = [];
   }
 
