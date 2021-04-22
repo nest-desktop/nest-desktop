@@ -27,11 +27,10 @@ export default Vue.extend({
       const NESTFrame = document.getElementById(
         'NESTFrame'
       ) as HTMLIFrameElement;
-      NESTFrame.src = core.app.nestServer.url;
-      setInterval(
-        () => NESTFrame.contentDocument.location.reload(true),
-        300000
-      );
+      setInterval(() => {
+        NESTFrame.src = core.app.nestServer.url;
+        // NESTFrame.contentDocument.location.reload(true);
+      }, 300000);
     };
 
     onMounted(() => {
