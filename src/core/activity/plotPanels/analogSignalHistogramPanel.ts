@@ -38,9 +38,7 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
    * Initialize histogram panel for analog signal.
    */
   init(): void {
-    this.activities = this.graph.project.activities.filter(
-      (activity: AnalogSignalActivity) => activity.hasAnalogData()
-    );
+    this.activities = this.graph.project.spikeActivities;
     this.data = [];
   }
 

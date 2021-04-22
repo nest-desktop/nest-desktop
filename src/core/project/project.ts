@@ -4,6 +4,7 @@ import Vue from 'vue';
 
 import { Activity } from '../activity/activity';
 import { ActivityGraph } from '../activity/activityGraph';
+import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
 import { Config } from '../config';
 import { Network } from '../network/network';
@@ -11,6 +12,7 @@ import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
 import { ProjectView } from './projectView';
 import { Simulation } from '../simulation/simulation';
+import { SpikeActivity } from '../activity/spikeActivity';
 import { upgradeProject } from './projectUpgrade';
 
 export class Project extends Config {
@@ -496,6 +498,42 @@ export class Project extends Config {
       activity.idx = idx;
     });
     return activities;
+  }
+
+  /**
+   * Get a list of analog signal activities.
+   */
+  get analogSignalActivities(): AnalogSignalActivity[] {
+    return this.activities.filter((activity: Activity) =>
+      activity.hasAnalogData()
+    ) as AnalogSignalActivity[];
+  }
+
+  /**
+   * Get a list of neuronal analog signal activities.
+   */
+  get neuronAnalogSignalActivities(): AnalogSignalActivity[] {
+    return this.activities.filter((activity: Activity) =>
+      activity.hasNeuronAnalogData()
+    ) as AnalogSignalActivity[];
+  }
+
+  /**
+   * Get a list of input analog signal activities.
+   */
+  get inputAnalogSignalActivities(): AnalogSignalActivity[] {
+    return this.activities.filter((activity: Activity) =>
+      activity.hasInputAnalogData()
+    ) as AnalogSignalActivity[];
+  }
+
+  /**
+   * Get a list of spike activities.
+   */
+  get spikeActivities(): SpikeActivity[] {
+    return this.activities.filter((activity: Activity) =>
+      activity.hasSpikeData()
+    ) as SpikeActivity[];
   }
 
   /**
