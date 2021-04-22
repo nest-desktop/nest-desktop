@@ -171,31 +171,25 @@ export class Network extends Config {
 
   /**
    * Add connection component to the network.
-   *
-   * @remarks
-   * When it connects to a recorder, it initializes activity graph.
    */
-  addConnection(conn: any): void {
+  addConnection(conn: any): Connection {
     const connection: Connection = new Connection(this, conn);
     this._connections.push(connection);
-
-    // Initialize activity and activity graph.
-    if (connection.view.connectRecorder()) {
-      connection.recorder.initActivity();
-      if (this._project.activityGraph !== undefined) {
-        this._project.activityGraph.init();
-      }
-    }
+    return connection;
   }
 
   /**
    * Connect node components by user interaction.
+   *
+   * @remarks
+   * When it connects to a recorder, it initializes activity graph.
    */
   connectNodes(source: Node, target: Node): void {
-    this.addConnection({
+    const connection: Connection = this.addConnection({
       source: source.idx,
       target: target.idx,
     });
+    connection.initActivity();
     this.networkChanges();
   }
 
@@ -227,6 +221,7 @@ export class Network extends Config {
 
     // clean network
     this.clean();
+    this.initActivity();
     this.networkChanges();
   }
 
@@ -243,8 +238,23 @@ export class Network extends Config {
     this._connections = this._connections
       .slice(0, idx)
       .concat(this.connections.slice(idx + 1));
+
+    // clean network
     this.clean();
+    this.initActivity();
     this.networkChanges();
+  }
+
+  /**
+   * Initialize activity and its graph
+   */
+  initActivity(recorder: Node = undefined): void {
+    if (recorder !== undefined) {
+      recorder.initActivity();
+    }
+    if (this._project.activityGraph !== undefined) {
+      this._project.activityGraph.init();
+    }
   }
 
   /**
