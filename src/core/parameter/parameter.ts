@@ -38,7 +38,7 @@ export class Parameter extends Config {
     this._factors = param.factors || [];
 
     this._input = param.input;
-    this._label = param.label;
+    this._label = param.label || param.id;
     this._max = param.max;
     this._min = param.min;
     this._readonly = param.readonly || false;

@@ -126,7 +126,7 @@ export class Synapse {
     if (this.model && synapse && synapse.hasOwnProperty('params')) {
       this.model.params.forEach((modelParam: ModelParameter) => {
         const synParam = synapse.params.find(
-          (param: ModelParameter) => param.id === modelParam.id
+          (param: any) => param.id === modelParam.id
         );
         this.addParameter(synParam || modelParam);
       });

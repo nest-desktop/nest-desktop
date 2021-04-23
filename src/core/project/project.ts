@@ -11,7 +11,7 @@ import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
 import { ProjectView } from './projectView';
 import { Simulation } from '../simulation/simulation';
-// import { upgradeProject } from './projectUpgrade';
+import { upgradeProject } from './projectUpgrade';
 
 export class Project extends Config {
   private _activityGraph: ActivityGraph;
@@ -48,8 +48,8 @@ export class Project extends Config {
     this._description = project.description || '';
     this._hash = project.hash || '';
 
-    // Upgrade old projects
-    // const projectUpgraded: any = upgradeProject(this._app, project);
+    // Upgrade old projects.
+    project = upgradeProject(this._app, project);
 
     // Initialize simulation and network.
     this.initSimulation(project.simulation);
@@ -423,7 +423,7 @@ export class Project extends Config {
       this._code.generate();
     }
     this._simulation.running = true;
-    return this.app.nestServer.http
+    return this.app.nestServer.httpClient
       .post(this._app.nestServer.url + '/exec', {
         source: this._code.script,
         return: 'response',
