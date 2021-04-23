@@ -252,7 +252,7 @@ export default Vue.extend({
       } else if (!hasAllNodeTypes()) {
         showSnackbar('Add at least a stimulator, a neuron and a recorder.');
       } else if (state.network.connections.length < 2) {
-        showSnackbar('Connect neuron to stimulator and recorder.');
+        showSnackbar('Connect I/O-devices to neurons.');
       }
     };
 
