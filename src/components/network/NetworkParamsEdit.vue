@@ -15,6 +15,7 @@
     <v-select
       :items="state.items"
       dense
+      placeholder="Filter"
       hide-details
       multiple
       small
@@ -186,7 +187,7 @@
                     tile
                     height="40"
                   >
-                    <v-icon small v-text="'mdi-menu'" />
+                    <v-icon v-text="'mdi-drag-vertical'" />
                   </v-btn>
                 </v-col>
               </v-row>
