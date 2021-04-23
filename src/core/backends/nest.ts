@@ -16,17 +16,23 @@ export class NESTServer extends Backend {
     return this._state;
   }
 
-  check(): Promise<any> {
-    return new Promise((resolve, reject) => {
+  /**
+   * It pings nest server if hostname provided, else it seeks the url.
+   */
+  check(): Promise<void> {
+    return new Promise<void>(resolve => {
       // console.log('Check backend')
       if (this.config.hostname) {
-        this.ping(this.url, () => resolve(this));
+        this.ping(this.url, () => resolve());
       } else {
-        this.seek().then(() => resolve(this));
+        this.seek().then(() => resolve());
       }
     });
   }
 
+  /**
+   * It seeks the url of NEST Server.
+   */
   seek(): Promise<any> {
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
@@ -36,7 +42,7 @@ export class NESTServer extends Backend {
     ];
     const hostPromises: any[] = hosts.map(
       (host: string) =>
-        new Promise((resolve, reject) => {
+        new Promise<void>(resolve => {
           const url: string = protocol + '//' + host;
           this.ping(url, () => resolve());
         })
@@ -44,6 +50,9 @@ export class NESTServer extends Backend {
     return Promise.all(hostPromises);
   }
 
+  /**
+   * It pings NEST Server.
+   */
   ping(url: string, callback: any = false): void {
     this._state.serverReady = false;
     return this.httpClient.ping(url, (req: any) => {
