@@ -23,7 +23,11 @@ export default Vue.extend({
     Navigation,
   },
   setup() {
-    const keepNESTServerConnected = () => {
+    /**
+     * Keep connection to NEST Server alive.
+     * Ping every 5 min.
+     */
+    const keepConnectionToNESTServerAlive = () => {
       const NESTFrame = document.getElementById(
         'NESTFrame'
       ) as HTMLIFrameElement;
@@ -35,7 +39,7 @@ export default Vue.extend({
 
     onMounted(() => {
       core.app.init();
-      keepNESTServerConnected();
+      keepConnectionToNESTServerAlive();
     });
   },
 });
