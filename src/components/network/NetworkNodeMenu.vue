@@ -17,6 +17,33 @@
 
         <span v-if="state.content === null">
           <v-list dense>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon v-text="'mdi-contrast'" />
+              </v-list-item-icon>
+              <v-list-item-title v-text="'Set all synaptic weights'" />
+
+              <v-btn
+                :outlined="node.view.weight === 'excitatory'"
+                @click="state.node.setWeights('excitatory')"
+                icon
+                small
+                title="excitatory"
+              >
+                <v-icon v-text="'mdi-plus'" />
+              </v-btn>
+
+              <v-btn
+                :outlined="node.view.weight === 'inhibitory'"
+                @click="state.node.setWeights('inhibitory')"
+                icon
+                small
+                title="inhibitory"
+              >
+                <v-icon v-text="'mdi-minus'" />
+              </v-btn>
+            </v-list-item>
+
             <v-list-item
               :key="index"
               @click="item.onClick"
@@ -169,16 +196,6 @@ export default Vue.extend({
       visibleParams: [],
       items: [
         {
-          id: 'paramsSelect',
-          icon: 'mdi-checkbox-marked-outline',
-          title: 'Set parameter view',
-          onClick: () => {
-            state.content = 'paramsSelect';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-        },
-        {
           id: 'paramsReset',
           icon: 'mdi-restart',
           title: 'Reset parameters',
@@ -207,15 +224,6 @@ export default Vue.extend({
           onClick: () => {
             state.content = 'nodeColor';
             window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-        },
-        {
-          id: 'setWeights',
-          icon: 'mdi-contrast',
-          title: 'Set all synaptic weights',
-          onClick: () => {
-            state.content = 'nodeWeights';
           },
           append: true,
         },

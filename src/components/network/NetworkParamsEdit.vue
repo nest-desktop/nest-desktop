@@ -12,87 +12,31 @@
       v-if="state.connectionMenu.show"
     />
 
-    <v-banner
-      class="elementType"
-      height="28"
-      max-height="28"
-      width="327"
-      single-line
-      sticky
+    <v-select
+      :items="state.items"
+      dense
+      hide-details
+      multiple
+      small
+      deletable-chips
+      small-chips
+      v-model="state.filtered"
     >
-      <v-btn-toggle dense group mandatory tile v-model="state.elementType">
-        <v-btn small v-text="'All'" />
-        <v-btn small v-text="'Neuron'" />
-        <v-btn small v-text="'Stimulator'" />
-        <v-btn small v-text="'Recorder'" />
-        <v-menu :close-on-content-click="false" offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn small v-text="'Custom'" v-bind="attrs" v-on="on" />
-          </template>
-          <v-card>
-            <v-card-text class="pa-0">
-              <v-list dense>
-                <v-list-item-group
-                  @change="nodeDisplayChange"
-                  multiple
-                  v-model="state.displayNodes"
-                >
-                  <v-list-item
-                    :color="node.view.color"
-                    :key="'node' + node.idx"
-                    v-for="node in state.network.nodes"
-                  >
-                    <template v-slot:default="{ active }">
-                      <v-list-item-content style="padding: 4px">
-                        <v-row no-gutters v-text="node.view.label" />
-                      </v-list-item-content>
-
-                      <v-list-item-action style="margin: 4px 0">
-                        <v-checkbox
-                          :color="node.view.color"
-                          :input-value="active"
-                          hide-details
-                        />
-                      </v-list-item-action>
-                    </template>
-                  </v-list-item>
-                </v-list-item-group>
-
-                <v-list-item-group
-                  @change="connectionDisplayChange"
-                  multiple
-                  v-model="state.displayConnections"
-                >
-                  <v-list-item
-                    :color="connection.source.view.color"
-                    :key="'connection' + connection.idx"
-                    v-for="connection in state.network.connections"
-                  >
-                    <template v-slot:default="{ active }">
-                      <v-list-item-content style="padding: 4px">
-                        <v-row no-gutters>
-                          {{ connection.source.view.label }}
-                          <v-icon small v-text="'mdi-arrow-right'" />
-                          {{ connection.target.view.label }}
-                        </v-row>
-                      </v-list-item-content>
-
-                      <v-list-item-action style="margin: 4px 0">
-                        <v-checkbox
-                          :color="connection.source.view.color"
-                          :input-value="active"
-                          hide-details
-                        />
-                      </v-list-item-action>
-                    </template>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-card-text>
-          </v-card>
-        </v-menu>
-      </v-btn-toggle>
-    </v-banner>
+      <template v-slot:prepend-item>
+        <v-list-item ripple @click="toggle">
+          <v-list-item-action>
+            <v-icon
+              :color="state.filtered.length > 0 ? 'indigo darken-4' : ''"
+              v-text="icon()"
+            />
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="'Select All'" />
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider class="mt-2"></v-divider>
+      </template>
+    </v-select>
 
     <v-row
       class="mr-2"
@@ -104,7 +48,7 @@
           <transition-group>
             <span :key="'node' + node.idx" v-for="node of state.network.nodes">
               <v-card class="mb-1" flat tile v-if="showNode(node)">
-                <v-sheet :color="node.view.color">
+                <v-sheet :color="node.view.color" class="handle">
                   <v-row @contextmenu="e => showNodeMenu(e, node)" no-gutters>
                     <v-col cols="3">
                       <v-btn
@@ -117,25 +61,8 @@
                         v-text="node.view.label"
                       />
                     </v-col>
-                    <v-col cols="7">
-                      <v-overflow-btn
-                        :items="node.models"
-                        class="ma-0"
-                        dark
-                        dense
-                        editable
-                        hide-details
-                        item-text="label"
-                        item-value="id"
-                        style="font-weight:700"
-                        tile
-                        v-model="node.modelId"
-                      />
-                    </v-col>
-                    <v-col cols="2">
-                      <v-btn block class="handle" dark text tile height="40">
-                        <v-icon small v-text="'mdi-menu'" />
-                      </v-btn>
+                    <v-col cols="9">
+                      <NodeModelSelect :node="node" />
                     </v-col>
                   </v-row>
                 </v-sheet>
@@ -320,6 +247,7 @@ import { Node } from '@/core/node/node';
 import core from '@/core';
 import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
 import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
+import NodeModelSelect from '@/components/network/NodeModelSelect.vue';
 import NodePosition from '@/components/network/NodePosition.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
@@ -329,6 +257,7 @@ export default Vue.extend({
     draggable,
     NetworkConnectionMenu,
     NetworkNodeMenu,
+    NodeModelSelect,
     NodePosition,
     ParameterEdit,
   },
@@ -357,6 +286,8 @@ export default Vue.extend({
         },
         show: false,
       },
+      items: ['neuron', 'stimulator', 'recorder', 'nodes', 'connections'],
+      filtered: ['neuron', 'stimulator', 'recorder', 'nodes', 'connections'],
     });
 
     /**
@@ -371,9 +302,13 @@ export default Vue.extend({
       } else if (state.elementType === 4) {
         return node.view.visible;
       } else {
-        const elementTypes: string[] = ['', 'neuron', 'stimulator', 'recorder'];
-        if (state.elementType === 0) return true;
-        return elementTypes[state.elementType] === node.model.elementType;
+        // const elementTypes: string[] = ['', 'neuron', 'stimulator', 'recorder'];
+        // if (state.elementType === 0) return true;
+        // return elementTypes[state.elementType] === node.model.elementType;
+        return (
+          state.filtered.includes(node.model.elementType) &&
+          state.filtered.includes('nodes')
+        );
       }
     };
 
@@ -414,11 +349,15 @@ export default Vue.extend({
       } else if (state.elementType === 4) {
         return connection.view.visible;
       } else {
-        const elementTypes: string[] = ['', 'neuron', 'stimulator', 'recorder'];
-        if (state.elementType === 0) return true;
+        // const elementTypes: string[] = ['', 'neuron', 'stimulator', 'recorder'];
+        // if (state.elementType === 0) return true;
+        // return (
+        //   elementTypes[state.elementType] ===
+        //   connection.source.model.elementType
+        // );
         return (
-          elementTypes[state.elementType] ===
-          connection.source.model.elementType
+          state.filtered.includes(connection.source.model.elementType) &&
+          state.filtered.includes('connections')
         );
       }
     };
@@ -469,6 +408,20 @@ export default Vue.extend({
         .map((connection: Connection) => connection.idx);
     };
 
+    const icon = () => {
+      if (state.filtered.length === state.items.length) return 'mdi-close-box';
+      if (state.filtered.length > 0) return 'mdi-minus-box';
+      return 'mdi-checkbox-blank-outline';
+    };
+
+    const toggle = () => {
+      if (state.filtered.length === state.items.length) {
+        state.filtered = [];
+      } else {
+        state.filtered = state.items.slice();
+      }
+    };
+
     onMounted(() => {
       update();
     });
@@ -483,6 +436,7 @@ export default Vue.extend({
 
     return {
       connectionDisplayChange,
+      icon,
       nodeDisplayChange,
       paramChange,
       showConnection,
@@ -490,45 +444,8 @@ export default Vue.extend({
       showNode,
       showNodeMenu,
       state,
+      toggle,
     };
   },
 });
 </script>
-
-<style>
-.elementType .v-toolbar__content {
-  padding: 0;
-}
-
-.v-btn-toggle--group > .v-btn.v-btn {
-  margin: 0;
-}
-
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
-}
-
-.v-overflow-btn .v-input__slot {
-  border-width: 0;
-}
-
-.v-overflow-btn.v-input--dense .v-select__slot {
-  height: 40px;
-}
-
-.v-image__image--preload {
-  filter: none;
-  --webkit-filter: none;
-}
-
-.v-banner__wrapper {
-  padding: 0 !important;
-}
-</style>
