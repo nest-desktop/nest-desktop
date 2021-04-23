@@ -31,7 +31,7 @@ export class HttpClient {
   }
 
   get(url: string): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const req: XMLHttpRequest = new XMLHttpRequest();
       req.open('GET', url, /*async*/ true);
       req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
@@ -71,7 +71,7 @@ export class HttpClient {
   }
 
   post(url: string, data: any): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const req: XMLHttpRequest = new XMLHttpRequest();
       req.open('POST', url, /*async*/ true);
       req.setRequestHeader(

@@ -2,7 +2,11 @@ import { App } from '../app';
 import { Model } from '../model/model';
 
 /**
- * Data structure changed in 2.5
+ * Upgrades networks which were created with NEST Desktop v2.5 or older to be
+ * compatible with v >= 3.0 (the data structure changed in v2.5).
+ * @param app NEST Desktop app
+ * @param project Project which should be transformed
+ * @returns Network changed to new format
  */
 function upgradeNetwork(app: App, project: any): any {
   // console.log('Upgrade network:', project.name);
@@ -96,7 +100,13 @@ function upgradeNetwork(app: App, project: any): any {
 }
 
 /**
- * Make projects compatible.
+
+ * Upgrades networks which were created with NEST Desktop v2.5 or older to be
+ * compatible with v >= 3.0 (the data structure changed in v2.5).
+ * It also checks if projects with v3.0+ are valid and corrects some problems.
+ * @param app NEST Desktop app
+ * @param project Project which should be transformed
+ * @returns Network changed to new format
  */
 export function upgradeProject(app: App, project: any): any {
   // console.log('Upgrade project:', project.name);
