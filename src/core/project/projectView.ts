@@ -1,6 +1,7 @@
 import { Project } from './project';
 
 export class ProjectView {
+  private _activityStatsPanelId: number = 0;
   private _modeIdx: number;
   private _project: Project; // parent
   private _selected: boolean = false;
@@ -8,6 +9,14 @@ export class ProjectView {
 
   constructor(project: Project) {
     this._project = project;
+  }
+
+  get activityStatsPanelId(): number {
+    return this._activityStatsPanelId;
+  }
+
+  set activityStatsPanelId(value: number) {
+    this._activityStatsPanelId = value;
   }
 
   get modeIdx(): number {

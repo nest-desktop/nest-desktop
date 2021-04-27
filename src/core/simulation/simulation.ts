@@ -7,7 +7,6 @@ export class Simulation extends Config {
   private _code: SimulationCode;
   private _kernel: SimulationKernel; // simulation kernel
   private _project: Project; // parent
-  private _randomSeed: number; // seed for random renerator of numpy
   private _running = false;
   private _time: number; // simulation time
 
@@ -17,7 +16,6 @@ export class Simulation extends Config {
     this._kernel = new SimulationKernel(this, simulation.kernel);
     this._code = new SimulationCode(this);
     this._time = parseFloat(simulation.time) || 1000;
-    this._randomSeed = parseInt(simulation.randomSeed, 0) || 0;
   }
 
   get code(): SimulationCode {
@@ -30,14 +28,6 @@ export class Simulation extends Config {
 
   get project(): Project {
     return this._project;
-  }
-
-  get randomSeed(): number {
-    return this._randomSeed;
-  }
-
-  set randomSeed(value: number) {
-    this._randomSeed = value;
   }
 
   get running(): boolean {
@@ -63,7 +53,6 @@ export class Simulation extends Config {
   toJSON(): any {
     const simulation: any = {
       kernel: this._kernel.toJSON(),
-      randomSeed: this._randomSeed,
       time: this._time,
     };
     return simulation;

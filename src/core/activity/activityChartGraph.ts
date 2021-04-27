@@ -59,7 +59,7 @@ export class ActivityChartGraph {
   }
 
   get endtime(): number {
-    return this._project.simulation.kernel.time;
+    return this._project.simulation.kernel.biologicalTime;
   }
 
   get imageButtonOptions(): any {

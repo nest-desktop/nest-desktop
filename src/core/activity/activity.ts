@@ -1,5 +1,6 @@
 // import { Config } from '../config';
 import { Node } from '../node/node';
+import { sha1 } from 'object-hash';
 
 export class Activity {
   private _events: any = {};
@@ -7,6 +8,7 @@ export class Activity {
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
+  private _hash: string;
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
@@ -18,7 +20,7 @@ export class Activity {
   }
 
   get endtime(): number {
-    return this._recorder.network.project.simulation.kernel.time;
+    return this._recorder.network.project.simulation.kernel.biologicalTime;
   }
 
   get events(): any {
@@ -27,6 +29,10 @@ export class Activity {
 
   set events(value: any) {
     this._events = value;
+  }
+
+  get hash(): string {
+    return this._hash;
   }
 
   get idx(): number {
@@ -77,6 +83,7 @@ export class Activity {
     this._events = activity.events || {};
     this._nodeIds = activity.nodeIds || [];
     this._nodePositions = activity.nodePositions || [];
+    this._hash = sha1(JSON.stringify(this._events));
   }
 
   hasAnalogData(): boolean {
