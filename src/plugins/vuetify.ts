@@ -11,6 +11,9 @@ import NetworkIcon from '@/components/icons/NetworkIcon.vue';
 
 Vue.use(Vuetify);
 
+// Color  code taken from
+// https://color.adobe.com/de/create/color-wheel
+
 export default new Vuetify({
   icons: {
     values: {
@@ -32,16 +35,25 @@ export default new Vuetify({
         primary: colors.grey.base,
         secondary: colors.grey.lighten2,
         accent: colors.grey.darken2,
-        project: {
-          base: colors.teal.base, //'#93b5ad',
-          darken1: colors.teal.darken1,
-          // darken1: '#84A29B',
+        kernel: {
+          base: '#FF6633',
+          darken1: '#B33A12',
+          lighen1: '#FF794D',
         },
         model: {
-          base: colors.orange.darken4, //'#be6442',
+          base: '#FF6633',
+          darken1: '#B33A12',
+          lighen1: '#FF794D',
+        },
+        project: {
+          base: '#1281B3',
+          darken1: '#054766',
+          lighten1: '#26BCFF',
         },
         settings: {
-          base: colors.deepPurple.base, //'#ce934a',
+          base: '#36B34F',
+          darken1: '#146625',
+          lighen1: '#40FF66',
         },
       },
     },
