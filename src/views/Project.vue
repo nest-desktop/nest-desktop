@@ -10,34 +10,9 @@
       dense
       flat
     >
-      <!-- <v-tabs hide-slider optional style="max-width:270px">
-        <v-tab>
-          <v-icon color="accent" large>mdi-brain</v-icon>
-          <v-icon style="position:absolute; bottom: 5px; right: 15px"
-            >mdi-pen</v-icon
-          >
-        </v-tab>
-        <v-tab>
-          <v-icon color="accent" large>mdi-brain</v-icon>
-          <v-icon style="position:absolute; bottom: 5px; right: 15px"
-            >mdi-play</v-icon
-          ></v-tab
-        >
-        <v-tab>
-          <v-icon color="accent" large>mdi-brain</v-icon>
-          <v-icon style="position:absolute; bottom: 5px; right: 15px"
-            >mdi-eye</v-icon
-          ></v-tab
-        >
-      </v-tabs> -->
-
-      <v-toolbar-title>
-        <v-icon class="ma-2" v-text="'mdi-brain'" />
-      </v-toolbar-title>
-
       <v-btn-toggle
         @change="updateProjectMode"
-        class="ma-2"
+        class="pl-10"
         group
         light
         mandatory
@@ -108,7 +83,7 @@
         </v-btn>
       </v-btn-toggle>
 
-      <v-toolbar-title>
+      <v-toolbar-title class="mx-2">
         {{ state.project.name }}
       </v-toolbar-title>
 
@@ -202,7 +177,7 @@
           mini-variant-width="56"
           right
         >
-          <v-list nav dense>
+          <!-- <v-list nav dense>
             <v-list-item
               @click="state.toolOpened = !state.toolOpened"
               title="Toggle navigation"
@@ -218,7 +193,7 @@
                 <v-list-item-title v-text="'Close'" />
               </v-list-item-content>
             </v-list-item>
-          </v-list>
+          </v-list> -->
 
           <v-list dense nav>
             <v-list-item

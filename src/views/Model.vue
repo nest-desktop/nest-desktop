@@ -1,11 +1,10 @@
 <template>
   <div model="model" v-if="state.model">
-    <v-app-bar app clipped-left color="model" dark dense flat>
-      <v-toolbar-title>
-        <v-icon class="ma-2">mdi-engine-outline</v-icon>
+    <!-- <v-app-bar app clipped-left color="model" dark dense flat>
+      <v-toolbar-title class="pl-12">
         {{ state.model.label }}
       </v-toolbar-title>
-    </v-app-bar>
+    </v-app-bar> -->
 
     <v-main>
       <ModelDocumentation :id="state.modelId" />
