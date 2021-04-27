@@ -1,5 +1,8 @@
 <template>
-  <div class="activitySpikeStats">
+  <div
+    class="activitySpikeStats"
+    v-if="state.activity && state.activity.hash === state.activityHash"
+  >
     <v-card flat tile>
       <!-- <v-card-title>
         <v-text-field
@@ -14,16 +17,35 @@
         :headers="state.headers"
         :items="state.items"
         :items-per-page="15"
+        :loading="state.loading"
         dense
         fixed-header
-      />
+        loading-text="Loading... Please wait"
+        sort-by="id"
+      >
+        <template v-slot:body.append="{ headers }">
+          <tr>
+            <td v-for="(header, i) in headers" :key="i">
+              <div v-if="header.value == 'id'" v-text="'All'" />
+              <div v-else-if="header.value == 'count'">
+                <span>&#931;</span>
+                = {{ sum(header.value) }}
+              </div>
+              <div v-else>
+                <span>&#956;</span>
+                = {{ mean(header.value).toFixed(2) }}
+              </div>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 import * as d3 from 'd3';
 
 import { Activity } from '@/core/activity/activity';
@@ -36,6 +58,7 @@ export default Vue.extend({
   setup(props) {
     const state = reactive({
       activity: undefined as Activity | undefined,
+      activityHash: '',
       headers: [
         {
           text: 'ID',
@@ -43,11 +66,12 @@ export default Vue.extend({
           value: 'id',
         },
         { text: 'Count', value: 'count' },
-        { text: 'ISI mean', value: 'meanISI' },
-        { text: 'ISI std', value: 'stdISI' },
-        { text: 'CV(ISI)', value: 'cvISI' },
+        { text: 'ISI mean (ms)', value: 'meanISI' },
+        { text: 'ISI std (ms)', value: 'stdISI' },
+        { text: 'CV (ISI)', value: 'cvISI' },
       ],
       items: [],
+      loading: false,
       search: '',
     });
 
@@ -83,6 +107,7 @@ export default Vue.extend({
       ];
 
       if (state.activity != undefined) {
+        state.loading = true;
         const times: any[] = Object.create(null);
         state.activity.nodeIds.forEach((id: number) => {
           times[id] = [];
@@ -95,40 +120,40 @@ export default Vue.extend({
             (a: number, b: number) => a - b
           );
           const isi: number[] = diff(timesSorted);
-          const isiMean: number =
-            isi.length > 1 ? parseFloat(d3.mean(isi).toFixed(2)) : 0;
-          const isiStd: number =
-            isi.length > 1 ? parseFloat(d3.deviation(isi).toFixed(2)) : 0;
+          const isiMean: number = isi.length > 0 ? d3.mean(isi) : 0;
+          const isiStd: number = isi.length > 1 ? d3.deviation(isi) : 0;
           return {
             id,
             count: timesSorted.length,
-            meanISI: isiMean,
-            stdISI: isiStd,
-            cvISI: isiMean > 0 ? (isiStd / isiMean).toFixed(2) : 0,
+            meanISI: isiMean.toFixed(2),
+            stdISI: isiStd.toFixed(2),
+            cvISI: isiMean === 0 ? NaN : (isiStd / isiMean).toFixed(2),
           };
         });
+        state.activityHash = state.activity.hash;
+        state.loading = false;
       }
     };
 
-    // const sum = element => {
-    //   const data = this.dataSource.filteredData;
-    //   return data.map(t => t[element]).reduce((acc, value) => acc + value, 0);
-    // };
-    //
-    // const mean = element => {
-    //   const data = this.dataSource.filteredData;
-    //   return (
-    //     data.map(t => t[element]).reduce((acc, value) => acc + value, 0) /
-    //     data.length
-    //   );
-    // };
+    const sum = (key: string) => {
+      return d3.sum(state.items.map(item => item[key]));
+    };
+
+    const mean = (key: string) => {
+      return d3.mean(state.items.map(item => item[key]));
+    };
 
     onMounted(() => {
       state.activity = props.activity as Activity;
       update();
     });
 
-    return { state };
+    watch(
+      () => props.activity,
+      () => update()
+    );
+
+    return { mean, state, sum };
   },
 });
 </script>

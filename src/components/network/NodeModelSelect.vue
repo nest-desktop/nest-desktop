@@ -34,7 +34,7 @@
           />
         </v-card-title>
 
-        <v-list dense>
+        <v-list class="no-highlight" dense>
           <v-list-item-group
             @change="selectionChange"
             active-class=""
@@ -47,8 +47,8 @@
               style="font-size:12px;"
               v-for="param of state.node.params"
             >
-              <template v-slot:default="{ active }">
-                <v-list-item-content style="padding: 4px">
+              <template v-slot:default="">
+                <v-list-item-content class="pa-1">
                   <v-row no-gutters>
                     {{ param.options.label }}
                     <v-spacer />
@@ -57,10 +57,10 @@
                   </v-row>
                 </v-list-item-content>
 
-                <v-list-item-action style="margin: 4px 0">
+                <v-list-item-action class="my-1">
                   <v-checkbox
                     :color="node.view.color"
-                    :input-value="active"
+                    :input-value="param.visible"
                     hide-details
                   />
                 </v-list-item-action>
@@ -102,14 +102,19 @@ export default Vue.extend({
       state.node.nodeChanges();
     };
 
+    /**
+     * Update states.
+     */
+    const update = () => {
+      state.node = props.node as Node;
+      state.visibleParams = state.node.filteredParams.map(
+        (param: ModelParameter) => param.idx
+      );
+    };
+
     watch(
       () => props.node,
-      () => {
-        state.node = props.node as Node;
-        state.visibleParams = state.node.filteredParams.map(
-          (param: ModelParameter) => param.idx
-        );
-      }
+      () => update()
     );
 
     return {
@@ -127,5 +132,9 @@ export default Vue.extend({
 
 .nodeModel:hover .modelEdit {
   display: block;
+}
+
+.no-highlight .v-list-item--active::before {
+  opacity: 0 !important;
 }
 </style>

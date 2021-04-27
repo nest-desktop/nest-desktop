@@ -1,5 +1,8 @@
 <template>
-  <div class="activityAnalogStats">
+  <div
+    class="activityAnalogStats"
+    v-if="state.activity && state.activity.hash === state.activityHash"
+  >
     <v-card flat tile>
       <!-- <v-card-title>
         <v-text-field
@@ -14,16 +17,34 @@
         :headers="state.headers"
         :items="state.items"
         :items-per-page="15"
+        :loading="state.loading"
         dense
         fixed-header
-      />
+        loading-text="Loading... Please wait"
+        sort-by="id"
+      >
+        <template
+          v-slot:body.append="{ headers }"
+          v-if="state.items.length > 1"
+        >
+          <tr>
+            <td v-for="(header, i) in headers" :key="i">
+              <div v-if="header.value == 'id'" v-text="'All'" />
+              <div v-else>
+                <span>&#956;</span>
+                = {{ mean(header.value).toFixed(2) }}
+              </div>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 import * as d3 from 'd3';
 
 import { Activity } from '@/core/activity/activity';
@@ -36,6 +57,7 @@ export default Vue.extend({
   setup(props) {
     const state = reactive({
       activity: undefined as Activity | undefined,
+      activityHash: '',
       headers: [
         {
           text: 'ID',
@@ -46,6 +68,7 @@ export default Vue.extend({
         { text: 'Std', value: 'std' },
       ],
       items: [],
+      loading: false,
       search: '',
       selectedRecordFrom: 'V_m',
     });
@@ -59,6 +82,7 @@ export default Vue.extend({
         return;
       }
       if (state.activity != undefined) {
+        state.loading = true;
         const activityData: any[] =
           state.activity.events[state.selectedRecordFrom];
         const data: any[] = Object.create(null);
@@ -70,11 +94,21 @@ export default Vue.extend({
           const d: any = data[id];
           return {
             id,
-            mean: d.length > 0 ? d3.mean(d).toFixed(2) : 0,
-            std: d.length > 0 ? d3.deviation(d).toFixed(2) : 0,
+            mean: d.length === 0 ? NaN : d3.mean(d).toFixed(2),
+            std: d.length === 0 ? NaN : d3.deviation(d).toFixed(2),
           };
         });
+        state.activityHash = state.activity.hash;
+        state.loading = false;
       }
+    };
+
+    const sum = (key: string) => {
+      return d3.sum(state.items.map(item => item[key]));
+    };
+
+    const mean = (key: string) => {
+      return d3.mean(state.items.map(item => item[key]));
     };
 
     onMounted(() => {
@@ -82,7 +116,12 @@ export default Vue.extend({
       update();
     });
 
-    return { state };
+    watch(
+      () => props.activity,
+      () => update()
+    );
+
+    return { mean, state, sum };
   },
 });
 </script>

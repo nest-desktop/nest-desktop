@@ -12,6 +12,7 @@
           :style="{ backgroundColor: state.node.view.color }"
           class="py-1"
           style="color:white; height:40px"
+          v-if="state.content !== 'modelDocumentation'"
           v-text="state.node.model.label"
         />
 
