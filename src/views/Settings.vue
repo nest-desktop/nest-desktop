@@ -1,18 +1,10 @@
 <template>
   <div class="settings">
-    <v-app-bar app clipped-left color="settings" dark dense flat>
-      <v-toolbar-title>
-        <v-icon class="ma-2" v-text="'mdi-cogs'" />
-        Settings
-      </v-toolbar-title>
-    </v-app-bar>
+    <!-- <v-app-bar app clipped-left color="settings" dark dense flat>
+      <v-toolbar-title class="pa-12" v-text="'Settings'" />
+    </v-app-bar> -->
 
-    <v-card
-      color="white"
-      flat
-      style="height:calc(100vh - 48px); overflow-y:auto"
-      tile
-    >
+    <v-card color="white" flat style="height:calc(100vh); overflow-y:auto" tile>
       <v-main>
         <v-container>
           <v-card flat tile>
