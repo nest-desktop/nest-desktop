@@ -13,7 +13,7 @@
       permanent
       v-click-outside="
         () => {
-          if (!state.pinned) {
+          if (!state.pinNav) {
             state.miniVariant = true;
             state.navList = '';
           }
@@ -29,41 +29,7 @@
           mobile-breakpoint="56"
         >
           <div style="display:flex; flex-direction:column; height: 100%">
-            <v-list nav dense>
-              <v-list-item
-                :title="state.pinned ? 'Unpin' : 'Pin' + ' navigation'"
-                @click="
-                  () => {
-                    state.pinned = !state.pinned;
-                    state.miniVariant = false;
-                    state.navList =
-                      state.navList === '' ? 'project' : state.navList;
-                  }
-                "
-              >
-                <v-list-item-icon>
-                  <v-icon
-                    v-text="
-                      state.pinned ? 'mdi-pin-outline' : 'mdi-pin-off-outline'
-                    "
-                  />
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="'Close'" />
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-
-            <v-list nav>
-              <v-list-item @click="reset" title="Home" to="/">
-                <v-list-item-icon>
-                  <v-icon v-text="'mdi-home'" />
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="'Home'" />
-                </v-list-item-content>
-              </v-list-item>
-
+            <v-list dense nav>
               <v-list-item
                 :class="{ 'v-list-item--active': state.navList === route.id }"
                 :color="route.color"
@@ -77,7 +43,7 @@
                   <v-list-item-group
                     style="font-size:7px; text-align:center; width:100%"
                   >
-                    <v-icon v-text="route.icon" />
+                    <v-icon small v-text="route.icon" />
                     <div v-text="route.title" />
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -103,7 +69,7 @@
 
               <v-list-item
                 @click="reset"
-                color="settings darken"
+                color="settings darken1"
                 title="Settings"
                 to="/settings"
               >
@@ -119,6 +85,122 @@
                   <v-list-item-title v-text="'Settings'" />
                 </v-list-item-content>
               </v-list-item>
+
+              <v-list-item
+                href="https://nest-desktop.readthedocs.io/en/latest/"
+                target="_blank"
+                title="Help"
+              >
+                <v-list-item-icon>
+                  <v-list-item-group
+                    style="font-size:7px; text-align:center; width:100%"
+                  >
+                    <v-icon small v-text="'mdi-help-circle-outline'" />
+                    Help
+                  </v-list-item-group>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="'Help'" />
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-dialog max-width="400" v-model="state.dialog">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-list-item
+                    @click="reset"
+                    title="About"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-list-item-icon>
+                      <v-list-item-group
+                        style="font-size:7px; text-align:center; width:100%"
+                      >
+                        <v-icon small v-text="'mdi-information-variant'" />
+                        About
+                      </v-list-item-group>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="'About'" />
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+                <v-card class="about-dialog">
+                  <v-card-title class="headline">
+                    About NEST Desktop
+                  </v-card-title>
+                  <v-card-text>
+                    <v-list dense>
+                      <v-list-item>
+                        <v-row>
+                          <v-col class="font-weight-bold" cols="4">
+                            Documentation
+                          </v-col>
+                          <v-col cols="8">
+                            <a
+                              href="https://nest-desktop.readthedocs.io"
+                              target="_blank"
+                              v-text="'https://nest-desktop.readthedocs.io'"
+                            />
+                          </v-col>
+                        </v-row>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-row>
+                          <v-col class="font-weight-bold" cols="4">
+                            Source Code
+                          </v-col>
+                          <v-col cols="8">
+                            <a
+                              href="https://github.com/babsey/nest-desktop"
+                              target="_blank"
+                              v-text="'https://github.com/babsey/nest-desktop'"
+                            />
+                          </v-col>
+                        </v-row>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-row>
+                          <v-col class="font-weight-bold" cols="4">
+                            License
+                          </v-col>
+                          <v-col cols="8">
+                            MIT License
+                          </v-col>
+                        </v-row>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-row>
+                          <v-col class="font-weight-bold" cols="4">
+                            Current Version
+                          </v-col>
+                          <v-col cols="8">
+                            {{ state.version }}
+                          </v-col>
+                        </v-row>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-row>
+                          <v-col class="font-weight-bold" cols="4">
+                            Contact
+                          </v-col>
+                          <v-col cols="8">
+                            <a href="mailto:spreizer@uni-trier.de">
+                              Sebastian Spreizer
+                            </a>
+                          </v-col>
+                        </v-row>
+                      </v-list-item>
+                    </v-list>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="state.dialog = false" text>
+                      Close
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-list>
           </div>
         </v-navigation-drawer>
@@ -152,13 +234,15 @@ export default {
   setup() {
     const state = reactive({
       app: core.app,
-      navList: '',
+      dialog: false,
       miniVariant: true,
+      navList: '',
+      pinNav: core.app.config.pinNav,
       projectsMenu: {
         position: { x: 0, y: 0 },
         show: false,
       },
-      pinned: true,
+      version: core.app.version,
     });
 
     /**
@@ -197,14 +281,14 @@ export default {
     const routes: any[] = [
       {
         id: 'project',
-        color: 'project darken',
+        color: 'project darken1',
         icon: 'mdi-brain',
         title: 'Projects',
         contextmenu: showProjectsMenu,
       },
       {
         id: 'model',
-        color: 'model',
+        color: 'model darken1',
         icon: 'mdi-square-root',
         title: 'Models',
         contextmenu: () => {},
@@ -220,3 +304,21 @@ export default {
   },
 };
 </script>
+
+<style>
+.about-dialog .v-list {
+  font-size: 12px;
+}
+.about-dialog .v-list-item {
+  height: 28px !important;
+  min-height: 28px !important;
+}
+.about-dialog a {
+  text-decoration: none;
+  color: black !important;
+}
+.about-dialog .col-4,
+.about-dialog .col-8 {
+  padding: 4px;
+}
+</style>

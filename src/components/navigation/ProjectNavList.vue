@@ -69,7 +69,7 @@
               <v-list-item-title v-text="project.name" />
               <!-- <v-list-item-subtitle v-html="timeSince(project.createdAt)" /> -->
               <v-list-item-subtitle>
-                {{ project.network.nodes.length }} nodes;
+                {{ project.network.nodes.length }} nodes,
                 {{ project.network.connections.length }} connections
               </v-list-item-subtitle>
             </v-list-item-content>
