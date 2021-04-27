@@ -420,8 +420,8 @@ export class Project extends Config {
   runSimulation(): Promise<any> {
     // console.log('Run simulation');
     this._errorMessage = '';
-    if (this._simulation.config.randomSeed) {
-      this._simulation.randomSeed = Math.round(Math.random() * 1000);
+    if (this._simulation.kernel.config.autoRNGSeed) {
+      this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
     this._simulation.running = true;
@@ -441,7 +441,8 @@ export class Project extends Config {
             break;
           case 200:
             data = JSON.parse(resp.response).data;
-            this._simulation.kernel.time = data.kernel.time;
+            this._simulation.kernel.biologicalTime =
+              data.kernel.biological_time;
             if (data.positions) {
               data.activities.forEach((activity: any) => {
                 const positions = activity.nodeIds.map(

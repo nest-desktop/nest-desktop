@@ -40,7 +40,6 @@ export class ProjectCode extends Code {
     this._script += 'nest.ResetKernel()\n';
 
     this._script += '\n\n# Simulation kernel\n';
-    this._script += this._project.simulation.code.setRandomSeed();
     this._script += this._project.simulation.code.setKernelStatus();
 
     // this._script += '\n\n# Copy models\n';
@@ -116,7 +115,10 @@ export class ProjectCode extends Code {
   response(): string {
     let script = '';
     script += 'response = {';
-    script += this._() + '"kernel": {"time": nest.GetKernelStatus("time")},';
+    script += this._() + '"kernel": {';
+    script +=
+      this._(2) + '"biological_time": nest.GetKernelStatus("biological_time")';
+    script += this._() + '},';
     script +=
       this._() + '"activities": ' + this._project.network.code.getActivities();
     if (this._project.network.hasSpatialNodes()) {
