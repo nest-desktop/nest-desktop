@@ -2,7 +2,7 @@
   <div class="model" v-if="state.modelId">
     <v-toolbar dense flat>
       <v-toolbar-title v-text="state.modelId" />
-      <v-toolbar-subtitle
+      <span
         class="px-2"
         v-if="state.subtitle"
         v-text="' – ' + state.subtitle"
@@ -75,7 +75,6 @@ export default Vue.extend({
       axios
         .get(state.url)
         .then(resp => {
-          console.log(resp);
           if (resp.status !== 200) {
             return;
           }

@@ -291,7 +291,6 @@ export default Vue.extend({
 
     onMounted(() => {
       updateStates();
-      console.log(state.visibleParams.connection, state.visibleParams.synapse);
     });
 
     return {

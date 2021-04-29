@@ -25,7 +25,7 @@
               <v-list-item-title v-text="'Set all synaptic weights'" />
 
               <v-btn
-                :outlined="node.view.weight === 'excitatory'"
+                :outlined="state.node.view.weight === 'excitatory'"
                 @click="state.node.setWeights('excitatory')"
                 icon
                 small
@@ -35,7 +35,7 @@
               </v-btn>
 
               <v-btn
-                :outlined="node.view.weight === 'inhibitory'"
+                :outlined="state.node.view.weight === 'inhibitory'"
                 @click="state.node.setWeights('inhibitory')"
                 icon
                 small
@@ -61,6 +61,26 @@
               <v-list-item-action v-if="item.input === 'checkbox'">
                 <v-checkbox :input-value="state[item.value]" />
               </v-list-item-action>
+              <v-list-item-action v-if="item.input === 'switch'">
+                <v-switch
+                  :color="state.node.view.color"
+                  :value="state[item.value]"
+                  dense
+                  hide-details
+                />
+              </v-list-item-action>
+            </v-list-item>
+
+            <v-list-item
+              @click="state.node.activity.downloadEvents()"
+              v-if="
+                state.node.model.isRecorder() && state.node.activity.hasEvents()
+              "
+            >
+              <v-list-item-icon>
+                <v-icon v-text="'mdi-download'" />
+              </v-list-item-icon>
+              <v-list-item-title v-text="'Download events'" />
             </v-list-item>
           </v-list>
         </span>
@@ -84,51 +104,6 @@
 
         <span v-if="state.content === 'modelDocumentation'">
           <ModelDocumentation :id="state.node.modelId" />
-        </span>
-
-        <span v-if="state.content === 'paramsSelect'">
-          <v-list dense>
-            <v-list-item-group
-              @change="selectionChange"
-              active-class=""
-              multiple
-              v-model="state.visibleParams"
-            >
-              <v-list-item
-                :key="param.id"
-                class="mx-0"
-                style="font-size:12px;"
-                v-for="param of state.node.params"
-              >
-                <template v-slot:default="{ active }">
-                  <v-list-item-content style="padding: 4px">
-                    <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
-                    </v-row>
-                  </v-list-item-content>
-
-                  <v-list-item-action style="margin: 4px 0">
-                    <v-checkbox
-                      :input-value="active"
-                      color="black"
-                      hide-details
-                    />
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-
-          <v-card-actions>
-            <v-btn @click="backMenu" text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
-            </v-btn>
-            <v-btn @click="hideAllParams" text v-text="'none'" />
-            <v-btn @click="showAllParams" text v-text="'all'" />
-          </v-card-actions>
         </span>
 
         <span v-if="state.content === 'nodeWeights'">
@@ -209,7 +184,7 @@ export default Vue.extend({
         {
           id: 'nodeSpatial',
           icon: 'mdi-axis-arrow',
-          input: 'checkbox',
+          input: 'switch',
           title: 'Spatial node',
           value: 'spatialNode',
           onClick: () => {
