@@ -11,7 +11,7 @@ import NetworkIcon from '@/components/icons/NetworkIcon.vue';
 
 Vue.use(Vuetify);
 
-// Color  code taken from
+// Color code taken from
 // https://color.adobe.com/de/create/color-wheel
 
 export default new Vuetify({
