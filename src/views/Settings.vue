@@ -16,6 +16,11 @@
                 v-model="state.devMode"
               />
               <v-checkbox
+                @change="e => updateAppConfig({ pinNav: e || false })"
+                label="Pin navigation (Reload page required.)"
+                v-model="state.pinNav"
+              />
+              <v-checkbox
                 @change="e => updateProjectConfig({ showHelp: e || false })"
                 label="Show help"
                 v-model="state.showHelp"
@@ -99,6 +104,7 @@ export default Vue.extend({
       devMode: core.app.config.devMode,
       nestVersion: '',
       network: new Config('Network'),
+      pinNav: core.app.config.pinNav,
       showHelp: core.app.project.config.showHelp,
     });
 
