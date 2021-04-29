@@ -24,6 +24,6 @@ export class SimulationCode extends Code {
   }
 
   simulate(): string {
-    return `nest.Simulate(${this.format(this._simulation.time)})\n`;
+    return `nest.Simulate(${this._simulation.time})\n`;
   }
 }

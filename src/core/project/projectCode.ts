@@ -85,17 +85,14 @@ export class ProjectCode extends Code {
   defineGetActivity(): string {
     let script = '';
     script += 'def getActivity(node):';
-    script += this._() + 'activity = {}';
-    script += this._() + 'activity["events"] = node.get("events")';
     script += this._() + 'if node.get("model") == "spike_recorder":';
-    script += this._(2) + 'activity["nodeIds"] = list(';
-    script += this._(3) + 'nest.GetConnections(None, node).sources()';
-    script += this._(2) + ')';
+    script += this._(2) + 'nodeIds = nest.GetConnections(None, node).sources()';
     script += this._() + 'else:';
-    script += this._(2) + 'activity["nodeIds"] = list(';
-    script += this._(3) + 'nest.GetConnections(node).targets()';
-    script += this._(2) + ')';
-    script += this._() + 'return activity';
+    script += this._(2) + 'nodeIds = nest.GetConnections(node).targets()';
+    script += this._() + 'return {';
+    script += this._(2) + '"events": node.get("events"),';
+    script += this._(2) + '"nodeIds": list(nodeIds)';
+    script += this._() + '}';
     return script;
   }
 

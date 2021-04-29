@@ -52,7 +52,7 @@ export class NodeCode extends Code {
     }
 
     const params: string[] = this._node.filteredParams.map(
-      (param: ModelParameter) => param.toCode()
+      (param: ModelParameter) => `"${param.id}": ${param.toCode()}`
     );
 
     if (this._node.model.existing === 'multimeter') {

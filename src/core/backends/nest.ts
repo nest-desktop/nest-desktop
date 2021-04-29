@@ -17,7 +17,7 @@ export class NESTServer extends Backend {
   }
 
   check(): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>(resolve => {
       // console.log('Check backend')
       if (this.config.hostname) {
         this.ping(this.url, () => resolve());
@@ -33,10 +33,7 @@ export class NESTServer extends Backend {
   seek(): Promise<any> {
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
-    const hosts: string[] = [
-      hostname + '/nest',
-      hostname + ':' + (this.port || '5000'),
-    ];
+    const hosts: string[] = [hostname + '/nest'];
     const hostPromises: any[] = hosts.map(
       (host: string) =>
         new Promise<void>(resolve => {
