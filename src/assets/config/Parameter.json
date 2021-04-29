@@ -1,68 +1,125 @@
 {
   "types": [
     {
-      "specs": [{ "id": "value", "title": "constant", "value": 1 }],
-      "value": "constant"
+      "icon": "mdi-numeric",
+      "id": "constant",
+      "label": "constant"
     },
     {
-      "specs": [{ "id": "beta", "title": "scale", "value": 1 }],
-      "value": "random.exponential"
-    },
-    {
+      "icon": "mdi-code-brackets",
+      "id": "numpy.arange",
+      "label": "ranged array",
       "specs": [
-        { "id": "mean", "title": "mean", "value": 0 },
-        { "id": "std", "title": "standard deviation", "value": 1 }
-      ],
-      "value": "random.lognormal"
+        {
+          "default": 0,
+          "id": "start",
+          "optional": true,
+          "label": "start",
+          "value": 0
+        },
+        { "id": "stop", "label": "stop", "value": 1 },
+        {
+          "default": 1,
+          "id": "step",
+          "optional": true,
+          "label": "step",
+          "value": 1
+        }
+      ]
     },
     {
+      "icon": "mdi-code-brackets",
+      "id": "numpy.linspace",
+      "label": "linear spaced array",
       "specs": [
-        { "id": "mean", "title": "mean", "value": 0 },
-        { "id": "std", "title": "standard deviation", "value": 1 }
-      ],
-      "value": "random.normal"
+        { "id": "start", "label": "start", "value": 0 },
+        { "id": "stop", "label": "stop", "value": 1 },
+        {
+          "default": 50,
+          "id": "num",
+          "optional": true,
+          "label": "num",
+          "value": 50
+        }
+      ]
     },
     {
+      "icon": "$diceMultipleOutline",
+      "id": "random.exponential",
+      "label": "exponential distribution",
+      "specs": [{ "id": "beta", "label": "scale", "value": 1 }]
+    },
+    {
+      "icon": "$diceMultipleOutline",
+      "id": "random.lognormal",
+      "label": "logarithm normal distribution",
       "specs": [
-        { "id": "min", "title": "lower boundary", "value": 0 },
-        { "id": "max", "title": "upper boundary", "value": 1 }
-      ],
-      "value": "random.uniform"
+        { "id": "mean", "label": "mean", "value": 0 },
+        { "id": "std", "label": "standard deviation", "value": 1 }
+      ]
     },
     {
+      "icon": "$diceMultipleOutline",
+      "id": "random.normal",
+      "label": "normal distribution",
       "specs": [
-        { "id": "a", "title": "slope", "value": 1 },
-        { "id": "c", "title": "shift", "value": 0 }
-      ],
-      "value": "spatial.distance"
+        { "id": "mean", "label": "mean", "value": 0 },
+        { "id": "std", "label": "standard deviation", "value": 1 }
+      ]
     },
     {
-      "specs": [{ "id": "beta", "title": "scale", "value": 1 }],
-      "value": "spatial_distributions.exponential"
-    },
-    {
+      "icon": "$diceMultipleOutline",
+      "id": "random.uniform",
+      "label": "uniform distribution",
       "specs": [
-        { "id": "kappa", "title": "shape", "value": 1 },
-        { "id": "theta", "title": "scale", "value": 1 }
-      ],
-      "value": "spatial_distributions.gamma"
+        { "id": "min", "label": "lower boundary", "value": 0 },
+        { "id": "max", "label": "upper boundary", "value": 1 }
+      ]
     },
     {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial.distance",
+      "label": "linear distance",
       "specs": [
-        { "id": "mean", "title": "mean", "value": 0 },
-        { "id": "std", "title": "standard deviation", "value": 1 }
-      ],
-      "value": "spatial_distributions.gaussian"
+        { "id": "a", "label": "slope", "value": 1 },
+        { "id": "c", "label": "shift", "value": 0 }
+      ]
     },
     {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.exponential",
+      "label": "exponential spatial distribution",
+      "specs": [{ "id": "beta", "label": "scale", "value": 1 }]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.gamma",
+      "label": "gamma spatial distribution",
       "specs": [
-        { "id": "mean_x", "title": "mean x", "value": 0 },
-        { "id": "mean_y", "title": "mean y", "value": 0 },
-        { "id": "std_x", "title": "std x", "value": 1 },
-        { "id": "std_y", "title": "std y", "value": 1 },
-        { "id": "rho", "title": "correlation of x and y", "value": 0 }
-      ],
-      "value": "spatial_distributions.gaussian2D"
+        { "id": "kappa", "label": "shape", "value": 1 },
+        { "id": "theta", "label": "scale", "value": 1 }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.gaussian",
+      "label": "gaussian spatial distribution",
+      "specs": [
+        { "id": "mean", "label": "mean", "value": 0 },
+        { "id": "std", "label": "standard deviation", "value": 1 }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.gaussian2D",
+      "label": "2D gaussian spatial distribution",
+      "specs": [
+        { "id": "mean_x", "label": "mean x", "value": 0 },
+        { "id": "mean_y", "label": "mean y", "value": 0 },
+        { "id": "std_x", "label": "std x", "value": 1 },
+        { "id": "std_y", "label": "std y", "value": 1 },
+        { "id": "rho", "label": "correlation of x and y", "value": 0 }
+      ]
     }
   ]
 }
