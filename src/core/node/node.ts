@@ -340,8 +340,9 @@ export class Node extends Config {
    * Toggle spatial mode.
    */
   toggleSpatial(): void {
+    const term: string = this._size === 1 ? 'grid' : 'free';
     this.initSpatial({
-      positions: this.spatial.hasPositions() ? undefined : 'grid',
+      positions: this.spatial.hasPositions() ? undefined : term,
     });
     this.nodeChanges();
   }

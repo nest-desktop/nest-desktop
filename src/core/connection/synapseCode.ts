@@ -18,7 +18,7 @@ export class SynapseCode extends Code {
     }
 
     this._synapse.filteredParams.forEach((param: ModelParameter) =>
-      synSpecList.push(param.toCode())
+      synSpecList.push(`"${param.id}": ${param.toCode()}`)
     );
 
     let script = '';

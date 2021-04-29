@@ -233,7 +233,7 @@ export class App extends Config {
     // console.log('Add projects');
     const projects: any[] = data.map(
       (project: any) =>
-        new Promise((resolve, reject) => {
+        new Promise<any>(resolve => {
           this.addProject(project).then(() => {
             resolve();
           });
@@ -373,7 +373,7 @@ export class App extends Config {
    */
   initProject(id: string = '', rev: string = ''): Promise<any> {
     // console.log(`Initialize project: id=${id}, rev=${rev}`);
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       try {
         if (id && rev) {
           this._project = this._projectRevisions.find(

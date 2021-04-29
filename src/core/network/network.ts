@@ -86,6 +86,16 @@ export class Network extends Config {
     return this._view;
   }
 
+  get visibleNodes(): Node[] {
+    return this._nodes.filter((node: Node) => node.view.visible);
+  }
+
+  get visibleConnections(): Connection[] {
+    return this._connections.filter(
+      (connection: Connection) => connection.view.visible
+    );
+  }
+
   /**
    * Check if the network has any spatial nodes.
    */

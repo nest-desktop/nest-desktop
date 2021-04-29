@@ -23,7 +23,7 @@ export class ConnectionCode extends Code {
   connSpec(): string {
     const connSpecList: string[] = [`"rule": "${this._connection.rule}"`];
     this._connection.filteredParams.forEach((param: Parameter) =>
-      connSpecList.push(param.toCode())
+      connSpecList.push(`"${param.id}": ${param.toCode()}`)
     );
 
     let script = ', conn_spec={' + this._();
