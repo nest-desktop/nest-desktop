@@ -22,6 +22,7 @@
         <v-card-title class="pa-0" style="color:white; height:40px">
           <v-overflow-btn
             :items="state.node.models"
+            @change="update()"
             class="ma-0"
             dense
             editable
@@ -42,7 +43,7 @@
             v-model="state.visibleParams"
           >
             <v-list-item
-              :key="param.id"
+              :key="param.idx"
               class="mx-0"
               style="font-size:12px;"
               v-for="param of state.node.params"
@@ -107,9 +108,9 @@ export default Vue.extend({
      */
     const update = () => {
       state.node = props.node as Node;
-      state.visibleParams = state.node.filteredParams.map(
-        (param: ModelParameter) => param.idx
-      );
+      state.visibleParams = state.node.params
+        .filter((param: ModelParameter) => param.visible)
+        .map((param: ModelParameter) => param.idx);
     };
 
     watch(
@@ -120,6 +121,7 @@ export default Vue.extend({
     return {
       selectionChange,
       state,
+      update,
     };
   },
 });

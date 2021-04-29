@@ -1,6 +1,6 @@
 <template>
   <div class="simulationKernel">
-    <v-row class="full-height mr-2" no-gutters>
+    <v-row class="full-height" no-gutters>
       <v-col>
         <v-card class="mb-1" flat tile>
           <v-btn
@@ -18,6 +18,28 @@
             }"
             class="pa-0"
           >
+            <ParameterEdit
+              :options="{
+                input: 'tickSlider',
+                label: 'local number of threads',
+                ticks: [1, 2, 4, 6, 8, 16],
+              }"
+              :value.sync="simulation.kernel.localNumThreads"
+              @update:value="paramChange"
+              class="mx-1 py-2"
+            />
+
+            <ParameterEdit
+              :options="{
+                input: 'tickSlider',
+                label: 'simulation resolution',
+                ticks: [0.01, 0.1, 1, 10],
+              }"
+              :value.sync="simulation.kernel.resolution"
+              @update:value="paramChange"
+              class="mx-1 py-2"
+            />
+
             <ParameterEdit
               :options="{
                 input: 'valueSlider',
@@ -44,28 +66,6 @@
                 })
               "
             />
-
-            <ParameterEdit
-              :options="{
-                input: 'tickSlider',
-                label: 'local number of threads',
-                ticks: [1, 2, 4, 6, 8, 16],
-              }"
-              :value.sync="simulation.kernel.localNumThreads"
-              @update:value="paramChange"
-              class="mx-1 py-2"
-            />
-
-            <ParameterEdit
-              :options="{
-                input: 'tickSlider',
-                label: 'simulation resolution',
-                ticks: [0.001, 0.01, 0.1, 1, 10],
-              }"
-              :value.sync="simulation.kernel.resolution"
-              @update:value="paramChange"
-              class="mx-1 py-2"
-            />
           </v-card-text>
         </v-card>
 
@@ -88,9 +88,8 @@
               :options="{
                 input: 'valueSlider',
                 label: 'simulation time',
-                max: 10000,
-                min: 10,
-                step: 10,
+                max: 2000,
+                min: 1,
                 value: 1000,
               }"
               :value.sync="simulation.time"
@@ -121,7 +120,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      color: '#FF6633',
+      color: '#9e9e9e',
       autoRNGSeed: false,
       simulation: props.simulation as Simulation,
     });

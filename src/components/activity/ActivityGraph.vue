@@ -98,7 +98,7 @@
           :data="state.graph.activityChartGraph.data"
           :displaylogo="false"
           :displayModeBar="true"
-          :editable="state.graph.activityChartGraph.options.editable"
+          :editable="true"
           :layout="state.graph.activityChartGraph.layout"
           :modeBarButtons="state.modeBarButtons"
           :scrollZoom="true"

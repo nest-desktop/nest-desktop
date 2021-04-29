@@ -43,7 +43,6 @@
       class="elementType"
       height="28"
       max-height="28"
-      width="327"
       single-line
       sticky
     >
@@ -214,11 +213,7 @@
       </v-btn-toggle>
     </v-banner>
 
-    <v-row
-      class="mr-2"
-      no-gutters
-      style="overflow-y:auto; height: calc(100vh - 76px);"
-    >
+    <v-row no-gutters style="overflow-y:auto; height: calc(100vh - 76px);">
       <v-col>
         <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
           <v-card class="mb-1" flat tile v-if="showNode(node)">
@@ -255,6 +250,7 @@
                     input: 'valueSlider',
                     label: 'population size',
                     max: 1000,
+                    min: 1,
                     value: 1,
                   }"
                   :value.sync="node.size"

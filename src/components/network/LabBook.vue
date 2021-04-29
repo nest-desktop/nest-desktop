@@ -12,157 +12,154 @@
           v-text="state.project.name"
         />
 
-        <v-row dense>
-          <v-col cols="6">
-            <draggable v-model="state.project.network.nodes">
-              <transition-group>
-                <v-card
-                  :key="node.idx"
-                  class="mb-1"
-                  flat
-                  tile
-                  v-for="node of state.project.network.nodes"
-                >
-                  <v-sheet :color="node.view.color">
+        <span class="d-flex flex-md-row">
+          <div
+            class="mx-1"
+            style="width:100%"
+            v-if="state.project.network.visibleNodes.length > 0"
+          >
+            <v-card
+              :key="'node-' + node.idx"
+              class="mb-1"
+              flat
+              tile
+              v-for="node of state.project.network.visibleNodes"
+            >
+              <v-sheet :color="node.view.color">
+                <v-row no-gutters>
+                  <v-col cols="4">
+                    <v-btn
+                      @click="node.view.select()"
+                      block
+                      dark
+                      height="40"
+                      text
+                      tile
+                      v-text="node.view.label"
+                    />
+                  </v-col>
+                  <v-col cols="8">
+                    <v-btn
+                      class="ma-0"
+                      block
+                      dark
+                      height="40"
+                      text
+                      tile
+                      v-text="node.model.label"
+                    />
+                  </v-col>
+                </v-row>
+              </v-sheet>
+
+              <v-card-text
+                :style="{
+                  borderLeft: `4px solid ${node.view.color}`,
+                }"
+                class="pa-0"
+              >
+                <v-list v-if="node.filteredParams.length > 0">
+                  <v-list-item
+                    :key="param.id"
+                    style="min-height:20px"
+                    two-line
+                    v-for="param of node.filteredParams"
+                  >
                     <v-row no-gutters>
-                      <v-col cols="4">
-                        <v-btn
-                          @click="node.view.select()"
-                          block
-                          dark
-                          height="40"
-                          text
-                          tile
-                          v-text="node.view.label"
-                        />
-                      </v-col>
-                      <v-col cols="8">
-                        <v-btn
-                          class="ma-0"
-                          block
-                          dark
-                          height="40"
-                          text
-                          tile
-                          v-text="node.model.label"
-                        />
-                      </v-col>
+                      <span v-text="param.options.label" />
+                      <v-spacer />
+                      <span
+                        class="mx-1 font-weight-bold text-right"
+                        v-text="param.toCode()"
+                      />
+                      <span
+                        style="min-width:24px"
+                        v-text="param.options.unit"
+                      />
                     </v-row>
-                  </v-sheet>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
+          </div>
 
-                  <v-card-text
-                    :style="{
-                      borderLeft: `4px solid ${node.view.color}`,
-                    }"
-                    class="pa-0"
+          <div
+            class="mx-1"
+            style="width:100%"
+            v-if="state.project.network.visibleConnections.length > 0"
+          >
+            <v-card
+              :key="'connection-' + connection.idx"
+              class="mb-1"
+              flat
+              tile
+              v-for="connection of state.project.network.visibleConnections"
+            >
+              <v-row no-gutters>
+                <v-col cols="4" class="py-0">
+                  <v-btn
+                    :color="connection.source.view.color"
+                    @click="() => connection.source.view.select()"
+                    block
+                    dark
+                    depressed
+                    height="40"
+                    tile
+                    v-text="connection.source.view.label"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    @click="() => connection.view.select()"
+                    block
+                    color="white"
+                    depressed
+                    height="40"
+                    tile
                   >
-                    <v-list v-if="node.filteredParams.length > 0">
-                      <v-list-item
-                        :key="param.id"
-                        style="min-height:20px"
-                        two-line
-                        v-for="param of node.filteredParams"
-                      >
-                        <v-row no-gutters>
-                          <span v-text="param.options.label" />
-                          <v-spacer />
-                          <span
-                            class="mx-1 font-weight-bold text-right"
-                            v-text="param.value"
-                          />
-                          <span
-                            style="min-width:24px"
-                            v-text="param.options.unit"
-                          />
-                        </v-row>
-                      </v-list-item>
-                    </v-list>
-                  </v-card-text>
-                </v-card>
-              </transition-group>
-            </draggable>
-          </v-col>
+                    <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                  </v-btn>
+                </v-col>
+                <v-col cols="4" class="py-0" style="text-align:center">
+                  <v-btn
+                    :color="connection.target.view.color"
+                    @click="() => connection.target.view.select()"
+                    block
+                    dark
+                    depressed
+                    height="40"
+                    tile
+                    v-text="connection.target.view.label"
+                  />
+                </v-col>
+              </v-row>
 
-          <v-col cols="6">
-            <draggable v-model="state.project.network.connections">
-              <transition-group>
-                <v-card
-                  :key="connection.idx"
-                  class="mb-1"
-                  flat
-                  tile
-                  v-for="connection of state.project.network.connections"
-                >
-                  <v-row no-gutters>
-                    <v-col cols="4" class="py-0">
-                      <v-btn
-                        :color="connection.source.view.color"
-                        @click="() => connection.source.view.select()"
-                        block
-                        dark
-                        depressed
-                        height="40"
-                        tile
-                        v-text="connection.source.view.label"
-                      />
-                    </v-col>
-                    <v-col cols="4">
-                      <v-btn
-                        @click="() => connection.view.select()"
-                        block
-                        color="white"
-                        depressed
-                        height="40"
-                        tile
-                      >
-                        <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                      </v-btn>
-                    </v-col>
-                    <v-col cols="4" class="py-0" style="text-align:center">
-                      <v-btn
-                        :color="connection.target.view.color"
-                        @click="() => connection.target.view.select()"
-                        block
-                        dark
-                        depressed
-                        height="40"
-                        tile
-                        v-text="connection.target.view.label"
-                      />
-                    </v-col>
-                  </v-row>
-
-                  <v-card-text
-                    :style="{
-                      borderLeft: `4px solid ${connection.source.view.color}`,
-                      borderRight: `4px solid ${connection.target.view.color}`,
-                    }"
-                    class="pa-0"
+              <v-card-text
+                :style="{
+                  borderLeft: `4px solid ${connection.source.view.color}`,
+                  borderRight: `4px solid ${connection.target.view.color}`,
+                }"
+                class="pa-0"
+              >
+                <v-list v-if="connection.synapse.filteredParams.length > 0">
+                  <v-list-item
+                    :key="param.id"
+                    style="min-height:20px; height:20px"
+                    v-for="param of connection.synapse.filteredParams"
                   >
-                    <v-list v-if="connection.synapse.filteredParams.length > 0">
-                      <v-list-item
-                        :key="param.id"
-                        style="min-height:20px; height:20px"
-                        v-for="param of connection.synapse.filteredParams"
-                      >
-                        <span v-text="param.options.label" />
-                        <v-spacer />
-                        <span
-                          class="mx-1 font-weight-bold"
-                          v-text="param.value"
-                        />
-                        <span
-                          style="min-width:24px"
-                          v-text="param.options.unit"
-                        />
-                      </v-list-item>
-                    </v-list>
-                  </v-card-text>
-                </v-card>
-              </transition-group>
-            </draggable>
-          </v-col>
-        </v-row>
+                    <span v-text="param.options.label" />
+                    <v-spacer />
+                    <span
+                      class="mx-1 font-weight-bold"
+                      v-text="param.toCode()"
+                    />
+                    <span style="min-width:24px" v-text="param.options.unit" />
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
+          </div>
+        </span>
       </v-card>
     </v-container>
   </div>
@@ -171,15 +168,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
-import draggable from 'vuedraggable';
 
 import core from '@/core';
 
 export default Vue.extend({
   name: 'LabBook',
-  components: {
-    draggable,
-  },
   props: {
     hash: String,
   },

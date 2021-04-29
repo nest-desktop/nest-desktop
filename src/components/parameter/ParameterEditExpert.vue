@@ -14,7 +14,7 @@
           <v-row>
             <span v-text="paramLabel()" />
             <v-spacer />
-            <span v-text="state.param.type" />
+            <span v-text="state.param.type.id" />
           </v-row>
         </v-btn>
       </template>
@@ -23,95 +23,51 @@
         <v-list dense>
           <v-list-item>
             <v-select
-              :items="state.param.getTypes()"
-              item-text="value"
+              :items="state.param.types"
+              @change="updateParam"
+              item-text="label"
+              item-value="id"
               dense
               hide-details
               label="Select a parameter type"
               v-model="state.param.type"
             >
               <template slot="selection" slot-scope="data">
-                <v-icon
-                  left
-                  v-if="data.item.value === 'constant'"
-                  v-text="'mdi-numeric'"
-                />
-                <v-icon
-                  left
-                  v-else
-                  v-text="
-                    data.item.value.startsWith('spatial')
-                      ? 'mdi-map'
-                      : 'mdi-dice-multiple'
-                  "
-                />
-                {{ data.item.value }}
+                <v-icon left v-text="data.item.icon" />
+                {{ data.item.label }}
               </template>
               <template slot="item" slot-scope="data">
-                <v-icon
-                  left
-                  v-if="data.item.value === 'constant'"
-                  v-text="'mdi-numeric'"
-                />
-                <v-icon
-                  left
-                  v-else
-                  v-text="
-                    data.item.value.startsWith('spatial')
-                      ? 'mdi-arrow-expand-horizontal'
-                      : '$diceMultipleOutline'
-                  "
-                />
-                {{ data.item.value }}
+                <v-icon left v-text="data.item.icon" />
+                {{ data.item.label }}
               </template>
             </v-select>
           </v-list-item>
 
-          <template v-if="state.param.isConstant()">
-            <v-list-item>
-              <v-row>
-                <v-col class="py-0">
-                  <v-text-field
-                    hide-details
-                    style="font-size: 13px"
-                    v-model="state.param.value"
-                  />
-                </v-col>
-              </v-row>
-            </v-list-item>
-          </template>
-
-          <template v-else>
-            <v-list-item>
-              <v-row>
-                <v-col
-                  :cols="12 / state.param.specs.length"
-                  :key="spec.id"
-                  class="py-0"
-                  v-for="spec in state.param.specs"
-                >
-                  <v-text-field
-                    :label="spec.id"
-                    :max="spec.max"
-                    :min="spec.min"
-                    :step="spec.step"
-                    hide-details
-                    type="number"
-                    style="font-size: 13px"
-                    v-model="spec.value"
-                  />
-                </v-col>
-              </v-row>
-            </v-list-item>
-          </template>
+          <v-list-item>
+            <v-row>
+              <v-col
+                :cols="12 / state.param.specs.length"
+                :key="spec.id"
+                class="py-0"
+                v-for="spec in state.param.specs"
+              >
+                <v-text-field
+                  :label="spec.label"
+                  :max="spec.max"
+                  :min="spec.min"
+                  :step="spec.step"
+                  hide-details
+                  type="number"
+                  style="font-size: 13px"
+                  v-model="spec.value"
+                />
+              </v-col>
+            </v-row>
+          </v-list-item>
         </v-list>
 
         <v-card-actions>
           <v-btn @click="updateParam" outlined v-text="'Update parameter'" />
-          <!-- <v-spacer />
-          <v-btn :title="state.node.spatial.positions.pos" icon>
-            <v-icon v-text="'mdi-map-outline'" />
-          </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-menu>
