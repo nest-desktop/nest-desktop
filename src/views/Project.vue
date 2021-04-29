@@ -12,10 +12,10 @@
     >
       <v-btn-toggle
         @change="updateProjectMode"
-        class="pl-10"
         group
         light
         mandatory
+        style="margin-left: -16px"
         v-model="state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
@@ -83,11 +83,10 @@
         </v-btn>
       </v-btn-toggle>
 
-      <v-toolbar-title class="mx-2">
-        {{ state.project.name }}
-      </v-toolbar-title>
-
       <v-spacer />
+      <v-toolbar-title class="mx-2" v-text="state.project.name" />
+      <v-spacer />
+
       <div class="mx-4" style="width:144px">
         <v-row no-gutters>
           <v-col col="3">
@@ -219,12 +218,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width:100%; padding-right:48px" v-if="state.toolOpened">
-          <networkParamsSelect
-            :network="state.project.network"
-            v-if="state.tool.name === 'networkParamSelect'"
-          />
-
+        <div style="width:100%; padding-right:56px" v-if="state.toolOpened">
           <NetworkParamsEdit
             :network="state.project.network"
             :projectId="state.projectId"
@@ -325,7 +319,6 @@ import core from '@/core';
 import LabBook from '@/components/network/LabBook.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
-import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
 import ProjectRawData from '@/components/project/ProjectRawData.vue';
 import SimulationButton from '@/components/simulation/SimulationButton.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
@@ -341,7 +334,6 @@ export default Vue.extend({
     LabBook,
     NetworkGraph,
     NetworkParamsEdit,
-    NetworkParamsSelect,
     ProjectRawData,
     SimulationButton,
     SimulationCodeEditor,
@@ -382,13 +374,13 @@ export default Vue.extend({
           icon: '$network',
           name: 'networkParamEdit',
           title: 'Network',
-          width: '382',
+          width: '430',
         },
         {
           icon: 'mdi-engine-outline',
           name: 'simulationKernel',
           title: 'Kernel',
-          width: '382',
+          width: '430',
         },
         {
           icon: 'mdi-code-braces',
@@ -402,7 +394,7 @@ export default Vue.extend({
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
           title: 'Activity',
-          width: '382',
+          width: '430',
         },
         {
           icon: 'mdi-table-large',
