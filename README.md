@@ -1,4 +1,4 @@
-# nest-desktop-v3
+# NEST Desktop
 
 ## Project setup
 ```
