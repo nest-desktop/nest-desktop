@@ -15,7 +15,7 @@
     "step": 0.01,
     "value": 0
   },
-  "kappa":{
+  "kappa": {
     "id": "kappa",
     "label": "kappa",
     "max": 10,
@@ -119,7 +119,7 @@
     "step": 0.01,
     "value": 1
   },
-  "theta":{
+  "theta": {
     "id": "theta",
     "label": "theta",
     "max": 10,
