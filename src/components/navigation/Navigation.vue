@@ -19,7 +19,7 @@
           }
         }
       "
-      width="320"
+      width="308"
     >
       <v-row class="fill-height" no-gutters>
         <v-navigation-drawer

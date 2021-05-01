@@ -13,6 +13,15 @@
           hide-details
         ></v-text-field>
       </v-card-title> -->
+      <v-card-title class="pa-2" v-if="state.activity.recordFrom.length > 1">
+        <v-select
+          :items="state.activity.recordFrom.map(r => ({ value: r, text: r }))"
+          @change="update"
+          dense
+          hide-details
+          v-model="state.selectedRecordFrom"
+        />
+      </v-card-title>
       <v-data-table
         :headers="state.headers"
         :items="state.items"
@@ -24,8 +33,8 @@
         sort-by="id"
       >
         <template
-          v-slot:body.append="{ headers }"
           v-if="state.items.length > 1"
+          v-slot:body.append="{ headers }"
         >
           <tr>
             <td v-for="(header, i) in headers" :key="i">
@@ -78,6 +87,9 @@ export default Vue.extend({
      */
     const update = () => {
       state.items = [];
+      if (state.activity.recordFrom.length === 1) {
+        state.selectedRecordFrom = state.activity.recordFrom[0] as string;
+      }
       if (state.selectedRecordFrom === undefined) {
         return;
       }
@@ -121,7 +133,7 @@ export default Vue.extend({
       () => update()
     );
 
-    return { mean, state, sum };
+    return { mean, state, sum, update };
   },
 });
 </script>
