@@ -53,6 +53,10 @@ export class SimulationKernel extends Config {
     this._biologicalTime = value;
   }
 
+  /**
+   * Serialize for JSON.
+   * @return simulation kernel object
+   */
   toJSON(): any {
     const kernel: any = {
       localNumThreads: this._localNumThreads,

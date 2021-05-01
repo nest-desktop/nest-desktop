@@ -11,6 +11,9 @@ export class SynapseCode extends Code {
     this._synapse = synapse;
   }
 
+  /**
+   * Write script of synapse specifications.
+   */
   synSpec(): string {
     const synSpecList: string[] = [];
     if (this._synapse.modelId !== 'static_synapse') {

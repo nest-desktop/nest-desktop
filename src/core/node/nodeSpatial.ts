@@ -122,6 +122,10 @@ export class FreePositions {
     );
   }
 
+  /**
+   * Serialize for JSON.
+   * @return free positons object
+   */
   toJSON(): any {
     const positions: any = {
       edgeWrap: this._edgeWrap,
@@ -245,6 +249,10 @@ export class GridPositions {
     return `nest.spatial.grid(${JSON.stringify(this._shape)})`;
   }
 
+  /**
+   * Serialize for JSON.
+   * @return grid positons object
+   */
   toJSON(): any {
     const positions: any = {
       center: this._center,
@@ -310,6 +318,10 @@ export class NodeSpatial extends Config {
     return this._positions !== undefined;
   }
 
+  /**
+   * Serialize for JSON.
+   * @return spatial object
+   */
   toJSON(): any {
     let spatial: any;
     if (this._positions === undefined) {

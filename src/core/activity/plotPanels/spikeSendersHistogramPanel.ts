@@ -8,15 +8,13 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
     this.name = 'SpikeSendersHistogramPanel';
     this.icon = 'mdi-chart-bar';
     this.label = 'histogram of spike senders';
-    this.layout.xaxis.title = 'Neuron ID';
-    this.layout.yaxis.title = 'Spike count';
     this.visible = false;
     this.xaxis = 4;
     this.init();
   }
 
   /**
-   * Initialize sender histogram panel for spike data.
+   * Initialize histogram panel of spike senders.
    */
   init(): void {
     // console.log('Init histogram panel for spike times');
@@ -25,18 +23,23 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
   }
 
   /**
-   * Update sender histogram panel for spike data.
+   * Update histogram panel of spike senders.
    *
    * @remarks
    * It requires activity data.
    */
   update(): void {
-    // console.log('Init histogram panel of spike times')
+    // console.log('Init histogram panel of spike senders')
     this.activities.forEach((activity: SpikeActivity) => {
       this.updateSpikeSendersHistogram(activity);
     });
+    this.layout.xaxis.title = 'Neuron ID';
+    this.layout.yaxis.title = 'Spike count';
   }
 
+  /**
+   * Add empty data of spike senders histogram in plot data.
+   */
   addSpikeSendersHistogram(activity: SpikeActivity): void {
     // console.log('Add histogram data of spike times')
     this.data.push({
@@ -46,7 +49,7 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
       histfunc: 'count',
       text: 'auto',
       legendgroup: 'spikes' + activity.idx,
-      name: 'Histogram of spikes in' + activity.recorder.view.label,
+      name: 'Histogram of spike senders in' + activity.recorder.view.label,
       hoverinfo: 'y',
       showlegend: false,
       opacity: 0.6,
@@ -66,6 +69,9 @@ export class SpikeSendersHistogramPanel extends SpikeTimesPanel {
     });
   }
 
+  /**
+   * Update histogram of spike senders in plot data.
+   */
   updateSpikeSendersHistogram(activity: SpikeActivity): void {
     // console.log('Update histogram data of spike times')
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {

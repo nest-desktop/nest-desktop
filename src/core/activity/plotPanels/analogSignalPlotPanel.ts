@@ -12,6 +12,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     this.init();
   }
 
+  /**
+   * Initialize plot panel for analog signals.
+   */
   init(): void {
     this.activities = this.graph.project.analogSignalActivities;
     this.data = [];
@@ -24,16 +27,43 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
    * It requires activity data.
    */
   update(): void {
+    const records: string[] = [];
     this.activities.forEach((activity: AnalogSignalActivity) => {
-      const recordables: string[] = Object.keys(activity.events).filter(
+      const eventKeys: string[] = Object.keys(activity.events).filter(
         (event: string) => !['times', 'senders'].includes(event)
       );
-      recordables.forEach((recordFrom: string) => {
-        if (recordFrom === 'V_m') {
+      eventKeys.forEach((eventKey: string) => {
+        if (eventKey === 'V_m') {
           this.updateSpikeThresholdLine(activity);
+        }
+        if (!records.includes(eventKey)) {
+          records.push(eventKey);
         }
       });
     });
+
+    // Label y-axis if only one record existed.
+    if (records.length === 1) {
+      const record = records[0];
+      const recordable: any = this.activities[0].recorder.model.config.recordables.find(
+        (recordable: any) => recordable.id === record
+      );
+      let yAxisTitle: string = this.capitalize(recordable.label);
+      if (recordable.unit) {
+        yAxisTitle += ` [${recordable.unit}]`;
+      }
+      this.layout.yaxis.title = yAxisTitle;
+    } else {
+      if (records.every(rec => rec.includes('ct_'))) {
+        this.layout.yaxis.title = 'Channel activation';
+      } else if (records.every(rec => rec.includes('g_'))) {
+        this.layout.yaxis.title = 'Conductance [nS]';
+      } else if (records.every(rec => rec.includes('I_syn_'))) {
+        this.layout.yaxis.title = 'Total synaptic current [pA]';
+      } else if (records.every(rec => rec.includes('weighted_spikes_'))) {
+        this.layout.yaxis.title = 'Weighted incoming spikes';
+      }
+    }
 
     this.activities.forEach((activity: AnalogSignalActivity) => {
       const recordables: string[] = Object.keys(activity.events).filter(
@@ -58,8 +88,12 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
         });
       }
     });
+    this.layout.xaxis.title = 'Time [ms]';
   }
 
+  /**
+   * Update color traces of analog signal.
+   */
   updateColor(): void {
     this.activities.forEach((activity: AnalogSignalActivity) => {
       const data: any = this.data.filter(
@@ -74,6 +108,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Add spike threshold line for membrane potential.
+   */
   addSpikeThresholdLine(activity: AnalogSignalActivity): void {
     const thresholds: number[] = activity.recorder.nodes.map((target: Node) =>
       target.getParameter('V_th')
@@ -99,6 +136,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Update spike threshold line for membrane potential.
+   */
   updateSpikeThresholdLine(activity: AnalogSignalActivity): void {
     if (
       !this.data.some(
@@ -119,6 +159,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     data.line.color = activity.recorder.view.color;
   }
 
+  /**
+   * Add empty data of single line for analog signal.
+   */
   addSingleLine(activity: AnalogSignalActivity, recordFrom: string): void {
     this.data.push({
       activityIdx: activity.idx,
@@ -139,6 +182,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Update single line for analog signal.
+   */
   updateSingleLine(activity: AnalogSignalActivity, recordFrom: string): void {
     if (
       !this.data.some(
@@ -157,6 +203,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     data.line.color = activity.recorder.view.color;
   }
 
+  /**
+   * Add empty data of multiple lines for analog signals.
+   */
   addMultipleLines(activity: AnalogSignalActivity, recordFrom: string): void {
     [...Array(100).keys()].forEach((idx: number) => {
       this.data.push({
@@ -178,6 +227,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Update multiple lines for analog signals.
+   */
   updateMultipleLines(
     activity: AnalogSignalActivity,
     recordFrom: string
@@ -219,6 +271,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Add empty data of average line for analog signals.
+   */
   addAverageLine(activity: AnalogSignalActivity, recordFrom: string): void {
     // white background for average line
     this.data.push({
@@ -257,6 +312,9 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Update average line for analog signals.
+   */
   updateAverageLine(activity: AnalogSignalActivity, recordFrom: string): void {
     if (
       this.data.filter(

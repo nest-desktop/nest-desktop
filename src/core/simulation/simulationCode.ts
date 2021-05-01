@@ -9,6 +9,9 @@ export class SimulationCode extends Code {
     this._simulation = simulation;
   }
 
+  /**
+   * Write script for simulation kernel.
+   */
   setKernelStatus(): string {
     let script = 'nest.SetKernelStatus({';
     script +=
@@ -23,6 +26,9 @@ export class SimulationCode extends Code {
     return script + '\n';
   }
 
+  /**
+   * Write script for simulation.
+   */
   simulate(): string {
     return `nest.Simulate(${this._simulation.time})\n`;
   }
