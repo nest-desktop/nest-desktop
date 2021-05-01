@@ -10,6 +10,9 @@ export class ModelCode extends Code {
     this._model = model;
   }
 
+  /**
+   * Write script to copy model.
+   */
   copyModel(): string {
     let script = '';
     script += `nest.CopyModel("${this._model.existing}", "${this._model.id}"`;
@@ -18,6 +21,9 @@ export class ModelCode extends Code {
     return script + '\n';
   }
 
+  /**
+   * Write script for model parameters.
+   */
   modelParams(): string {
     let script = '';
     if (this._model.params === undefined || this._model.params.length === 0) {

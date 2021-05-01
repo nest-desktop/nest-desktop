@@ -15,7 +15,6 @@ export class Parameter extends Config {
   private _min: number;
   private _parent: Connection | Model | Node | Synapse; // parent
   private _readonly: boolean;
-  private _specs: any[] = [];
   private _step: number;
   private _ticks: any[];
   private _type: any = { id: 'constant' };
@@ -316,6 +315,7 @@ export class Parameter extends Config {
 
   /**
    * Serialize for JSON.
+   * @return parameter object
    */
   toJSON(): any {
     const params: any = {

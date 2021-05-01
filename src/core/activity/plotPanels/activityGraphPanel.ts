@@ -5,7 +5,7 @@ import { ActivityChartGraph } from '../activityChartGraph';
 import { Config } from '../../config';
 
 export class ActivityGraphPanel extends Config {
-  private static readonly _name = 'ActivityGraphPanel';
+  // private static readonly _name = 'ActivityGraphPanel';
   private _activities: Activity[] = [];
   private _data: any[] = [];
   private _graph: ActivityChartGraph; // parent
@@ -14,12 +14,12 @@ export class ActivityGraphPanel extends Config {
   private _layout: any = {
     xaxis: {
       showgrid: true,
-      title: 'Time [ms]',
+      title: '',
     },
     yaxis: {
+      height: 1,
       showgrid: true,
       title: '',
-      height: 1,
     },
   };
   private _name = '';
@@ -116,19 +116,41 @@ export class ActivityGraphPanel extends Config {
     return this.graph.panels.indexOf(this) + 1;
   }
 
+  /**
+   * Capitalize axis label.
+   */
+  capitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  /**
+   * Check if it has any activities.
+   */
   hasActivities(): boolean {
     return this.activities.length > 0;
   }
 
+  /**
+   * Initialize activity graph panel.
+   */
   init(): void {
     this.activities = this.graph.project.activities;
     this.data = [];
   }
 
+  /**
+   * Update activity graph panel.
+   */
   update(): void {}
 
+  /**
+   * Update color in activity graph panel.
+   */
   updateColor(): void {}
 
+  /**
+   * Update layout in activity graph panel.
+   */
   updateLayout(): void {
     const panels: ActivityGraphPanel[] = this.graph.panels;
     const heights: number[] = panels.map(

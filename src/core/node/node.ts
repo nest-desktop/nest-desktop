@@ -139,7 +139,7 @@ export class Node extends Config {
   //   this._positions = value;
   // }
 
-  get recordables(): string[] {
+  get recordables(): any[] {
     if (this.model.existing !== 'multimeter') {
       return [];
     }
@@ -151,9 +151,9 @@ export class Node extends Config {
     if (recordables.length === 0) {
       return [];
     }
-    const recordablesFlat: string[] = [].concat(...recordables);
+    const recordablesFlat: any[] = [].concat(...recordables);
     const recordablesSet: any[] = [...new Set(recordablesFlat)];
-    recordablesSet.sort((a: number, b: number) => a - b);
+    recordablesSet.sort((a: any, b: any) => a.id - b.id);
     return recordablesSet;
   }
 
@@ -363,10 +363,12 @@ export class Node extends Config {
     if (this.model.existing !== 'multimeter') {
       return;
     }
-    const recordables = this.recordables;
+    const recordables = this.recordables.map(
+      (recordable: any) => recordable.id
+    );
     this._recordFrom =
       recordables.length > 0
-        ? this.recordFrom.filter((rec: string) => recordables.includes(rec))
+        ? this.recordFrom.filter((rec: any) => recordables.includes(rec))
         : [];
   }
 

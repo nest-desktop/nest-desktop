@@ -22,7 +22,6 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     this.icon = 'mdi-chart-bar';
     this.label = 'histogram of inter-spike interval';
     this.layout.barmode = this.state.barmode;
-    this.layout.xaxis.title = 'Inter-spike interval [ms]';
     this.visible = false;
     this.xaxis = 2;
     this.init();
@@ -32,6 +31,9 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     return this._state;
   }
 
+  /**
+   * Initialize histogram panel for inter-spike intervals (ISI).
+   */
   init(): void {
     // console.log('Init histogram panel for inter-spike interval');
     this.activities = this.graph.project.spikeActivities;
@@ -39,7 +41,7 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
   }
 
   /**
-   * Update histogram panel for ISI of spike data.
+   * Update histogram panel for inter-spike intervals (ISI).
    *
    * @remarks
    * It requires activity data.
@@ -50,8 +52,12 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
       this.updateInterSpikeIntervalHistogram(activity);
     });
     this.layout.xaxis.type = this.state.xaxisType;
+    this.layout.xaxis.title = 'Inter-spike interval [ms]';
   }
 
+  /**
+   * Add empty data of ISI histogram of spikes.
+   */
   addInterSpikeIntervalHistogram(activity: SpikeActivity): void {
     // console.log('Add histogram data of inter-spike interval')
     this.data.push({
@@ -81,6 +87,9 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     });
   }
 
+  /**
+   * Update ISI histogram of spikes.
+   */
   updateInterSpikeIntervalHistogram(activity: SpikeActivity): void {
     // console.log('Update histogram data of inter-spike interval')
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {

@@ -1,8 +1,9 @@
 import { App } from '../app';
+import { Config } from '../config';
 import { ModelCode } from './modelCode';
 import { ModelParameter } from '../parameter/modelParameter';
 
-export class Model {
+export class Model extends Config {
   private readonly _name = 'Model';
 
   private _abbreviation: string;
@@ -15,9 +16,10 @@ export class Model {
   private _idx: number; // generative
   private _label: string; // model label for view
   private _params: ModelParameter[] = []; // model parameters
-  private _recordables: string[]; // recordables for multimeter
+  private _recordables: any[]; // recordables for multimeter
 
   constructor(app: App, model: any) {
+    super('Model');
     this._app = app;
     this._code = new ModelCode(this);
 
@@ -31,7 +33,11 @@ export class Model {
     this._label = model.label || '';
     this._abbreviation = model.abbreviation;
     model.params.forEach((param: any) => this.addParameter(param));
-    this._recordables = model.recordables || [];
+    this._recordables = model.recordables
+      ? this.config.recordables.filter((recordable: any) =>
+          model.recordables.includes(recordable.id)
+        )
+      : [];
   }
 
   get abbreviation(): string {
@@ -78,7 +84,7 @@ export class Model {
     return this._params;
   }
 
-  get recordables(): string[] {
+  get recordables(): any[] {
     return this._recordables;
   }
 
@@ -86,14 +92,23 @@ export class Model {
     return this.id;
   }
 
+  /**
+   * Get parameter of the model.
+   */
   getParameter(id: string): ModelParameter {
     return this._params.find((param: ModelParameter) => param.id === id);
   }
 
+  /**
+   * Add parameter to the model specifications.
+   */
   addParameter(param: any): void {
     this._params.push(new ModelParameter(this, param));
   }
 
+  /**
+   * Create new parameter.
+   */
   newParameter(paramId: string, value: any): void {
     const param: any = {
       id: paramId,
@@ -112,12 +127,18 @@ export class Model {
     this._params.sort((a: any, b: any) => a.id - b.id);
   }
 
+  /**
+   * Remove parameter.
+   */
   removeParameter(paramId: string): void {
     this._params = this.params.filter(
       (param: ModelParameter) => param.id !== paramId
     );
   }
 
+  /**
+   * Update parameter.
+   */
   updateParameter(param: any): void {
     const idx: number = this._params
       .map((p: ModelParameter) => p.id)
@@ -127,34 +148,59 @@ export class Model {
 
   modelChanges(): void {}
 
+  /**
+   * Clean model index.
+   */
   clean(): void {
     this._idx = this._app.models.indexOf(this);
   }
 
+  /**
+   * Clone model object.
+   */
   clone(): Model {
     return new Model(this._app, this);
   }
 
+  /**
+   * Check if the model is a neuron.
+   */
   isNeuron(): boolean {
     return this._elementType === 'neuron';
   }
 
+  /**
+   * Check if the model is a recorder.
+   */
   isRecorder(): boolean {
     return this._elementType === 'recorder';
   }
 
+  /**
+   * Check if the model is a stimulator.
+   */
   isStimulator(): boolean {
     return this._elementType === 'stimulator';
   }
 
+  /**
+   * Delete model object from model list in app.
+   */
   delete(): Promise<any> {
     return this._app.deleteModel(this._doc._id);
   }
 
+  /**
+   * Save model object to list and to database.
+   */
   save(): Promise<any> {
     return this._app.saveModel(this);
   }
 
+  /**
+   * Serialize for JSON.
+   * @return model object
+   */
   toJSON(): any {
     const model: any = {
       abbreviation: this._abbreviation,
@@ -168,7 +214,9 @@ export class Model {
 
     // Add recordables if provided.
     if (this.recordables.length > 0) {
-      model.recordables = this._recordables;
+      model.recordables = this._recordables.map(
+        (recordable: any) => recordable.id
+      );
     }
     return model;
   }

@@ -10,20 +10,25 @@ export class SpikeTimesPanel extends ActivityGraphPanel {
     this.init();
   }
 
+  /**
+   * Initialize spike data panels.
+   */
   init(): void {
     this.activities = this.graph.project.spikeActivities;
     this.data = [];
   }
 
+  /**
+   * Update marker color for spike data panels.
+   */
   updateColor(): void {
     this.activities.forEach((activity: SpikeActivity) => {
       const data: any = this.data.find(
         (d: any) => d.activityIdx === activity.idx
       );
-      if (data == undefined) {
-        return;
+      if (data !== undefined) {
+        data.marker.color = activity.recorder.view.color;
       }
-      data.marker.color = activity.recorder.view.color;
     });
   }
 }

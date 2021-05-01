@@ -19,6 +19,9 @@ export class NodeCode extends Code {
     return this._node.network.project.app.nestServer.state.simulatorVersion;
   }
 
+  /**
+   * Write script to create node.
+   */
   create(): string {
     let script = '';
     script += `${this.label} = nest.Create("${this._node.modelId}"`;
@@ -41,10 +44,16 @@ export class NodeCode extends Code {
     return script + '\n';
   }
 
+  /**
+   * XOR logical operation.
+   */
   XOR(a: boolean, b: boolean): boolean {
     return (a || b) && !(a && b);
   }
 
+  /**
+   * Write script for node parameters.
+   */
   nodeParams(): string {
     let script = '';
     if (this._node.params === undefined || this._node.params.length === 0) {
@@ -57,7 +66,7 @@ export class NodeCode extends Code {
 
     if (this._node.model.existing === 'multimeter') {
       const recordFrom: string[] = this._node.recordFrom.map(
-        (record: string) => '"' + record + '"'
+        (rec: any) => '"' + rec + '"'
       );
       params.push(`"record_from": [${recordFrom.join(',')}]`);
     }

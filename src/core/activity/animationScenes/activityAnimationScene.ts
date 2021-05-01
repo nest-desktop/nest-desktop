@@ -254,6 +254,9 @@ export class ActivityAnimationScene {
     }
   }
 
+  /**
+   * Update frame index.
+   */
   updateFrameIdx(): void {
     const framesLength: number = this._graph.frames.length;
     const frames: any = this._graph.config.frames;

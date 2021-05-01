@@ -8,6 +8,7 @@ export class Activity {
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
+  private _recordFrom: String[] = [];
   private _hash: string;
 
   constructor(recorder: Node, activity: any = {}) {
@@ -67,6 +68,10 @@ export class Activity {
     return this._recorder;
   }
 
+  get recordFrom(): String[] {
+    return this._recordFrom;
+  }
+
   get senders(): number[] {
     const senders: any[] = [...new Set(this._events.senders)];
     if (senders.length > 0) {
@@ -75,45 +80,79 @@ export class Activity {
     return senders;
   }
 
+  /**
+   * Check if activity has events.
+   */
   hasEvents(): boolean {
     return this.nEvents > 0;
   }
 
+  /**
+   * Update activity.
+   */
   update(activity: any): void {
     this._events = activity.events || {};
+    this._recordFrom = Object.keys(this._events).filter(
+      (event: string) => !['senders', 'times'].includes(event)
+    );
     this._nodeIds = activity.nodeIds || [];
     this._nodePositions = activity.nodePositions || [];
     this._hash = sha1(JSON.stringify(this._events));
   }
 
+  /**
+   * Check if activity contains analog signal data.
+   */
   hasAnalogData(): boolean {
     return ['voltmeter', 'multimeter'].includes(this._recorder.model.existing);
   }
 
+  /**
+   * Check if activity contains analog signal data from input devices.
+   */
   hasInputAnalogData(): boolean {
     return this.hasAnalogData() && this.elementTypes.includes('stimulator');
   }
 
+  /**
+   * Check if activity contains analog signal data from neurons.
+   */
   hasNeuronAnalogData(): boolean {
     return this.hasAnalogData() && this.elementTypes.includes('neuron');
   }
 
+  /**
+   * Check if activity contains spike data.
+   */
   hasSpikeData(): boolean {
     return this._recorder.model.existing === 'spike_recorder';
   }
 
+  /**
+   * Download activity (node indices, positions and events).
+   */
   download(): void {
     this._recorder.network.project.app.download(this, 'activity');
   }
 
+  /**
+   * Download events.
+   */
   downloadEvents(): void {
     this._recorder.network.project.app.download(this._events, 'events');
   }
 
+  /**
+   * Clone activity.
+   */
   clone(): Activity {
     return new Activity(this.recorder, this.toJSON());
   }
 
+  /**
+   * Serialize for JSON.
+   * @return activity object
+   */
   toJSON(): any {
     return {
       events: this._events,

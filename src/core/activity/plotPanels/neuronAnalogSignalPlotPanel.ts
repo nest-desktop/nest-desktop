@@ -8,10 +8,12 @@ export class NeuronAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
     this.name = 'NeuronAnalogSignalPlotPanel';
     this.label = 'line of neuron analog signals';
     this.layout.yaxis.height = 2;
-    this.layout.yaxis.title = 'Membrane potential [mV]';
     this.init();
   }
 
+  /**
+   * Initialize plot panel for neuronal analog signals.
+   */
   init(): void {
     this.activities = this.graph.project.neuronAnalogSignalActivities;
     this.data = [];

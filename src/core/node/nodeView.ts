@@ -166,6 +166,10 @@ export class NodeView {
     return this._node.network.view.isNodeSelected(this._node, unselected);
   }
 
+  /**
+   * Serialize for JSON.
+   * @return node view object
+   */
   toJSON(): any {
     const nodeView: any = {
       color: this._color,

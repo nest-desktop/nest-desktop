@@ -7,6 +7,9 @@ export class AnalogSignalActivity extends Activity {
     super(recorder, activity);
   }
 
+  /**
+   * Clone analog signal activity.
+   */
   clone(): AnalogSignalActivity {
     return new AnalogSignalActivity(this.recorder, this.toJSON());
   }
