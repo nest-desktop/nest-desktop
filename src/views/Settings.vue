@@ -112,8 +112,8 @@ export default Vue.extend({
      * Check if NEST is running in the backend.
      */
     const checkNEST = () => {
-      core.app.nestServer.check().then(nestServer => {
-        state.nestVersion = nestServer.state.simulatorVersion;
+      core.app.nestServer.check().then(() => {
+        state.nestVersion = core.app.nestServer.state.simulatorVersion;
       });
     };
     /**
