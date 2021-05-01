@@ -264,12 +264,17 @@
                   <v-col>
                     <v-select
                       :color="node.view.color"
+                      :item-text="
+                        item =>
+                          item.label + (item.unit ? ` (${item.unit})` : '')
+                      "
                       :items="node.recordables"
                       @change="paramChange()"
                       attach
                       class="ma-0 pt-4 px-1"
                       dense
                       hide-details
+                      item-value="id"
                       label="Record from"
                       multiple
                       persistent-hint

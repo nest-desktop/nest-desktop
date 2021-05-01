@@ -49,6 +49,7 @@
               :key="index"
               @click="item.onClick"
               v-for="(item, index) in state.items"
+              v-show="item.show()"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
@@ -69,18 +70,6 @@
                   hide-details
                 />
               </v-list-item-action>
-            </v-list-item>
-
-            <v-list-item
-              @click="state.node.activity.downloadEvents()"
-              v-if="
-                state.node.model.isRecorder() && state.node.activity.hasEvents()
-              "
-            >
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-download'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'Download events'" />
             </v-list-item>
           </v-list>
         </span>
@@ -172,61 +161,54 @@ export default Vue.extend({
       visibleParams: [],
       items: [
         {
-          id: 'paramsReset',
           icon: 'mdi-restart',
-          title: 'Reset parameters',
+          id: 'paramsReset',
           onClick: () => {
             state.node.resetParameters();
             closeMenu();
           },
           append: false,
+          show: () => true,
+          title: 'Reset parameters',
         },
         {
-          id: 'nodeSpatial',
           icon: 'mdi-axis-arrow',
+          id: 'nodeSpatial',
           input: 'switch',
-          title: 'Spatial node',
-          value: 'spatialNode',
           onClick: () => {
             state.node.toggleSpatial();
             state.spatialNode = state.node.spatial.hasPositions();
             closeMenu();
           },
+          show: () => !state.node.model.isRecorder(),
+          title: 'Spatial node',
         },
         {
-          id: 'nodeColor',
           icon: 'mdi-format-color-fill',
-          title: 'Colorize node',
+          id: 'nodeColor',
           onClick: () => {
             state.content = 'nodeColor';
             window.dispatchEvent(new Event('resize'));
           },
           append: true,
+          show: () => true,
+          title: 'Colorize node',
         },
         {
-          id: 'modelDescription',
           icon: 'mdi-information-outline',
-          title: 'Model documentation',
+          id: 'modelDescription',
           onClick: () => {
             state.content = 'modelDocumentation';
             setTimeout(() => {
               window.dispatchEvent(new Event('resize'));
             }, 300);
           },
+          show: () => state.node.model.id !== 'voltmeter',
+          title: 'Model documentation',
         },
-        // {
-        //   id: 'eventsDownload',
-        //   icon: 'mdi-download',
-        //   title: 'Download events',
-        //   onClick: () => {
-        //     state.node.activity.downloadEvents();
-        //     closeMenu();
-        //   },
-        // },
         {
-          id: 'nodeClone',
           icon: 'mdi-content-copy',
-          title: 'Clone node',
+          id: 'nodeClone',
           onClick: () => {
             const newNode: any = JSON.parse(
               JSON.stringify(state.node.toJSON())
@@ -237,14 +219,30 @@ export default Vue.extend({
             state.node.network.networkChanges();
             closeMenu();
           },
+          show: () => true,
+          title: 'Clone node',
         },
         {
-          id: 'nodeDelete',
+          icon: 'mdi-download',
+          id: 'eventsDownload',
+          onClick: () => {
+            state.node.activity.downloadEvents();
+            closeMenu();
+          },
+          show: () =>
+            state.node.activity &&
+            state.node.activity.hasEvents() &&
+            state.node.model.isRecorder(),
+          title: 'Download events',
+        },
+        {
           icon: 'mdi-trash-can-outline',
-          title: 'Delete node',
+          id: 'nodeDelete',
           onClick: () => {
             state.content = 'nodeDelete';
           },
+          show: () => true,
+          title: 'Delete node',
         },
       ],
     });

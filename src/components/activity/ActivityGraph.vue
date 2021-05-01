@@ -7,9 +7,7 @@
         <v-card-text>
           <v-row no-gutters>
             <v-col cols="8">
-              <v-subheader>
-                Image format
-              </v-subheader>
+              <v-subheader v-text="'Image format'" />
             </v-col>
 
             <v-col cols="4">
@@ -19,7 +17,7 @@
                 label="Select image format"
                 single-line
                 v-model="state.toImageButtonOptions.format"
-              ></v-select>
+              />
             </v-col>
           </v-row>
 

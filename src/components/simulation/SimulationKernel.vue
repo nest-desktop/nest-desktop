@@ -22,7 +22,7 @@
               :options="{
                 input: 'tickSlider',
                 label: 'local number of threads',
-                ticks: [1, 2, 4, 6, 8, 16],
+                ticks: [1, 2, 4, 8],
               }"
               :value.sync="simulation.kernel.localNumThreads"
               @update:value="paramChange"

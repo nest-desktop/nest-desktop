@@ -129,6 +129,7 @@
                   <v-text-field
                     @blur="e => paramChange(e.target.value)"
                     @change="paramChange"
+                    :step="state.options.step || 1"
                     class="mt-0 pt-0"
                     height="32"
                     hide-details
