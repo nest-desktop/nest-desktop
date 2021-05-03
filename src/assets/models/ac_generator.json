@@ -51,19 +51,19 @@
       "unit": "ms",
       "value": 0,
       "input": "valueSlider",
-      "max": 10000,
+      "max": 1000,
       "min": 0,
-      "step": 10
+      "step": 1
     },
     {
       "id": "stop",
       "label": "stop time",
       "unit": "ms",
-      "value": 10000,
+      "value": 1000,
       "input": "valueSlider",
-      "max": 10000,
+      "max": 1000,
       "min": 0,
-      "step": 10
+      "step": 1
     }
   ]
 }

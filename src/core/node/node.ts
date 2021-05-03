@@ -99,9 +99,9 @@ export class Node extends Config {
     this._size = 1;
     this.initParameters();
     this._network.clean();
-    this.initActivity();
     if (this.model.isRecorder()) {
-      this.network.project.activityGraph.init();
+      this.initActivity();
+      this._network.project.activityGraph.init();
     }
     this.nodeChanges();
   }
@@ -213,18 +213,14 @@ export class Node extends Config {
   }
 
   /**
-   * Initialize activity for recorder node.
-   * @param activity - network activity from the simulator
+   * Initialize activity for the recorder.
    */
   initActivity(activity: any = {}): void {
-    if (!this.model.isRecorder()) {
-      return;
-    }
     if (this.model.existing === 'spike_recorder') {
       this._activity = new SpikeActivity(this, activity);
     } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
       this._activity = new AnalogSignalActivity(this, activity);
-    } else {
+    } else if (this.model.isRecorder()) {
       this._activity = new Activity(this, activity);
     }
   }

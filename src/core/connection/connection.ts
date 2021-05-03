@@ -82,6 +82,10 @@ export class Connection extends Config {
     return this._params;
   }
 
+  get recorder(): Node {
+    return this.source.model.isRecorder() ? this.source : this.target;
+  }
+
   get rule(): string {
     return this._rule;
   }
@@ -195,6 +199,7 @@ export class Connection extends Config {
    */
   reverse(): void {
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
+    this.initActivity();
     this.connectionChanges();
   }
 
@@ -219,6 +224,15 @@ export class Connection extends Config {
     return (
       this.source.spatial.hasPositions() && this.target.spatial.hasPositions()
     );
+  }
+
+  /**
+   * Initialize activity and its graph.
+   */
+  initActivity(): void {
+    if (this._view.connectRecorder()) {
+      this.network.initActivity(this.recorder);
+    }
   }
 
   /**

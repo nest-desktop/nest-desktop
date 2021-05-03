@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <iframe id="NESTFrame" class="iframe" />
     <Navigation class="no-print" />
 
     <transition name="fade">
@@ -22,8 +23,23 @@ export default Vue.extend({
     Navigation,
   },
   setup() {
+    /**
+     * Keep connection to NEST Server alive.
+     * Ping every 5 min.
+     */
+    const keepConnectionToNESTServerAlive = () => {
+      const NESTFrame = document.getElementById(
+        'NESTFrame'
+      ) as HTMLIFrameElement;
+      setInterval(() => {
+        NESTFrame.src = core.app.nestServer.url;
+        // NESTFrame.contentDocument.location.reload(true);
+      }, 300000);
+    };
+
     onMounted(() => {
       core.app.init();
+      keepConnectionToNESTServerAlive();
     });
   },
 });
@@ -46,6 +62,13 @@ export default Vue.extend({
   @page {
     size: landscape;
   }
+}
+
+.iframe {
+  background-color: white;
+  display: none;
+  position: absolute;
+  z-index: 1000;
 }
 
 .v-toast__text h1 {

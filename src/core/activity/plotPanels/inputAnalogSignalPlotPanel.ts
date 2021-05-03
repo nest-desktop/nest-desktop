@@ -1,4 +1,3 @@
-import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { AnalogSignalPlotPanel } from './analogSignalPlotPanel';
 
@@ -12,9 +11,7 @@ export class InputAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
   }
 
   init(): void {
-    this.activities = this.graph.project.activities.filter(
-      (activity: Activity) => activity.hasInputAnalogData()
-    );
+    this.activities = this.graph.project.inputAnalogSignalActivities;
     this.data = [];
   }
 }

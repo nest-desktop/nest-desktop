@@ -1,7 +1,7 @@
 export class HttpClient {
   constructor() {}
 
-  ping(url: string, callback: any): void {
+  ping(url: string, callback: any = undefined): void {
     const started: number = new Date().getTime();
     const req: XMLHttpRequest = new XMLHttpRequest();
     req.open('GET', url, /*async*/ true);
@@ -16,7 +16,7 @@ export class HttpClient {
         case 4:
           ended = new Date().getTime();
           milliseconds = ended - started;
-          if (callback !== null) {
+          if (callback !== undefined) {
             callback(req, milliseconds);
           }
           break;
@@ -25,8 +25,7 @@ export class HttpClient {
     try {
       req.send(null);
     } catch (exception) {
-      // this is expected
-      console.log(exception);
+      // console.log(exception);
     }
   }
 
@@ -63,8 +62,7 @@ export class HttpClient {
       try {
         req.send(null);
       } catch (exception) {
-        console.log(exception);
-        // this is expected
+        // console.log(exception);
         reject(req);
       }
     });
@@ -107,8 +105,7 @@ export class HttpClient {
       try {
         req.send(JSON.stringify(data));
       } catch (exception) {
-        console.log(exception);
-        // this is expected
+        // console.log(exception);
         reject(req);
       }
     });

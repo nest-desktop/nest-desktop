@@ -31,22 +31,28 @@
                 </v-btn>
               </v-btn-toggle>
             </v-col>
-            <v-col class="pa-3" cols="10" style="height:60px; line-height:60px">
-              <input
+            <v-col class="pa-3" cols="10">
+              <!-- <input
                 @change="fetchProjectsFromFile"
                 ref="file"
                 type="file"
                 v-show="state.source === 'file'"
+              /> -->
+              <v-file-input
+                @change="fetchProjectsFromFile"
+                label="File input"
+                truncate-length="100"
+                v-show="state.source === 'file'"
               />
               <v-text-field
                 @change="fetchProjectsFromUrl"
+                class="pt-2"
                 clearable
                 dense
                 full-width
-                height="40"
-                hide-details
-                label="url"
-                ref="url"
+                label="Enter url"
+                prepend-icon="mdi-web"
+                small
                 v-show="state.source === 'url'"
               />
             </v-col>
@@ -128,11 +134,11 @@ export default Vue.extend({
   props: {
     open: Boolean,
   },
-  setup(props, { refs }) {
+  setup(props) {
     const state = reactive({
       dialog: false,
       items: [
-        { icon: 'mdi-file-outline', value: 'file' },
+        { icon: 'mdi-paperclip', value: 'file' },
         { icon: 'mdi-web', value: 'url' },
       ],
       open: props.open,
@@ -177,11 +183,10 @@ export default Vue.extend({
     /**
      * Fetch projects from file.
      */
-    const fetchProjectsFromFile = () => {
+    const fetchProjectsFromFile = (file: any) => {
       state.projects = [];
       const fileReader = new FileReader();
-      const file = refs.file as any;
-      fileReader.readAsText(file.files[0]);
+      fileReader.readAsText(file);
       fileReader.addEventListener('load', (event: any) => {
         setTimeout(() => {
           const result: any = JSON.parse(event.target.result as string);
