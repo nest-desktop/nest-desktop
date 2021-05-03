@@ -11,6 +11,7 @@
       :position="state.connectionMenu.position"
       v-if="state.connectionMenu.show"
     />
+
     <!--
     <v-select
       :items="state.items"
@@ -64,6 +65,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn small v-text="'Custom'" v-bind="attrs" v-on="on" />
           </template>
+
           <v-card :width="280">
             <v-card-text class="pa-0">
               <v-list class="no-highlight" dense>
@@ -710,5 +712,12 @@ export default Vue.extend({
 }
 .no-highlight .v-list-item--active::before {
   opacity: 0 !important;
+}
+
+.v-list-item .handle {
+  opacity: 0;
+}
+.v-list-item:hover .handle {
+  opacity: 1;
 }
 </style>

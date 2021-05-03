@@ -538,6 +538,15 @@ export class Project extends Config {
   }
 
   /**
+   * Initialize activity graph.
+   */
+  initActivityGraph(): void {
+    if (this._activityGraph !== undefined) {
+      this._activityGraph.init();
+    }
+  }
+
+  /**
    * Update activities in recorder nodes after simulation.
    */
   updateActivities(data: any): void {
