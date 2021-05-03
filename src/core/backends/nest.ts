@@ -30,7 +30,7 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * It seeks the url of NEST Server.
+   * Seek the url of NEST Server.
    */
   seek(): Promise<any> {
     // console.log('seek nest server');
@@ -48,11 +48,7 @@ export class NESTServer extends Backend {
   }
 
   /**
-<<<<<<< HEAD
-   * It pings NEST Server.
-=======
-   * Ping the nest backend.
->>>>>>> 2aa7ed3... update core
+   * Ping NEST Server.
    */
   ping(url: string, callback: any = false): void {
     // console.log('ping nest server');
