@@ -37,6 +37,7 @@ export class Network extends Config {
     this._connections.forEach((connection: Connection) => {
       connection.clean();
     });
+    this._project.initActivityGraph();
     this.networkChanges();
   }
 
@@ -65,6 +66,7 @@ export class Network extends Config {
       connection.targetIdx = nodeIdx.indexOf(connection.targetIdx);
       connection.clean();
     });
+    this._project.initActivityGraph();
     this.networkChanges();
   }
 
@@ -199,7 +201,7 @@ export class Network extends Config {
       source: source.idx,
       target: target.idx,
     });
-    connection.initActivity();
+    connection.source.initActivity();
     this.networkChanges();
   }
 
@@ -231,7 +233,7 @@ export class Network extends Config {
 
     // clean network
     this.clean();
-    this.initActivity();
+    this._project.initActivityGraph();
     this.networkChanges();
   }
 
@@ -251,20 +253,8 @@ export class Network extends Config {
 
     // clean network
     this.clean();
-    this.initActivity();
+    this._project.initActivityGraph();
     this.networkChanges();
-  }
-
-  /**
-   * Initialize activity and its graph
-   */
-  initActivity(recorder: Node = undefined): void {
-    if (recorder !== undefined) {
-      recorder.initActivity();
-    }
-    if (this._project.activityGraph !== undefined) {
-      this._project.activityGraph.init();
-    }
   }
 
   /**
