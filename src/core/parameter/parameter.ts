@@ -302,7 +302,7 @@ export class Parameter extends Config {
       const specs: string = this.specs
         .map((spec: any) => this.format(spec.value))
         .join(', ');
-      value = `nest.${this._type}(nest.spatial.distance, ${specs})`;
+      value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
       const specs: string = this.specs
