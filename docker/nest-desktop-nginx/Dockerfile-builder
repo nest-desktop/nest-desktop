@@ -9,6 +9,7 @@ RUN yarn install && yarn build
 
 # nginx state for serving content
 FROM nginx:alpine
+LABEL maintainer="Sebastian Spreizer <spreizer@web.de>"
 # Set working directory to nginx asset directory
 WORKDIR /usr/share/nginx/html
 # Remove default nginx static assets

@@ -1,6 +1,7 @@
 <template>
   <div class="parameterEdit">
     <v-menu
+      :close-on-content-click="false"
       :position-x="state.menu.position.x"
       :position-y="state.menu.position.y"
       :value="state.menu.show"
@@ -8,38 +9,77 @@
       transition="slide-y-transition"
     >
       <v-card :min-width="300" flat tile>
-        <v-subheader v-text="state.options.label" />
+        <v-card-subtitle class="pb-0" v-text="state.options.label" />
 
-        <v-list dense>
-          <v-list-item
-            :key="index"
-            @click="item.onClick"
-            v-for="(item, index) in state.items"
-            v-show="item.visible"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon" />
-            </v-list-item-icon>
-            <v-list-item-title v-text="item.title" />
-            <v-list-item-action v-if="item.actions.length > 0">
-              <v-row>
-                <span
-                  :key="'action' + action.id"
-                  class="mx-1"
-                  v-for="action in item.actions"
-                >
-                  <v-switch
-                    :value="action.value()"
-                    :color="state.color"
-                    dense
-                    hide-details
-                    v-if="action.id === 'switch'"
-                  />
-                </span>
-              </v-row>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
+        <span v-if="state.content === null">
+          <v-list dense>
+            <v-list-item
+              :key="index"
+              @click="item.onClick"
+              v-for="(item, index) in state.items"
+              v-show="item.visible"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon" />
+              </v-list-item-icon>
+              <v-list-item-title v-text="item.title" />
+              <v-list-item-action v-if="item.actions.length > 0">
+                <v-row>
+                  <span
+                    :key="'action' + action.id"
+                    class="mx-1"
+                    v-for="action in item.actions"
+                  >
+                    <v-switch
+                      :value="action.value()"
+                      :color="state.color"
+                      dense
+                      hide-details
+                      v-if="action.id === 'switch'"
+                    />
+                  </span>
+                </v-row>
+              </v-list-item-action>
+              <v-list-item-action v-if="item.append">
+                <v-icon small v-text="'mdi-menu-right'" />
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </span>
+
+        <span v-if="state.content === 'generateValues'">
+          <v-card-text>
+            <v-select
+              :items="state.valueGenerator.types"
+              dense
+              hide-details
+              v-model="state.valueGenerator.type"
+            />
+            <v-row no-gutters>
+              <v-col
+                :key="param.id"
+                class="mx-1"
+                v-for="param in state.valueGenerator.options"
+                v-show="param.visible"
+              >
+                <v-text-field
+                  :label="param.label"
+                  class="mt-5"
+                  dense
+                  hide-details
+                  type="number"
+                  v-model="state.valueGenerator.params[param.id]"
+                />
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="backMenu" text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-btn @click="generateValues" text v-text="'Generate'" />
+          </v-card-actions>
+        </span>
       </v-card>
     </v-menu>
 
@@ -152,6 +192,8 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
+import { ValueGenerator } from '@/core/parameter/valueGenerator';
+
 import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
 import ParameterEditExpert from '@/components/parameter/ParameterEditExpert.vue';
@@ -170,6 +212,7 @@ export default Vue.extend({
   setup(props, { emit }) {
     const state = reactive({
       color: props.color,
+      content: null,
       expertMode: false,
       items: [
         {
@@ -179,6 +222,17 @@ export default Vue.extend({
           onClick: () => {
             state.param.reset();
             state.param.paramChanges();
+            closeMenu();
+          },
+          visible: true,
+        },
+        {
+          actions: [],
+          append: true,
+          icon: 'mdi-numeric',
+          title: 'Generate values',
+          onClick: () => {
+            state.content = 'generateValues';
           },
           visible: true,
         },
@@ -206,6 +260,7 @@ export default Vue.extend({
           onClick: () => {
             state.param.visible = false;
             state.param.paramChanges();
+            closeMenu();
           },
           visible: true,
         },
@@ -220,6 +275,7 @@ export default Vue.extend({
       options: props.param ? props.param['options'] : props.options,
       param: props.param as ModelParameter | Parameter | undefined,
       value: undefined,
+      valueGenerator: new ValueGenerator(),
     });
 
     /**
@@ -242,10 +298,23 @@ export default Vue.extend({
         case 'tickSlider':
           return state.options.ticks[value]; // returns tick values
         case 'arrayInput':
-          return JSON.parse(`[${value}]`); // returns array and not string
+          if (typeof value === 'string') {
+            return value.startsWith('[') && value.endsWith(']')
+              ? JSON.parse(value)
+              : JSON.parse(`[${value}]`); // returns array
+          } else {
+            return value;
+          }
         default:
           return value;
       }
+    };
+
+    const generateValues = () => {
+      console.log(state.value);
+      state.value = state.valueGenerator.generate();
+      console.log(state.value);
+      paramChange();
     };
 
     /**
@@ -286,6 +355,7 @@ export default Vue.extend({
         state.menu.position.x = e.clientX;
         state.menu.position.y = e.clientY;
         this.$nextTick(() => {
+          state.content = null;
           state.menu.show = true;
         });
       }
@@ -299,6 +369,21 @@ export default Vue.extend({
     };
 
     /**
+     * Return to main menu content.
+     */
+    const backMenu = () => {
+      state.content = null;
+    };
+
+    /**
+     * Close menu.
+     */
+    const closeMenu = () => {
+      state.content = null;
+      state.menu.show = false;
+    };
+
+    /**
      * Update param and expert mode.
      */
     const update = () => {
@@ -308,7 +393,8 @@ export default Vue.extend({
         state.options = props.param['options'];
         state.param = props.param as ModelParameter | Parameter;
         state.expertMode = !state.param.isConstant();
-        state.items[1].visible = ['valueSlider', 'arrayInput'].includes(
+        state.items[1].visible = 'arrayInput' === state.options.input;
+        state.items[2].visible = ['valueSlider', 'arrayInput'].includes(
           state.options.input
         );
       } else {
@@ -327,7 +413,15 @@ export default Vue.extend({
       }
     );
 
-    return { label, paramChange, paramExpertChange, showMenu, state };
+    return {
+      backMenu,
+      generateValues,
+      label,
+      paramChange,
+      paramExpertChange,
+      showMenu,
+      state,
+    };
   },
 });
 </script>
