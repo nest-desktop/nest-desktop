@@ -26,7 +26,7 @@
           title="Rename the current project"
           v-model="state.app.project.name"
         >
-          <template v-slot:append-outer>
+          <template #append-outer>
             <v-row>
               <v-btn
                 @click="state.app.project.save()"
@@ -69,7 +69,7 @@
               <v-list-item-title v-text="project.name" />
               <!-- <v-list-item-subtitle v-html="timeSince(project.createdAt)" /> -->
               <v-list-item-subtitle>
-                {{ project.network.nodes.length }} nodes;
+                {{ project.network.nodes.length }} nodes,
                 {{ project.network.connections.length }} connections
               </v-list-item-subtitle>
             </v-list-item-content>

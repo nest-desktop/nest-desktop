@@ -40,7 +40,6 @@ export class ProjectCode extends Code {
     this._script += 'nest.ResetKernel()\n';
 
     this._script += '\n\n# Simulation kernel\n';
-    this._script += this._project.simulation.code.setRandomSeed();
     this._script += this._project.simulation.code.setKernelStatus();
 
     // this._script += '\n\n# Copy models\n';
@@ -86,17 +85,14 @@ export class ProjectCode extends Code {
   defineGetActivity(): string {
     let script = '';
     script += 'def getActivity(node):';
-    script += this._() + 'activity = {}';
-    script += this._() + 'activity["events"] = node.get("events")';
     script += this._() + 'if node.get("model") == "spike_recorder":';
-    script += this._(2) + 'activity["nodeIds"] = list(';
-    script += this._(3) + 'nest.GetConnections(None, node).sources()';
-    script += this._(2) + ')';
+    script += this._(2) + 'nodeIds = nest.GetConnections(None, node).sources()';
     script += this._() + 'else:';
-    script += this._(2) + 'activity["nodeIds"] = list(';
-    script += this._(3) + 'nest.GetConnections(node).targets()';
-    script += this._(2) + ')';
-    script += this._() + 'return activity';
+    script += this._(2) + 'nodeIds = nest.GetConnections(node).targets()';
+    script += this._() + 'return {';
+    script += this._(2) + '"events": node.get("events"),';
+    script += this._(2) + '"nodeIds": list(nodeIds)';
+    script += this._() + '}';
     return script;
   }
 
@@ -116,7 +112,10 @@ export class ProjectCode extends Code {
   response(): string {
     let script = '';
     script += 'response = {';
-    script += this._() + '"kernel": {"time": nest.GetKernelStatus("time")},';
+    script += this._() + '"kernel": {';
+    script +=
+      this._(2) + '"biological_time": nest.GetKernelStatus("biological_time")';
+    script += this._() + '},';
     script +=
       this._() + '"activities": ' + this._project.network.code.getActivities();
     if (this._project.network.hasSpatialNodes()) {

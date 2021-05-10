@@ -9,20 +9,9 @@ export class SimulationCode extends Code {
     this._simulation = simulation;
   }
 
-  setRandomSeed(): string {
-    const script = `numpy.random.seed(${this._simulation.randomSeed})`;
-    return script + '\n';
-  }
-
-  setRandomStates(): string {
-    let script = '';
-    script += `msd = ${this._simulation.randomSeed}\n`;
-    script += 'N_vp = nest.GetKernelStatus(["total_num_virtual_procs"])[0]\n';
-    script +=
-      'pyrngs = [numpy.random.RandomState(s) for s in range(msd, msd+N_vp)]';
-    return script + '\n';
-  }
-
+  /**
+   * Write script for simulation kernel.
+   */
   setKernelStatus(): string {
     let script = 'nest.SetKernelStatus({';
     script +=
@@ -31,17 +20,16 @@ export class SimulationCode extends Code {
     script +=
       this._() +
       `"resolution": ${this.format(this._simulation.kernel.resolution)},`;
-    // script += this._() + '"grng_seed": msd+N_vp';
-    script +=
-      this._() +
-      `"rng_seeds": numpy.random.randint(0, 1000, ${this._simulation.kernel.localNumThreads}).tolist()`;
-    // '"rng_seeds": range(msd+N_vp+1, msd+2*N_vp+1)';
+    script += this._() + `"rng_seed": ${this._simulation.kernel.rngSeed}`;
 
     script += this.end() + '})';
     return script + '\n';
   }
 
+  /**
+   * Write script for simulation.
+   */
   simulate(): string {
-    return `nest.Simulate(${this.format(this._simulation.time)})\n`;
+    return `nest.Simulate(${this._simulation.time})\n`;
   }
 }

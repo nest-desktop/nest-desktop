@@ -1,12 +1,18 @@
 <template>
   <div class="model" v-if="state.modelId">
-    <v-card flat tile style="height:calc(100vh - 64px); overflow-y:auto">
+    <v-toolbar dense flat>
+      <v-toolbar-title v-text="state.modelId" />
+      <span
+        class="px-2"
+        v-if="state.subtitle"
+        v-text="' – ' + state.subtitle"
+      />
+    </v-toolbar>
+    <v-card flat tile style="max-height:calc(100vh - 64px); overflow-y:auto">
       <v-card :key="block.title" flat tile v-for="block of state.blocks">
         <v-card-title v-text="block.title" />
         <v-card-text>
-          <pre>
-            {{ block.content }}
-          </pre>
+          <pre v-text="block.content" />
         </v-card-text>
       </v-card>
     </v-card>
@@ -40,9 +46,10 @@ export default Vue.extend({
     ];
 
     const state = reactive({
-      modelId: props.id,
-      helptext: '',
       blocks: [],
+      helptext: '',
+      modelId: props.id,
+      subtitle: '',
       url: '',
     });
 
@@ -50,9 +57,10 @@ export default Vue.extend({
      * Reset model documentation.
      */
     const reset = () => {
-      state.url = '';
-      state.helptext = '';
       state.blocks = [];
+      state.helptext = '';
+      state.subtitle = '';
+      state.url = '';
     };
 
     /**
@@ -72,6 +80,7 @@ export default Vue.extend({
           }
           state.helptext = resp.data;
           const lines: string[] = state.helptext.split('\n');
+          state.subtitle = lines[0].split(' – ')[1] || '';
           let blocks: any[] = titles.map(title => [
             lines.indexOf(title),
             title,

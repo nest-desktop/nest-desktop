@@ -12,15 +12,44 @@
           :style="{ backgroundColor: state.node.view.color }"
           class="py-1"
           style="color:white; height:40px"
+          v-if="state.content !== 'modelDocumentation'"
           v-text="state.node.model.label"
         />
 
         <span v-if="state.content === null">
           <v-list dense>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon v-text="'mdi-contrast'" />
+              </v-list-item-icon>
+              <v-list-item-title v-text="'Set all synaptic weights'" />
+
+              <v-btn
+                :outlined="state.node.view.weight === 'excitatory'"
+                @click="state.node.setWeights('excitatory')"
+                icon
+                small
+                title="excitatory"
+              >
+                <v-icon v-text="'mdi-plus'" />
+              </v-btn>
+
+              <v-btn
+                :outlined="state.node.view.weight === 'inhibitory'"
+                @click="state.node.setWeights('inhibitory')"
+                icon
+                small
+                title="inhibitory"
+              >
+                <v-icon v-text="'mdi-minus'" />
+              </v-btn>
+            </v-list-item>
+
             <v-list-item
               :key="index"
               @click="item.onClick"
               v-for="(item, index) in state.items"
+              v-show="item.show()"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
@@ -32,6 +61,14 @@
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
                 <v-checkbox :input-value="state[item.value]" />
+              </v-list-item-action>
+              <v-list-item-action v-if="item.input === 'switch'">
+                <v-switch
+                  :color="state.node.view.color"
+                  :value="state[item.value]"
+                  dense
+                  hide-details
+                />
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -56,51 +93,6 @@
 
         <span v-if="state.content === 'modelDocumentation'">
           <ModelDocumentation :id="state.node.modelId" />
-        </span>
-
-        <span v-if="state.content === 'paramsSelect'">
-          <v-list dense>
-            <v-list-item-group
-              @change="selectionChange"
-              active-class=""
-              multiple
-              v-model="state.visibleParams"
-            >
-              <v-list-item
-                :key="param.id"
-                class="mx-0"
-                style="font-size:12px;"
-                v-for="param of state.node.params"
-              >
-                <template v-slot:default="{ active }">
-                  <v-list-item-content style="padding: 4px">
-                    <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
-                    </v-row>
-                  </v-list-item-content>
-
-                  <v-list-item-action style="margin: 4px 0">
-                    <v-checkbox
-                      :input-value="active"
-                      color="black"
-                      hide-details
-                    />
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-
-          <v-card-actions>
-            <v-btn @click="backMenu" text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
-            </v-btn>
-            <v-btn @click="hideAllParams" text v-text="'none'" />
-            <v-btn @click="showAllParams" text v-text="'all'" />
-          </v-card-actions>
         </span>
 
         <span v-if="state.content === 'nodeWeights'">
@@ -169,80 +161,54 @@ export default Vue.extend({
       visibleParams: [],
       items: [
         {
-          id: 'paramsSelect',
-          icon: 'mdi-checkbox-marked-outline',
-          title: 'Set parameter view',
-          onClick: () => {
-            state.content = 'paramsSelect';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-        },
-        {
-          id: 'paramsReset',
           icon: 'mdi-restart',
-          title: 'Reset parameters',
+          id: 'paramsReset',
           onClick: () => {
             state.node.resetParameters();
             closeMenu();
           },
           append: false,
+          show: () => true,
+          title: 'Reset parameters',
         },
         {
-          id: 'nodeSpatial',
           icon: 'mdi-axis-arrow',
-          input: 'checkbox',
-          title: 'Spatial node',
-          value: 'spatialNode',
+          id: 'nodeSpatial',
+          input: 'switch',
           onClick: () => {
             state.node.toggleSpatial();
             state.spatialNode = state.node.spatial.hasPositions();
             closeMenu();
           },
+          show: () => !state.node.model.isRecorder(),
+          title: 'Spatial node',
         },
         {
-          id: 'nodeColor',
           icon: 'mdi-format-color-fill',
-          title: 'Colorize node',
+          id: 'nodeColor',
           onClick: () => {
             state.content = 'nodeColor';
             window.dispatchEvent(new Event('resize'));
           },
           append: true,
+          show: () => true,
+          title: 'Colorize node',
         },
         {
-          id: 'setWeights',
-          icon: 'mdi-contrast',
-          title: 'Set all synaptic weights',
-          onClick: () => {
-            state.content = 'nodeWeights';
-          },
-          append: true,
-        },
-        {
-          id: 'modelDescription',
           icon: 'mdi-information-outline',
-          title: 'Model documentation',
+          id: 'modelDescription',
           onClick: () => {
             state.content = 'modelDocumentation';
             setTimeout(() => {
               window.dispatchEvent(new Event('resize'));
             }, 300);
           },
+          show: () => state.node.model.id !== 'voltmeter',
+          title: 'Model documentation',
         },
-        // {
-        //   id: 'eventsDownload',
-        //   icon: 'mdi-download',
-        //   title: 'Download events',
-        //   onClick: () => {
-        //     state.node.activity.downloadEvents();
-        //     closeMenu();
-        //   },
-        // },
         {
-          id: 'nodeClone',
           icon: 'mdi-content-copy',
-          title: 'Clone node',
+          id: 'nodeClone',
           onClick: () => {
             const newNode: any = JSON.parse(
               JSON.stringify(state.node.toJSON())
@@ -253,14 +219,30 @@ export default Vue.extend({
             state.node.network.networkChanges();
             closeMenu();
           },
+          show: () => true,
+          title: 'Clone node',
         },
         {
-          id: 'nodeDelete',
+          icon: 'mdi-download',
+          id: 'eventsDownload',
+          onClick: () => {
+            state.node.activity.downloadEvents();
+            closeMenu();
+          },
+          show: () =>
+            state.node.activity &&
+            state.node.activity.hasEvents() &&
+            state.node.model.isRecorder(),
+          title: 'Download events',
+        },
+        {
           icon: 'mdi-trash-can-outline',
-          title: 'Delete node',
+          id: 'nodeDelete',
           onClick: () => {
             state.content = 'nodeDelete';
           },
+          show: () => true,
+          title: 'Delete node',
         },
       ],
     });

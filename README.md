@@ -1,4 +1,4 @@
-# nest-desktop
+# NEST Desktop
 
 ## Project setup
 ```

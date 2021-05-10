@@ -421,6 +421,7 @@ export class NetworkGraph {
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
+    // console.log('Init connection graph.');
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
 
     elem.selectAll('*').remove();
@@ -444,7 +445,6 @@ export class NetworkGraph {
    */
   initNetworkGraph() {
     // console.log('Init network graph');
-
     const connections: d3.Selection<any, any, any, any> = this._selector
       .select('g#connections')
       .selectAll('g.connection')
@@ -607,6 +607,7 @@ export class NetworkGraph {
    * Update connection graph.
    */
   updateConnectionGraph() {
+    // console.log('Update connection graph.');
     const duration: number = this._state.dragging ? 0 : 250;
     const t: d3.Transition<any, any, any, any> = d3
       .transition()

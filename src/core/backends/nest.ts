@@ -9,7 +9,6 @@ export class NESTServer extends Backend {
 
   constructor() {
     super('NESTServer');
-    this.check();
   }
 
   get state(): any {
@@ -17,7 +16,7 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * It pings nest server if hostname provided, else it seeks the url.
+   * Check if the nest backend is served.
    */
   check(): Promise<void> {
     return new Promise<void>(resolve => {
@@ -31,15 +30,13 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * It seeks the url of NEST Server.
+   * Seek the url of NEST Server.
    */
   seek(): Promise<any> {
+    // console.log('seek nest server');
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
-    const hosts: string[] = [
-      hostname + '/nest',
-      hostname + ':' + (this.port || '5000'),
-    ];
+    const hosts: string[] = [hostname + ':5000', hostname + '/nest'];
     const hostPromises: any[] = hosts.map(
       (host: string) =>
         new Promise<void>(resolve => {
@@ -51,9 +48,10 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * It pings NEST Server.
+   * Ping NEST Server.
    */
   ping(url: string, callback: any = false): void {
+    // console.log('ping nest server');
     this._state.serverReady = false;
     return this.httpClient.ping(url, (req: any) => {
       let resp: any;

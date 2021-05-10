@@ -1,6 +1,4 @@
 {
-  "log": false,
-  "devMode": false,
   "databases": {
     "model": {
       "host": "",
@@ -13,6 +11,8 @@
       "name": "project"
     }
   },
+  "devMode": false,
+  "log": false,
   "models": [
     "ac_generator",
     "dc_generator",
@@ -29,6 +29,7 @@
     "step_current_generator",
     "voltmeter"
   ],
+  "pinNav": true,
   "projects": [
     "spatial-spike-activity",
     "spatial-neurons",

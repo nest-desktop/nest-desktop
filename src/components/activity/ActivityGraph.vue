@@ -7,9 +7,7 @@
         <v-card-text>
           <v-row no-gutters>
             <v-col cols="8">
-              <v-subheader>
-                Image format
-              </v-subheader>
+              <v-subheader v-text="'Image format'" />
             </v-col>
 
             <v-col cols="4">
@@ -19,7 +17,7 @@
                 label="Select image format"
                 single-line
                 v-model="state.toImageButtonOptions.format"
-              ></v-select>
+              />
             </v-col>
           </v-row>
 
@@ -98,7 +96,7 @@
           :data="state.graph.activityChartGraph.data"
           :displaylogo="false"
           :displayModeBar="true"
-          :editable="state.graph.activityChartGraph.options.editable"
+          :editable="true"
           :layout="state.graph.activityChartGraph.layout"
           :modeBarButtons="state.modeBarButtons"
           :scrollZoom="true"
@@ -117,7 +115,7 @@
     <v-snackbar :timeout="-1" v-model="state.snackbar.show">
       {{ state.snackbar.text }}
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn
           @click="state.snackbar.show = false"
           text

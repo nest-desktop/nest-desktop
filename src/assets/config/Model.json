@@ -1,0 +1,59 @@
+{
+  "recordables": [
+    {
+      "id": "Act_m",
+      "label": "sodium channel activation"
+    },
+    {
+      "id": "Act_n",
+      "label": "potassium channel activation"
+    },
+    {
+      "id": "g_ex",
+      "label": "excitatory conductance",
+      "unit": "nS"
+    },
+    {
+      "id": "g_in",
+      "label": "inhibitory conductance",
+      "unit": "nS"
+    },
+    {
+      "id": "I_syn_ex",
+      "label": "total excitatory synaptic current",
+      "unit": "pA"
+    },
+    {
+      "id": "I_syn_in",
+      "label": "total inhibitory synaptic current",
+      "unit": "pA"
+    },
+    {
+      "id": "I",
+      "label": "current",
+      "unit": "pA"
+    },
+    {
+      "id": "Inact_h",
+      "label": "sodium channel inactivation"
+    },
+    {
+      "id": "t_ref_remaining",
+      "label": "time remaining till end of refractory state",
+      "unit": "ms"
+    },
+    {
+      "id": "V_m",
+      "label": "membrane potential",
+      "unit": "mV"
+    },
+    {
+      "id": "weighted_spikes_ex",
+      "label": "weighted incoming excitatory spikes"
+    },
+    {
+      "id": "weighted_spikes_in",
+      "label": "weighted incoming inhibitory spikes"
+    }
+  ]
+}

@@ -23,7 +23,6 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
     this.name = 'AnalogSignalHistogramPanel';
     this.icon = 'mdi-chart-bar';
     this.label = 'histogram of analog signals';
-    this.layout.xaxis.title = 'Membrane potential [mV]';
     this.layout.barmode = this.state.barmode;
     this.visible = false;
     this.xaxis = 2;
@@ -38,7 +37,7 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
    * Initialize histogram panel for analog signal.
    */
   init(): void {
-    this.activities = this.graph.project.spikeActivities;
+    this.activities = this.graph.project.analogSignalActivities;
     this.data = [];
   }
 
@@ -50,16 +49,46 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
    */
   update(): void {
     // console.log('Init histogram panel of spike times')
+    const records: string[] = [];
     this.activities.forEach((activity: AnalogSignalActivity) => {
-      const recordables: string[] = Object.keys(activity.events).filter(
+      const eventKeys: string[] = Object.keys(activity.events).filter(
         (event: string) => !['times', 'senders'].includes(event)
       );
-      recordables.forEach((recordFrom: string) => {
-        this.updateAnalogSignalHistogram(activity, recordFrom);
+      eventKeys.forEach((eventKey: string) => {
+        this.updateAnalogSignalHistogram(activity, eventKey);
+        if (!records.includes(eventKey)) {
+          records.push(eventKey);
+        }
       });
     });
+
+    // Label x-axis if only one record existed.
+    if (records.length === 1) {
+      const record = records[0];
+      const recordable: any = this.activities[0].recorder.model.config.recordables.find(
+        (recordable: any) => recordable.id === record
+      );
+      let xAxisTitle: string = this.capitalize(recordable.label);
+      if (recordable.unit) {
+        xAxisTitle += ` [${recordable.unit}]`;
+      }
+      this.layout.xaxis.title = xAxisTitle;
+    } else {
+      if (records.every(rec => rec.includes('ct_'))) {
+        this.layout.xaxis.title = 'Channel activation';
+      } else if (records.every(rec => rec.includes('g_'))) {
+        this.layout.xaxis.title = 'Conductance [nS]';
+      } else if (records.every(rec => rec.includes('I_syn_'))) {
+        this.layout.xaxis.title = 'Total synaptic current [pA]';
+      } else if (records.every(rec => rec.includes('weighted_spikes_'))) {
+        this.layout.xaxis.title = 'Weighted incoming spikes';
+      }
+    }
   }
 
+  /**
+   * Add empty data of analog signal histogram in plot data.
+   */
   addAnalogSignalHistogram(
     activity: AnalogSignalActivity,
     recordFrom: string
@@ -93,6 +122,9 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
     });
   }
 
+  /**
+   * Update analog signal histogram in plot data.
+   */
   updateAnalogSignalHistogram(
     activity: AnalogSignalActivity,
     recordFrom: string

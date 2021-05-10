@@ -15,10 +15,9 @@ export class Parameter extends Config {
   private _min: number;
   private _parent: Connection | Model | Node | Synapse; // parent
   private _readonly: boolean;
-  private _specs: any[] = [];
   private _step: number;
   private _ticks: any[];
-  private _type: string = 'constant';
+  private _type: any = { id: 'constant' };
   private _unit: string;
   private _value: boolean | number | number[]; // constant value;
   private _visible: boolean;
@@ -30,8 +29,7 @@ export class Parameter extends Config {
 
     this._id = param.id;
     this._value = param.value || 0;
-    this._type = param.type || 'constant';
-    this._specs = param.specs || [{ id: 'value', value: this._value }];
+    this._type = param.type || { id: 'constant' };
     this._format = param.format || 'float';
 
     this._visible = param.visible !== undefined ? param.visible : false;
@@ -104,7 +102,11 @@ export class Parameter extends Config {
   }
 
   get specs(): any[] {
-    return this._specs;
+    if (this._type.id === 'constant') {
+      return [{ label: this.label, value: this._value }];
+    } else {
+      return this._type.specs || [];
+    }
   }
 
   get step(): number {
@@ -136,13 +138,14 @@ export class Parameter extends Config {
   }
 
   set type(value: string) {
-    this._type = value;
-    this._specs = this.config.types.find(
-      (type: any) => type.value === this._type
-    ).specs;
-    if (this.isConstant()) {
-      this._specs[0].value = this._value;
-    }
+    this._type = this.config.types.find((type: any) => type.id === value);
+  }
+
+  get types(): any[] {
+    const types: any[] = this.config.types;
+    return !this.isSpatial()
+      ? types.filter((type: any) => !type.id.startsWith('spatial'))
+      : types;
   }
 
   get unit(): string {
@@ -173,7 +176,7 @@ export class Parameter extends Config {
    * Check if this parameter is constant.
    */
   isConstant(): boolean {
-    return this._type === 'constant';
+    return this._type.id === 'constant';
   }
 
   /**
@@ -193,16 +196,6 @@ export class Parameter extends Config {
   }
 
   /**
-   * List parameter types for random or spatial distribution.
-   */
-  getTypes(): string[] {
-    const types: any[] = this.config.types;
-    return !this.isSpatial()
-      ? types.filter((type: any) => !type.value.startsWith('spatial'))
-      : types;
-  }
-
-  /**
    * Copy paramter component
    */
   copy(): any {
@@ -213,7 +206,7 @@ export class Parameter extends Config {
    * Reset value taken from options.
    */
   reset(): void {
-    this._type = 'constant';
+    this._type = { id: 'constant' };
     // this._value = this.options.value;
   }
 
@@ -275,7 +268,7 @@ export class Parameter extends Config {
    */
   toCode(): string {
     let value: string;
-    if (this.isConstant()) {
+    if (this._type.id === 'constant') {
       // Constant value
       if (this._format === 'boolean') {
         // Boolean value
@@ -291,29 +284,38 @@ export class Parameter extends Config {
         // Float value or array.
         value = this.format(this._value);
       }
-    } else {
-      const specs: string = this._specs
-        .map(spec => this.format(spec.value))
+    } else if (this._type.id.startsWith('numpy')) {
+      const specs: string = this.specs
+        .filter((spec: any) => !(spec.optional && spec.value === spec.default))
+        .map((spec: any) => this.format(spec.value))
         .join(', ');
-      if (!this.type.startsWith('spatial')) {
-        // Non-spatial distribution.
-        value = `nest.${this._type}(${specs})`;
-      } else if (this._type === 'spatial.distance') {
-        // Distance-dependent linear function.
-        value = '';
-        value += this._specs[0].value !== 1 ? `${this._specs[0].value} * ` : '';
-        value += `nest.${this._type}`;
-        value += this._specs[1].value !== 0 ? ` + ${this._specs[1].value}` : '';
-      } else {
-        // Spatial distribution.
-        value = `nest.${this._type}(nest.spatial.distance, ${specs})`;
-      }
+      value = `${this._type.id}(${specs})`;
+    } else if (this._type.id === 'spatial.distance') {
+      // Distance-dependent linear function.
+      const specs: any[] = this.specs;
+      value = '';
+      value += specs[0].value !== 1 ? `${specs[0].value} * ` : '';
+      value += `nest.${this._type.id}`;
+      value += specs[1].value !== 0 ? ` + ${specs[1].value}` : '';
+    } else if (this._type.id.startsWith('spatial')) {
+      // Spatial distribution.
+      const specs: string = this.specs
+        .map((spec: any) => this.format(spec.value))
+        .join(', ');
+      value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
+    } else {
+      // Non-spatial distribution.
+      const specs: string = this.specs
+        .map((spec: any) => this.format(spec.value))
+        .join(', ');
+      value = `nest.${this._type.id}(${specs})`;
     }
-    return `"${this._id}": ${value}`;
+    return value;
   }
 
   /**
    * Serialize for JSON.
+   * @return parameter object
    */
   toJSON(): any {
     const params: any = {
@@ -324,11 +326,6 @@ export class Parameter extends Config {
       visible: this._visible,
       format: this._format as string | 'float',
     };
-
-    // Add specs for distribution if random.
-    if (!this.isConstant()) {
-      params.specs = this._specs;
-    }
     return params;
   }
 }

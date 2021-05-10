@@ -37,7 +37,7 @@ export class Node extends Config {
 
     this.initParameters(node);
     this.initSpatial(node.spatial);
-    this.initActivity(node.activity);
+    this.initActivity();
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity {
@@ -99,10 +99,8 @@ export class Node extends Config {
     this._size = 1;
     this.initParameters();
     this._network.clean();
-    if (this.model.isRecorder()) {
-      this.initActivity();
-      this._network.project.activityGraph.init();
-    }
+    this.initActivity();
+    this._network.project.initActivityGraph();
     this.nodeChanges();
   }
 
@@ -140,7 +138,7 @@ export class Node extends Config {
   //   this._positions = value;
   // }
 
-  get recordables(): string[] {
+  get recordables(): any[] {
     if (this.model.existing !== 'multimeter') {
       return [];
     }
@@ -152,9 +150,9 @@ export class Node extends Config {
     if (recordables.length === 0) {
       return [];
     }
-    const recordablesFlat: string[] = [].concat(...recordables);
+    const recordablesFlat: any[] = [].concat(...recordables);
     const recordablesSet: any[] = [...new Set(recordablesFlat)];
-    recordablesSet.sort((a: number, b: number) => a - b);
+    recordablesSet.sort((a: any, b: any) => a.id - b.id);
     return recordablesSet;
   }
 
@@ -164,7 +162,7 @@ export class Node extends Config {
 
   set recordFrom(value: string[]) {
     this._recordFrom = value;
-    this.network.project.activityGraph.init();
+    this.network.project.initActivityGraph();
   }
 
   get size(): number {
@@ -215,13 +213,13 @@ export class Node extends Config {
   /**
    * Initialize activity for the recorder.
    */
-  initActivity(activity: any = {}): void {
+  initActivity(): void {
     if (this.model.existing === 'spike_recorder') {
-      this._activity = new SpikeActivity(this, activity);
+      this._activity = new SpikeActivity(this);
     } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
-      this._activity = new AnalogSignalActivity(this, activity);
-    } else if (this.model.isRecorder()) {
-      this._activity = new Activity(this, activity);
+      this._activity = new AnalogSignalActivity(this);
+    } else {
+      this._activity = new Activity(this);
     }
   }
 
@@ -341,8 +339,9 @@ export class Node extends Config {
    * Toggle spatial mode.
    */
   toggleSpatial(): void {
+    const term: string = this._size === 1 ? 'grid' : 'free';
     this.initSpatial({
-      positions: this.spatial.hasPositions() ? undefined : 'grid',
+      positions: this.spatial.hasPositions() ? undefined : term,
     });
     this.nodeChanges();
   }
@@ -363,10 +362,12 @@ export class Node extends Config {
     if (this.model.existing !== 'multimeter') {
       return;
     }
-    const recordables = this.recordables;
+    const recordables = this.recordables.map(
+      (recordable: any) => recordable.id
+    );
     this._recordFrom =
       recordables.length > 0
-        ? this.recordFrom.filter((rec: string) => recordables.includes(rec))
+        ? this.recordFrom.filter((rec: any) => recordables.includes(rec))
         : [];
   }
 

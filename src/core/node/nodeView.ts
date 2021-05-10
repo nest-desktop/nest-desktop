@@ -12,14 +12,15 @@ export class NodeView {
 
   constructor(node: Node, view: any) {
     this._node = node;
-    this._color =
-      view.color || this._node.network.view.getNodeColor(this._node.idx);
+    this._color = view.color;
     this._position = view.position;
     this._visible = view.visible || true;
   }
 
   get color(): string {
-    if (this._node.model.elementType === 'recorder') {
+    if (typeof this._color === 'string') {
+      return this._color;
+    } else if (this._node.model.elementType === 'recorder') {
       const connections: Connection[] = this._node.network.connections.filter(
         (connection: Connection) =>
           connection.sourceIdx === this._node.idx ||
@@ -37,12 +38,7 @@ export class NodeView {
         return node.view.color;
       }
     }
-
-    if (typeof this._color === 'string') {
-      return this._color;
-    } else {
-      return this._node.network.view.getNodeColor(this._node.idx);
-    }
+    return this._node.network.view.getNodeColor(this._node.idx);
   }
 
   set color(value: string) {
@@ -170,6 +166,10 @@ export class NodeView {
     return this._node.network.view.isNodeSelected(this._node, unselected);
   }
 
+  /**
+   * Serialize for JSON.
+   * @return node view object
+   */
   toJSON(): any {
     const nodeView: any = {
       color: this._color,

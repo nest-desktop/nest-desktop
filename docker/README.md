@@ -1,4 +1,4 @@
-Start docker containers
+#### Start docker containers
 
 ```
 docker-compose up --build
@@ -7,17 +7,15 @@ docker-compose up --build
 Go to ```http://localhost:8000```
 
 
-
-Shut down docker containers
+#### Shut down docker containers
 
 ```
 docker-compose down
 ```
 
 
-
-Run only nest-server container
+#### Restart nest-server container
 
 ```
-docker-compose run nest-server
+docker-compose restart nest-server
 ```

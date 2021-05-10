@@ -10,6 +10,9 @@ export class InputAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
     this.init();
   }
 
+  /**
+   * Initialize plot panel for input signals.
+   */
   init(): void {
     this.activities = this.graph.project.inputAnalogSignalActivities;
     this.data = [];

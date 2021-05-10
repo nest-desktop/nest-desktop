@@ -53,39 +53,38 @@
       </v-card-title>
 
       <v-card-text class="pa-0 pl-1">
-        <v-card
-          :key="param.id"
-          class="param"
-          flat
-          tile
-          v-for="param of node.params"
-          v-show="param.visible || true"
-        >
-          <v-row>
-            <v-list-item style="font-size:12px; min-height:32px">
-              <template v-slot:default="">
-                <v-list-item-content style="padding: 4px">
-                  <v-row no-gutters>
-                    {{ param.options.label }}
-                    <v-spacer />
-                    {{ param.value }}
-                    {{ param.options.unit }}
-                  </v-row>
-                </v-list-item-content>
+        <v-list class="no-highlight" dense>
+          <v-list-item
+            :key="param.id"
+            class="param"
+            flat
+            tile
+            v-for="param of node.params"
+            v-show="param.visible || true"
+            style="font-size:12px; min-height:32px"
+          >
+            <template #default="">
+              <v-list-item-content class="pa-1">
+                <v-row no-gutters>
+                  {{ param.options.label }}
+                  <v-spacer />
+                  {{ param.value }}
+                  {{ param.options.unit }}
+                </v-row>
+              </v-list-item-content>
 
-                <v-list-item-action style="margin: 4px 0">
-                  <v-checkbox
-                    @change="paramChange"
-                    class="shrink mr-2"
-                    color="black"
-                    hide-details
-                    v-model="param.visible"
-                  />
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-          </v-row>
-        </v-card>
+              <v-list-item-action class="my-1">
+                <v-checkbox
+                  @change="paramChange"
+                  class="shrink mr-2"
+                  color="black"
+                  hide-details
+                  v-model="param.visible"
+                />
+              </v-list-item-action>
+            </template>
+          </v-list-item>
+        </v-list>
       </v-card-text>
     </v-card>
   </div>
@@ -196,5 +195,9 @@ export default Vue.extend({
   width: 24px;
   left: -7px;
   top: calc(50% - 19px);
+}
+
+.no-highlight .v-list-item--active::before {
+  opacity: 0 !important;
 }
 </style>

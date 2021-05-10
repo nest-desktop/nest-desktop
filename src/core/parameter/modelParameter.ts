@@ -48,6 +48,7 @@ export class ModelParameter extends Parameter {
 
   /**
    * Serialize for JSON.
+   * @return model parameter object
    */
   toJSON(): any {
     const params: any = {

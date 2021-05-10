@@ -20,10 +20,13 @@ export class ConnectionCode extends Code {
     return this._connection.target.code.label;
   }
 
+  /**
+   * Write script of connection specifications.
+   */
   connSpec(): string {
     const connSpecList: string[] = [`"rule": "${this._connection.rule}"`];
     this._connection.filteredParams.forEach((param: Parameter) =>
-      connSpecList.push(param.toCode())
+      connSpecList.push(`"${param.id}": ${param.toCode()}`)
     );
 
     let script = ', conn_spec={' + this._();
@@ -32,6 +35,9 @@ export class ConnectionCode extends Code {
     return script;
   }
 
+  /**
+   * Write script to connect nodes.
+   */
   connect(): string {
     let sourceNode: Node = this._connection.source;
     let targetNode: Node = this._connection.target;

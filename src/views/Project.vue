@@ -10,49 +10,25 @@
       dense
       flat
     >
-      <!-- <v-tabs hide-slider optional style="max-width:270px">
-        <v-tab>
-          <v-icon color="accent" large>mdi-brain</v-icon>
-          <v-icon style="position:absolute; bottom: 5px; right: 15px"
-            >mdi-pen</v-icon
-          >
-        </v-tab>
-        <v-tab>
-          <v-icon color="accent" large>mdi-brain</v-icon>
-          <v-icon style="position:absolute; bottom: 5px; right: 15px"
-            >mdi-play</v-icon
-          ></v-tab
-        >
-        <v-tab>
-          <v-icon color="accent" large>mdi-brain</v-icon>
-          <v-icon style="position:absolute; bottom: 5px; right: 15px"
-            >mdi-eye</v-icon
-          ></v-tab
-        >
-      </v-tabs> -->
-
-      <v-toolbar-title>
-        <v-icon class="ma-2" v-text="'mdi-brain'" />
-      </v-toolbar-title>
-
       <v-btn-toggle
         @change="updateProjectMode"
-        class="ma-2"
         group
         light
         mandatory
+        style="margin-left: -16px"
         v-model="state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
                 <v-row style="place-content: center;">
                   <v-icon v-text="'$network'" />
                 </v-row>
-                <v-row style="place-content: center; font-size:10px">
-                  Editor
-                </v-row>
+                <v-row
+                  style="place-content: center; font-size:10px"
+                  v-text="'Editor'"
+                />
               </v-col>
             </v-btn>
           </template>
@@ -60,15 +36,16 @@
         </v-tooltip>
 
         <v-menu offset-y open-on-hover>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
                 <v-row style="place-content: center;">
                   <v-icon v-text="'mdi-chart-scatter-plot'" />
                 </v-row>
-                <v-row style="place-content: center; font-size:10px">
-                  Explorer
-                </v-row>
+                <v-row
+                  style="place-content: center; font-size:10px"
+                  v-text="'Explorer'"
+                />
               </v-col>
             </v-btn>
           </template>
@@ -101,18 +78,18 @@
             <v-row style="place-content: center;">
               <v-icon v-text="'mdi-book-open-outline'" />
             </v-row>
-            <v-row style="place-content: center; font-size:10px">
-              Lab book
-            </v-row>
+            <v-row
+              style="place-content: center; font-size:10px"
+              v-text="'Lab book'"
+            />
           </v-col>
         </v-btn>
       </v-btn-toggle>
 
-      <v-toolbar-title>
-        {{ state.project.name }}
-      </v-toolbar-title>
-
       <v-spacer />
+      <v-toolbar-title class="mx-2" v-text="state.project.name" />
+      <v-spacer />
+
       <div class="mx-4" style="width:144px">
         <v-row no-gutters>
           <v-col col="3">
@@ -123,7 +100,7 @@
               icon
               small
             >
-              <v-icon>mdi-page-first</v-icon>
+              <v-icon v-text="'mdi-page-first'" />
             </v-btn>
           </v-col>
 
@@ -141,7 +118,7 @@
                 color="project darken-1"
                 offset-y="8"
               >
-                <v-icon>mdi-undo-variant</v-icon>
+                <v-icon v-text="'mdi-undo-variant'" />
               </v-badge>
             </v-btn>
           </v-col>
@@ -160,7 +137,7 @@
                 color="project darken-1"
                 offset-y="8"
               >
-                <v-icon>mdi-redo-variant</v-icon>
+                <v-icon v-text="'mdi-redo-variant'" />
               </v-badge>
             </v-btn>
           </v-col>
@@ -173,7 +150,7 @@
               icon
               small
             >
-              <v-icon>mdi-page-last</v-icon>
+              <v-icon v-text="'mdi-page-last'" />
             </v-btn>
           </v-col>
         </v-row>
@@ -202,7 +179,7 @@
           mini-variant-width="56"
           right
         >
-          <v-list nav dense>
+          <!-- <v-list nav dense>
             <v-list-item
               @click="state.toolOpened = !state.toolOpened"
               title="Toggle navigation"
@@ -218,7 +195,7 @@
                 <v-list-item-title v-text="'Close'" />
               </v-list-item-content>
             </v-list-item>
-          </v-list>
+          </v-list> -->
 
           <v-list dense nav>
             <v-list-item
@@ -244,12 +221,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width:100%; padding-right:48px" v-if="state.toolOpened">
-          <networkParamsSelect
-            :network="state.project.network"
-            v-if="state.tool.name === 'networkParamSelect'"
-          />
-
+        <div style="width:100%; padding-right:56px" v-if="state.toolOpened">
           <NetworkParamsEdit
             :network="state.project.network"
             :projectId="state.projectId"
@@ -350,7 +322,6 @@ import core from '@/core';
 import LabBook from '@/components/network/LabBook.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
 import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
-import NetworkParamsSelect from '@/components/network/NetworkParamsSelect.vue';
 import ProjectRawData from '@/components/project/ProjectRawData.vue';
 import SimulationButton from '@/components/simulation/SimulationButton.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
@@ -366,7 +337,6 @@ export default Vue.extend({
     LabBook,
     NetworkGraph,
     NetworkParamsEdit,
-    NetworkParamsSelect,
     ProjectRawData,
     SimulationButton,
     SimulationCodeEditor,
@@ -407,13 +377,13 @@ export default Vue.extend({
           icon: '$network',
           name: 'networkParamEdit',
           title: 'Network',
-          width: '382',
+          width: '430',
         },
         {
           icon: 'mdi-engine-outline',
           name: 'simulationKernel',
           title: 'Kernel',
-          width: '382',
+          width: '430',
         },
         {
           icon: 'mdi-code-braces',
@@ -427,7 +397,7 @@ export default Vue.extend({
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
           title: 'Activity',
-          width: '382',
+          width: '430',
         },
         {
           icon: 'mdi-table-large',

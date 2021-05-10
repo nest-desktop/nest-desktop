@@ -20,7 +20,6 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     this.icon = 'mdi-chart-bar';
     this.label = 'histogram of CV of ISI';
     this.layout.barmode = this.state.barmode;
-    this.layout.xaxis.title = 'CV of ISI';
     this.visible = false;
     this.xaxis = 3;
     this.init();
@@ -47,8 +46,12 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     this.activities.forEach((activity: SpikeActivity) => {
       this.updateCVISIHistogram(activity);
     });
+    this.layout.xaxis.title = 'CV of ISI';
   }
 
+  /**
+   * Add empty data of CV of ISI histogram of spikes.
+   */
   addCVISIHistogram(activity: SpikeActivity): void {
     // console.log('Add histogram data of inter-spike interval')
     this.data.push({
@@ -78,6 +81,9 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     });
   }
 
+  /**
+   * Update CV of ISI histogram of spikes.
+   */
   updateCVISIHistogram(activity: SpikeActivity): void {
     // console.log('Update histogram data of inter-spike interval')
     if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {

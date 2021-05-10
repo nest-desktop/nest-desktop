@@ -20,7 +20,6 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     this.name = 'SpikeTimesHistogramPanel';
     this.icon = 'mdi-chart-bar';
     this.label = 'histogram of spike times';
-    this.layout.yaxis.title = 'Spike count';
     this.layout.barmode = this.state.barmode;
     // this.visible = false;
     this.init();
@@ -31,7 +30,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   }
 
   /**
-   * Initialize time histogram panel for spike data.
+   * Initialize histogram panel of spike times.
    */
   init(): void {
     // console.log('Init histogram panel for spike times');
@@ -40,7 +39,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   }
 
   /**
-   * Update time histogram panel for spike data.
+   * Update histogram panel of spike times.
    *
    * @remarks
    * It requires activity data.
@@ -50,8 +49,34 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     this.activities.forEach((activity: SpikeActivity) => {
       this.updateSpikeTimesHistogram(activity);
     });
+    this.layout.xaxis.title = 'Time [ms]';
+    this.layout.yaxis.title = 'Spike count';
   }
 
+  /**
+   * Update histogram of spike times
+   */
+  updateSpikeTimesHistogram(activity: SpikeActivity): void {
+    // console.log('Update histogram data of spike times')
+    if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
+      this.addSpikeTimesHistogram(activity);
+    }
+    const data: any = this.data.find(
+      (d: any) => d.activityIdx === activity.idx
+    );
+    const start = 1;
+    const end: number = activity.endtime + 1;
+    const size: number = this.state.binsize.value;
+    data.x = activity.events.times;
+    data.xbins.size = size;
+    data.xbins.end = end;
+    data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
+    data.marker.color = activity.recorder.view.color;
+  }
+
+  /**
+   * Add empty data of spike time histogram in plot data.
+   */
   addSpikeTimesHistogram(activity: SpikeActivity): void {
     // console.log('Add histogram data of spike times')
     this.data.push({
@@ -61,7 +86,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
       histfunc: 'count',
       text: 'auto',
       legendgroup: 'spikes' + activity.idx,
-      name: 'Histogram of spikes in' + activity.recorder.view.label,
+      name: 'Histogram of spike times in' + activity.recorder.view.label,
       hoverinfo: 'y',
       showlegend: false,
       opacity: 0.6,
@@ -79,23 +104,5 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
       },
       x: [],
     });
-  }
-
-  updateSpikeTimesHistogram(activity: SpikeActivity): void {
-    // console.log('Update histogram data of spike times')
-    if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
-      this.addSpikeTimesHistogram(activity);
-    }
-    const data: any = this.data.find(
-      (d: any) => d.activityIdx === activity.idx
-    );
-    const start = 1;
-    const end: number = activity.endtime + 1;
-    const size: number = this.state.binsize.value;
-    data.x = activity.events.times;
-    data.xbins.size = size;
-    data.xbins.end = end;
-    data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
-    data.marker.color = activity.recorder.view.color;
   }
 }

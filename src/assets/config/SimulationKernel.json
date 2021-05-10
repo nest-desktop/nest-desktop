@@ -1,27 +1,29 @@
 {
-  "params": [{
-    "id": "local_num_threads",
-    "input": "tickSlider",
-    "label": "local number of threads",
-    "ticks": [
-      1,
-      2,
-      4,
-      6,
-      8
-    ],
-    "value": 1
-  }, {
-    "id": "resolution",
-    "input": "tickSlider",
-    "label": "time resolution",
-    "ticks": [
-      0.001,
-      0.01,
-      0.1,
-      1
-    ],
-    "unit": "ms",
-    "value": 0.1
-  }]
+  "autoRNGSeed": false,
+  "params": [
+    {
+      "id": "localNumThreads",
+      "input": "tickSlider",
+      "label": "local number of threads",
+      "ticks": [1, 2, 4, 8],
+      "value": 1
+    },
+    {
+      "id": "rngSeed",
+      "input": "valueSlider",
+      "label": "seed of random number generator",
+      "max": 1000,
+      "min": 1,
+      "step": 1,
+      "value": 1
+    },
+    {
+      "id": "resolution",
+      "input": "tickSlider",
+      "label": "time resolution",
+      "ticks": [0.01, 0.1, 1],
+      "unit": "ms",
+      "value": 0.1
+    }
+  ]
 }

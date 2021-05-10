@@ -1,18 +1,10 @@
 <template>
   <div class="settings">
-    <v-app-bar app clipped-left color="settings" dark dense flat>
-      <v-toolbar-title>
-        <v-icon class="ma-2" v-text="'mdi-cogs'" />
-        Settings
-      </v-toolbar-title>
-    </v-app-bar>
+    <!-- <v-app-bar app clipped-left color="settings" dark dense flat>
+      <v-toolbar-title class="pa-12" v-text="'Settings'" />
+    </v-app-bar> -->
 
-    <v-card
-      color="white"
-      flat
-      style="height:calc(100vh - 48px); overflow-y:auto"
-      tile
-    >
+    <v-card color="white" flat style="height:calc(100vh); overflow-y:auto" tile>
       <v-main>
         <v-container>
           <v-card flat tile>
@@ -22,6 +14,11 @@
                 @change="e => updateAppConfig({ devMode: e || false })"
                 label="Development mode"
                 v-model="state.devMode"
+              />
+              <v-checkbox
+                @change="e => updateAppConfig({ pinNav: e || false })"
+                label="Pin navigation (Reload page required.)"
+                v-model="state.pinNav"
               />
               <v-checkbox
                 @change="e => updateProjectConfig({ showHelp: e || false })"
@@ -107,6 +104,7 @@ export default Vue.extend({
       devMode: core.app.config.devMode,
       nestVersion: '',
       network: new Config('Network'),
+      pinNav: core.app.config.pinNav,
       showHelp: core.app.project.config.showHelp,
     });
 
@@ -114,8 +112,8 @@ export default Vue.extend({
      * Check if NEST is running in the backend.
      */
     const checkNEST = () => {
-      core.app.nestServer.check().then(nestServer => {
-        state.nestVersion = nestServer.state.simulatorVersion;
+      core.app.nestServer.check().then(() => {
+        state.nestVersion = core.app.nestServer.state.simulatorVersion;
       });
     };
     /**

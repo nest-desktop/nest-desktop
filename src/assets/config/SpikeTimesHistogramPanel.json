@@ -1,38 +1,37 @@
 {
-  "barmode": [{
-    "label": "Group",
-    "value": "group"
-  }, {
-    "label": "Overlay",
-    "value": "overlay"
-  }, {
-    "label": "Stack",
-    "value": "stack"
-  }],
-  "barnorm": [{
-    "label": "Default",
-    "value": ""
-  }, {
-    "label": "Fraction",
-    "value": "fraction"
-  }, {
-    "label": "Percent",
-    "value": "percent"
-  }],
+  "barmode": [
+    {
+      "label": "Group",
+      "value": "group"
+    },
+    {
+      "label": "Overlay",
+      "value": "overlay"
+    },
+    {
+      "label": "Stack",
+      "value": "stack"
+    }
+  ],
+  "barnorm": [
+    {
+      "label": "Default",
+      "value": ""
+    },
+    {
+      "label": "Fraction",
+      "value": "fraction"
+    },
+    {
+      "label": "Percent",
+      "value": "percent"
+    }
+  ],
   "binsize": {
     "id": "binsize",
     "label": "Bin size",
     "level": 1,
-    "ticks": [
-      5,
-      10,
-      25,
-      50,
-      100,
-      250,
-      500,
-      1000
-    ],
+    "ticks": [5, 10, 25, 50, 100, 250, 500, 1000],
     "unit": "ms",
     "value": 25,
     "view": "ticksSlider"

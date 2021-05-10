@@ -9,6 +9,9 @@ export class SpikeActivity extends Activity {
     super(recorder, activity);
   }
 
+  /**
+   * Update spike activity.
+   */
   update(activity: any): void {
     this.events = activity.events || {};
     this.nodeIds = activity.nodeIds || [];
@@ -18,6 +21,9 @@ export class SpikeActivity extends Activity {
     }
   }
 
+  /**
+   * Update times of spike activity.
+   */
   updateTimes(): void {
     this._times = Object.create(null);
     this.nodeIds.forEach((id: number) => (this._times[id] = []));
@@ -42,10 +48,16 @@ export class SpikeActivity extends Activity {
   //   });
   // }
 
+  /**
+   * Get ISI of all nodes.
+   */
   ISI(): number[][] {
     return this.nodeIds.map((id: number) => this.getISI(this._times[id]));
   }
 
+  /**
+   * Get ISI of a node.
+   */
   getISI(times: number[]): number[] {
     if (times.length <= 1) {
       return [0];
@@ -58,12 +70,18 @@ export class SpikeActivity extends Activity {
     return values;
   }
 
+  /**
+   * Get average of values.
+   */
   getAverage(values: number[]): number {
     const n: number = values.length;
     const sum: number = values.reduce((a: number, b: number) => a + b, 0);
     return sum / n || 0;
   }
 
+  /**
+   * Get variance of values.
+   */
   getVariance(values: number[]): number {
     const n: number = values.length;
     const avg: number = this.getAverage(values);
@@ -74,10 +92,16 @@ export class SpikeActivity extends Activity {
     );
   }
 
+  /**
+   * Get standard deviation of values.
+   */
   getStandardDeviation(values: number[]): number {
     return Math.sqrt(this.getVariance(values));
   }
 
+  /**
+   * Clone spike activity.
+   */
   clone(): SpikeActivity {
     return new SpikeActivity(this.recorder, this.toJSON());
   }

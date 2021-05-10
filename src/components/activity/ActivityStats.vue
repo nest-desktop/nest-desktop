@@ -1,62 +1,55 @@
 <template>
   <div class="activityStats">
-    <span v-if="state.activity === undefined">
-      <v-card
-        :key="activity.idx"
-        @click="state.activity = activity"
-        class="ma-1"
-        flat
-        v-for="activity of state.project.activities"
-      >
-        <v-btn
-          :color="activity.recorder.view.color"
-          :disabled="!activity.hasEvents()"
-          block
-          outlined
-          tile
-        >
-          <v-row>
-            <v-col cols="4">
-              {{ activity.recorder.view.label }}
-            </v-col>
-            <v-col cols="8">
-              {{ activity.recorder.model.label }}
-            </v-col>
-          </v-row>
-        </v-btn>
-      </v-card>
-    </span>
+    <v-card :width="444" flat tile style="padding-left: 1px">
+      <!-- <v-subheader v-text="'Activity statistics'" /> -->
 
-    <v-card flat tile v-if="state.activity">
-      <v-toolbar
-        :color="state.activity.recorder.view.color"
-        dark
-        dense
+      <v-expansion-panels
+        accordion
         flat
+        hover
         tile
+        v-model="state.project.view.activityStatsPanelId"
       >
-        <v-btn @click="state.activity = undefined" fab small>
-          <v-icon v-text="'mdi-chevron-left'" />
-        </v-btn>
-        <v-toolbar-title
-          class="mx-2"
-          v-text="state.activity.recorder.model.label"
-        />
-      </v-toolbar>
+        <v-expansion-panel
+          :disabled="!activity.hasEvents()"
+          :key="index"
+          :style="{
+            borderLeft: '4px solid ' + activity.recorder.view.color,
+          }"
+          class="mb-1"
+          v-for="(activity, index) in state.project.activities"
+        >
+          <v-expansion-panel-header
+            :color="activity.recorder.view.color"
+            class="pa-0"
+          >
+            <v-btn :height="40" :ripple="false" class="py-0" dark text tile>
+              <v-row>
+                <v-col cols="3" v-text="activity.recorder.view.label" />
+                <v-col cols="9" v-text="activity.recorder.model.label" />
+              </v-row>
+            </v-btn>
+            <template #actions>
+              <v-icon class="mx-3" color="white" v-text="'$expand'" />
+            </template>
+          </v-expansion-panel-header>
 
-      <v-card-text
-        class="pa-1"
-        style="height:calc(100vh - 96px); overflow-y:auto"
-      >
-        <ActivitySpikeStats
-          :activity="state.activity"
-          v-if="state.activity.recorder.modelId == 'spike_recorder'"
-        />
-        <ActivityAnalogStats
-          :activity="state.activity"
-          v-if="state.activity.recorder.modelId != 'spike_recorder'"
-        />
-      </v-card-text>
+          <v-expansion-panel-content
+            :key="state.project.code.hash"
+            class="px-0"
+            v-if="activity.hasEvents()"
+          >
+            <ActivitySpikeStats
+              :activity="activity"
+              v-if="activity.recorder.modelId == 'spike_recorder'"
+            />
+            <ActivityAnalogStats
+              :activity="activity"
+              v-if="activity.recorder.modelId !== 'spike_recorder'"
+            />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-card>
   </div>
 </template>
@@ -65,7 +58,6 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { Activity } from '@/core/activity/activity';
 import { Project } from '@/core/project/project';
 import ActivityAnalogStats from '@/components/activity/ActivityAnalogStats.vue';
 import ActivitySpikeStats from '@/components/activity/ActivitySpikeStats.vue';
@@ -81,14 +73,12 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      activity: undefined as Activity | undefined,
       project: props.project,
     });
 
     watch(
       () => props.project,
       () => {
-        state.activity = undefined;
         state.project = props.project;
       }
     );
@@ -97,3 +87,17 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.activityStats .v-expansion-panel-content__wrap {
+  padding: 0 0 16px;
+}
+
+.activityStats .v-expansion-panel-content__wrap {
+  padding: 0 0 16px;
+}
+.activityStats .v-expansion-panel > .v-expansion-panel-header,
+.activityStats .v-expansion-panel--active > .v-expansion-panel-header {
+  min-height: 40px;
+}
+</style>

@@ -113,15 +113,19 @@ export class FreePositions {
       args.push(`nest.random.uniform(-0.5, 0.5)`);
       args.push(`num_dimensions=${this._numDimensions}`);
     }
-    const script: string =
+    return (
       'nest.spatial.free(' +
       this.spatial.node.code._(2) +
       args.join(',' + this.spatial.node.code._(2)) +
       this.spatial.node.code._(1) +
-      ')';
-    return script;
+      ')'
+    );
   }
 
+  /**
+   * Serialize for JSON.
+   * @return free positons object
+   */
   toJSON(): any {
     const positions: any = {
       edgeWrap: this._edgeWrap,
@@ -242,10 +246,13 @@ export class GridPositions {
    * Write code for grid positons.
    */
   toCode(): string {
-    const script: string = `nest.spatial.grid(${JSON.stringify(this._shape)})`;
-    return script;
+    return `nest.spatial.grid(${JSON.stringify(this._shape)})`;
   }
 
+  /**
+   * Serialize for JSON.
+   * @return grid positons object
+   */
   toJSON(): any {
     const positions: any = {
       center: this._center,
@@ -311,6 +318,10 @@ export class NodeSpatial extends Config {
     return this._positions !== undefined;
   }
 
+  /**
+   * Serialize for JSON.
+   * @return spatial object
+   */
   toJSON(): any {
     let spatial: any;
     if (this._positions === undefined) {
