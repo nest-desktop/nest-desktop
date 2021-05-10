@@ -1,20 +1,16 @@
 version: '3'
 services:
   nest-desktop:
-    image: nestsim/nest-desktop:dev
-    command: 'nest-desktop start -h 0.0.0.0 -p 8000'
+    image: nestdesktop/app:dev
     container_name: 'nest-desktop'
     ports:
       - '8000:8000'
   nest-server:
-    image: babsey/nest-server:dev
+    image: nestsim/nest:3.0
+    command: 'nest-server start -o'
     container_name: 'nest-server'
-    command: 'nest-server start -h 0.0.0.0 -p 5000 -o'
+    environment:
+      NEST_SERVER_MODULES: 'nest,numpy'
+      NEST_SERVER_RESTRICTION_OFF: 'true'
     ports:
       - '5000:5000'
-  # elephant-server:
-  #   build: elephant-server
-  #   command: 'elephant-server start -p 5000'
-  #   container_name: 'elephant-server'
-  #   ports:
-  #     - '5001:5000'
