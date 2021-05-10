@@ -1,7 +1,7 @@
 <template>
   <div class="nodeModelSelect">
     <v-menu :close-on-content-click="false" tile>
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn
           :height="40"
           block
@@ -48,7 +48,7 @@
               style="font-size:12px;"
               v-for="param of state.node.params"
             >
-              <template v-slot:default="">
+              <template #default="">
                 <v-list-item-content class="pa-1">
                   <v-row no-gutters>
                     {{ param.options.label }}

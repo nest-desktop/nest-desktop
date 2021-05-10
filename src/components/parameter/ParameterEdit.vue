@@ -165,7 +165,7 @@
                 hide-details
                 :value="state.value"
               >
-                <template v-slot:append>
+                <template #append>
                   <v-text-field
                     @blur="e => paramChange(e.target.value)"
                     @change="paramChange"

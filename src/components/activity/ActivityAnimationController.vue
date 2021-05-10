@@ -174,7 +174,7 @@
               style="font-size:13px"
               v-model="state.graph.activityAnimationGraph.config.colorMap.scale"
             >
-              <template v-slot:item="{ item }">
+              <template #item="{ item }">
                 <v-row style="width:200px">
                   <v-col class="py-0" cols="4">
                     <img

@@ -1,7 +1,7 @@
 <template>
   <div class="simulationButton">
     <v-menu :close-on-content-click="false" offset-y v-model="state.showMenu">
-      <template v-slot:activator="{}">
+      <template #activator="{}">
         <v-btn @click="simulate" @contextmenu="showMenu" outlined>
           <v-icon left>mdi-play</v-icon>
           Simulate

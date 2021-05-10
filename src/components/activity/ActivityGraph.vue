@@ -115,7 +115,7 @@
     <v-snackbar :timeout="-1" v-model="state.snackbar.show">
       {{ state.snackbar.text }}
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn
           @click="state.snackbar.show = false"
           text

@@ -23,7 +23,7 @@
         loading-text="Loading... Please wait"
         sort-by="id"
       >
-        <template v-slot:body.append="{ headers }">
+        <template #[`body.append`]="{ headers }">
           <tr>
             <td v-for="(header, i) in headers" :key="i">
               <div v-if="header.value == 'id'" v-text="'All'" />

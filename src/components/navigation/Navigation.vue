@@ -56,7 +56,7 @@
             <v-list nav dense>
               <template v-if="state.app.config.devMode">
                 <v-tooltip right>
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <v-list-item v-bind="attrs" v-on="on">
                       <v-list-item-icon v-bind="attrs" v-on="on">
                         <v-icon v-text="'mdi-dev-to'" />
@@ -105,7 +105,7 @@
               </v-list-item>
 
               <v-dialog max-width="400" v-model="state.dialog">
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-list-item
                     @click="reset"
                     title="About"

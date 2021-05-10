@@ -26,7 +26,7 @@
           title="Rename the current project"
           v-model="state.app.project.name"
         >
-          <template v-slot:append-outer>
+          <template #append-outer>
             <v-row>
               <v-btn
                 @click="state.app.project.save()"

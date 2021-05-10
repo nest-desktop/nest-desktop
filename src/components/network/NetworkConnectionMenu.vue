@@ -51,7 +51,7 @@
                 style="font-size:12px;"
                 v-for="param of state.connection.params"
               >
-                <template v-slot:default="{ active }">
+                <template #default="{ active }">
                   <v-list-item-content style="padding: 4px">
                     <v-row no-gutters>
                       {{ param.options.label }}
@@ -84,7 +84,7 @@
                 style="font-size:12px;"
                 v-for="param of state.connection.synapse.params"
               >
-                <template v-slot:default="{ active }">
+                <template #default="{ active }">
                   <v-list-item-content style="padding: 4px">
                     <v-row no-gutters>
                       {{ param.options.label }}

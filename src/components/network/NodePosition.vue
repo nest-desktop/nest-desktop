@@ -1,7 +1,7 @@
 <template>
   <div class="NodePosition">
     <v-menu :close-on-content-click="false" v-if="state.node.spatial.positions">
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-card height="40" tile flat v-bind="attrs" v-on="on">
           <v-card-text class="px-2" style="padding: 10px 0">
             <NodePositionTitle
@@ -141,7 +141,7 @@
           <v-row>
             <v-col class="py-0">
               <v-checkbox v-model="state.node.spatial.positions.edgeWrap">
-                <template v-slot:label>
+                <template #label>
                   Edge wrap
                 </template>
               </v-checkbox>
