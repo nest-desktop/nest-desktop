@@ -3,7 +3,7 @@
     <v-card flat tile>
       <v-card-actions>
         <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn
               :disabled="
                 state.graph.activityChartGraph.panelsInvisible.length === 0

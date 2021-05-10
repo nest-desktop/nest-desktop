@@ -24,7 +24,7 @@
       small-chips
       v-model="state.filtered"
     >
-      <template v-slot:prepend-item>
+      <template #prepend-item>
         <v-list-item ripple @click="toggle">
           <v-list-item-action>
             <v-icon
@@ -62,7 +62,7 @@
           v-for="elementType in state.elementTypes"
         />
         <v-menu :close-on-content-click="false" :max-height="600" offset-y>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn small v-text="'Custom'" v-bind="attrs" v-on="on" />
           </template>
 
@@ -80,7 +80,7 @@
                         v-for="elementType in state.elementTypes"
                       >
                         <v-tooltip :open-delay="1000" top>
-                          <template v-slot:activator="{ on, attrs }">
+                          <template #activator="{ on, attrs }">
                             <v-btn
                               @click="toggleNodes(elementType)"
                               class="mx-0"
@@ -109,7 +109,7 @@
                         v-for="elementType in state.elementTypes"
                       >
                         <v-tooltip :open-delay="1000" bottom>
-                          <template v-slot:activator="{ on, attrs }">
+                          <template #activator="{ on, attrs }">
                             <v-btn
                               @click="toggleConnections(elementType)"
                               class="mx-0"
@@ -141,7 +141,7 @@
                         :key="'node' + node.idx"
                         v-for="node in state.network.nodes"
                       >
-                        <template v-slot:default="{ active }">
+                        <template #default="{ active }">
                           <v-icon
                             :color="node.view.color"
                             class="handle"
@@ -181,7 +181,7 @@
                         :key="'connection' + connection.idx"
                         v-for="connection in state.network.connections"
                       >
-                        <template v-slot:default="{ active }">
+                        <template #default="{ active }">
                           <v-icon
                             :color="connection.source.view.color"
                             class="handle"

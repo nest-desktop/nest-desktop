@@ -9,7 +9,7 @@
 
         <v-card-text>
           <v-simple-table v-if="state.projects.length !== 0">
-            <template v-slot:default>
+            <template #default>
               <thead>
                 <tr>
                   <th v-text="'Name'" />

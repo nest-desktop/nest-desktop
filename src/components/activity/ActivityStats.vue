@@ -25,18 +25,12 @@
           >
             <v-btn :height="40" :ripple="false" class="py-0" dark text tile>
               <v-row>
-                <v-col cols="3">
-                  {{ activity.recorder.view.label }}
-                </v-col>
-                <v-col cols="9">
-                  {{ activity.recorder.model.label }}
-                </v-col>
+                <v-col cols="3" v-text="activity.recorder.view.label" />
+                <v-col cols="9" v-text="activity.recorder.model.label" />
               </v-row>
             </v-btn>
-            <template v-slot:actions>
-              <v-icon class="mx-3" color="white">
-                $expand
-              </v-icon>
+            <template #actions>
+              <v-icon class="mx-3" color="white" v-text="'$expand'" />
             </template>
           </v-expansion-panel-header>
 

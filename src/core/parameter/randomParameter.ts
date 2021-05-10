@@ -28,7 +28,7 @@ export class ParameterRandom extends Config {
   get specs(): any {
     return this._specs;
   }
-  
+
   /**
    * Serialize for JSON.
    * @return random parameter object

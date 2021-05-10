@@ -1,7 +1,7 @@
 <template>
   <div class="randomParameterEdit">
     <v-menu :close-on-content-click="false" :max-width="300">
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn
           color="white"
           block

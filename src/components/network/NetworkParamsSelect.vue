@@ -63,7 +63,7 @@
             v-show="param.visible || true"
             style="font-size:12px; min-height:32px"
           >
-            <template v-slot:default="">
+            <template #default="">
               <v-list-item-content class="pa-1">
                 <v-row no-gutters>
                   {{ param.options.label }}

@@ -235,7 +235,7 @@ export class App extends Config {
       (project: any) =>
         new Promise<any>(resolve => {
           this.addProject(project).then(() => {
-            resolve();
+            resolve(project);
           });
         })
     );

@@ -19,15 +19,16 @@
         v-model="state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
                 <v-row style="place-content: center;">
                   <v-icon v-text="'$network'" />
                 </v-row>
-                <v-row style="place-content: center; font-size:10px">
-                  Editor
-                </v-row>
+                <v-row
+                  style="place-content: center; font-size:10px"
+                  v-text="'Editor'"
+                />
               </v-col>
             </v-btn>
           </template>
@@ -35,15 +36,16 @@
         </v-tooltip>
 
         <v-menu offset-y open-on-hover>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
                 <v-row style="place-content: center;">
                   <v-icon v-text="'mdi-chart-scatter-plot'" />
                 </v-row>
-                <v-row style="place-content: center; font-size:10px">
-                  Explorer
-                </v-row>
+                <v-row
+                  style="place-content: center; font-size:10px"
+                  v-text="'Explorer'"
+                />
               </v-col>
             </v-btn>
           </template>
@@ -76,9 +78,10 @@
             <v-row style="place-content: center;">
               <v-icon v-text="'mdi-book-open-outline'" />
             </v-row>
-            <v-row style="place-content: center; font-size:10px">
-              Lab book
-            </v-row>
+            <v-row
+              style="place-content: center; font-size:10px"
+              v-text="'Lab book'"
+            />
           </v-col>
         </v-btn>
       </v-btn-toggle>
@@ -97,7 +100,7 @@
               icon
               small
             >
-              <v-icon>mdi-page-first</v-icon>
+              <v-icon v-text="'mdi-page-first'" />
             </v-btn>
           </v-col>
 
@@ -115,7 +118,7 @@
                 color="project darken-1"
                 offset-y="8"
               >
-                <v-icon>mdi-undo-variant</v-icon>
+                <v-icon v-text="'mdi-undo-variant'" />
               </v-badge>
             </v-btn>
           </v-col>
@@ -134,7 +137,7 @@
                 color="project darken-1"
                 offset-y="8"
               >
-                <v-icon>mdi-redo-variant</v-icon>
+                <v-icon v-text="'mdi-redo-variant'" />
               </v-badge>
             </v-btn>
           </v-col>
@@ -147,7 +150,7 @@
               icon
               small
             >
-              <v-icon>mdi-page-last</v-icon>
+              <v-icon v-text="'mdi-page-last'" />
             </v-btn>
           </v-col>
         </v-row>

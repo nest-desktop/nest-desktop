@@ -28,7 +28,7 @@
           <v-col class="text-center">
             <v-btn class="mx-3" to="project" v-text="'Start a new project'" />
             <v-menu>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   @click="loadProjects"
                   class="mx-3"

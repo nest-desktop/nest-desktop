@@ -38,12 +38,12 @@ export default new Vuetify({
         kernel: {
           base: '#FF6633',
           darken1: '#B33A12',
-          lighen1: '#FF794D',
+          lighten1: '#FF794D',
         },
         model: {
           base: '#FF6633',
           darken1: '#B33A12',
-          lighen1: '#FF794D',
+          lighten1: '#FF794D',
         },
         project: {
           base: '#1281B3',
@@ -53,7 +53,7 @@ export default new Vuetify({
         settings: {
           base: '#36B34F',
           darken1: '#146625',
-          lighen1: '#40FF66',
+          lighten1: '#40FF66',
         },
       },
     },
