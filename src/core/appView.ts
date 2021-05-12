@@ -36,6 +36,10 @@ export class AppView {
     );
   }
 
+  get model(): any {
+    return this._model;
+  }
+
   get project(): any {
     return this._project;
   }
