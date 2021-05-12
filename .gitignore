@@ -115,11 +115,15 @@ dist
 /tests/e2e/reports/
 selenium-debug.log
 
+# Singularity image file
+*.sif
+
 # local env files
 .env.local
 .env.*.local
 
 # Output for pip
 /nest_desktop/app
+build
 __pycache__
 *.egg-info
