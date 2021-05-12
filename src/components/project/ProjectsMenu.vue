@@ -14,7 +14,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width:300px">
+      <v-card tile flat style="min-width: 300px">
         <span v-if="state.content === null">
           <v-list dense>
             <v-list-item
@@ -35,9 +35,7 @@
         </span>
 
         <span v-if="state.content === 'projectsReset'">
-          <v-card-title>
-            Are you sure?
-          </v-card-title>
+          <v-card-title v-text="'Are you sure?'" />
 
           <v-card-text>
             The database for projects will be deleted and then reset.
@@ -47,11 +45,15 @@
 
           <v-card-actions>
             <v-btn @click="reset" text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
+              <v-icon left v-text="'mdi-menu-left'" />
+              back
             </v-btn>
-            <v-btn @click="resetProjects" color="warning" dark>
-              reset
-            </v-btn>
+            <v-btn
+              @click="resetProjects"
+              color="warning"
+              dark
+              v-text="'Reset'"
+            />
           </v-card-actions>
         </span>
       </v-card>

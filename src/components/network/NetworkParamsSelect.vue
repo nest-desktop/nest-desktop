@@ -45,7 +45,7 @@
           hide-details
           item-text="label"
           item-value="id"
-          style="font-weight:700"
+          style="font-weight: 700"
           v-model="node.modelId"
         />
         <!-- </v-col>
@@ -61,7 +61,7 @@
             tile
             v-for="param of node.params"
             v-show="param.visible || true"
-            style="font-size:12px; min-height:32px"
+            style="font-size: 12px; min-height: 32px"
           >
             <template #default="">
               <v-list-item-content class="pa-1">

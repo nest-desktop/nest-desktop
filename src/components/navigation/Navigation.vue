@@ -28,7 +28,7 @@
           mini-variant-width="56"
           mobile-breakpoint="56"
         >
-          <div style="display:flex; flex-direction:column; height: 100%">
+          <div class="flex">
             <v-list dense nav>
               <v-list-item
                 :class="{ 'v-list-item--active': state.navList === route.id }"
@@ -40,9 +40,7 @@
                 v-for="route in routes"
               >
                 <v-list-item-icon>
-                  <v-list-item-group
-                    style="font-size:7px; text-align:center; width:100%"
-                  >
+                  <v-list-item-group class="nav-item">
                     <v-icon small v-text="route.icon" />
                     <div v-text="route.title" />
                   </v-list-item-group>
@@ -74,9 +72,7 @@
                 to="/settings"
               >
                 <v-list-item-icon>
-                  <v-list-item-group
-                    style="font-size:7px; text-align:center; width:100%"
-                  >
+                  <v-list-item-group class="nav-item">
                     <v-icon small v-text="'mdi-cogs'" />
                     Settings
                   </v-list-item-group>
@@ -87,14 +83,12 @@
               </v-list-item>
 
               <v-list-item
-                href="https://nest-desktop.readthedocs.io/en/latest/"
+                href="https://nest-desktop.readthedocs.io"
                 target="_blank"
                 title="Help"
               >
                 <v-list-item-icon>
-                  <v-list-item-group
-                    style="font-size:7px; text-align:center; width:100%"
-                  >
+                  <v-list-item-group class="nav-item">
                     <v-icon small v-text="'mdi-help-circle-outline'" />
                     Help
                   </v-list-item-group>
@@ -104,7 +98,7 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-dialog max-width="400" v-model="state.dialog">
+              <v-dialog max-width="450" v-model="state.dialog">
                 <template #activator="{ on, attrs }">
                   <v-list-item
                     @click="reset"
@@ -113,9 +107,7 @@
                     v-on="on"
                   >
                     <v-list-item-icon>
-                      <v-list-item-group
-                        style="font-size:7px; text-align:center; width:100%"
-                      >
+                      <v-list-item-group class="nav-item">
                         <v-icon small v-text="'mdi-information-variant'" />
                         About
                       </v-list-item-group>
@@ -126,78 +118,20 @@
                   </v-list-item>
                 </template>
                 <v-card class="about-dialog">
-                  <v-card-title class="headline">
-                    About NEST Desktop
-                  </v-card-title>
+                  <v-card-title
+                    class="headline"
+                    v-text="'About NEST Desktop'"
+                  />
                   <v-card-text>
-                    <v-list dense>
-                      <v-list-item>
-                        <v-row>
-                          <v-col class="font-weight-bold" cols="4">
-                            Documentation
-                          </v-col>
-                          <v-col cols="8">
-                            <a
-                              href="https://nest-desktop.readthedocs.io"
-                              target="_blank"
-                              v-text="'https://nest-desktop.readthedocs.io'"
-                            />
-                          </v-col>
-                        </v-row>
-                      </v-list-item>
-                      <v-list-item>
-                        <v-row>
-                          <v-col class="font-weight-bold" cols="4">
-                            Source Code
-                          </v-col>
-                          <v-col cols="8">
-                            <a
-                              href="https://github.com/babsey/nest-desktop"
-                              target="_blank"
-                              v-text="'https://github.com/babsey/nest-desktop'"
-                            />
-                          </v-col>
-                        </v-row>
-                      </v-list-item>
-                      <v-list-item>
-                        <v-row>
-                          <v-col class="font-weight-bold" cols="4">
-                            License
-                          </v-col>
-                          <v-col cols="8">
-                            MIT License
-                          </v-col>
-                        </v-row>
-                      </v-list-item>
-                      <v-list-item>
-                        <v-row>
-                          <v-col class="font-weight-bold" cols="4">
-                            Current Version
-                          </v-col>
-                          <v-col cols="8">
-                            {{ state.version }}
-                          </v-col>
-                        </v-row>
-                      </v-list-item>
-                      <v-list-item>
-                        <v-row>
-                          <v-col class="font-weight-bold" cols="4">
-                            Contact
-                          </v-col>
-                          <v-col cols="8">
-                            <a href="mailto:spreizer@uni-trier.de">
-                              Sebastian Spreizer
-                            </a>
-                          </v-col>
-                        </v-row>
-                      </v-list-item>
-                    </v-list>
+                    <About />
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn @click="state.dialog = false" text>
-                      Close
-                    </v-btn>
+                    <v-btn
+                      @click="state.dialog = false"
+                      text
+                      v-text="'Close'"
+                    />
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -205,7 +139,7 @@
           </div>
         </v-navigation-drawer>
 
-        <div style="padding-left:56px">
+        <div style="padding-left: 56px">
           <ProjectNavList v-if="state.navList === 'project'" />
           <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />
@@ -220,6 +154,7 @@ import { reactive } from '@vue/composition-api';
 
 import core from '@/core';
 
+import About from '@/components/About.vue';
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
@@ -227,6 +162,7 @@ import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
 export default {
   name: 'Navigation',
   components: {
+    About,
     ModelNavList,
     ProjectNavList,
     ProjectsMenu,
@@ -242,7 +178,6 @@ export default {
         position: { x: 0, y: 0 },
         show: false,
       },
-      version: core.app.version,
     });
 
     /**
@@ -306,19 +241,15 @@ export default {
 </script>
 
 <style>
-.about-dialog .v-list {
-  font-size: 12px;
+.navigation .flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
-.about-dialog .v-list-item {
-  height: 28px !important;
-  min-height: 28px !important;
-}
-.about-dialog a {
-  text-decoration: none;
-  color: black !important;
-}
-.about-dialog .col-4,
-.about-dialog .col-8 {
-  padding: 4px;
+
+.navigation .nav-item {
+  font-size: 7px;
+  text-align: center;
+  width: 100%;
 }
 </style>

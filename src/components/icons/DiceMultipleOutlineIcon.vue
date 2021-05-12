@@ -7,8 +7,12 @@
       focusable="false"
       width="1em"
       height="1em"
-      style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
       preserveAspectRatio="xMidYMid meet"
+      style="
+        -ms-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      "
       viewBox="0 0 24 24"
     >
       <path

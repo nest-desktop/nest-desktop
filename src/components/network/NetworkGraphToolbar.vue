@@ -5,12 +5,12 @@
       absolute
       dense
       flat
-      style="width:100%; background-color:transparent"
+      style="width: 100%; background-color: transparent"
     >
       <div v-if="state.network">
         <v-row>
           <v-col>
-            <transition-group name="list" style="display:inline-flex">
+            <transition-group name="list" style="display: inline-flex">
               <span
                 key="sourceNode"
                 v-if="
