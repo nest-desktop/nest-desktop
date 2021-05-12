@@ -22,28 +22,28 @@
           <template #activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
-                <v-row style="place-content: center;">
+                <v-row style="place-content: center">
                   <v-icon v-text="'$network'" />
                 </v-row>
                 <v-row
-                  style="place-content: center; font-size:10px"
+                  style="place-content: center; font-size: 10px"
                   v-text="'Editor'"
                 />
               </v-col>
             </v-btn>
           </template>
-          <span>Construct network</span>
+          Construct network
         </v-tooltip>
 
         <v-menu offset-y open-on-hover>
           <template #activator="{ on, attrs }">
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
-                <v-row style="place-content: center;">
+                <v-row style="place-content: center">
                   <v-icon v-text="'mdi-chart-scatter-plot'" />
                 </v-row>
                 <v-row
-                  style="place-content: center; font-size:10px"
+                  style="place-content: center; font-size: 10px"
                   v-text="'Explorer'"
                 />
               </v-col>
@@ -75,11 +75,11 @@
 
         <v-btn class="mx-0 px-6">
           <v-col>
-            <v-row style="place-content: center;">
+            <v-row style="place-content: center">
               <v-icon v-text="'mdi-book-open-outline'" />
             </v-row>
             <v-row
-              style="place-content: center; font-size:10px"
+              style="place-content: center; font-size: 10px"
               v-text="'Lab book'"
             />
           </v-col>
@@ -90,7 +90,7 @@
       <v-toolbar-title class="mx-2" v-text="state.project.name" />
       <v-spacer />
 
-      <div class="mx-4" style="width:144px">
+      <div class="mx-4" style="width: 144px">
         <v-row no-gutters>
           <v-col col="3">
             <v-btn
@@ -210,7 +210,7 @@
             >
               <v-list-item-icon>
                 <v-list-item-group
-                  style="text-align:center; width:100%; font-size: 7px"
+                  style="text-align: center; width: 100%; font-size: 7px"
                 >
                   <v-icon small v-text="tool.icon" />
                   <div v-text="tool.title" />
@@ -221,7 +221,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width:100%; padding-right:56px" v-if="state.toolOpened">
+        <div style="width: 100%; padding-right: 56px" v-if="state.toolOpened">
           <NetworkParamsEdit
             :network="state.project.network"
             :projectId="state.projectId"
