@@ -5,7 +5,7 @@
         NEST Desktop
       </v-toolbar-title>
     </v-app-bar> -->
-    <v-main style="height:100vh; overflow-y:auto">
+    <v-main style="height: 100vh; overflow-y: auto">
       <v-container class="fill-height">
         <v-row>
           <v-col class="text-center pa-10">
@@ -76,70 +76,7 @@
           <v-col cols="12" md="5">
             <v-card flat class="app-details">
               <v-card-text class="py-0">
-                <v-list dense>
-                  <v-list-item>
-                    <v-row>
-                      <v-col class="font-weight-bold" cols="4">
-                        Documentation
-                      </v-col>
-                      <v-col cols="8">
-                        <a
-                          href="https://nest-desktop.readthedocs.io"
-                          target="_blank"
-                        >
-                          https://nest-desktop.readthedocs.io
-                        </a>
-                      </v-col>
-                    </v-row>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-row>
-                      <v-col class="font-weight-bold" cols="4">
-                        Source Code
-                      </v-col>
-                      <v-col cols="8">
-                        <a
-                          href="https://github.com/babsey/nest-desktop"
-                          target="_blank"
-                        >
-                          https://github.com/babsey/nest-desktop
-                        </a>
-                      </v-col>
-                    </v-row>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-row>
-                      <v-col class="font-weight-bold" cols="4">
-                        License
-                      </v-col>
-                      <v-col cols="8">
-                        MIT License
-                      </v-col>
-                    </v-row>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-row>
-                      <v-col class="font-weight-bold" cols="4">
-                        Current Version
-                      </v-col>
-                      <v-col cols="8">
-                        {{ state.version }}
-                      </v-col>
-                    </v-row>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-row>
-                      <v-col class="font-weight-bold" cols="4">
-                        Contact
-                      </v-col>
-                      <v-col cols="8">
-                        <a href="mailto:spreizer@uni-trier.de">
-                          Sebastian Spreizer
-                        </a>
-                      </v-col>
-                    </v-row>
-                  </v-list-item>
-                </v-list>
+                <About />
               </v-card-text>
             </v-card>
           </v-col>
@@ -193,12 +130,16 @@ import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 import core from '@/core';
 
+import About from '@/components/About.vue';
+
 export default Vue.extend({
   name: 'Home',
+  components: {
+    About,
+  },
   setup() {
     const state = reactive({
       projects: core.app.projects,
-      version: core.app.version,
     });
 
     /**
