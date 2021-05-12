@@ -12,7 +12,7 @@
         </v-card>
       </template>
 
-      <v-card tile style="width:315px">
+      <v-card tile style="width: 315px">
         <v-card-subtitle>
           <NodePositionTitle
             :key="state.node.spatial.hash"
@@ -141,9 +141,7 @@
           <v-row>
             <v-col class="py-0">
               <v-checkbox v-model="state.node.spatial.positions.edgeWrap">
-                <template #label>
-                  Edge wrap
-                </template>
+                <template #label>Edge wrap</template>
               </v-checkbox>
             </v-col>
           </v-row>

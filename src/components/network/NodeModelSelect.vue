@@ -18,8 +18,8 @@
         </v-btn>
       </template>
 
-      <v-card style="min-width:300px" tile>
-        <v-card-title class="pa-0" style="color:white; height:40px">
+      <v-card style="min-width: 300px" tile>
+        <v-card-title class="pa-0" style="color: white; height: 40px">
           <v-overflow-btn
             :items="state.node.models"
             @change="update()"
@@ -29,7 +29,7 @@
             hide-details
             item-text="label"
             item-value="id"
-            style="font-weight:700"
+            style="font-weight: 700"
             tile
             v-model="state.node.modelId"
           />
@@ -45,7 +45,7 @@
             <v-list-item
               :key="param.idx"
               class="mx-0"
-              style="font-size:12px;"
+              style="font-size: 12px"
               v-for="param of state.node.params"
             >
               <template #default="">

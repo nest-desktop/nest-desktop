@@ -7,7 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width:300px">
+      <v-card tile flat style="min-width: 300px">
         <!-- <v-card-title
           :style="{ backgroundColor: state.connection.source.view.color }"
           class="py-1"
@@ -48,7 +48,7 @@
               <v-list-item
                 :key="param.id"
                 class="mx-0"
-                style="font-size:12px;"
+                style="font-size: 12px"
                 v-for="param of state.connection.params"
               >
                 <template #default="{ active }">
@@ -81,7 +81,7 @@
               <v-list-item
                 :key="param.id"
                 class="mx-0"
-                style="font-size:12px;"
+                style="font-size: 12px"
                 v-for="param of state.connection.synapse.params"
               >
                 <template #default="{ active }">

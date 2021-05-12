@@ -75,7 +75,7 @@
     </v-dialog>
 
     <div
-      style="position:absolute; left: 0; top: 0; z-index:1000"
+      style="position: absolute; left: 0; top: 0; z-index: 1000"
       v-if="state.graph.project.app.config.devMode"
     >
       <v-chip

@@ -215,7 +215,7 @@
       </v-btn-toggle>
     </v-banner>
 
-    <v-row no-gutters style="overflow-y:auto; height: calc(100vh - 76px);">
+    <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
       <v-col>
         <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
           <v-card class="mb-1" flat tile v-if="showNode(node)">
@@ -310,7 +310,7 @@
             @contextmenu="e => showConnectionMenu(e, connection)"
             no-gutters
           >
-            <v-col cols="3" class="py-0" style="text-align:center">
+            <v-col cols="3" class="py-0" style="text-align: center">
               <v-btn
                 :color="connection.source.view.color"
                 @click="() => connection.source.view.select()"
@@ -334,7 +334,7 @@
                 <v-icon v-text="'mdi-arrow-right-bold-outline'" />
               </v-btn>
             </v-col>
-            <v-col cols="3" class="py-0" style="text-align:center">
+            <v-col cols="3" class="py-0" style="text-align: center">
               <v-btn
                 :color="connection.target.view.color"
                 @click="() => connection.target.view.select()"
