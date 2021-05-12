@@ -2,7 +2,12 @@
   <div class="simulationButton">
     <v-menu :close-on-content-click="false" offset-y v-model="state.showMenu">
       <template #activator="{}">
-        <v-btn @click="simulate" @contextmenu="showMenu" outlined>
+        <v-btn
+          :loading="state.project.simulation.running"
+          @click="simulate"
+          @contextmenu="showMenu"
+          outlined
+        >
           <v-icon left>mdi-play</v-icon>
           Simulate
         </v-btn>

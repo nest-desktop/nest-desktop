@@ -8,7 +8,7 @@
     <v-main style="height:100vh; overflow-y:auto">
       <v-container class="fill-height">
         <v-row>
-          <v-col class="text-center pa-12">
+          <v-col class="text-center pa-10">
             <v-img
               :src="require('@/assets/img/logo/nest-desktop-logo.png')"
               class="my-6"
