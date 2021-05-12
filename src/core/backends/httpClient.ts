@@ -6,7 +6,7 @@ export class HttpClient {
    */
   ping(url: string, callback: any = undefined): void {
     // console.log('ping');
-    const started: number = new Date().getTime();
+    // const started: number = new Date().getTime();
     const req: XMLHttpRequest = new XMLHttpRequest();
     req.open('GET', url, /*async*/ true);
     req.setRequestHeader('Access-Control-Allow-Headers', 'Origin');
@@ -14,8 +14,8 @@ export class HttpClient {
     req.setRequestHeader('Access-Control-Allow-Origin', '*');
     // req.timeout = 1000;
     req.onreadystatechange = () => {
-      let ended: number;
-      let milliseconds: number;
+      // let ended: number;
+      // let milliseconds: number;
       switch (req.readyState) {
         // case 1:
         //   console.log('Request started.');
@@ -37,8 +37,8 @@ export class HttpClient {
         //   break;
         case 4:
           // console.log('Done.');
-          ended = new Date().getTime();
-          milliseconds = ended - started;
+          // ended = new Date().getTime();
+          // milliseconds = ended - started;
           // console.log(url, req.status, milliseconds + 'ms');
           if (callback !== undefined) {
             callback(req);

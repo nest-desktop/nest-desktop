@@ -16,8 +16,7 @@
               height="200"
             />
 
-            <h1 class="display-3 font-weight-light">NEST Desktop</h1>
-
+            <h1 class="display-3 font-weight-light" v-text="'NEST Desktop'" />
             <p class="subheading font-weight-regular ma-3">
               An educational GUI for neuroscience
             </p>

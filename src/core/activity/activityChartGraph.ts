@@ -1,5 +1,3 @@
-import * as PlotlyJS from 'plotly.js-dist';
-
 import { Project } from '../project/project';
 
 import { ActivityGraphPanel } from './plotPanels/activityGraphPanel';

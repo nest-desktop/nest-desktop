@@ -41,17 +41,17 @@ function getRectanglePoints(radius: number): string {
   return points;
 }
 
-function getRhombusPoints(radius: number): string {
-  const a: number = radius + 4;
-  const b: number = radius - 4;
-  const points: string = [
-    [a, 0].join(','),
-    [0, b].join(','),
-    [-a, 0].join(','),
-    [0, -b].join(','),
-  ].join(' ');
-  return points;
-}
+// function getRhombusPoints(radius: number): string {
+//   const a: number = radius + 4;
+//   const b: number = radius - 4;
+//   const points: string = [
+//     [a, 0].join(','),
+//     [0, b].join(','),
+//     [-a, 0].join(','),
+//     [0, -b].join(','),
+//   ].join(' ');
+//   return points;
+// }
 
 // function getSquarePoints(radius: number): string {
 //   const a: number = radius / 2. * Math.sqrt(Math.PI);

@@ -27,6 +27,10 @@ export class ProjectView {
     this._modeIdx = value;
   }
 
+  get project(): Project {
+    return this._project;
+  }
+
   get selected(): boolean {
     return this._selected;
   }

@@ -30,6 +30,10 @@ export class ConnectionMask extends Config {
     this._specs = mask.specs || {};
   }
 
+  get connection(): Connection {
+    return this._connection;
+  }
+
   get graph(): any {
     return this._graph;
   }
