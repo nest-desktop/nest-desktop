@@ -4,7 +4,7 @@ import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { Config } from '../../config';
 
-export class ActivityGraphPanel extends Config {
+export abstract class ActivityGraphPanel extends Config {
   // private static readonly _name = 'ActivityGraphPanel';
   private _activities: Activity[] = [];
   private _data: any[] = [];
@@ -132,27 +132,48 @@ export class ActivityGraphPanel extends Config {
 
   /**
    * Initialize activity graph panel.
+   *
+   * @remarks
+   * This method will be overwritten in child classes.
    */
-  init(): void {
+  abstract init(): void;
+
+  /**
+   * Update panels for activities.
+   *
+   * @remarks
+   * It requires activity data.
+   */
+  update(): void {
+    // console.log('Update panels for activity.');
     this.data = [];
-    this.activities = this.graph.project.activities;
+    this.activities.forEach((activity: Activity) => {
+      this.updateData(activity);
+    });
+
+    this.updateLayoutLabel();
   }
 
   /**
-   * Update activity graph panel.
+   * Update marker color for activities.
    */
-  update(): void {}
-
-  /**
-   * Update color in activity graph panel.
-   */
-  updateColor(): void {}
+  updateColor(): void {
+    this.activities.forEach((activity: Activity) => {
+      const data: any = this.data.find(
+        (d: any) => d.activityIdx === activity.idx
+      );
+      if (data !== undefined) {
+        data.marker.color = activity.recorder.view.color;
+      }
+    });
+  }
 
   /**
    * Update activity graph panel.
    *
    * @remarks
    * It requires activity data.
+   * It is a replacement for abstract component.
    */
   updateData(activity: Activity): void {
     activity;
@@ -186,6 +207,12 @@ export class ActivityGraphPanel extends Config {
     this.layout.xaxis.anchor = 'y' + this.yaxis;
   }
 
+  /**
+   * Update layout label.
+   *
+   * @remarks
+   * It is a replacement for abstract component.
+   */
   updateLayoutLabel(data: any = undefined): void {
     data;
   }

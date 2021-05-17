@@ -56,7 +56,7 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
         (event: string) => !['times', 'senders'].includes(event)
       );
       eventKeys.forEach((eventKey: string) => {
-        this.updateAnalogSignalHistogram(activity, eventKey);
+        this.updateEventData(activity, eventKey);
         if (!records.includes(eventKey)) {
           records.push(eventKey);
         }
@@ -69,14 +69,11 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
   /**
    * Update data for analog signal histogram.
    */
-  updateAnalogSignalHistogram(
-    activity: AnalogSignalActivity,
-    recordFrom: string
-  ): void {
+  updateEventData(activity: AnalogSignalActivity, recordFrom: string): void {
     // console.log('Update data for analog signal histogram.');
-    const event: number[] = activity.events[recordFrom];
-    const start: number = d3.min(event);
-    const end: number = d3.max(event) + 1;
+    const x: number[] = activity.events[recordFrom];
+    const start: number = d3.min(x);
+    const end: number = d3.max(x) + 1;
     const size: number = (end - start) / this.state.bins.value;
 
     this.data.push({
@@ -102,7 +99,7 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: event,
+      x,
       xaxis: 'x' + this.xaxis,
     });
   }

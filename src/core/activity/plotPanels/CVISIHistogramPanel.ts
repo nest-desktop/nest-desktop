@@ -38,7 +38,7 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     const end = 5;
     const size = this._state.binsize.value;
     const isi: number[][] = activity.ISI();
-    const cv_isi: number[] = isi.map(
+    const x: number[] = isi.map(
       (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
     );
 
@@ -60,13 +60,13 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
         size,
       },
       marker: {
-        color: 'black',
+        color: activity.recorder.view.color,
         line: {
-          color: activity.recorder.view.color,
+          color: 'white',
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: cv_isi,
+      x,
     });
   }
 
