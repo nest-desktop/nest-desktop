@@ -36,10 +36,11 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
    */
   updateData(activity: SpikeActivity): void {
     // console.log('Update data fir ISI histogram.').
+    const isi: number[][] = activity.ISI();
+    const x: number[] = [].concat.apply([], isi);
     const start = 0.0;
     const end: number = activity.endtime + 1;
     const size: number = this.state.binsize.value;
-    const isi: number[][] = activity.ISI();
 
     this.data.push({
       activityIdx: activity.idx,
@@ -64,7 +65,7 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: [].concat.apply([], isi),
+      x,
     });
   }
 

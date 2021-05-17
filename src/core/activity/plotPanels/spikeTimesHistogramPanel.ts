@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
@@ -34,8 +36,9 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
    */
   updateData(activity: SpikeActivity): void {
     // console.log('Update data of spike time histogram.');
-    const start = 1;
-    const end: number = activity.endtime + 1;
+    const x: number[] = activity.events.times;
+    const start = d3.min(x);
+    const end: number = d3.max(x) + 1;
     const size: number = this.state.binsize.value;
 
     this.data.push({
@@ -50,9 +53,9 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
       showlegend: false,
       opacity: 0.6,
       xbins: {
-        start: start,
-        end: end,
-        size: size,
+        start,
+        end,
+        size,
       },
       marker: {
         color: activity.recorder.view.color,
@@ -61,7 +64,7 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: activity.events.times,
+      x,
     });
   }
 
