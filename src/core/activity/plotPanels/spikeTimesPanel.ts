@@ -11,15 +11,31 @@ export class SpikeTimesPanel extends ActivityGraphPanel {
   }
 
   /**
-   * Initialize spike data panels.
+   * Initialize panels for spike activities.
    */
   init(): void {
-    this.activities = this.graph.project.spikeActivities;
     this.data = [];
+    this.activities = this.graph.project.spikeActivities;
   }
 
   /**
-   * Update marker color for spike data panels.
+   * Update panels for spike activities.
+   *
+   * @remarks
+   * It requires activity data.
+   */
+  update(): void {
+    // console.log('Update panels for spike activity.');
+    this.data = [];
+    this.activities.forEach((activity: SpikeActivity) => {
+      this.updateData(activity);
+    });
+
+    this.updateLayoutLabel();
+  }
+
+  /**
+   * Update marker color for spike activities.
    */
   updateColor(): void {
     this.activities.forEach((activity: SpikeActivity) => {

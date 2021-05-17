@@ -29,30 +29,19 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
     return this._state;
   }
 
-  init(): void {
-    // console.log('Init histogram panel for inter-spike interval');
-    this.activities = this.graph.project.spikeActivities;
-    this.data = [];
-  }
-
   /**
-   * Update CV panel for spike data.
-   *
-   * @remarks
-   * It requires activity data.
+   * Update data for CV of ISI histogram.
    */
-  update(): void {
-    // console.log('Init histogram panel of spike times')
-    this.activities.forEach((activity: SpikeActivity) => {
-      this.updateCVISIHistogram(activity);
-    });
-    this.layout.xaxis.title = 'CV of ISI';
-  }
+  updateData(activity: SpikeActivity): void {
+    // console.log('Update data for CV_ISI histogram.')
+    const start = 0;
+    const end = 5;
+    const size = this._state.binsize.value;
+    const isi: number[][] = activity.ISI();
+    const cv_isi: number[] = isi.map(
+      (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
+    );
 
-  /**
-   * Add empty data of CV of ISI histogram of spikes.
-   */
-  addCVISIHistogram(activity: SpikeActivity): void {
     // console.log('Add histogram data of inter-spike interval')
     this.data.push({
       activityIdx: activity.idx,
@@ -66,40 +55,25 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
       showlegend: false,
       opacity: 0.6,
       xbins: {
-        start: 0,
-        end: 1,
-        size: this._state.binsize.value,
+        start,
+        end,
+        size,
       },
       marker: {
         color: 'black',
         line: {
-          color: 'white',
-          width: 1,
+          color: activity.recorder.view.color,
+          width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: [],
+      x: cv_isi,
     });
   }
 
   /**
-   * Update CV of ISI histogram of spikes.
+   * Update layout label for CV_ISI histogram.
    */
-  updateCVISIHistogram(activity: SpikeActivity): void {
-    // console.log('Update histogram data of inter-spike interval')
-    if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
-      this.addCVISIHistogram(activity);
-    }
-    const data: any = this.data.find(
-      (d: any) => d.activityIdx === activity.idx
-    );
-    const isi: number[][] = activity.ISI();
-    data.x = isi.map(
-      (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
-    );
-    data.xbins.start = 0;
-    data.xbins.end = 5;
-    data.xbins.size = this._state.binsize.value;
-    data.marker.line.width = 1;
-    data.marker.color = activity.recorder.view.color;
+  updateLayoutLabel(): void {
+    this.layout.xaxis.title = 'CV of ISI';
   }
 }

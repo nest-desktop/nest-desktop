@@ -7,6 +7,7 @@ export class InputAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
     this.icon = 'mdi-chart-line';
     this.name = 'InputAnalogSignalPlotPanel';
     this.label = 'line of input analog signals';
+    this.layout.yaxis.height = 1;
     this.init();
   }
 
@@ -14,7 +15,7 @@ export class InputAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
    * Initialize plot panel for input signals.
    */
   init(): void {
-    this.activities = this.graph.project.inputAnalogSignalActivities;
     this.data = [];
+    this.activities = this.graph.project.inputAnalogSignalActivities;
   }
 }

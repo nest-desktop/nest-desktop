@@ -134,8 +134,8 @@ export class ActivityGraphPanel extends Config {
    * Initialize activity graph panel.
    */
   init(): void {
-    this.activities = this.graph.project.activities;
     this.data = [];
+    this.activities = this.graph.project.activities;
   }
 
   /**
@@ -149,6 +149,16 @@ export class ActivityGraphPanel extends Config {
   updateColor(): void {}
 
   /**
+   * Update activity graph panel.
+   *
+   * @remarks
+   * It requires activity data.
+   */
+  updateData(activity: Activity): void {
+    activity;
+  }
+
+  /**
    * Update layout in activity graph panel.
    */
   updateLayout(): void {
@@ -159,7 +169,10 @@ export class ActivityGraphPanel extends Config {
     const heightTotal: number = math.sum(heights);
     heights.reverse();
     const heightCumsum: number[] = heights.map(
-      ((sum: number) => (value: number) => (sum += value))(0)
+      (
+        (sum: number) => (value: number) =>
+          (sum += value)
+      )(0)
     );
     const steps = heightCumsum.map((h: number) => h / heightTotal);
     steps.unshift(0);
@@ -171,5 +184,9 @@ export class ActivityGraphPanel extends Config {
     ];
     this.layout.yaxis.domain = domain;
     this.layout.xaxis.anchor = 'y' + this.yaxis;
+  }
+
+  updateLayoutLabel(data: any = undefined): void {
+    data;
   }
 }
