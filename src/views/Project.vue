@@ -242,7 +242,7 @@
             :graph="state.project.activityGraph"
             v-if="
               state.tool.name === 'activityEdit' &&
-                state.activityGraph === 'abstract'
+              state.activityGraph === 'abstract'
             "
           />
 
@@ -250,7 +250,7 @@
             :graph="state.project.activityGraph"
             v-if="
               state.tool.name === 'activityEdit' &&
-                state.activityGraph === 'spatial'
+              state.activityGraph === 'spatial'
             "
           />
 

@@ -56,8 +56,8 @@ export default Vue.extend({
           title: 'Simulate after change',
           value: 'simulateAfterChange',
           onClick: () => {
-            state.projectConfig.simulateAfterChange = !state.projectConfig
-              .simulateAfterChange;
+            state.projectConfig.simulateAfterChange =
+              !state.projectConfig.simulateAfterChange;
             state.project.updateConfig(state.projectConfig);
           },
         },
@@ -67,8 +67,8 @@ export default Vue.extend({
           title: 'Simulate after load',
           value: 'simulateAfterLoad',
           onClick: () => {
-            state.projectConfig.simulateAfterLoad = !state.projectConfig
-              .simulateAfterLoad;
+            state.projectConfig.simulateAfterLoad =
+              !state.projectConfig.simulateAfterLoad;
             state.project.updateConfig(state.projectConfig);
           },
         },
@@ -78,8 +78,8 @@ export default Vue.extend({
           title: 'Simulate after checkout',
           value: 'simulateAfterCheckout',
           onClick: () => {
-            state.projectConfig.simulateAfterCheckout = !state.projectConfig
-              .simulateAfterCheckout;
+            state.projectConfig.simulateAfterCheckout =
+              !state.projectConfig.simulateAfterCheckout;
             state.project.updateConfig(state.projectConfig);
           },
         },

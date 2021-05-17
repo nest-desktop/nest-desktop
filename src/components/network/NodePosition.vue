@@ -100,9 +100,8 @@
                   :value="item"
                   @change="
                     value => {
-                      state.node.spatial.positions.center[idx] = parseInt(
-                        value
-                      );
+                      state.node.spatial.positions.center[idx] =
+                        parseInt(value);
                     }
                   "
                   hide-details

@@ -491,7 +491,7 @@ export default Vue.extend({
     /**
      * Show node menu.
      */
-    const showNodeMenu = function(e: MouseEvent, node: Node) {
+    const showNodeMenu = function (e: MouseEvent, node: Node) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.nodeMenu.show = false;
@@ -565,7 +565,10 @@ export default Vue.extend({
     /**
      * Show connection menu.
      */
-    const showConnectionMenu = function(e: MouseEvent, connection: Connection) {
+    const showConnectionMenu = function (
+      e: MouseEvent,
+      connection: Connection
+    ) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.connectionMenu.show = false;
