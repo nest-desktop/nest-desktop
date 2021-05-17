@@ -15,7 +15,7 @@
                 key="sourceNode"
                 v-if="
                   state.network.view.selectedNode ||
-                    state.network.view.selectedConnection
+                  state.network.view.selectedConnection
                 "
               >
                 <NetworkNodeChip
@@ -34,7 +34,7 @@
                 key="connection"
                 v-if="
                   state.network.view.selectedConnection ||
-                    state.graph.state.enableConnection
+                  state.graph.state.enableConnection
                 "
               >
                 <v-icon class="ma-1" small v-text="'mdi-arrow-right'" />

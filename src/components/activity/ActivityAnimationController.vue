@@ -277,8 +277,8 @@
                 max:
                   state.graph.activityAnimationGraph.config.frames.sampleRate *
                   50,
-                step:
-                  state.graph.activityAnimationGraph.config.frames.sampleRate,
+                step: state.graph.activityAnimationGraph.config.frames
+                  .sampleRate,
                 label: 'Trail length',
               }"
               :value.sync="

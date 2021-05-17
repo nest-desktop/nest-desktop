@@ -345,7 +345,7 @@ export default Vue.extend({
     /**
      * Show parameter menu.
      */
-    const showMenu = function(e: MouseEvent) {
+    const showMenu = function (e: MouseEvent) {
       if (this.param) {
         // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
         e.preventDefault();

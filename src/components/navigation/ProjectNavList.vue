@@ -118,7 +118,7 @@ export default Vue.extend({
     /**
      * Show project menu.
      */
-    const showProjectMenu = function(e: MouseEvent, project: Project) {
+    const showProjectMenu = function (e: MouseEvent, project: Project) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.projectMenu.show = false;
