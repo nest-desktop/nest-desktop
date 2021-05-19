@@ -48,9 +48,11 @@
             refY="4"
           >
             <path
-              :style="{ stroke: connection.source.view.color }"
+              :style="{
+                fill: connection.source.view.color,
+                stroke: connection.source.view.color,
+              }"
               d="M2,2L6,4L2,6L2,2L6,4"
-              fill="white"
             />
           </marker>
 
@@ -63,8 +65,10 @@
             refY="4"
           >
             <circle
-              :style="{ stroke: connection.source.view.color }"
-              fill="white"
+              :style="{
+                fill: connection.source.view.color,
+                stroke: connection.source.view.color,
+              }"
               r="2"
               transform="translate(4,4)"
             />

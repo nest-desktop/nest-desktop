@@ -674,6 +674,7 @@ export class NetworkGraph {
       .selectAll('g.node')
       .selectAll('.shape')
       .style('stroke', (node: Node) => node.view.color)
+      .style('stroke-width', (node: Node) => (node.n > 1 ? 1.5 : 1) * this._strokeWidth)
       .style('stroke-dasharray', (node: Node) =>
         node.view.isSelected() ? '7.85' : ''
       );
