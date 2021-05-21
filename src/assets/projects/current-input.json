@@ -58,13 +58,11 @@
         "params": [
           {
             "id": "amplitude",
-            "value": 1,
-            "visible": true
+            "value": 1
           },
           {
             "id": "start",
-            "value": 100,
-            "visible": true
+            "value": 100
           },
           {
             "id": "stop",
@@ -85,8 +83,7 @@
         "params": [
           {
             "id": "C_m",
-            "value": 250,
-            "visible": true
+            "value": 250
           },
           {
             "id": "E_L",
@@ -120,8 +117,7 @@
           },
           {
             "id": "tau_m",
-            "value": 10,
-            "visible": true
+            "value": 10
           },
           {
             "id": "tau_syn_ex",
@@ -146,8 +142,7 @@
         "params": [
           {
             "id": "interval",
-            "value": 0.1,
-            "visible": true
+            "value": 0.1
           },
           {
             "id": "start",
