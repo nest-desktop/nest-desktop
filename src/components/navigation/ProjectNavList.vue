@@ -11,9 +11,7 @@
         <v-list-item-icon>
           <v-icon left v-text="'mdi-plus'" />
         </v-list-item-icon>
-        <v-list-item-title>
-          New project
-        </v-list-item-title>
+        <v-list-item-title v-text="'New project'" />
       </v-list-item>
     </v-list>
 
@@ -117,36 +115,10 @@ export default Vue.extend({
       },
     });
 
-    // const timeSince = date => {
-    //   const seconds = Math.floor((+new Date() - +new Date(date)) / 1000);
-    //   if (seconds < 60) {
-    //     return 'Just now';
-    //   }
-    //   const intervals = {
-    //     year: 31536000,
-    //     month: 2592000,
-    //     week: 604800,
-    //     day: 86400,
-    //     hour: 3600,
-    //     minute: 60,
-    //   };
-    //   let counter;
-    //   for (const i in intervals) {
-    //     counter = Math.floor(seconds / intervals[i]);
-    //     if (counter > 0) {
-    //       if (counter === 1) {
-    //         return counter + ' ' + i + ' ago'; // singular (1 day ago)
-    //       } else {
-    //         return counter + ' ' + i + 's ago'; // plural (2 days ago)
-    //       }
-    //     }
-    //   }
-    // };
-
     /**
      * Show project menu.
      */
-    const showProjectMenu = function(e: MouseEvent, project: Project) {
+    const showProjectMenu = function (e: MouseEvent, project: Project) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.projectMenu.show = false;

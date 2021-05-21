@@ -174,7 +174,7 @@
                     height="32"
                     hide-details
                     single-line
-                    style="width: 60px; font-size:12px"
+                    style="width: 60px; font-size: 12px"
                     type="number"
                     :value="state.value"
                   />
@@ -311,9 +311,7 @@ export default Vue.extend({
     };
 
     const generateValues = () => {
-      console.log(state.value);
       state.value = state.valueGenerator.generate();
-      console.log(state.value);
       paramChange();
     };
 
@@ -347,7 +345,7 @@ export default Vue.extend({
     /**
      * Show parameter menu.
      */
-    const showMenu = function(e: MouseEvent) {
+    const showMenu = function (e: MouseEvent) {
       if (this.param) {
         // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
         e.preventDefault();

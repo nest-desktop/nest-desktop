@@ -215,7 +215,7 @@
       </v-btn-toggle>
     </v-banner>
 
-    <v-row no-gutters style="overflow-y:auto; height: calc(100vh - 76px);">
+    <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
       <v-col>
         <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
           <v-card class="mb-1" flat tile v-if="showNode(node)">
@@ -310,7 +310,7 @@
             @contextmenu="e => showConnectionMenu(e, connection)"
             no-gutters
           >
-            <v-col cols="3" class="py-0" style="text-align:center">
+            <v-col cols="3" class="py-0" style="text-align: center">
               <v-btn
                 :color="connection.source.view.color"
                 @click="() => connection.source.view.select()"
@@ -334,7 +334,7 @@
                 <v-icon v-text="'mdi-arrow-right-bold-outline'" />
               </v-btn>
             </v-col>
-            <v-col cols="3" class="py-0" style="text-align:center">
+            <v-col cols="3" class="py-0" style="text-align: center">
               <v-btn
                 :color="connection.target.view.color"
                 @click="() => connection.target.view.select()"
@@ -491,7 +491,7 @@ export default Vue.extend({
     /**
      * Show node menu.
      */
-    const showNodeMenu = function(e: MouseEvent, node: Node) {
+    const showNodeMenu = function (e: MouseEvent, node: Node) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.nodeMenu.show = false;
@@ -565,7 +565,10 @@ export default Vue.extend({
     /**
      * Show connection menu.
      */
-    const showConnectionMenu = function(e: MouseEvent, connection: Connection) {
+    const showConnectionMenu = function (
+      e: MouseEvent,
+      connection: Connection
+    ) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.connectionMenu.show = false;

@@ -8,7 +8,7 @@
         v-text="' – ' + state.subtitle"
       />
     </v-toolbar>
-    <v-card flat tile style="max-height:calc(100vh - 64px); overflow-y:auto">
+    <v-card flat tile style="max-height: calc(100vh - 64px); overflow-y: auto">
       <v-card :key="block.title" flat tile v-for="block of state.blocks">
         <v-card-title v-text="block.title" />
         <v-card-text>

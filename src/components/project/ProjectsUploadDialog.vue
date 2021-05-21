@@ -98,9 +98,7 @@
               </tbody>
             </template>
           </v-simple-table>
-          <template v-else>
-            Select another file.
-          </template>
+          <template v-else> Select another file. </template>
         </v-card-text>
 
         <v-card-actions>

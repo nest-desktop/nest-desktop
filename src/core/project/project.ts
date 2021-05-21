@@ -406,11 +406,6 @@ export class Project extends Config {
     this._simulation = new Simulation(this, simulation);
   }
 
-  setErrorMessage(title: string, text: string) {
-    this._errorMessage = text;
-    // this._errorMessage = `<h1>${title}</h1><p>${text}</p>`;
-  }
-
   /**
    * Start simulation.
    *
@@ -434,10 +429,7 @@ export class Project extends Config {
         let data: any;
         switch (resp.status) {
           case 0:
-            this.setErrorMessage(
-              'Internal Server Error',
-              'Failed to find NEST Server.'
-            );
+            this._errorMessage = 'Failed to find NEST Server.';
             break;
           case 200:
             data = JSON.parse(resp.response).data;
@@ -455,7 +447,7 @@ export class Project extends Config {
             this.commitNetwork(this._network);
             break;
           default:
-            this.setErrorMessage('Bad request', resp.response);
+            this._errorMessage = resp.response;
             break;
         }
 

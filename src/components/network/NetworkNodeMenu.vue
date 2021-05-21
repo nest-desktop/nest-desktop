@@ -7,11 +7,11 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width:300px">
+      <v-card tile flat style="min-width: 300px">
         <v-card-title
           :style="{ backgroundColor: state.node.view.color }"
           class="py-1"
-          style="color:white; height:40px"
+          style="color: white; height: 40px"
           v-if="state.content !== 'modelDocumentation'"
           v-text="state.node.model.label"
         />
@@ -79,7 +79,7 @@
             @update:color="updateColor"
             flat
             show-swatches
-            style="border-radius:0"
+            style="border-radius: 0"
             v-model="state.node.view.color"
           />
 

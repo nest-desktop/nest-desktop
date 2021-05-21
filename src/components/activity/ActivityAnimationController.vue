@@ -171,11 +171,11 @@
             <v-select
               :items="colorScales"
               hide-details
-              style="font-size:13px"
+              style="font-size: 13px"
               v-model="state.graph.activityAnimationGraph.config.colorMap.scale"
             >
               <template #item="{ item }">
-                <v-row style="width:200px">
+                <v-row style="width: 200px">
                   <v-col class="py-0" cols="4">
                     <img
                       :src="require(`@/assets/img/colorscales/${item}.png`)"
@@ -189,9 +189,7 @@
                       width="100%"
                     />
                   </v-col>
-                  <v-col class="py-0" cols="8">
-                    {{ item }}
-                  </v-col>
+                  <v-col class="py-0" cols="8" v-text="item" />
                 </v-row>
               </template>
             </v-select>
@@ -279,8 +277,8 @@
                 max:
                   state.graph.activityAnimationGraph.config.frames.sampleRate *
                   50,
-                step:
-                  state.graph.activityAnimationGraph.config.frames.sampleRate,
+                step: state.graph.activityAnimationGraph.config.frames
+                  .sampleRate,
                 label: 'Trail length',
               }"
               :value.sync="

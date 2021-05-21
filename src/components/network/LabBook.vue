@@ -3,7 +3,7 @@
     <v-container>
       <v-card
         flat
-        style="height:calc(70vh - 48px); overflow-y:auto; overflow-x:hidden"
+        style="height: calc(70vh - 48px); overflow-y: auto; overflow-x: hidden"
         tile
       >
         <v-card-title
@@ -15,7 +15,7 @@
         <span class="d-flex flex-md-row">
           <div
             class="mx-1"
-            style="width:100%"
+            style="width: 100%"
             v-if="state.project.network.visibleNodes.length > 0"
           >
             <v-card
@@ -61,7 +61,7 @@
                 <v-list v-if="node.filteredParams.length > 0">
                   <v-list-item
                     :key="param.id"
-                    style="min-height:20px"
+                    style="min-height: 20px"
                     two-line
                     v-for="param of node.filteredParams"
                   >
@@ -73,7 +73,7 @@
                         v-text="param.toCode()"
                       />
                       <span
-                        style="min-width:24px"
+                        style="min-width: 24px"
                         v-text="param.options.unit"
                       />
                     </v-row>
@@ -85,7 +85,7 @@
 
           <div
             class="mx-1"
-            style="width:100%"
+            style="width: 100%"
             v-if="state.project.network.visibleConnections.length > 0"
           >
             <v-card
@@ -120,7 +120,7 @@
                     <v-icon v-text="'mdi-arrow-right-bold-outline'" />
                   </v-btn>
                 </v-col>
-                <v-col cols="4" class="py-0" style="text-align:center">
+                <v-col cols="4" class="py-0" style="text-align: center">
                   <v-btn
                     :color="connection.target.view.color"
                     @click="() => connection.target.view.select()"
@@ -144,7 +144,7 @@
                 <v-list v-if="connection.synapse.filteredParams.length > 0">
                   <v-list-item
                     :key="param.id"
-                    style="min-height:20px; height:20px"
+                    style="min-height: 20px; height: 20px"
                     v-for="param of connection.synapse.filteredParams"
                   >
                     <span v-text="param.options.label" />
@@ -153,7 +153,7 @@
                       class="mx-1 font-weight-bold"
                       v-text="param.toCode()"
                     />
-                    <span style="min-width:24px" v-text="param.options.unit" />
+                    <span style="min-width: 24px" v-text="param.options.unit" />
                   </v-list-item>
                 </v-list>
               </v-card-text>
