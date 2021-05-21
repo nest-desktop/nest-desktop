@@ -53,7 +53,6 @@ export class ModelParameter extends Parameter {
   toJSON(): any {
     const params: any = {
       id: this.id,
-      type: this.type,
       value: this.value,
     };
     if (this.parent.name === 'Model') {
@@ -69,13 +68,14 @@ export class ModelParameter extends Parameter {
         params.ticks = this.ticks;
       }
     } else {
-      // For node or synapse components
-      params.factors = this.factors;
-      params.visible = this.visible;
-
-      // Add specs for distribution if random.
+      if (this.factors.length > 0) {
+        params.factors = this.factors;
+      }
       if (!this.isConstant()) {
-        params.specs = this.specs;
+        params.type = this.type;
+      }
+      if (this.visible === false) {
+        params.visible = this.visible;
       }
     }
     return params;
