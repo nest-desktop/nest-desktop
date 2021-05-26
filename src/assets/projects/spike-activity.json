@@ -12,8 +12,7 @@
           "params": [
             {
               "id": "weight",
-              "value": 10,
-              "visible": true
+              "value": 10
             },
             {
               "id": "delay",
@@ -60,8 +59,7 @@
         "params": [
           {
             "id": "rate",
-            "value": 6500,
-            "visible": true
+            "value": 6500
           },
           {
             "id": "start",

@@ -29,11 +29,12 @@ export class Parameter extends Config {
 
     this._id = param.id;
     this._value = param.value || 0;
-    this._type = param.type || { id: 'constant' };
-    this._format = param.format || 'float';
+    this._visible = param.visible !== undefined ? param.visible : true;
 
-    this._visible = param.visible !== undefined ? param.visible : false;
+    // optional param specifications
     this._factors = param.factors || [];
+    this._format = param.format || 'float';
+    this._type = param.type || { id: 'constant' };
 
     this._input = param.input;
     this._label = param.label || param.id;
@@ -268,10 +269,10 @@ export class Parameter extends Config {
    */
   toCode(): string {
     let value: string;
-    if (this._type.id === 'constant') {
+    if (this.isConstant()) {
       // Constant value
       if (this._format === 'boolean') {
-        // Boolean value
+        // Boolean value for Python
         value = this._value ? 'True' : 'False';
       } else if (
         this._format === 'integer' ||
@@ -319,13 +320,18 @@ export class Parameter extends Config {
    */
   toJSON(): any {
     const params: any = {
-      factors: this._factors,
       id: this._id,
-      type: this._type,
       value: this._value,
-      visible: this._visible,
-      format: this._format as string | 'float',
     };
+    if (this._factors.length > 0) {
+      params.factors = this._factors;
+    }
+    if (!this.isConstant()) {
+      params.type = this._type;
+    }
+    if (this._visible === false) {
+      params.visible = this._visible;
+    }
     return params;
   }
 }
