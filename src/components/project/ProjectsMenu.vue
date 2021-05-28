@@ -35,7 +35,7 @@
         </span>
 
         <span v-if="state.content === 'projectsReset'">
-          <v-card-title v-text="'Are you sure?'" />
+          <v-card-title v-text="'Are you sure to reset all projects?'" />
 
           <v-card-text>
             The database for projects will be deleted and then reset.
@@ -45,13 +45,13 @@
 
           <v-card-actions>
             <v-btn @click="reset" text>
-              <v-icon left v-text="'mdi-menu-left'" />
-              back
+              <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
+            <v-spacer />
             <v-btn
               @click="resetProjects"
               color="warning"
-              dark
+              text
               v-text="'Reset'"
             />
           </v-card-actions>
@@ -137,7 +137,7 @@ export default Vue.extend({
         {
           id: 'projectsReset',
           icon: '$mdiDatabaseRefreshOutline',
-          title: 'Reset projects',
+          title: 'Reset all projects',
           onClick: () => {
             state.content = 'projectsReset';
           },
