@@ -15,7 +15,7 @@ export class NeuronAnalogSignalPlotPanel extends AnalogSignalPlotPanel {
    * Initialize plot panel for neuronal analog signals.
    */
   init(): void {
-    this.activities = this.graph.project.neuronAnalogSignalActivities;
     this.data = [];
+    this.activities = this.graph.project.neuronAnalogSignalActivities;
   }
 }

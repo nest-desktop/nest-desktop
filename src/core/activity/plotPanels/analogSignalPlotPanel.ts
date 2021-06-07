@@ -13,58 +13,39 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
   }
 
   /**
-   * Initialize plot panel for analog signals.
+   * Initialize trace panel for analog signals.
    */
   init(): void {
-    this.activities = this.graph.project.analogSignalActivities;
     this.data = [];
+    this.activities = this.graph.project.analogSignalActivities;
   }
 
   /**
-   * Update panel for analog signal.
+   * Update trace panel for analog signals.
    *
    * @remarks
    * It requires activity data.
    */
   update(): void {
+    this.data = [];
     const records: string[] = [];
+
+    // Update spike threshold for membrane potential
     this.activities.forEach((activity: AnalogSignalActivity) => {
-      const eventKeys: string[] = Object.keys(activity.events).filter(
+      const recordables: string[] = Object.keys(activity.events).filter(
         (event: string) => !['times', 'senders'].includes(event)
       );
-      eventKeys.forEach((eventKey: string) => {
-        if (eventKey === 'V_m') {
+      recordables.forEach((recordFrom: string) => {
+        if (recordFrom === 'V_m') {
           this.updateSpikeThresholdLine(activity);
         }
-        if (!records.includes(eventKey)) {
-          records.push(eventKey);
+        if (!records.includes(recordFrom)) {
+          records.push(recordFrom);
         }
       });
     });
 
-    // Label y-axis if only one record existed.
-    if (records.length === 1) {
-      const record = records[0];
-      const recordable: any = this.activities[0].recorder.model.config.recordables.find(
-        (recordable: any) => recordable.id === record
-      );
-      let yAxisTitle: string = this.capitalize(recordable.label);
-      if (recordable.unit) {
-        yAxisTitle += ` [${recordable.unit}]`;
-      }
-      this.layout.yaxis.title = yAxisTitle;
-    } else {
-      if (records.every(rec => rec.includes('ct_'))) {
-        this.layout.yaxis.title = 'Channel activation';
-      } else if (records.every(rec => rec.includes('g_'))) {
-        this.layout.yaxis.title = 'Conductance [nS]';
-      } else if (records.every(rec => rec.includes('I_syn_'))) {
-        this.layout.yaxis.title = 'Total synaptic current [pA]';
-      } else if (records.every(rec => rec.includes('weighted_spikes_'))) {
-        this.layout.yaxis.title = 'Weighted incoming spikes';
-      }
-    }
-
+    // Update single line or multiple lines.
     this.activities.forEach((activity: AnalogSignalActivity) => {
       const recordables: string[] = Object.keys(activity.events).filter(
         (event: string) => !['times', 'senders'].includes(event)
@@ -78,6 +59,7 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       });
     });
 
+    // Update average line for recorded population.
     this.activities.forEach((activity: AnalogSignalActivity) => {
       if (activity.nodeIds.length > 1) {
         const recordables: string[] = Object.keys(activity.events).filter(
@@ -88,147 +70,65 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
         });
       }
     });
-    this.layout.xaxis.title = 'Time [ms]';
+
+    this.updateLayoutLabel(records);
   }
 
   /**
-   * Update color traces of analog signal.
-   */
-  updateColor(): void {
-    this.activities.forEach((activity: AnalogSignalActivity) => {
-      const data: any = this.data.filter(
-        (d: any) => d.activityIdx === activity.idx && d.class !== 'background'
-      );
-      if (data.length == 0) {
-        return;
-      }
-      data.forEach((d: any) => {
-        d.line.color = activity.recorder.view.color;
-      });
-    });
-  }
-
-  /**
-   * Add spike threshold line for membrane potential.
-   */
-  addSpikeThresholdLine(activity: AnalogSignalActivity): void {
-    const thresholds: number[] = activity.recorder.nodes.map((target: Node) =>
-      target.getParameter('V_th')
-    );
-    const threshold: number = thresholds.length > 0 ? thresholds[0] : -55;
-    this.data.push({
-      activityIdx: activity.idx,
-      id: 'threshold',
-      mode: 'lines',
-      type: 'scattergl',
-      showlegend: true,
-      hoverinfo: 'none',
-      name: 'Spike threshold',
-      opacity: 0.5,
-      visible: 'legendonly',
-      line: {
-        color: 'black',
-        dash: 'dot',
-        width: 2,
-      },
-      x: [0.1, activity.endtime],
-      y: [threshold, threshold],
-    });
-  }
-
-  /**
-   * Update spike threshold line for membrane potential.
+   * Update spike threshold data for membrane potential.
    */
   updateSpikeThresholdLine(activity: AnalogSignalActivity): void {
-    if (
-      !this.data.some(
-        (d: any) => d.activityIdx === activity.idx && d.id === 'threshold'
-      )
-    ) {
-      this.addSpikeThresholdLine(activity);
-    }
+    const thresholds: number[] = activity.recorder.nodes
+      .filter((node: Node) => node.modelId.startsWith('iaf'))
+      .map((target: Node) => target.getParameter('V_th') || -55);
 
-    const data = this.data.find(
-      (d: any) => d.activityIdx === activity.idx && d.id === 'threshold'
-    );
-    const thresholds: number[] = activity.recorder.nodes.map((target: Node) =>
-      target.getParameter('V_th')
-    );
-    const threshold: number = thresholds.length > 0 ? thresholds[0] : -55;
-    data.y = [threshold, threshold];
-    data.line.color = activity.recorder.view.color;
+    if (thresholds.length > 0) {
+      this.data.push({
+        activityIdx: activity.idx,
+        id: 'threshold',
+        mode: 'lines',
+        type: 'scattergl',
+        showlegend: true,
+        hoverinfo: 'none',
+        name: 'Spike threshold',
+        opacity: 0.5,
+        visible: 'legendonly',
+        line: {
+          color: activity.recorder.view.color,
+          dash: 'dot',
+          width: 2,
+        },
+        x: [0.1, activity.endtime],
+        y: [thresholds[0], thresholds[0]],
+      });
+    }
   }
 
   /**
-   * Add empty data of single line for analog signal.
+   * Update single line data for analog signal.
    */
-  addSingleLine(activity: AnalogSignalActivity, recordFrom: string): void {
+  updateSingleLine(activity: AnalogSignalActivity, recordFrom: string): void {
     this.data.push({
       activityIdx: activity.idx,
       id: recordFrom,
       legendgroup: recordFrom + activity.idx,
       mode: 'lines',
       type: 'scattergl',
-      name: '',
+      name: recordFrom + ' of ' + activity.senders[0],
       hoverinfo: 'all',
       showlegend: true,
       visible: true,
       line: {
-        color: 'black',
+        color: activity.recorder.view.color,
         width: 1.5,
       },
-      x: [],
-      y: [],
+      x: activity.events.times,
+      y: activity.events[recordFrom],
     });
   }
 
   /**
-   * Update single line for analog signal.
-   */
-  updateSingleLine(activity: AnalogSignalActivity, recordFrom: string): void {
-    if (
-      !this.data.some(
-        (d: any) => d.activityIdx === activity.idx && d.id === recordFrom
-      )
-    ) {
-      this.addSingleLine(activity, recordFrom);
-    }
-
-    const data: any = this.data.find(
-      (d: any) => d.activityIdx === activity.idx && d.id === recordFrom
-    );
-    data.x = activity.events.times;
-    data.y = activity.events[recordFrom];
-    data.name = recordFrom + ' of ' + activity.senders[0];
-    data.line.color = activity.recorder.view.color;
-  }
-
-  /**
-   * Add empty data of multiple lines for analog signals.
-   */
-  addMultipleLines(activity: AnalogSignalActivity, recordFrom: string): void {
-    [...Array(100).keys()].forEach((idx: number) => {
-      this.data.push({
-        activityIdx: activity.idx,
-        legendgroup: recordFrom + activity.idx,
-        mode: 'lines',
-        type: 'scattergl',
-        hoverinfo: 'none',
-        name: '',
-        opacity: idx === 0 ? 0.5 : 0.3,
-        showlegend: idx === 0,
-        line: {
-          color: 'black',
-          width: 1,
-        },
-        x: [],
-        y: [],
-      });
-    });
-  }
-
-  /**
-   * Update multiple lines for analog signals.
+   * Update multiple lines data for analog signals.
    */
   updateMultipleLines(
     activity: AnalogSignalActivity,
@@ -237,19 +137,8 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     if (!activity.events.hasOwnProperty(recordFrom)) {
       return;
     }
-    if (
-      this.data.filter((d: any) => d.legendgroup === recordFrom + activity.idx)
-        .length !== 100
-    ) {
-      this.addMultipleLines(activity, recordFrom);
-    }
-
-    const data: any[] = this.data.filter(
-      (d: any) => d.legendgroup === recordFrom + activity.idx
-    );
     const senders: number[] = activity.senders.slice(0, 100);
     const events: any[] = senders.map(() => ({ x: [], y: [], name: '' }));
-
     activity.events.senders.forEach((sender: number, idx: number) => {
       const senderIdx: number = senders.indexOf(sender);
       if (senderIdx === -1) {
@@ -263,52 +152,22 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
     });
 
     events.forEach((event: any, idx: number) => {
-      const d: any = data[idx];
-      d.x = event.x;
-      d.y = event.y;
-      d.name = event.name;
-      d.line.color = activity.recorder.view.color;
-    });
-  }
-
-  /**
-   * Add empty data of average line for analog signals.
-   */
-  addAverageLine(activity: AnalogSignalActivity, recordFrom: string): void {
-    // white background for average line
-    this.data.push({
-      activityIdx: activity.idx,
-      class: 'background',
-      recordFrom,
-      mode: 'lines',
-      type: 'scattergl',
-      hoverinfo: 'none',
-      legendgroup: recordFrom + '_avg' + activity.idx,
-      showlegend: false,
-      line: {
-        width: 8,
-        color: 'white',
-      },
-      x: [],
-      y: [],
-    });
-
-    // average line
-    this.data.push({
-      activityIdx: activity.idx,
-      recordFrom,
-      mode: 'lines',
-      type: 'scattergl',
-      name: recordFrom + ' average',
-      legendgroup: recordFrom + '_avg' + activity.idx,
-      hoverinfo: 'all',
-      showlegend: true,
-      line: {
-        width: 1.5,
-        color: 'black',
-      },
-      x: [],
-      y: [],
+      this.data.push({
+        activityIdx: activity.idx,
+        legendgroup: recordFrom + activity.idx,
+        mode: 'lines',
+        type: 'scattergl',
+        hoverinfo: 'none',
+        name: event.name,
+        opacity: idx === 0 ? 0.5 : 0.3,
+        showlegend: idx === 0,
+        line: {
+          color: activity.recorder.view.color,
+          width: 1,
+        },
+        x: event.x,
+        y: event.y,
+      });
     });
   }
 
@@ -316,20 +175,8 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
    * Update average line for analog signals.
    */
   updateAverageLine(activity: AnalogSignalActivity, recordFrom: string): void {
-    if (
-      this.data.filter(
-        (d: any) => d.legendgroup === recordFrom + '_avg' + activity.idx
-      ).length !== 2
-    ) {
-      this.addAverageLine(activity, recordFrom);
-    }
-
-    const data: any[] = this.data.filter(
-      (d: any) => d.legendgroup === recordFrom + '_avg' + activity.idx
-    );
     const senders: number[] = activity.senders;
     const events: any[] = senders.map(() => ({ x: [], y: [], name: '' }));
-
     activity.events.senders.forEach((sender: number, idx: number) => {
       if (!activity.events.hasOwnProperty(recordFrom)) {
         return;
@@ -354,11 +201,87 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       return avg;
     });
 
-    data.forEach((d: any) => {
-      d.x = x;
-      d.y = y;
+    this.data.push({
+      activityIdx: activity.idx,
+      class: 'background',
+      recordFrom,
+      mode: 'lines',
+      type: 'scattergl',
+      hoverinfo: 'none',
+      legendgroup: recordFrom + '_avg' + activity.idx,
+      showlegend: false,
+      line: {
+        color: 'white',
+        width: 4.5,
+      },
+      x,
+      y,
     });
 
-    data[1].line.color = activity.recorder.view.color;
+    // average line
+    this.data.push({
+      activityIdx: activity.idx,
+      recordFrom,
+      mode: 'lines',
+      type: 'scattergl',
+      name: recordFrom + ' average',
+      legendgroup: recordFrom + '_avg' + activity.idx,
+      hoverinfo: 'all',
+      showlegend: true,
+      line: {
+        color: activity.recorder.view.color,
+        width: 1.5,
+      },
+      x,
+      y,
+    });
+  }
+
+  /**
+   * Update color traces of analog signals.
+   */
+  updateColor(): void {
+    this.activities.forEach((activity: AnalogSignalActivity) => {
+      const data: any = this.data.filter(
+        (d: any) => d.activityIdx === activity.idx && d.class !== 'background'
+      );
+      if (data.length == 0) {
+        return;
+      }
+      data.forEach((d: any) => {
+        d.line.color = activity.recorder.view.color;
+      });
+    });
+  }
+
+  /**
+   * Update layout label for analog signals.
+   */
+  updateLayoutLabel(records: string[]): void {
+    // console.log('Update layout label for analog signal.');
+    // Label y-axis if only one record existed.
+    this.layout.xaxis.title = 'Time [ms]';
+    if (records.length === 1) {
+      const record = records[0];
+      const recordable: any =
+        this.activities[0].recorder.model.config.recordables.find(
+          (recordable: any) => recordable.id === record
+        );
+      let yAxisTitle: string = this.capitalize(recordable.label);
+      if (recordable.unit) {
+        yAxisTitle += ` [${recordable.unit}]`;
+      }
+      this.layout.yaxis.title = yAxisTitle;
+    } else {
+      if (records.every(rec => rec.includes('ct_'))) {
+        this.layout.yaxis.title = 'Channel activation';
+      } else if (records.every(rec => rec.includes('g_'))) {
+        this.layout.yaxis.title = 'Conductance [nS]';
+      } else if (records.every(rec => rec.includes('I_syn_'))) {
+        this.layout.yaxis.title = 'Total synaptic current [pA]';
+      } else if (records.every(rec => rec.includes('weighted_spikes_'))) {
+        this.layout.yaxis.title = 'Weighted incoming spikes';
+      }
+    }
   }
 }

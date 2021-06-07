@@ -4,7 +4,7 @@ import { Activity } from '../activity';
 import { ActivityChartGraph } from '../activityChartGraph';
 import { Config } from '../../config';
 
-export class ActivityGraphPanel extends Config {
+export abstract class ActivityGraphPanel extends Config {
   // private static readonly _name = 'ActivityGraphPanel';
   private _activities: Activity[] = [];
   private _data: any[] = [];
@@ -132,21 +132,52 @@ export class ActivityGraphPanel extends Config {
 
   /**
    * Initialize activity graph panel.
+   *
+   * @remarks
+   * This method will be overwritten in child classes.
    */
-  init(): void {
-    this.activities = this.graph.project.activities;
+  abstract init(): void;
+
+  /**
+   * Update panels for activities.
+   *
+   * @remarks
+   * It requires activity data.
+   */
+  update(): void {
+    // console.log('Update panels for activity.');
     this.data = [];
+    this.activities.forEach((activity: Activity) => {
+      this.updateData(activity);
+    });
+
+    this.updateLayoutLabel();
+  }
+
+  /**
+   * Update marker color for activities.
+   */
+  updateColor(): void {
+    this.activities.forEach((activity: Activity) => {
+      const data: any = this.data.find(
+        (d: any) => d.activityIdx === activity.idx
+      );
+      if (data !== undefined) {
+        data.marker.color = activity.recorder.view.color;
+      }
+    });
   }
 
   /**
    * Update activity graph panel.
+   *
+   * @remarks
+   * It requires activity data.
+   * It is a replacement for abstract component.
    */
-  update(): void {}
-
-  /**
-   * Update color in activity graph panel.
-   */
-  updateColor(): void {}
+  updateData(activity: Activity): void {
+    activity;
+  }
 
   /**
    * Update layout in activity graph panel.
@@ -159,7 +190,10 @@ export class ActivityGraphPanel extends Config {
     const heightTotal: number = math.sum(heights);
     heights.reverse();
     const heightCumsum: number[] = heights.map(
-      ((sum: number) => (value: number) => (sum += value))(0)
+      (
+        (sum: number) => (value: number) =>
+          (sum += value)
+      )(0)
     );
     const steps = heightCumsum.map((h: number) => h / heightTotal);
     steps.unshift(0);
@@ -171,5 +205,15 @@ export class ActivityGraphPanel extends Config {
     ];
     this.layout.yaxis.domain = domain;
     this.layout.xaxis.anchor = 'y' + this.yaxis;
+  }
+
+  /**
+   * Update layout label.
+   *
+   * @remarks
+   * It is a replacement for abstract component.
+   */
+  updateLayoutLabel(data: any = undefined): void {
+    data;
   }
 }

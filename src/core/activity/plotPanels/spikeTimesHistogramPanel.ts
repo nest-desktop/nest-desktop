@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
@@ -30,55 +32,15 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   }
 
   /**
-   * Initialize histogram panel of spike times.
+   * Update data for spike time histogram.
    */
-  init(): void {
-    // console.log('Init histogram panel for spike times');
-    this.activities = this.graph.project.spikeActivities;
-    this.data = [];
-  }
-
-  /**
-   * Update histogram panel of spike times.
-   *
-   * @remarks
-   * It requires activity data.
-   */
-  update(): void {
-    // console.log('Init histogram panel of spike times')
-    this.activities.forEach((activity: SpikeActivity) => {
-      this.updateSpikeTimesHistogram(activity);
-    });
-    this.layout.xaxis.title = 'Time [ms]';
-    this.layout.yaxis.title = 'Spike count';
-  }
-
-  /**
-   * Update histogram of spike times
-   */
-  updateSpikeTimesHistogram(activity: SpikeActivity): void {
-    // console.log('Update histogram data of spike times')
-    if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
-      this.addSpikeTimesHistogram(activity);
-    }
-    const data: any = this.data.find(
-      (d: any) => d.activityIdx === activity.idx
-    );
-    const start = 1;
-    const end: number = activity.endtime + 1;
+  updateData(activity: SpikeActivity): void {
+    // console.log('Update data of spike time histogram.');
+    const x: number[] = activity.events.times;
+    const start = d3.min(x);
+    const end: number = d3.max(x) + 1;
     const size: number = this.state.binsize.value;
-    data.x = activity.events.times;
-    data.xbins.size = size;
-    data.xbins.end = end;
-    data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
-    data.marker.color = activity.recorder.view.color;
-  }
 
-  /**
-   * Add empty data of spike time histogram in plot data.
-   */
-  addSpikeTimesHistogram(activity: SpikeActivity): void {
-    // console.log('Add histogram data of spike times')
     this.data.push({
       activityIdx: activity.idx,
       type: 'histogram',
@@ -91,18 +53,26 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
       showlegend: false,
       opacity: 0.6,
       xbins: {
-        start: 0,
-        end: 1,
-        size: 0.1,
+        start,
+        end,
+        size,
       },
       marker: {
-        color: 'black',
+        color: activity.recorder.view.color,
         line: {
           color: 'white',
-          width: 1,
+          width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: [],
+      x,
     });
+  }
+
+  /**
+   * Update layout label for spike time histogram.
+   */
+  updateLayoutLabel(): void {
+    this.layout.xaxis.title = 'Time [ms]';
+    this.layout.yaxis.title = 'Spike count';
   }
 }

@@ -32,34 +32,16 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
   }
 
   /**
-   * Initialize histogram panel for inter-spike intervals (ISI).
+   * Update data for ISI histogram.
    */
-  init(): void {
-    // console.log('Init histogram panel for inter-spike interval');
-    this.activities = this.graph.project.spikeActivities;
-    this.data = [];
-  }
+  updateData(activity: SpikeActivity): void {
+    // console.log('Update data for ISI histogram.').
+    const isi: number[][] = activity.ISI();
+    const x: number[] = [].concat.apply([], isi);
+    const start = 0.0;
+    const end: number = activity.endtime + 1;
+    const size: number = this.state.binsize.value;
 
-  /**
-   * Update histogram panel for inter-spike intervals (ISI).
-   *
-   * @remarks
-   * It requires activity data.
-   */
-  update(): void {
-    // console.log('Init histogram panel of spike times')
-    this.activities.forEach((activity: SpikeActivity) => {
-      this.updateInterSpikeIntervalHistogram(activity);
-    });
-    this.layout.xaxis.type = this.state.xaxisType;
-    this.layout.xaxis.title = 'Inter-spike interval [ms]';
-  }
-
-  /**
-   * Add empty data of ISI histogram of spikes.
-   */
-  addInterSpikeIntervalHistogram(activity: SpikeActivity): void {
-    // console.log('Add histogram data of inter-spike interval')
     this.data.push({
       activityIdx: activity.idx,
       type: 'histogram',
@@ -72,41 +54,26 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
       showlegend: false,
       opacity: 0.6,
       xbins: {
-        start: 0,
-        end: 1,
-        size: this._state.binsize.value,
+        start,
+        end,
+        size,
       },
       marker: {
-        color: 'black',
+        color: activity.recorder.view.color,
         line: {
           color: 'white',
-          width: 1,
+          width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      x: [],
+      x,
     });
   }
 
   /**
-   * Update ISI histogram of spikes.
+   * Update layout label for ISI histogram.
    */
-  updateInterSpikeIntervalHistogram(activity: SpikeActivity): void {
-    // console.log('Update histogram data of inter-spike interval')
-    if (!this.data.some((d: any) => d.activityIdx === activity.idx)) {
-      this.addInterSpikeIntervalHistogram(activity);
-    }
-    const start = 0.0;
-    const end: number = activity.endtime + 1;
-    const size: number = this.state.binsize.value;
-    const data: any = this.data.find(
-      (d: any) => d.activityIdx === activity.idx
-    );
-    const isi: number[][] = activity.ISI();
-    data.x = [].concat.apply([], isi);
-    data.xbins.start = start;
-    data.xbins.size = size;
-    data.xbins.end = end;
-    data.marker.line.width = (end - start) / size > 100 ? 0 : 1;
-    data.marker.color = activity.recorder.view.color;
+  updateLayoutLabel(): void {
+    this.layout.xaxis.type = this.state.xaxisType;
+    this.layout.xaxis.title = 'Inter-spike interval [ms]';
   }
 }

@@ -1,6 +1,5 @@
 import { ActivityChartGraph } from '../activityChartGraph';
 import { ActivityGraphPanel } from './activityGraphPanel';
-import { SpikeActivity } from '../spikeActivity';
 
 export class SpikeTimesPanel extends ActivityGraphPanel {
   constructor(graph: ActivityChartGraph, configName: string = null) {
@@ -11,24 +10,10 @@ export class SpikeTimesPanel extends ActivityGraphPanel {
   }
 
   /**
-   * Initialize spike data panels.
+   * Initialize panels for spike activities.
    */
   init(): void {
-    this.activities = this.graph.project.spikeActivities;
     this.data = [];
-  }
-
-  /**
-   * Update marker color for spike data panels.
-   */
-  updateColor(): void {
-    this.activities.forEach((activity: SpikeActivity) => {
-      const data: any = this.data.find(
-        (d: any) => d.activityIdx === activity.idx
-      );
-      if (data !== undefined) {
-        data.marker.color = activity.recorder.view.color;
-      }
-    });
+    this.activities = this.graph.project.spikeActivities;
   }
 }
