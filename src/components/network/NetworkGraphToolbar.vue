@@ -82,11 +82,16 @@
               </v-btn>
             </template>
             <v-card class="about-dialog">
-              <v-card-title v-text="'Are you sure to delete network?'" />
+              <v-card-title v-text="'Are you sure to delete this network?'" />
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn @click="state.dialog = false" text v-text="'close'" />
-                <v-btn @click="deleteNetwork" text v-text="'yes'" />
+                <v-btn
+                  @click="deleteNetwork"
+                  color="warning"
+                  text
+                  v-text="'delete'"
+                />
               </v-card-actions>
             </v-card>
           </v-dialog>

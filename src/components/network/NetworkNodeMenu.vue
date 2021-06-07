@@ -120,7 +120,7 @@
         </span>
 
         <span v-if="state.content === 'nodeDelete'">
-          <v-card-title v-text="'Are you sure to delete node?'" />
+          <v-card-title v-text="'Are you sure to delete this node?'" />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
