@@ -12,7 +12,7 @@
             />
             <v-checkbox
               @change="e => updateAppConfig({ pinNav: e || false })"
-              label="Pin navigation (Reload page required.)"
+              label="Pin navigation (Page reload required)"
               v-model="state.pinNav"
             />
             <v-checkbox
