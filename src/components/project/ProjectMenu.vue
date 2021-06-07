@@ -33,6 +33,23 @@
             </v-list-item>
           </v-list>
         </span>
+
+        <span v-if="state.content === 'projectDelete'">
+          <v-card-title v-text="'Are you sure to delete this project?'" />
+
+          <v-card-actions>
+            <v-btn @click="state.content = null" text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              @click="deleteProject"
+              color="warning"
+              text
+              v-text="'Delete'"
+            />
+          </v-card-actions>
+        </span>
       </v-card>
     </v-menu>
   </div>
@@ -95,14 +112,22 @@ export default Vue.extend({
           icon: 'mdi-delete',
           title: 'Delete project',
           onClick: () => {
-            state.project.delete().then(() => {
-              state.project.app.updateProjects();
-            });
-            state.show = false;
+            state.content = 'projectDelete';
           },
+          append: true,
         },
       ],
     });
+
+    /**
+     * Delete project.
+     */
+    const deleteProject = () => {
+      state.project.delete().then(() => {
+        state.project.app.updateProjects();
+      });
+      state.show = false;
+    };
 
     watch(
       () => props.project,
@@ -114,7 +139,7 @@ export default Vue.extend({
       }
     );
 
-    return { state };
+    return { deleteProject, state };
   },
 });
 </script>

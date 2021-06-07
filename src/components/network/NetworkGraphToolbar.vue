@@ -68,6 +68,34 @@
         </span>
 
         <span>
+          <v-dialog max-width="450" v-model="state.dialog">
+            <template #activator="{ on, attrs }">
+              <v-btn
+                :disabled="state.network.isEmpty()"
+                icon
+                small
+                title="Delete network"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon small v-text="'mdi-trash-can-outline'" />
+              </v-btn>
+            </template>
+            <v-card class="about-dialog">
+              <v-card-title v-text="'Are you sure to delete this network?'" />
+              <v-card-actions>
+                <v-spacer />
+                <v-btn @click="state.dialog = false" text v-text="'close'" />
+                <v-btn
+                  @click="deleteNetwork"
+                  color="warning"
+                  text
+                  v-text="'delete'"
+                />
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-btn
             :color="state.graph.state.centerSelected ? 'amber' : 'grey'"
             @click="() => state.graph.toggleCenterSelected()"
@@ -132,9 +160,18 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
+      dialog: false,
       graph: props.graph as NetworkGraph,
       network: props.network as Network,
     });
+
+    /**
+     * Delete network.
+     */
+    const deleteNetwork = () => {
+      state.network.empty();
+      state.dialog = false;
+    };
 
     watch(
       () => [props.graph, props.network],
@@ -145,6 +182,7 @@ export default Vue.extend({
     );
 
     return {
+      deleteNetwork,
       state,
     };
   },

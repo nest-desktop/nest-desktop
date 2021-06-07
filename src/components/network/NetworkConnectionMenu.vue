@@ -117,13 +117,19 @@
         </span>
 
         <span v-if="state.content === 'connectionDelete'">
-          <v-card-title v-text="'Are you sure to delete it?'" />
+          <v-card-title v-text="'Are you sure to delete this connection?'" />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
-              <v-icon left v-text="'mdi-menu-left'" /> no
+              <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="deleteConnection" text v-text="'yes'" />
+            <v-spacer />
+            <v-btn
+              @click="deleteConnection"
+              color="warning"
+              text
+              v-text="'delete'"
+            />
           </v-card-actions>
         </span>
       </v-card>
@@ -161,7 +167,6 @@ export default Vue.extend({
             state.content = 'paramsSelect';
             window.dispatchEvent(new Event('resize'));
           },
-          append: true,
         },
         {
           id: 'connectionReverse',
@@ -171,7 +176,6 @@ export default Vue.extend({
             state.connection.reverse();
             closeMenu();
           },
-          append: false,
         },
         {
           id: 'connectionReverse',
@@ -181,7 +185,6 @@ export default Vue.extend({
             state.connection.synapse.inverseWeight();
             closeMenu();
           },
-          append: false,
         },
         {
           id: 'connectionReset',
@@ -191,7 +194,6 @@ export default Vue.extend({
             state.connection.reset();
             closeMenu();
           },
-          append: false,
         },
         {
           id: 'connectionDelete',
@@ -200,7 +202,7 @@ export default Vue.extend({
           onClick: () => {
             state.content = 'connectionDelete';
           },
-          append: false,
+          append: true,
         },
       ],
     });

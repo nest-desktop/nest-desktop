@@ -120,13 +120,14 @@
         </span>
 
         <span v-if="state.content === 'nodeDelete'">
-          <v-card-title v-text="'Are you sure to delete node?'" />
+          <v-card-title v-text="'Are you sure to delete this node?'" />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
-              <v-icon left v-text="'mdi-menu-left'" /> no
+              <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="deleteNode" text>yes</v-btn>
+            <v-spacer />
+            <v-btn @click="deleteNode" color="warning" text v-text="'delete'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -243,6 +244,7 @@ export default Vue.extend({
           },
           show: () => true,
           title: 'Delete node',
+          append: true,
         },
       ],
     });
