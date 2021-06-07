@@ -35,7 +35,7 @@
         </span>
 
         <span v-if="state.content === 'projectDelete'">
-          <v-card-title v-text="'Are you sure to delete project?'" />
+          <v-card-title v-text="'Are you sure to delete this project?'" />
 
           <v-card-actions>
             <v-btn @click="state.content = null" text>

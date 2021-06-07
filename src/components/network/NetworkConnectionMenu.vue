@@ -117,7 +117,7 @@
         </span>
 
         <span v-if="state.content === 'connectionDelete'">
-          <v-card-title v-text="'Are you sure to delete connection?'" />
+          <v-card-title v-text="'Are you sure to delete this connection?'" />
 
           <v-card-actions>
             <v-btn @click="backMenu" text>
