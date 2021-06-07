@@ -35,7 +35,7 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
    * Update data for ISI histogram.
    */
   updateData(activity: SpikeActivity): void {
-    // console.log('Update data fir ISI histogram.').
+    // console.log('Update data for ISI histogram.').
     const isi: number[][] = activity.ISI();
     const x: number[] = [].concat.apply([], isi);
     const start = 0.0;
