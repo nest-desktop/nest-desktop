@@ -14,7 +14,7 @@ setuptools.setup(
     description="A web-based GUI application for NEST Simulator",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/babsey/nest-desktop",
+    url="https://github.com/nest-desktop/nest-desktop",
     license="MIT License",
     packages=setuptools.find_packages(),
     include_package_data=True,
