@@ -52,9 +52,8 @@ export class NetworkGraph {
    * Initialize panel.
    */
   initPanel(): void {
-    const selectPanel: d3.Selection<any, any, any, any> = this._selector.select(
-      'g#panel'
-    );
+    const selectPanel: d3.Selection<any, any, any, any> =
+      this._selector.select('g#panel');
     selectPanel.style('display', 'none');
     selectPanel
       .append('circle')
@@ -187,7 +186,7 @@ export class NetworkGraph {
         .style('stroke', selectedNode.view.color)
         .attr('d', () => drawPath(source, target, { isTargetMouse: true }));
     } else {
-      console.error('No node was selected when dragLine() got executed!');
+      console.log('No node was selected when dragLine() got executed!');
     }
   }
 
@@ -350,10 +349,7 @@ export class NetworkGraph {
       node.model.elementType == 'neuron' &&
       node.view.weight == 'inhibitory'
     ) {
-      soma
-        .append('circle')
-        .attr('class', 'shape')
-        .attr('r', this._nodeRadius);
+      soma.append('circle').attr('class', 'shape').attr('r', this._nodeRadius);
     } else {
       soma
         .append('polygon')
@@ -614,10 +610,7 @@ export class NetworkGraph {
       .duration(duration);
 
     // update connection path
-    this._selector
-      .selectAll('g.connection')
-      .transition(t)
-      .style('opacity', 1);
+    this._selector.selectAll('g.connection').transition(t).style('opacity', 1);
 
     this._selector
       .selectAll('g.connection')
@@ -674,17 +667,16 @@ export class NetworkGraph {
       .selectAll('g.node')
       .selectAll('.shape')
       .style('stroke', (node: Node) => node.view.color)
-      .style('stroke-width', (node: Node) => (node.n > 1 ? 1.5 : 1) * this._strokeWidth)
+      .style(
+        'stroke-width',
+        (node: Node) => (node.n > 1 ? 1.5 : 1) * this._strokeWidth
+      )
       .style('stroke-dasharray', (node: Node) =>
         node.view.isSelected() ? '7.85' : ''
       );
 
-    const connector: d3.Selection<
-      any,
-      any,
-      any,
-      any
-    > = this._selector.selectAll('g.connector');
+    const connector: d3.Selection<any, any, any, any> =
+      this._selector.selectAll('g.connector');
 
     connector.style('opacity', (node: Node) =>
       (node.view.isFocused() || node.view.isSelected()) &&
@@ -780,10 +772,10 @@ export class NetworkGraph {
         this._state.centerSelected &&
         this._network.view.selectedConnection
       ) {
-        const source: any = this._network.view.selectedConnection.source.view
-          .position;
-        const target: any = this._network.view.selectedConnection.target.view
-          .position;
+        const source: any =
+          this._network.view.selectedConnection.source.view.position;
+        const target: any =
+          this._network.view.selectedConnection.target.view.position;
         x = d3.mean([source.x, target.x]);
         y = d3.mean([source.y, target.y]);
       } else if (this._network.nodes.length > 0) {
