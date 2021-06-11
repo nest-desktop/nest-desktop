@@ -146,6 +146,10 @@ export abstract class ActivityGraphPanel extends Config {
    */
   update(): void {
     // console.log('Update panels for activity.');
+    this.activities.forEach((activity: Activity) => {
+      this.updateStates(activity);
+    });
+
     this.data = [];
     this.activities.forEach((activity: Activity) => {
       this.updateData(activity);
@@ -215,5 +219,16 @@ export abstract class ActivityGraphPanel extends Config {
    */
   updateLayoutLabel(data: any = undefined): void {
     data;
+  }
+
+  /**
+   * Update states of activity graph panel.
+   *
+   * @remarks
+   * It requires activity data.
+   * It is a replacement for abstract component.
+   */
+  updateStates(activity: Activity): void {
+    activity;
   }
 }

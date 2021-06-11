@@ -82,7 +82,6 @@ export class AnalogSignalHistogramPanel extends ActivityGraphPanel {
       type: 'histogram',
       source: 'x',
       histfunc: 'count',
-      text: 'auto',
       name: 'Histogram of ' + activity.recorder.view.label,
       hoverinfo: 'y',
       showlegend: false,
