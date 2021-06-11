@@ -1722,7 +1722,7 @@
   dependencies:
     eslint-config-prettier "^6.0.0"
 
-"@vue/eslint-config-typescript@^4.0.0":
+"@vue/eslint-config-typescript@4":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@vue/eslint-config-typescript/-/eslint-config-typescript-4.0.0.tgz#a202983598a4a826460cbb8ee43826875b0f6673"
   integrity sha512-uSMAMgw4xDgVdZQhpbtJRo8nMV4oOy3Ht8olfOo7xvYFYLMF2JZ1tDRKd9/NSusxA72O2Vma+HzmyzDHg9evcQ==

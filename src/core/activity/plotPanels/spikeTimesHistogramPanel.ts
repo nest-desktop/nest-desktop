@@ -1,5 +1,3 @@
-import * as d3 from 'd3';
-
 import { ActivityChartGraph } from '../activityChartGraph';
 import { SpikeActivity } from '../spikeActivity';
 import { SpikeTimesPanel } from './spikeTimesPanel';
@@ -15,6 +13,8 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
     },
     barmode: 'overlay',
     barnorm: '',
+    start: 0,
+    end: 1000,
   };
 
   constructor(graph: ActivityChartGraph) {
@@ -37,16 +37,15 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   updateData(activity: SpikeActivity): void {
     // console.log('Update data of spike time histogram.');
     const x: number[] = activity.events.times;
-    const start = d3.min(x);
-    const end: number = d3.max(x) + 1;
-    const size: number = this.state.binsize.value;
+    const start: number = this._state.start;
+    const end: number = this._state.end;
+    const size: number = this._state.binsize.value;
 
     this.data.push({
       activityIdx: activity.idx,
       type: 'histogram',
       source: 'x',
       histfunc: 'count',
-      text: 'auto',
       legendgroup: 'spikes' + activity.idx,
       name: 'Histogram of spike times in' + activity.recorder.view.label,
       hoverinfo: 'y',
@@ -74,5 +73,13 @@ export class SpikeTimesHistogramPanel extends SpikeTimesPanel {
   updateLayoutLabel(): void {
     this.layout.xaxis.title = 'Time [ms]';
     this.layout.yaxis.title = 'Spike count';
+  }
+
+  /**
+   * Update state for spike time histogram.
+   */
+  updateStates(activity: SpikeActivity): void {
+    this._state.start = 0;
+    this._state.end = activity.endtime + 1;
   }
 }
