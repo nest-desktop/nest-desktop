@@ -13,10 +13,10 @@ You will use a simple linear integrate-and-fire (LIF) point neuron model to devi
 In the LIF neuron model, spikes are generated each time the membrane potential reaches a predefined threshold.
 Spike waveforms are not modeled explicitly, and you recognize a spike only by the reset (strong downward deflection) of the membrane potential that follows a threshold crossing.
 
-Exercise
   1. What is the membrane potential response for both negative and positive values of the applied current?
      You can measure the membrane potential by performing an intracellular recording, using a voltmeter.
      Try different amplitudes of the applied current and describe the phenomena you observe.
+
   2. Explore how the membrane potential response depends on the biophysical neuron parameters.
      In particular, describe the influence of the time constant of the membrane, the spike threshold and the absolute refractory time on the membrane potential trajectories.
 

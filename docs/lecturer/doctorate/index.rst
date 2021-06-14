@@ -1,18 +1,13 @@
 Doctorate
 =========
 
-
 The section `Doctorate` gives deep insight into computational neuroscience.
 Here, we learn activity dynamics of complex neuronal networks.
 
 
-
-**Assignments**
+**Topics**
 
 .. toctree::
+  :maxdepth: 1
 
-
-**Assignments will come soon**
-
-  - Decision making
-  - Traveling wave
+  networks-decision-making
