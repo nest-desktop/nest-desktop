@@ -48,7 +48,6 @@ export class CVISIHistogramPanel extends SpikeTimesPanel {
       type: 'histogram',
       source: 'x',
       histfunc: 'count',
-      text: 'auto',
       legendgroup: 'spikes' + activity.idx,
       name: 'Histogram of CV(ISI) in' + activity.recorder.view.label,
       hoverinfo: 'y',

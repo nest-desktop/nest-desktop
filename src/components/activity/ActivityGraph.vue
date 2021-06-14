@@ -143,7 +143,7 @@
 import Vue from 'vue';
 import { reactive, onMounted, watch } from '@vue/composition-api';
 import { Plotly } from 'vue-plotly';
-import * as PlotlyJS from 'plotly.js-dist';
+import * as PlotlyJS from 'plotly.js-dist-min';
 
 import ActivityAnimationGraph from '@/components/activity/ActivityAnimationGraph.vue';
 import { ActivityGraph } from '@/core/activity/activityGraph';

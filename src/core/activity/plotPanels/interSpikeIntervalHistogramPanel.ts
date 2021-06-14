@@ -14,6 +14,8 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     barmode: 'overlay',
     barnorm: '',
     xaxisType: 'linear',
+    start: 0,
+    end: 1000,
   };
 
   constructor(graph: ActivityChartGraph) {
@@ -38,16 +40,15 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
     // console.log('Update data for ISI histogram.').
     const isi: number[][] = activity.ISI();
     const x: number[] = [].concat.apply([], isi);
-    const start = 0.0;
-    const end: number = activity.endtime + 1;
-    const size: number = this.state.binsize.value;
+    const start: number = this._state.start;
+    const end: number = this._state.end;
+    const size: number = this._state.binsize.value;
 
     this.data.push({
       activityIdx: activity.idx,
       type: 'histogram',
       source: 'x',
       histfunc: 'count',
-      text: 'auto',
       legendgroup: 'spikes' + activity.idx,
       name: 'Histogram of ISI in' + activity.recorder.view.label,
       hoverinfo: 'y',
@@ -75,5 +76,13 @@ export class InterSpikeIntervalHistogramPanel extends SpikeTimesPanel {
   updateLayoutLabel(): void {
     this.layout.xaxis.type = this.state.xaxisType;
     this.layout.xaxis.title = 'Inter-spike interval [ms]';
+  }
+
+  /**
+   * Update state for spike time histogram.
+   */
+  updateStates(activity: SpikeActivity): void {
+    this._state.start = 0;
+    this._state.end = activity.endtime + 1;
   }
 }
