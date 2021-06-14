@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nest-desktop:
+    image: nestdesktop/app:dev
+    container_name: 'nest-desktop'
+    ports:
+      - '8000:8000'
+  nest-server:
+    image: nestsim/nest:3.0
+    command: 'nest-server start -o'
+    container_name: 'nest-server'
+    environment:
+      NEST_SERVER_MODULES: 'nest,numpy'
+      NEST_SERVER_RESTRICTION_OFF: 'true'
+    ports:
+      - '5000:5000'
