@@ -12,6 +12,7 @@ NEST Desktop allows students to explore important concepts in computational neur
 Our experiences so far highlight that NEST Desktop helps advancing both quality and intensity of teaching in computational neuroscience in regular university courses.
 We view the availability of the tool on public resources like the European ICT infrastructure for neuroscience EBRAINS as a contribution to equal opportunities [2]_.
 
+A preprint for NEST Desktop is available on [BioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1).
 
 **Acknowledgements**
 
