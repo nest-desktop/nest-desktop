@@ -47,7 +47,7 @@ For more information, please see the [User Documentation Page](https://nest-desk
 
 ### Citation
 
-You can use reference to the preprint for NEST Desktop which is available on [BioRxiv](https://biorxiv.org).
+You can use reference to the preprint for NEST Desktop which is available on [BioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1).
 
 
 ### License [MIT](LICENSE)
