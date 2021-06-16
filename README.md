@@ -3,21 +3,21 @@
 </p>
 
 GitHub
-![commit activity](https://img.shields.io/github/commit-activity/y/nest-desktop/nest-desktop)
-![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)
-![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)
+[![commit activity](https://img.shields.io/github/commit-activity/y/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
+[![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers)
+[![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members)
 
 PyPI
 [![pypi](https://img.shields.io/pypi/v/nest-desktop?label=version)](https://pypi.org/project/nest-desktop/)
-![downloads](https://img.shields.io/pypi/dm/nest-desktop)
+[![downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/)
 
 DockerHub
 [![docker version](https://img.shields.io/docker/v/nestdesktop/app/dev)](https://hub.docker.com/r/nestdesktop/app)
-![image size](https://img.shields.io/docker/image-size/nestdesktop/app/dev)
-![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)
+[![image size](https://img.shields.io/docker/image-size/nestdesktop/app/dev)](https://hub.docker.com/r/nestdesktop/app)
+[![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)](https://hub.docker.com/r/nestdesktop/app)
 
 [![docs](https://img.shields.io/readthedocs/nest-desktop)](https://nest-desktop.readthedocs.io)
-![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)
+[![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.4739103-blue)](https://doi.org/10.5281/zenodo.4739103)
 
 
