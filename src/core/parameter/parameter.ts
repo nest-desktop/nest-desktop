@@ -29,7 +29,7 @@ export class Parameter extends Config {
 
     this._id = param.id;
     this._value = param.value || 0;
-    this._visible = param.visible !== undefined ? param.visible : false;
+    this._visible = param.visible !== undefined ? param.visible : true;
 
     // optional param specifications
     this._factors = param.factors || [];
@@ -322,15 +322,13 @@ export class Parameter extends Config {
     const params: any = {
       id: this._id,
       value: this._value,
+      visible: this._visible,
     };
     if (this._factors.length > 0) {
       params.factors = this._factors;
     }
     if (!this.isConstant()) {
       params.type = this._type;
-    }
-    if (this._visible === false) {
-      params.visible = this._visible;
     }
     return params;
   }
