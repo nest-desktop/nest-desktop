@@ -35,7 +35,7 @@
                 :color="route.color"
                 :key="route.id"
                 :title="route.title"
-                @click="() => toggle(route.id)"
+                @click="() => updatePageContent(route.id)"
                 @contextmenu="e => route.contextmenu(e)"
                 v-for="route in routes"
               >
@@ -158,6 +158,7 @@ import About from '@/components/About.vue';
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
+import VueRouter, { Route } from 'vue-router';
 
 export default {
   name: 'Navigation',
@@ -179,6 +180,8 @@ export default {
         show: false,
       },
     });
+    let recentProjectId = '';
+    let recentModelId = 'ac_generator';
 
     /**
      * Toggle navigation drawer.
@@ -197,6 +200,51 @@ export default {
     };
 
     /**
+     * Redirects the page content to the most recent chosen project/model. If
+     * no one was chosen before, the first one is selected.
+     * Please beware: The route IDs used in this class are the ones in the
+     * array, which might not contain every route from the Vue router!
+     * @param targetRouteId ID of the route to navigate to
+     * @param router Vue router (this.$router)
+     */
+    function redirect(targetRouteId: string, router: VueRouter) {
+      if (targetRouteId === 'project') {
+        if (recentProjectId == '') {
+          recentProjectId = state.app.view.filteredProjects[0].id;
+        }
+        router.push({
+          name: 'ProjectId',
+          params: { id: recentProjectId },
+        });
+      } else {
+        if (recentModelId == undefined) {
+          recentModelId = 'ac_generator';
+        }
+        router.push({ name: 'ModelId', params: { id: recentModelId } });
+      }
+    }
+
+    /**
+     * Stores the most recently used model or project, respectively.
+     * Please beware: The route IDs used in this class are the ones in the
+     * array, which might not contain every route from the Vue router!
+     * @param currentTargetId ID of the route to navigate to
+     * @param sourceRroute Vue route of the page to leave (this.$route)
+     */
+    function saveRecentId(targetRouteId: string, sourceRoute: Route) {
+      switch (targetRouteId) {
+        case 'model':
+          recentProjectId = sourceRoute.params.id;
+          break;
+        case 'project':
+          recentModelId = sourceRoute.params.id;
+          break;
+        default:
+          break;
+      }
+    }
+
+    /**
      * Show project menu.
      */
     const showProjectsMenu = (e: MouseEvent) => {
@@ -209,6 +257,24 @@ export default {
         state.projectsMenu.show = true;
       }, 1);
     };
+
+    /**
+     * Updates the page content according to the route ID to navigate to.
+     * Please beware: The route IDs used in this class are the ones in the
+     * array, which might not contain every route from the Vue router!
+     * @param routeId ID of the route to navigate to
+     */
+    function updatePageContent(routeId: string) {
+      toggle(routeId);
+
+      // Check if the page is already loaded to avoid "Avoided redundant
+      // navigation" error
+      let pathstring: string = this.$route.path;
+      if (pathstring.indexOf(routeId) < 0) {
+        saveRecentId(routeId, this.$route);
+        redirect(routeId, this.$router);
+      }
+    }
 
     /**
      * List of routes in navigation.
@@ -235,6 +301,7 @@ export default {
       reset,
       routes,
       state,
+      updatePageContent,
     };
   },
 };
