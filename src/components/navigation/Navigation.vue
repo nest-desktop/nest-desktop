@@ -209,7 +209,7 @@ export default {
      */
     function redirect(targetRouteId: string, router: VueRouter) {
       if (targetRouteId === 'project') {
-        if (recentProjectId == '') {
+        if (recentProjectId == undefined || recentProjectId.length <= 0) {
           recentProjectId = state.app.view.filteredProjects[0].id;
         }
         router.push({
@@ -217,7 +217,7 @@ export default {
           params: { id: recentProjectId },
         });
       } else {
-        if (recentModelId == undefined) {
+        if (recentModelId == undefined || recentModelId.length <= 0) {
           recentModelId = 'ac_generator';
         }
         router.push({ name: 'ModelId', params: { id: recentModelId } });
