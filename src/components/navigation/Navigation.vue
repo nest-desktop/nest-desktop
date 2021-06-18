@@ -209,7 +209,14 @@ export default {
      */
     function redirect(targetRouteId: string, router: VueRouter) {
       if (targetRouteId === 'project') {
-        if (recentProjectId == undefined || recentProjectId.length <= 0) {
+        // check if project ID is undefined or project does not exist anymore
+        if (
+          recentProjectId == undefined ||
+          recentProjectId.length <= 0 ||
+          state.app.view.filteredProjects.filter(
+            project => project.id == recentProjectId
+          ).length <= 0
+        ) {
           recentProjectId = state.app.view.filteredProjects[0].id;
         }
         router.push({
