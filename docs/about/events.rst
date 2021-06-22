@@ -45,7 +45,7 @@ Past events
 
 **2016**
 
-:December: - NEST Desktop is born in Freiburg.
+:December: - Start to develop NEST Desktop.
 
 ||||
 
