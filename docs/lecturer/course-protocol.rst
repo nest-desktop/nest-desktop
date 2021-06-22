@@ -11,7 +11,7 @@ In addition, students will need to select and extract meaningful illustrations a
 Simulations with NEST Desktop can be exported to *PDF*, *PNG* or *SVG* files.
 for PDF export, students can increase the zoom factor of the browser before printing the page.
 Image files can be imported to a document processor, e.g. LibreOffice or LaTeX for better illustration of the simulation.
-It is important, however, that the writing is focused, and carefully select images to import into the protocol.
+It is important, however, that the writing is focused, and images to import to the protocol are carefully selected.
 As a final step, the protocol will be exported to a single PDF file and submitted by email to tutors.
 
 Generally, please make sure the protocol is concise, complete and correct.
