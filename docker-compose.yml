@@ -1,7 +1,7 @@
 version: '3'
 services:
   nest-desktop:
-    image: nestdesktop/app:dev
+    image: nestdesktop/app:3.0
     container_name: 'nest-desktop'
     ports:
       - '8000:8000'

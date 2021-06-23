@@ -1,0 +1,114 @@
+{
+  "id": "iaf_psc_alpha",
+  "element_type": "neuron",
+  "label": "IAF psc alpha",
+  "recordables": [
+    "I_syn_ex",
+    "I_syn_in",
+    "V_m",
+    "weighted_spikes_ex",
+    "weighted_spikes_in"
+  ],
+  "params": [
+    {
+      "id": "C_m",
+      "label": "capacitance of the membrane",
+      "unit": "pF",
+      "value": 250,
+      "input": "valueSlider",
+      "max": 500,
+      "min": 1,
+      "step": 1
+    },
+    {
+      "id": "E_L",
+      "label": "leak reversal potential",
+      "unit": "mV",
+      "value": -70,
+      "input": "valueSlider",
+      "max": 100,
+      "min": -100,
+      "step": 1
+    },
+    {
+      "id": "I_e",
+      "label": "constant external input current",
+      "unit": "pA",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 100,
+      "min": -100,
+      "step": 1
+    },
+    {
+      "id": "V_m",
+      "label": "initial membrane potential",
+      "unit": "mV",
+      "value": -70,
+      "input": "valueSlider",
+      "max": 100,
+      "min": -100,
+      "step": 1
+    },
+    {
+      "id": "V_reset",
+      "label": "reset potential of the membrane",
+      "unit": "mV",
+      "value": -70,
+      "input": "valueSlider",
+      "max": 100,
+      "min": -100,
+      "step": 1
+    },
+    {
+      "id": "V_th",
+      "label": "spike threshold",
+      "unit": "mV",
+      "value": -55,
+      "input": "valueSlider",
+      "max": 100,
+      "min": -100,
+      "step": 1
+    },
+    {
+      "id": "t_ref",
+      "label": "duration of refractory period",
+      "unit": "ms",
+      "value": 2,
+      "input": "valueSlider",
+      "max": 5,
+      "min": 0.1,
+      "step": 0.1
+    },
+    {
+      "id": "tau_m",
+      "label": "membrane time constant",
+      "unit": "ms",
+      "value": 10,
+      "input": "valueSlider",
+      "max": 30,
+      "min": 1,
+      "step": 0.1
+    },
+    {
+      "id": "tau_syn_ex",
+      "label": "time constant of the excitatory synapse",
+      "unit": "ms",
+      "value": 2,
+      "input": "valueSlider",
+      "max": 4,
+      "min": 0.1,
+      "step": 0.1
+    },
+    {
+      "id": "tau_syn_in",
+      "label": "time constant of the inhibitory synapse",
+      "unit": "ms",
+      "value": 2,
+      "input": "valueSlider",
+      "max": 4,
+      "min": 0.1,
+      "step": 0.1
+    }
+  ]
+}

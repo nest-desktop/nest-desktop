@@ -1,0 +1,11 @@
+{
+  "binsize": {
+    "id": "binsize",
+    "label": "Bin size",
+    "level": 1,
+    "ticks": [1, 2, 5, 10, 25, 50],
+    "unit": "ms",
+    "value": 5,
+    "view": "ticksSlider"
+  }
+}

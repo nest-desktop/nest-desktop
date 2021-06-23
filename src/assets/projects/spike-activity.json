@@ -1,0 +1,170 @@
+{
+  "name": "Spike activity",
+  "network": {
+    "connections": [
+      {
+        "source": 0,
+        "target": 1,
+        "rule": "all_to_all",
+        "params": [],
+        "synapse": {
+          "model": "static_synapse",
+          "params": [
+            {
+              "id": "weight",
+              "value": 10
+            },
+            {
+              "id": "delay",
+              "value": 1,
+              "visible": false
+            }
+          ]
+        }
+      },
+      {
+        "source": 1,
+        "target": 2,
+        "rule": "all_to_all",
+        "params": [],
+        "synapse": {
+          "model": "static_synapse",
+          "params": [
+            {
+              "id": "weight",
+              "value": 1,
+              "visible": false,
+              "factors": []
+            },
+            {
+              "id": "delay",
+              "value": 1,
+              "visible": false,
+              "factors": []
+            }
+          ]
+        }
+      }
+    ],
+    "nodes": [
+      {
+        "model": "poisson_generator",
+        "size": 1,
+        "view": {
+          "position": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        "params": [
+          {
+            "id": "rate",
+            "value": 6500
+          },
+          {
+            "id": "start",
+            "value": 0,
+            "visible": false
+          },
+          {
+            "id": "stop",
+            "value": 10000,
+            "visible": false
+          }
+        ]
+      },
+      {
+        "model": "iaf_psc_alpha",
+        "size": 100,
+        "view": {
+          "position": {
+            "x": 200,
+            "y": 100
+          }
+        },
+        "params": [
+          {
+            "id": "C_m",
+            "value": 250,
+            "visible": false
+          },
+          {
+            "id": "E_L",
+            "value": -70,
+            "visible": false
+          },
+          {
+            "id": "I_e",
+            "value": 0,
+            "visible": false
+          },
+          {
+            "id": "V_m",
+            "value": -70,
+            "visible": false
+          },
+          {
+            "id": "V_reset",
+            "value": -70,
+            "visible": false
+          },
+          {
+            "id": "V_th",
+            "value": -55,
+            "visible": false
+          },
+          {
+            "id": "t_ref",
+            "value": 2,
+            "visible": false
+          },
+          {
+            "id": "tau_m",
+            "value": 10,
+            "visible": false
+          },
+          {
+            "id": "tau_syn_ex",
+            "value": 2,
+            "visible": false
+          },
+          {
+            "id": "tau_syn_in",
+            "value": 2,
+            "visible": false
+          }
+        ]
+      },
+      {
+        "model": "spike_recorder",
+        "view": {
+          "position": {
+            "x": 350,
+            "y": 50
+          }
+        },
+        "params": [
+          {
+            "id": "start",
+            "value": 0,
+            "visible": false
+          },
+          {
+            "id": "stop",
+            "value": 10000,
+            "visible": false
+          }
+        ]
+      }
+    ]
+  },
+  "simulation": {
+    "kernel": {
+      "resolution": 0.1,
+      "localNumThreads": 1
+    },
+    "time": 1000,
+    "randomSeed": 0
+  },
+  "version": "3.0.0"
+}

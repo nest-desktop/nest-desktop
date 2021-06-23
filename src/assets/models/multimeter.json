@@ -1,0 +1,36 @@
+{
+  "abbreviation": "mm",
+  "id": "multimeter",
+  "element_type": "recorder",
+  "label": "multimeter",
+  "params": [
+    {
+      "id": "interval",
+      "label": "time interval of recording",
+      "unit": "ms",
+      "value": 1,
+      "input": "tickSlider",
+      "ticks": [0.01, 0.1, 1, 10]
+    },
+    {
+      "id": "start",
+      "label": "start time",
+      "unit": "ms",
+      "value": 0,
+      "input": "valueSlider",
+      "max": 10000,
+      "min": 0,
+      "step": 10
+    },
+    {
+      "id": "stop",
+      "label": "stop time",
+      "unit": "ms",
+      "value": 10000,
+      "input": "valueSlider",
+      "max": 10000,
+      "min": 0,
+      "step": 10
+    }
+  ]
+}

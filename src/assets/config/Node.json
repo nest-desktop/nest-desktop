@@ -1,0 +1,26 @@
+{
+  "graph": {
+    "radius": {
+      "label": "shape radius",
+      "max": 30,
+      "min": 1,
+      "value": 15
+    },
+    "strokeWidth": {
+      "label": "stroke width",
+      "max": 20,
+      "min": 1,
+      "step": 0.5,
+      "value": 2.5
+    }
+  },
+  "size": {
+    "id": "n",
+    "input": "valueSlider",
+    "label": "population size",
+    "max": 1000,
+    "min": 1,
+    "step": 1,
+    "value": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "bins": {
+    "id": "bins",
+    "label": "Bins",
+    "level": 1,
+    "ticks": [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000],
+    "value": 250,
+    "view": "ticksSlider"
+  }
+}

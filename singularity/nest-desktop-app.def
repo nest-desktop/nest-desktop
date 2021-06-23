@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: nest-desktop/app
+
+%labels
+  AUTHOR Sebastian Spreizer <spreizer@web.de>
+
+%runscript
+  nest-desktop start
