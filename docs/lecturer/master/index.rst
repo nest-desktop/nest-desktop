@@ -1,8 +1,8 @@
-Master
-======
+Master students
+===============
 
-The section `Master` contains topics for the students with biological knowledge.
-Here, we learn activity dynamics of a single neuron as well as of the neuronal networks.
+This section covers advanced topics for students with previous knowledge in neurobiology.
+Here, we cover the activity dynamics of single neurons and of neuronal networks.
 
 
 **Topics**

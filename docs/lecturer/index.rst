@@ -6,32 +6,30 @@
    This is A PREVIEW. This guide is in development. Some information may be incomplete!
 
 
-This section contains guides for the lecturer for teaching computational neuroscience with NEST Desktop.
-With computer simulation students are able to explore models ranging from single neurons to large neuronal networks.
+This section gives directions for lecturers who want to teach computational neuroscience with NEST Desktop.
+Using computer simulations, students are able to explore models ranging from single neurons to large neuronal networks.
 Numerical experiments of increasing complexity help to understand how brain networks function and what are the features of their dynamic behavior.
 
 .. note::
 
-  This section assumes that you have prior knowledge of the use of NEST Desktop.
+  This section assumes that you have prior knowledge of how to use NEST Desktop.
   If you have not used NEST Desktop before, please read the User Documentation first (:doc:`/user/index`).
 
-In term to organize a course guides are provides for coordinators:
+To support the organization of a course, we provide some hints for course instructors:
 
   - :doc:`course-design`
-  - :doc:`didactic-strategy`
+  - :doc:`didactic-concept`
 
-Additionally, we provide course materials for the participants:
+Additionally, we provide course materials to be handed out to participants:
 
   - :doc:`first-steps`
   - :doc:`course-protocol`
 
+This guide shows how you can teach the biophysics of neurons, synapses and large networks of the brain to students using NEST Desktop.
+Video tutorials illustrate important aspects of the course work.
+The provided material could be used to prepare handouts for students.
 
-
-These guides show how to systematically teach the biophysics of neurons, synapses and large networks of the brain to students with NEST Desktop. Video tutorials give insight of NEST Desktop in a course.
-Also course materials will be handed out to students.
-
-
-Select appropriate assignments that fits your background knowledge:
+Select the level of the course that you plan to conduct with NEST Desktop:
 
 .. raw:: html
 
@@ -39,11 +37,11 @@ Select appropriate assignments that fits your background knowledge:
     <div class="column col-3 color pa-1">
       <a href="bachelor/index.html">
         <div class="black pa-1">
-          <h3>The bachelor</h3>
+          <h3>Bachelor students</h3>
           <p>
-            ... learns basics of computational neuroscience without any prior knowledge.
+            ... want to learn basic computational neuroscience with little prior knowledge.
           </p>
-          <span class="bottom pa-1">I am a bachelor.</span>
+          <span class="bottom pa-1">For bachelor students</span>
         </div>
       </a>
     </div>
@@ -52,11 +50,11 @@ Select appropriate assignments that fits your background knowledge:
     <div class="column col-3 color pa-1">
       <a href="master/index.html">
         <div class="black pa-1">
-          <h3>The master</h3>
+          <h3>Master students</h3>
           <p>
-          ... explores topics of computational neuroscience with biological knowledge.
+          ... explore core concepts of computational neuroscience arising in the literature.
           </p>
-          <span class="bottom pa-1">I am a master.</span>
+          <span class="bottom pa-1">For master students</span>
         </div>
       </a>
     </div>
@@ -64,11 +62,11 @@ Select appropriate assignments that fits your background knowledge:
     <div class="column col-3 color pa-1">
       <a href="doctorate/index.html">
         <div class="black pa-1">
-          <h3>The doctorate</h3>
+          <h3>Doctoral students</h3>
           <p>
-            ... dives in advance concept of computational neuroscience.
+            ... deal with advanced concepts of computational neuroscience arising in research.
           </p>
-          <span class="bottom pa-1">I am a doctorate.</span>
+          <span class="bottom pa-1">For doctoral students</span>
         </div>
       </a>
     </div>
@@ -81,8 +79,8 @@ Select appropriate assignments that fits your background knowledge:
 
 Thanks for the help:
 
-  - Stefan Rotter (Course coordinator)
-  - Jeanine Laturner (Tutor)
+  - Stefan Rotter (course instructor)
+  - Jeanine Laturner (tutor)
 
 
 

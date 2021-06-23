@@ -4,7 +4,6 @@ Noise current injection into single neurons
 To account for additional effects seen in recordings from real nerve cells, we add some `noise` current to the input mimicking spontaneous channel openings, or `synaptic bombardment` originating from a large pool of presynaptic neurons.
 If the fluctuations of a physical variable are due to the combined influence of a large number of small contributions, the concept of White Noise can provide an adequate descriptive model.
 In this idealized type of signal, all frequencies are present in equal proportions, but with random phases (`wind`).
-
 A well-known example is `white` light, which comprises all colors from the visible spectrum.
 In our simulations, we use a sequence of independent identically distributed Gaussian random variables to approximate a particular type of white noise, Gaussian White Noise (GWN).
 
@@ -19,18 +18,17 @@ In our simulations, we use a sequence of independent identically distributed Gau
 
   3. Play with the parameters of the noise current over a certain range of values when there is
 
-     (i) no action potential generated, and
-     (ii) several spikes generated.
+       (i) no action potential generated, and
+       (ii) several spikes generated.
 
      What exactly is the “threshold” now?
-
      To judge the effect of random fluctuations, it is important to look at multiple repetitions of the same experiment.
      What happens to the frequency of spikes and the irregularity of spike trains as mean and/or variance of the noise is increased?
-     The irregularity of neuronal spiking can be assessed, for experiment.
+     The irregularity of neuronal spiking can be assessed, for example, by the coefficient of variation (CV) of the interspike intervals.
 
   4. Now you should systematically measure two types of input-output curve of the neuron:
 
-     (i) Keep the variance of the noise at a fixed level and systematically change the mean of the noise.
-         What is the difference to the curve you obtained with pure DC input?
-     (ii) Now keep the mean of the noise at a fixed level and systematically change the variance of the noise.
-          What is the minimal variance (“threshold”) that leads to a non-zero response rate?
+       (i) Keep the variance of the noise at a fixed level and systematically change the mean of the noise.
+           What is the difference to the curve you obtained with pure DC input?
+       (ii) Now keep the mean of the noise at a fixed level and systematically change the variance of the noise.
+            What is the minimal variance (“threshold”) that leads to a non-zero response rate?

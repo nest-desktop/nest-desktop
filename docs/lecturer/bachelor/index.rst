@@ -1,9 +1,10 @@
-Bachelor
-========
+Bachelor students
+=================
 
-The section `Bachelor` provides guides for the students without any prior knowledge.
-Here, we learn activity dynamics of a single neuron model.
-In all assignments we choose :code:`iaf_psc_alpha` as our neuron model to measure neuronal responses to a variety of input types.
+This section provides sample assignments for students with little prior knowledge.
+The focus lies on the activity dynamics of single neurons.
+In all assignments we use :code:`iaf_psc_alpha` as our neuron model.
+It is studied how a neuron responds to different types of input.
 
 
 **Topics**

@@ -5,8 +5,7 @@ Intracellular recordings give access to the membrane potential of single neurons
 If cells are studied `in vitro` in an acute slice preparation, the synaptic input, which a neuron normally receives under `in vivo` conditions, is then missing.
 It must be replaced by artificial input applied to the neuron through the electrode.
 One can use direct current (DC) of various amplitudes to systematically explore the response properties of a neuron.
-This represents, in fact, a simple and efficient method to characterize biological neurons in electro-physiological
-experiments.
+This represents, in fact, a simple and efficient method to characterize biological neurons in electrophysiological experiments.
 We will here apply it to model neurons as well.
 
 You will use a simple linear integrate-and-fire (LIF) point neuron model to devise a single-neuron current injection experiment.

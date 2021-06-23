@@ -1,7 +1,7 @@
 Poisson input into single neurons
 =================================
 
-In models, we often assume that presynaptic action potentials are generated randomly at a certain rate.
+In models, we often assume that presynaptic action potentials are arriving randomly at a certain rate.
 Synapses on the dendrite of the postsynaptic neuron are then activated in a random fashion.
 The stochastic process that reflects such random arrival of point-like events is called a Poisson process.
 Its only parameter is the rate at which events occur.
@@ -32,7 +32,7 @@ You can now employ the Poisson generator functionality of NEST to explore the re
      Previously, we have considered Gaussian White Noise input, which was described by the two parameters mean :math:`\mu` and variance :math:`\sigma^{2}` .
      No specific assumptions were then made about the biophysical origin of membrane potential fluctuations.
      Shotnoise can also be described in terms of the mean :math:`\mu` and variance :math:`\sigma^{2}` of the membrane potential.
-     As long as the input remains subthreshold and no output spikes are generated, it holds that :math:`\mu \sim `\lambda_{E} - \lambda_{I}` and :math:`\sigma^{2} \sim \lambda_{E} + \lambda_{I}` .
+     As long as the input remains subthreshold and no output spikes are generated, it holds that :math:`\mu \sim \lambda_{E} - \lambda_{I}` and :math:`\sigma^{2} \sim \lambda_{E} + \lambda_{I}`.
      (The symbol :math:`\sim` means “is proportional to”.)
      Perform some experiments that illustrate this relation.
 

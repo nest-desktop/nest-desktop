@@ -25,7 +25,7 @@ Contents
 
   lecturer/index
   lecturer/course-design
-  lecturer/didactic-strategy
+  lecturer/didactic-concept
   lecturer/first-steps
   lecturer/course-protocol
 
