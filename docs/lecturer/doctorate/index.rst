@@ -1,8 +1,8 @@
-Doctorate
-=========
+Doctoral students
+=================
 
-The section `Doctorate` gives deep insight into computational neuroscience.
-Here, we learn activity dynamics of complex neuronal networks.
+This section illustrates how NEST Desktop might be used for research in computational neuroscience.
+A typical example covers the activity dynamics of neuronal networks with multiple interacting populations.
 
 
 **Topics**

@@ -1,16 +1,15 @@
 Course design
 =============
 
+A course with NEST Desktop can be organized for students at different levels of university education.
+The course can be held in a computer lab, allowing for personal interaction with other course participants and tutors.
+Alternatively, the course can be held online, where students use their own computers at home and interact by video chat.
+For both options, NEST Desktop is deployed in a virtual machine that is controlled by the students via a standard web browser.
 
-A course with NEST Desktop can be organized for the university students in different graduation levels.
-The course can be held in a computer lab room or online where students can attend the course with their local machine.
-For both options, NEST Desktop needs to be deployed in a virtual machine that students can use NEST Desktop via web browser.
+A typical course could be scheduled as a one-week block course with fixed hours for complementary lectures, technical tutorials and consultation hours.
+The complementary lectures provide the basic background information needed to understand the course assignments.
+The technical tutorials explain step by step the operation of NEST Desktop.
+The consultation hours give students an opportunity to ask the tutors questions about the course assignments.
+Students can also post their questions and comments to the teaching staff by email.
 
-It can be scheduled in a week block session with fixed times for brief lecture, tutorials and tutor hours.
-The brief lecture provides complementary background information needed to understand the simulation assignments.
-The tutorials give insight of functionalities of NEST Desktop needed for assignments.
-The tutor hours gives tutors the opportunity to answer questions about the course assignments.
-In addition, students can post their questions and comments by email to the teachers or tutors.
-But students works on the course assignments alone or with a partner.
-
-Example assignments are prepared here for students with different background knowledge.
+Specific sample assignments are provided for students with different background knowledge.
