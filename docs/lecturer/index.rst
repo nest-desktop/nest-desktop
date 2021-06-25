@@ -1,11 +1,6 @@
 |lecturer| How to lecture with NEST Desktop
 ===========================================
 
-.. warning::
-
-   This is A PREVIEW. This guide is in development. Some information may be incomplete!
-
-
 This section gives directions for lecturers who want to teach computational neuroscience with NEST Desktop.
 Using computer simulations, students are able to explore models ranging from single neurons to large neuronal networks.
 Numerical experiments of increasing complexity help to understand how brain networks function and what are the features of their dynamic behavior.
@@ -39,7 +34,7 @@ Select the level of the course that you plan to conduct with NEST Desktop:
         <div class="black pa-1">
           <h3>Bachelor students</h3>
           <p>
-            ... want to learn basic computational neuroscience with little prior knowledge.
+            ... learn basic computational neuroscience with little prior knowledge.
           </p>
           <span class="bottom pa-1">For bachelor students</span>
         </div>

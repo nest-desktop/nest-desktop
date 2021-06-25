@@ -1,11 +1,12 @@
-Past events
-===========
+History
+=======
 
 **2021**
 
+:16 June: Preprint on `bioRxiv <https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1>`__
 :3 - 7 May: MSc course "Biophysics of Neurons and Networks" at [BCF]_, online (Freiburg, Germany).
 :8 - 9 April: "NEST Desktop insitufication" on In-Situ Hackathon, online (HCI).
-:08 - 19 February: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
+:8 - 19 February: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
 
 **2020**
 
@@ -46,6 +47,7 @@ Past events
 **2016**
 
 :December: - Start to develop NEST Desktop.
+
 
 ||||
 

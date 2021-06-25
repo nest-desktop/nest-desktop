@@ -21,7 +21,7 @@ Here, the guide shows you how to build containers with ``docker-compose``.
 Requirements
   * `Docker compose <https://docs.docker.com/compose/>`__
 
-**Installation**
+**Preparation**
 
 .. code-block:: bash
 
@@ -70,9 +70,32 @@ Alternatively, you can clone the source code that you can change Dockerfile and 
 For more information, visit the page https://github.com/nest-desktop/nest-desktop-docker.
 
 
+**Upgrade images**
+
+First stop the containers and shut down services of nest-desktop and nest-server.
+
+.. code-block:: bash
+
+  docker-compose stop
+  docker-compose down
+
+Then pull images from docker hub.
+
+.. code-block:: bash
+
+  docker-compose pull
+
+Afterwards, you can start the services and containers.
+
+.. code-block:: bash
+
+  docker-compose up --no-start
+  docker-compose start
+
+
 **Useful commands for docker-compose**
 
-List containers.
+List of active and stopped containers.
 
 .. code-block:: bash
 

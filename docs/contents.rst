@@ -9,7 +9,7 @@ Contents
   :caption: About NEST Desktop
 
   about/abstract
-  about/events
+  about/history
 
 .. toctree::
   :caption: User Documentation
