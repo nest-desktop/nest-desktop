@@ -70,6 +70,7 @@ Alternatively, you can clone the source code that you can change Dockerfile and 
 For more information, visit the page https://github.com/nest-desktop/nest-desktop-docker.
 
 
+<<<<<<< HEAD
 **Upgrade images**
 
 First stop the containers and shut down services of nest-desktop and nest-server.
@@ -96,6 +97,11 @@ Afterwards, you can start the services and containers.
 **Useful commands for docker-compose**
 
 List of active and stopped containers.
+=======
+**Useful commands for docker-compose**
+
+List containers.
+>>>>>>> 874da9754a7d7cad24ff0decbafd4e9431defee6
 
 .. code-block:: bash
 

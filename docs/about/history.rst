@@ -4,18 +4,18 @@ History
 **2021**
 
 :16 June: Preprint on `bioRxiv <https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1>`__
-:3 - 7 May: MSc course "Biophysics of Neurons and Networks" at [BCF]_, online (Freiburg, Germany).
-:8 - 9 April: "NEST Desktop insitufication" on In-Situ Hackathon, online (HCI).
-:8 - 19 February: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
+:03 - 07 May: MSc course "Biophysics of Neurons and Networks" at [BCF]_, online (Freiburg, Germany).
+:08 - 09 April: "NEST Desktop insitufication" on In-Situ Hackathon, online (HCI).
+:08 - 19 February: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
 
 **2020**
 
-:30 Sep - 1 Oct: Hand-on Session and Poster at `Bernstein Conference 2020 <https://abstracts.g-node.org/conference/BC20/abstracts#/uuid/f33d04d5-27fc-45b1-9d7a-44e2a0f28360>`__, online (Berlin, Germany).
+:30 Sep - 01 Oct: Hand-on Session and Poster at `Bernstein Conference 2020 <https://abstracts.g-node.org/conference/BC20/abstracts#/uuid/f33d04d5-27fc-45b1-9d7a-44e2a0f28360>`__, online (Berlin, Germany).
 :18 - 22 July: Tutorial with NESTML, presented by Dr. Linssen, at `CNS 2020 <https://www.cnsorg.org/cns-2020-tutorials#T1>`__, online (Melbourne, Australia).
 :29 - 30 June: Talk "NEST Desktop" at `NEST Conference <https://indico-jsc.fz-juelich.de/event/115/>`__ at [NMBU]_, online (As, Norway).
-:2 - 17 June: MSc course "Biophysics of Neurons and Networks" at [BCF]_, online (Freiburg, Germany).
+:02 - 17 June: MSc course "Biophysics of Neurons and Networks" at [BCF]_, online (Freiburg, Germany).
 :16 April: Presentation and demo at `NeuroMat <https://neuromat.numec.prp.usp.br/content/nmweb/presentations/>`__, online (Sao Paulo, Brazil).
-:3 - 6 February: Talk and Demo/Hand-on session at `HBP Summit and Open Days <https://summit2020.humanbrainproject.eu/>`__ , Athene, Greece.
+:03 - 06 February: Talk and Demo/Hand-on session at `HBP Summit and Open Days <https://summit2020.humanbrainproject.eu/>`__ , Athene, Greece.
 
 **2019**
 

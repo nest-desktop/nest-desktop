@@ -10,6 +10,7 @@ Contents
 
   about/abstract
   about/history
+  about/releases
 
 .. toctree::
   :caption: User Documentation
