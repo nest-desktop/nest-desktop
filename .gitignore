@@ -115,6 +115,9 @@ dist
 /tests/e2e/reports/
 selenium-debug.log
 
+# sphinx (docs) build
+/docs/_build
+
 # Singularity image file
 *.sif
 

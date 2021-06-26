@@ -1,0 +1,85 @@
+/* Create three equal columns that floats next to each other */
+
+.black {
+  color: rgb(64, 64, 64);
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.column {
+  float: left;
+  height: 100%;
+}
+
+.column.col-3 {
+  width: 33%;
+}
+
+.column.col-4 {
+  width: 25%;
+}
+
+.column div {
+  height: 100%;
+  position: relative;
+}
+
+.column .avatar {
+  height: 100px;
+}
+
+.column.color div {
+  border: 2px solid #0f6d99;
+}
+
+.column.color:hover div {
+  background-color: #0f6d99;
+  color: white;
+}
+
+.iframe-container {
+  height: 0;
+  height: auto;
+  max-width: 100%;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+}
+
+.iframe-container iframe {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.ma-1 {
+  margin: 4px;
+}
+
+.ma-2 {
+  margin: 8px;
+}
+.ma-3 {
+  margin: 12px;
+}
+
+.pa-1 {
+  padding: 4px;
+}
+
+.pa-2 {
+  padding: 8px;
+}
+
+.pa-3 {
+  padding: 12px;
+}
