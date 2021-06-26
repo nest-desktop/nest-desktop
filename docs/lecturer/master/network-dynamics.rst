@@ -51,7 +51,7 @@ A typical value for the connection probability in local cortical networks is 10%
   3. If the Poisson input is neither too weak nor too strong, the activity in the recurrent network looks random itself, both on the level of spike trains and on the level of membrane potentials.
      What are the reasons for this?
      You can test the influence of the random Poisson input by replacing it by a deterministic DC source.
-     Make sure that the amplitude of the injected DC is roughly equivalent to Poisson input applied previously.
+     Make sure that the amplitude of the injected DC is roughly equivalent to the Poisson input applied previously.
      As a criterion, you can either compare mean membrane potentials in an intracellular recording of one of the neurons in the network, or you can base your calibration on the response rate of one or several neurons in the network.
 
 NEST Desktop offers several different methods to wire up a network randomly.
@@ -110,12 +110,12 @@ The value :math:`g = 4` is special, because in this setting the relatively small
   3. Stable “fixed point activity” is characterized by a tight temporal balance between excitation and inhibition.
      This balance can be demonstrated by comparing the time-resolved PSTH fluctuations of the excitatory population to the inhibitory population.
      A “scatter plot” may come handy to display the observations made “by eye” in a more objective way:
-     Simultaneous bin counts of excitatory activity x and inhibitory activity y make the coordinates (x,y) of data points in a two-dimensional display.
+     Simultaneous bin counts of excitatory activity :math:`x` and inhibitory activity :math:`y` make the coordinates :math:`(x,y)` of data points in a two-dimensional display.
      What is the relation of individual spike trains with the population activity measured by the PSTH?
 
-  4. You should now vary the parameter g and document all important changes.
+  4. You should now vary the parameter :math:`g` and document all important changes.
      Changing this parameter has the potential to alter the balance between excitation and inhibition.
-     Describe how the balance is affected, and what are the consequences of this for the recurrent network dynamics.
+     Describe how the balance is affected, and what the consequences of this for the recurrent network dynamics are.
 
 
 **Video tutorial**

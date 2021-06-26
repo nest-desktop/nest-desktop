@@ -9,7 +9,7 @@ This is the promise and the potential of computational neuroscience.
 
 In experiments with animals or humans, brain activity must be recorded with suitable advanced instruments (e.g. electrodes, optical instruments, or brain scanners).
 This is exactly what researchers also do in simulations.
-For that reason, simulated data typically look very much like experimental data, and they have to be analyzed like experimental data.
+For that reason, simulated data typically looks very much like experimental data, and they have to be analyzed like experimental data.
 To some degree, therefore, this is also a course on neuroscientific data analysis.
 In contrast to experiments with biological brains, in a simulation one has access to much more detailed information about the inner workings.
 As a consequence, computer simulations can sometimes provide insight that goes beyond what is achieved by experiments, even with latest techniques.
@@ -27,4 +27,4 @@ Specifically, students need to learn how to ...
    * run a simulation
    * analyze the activity data
    * visualize the results
-   * document simulation for the protocol
+   * document a simulation for the protocol

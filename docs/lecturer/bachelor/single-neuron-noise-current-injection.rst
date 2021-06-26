@@ -26,7 +26,7 @@ In our simulations, we use a sequence of independent identically distributed Gau
      What happens to the frequency of spikes and the irregularity of spike trains as mean and/or variance of the noise is increased?
      The irregularity of neuronal spiking can be assessed, for example, by the coefficient of variation (CV) of the interspike intervals.
 
-  4. Now you should systematically measure two types of input-output curve of the neuron:
+  4. Now you should systematically measure two types of input-output curves of the neuron:
 
        (i) Keep the variance of the noise at a fixed level and systematically change the mean of the noise.
            What is the difference to the curve you obtained with pure DC input?

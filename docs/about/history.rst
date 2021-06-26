@@ -46,7 +46,7 @@ History
 
 **2016**
 
-:December: - Start to develop NEST Desktop.
+:December: - The start of the development of NEST Desktop.
 
 
 ||||

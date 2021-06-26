@@ -1,7 +1,7 @@
 Work on the source code
 =======================
 
-First, prepare the development environment with required packages.
+First, prepare the development environment with the required packages.
 
 .. code-block:: bash
 
@@ -12,8 +12,8 @@ The Live Development Server is serving at ``http://localhost:8080``.
 
 **Setup**
 
-Install NEST Desktop from source code on local machine using ``pip`` (where it finds ``setup.py``).
-Recommended method is to install it in user home with the command argument ``--user``.
+It is possible to install NEST Desktop from source code on a local machine using ``pip`` (where it finds ``setup.py``).
+The recommended method is to install it in the user's home directory using the command argument ``--user``.
 
 .. code-block:: bash
 
@@ -26,31 +26,31 @@ Recommended method is to install it in user home with the command argument ``--u
 
 **Commit changes**
 
-Go to dev branch for the development.
+Go to the `dev` branch for the development.
 
 .. code-block:: bash
 
   git checkout dev
 
-Fetch metadata from GitHub:
+Fetch the data from GitHub (download it to your local directory):
 
 .. code-block:: bash
 
   git fetch
 
-If required, pull data from GitHub:
+If required, intergrate the changes from GitHub into your local repository:
 
 .. code-block:: bash
 
   git pull
 
-It is recommended to create a new branch for an approach goal.
+It is recommended to create a new branch for an an implementation of a new feature/goal.
 
 .. code-block:: bash
 
   git checkout -b newBranch
 
-If changes is ready for the commit:
+If your changes are ready to be commited, stage and commit them:
 
 .. code-block:: bash
 
@@ -59,7 +59,7 @@ If changes is ready for the commit:
 
 |
 
-Finally, push all of them to repository.
+Finally, push all of them to repository on the internet (and create a merge request afterwards).
 
 .. code-block:: bash
 

@@ -7,8 +7,8 @@ Build and publish package
 
 |
 
-To build and push NEST Desktop on `PyPI <https://pypi.org/project/nest-desktop/>`__ is a required step for the production.
-Then Docker Hub can upgrade NEST Desktop in Docker image.
+Building and pushing NEST Desktop on `PyPI <https://pypi.org/project/nest-desktop/>`__ is a required step for the production.
+After that, Docker Hub can upgrade NEST Desktop in the provided Docker image.
 
 Requirements
   - setuptools, wheel, twine
@@ -18,30 +18,30 @@ The Python Package Index **nest-desktop** includes an executive command ``nest-d
 
 **Build**
 
-Current work directory is ``nest-desktop``.
+The current working directory is ``nest-desktop``.
 
 The building phase contains two steps:
-First build a package of NEST Desktop using ``vue-cli-service``.
+First, build a package of NEST Desktop using ``vue-cli-service``.
 
 Initially, you have to upgrade the version of nest-desktop in:
 
   - ``packages.json``
   - ``nest_desktop/__init__.py``
 
-Then generate app package using yarn. It builds the folder ``nest_desktop/app``:
+Then generate the app package using `yarn`. It builds the folder ``nest_desktop/app``:
 
 .. code-block:: bash
 
   yarn build
 
 
-The second step is to build pip package for PyPI:
+The second step is to build a pip package for PyPI:
 
 .. code-block:: bash
 
   rm -rf build/ dist/ nest_desktop.egg-info/
 
-Then generate distribution packages of `nest-desktop` for PyPI:
+Then generate the distribution packages of `nest-desktop` for PyPI:
 
 .. code-block:: bash
 
@@ -50,15 +50,15 @@ Then generate distribution packages of `nest-desktop` for PyPI:
 
 **Upload**
 
-Finally, the package is ready for the publication.
-You can upload pip-package of ``nest-desktop`` to PyPI:
+Finally, the package is ready for the the publication.
+You can upload the pip-package of ``nest-desktop`` to PyPI:
 
 .. code-block:: bash
 
   python3 -m twine upload dist/*
 
 
-Do not forget to commit changes and set version tag in git.
+Do not forget to commit the changes you made and set a new version tag in git.
 
 .. code-block:: bash
 

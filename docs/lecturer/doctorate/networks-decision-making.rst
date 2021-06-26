@@ -14,8 +14,8 @@ A very similar mechanism, based however on splitting the inhibitory population, 
 In the basal ganglia, for example, decisions are made whether a planned action, for example a movement, is executed or terminated (“go/nogo”).
 
 To explore decision making with computer simulations, we recommend that you start with the network models that were prepared for the course.
-From the navigation sidebar on the left, click right mouse button on projects icon (brain symbol).
-Then choose the option “Upload projects from the dropdown menu (three vertical dots) and upload the file provided in the repository (tba).
+In the navigation sidebar on the left, click with the right mouse button on the projects icon (contains a brain symbol).
+Then choose the option “Upload projects" (icon: arrow pointing upwards) from the dropdown menu (three vertical dots) and upload the file provided in the repository (tba).
 This is, by the way, a general method with which you can share models with others, including all settings and parameters.
 
 
@@ -26,7 +26,7 @@ The provided network model comprises three (instead of just two) subpopulations:
 two of them are excitatory (a, b), and one is inhibitory (c).
 This was achieved by dividing the excitatory population of the model considered in the previous chapter into two equal halves.
 In a fully symmetric setting, the two excitatory populations (a, b) of course do not behave any different.
-But if the symmetry is broken, one of the populations may take over and dominate the other one.
+However, if the symmetry is broken, one of the populations may take over and dominate the other one.
 There are different possibilities how this can be achieved.
 
   1. Figure out which manipulations of the network configuration lead to an unequal activation of the two excitatory populations, for example a stronger activation of population (b).
@@ -59,7 +59,7 @@ Decision making
 ---------------
 
 Perceptual decisions have to be made when there are two conflicting interpretations of the input (e.g. leftward vs. rightward movement of a subtle stimulus).
-The brain then will not maintain both interpretations, but rather decides for one of them and adjusts its behavior accordingly.
+The brain will then not maintain both interpretations, but rather decides for one of them and adjusts its behavior accordingly.
 Typically, the “stronger” input wins, but additional factors (e.g. memory previous encounters, or random perturbations) might contribute as well.
 The same holds for action selection, which is a necessary component to resolve conflicts in the behavioral goals of an animal.
 

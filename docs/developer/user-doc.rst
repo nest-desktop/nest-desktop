@@ -1,15 +1,16 @@
 User documentation
 ==================
 
-We use Sphinx to generate documentation and Read the Docs to publish it.
+We use `Sphinx <https://www.sphinx-doc.org/en/master/>`__ to generate the documentation and `Read the Docs <https://readthedocs.org/>`__  to publish it.
 Sphinx uses reStructuredText.
 To learn more about the syntax, check out this quick reference.
 
 Requirements
-  * sphinx, sphinx rth theme
+  * `Sphinx <https://www.sphinx-doc.org/en/master/>`__
+  * `Read the Docs Sphinx Theme <https://github.com/readthedocs/sphinx_rtd_theme>`__
 
-Current work directory: ``nest-desktop/docs``.
-To install sphinx and readthedocs theme via  ``pip``:
+Current working directory: ``nest-desktop/docs``.
+To install Sphinx and the Read the Docs theme via ``pip``:
 
 .. code-block:: bash
 
@@ -17,7 +18,7 @@ To install sphinx and readthedocs theme via  ``pip``:
 
 **Development: Render HTML offline**
 
-Build sphinx documentation in ``docs`` folder offline:
+Build the documentation which your created with Sphinx in the ``docs`` folder offline:
 
 .. code-block:: bash
 
@@ -26,5 +27,5 @@ Build sphinx documentation in ``docs`` folder offline:
 
 **Publication: Push to ReadTheDocs**
 
-It automatically builds docs for master for each push commits to master.
-Docs for other version depends on GitHub tags.
+The documentation files for the main branch are automatically rebuilt (and updated) each time a push is made to the repository.
+The docs for other versions depend on the GitHub tags.

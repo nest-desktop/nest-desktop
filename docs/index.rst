@@ -9,7 +9,7 @@ NEST Desktop
 
 |
 
-Hello there!
+Hello there! :-)
 
 NEST Desktop is a web-based GUI application for NEST Simulator,
 an advanced simulation tool for the computational neuroscience.
@@ -19,11 +19,11 @@ and instrumentation of neuronal network models.
 
 |
 
-It's so great that you want to use NEST Desktop.
+It's so great that you want to use NEST Desktop!
 
 ||||
 
-The documentation is organized into four sections.
+The documentation is organized in four sections.
 Select the appropriate section that fits your needs.
 
 .. raw:: html

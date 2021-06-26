@@ -7,7 +7,7 @@ When you want to start the bundle of NEST Desktop and NEST Server, you can read 
 
 .. note::
 
-  NEST Desktop requires NEST Server which runs only in Linux systems.
+  NEST Desktop requires NEST Server which runs only in Linux systems (when deployed without any containerization technique).
   For more information read the full installing docs of NEST Simulator
   `here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
 
@@ -65,7 +65,7 @@ Via Python Package
 
 For more information read the full installing docs :doc:`here <setup>`.
 
-2. Start NEST Desktop (in other terminal session):
+2. Start NEST Desktop (in another terminal session):
 
 .. code-block:: bash
 
@@ -73,7 +73,7 @@ For more information read the full installing docs :doc:`here <setup>`.
 
 NEST Desktop is serving at ``http://localhost:8000``.
 
-For more information read the full documentation of command API :doc:`here </developer/command-API>`.
+For more information read the full documentation of the command API :doc:`here </developer/command-API>`.
 
 
 Via Docker
@@ -86,16 +86,16 @@ Via Docker
 |
 
 Docker is a virtualization software packaging applications and its dependencies in a virtual container that can run on any Linux server.
-It is available for a variety of operating systems, e.g. Linux, Mac and Windows. For more information `here <https://www.docker.com/resources/what-container>`__.
+In fact, it is available for a wide variety of operating systems, e.g. Linux, Mac and Windows. For more information on this technology, take a look at `this overview <https://www.docker.com/resources/what-container>`__.
 
 
-1. Pull NEST Desktop image from Docker Hub:
+1. Pull the NEST Desktop image from Docker Hub:
 
 .. code-block:: bash
 
   docker pull nestdesktop/app
 
-2. Start the docker container:
+2. Start the Docker container:
 
 .. code-block:: bash
 
@@ -106,12 +106,12 @@ NEST Desktop is now serving at ``http://localhost:8000``.
 .. note::
 
   It only starts NEST Desktop without NEST Server.
-  If you want to start front end with back ends, you can use Docker-compose :doc:`here </deployer/deploy-docker>`.
+  If you want to both together (front end and back end), you can use Docker Compose, which is documented :doc:`here </deployer/deploy-docker>`.
 
 
 .. rubric:: Arguments
 
-You can find help text of docker arguments by :code:`docker run --help`.
+You can find the help texts of docker arguments by :code:`docker run --help`.
 
 +----+-------------------------------------------+
 | -p | Publish a container's port(s) to the host |
@@ -136,20 +136,20 @@ Singularity is an application container for Linux systems.
 For more information read the full documentation
 `here <https://sylabs.io/docs/>`__.
 
-1. Clone working copy from repository and go to Singularity folder:
+1. Clone a working copy from the repository and go to the Singularity folder:
 
 .. code-block:: bash
 
   git clone https://github.com/nest-desktop/nest-desktop
   cd nest-desktop/singularity
 
-2. Build singularity container (with sudo):
+2. Build the Singularity container (with sudo):
 
 .. code-block:: bash
 
   singularity build nest-desktop-app.sif nest-desktop-app.def
 
-3. Start singularity container
+3. Start the Singularity container
 
 .. code-block:: bash
 

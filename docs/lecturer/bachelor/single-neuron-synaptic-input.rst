@@ -2,7 +2,7 @@ Excitatory and inhibitory synaptic input into single neurons
 ============================================================
 
 In a biological neuronal network, communication between neurons typically relies on synaptic input.
-Whenever the presynaptic neuron generates a spike, chemical neurotransmitter (e.g. glutamate or GABA) is released and bound to postsynaptic receptors.
+Whenever the presynaptic neuron generates a spike, a chemical neurotransmitter (e.g. glutamate or GABA) is released and bound to postsynaptic receptors.
 This leads to a transient activation of the synapse, and a transient inward or outward postsynaptic current (PSC).
 As a consequence, the membrane potential of the postsynaptic neuron experiences a small deflection, the postsynaptic potential (PSP).
 Typically, for an excitatory synapse using glutamate as a transmitter, this deflection is depolarizing (towards threshold).

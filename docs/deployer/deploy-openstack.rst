@@ -10,13 +10,13 @@ Deploy on OpenStack
 
 
 
-The guide provides step-by-step documentation on how to deploy NEST Desktop on OpenStack resources.
-For more information of OpenStack, please follow the link: https://www.redhat.com/en/topics/openstack.
+The guide provides a step-by-step documentation on how to deploy NEST Desktop on OpenStack resources.
+For more information on OpenStack, please follow this link: https://www.redhat.com/en/topics/openstack.
 
-As example of OpenStack infrastructure, we used bwCloud which is assigned to the universities in Baden-Württemberg, Germany.
-For more information, follow the link:  https://www.bw-cloud.org/.
+As an example of an OpenStack infrastructure, we show the deployment on bwCloud, which is assigned to the universities in Baden-Württemberg, Germany.
+For more information bwCloud, follow the link:  https://www.bw-cloud.org/.
 
-Deployer can build an image on OpenStack via Packer and Ansible.
+Deployers can build an OpenStack image via Packer and Ansible.
 
 Requirements
   - `Packer <https://www.packer.io/downloads.html>`__
@@ -33,7 +33,7 @@ Requirements
 
 You can find the source code on https://github.com/nest-desktop/nest-desktop-bwCloud.
 
-1. Download OpenStack RC File from `bwCloud dashboard <https://portal.bw-cloud.org/project/api_access/>`__:
+1. Download the OpenStack RC File from `bwCloud dashboard <https://portal.bw-cloud.org/project/api_access/>`__:
 
   :guilabel:`Project` -> :guilabel:`API Access` -> :guilabel:`Download OpenStack RC File`
 
@@ -43,7 +43,7 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 
   source Project_<userID>-openrc.sh
 
-3. Modify Ansible configurations ``infrastructure/bwCloud/nest-desktop.json``.
+3. Modify the Ansible configurations in ``infrastructure/bwCloud/nest-desktop.json``.
 
   Set ``image_name``. Values for ``source_image`` and ``networks`` are taken from bwCloud dashboard.
 
@@ -53,7 +53,7 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 
   packer build nest-desktop.json
 
-5. Start an instance on bwCloud dashboard and it will have a public IP of the virtual machine.
+5. Start an instance on the bwCloud dashboard and it will have a public IP of the virtual machine.
 
 
 |

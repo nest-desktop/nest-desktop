@@ -3,7 +3,7 @@
 
 **Quick start**
 
-The video shows few steps to construct network and explore activity.
+The video shows the few steps to construct a network and explore its activity.
 For more information, please read :doc:`detailed guides of usage <usage>`.
 
 .. raw:: html
@@ -23,7 +23,7 @@ For more information, please read :doc:`detailed guides of usage <usage>`.
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
   docker-compose up --build
 
-For more information, please read :doc:`detailed guides of setup <setup>`.
+For more information, please read the :doc:`detailed guides of setup <setup>`.
 
 
 ||||

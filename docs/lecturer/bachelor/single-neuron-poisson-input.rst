@@ -15,20 +15,20 @@ You can now employ the Poisson generator functionality of NEST to explore the re
   2. Consider an LIF neuron that receives Poisson input of a constant rate using a synapse of a specific amplitude.
      Analyze how the input rate influences the membrane potential and the spiking response of the neuron.
      The parameters of interest are the mean and the variance of the membrane potential, as well as the output firing rate and the irregularity of the output spike train.
-     What happens if you change the strength of synapse?
+     What happens if you change the strength of the synapse?
 
   3. Now we consider the more realistic situation that a neuron receives input from two different and independent presynaptic populations, one consisting of excitatory, the other one consisting of inhibitory neurons.
 
      .. note:: The presynaptic population of a cortical nerve cell can be quite large, comprising up to 10 000 neurons, say.
 
-     What matters for the postsynaptic neuron is the accumulated spike rate for each type of input, so these input rates will be also large.
+     What matters for the postsynaptic neuron is the accumulated spike rate for each type of input, so these input rates will also be large.
      The model has two parameters, the rate :math:`\lambda_{E}` of the excitatory Poisson process and the rate :math:`\lambda_{I}` of the inhibitory Poisson process.
      Begin your simulation experiments by fixing :math:`\lambda_{E} = \lambda_{I}` assuming exactly the same firing rate for excitatory and inhibitory inputs.
      Start with small rates (subthreshold) and jointly increase them step by step until output spikes are generated (superthreshold).
      Describe your observations for weak and for strong input, both on the level of the membrane potential and on the level of output spike trains.
 
   4. Considering synaptic bombardment from a large pool of presynaptic neurons, the mathematical model of shotnoise is appropriate to describe membrane potential fluctuations.
-     Generally, the two relevant parameters :math:`\lambda_{E}` and :math:`\lambda_{E}` are fixed independently, and combinations with :math:`\lambda_{E} \neq \lambda_{E}` may arise.
+     Generally, the two relevant parameters :math:`\lambda_{E}` and :math:`\lambda_{I}` are fixed independently, and combinations with :math:`\lambda_{E} \neq \lambda_{I}` may arise.
      Previously, we have considered Gaussian White Noise input, which was described by the two parameters mean :math:`\mu` and variance :math:`\sigma^{2}` .
      No specific assumptions were then made about the biophysical origin of membrane potential fluctuations.
      Shotnoise can also be described in terms of the mean :math:`\mu` and variance :math:`\sigma^{2}` of the membrane potential.

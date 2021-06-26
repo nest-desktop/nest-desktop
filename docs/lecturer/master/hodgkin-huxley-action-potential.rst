@@ -51,7 +51,7 @@ Sodium channel inactivation and potassium channel activation finally terminate t
 
   2. It is difficult to disentangle the effect of sodium channel inactivation and potassium channel activation.
      The former helps terminating the upstroke, the latter causes a downstroke of the membrane potential during a spike.
-     In a simulation, you can record the concentration of m, n and h particles of the Hodgkin-Huxley model for a more precise view on these two processes.
+     In a simulation, you can record the concentration of :code:`h`, :code:`m` and :code:`n` particles of the Hodgkin-Huxley model for a more precise view on these two processes.
      Is such a recording also possible in a biological neuron?
 
   3. Explore the effect of the specific neurotoxins TTX and TEA on neuronal spiking.
@@ -85,4 +85,4 @@ You should perform some numerical simulations to address this question:
      No spike is generated then, and this phenomenon is called the “depolarization block”.
      Try out different slopes of the ramp.
      Can you explain it in terms of sodium channel inactivation?
-     Perform a simultaneous recording of :code:`m`, :code:`n` and :code:`h` particles to back up your explanation.
+     Perform a simultaneous recording of :code:`h`, :code:`m` and :code:`n` particles to back up your explanation.

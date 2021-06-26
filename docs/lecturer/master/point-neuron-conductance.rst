@@ -16,14 +16,14 @@ Point neurons with conductance-based synapses
 
 In contrast to what we assumed for the leaky integrate-and-fire neuron model, biological synapses operate on
 the basis of ion channels, and should not be considered as fixed current sources.
-When neurotransmitter is released at the presynaptic axon terminal, it diffuses through the synaptic cleft and binds to the receptors sitting in the membrane of the postsynaptic neuron.
+When a neurotransmitter is released at the presynaptic axon terminal, it diffuses through the synaptic cleft and binds to the receptors sitting in the membrane of the postsynaptic neuron.
 As a result, ion channels linked to the receptors open transiently and enable a brief postsynaptic current flow.
 The duration of this transient inflow or outflow is described by the so-called synaptic time constant.
 Depending on the concentration gradient of the ions involved (:math:`Na^{+}` for excitatory synapses, :math:`Cl^{-}` for inhibitory synapses), this current is either depolarizing or hyperpolarizing, respectively.
 
 If many of these synaptic channels are simultaneously open due to massive synaptic bombardment from a
 pool of presynaptic neurons, this may change the integration properties of the neuron as a whole.
-Its total input resistance :math:`R` is decreased, and therefore the membrane time constant :math:`\tau = R * C` is decreased as well, affecting the width of individual postsynaptic potentials (PSPs), which may also have a reduced amplitude due to the strong membrane leak.
+Its total input resistance :math:`R` is decreased, and therefore the membrane time constant :math:`\tau = R \cdot C` is decreased as well, affecting the width of individual postsynaptic potentials (PSPs), which may also have a reduced amplitude due to the strong membrane leak.
 In addition, postsynaptic potentials have a shorter duration, as the membrane time constant is smaller.
 This scenario has been described as the “high-conductance state”.
 Neurons then assume nonlinear properties, as their input integration becomes state-dependent:

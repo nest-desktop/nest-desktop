@@ -4,14 +4,14 @@ Command API
 
 This documentation guide provides detailed information about the command ``nest-desktop``.
 
-Show usage for the command :code:`nest-desktop`
+Show the usage of the :code:`nest-desktop` command:
 
 .. code-block:: bash
 
   nest-desktop
 
 
-Options for :code:`nest-desktop`
+Options for :code:`nest-desktop`:
 
 .. code-block:: bash
 

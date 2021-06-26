@@ -12,14 +12,13 @@ Docker is a virtualization software packaging applications and its dependencies 
 It is available for a variety of the operating systems, e.g. Linux, Mac and Windows.
 For more information follow the link `here <https://www.docker.com/resources/what-container>`__.
 
-NEST Desktop and NEST Server are prepared in different containers.
-But you can use docker-compose to start multiple containers, e.g. NEST Desktop, NEST Server.
-Docker compose needs the configuration file (``docker-compose.yml``).
+NEST Desktop and NEST Server are prepared in different containers, but you can use docker-compose to start multiple containers, e.g. NEST Desktop, NEST Server.
+Docker Compose needs the configuration file (``docker-compose.yml``).
 
 Here, the guide shows you how to build containers with ``docker-compose``.
 
 Requirements
-  * `Docker compose <https://docs.docker.com/compose/>`__
+  * `Docker Compose <https://docs.docker.com/compose/>`__
 
 **Preparation**
 
@@ -35,12 +34,12 @@ Requirements
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 
 It will pull images of NEST Desktop from https://hub.docker.com/r/nestdesktop/app)
-and NEST Server can be started in official NEST image (https://hub.docker.com/r/nestsim/nest).
+and NEST Server can be started from within the official NEST image (https://hub.docker.com/r/nestsim/nest).
 
 
 **Getting started**
 
-Build and start NEST Desktop and NEST Server containers.
+Build and start the NEST Desktop and NEST Server containers.
 
 .. code-block:: bash
 
@@ -51,7 +50,7 @@ With :guilabel:`CTRL` + :guilabel:`C` you can shutdown these services.
 
 .. rubric:: Configurations in :code:`docker-compose.yml`
 
-Here, you can find details of configuration file.
+Here, you can find the details of the configuration file.
 
 +----------------+------------------------------------+
 | image          | Get docker image from Docker Hub   |
@@ -66,11 +65,10 @@ Here, you can find details of configuration file.
 +----------------+------------------------------------+
 
 
-Alternatively, you can clone the source code that you can change Dockerfile and build docker images on your machine.
+Alternatively, you can clone the source code so that you can change the Dockerfile and build custom docker images on your  machine.
 For more information, visit the page https://github.com/nest-desktop/nest-desktop-docker.
 
 
-<<<<<<< HEAD
 **Upgrade images**
 
 First stop the containers and shut down services of nest-desktop and nest-server.
@@ -96,40 +94,35 @@ Afterwards, you can start the services and containers.
 
 **Useful commands for docker-compose**
 
-List of active and stopped containers.
-=======
-**Useful commands for docker-compose**
-
 List containers.
->>>>>>> 874da9754a7d7cad24ff0decbafd4e9431defee6
 
 .. code-block:: bash
 
   docker-compose ps
 
-If no services (``nest-desktop`` and ``nest-server``) is in the list, it means that no containers can be started.
-You can attach container for services without starting ``--no-start``.
+If there are no services (``nest-desktop`` and ``nest-server``) in the displayed list, it means that no containers can be started.
+You can attach a container for services without starting it using ``--no-start``.
 
 .. code-block:: bash
 
   docker-compose up --no-start
 
 
-Then start services ``nest-desktop`` and ``nest-server`` as a daemon.
+Then start the services ``nest-desktop`` and ``nest-server`` as daemon.
 
 .. code-block:: bash
 
   docker-compose start
 
 
-Stop services ``nest-desktop`` and ``nest-server``.
+Stop the services ``nest-desktop`` and ``nest-server``.
 
 .. code-block:: bash
 
   docker-compose stop
 
 
-Shutdown services ``nest-desktop`` and ``nest-server``.
+Shutdown the services ``nest-desktop`` and ``nest-server``.
 
 .. code-block:: bash
 
