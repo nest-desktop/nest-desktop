@@ -44,13 +44,13 @@ docker-compose up --build
 
 For more information, please see the [User Documentation Page](https://nest-desktop.readthedocs.io).
 
-### Citation
+### Cite NEST Desktop
 
 In order to cite NEST Desktop in general, please use the DOI [10.5281/zenodo.5037050](https://doi.org/10.5281/zenodo.5037050) for all versions (always redirecting to the latest version).
 If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.0.
-You can also use the reference to the preprint for NEST Desktop (DOI: [10.1101/2021.06.15.444791](https://doi.org/10.1101/2021.06.15.444791)), which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1), if that is more appropriate in the context of your reference.
+You can use the reference to the preprint for NEST Desktop (DOI: [10.1101/2021.06.15.444791](https://doi.org/10.1101/2021.06.15.444791)) as well, which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1), if that is more appropriate in the context of your reference.
 
-You will also find the exports for the citation managers there.
+You will also find the exports for the citation managers on Zenodo and bioRxiv.
 
 ### License
 
