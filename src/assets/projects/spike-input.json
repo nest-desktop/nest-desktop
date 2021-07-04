@@ -12,13 +12,11 @@
           "params": [
             {
               "id": "weight",
-              "value": 1,
-              "visible": false
+              "value": 1
             },
             {
               "id": "delay",
-              "value": 1,
-              "visible": false
+              "value": 1
             }
           ]
         }

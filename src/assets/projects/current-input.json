@@ -13,7 +13,7 @@
             {
               "id": "weight",
               "value": 1,
-              "visible": false
+              "visible": true
             },
             {
               "id": "delay",
@@ -58,11 +58,13 @@
         "params": [
           {
             "id": "amplitude",
-            "value": 1
+            "value": 1,
+            "visible": true
           },
           {
             "id": "start",
-            "value": 100
+            "value": 100,
+            "visible": true
           },
           {
             "id": "stop",
@@ -83,7 +85,8 @@
         "params": [
           {
             "id": "C_m",
-            "value": 250
+            "value": 250,
+            "visible": true
           },
           {
             "id": "E_L",
@@ -117,7 +120,8 @@
           },
           {
             "id": "tau_m",
-            "value": 10
+            "value": 10,
+            "visible": true
           },
           {
             "id": "tau_syn_ex",
@@ -142,7 +146,8 @@
         "params": [
           {
             "id": "interval",
-            "value": 0.1
+            "value": 0.1,
+            "visible": true
           },
           {
             "id": "start",

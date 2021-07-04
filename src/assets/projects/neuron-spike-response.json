@@ -13,11 +13,13 @@
         "params": [
           {
             "id": "spike_times",
-            "value": [100, 300]
+            "value": [100, 300],
+            "visible": true
           },
           {
             "id": "spike_weights",
-            "value": [1, -1]
+            "value": [1, -1],
+            "visible": true
           }
         ]
       },
@@ -43,7 +45,8 @@
         "params": [
           {
             "id": "interval",
-            "value": 0.1
+            "value": 0.1,
+            "visible": false
           }
         ]
       }
