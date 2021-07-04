@@ -8,13 +8,30 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width: 300px">
-        <v-card-title
+        <!-- <v-card-title
           :style="{ backgroundColor: state.node.view.color }"
           class="py-1"
           style="color: white; height: 40px"
           v-if="state.content !== 'modelDocumentation'"
           v-text="state.node.model.label"
-        />
+        /> -->
+        <v-sheet :color="node.view.color">
+          <v-row no-gutters>
+            <!-- <v-col cols="3">
+              <v-btn
+                block
+                dark
+                height="40"
+                text
+                tile
+                v-text="node.view.label"
+              />
+            </v-col> -->
+            <v-col cols="12">
+              <NodeModelSelect :node="state.node" />
+            </v-col>
+          </v-row>
+        </v-sheet>
 
         <span v-if="state.content === null">
           <v-list dense>
@@ -74,6 +91,18 @@
           </v-list>
         </span>
 
+        <span v-if="state.content === 'nodeParamEdit'">
+          <v-card-text class="py-1 px-0">
+            <NodeParamEdit :node="state.node" />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+          </v-card-actions>
+        </span>
+
         <span v-if="state.content === 'nodeColor'">
           <v-color-picker
             @update:color="updateColor"
@@ -84,10 +113,11 @@
           />
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="resetColor" text v-text="'reset'" />
+            <v-spacer />
+            <v-btn @click="resetColor" outlined small text v-text="'reset'" />
           </v-card-actions>
         </span>
 
@@ -113,7 +143,7 @@
           </v-list>
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
           </v-card-actions>
@@ -123,11 +153,18 @@
           <v-card-title v-text="'Are you sure to delete this node?'" />
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn @click="deleteNode" color="warning" text v-text="'delete'" />
+            <v-btn
+              @click="deleteNode"
+              color="warning"
+              outlined
+              small
+              text
+              v-text="'delete'"
+            />
           </v-card-actions>
         </span>
       </v-card>
@@ -142,11 +179,15 @@ import { reactive, onMounted } from '@vue/composition-api';
 import { Node } from '@/core/node/node';
 import { ModelParameter } from '@/core/parameter/modelParameter';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
+import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
+import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkNodeMenu',
   components: {
     ModelDocumentation,
+    NodeModelSelect,
+    NodeParamEdit,
   },
   props: {
     node: Node,
@@ -162,6 +203,17 @@ export default Vue.extend({
       visibleParams: [],
       items: [
         {
+          icon: 'mdi-pencil',
+          id: 'paramEdit',
+          onClick: () => {
+            state.content = 'nodeParamEdit';
+            window.dispatchEvent(new Event('resize'));
+          },
+          append: true,
+          show: () => true,
+          title: 'Edit parameters',
+        },
+        {
           icon: 'mdi-restart',
           id: 'paramsReset',
           onClick: () => {
@@ -170,7 +222,7 @@ export default Vue.extend({
           },
           append: false,
           show: () => true,
-          title: 'Reset parameters',
+          title: 'Reset all parameters',
         },
         {
           icon: 'mdi-axis-arrow',
@@ -369,20 +421,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style>
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
-}
-
-.v-list-item__action {
-  margin: 0;
-}
-</style>

@@ -1,12 +1,12 @@
 <template>
   <div class="networkGraph" ref="networkGraph">
-    <NetworkConnectionMenu
+    <ConnectionMenu
       :connection="state.connectionMenu.connection"
       :position="state.connectionMenu.position"
       v-if="state.connectionMenu.show"
     />
 
-    <NetworkNodeMenu
+    <NodeMenu
       :node="state.nodeMenu.node"
       :position="state.nodeMenu.position"
       v-if="state.nodeMenu.show"
@@ -139,16 +139,16 @@ import { NetworkGraph } from '@/core/network/networkGraph';
 import { Node } from '@/core/node/node';
 import core from '@/core';
 
-import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
-import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
+import ConnectionMenu from '@/components/connection/ConnectionMenu.vue';
+import NodeMenu from '@/components/node/NodeMenu.vue';
 import NetworkGraphToolbar from '@/components/network/NetworkGraphToolbar.vue';
 
 export default Vue.extend({
   name: 'NetworkGraph',
   components: {
-    NetworkConnectionMenu,
+    ConnectionMenu,
     NetworkGraphToolbar,
-    NetworkNodeMenu,
+    NodeMenu,
   },
   props: {
     networkHash: String,

@@ -3,6 +3,7 @@ import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionView } from './connectionView';
 import { Model } from '../model/model';
+import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { Parameter } from '../parameter/parameter';
@@ -147,6 +148,19 @@ export class Connection extends Config {
    */
   public hideAllParams(): void {
     this.params.forEach((param: Parameter) => (param.visible = false));
+  }
+
+  /**
+   * Sets default param value.
+   */
+  public resetAllParams(): void {
+    const ruleConfig: any = this.getRuleConfig();
+    this.params.forEach((param: Parameter) => {
+      param.reset();
+      const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
+      param.value = p.value;
+    });
+    this.synapse.params.forEach((param: ModelParameter) => param.reset());
   }
 
   /**

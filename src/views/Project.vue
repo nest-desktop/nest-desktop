@@ -222,7 +222,7 @@
         </v-navigation-drawer>
 
         <div style="width: 100%; padding-right: 56px" v-if="state.toolOpened">
-          <NetworkParamsEdit
+          <NetworkParamEdit
             :network="state.project.network"
             :projectId="state.projectId"
             v-if="state.tool.name === 'networkParamEdit'"
@@ -289,7 +289,7 @@
       </transition>
 
       <transition name="fade">
-        <LabBook
+        <ProjectLabBook
           :hash="state.project.network.hash"
           v-if="state.modeIdx === 2"
         />
@@ -319,9 +319,9 @@ import ActivityChartController from '@/components/activity/ActivityChartControll
 import ActivityAnimationController from '@/components/activity/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/ActivityStats.vue';
 import core from '@/core';
-import LabBook from '@/components/network/LabBook.vue';
 import NetworkGraph from '@/components/network/NetworkGraph.vue';
-import NetworkParamsEdit from '@/components/network/NetworkParamsEdit.vue';
+import NetworkParamEdit from '@/components/network/NetworkParamEdit.vue';
+import ProjectLabBook from '@/components/project/ProjectLabBook.vue';
 import ProjectRawData from '@/components/project/ProjectRawData.vue';
 import SimulationButton from '@/components/simulation/SimulationButton.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
@@ -334,9 +334,9 @@ export default Vue.extend({
     ActivityChartController,
     ActivityGraph,
     ActivityStats,
-    LabBook,
     NetworkGraph,
-    NetworkParamsEdit,
+    NetworkParamEdit,
+    ProjectLabBook,
     ProjectRawData,
     SimulationButton,
     SimulationCodeEditor,
