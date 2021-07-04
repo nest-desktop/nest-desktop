@@ -46,7 +46,7 @@
           {
             "id": "interval",
             "value": 0.1,
-            "visible": false
+            "visible": true
           }
         ]
       }

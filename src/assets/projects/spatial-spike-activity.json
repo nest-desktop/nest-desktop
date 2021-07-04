@@ -13,7 +13,7 @@
             {
               "id": "weight",
               "value": 10,
-              "visible": false
+              "visible": true
             },
             {
               "id": "delay",
