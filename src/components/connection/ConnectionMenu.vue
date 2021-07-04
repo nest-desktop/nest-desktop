@@ -79,13 +79,14 @@
           <v-card-title v-text="'Are you sure to delete this connection?'" />
 
           <v-card-actions>
-            <v-btn @click="backMenu" small text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
             <v-btn
               @click="deleteConnection"
               color="warning"
+              outlined
               small
               text
               v-text="'delete'"
