@@ -68,14 +68,12 @@ export class ModelParameter extends Parameter {
         params.ticks = this.ticks;
       }
     } else {
+      params.visible = this.visible;
       if (this.factors.length > 0) {
         params.factors = this.factors;
       }
       if (!this.isConstant()) {
         params.type = this.type;
-      }
-      if (this.visible === false) {
-        params.visible = this.visible;
       }
     }
     return params;
