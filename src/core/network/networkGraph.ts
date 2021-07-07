@@ -7,6 +7,7 @@ import { getPoints } from '../node/nodeGraph';
 import { Node } from '../node/node';
 
 export class NetworkGraph {
+  private _connectorRadius: number = 6;
   private _cursorPosition: any = { x: 0, y: 0 };
   private _height: number = 600;
   private _network: Network;
@@ -340,6 +341,48 @@ export class NetworkGraph {
         this.dragLine(e);
         this.updateNetworkGraph();
       });
+
+    // Connector plus symbol made of lines (white lines for spacing):
+    // hline white
+    connector
+      .append('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', 0)
+      .attr('stroke', 'white')
+      .attr('stroke-width', 4)
+      .attr('name', 'plus-hline-white');
+    // vline white
+    connector
+      .append('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', 0)
+      .attr('stroke', 'white')
+      .attr('stroke-width', 4)
+      .attr('name', 'plus-vline-white');
+    // hline colored
+    connector
+      .append('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', 0)
+      .attr('stroke', '#33cc33')
+      .attr('stroke-width', 1.25)
+      .attr('name', 'plus-hline-colored');
+    // vline colored
+    connector
+      .append('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', 0)
+      .attr('stroke', '#33cc33')
+      .attr('stroke-width', 1.25)
+      .attr('name', 'plus-vline-colored');
 
     const soma: d3.Selection<any, any, any, any> = elem
       .append('g')
@@ -730,6 +773,76 @@ export class NetworkGraph {
           : 0
       )
       .style('stroke', (node: Node) => node.view.color);
+
+    /* Defining the coordinates of the components of the plus symbol contained
+     * in the connector: */
+    const connectorPlusSymbolComponents = [
+      {
+        name: 'plus-hline-white',
+        // coordinates with current config: x1: 30, y1: 25.5, x2: 39.5, y2: 25.5
+        x1: connectorEndPos.x + this._connectorRadius / 3,
+        y1: connectorEndPos.y - (13 / 12) * this._connectorRadius,
+        x2: connectorEndPos.x + (23 / 12) * this._connectorRadius,
+        y2: connectorEndPos.y - (13 / 12) * this._connectorRadius,
+      },
+      {
+        name: 'plus-vline-white',
+        // coordinates with current config: x1: 35, y1: 21.5, x2: 35, y2: 31
+        x1: connectorEndPos.x + (7 / 6) * this._connectorRadius,
+        y1: connectorEndPos.y - (21 / 12) * this._connectorRadius,
+        x2: connectorEndPos.x + (7 / 6) * this._connectorRadius,
+        y2: connectorEndPos.y - (1 / 6) * this._connectorRadius,
+      },
+      {
+        name: 'plus-hline-colored',
+        // coordinates with current config: x1: 31.5, y1: 25.5, x2: 38.5, y2: 25.5
+        x1: connectorEndPos.x + (7 / 12) * this._connectorRadius,
+        y1: connectorEndPos.y - (13 / 12) * this._connectorRadius,
+        x2: connectorEndPos.x + (21 / 12) * this._connectorRadius,
+        y2: connectorEndPos.y - (13 / 12) * this._connectorRadius,
+      },
+      {
+        name: 'plus-vline-colored',
+        // coordinates with current config: x1: 35, y1: 22, x2: 35, y2: 29.5
+        x1: connectorEndPos.x + (7 / 6) * this._connectorRadius,
+        y1: connectorEndPos.y - (5 / 3) * this._connectorRadius,
+        x2: connectorEndPos.x + (7 / 6) * this._connectorRadius,
+        y2: connectorEndPos.y - (5 / 12) * this._connectorRadius,
+      },
+    ];
+
+    let lines = connector.selectAll('line');
+
+    const correctState = !this._state.enableConnection && !this.state.dragging;
+    for (let line of connectorPlusSymbolComponents) {
+      /* select all lines with the correct name (in the whole d3js graphics)
+       * and alter only the coordinates of those whose node is selected/focused */
+      lines
+        .filter(function () {
+          return d3.select(this).attr('name').indexOf(line.name) >= 0;
+        })
+        .transition(t)
+        .attr('x1', (node: Node) =>
+          (node.view.isFocused() || node.view.isSelected()) && correctState
+            ? line.x1
+            : 0
+        )
+        .attr('y1', (node: Node) =>
+          (node.view.isFocused() || node.view.isSelected()) && correctState
+            ? line.y1
+            : 0
+        )
+        .attr('x2', (node: Node) =>
+          (node.view.isFocused() || node.view.isSelected()) && correctState
+            ? line.x2
+            : 0
+        )
+        .attr('y2', (node: Node) =>
+          (node.view.isFocused() || node.view.isSelected()) && correctState
+            ? line.y2
+            : 0
+        );
+    }
   }
 
   /**
