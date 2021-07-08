@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.node">
+  <div class="nodeMenu" v-if="state.node">
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -7,7 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width: 300px">
+      <v-card tile flat style="width: 300px">
         <!-- <v-card-title
           :style="{ backgroundColor: state.node.view.color }"
           class="py-1"
@@ -15,7 +15,7 @@
           v-if="state.content !== 'modelDocumentation'"
           v-text="state.node.model.label"
         /> -->
-        <v-sheet :color="node.view.color">
+        <v-sheet :color="state.node.view.color">
           <v-row no-gutters>
             <!-- <v-col cols="3">
               <v-btn
@@ -33,7 +33,7 @@
           </v-row>
         </v-sheet>
 
-        <span v-if="state.content === null">
+        <span v-if="state.content === undefined">
           <v-list dense>
             <v-list-item>
               <v-list-item-icon>
@@ -41,25 +41,31 @@
               </v-list-item-icon>
               <v-list-item-title v-text="'Set all synaptic weights'" />
 
-              <v-btn
-                :outlined="state.node.view.weight === 'excitatory'"
-                @click="state.node.setWeights('excitatory')"
-                icon
-                small
-                title="excitatory"
+              <v-btn-toggle
+                :color="state.node.view.color"
+                :value="state.weight[state.node.view.weight]"
+                dense
+                mandatory
+                rounded
               >
-                <v-icon v-text="'mdi-plus'" />
-              </v-btn>
+                <v-btn
+                  @click="state.node.setWeights('inhibitory')"
+                  icon
+                  small
+                  title="inhibitory"
+                >
+                  <v-icon small v-text="'mdi-minus'" />
+                </v-btn>
 
-              <v-btn
-                :outlined="state.node.view.weight === 'inhibitory'"
-                @click="state.node.setWeights('inhibitory')"
-                icon
-                small
-                title="inhibitory"
-              >
-                <v-icon v-text="'mdi-minus'" />
-              </v-btn>
+                <v-btn
+                  @click="state.node.setWeights('excitatory')"
+                  icon
+                  small
+                  title="excitatory"
+                >
+                  <v-icon small v-text="'mdi-plus'" />
+                </v-btn>
+              </v-btn-toggle>
             </v-list-item>
 
             <v-list-item
@@ -125,30 +131,6 @@
           <ModelDocumentation :id="state.node.modelId" />
         </span>
 
-        <span v-if="state.content === 'nodeWeights'">
-          <v-list dense>
-            <v-list-item @click="setWeights('excitatory')">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-plus'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'excitatory'" />
-            </v-list-item>
-
-            <v-list-item @click="setWeights('inhibitory')">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-minus'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'inhibitory'" />
-            </v-list-item>
-          </v-list>
-
-          <v-card-actions>
-            <v-btn @click="backMenu" outlined small text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
-            </v-btn>
-          </v-card-actions>
-        </span>
-
         <span v-if="state.content === 'nodeDelete'">
           <v-card-title v-text="'Are you sure to delete this node?'" />
 
@@ -195,12 +177,17 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      content: null,
+      content: undefined as string | undefined,
       node: props.node as Node,
       position: props.position,
       show: true,
       spatialNode: false,
       visibleParams: [],
+      weight: {
+        mixed: null,
+        inhibitory: 0,
+        excitatory: 1,
+      },
       items: [
         {
           icon: 'mdi-pencil',
@@ -231,10 +218,10 @@ export default Vue.extend({
           onClick: () => {
             state.node.toggleSpatial();
             state.spatialNode = state.node.spatial.hasPositions();
-            closeMenu();
           },
           show: () => !state.node.model.isRecorder(),
           title: 'Spatial node',
+          value: 'spatialNode',
         },
         {
           icon: 'mdi-format-color-fill',
@@ -374,7 +361,7 @@ export default Vue.extend({
      * Reset states.
      */
     const resetStates = () => {
-      state.content = null;
+      state.content = undefined;
       state.show = true;
     };
 
@@ -390,7 +377,7 @@ export default Vue.extend({
      * Return to main menu content.
      */
     const backMenu = () => {
-      state.content = null;
+      state.content = undefined;
     };
 
     /**
