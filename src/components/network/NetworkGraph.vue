@@ -307,7 +307,7 @@ export default Vue.extend({
         state.network.view.selectedConnection,
       ],
       () => {
-        state.graph.updateNetworkGraph();
+        // state.graph.updateNetworkGraph();
         state.graph.transformNetworkGraph();
       }
     );
