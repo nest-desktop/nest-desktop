@@ -771,7 +771,9 @@ export class NetworkGraph {
     connector
       .selectAll('line')
       .transition(t)
-      .attr('opacity', (node: Node) => (node.view.isFocused() ? 1 : 0));
+      .attr('opacity', (node: Node) =>
+        node.view.isFocused() || node.view.isSelected() ? 1 : 0 // remove node.view.isSelected() for only hover appearance of the plus symbol
+      );
 
     connector
       .selectAll('.color')
