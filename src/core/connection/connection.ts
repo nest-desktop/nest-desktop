@@ -151,7 +151,7 @@ export class Connection extends Config {
   }
 
   /**
-   * Sets default param value.
+   * Resets all parameters to their default.
    */
   public resetAllParams(): void {
     const ruleConfig: any = this.getRuleConfig();

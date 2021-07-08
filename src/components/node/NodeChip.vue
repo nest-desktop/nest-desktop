@@ -20,7 +20,7 @@ import { NetworkGraph } from '@/core/network/networkGraph';
 import { Node } from '@/core/node/node';
 
 export default Vue.extend({
-  name: 'NetworkNodeChip',
+  name: 'NodeChip',
   props: {
     graph: NetworkGraph,
     node: Node,
