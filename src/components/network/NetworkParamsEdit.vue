@@ -363,7 +363,7 @@
               item-value="value"
               item-text="label"
               label="Connection rule"
-              class="ml-1 px-1"
+              class="ml-1 pa-1"
               v-model="connection.rule"
             />
 
