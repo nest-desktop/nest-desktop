@@ -18,12 +18,12 @@
                   state.network.view.selectedConnection
                 "
               >
-                <NetworkNodeChip
+                <NodeChip
                   :graph="state.graph"
                   :node="state.network.view.selectedNode"
                   v-if="state.network.view.selectedNode"
                 />
-                <NetworkNodeChip
+                <NodeChip
                   :graph="state.graph"
                   :node="state.network.view.selectedConnection.source"
                   v-if="state.network.view.selectedConnection"
