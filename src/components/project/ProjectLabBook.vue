@@ -1,5 +1,5 @@
 <template>
-  <div class="lab-book" v-if="state.project">
+  <div class="projectLabBook" v-if="state.project">
     <v-container>
       <v-card
         flat
@@ -172,7 +172,7 @@ import { reactive, watch, onMounted } from '@vue/composition-api';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'LabBook',
+  name: 'ProjectLabBook',
   props: {
     hash: String,
   },

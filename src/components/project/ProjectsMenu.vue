@@ -25,7 +25,7 @@
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
               </v-list-item-icon>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title v-text="item.title" />
 
               <v-list-item-action v-show="item.append">
                 <v-icon small v-text="'mdi-menu-right'" />
@@ -44,13 +44,15 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="reset" text>
+            <v-btn @click="reset" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
             <v-btn
               @click="resetProjects"
               color="warning"
+              outlined
+              small
               text
               v-text="'Reset'"
             />

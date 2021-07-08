@@ -38,13 +38,15 @@
           <v-card-title v-text="'Are you sure to delete this project?'" />
 
           <v-card-actions>
-            <v-btn @click="state.content = null" text>
+            <v-btn @click="state.content = null" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
             <v-btn
               @click="deleteProject"
               color="warning"
+              outlined
+              small
               text
               v-text="'Delete'"
             />
