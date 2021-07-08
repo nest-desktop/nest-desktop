@@ -7,13 +7,42 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width: 300px">
+      <v-card tile flat style="width: 300px">
         <!-- <v-card-title
           :style="{ backgroundColor: state.connection.source.view.color }"
           class="py-1"
           style="color:white; height:40px"
         >
         </v-card-title> -->
+        <v-row no-gutters>
+          <v-col cols="3" class="py-0" style="text-align: center">
+            <v-btn
+              :color="connection.source.view.color"
+              block
+              dark
+              depressed
+              height="40"
+              tile
+              v-text="connection.source.view.label"
+            />
+          </v-col>
+          <v-col cols="6">
+            <v-btn block color="white" depressed height="40" tile>
+              <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+            </v-btn>
+          </v-col>
+          <v-col cols="3" class="py-0" style="text-align: center">
+            <v-btn
+              :color="connection.target.view.color"
+              block
+              dark
+              depressed
+              height="40"
+              tile
+              v-text="connection.target.view.label"
+            />
+          </v-col>
+        </v-row>
 
         <span v-if="state.content === undefined">
           <v-list dense>
@@ -28,7 +57,7 @@
               <v-list-item-title v-text="item.title" />
 
               <v-list-item-action v-show="item.append">
-                <v-icon v-text="'mdi-menu-right'" />
+                <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
                 <v-checkbox :input-value="state[item.value]" />
@@ -247,7 +276,7 @@ export default Vue.extend({
      * Reset states.
      */
     const resetStates = () => {
-      state.content = null;
+      state.content = undefined;
       state.show = true;
     };
 
