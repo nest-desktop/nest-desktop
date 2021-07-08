@@ -26,6 +26,7 @@
             class="ma-0"
             dense
             editable
+            filled
             hide-details
             item-text="label"
             item-value="id"
