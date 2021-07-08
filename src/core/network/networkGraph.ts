@@ -7,6 +7,7 @@ import { getPoints } from '../node/nodeGraph';
 import { Node } from '../node/node';
 
 export class NetworkGraph {
+  private _connectorRadius: number = 6;
   private _cursorPosition: any = { x: 0, y: 0 };
   private _height: number = 600;
   private _network: Network;
@@ -261,6 +262,7 @@ export class NetworkGraph {
         } else {
           this.reset();
         }
+        this.updateNetworkGraph();
       })
       .on('mousedown', () => {
         this._selector.select('rect#background').style('cursor', 'move');
@@ -303,6 +305,7 @@ export class NetworkGraph {
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
+    // console.log('Init node graph');
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
     elem.selectAll('*').remove();
 
@@ -320,15 +323,16 @@ export class NetworkGraph {
 
     connector
       .append('path')
-      .attr('class', 'display')
+      .attr('class', 'color')
       .attr('fill', 'none')
       .attr('stroke-width', this._strokeWidth)
       .style('pointer-events', 'none');
 
-    connector
+    const connectorEnd = connector.append('g').attr('class', 'end');
+
+    connectorEnd
       .append('circle')
-      .attr('cx', 0)
-      .attr('cy', 0)
+      .attr('class', 'color')
       .attr('fill', 'white')
       .attr('r', '6px')
       .attr('stroke-width', this._strokeWidth)
@@ -340,6 +344,52 @@ export class NetworkGraph {
         this.dragLine(e);
         this.updateNetworkGraph();
       });
+
+    // Connector plus symbol made of lines (white lines for spacing):
+    // hline white
+    // coordinates with current config: x1: 30, y1: 25.5, x2: 39.5, y2: 25.5
+    connectorEnd
+      .append('line')
+      .attr('stroke-width', 4)
+      .attr('stroke', 'white')
+      .attr('x1', this._connectorRadius / 3)
+      .attr('x2', (23 / 12) * this._connectorRadius)
+      .attr('y1', -(13 / 12) * this._connectorRadius)
+      .attr('y2', -(13 / 12) * this._connectorRadius)
+      .style('pointer-events', 'none');
+    // vline white
+    // coordinates with current config: x1: 35, y1: 21.5, x2: 35, y2: 31
+    connectorEnd
+      .append('line')
+      .attr('stroke-width', 4)
+      .attr('stroke', 'white')
+      .attr('x1', (7 / 6) * this._connectorRadius)
+      .attr('x2', (7 / 6) * this._connectorRadius)
+      .attr('y1', -(21 / 12) * this._connectorRadius)
+      .attr('y2', -(1 / 6) * this._connectorRadius)
+      .style('pointer-events', 'none');
+    // hline colored
+    // coordinates with current config: x1: 31.5, y1: 25.5, x2: 38.5, y2: 25.5
+    connectorEnd
+      .append('line')
+      .attr('class', 'color')
+      .attr('stroke-width', 1.25)
+      .attr('x1', (7 / 12) * this._connectorRadius)
+      .attr('x2', (21 / 12) * this._connectorRadius)
+      .attr('y1', -(13 / 12) * this._connectorRadius)
+      .attr('y2', -(13 / 12) * this._connectorRadius)
+      .style('pointer-events', 'none');
+    // vline colored
+    // coordinates with current config: x1: 35, y1: 22, x2: 35, y2: 29.5
+    connectorEnd
+      .append('line')
+      .attr('class', 'color')
+      .attr('stroke-width', 1.25)
+      .attr('x1', (7 / 6) * this._connectorRadius)
+      .attr('x2', (7 / 6) * this._connectorRadius)
+      .attr('y1', -(5 / 3) * this._connectorRadius)
+      .attr('y2', -(5 / 12) * this._connectorRadius)
+      .style('pointer-events', 'none');
 
     const soma: d3.Selection<any, any, any, any> = elem
       .append('g')
@@ -417,41 +467,10 @@ export class NetworkGraph {
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
-    // console.log('Init connection graph.');
+    // console.log('Init connection graph');
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
 
-    elem.selectAll('*').remove();
     elem
-      .append('path')
-      .style('fill', 'none')
-      .style('stroke', 'black')
-      .style('opacity', 0)
-      .style('stroke-width', 40);
-
-    elem
-      .append('path')
-      .attr('class', 'display')
-      .style('fill', 'none')
-      .style('stroke-width', this._strokeWidth)
-      .style('pointer-events', 'none');
-  }
-
-  /**
-   * Initialize network graph.
-   */
-  initNetworkGraph() {
-    // console.log('Init network graph');
-    const connections: d3.Selection<any, any, any, any> = this._selector
-      .select('g#connections')
-      .selectAll('g.connection')
-      .data(this._network.connections);
-
-    connections
-      .enter()
-      .append('g')
-      .attr('class', 'connection')
-      .attr('idx', (connection: Connection) => connection.idx)
-      .style('opacity', 0)
       .on('mouseover', (_, connection: Connection) => {
         connection.view.focus();
         this.updateNetworkGraph();
@@ -470,12 +489,31 @@ export class NetworkGraph {
         connection.view.focus();
         this.updateNetworkGraph();
         this.transformNetworkGraph();
-      })
-      .merge(connections)
-      .each((_, i, e) => this.initConnectionGraph(i, e));
+      });
 
-    connections.exit().remove();
+    elem.selectAll('*').remove();
+    elem
+      .append('path')
+      .style('fill', 'none')
+      .style('stroke', 'black')
+      .style('opacity', 0)
+      .style('stroke-width', 40);
 
+    elem
+      .append('path')
+      .attr('class', 'color')
+      .style('fill', 'none')
+      .style('stroke-width', this._strokeWidth)
+      .style('pointer-events', 'none');
+  }
+
+  /**
+   * Initialize network graph.
+   */
+  initNetworkGraph() {
+    // console.log('Init network graph');
+
+    // Define drag behavior for node.
     const dragNode: d3.DragBehavior<any, any, any> = d3
       .drag()
       .on('start', (event: any) => {
@@ -512,6 +550,22 @@ export class NetworkGraph {
         this.transformNetworkGraph();
       });
 
+    const connections: d3.Selection<any, any, any, any> = this._selector
+      .select('g#connections')
+      .selectAll('g.connection')
+      .data(this._network.connections);
+
+    connections
+      .enter()
+      .append('g')
+      .attr('class', 'connection')
+      .attr('idx', (connection: Connection) => connection.idx)
+      .style('opacity', 0)
+      .merge(connections)
+      .each((_, i, e) => this.initConnectionGraph(i, e));
+
+    connections.exit().remove();
+
     const nodes: d3.Selection<any, any, any, any> = this._selector
       .select('g#nodes')
       .selectAll('g.node')
@@ -522,13 +576,6 @@ export class NetworkGraph {
       .append('g')
       .attr('class', 'node')
       .attr('idx', (node: Node) => node.idx)
-      .attr(
-        'transform',
-        (node: Node) =>
-          `translate(${node.view.position.x},${node.view.position.y}) scale( ${
-            node.view.isFocused() ? 1.2 : 1
-          })`
-      )
       .style('opacity', 0)
       .call(dragNode)
       .merge(nodes)
@@ -603,7 +650,7 @@ export class NetworkGraph {
    * Update connection graph.
    */
   updateConnectionGraph() {
-    // console.log('Update connection graph.');
+    // console.log('Update connection graph');
     const duration: number = this._state.dragging ? 0 : 250;
     const t: d3.Transition<any, any, any, any> = d3
       .transition()
@@ -614,7 +661,7 @@ export class NetworkGraph {
 
     this._selector
       .selectAll('g.connection')
-      .selectAll('path.display')
+      .selectAll('path.color')
       .style('stroke', (connection: Connection) => connection.source.view.color)
       .style(
         'stroke-width',
@@ -644,6 +691,7 @@ export class NetworkGraph {
    * Update node graph.
    */
   updateNodeGraph() {
+    // console.log('Update node graph');
     const duration: number = this._state.dragging ? 0 : 250;
     const t: d3.Transition<any, any, any, any> = d3
       .transition()
@@ -678,13 +726,15 @@ export class NetworkGraph {
     const connector: d3.Selection<any, any, any, any> =
       this._selector.selectAll('g.connector');
 
-    connector.style('opacity', (node: Node) =>
-      (node.view.isFocused() || node.view.isSelected()) &&
-      !this._state.enableConnection &&
-      !this.state.dragging
-        ? '1'
-        : '0'
-    );
+    connector
+      .transition(t)
+      .style('opacity', (node: Node) =>
+        (node.view.isFocused() || node.view.isSelected()) &&
+        !this._state.enableConnection &&
+        !this.state.dragging
+          ? '1'
+          : '0'
+      );
 
     // connector animation
     const connectorEndPos: any = {
@@ -708,27 +758,26 @@ export class NetworkGraph {
       );
 
     connector
-      .selectAll('path.display')
+      .select('.end')
       .transition(t)
-      .style('stroke', (node: Node) => node.view.color);
+      .attr('transform', (node: Node) =>
+        (node.view.isFocused() || node.view.isSelected()) &&
+        !this._state.enableConnection &&
+        !this.state.dragging
+          ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
+          : 'translate(0,0)'
+      );
 
     connector
-      .selectAll('circle')
+      .selectAll('line')
       .transition(t)
-      .attr('cx', (node: Node) =>
-        (node.view.isFocused() || node.view.isSelected()) &&
-        !this._state.enableConnection &&
-        !this.state.dragging
-          ? connectorEndPos.x
-          : 0
-      )
-      .attr('cy', (node: Node) =>
-        (node.view.isFocused() || node.view.isSelected()) &&
-        !this._state.enableConnection &&
-        !this.state.dragging
-          ? connectorEndPos.y
-          : 0
-      )
+      .attr('opacity', (node: Node) =>
+        node.view.isFocused() || node.view.isSelected() ? 1 : 0 // remove node.view.isSelected() for only hover appearance of the plus symbol
+      );
+
+    connector
+      .selectAll('.color')
+      .transition(t)
       .style('stroke', (node: Node) => node.view.color);
   }
 
