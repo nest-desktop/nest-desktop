@@ -168,7 +168,7 @@ import { reactive, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
-import NodePositionTitle from '@/components/network/NodePositionTitle.vue';
+import NodePositionTitle from '@/components/node/NodePositionTitle.vue';
 
 export default Vue.extend({
   name: 'NodePosition',

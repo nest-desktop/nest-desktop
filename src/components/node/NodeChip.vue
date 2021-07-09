@@ -1,5 +1,5 @@
 <template>
-  <div class="networkNodeChip">
+  <div class="nodeChip">
     <v-chip :color="state.node.view.color" @click="selectNode" dark small>
       <span v-text="state.node.view.label" />
       <span class="mx-1 font-weight-light" v-text="state.node.model.label" />
@@ -20,7 +20,7 @@ import { NetworkGraph } from '@/core/network/networkGraph';
 import { Node } from '@/core/node/node';
 
 export default Vue.extend({
-  name: 'NetworkNodeChip',
+  name: 'NodeChip',
   props: {
     graph: NetworkGraph,
     node: Node,

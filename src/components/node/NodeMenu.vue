@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.node">
+  <div class="nodeMenu" v-if="state.node">
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -8,15 +8,32 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width: 300px">
-        <v-card-title
+        <!-- <v-card-title
           :style="{ backgroundColor: state.node.view.color }"
           class="py-1"
           style="color: white; height: 40px"
           v-if="state.content !== 'modelDocumentation'"
           v-text="state.node.model.label"
-        />
+        /> -->
+        <v-sheet :color="state.node.view.color">
+          <v-row no-gutters>
+            <!-- <v-col cols="3">
+              <v-btn
+                block
+                dark
+                height="40"
+                text
+                tile
+                v-text="node.view.label"
+              />
+            </v-col> -->
+            <v-col cols="12">
+              <NodeModelSelect :node="state.node" />
+            </v-col>
+          </v-row>
+        </v-sheet>
 
-        <span v-if="state.content === null">
+        <span v-if="state.content === undefined">
           <v-list dense>
             <v-list-item>
               <v-list-item-icon>
@@ -24,25 +41,31 @@
               </v-list-item-icon>
               <v-list-item-title v-text="'Set all synaptic weights'" />
 
-              <v-btn
-                :outlined="state.node.view.weight === 'excitatory'"
-                @click="state.node.setWeights('excitatory')"
-                icon
-                small
-                title="excitatory"
+              <v-btn-toggle
+                :color="state.node.view.color"
+                :value="state.weight[state.node.view.weight]"
+                dense
+                mandatory
+                rounded
               >
-                <v-icon v-text="'mdi-plus'" />
-              </v-btn>
+                <v-btn
+                  @click="state.node.setWeights('inhibitory')"
+                  icon
+                  small
+                  title="inhibitory"
+                >
+                  <v-icon small v-text="'mdi-minus'" />
+                </v-btn>
 
-              <v-btn
-                :outlined="state.node.view.weight === 'inhibitory'"
-                @click="state.node.setWeights('inhibitory')"
-                icon
-                small
-                title="inhibitory"
-              >
-                <v-icon v-text="'mdi-minus'" />
-              </v-btn>
+                <v-btn
+                  @click="state.node.setWeights('excitatory')"
+                  icon
+                  small
+                  title="excitatory"
+                >
+                  <v-icon small v-text="'mdi-plus'" />
+                </v-btn>
+              </v-btn-toggle>
             </v-list-item>
 
             <v-list-item
@@ -74,6 +97,18 @@
           </v-list>
         </span>
 
+        <span v-if="state.content === 'nodeParamEdit'">
+          <v-card-text class="py-1 px-0">
+            <NodeParamEdit :node="state.node" />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+          </v-card-actions>
+        </span>
+
         <span v-if="state.content === 'nodeColor'">
           <v-color-picker
             @update:color="updateColor"
@@ -84,10 +119,11 @@
           />
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="resetColor" text v-text="'reset'" />
+            <v-spacer />
+            <v-btn @click="resetColor" outlined small text v-text="'reset'" />
           </v-card-actions>
         </span>
 
@@ -95,39 +131,22 @@
           <ModelDocumentation :id="state.node.modelId" />
         </span>
 
-        <span v-if="state.content === 'nodeWeights'">
-          <v-list dense>
-            <v-list-item @click="setWeights('excitatory')">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-plus'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'excitatory'" />
-            </v-list-item>
-
-            <v-list-item @click="setWeights('inhibitory')">
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-minus'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'inhibitory'" />
-            </v-list-item>
-          </v-list>
-
-          <v-card-actions>
-            <v-btn @click="backMenu" text>
-              <v-icon left v-text="'mdi-menu-left'" /> back
-            </v-btn>
-          </v-card-actions>
-        </span>
-
         <span v-if="state.content === 'nodeDelete'">
           <v-card-title v-text="'Are you sure to delete this node?'" />
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn @click="deleteNode" color="warning" text v-text="'delete'" />
+            <v-btn
+              @click="deleteNode"
+              color="warning"
+              outlined
+              small
+              text
+              v-text="'delete'"
+            />
           </v-card-actions>
         </span>
       </v-card>
@@ -142,11 +161,15 @@ import { reactive, onMounted } from '@vue/composition-api';
 import { Node } from '@/core/node/node';
 import { ModelParameter } from '@/core/parameter/modelParameter';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
+import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
+import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkNodeMenu',
   components: {
     ModelDocumentation,
+    NodeModelSelect,
+    NodeParamEdit,
   },
   props: {
     node: Node,
@@ -154,13 +177,29 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      content: null,
+      content: undefined as string | undefined,
       node: props.node as Node,
       position: props.position,
       show: true,
       spatialNode: false,
       visibleParams: [],
+      weight: {
+        mixed: null,
+        inhibitory: 0,
+        excitatory: 1,
+      },
       items: [
+        {
+          icon: 'mdi-pencil',
+          id: 'paramEdit',
+          onClick: () => {
+            state.content = 'nodeParamEdit';
+            window.dispatchEvent(new Event('resize'));
+          },
+          append: true,
+          show: () => true,
+          title: 'Edit parameters',
+        },
         {
           icon: 'mdi-restart',
           id: 'paramsReset',
@@ -170,7 +209,7 @@ export default Vue.extend({
           },
           append: false,
           show: () => true,
-          title: 'Reset parameters',
+          title: 'Reset all parameters',
         },
         {
           icon: 'mdi-axis-arrow',
@@ -179,10 +218,10 @@ export default Vue.extend({
           onClick: () => {
             state.node.toggleSpatial();
             state.spatialNode = state.node.spatial.hasPositions();
-            closeMenu();
           },
           show: () => !state.node.model.isRecorder(),
           title: 'Spatial node',
+          value: 'spatialNode',
         },
         {
           icon: 'mdi-format-color-fill',
@@ -322,7 +361,7 @@ export default Vue.extend({
      * Reset states.
      */
     const resetStates = () => {
-      state.content = null;
+      state.content = undefined;
       state.show = true;
     };
 
@@ -338,7 +377,7 @@ export default Vue.extend({
      * Return to main menu content.
      */
     const backMenu = () => {
-      state.content = null;
+      state.content = undefined;
     };
 
     /**
@@ -369,20 +408,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style>
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
-}
-
-.v-list-item__action {
-  margin: 0;
-}
-</style>

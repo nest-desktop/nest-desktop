@@ -7,8 +7,22 @@
         v-if="state.subtitle"
         v-text="' – ' + state.subtitle"
       />
+      <v-spacer />
+      <v-btn
+        :href="`https://nest-simulator.readthedocs.io/en/v3.0/models/${state.modelId}.html`"
+        :title="`https://nest-simulator.readthedocs.io/en/v3.0/models/${state.modelId}.html`"
+        class="mx-1"
+        outlined
+        small
+        target="_blank"
+        text
+      >
+        <v-icon left v-text="'mdi-open-in-new'" />
+        More
+      </v-btn>
     </v-toolbar>
-    <v-card flat tile style="max-height: calc(100vh - 64px); overflow-y: auto">
+
+    <v-card flat style="max-height: calc(100vh - 64px); overflow-y: auto" tile>
       <v-card :key="block.title" flat tile v-for="block of state.blocks">
         <v-card-title v-text="block.title" />
         <v-card-text>
@@ -35,11 +49,13 @@ export default Vue.extend({
     const titles = [
       'Short description',
       'Description',
+      'Remarks',
       'Parameters',
       'Examples',
       'Problems/Todo',
       'Receives',
       'Sends',
+      'Transmits',
       'References',
       'See also',
       'EndUserDocs */',

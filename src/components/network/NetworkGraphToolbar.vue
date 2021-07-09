@@ -18,12 +18,12 @@
                   state.network.view.selectedConnection
                 "
               >
-                <NetworkNodeChip
+                <NodeChip
                   :graph="state.graph"
                   :node="state.network.view.selectedNode"
                   v-if="state.network.view.selectedNode"
                 />
-                <NetworkNodeChip
+                <NodeChip
                   :graph="state.graph"
                   :node="state.network.view.selectedConnection.source"
                   v-if="state.network.view.selectedConnection"
@@ -44,7 +44,7 @@
                 key="targetNode"
                 v-if="state.network.view.selectedConnection"
               >
-                <NetworkNodeChip
+                <NodeChip
                   :graph="state.graph"
                   :node="state.network.view.selectedConnection.target"
                 />
@@ -147,12 +147,12 @@ import { reactive, watch } from '@vue/composition-api';
 
 import { Network } from '@/core/network/network';
 import { NetworkGraph } from '@/core/network/networkGraph';
-import NetworkNodeChip from '@/components/network/NetworkNodeChip.vue';
+import NodeChip from '@/components/node/NodeChip.vue';
 
 export default Vue.extend({
   name: 'NetworkGraphToolbar',
   components: {
-    NetworkNodeChip,
+    NodeChip,
   },
   props: {
     graph: NetworkGraph,

@@ -233,14 +233,14 @@ export class Node extends Config {
     if (this.model && node && node.hasOwnProperty('params')) {
       this.model.params.forEach((modelParam: ModelParameter) => {
         const nodeParam = node.params.find((p: any) => p.id === modelParam.id);
-        this.addParameter(nodeParam || modelParam);
+        this.addParameter(nodeParam || modelParam.toJSON());
       });
     } else if (this.model) {
       this.model.params.forEach((param: ModelParameter) =>
-        this.addParameter(param)
+        this.addParameter(param.toJSON())
       );
     } else if (node.hasOwnProperty('params')) {
-      node.params.forEach((param: ModelParameter) => this.addParameter(param));
+      node.params.forEach((param: any) => this.addParameter(param));
     }
     if (this.model.existing === 'multimeter') {
       this._recordFrom = node !== null ? node.recordFrom || ['V_m'] : ['V_m'];

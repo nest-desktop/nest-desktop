@@ -29,7 +29,7 @@ export class Parameter extends Config {
 
     this._id = param.id;
     this._value = param.value || 0;
-    this._visible = param.visible !== undefined ? param.visible : true;
+    this._visible = param.visible !== undefined ? param.visible : false;
 
     // optional param specifications
     this._factors = param.factors || [];
@@ -207,7 +207,7 @@ export class Parameter extends Config {
    * Reset value taken from options.
    */
   reset(): void {
-    this._type = { id: 'constant' };
+    this.type = 'constant';
     // this._value = this.options.value;
   }
 

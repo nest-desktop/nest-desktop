@@ -58,7 +58,8 @@
         "params": [
           {
             "id": "spike_times",
-            "value": [300]
+            "value": [300],
+            "visible": true
           },
           {
             "id": "spike_weights",
@@ -79,7 +80,8 @@
         "params": [
           {
             "id": "C_m",
-            "value": 250
+            "value": 250,
+            "visible": false
           },
           {
             "id": "E_L",
@@ -114,7 +116,7 @@
           {
             "id": "tau_m",
             "value": 10,
-            "visible": true
+            "visible": false
           },
           {
             "id": "tau_syn_ex",
