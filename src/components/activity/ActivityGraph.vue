@@ -118,7 +118,8 @@
       <template #action="{ attrs }">
         <v-btn
           @click="state.snackbar.show = false"
-          text
+          outlined
+          small
           v-bind="attrs"
           v-if="state.snackbar.actions.length === 0"
         >
@@ -128,7 +129,8 @@
           <v-btn
             :key="actionIdx"
             @click="action.onClick"
-            text
+            outlined
+            small
             v-bind="attrs"
             v-for="(action, actionIdx) in state.snackbar.actions"
             v-text="action.text"
