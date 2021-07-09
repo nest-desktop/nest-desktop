@@ -33,7 +33,7 @@ export default Vue.extend({
 
     const selectNode = () => {
       state.node.view.select();
-      state.graph.updateNetworkGraph();
+      state.graph.update();
     };
 
     watch(
