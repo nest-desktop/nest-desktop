@@ -270,9 +270,11 @@ export default Vue.extend({
       state.network = core.app.project.network;
       state.graph.network = state.network;
       const elem: any = refs.networkGraph['parentNode'];
-      state.graph.resize(elem.clientWidth, elem.clientHeight);
       state.graph.reset();
+      state.graph.resize(elem.clientWidth, elem.clientHeight);
+      state.graph.init();
       state.graph.update();
+      state.graph.transform();
       setMenuTrigger();
       showHelp();
     };
@@ -284,7 +286,6 @@ export default Vue.extend({
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
         state.graph.resize(elem.clientWidth, elem.clientHeight);
-        state.graph.transformNetworkGraph();
       }
     };
 
@@ -309,8 +310,9 @@ export default Vue.extend({
         state.network.view.selectedConnection,
       ],
       () => {
-        state.graph.updateNetworkGraph();
-        state.graph.transformNetworkGraph();
+        // When (un-)select node or connection button outside of the network graph.
+        state.graph.update();
+        state.graph.transform();
       }
     );
 
