@@ -2,7 +2,6 @@
 // https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
 import core from '@/core';
 
-
 export default {
   data() {
     return {
@@ -35,7 +34,7 @@ export default {
     updateAvailable(event: any) {
       this.registration = event.detail;
       if (core.app.config.autoUpdate) {
-        this.refreshApp()
+        this.refreshApp();
       } else {
         this.updateExists = true;
       }
