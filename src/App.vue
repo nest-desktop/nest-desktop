@@ -7,7 +7,7 @@
       <router-view />
     </transition>
 
-    <v-snackbar :timeout="-1" :value="updateExists">
+    <v-snackbar :timeout="-1" :value="state.updateExists">
       An update is available.
 
       <template #action="{ attrs }">
@@ -25,20 +25,51 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 
 import core from '@/core';
 import Navigation from '@/components/navigation/Navigation.vue';
 // import Navigation from '@/components/navigation/NavigationTemporary.vue';
-import update from './mixins/update';
 
 export default Vue.extend({
   name: 'App',
   components: {
     Navigation,
   },
-  mixins: [update],
   setup() {
+    const state = reactive({
+      refreshing: false,
+      registration: null,
+      updateExists: false,
+    });
+
+    /**
+     * Register if an update is available.
+     * When autoUpdate is enabled, it refresh the app.
+     * Else the user can click on button in snackbar to refresh the app.
+     */
+    const updateAvailable = (event: any) => {
+      state.registration = event.detail;
+      if (core.app.config.autoUpdate) {
+        setTimeout(() => {
+          refreshApp();
+        }, 1);
+      } else {
+        state.updateExists = true;
+      }
+    };
+
+    /**
+     * Called when the user accepts the update
+     */
+    const refreshApp = () => {
+      state.updateExists = false;
+      if (state.refreshing) return;
+      state.refreshing = true;
+      // Here the actual reload of the page occurs
+      window.location.reload();
+    };
+
     /**
      * Keep connection to NEST Server alive.
      * Ping every 5 min.
@@ -56,9 +87,14 @@ export default Vue.extend({
     };
 
     onMounted(() => {
+      document.addEventListener('swUpdated', updateAvailable, {
+        once: true,
+      });
       core.app.init();
       keepConnectionToNESTServerAlive();
     });
+
+    return { refreshApp, state };
   },
 });
 </script>
