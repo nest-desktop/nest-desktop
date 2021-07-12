@@ -6,6 +6,20 @@
     <transition name="fade">
       <router-view />
     </transition>
+
+    <v-snackbar :timeout="-1" :value="updateExists">
+      An update is available.
+
+      <template #action="{ attrs }">
+        <v-btn
+          @click="refreshApp"
+          outlined
+          small
+          v-bind="attrs"
+          v-text="'Update'"
+        />
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -16,12 +30,14 @@ import { onMounted } from '@vue/composition-api';
 import core from '@/core';
 import Navigation from '@/components/navigation/Navigation.vue';
 // import Navigation from '@/components/navigation/NavigationTemporary.vue';
+import update from './mixins/update';
 
 export default Vue.extend({
   name: 'App',
   components: {
     Navigation,
   },
+  mixins: [update],
   setup() {
     /**
      * Keep connection to NEST Server alive.
