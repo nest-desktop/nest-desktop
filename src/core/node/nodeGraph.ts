@@ -122,8 +122,8 @@ export class NodeGraph {
   /**
    * Initialize node graph.
    *
-   * @remark It is only been executed in networkGraph.init().
-   * For changing in node graph, use update().
+   * @remark It is only executed in networkGraph.init().
+   * For changes in the node graph, use update().
    */
   init(
     node: Node,
