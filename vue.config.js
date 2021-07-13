@@ -27,4 +27,9 @@ module.exports = {
       new ForkTsCheckerWebpackPlugin(newForkTsCheckerOptions)
     );
   },
+  pwa: {
+    workboxOptions: {
+      skipWaiting: true,
+    },
+  },
 };

@@ -19,11 +19,11 @@ if (process.env.NODE_ENV === 'production') {
     updatefound() {
       console.log('New content is downloading.');
     },
-    updated() {
-      console.log('New content is available; refreshing...');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+    updated(registration) {
+      console.log('New content is available; please refresh.');
+      document.dispatchEvent(
+        new CustomEvent('swUpdated', { detail: registration })
+      );
     },
     offline() {
       console.log(
