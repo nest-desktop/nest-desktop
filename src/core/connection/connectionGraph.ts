@@ -15,8 +15,8 @@ export class ConnectionGraph {
   /**
    * Initialize connection graph.
    *
-   * @remark It is only been executed in networkGraph.init().
-   * For changing in connection graph, use update.
+   * @remark It is only executed in networkGraph.init().
+   * For changes in the connection graph, use update().
    */
   init(idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
     // console.log('Init connection graph');
