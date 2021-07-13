@@ -6,6 +6,11 @@
           <v-card-title v-text="'App'" />
           <v-card-text>
             <v-checkbox
+              @change="e => updateAppConfig({ autoUpdate: e || false })"
+              label="Auto update"
+              v-model="state.autoUpdate"
+            />
+            <v-checkbox
               @change="e => updateAppConfig({ devMode: e || false })"
               label="Development mode"
               v-model="state.devMode"
