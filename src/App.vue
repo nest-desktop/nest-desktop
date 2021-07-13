@@ -37,6 +37,7 @@ export default Vue.extend({
     Navigation,
   },
   setup() {
+    // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
     const state = reactive({
       refreshing: false,
       registration: null,
@@ -45,7 +46,7 @@ export default Vue.extend({
 
     /**
      * Register if an update is available.
-     * When autoUpdate is enabled, it refresh the app.
+     * When autoUpdate is enabled, it refreshes the app.
      * Else the user can click on button in snackbar to refresh the app.
      */
     const updateAvailable = (event: any) => {
@@ -66,7 +67,7 @@ export default Vue.extend({
       state.updateExists = false;
       if (state.refreshing) return;
       state.refreshing = true;
-      // Here the actual reload of the page occurs
+      // Actual reloading of the page
       window.location.reload();
     };
 
