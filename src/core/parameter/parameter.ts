@@ -241,28 +241,16 @@ export class Parameter extends Config {
   }
 
   /**
-   * Format float value or array.
+   * Format value or array to string.
    */
-  format(value: any): any {
-    if (Number.isInteger(value)) {
-      return this.floatToFixed(value);
-    } else if (Array.isArray(value)) {
+  format(value: any): string {
+    if (Array.isArray(value)) {
       return `[${String(value.map((v: any) => this.format(v)))}]`;
     } else {
-      return value;
+      return JSON.stringify(value);
     }
   }
 
-  /**
-   * Fixed float value with correct amount of decimals.
-   */
-  floatToFixed(value: number): string {
-    const valString: string = JSON.stringify(value);
-    const valList: string[] = valString.split('.');
-    return value.toFixed(
-      valList.length === 2 ? Math.min(valList[1].length, 20) : 1
-    );
-  }
 
   /**
    * Write code.
@@ -274,16 +262,9 @@ export class Parameter extends Config {
       if (this._format === 'boolean') {
         // Boolean value for Python
         value = this._value ? 'True' : 'False';
-      } else if (
-        this._format === 'integer' ||
-        ['indegree', 'outdegree', 'N'].includes(this._id) // in connection
-      ) {
-        // Integer value.
-        const val = this._value as Number;
-        value = val.toFixed();
       } else {
-        // Float value or array.
-        value = this.format(this._value);
+        const val = this._value as Number;
+        value = this.format(val);
       }
     } else if (this._type.id.startsWith('numpy')) {
       const specs: string = this.specs
