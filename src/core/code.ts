@@ -16,26 +16,14 @@ export class Code {
   }
 
   /**
-   * Format float value or array.
+   * Format value or array to string.
    */
-  format(value: any): any {
-    if (Number.isInteger(value)) {
-      return this.floatToFixed(value);
-    } else if (Array.isArray(value)) {
+  format(value: any): string {
+    if (Array.isArray(value)) {
       return `[${String(value.map((v: any) => this.format(v)))}]`;
     } else {
-      return value;
+      return JSON.stringify(value);
     }
   }
 
-  /**
-   * Generate fixed float value with correct amount of decimals.
-   */
-  floatToFixed(value: number): string {
-    const valString: string = JSON.stringify(value);
-    const valList: string[] = valString.split('.');
-    return value.toFixed(
-      valList.length === 2 ? Math.min(valList[1].length, 20) : 1
-    );
-  }
 }
