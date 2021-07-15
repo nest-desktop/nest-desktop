@@ -39,6 +39,10 @@ export class ProjectCode extends Code {
     this._script += this.importModules();
     this._script += 'nest.ResetKernel()\n';
 
+    if (this._project.config.simulateWithInsite) {
+      this._script += 'nest.Install("insitemodule")';
+    }
+
     this._script += '\n\n# Simulation kernel\n';
     this._script += this._project.simulation.code.setKernelStatus();
 
@@ -54,18 +58,20 @@ export class ProjectCode extends Code {
     this._script += '\n\n# Run simulation\n';
     this._script += this._project.simulation.code.simulate();
 
-    if (this._project.network.recorders.length > 0) {
-      this._script += '\n\n# Get IDs of recorded node\n';
-      this._script += this.defineGetNodeIds();
+    if (!this._project.config.simulateWithInsite) {
+      if (this._project.network.recorders.length > 0) {
+        this._script += '\n\n# Get IDs of recorded node\n';
+        this._script += this.defineGetNodeIds();
 
-      if (this._project.network.hasSpatialNodes()) {
-        this._script += '\n\n# Get node positions\n';
-        this._script += this.defineGetNodePositions();
+        if (this._project.network.hasSpatialNodes()) {
+          this._script += '\n\n# Get node positions\n';
+          this._script += this.defineGetNodePositions();
+        }
+
+        this._script += '\n\n# Collect response\n';
+        this._script += this.response();
       }
     }
-
-    this._script += '\n\n# Collect response\n';
-    this._script += this.response();
 
     this._hash = sha1(this._script);
   }
