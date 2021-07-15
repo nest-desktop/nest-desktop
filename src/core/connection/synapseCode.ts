@@ -14,20 +14,20 @@ export class SynapseCode extends Code {
   /**
    * Write script of synapse specifications.
    */
-  synSpec(): string {
-    const synSpecList: string[] = [];
+  specs(): string {
+    const specs: string[] = [];
     if (this._synapse.modelId !== 'static_synapse') {
-      synSpecList.push(`"model": "${this._synapse.modelId}"`);
+      specs.push(`"model": "${this._synapse.modelId}"`);
     }
 
     this._synapse.filteredParams.forEach((param: ModelParameter) =>
-      synSpecList.push(`"${param.id}": ${param.toCode()}`)
+      specs.push(`"${param.id}": ${param.toCode()}`)
     );
 
     let script = '';
-    if (synSpecList.length > 0) {
+    if (specs.length > 0) {
       script += ', syn_spec={' + this._();
-      script += synSpecList.join(',' + this._());
+      script += specs.join(',' + this._());
       script += this.end() + '}';
     }
     return script;
