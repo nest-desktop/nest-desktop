@@ -54,7 +54,6 @@
         {
           "id": "indegree",
           "input": "valueSlider",
-          "format": "integer",
           "label": "indegree",
           "max": 100,
           "min": 1,
@@ -73,7 +72,6 @@
           "visible": false
         },
         {
-          "format": "boolean",
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
@@ -81,7 +79,6 @@
           "visible": false
         },
         {
-          "format": "boolean",
           "id": "allow_multapses",
           "input": "checkbox",
           "label": "allow multapses",
@@ -97,7 +94,6 @@
         {
           "id": "outdegree",
           "input": "valueSlider",
-          "format": "integer",
           "label": "outdegree",
           "max": 100,
           "min": 1,
@@ -116,7 +112,6 @@
           "visible": false
         },
         {
-          "format": "boolean",
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
@@ -124,7 +119,6 @@
           "visible": false
         },
         {
-          "format": "boolean",
           "id": "allow_multapses",
           "input": "checkbox",
           "label": "allow multapses",
@@ -138,7 +132,6 @@
       "label": "fixed total number",
       "params": [
         {
-          "format": "integer",
           "id": "N",
           "input": "valueSlider",
           "label": "N",
@@ -149,7 +142,6 @@
           "visible": true
         },
         {
-          "format": "boolean",
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
@@ -157,7 +149,6 @@
           "visible": false
         },
         {
-          "format": "boolean",
           "id": "allow_multapses",
           "input": "checkbox",
           "label": "allow multapses",
@@ -193,7 +184,6 @@
           "visible": false
         },
         {
-          "format": "boolean",
           "id": "use_on_source",
           "input": "checkbox",
           "label": "use on source",
@@ -217,7 +207,6 @@
           "visible": true
         },
         {
-          "format": "boolean",
           "id": "allow_autapses",
           "input": "checkbox",
           "label": "allow autapses",
@@ -226,7 +215,6 @@
           "visible": true
         },
         {
-          "format": "boolean",
           "id": "make_symmetric",
           "input": "checkbox",
           "label": "make symmetric",
@@ -235,7 +223,6 @@
           "visible": true
         },
         {
-          "format": "boolean",
           "id": "use_on_source",
           "input": "checkbox",
           "label": "use on source",
