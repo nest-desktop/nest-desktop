@@ -51,11 +51,12 @@ export class NetworkCode extends Code {
    */
   getActivities(): string {
     let script = '[';
-    script += this._(2);
     const activities: string[] = this._network.recorders.map(
       (node: Node) => `getActivity(${node.view.label})`
     );
-    script += activities.join(',' + this._(2));
+    if (activities.length > 0) {
+      script += this._(2) + activities.join(',' + this._(2));
+    }
     script += this._() + ']';
     return script;
   }

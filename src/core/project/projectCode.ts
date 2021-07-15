@@ -54,17 +54,19 @@ export class ProjectCode extends Code {
     this._script += '\n\n# Run simulation\n';
     this._script += this._project.simulation.code.simulate();
 
-    this._script +=
-      '\n\n# Define function getting activity from the recorder\n';
-    this._script += this.defineGetActivity();
+    if (this._project.network.recorders.length > 0) {
+      this._script +=
+        '\n\n# Define function getting activity from the recorder\n';
+      this._script += this.defineGetActivity();
 
-    if (this._project.network.hasSpatialNodes()) {
-      this._script += '\n\n# Define function getting node positions\n';
-      this._script += this.defineGetNodePositions();
+      if (this._project.network.hasSpatialNodes()) {
+        this._script += '\n\n# Define function getting node positions\n';
+        this._script += this.defineGetNodePositions();
+      }
+
+      this._script += '\n\n# Get activities\n';
+      this._script += this.response();
     }
-
-    this._script += '\n\n# Collect activities\n';
-    this._script += this.response();
 
     this._hash = sha1(this._script);
   }

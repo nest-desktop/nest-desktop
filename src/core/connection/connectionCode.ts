@@ -23,15 +23,18 @@ export class ConnectionCode extends Code {
   /**
    * Write script of connection specifications.
    */
-  connSpec(): string {
-    const connSpecList: string[] = [`"rule": "${this._connection.rule}"`];
+  specs(): string {
+    const specs: string[] = [`"rule": "${this._connection.rule}"`];
     this._connection.filteredParams.forEach((param: Parameter) =>
-      connSpecList.push(`"${param.id}": ${param.toCode()}`)
+      specs.push(`"${param.id}": ${param.toCode()}`)
     );
 
-    let script = ', conn_spec={' + this._();
-    script += connSpecList.join(',' + this._());
-    script += this.end() + '}';
+    let script = '';
+    if (specs.length > 1 && this._connection.rule !== 'all_to_all') {
+      script += ', conn_spec={' + this._();
+      script += specs.join(',' + this._());
+      script += this.end() + '}';
+    }
     return script;
   }
 
@@ -48,8 +51,8 @@ export class ConnectionCode extends Code {
 
     let script = '';
     script += `nest.Connect(${this.sourceLabel}, ${this.targetLabel}`;
-    script += this.connSpec();
-    script += this._connection.synapse.code.synSpec();
+    script += this.specs();
+    script += this._connection.synapse.code.specs();
     script += ')';
     return script + '\n';
   }
