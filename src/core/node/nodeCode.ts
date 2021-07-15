@@ -69,6 +69,20 @@ export class NodeCode extends Code {
       );
       params.push(`"record_from": [${recordFrom.join(',')}]`);
     }
+
+    if (
+      this._node.model.elementType === 'recorder' &&
+      this._node.network.project.config.simulateWithInsite
+    ) {
+      params.push('"record_to": "insite"');
+    }
+
+    if (this._node.params !== undefined || this._node.params.length > 0) {
+      this._node.filteredParams.forEach((param: ModelParameter) =>
+        params.push(`"${param.id}": ${param.toCode()}`)
+      );
+    }
+
     if (params.length > 0) {
       script += '{' + this._();
       script += params.join(',' + this._());
