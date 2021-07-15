@@ -201,7 +201,7 @@ export class Network extends Config {
       target: target.idx,
     });
     if (connection.view.connectRecorder()) {
-      connection.initActivity();
+      connection.recorder.initActivity();
     }
     this.networkChanges();
   }

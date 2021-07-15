@@ -263,15 +263,6 @@ export class Connection extends Config {
   }
 
   /**
-   * Initialize activity for the connection with recorder.
-   */
-  initActivity(): void {
-    this._view.connectSpikeRecorder()
-      ? this.target.initActivity()
-      : this.source.initActivity();
-  }
-
-  /**
    * Serialize for JSON.
    * @return connection object
    */
