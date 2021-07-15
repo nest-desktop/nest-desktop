@@ -212,6 +212,7 @@ export class Connection extends Config {
    * It emits connection changes.
    */
   reverse(): void {
+    // console.log('Reverse connection');
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
     this.recorder.initActivity();
     this.connectionChanges();
@@ -259,6 +260,15 @@ export class Connection extends Config {
    */
   remove(): void {
     this._network.deleteConnection(this);
+  }
+
+  /**
+   * Initialize activity for the connection with recorder.
+   */
+  initActivity(): void {
+    this._view.connectSpikeRecorder()
+      ? this.target.initActivity()
+      : this.source.initActivity();
   }
 
   /**

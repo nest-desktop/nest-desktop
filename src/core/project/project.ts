@@ -533,8 +533,12 @@ export class Project extends Config {
    * Initialize activity graph.
    */
   initActivityGraph(): void {
-    if (this._activityGraph !== undefined) {
-      this._activityGraph.init();
+    if (this._activityGraph === undefined) {
+      return;
+    }
+    this._activityGraph.init();
+    if (this.hasActivities) {
+      this._activityGraph.update();
     }
   }
 
@@ -555,7 +559,7 @@ export class Project extends Config {
     this.checkActivities();
 
     // Update activity graph.
-    this.activityGraph.update();
+    this._activityGraph.update();
   }
 
   /**
