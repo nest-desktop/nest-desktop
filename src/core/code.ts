@@ -14,16 +14,4 @@ export class Code {
   end(): string {
     return '\n';
   }
-
-  /**
-   * Format value or array to string.
-   */
-  format(value: any): string {
-    if (Array.isArray(value)) {
-      return `[${String(value.map((v: any) => this.format(v)))}]`;
-    } else {
-      return JSON.stringify(value);
-    }
-  }
-
 }
