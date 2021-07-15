@@ -34,16 +34,11 @@ export class ModelCode extends Code {
       .filter((param: ModelParameter) => param.visible)
       .map((param: ModelParameter) => {
         if (param.id === 'record_from') {
-          const recordFrom: string[] = param.value.map(
-            (val: string) => `"${val}"`
-          );
           paramsList.push(
-            this._() + `"${param.id}": [${recordFrom.join(',')}]`
+            this._() + `"${param.id}": [${param.value.join(',')}]`
           );
         } else {
-          paramsList.push(
-            this._() + `"${param.id}": ${this.format(param.value)}`
-          );
+          paramsList.push(this._() + `"${param.id}": ${param.value}`);
         }
       });
     if (paramsList.length > 0) {

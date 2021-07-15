@@ -6,7 +6,6 @@ import { Synapse } from '../connection/synapse';
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
-  private _format: string;
   private _id: string;
   private _idx: number; // generative
   private _input: string;
@@ -33,7 +32,6 @@ export class Parameter extends Config {
 
     // optional param specifications
     this._factors = param.factors || [];
-    this._format = param.format || 'float';
     this._type = param.type || { id: 'constant' };
 
     this._input = param.input;
@@ -241,35 +239,22 @@ export class Parameter extends Config {
   }
 
   /**
-   * Format value or array to string.
-   */
-  format(value: any): string {
-    if (Array.isArray(value)) {
-      return `[${String(value.map((v: any) => this.format(v)))}]`;
-    } else {
-      return JSON.stringify(value);
-    }
-  }
-
-
-  /**
-   * Write code.
+   * Write textual code.
    */
   toCode(): string {
     let value: string;
     if (this.isConstant()) {
       // Constant value
-      if (this._format === 'boolean') {
+      if (typeof this._value === 'boolean') {
         // Boolean value for Python
         value = this._value ? 'True' : 'False';
       } else {
-        const val = this._value as Number;
-        value = this.format(val);
+        value = JSON.stringify(this._value);
       }
     } else if (this._type.id.startsWith('numpy')) {
       const specs: string = this.specs
         .filter((spec: any) => !(spec.optional && spec.value === spec.default))
-        .map((spec: any) => this.format(spec.value))
+        .map((spec: any) => spec.value)
         .join(', ');
       value = `${this._type.id}(${specs})`;
     } else if (this._type.id === 'spatial.distance') {
@@ -282,13 +267,13 @@ export class Parameter extends Config {
     } else if (this._type.id.startsWith('spatial')) {
       // Spatial distribution.
       const specs: string = this.specs
-        .map((spec: any) => this.format(spec.value))
+        .map((spec: any) => spec.value)
         .join(', ');
       value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
       const specs: string = this.specs
-        .map((spec: any) => this.format(spec.value))
+        .map((spec: any) => spec.value)
         .join(', ');
       value = `nest.${this._type.id}(${specs})`;
     }
