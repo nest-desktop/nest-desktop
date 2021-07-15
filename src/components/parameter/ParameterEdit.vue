@@ -311,6 +311,8 @@ export default Vue.extend({
     };
 
     const generateValues = () => {
+      state.valueGenerator.sort =
+        state.param.id.includes('time') || state.param.id.includes('Time');
       state.value = state.valueGenerator.generate();
       paramChange();
     };
