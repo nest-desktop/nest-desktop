@@ -485,6 +485,59 @@ export class Project {
       });
   }
 
+  /**
+   * Start simulation with recording backend insite.
+   *
+   * @remarks
+   * During the simulation it updates activities.
+   */
+  runSimulationInsite(): void {
+    // console.log('Run simulation with insite');
+    this._errorMessage = '';
+    if (this._simulation.kernel.config.autoRNGSeed) {
+      this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
+      this._code.generate();
+    }
+    this._simulation.running = true;
+    this.app.nestServer.httpClient
+      .post(this._app.nestServer.url + '/exec', {
+        source: this._code.script,
+      })
+      .then((resp: any) => {
+        switch (resp.status) {
+          case 0:
+            this._errorMessage = 'Failed to find NEST Server.';
+            break;
+          case 200:
+            this._errorMessage = 'Simulation is finished.';
+            break;
+          default:
+            this._errorMessage = resp.response;
+            break;
+        }
+
+        // Show error message via toast notification.
+        if (this._errorMessage) {
+          Vue.$toast.open({
+            message: this._errorMessage,
+            pauseOnHover: true,
+            position: 'top-right',
+            type: 'error',
+          });
+        }
+
+        return resp;
+      })
+      .catch((resp: any) => {
+        this._errorMessage = resp.responseText;
+        return resp;
+      });
+
+    setTimeout(() => {
+      this._simulation.running = false;
+    }, 100);
+  }
+
   /*
    * Activities
    */
