@@ -40,7 +40,11 @@ export class ProjectCode extends Code {
     this._script += 'nest.ResetKernel()\n';
 
     if (this._project.config.simulateWithInsite) {
-      this._script += 'nest.Install("insitemodule")';
+      this._script += '# "insitemodule" can only be loaded once.\n';
+      this._script += 'try:';
+      this._script += this._() + 'nest.Install("insitemodule")\n';
+      this._script += 'except:';
+      this._script += this._() + 'pass';
     }
 
     this._script += '\n\n# Simulation kernel\n';
