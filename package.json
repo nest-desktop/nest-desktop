@@ -3,7 +3,7 @@
   "version": "3.0.3",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 8001",
     "build": "vue-cli-service build --prod",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
