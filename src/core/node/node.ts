@@ -89,18 +89,18 @@ export class Node extends Config {
    * Set model id.
    *
    * @remarks
-   * It initializes parameters, spaital activity and activity graph components.
-   * It triggers node changes to start simulation.
+   * It initializes parameters and activity components.
+   * It triggers node changes.
    *
    * @param value - id of the model
    */
   set modelId(value: string) {
+    // console.log('Set Model');
     this._modelId = value;
     this._size = 1;
     this.initParameters();
     this._network.clean();
     this.initActivity();
-    this._network.project.initActivityGraph();
     this.nodeChanges();
   }
 
@@ -161,6 +161,7 @@ export class Node extends Config {
   }
 
   set recordFrom(value: string[]) {
+    // console.log('Set record from');
     this._recordFrom = value;
     this.network.project.initActivityGraph();
   }
@@ -214,6 +215,10 @@ export class Node extends Config {
    * Initialize activity for the recorder.
    */
   initActivity(): void {
+    if (this.model.elementType !== 'recorder') {
+      return;
+    }
+    console.log('Initialize activity');
     if (this.model.existing === 'spike_recorder') {
       this._activity = new SpikeActivity(this);
     } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
@@ -221,6 +226,7 @@ export class Node extends Config {
     } else {
       this._activity = new Activity(this);
     }
+    this._network.project.initActivityGraph();
   }
 
   /**
