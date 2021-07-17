@@ -218,7 +218,7 @@ export class Node extends Config {
     if (this.model.elementType !== 'recorder') {
       return;
     }
-    console.log('Initialize activity');
+    // console.log('Initialize activity');
     if (this.model.existing === 'spike_recorder') {
       this._activity = new SpikeActivity(this);
     } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
