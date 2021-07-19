@@ -29,7 +29,6 @@ import { reactive, onMounted } from '@vue/composition-api';
 
 import core from '@/core';
 import Navigation from '@/components/navigation/Navigation.vue';
-// import Navigation from '@/components/navigation/NavigationTemporary.vue';
 
 export default Vue.extend({
   name: 'App',
