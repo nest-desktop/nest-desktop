@@ -117,8 +117,7 @@ export class FreePositions {
       'nest.spatial.free(' +
       this.spatial.node.code._(2) +
       args.join(',' + this.spatial.node.code._(2)) +
-      this.spatial.node.code._(1) +
-      ')'
+      '\n)'
     );
   }
 

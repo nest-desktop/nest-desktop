@@ -6,7 +6,6 @@ import { Synapse } from '../connection/synapse';
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
-  private _format: string;
   private _id: string;
   private _idx: number; // generative
   private _input: string;
@@ -33,7 +32,6 @@ export class Parameter extends Config {
 
     // optional param specifications
     this._factors = param.factors || [];
-    this._format = param.format || 'float';
     this._type = param.type || { id: 'constant' };
 
     this._input = param.input;
@@ -241,54 +239,22 @@ export class Parameter extends Config {
   }
 
   /**
-   * Format float value or array.
-   */
-  format(value: any): any {
-    if (Number.isInteger(value)) {
-      return this.floatToFixed(value);
-    } else if (Array.isArray(value)) {
-      return `[${String(value.map((v: any) => this.format(v)))}]`;
-    } else {
-      return value;
-    }
-  }
-
-  /**
-   * Fixed float value with correct amount of decimals.
-   */
-  floatToFixed(value: number): string {
-    const valString: string = JSON.stringify(value);
-    const valList: string[] = valString.split('.');
-    return value.toFixed(
-      valList.length === 2 ? Math.min(valList[1].length, 20) : 1
-    );
-  }
-
-  /**
-   * Write code.
+   * Write textual code.
    */
   toCode(): string {
     let value: string;
     if (this.isConstant()) {
       // Constant value
-      if (this._format === 'boolean') {
+      if (typeof this._value === 'boolean') {
         // Boolean value for Python
         value = this._value ? 'True' : 'False';
-      } else if (
-        this._format === 'integer' ||
-        ['indegree', 'outdegree', 'N'].includes(this._id) // in connection
-      ) {
-        // Integer value.
-        const val = this._value as Number;
-        value = val.toFixed();
       } else {
-        // Float value or array.
-        value = this.format(this._value);
+        value = JSON.stringify(this._value);
       }
     } else if (this._type.id.startsWith('numpy')) {
       const specs: string = this.specs
         .filter((spec: any) => !(spec.optional && spec.value === spec.default))
-        .map((spec: any) => this.format(spec.value))
+        .map((spec: any) => spec.value)
         .join(', ');
       value = `${this._type.id}(${specs})`;
     } else if (this._type.id === 'spatial.distance') {
@@ -301,13 +267,13 @@ export class Parameter extends Config {
     } else if (this._type.id.startsWith('spatial')) {
       // Spatial distribution.
       const specs: string = this.specs
-        .map((spec: any) => this.format(spec.value))
+        .map((spec: any) => spec.value)
         .join(', ');
       value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
       const specs: string = this.specs
-        .map((spec: any) => this.format(spec.value))
+        .map((spec: any) => spec.value)
         .join(', ');
       value = `nest.${this._type.id}(${specs})`;
     }

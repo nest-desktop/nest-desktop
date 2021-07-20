@@ -5,14 +5,12 @@
   "label": "spike generator",
   "params": [
     {
-      "format": "array",
       "id": "spike_times",
       "label": "spike times",
       "unit": "ms",
       "input": "arrayInput"
     },
     {
-      "format": "array",
       "id": "spike_weights",
       "label": "weights of spike",
       "unit": "pA",

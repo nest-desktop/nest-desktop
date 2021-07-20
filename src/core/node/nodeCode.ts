@@ -34,11 +34,14 @@ export class NodeCode extends Code {
     }
     const params: string = this.nodeParams();
     if (params.length > 0) {
-      script += ', params=' + this.nodeParams();
+      script += `, params=${params}`;
     }
     if (this._node.spatial.hasPositions()) {
       script +=
-        ',' + this._() + 'positions=' + this._node.spatial.positions.toCode();
+        ',' +
+        (params.length > 0 ? ' ' : this._()) +
+        'positions=' +
+        this._node.spatial.positions.toCode();
     }
     script += ')';
     return script + '\n';

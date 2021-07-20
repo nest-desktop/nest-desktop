@@ -6,7 +6,7 @@ services:
     ports:
       - '8000:8000'
   nest-server:
-    image: nestsim/nest:3.0
+    image: nestsim/nest:latest
     command: 'nest-server start -o'
     container_name: 'nest-server'
     environment:

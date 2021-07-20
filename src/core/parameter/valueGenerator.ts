@@ -48,6 +48,10 @@ export class ValueGenerator {
     return this._params;
   }
 
+  set sort(value: boolean) {
+    this._sort = value;
+  }
+
   get type(): string {
     return this._type;
   }
