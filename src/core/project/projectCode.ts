@@ -63,10 +63,10 @@ export class ProjectCode extends Code {
         this._script += '\n\n# Define function getting node positions\n';
         this._script += this.defineGetNodePositions();
       }
-
-      this._script += '\n\n# Get activities\n';
-      this._script += this.response();
     }
+
+    this._script += '\n\n# Collect response\n';
+    this._script += this.response();
 
     this._hash = sha1(this._script);
   }
@@ -117,15 +117,20 @@ export class ProjectCode extends Code {
     script += this._() + '"kernel": {';
     script +=
       this._(2) + '"biological_time": nest.GetKernelStatus("biological_time")';
-    script += this._() + '},';
-    script +=
-      this._() + '"activities": ' + this._project.network.code.getActivities();
-    if (this._project.network.hasSpatialNodes()) {
+    script += this._() + '}';
+    if (this._project.network.recorders.length > 0) {
       script +=
         ',' +
         this._() +
-        '"positions": ' +
-        this._project.network.code.getNodePositions();
+        '"activities": ' +
+        this._project.network.code.getActivities();
+      if (this._project.network.hasSpatialNodes()) {
+        script +=
+          ',' +
+          this._() +
+          '"positions": ' +
+          this._project.network.code.getNodePositions();
+      }
     }
     script += this.end() + '}';
     return script + '\n';
