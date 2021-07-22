@@ -102,7 +102,7 @@ export default Vue.extend({
         {
           id: 'projectDownload',
           icon: 'mdi-download',
-          title: 'Download project',
+          title: 'Save project to file',
           onClick: () => {
             state.project.view.selected = true;
             state.openProjectsDialog = true;

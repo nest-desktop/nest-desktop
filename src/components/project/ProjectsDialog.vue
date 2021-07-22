@@ -90,7 +90,7 @@ import { Project } from '@/core/project/project';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'ProjectsDownloadDialog',
+  name: 'ProjectsDialog',
   props: {
     action: String,
     open: Boolean,
