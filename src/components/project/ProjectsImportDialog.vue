@@ -121,11 +121,18 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="state.dialog = false" text v-text="'Cancel'" />
           <v-btn
-            :disabled="state.projects.length === 0"
-            @click="loadProjects"
+            @click="state.dialog = false"
+            outlined
+            small
             text
+            v-text="'Cancel'"
+          />
+          <v-btn
+            :disabled="!state.projects.some(p => p.selected)"
+            @click="loadProjects"
+            outlined
+            small
           >
             <v-icon left v-text="'mdi-import'" />
             Import

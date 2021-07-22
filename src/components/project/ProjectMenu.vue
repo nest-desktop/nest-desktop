@@ -42,14 +42,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteProject"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'Delete'"
-            />
+            <v-btn @click="deleteProject" outlined small v-text="'Delete'" />
           </v-card-actions>
         </span>
       </v-card>

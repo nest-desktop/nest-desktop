@@ -48,14 +48,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="resetProjects"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'Reset'"
-            />
+            <v-btn @click="resetProjects" outlined small v-text="'Reset'" />
           </v-card-actions>
         </span>
       </v-card>
