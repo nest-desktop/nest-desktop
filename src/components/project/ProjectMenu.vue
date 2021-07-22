@@ -3,7 +3,7 @@
     <ProjectsDialog
       :open="state.openProjectsDialog"
       :projects="[state.project]"
-      action="download"
+      action="export"
     />
 
     <v-menu
@@ -100,9 +100,9 @@ export default Vue.extend({
           },
         },
         {
-          id: 'projectDownload',
-          icon: 'mdi-download',
-          title: 'Save project to file',
+          id: 'projectExport',
+          icon: 'mdi-export',
+          title: 'Export project',
           onClick: () => {
             state.project.view.selected = true;
             state.openProjectsDialog = true;

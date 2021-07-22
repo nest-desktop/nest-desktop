@@ -2,7 +2,7 @@
   <div class="ProjectsLoadDialog">
     <v-dialog v-model="state.dialog" max-width="1024">
       <v-card>
-        <v-card-title v-text="'Load projects from file'" />
+        <v-card-title v-text="'Import projects'" />
         <v-card-subtitle v-text="'Select a source'" />
 
         <v-card-text>
@@ -10,8 +10,8 @@
             <v-col cols="2">
               <v-btn-toggle
                 class="mt-3"
-                dark
                 dense
+                group
                 mandatory
                 v-model="state.source"
               >
@@ -72,18 +72,18 @@
               v-text="
                 `${state.projects.length} project${
                   state.projects.length > 1 ? 's' : ''
-                } found. Select projects to load.`
+                } found. Select projects to import.`
               "
             />
 
             <v-simple-table>
               <thead>
                 <tr>
-                  <th v-text="'Name'" />
+                  <th v-text="'Project name'" />
                   <th v-text="'Created at'" />
                   <th v-text="'Version'" />
                   <th class="text-center" v-text="'Valid'" />
-                  <th class="text-center" v-text="'Load'" />
+                  <th class="text-center" v-text="'Selected'" />
                 </tr>
               </thead>
               <tbody>
@@ -127,8 +127,8 @@
             @click="loadProjects"
             text
           >
-            <v-icon left v-text="'mdi-upload'" />
-            Load
+            <v-icon left v-text="'mdi-import'" />
+            Import
           </v-btn>
         </v-card-actions>
       </v-card>
