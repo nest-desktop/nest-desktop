@@ -56,20 +56,28 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="state.dialog = false" text v-text="'Cancel'" />
           <v-btn
-            :disabled="state.projects.length === 0"
-            @click="exportProjects"
+            @click="state.dialog = false"
+            outlined
+            small
             text
+            v-text="'Cancel'"
+          />
+          <v-btn
+            :disabled="!state.projects.some(p => p.view.selected)"
+            @click="exportProjects"
+            outlined
+            small
             v-if="state.action === 'export'"
           >
             <v-icon left v-text="'mdi-export'" />
             Export
           </v-btn>
           <v-btn
-            :disabled="state.projects.length === 0"
+            :disabled="!state.projects.some(p => p.view.selected)"
             @click="deleteProjects"
-            text
+            outlined
+            small
             v-if="state.action === 'delete'"
           >
             <v-icon left v-text="'mdi-trash-can-outline'" />
