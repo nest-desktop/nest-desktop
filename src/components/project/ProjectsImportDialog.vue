@@ -9,7 +9,6 @@
           <v-row class="mb-1">
             <v-col cols="2">
               <v-btn-toggle
-                class="mt-3"
                 dense
                 group
                 mandatory
@@ -32,6 +31,7 @@
                     :disabled="state.trees.length === 0"
                     :items="state.trees"
                     @change="getFilesFromGithub"
+                    dense
                     label="Select path"
                     prepend-icon="mdi-github"
                     v-model="state.selectedTree"
@@ -42,6 +42,7 @@
                     :disabled="state.files.length === 0"
                     :items="state.files"
                     @change="getProjectsFromGithub"
+                    dense
                     label="Select file"
                     v-model="state.selectedFile"
                   />
@@ -50,18 +51,19 @@
               <v-file-input
                 @change="getProjectsFromFile"
                 label="File input"
+                dense
                 truncate-length="100"
                 v-show="state.source === 'file'"
               />
               <v-text-field
                 @change="getProjectsFromUrl"
-                class="pt-2"
+                class="ma-0 pa-0"
                 clearable
                 dense
                 full-width
+                flat
                 label="Enter url"
                 prepend-icon="mdi-web"
-                small
                 v-show="state.source === 'url'"
               />
             </v-col>
