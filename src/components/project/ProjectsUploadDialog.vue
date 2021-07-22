@@ -2,28 +2,21 @@
   <div class="ProjectsUploadDialog">
     <v-dialog v-model="state.dialog" max-width="1024">
       <v-card>
-        <v-card-title
-          v-if="state.projects.length !== 0"
-          v-text="
-            `${state.projects.length} project${
-              state.projects.length > 1 ? 's' : ''
-            } found.`
-          "
-        />
-        <v-card-title v-else v-text="'No project found.'" />
-
-        <v-card-subtitle
-          v-text="'Select projects to upload.'"
-          v-if="state.projects.length !== 0"
-        />
+        <v-card-title v-text="'Upload projects to NEST Desktop'" />
 
         <v-card-text>
-          <v-row>
+          <v-row class="mb-1">
             <v-col cols="2">
-              <v-btn-toggle mandatory v-model="state.source">
+              <v-btn-toggle
+                class="mt-3"
+                dark
+                dense
+                mandatory
+                v-model="state.source"
+              >
                 <v-btn
                   :key="item.value"
-                  :title="item.value"
+                  :title="item.title"
                   :value="item.value"
                   v-for="item in state.items"
                 >
@@ -32,12 +25,27 @@
               </v-btn-toggle>
             </v-col>
             <v-col class="pa-3" cols="10">
-              <!-- <input
-                @change="fetchProjectsFromFile"
-                ref="file"
-                type="file"
-                v-show="state.source === 'file'"
-              /> -->
+              <v-row v-show="state.source === 'github'">
+                <v-col cols="6">
+                  <v-select
+                    :disabled="state.trees.length === 0"
+                    :items="state.trees"
+                    @change="fetchFilesFromGithub"
+                    label="Select path"
+                    prepend-icon="mdi-github"
+                    v-model="state.selectedTree"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-select
+                    :disabled="state.files.length === 0"
+                    :items="state.files"
+                    @change="fetchProjectsFromGithub"
+                    label="Select file"
+                    v-model="state.selectedFile"
+                  />
+                </v-col>
+              </v-row>
               <v-file-input
                 @change="fetchProjectsFromFile"
                 label="File input"
@@ -58,15 +66,23 @@
             </v-col>
           </v-row>
 
-          <v-simple-table v-if="state.projects.length !== 0">
-            <template #default>
+          <span v-if="state.projects.length !== 0">
+            <span
+              v-text="
+                `${state.projects.length} project${
+                  state.projects.length > 1 ? 's' : ''
+                } found. Select projects to upload.`
+              "
+            />
+
+            <v-simple-table>
               <thead>
                 <tr>
                   <th v-text="'Name'" />
                   <th v-text="'Created at'" />
                   <th v-text="'Version'" />
                   <th class="text-center" v-text="'Valid'" />
-                  <th class="text-center" v-text="'Selected'" />
+                  <th class="text-center" v-text="'Upload'" />
                 </tr>
               </thead>
               <tbody>
@@ -96,9 +112,10 @@
                   </td>
                 </tr>
               </tbody>
-            </template>
-          </v-simple-table>
-          <template v-else> Select another file. </template>
+            </v-simple-table>
+          </span>
+
+          <span v-else v-text="'No projects found'" />
         </v-card-text>
 
         <v-card-actions>
@@ -136,13 +153,27 @@ export default Vue.extend({
     const state = reactive({
       dialog: false,
       items: [
-        { icon: 'mdi-paperclip', value: 'file' },
-        { icon: 'mdi-web', value: 'url' },
+        {
+          icon: 'mdi-paperclip',
+          title: 'Load projects from file',
+          value: 'file',
+        },
+        {
+          icon: 'mdi-github',
+          title:
+            'Load projects from github repo (nest-desktop/nest-desktop-projects)',
+          value: 'github',
+        },
+        { icon: 'mdi-web', title: 'Load projects from url', value: 'url' },
       ],
+      files: [],
       open: props.open,
       projects: [] as Project[],
+      selectedFile: {},
       selectedProjects: [],
+      selectedTree: {},
       source: 'file',
+      trees: [],
     });
 
     const app = new App();
@@ -162,42 +193,80 @@ export default Vue.extend({
     };
 
     /**
-     * Fetch projects from url.
+     * Push projects to the list and validate them.
      */
-    const fetchProjectsFromUrl = (url: string) => {
-      state.projects = [];
-      axios.get(url).then((response: any) => {
-        const data: any = response.data;
-        const projects: any[] = Array.isArray(data) ? data : [data];
-        projects.forEach((project: any) => {
-          if (project.name) {
-            state.projects.push(project);
-            validateProject(project);
-          }
-        });
+    const loadProjects = (data: any) => {
+      const projects: any[] = Array.isArray(data) ? data : [data];
+      projects.forEach((project: any) => {
+        if (project.name) {
+          state.projects.push(project);
+          validateProject(project);
+        }
       });
     };
 
     /**
-     * Fetch projects from file.
+     * Get projects from file.
      */
     const fetchProjectsFromFile = (file: any) => {
       state.projects = [];
       const fileReader = new FileReader();
       fileReader.readAsText(file);
-      fileReader.addEventListener('load', (event: any) => {
-        setTimeout(() => {
-          const result: any = JSON.parse(event.target.result as string);
-          const data = Array.isArray(result) ? result : [result];
-          state.projects = [];
-          data.forEach((project: any) => {
-            if (project.name) {
-              state.projects.push(project);
-              validateProject(project);
-            }
+      fileReader.addEventListener('load', (event: any) =>
+        loadProjects(JSON.parse(event.target.result as string))
+      );
+    };
+
+    /**
+     * Get trees from github.
+     */
+    const fetchTreesFromGithub = () => {
+      state.trees = [];
+      const url =
+        'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/main?recursive=true';
+      axios.get(url).then((response: any) => {
+        state.trees = response.data.tree
+          .filter((d: any) => d.type === 'tree')
+          .map((d: any) => {
+            return { text: d.path, value: d };
           });
-        }, 1);
       });
+    };
+
+    /**
+     * Get files from github.
+     */
+    const fetchFilesFromGithub = (tree: any) => {
+      state.files = [];
+      const url =
+        'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/' +
+        tree.sha;
+      axios.get(url).then((response: any) => {
+        state.files = response.data.tree
+          .filter((d: any) => d.type === 'blob' && d.path.endsWith('.json'))
+          .map((d: any) => {
+            return { text: d.path, value: d };
+          });
+      });
+    };
+
+    /**
+     * Get projects from url.
+     */
+    const fetchProjectsFromUrl = (url: string) => {
+      state.projects = [];
+      axios.get(url).then((response: any) => loadProjects(response.data));
+    };
+
+    /**
+     * Get projects from github.
+     */
+    const fetchProjectsFromGithub = () => {
+      if (!Object.keys(state.selectedTree).includes('path')) {
+        return;
+      }
+      const url = `https://raw.githubusercontent.com/nest-desktop/nest-desktop-projects/main/${state.selectedTree['path']}/${state.selectedFile['path']}`;
+      fetchProjectsFromUrl(url);
     };
 
     /**
@@ -216,10 +285,13 @@ export default Vue.extend({
       () => props.open,
       () => {
         state.dialog = props.open as boolean;
+        fetchTreesFromGithub();
       }
     );
 
     return {
+      fetchFilesFromGithub,
+      fetchProjectsFromGithub,
       fetchProjectsFromFile,
       fetchProjectsFromUrl,
       state,
