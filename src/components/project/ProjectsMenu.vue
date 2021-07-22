@@ -1,6 +1,6 @@
 <template>
   <div class="projectsMenu">
-    <ProjectsLoadDialog :open="state.openLoadDialog" />
+    <ProjectsImportDialog :open="state.openImportDialog" />
     <ProjectsDialog
       :action="state.projectDialogAction"
       :open="state.openProjectsDialog"
@@ -70,13 +70,13 @@ import { reactive, watch } from '@vue/composition-api';
 import { Project } from '@/core/project/project';
 import core from '@/core';
 import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsLoadDialog from '@/components/project/ProjectsLoadDialog.vue';
+import ProjectsImportDialog from '@/components/project/ProjectsImportDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectsMenu',
   components: {
     ProjectsDialog,
-    ProjectsLoadDialog,
+    ProjectsImportDialog,
   },
   props: {
     position: Object,
@@ -88,9 +88,9 @@ export default Vue.extend({
       projects: core.app.projects as Project[],
       position: props.position,
       show: true,
-      openLoadDialog: false,
+      openImportDialog: false,
       openProjectsDialog: false,
-      projectDialogAction: 'download',
+      projectDialogAction: 'export',
       items: [
         {
           id: 'projectsReload',
@@ -102,24 +102,24 @@ export default Vue.extend({
           },
         },
         {
-          id: 'projectsDownload',
-          icon: 'mdi-download',
-          title: 'Save projects to file',
+          id: 'projectsExport',
+          icon: 'mdi-export',
+          title: 'Export projects',
           onClick: () => {
             state.projects.forEach((project: Project) => {
               project.view.resetState();
             });
-            state.projectDialogAction = 'download';
+            state.projectDialogAction = 'export';
             state.openProjectsDialog = true;
             state.show = false;
           },
         },
         {
-          id: 'projectsLoad',
-          icon: 'mdi-upload',
-          title: 'Load projects from file',
+          id: 'projectsImport',
+          icon: 'mdi-import',
+          title: 'Import projects',
           onClick: () => {
-            state.openLoadDialog = true;
+            state.openImportDialog = true;
             state.show = false;
           },
         },

@@ -12,12 +12,12 @@
             <template #default>
               <thead>
                 <tr>
-                  <th v-text="'Name'" />
+                  <th v-text="'Project name'" />
                   <th v-text="'Created at'" />
                   <th class="text-center" v-text="'Selected'" />
                   <th
                     class="text-center"
-                    v-if="state.action === 'download'"
+                    v-if="state.action === 'export'"
                     v-text="'Activities'"
                   />
                 </tr>
@@ -34,7 +34,7 @@
                       v-model="project.view.selected"
                     />
                   </td>
-                  <td class="text-center" v-if="state.action === 'download'">
+                  <td class="text-center" v-if="state.action === 'export'">
                     <v-checkbox
                       :disabled="!project.hasActivities"
                       @change="
@@ -59,12 +59,12 @@
           <v-btn @click="state.dialog = false" text v-text="'Cancel'" />
           <v-btn
             :disabled="state.projects.length === 0"
-            @click="downloadProjects"
+            @click="exportProjects"
             text
-            v-if="state.action === 'download'"
+            v-if="state.action === 'export'"
           >
-            <v-icon left v-text="'mdi-download'" />
-            Download
+            <v-icon left v-text="'mdi-export'" />
+            Export
           </v-btn>
           <v-btn
             :disabled="state.projects.length === 0"
@@ -98,15 +98,15 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      action: 'download',
+      action: 'export',
       dialog: false,
       projects: props.projects as Project[],
     });
 
     /**
-     * Download projects.
+     * Export projects.
      */
-    const downloadProjects = () => {
+    const exportProjects = () => {
       const projects: any[] = state.projects
         .filter((project: Project) => project.view.selected)
         .map((project: Project) => {
@@ -153,7 +153,7 @@ export default Vue.extend({
 
     return {
       console,
-      downloadProjects,
+      exportProjects,
       deleteProjects,
       state,
     };
