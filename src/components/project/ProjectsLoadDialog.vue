@@ -1,8 +1,9 @@
 <template>
-  <div class="ProjectsUploadDialog">
+  <div class="ProjectsLoadDialog">
     <v-dialog v-model="state.dialog" max-width="1024">
       <v-card>
-        <v-card-title v-text="'Upload projects to NEST Desktop'" />
+        <v-card-title v-text="'Load projects from file'" />
+        <v-card-subtitle v-text="'Select a source'" />
 
         <v-card-text>
           <v-row class="mb-1">
@@ -30,7 +31,7 @@
                   <v-select
                     :disabled="state.trees.length === 0"
                     :items="state.trees"
-                    @change="fetchFilesFromGithub"
+                    @change="getFilesFromGithub"
                     label="Select path"
                     prepend-icon="mdi-github"
                     v-model="state.selectedTree"
@@ -40,20 +41,20 @@
                   <v-select
                     :disabled="state.files.length === 0"
                     :items="state.files"
-                    @change="fetchProjectsFromGithub"
+                    @change="getProjectsFromGithub"
                     label="Select file"
                     v-model="state.selectedFile"
                   />
                 </v-col>
               </v-row>
               <v-file-input
-                @change="fetchProjectsFromFile"
+                @change="getProjectsFromFile"
                 label="File input"
                 truncate-length="100"
                 v-show="state.source === 'file'"
               />
               <v-text-field
-                @change="fetchProjectsFromUrl"
+                @change="getProjectsFromUrl"
                 class="pt-2"
                 clearable
                 dense
@@ -71,7 +72,7 @@
               v-text="
                 `${state.projects.length} project${
                   state.projects.length > 1 ? 's' : ''
-                } found. Select projects to upload.`
+                } found. Select projects to load.`
               "
             />
 
@@ -82,7 +83,7 @@
                   <th v-text="'Created at'" />
                   <th v-text="'Version'" />
                   <th class="text-center" v-text="'Valid'" />
-                  <th class="text-center" v-text="'Upload'" />
+                  <th class="text-center" v-text="'Load'" />
                 </tr>
               </thead>
               <tbody>
@@ -123,11 +124,11 @@
           <v-btn @click="state.dialog = false" text v-text="'Cancel'" />
           <v-btn
             :disabled="state.projects.length === 0"
-            @click="uploadProjects"
+            @click="loadProjects"
             text
           >
             <v-icon left v-text="'mdi-upload'" />
-            Upload
+            Load
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -145,7 +146,7 @@ import core from '@/core';
 import { App } from '@/core/app';
 
 export default Vue.extend({
-  name: 'ProjectsUploadDialog',
+  name: 'ProjectsLoadDialog',
   props: {
     open: Boolean,
   },
@@ -193,9 +194,9 @@ export default Vue.extend({
     };
 
     /**
-     * Push projects to the list and validate them.
+     * Fetch projects and validate them.
      */
-    const loadProjects = (data: any) => {
+    const fetchProjects = (data: any) => {
       const projects: any[] = Array.isArray(data) ? data : [data];
       projects.forEach((project: any) => {
         if (project.name) {
@@ -208,19 +209,19 @@ export default Vue.extend({
     /**
      * Get projects from file.
      */
-    const fetchProjectsFromFile = (file: any) => {
+    const getProjectsFromFile = (file: any) => {
       state.projects = [];
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.addEventListener('load', (event: any) =>
-        loadProjects(JSON.parse(event.target.result as string))
+        fetchProjects(JSON.parse(event.target.result as string))
       );
     };
 
     /**
      * Get trees from github.
      */
-    const fetchTreesFromGithub = () => {
+    const getTreesFromGithub = () => {
       state.trees = [];
       const url =
         'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/main?recursive=true';
@@ -236,7 +237,7 @@ export default Vue.extend({
     /**
      * Get files from github.
      */
-    const fetchFilesFromGithub = (tree: any) => {
+    const getFilesFromGithub = (tree: any) => {
       state.files = [];
       const url =
         'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/' +
@@ -253,26 +254,26 @@ export default Vue.extend({
     /**
      * Get projects from url.
      */
-    const fetchProjectsFromUrl = (url: string) => {
+    const getProjectsFromUrl = (url: string) => {
       state.projects = [];
-      axios.get(url).then((response: any) => loadProjects(response.data));
+      axios.get(url).then((response: any) => fetchProjects(response.data));
     };
 
     /**
      * Get projects from github.
      */
-    const fetchProjectsFromGithub = () => {
+    const getProjectsFromGithub = () => {
       if (!Object.keys(state.selectedTree).includes('path')) {
         return;
       }
       const url = `https://raw.githubusercontent.com/nest-desktop/nest-desktop-projects/main/${state.selectedTree['path']}/${state.selectedFile['path']}`;
-      fetchProjectsFromUrl(url);
+      getProjectsFromUrl(url);
     };
 
     /**
-     * Upload selected projects.
+     * Load selected projects.
      */
-    const uploadProjects = () => {
+    const loadProjects = () => {
       const projects: any[] = state.projects.filter(
         (project: any) => project.selected
       );
@@ -285,17 +286,17 @@ export default Vue.extend({
       () => props.open,
       () => {
         state.dialog = props.open as boolean;
-        fetchTreesFromGithub();
+        getTreesFromGithub();
       }
     );
 
     return {
-      fetchFilesFromGithub,
-      fetchProjectsFromGithub,
-      fetchProjectsFromFile,
-      fetchProjectsFromUrl,
+      getFilesFromGithub,
+      getProjectsFromGithub,
+      getProjectsFromFile,
+      getProjectsFromUrl,
+      loadProjects,
       state,
-      uploadProjects,
     };
   },
 });

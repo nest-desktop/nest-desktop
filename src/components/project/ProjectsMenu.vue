@@ -1,6 +1,6 @@
 <template>
   <div class="projectsMenu">
-    <ProjectsUploadDialog :open="state.openUploadDialog" />
+    <ProjectsLoadDialog :open="state.openLoadDialog" />
     <ProjectsDialog
       :action="state.projectDialogAction"
       :open="state.openProjectsDialog"
@@ -70,13 +70,13 @@ import { reactive, watch } from '@vue/composition-api';
 import { Project } from '@/core/project/project';
 import core from '@/core';
 import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsUploadDialog from '@/components/project/ProjectsUploadDialog.vue';
+import ProjectsLoadDialog from '@/components/project/ProjectsLoadDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectsMenu',
   components: {
     ProjectsDialog,
-    ProjectsUploadDialog,
+    ProjectsLoadDialog,
   },
   props: {
     position: Object,
@@ -88,7 +88,7 @@ export default Vue.extend({
       projects: core.app.projects as Project[],
       position: props.position,
       show: true,
-      openUploadDialog: false,
+      openLoadDialog: false,
       openProjectsDialog: false,
       projectDialogAction: 'download',
       items: [
@@ -104,7 +104,7 @@ export default Vue.extend({
         {
           id: 'projectsDownload',
           icon: 'mdi-download',
-          title: 'Download projects',
+          title: 'Save projects to file',
           onClick: () => {
             state.projects.forEach((project: Project) => {
               project.view.resetState();
@@ -115,11 +115,11 @@ export default Vue.extend({
           },
         },
         {
-          id: 'projectsUpload',
+          id: 'projectsLoad',
           icon: 'mdi-upload',
-          title: 'Upload projects',
+          title: 'Load projects from file',
           onClick: () => {
-            state.openUploadDialog = true;
+            state.openLoadDialog = true;
             state.show = false;
           },
         },
