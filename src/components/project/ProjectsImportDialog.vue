@@ -9,8 +9,8 @@
           <v-row class="mb-1">
             <v-col cols="2">
               <v-btn-toggle
+                dark
                 dense
-                group
                 mandatory
                 v-model="state.source"
               >
