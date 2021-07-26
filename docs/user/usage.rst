@@ -256,8 +256,8 @@ It is useful to give project a proper name so that you can recognize your projec
 |
 
 Below the search field it shows a list of the projects.
-Clicking with right mouse button on a project item shows a menu with options to reload, duplicate, download or delete the project.
-In the projects menu, you can find methods to reload, download, upload, delete or reset projects.
+Clicking with right mouse button on a project item shows a menu with options to reload, duplicate, export or delete a project.
+In the projects menu, you can find methods to reload, export, import, delete or reset single or multiple projects.
 
 .. note::
   Unless you click on the save button, the project is not stored in database and is lost when you reload the page!
