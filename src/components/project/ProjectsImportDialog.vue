@@ -8,12 +8,7 @@
         <v-card-text>
           <v-row class="mb-1">
             <v-col cols="2">
-              <v-btn-toggle
-                dark
-                dense
-                mandatory
-                v-model="state.source"
-              >
+              <v-btn-toggle dark dense mandatory v-model="state.source">
                 <v-btn
                   :key="item.value"
                   :title="item.title"
@@ -171,10 +166,14 @@ export default Vue.extend({
         {
           icon: 'mdi-github',
           title:
-            'Load projects from github repo (nest-desktop/nest-desktop-projects)',
+            'Load projects from GitHub repo (nest-desktop/nest-desktop-projects)',
           value: 'github',
         },
-        { icon: 'mdi-web', title: 'Load projects from url', value: 'url' },
+        {
+          icon: 'mdi-web',
+          title: 'Load projects from URL',
+          value: 'url',
+        },
       ],
       files: [],
       open: props.open,
@@ -238,7 +237,10 @@ export default Vue.extend({
         state.trees = response.data.tree
           .filter((d: any) => d.type === 'tree')
           .map((d: any) => {
-            return { text: d.path, value: d };
+            return {
+              text: d.path,
+              value: d,
+            };
           });
       });
     };
@@ -255,7 +257,10 @@ export default Vue.extend({
         state.files = response.data.tree
           .filter((d: any) => d.type === 'blob' && d.path.endsWith('.json'))
           .map((d: any) => {
-            return { text: d.path, value: d };
+            return {
+              text: d.path,
+              value: d,
+            };
           });
       });
     };
