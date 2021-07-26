@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.connection">
+  <div class="connectionMenu" v-if="state.connection">
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -7,13 +7,42 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width: 300px">
+      <v-card tile flat style="width: 300px">
         <!-- <v-card-title
           :style="{ backgroundColor: state.connection.source.view.color }"
           class="py-1"
           style="color:white; height:40px"
         >
         </v-card-title> -->
+        <v-row no-gutters>
+          <v-col cols="3" class="py-0" style="text-align: center">
+            <v-btn
+              :color="connection.source.view.color"
+              block
+              dark
+              depressed
+              height="40"
+              tile
+              v-text="connection.source.view.label"
+            />
+          </v-col>
+          <v-col cols="6">
+            <v-btn block color="white" depressed height="40" tile>
+              <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+            </v-btn>
+          </v-col>
+          <v-col cols="3" class="py-0" style="text-align: center">
+            <v-btn
+              :color="connection.target.view.color"
+              block
+              dark
+              depressed
+              height="40"
+              tile
+              v-text="connection.target.view.label"
+            />
+          </v-col>
+        </v-row>
 
         <span v-if="state.content === undefined">
           <v-list dense>
@@ -28,7 +57,7 @@
               <v-list-item-title v-text="item.title" />
 
               <v-list-item-action v-show="item.append">
-                <v-icon v-text="'mdi-menu-right'" />
+                <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
                 <v-checkbox :input-value="state[item.value]" />
@@ -37,82 +66,41 @@
           </v-list>
         </span>
 
-        <span v-if="state.content === 'paramsSelect'">
-          <v-list dense>
-            <v-list-item-group
-              @change="selectionChange"
-              active-class=""
-              multiple
-              v-model="state.visibleParams.connection"
-            >
-              <v-list-item
-                :key="param.id"
-                class="mx-0"
-                style="font-size: 12px"
-                v-for="param of state.connection.params"
-              >
-                <template #default="{ active }">
-                  <v-list-item-content style="padding: 4px">
-                    <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
-                    </v-row>
-                  </v-list-item-content>
-
-                  <v-list-item-action style="margin: 4px 0">
-                    <v-checkbox
-                      :input-value="active"
-                      color="black"
-                      hide-details
-                    />
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </v-list-item-group>
-
-            <v-list-item-group
-              @change="selectionChange"
-              active-class=""
-              multiple
-              v-model="state.visibleParams.synapse"
-            >
-              <v-list-item
-                :key="param.id"
-                class="mx-0"
-                style="font-size: 12px"
-                v-for="param of state.connection.synapse.params"
-              >
-                <template #default="{ active }">
-                  <v-list-item-content style="padding: 4px">
-                    <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
-                    </v-row>
-                  </v-list-item-content>
-
-                  <v-list-item-action style="margin: 4px 0">
-                    <v-checkbox
-                      :input-value="active"
-                      class="shrink mr-2"
-                      color="black"
-                      hide-details
-                    />
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
+        <span v-if="state.content === 'paramSelect'">
+          <v-card-text class="pa-0">
+            <ConnectionParamSelect
+              :connection="state.connection"
+              :visibleParams="state.visibleParams"
+            />
+          </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="hideAllParams" text v-text="'none'" />
-            <v-btn @click="showAllParams" text v-text="'all'" />
+            <v-spacer />
+            <v-btn @click="hideAllParams" outlined small text v-text="'none'" />
+            <v-btn @click="showAllParams" outlined small text v-text="'all'" />
+          </v-card-actions>
+        </span>
+
+        <span v-if="state.content === 'paramEdit'">
+          <v-card-text class="px-0">
+            <ConnectionParamEdit :connection="state.connection" />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              @click="resetAllParams"
+              outlined
+              small
+              text
+              v-text="'reset'"
+            />
           </v-card-actions>
         </span>
 
@@ -120,13 +108,15 @@
           <v-card-title v-text="'Are you sure to delete this connection?'" />
 
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
             <v-btn
               @click="deleteConnection"
               color="warning"
+              outlined
+              small
               text
               v-text="'delete'"
             />
@@ -144,9 +134,15 @@ import { reactive, onMounted } from '@vue/composition-api';
 import { Connection } from '@/core/connection/connection';
 import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
+import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
+import ConnectionParamSelect from '@/components/connection/ConnectionParamSelect.vue';
 
 export default Vue.extend({
-  name: 'NetworkConnectionMenu',
+  name: 'ConnectionMenu',
+  components: {
+    ConnectionParamEdit,
+    ConnectionParamSelect,
+  },
   props: {
     connection: Connection,
     position: Object,
@@ -160,13 +156,24 @@ export default Vue.extend({
       show: true,
       items: [
         {
-          id: 'paramsSelect',
+          id: 'paramSelect',
           icon: 'mdi-checkbox-marked-outline',
           title: 'Set parameter view',
           onClick: () => {
-            state.content = 'paramsSelect';
+            state.content = 'paramSelect';
             window.dispatchEvent(new Event('resize'));
           },
+          append: true,
+        },
+        {
+          id: 'paramEdit',
+          icon: 'mdi-pencil-outline',
+          title: 'Edit parameter',
+          onClick: () => {
+            state.content = 'paramEdit';
+            window.dispatchEvent(new Event('resize'));
+          },
+          append: true,
         },
         {
           id: 'connectionReverse',
@@ -253,6 +260,10 @@ export default Vue.extend({
       setVisibleParams();
     };
 
+    const resetAllParams = () => {
+      state.connection.resetAllParams();
+    };
+
     /**
      * Delete connection.
      */
@@ -265,7 +276,7 @@ export default Vue.extend({
      * Reset states.
      */
     const resetStates = () => {
-      state.content = null;
+      state.content = undefined;
       state.show = true;
     };
 
@@ -300,6 +311,7 @@ export default Vue.extend({
       deleteConnection,
       hideAllParams,
       paramChange,
+      resetAllParams,
       showAllParams,
       selectionChange,
       state,
@@ -307,20 +319,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style>
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
-}
-
-.v-list-item__action {
-  margin: 0;
-}
-</style>

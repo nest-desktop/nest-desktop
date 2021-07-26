@@ -1,12 +1,12 @@
 <template>
   <div class="networkParamEdit" v-if="state.network">
-    <NetworkNodeMenu
+    <NodeMenu
       :node="state.nodeMenu.node"
       :position="state.nodeMenu.position"
       v-if="state.nodeMenu.show"
     />
 
-    <NetworkConnectionMenu
+    <ConnectionMenu
       :connection="state.connectionMenu.connection"
       :position="state.connectionMenu.position"
       v-if="state.connectionMenu.show"
@@ -244,56 +244,7 @@
               }"
               class="pa-0"
             >
-              <div v-if="!node.model.isRecorder()">
-                <NodePosition :node="node" v-if="node.spatial.hasPositions()" />
-                <ParameterEdit
-                  :color="node.view.color"
-                  :options="{
-                    input: 'valueSlider',
-                    label: 'population size',
-                    max: 1000,
-                    min: 1,
-                    value: 1,
-                  }"
-                  :value.sync="node.size"
-                  @update:value="paramChange()"
-                  v-else
-                />
-              </div>
-
-              <template v-if="node.model.existing === 'multimeter'">
-                <v-row no-gutters>
-                  <v-col>
-                    <v-select
-                      :color="node.view.color"
-                      :item-text="
-                        item =>
-                          item.label + (item.unit ? ` (${item.unit})` : '')
-                      "
-                      :items="node.recordables"
-                      @change="paramChange()"
-                      attach
-                      class="ma-0 pt-4 px-1"
-                      dense
-                      hide-details
-                      item-value="id"
-                      label="Record from"
-                      multiple
-                      persistent-hint
-                      v-model="node.recordFrom"
-                    />
-                  </v-col>
-                </v-row>
-              </template>
-
-              <ParameterEdit
-                :color="node.view.color"
-                :key="param.id"
-                :param="param"
-                :value.sync="param.value"
-                @update:value="paramChange()"
-                v-for="param of node.filteredParams"
-              />
+              <NodeParamEdit :node="node" />
             </v-card-text>
           </v-card>
         </span>
@@ -355,35 +306,7 @@
             }"
             class="pa-0 pt-2 ma-0"
           >
-            <v-select
-              :items="connection.config.rules"
-              @change="paramChange()"
-              dense
-              hide-details
-              item-value="value"
-              item-text="label"
-              label="Connection rule"
-              class="ml-1 px-1"
-              v-model="connection.rule"
-            />
-
-            <ParameterEdit
-              :color="connection.source.view.color"
-              :key="'conn' + connection.idx + '-' + param.id"
-              :options="param"
-              :value.sync="param.value"
-              @update:value="paramChange()"
-              v-for="param in connection.filteredParams"
-            />
-
-            <ParameterEdit
-              :color="connection.source.view.color"
-              :key="'syn' + connection.idx + '-' + param.id"
-              :param="param"
-              :value.sync="param.value"
-              @update:value="paramChange()"
-              v-for="param in connection.synapse.filteredParams"
-            />
+            <ConnectionParamEdit :connection="connection" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -399,22 +322,22 @@ import draggable from 'vuedraggable';
 import { Connection } from '@/core/connection/connection';
 import { Network } from '@/core/network/network';
 import { Node } from '@/core/node/node';
+import ConnectionMenu from '@/components/connection/ConnectionMenu.vue';
+import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import core from '@/core';
-import NetworkConnectionMenu from '@/components/network/NetworkConnectionMenu.vue';
-import NetworkNodeMenu from '@/components/network/NetworkNodeMenu.vue';
-import NodeModelSelect from '@/components/network/NodeModelSelect.vue';
-import NodePosition from '@/components/network/NodePosition.vue';
-import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
+import NodeMenu from '@/components/node/NodeMenu.vue';
+import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
+import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
   components: {
+    ConnectionMenu,
+    ConnectionParamEdit,
     draggable,
-    NetworkConnectionMenu,
-    NetworkNodeMenu,
+    NodeMenu,
     NodeModelSelect,
-    NodePosition,
-    ParameterEdit,
+    NodeParamEdit,
   },
   props: {
     projectId: String,
@@ -634,16 +557,6 @@ export default Vue.extend({
       return state.iconsOff[elementType];
     };
 
-    /**
-     * Triggers when parameter is changed.
-     */
-    const paramChange = () => {
-      state.network.networkChanges();
-      // if (!state.network.project.simulation.running) {
-      //   state.network.project.simulateAfterChange();
-      // }
-    };
-
     const update = () => {
       state.displayNodes = state.network.nodes
         .filter((node: Node) => node.view.visible)
@@ -670,7 +583,6 @@ export default Vue.extend({
       iconConnections,
       iconNodes,
       nodeDisplayChange,
-      paramChange,
       showConnection,
       showConnectionMenu,
       showNode,
@@ -689,16 +601,6 @@ export default Vue.extend({
 }
 .v-btn-toggle--group > .v-btn.v-btn {
   margin: 0;
-}
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
 }
 .v-overflow-btn .v-input__slot {
   border-width: 0;

@@ -3,6 +3,7 @@ import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionView } from './connectionView';
 import { Model } from '../model/model';
+import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { Parameter } from '../parameter/parameter';
@@ -150,6 +151,19 @@ export class Connection extends Config {
   }
 
   /**
+   * Resets all parameters to their default.
+   */
+  public resetAllParams(): void {
+    const ruleConfig: any = this.getRuleConfig();
+    this.params.forEach((param: Parameter) => {
+      param.reset();
+      const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
+      param.value = p.value;
+    });
+    this.synapse.params.forEach((param: ModelParameter) => param.reset());
+  }
+
+  /**
    * Observer for connection changes.
    *
    * @remarks
@@ -198,6 +212,7 @@ export class Connection extends Config {
    * It emits connection changes.
    */
   reverse(): void {
+    // console.log('Reverse connection');
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
     this.recorder.initActivity();
     this.connectionChanges();
