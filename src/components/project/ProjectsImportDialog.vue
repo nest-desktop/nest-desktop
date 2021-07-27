@@ -7,7 +7,7 @@
 
         <v-card-text>
           <v-row class="mb-1">
-            <v-col cols="2">
+            <v-col cols="3">
               <v-btn-toggle dark dense mandatory v-model="state.source">
                 <v-btn
                   :key="item.value"
@@ -19,7 +19,7 @@
                 </v-btn>
               </v-btn-toggle>
             </v-col>
-            <v-col class="pa-3" cols="10">
+            <v-col class="pa-3" cols="9">
               <v-row v-show="state.source === 'github'">
                 <v-col cols="6">
                   <v-select
