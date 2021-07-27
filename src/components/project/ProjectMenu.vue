@@ -3,7 +3,7 @@
     <ProjectsDialog
       :open="state.openProjectsDialog"
       :projects="[state.project]"
-      action="download"
+      action="export"
     />
 
     <v-menu
@@ -42,14 +42,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteProject"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'Delete'"
-            />
+            <v-btn @click="deleteProject" outlined small v-text="'Delete'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -100,9 +93,9 @@ export default Vue.extend({
           },
         },
         {
-          id: 'projectDownload',
-          icon: 'mdi-download',
-          title: 'Download project',
+          id: 'projectExport',
+          icon: 'mdi-export',
+          title: 'Export project',
           onClick: () => {
             state.project.view.selected = true;
             state.openProjectsDialog = true;

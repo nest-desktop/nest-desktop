@@ -1,6 +1,6 @@
 <template>
   <div class="projectsMenu">
-    <ProjectsUploadDialog :open="state.openUploadDialog" />
+    <ProjectsImportDialog :open="state.openImportDialog" />
     <ProjectsDialog
       :action="state.projectDialogAction"
       :open="state.openProjectsDialog"
@@ -48,14 +48,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="resetProjects"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'Reset'"
-            />
+            <v-btn @click="resetProjects" outlined small v-text="'Reset'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -70,13 +63,13 @@ import { reactive, watch } from '@vue/composition-api';
 import { Project } from '@/core/project/project';
 import core from '@/core';
 import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsUploadDialog from '@/components/project/ProjectsUploadDialog.vue';
+import ProjectsImportDialog from '@/components/project/ProjectsImportDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectsMenu',
   components: {
     ProjectsDialog,
-    ProjectsUploadDialog,
+    ProjectsImportDialog,
   },
   props: {
     position: Object,
@@ -88,9 +81,9 @@ export default Vue.extend({
       projects: core.app.projects as Project[],
       position: props.position,
       show: true,
-      openUploadDialog: false,
+      openImportDialog: false,
       openProjectsDialog: false,
-      projectDialogAction: 'download',
+      projectDialogAction: 'export',
       items: [
         {
           id: 'projectsReload',
@@ -102,24 +95,24 @@ export default Vue.extend({
           },
         },
         {
-          id: 'projectsDownload',
-          icon: 'mdi-download',
-          title: 'Download projects',
+          id: 'projectsExport',
+          icon: 'mdi-export',
+          title: 'Export projects',
           onClick: () => {
             state.projects.forEach((project: Project) => {
               project.view.resetState();
             });
-            state.projectDialogAction = 'download';
+            state.projectDialogAction = 'export';
             state.openProjectsDialog = true;
             state.show = false;
           },
         },
         {
-          id: 'projectsUpload',
-          icon: 'mdi-upload',
-          title: 'Upload projects',
+          id: 'projectsImport',
+          icon: 'mdi-import',
+          title: 'Import projects',
           onClick: () => {
-            state.openUploadDialog = true;
+            state.openImportDialog = true;
             state.show = false;
           },
         },
