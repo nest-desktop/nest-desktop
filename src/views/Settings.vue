@@ -45,18 +45,64 @@
         <v-card flat tile>
           <v-card-title v-text="'Backend'" />
           <v-card-text>
-            <v-text-field
-              label="NEST Server"
-              v-model="state.app.nestServer.url"
-            />
-            <span v-if="state.nestVersion">
-              Response:
-              <v-chip color="orange darken-3" dark small>
-                <v-avatar left>
-                  <v-icon small v-text="'mdi-checkbox-marked-circle'" />
-                </v-avatar>
-                NEST version: {{ state.nestVersion }}
-              </v-chip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  label="NEST Server URL"
+                  placeholder="https://www.my-nest-server.com:5000"
+                  v-model="state.app.nestServer.url"
+                  v-bind="attrs"
+                  v-on="on"
+                />
+              </template>
+              <span
+                >Please enter the URL where the NEST Server can be found at
+                (including protocol!).</span
+              >
+            </v-tooltip>
+            <span v-if="state.nestVersion && state.nestVersion != 'unknown'">
+              <label>Response: </label>
+              <v-tooltip right>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-chip color="green" dark small v-bind="attrs" v-on="on">
+                    <v-avatar left>
+                      <v-icon small v-text="'mdi-checkbox-marked-circle'" />
+                    </v-avatar>
+                    NEST version: {{ state.nestVersion }}
+                  </v-chip>
+                </template>
+                <span>A NEST Server has been found at the given URL.</span>
+              </v-tooltip>
+            </span>
+            <span v-else-if="state.nestVersion === 'unknown'">
+              <label>Response: </label>
+              <v-tooltip right>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-chip color="gray" dark small v-bind="attrs" v-on="on">
+                    <v-avatar left>
+                      <v-icon small v-text="'mdi-help-circle-outline'" />
+                    </v-avatar>
+                    <span>Unknown</span>
+                  </v-chip>
+                </template>
+                <span> The NEST Server state has not been checked yet. </span>
+              </v-tooltip>
+            </span>
+            <span v-else>
+              <label>Response: </label>
+              <v-tooltip right>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-chip color="red" dark small v-bind="attrs" v-on="on">
+                    <v-avatar left>
+                      <v-icon small v-text="'mdi-power-off'" />
+                    </v-avatar>
+                    <span> No valid response </span>
+                  </v-chip>
+                </template>
+                <span>
+                  The NEST Server seems to be unavailable at this URL.
+                </span>
+              </v-tooltip>
             </span>
           </v-card-text>
 
@@ -122,7 +168,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
+import { onBeforeMount, reactive } from '@vue/composition-api';
 
 import { Config } from '@/core/config';
 import core from '@/core';
@@ -135,21 +181,29 @@ export default Vue.extend({
     const state = reactive({
       app: core.app,
       devMode: core.app.config.devMode,
-      nestVersion: '',
+      nestVersion: 'unknown',
       network: new Config('Network'),
       pinNav: core.app.config.pinNav,
       showHelp: core.app.project.config.showHelp,
       colorSchemes: colorSchemes,
     });
 
+    onBeforeMount(() => checkNEST());
+
     /**
      * Check if NEST is running in the backend.
      */
-    const checkNEST = () => {
-      core.app.nestServer.check().then(() => {
-        state.nestVersion = core.app.nestServer.state.simulatorVersion;
-      });
-    };
+    async function checkNEST() {
+      core.app.nestServer
+        .check()
+        .catch(() => {
+          // connection errors are already processed in httpClient
+        })
+        .finally(function () {
+          // update the version (is updated as well in case of failure)
+          state.nestVersion = core.app.nestServer.state.simulatorVersion;
+        });
+    }
 
     /**
      * Update app configuration.
