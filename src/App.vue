@@ -75,15 +75,20 @@ export default Vue.extend({
      * Ping every 5 min.
      */
     const keepConnectionToNESTServerAlive = () => {
-      core.app.nestServer.check().then(() => {
-        const NESTFrame = document.getElementById(
-          'NESTFrame'
-        ) as HTMLIFrameElement;
-        setInterval(() => {
-          NESTFrame.src = core.app.nestServer.url;
-          // NESTFrame.contentDocument.location.reload(true);
-        }, 300000);
-      });
+      core.app.nestServer
+        .check()
+        .then(() => {
+          const NESTFrame = document.getElementById(
+            'NESTFrame'
+          ) as HTMLIFrameElement;
+          setInterval(() => {
+            NESTFrame.src = core.app.nestServer.url;
+            // NESTFrame.contentDocument.location.reload(true);
+          }, 300000);
+        })
+        .catch((e: Error) => {
+          // Errors are already logged inside the httpClient
+        });
     };
 
     onMounted(() => {
