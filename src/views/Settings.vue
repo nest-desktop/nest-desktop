@@ -45,7 +45,7 @@
         <v-card flat tile>
           <v-card-title v-text="'Backend'" />
           <v-card-text>
-            <v-tooltip top>
+            <v-tooltip top open-delay="300">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   label="NEST Server URL"
@@ -62,7 +62,7 @@
             </v-tooltip>
             <span v-if="state.nestVersion && state.nestVersion != 'unknown'">
               <label>Response: </label>
-              <v-tooltip right>
+              <v-tooltip right open-delay="300">
                 <template v-slot:activator="{ on, attrs }">
                   <v-chip color="green" dark small v-bind="attrs" v-on="on">
                     <v-avatar left>
@@ -76,7 +76,7 @@
             </span>
             <span v-else-if="state.nestVersion === 'unknown'">
               <label>Response: </label>
-              <v-tooltip right>
+              <v-tooltip right open-delay="300">
                 <template v-slot:activator="{ on, attrs }">
                   <v-chip color="gray" dark small v-bind="attrs" v-on="on">
                     <v-avatar left>
@@ -90,7 +90,7 @@
             </span>
             <span v-else>
               <label>Response: </label>
-              <v-tooltip right>
+              <v-tooltip right open-delay="300">
                 <template v-slot:activator="{ on, attrs }">
                   <v-chip color="red" dark small v-bind="attrs" v-on="on">
                     <v-avatar left>
