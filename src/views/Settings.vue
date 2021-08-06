@@ -55,10 +55,10 @@
                   v-on="on"
                 />
               </template>
-              <span
-                >Please enter the URL where the NEST Server can be found at
-                (including protocol!).</span
-              >
+              <span>
+                Please enter the URL where the NEST Server can be found at
+                (including protocol!).
+              </span>
             </v-tooltip>
             <span v-if="state.nestVersion && state.nestVersion != 'unknown'">
               <label>Response: </label>
