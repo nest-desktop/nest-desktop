@@ -17,6 +17,7 @@
     "core-js": "2.6.12",
     "d3": "^7.0.0",
     "dat.gui": "^0.7.7",
+    "detect-browser": "^5.2.0",
     "mathjs": "^9.4.2",
     "object-hash": "^2.0.3",
     "plotly.js-dist-min": "^2.0.0",
