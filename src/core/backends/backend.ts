@@ -47,13 +47,41 @@ export class Backend extends Config {
     this.updateConfig({ protocol: value });
   }
 
+  /**
+   * The url variable stores the NEST Server URL by splitting it into hostname
+   * and protocol. Beware: A correct URL has to contain a '//' delimiter,
+   * otherwise the empty string is used.
+   *
+   * @returns NEST Server URL (or empty string if undefined)
+   */
   get url(): string {
-    return this.protocol + '//' + this.host;
+    if (
+      this.protocol != undefined &&
+      this.host != undefined &&
+      this.protocol != '' &&
+      this.host != ''
+    )
+      return this.protocol + '//' + this.host;
+    return '';
   }
 
+  /**
+   * The url variable stores the NEST Server URL by splitting it into hostname
+   * and protocol. Beware: A correct URL has to contain a '//' delimiter,
+   * otherwise the empty string is used.
+   *
+   * @param value URL to save as hostname and protocol
+   */
   set url(value: string) {
-    const values: string[] = value.split('//');
-    this.protocol = values[0];
-    this.host = values[1];
+    if (value != undefined && value != '') {
+      const values: string[] = value.split('//');
+      if (values.length > 1) {
+        this.protocol = values[0];
+        this.host = values[1];
+        return;
+      }
+    }
+    this.protocol = '';
+    this.host = '';
   }
 }
