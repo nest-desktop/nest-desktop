@@ -143,10 +143,10 @@
                   />
                 </template>
                 <span>
-                  <v-icon v-text="'mdi-alert-outline'" color="white" />
-                  Beware: Small resolution values produce many datapoints, which
-                  can cause a high system load and thus freezes and lags!</span
-                >
+                  <v-icon v-text="'mdi-alert-outline'" color="white"> </v-icon>
+                  Beware: Small resolution values produce many data points,<br />
+                  which can cause a high system load and thus freezes and lags!
+                </span>
               </v-tooltip>
             </template>
 
