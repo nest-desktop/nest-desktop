@@ -33,7 +33,25 @@
         <v-row>
           <v-col class="font-weight-bold" cols="4" v-text="'Contact'" />
           <v-col cols="8">
-            <a :href="state.mail" v-text="state.name" />
+            <a
+              :href="
+                state.contactMailHeader +
+                mailText[0] +
+                state.clientType +
+                mailText[1] +
+                state.browserName +
+                mailText[2] +
+                state.browserVersion +
+                mailText[3] +
+                state.version +
+                mailText[4] +
+                state.serverVersion +
+                mailText[5] +
+                state.osType +
+                mailText[6]
+              "
+              v-text="state.contactName"
+            />
           </v-col>
         </v-row>
       </v-list-item>
@@ -42,24 +60,59 @@
 </template>
 
 <script lang="ts">
-import { reactive } from '@vue/composition-api';
-
+import { onBeforeMount, reactive } from '@vue/composition-api';
 import core from '@/core';
 
+import { detect } from 'detect-browser';
 export default {
   name: 'About',
   setup() {
     const state = reactive({
+      browserName: '',
+      browserVersion: '',
+      clientType: '',
+      contactMailHeader:
+        'mailto:spreizer@uni-trier.de?subject=[NEST Desktop ' +
+        core.app.version +
+        ']',
+      contactName: 'Sebastian Spreizer',
       doc: 'https://nest-desktop.readthedocs.io',
       license: 'MIT License',
-      mail: 'mailto:spreizer@uni-trier.de?subject=[NEST Desktop]',
-      name: 'Sebastian Spreizer',
+      osType: '',
       repo: 'https://github.com/nest-desktop/nest-desktop',
+      serverVersion: core.app.nestServer.state.simulatorVersion,
       version: core.app.version,
+    });
+    const mailText = [
+      '&body=%2D%2D%2D%2D %0D%0APlease do not delete the following lines! %0D%0AClient type: ',
+      '%0D%0ABrowser name: ',
+      '%0D%0ABrowser version: ',
+      '%0D%0ANEST Desktop version: ',
+      '%0D%0ANEST Server version: ',
+      '%0D%0AOS type: ',
+      '%0D%0A %2D%2D%2D%2D %0D%0A%0D%0A(your message text...)',
+    ];
+
+    // TODO: change to onRenderTriggered in Vue 3 to catch updates as well
+    onBeforeMount(() => {
+      // Fetch the NEST Server version.
+      core.app.nestServer.check().then(() => {
+        state.serverVersion = core.app.nestServer.state.simulatorVersion;
+      });
+
+      // Fetch the debugging information
+      const info = detect();
+      if (info) {
+        state.clientType = info.type;
+        state.browserName = info.name;
+        state.browserVersion = info.version;
+        state.osType = info.os;
+      }
     });
 
     return {
       state,
+      mailText,
     };
   },
 };
