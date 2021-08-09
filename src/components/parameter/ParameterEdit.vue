@@ -124,19 +124,30 @@
 
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
-              <v-slider
-                :max="state.options.ticks.length - 1"
-                :thumb-color="state.color"
-                :tick-labels="state.options.ticks"
-                @change="paramChange"
-                class="mb-1"
-                dense
-                height="40"
-                hide-details
-                ticks="always"
-                tick-size="4"
-                :value="state.value"
-              />
+              <v-tooltip left v-model="state.showResolutionWarning">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-slider
+                    :max="state.options.ticks.length - 1"
+                    :thumb-color="state.color"
+                    :tick-labels="state.options.ticks"
+                    @change="paramChange"
+                    class="mb-1"
+                    dense
+                    height="40"
+                    hide-details
+                    ticks="always"
+                    tick-size="4"
+                    :value="state.value"
+                    v-bind="attrs"
+                    v-on="on"
+                  />
+                </template>
+                <span>
+                  <v-icon v-text="'mdi-alert-outline'" color="white"> </v-icon>
+                  Beware: Small resolution values produce many data points,<br />
+                  which can cause a high system load and thus freezes and lags!
+                </span>
+              </v-tooltip>
             </template>
 
             <template v-if="state.options.input === 'valueInput'">
@@ -275,6 +286,7 @@ export default Vue.extend({
       options: props.param ? props.param['options'] : props.options,
       param: props.param as ModelParameter | Parameter | undefined,
       value: undefined,
+      showResolutionWarning: false,
       valueGenerator: new ValueGenerator(),
     });
 
@@ -402,6 +414,15 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * (Re-)Checks if the warning about the simulation resolution should be
+     * shown.
+     */
+    function updateResolutionWarningState() {
+      state.showResolutionWarning =
+        state.options.label === 'simulation resolution' && state.value < 1;
+    }
+
     onMounted(() => {
       update();
     });
@@ -410,6 +431,7 @@ export default Vue.extend({
       () => [props.color, props.options, props.param, props.value],
       () => {
         update();
+        updateResolutionWarningState();
       }
     );
 
