@@ -35,7 +35,7 @@ NEST Desktop is available on [EBRAINS](https://ebrains.eu/service/nest-desktop) 
 
 ### Quick start
 
-To get started with NEST Desktop and NEST Server, use Docker compose with the configuration file:
+To get started with NEST Desktop and NEST Simulator, use Docker compose with the configuration file:
 
 ```
 wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml

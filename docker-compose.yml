@@ -5,10 +5,11 @@ services:
     container_name: 'nest-desktop'
     ports:
       - '8000:8000'
-  nest-server:
+
+  nest-simulator:
     image: nestsim/nest:latest
     command: 'nest-server start -o'
-    container_name: 'nest-server'
+    container_name: 'nest-simulator'
     environment:
       NEST_SERVER_MODULES: 'nest,numpy'
       NEST_SERVER_RESTRICTION_OFF: 'true'
