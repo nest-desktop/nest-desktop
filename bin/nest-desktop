@@ -62,19 +62,19 @@ version() {
 
 
 CMD=$1; shift
-while getopts "h:p:" opt; do
-    case $opt in
-        h) HOST=$OPTARG ;;
-        p) PORT=$OPTARG ;;
-    esac
+while getopts "h:p:" flag; do
+  case ${flag} in
+    h) HOST=$OPTARG ;;
+    p) PORT=$OPTARG ;;
+  esac
 done
 
 case "$CMD" in
-  pid) pid ;;
+  pid)     pid ;;
   restart) stop; sleep .5; start ;;
   start)   start ;;
   status)  status ;;
   stop)    stop ;;
   version) version ;;
-  *) usage ;;
+  *)       usage ;;
 esac
