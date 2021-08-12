@@ -21,7 +21,7 @@ The recommended method is to install it in the user's home directory using the c
   nest-desktop start
 
 .. note::
-  Do not forget to start NEST Server.
+  Do not forget to start NEST Simulator.
 
 
 **Commit changes**

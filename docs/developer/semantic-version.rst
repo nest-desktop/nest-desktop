@@ -20,4 +20,4 @@ It means that this version could cause the compatibility issues and the user mig
 **A patch number**
 
 It is a bugfix and non-breaking features were added to the code.
-The user is able to work with different patch versions of NEST Desktop and NEST Server.
+The user is able to work with different patch versions of NEST Desktop and NEST Simulator.
