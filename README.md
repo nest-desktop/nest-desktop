@@ -20,7 +20,6 @@ DockerHub
 [![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
 [![DOI](https://img.shields.io/badge/DOI-10.1101%2F2021.06.15.444791-blue)](https://doi.org/10.1101/2021.06.15.444791)
 
-
 ---
 
 NEST Desktop is a web-based application which provides a graphical user interface for [NEST Simulator](https://nest-simulator.org). With this easy-to-use tool, users can interactively construct neuronal networks and explore network dynamics.
@@ -36,18 +35,17 @@ NEST Desktop is available on [EBRAINS](https://ebrains.eu/service/nest-desktop) 
 
 ### Quick start
 
-To get started with NEST Desktop and NEST Server, use Docker compose with the configuration file:
+To get started with NEST Desktop and NEST Simulator, use Docker compose with the configuration file:
 
 ```
 wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 docker-compose up --build
 ```
-For more information, please see the [User Documentation Page](https://nest-desktop.readthedocs.io).
 
+For more information, please see the [User Documentation Page](https://nest-desktop.readthedocs.io).
 
 ### Citation
 
 You can use the reference to the preprint for NEST Desktop which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1).
-
 
 ### License [MIT](LICENSE)
