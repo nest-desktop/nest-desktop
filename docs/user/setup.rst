@@ -15,7 +15,7 @@ For more information, please have a look `here <https://nest-simulator.readthedo
 |
 
 Docker (+ Docker Compose) and Singularity provide virtualization for NEST Desktop and NEST Simulator.
-These approaches are recommended to setup NEST Desktop and NEST Simulator in the same time.
+These approaches are recommended to run NEST Desktop and NEST Simulator in the same time.
 
 Furthermore, you are able to install NEST Desktop with ``pip`` command.
 On the other hand, installing NEST Simulator on your computer directly is not an easy approach.
