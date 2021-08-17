@@ -68,7 +68,7 @@ html_theme_options = {
 html_static_path = ['_static']
 
 rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
-             You are looking at 'latest', which is in active and ongoing development. \
+             You are looking at version 'latest', which is in active and ongoing development. \
              You can change versions on the bottom left of the screen."
 
 intersphinx_mapping = {

@@ -3,7 +3,10 @@ Setup Guide
 
 
 This guide provides a detailed documentation on how to install NEST Desktop with NEST Simulator.
-The front end NEST Desktop requires NEST Simulator as back end for the simulation engine.
+The front end NEST Desktop requires NEST Simulator as the back end for the simulation.
+NEST Simulator has an API Server which can forward requests to simulation engine.
+For more information, please have a look `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
+
 
 .. image:: ../_static/img/installation-guide.png
   :width: 100%
@@ -11,10 +14,12 @@ The front end NEST Desktop requires NEST Simulator as back end for the simulatio
 
 |
 
-.. note::
+Docker (+ Docker Compose) and Singularity provide virtualization for NEST Desktop and NEST Simulator.
+These approaches are recommended to setup NEST Desktop and NEST Simulator in the same time.
 
-  NEST Simulator has API Server which can forward requests to simulation engine.
-  To read more information about API Server of the NEST Simulator, `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
+Furthermore, you are able to install NEST Desktop with ``pip`` command.
+On the other hand, installing NEST Simulator on your computer directly is not an easy approach.
+Thus, it is rather for experienced users.
 
 You can read the installation instructions by clicking one of these logos below:
 
@@ -52,8 +57,8 @@ You can read the installation instructions by clicking one of these logos below:
 
 ||||
 
-Via Docker Compose
-------------------
+Via Docker Compose for |linux| |windows| |apple|
+------------------------------------------------
 
 .. image:: ../_static/img/logo/docker-compose-logo.png
   :width: 240px
@@ -66,13 +71,13 @@ Docker Compose is a tool for running multi-container applications on Docker defi
 To get more information, see the `official page of Docker Compose <https://github.com/docker/compose>`__.
 
 
-**Windows and macOS**
+**Windows** |windows| **and macOS** |apple|
 
 Docker Compose is included in Docker Desktop for Windows and macOS.
 For more information take a look at `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
 
 
-**Quick setup in Linux**
+**Quick setup in Linux** |linux|
 
 1. Install Docker and Docker Compose
 
@@ -80,13 +85,11 @@ For more information take a look at `installation guide of Docker Desktop <https
 
   apt install docker.io docker-compose
 
-
 2. Get configuration file for Docker-compose (`docker-compose.yml <https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml>`__)
 
 .. code-block:: bash
 
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
-
 
 3. Build and start NEST Desktop and NEST Simulator with a single command:
 
@@ -94,14 +97,18 @@ For more information take a look at `installation guide of Docker Desktop <https
 
   docker-compose up --build
 
+Now NEST Desktop is started.
+You can use NEST Desktop in the web browser at http://localhost:8000.
 
-NEST Desktop is now serving at ``http://localhost:8000`` and NEST Simulator at ``http://localhost:5000``.
+**Installation is now complete!**
+:doc:`Now we can start constructing networks for the simulation! <usage>`.
+
 
 For more information read the full documentation of the `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
-Via Singularity
----------------
+Via Singularity for |linux|
+---------------------------
 
 .. image:: ../_static/img/logo/singularity-logo.svg
   :width: 240px
@@ -138,13 +145,18 @@ For more information read the full documentation of the Singularity
 
   nest-desktop-singularity start
 
-NEST Desktop is now serving at ``http://localhost:8000`` and NEST Simulator at ``http://localhost:5000``.
+Now NEST Desktop is started.
+You can use NEST Desktop in the web browser at http://localhost:8000.
 
+**Installation is now complete!**
+:doc:`Now we can start constructing networks for the simulation! <usage>`.
 
 For more information read the full documentation of the `NEST Desktop Singularity <https://github.com/nest-desktop/nest-desktop-singularity>`__.
 
-Via Python Package
-------------------
+
+
+Via Python Package for |linux| |windows| |apple|
+------------------------------------------------
 
 .. image:: ../_static/img/logo/pypi-logo.svg
   :width: 240px
@@ -152,14 +164,35 @@ Via Python Package
 
 |
 
-.. note::
+1. (For advanced user) Install NEST Simulator:
 
-  This section shows setup guide for only NEST Desktop.
-  NEST Simulator cannot be installed via pip (`maybe soon <https://github.com/nest/nest-simulator/pull/2073>`__).
-  For more information read the full installation guide of NEST Simulator
-  `here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
+Since NEST 3, API Server is implemented in NEST Simulator.
+Skip this step when the appropriate NEST Simulator (3.0 or higher) is already installed on your computer.
 
-1. NEST Desktop is available on PyPI and can be installed with ``pip`` command:
+Read the full installation guide of NEST Simulator
+`here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
+
+2. Install dependencies for API Server of NEST Simulator:
+
+.. code-block:: bash
+
+  pip install flask flask-cors RestrictedPython uwsgi
+
+3. Start NEST Server as the back end:
+
+The API Server for NEST Simulator is referred to as **NEST Server**.
+
+.. code-block:: bash
+
+  nest-server start
+
+Now, NEST Server is running at http://localhost:5000.
+
+Read detailed information of NEST Server `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
+
+4. Install NEST Desktop
+
+NEST Desktop is available on PyPI and can be installed with ``pip`` command:
 
 .. code-block:: bash
 
@@ -167,16 +200,32 @@ Via Python Package
 
 For more information read the full installing docs :doc:`here <setup>`.
 
-2. Start NEST Desktop (in another terminal session):
+5. Start NEST Desktop (in another terminal session):
 
 .. code-block:: bash
 
   nest-desktop start
 
-NEST Desktop is serving at ``http://localhost:8000``.
+Now NEST Desktop is started.
+You can use NEST Desktop in the web browser at http://localhost:8000.
 
-.. warning::
-
-  You have to start NEST Simulator as back end for NEST Desktop.
+**Installation is now complete!**
+:doc:`Now we can start constructing networks for the simulation! <usage>`.
 
 For more information read the full documentation of the command API :doc:`here </developer/command-API>`.
+
+
+.. |apple| image:: ../_static/img/icons/apple.svg
+  :width: 24px
+  :alt: apple
+  :target: #
+
+.. |linux| image:: ../_static/img/icons/linux.svg
+  :width: 24px
+  :alt: linux
+  :target: #
+
+.. |windows| image:: ../_static/img/icons/windows.svg
+  :width: 24px
+  :alt: windows
+  :target: #
