@@ -71,6 +71,10 @@ rst_prolog = ".. warning:: \n   This version of the documentation is NOT an offi
              You are looking at 'latest', which is in active and ongoing development. \
              You can change versions on the bottom left of the screen."
 
+intersphinx_mapping = {
+    'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
+    'simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
+}
 
 def setup(app):
   app.add_css_file('css/styles.css')
