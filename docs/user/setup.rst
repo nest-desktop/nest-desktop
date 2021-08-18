@@ -4,7 +4,7 @@ Setup Guide
 
 This guide provides a detailed documentation on how to install NEST Desktop with NEST Simulator.
 The front end NEST Desktop requires NEST Simulator as the back end for the simulation.
-NEST Simulator has an API Server which can forward requests to simulation engine.
+NEST Simulator has an API Server which can forward requests to the simulation engine.
 For more information, please have a look `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
 
 
@@ -15,10 +15,10 @@ For more information, please have a look `here <https://nest-simulator.readthedo
 |
 
 Docker (+ Docker Compose) and Singularity provide virtualization for NEST Desktop and NEST Simulator.
-These approaches are recommended to run NEST Desktop and NEST Simulator in the same time.
+These approaches are recommended to run NEST Desktop and NEST Simulator at the same time.
 
 Furthermore, you are able to install NEST Desktop with ``pip`` command.
-On the other hand, installing NEST Simulator on your computer directly is not an easy approach.
+On the other hand, you could install NEST Simulator on your computer directly - which is not an easy approach.
 Thus, it is rather for experienced users.
 
 You can read the installation instructions by clicking one of these logos below:
@@ -74,7 +74,7 @@ To get more information, see the `official page of Docker Compose <https://githu
 **Windows** |windows| **and macOS** |apple|
 
 Docker Compose is included in Docker Desktop for Windows and macOS.
-For more information take a look at `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
+For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
 
 
 **Quick setup in Linux** |linux|
@@ -100,11 +100,11 @@ For more information take a look at `installation guide of Docker Desktop <https
 Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
-**Installation is now complete!**
+**The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`.
 
 
-For more information read the full documentation of the `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
+For more information read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
 Via Singularity for |linux|
@@ -117,7 +117,7 @@ Via Singularity for |linux|
 |
 
 Singularity is an application container for **Linux** systems.
-For more information read the full documentation of the Singularity
+For more information read the full documentation of Singularity
 `here <https://sylabs.io/docs/>`__.
 
 1. Clone a working copy from the repository and go to the folder:
@@ -127,19 +127,19 @@ For more information read the full documentation of the Singularity
   git clone https://github.com/nest-desktop/nest-desktop-singularity
   cd nest-desktop-singularity
 
-2. Register bash command for NEST Desktop Singularity:
+2. Register the bash command for NEST Desktop Singularity:
 
 .. code-block:: bash
 
   export PATH=$PATH:$PWD/bin/
 
-3. Build Singularity images (it will ask for sudo password):
+3. Build the Singularity images (it will ask for sudo password):
 
 .. code-block:: bash
 
   nest-desktop-singularity build
 
-4. Start Singularity instances of NEST Desktop and NEST Simulator:
+4. Start the Singularity instances of NEST Desktop and NEST Simulator:
 
 .. code-block:: bash
 
@@ -148,10 +148,10 @@ For more information read the full documentation of the Singularity
 Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
-**Installation is now complete!**
+**The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`.
 
-For more information read the full documentation of the `NEST Desktop Singularity <https://github.com/nest-desktop/nest-desktop-singularity>`__.
+For more information read the full documentation of `NEST Desktop Singularity <https://github.com/nest-desktop/nest-desktop-singularity>`__.
 
 
 
@@ -164,15 +164,17 @@ Via Python Package for |linux| |windows| |apple|
 
 |
 
+NEST Simulator cannot be installed via pip (`maybe soon <https://github.com/nest/nest-simulator/pull/2073>`__).
+Therefore, we need to install it in another way.
 1. (For advanced user) Install NEST Simulator:
 
-Since NEST 3, API Server is implemented in NEST Simulator.
+Since NEST 3, the API Server is already implemented in NEST Simulator.
 Skip this step when the appropriate NEST Simulator (3.0 or higher) is already installed on your computer.
 
 Read the full installation guide of NEST Simulator
 `here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
 
-2. Install dependencies for API Server of NEST Simulator:
+2. Install the dependencies for the API Server of NEST Simulator:
 
 .. code-block:: bash
 
@@ -188,17 +190,17 @@ The API Server for NEST Simulator is referred to as **NEST Server**.
 
 Now, NEST Server is running at http://localhost:5000.
 
-Read detailed information of NEST Server `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
+Read the detailed information on NEST Server `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
 
 4. Install NEST Desktop
 
-NEST Desktop is available on PyPI and can be installed with ``pip`` command:
+NEST Desktop is available on PyPI and can be installed with the ``pip`` command:
 
 .. code-block:: bash
 
   pip3 install nest-desktop [--user] [--upgrade]
 
-For more information read the full installing docs :doc:`here <setup>`.
+For more information read the complete installing guide :doc:`here <setup>`.
 
 5. Start NEST Desktop (in another terminal session):
 
@@ -209,7 +211,7 @@ For more information read the full installing docs :doc:`here <setup>`.
 Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
-**Installation is now complete!**
+**The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`.
 
 For more information read the full documentation of the command API :doc:`here </developer/command-API>`.

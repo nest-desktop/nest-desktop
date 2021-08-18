@@ -69,7 +69,7 @@ html_static_path = ['_static']
 
 rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
              You are looking at version 'latest', which is in active and ongoing development. \
-             You can change versions on the bottom left of the screen."
+             You can change versions at the bottom left of the screen."
 
 intersphinx_mapping = {
     'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
