@@ -2,15 +2,24 @@ Setup Guide
 ===========
 
 
-This guide provides a detailed documentation on how to install and start only NEST Desktop (without NEST Server).
-When you want to start the bundle of NEST Desktop and NEST Server, you can read the instructions :doc:`here <../deployer/deploy-docker>`.
+This guide provides a detailed documentation on how to install NEST Desktop with NEST Simulator.
+The front end NEST Desktop requires NEST Simulator as the back end for the simulation.
+NEST Simulator has an API Server which can forward requests to the simulation engine.
+For more information, please have a look `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
 
-.. note::
 
-  NEST Desktop requires NEST Server which runs only in Linux systems (when deployed without any containerization technique).
-  For more information read the full installing docs of NEST Simulator
-  `here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
+.. image:: ../_static/img/installation-guide.png
+  :width: 100%
+  :target: #setup-guide
 
+|
+
+Docker (+ Docker Compose) and Singularity provide virtualization for NEST Desktop and NEST Simulator.
+These approaches are recommended to run NEST Desktop and NEST Simulator at the same time.
+
+Furthermore, you are able to install NEST Desktop with ``pip`` command.
+On the other hand, you could install NEST Simulator on your computer directly - which is not an easy approach.
+Thus, it is rather for experienced users.
 
 You can read the installation instructions by clicking one of these logos below:
 
@@ -18,19 +27,10 @@ You can read the installation instructions by clicking one of these logos below:
 
     <div class="center" style="height:150px">
       <div class="column col-3">
-        <a href="#via-python-package">
-          <div class="black center">
-            <img class="ma-2" src="../_static/img/logo/pypi-logo.svg" style="height:100px">
-            <h2>Python Package</h2>
-          </div>
-        </a>
-      </div>
-
-      <div class="column col-3">
         <a href="#via-docker">
           <div class="black center">
-            <img class="ma-2" src="../_static/img/logo/Moby-logo.png" style="height:100px">
-            <h2>Docker</h2>
+            <img class="ma-2" src="../_static/img/logo/docker-compose-logo.png" style="height:100px">
+            <h2>Docker Compose</h2>
           </div>
         </a>
       </div>
@@ -43,88 +43,72 @@ You can read the installation instructions by clicking one of these logos below:
           </div>
         </a>
       </div>
+
+      <div class="column col-3">
+        <a href="#via-python-package">
+          <div class="black center">
+            <img class="ma-2" src="../_static/img/logo/pypi-logo.svg" style="height:100px">
+            <h2>Python Package</h2>
+          </div>
+        </a>
+      </div>
     </div>
 
 
 ||||
 
-Via Python Package
-------------------
+Via Docker Compose |linux| |windows| |apple|
+--------------------------------------------
 
-.. image:: ../_static/img/logo/pypi-logo.svg
-  :width: 240px
-  :target: #via-python-package
-
-|
-
-1. NEST Desktop is available on PyPI and can be installed with pip:
-
-.. code-block:: bash
-
-  pip3 install nest-desktop [--user] [--upgrade]
-
-For more information read the full installing docs :doc:`here <setup>`.
-
-2. Start NEST Desktop (in another terminal session):
-
-.. code-block:: bash
-
-  nest-desktop start
-
-NEST Desktop is serving at ``http://localhost:8000``.
-
-For more information read the full documentation of the command API :doc:`here </developer/command-API>`.
-
-
-Via Docker
-----------
-
-.. image:: ../_static/img/logo/Moby-logo.png
+.. image:: ../_static/img/logo/docker-compose-logo.png
   :width: 240px
   :target: #via-docker
 
 |
 
-Docker is a virtualization software packaging applications and its dependencies in a virtual container that can run on any Linux server.
-In fact, it is available for a wide variety of operating systems, e.g. Linux, Mac and Windows. For more information on this technology, take a look at `this overview <https://www.docker.com/resources/what-container>`__.
+Docker is a virtualization software packaging applications and its dependencies.
+Docker Compose is a tool for running multi-container applications on Docker defined using the Compose file format.
+To get more information, see the `official page of Docker Compose <https://github.com/docker/compose>`__.
 
 
-1. Pull the NEST Desktop image from Docker Hub:
+**Windows** |windows| **and macOS** |apple|
+
+Docker Compose is included in Docker Desktop for Windows and macOS.
+For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
+
+
+**Quick setup in Linux** |linux|
+
+1. Install Docker and Docker Compose
 
 .. code-block:: bash
 
-  docker pull nestdesktop/app
+  apt install docker.io docker-compose
 
-2. Start the Docker container:
+2. Get configuration file for Docker-compose (`docker-compose.yml <https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml>`__)
 
 .. code-block:: bash
 
-  docker run -rm -it -p 8000:8000 --name nest-desktop nestdesktop/app
+  wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 
-NEST Desktop is now serving at ``http://localhost:8000``.
+3. Build and start NEST Desktop and NEST Simulator with a single command:
 
-.. note::
+.. code-block:: bash
 
-  It only starts NEST Desktop without NEST Server.
-  If you want to both together (front end and back end), you can use Docker Compose, which is documented :doc:`here </deployer/deploy-docker>`.
+  docker-compose up --build
 
+Now NEST Desktop is started.
+You can use NEST Desktop in the web browser at http://localhost:8000.
 
-.. rubric:: Arguments
-
-You can find the help texts of docker arguments by :code:`docker run --help`.
-
-+----+-------------------------------------------+
-| -p | Publish a container's port(s) to the host |
-+----+-------------------------------------------+
-| -i | Keep STDIN open even if not attached      |
-+----+-------------------------------------------+
-| -t | Allocate a pseudo-TTY                     |
-+----+-------------------------------------------+
+**The installation is now complete!**
+:doc:`Now we can start constructing networks for the simulation! <usage>`
 
 
+For more information read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
-Via Singularity
----------------
+
+Via Singularity |linux|
+-----------------------
 
 .. image:: ../_static/img/logo/singularity-logo.svg
   :width: 240px
@@ -132,27 +116,118 @@ Via Singularity
 
 |
 
-Singularity is an application container for Linux systems.
-For more information read the full documentation
+Singularity is an application container for **Linux** systems.
+For more information read the full documentation of Singularity
 `here <https://sylabs.io/docs/>`__.
 
-1. Clone a working copy from the repository and go to the Singularity folder:
+1. Clone a working copy from the repository and go to the folder:
 
 .. code-block:: bash
 
-  git clone https://github.com/nest-desktop/nest-desktop
-  cd nest-desktop/singularity
+  git clone https://github.com/nest-desktop/nest-desktop-singularity
+  cd nest-desktop-singularity
 
-2. Build the Singularity container (with sudo):
-
-.. code-block:: bash
-
-  singularity build nest-desktop-app.sif nest-desktop-app.def
-
-3. Start the Singularity container
+2. Register the bash command for NEST Desktop Singularity:
 
 .. code-block:: bash
 
-  singularity run nest-desktop-app.sif
+  export PATH=$PATH:$PWD/bin/
 
-NEST Desktop is now serving at ``http://localhost:8000``.
+3. Build the Singularity images (it will ask for sudo password):
+
+.. code-block:: bash
+
+  nest-desktop-singularity build
+
+4. Start the Singularity instances of NEST Desktop and NEST Simulator:
+
+.. code-block:: bash
+
+  nest-desktop-singularity start
+
+Now NEST Desktop is started.
+You can use NEST Desktop in the web browser at http://localhost:8000.
+
+**The installation is now complete!**
+:doc:`Now we can start constructing networks for the simulation! <usage>`
+
+For more information read the full documentation of `NEST Desktop Singularity <https://github.com/nest-desktop/nest-desktop-singularity>`__.
+
+
+
+Via Python Package |linux| |windows| |apple|
+--------------------------------------------
+
+.. image:: ../_static/img/logo/pypi-logo.svg
+  :width: 240px
+  :target: #via-python-package
+
+|
+
+NEST Simulator cannot be installed via pip (`maybe soon <https://github.com/nest/nest-simulator/pull/2073>`__).
+Therefore, we need to install it in another way.
+1. (For advanced user) Install NEST Simulator:
+
+Since NEST 3, the API Server is already implemented in NEST Simulator.
+Skip this step when the appropriate NEST Simulator (3.0 or higher) is already installed on your computer.
+
+Read the full installation guide of NEST Simulator
+`here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
+
+2. Install the dependencies for the API Server of NEST Simulator:
+
+.. code-block:: bash
+
+  pip install flask flask-cors RestrictedPython uwsgi
+
+3. Start NEST Server as the back end:
+
+The API Server for NEST Simulator is referred to as **NEST Server**.
+
+.. code-block:: bash
+
+  nest-server start
+
+Now, NEST Server is running at http://localhost:5000.
+
+Read the detailed information on NEST Server `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
+
+4. Install NEST Desktop
+
+NEST Desktop is available on PyPI and can be installed with the ``pip`` command:
+
+.. code-block:: bash
+
+  pip3 install nest-desktop [--user] [--upgrade]
+
+For more information read the complete installing guide :doc:`here <setup>`.
+
+5. Start NEST Desktop (in another terminal session):
+
+.. code-block:: bash
+
+  nest-desktop start
+
+Now NEST Desktop is started.
+You can use NEST Desktop in the web browser at http://localhost:8000.
+
+**The installation is now complete!**
+:doc:`Now we can start constructing networks for the simulation! <usage>`
+
+For more information read the full documentation of the command API :doc:`here </developer/command-API>`.
+
+
+.. |apple| image:: ../_static/img/icons/apple.svg
+  :width: 24px
+  :alt: apple
+  :target: #
+
+.. |linux| image:: ../_static/img/icons/linux.svg
+  :width: 24px
+  :alt: linux
+  :target: #
+
+.. |windows| image:: ../_static/img/icons/windows.svg
+  :width: 24px
+  :alt: windows
+  :target: #

@@ -67,6 +67,14 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
+             You are looking at version 'latest', which is in active and ongoing development. \
+             You can change versions at the bottom left of the screen."
+
+intersphinx_mapping = {
+    'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
+    'simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
+}
 
 def setup(app):
   app.add_css_file('css/styles.css')

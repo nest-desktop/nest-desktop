@@ -28,8 +28,8 @@ NEST Desktop is available as a prototype online.
 
 **Trouble shootings**
 
-Why cannot I find NEST Server?
-  Sometimes the issue is resolved when you check NEST Server.
+Why cannot I find NEST Simulator?
+  Sometimes the issue is resolved when you check NEST Simulator.
 
   If not, the problem lies in the cookies and site data for the user authentication of the *EBRAINS* platform.
   That cookie expires after a session.

@@ -12,7 +12,7 @@ Docker is a virtualization software packaging applications and its dependencies 
 It is available for a variety of the operating systems, e.g. Linux, Mac and Windows.
 For more information follow the link `here <https://www.docker.com/resources/what-container>`__.
 
-NEST Desktop and NEST Server are prepared in different containers, but you can use docker-compose to start multiple containers, e.g. NEST Desktop, NEST Server.
+NEST Desktop and NEST Simulator are prepared in different containers, but you can use docker-compose to start multiple containers, e.g. NEST Desktop, NEST Simulator.
 Docker Compose needs the configuration file (``docker-compose.yml``).
 
 Here, the guide shows you how to build containers with ``docker-compose``.
@@ -34,18 +34,18 @@ Requirements
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 
 It will pull images of NEST Desktop from https://hub.docker.com/r/nestdesktop/app)
-and NEST Server can be started from within the official NEST image (https://hub.docker.com/r/nestsim/nest).
+and NEST Simulator can be started from within the official NEST image (https://hub.docker.com/r/nestsim/nest).
 
 
 **Getting started**
 
-Build and start the NEST Desktop and NEST Server containers.
+Build and start the NEST Desktop and NEST Simulator containers.
 
 .. code-block:: bash
 
   docker-compose up --build
 
-NEST Desktop and NEST Server are now serving at ``http://localhost:8000`` and ``http://localhost:5000``, respectively.
+NEST Desktop and NEST Simulator are now serving at ``http://localhost:8000`` and ``http://localhost:5000``, respectively.
 With :guilabel:`CTRL` + :guilabel:`C` you can shutdown these services.
 
 .. rubric:: Configurations in :code:`docker-compose.yml`
@@ -136,4 +136,4 @@ Shutdown the services ``nest-desktop`` and ``nest-server``.
 Thanks for the help:
 
   - Steffen Graber (Docker Hub for NEST Simulator)
-  - Jochen Martin Eppler (NEST Server)
+  - Jochen Martin Eppler (API Server for NEST Simulator)

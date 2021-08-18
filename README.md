@@ -20,7 +20,6 @@ DockerHub
 [![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
 [![DOI](https://img.shields.io/badge/DOI-10.1101%2F2021.06.15.444791-blue)](https://doi.org/10.1101/2021.06.15.444791)
 
-
 ---
 
 NEST Desktop is a web-based application which provides a graphical user interface for [NEST Simulator](https://nest-simulator.org). With this easy-to-use tool, users can interactively construct neuronal networks and explore network dynamics.
@@ -42,12 +41,17 @@ To get started with NEST Desktop and NEST Server, use Docker compose with the co
 wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 docker-compose up --build
 ```
+
 For more information, please see the [User Documentation Page](https://nest-desktop.readthedocs.io).
 
+### Cite NEST Desktop
 
-### Citation
+In order to cite NEST Desktop in general, please use the DOI [10.5281/zenodo.5037050](https://doi.org/10.5281/zenodo.5037050) for all versions (always redirecting to the latest version).
+If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.0.
+You can use the reference to the preprint for NEST Desktop (DOI: [10.1101/2021.06.15.444791](https://doi.org/10.1101/2021.06.15.444791)) as well, which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1), if that is more appropriate in the context of your reference.
 
-You can use the reference to the preprint for NEST Desktop which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1).
+You will also find the exports for the citation managers on Zenodo and bioRxiv.
 
+### License
 
-### License [MIT](LICENSE)
+NEST Desktop is published under the [MIT](LICENSE) license.
