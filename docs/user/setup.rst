@@ -57,8 +57,8 @@ You can read the installation instructions by clicking one of these logos below:
 
 ||||
 
-Via Docker Compose for |linux| |windows| |apple|
-------------------------------------------------
+Via Docker Compose |linux| |windows| |apple|
+--------------------------------------------
 
 .. image:: ../_static/img/logo/docker-compose-logo.png
   :width: 240px
@@ -101,14 +101,14 @@ Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! <usage>`.
+:doc:`Now we can start constructing networks for the simulation! <usage>`
 
 
 For more information read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
-Via Singularity for |linux|
----------------------------
+Via Singularity |linux|
+-----------------------
 
 .. image:: ../_static/img/logo/singularity-logo.svg
   :width: 240px
@@ -149,14 +149,14 @@ Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! <usage>`.
+:doc:`Now we can start constructing networks for the simulation! <usage>`
 
 For more information read the full documentation of `NEST Desktop Singularity <https://github.com/nest-desktop/nest-desktop-singularity>`__.
 
 
 
-Via Python Package for |linux| |windows| |apple|
-------------------------------------------------
+Via Python Package |linux| |windows| |apple|
+--------------------------------------------
 
 .. image:: ../_static/img/logo/pypi-logo.svg
   :width: 240px
@@ -212,7 +212,7 @@ Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! <usage>`.
+:doc:`Now we can start constructing networks for the simulation! <usage>`
 
 For more information read the full documentation of the command API :doc:`here </developer/command-API>`.
 
