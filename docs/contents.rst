@@ -16,8 +16,8 @@ Contents
   :caption: User Documentation
 
   user/index
-  user/usage
   user/setup
+  user/usage
   user/troubleshooting
   user/use-ebrains
 

@@ -10,15 +10,15 @@ Error messages
 
 **Server not found**
 
-NEST Desktop cannot find the NEST Server.
+NEST Desktop cannot find the NEST Simulator.
 It has two possible reasons:
 
-  - NEST Desktop has a wrong URL under which it tries to contact the server. See the FAQ for NEST Server below.
-  - The server is down. Contact the server operators and enter the URL of the NEST Server, e.g. ``localhost:5000`` in a web browser to check if it is running again.
+  - NEST Desktop has a wrong URL under which it tries to contact the server. See the FAQ for NEST Simulator below.
+  - The server is down. Contact the server operators and enter the URL of the NEST Simulator, e.g. ``localhost:5000`` in a web browser to check if it is running again.
 
 .. note::
   For advanced users:
-  Check in a terminal whether NEST Server is running (``curl localhost:5000``).
+  Check in a terminal whether NEST Simulator is running (``curl localhost:5000``).
 
 
 **Internal server error**
@@ -39,14 +39,14 @@ Frequently asked questions (FAQ)
 
 |
 
-**NEST Server**
+**NEST Simulator**
 
-How can I change the URL of the NEST Server?
-  On the settings page you can find the URL of the NEST Server.
+How can I change the URL of the NEST Simulator?
+  On the settings page you can find the URL of the NEST Simulator.
 
-How can I check NEST Server?
+How can I check NEST Simulator?
   On the settings page you can click on :guilabel:`CHECK` button.
-  If a chip with NEST version appears, this indicates that NEST Server is working.
+  If a chip with NEST version appears, this indicates that NEST Simulator is working.
 
 |
 

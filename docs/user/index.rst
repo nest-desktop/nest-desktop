@@ -23,19 +23,18 @@ For more information, please read :doc:`detailed guides of usage <usage>`.
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
   docker-compose up --build
 
-For more information, please read the :doc:`detailed guides of setup <setup>`.
+For more information, please read the :doc:`detailed setup guides <setup>`.
 
 
 ||||
 
 Guides for NEST Desktop
-  - :doc:`How to use NEST Desktop <usage>`
   - :doc:`How to setup NEST Desktop <setup>`
+  - :doc:`How to use NEST Desktop <usage>`
   - :doc:`Troubleshooting <troubleshooting>`
 
 Guides for the infrastructure
   - :doc:`Use NEST Desktop on EBRAINS <use-ebrains>`
-
 
 
 .. |user| image:: ../_static/img/icons/user.svg
