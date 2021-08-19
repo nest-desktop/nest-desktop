@@ -103,8 +103,8 @@ You can use NEST Desktop in the web browser at http://localhost:8000.
 **The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`
 
-
-For more information read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
+.. note:: 
+For more information (like running the containers without root password, etc.), please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
 Via Singularity |linux|
