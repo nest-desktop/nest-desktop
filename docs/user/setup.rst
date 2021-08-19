@@ -77,6 +77,11 @@ Docker Compose is included in Docker Desktop for Windows and macOS.
 For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
 
 
+Please keep in mind that on Windows you can also use the Windows Subsystem for Linux (WSL) version 2 or higher, which allows you to run Docker without emulation.
+This offers performance advantages and more features.
+Detailed instructions on how to use Docker on WSL (version 2+) are provided by `Docker <https://docs.docker.com/desktop/windows/wsl/>`__ and `Microsoft <https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers>`__.
+
+
 **Quick setup in Linux** |linux|
 
 1. Install Docker and Docker Compose
@@ -104,7 +109,7 @@ You can use NEST Desktop in the web browser at http://localhost:8000.
 :doc:`Now we can start constructing networks for the simulation! <usage>`
 
 .. note:: 
-For more information (like running the containers without root password, etc.), please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
+  For more information (like running the containers without root password, etc.), please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
 Via Singularity |linux|
