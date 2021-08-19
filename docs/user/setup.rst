@@ -95,7 +95,7 @@ For more information take a look at the `installation guide of Docker Desktop <h
 
 .. code-block:: bash
 
-  docker-compose up --build
+  sudo docker-compose up --build
 
 Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
