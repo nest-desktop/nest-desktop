@@ -77,6 +77,11 @@ Docker Compose is included in Docker Desktop for Windows and macOS.
 For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
 
 
+Please keep in mind that on Windows you can also use the Windows Subsystem for Linux (WSL) version 2 or higher, which allows you to run Docker without emulation.
+This offers performance advantages and more features.
+Detailed instructions on how to use Docker on WSL (version 2+) are provided by `Docker <https://docs.docker.com/desktop/windows/wsl/>`__ and `Microsoft <https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers>`__.
+
+
 **Quick setup in Linux** |linux|
 
 1. Install Docker and Docker Compose
@@ -95,7 +100,7 @@ For more information take a look at the `installation guide of Docker Desktop <h
 
 .. code-block:: bash
 
-  docker-compose up --build
+  sudo docker-compose up --build
 
 Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
@@ -103,8 +108,8 @@ You can use NEST Desktop in the web browser at http://localhost:8000.
 **The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`
 
-
-For more information read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
+.. note:: 
+  For more information (like running the containers without root password, etc.), please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
 Via Singularity |linux|
@@ -133,11 +138,18 @@ For more information read the full documentation of Singularity
 
   export PATH=$PATH:$PWD/bin/
 
+.. note:: 
+  You will have to repeat this every time you end a terminal session.
+  If you like to register this command permanently, please proceed according to the `full documentation <https://github.com/nest-desktop/nest-desktop-singularity>`__.
+
 3. Build the Singularity images (it will ask for sudo password):
 
 .. code-block:: bash
 
   nest-desktop-singularity build
+
+.. note::
+  This command (and the following ones) need to be executed inside the folder where the container files are located, i.e. the `nest-desktop-singularity` folder.
 
 4. Start the Singularity instances of NEST Desktop and NEST Simulator:
 
