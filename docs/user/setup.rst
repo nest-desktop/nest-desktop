@@ -14,46 +14,13 @@ For more information, please have a look `here <https://nest-simulator.readthedo
 
 |
 
-Docker (+ Docker Compose) and Singularity provide virtualization for NEST Desktop and NEST Simulator.
-These approaches are recommended to run NEST Desktop and NEST Simulator at the same time.
+Docker (+ Docker Compose) and Singularity provide both NEST Desktop and NEST Simulator, so you have everything you need to run NEST Desktop.
 
-Furthermore, you are able to install NEST Desktop with ``pip`` command.
-On the other hand, you could install NEST Simulator on your computer directly - which is not an easy approach.
-Thus, it is rather for experienced users.
+Alternatively, you can install NEST Desktop with the pip command.
+If you only have NEST Desktop (i.e., NEST Simulator is not running as back-end), you can create networks but cannot run simulations within the application.
+To enable the full functionality of NEST Desktop, you also need to install NEST Simulator on your computer and run NEST Server.
 
-You can read the installation instructions by clicking one of these logos below:
-
-.. raw:: html
-
-    <div class="center" style="height:150px">
-      <div class="column col-3">
-        <a href="#via-docker">
-          <div class="black center">
-            <img class="ma-2" src="../_static/img/logo/docker-compose-logo.png" style="height:100px">
-            <h2>Docker Compose</h2>
-          </div>
-        </a>
-      </div>
-
-      <div class="column col-3">
-        <a href="#via-singularity">
-          <div class="black center">
-            <img class="ma-2" src="../_static/img/logo/singularity-logo.svg" style="height:100px">
-            <h2>Singularity</h2>
-          </div>
-        </a>
-      </div>
-
-      <div class="column col-3">
-        <a href="#via-python-package">
-          <div class="black center">
-            <img class="ma-2" src="../_static/img/logo/pypi-logo.svg" style="height:100px">
-            <h2>Python Package</h2>
-          </div>
-        </a>
-      </div>
-    </div>
-
+See instructions below for details.
 
 ||||
 
@@ -108,7 +75,7 @@ You can use NEST Desktop in the web browser at http://localhost:8000.
 **The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`
 
-.. note:: 
+.. note::
   For more information (like running the containers without root password, etc.), please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 
@@ -138,7 +105,7 @@ For more information read the full documentation of Singularity
 
   export PATH=$PATH:$PWD/bin/
 
-.. note:: 
+.. note::
   You will have to repeat this every time you end a terminal session.
   If you like to register this command permanently, please proceed according to the `full documentation <https://github.com/nest-desktop/nest-desktop-singularity>`__.
 
@@ -178,13 +145,13 @@ Via Python Package |linux| |windows| |apple|
 
 NEST Simulator cannot be installed via pip (`maybe soon <https://github.com/nest/nest-simulator/pull/2073>`__).
 Therefore, we need to install it in another way.
-1. (For advanced user) Install NEST Simulator:
 
-Since NEST 3, the API Server is already implemented in NEST Simulator.
-Skip this step when the appropriate NEST Simulator (3.0 or higher) is already installed on your computer.
+1. Install NEST Simulator (SKIP THIS STEP IF YOU HAVE NEST 3 INSTALLED.):
 
 Read the full installation guide of NEST Simulator
 `here <https://nest-simulator.readthedocs.io/en/latest/installation/index.html>`__.
+
+We highly recommend installing NEST 3. With NEST 3, the API server (i.e., NEST Server) is already implemented.
 
 2. Install the dependencies for the API Server of NEST Simulator:
 
@@ -202,7 +169,7 @@ The API Server for NEST Simulator is referred to as **NEST Server**.
 
 Now, NEST Server is running at http://localhost:5000.
 
-Read the detailed information on NEST Server `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
+You can find the detailed information on NEST Server `here <https://nest-simulator.readthedocs.io/en/stable/nest_server.html>`__.
 
 4. Install NEST Desktop
 
