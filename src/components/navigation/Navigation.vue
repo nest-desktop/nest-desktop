@@ -9,7 +9,8 @@
       :miniVariant="state.miniVariant"
       app
       left
-      mobile-breakpoint="56"
+      mobile-breakpoint="64"
+      mini-variant-width="64"
       permanent
       v-click-outside="
         () => {
@@ -26,8 +27,8 @@
           absolute
           app
           mini-variant
-          mini-variant-width="56"
-          mobile-breakpoint="56"
+          mini-variant-width="64"
+          mobile-breakpoint="64"
           permanent
         >
           <div class="flex">
@@ -43,7 +44,7 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon small v-text="route.icon" />
+                    <v-icon v-text="route.icon" size="186%" />
                     <div v-text="route.title" />
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -96,7 +97,7 @@
                   </v-list-item-group>
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title v-text="'Help'" />
+                  <v-list-item-title v-text="'Help'" class="text-h1" />
                 </v-list-item-content>
               </v-list-item>
 
@@ -141,7 +142,7 @@
           </div>
         </v-navigation-drawer>
 
-        <div style="padding-left: 56px">
+        <div style="padding-left: 64px">
           <ProjectNavList v-if="state.navList === 'project'" />
           <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />
@@ -324,7 +325,7 @@ export default {
 }
 
 .navigation .nav-item {
-  font-size: 7px;
+  font-size: 9px;
   text-align: center;
   width: 100%;
 }
