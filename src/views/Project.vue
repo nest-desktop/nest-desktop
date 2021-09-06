@@ -3,7 +3,6 @@
     <v-app-bar
       app
       class="no-print"
-      clipped-left
       clipped-right
       color="project"
       dark
