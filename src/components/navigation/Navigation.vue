@@ -8,7 +8,7 @@
     <v-navigation-drawer
       :miniVariant="state.miniVariant"
       app
-      clipped
+      left
       mobile-breakpoint="56"
       permanent
       v-click-outside="
@@ -24,9 +24,11 @@
       <v-row class="fill-height" no-gutters>
         <v-navigation-drawer
           absolute
+          app
           mini-variant
           mini-variant-width="56"
           mobile-breakpoint="56"
+          permanent
         >
           <div class="flex">
             <v-list dense nav>
