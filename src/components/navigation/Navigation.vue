@@ -20,7 +20,7 @@
           }
         }
       "
-      width="308"
+      width="320"
     >
       <v-row class="fill-height" no-gutters>
         <v-navigation-drawer
@@ -32,7 +32,7 @@
           permanent
         >
           <div class="flex">
-            <v-list dense nav>
+            <v-list nav>
               <v-list-item
                 :class="{ 'v-list-item--active': state.navList === route.id }"
                 :color="route.color"
@@ -44,7 +44,7 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon v-text="route.icon" size="186%" />
+                    <v-icon v-text="route.icon" />
                     <div v-text="route.title" />
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -54,7 +54,7 @@
 
             <v-spacer />
 
-            <v-list nav dense>
+            <v-list nav>
               <template v-if="state.app.config.devMode">
                 <v-tooltip right>
                   <template #activator="{ on, attrs }">
@@ -76,7 +76,7 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon small v-text="'mdi-cogs'" />
+                    <v-icon v-text="'mdi-cogs'" />
                     Settings
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -92,7 +92,7 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon small v-text="'mdi-help-circle-outline'" />
+                    <v-icon v-text="'mdi-help-circle-outline'" />
                     Help
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -111,7 +111,7 @@
                   >
                     <v-list-item-icon>
                       <v-list-item-group class="nav-item">
-                        <v-icon small v-text="'mdi-information-variant'" />
+                        <v-icon v-text="'mdi-information-variant'" />
                         About
                       </v-list-item-group>
                     </v-list-item-icon>

@@ -24,7 +24,7 @@
 
       <v-row>
         <v-col class="text-center">
-          <v-btn class="mx-3" to="project" v-text="'Start a new project'" />
+          <v-btn class="ma-3" to="project" v-text="'Start a new project'" />
           <v-menu>
             <template #activator="{ on, attrs }">
               <v-btn
