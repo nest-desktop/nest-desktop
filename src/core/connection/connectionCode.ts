@@ -24,16 +24,17 @@ export class ConnectionCode extends Code {
    * Write script of connection specifications.
    */
   specs(): string {
-    const specs: string[] = [`"rule": "${this._connection.rule}"`];
-    this._connection.filteredParams.forEach((param: Parameter) =>
-      specs.push(`"${param.id}": ${param.toCode()}`)
-    );
-
     let script = '';
-    if (specs.length > 1 && this._connection.rule !== 'all_to_all') {
+    if (this._connection.filteredParams.length > 0) {
+      const specs: string[] = [`"rule": "${this._connection.rule}"`];
+      this._connection.filteredParams.forEach((param: Parameter) =>
+        specs.push(`"${param.id}": ${param.toCode()}`)
+      );
       script += ', conn_spec={' + this._();
       script += specs.join(',' + this._());
       script += this.end() + '}';
+    } else {
+      script += `, "${this._connection.rule}"`;
     }
     return script;
   }
