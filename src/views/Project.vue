@@ -197,7 +197,7 @@
             </v-list-item>
           </v-list> -->
 
-          <v-list dense nav>
+          <v-list nav>
             <v-list-item
               :class="{
                 'v-list-item--active': state.tool === tool && state.toolOpened,
@@ -210,7 +210,7 @@
             >
               <v-list-item-icon>
                 <v-list-item-group class="nav-item-right">
-                  <v-icon small v-text="tool.icon" />
+                  <v-icon v-text="tool.icon" />
                   <div v-text="tool.title" />
                 </v-list-item-group>
               </v-list-item-icon>
