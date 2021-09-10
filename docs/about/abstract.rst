@@ -12,7 +12,7 @@ NEST Desktop allows students to explore important concepts in computational neur
 Our experiences so far highlight that NEST Desktop helps advancing both quality and intensity of teaching in computational neuroscience in regular university courses.
 We view the availability of the tool on public resources like the European ICT infrastructure for neuroscience EBRAINS as a contribution to equal opportunities [2]_.
 
-A preprint for NEST Desktop is available on `bioRxiv <https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1>`__.
+A preprint for NEST Desktop is available on `bioRxiv <https://www.biorxiv.org/content/10.1101/2021.06.15.444791>`__.
 
 **Acknowledgements**
 
@@ -21,9 +21,9 @@ This project was funded by the Helmholtz Association Initiative and Networking F
 This work was supported by the DFG Excellence Cluster BrainLinks-BrainTools (grant EXC 1086).
 
 **Cite NEST Desktop**
-In order to cite NEST Desktop in general, please use the DOI [10.5281/zenodo.5037050](https://doi.org/10.5281/zenodo.5037050) for all versions (always redirecting to the latest version).
-If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.0.
-You can use the reference to the  preprint for NEST Desktop (DOI: `10.1101/2021.06.15.444791 <https://doi.org/10.1101/2021.06.15.444791>`__ ) mentioned above as well, if that is more appropriate in the context of your reference.
+In order to cite NEST Desktop in general, please use the DOI `10.5281/zenodo.5037050 <https://doi.org/10.5281/zenodo.5037050>`__ for all versions (always redirecting to the latest version).
+If you like to refer to a single version, you can find these also on Zenodo, e.g. `10.5281/zenodo.5037051 <https://doi.org/10.5281/zenodo.5037051>`__ for Version 3.0.0.
+You can use the reference to the  preprint for NEST Desktop (DOI: `10.1101/2021.06.15.444791 <https://doi.org/10.1101/2021.06.15.444791>`__) mentioned above as well, if that is more appropriate in the context of your reference.
 
 You will also find the exports for the citation managers on Zenodo and bioRxiv.
 
