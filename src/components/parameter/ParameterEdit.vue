@@ -47,6 +47,69 @@
           </v-list>
         </span>
 
+        <span v-if="state.content === 'configSlider'">
+          <v-card-text>
+            <v-row>
+              <v-col class="py-0">
+                <v-text-field
+                  hide-details
+                  label="label"
+                  v-model="state.options.label"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6" class="py-0">
+                <v-text-field
+                  hide-details
+                  label="default"
+                  type="number"
+                  v-model="state.options.value"
+                />
+              </v-col>
+              <v-col cols="6" class="py-0">
+                <v-text-field
+                  v-model="state.options.unit"
+                  hide-details
+                  label="unit"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4" class="py-0">
+                <v-text-field
+                  hide-details
+                  label="min"
+                  type="number"
+                  v-model="state.options.min"
+                />
+              </v-col>
+              <v-col cols="4" class="py-0">
+                <v-text-field
+                  hide-details
+                  label="step"
+                  type="number"
+                  v-if="state.options.step"
+                  v-model="state.options.step"
+                />
+              </v-col>
+              <v-col cols="4" class="py-0">
+                <v-text-field
+                  hide-details
+                  label="max"
+                  type="number"
+                  v-model="state.param.options.max"
+                />
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+          </v-card-actions>
+        </span>
+
         <span v-if="state.content === 'generateValues'">
           <v-card-text>
             <v-select
@@ -74,10 +137,11 @@
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" small outlined text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="generateValues" text v-text="'Generate'" />
+            <v-spacer />
+            <v-btn @click="generateValues" small outlined v-text="'generate'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -112,8 +176,8 @@
             <template v-if="state.options.input === 'checkbox'">
               <v-checkbox
                 :color="state.color"
-                :readonly="state.options.readonly"
                 :label="label()"
+                :readonly="state.options.readonly"
                 @change="paramChange()"
                 class="ma-1"
                 dense
@@ -124,70 +188,88 @@
 
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
-              <v-tooltip left v-model="state.showResolutionWarning">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-slider
-                    :max="state.options.ticks.length - 1"
-                    :thumb-color="state.color"
-                    :tick-labels="state.options.ticks"
-                    @change="paramChange"
-                    class="mb-1"
-                    dense
-                    height="40"
-                    hide-details
-                    ticks="always"
-                    tick-size="4"
-                    :value="state.value"
-                    v-bind="attrs"
-                    v-on="on"
-                  />
-                </template>
-                <span>
-                  <v-icon v-text="'mdi-alert-outline'" color="white"> </v-icon>
-                  Beware: Small resolution values produce many data points,<br />
-                  which can cause a high system load and thus freezes and lags!
-                </span>
-              </v-tooltip>
+              <v-slider
+                :hide-details="!state.showHint"
+                :max="state.options.ticks.length - 1"
+                :rules="rules"
+                :thumb-color="state.color"
+                :tick-labels="state.options.ticks"
+                :value="state.value"
+                @change="paramChange"
+                class="mb-1"
+                dense
+                height="40"
+                tick-size="4"
+                ticks="always"
+              />
             </template>
 
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
+                :value="state.value"
                 @blur="e => paramChange(e.target.value)"
                 @change="paramChange"
                 auto-grow
                 hide-details
                 outlined
                 small
-                :value="state.value"
               />
             </template>
 
             <template v-if="state.options.input === 'valueSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
+                :hide-details="!state.showHint"
                 :max="state.options.max || 1"
                 :min="state.options.min || 0"
+                :rules="rules"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
+                :value="state.value"
                 @change="paramChange"
                 dense
                 height="40"
-                hide-details
-                :value="state.value"
+                thumb-label
               >
+                <template #prepend>
+                  <v-btn
+                    :disabled="state.value <= state.options.min"
+                    @click="decrement"
+                    icon
+                    small
+                  >
+                    <v-icon
+                      :color="color"
+                      class="slider-icon"
+                      v-text="'mdi-minus'"
+                    />
+                  </v-btn>
+                </template>
                 <template #append>
+                  <v-btn
+                    :disabled="state.value >= state.options.max"
+                    @click="increment"
+                    icon
+                    small
+                  >
+                    <v-icon
+                      :color="color"
+                      class="slider-icon"
+                      v-text="'mdi-plus'"
+                    />
+                  </v-btn>
                   <v-text-field
+                    :step="state.options.step || 1"
+                    :value="state.value"
                     @blur="e => paramChange(e.target.value)"
                     @change="paramChange"
-                    :step="state.options.step || 1"
                     class="mt-0 pt-0"
                     height="32"
                     hide-details
                     single-line
                     style="width: 60px; font-size: 12px"
                     type="number"
-                    :value="state.value"
                   />
                 </template>
               </v-slider>
@@ -225,6 +307,7 @@ export default Vue.extend({
       color: props.color,
       content: null,
       expertMode: false,
+      hintText: '',
       items: [
         {
           actions: [],
@@ -266,6 +349,16 @@ export default Vue.extend({
         },
         {
           actions: [],
+          append: true,
+          icon: 'mdi-pencil-outline',
+          title: 'Config slider',
+          onClick: () => {
+            state.content = 'configSlider';
+          },
+          visible: true,
+        },
+        {
+          actions: [],
           icon: 'mdi-eye-off-outline',
           title: 'Hide parameter',
           onClick: () => {
@@ -286,8 +379,10 @@ export default Vue.extend({
       options: props.param ? props.param['options'] : props.options,
       param: props.param as ModelParameter | Parameter | undefined,
       value: undefined,
-      showResolutionWarning: false,
+      showHint: false,
+      showConfig: false,
       valueGenerator: new ValueGenerator(),
+      warned: false,
     });
 
     /**
@@ -333,6 +428,13 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const paramChange = (value: any = undefined) => {
+      // if (state.value < state.options.min) {
+      //   state.options.min = state.value;
+      // }
+      // if (state.value > state.options.max) {
+      //   state.options.max = state.value;
+      // }
+
       let changed: boolean = true;
       if (typeof value === 'number') {
         // slider
@@ -360,9 +462,9 @@ export default Vue.extend({
      * Show parameter menu.
      */
     const showMenu = function (e: MouseEvent) {
+      e.preventDefault();
       if (this.param) {
         // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-        e.preventDefault();
         state.menu.show = false;
         state.menu.position.x = e.clientX;
         state.menu.position.y = e.clientY;
@@ -381,6 +483,30 @@ export default Vue.extend({
     };
 
     /**
+     * Increment value
+     */
+    const increment = e => {
+      if (e.ctrlKey) {
+        state.value += parseFloat(state.options.step) * 10 || 10;
+      } else {
+        state.value += parseFloat(state.options.step) || 1;
+      }
+      paramChange();
+    };
+
+    /**
+     * Increment value
+     */
+    const decrement = e => {
+      if (e.ctrlKey) {
+        state.value += parseFloat(state.options.step) * 10 || 10;
+      } else {
+        state.value -= parseFloat(state.options.step) || 1;
+      }
+      paramChange();
+    };
+
+    /**
      * Return to main menu content.
      */
     const backMenu = () => {
@@ -396,6 +522,17 @@ export default Vue.extend({
     };
 
     /**
+     * show menu items.
+     */
+    const showMenuItems = () => {
+      state.items[1].visible = state.options.input === 'arrayInput';
+      state.items[2].visible = ['valueSlider', 'arrayInput'].includes(
+        state.options.input
+      );
+      state.items[3].visible = state.options.input === 'valueSlider';
+    };
+
+    /**
      * Update param and expert mode.
      */
     const update = () => {
@@ -405,23 +542,44 @@ export default Vue.extend({
         state.options = props.param['options'];
         state.param = props.param as ModelParameter | Parameter;
         state.expertMode = !state.param.isConstant();
-        state.items[1].visible = 'arrayInput' === state.options.input;
-        state.items[2].visible = ['valueSlider', 'arrayInput'].includes(
-          state.options.input
-        );
       } else {
         state.options = props.options;
       }
+      showMenuItems();
     };
 
     /**
-     * (Re-)Checks if the warning about the simulation resolution should be
-     * shown.
+     * Rules for value validation.
      */
-    function updateResolutionWarningState() {
-      state.showResolutionWarning =
-        state.options.label === 'simulation resolution' && state.value < 1;
-    }
+    const rules = [
+      (v: number) => {
+        if (!state.warned) {
+          if (state.options.id === 'populationSize' && v > 500) {
+            state.hintText =
+              'Large population produce many data points which could cause a high system load and thus freezes and lags!';
+          } else if (state.options.id === 'simulationResolution' && v < 1) {
+            state.hintText =
+              'Small resolution values produce many data points which could cause a high system load and thus freezes and lags!';
+          } else if (state.options.id === 'interval' && v < 1) {
+            state.hintText =
+              'Small resolution values produce many data points which could cause a high system load and thus freezes and lags!';
+          } else if (state.options.id === 'simulationTime' && v > 1000) {
+            state.hintText =
+              'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!';
+          } else {
+            state.showHint = false;
+            return true;
+          }
+          state.showHint = true;
+          state.warned = true;
+          setTimeout(() => {
+            state.showHint = false;
+            state.hintText = '';
+          }, 5000);
+        }
+        return state.hintText || true;
+      },
+    ];
 
     onMounted(() => {
       update();
@@ -431,16 +589,18 @@ export default Vue.extend({
       () => [props.color, props.options, props.param, props.value],
       () => {
         update();
-        updateResolutionWarningState();
       }
     );
 
     return {
       backMenu,
+      decrement,
       generateValues,
+      increment,
       label,
       paramChange,
       paramExpertChange,
+      rules,
       showMenu,
       state,
     };
@@ -459,5 +619,13 @@ export default Vue.extend({
 
 .parameterEdit .v-slider__tick {
   font-size: 11px;
+}
+
+.parameterEdit .slider-icon {
+  display: none;
+}
+
+.parameterEdit:hover .slider-icon {
+  display: block;
 }
 </style>

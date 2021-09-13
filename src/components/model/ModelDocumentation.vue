@@ -1,5 +1,5 @@
 <template>
-  <div class="model" v-if="state.modelId">
+  <div class="modelDocumentation" v-if="state.modelId">
     <v-toolbar dense flat>
       <v-toolbar-title v-text="state.modelId" />
       <span
@@ -46,18 +46,29 @@ export default Vue.extend({
     id: String,
   },
   setup(props) {
-    const titles = [
-      'Short description',
-      'Description',
-      'Remarks',
-      'Parameters',
+    // Keywords taken from https://github.com/nest/nest-simulator/blob/master/extras/help_generator/generate_help.py#L73
+    const keywords = [
+      'Synopsis',
       'Examples',
-      'Problems/Todo',
+      'Description',
+      'Parameters',
+      'Options',
+      'Requires',
+      'Require',
       'Receives',
-      'Sends',
       'Transmits',
+      'Sends',
+      'Variants',
+      'Bugs',
+      'Diagnostics',
+      'Remarks',
+      'Availability',
       'References',
       'See also',
+      'Author',
+      'Authors',
+      'FirstVersion',
+      'Source',
       'EndUserDocs */',
     ];
 
@@ -97,9 +108,9 @@ export default Vue.extend({
           state.helptext = resp.data;
           const lines: string[] = state.helptext.split('\n');
           state.subtitle = lines[0].split(' – ')[1] || '';
-          let blocks: any[] = titles.map(title => [
-            lines.indexOf(title),
-            title,
+          let blocks: any[] = keywords.map(keyword => [
+            lines.indexOf(keyword),
+            keyword,
           ]);
           blocks = blocks.sort((a: any[], b: any[]) => a[0] - b[0]);
           blocks = blocks.filter(block => block[0] !== -1);
@@ -113,8 +124,8 @@ export default Vue.extend({
             content[block[1]] = lines.slice(start, end).join('\n');
           });
 
-          state.blocks = titles
-            .filter((title: string) => content[title])
+          state.blocks = keywords
+            .filter((keyword: string) => content[keyword])
             .map((title: string) => {
               return {
                 title,
