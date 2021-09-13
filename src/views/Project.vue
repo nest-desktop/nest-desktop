@@ -3,7 +3,6 @@
     <v-app-bar
       app
       class="no-print"
-      clipped-left
       clipped-right
       color="project"
       dark
@@ -167,7 +166,8 @@
       app
       class="no-print"
       clipped
-      mobile-breakpoint="56"
+      mobile-breakpoint="64"
+      mini-variant-width="64"
       permanent
       right
     >
@@ -175,8 +175,8 @@
         <v-navigation-drawer
           absolute
           mini-variant
-          mobile-breakpoint="56"
-          mini-variant-width="56"
+          mobile-breakpoint="64"
+          mini-variant-width="64"
           right
         >
           <!-- <v-list nav dense>
@@ -197,7 +197,7 @@
             </v-list-item>
           </v-list> -->
 
-          <v-list dense nav>
+          <v-list nav>
             <v-list-item
               :class="{
                 'v-list-item--active': state.tool === tool && state.toolOpened,
@@ -209,10 +209,8 @@
               v-show="tool.devMode ? core.app.config.devMode : true"
             >
               <v-list-item-icon>
-                <v-list-item-group
-                  style="text-align: center; width: 100%; font-size: 7px"
-                >
-                  <v-icon small v-text="tool.icon" />
+                <v-list-item-group class="nav-item-right">
+                  <v-icon v-text="tool.icon" />
                   <div v-text="tool.title" />
                 </v-list-item-group>
               </v-list-item-icon>
@@ -221,7 +219,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width: 100%; padding-right: 56px" v-if="state.toolOpened">
+        <div style="width: 100%; padding-right: 64px" v-if="state.toolOpened">
           <NetworkParamEdit
             :network="state.project.network"
             :projectId="state.projectId"
@@ -533,3 +531,11 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.project-container .nav-item-right {
+  text-align: center;
+  width: 100%;
+  font-size: 9px;
+}
+</style>

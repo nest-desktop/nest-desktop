@@ -8,8 +8,9 @@
     <v-navigation-drawer
       :miniVariant="state.miniVariant"
       app
-      clipped
-      mobile-breakpoint="56"
+      left
+      mobile-breakpoint="64"
+      mini-variant-width="64"
       permanent
       v-click-outside="
         () => {
@@ -19,17 +20,19 @@
           }
         }
       "
-      width="308"
+      width="320"
     >
       <v-row class="fill-height" no-gutters>
         <v-navigation-drawer
           absolute
+          app
           mini-variant
-          mini-variant-width="56"
-          mobile-breakpoint="56"
+          mini-variant-width="64"
+          mobile-breakpoint="64"
+          permanent
         >
           <div class="flex">
-            <v-list dense nav>
+            <v-list nav>
               <v-list-item
                 :class="{ 'v-list-item--active': state.navList === route.id }"
                 :color="route.color"
@@ -41,7 +44,7 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon small v-text="route.icon" />
+                    <v-icon v-text="route.icon" />
                     <div v-text="route.title" />
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -51,7 +54,7 @@
 
             <v-spacer />
 
-            <v-list nav dense>
+            <v-list nav>
               <template v-if="state.app.config.devMode">
                 <v-tooltip right>
                   <template #activator="{ on, attrs }">
@@ -73,7 +76,7 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon small v-text="'mdi-cogs'" />
+                    <v-icon v-text="'mdi-cogs'" />
                     Settings
                   </v-list-item-group>
                 </v-list-item-icon>
@@ -89,12 +92,12 @@
               >
                 <v-list-item-icon>
                   <v-list-item-group class="nav-item">
-                    <v-icon small v-text="'mdi-help-circle-outline'" />
+                    <v-icon v-text="'mdi-help-circle-outline'" />
                     Help
                   </v-list-item-group>
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title v-text="'Help'" />
+                  <v-list-item-title v-text="'Help'" class="text-h1" />
                 </v-list-item-content>
               </v-list-item>
 
@@ -108,7 +111,7 @@
                   >
                     <v-list-item-icon>
                       <v-list-item-group class="nav-item">
-                        <v-icon small v-text="'mdi-information-variant'" />
+                        <v-icon v-text="'mdi-information-variant'" />
                         About
                       </v-list-item-group>
                     </v-list-item-icon>
@@ -139,7 +142,7 @@
           </div>
         </v-navigation-drawer>
 
-        <div style="padding-left: 56px">
+        <div style="padding-left: 64px">
           <ProjectNavList v-if="state.navList === 'project'" />
           <ModelNavList v-if="state.navList === 'model'" />
           <SettingNavList v-if="state.navList === 'setting'" />
@@ -322,7 +325,7 @@ export default {
 }
 
 .navigation .nav-item {
-  font-size: 7px;
+  font-size: 9px;
   text-align: center;
   width: 100%;
 }
