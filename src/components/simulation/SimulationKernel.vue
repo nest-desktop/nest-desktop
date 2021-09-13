@@ -31,6 +31,7 @@
 
             <ParameterEdit
               :options="{
+                id: 'simulationResolution',
                 input: 'tickSlider',
                 label: 'simulation resolution',
                 ticks: [0.01, 0.1, 1, 10],
@@ -86,6 +87,7 @@
           >
             <ParameterEdit
               :options="{
+                id: 'simulationTime',
                 input: 'valueSlider',
                 label: 'simulation time',
                 max: 2000,
@@ -144,17 +146,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style>
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
-  z-index: 1000;
-}
-</style>

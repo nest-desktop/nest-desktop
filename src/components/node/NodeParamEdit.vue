@@ -8,6 +8,7 @@
       <ParameterEdit
         :color="state.node.view.color"
         :options="{
+          id: 'populationSize',
           input: 'valueSlider',
           label: 'population size',
           max: 1000,

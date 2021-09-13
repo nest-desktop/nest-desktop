@@ -147,4 +147,16 @@ export default Vue.extend({
 .fade-enter {
   opacity: 0;
 }
+
+.paramLabel {
+  color: black;
+  font-size: 12px;
+  font-weight: 400;
+  height: 12px;
+  left: -8px;
+  line-height: 12px;
+  pointer-events: none;
+  position: absolute;
+  top: 2px;
+}
 </style>
