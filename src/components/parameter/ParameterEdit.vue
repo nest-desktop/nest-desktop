@@ -207,8 +207,8 @@
                 <template #message>
                   <div
                     @click="closeMessage"
-                    class="mb-1"
-                    style="cursor: pointer"
+                    class="mb-1 mt-2"
+                    style="background-color: #eeeeee; cursor: pointer"
                   >
                     <v-divider />
                     <v-row class="mx-0 py-1">
@@ -260,9 +260,10 @@
                     @click="closeMessage"
                     class="mb-1"
                     style="
+                      background-color: #eeeeee;
                       cursor: pointer;
                       margin-left: -37px;
-                      margin-right: -97px;
+                      margin-right: -105px;
                     "
                   >
                     <v-divider />
@@ -309,7 +310,7 @@
                     :value="state.value"
                     @blur="e => paramChange(e.target.value)"
                     @change="paramChange"
-                    class="mt-0 pt-0"
+                    class="mt-0 ml-2 pt-0"
                     height="32"
                     hide-details
                     single-line
@@ -629,7 +630,7 @@ export default Vue.extend({
         if (state.message.length > 0) {
           state.timeoutId = setTimeout(() => {
             state.message = '';
-          }, 5000);
+          }, 7500);
         }
         return messageType === 'error' ? state.message : true;
       },
