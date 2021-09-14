@@ -189,7 +189,6 @@
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
-                :color="state.color"
                 :hide-details="state.message.length === 0"
                 :hint="state.message"
                 :max="state.options.ticks.length - 1"
