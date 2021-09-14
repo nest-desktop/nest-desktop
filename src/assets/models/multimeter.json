@@ -15,7 +15,7 @@
         [
           "warning",
           "value < 1",
-          "Small recording intervals produce many data points which could cause a high system load and thus freezes and lags!"
+          "Small recording interval produces many data points which could cause a high system load and thus freezes and lags!"
         ]
       ]
     },
