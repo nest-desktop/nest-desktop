@@ -620,7 +620,6 @@ export default Vue.extend({
           clearTimeout(state.timeoutId);
         }
         let messageType: string = '';
-        console.log(state.options.unit);
         if (state.options.unit && state.options.unit === 'ms' && value < 0) {
           messageType = 'error';
           state.message = `The ${state.options.label} cannot be negative.`;
