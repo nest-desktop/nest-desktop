@@ -81,7 +81,6 @@ export default Vue.extend({
       state.model = core.app.getModel(state.modelId);
       getParamDefaults().then(() => {
         const elementType: string = state.params['element_type'];
-        console.log(elementType);
         if (elementType !== 'neuron') {
           return;
         }
