@@ -5,7 +5,6 @@ import { Node } from '../node/node';
 import { Synapse } from '../connection/synapse';
 
 export class Parameter extends Config {
-  private _errorMessage: string; // error message if validated.
   private _factors: string[]; // not functional yet
   private _id: string;
   private _idx: number; // generative
@@ -34,7 +33,6 @@ export class Parameter extends Config {
 
     // optional param specifications
     this._rules = param.rules || [];
-    this._errorMessage = param.errorMessage || '';
     this._factors = param.factors || [];
     this._type = param.type || { id: 'constant' };
 
@@ -46,10 +44,6 @@ export class Parameter extends Config {
     this._step = param.step;
     this._ticks = param.ticks;
     this._unit = param.unit || '';
-  }
-
-  get errorMessage(): string {
-    return this._errorMessage;
   }
 
   get id(): string {
