@@ -16,9 +16,9 @@
           value: 1,
           rules: [
             [
-              'warning',
               'value >= 1000',
               'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
+              'warning',
             ],
           ],
         }"

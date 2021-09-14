@@ -38,9 +38,9 @@
                 unit: 'ms',
                 rules: [
                   [
-                    'warning',
                     'value < 1',
                     'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
+                    'warning',
                   ],
                 ],
               }"
@@ -104,9 +104,9 @@
                 value: 1000,
                 rules: [
                   [
-                    'warning',
                     'value >= 2000',
                     'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
+                    'warning',
                   ],
                 ],
               }"

@@ -13,9 +13,9 @@
       "ticks": [0.01, 0.1, 1, 10],
       "rules": [
         [
-          "warning",
           "value < 1",
-          "Small recording intervals produce many data points which could cause a high system load and thus freezes and lags!"
+          "Small recording intervals produce many data points which could cause a high system load and thus freezes and lags!",
+          "warning"
         ]
       ]
     },

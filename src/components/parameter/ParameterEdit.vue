@@ -625,8 +625,8 @@ export default Vue.extend({
           state.message = `The ${state.options.label} cannot be negative.`;
         } else if (state.options.rules !== undefined) {
           state.options.rules.forEach((rule: string[]) => {
-            messageType = eval(rule[1]) ? rule[0] : '';
-            state.message = eval(rule[1]) ? rule[2] : '';
+            state.message = eval(rule[0]) ? rule[1] : '';
+            messageType = eval(rule[0]) ? rule[2] : '';
           });
         }
         if (state.message.length > 0) {
