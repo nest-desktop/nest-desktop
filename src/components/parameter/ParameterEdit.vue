@@ -630,11 +630,11 @@ export default Vue.extend({
             state.message = eval(rule[1]) ? rule[2] : '';
           });
         }
-        // if (state.message.length > 0) {
-        //   state.timeoutId = setTimeout(() => {
-        //     state.message = '';
-        //   }, 5000);
-        // }
+        if (state.message.length > 0) {
+          state.timeoutId = setTimeout(() => {
+            state.message = '';
+          }, 5000);
+        }
         return messageType === 'error' ? state.message : true;
       },
     ];
