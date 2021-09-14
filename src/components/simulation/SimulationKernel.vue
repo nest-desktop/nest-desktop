@@ -35,6 +35,14 @@
                 input: 'tickSlider',
                 label: 'simulation resolution',
                 ticks: [0.01, 0.1, 1, 10],
+                unit: 'ms',
+                rules: [
+                  [
+                    'warning',
+                    'value < 1',
+                    'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
+                  ],
+                ],
               }"
               :value.sync="simulation.kernel.resolution"
               @update:value="paramChange"
@@ -51,7 +59,7 @@
               }"
               :value.sync="simulation.kernel.rngSeed"
               @update:value="paramChange"
-              class="mx-1 pa-1"
+              class="mx-1 py-1"
             />
 
             <ParameterEdit
@@ -91,8 +99,16 @@
                 input: 'valueSlider',
                 label: 'simulation time',
                 max: 2000,
-                min: 1,
+                min: 0,
+                unit: 'ms',
                 value: 1000,
+                rules: [
+                  [
+                    'warning',
+                    'value >= 2000',
+                    'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
+                  ],
+                ],
               }"
               :value.sync="simulation.time"
               @update:value="paramChange"

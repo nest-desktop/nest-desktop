@@ -225,7 +225,7 @@ export class Model extends Config {
     };
 
     // Add recordables if provided.
-    if (this.recordables.length > 0) {
+    if (this._recordables.length > 0) {
       model.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );
