@@ -1,15 +1,6 @@
 <template>
   <div model="model" v-if="state.model">
-    <v-app-bar
-      app
-      class="no-print"
-      clipped-left
-      clipped-right
-      color="model"
-      dark
-      dense
-      flat
-    >
+    <v-app-bar app class="no-print" clipped-right color="model" dark dense flat>
       <v-btn-toggle
         group
         light

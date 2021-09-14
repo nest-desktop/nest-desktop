@@ -189,11 +189,15 @@
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
-                :hide-details="!state.showHint"
+                :color="state.color"
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :max="state.options.ticks.length - 1"
+                :persistent-hint="state.message.length > 0"
                 :rules="rules"
                 :thumb-color="state.color"
                 :tick-labels="state.options.ticks"
+                :track-fill-color="state.color"
                 :value="state.value"
                 @change="paramChange"
                 class="mb-1"
@@ -201,7 +205,26 @@
                 height="40"
                 tick-size="4"
                 ticks="always"
-              />
+              >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="mb-1"
+                    style="cursor: pointer"
+                  >
+                    <v-divider />
+                    <v-row class="mx-0 py-1">
+                      <v-col class="text-center" cols="2">
+                        <v-icon large right v-text="'mdi-alert-outline'" />
+                      </v-col>
+                      <v-col cols="10">
+                        <div v-text="state.message" />
+                      </v-col>
+                    </v-row>
+                    <v-divider />
+                  </div>
+                </template>
+              </v-slider>
             </template>
 
             <template v-if="state.options.input === 'valueInput'">
@@ -220,21 +243,46 @@
             <template v-if="state.options.input === 'valueSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
-                :hide-details="!state.showHint"
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :max="state.options.max || 1"
                 :min="state.options.min || 0"
+                :persistent-hint="state.message.length > 0"
                 :rules="rules"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
+                :track-fill-color="state.color"
                 :value="state.value"
                 @change="paramChange"
                 dense
                 height="40"
                 thumb-label
               >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="mb-1"
+                    style="
+                      cursor: pointer;
+                      margin-left: -37px;
+                      margin-right: -97px;
+                    "
+                  >
+                    <v-divider />
+                    <v-row class="mx-0 py-1">
+                      <v-col class="text-center" cols="2">
+                        <v-icon large right v-text="'mdi-alert-outline'" />
+                      </v-col>
+                      <v-col cols="10">
+                        <div v-text="state.message" />
+                      </v-col>
+                    </v-row>
+                    <v-divider />
+                  </div>
+                </template>
                 <template #prepend>
                   <v-btn
-                    :disabled="state.value <= state.options.min"
+                    :disabled="state.value <= state.options.min && false"
                     @click="decrement"
                     icon
                     small
@@ -248,7 +296,7 @@
                 </template>
                 <template #append>
                   <v-btn
-                    :disabled="state.value >= state.options.max"
+                    :disabled="state.value >= state.options.max && false"
                     @click="increment"
                     icon
                     small
@@ -307,7 +355,6 @@ export default Vue.extend({
       color: props.color,
       content: null,
       expertMode: false,
-      hintText: '',
       items: [
         {
           actions: [],
@@ -376,13 +423,13 @@ export default Vue.extend({
           y: 0,
         },
       },
+      message: '',
       options: props.param ? props.param['options'] : props.options,
       param: props.param as ModelParameter | Parameter | undefined,
-      value: undefined,
-      showHint: false,
       showConfig: false,
+      timeoutId: undefined,
+      value: undefined,
       valueGenerator: new ValueGenerator(),
-      warned: false,
     });
 
     /**
@@ -479,13 +526,18 @@ export default Vue.extend({
      * Parameter label.
      */
     const label = () => {
-      return state.param ? state.param.title : state.options.label;
+      if (state.param) {
+        return state.param.title;
+      } else {
+        let text = state.options.label;
+        return state.options.unit ? text + ` (${state.options.unit})` : text;
+      }
     };
 
     /**
      * Increment value
      */
-    const increment = e => {
+    const increment = (e: any) => {
       if (e.ctrlKey) {
         state.value += parseFloat(state.options.step) * 10 || 10;
       } else {
@@ -497,7 +549,7 @@ export default Vue.extend({
     /**
      * Increment value
      */
-    const decrement = e => {
+    const decrement = (e: any) => {
       if (e.ctrlKey) {
         state.value += parseFloat(state.options.step) * 10 || 10;
       } else {
@@ -545,39 +597,45 @@ export default Vue.extend({
       } else {
         state.options = props.options;
       }
+      state.options.errorMessages = [];
       showMenuItems();
+    };
+
+    /**
+     * Close message text.
+     */
+    const closeMessage = () => {
+      if (state.timeoutId) {
+        clearTimeout(state.timeoutId);
+      }
+      state.message = '';
     };
 
     /**
      * Rules for value validation.
      */
     const rules = [
-      (v: number) => {
-        if (!state.warned) {
-          if (state.options.id === 'populationSize' && v > 500) {
-            state.hintText =
-              'Large population produce many data points which could cause a high system load and thus freezes and lags!';
-          } else if (state.options.id === 'simulationResolution' && v < 1) {
-            state.hintText =
-              'Small resolution values produce many data points which could cause a high system load and thus freezes and lags!';
-          } else if (state.options.id === 'interval' && v < 1) {
-            state.hintText =
-              'Small resolution values produce many data points which could cause a high system load and thus freezes and lags!';
-          } else if (state.options.id === 'simulationTime' && v > 1000) {
-            state.hintText =
-              'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!';
-          } else {
-            state.showHint = false;
-            return true;
-          }
-          state.showHint = true;
-          state.warned = true;
-          setTimeout(() => {
-            state.showHint = false;
-            state.hintText = '';
-          }, 5000);
+      (value: number) => {
+        if (state.timeoutId) {
+          clearTimeout(state.timeoutId);
         }
-        return state.hintText || true;
+        let messageType: string = '';
+        console.log(state.options.unit);
+        if (state.options.unit && state.options.unit === 'ms' && value < 0) {
+          messageType = 'error';
+          state.message = `The ${state.options.label} cannot be negative.`;
+        } else if (state.options.rules !== undefined) {
+          state.options.rules.forEach((rule: string[]) => {
+            messageType = eval(rule[1]) ? rule[0] : '';
+            state.message = eval(rule[1]) ? rule[2] : '';
+          });
+        }
+        // if (state.message.length > 0) {
+        //   state.timeoutId = setTimeout(() => {
+        //     state.message = '';
+        //   }, 5000);
+        // }
+        return messageType === 'error' ? state.message : true;
       },
     ];
 
@@ -593,6 +651,7 @@ export default Vue.extend({
     );
 
     return {
+      closeMessage,
       backMenu,
       decrement,
       generateValues,

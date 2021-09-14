@@ -5,6 +5,7 @@ import { Node } from '../node/node';
 import { Synapse } from '../connection/synapse';
 
 export class Parameter extends Config {
+  private _errorMessage: string; // error message if validated.
   private _factors: string[]; // not functional yet
   private _id: string;
   private _idx: number; // generative
@@ -14,6 +15,7 @@ export class Parameter extends Config {
   private _min: number;
   private _parent: Connection | Model | Node | Synapse; // parent
   private _readonly: boolean;
+  private _rules: string[][];
   private _step: number;
   private _ticks: any[];
   private _type: any = { id: 'constant' };
@@ -31,6 +33,8 @@ export class Parameter extends Config {
     this._visible = param.visible !== undefined ? param.visible : false;
 
     // optional param specifications
+    this._rules = param.rules || [];
+    this._errorMessage = param.errorMessage || '';
     this._factors = param.factors || [];
     this._type = param.type || { id: 'constant' };
 
@@ -42,6 +46,10 @@ export class Parameter extends Config {
     this._step = param.step;
     this._ticks = param.ticks;
     this._unit = param.unit || '';
+  }
+
+  get errorMessage(): string {
+    return this._errorMessage;
   }
 
   get id(): string {
@@ -98,6 +106,10 @@ export class Parameter extends Config {
 
   get readonly(): boolean {
     return this._readonly;
+  }
+
+  get rules(): string[][] {
+    return this._rules;
   }
 
   get specs(): any[] {
@@ -285,17 +297,32 @@ export class Parameter extends Config {
    * @return parameter object
    */
   toJSON(): any {
-    const params: any = {
+    const param: any = {
       id: this._id,
       value: this._value,
       visible: this._visible,
     };
+
+    // Add value factors if existed
     if (this._factors.length > 0) {
-      params.factors = this._factors;
+      param.factors = this._factors;
     }
+
+    // Add error message if existed.
+    if (this._errorMessage.length > 0) {
+      param.errorMessage = this._errorMessage;
+    }
+
+    // Add rules for validation if existed.
+    if (this._rules.length > 0) {
+      param.rules = this._rules;
+    }
+
+    // Add param type if not constant.
     if (!this.isConstant()) {
-      params.type = this._type;
+      param.type = this._type;
     }
-    return params;
+
+    return param;
   }
 }
