@@ -42,7 +42,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
-import axios from 'axios';
 
 import { App } from '@/core/app';
 import { Model } from '@/core/model/model';
