@@ -197,7 +197,6 @@
                 :rules="rules"
                 :thumb-color="state.color"
                 :tick-labels="state.options.ticks"
-                :track-fill-color="state.color"
                 :value="state.value"
                 @change="paramChange"
                 class="mb-1"
@@ -251,7 +250,6 @@
                 :rules="rules"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
-                :track-fill-color="state.color"
                 :value="state.value"
                 @change="paramChange"
                 dense
