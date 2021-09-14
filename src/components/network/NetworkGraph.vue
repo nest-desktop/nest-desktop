@@ -286,6 +286,7 @@ export default Vue.extend({
       const elem: any = refs.networkGraph['parentNode'];
       if (elem) {
         state.graph.resize(elem.clientWidth, elem.clientHeight);
+        state.graph.transform();
       }
     };
 
