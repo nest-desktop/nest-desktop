@@ -82,11 +82,6 @@ export class ModelParameter extends Parameter {
       }
     }
 
-    // Add error message if existed.
-    if (this.errorMessage.length > 0) {
-      param.errorMessage = this.errorMessage;
-    }
-
     // Add rules for validation if existed.
     if (this.rules.length > 0) {
       param.rules = this.rules;

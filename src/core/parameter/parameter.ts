@@ -308,11 +308,6 @@ export class Parameter extends Config {
       param.factors = this._factors;
     }
 
-    // Add error message if existed.
-    if (this._errorMessage.length > 0) {
-      param.errorMessage = this._errorMessage;
-    }
-
     // Add rules for validation if existed.
     if (this._rules.length > 0) {
       param.rules = this._rules;
