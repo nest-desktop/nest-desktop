@@ -48,7 +48,6 @@
       sticky
     >
       <v-btn-toggle
-        :max="4"
         dense
         group
         mandatory
