@@ -58,7 +58,7 @@
       "id": "V_m",
       "label": "initial membrane potential",
       "unit": "mV",
-      "value": -70,
+      "value": -65,
       "input": "valueSlider",
       "max": 100,
       "min": -100,

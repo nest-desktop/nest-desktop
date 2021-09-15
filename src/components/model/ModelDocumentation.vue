@@ -40,6 +40,9 @@ import axios from 'axios';
 
 import core from '@/core';
 
+/**
+ * Model ducoumenation shows documentation of a model.
+ */
 export default Vue.extend({
   name: 'ModelDocumentation',
   props: {
