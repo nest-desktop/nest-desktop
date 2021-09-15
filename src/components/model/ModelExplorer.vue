@@ -51,6 +51,9 @@ import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 import core from '@/core';
 
+/**
+ * Model explorer shows activity of a neuron model.
+ */
 export default Vue.extend({
   name: 'ModelExplorer',
   components: {
@@ -62,11 +65,12 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      modelId: '',
       model: undefined as Model | undefined,
-      project: undefined as Project | undefined,
-      params: {},
+      modelId: '',
       paramList: [],
+      params: {},
+      project: undefined as Project | undefined,
+      script: '',
     });
 
     const initProject = () => {
@@ -74,55 +78,58 @@ export default Vue.extend({
       state.project = new Project(core.app as App, data);
     };
 
-    const initModel = (id: string) => {
+    const initModel = () => {
       state.project.activityGraph.emptyActivityGraph();
-      state.modelId = id;
       state.model = core.app.getModel(state.modelId);
-      getParamDefaults().then(() => {
-        const elementType: string = state.params['element_type'];
-        if (elementType !== 'neuron') {
-          return;
-        }
-        const node = state.project.network.nodes[1];
-        node.modelId = state.modelId;
-        state.project.runSimulation();
-      });
+      getParamDefaults();
     };
 
     const getParamDefaults = () => {
-      return new Promise((resolve, reject) => {
-        state.model
-          .fetchDefaults()
-          .then((resp: any) => {
-            state.params = JSON.parse(resp.responseText);
-            state.paramList = Object.keys(state.params).map((param: string) => {
-              return { id: param, value: state.params[param] };
-            });
-            resolve(true);
-          })
-          .catch(() => {
-            reject(true);
+      state.model
+        .fetchDefaults()
+        .then((resp: any) => {
+          const responseText = resp.responseText.replace(
+            /(NaN|-?Infinity)/g,
+            '"$1"'
+          );
+          state.params = JSON.parse(responseText);
+          state.paramList = Object.keys(state.params).map((param: string) => {
+            return { id: param, value: state.params[param] };
           });
-      });
+          paramChange();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     };
 
     const paramChange = () => {
+      const elementType: string = state.params['element_type'];
+      if (elementType !== 'neuron') {
+        return;
+      }
       const node = state.project.network.nodes[1];
+      node.modelId = state.modelId;
       node.params = state.model.params;
       node.params.forEach(param => (param.visible = true));
       node.nodeChanges();
-      state.project.runSimulation();
+      state.script = state.project.code.script;
+      state.project.runSimulation().then(() => {
+        state.project.checkActivities();
+      });
     };
 
     onMounted(() => {
       initProject();
-      initModel(props.id as string);
+      state.modelId = props.id as string;
+      initModel();
     });
 
     watch(
       () => props.id,
       (id: string) => {
-        initModel(id as string);
+        state.modelId = id as string;
+        initModel();
       }
     );
     return { getParamDefaults, paramChange, state };
