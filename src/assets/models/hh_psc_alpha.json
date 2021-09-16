@@ -1,12 +1,12 @@
 {
   "id": "hh_psc_alpha",
-  "element_type": "neuron",
+  "elementType": "neuron",
   "label": "HH psc alpha",
   "recordables": ["Act_m", "Act_n", "I_syn_ex", "I_syn_in", "Inact_h", "V_m"],
   "params": [
     {
       "id": "C_m",
-      "label": "capacitance of the membrane",
+      "label": "capacity of the membrane",
       "unit": "pF",
       "value": 100,
       "input": "valueSlider",

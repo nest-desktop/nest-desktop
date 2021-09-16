@@ -1,7 +1,7 @@
 {
   "abbreviation": "sr",
   "id": "spike_recorder",
-  "element_type": "recorder",
+  "elementType": "recorder",
   "label": "spike recorder",
   "params": [
     {

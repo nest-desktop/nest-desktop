@@ -1,6 +1,6 @@
 {
   "id": "static_synapse",
-  "element_type": "synapse",
+  "elementType": "synapse",
   "label": "static synapse",
   "params": [
     {
