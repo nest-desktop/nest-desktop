@@ -1,7 +1,7 @@
 {
-  "abbreviation": "gwn",
+  "abbreviation": "noise",
   "id": "noise_generator",
-  "element_type": "stimulator",
+  "elementType": "stimulator",
   "label": "Gaussian white noise",
   "recordables": ["I"],
   "params": [

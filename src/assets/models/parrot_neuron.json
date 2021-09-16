@@ -1,6 +1,6 @@
 {
   "id": "parrot_neuron",
-  "element_type": "neuron",
+  "elementType": "neuron",
   "label": "parrot neuron",
   "params": []
 }

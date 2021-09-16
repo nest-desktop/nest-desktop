@@ -1,6 +1,6 @@
 {
   "id": "iaf_psc_alpha",
-  "element_type": "neuron",
+  "elementType": "neuron",
   "label": "IAF psc alpha",
   "recordables": [
     "I_syn_ex",
@@ -12,7 +12,7 @@
   "params": [
     {
       "id": "C_m",
-      "label": "capacitance of the membrane",
+      "label": "capacity of the membrane",
       "unit": "pF",
       "value": 250,
       "input": "valueSlider",
