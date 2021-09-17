@@ -24,6 +24,9 @@ import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 import core from '@/core';
 
+/**
+ * Model editor to configure models.
+ */
 export default Vue.extend({
   name: 'ModelEditor',
   components: {
