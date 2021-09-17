@@ -1,8 +1,8 @@
 {
-  "abbreviation": "noise",
+  "abbreviation": "ng",
   "id": "noise_generator",
   "elementType": "stimulator",
-  "label": "Gaussian white noise",
+  "label": "noise generator (Gaussian white noise)",
   "recordables": ["I"],
   "params": [
     {

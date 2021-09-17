@@ -1,4 +1,5 @@
 {
+  "abbreviation": "sc",
   "id": "step_current_generator",
   "elementType": "stimulator",
   "label": "step current generator",
