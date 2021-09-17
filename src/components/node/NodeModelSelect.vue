@@ -12,7 +12,7 @@
           v-bind="attrs"
           v-on="on"
         >
-          {{ state.node.model.label }}
+          <span v-text="state.node.model.label" />
           <v-spacer />
           <v-icon class="modelEdit" right v-text="'mdi-pencil'" />
         </v-btn>
