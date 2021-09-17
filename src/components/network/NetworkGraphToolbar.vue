@@ -85,11 +85,17 @@
               <v-card-title v-text="'Are you sure to delete this network?'" />
               <v-card-actions>
                 <v-spacer />
-                <v-btn @click="state.dialog = false" text v-text="'close'" />
+                <v-btn
+                  @click="state.dialog = false"
+                  small
+                  outlined
+                  text
+                  v-text="'close'"
+                />
                 <v-btn
                   @click="deleteNetwork"
-                  color="warning"
-                  text
+                  small
+                  outlined
                   v-text="'delete'"
                 />
               </v-card-actions>

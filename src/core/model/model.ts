@@ -93,6 +93,18 @@ export class Model extends Config {
   }
 
   /**
+   * Get defaults of the model from NEST Simulator.
+   */
+  fetchDefaults(): Promise<any> {
+    return this.app.nestServer.httpClient.post(
+      this.app.nestServer.url + '/api/GetDefaults',
+      {
+        model: this._id,
+      }
+    );
+  }
+
+  /**
    * Get parameter of the model.
    */
   getParameter(id: string): ModelParameter {
@@ -213,7 +225,7 @@ export class Model extends Config {
     };
 
     // Add recordables if provided.
-    if (this.recordables.length > 0) {
+    if (this._recordables.length > 0) {
       model.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );

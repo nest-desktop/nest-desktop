@@ -8,11 +8,19 @@
       <ParameterEdit
         :color="state.node.view.color"
         :options="{
+          id: 'populationSize',
           input: 'valueSlider',
           label: 'population size',
           max: 1000,
           min: 1,
           value: 1,
+          rules: [
+            [
+              'value >= 1000',
+              'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
+              'warning',
+            ],
+          ],
         }"
         :value.sync="state.node.size"
         @update:value="paramChange()"

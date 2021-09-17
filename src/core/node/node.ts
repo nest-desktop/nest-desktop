@@ -130,6 +130,10 @@ export class Node extends Config {
     return this._params;
   }
 
+  set params(values: any[]) {
+    this._params = values.map(value => new ModelParameter(this, value));
+  }
+
   get positions(): number[][] {
     return this._positions;
   }

@@ -14,6 +14,7 @@ export class Parameter extends Config {
   private _min: number;
   private _parent: Connection | Model | Node | Synapse; // parent
   private _readonly: boolean;
+  private _rules: string[][];
   private _step: number;
   private _ticks: any[];
   private _type: any = { id: 'constant' };
@@ -31,6 +32,7 @@ export class Parameter extends Config {
     this._visible = param.visible !== undefined ? param.visible : false;
 
     // optional param specifications
+    this._rules = param.rules || [];
     this._factors = param.factors || [];
     this._type = param.type || { id: 'constant' };
 
@@ -98,6 +100,10 @@ export class Parameter extends Config {
 
   get readonly(): boolean {
     return this._readonly;
+  }
+
+  get rules(): string[][] {
+    return this._rules;
   }
 
   get specs(): any[] {
@@ -285,17 +291,27 @@ export class Parameter extends Config {
    * @return parameter object
    */
   toJSON(): any {
-    const params: any = {
+    const param: any = {
       id: this._id,
       value: this._value,
       visible: this._visible,
     };
+
+    // Add value factors if existed
     if (this._factors.length > 0) {
-      params.factors = this._factors;
+      param.factors = this._factors;
     }
+
+    // Add rules for validation if existed.
+    if (this._rules.length > 0) {
+      param.rules = this._rules;
+    }
+
+    // Add param type if not constant.
     if (!this.isConstant()) {
-      params.type = this._type;
+      param.type = this._type;
     }
-    return params;
+
+    return param;
   }
 }

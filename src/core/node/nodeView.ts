@@ -51,25 +51,34 @@ export class NodeView {
       return this._label;
     }
 
+    let idx: number;
     const elementType: string = this._node.model.elementType;
-    if (elementType === undefined) {
-      const idx: number = this._node.network.nodes.indexOf(this._node);
-      return 'n' + (idx + 1);
-    } else if (elementType === 'neuron') {
-      const idx: number = this._node.network.neurons.indexOf(this._node);
-      return 'n' + (idx + 1);
-    } else {
-      const nodes: Node[] = this._node.network.nodes.filter(
-        (node: Node) => node.modelId === this._node.modelId
-      );
-      const idx: number = nodes.indexOf(this._node);
-      const label: string =
-        this._node.model.abbreviation ||
-        this._node.modelId
-          .split('_')
-          .map((d: string) => d[0])
-          .join('');
-      return label + (idx + 1);
+    switch (elementType) {
+      case undefined:
+        idx = this._node.network.nodes.indexOf(this._node);
+        return 'n' + (idx + 1);
+      // case 'stimulator':
+      //   idx = this._node.network.stimulators.indexOf(this._node);
+      //   const varname: string = this._node.modelId.slice(
+      //     0,
+      //     this._node.modelId.length - 10
+      //   );
+      //   return varname + (idx + 1);
+      case 'neuron':
+        idx = this._node.network.neurons.indexOf(this._node);
+        return 'n' + (idx + 1);
+      default:
+        const nodes: Node[] = this._node.network.nodes.filter(
+          (node: Node) => node.modelId === this._node.modelId
+        );
+        idx = nodes.indexOf(this._node);
+        const label: string =
+          this._node.model.abbreviation ||
+          this._node.modelId
+            .split('_')
+            .map((d: string) => d[0])
+            .join('');
+        return label + (idx + 1);
     }
   }
 

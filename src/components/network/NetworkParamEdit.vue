@@ -63,7 +63,7 @@
         />
         <v-menu :close-on-content-click="false" :max-height="600" offset-y>
           <template #activator="{ on, attrs }">
-            <v-btn small v-text="'Custom'" v-bind="attrs" v-on="on" />
+            <v-btn small v-text="'custom'" v-bind="attrs" v-on="on" />
           </template>
 
           <v-card :width="280">

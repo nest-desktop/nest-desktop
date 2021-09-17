@@ -31,9 +31,18 @@
 
             <ParameterEdit
               :options="{
+                id: 'simulationResolution',
                 input: 'tickSlider',
                 label: 'simulation resolution',
                 ticks: [0.01, 0.1, 1, 10],
+                unit: 'ms',
+                rules: [
+                  [
+                    'value < 1',
+                    'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
+                    'warning',
+                  ],
+                ],
               }"
               :value.sync="simulation.kernel.resolution"
               @update:value="paramChange"
@@ -50,7 +59,7 @@
               }"
               :value.sync="simulation.kernel.rngSeed"
               @update:value="paramChange"
-              class="mx-1 pa-1"
+              class="mx-1 py-1"
             />
 
             <ParameterEdit
@@ -86,11 +95,20 @@
           >
             <ParameterEdit
               :options="{
+                id: 'simulationTime',
                 input: 'valueSlider',
                 label: 'simulation time',
                 max: 2000,
-                min: 1,
+                min: 0,
+                unit: 'ms',
                 value: 1000,
+                rules: [
+                  [
+                    'value >= 2000',
+                    'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
+                    'warning',
+                  ],
+                ],
               }"
               :value.sync="simulation.time"
               @update:value="paramChange"
@@ -144,17 +162,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style>
-.paramLabel {
-  color: black;
-  font-size: 12px;
-  font-weight: 400;
-  height: 12px;
-  left: -8px;
-  line-height: 12px;
-  position: absolute;
-  top: 2px;
-  z-index: 1000;
-}
-</style>
