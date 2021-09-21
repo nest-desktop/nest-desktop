@@ -387,10 +387,10 @@ export default Vue.extend({
           icon: 'mdi-code-braces',
           name: 'dataJSON',
           title: 'Data',
-          width: '570',
+          width: '530',
           devMode: true,
         },
-        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '570' },
+        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '530' },
         {
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
@@ -401,7 +401,7 @@ export default Vue.extend({
           icon: 'mdi-table-large',
           name: 'activityStats',
           title: 'Statistics',
-          width: '500',
+          width: '440',
         },
       ],
     });
