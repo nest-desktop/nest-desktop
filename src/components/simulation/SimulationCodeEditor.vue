@@ -80,7 +80,7 @@ export default Vue.extend({
   border: 1px solid #eee;
   font-family: monospace;
   font-size: 12px;
-  width: 468px;
+  width: 438px;
   height: calc(100vh - 48px);
 }
 </style>
