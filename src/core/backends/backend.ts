@@ -48,11 +48,11 @@ export class Backend extends Config {
   }
 
   /**
-   * The url variable stores the NEST Server URL by splitting it into hostname
+   * The url variable stores the URL of the backend by splitting it into hostname
    * and protocol. Beware: A correct URL has to contain a '//' delimiter,
    * otherwise the empty string is used.
    *
-   * @returns NEST Server URL (or empty string if undefined)
+   * @returns the URL of the backend (or empty string if undefined)
    */
   get url(): string {
     if (
@@ -66,7 +66,7 @@ export class Backend extends Config {
   }
 
   /**
-   * The url variable stores the NEST Server URL by splitting it into hostname
+   * The url variable stores the URL of the backend by splitting it into hostname
    * and protocol. Beware: A correct URL has to contain a '//' delimiter,
    * otherwise the empty string is used.
    *

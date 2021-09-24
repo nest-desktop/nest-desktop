@@ -18,7 +18,7 @@ import { upgradeProject } from './projectUpgrade';
 export class Project extends Config {
   private _activityGraph: ActivityGraph;
   private _app: App; // parent
-  private _code: ProjectCode; // code script for NEST Server
+  private _code: ProjectCode; // code script for NEST Simulator
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _errorMessage = '';
@@ -420,8 +420,8 @@ export class Project extends Config {
       this._code.generate();
     }
     this._simulation.running = true;
-    return this.app.nestServer.httpClient
-      .post(this._app.nestServer.url + '/exec', {
+    return this.app.NESTSimulator.httpClient
+      .post(this._app.NESTSimulator.url + '/exec', {
         source: this._code.script,
         return: 'response',
       })
@@ -429,7 +429,7 @@ export class Project extends Config {
         let data: any;
         switch (resp.status) {
           case 0:
-            this._errorMessage = 'Failed to find NEST Server.';
+            this._errorMessage = 'Failed to find the server of NEST Simulator.';
             break;
           case 200:
             data = JSON.parse(resp.response).data;

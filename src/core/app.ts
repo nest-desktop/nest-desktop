@@ -3,7 +3,7 @@ import { AppView } from './appView';
 import { Config } from './config';
 import { DatabaseService } from './database';
 import { Model } from './model/model';
-import { NESTServer } from './backends/nest';
+import { NESTSimulator } from './backends/nestSimulator';
 import { Project } from './project/project';
 
 import { environment } from '../environments/environment';
@@ -19,7 +19,7 @@ const pad = (num: number, size: number = 2): string => {
 export class App extends Config {
   private _modelDB: DatabaseService;
   private _models: Model[] = [];
-  private _nestServer: NESTServer;
+  private _NESTSimulator: NESTSimulator;
   private _project: Project;
   private _projectDB: DatabaseService;
   private _projectRevisions: Project[] = [];
@@ -32,7 +32,7 @@ export class App extends Config {
     super('App');
     this._version = environment.VERSION;
     this._view = new AppView(this);
-    this._nestServer = new NESTServer();
+    this._NESTSimulator = new NESTSimulator();
   }
 
   get datetime(): string {
@@ -59,8 +59,8 @@ export class App extends Config {
     return this._modelDB;
   }
 
-  get nestServer(): NESTServer {
-    return this._nestServer;
+  get NESTSimulator(): NESTSimulator {
+    return this._NESTSimulator;
   }
 
   get ready(): boolean {

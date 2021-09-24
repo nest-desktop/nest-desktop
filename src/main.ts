@@ -35,9 +35,25 @@ Vue.use(VueCodemirror);
 // Production
 Vue.config.productionTip = false;
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App),
-}).$mount('#app');
+/**
+ * initialize app.
+ */
+const initApp = () => {
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: h => h(App),
+  }).$mount('#app');
+};
+
+// Load data for global config.
+fetch(process.env.BASE_URL + 'config.json')
+  .then(response => response.json())
+  .then(config => {
+    Vue.prototype.$config = config;
+    initApp();
+  })
+  .catch(() => {
+    initApp();
+  });

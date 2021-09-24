@@ -1,6 +1,6 @@
 import { Backend } from './backend';
 
-export class NESTServer extends Backend {
+export class NESTSimulator extends Backend {
   private _state: any = {
     serverReady: false,
     simulatorReady: false,
@@ -8,7 +8,7 @@ export class NESTServer extends Backend {
   };
 
   constructor() {
-    super('NESTServer');
+    super('NESTSimulator');
   }
 
   get state(): any {
@@ -16,11 +16,11 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * Check if the nest backend is served.
+   * Check if the NEST Simulator is serving.
    */
   check(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      // console.log('Check backend')
+      // console.log('Check NEST Simulator')
       if (this.config.hostname) {
         this.ping(
           this.url,
@@ -36,13 +36,14 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * Seek the url of NEST Server.
+   * Seek the server URL of NEST Simulator.
    */
   seek(): Promise<any> {
-    // console.log('seek nest server');
+    // console.log('seek the server of NEST Simulator');
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
-    const hosts: string[] = [hostname + ':5000', hostname + '/nest'];
+    const port: string = this.port || '5000';
+    const hosts: string[] = [hostname + ':' + port, hostname + '/nest'];
     const hostPromises: any[] = hosts.map(
       (host: string) =>
         new Promise<void>((resolve, reject) => {
@@ -58,7 +59,7 @@ export class NESTServer extends Backend {
   }
 
   /**
-   * Ping the NEST Server.
+   * Ping the server of NEST Simulator.
    * @param url The URL which should be pinged.
    * @param callbackFail Function to execute in case of ping failure
    * @param callbackSucc Function to execute in case of ping success
@@ -68,7 +69,7 @@ export class NESTServer extends Backend {
     callbackFail: any = false,
     callbackSucc: any = false
   ): void {
-    // console.log('ping nest server');
+    // console.log('ping the server of NEST Simulator');
     this._state.serverReady = false;
 
     this.httpClient.ping(url, (req: any) => {
