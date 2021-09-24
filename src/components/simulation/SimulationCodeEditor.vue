@@ -45,6 +45,7 @@ export default Vue.extend({
   setup(props) {
     const simulationCodeEditor = ref(null);
     const codeMirror = ref(null);
+
     const state = reactive({
       code: props.code as ProjectCode,
       width: 300,
@@ -68,6 +69,9 @@ export default Vue.extend({
       },
     };
 
+    /**
+     * Resize CodeMirror.
+     */
     const resizeCodeMirror = () => {
       const height = simulationCodeEditor.value.clientHeight;
       const width = simulationCodeEditor.value.clientWidth;
