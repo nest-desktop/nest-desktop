@@ -346,8 +346,8 @@ export default {
     };
 
     return {
-      resizeSidebar,
       reset,
+      resizeSidebar,
       routes,
       state,
       toggle,
