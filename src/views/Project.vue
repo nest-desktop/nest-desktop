@@ -162,6 +162,7 @@
 
     <v-navigation-drawer
       :mini-variant="!state.toolOpened"
+      :style="{ transition: state.resizing ? 'initial' : '' }"
       :width="state.tool.width"
       app
       class="no-print"
@@ -171,6 +172,11 @@
       permanent
       right
     >
+      <div
+        @mousedown="resizeSidebar"
+        class="resize-handle"
+        v-if="state.toolOpened"
+      />
       <v-row class="fill-height ml-0" no-gutters>
         <v-navigation-drawer
           absolute
@@ -359,6 +365,7 @@ export default Vue.extend({
       networkGraphHeight: 'calc(100vh - 48px)',
       projectId: props.id as string,
       project: undefined as Project | undefined,
+      resizing: false,
       simulationMenu: {
         position: { x: 0, y: 0 },
         show: false,
@@ -366,42 +373,37 @@ export default Vue.extend({
       toolOpened: false,
       tool: undefined,
       tools: [
-        // {
-        //   icon: '$network',
-        //   name: 'networkParamSelect',
-        //   title: 'Network',
-        // },
         {
           icon: '$network',
           name: 'networkParamEdit',
           title: 'Network',
-          width: '440',
+          width: 440,
         },
         {
           icon: 'mdi-engine-outline',
           name: 'simulationKernel',
           title: 'Kernel',
-          width: '440',
+          width: 440,
         },
         {
           icon: 'mdi-code-braces',
           name: 'dataJSON',
           title: 'Data',
-          width: '570',
           devMode: true,
+          width: 575,
         },
-        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '570' },
+        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: 575 },
         {
           icon: 'mdi-chart-scatter-plot',
           name: 'activityEdit',
           title: 'Activity',
-          width: '440',
+          width: 440,
         },
         {
           icon: 'mdi-table-large',
           name: 'activityStats',
           title: 'Statistics',
-          width: '500',
+          width: 440,
         },
       ],
     });
@@ -505,6 +507,27 @@ export default Vue.extend({
       state.tool = state.tools[0];
     };
 
+    const handleMouseMove = (e: MouseEvent) => {
+      window.getSelection().removeAllRanges();
+      const width = window.innerWidth - e.clientX;
+      if (width > 440) {
+        state.tool.width = width;
+        window.dispatchEvent(new Event('resize'));
+      }
+    };
+
+    const handleMouseUp = () => {
+      state.resizing = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    const resizeSidebar = () => {
+      state.resizing = true;
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    };
+
     onMounted(() => {
       reset();
       state.projectId = props.id as string;
@@ -523,6 +546,7 @@ export default Vue.extend({
       core,
       countAfter,
       countBefore,
+      resizeSidebar,
       selectActivityGraph,
       selectTool,
       state,
@@ -537,5 +561,14 @@ export default Vue.extend({
   text-align: center;
   width: 100%;
   font-size: 9px;
+}
+
+.project-container .resize-handle {
+  cursor: ew-resize;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  width: 4px;
+  z-index: 10;
 }
 </style>
