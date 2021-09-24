@@ -315,6 +315,9 @@ export default {
       },
     ];
 
+    /**
+     * Handle mouse move on resizing.
+     */
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();
       const width = e.clientX + 2;
@@ -324,12 +327,18 @@ export default {
       }
     };
 
+    /**
+     * Handle mouse up on resizing.
+     */
     const handleMouseUp = () => {
       state.resizing = false;
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
 
+    /**
+     * Resize sidebar.
+     */
     const resizeSidebar = () => {
       state.resizing = true;
       window.addEventListener('mousemove', handleMouseMove);

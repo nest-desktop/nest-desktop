@@ -507,6 +507,9 @@ export default Vue.extend({
       state.tool = state.tools[0];
     };
 
+    /**
+     * Handle mouse move on resizing.
+     */
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();
       const width = window.innerWidth - e.clientX;
@@ -516,12 +519,18 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Handle mouse up on resizing.
+     */
     const handleMouseUp = () => {
       state.resizing = false;
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
 
+    /**
+     * Resize sidebar.
+     */
     const resizeSidebar = () => {
       state.resizing = true;
       window.addEventListener('mousemove', handleMouseMove);
