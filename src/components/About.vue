@@ -45,7 +45,7 @@
                 mailText[3] +
                 state.version +
                 mailText[4] +
-                state.serverVersion +
+                state.simulatorVersion +
                 mailText[5] +
                 state.osType +
                 mailText[6]
@@ -80,7 +80,7 @@ export default {
       license: 'MIT License',
       osType: '',
       repo: 'https://github.com/nest-desktop/nest-desktop',
-      serverVersion: core.app.nestServer.state.simulatorVersion,
+      simulatorVersion: core.app.NESTSimulator.state.simulatorVersion,
       version: core.app.version,
     });
     const mailText = [
@@ -88,16 +88,16 @@ export default {
       '%0D%0ABrowser name: ',
       '%0D%0ABrowser version: ',
       '%0D%0ANEST Desktop version: ',
-      '%0D%0ANEST Server version: ',
+      '%0D%0ANEST Simulator version: ',
       '%0D%0AOS type: ',
       '%0D%0A %2D%2D%2D%2D %0D%0A%0D%0A(your message text...)',
     ];
 
     // TODO: change to onRenderTriggered in Vue 3 to catch updates as well
     onBeforeMount(() => {
-      // Fetch the NEST Server version.
-      core.app.nestServer.check().then(() => {
-        state.serverVersion = core.app.nestServer.state.simulatorVersion;
+      // Fetch the NEST Simulator version.
+      core.app.NESTSimulator.check().then(() => {
+        state.simulatorVersion = core.app.NESTSimulator.state.simulatorVersion;
       });
 
       // Fetch the debugging information
