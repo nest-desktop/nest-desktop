@@ -1,6 +1,6 @@
 <template>
   <div class="activityStats">
-    <v-card :width="444" flat tile style="padding-left: 1px">
+    <v-card flat tile>
       <!-- <v-subheader v-text="'Activity statistics'" /> -->
 
       <v-expansion-panels
