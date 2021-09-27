@@ -96,6 +96,12 @@ export default Vue.extend({
         once: true,
       });
       core.app.init();
+      core.app.view.project.state = reactive({
+        activityGraph: 'abstract',
+        modeIdx: 0,
+        tool: undefined,
+        toolOpened: false,
+      });
       keepConnectionToNESTServerAlive();
     });
 

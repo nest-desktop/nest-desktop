@@ -6,7 +6,7 @@ import { AnalogSignalActivity } from '../analogSignalActivity';
 export class AnalogSignalPlotPanel extends ActivityGraphPanel {
   constructor(graph: ActivityChartGraph) {
     super(graph);
-    this.icon = 'mdi-chart-line';
+    this.icon = 'mdi-chart-bell-curve-cumulative';
     this.name = 'AnalogSignalPlotPanel';
     this.label = 'line of analog signals';
     this.init();
