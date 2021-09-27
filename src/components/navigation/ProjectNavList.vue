@@ -73,7 +73,11 @@
             </v-list-item-content>
 
             <v-list-item-icon>
-              <ActivityGraphIcon :project="project" :small="true" v-if="project.hasActivities" />
+              <ActivityGraphIcon
+                :project="project"
+                :small="true"
+                v-if="project.hasActivities"
+              />
               <!-- <v-icon
                 small
                 v-show="!project.rev"
