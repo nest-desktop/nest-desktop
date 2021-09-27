@@ -74,18 +74,18 @@ export default Vue.extend({
     });
 
     /**
-    * Initialize project.
-    * It gets a project from the database.
-    */
+     * Initialize project.
+     * It gets a project from the database.
+     */
     const initProject = () => {
       const data: any = require('@/assets/projects/neuron-spike-response.json');
       state.project = new Project(core.app as App, data);
     };
 
     /**
-    * Initialize model.
-    * It gets model from the database and parameter defaults from NEST Server.
-    */
+     * Initialize model.
+     * It initializes the model using one from the local database and the parameter defaults using the ones from the NEST Server.
+     */
     const initModel = () => {
       state.project.activityGraph.emptyActivityGraph();
       state.model = core.app.getModel(state.modelId);
@@ -93,8 +93,8 @@ export default Vue.extend({
     };
 
     /**
-    * Get paramter defaults from NEST Server.
-    */
+     * Get the parameter defaults from the NEST Server.
+     */
     const getParamDefaults = () => {
       state.model
         .fetchDefaults()
@@ -115,8 +115,8 @@ export default Vue.extend({
     };
 
     /**
-    * Triggers when paramter value is changed.
-    */
+     * Triggers when a parameter value is changed. It updates the variables and re-runs the simulation.
+     */
     const paramChange = () => {
       const elementType: string = state.params['element_type'];
       if (elementType !== 'neuron') {

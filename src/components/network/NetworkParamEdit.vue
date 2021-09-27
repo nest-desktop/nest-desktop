@@ -47,13 +47,7 @@
       single-line
       sticky
     >
-      <v-btn-toggle
-        dense
-        group
-        mandatory
-        tile
-        v-model="state.elementType"
-      >
+      <v-btn-toggle dense group mandatory tile v-model="state.elementType">
         <v-btn
           :key="elementType"
           small
