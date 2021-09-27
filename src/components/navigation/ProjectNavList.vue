@@ -73,14 +73,28 @@
             </v-list-item-content>
 
             <v-list-item-icon>
+              <span v-if="project.hasActivities">
+                <v-icon
+                  small
+                  v-show="project.hasAnalogActivities"
+                  v-text="'mdi-chart-bell-curve-cumulative'"
+                />
+                <v-icon
+                  small
+                  v-show="project.hasSpikeActivities"
+                  v-text="'mdi-chart-scatter-plot'"
+                />
+                <v-icon
+                  small
+                  v-show="project.hasSpatialActivities"
+                  v-text="'mdi-axis-arrow'"
+                />
+              </span>
               <!-- <v-icon
-                v-show="project.activityGraph.codeHash !== undefined"
-                v-text="'mdi-chart-scatter-plot'"
-              /> -->
-              <v-icon
+                small
                 v-show="!project.rev"
                 v-text="'mdi-alert-circle-outline'"
-              />
+              /> -->
             </v-list-item-icon>
           </v-list-item>
         </transition-group>

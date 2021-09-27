@@ -34,19 +34,21 @@
                       v-model="project.view.selected"
                     />
                   </td>
-                  <td class="text-center" v-if="state.action === 'export'">
-                    <v-checkbox
-                      :disabled="!project.hasActivities"
-                      @change="
-                        value => {
-                          project.view.state.selected = value;
-                        }
-                      "
-                      class="ma-0"
-                      color="project"
-                      hide-details
-                      v-model="project.view.withActivities"
-                    />
+                  <td v-if="state.action === 'export'">
+                    <v-row>
+                      <v-col class="py-4" cols="4">
+                        <ActivityGraphIcon :project="project" :small="true" />
+                      </v-col>
+                      <v-col cols="4">
+                        <v-checkbox
+                          :disabled="!project.hasActivities"
+                          class="ma-0"
+                          color="project"
+                          hide-details
+                          v-model="project.view.withActivities"
+                        />
+                      </v-col>
+                    </v-row>
                   </td>
                 </tr>
               </tbody>
@@ -96,9 +98,13 @@ import { reactive, watch } from '@vue/composition-api';
 import { Activity } from '@/core/activity/activity';
 import { Project } from '@/core/project/project';
 import core from '@/core';
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 
 export default Vue.extend({
   name: 'ProjectsDialog',
+  components: {
+    ActivityGraphIcon,
+  },
   props: {
     action: String,
     open: Boolean,

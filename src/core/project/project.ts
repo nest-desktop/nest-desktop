@@ -23,8 +23,10 @@ export class Project extends Config {
   private _description: string; // description about the project
   private _errorMessage = '';
   private _hasActivities = false;
+  private _hasAnalogActivities = false;
   private _hash: string; // obsolete: hash of serialized network
   private _hasSpatialActivities = false;
+  private _hasSpikeActivities = false;
   private _id: string; // id of the project
   private _name: string; // project name
   private _network: Network; // network of neurons and devices
@@ -571,6 +573,16 @@ export class Project extends Config {
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasEvents())
         : false;
+    this._hasAnalogActivities =
+      activities.length > 0
+        ? activities.some((activity: Activity) =>
+            activity.hasNeuronAnalogData()
+          )
+        : false;
+    this._hasSpikeActivities =
+      activities.length > 0
+        ? activities.some((activity: Activity) => activity.hasSpikeData())
+        : false;
     this._hasSpatialActivities = this.hasActivities
       ? activities.some(
           (activity: Activity) =>
@@ -587,10 +599,24 @@ export class Project extends Config {
   }
 
   /**
+   * Does the project have events in analog activities?
+   */
+  get hasAnalogActivities(): boolean {
+    return this._hasAnalogActivities;
+  }
+
+  /**
    * Does the project have events in spatial activities?
    */
   get hasSpatialActivities(): boolean {
     return this._hasSpatialActivities;
+  }
+
+  /**
+   * Does the project have events in spike activities?
+   */
+  get hasSpikeActivities(): boolean {
+    return this._hasSpikeActivities;
   }
 
   /**

@@ -129,6 +129,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
+  ref,
   reactive,
   onBeforeUnmount,
   onMounted,
@@ -155,7 +156,8 @@ export default Vue.extend({
   props: {
     networkHash: String,
   },
-  setup(props, { refs }) {
+  setup(props) {
+    const networkGraph = ref(null);
     const state = reactive({
       network: core.app.project.network,
       graph: undefined,
@@ -269,7 +271,7 @@ export default Vue.extend({
       // console.log('Update network graph');
       state.network = core.app.project.network;
       state.graph.network = state.network;
-      const elem: any = refs.networkGraph['parentNode'];
+      const elem: any = networkGraph.value['parentNode'];
       state.graph.reset();
       state.graph.resize(elem.clientWidth, elem.clientHeight);
       state.graph.init();
@@ -283,7 +285,7 @@ export default Vue.extend({
      * Resize network graph.
      */
     const onResize = () => {
-      const elem: any = refs.networkGraph['parentNode'];
+      const elem: any = networkGraph.value['parentNode'];
       if (elem) {
         state.graph.resize(elem.clientWidth, elem.clientHeight);
         state.graph.transform();
@@ -317,7 +319,7 @@ export default Vue.extend({
       }
     );
 
-    return { state };
+    return { state, networkGraph };
   },
 });
 </script>

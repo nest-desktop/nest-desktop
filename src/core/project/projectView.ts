@@ -44,7 +44,7 @@ export class ProjectView {
   }
 
   set withActivities(value: boolean) {
-    this._selected = value;
+    this._selected = true;
     this._withActivities = value;
   }
 

@@ -17,6 +17,52 @@ export class AppView {
     };
     this._project = {
       searchTerm: '',
+      state: undefined,
+      tools: [
+        {
+          icon: '$network',
+          minWidth: 440,
+          name: 'networkParamEdit',
+          title: 'Network',
+          width: 440,
+        },
+        {
+          icon: 'mdi-engine-outline',
+          minWidth: 440,
+          name: 'simulationKernel',
+          title: 'Kernel',
+          width: 440,
+        },
+        {
+          icon: 'mdi-code-braces',
+          minWidth: 575,
+          name: 'dataJSON',
+          title: 'Data',
+          devMode: true,
+          width: 575,
+        },
+        {
+          icon: 'mdi-xml',
+          minWidth: 575,
+          name: 'codeEditor',
+          title: 'Code',
+          width: 575,
+        },
+        {
+          icon: 'mdi-chart-scatter-plot',
+          minWidth: 440,
+          name: 'activityEdit',
+          title: 'Activity',
+          width: 440,
+        },
+        {
+          icon: 'mdi-table-large',
+          minWidth: 440,
+          name: 'activityStats',
+          title: 'Statistics',
+          width: 440,
+        },
+      ],
     };
   }
 
