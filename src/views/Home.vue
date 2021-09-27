@@ -5,7 +5,7 @@
         NEST Desktop
       </v-toolbar-title>
     </v-app-bar> -->
-    <v-container class="fill-height">
+    <v-container class="fill-height" style="height: 100vh">
       <v-row>
         <v-col class="text-center pa-10">
           <v-img
