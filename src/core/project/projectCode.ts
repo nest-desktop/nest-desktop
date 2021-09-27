@@ -82,7 +82,7 @@ export class ProjectCode extends Code {
   }
 
   /**
-   * Generate script to define a function to get activity.
+   * Generate script to define a function to get node ids.
    */
   defineGetNodeIds(): string {
     let script = '';
