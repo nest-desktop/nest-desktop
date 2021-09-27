@@ -56,11 +56,11 @@ export class ProjectCode extends Code {
 
     if (this._project.network.recorders.length > 0) {
       this._script +=
-        '\n\n# Define function getting activity from the recorder\n';
-      this._script += this.defineGetActivity();
+        '\n\n# Get ids of recorded node\n';
+      this._script += this.defineGetNodeIds();
 
       if (this._project.network.hasSpatialNodes()) {
-        this._script += '\n\n# Define function getting node positions\n';
+        this._script += '\n\n# Get node positions\n';
         this._script += this.defineGetNodePositions();
       }
     }
@@ -84,18 +84,14 @@ export class ProjectCode extends Code {
   /**
    * Generate script to define a function to get activity.
    */
-  defineGetActivity(): string {
+  defineGetNodeIds(): string {
     let script = '';
-    script += 'def getActivity(node):';
-    script += this._() + 'if node.get("model") == "spike_recorder":';
-    script += this._(2) + 'nodeIds = nest.GetConnections(None, node).sources()';
+    script += 'def getNodeIds(node):';
+    script += this._() + 'if node.model == "spike_recorder":';
+    script += this._(2) + 'return list(nest.GetConnections(None, node).sources())';
     script += this._() + 'else:';
-    script += this._(2) + 'nodeIds = nest.GetConnections(node).targets()';
-    script += this._() + 'return {';
-    script += this._(2) + '"events": node.get("events"),';
-    script += this._(2) + '"nodeIds": list(nodeIds)';
-    script += this._() + '}';
-    return script;
+    script += this._(2) + 'return list(nest.GetConnections(node).targets())';
+    return script + '\n';
   }
 
   /**
@@ -116,7 +112,7 @@ export class ProjectCode extends Code {
     script += 'response = {';
     script += this._() + '"kernel": {';
     script +=
-      this._(2) + '"biological_time": nest.GetKernelStatus("biological_time")';
+      this._(2) + '"biological_time": nest.biological_time';
     script += this._() + '}';
     if (this._project.network.recorders.length > 0) {
       script +=
