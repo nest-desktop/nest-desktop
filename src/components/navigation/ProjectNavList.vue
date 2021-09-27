@@ -73,23 +73,7 @@
             </v-list-item-content>
 
             <v-list-item-icon>
-              <span v-if="project.hasActivities">
-                <v-icon
-                  small
-                  v-show="project.hasAnalogActivities"
-                  v-text="'mdi-chart-bell-curve-cumulative'"
-                />
-                <v-icon
-                  small
-                  v-show="project.hasSpikeActivities"
-                  v-text="'mdi-chart-scatter-plot'"
-                />
-                <v-icon
-                  small
-                  v-show="project.hasSpatialActivities"
-                  v-text="'mdi-axis-arrow'"
-                />
-              </span>
+              <ActivityGraphIcon :project="project" :small="true" v-if="project.hasActivities" />
               <!-- <v-icon
                 small
                 v-show="!project.rev"
@@ -109,12 +93,14 @@ import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import { Project } from '@/core/project/project';
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import core from '@/core';
 import ProjectMenu from '@/components/project/ProjectMenu.vue';
 
 export default Vue.extend({
   name: 'ProjectNavList',
   components: {
+    ActivityGraphIcon,
     draggable,
     ProjectMenu,
   },
