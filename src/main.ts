@@ -36,7 +36,7 @@ Vue.use(VueCodemirror);
 Vue.config.productionTip = false;
 
 /**
- * initialize app.
+ * Initialize the app.
  */
 const initApp = () => {
   new Vue({
@@ -47,13 +47,12 @@ const initApp = () => {
   }).$mount('#app');
 };
 
-// Load data for global config.
+// Load the data from public/config.json for the global config and initialize the app.
 fetch(process.env.BASE_URL + 'config.json')
   .then(response => response.json())
   .then(config => {
     Vue.prototype.$config = config;
-    initApp();
   })
-  .catch(() => {
+  .finally(() => {
     initApp();
   });
