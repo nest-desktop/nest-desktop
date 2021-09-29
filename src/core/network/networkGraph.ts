@@ -2,11 +2,12 @@ import * as d3 from 'd3';
 
 import { Connection } from '../connection/connection';
 import { ConnectionGraph } from '../connection/connectionGraph';
+import { Config } from '../config';
 import { Network } from './network';
 import { NodeGraph } from '../node/nodeGraph';
 import { Node } from '../node/node';
 
-export class NetworkGraph {
+export class NetworkGraph extends Config {
   private _connectionGraph: ConnectionGraph;
   private _cursorPosition: any = { x: 0, y: 0 };
   private _height: number = 600;
@@ -14,7 +15,7 @@ export class NetworkGraph {
   private _nodeGraph: NodeGraph;
   private _selector: d3.Selection<any, any, any, any>;
   private _state: any = {
-    centerNetwork: true,
+    centerNetwork: false,
     centerSelected: false,
     connected: false,
     dragging: false,
@@ -29,6 +30,7 @@ export class NetworkGraph {
   private _transform: any = { k: 1, x: 0, y: 0 };
 
   constructor(selector: string) {
+    super('NetworkGraph');
     this._selector = d3.select(selector);
     this._connectionGraph = new ConnectionGraph(this);
     this._nodeGraph = new NodeGraph(this);
@@ -413,6 +415,15 @@ export class NetworkGraph {
   }
 
   /**
+   * Update state from config.
+   */
+  updateState(): void {
+    this._state.centerNetwork = this.config.centerNetwork;
+    this._state.centerSelected = this.config.centerSelected;
+    this._state.showGrid = this.config.showGrid;
+  }
+
+  /**
    * Generate data for the grid.
    */
   gridData() {
@@ -467,7 +478,7 @@ export class NetworkGraph {
       .attr('x2', (d: any) => d.x2)
       .attr('y1', (d: any) => d.y1)
       .attr('y2', (d: any) => d.y2)
-      .style('opacity', this._state.showGrid ? 1 : 0);
+      .style('opacity', this.state.showGrid ? 1 : 0);
 
     gridLines.exit().remove();
   }
@@ -477,6 +488,8 @@ export class NetworkGraph {
    */
   update() {
     // console.log('Update network graph');
+    this.updateState();
+    this.updateGridGraph();
     this._connectionGraph.update();
     this._nodeGraph.update();
   }
@@ -502,48 +515,48 @@ export class NetworkGraph {
    */
   transform(): void {
     // console.log('Transform network graph');
-    if (this._state.centerNetwork || this._state.centerSelected) {
-      let x: number = 0,
-        y: number = 0;
-      if (this._state.centerSelected && this._network.view.selectedNode) {
-        x = this._network.view.selectedNode.view.position.x;
-        y = this._network.view.selectedNode.view.position.y;
-      } else if (
-        this._state.centerSelected &&
-        this._network.view.selectedConnection
-      ) {
-        const source: any =
-          this._network.view.selectedConnection.source.view.position;
-        const target: any =
-          this._network.view.selectedConnection.target.view.position;
-        x = d3.mean([source.x, target.x]);
-        y = d3.mean([source.y, target.y]);
-      } else if (this._network.nodes.length > 0) {
-        const networkCenterPos = this.centerNetworkPos();
-        x = networkCenterPos.x;
-        y = networkCenterPos.y;
-      }
-      this._transform.x = this._width / 2 - x * this._transform.k;
-      this._transform.y = this._height / 2 - y * this._transform.k;
+    let x: number = 0,
+      y: number = 0;
 
-      this._state.transforming = true;
-      this._selector
-        .select('rect#background')
-        .call(
-          this._zoom.transform,
-          d3.zoomIdentity
-            .translate(this._transform.x, this._transform.y)
-            .scale(this._transform.k)
-        );
-      this._state.transforming = false;
+    if (this._state.centerSelected && this._network.view.selectedNode) {
+      x = this._network.view.selectedNode.view.position.x;
+      y = this._network.view.selectedNode.view.position.y;
+    } else if (
+      this._state.centerSelected &&
+      this._network.view.selectedConnection
+    ) {
+      const source: any =
+        this._network.view.selectedConnection.source.view.position;
+      const target: any =
+        this._network.view.selectedConnection.target.view.position;
+      x = d3.mean([source.x, target.x]);
+      y = d3.mean([source.y, target.y]);
+    } else if (this._state.centerNetwork && this._network.nodes.length > 0) {
+      const networkCenterPos = this.centerNetworkPos();
+      x = networkCenterPos.x;
+      y = networkCenterPos.y;
     }
+
+    this._transform.x = this._width / 2 - x * this._transform.k;
+    this._transform.y = this._height / 2 - y * this._transform.k;
+    this._state.transforming = true;
+    this._selector
+      .select('rect#background')
+      .call(
+        this._zoom.transform,
+        d3.zoomIdentity
+          .translate(this._transform.x, this._transform.y)
+          .scale(this._transform.k)
+      );
+    this._state.transforming = false;
   }
 
   /**
    * Toggle center of network graph.
    */
   toggleCenterNetwork(): void {
-    this._state.centerNetwork = !this._state.centerNetwork;
+    this.updateConfig({ centerNetwork: !this.config.centerNetwork });
+    this.updateState();
     this.transform();
   }
 
@@ -551,7 +564,8 @@ export class NetworkGraph {
    * Toggle center of selected.
    */
   toggleCenterSelected(): void {
-    this._state.centerSelected = !this._state.centerSelected;
+    this.updateConfig({ centerSelected: !this.config.centerSelected });
+    this.updateState();
     this.transform();
   }
 
@@ -559,7 +573,8 @@ export class NetworkGraph {
    * Toggle grid graph.
    */
   toggleGrid(): void {
-    this._state.showGrid = !this._state.showGrid;
+    this.updateConfig({ showGrid: !this.config.showGrid });
+    this.updateState();
     this.updateGridGraph();
   }
 
