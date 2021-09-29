@@ -78,7 +78,6 @@ export default Vue.extend({
      */
     const updateConfigs = () => {
       const config = Vue.prototype.$config || {};
-
       // Update config for NEST Simulator
       if (config.NESTSimulator && !core.app.NESTSimulator.config.custom) {
         if ('url' in config.NESTSimulator) {
