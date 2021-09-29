@@ -51,8 +51,8 @@
         "size": 1,
         "view": {
           "position": {
-            "x": 50,
-            "y": 100
+            "x": -150,
+            "y": 25
           }
         },
         "params": [
@@ -78,8 +78,8 @@
         "size": 1,
         "view": {
           "position": {
-            "x": 200,
-            "y": 50
+            "x": 0,
+            "y": -25
           }
         },
         "params": [
@@ -139,8 +139,8 @@
         "model": "voltmeter",
         "view": {
           "position": {
-            "x": 350,
-            "y": 100
+            "x": 150,
+            "y": 25
           }
         },
         "params": [
