@@ -1,37 +1,74 @@
 <template>
-  <div class="about">
-    <v-list dense>
+  <div class="about" align="center">
+    <v-list dense max-width="500px" color="grey lighten-5">
       <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold" cols="4" v-text="'Documentation'" />
+        <v-row class="ml-1">
+          <v-col
+            align="start"
+            class="font-weight-bold"
+            cols="4"
+            v-text="'Documentation'"
+          />
           <v-col cols="8">
-            <a :href="state.doc" target="_blank" v-text="state.doc" />
+            <a
+              :href="state.doc"
+              onmouseover="style='text-decoration:underline'"
+              onmouseout="style='text-decoration:none'"
+              target="_blank"
+              v-text="state.doc"
+            />
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold" cols="4" v-text="'Source code'" />
+        <v-row class="grey lighten-5 ml-1">
+          <v-col
+            align="start"
+            class="font-weight-bold"
+            cols="4"
+            v-text="'Source code'"
+          />
           <v-col cols="8">
-            <a :href="state.repo" target="_blank" v-text="state.repo" />
+            <a
+              :href="state.repo"
+              onmouseover="style='text-decoration:underline'"
+              onmouseout="style='text-decoration:none'"
+              target="_blank"
+              v-text="state.repo"
+            />
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold" cols="4" v-text="'License'" />
+        <v-row class="ml-1">
+          <v-col
+            align="start"
+            class="font-weight-bold"
+            cols="4"
+            v-text="'License'"
+          />
           <v-col cols="8" v-text="state.license" />
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold" cols="4" v-text="'Current version'" />
+        <v-row class="ml-1">
+          <v-col
+            align="start"
+            class="font-weight-bold"
+            cols="4"
+            v-text="'Current version'"
+          />
           <v-col cols="8" v-text="state.version" />
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold" cols="4" v-text="'Contact'" />
+        <v-row class="ml-1">
+          <v-col
+            align="start"
+            class="font-weight-bold"
+            cols="4"
+            v-text="'Contact'"
+          />
           <v-col cols="8">
             <a
               :href="
@@ -50,6 +87,8 @@
                 state.osType +
                 mailText[6]
               "
+              onmouseover="style='text-decoration:underline'"
+              onmouseout="style='text-decoration:none'"
               v-text="state.contactName"
             />
           </v-col>
@@ -75,7 +114,7 @@ export default {
         'mailto:spreizer@uni-trier.de?subject=[NEST Desktop ' +
         core.app.version +
         ']',
-      contactName: 'Sebastian Spreizer',
+      contactName: '📧 Sebastian Spreizer',
       doc: 'https://nest-desktop.readthedocs.io',
       license: 'MIT License',
       osType: '',
