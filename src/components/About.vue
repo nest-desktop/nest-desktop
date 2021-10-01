@@ -1,6 +1,6 @@
 <template>
   <div class="about" align="center">
-    <v-list dense max-width="500px" color="grey lighten-5">
+    <v-list dense max-width="500px">
       <v-list-item>
         <v-row class="ml-1">
           <v-col
@@ -9,11 +9,11 @@
             cols="4"
             v-text="'Documentation'"
           />
-          <v-col cols="8">
+          <v-col cols="8" align="end">
             <a
               :href="state.doc"
-              onmouseover="style='text-decoration:underline'"
               onmouseout="style='text-decoration:none'"
+              onmouseover="style='text-decoration:underline'"
               target="_blank"
               v-text="state.doc"
             />
@@ -21,18 +21,18 @@
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row class="grey lighten-5 ml-1">
+        <v-row class="ml-1">
           <v-col
             align="start"
             class="font-weight-bold"
             cols="4"
             v-text="'Source code'"
           />
-          <v-col cols="8">
+          <v-col cols="8" align="end">
             <a
               :href="state.repo"
-              onmouseover="style='text-decoration:underline'"
               onmouseout="style='text-decoration:none'"
+              onmouseover="style='text-decoration:underline'"
               target="_blank"
               v-text="state.repo"
             />
@@ -47,7 +47,7 @@
             cols="4"
             v-text="'License'"
           />
-          <v-col cols="8" v-text="state.license" />
+          <v-col align="end" cols="8" v-text="state.license" />
         </v-row>
       </v-list-item>
       <v-list-item>
@@ -58,7 +58,7 @@
             cols="4"
             v-text="'Current version'"
           />
-          <v-col cols="8" v-text="state.version" />
+          <v-col align="end" cols="8" v-text="state.version" />
         </v-row>
       </v-list-item>
       <v-list-item>
@@ -69,7 +69,7 @@
             cols="4"
             v-text="'Contact'"
           />
-          <v-col cols="8">
+          <v-col align="end" cols="8">
             <a
               :href="
                 state.contactMailHeader +
@@ -87,8 +87,8 @@
                 state.osType +
                 mailText[6]
               "
-              onmouseover="style='text-decoration:underline'"
               onmouseout="style='text-decoration:none'"
+              onmouseover="style='text-decoration:underline'"
               v-text="state.contactName"
             />
           </v-col>
