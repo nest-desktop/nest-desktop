@@ -13,16 +13,11 @@ export class SimulationCode extends Code {
    * Write script for simulation kernel.
    */
   setKernelStatus(): string {
-    let script = 'nest.SetKernelStatus({' + this._();
-    const specs: string[] = [];
-    specs.push(
-      `"local_num_threads": ${this._simulation.kernel.localNumThreads}`
-    );
-    specs.push(`"resolution": ${this._simulation.kernel.resolution}`);
-    specs.push(`"rng_seed": ${this._simulation.kernel.rngSeed}`);
-    script += specs.join(',' + this._());
-    script += this.end() + '})';
-    return script + '\n';
+    let script = '';
+    script += `nest.local_num_threads = ${this._simulation.kernel.localNumThreads}\n`;
+    script += `nest.resolution = ${this._simulation.kernel.resolution}\n`;
+    script += `nest.rng_seed = ${this._simulation.kernel.rngSeed}\n`;
+    return script;
   }
 
   /**
