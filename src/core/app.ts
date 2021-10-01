@@ -7,6 +7,7 @@ import { NESTSimulator } from './backends/nestSimulator';
 import { Project } from './project/project';
 
 import { environment } from '../environments/environment';
+import Vue from 'vue/types/umd';
 
 const pad = (num: number, size: number = 2): string => {
   let s: string = num + '';
@@ -469,5 +470,22 @@ export class App extends Config {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+  }
+
+  /**
+   * Update configs from global config.
+   *
+   * @remarks
+   * Global config is loaded in main.ts.
+   */
+  public updateConfigs(config: any = {}) {
+    // Update config for NEST Simulator
+    if (config.NESTSimulator && !this.NESTSimulator.config.custom) {
+      if ('url' in config.NESTSimulator) {
+        this.NESTSimulator.url = config.NESTSimulator.url;
+      } else {
+        this.NESTSimulator.updateConfig(config.NESTSimulator);
+      }
+    }
   }
 }
