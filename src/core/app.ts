@@ -98,6 +98,7 @@ export class App extends Config {
   init(): Promise<any> {
     this._project = new Project(this);
     this._ready = false;
+    this._view.initProjectState();
     return this.initModels().then(() =>
       this.initProjects().then(() => (this._ready = true))
     );
