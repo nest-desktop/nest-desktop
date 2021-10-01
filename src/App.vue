@@ -71,24 +71,6 @@ export default Vue.extend({
     };
 
     /**
-     * Update configs from global config.
-     *
-     * @remarks
-     * Global config is loaded in main.ts.
-     */
-    const updateConfigs = () => {
-      const config = Vue.prototype.$config || {};
-      // Update config for NEST Simulator
-      if (config.NESTSimulator && !core.app.NESTSimulator.config.custom) {
-        if ('url' in config.NESTSimulator) {
-          core.app.NESTSimulator.url = config.NESTSimulator.url;
-        } else {
-          core.app.NESTSimulator.updateConfig(config.NESTSimulator);
-        }
-      }
-    };
-
-    /**
      * Keep connection to NEST Simulator alive.
      * Ping every 5 min.
      */
@@ -113,7 +95,7 @@ export default Vue.extend({
         once: true,
       });
       core.app.init();
-      updateConfigs();
+      core.app.updateConfigs(Vue.prototype.$config);
       keepConnectionToNESTSimulatorAlive();
     });
 
