@@ -505,6 +505,7 @@ export default Vue.extend({
 
     /**
      * Handle mouse move on resizing.
+     * @param e MouseEvent from which the x position is taken
      */
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();

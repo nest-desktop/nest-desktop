@@ -593,6 +593,8 @@ export class Project extends Config {
 
   /**
    * Does the project have events in activities?
+   *
+   * @returns True if such activities exist, false otherwise
    */
   get hasActivities(): boolean {
     return this._hasActivities;
@@ -600,6 +602,8 @@ export class Project extends Config {
 
   /**
    * Does the project have events in analog activities?
+   *
+   * @returns True if such analog activities exist, false otherwise
    */
   get hasAnalogActivities(): boolean {
     return this._hasAnalogActivities;
@@ -607,6 +611,8 @@ export class Project extends Config {
 
   /**
    * Does the project have events in spatial activities?
+   *
+   * @returns True if such spatial activities exist, false otherwise
    */
   get hasSpatialActivities(): boolean {
     return this._hasSpatialActivities;
@@ -614,6 +620,8 @@ export class Project extends Config {
 
   /**
    * Does the project have events in spike activities?
+   *
+   * @returns True if such spike activities exist, false otherwise
    */
   get hasSpikeActivities(): boolean {
     return this._hasSpikeActivities;
