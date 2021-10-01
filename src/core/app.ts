@@ -7,7 +7,6 @@ import { NESTSimulator } from './backends/nestSimulator';
 import { Project } from './project/project';
 
 import { environment } from '../environments/environment';
-import Vue from 'vue/types/umd';
 
 const pad = (num: number, size: number = 2): string => {
   let s: string = num + '';
