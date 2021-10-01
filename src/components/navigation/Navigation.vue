@@ -101,7 +101,7 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-dialog max-width="450" v-model="state.dialog">
+              <v-dialog max-width="500" v-model="state.dialog">
                 <template #activator="{ on, attrs }">
                   <v-list-item
                     @click="reset"
