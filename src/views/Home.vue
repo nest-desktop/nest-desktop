@@ -205,8 +205,8 @@ export default Vue.extend({
   setup() {
     const references = [
       {
-        iconSrc: 'ebrains-logo.png',
         color: 'rgba(178, 245, 23, 0.1)',
+        iconSrc: 'ebrains-logo.svg',
         title: 'EBRAINS',
         url: 'https://www.ebrains.eu',
       },
@@ -217,14 +217,14 @@ export default Vue.extend({
         url: 'https://europa.eu/european-union/index_en',
       },
       {
-        iconSrc: 'hbp-logo.jpeg',
         color: 'rgba(16, 188, 220, 0.1)',
+        iconSrc: 'hbp-logo.png',
         title: 'Human Brain Project',
         url: 'https://www.humanbrainproject.eu',
       },
       {
-        iconSrc: 'nest-simulated.png',
         color: 'rgba(255,102,51,0.1)',
+        iconSrc: 'nest.svg',
         title: 'NEST Simulator',
         url: 'https://www.nest-simulator.org',
       },
