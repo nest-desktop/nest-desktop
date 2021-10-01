@@ -4,8 +4,8 @@
     style="
       left: 50%;
       position: relative;
-      top: 38%;
-      transform: translate(-50%, -38%);
+      top: 50%;
+      transform: translate(-50%, -50%);
       y-overflow: scroll;
     "
   >
@@ -16,21 +16,21 @@
     </v-app-bar> -->
 
     <v-container
-      style="background-color: white"
+      align="center"
+      class="ml-10"
+      clipped-left
       fill-height
       fluid
-      clipped-left
-      class="ml-10"
-      align="center"
+      style="background-color: white"
     >
       <v-container align="center" justify="center">
-        <v-row>
-          <v-col class="text-center pa-10">
+        <v-row class="mb-15">
+          <v-col class="pa-10 text-center">
             <v-img
               :src="require('@/assets/img/logo/nest-desktop-logo.png')"
               class="my-6"
               contain
-              height="200"
+              height="250"
             />
 
             <h1 class="display-3 font-weight-light" v-text="'NEST Desktop'" />
@@ -42,21 +42,53 @@
 
         <v-row align="center">
           <v-col class="text-center">
-            <v-row align="center" class="mb-2">
-              <v-col cols="6" align-self="stretch">
-                <v-card
-                  elevation="1"
-                  class="app-details align-stretch"
-                  tile
+            <v-btn
+              class="ma-3"
+              outlined
+              text
+              to="project"
+              v-text="'Start a new project'"
+              width="210px"
+            />
+            <v-menu>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  @click="loadProjects"
+                  class="mx-3"
                   outlined
+                  text
+                  v-bind="attrs"
+                  v-on="on"
+                  width="210px"
+                >
+                  Load a project <v-icon right v-text="'mdi-dots-vertical'" />
+                </v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item
+                  :key="index"
+                  :to="`project/${project.id}`"
+                  v-for="(project, index) in state.projects"
+                >
+                  <v-list-item-title v-text="project.name" />
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-row align="center" class="mb-2 mt-2">
+              <v-col align-self="stretch" cols="6">
+                <v-card
+                  align-center
+                  class="app-details align-stretch"
+                  d-flex
+                  flat
                   height="100%"
                   min-height="182px"
-                  d-flex
-                  align-center
+                  outlined
+                  tile
                 >
                   <v-layout fill-height="true">
-                    <v-card flat class="app-details d-flex align-center">
-                      <v-card-text align="left" class="py-0 mt-3 mb-3">
+                    <v-card class="app-details align-center d-flex" flat>
+                      <v-card-text align="left" class="mb-3 mt-3 py-0">
                         <p>
                           NEST Desktop is a web-based GUI application for NEST
                           Simulator, an advanced simulation tool for
@@ -76,21 +108,21 @@
                 </v-card>
               </v-col>
 
-              <v-col cols="6" align-self="stretch">
+              <v-col align-self="stretch" cols="6">
                 <v-card
-                  elevation="1"
-                  class="app-details align-stretch"
-                  tile
-                  outlined
+                  align-center
+                  class="align-stretch app-details"
+                  d-flex
+                  flat
                   height="100%"
                   min-height="182px"
-                  d-flex
-                  align-center
+                  outlined
+                  tile
                 >
                   <v-layout fill-height="true">
                     <v-row align="center">
-                      <v-col cols="12" align="center">
-                        <v-card flat class="app-details d-flex align-end">
+                      <v-col align="center" cols="12">
+                        <v-card class="app-details align-end d-flex" flat>
                           <v-card-text align="center" class="py-0 text-center">
                             <About />
                           </v-card-text>
@@ -101,59 +133,33 @@
                 </v-card>
               </v-col>
             </v-row>
-            <v-btn
-              class="ma-3"
-              to="project"
-              v-text="'Start a new project'"
-              width="210px"
-            />
-            <v-menu>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  @click="loadProjects"
-                  class="mx-3"
-                  v-bind="attrs"
-                  v-on="on"
-                  width="210px"
-                >
-                  Load a project <v-icon right v-text="'mdi-dots-vertical'" />
-                </v-btn>
-              </template>
-              <v-list dense>
-                <v-list-item
-                  :key="index"
-                  :to="`project/${project.id}`"
-                  v-for="(project, index) in state.projects"
-                >
-                  <v-list-item-title v-text="project.name" />
-                </v-list-item>
-              </v-list>
-            </v-menu>
           </v-col>
         </v-row>
 
         <v-row class="mt-2">
           <v-col
-            v-for="reference in references"
-            :key="reference.title"
             :cols="3"
+            :key="reference.title"
+            v-for="reference in references"
           >
-            <v-card>
-              <v-img
-                :src="require(`@/assets/img/logo/` + reference.iconSrc)"
-                class="white--text align-end mt-2"
-                :gradient="reference.gradient"
-                max-height="50px"
-                contain
-                :href="reference.url"
-              >
-              </v-img>
+            <v-card flat outlined tile>
+              <v-sheet :color="reference.color" class="pa-1">
+                <v-img
+                  :gradient="reference.gradient"
+                  :href="reference.url"
+                  :src="require(`@/assets/img/logo/` + reference.iconSrc)"
+                  class="white--text align-end"
+                  contain
+                  max-height="50px"
+                >
+                </v-img>
+              </v-sheet>
               <v-card-title
                 ><a
                   :href="reference.url"
                   class="subtitle-1"
-                  onmouseover="style='text-decoration:underline; color: black'"
-                  onmouseout="style='text-decoration:none; color: black'"
+                  onmouseout="style='color: black; text-decoration:none'"
+                  onmouseover="style='color: black; text-decoration:underline'"
                   style="color: black; text-decoration: none"
                   target="_blank"
                   text-decoration="none"
@@ -199,29 +205,26 @@ export default Vue.extend({
   setup() {
     const references = [
       {
-        gradient:
-          'to bottom, rgba(178, 245, 23, 0.05), 90%, rgba(178, 245, 23, 0.23)',
         iconSrc: 'ebrains-logo.png',
-        title: 'EBrains',
+        color: 'rgba(178, 245, 23, 0.1)',
+        title: 'EBRAINS',
         url: 'https://www.ebrains.eu',
       },
       {
-        gradient: 'to bottom, rgba(17,31,138,0.05), 90%, rgba(17,31,138,0.23)',
+        color: 'rgba(17,31,138,0.1)',
         iconSrc: 'eu-logo.png',
         title: 'European Union',
         url: 'https://europa.eu/european-union/index_en',
       },
       {
-        gradient:
-          'to bottom, rgba(16, 188, 220, 0.05), 90%, rgba(16, 188, 220, 0.23)',
         iconSrc: 'hbp-logo.jpeg',
+        color: 'rgba(16, 188, 220, 0.1)',
         title: 'Human Brain Project',
         url: 'https://www.humanbrainproject.eu',
       },
       {
-        gradient:
-          'to bottom, rgba(255,102,51,0.05), 90%, rgba(255,102,51,0.23)',
         iconSrc: 'nest-simulated.png',
+        color: 'rgba(255,102,51,0.1)',
         title: 'NEST Simulator',
         url: 'https://www.nest-simulator.org',
       },
