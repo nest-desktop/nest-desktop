@@ -150,7 +150,10 @@ export class NodeView {
   /**
    * Focus node.
    */
-  focus(): void {
+  focus(forced: boolean = false): void {
+    if (forced) {
+      this._node.network.view.resetFocus();
+    }
     this._node.network.view.focusedNode = this._node;
   }
 
@@ -164,8 +167,18 @@ export class NodeView {
   /**
    * Select node.
    */
-  select(): void {
+  select(forced: boolean = false): void {
+    if (forced) {
+      this._node.network.view.resetSelection();
+    }
     this._node.network.view.selectedNode = this._node;
+  }
+
+  /**
+   * Check if any node is selected.
+   */
+  isAnySelected(): boolean {
+    return this._node.network.view.selectedNode !== null;
   }
 
   /**

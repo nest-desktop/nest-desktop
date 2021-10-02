@@ -1,3 +1,5 @@
+import { sha1 } from 'object-hash';
+
 import { Config } from '../config';
 import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
@@ -22,6 +24,7 @@ export class Connection extends Config {
   private readonly _name = 'Connection';
 
   private _code: ConnectionCode;
+  private _hash: string;
   private _idx: number; // generative
   private _mask: ConnectionMask;
   private _network: Network; // parent
@@ -46,6 +49,8 @@ export class Connection extends Config {
     this.initParameters(connection.params);
     this._mask = new ConnectionMask(this, connection.mask);
     this._synapse = new Synapse(this, connection.synapse);
+
+    this.updateHash();
   }
 
   get code(): ConnectionCode {
@@ -57,6 +62,10 @@ export class Connection extends Config {
    */
   get filteredParams(): Parameter[] {
     return this._params.filter((param: Parameter) => param.visible);
+  }
+
+  get hash(): string {
+    return this._hash;
   }
 
   get idx(): number {
@@ -226,10 +235,21 @@ export class Connection extends Config {
   }
 
   /**
+   * Update hash for connection graph.
+   */
+  updateHash(): void {
+    this._hash = sha1({
+      color: this.source.view.color,
+      idx: this.idx,
+    });
+  }
+
+  /**
    * Clean this component.
    */
   clean(): void {
     this._idx = this._network.connections.indexOf(this);
+    this.updateHash();
   }
 
   /**

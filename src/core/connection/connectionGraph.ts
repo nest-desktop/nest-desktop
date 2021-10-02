@@ -2,47 +2,36 @@ import * as d3 from 'd3';
 
 import { Connection } from './connection';
 import { NetworkGraph } from '../network/networkGraph';
+import drawPath from './connectionGraphPath';
 
 export class ConnectionGraph {
   private _networkGraph: NetworkGraph;
-  private _selector: d3.Selection<any, any, any, any>;
 
   constructor(networkGraph: NetworkGraph) {
     this._networkGraph = networkGraph;
-    this._selector = networkGraph.selector.select('g#connections');
+  }
+
+  get state(): any {
+    return this._networkGraph.workspace.state;
+  }
+
+  get strokeWidth(): number {
+    return this._networkGraph.config.strokeWidth;
   }
 
   /**
-   * Initialize connection graph.
-   *
-   * @remark It is only executed in networkGraph.init().
-   * For changes in the connection graph, use update().
+   * Initialize a connection graph.
    */
-  init(idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
+  init(
+    connection: Connection,
+    idx: number,
+    elements: SVGGElement[] | ArrayLike<SVGGElement>
+  ): void {
     // console.log('Init connection graph');
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
 
-    elem
-      .on('mouseover', (_, connection: Connection) => {
-        connection.view.focus();
-        this._networkGraph.update();
-      })
-      .on('mouseout', () => {
-        this._networkGraph.network.view.resetFocus();
-        this._networkGraph.update();
-      })
-      .on('click', (_, connection: Connection) => {
-        if (this._networkGraph.network.view.selectedConnection === connection) {
-          this._networkGraph.reset();
-        } else {
-          this._networkGraph.reset();
-          connection.view.select();
-        }
-        connection.view.focus();
-        this._networkGraph.update();
-      });
-
     elem.selectAll('*').remove();
+
     elem
       .append('path')
       .style('fill', 'none')
@@ -54,103 +43,127 @@ export class ConnectionGraph {
       .append('path')
       .attr('class', 'color')
       .style('fill', 'none')
-      .style('stroke-width', this._networkGraph.strokeWidth)
+      .style('stroke-width', this.strokeWidth)
       .style('pointer-events', 'none');
+
+    elem
+      .on('mouseover', () => {
+        connection.view.focus();
+        this._networkGraph.update();
+      })
+      .on('mouseout', () => {
+        this._networkGraph.network.view.resetFocus();
+        this._networkGraph.update();
+      })
+      .on('click', () => {
+        connection.view.focus();
+        this._networkGraph.network.view.selectedConnection = connection;
+        this._networkGraph.update();
+      });
   }
 
   /**
-   * Update connection graph.
+   * Update connections in network graph.
+   *
+   * @remarks
+   * This function should be called when connections in network are changed.
    */
   update() {
-    // console.log('Update connection graph');
-    const duration: number = this._networkGraph.state.dragging ? 0 : 250;
+    // console.log('Init network graph');
+    const connections: d3.Selection<any, any, any, any> =
+      this._networkGraph.selector
+        .select('g#connections')
+        .selectAll('g.connection')
+        .data(
+          this._networkGraph.network.connections,
+          (c: Connection) => c.hash
+        );
+
+    connections
+      .enter()
+      .append('g')
+      .attr('class', 'connection')
+      .attr('idx', (c: Connection) => c.idx)
+      .attr('hash', (c: Connection) => c.hash.slice(0, 6))
+      .style('opacity', 0)
+      .call(
+        d3
+          .drag()
+          .on('start', (e: MouseEvent) => this._networkGraph.dragStart(e))
+          .on('drag', (e: MouseEvent, c: Connection) => this.drag(e, c))
+          .on('end', (e: MouseEvent) => this._networkGraph.dragEnd(e))
+      )
+      .each((c: Connection, i: number, e) => this.init(c, i, e));
+
+    connections.exit().remove();
+
+    this.render();
+  }
+
+  /**
+   * Drag connection graph by moving its node graphs.
+   */
+  drag(event: MouseEvent, connection: Connection): void {
+    if (!this.state.enableConnection) {
+      const sourceNode = connection.source;
+      sourceNode.view.position.x += event['dx'];
+      sourceNode.view.position.y += event['dy'];
+      const targetNode = connection.target;
+      targetNode.view.position.x += event['dx'];
+      targetNode.view.position.y += event['dy'];
+      this._networkGraph.render();
+    }
+  }
+
+  /**
+   * Render connection graphs.
+   */
+  render() {
+    // console.log('Render connection graph');
+    const selector = d3.select('g#connections').selectAll('g.connection');
+
+    selector.style('pointer-events', () =>
+      this._networkGraph.workspace.state.enableConnection ? 'none' : ''
+    );
+
+    const duration: number = this._networkGraph.workspace.state.dragging
+      ? 0
+      : 250;
     const t: d3.Transition<any, any, any, any> = d3
       .transition()
       .duration(duration);
 
-    // update connection path
-    this._selector.selectAll('g.connection').transition(t).style('opacity', 1);
+    selector.each((connection: Connection, idx: number, elements: any[]) => {
+      const elem = d3.select(elements[idx]);
 
-    this._selector
-      .selectAll('g.connection')
-      .selectAll('path.color')
-      .style('stroke', (connection: Connection) => connection.source.view.color)
-      .style(
-        'stroke-width',
-        (connection: Connection) =>
-          (connection.view.isFocused(false) ? 1.2 : 1) *
-          this._networkGraph.strokeWidth
-      )
-      .attr('marker-end', (connection: Connection) =>
-        connection.view.markerEnd()
-      )
-      .style('stroke-dasharray', (connection: Connection) =>
-        connection.view.probabilistic() ? '7.85' : ''
-      );
+      elem
+        .selectAll('path')
+        .transition(t)
+        .attr(
+          'd',
+          drawPath(
+            connection.source.view.position,
+            connection.target.view.position
+          )
+        );
 
-    this._selector
-      .selectAll('g.connection')
-      .selectAll('path')
-      .transition(t)
-      .attr('d', (connection: Connection) =>
-        this.drawPath(
-          connection.source.view.position,
-          connection.target.view.position
+      elem
+        .select('path.color')
+        .style('stroke', connection.source.view.color)
+        .style(
+          'stroke-width',
+          this.strokeWidth * (connection.view.isFocused(false) ? 1.2 : 1)
         )
-      );
-  }
+        .attr('marker-end', connection.view.markerEnd())
+        .style(
+          'stroke-dasharray',
+          connection.view.probabilistic() ? '7.85' : ''
+        );
 
-  drawPath(source: any, target: any, config: any = {}): string {
-    const r: number = config.radius || 18;
-
-    const x1: number = source.x;
-    let y1: number = source.y;
-    const x2: number = target.x;
-    const y2: number = target.y;
-
-    const dx: number = x2 - x1;
-    const dy: number = y2 - y1;
-    const dr: number = Math.sqrt(dx * dx + dy * dy);
-
-    // Defaults for normal edge.
-    const ellipticalArc: number = config.ellipticalArc || 2.5;
-    const xAxisRotation: number = config.xAxisRotation || 0;
-
-    let drx: number = dr * ellipticalArc * 2;
-    let dry: number = dr * ellipticalArc; // * 2;
-    let largeArc = 0; // 1 or 0
-    let sweep = 1; // 1 or 0
-
-    let mx2: number = x2;
-    let my2: number = y2;
-
-    // Self edge.
-    if (dx === 0 && dy === 0 && !config.isTargetMouse) {
-      // Fiddle with this angle to get loop oriented.
-
-      // Needs to be 1.
-      largeArc = 1;
-
-      // Change sweep to change orientation of loop.
-      sweep = 0;
-
-      // Make drx and dry different to get an ellipse
-      // instead of a circle.
-      drx = 20;
-      dry = 10;
-
-      y1 -= 6;
-
-      mx2 = x2 + 1;
-      my2 = y2 - r - 4;
-    } else if (!config.isTargetMouse) {
-      const a: number = Math.atan2(dy, dx);
-      const tr: number = r + 6;
-      mx2 = x2 - Math.cos(a) * tr;
-      my2 = y2 - Math.sin(a) * tr;
-    }
-
-    const d: string = `M${x1.toFixed()},${y1.toFixed()}A${drx},${dry} ${xAxisRotation},${largeArc},${sweep} ${mx2.toFixed()},${my2.toFixed()}`;
-    return d;
+      elem
+        .transition(t)
+        .delay(duration / 2)
+        .style('opacity', 1);
+    });
   }
 }
