@@ -52,7 +52,8 @@ export class NetworkCode extends Code {
   getActivities(): string {
     let script = '[';
     const activities: string[] = this._network.recorders.map(
-      (node: Node) => `{"events": ${node.view.label}.events, "nodeIds": getNodeIds(${node.view.label})}`
+      (node: Node) =>
+        `{"events": ${node.view.label}.events, "nodeIds": getNodeIds(${node.view.label})}`
     );
     if (activities.length > 0) {
       script += this._(2) + activities.join(',' + this._(2));

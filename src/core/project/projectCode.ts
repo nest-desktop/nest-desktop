@@ -55,8 +55,7 @@ export class ProjectCode extends Code {
     this._script += this._project.simulation.code.simulate();
 
     if (this._project.network.recorders.length > 0) {
-      this._script +=
-        '\n\n# Get ids of recorded node\n';
+      this._script += '\n\n# Get ids of recorded node\n';
       this._script += this.defineGetNodeIds();
 
       if (this._project.network.hasSpatialNodes()) {
@@ -88,7 +87,8 @@ export class ProjectCode extends Code {
     let script = '';
     script += 'def getNodeIds(node):';
     script += this._() + 'if node.model == "spike_recorder":';
-    script += this._(2) + 'return list(nest.GetConnections(None, node).sources())';
+    script +=
+      this._(2) + 'return list(nest.GetConnections(None, node).sources())';
     script += this._() + 'else:';
     script += this._(2) + 'return list(nest.GetConnections(node).targets())';
     return script + '\n';
@@ -111,8 +111,7 @@ export class ProjectCode extends Code {
     let script = '';
     script += 'response = {';
     script += this._() + '"kernel": {';
-    script +=
-      this._(2) + '"biological_time": nest.biological_time';
+    script += this._(2) + '"biological_time": nest.biological_time';
     script += this._() + '}';
     if (this._project.network.recorders.length > 0) {
       script +=
