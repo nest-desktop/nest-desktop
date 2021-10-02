@@ -160,10 +160,7 @@ export class ConnectionGraph {
           connection.view.probabilistic() ? '7.85' : ''
         );
 
-      elem
-        .transition(t)
-        .delay(duration / 2)
-        .style('opacity', 1);
+      elem.transition(t).delay(duration).style('opacity', 1);
     });
   }
 }
