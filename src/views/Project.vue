@@ -316,7 +316,7 @@
           ref="networkGraph"
           v-if="[0, 2].includes(core.app.view.project.state.modeIdx)"
         >
-          <NetworkGraph :networkHash="state.project.network.hash" />
+          <NetworkEditor :networkHash="state.project.network.hash" />
         </div>
       </transition>
 
@@ -366,7 +366,7 @@ import ActivityChartController from '@/components/activity/ActivityChartControll
 import ActivityAnimationController from '@/components/activity/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/ActivityStats.vue';
 import core from '@/core';
-import NetworkGraph from '@/components/network/NetworkGraph.vue';
+import NetworkEditor from '@/components/network/NetworkEditor.vue';
 import NetworkParamEdit from '@/components/network/NetworkParamEdit.vue';
 import ProjectLabBook from '@/components/project/ProjectLabBook.vue';
 import ProjectRawData from '@/components/project/ProjectRawData.vue';
@@ -382,7 +382,7 @@ export default Vue.extend({
     ActivityGraph,
     ActivityGraphIcon,
     ActivityStats,
-    NetworkGraph,
+    NetworkEditor,
     NetworkParamEdit,
     ProjectLabBook,
     ProjectRawData,
