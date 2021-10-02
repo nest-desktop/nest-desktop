@@ -1,3 +1,5 @@
+import { sha1 } from 'object-hash';
+
 import { Activity } from '../activity/activity';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { Config } from '../config';
@@ -16,6 +18,7 @@ export class Node extends Config {
   private _activity: SpikeActivity | AnalogSignalActivity | Activity;
   private _code: NodeCode; // code service for node
   private _idx: number; // generative
+  private _hash: string;
   private _modelId: string;
   private _network: Network; // parent
   private _params: ModelParameter[];
@@ -38,6 +41,8 @@ export class Node extends Config {
     this.initParameters(node);
     this.initSpatial(node.spatial);
     this.initActivity();
+
+    this.updateHash();
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity {
@@ -54,6 +59,10 @@ export class Node extends Config {
 
   get filteredParams(): ModelParameter[] {
     return this._params.filter((param: ModelParameter) => param.visible);
+  }
+
+  get hash(): string {
+    return this._hash;
   }
 
   get idx(): number {
@@ -357,12 +366,23 @@ export class Node extends Config {
   }
 
   /**
+   * Update hash for node graph.
+   */
+  updateHash(): void {
+    this._hash = sha1({
+      color: this.view.color,
+      idx: this.idx,
+    });
+  }
+
+  /**
    * Clean node component.
    */
   clean(): void {
     this._idx = this._network.nodes.indexOf(this);
     this.collectRecordFromTargets();
     this.view.clean();
+    this.updateHash();
   }
 
   /**

@@ -159,8 +159,8 @@ export class Network extends Config {
   /**
    * Add node component to the network.
    */
-  addNode(node: any): void {
-    this._nodes.push(new Node(this, node));
+  addNode(data: any): void {
+    this._nodes.push(new Node(this, data));
   }
 
   /**
@@ -182,8 +182,8 @@ export class Network extends Config {
   /**
    * Add connection component to the network.
    */
-  addConnection(conn: any): Connection {
-    const connection: Connection = new Connection(this, conn);
+  addConnection(data: any): Connection {
+    const connection: Connection = new Connection(this, data);
     this._connections.push(connection);
     return connection;
   }
@@ -196,6 +196,7 @@ export class Network extends Config {
    */
   connectNodes(source: Node, target: Node): void {
     // console.log('Connect nodes');
+    const weight = source.view.weight;
     const connection: Connection = this.addConnection({
       source: source.idx,
       target: target.idx,
@@ -203,6 +204,7 @@ export class Network extends Config {
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
     }
+    source.setWeights(weight);
     this.networkChanges();
   }
 
@@ -216,11 +218,12 @@ export class Network extends Config {
     // console.log('Delete node');
     this._view.reset();
     this._connections = this._connections.filter(
-      (c: Connection) => c.source !== node && c.target !== node
+      (connection: Connection) =>
+        connection.source !== node && connection.target !== node
     );
 
     // Update source and target idx in connections
-    this._connections.forEach(connection => {
+    this._connections.forEach((connection: Connection) => {
       if (connection.sourceIdx > node.idx) {
         connection.sourceIdx -= 1;
       }
@@ -291,15 +294,13 @@ export class Network extends Config {
     // add nodes to network.
     this._nodes = [];
     if (network.nodes) {
-      network.nodes.forEach((node: any) => this.addNode(node));
+      network.nodes.forEach((data: any) => this.addNode(data));
     }
 
     // add connections to network.
     this._connections = [];
     if (network.connections) {
-      network.connections.forEach((connection: any) =>
-        this.addConnection(connection)
-      );
+      network.connections.forEach((data: any) => this.addConnection(data));
     }
 
     this.clean();
