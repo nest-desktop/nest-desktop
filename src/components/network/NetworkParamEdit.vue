@@ -12,34 +12,6 @@
       v-if="state.connectionMenu.show"
     />
 
-    <!--
-    <v-select
-      :items="state.items"
-      dense
-      placeholder="Filter"
-      hide-details
-      multiple
-      small
-      deletable-chips
-      small-chips
-      v-model="state.filtered"
-    >
-      <template #prepend-item>
-        <v-list-item ripple @click="toggle">
-          <v-list-item-action>
-            <v-icon
-              :color="state.filtered.length > 0 ? 'indigo darken-4' : ''"
-              v-text="icon()"
-            />
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="'Select All'" />
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select> -->
-
     <v-banner
       class="elementType"
       height="28"
@@ -275,6 +247,13 @@
                 height="40"
                 tile
               >
+                <v-chip
+                  label
+                  outlined
+                  small
+                  v-if="connection.network.project.app.config.devMode"
+                  v-text="connection.hash.slice(0, 6)"
+                />
                 <v-icon v-text="'mdi-arrow-right-bold-outline'" />
               </v-btn>
             </v-col>

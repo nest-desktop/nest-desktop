@@ -28,6 +28,13 @@
           </v-col>
           <v-col cols="6">
             <v-btn block color="white" depressed height="40" tile>
+              <v-chip
+                label
+                outlined
+                small
+                v-if="connection.network.project.app.config.devMode"
+                v-text="connection.hash.slice(0, 6)"
+              />
               <v-icon v-text="'mdi-arrow-right-bold-outline'" />
             </v-btn>
           </v-col>

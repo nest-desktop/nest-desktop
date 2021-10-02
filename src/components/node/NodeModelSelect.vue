@@ -15,6 +15,13 @@
           <span v-text="state.node.model.label" />
           <v-spacer />
           <v-icon class="modelEdit" right v-text="'mdi-pencil'" />
+          <v-chip
+            label
+            outlined
+            small
+            v-if="state.node.network.project.app.config.devMode"
+            v-text="state.node.hash.slice(0, 6)"
+          />
         </v-btn>
       </template>
 
