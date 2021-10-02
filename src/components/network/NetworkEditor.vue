@@ -1,5 +1,5 @@
 <template>
-  <div class="networkGraph" ref="networkGraph">
+  <div class="networkEditor" ref="networkEditor">
     <ConnectionMenu
       :connection="state.connectionMenu.connection"
       :position="state.connectionMenu.position"
@@ -12,7 +12,7 @@
       v-if="state.nodeMenu.show"
     />
 
-    <NetworkGraphToolbar
+    <NetworkEditorToolbar
       :graph="state.graph"
       :network="state.network"
       class="no-print"
@@ -76,14 +76,12 @@
         </defs>
       </g>
 
-      <rect id="background" fill="white" />
-      <!-- <g class="grid no-print" /> -->
-
-      <g id="network" ref="network">
+      <rect id="workspaceHandler" fill="white" />
+      <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">
           <path
-            :style="{ strokeWidth: state.graph.strokeWidth }"
+            :style="{ strokeWidth: state.graph.config.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
             stroke-linecap="round"
@@ -93,7 +91,8 @@
 
         <g id="connections" />
         <g id="nodes" />
-        <g id="panel" />
+
+        <g id="nodeAddPanel" />
       </g>
     </svg>
 
@@ -144,13 +143,13 @@ import core from '@/core';
 
 import ConnectionMenu from '@/components/connection/ConnectionMenu.vue';
 import NodeMenu from '@/components/node/NodeMenu.vue';
-import NetworkGraphToolbar from '@/components/network/NetworkGraphToolbar.vue';
+import NetworkEditorToolbar from '@/components/network/NetworkEditorToolbar.vue';
 
 export default Vue.extend({
-  name: 'NetworkGraph',
+  name: 'NetworkEditor',
   components: {
     ConnectionMenu,
-    NetworkGraphToolbar,
+    NetworkEditorToolbar,
     NodeMenu,
   },
   props: {
@@ -228,7 +227,7 @@ export default Vue.extend({
     };
 
     /**
-     * Show snackbar
+     * Show snackbar.
      */
     const showSnackbar = (text: string, actions: any[] = []) => {
       state.snackbar.text = text;
@@ -236,6 +235,9 @@ export default Vue.extend({
       state.snackbar.show = true;
     };
 
+    /**
+     * Check if nodes with all types are created.
+     */
     const hasAllNodeTypes = () => {
       const types: string[] = state.network.nodes.map(
         node => node.model.elementType
@@ -276,7 +278,6 @@ export default Vue.extend({
       state.graph.resize(elem.clientWidth, elem.clientHeight);
       state.graph.init();
       state.graph.update();
-      state.graph.transform();
       setMenuTrigger();
       showHelp();
     };
@@ -287,14 +288,17 @@ export default Vue.extend({
     const onResize = () => {
       const elem: any = networkGraph.value['parentNode'];
       if (elem) {
-        state.graph.resize(elem.clientWidth, elem.clientHeight);
-        state.graph.transform();
+        state.graph.workspace.resize(elem.clientWidth, elem.clientHeight);
+        state.graph.workspace.updateTransform();
       }
     };
 
     onMounted(() => {
       state.graph = new NetworkGraph('svg#networkGraph');
+      onResize();
+      state.graph.workspace.init();
       update();
+      state.graph.workspace.update();
       window.addEventListener('resize', onResize);
     });
 
@@ -315,7 +319,6 @@ export default Vue.extend({
       () => {
         // When (un-)select node or connection button outside of the network graph.
         state.graph.update();
-        state.graph.transform();
       }
     );
 

@@ -1,11 +1,10 @@
 <template>
   <div class="nodeChip">
-    <v-chip :color="state.node.view.color" @click="selectNode" dark small>
-      <span v-text="state.node.view.label" />
-      <span class="mx-1 font-weight-light" v-text="state.node.model.label" />
+    <v-chip :color="state.node.view.color" @click="selectNode" outlined small>
+      <span class="font-weight-bold" v-text="state.node.view.label" />
+      <span class="mx-1" v-text="state.node.model.label" />
       <span class="mx-1" v-if="state.node.network.project.app.config.devMode">
-        (x:
-        {{ state.node.view.position.x.toFixed() }} y:
+        ( {{ state.node.view.position.x.toFixed() }},
         {{ state.node.view.position.y.toFixed() }})
       </span>
     </v-chip>
