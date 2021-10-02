@@ -1,5 +1,4 @@
 {
-  "centerNetwork": false,
-  "centerSelected": false,
-  "showGrid": false
+  "nodeRadius": 20,
+  "strokeWidth": 3
 }
