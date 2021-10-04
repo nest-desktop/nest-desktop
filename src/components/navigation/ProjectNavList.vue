@@ -73,14 +73,16 @@
             </v-list-item-content>
 
             <v-list-item-icon>
+              <ActivityGraphIcon
+                :project="project"
+                :small="true"
+                v-if="project.hasActivities"
+              />
               <!-- <v-icon
-                v-show="project.activityGraph.codeHash !== undefined"
-                v-text="'mdi-chart-scatter-plot'"
-              /> -->
-              <v-icon
+                small
                 v-show="!project.rev"
                 v-text="'mdi-alert-circle-outline'"
-              />
+              /> -->
             </v-list-item-icon>
           </v-list-item>
         </transition-group>
@@ -95,12 +97,14 @@ import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import { Project } from '@/core/project/project';
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import core from '@/core';
 import ProjectMenu from '@/components/project/ProjectMenu.vue';
 
 export default Vue.extend({
   name: 'ProjectNavList',
   components: {
+    ActivityGraphIcon,
     draggable,
     ProjectMenu,
   },

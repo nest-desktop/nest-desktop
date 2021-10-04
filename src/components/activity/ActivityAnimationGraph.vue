@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, onUnmounted } from '@vue/composition-api';
+import { ref, onMounted, onUnmounted } from '@vue/composition-api';
 
 import { ActivityAnimationGraph } from '@/core/activity/activityAnimationGraph';
 
@@ -17,19 +17,22 @@ export default Vue.extend({
   props: {
     graph: ActivityAnimationGraph,
   },
-  setup(props, { refs }) {
+  setup(props) {
     let graph: ActivityAnimationGraph;
+    const activityAnimationGraph = ref(null);
 
     onMounted(() => {
       graph = props.graph as ActivityAnimationGraph;
-      graph.initScene(refs['activityAnimationGraph']);
+      graph.initScene(activityAnimationGraph.value);
     });
 
     onUnmounted(() => {
       graph.scene.destroy();
     });
 
-    return {};
+    return {
+      activityAnimationGraph,
+    };
   },
 });
 </script>

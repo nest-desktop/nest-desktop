@@ -7,6 +7,8 @@
 
     <v-navigation-drawer
       :miniVariant="state.miniVariant"
+      :style="{ transition: state.resizing ? 'initial' : '' }"
+      :width="state.width"
       app
       left
       mobile-breakpoint="64"
@@ -20,133 +22,138 @@
           }
         }
       "
-      width="320"
     >
+      <div
+        @mousedown="resizeSidebar"
+        class="resize-handle"
+        v-if="!state.miniVariant"
+      />
       <v-row class="fill-height" no-gutters>
-        <v-navigation-drawer
-          absolute
-          app
-          mini-variant
-          mini-variant-width="64"
-          mobile-breakpoint="64"
-          permanent
-        >
-          <div class="flex">
-            <v-list nav>
-              <v-list-item
-                :class="{ 'v-list-item--active': state.navList === route.id }"
-                :color="route.color"
-                :key="route.id"
-                :title="route.title"
-                @click="() => updatePageContent(route.id)"
-                @contextmenu="e => route.contextmenu(e)"
-                v-for="route in routes"
-              >
-                <v-list-item-icon>
-                  <v-list-item-group class="nav-item">
-                    <v-icon v-text="route.icon" />
-                    <div v-text="route.title" />
-                  </v-list-item-group>
-                </v-list-item-icon>
-                <v-list-item-content />
-              </v-list-item>
-            </v-list>
+        <v-col>
+          <v-navigation-drawer
+            absolute
+            app
+            mini-variant
+            mini-variant-width="64"
+            mobile-breakpoint="64"
+            permanent
+          >
+            <div class="flex">
+              <v-list nav>
+                <v-list-item
+                  :class="{ 'v-list-item--active': state.navList === route.id }"
+                  :color="route.color"
+                  :key="route.id"
+                  :title="route.title"
+                  @click="() => updatePageContent(route.id)"
+                  @contextmenu="e => route.contextmenu(e)"
+                  v-for="route in routes"
+                >
+                  <v-list-item-icon>
+                    <v-list-item-group class="nav-item">
+                      <v-icon v-text="route.icon" />
+                      <div v-text="route.title" />
+                    </v-list-item-group>
+                  </v-list-item-icon>
+                  <v-list-item-content />
+                </v-list-item>
+              </v-list>
 
-            <v-spacer />
+              <v-spacer />
 
-            <v-list nav>
-              <template v-if="state.app.config.devMode">
-                <v-tooltip right>
+              <v-list nav>
+                <template v-if="state.app.config.devMode">
+                  <v-tooltip right>
+                    <template #activator="{ on, attrs }">
+                      <v-list-item v-bind="attrs" v-on="on">
+                        <v-list-item-icon v-bind="attrs" v-on="on">
+                          <v-icon v-text="'mdi-dev-to'" />
+                        </v-list-item-icon>
+                      </v-list-item>
+                    </template>
+                    <span v-text="'Dev mode is on.'" />
+                  </v-tooltip>
+                </template>
+
+                <v-list-item
+                  @click="reset"
+                  color="settings darken1"
+                  title="Settings"
+                  to="/settings"
+                >
+                  <v-list-item-icon>
+                    <v-list-item-group class="nav-item">
+                      <v-icon v-text="'mdi-cogs'" />
+                      Settings
+                    </v-list-item-group>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="'Settings'" />
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item
+                  href="https://nest-desktop.readthedocs.io"
+                  target="_blank"
+                  title="Help"
+                >
+                  <v-list-item-icon>
+                    <v-list-item-group class="nav-item">
+                      <v-icon v-text="'mdi-help-circle-outline'" />
+                      Help
+                    </v-list-item-group>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="'Help'" class="text-h1" />
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-dialog max-width="450" v-model="state.dialog">
                   <template #activator="{ on, attrs }">
-                    <v-list-item v-bind="attrs" v-on="on">
-                      <v-list-item-icon v-bind="attrs" v-on="on">
-                        <v-icon v-text="'mdi-dev-to'" />
+                    <v-list-item
+                      @click="reset"
+                      title="About"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-list-item-icon>
+                        <v-list-item-group class="nav-item">
+                          <v-icon v-text="'mdi-information-variant'" />
+                          About
+                        </v-list-item-group>
                       </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title v-text="'About'" />
+                      </v-list-item-content>
                     </v-list-item>
                   </template>
-                  <span v-text="'Dev mode is on.'" />
-                </v-tooltip>
-              </template>
-
-              <v-list-item
-                @click="reset"
-                color="settings darken1"
-                title="Settings"
-                to="/settings"
-              >
-                <v-list-item-icon>
-                  <v-list-item-group class="nav-item">
-                    <v-icon v-text="'mdi-cogs'" />
-                    Settings
-                  </v-list-item-group>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="'Settings'" />
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item
-                href="https://nest-desktop.readthedocs.io"
-                target="_blank"
-                title="Help"
-              >
-                <v-list-item-icon>
-                  <v-list-item-group class="nav-item">
-                    <v-icon v-text="'mdi-help-circle-outline'" />
-                    Help
-                  </v-list-item-group>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="'Help'" class="text-h1" />
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-dialog max-width="500" v-model="state.dialog">
-                <template #activator="{ on, attrs }">
-                  <v-list-item
-                    @click="reset"
-                    title="About"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    <v-list-item-icon>
-                      <v-list-item-group class="nav-item">
-                        <v-icon v-text="'mdi-information-variant'" />
-                        About
-                      </v-list-item-group>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="'About'" />
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-                <v-card class="about-dialog">
-                  <v-card-title
-                    class="headline"
-                    v-text="'About NEST Desktop'"
-                  />
-                  <v-card-text>
-                    <About />
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      @click="state.dialog = false"
-                      text
-                      v-text="'Close'"
+                  <v-card class="about-dialog">
+                    <v-card-title
+                      class="headline"
+                      v-text="'About NEST Desktop'"
                     />
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-list>
-          </div>
-        </v-navigation-drawer>
+                    <v-card-text>
+                      <About />
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        @click="state.dialog = false"
+                        text
+                        v-text="'Close'"
+                      />
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-list>
+            </div>
+          </v-navigation-drawer>
 
-        <div style="padding-left: 64px">
-          <ProjectNavList v-if="state.navList === 'project'" />
-          <ModelNavList v-if="state.navList === 'model'" />
-          <SettingNavList v-if="state.navList === 'setting'" />
-        </div>
+          <div style="padding-left: 64px">
+            <ProjectNavList v-if="state.navList === 'project'" />
+            <ModelNavList v-if="state.navList === 'model'" />
+          </div>
+        </v-col>
       </v-row>
     </v-navigation-drawer>
   </div>
@@ -182,6 +189,8 @@ export default {
         position: { x: 0, y: 0 },
         show: false,
       },
+      resizing: false,
+      width: 320,
     });
     let recentProjectId = '';
     let recentModelId = 'ac_generator';
@@ -306,11 +315,44 @@ export default {
       },
     ];
 
+    /**
+     * Handle mouse move on resizing.
+     *
+     * @param e MouseEvent from which the x position is taken
+     */
+    const handleMouseMove = (e: MouseEvent) => {
+      window.getSelection().removeAllRanges();
+      const width = e.clientX + 2;
+      if (width > 320) {
+        state.width = width;
+        window.dispatchEvent(new Event('resize'));
+      }
+    };
+
+    /**
+     * Handle mouse up on resizing.
+     */
+    const handleMouseUp = () => {
+      state.resizing = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    /**
+     * Resize sidebar.
+     */
+    const resizeSidebar = () => {
+      state.resizing = true;
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    };
+
     return {
-      toggle,
       reset,
+      resizeSidebar,
       routes,
       state,
+      toggle,
       updatePageContent,
     };
   },
@@ -328,5 +370,14 @@ export default {
   font-size: 9px;
   text-align: center;
   width: 100%;
+}
+
+.navigation .resize-handle {
+  cursor: ew-resize;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  width: 4px;
+  z-index: 10;
 }
 </style>

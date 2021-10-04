@@ -15,7 +15,7 @@
         light
         mandatory
         style="margin-left: -16px"
-        v-model="state.modeIdx"
+        v-model="core.app.view.project.state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
@@ -39,7 +39,15 @@
             <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
               <v-col>
                 <v-row style="place-content: center">
-                  <v-icon v-text="'mdi-chart-scatter-plot'" />
+                  <ActivityGraphIcon
+                    :project="state.project"
+                    v-if="state.project.hasActivities"
+                  />
+                  <v-icon
+                    class="rotate-90"
+                    v-else
+                    v-text="'mdi-border-style'"
+                  />
                 </v-row>
                 <v-row
                   style="place-content: center; font-size: 10px"
@@ -55,7 +63,11 @@
               @click="selectActivityGraph('abstract')"
             >
               <v-list-item-icon>
-                <v-icon v-text="'mdi-chart-scatter-plot'" />
+                <ActivityGraphIcon
+                  :project="state.project"
+                  v-if="state.project.hasActivities"
+                />
+                <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
               </v-list-item-icon>
               <v-list-item-title v-text="'abstract'" />
             </v-list-item>
@@ -155,14 +167,19 @@
         </v-row>
       </div>
 
-      <div @click="state.modeIdx = 1">
+      <div @click="core.app.view.project.state.modeIdx = 1">
         <SimulationButton :project="state.project" />
       </div>
     </v-app-bar>
 
     <v-navigation-drawer
-      :mini-variant="!state.toolOpened"
-      :width="state.tool.width"
+      :mini-variant="!core.app.view.project.state.toolOpened"
+      :style="{ transition: state.resizing ? 'initial' : '' }"
+      :width="
+        core.app.view.project.state.tool !== undefined
+          ? core.app.view.project.state.tool.width
+          : 0
+      "
       app
       class="no-print"
       clipped
@@ -171,6 +188,11 @@
       permanent
       right
     >
+      <div
+        @mousedown="resizeSidebar"
+        class="resize-handle"
+        v-if="core.app.view.project.state.toolOpened"
+      />
       <v-row class="fill-height ml-0" no-gutters>
         <v-navigation-drawer
           absolute
@@ -181,13 +203,13 @@
         >
           <!-- <v-list nav dense>
             <v-list-item
-              @click="state.toolOpened = !state.toolOpened"
+              @click="core.app.view.project.state.toolOpened = !core.app.view.project.state.toolOpened"
               title="Toggle navigation"
             >
               <v-list-item-icon>
                 <v-icon
                   v-text="
-                    'mdi-chevron-' + (state.toolOpened ? 'right' : 'left')
+                    'mdi-chevron-' + (core.app.view.project.state.toolOpened ? 'right' : 'left')
                   "
                 />
               </v-list-item-icon>
@@ -200,17 +222,33 @@
           <v-list nav>
             <v-list-item
               :class="{
-                'v-list-item--active': state.tool === tool && state.toolOpened,
+                'v-list-item--active':
+                  core.app.view.project.state.tool === tool &&
+                  core.app.view.project.state.toolOpened,
               }"
               :key="tool.name"
               :title="tool.title"
               @click="selectTool(tool)"
-              v-for="tool in state.tools"
+              v-for="tool in core.app.view.project.tools"
               v-show="tool.devMode ? core.app.config.devMode : true"
             >
               <v-list-item-icon>
                 <v-list-item-group class="nav-item-right">
-                  <v-icon v-text="tool.icon" />
+                  <span v-if="tool.name !== 'activityEdit'">
+                    <v-icon v-text="tool.icon" />
+                  </span>
+                  <span v-else>
+                    <ActivityGraphIcon
+                      :project="state.project"
+                      :spatial="true"
+                      v-if="state.project.hasActivities"
+                    />
+                    <v-icon
+                      class="rotate-90"
+                      v-else
+                      v-text="'mdi-border-style'"
+                    />
+                  </span>
                   <div v-text="tool.title" />
                 </v-list-item-group>
               </v-list-item-icon>
@@ -219,45 +257,52 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div style="width: 100%; padding-right: 64px" v-if="state.toolOpened">
+        <div
+          style="width: 100%; padding-right: 64px"
+          v-if="core.app.view.project.state.toolOpened"
+        >
           <NetworkParamEdit
             :network="state.project.network"
             :projectId="state.projectId"
-            v-if="state.tool.name === 'networkParamEdit'"
+            v-if="core.app.view.project.state.tool.name === 'networkParamEdit'"
           />
 
           <SimulationKernel
             :simulation="state.project.simulation"
-            v-if="state.tool.name === 'simulationKernel'"
+            v-if="core.app.view.project.state.tool.name === 'simulationKernel'"
           />
 
           <SimulationCodeEditor
             :code="state.project.code"
-            v-if="state.tool.name === 'codeEditor'"
+            v-if="core.app.view.project.state.tool.name === 'codeEditor'"
           />
 
           <ActivityChartController
             :graph="state.project.activityGraph"
             v-if="
-              state.tool.name === 'activityEdit' &&
-              state.activityGraph === 'abstract'
+              core.app.view.project.state.tool.name === 'activityEdit' &&
+              core.app.view.project.state.activityGraph === 'abstract'
             "
           />
 
           <ActivityAnimationController
             :graph="state.project.activityGraph"
             v-if="
-              state.tool.name === 'activityEdit' &&
-              state.activityGraph === 'spatial'
+              core.app.view.project.state.tool.name === 'activityEdit' &&
+              core.app.view.project.state.activityGraph === 'spatial'
             "
           />
 
           <ActivityStats
             :project="core.app.project"
-            v-if="state.tool.name === 'activityStats'"
+            v-if="core.app.view.project.state.tool.name === 'activityStats'"
           />
 
-          <v-card flat tile v-if="state.tool.name === 'dataJSON'">
+          <v-card
+            flat
+            tile
+            v-if="core.app.view.project.state.tool.name === 'dataJSON'"
+          >
             <ProjectRawData :project="state.project" />
           </v-card>
         </div>
@@ -269,7 +314,7 @@
         <div
           :style="{ height: state.networkGraphHeight }"
           ref="networkGraph"
-          v-if="[0, 2].includes(state.modeIdx)"
+          v-if="[0, 2].includes(core.app.view.project.state.modeIdx)"
         >
           <NetworkGraph :networkHash="state.project.network.hash" />
         </div>
@@ -281,20 +326,23 @@
           :graph="state.project.activityGraph"
           :graphHash="state.project.activityGraph.codeHash"
           :projectId="state.projectId"
-          :view="state.activityGraph"
-          v-if="state.modeIdx === 1"
+          :view="core.app.view.project.state.activityGraph"
+          v-if="core.app.view.project.state.modeIdx === 1"
         />
       </transition>
 
       <transition name="fade">
         <ProjectLabBook
           :hash="state.project.network.hash"
-          v-if="state.modeIdx === 2"
+          v-if="core.app.view.project.state.modeIdx === 2"
         />
       </transition>
     </v-main>
 
-    <v-overlay :value="state.loading || state.project.simulation.running">
+    <v-overlay
+      :value="state.loading || state.project.simulation.running"
+      :z-index="10"
+    >
       <v-progress-circular
         :size="70"
         :width="7"
@@ -313,6 +361,7 @@ import axios from 'axios';
 
 import { Project } from '@/core/project/project';
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import ActivityChartController from '@/components/activity/ActivityChartController.vue';
 import ActivityAnimationController from '@/components/activity/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/ActivityStats.vue';
@@ -331,6 +380,7 @@ export default Vue.extend({
     ActivityAnimationController,
     ActivityChartController,
     ActivityGraph,
+    ActivityGraphIcon,
     ActivityStats,
     NetworkGraph,
     NetworkParamEdit,
@@ -344,66 +394,17 @@ export default Vue.extend({
     id: String,
   },
   setup(props, { root }) {
-    let _modeIdx: number = 0;
     const state = reactive({
-      activityGraph: 'abstract',
       error: false,
       loading: false,
-      get modeIdx(): number {
-        return _modeIdx;
-      },
-      set modeIdx(value: number) {
-        _modeIdx = value;
-        state.project.view.modeIdx = value;
-      },
       networkGraphHeight: 'calc(100vh - 48px)',
       projectId: props.id as string,
       project: undefined as Project | undefined,
+      resizing: false,
       simulationMenu: {
         position: { x: 0, y: 0 },
         show: false,
       },
-      toolOpened: false,
-      tool: undefined,
-      tools: [
-        // {
-        //   icon: '$network',
-        //   name: 'networkParamSelect',
-        //   title: 'Network',
-        // },
-        {
-          icon: '$network',
-          name: 'networkParamEdit',
-          title: 'Network',
-          width: '440',
-        },
-        {
-          icon: 'mdi-engine-outline',
-          name: 'simulationKernel',
-          title: 'Kernel',
-          width: '440',
-        },
-        {
-          icon: 'mdi-code-braces',
-          name: 'dataJSON',
-          title: 'Data',
-          width: '570',
-          devMode: true,
-        },
-        { icon: 'mdi-xml', name: 'codeEditor', title: 'Code', width: '570' },
-        {
-          icon: 'mdi-chart-scatter-plot',
-          name: 'activityEdit',
-          title: 'Activity',
-          width: '440',
-        },
-        {
-          icon: 'mdi-table-large',
-          name: 'activityStats',
-          title: 'Statistics',
-          width: '500',
-        },
-      ],
     });
 
     /**
@@ -426,9 +427,10 @@ export default Vue.extend({
           if (state.project) {
             updateProjectMode();
             state.project.network.view.reset();
-            state.activityGraph = state.project.network.view.hasPositions()
-              ? state.activityGraph
-              : 'abstract';
+            core.app.view.project.state.activityGraph =
+              state.project.network.view.hasPositions()
+                ? core.app.view.project.state.activityGraph
+                : 'abstract';
             state.loading = false;
             if (state.project.config.simulateAfterLoad) {
               state.project.runSimulation();
@@ -460,8 +462,8 @@ export default Vue.extend({
      * Select view for activity graph.
      */
     const selectActivityGraph = (mode: string) => {
-      state.activityGraph = mode;
-      state.modeIdx = 1;
+      core.app.view.project.state.activityGraph = mode;
+      core.app.view.project.state.modeIdx = 1;
     };
 
     /**
@@ -469,7 +471,9 @@ export default Vue.extend({
      */
     const resizeNetworkGraph = () => {
       state.networkGraphHeight =
-        state.modeIdx === 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
+        core.app.view.project.state.modeIdx === 2
+          ? 'calc(30vh)'
+          : 'calc(100vh - 48px)';
       setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
       }, 1);
@@ -479,11 +483,11 @@ export default Vue.extend({
      * Update view mode of the project.
      */
     const updateProjectMode = () => {
-      state.project.view.modeIdx = state.modeIdx;
-      if ([0, 2].includes(state.modeIdx)) {
-        state.toolOpened = state.toolOpened
-          ? state.modeIdx !== 2
-          : state.toolOpened;
+      if ([0, 2].includes(core.app.view.project.state.modeIdx)) {
+        core.app.view.project.state.toolOpened = core.app.view.project.state
+          .toolOpened
+          ? core.app.view.project.state.modeIdx !== 2
+          : core.app.view.project.state.toolOpened;
         resizeNetworkGraph();
       }
     };
@@ -492,21 +496,46 @@ export default Vue.extend({
      * Select tool for this project.
      */
     const selectTool = (tool: any) => {
-      state.toolOpened = state.toolOpened ? state.tool != tool : true;
-      state.tool = tool;
+      core.app.view.project.state.toolOpened = core.app.view.project.state
+        .toolOpened
+        ? core.app.view.project.state.tool != tool
+        : true;
+      core.app.view.project.state.tool = tool;
     };
 
     /**
-     * Reset view.
+     * Handle mouse move on resizing.
+     * @param e MouseEvent from which the x position is taken
      */
-    const reset = () => {
-      state.activityGraph = 'abstract';
-      state.toolOpened = false;
-      state.tool = state.tools[0];
+    const handleMouseMove = (e: MouseEvent) => {
+      window.getSelection().removeAllRanges();
+      const width = window.innerWidth - e.clientX;
+      if (width >= core.app.view.project.state.tool['minWidth']) {
+        core.app.view.project.state.tool['width'] = width;
+        window.dispatchEvent(new Event('resize'));
+      }
+    };
+
+    /**
+     * Handle mouse up on resizing.
+     */
+    const handleMouseUp = () => {
+      state.resizing = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.dispatchEvent(new Event('resize'));
+    };
+
+    /**
+     * Resize sidebar.
+     */
+    const resizeSidebar = () => {
+      state.resizing = true;
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
     };
 
     onMounted(() => {
-      reset();
       state.projectId = props.id as string;
       loadProject();
     });
@@ -523,6 +552,7 @@ export default Vue.extend({
       core,
       countAfter,
       countBefore,
+      resizeSidebar,
       selectActivityGraph,
       selectTool,
       state,
@@ -537,5 +567,18 @@ export default Vue.extend({
   text-align: center;
   width: 100%;
   font-size: 9px;
+}
+
+.project-container .resize-handle {
+  cursor: ew-resize;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  width: 4px;
+  z-index: 10;
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
 }
 </style>

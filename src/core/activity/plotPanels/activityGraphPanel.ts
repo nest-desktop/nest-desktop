@@ -9,7 +9,7 @@ export abstract class ActivityGraphPanel extends Config {
   private _activities: Activity[] = [];
   private _data: any[] = [];
   private _graph: ActivityChartGraph; // parent
-  private _icon = 'chart-line';
+  private _icon = 'mdi-chart-bell-curve-cumulative';
   private _label = 'graph panel of activity';
   private _layout: any = {
     xaxis: {
