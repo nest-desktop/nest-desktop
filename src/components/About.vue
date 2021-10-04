@@ -2,7 +2,7 @@
   <div class="about" align="center">
     <v-list dense max-width="500px">
       <v-list-item>
-        <v-row class="ml-1">
+        <v-row align-content="start">
           <v-col
             align="start"
             class="font-weight-bold"
@@ -21,7 +21,7 @@
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row class="ml-1">
+        <v-row>
           <v-col
             align="start"
             class="font-weight-bold"
@@ -40,7 +40,7 @@
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row class="ml-1">
+        <v-row>
           <v-col
             align="start"
             class="font-weight-bold"
@@ -51,7 +51,7 @@
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row class="ml-1">
+        <v-row>
           <v-col
             align="start"
             class="font-weight-bold"
@@ -62,7 +62,7 @@
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row class="ml-1">
+        <v-row>
           <v-col
             align="start"
             class="font-weight-bold"
