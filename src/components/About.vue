@@ -1,19 +1,16 @@
 <template>
-  <div class="about" align="center">
+  <div class="about">
     <v-list dense max-width="500px">
       <v-list-item>
-        <v-row align-content="start">
+        <v-row>
           <v-col
-            align="start"
-            class="font-weight-bold"
+            class="font-weight-bold text-left"
             cols="4"
             v-text="'Documentation'"
           />
-          <v-col cols="8" align="end">
+          <v-col class="text-right" cols="8">
             <a
               :href="state.doc"
-              onmouseout="style='text-decoration:none'"
-              onmouseover="style='text-decoration:underline'"
               target="_blank"
               v-text="state.doc"
             />
@@ -23,16 +20,13 @@
       <v-list-item>
         <v-row>
           <v-col
-            align="start"
-            class="font-weight-bold"
+            class="font-weight-bold text-left"
             cols="4"
             v-text="'Source code'"
           />
-          <v-col cols="8" align="end">
+          <v-col class="text-right" cols="8">
             <a
               :href="state.repo"
-              onmouseout="style='text-decoration:none'"
-              onmouseover="style='text-decoration:underline'"
               target="_blank"
               v-text="state.repo"
             />
@@ -42,34 +36,31 @@
       <v-list-item>
         <v-row>
           <v-col
-            align="start"
-            class="font-weight-bold"
+            class="font-weight-bold text-left"
             cols="4"
             v-text="'License'"
           />
-          <v-col align="end" cols="8" v-text="state.license" />
+          <v-col class="text-right" cols="8" v-text="state.license" />
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
           <v-col
-            align="start"
-            class="font-weight-bold"
+            class="font-weight-bold text-left"
             cols="4"
             v-text="'Current version'"
           />
-          <v-col align="end" cols="8" v-text="state.version" />
+          <v-col class="text-right" cols="8" v-text="state.version" />
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
           <v-col
-            align="start"
-            class="font-weight-bold"
+            class="font-weight-bold text-left"
             cols="4"
             v-text="'Contact'"
           />
-          <v-col align="end" cols="8">
+          <v-col class="text-right" cols="8">
             <a
               :href="
                 state.contactMailHeader +
@@ -162,13 +153,17 @@ export default {
   font-size: 12px;
 }
 .about .v-list-item {
-  height: 28px !important;
+  color: black !important;
   min-height: 28px !important;
 }
 .about a {
-  text-decoration: none;
   color: black !important;
+  text-decoration: none;
 }
+.about a:hover {
+  text-decoration: underline;
+}
+
 .about .col-4,
 .about .col-8 {
   padding: 4px;
