@@ -96,8 +96,8 @@ export class Model extends Config {
    * Get defaults of the model from NEST Simulator.
    */
   fetchDefaults(): Promise<any> {
-    return this.app.nestServer.httpClient.post(
-      this.app.nestServer.url + '/api/GetDefaults',
+    return this.app.NESTSimulator.httpClient.post(
+      this.app.NESTSimulator.url + '/api/GetDefaults',
       {
         model: this._id,
       }
