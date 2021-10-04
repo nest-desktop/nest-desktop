@@ -323,10 +323,11 @@ export default {
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();
       const width = e.clientX + 2;
-      if (width > 320) {
-        state.width = width;
-        window.dispatchEvent(new Event('resize'));
+      if (width < 320) {
+        return;
       }
+      state.width = width;
+      window.dispatchEvent(new Event('resize'));
     };
 
     /**

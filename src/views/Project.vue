@@ -510,10 +510,17 @@ export default Vue.extend({
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();
       const width = window.innerWidth - e.clientX;
-      if (width >= core.app.view.project.state.tool['minWidth']) {
-        core.app.view.project.state.tool['width'] = width;
-        window.dispatchEvent(new Event('resize'));
+      if (
+        width ===
+        core.app.view.project.state.tool['minWidth']
+      ) {
+        return;
       }
+      core.app.view.project.state.tool['width'] =
+        width > core.app.view.project.state.tool['minWidth']
+          ? width
+          : core.app.view.project.state.tool['minWidth'];
+      window.dispatchEvent(new Event('resize'));
     };
 
     /**
