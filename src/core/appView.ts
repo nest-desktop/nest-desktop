@@ -18,7 +18,12 @@ export class AppView {
     };
     this._project = {
       searchTerm: '',
-      state: undefined,
+      state: reactive({
+        activityGraph: 'abstract',
+        modeIdx: 0,
+        tool: undefined,
+        toolOpened: false,
+      }),
       tools: [
         {
           icon: '$network',
