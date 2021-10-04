@@ -48,19 +48,24 @@
             <v-tooltip top open-delay="300">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  label="NEST Server URL"
-                  placeholder="https://www.my-nest-server.com:5000"
-                  v-model="state.app.nestServer.url"
+                  @change="updateNESTSimulatorConfig"
+                  label="URL of NEST Simulator"
+                  placeholder="http://127.0.0.1:5000"
+                  v-model="state.app.NESTSimulator.url"
                   v-bind="attrs"
                   v-on="on"
                 />
               </template>
               <span>
-                Please enter the URL where the NEST Server can be found at
-                (including protocol!).
+                Please enter the URL where the server of NEST Simulator can be
+                found at (including protocol!).
               </span>
             </v-tooltip>
-            <span v-if="state.nestVersion && state.nestVersion != 'unknown'">
+            <span
+              v-if="
+                state.simulatorVersion && state.simulatorVersion != 'unknown'
+              "
+            >
               <label>Response: </label>
               <v-tooltip right open-delay="300">
                 <template v-slot:activator="{ on, attrs }">
@@ -68,13 +73,16 @@
                     <v-avatar left>
                       <v-icon small v-text="'mdi-checkbox-marked-circle'" />
                     </v-avatar>
-                    NEST version: {{ state.nestVersion }}
+                    NEST version: {{ state.simulatorVersion }}
                   </v-chip>
                 </template>
-                <span>A NEST Server has been found at the given URL.</span>
+                <span
+                  >A server of NEST Simulator has been found at the given
+                  URL.</span
+                >
               </v-tooltip>
             </span>
-            <span v-else-if="state.nestVersion === 'unknown'">
+            <span v-else-if="state.simulatorVersion === 'unknown'">
               <label>Response: </label>
               <v-tooltip right open-delay="300">
                 <template v-slot:activator="{ on, attrs }">
@@ -85,7 +93,9 @@
                     <span>Unknown</span>
                   </v-chip>
                 </template>
-                <span> The NEST Server state has not been checked yet. </span>
+                <span>
+                  The server state of NEST Simulator has not been checked yet.
+                </span>
               </v-tooltip>
             </span>
             <span v-else>
@@ -100,15 +110,16 @@
                   </v-chip>
                 </template>
                 <span>
-                  The NEST Server seems to be unavailable at this URL.
+                  The server of NEST Simulator seems to be unavailable at this
+                  URL.
                 </span>
               </v-tooltip>
             </span>
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="checkNEST">Check</v-btn>
-            <!-- <v-btn @click="() => core.app.nestServer.seek()">seek</v-btn> -->
+            <v-btn @click="checkNESTSimulator">Check</v-btn>
+            <!-- <v-btn @click="() => core.app.NESTSimulator.seek()">seek</v-btn> -->
           </v-card-actions>
         </v-card>
 
@@ -181,27 +192,27 @@ export default Vue.extend({
     const state = reactive({
       app: core.app,
       devMode: core.app.config.devMode,
-      nestVersion: 'unknown',
+      simulatorVersion: 'unknown',
       network: new Config('Network'),
       pinNav: core.app.config.pinNav,
       showHelp: core.app.project.config.showHelp,
       colorSchemes: colorSchemes,
     });
 
-    onBeforeMount(() => checkNEST());
+    onBeforeMount(() => checkNESTSimulator());
 
     /**
-     * Check if NEST is running in the backend.
+     * Check if NEST Simulator is running in the backend.
      */
-    async function checkNEST() {
-      core.app.nestServer
-        .check()
+    async function checkNESTSimulator() {
+      core.app.NESTSimulator.check()
         .catch(() => {
           // connection errors are already processed in httpClient
         })
         .finally(function () {
           // update the version (is updated as well in case of failure)
-          state.nestVersion = core.app.nestServer.state.simulatorVersion;
+          state.simulatorVersion =
+            core.app.NESTSimulator.state.simulatorVersion;
         });
     }
 
@@ -217,6 +228,14 @@ export default Vue.extend({
      */
     const updateProjectConfig = (d: any) => {
       core.app.project.updateConfig(d);
+    };
+
+    /**
+     * Update configurations for NEST Simulator.
+     */
+    const updateNESTSimulatorConfig = () => {
+      state.app.NESTSimulator.updateConfig({ custom: true });
+      checkNESTSimulator();
     };
 
     /**
@@ -236,9 +255,10 @@ export default Vue.extend({
     };
 
     return {
-      checkNEST,
+      checkNESTSimulator,
       state,
       updateAppConfig,
+      updateNESTSimulatorConfig,
       updateNetworkColorScheme,
       updateProjectConfig,
     };

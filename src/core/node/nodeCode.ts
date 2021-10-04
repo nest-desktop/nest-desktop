@@ -15,10 +15,6 @@ export class NodeCode extends Code {
     return this._node.view.label;
   }
 
-  get simulatorVersion(): string {
-    return this._node.network.project.app.nestServer.state.simulatorVersion;
-  }
-
   /**
    * Write script to create node.
    */

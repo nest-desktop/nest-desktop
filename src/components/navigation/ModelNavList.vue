@@ -68,8 +68,8 @@ export default Vue.extend({
         // Use implemented models
         state.models = implementedModels;
       } else {
-        // Fetch models from NEST Server API.
-        const url = `${core.app.nestServer.url}/api/Models`;
+        // Fetch models from NEST Simulator.
+        const url = `${core.app.NESTSimulator.url}/api/Models`;
         axios.get(url).then(resp => {
           state.models = resp.data;
         });
