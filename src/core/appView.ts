@@ -95,17 +95,4 @@ export class AppView {
   get project(): any {
     return this._project;
   }
-
-  /**
-   * Initializes the project state with  activityGraph, nodeIdx, tool and
-   * toolOpened (reactive).
-   */
-  public initProjectState() {
-    this.project.state = reactive({
-      activityGraph: 'abstract',
-      modeIdx: 0,
-      tool: undefined,
-      toolOpened: false,
-    });
-  }
 }
