@@ -2,6 +2,8 @@
   <div class="home">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
+        <v-spacer />
+
         <v-row>
           <v-col align="center">
             <v-img
@@ -17,9 +19,7 @@
               v-text="'An educational GUI for neuroscience'"
             />
           </v-col>
-        </v-row>
 
-        <v-row>
           <v-col :cols="12" :md="12" :xl="8" :offset-xl="2">
             <v-row>
               <v-col :lg="4" :xs="6" :offset-lg="2">
@@ -104,16 +104,16 @@
                 :cols="12"
                 :key="reference.title"
                 :lg="3"
-                :md="6"
+                :sm="6"
                 v-for="reference in references"
               >
-                <v-tooltip :open-delay="200" bottom>
+                <v-tooltip :open-delay="200" top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       :color="reference.color"
                       :href="reference.url"
-                      class="logo"
                       block
+                      class="logo"
                       depressed
                       ripple
                       target="_blank"
@@ -209,33 +209,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.app-details .v-list {
-  font-size: 12px;
-}
-
-.app-details .v-list-item {
-  min-height: 28px !important;
-}
-.app-details a {
-  text-decoration: none;
-  color: black;
-}
-.app-details .col-4,
-.app-details .col-8 {
-  padding: 4px;
-}
-
-.logo {
+.home .logo {
   overflow: hidden;
 }
-
-.logo .v-image {
+.home .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-
-.logo:hover .v-image {
-  transition: all 0.5s ease-in-out;
+.home .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>
