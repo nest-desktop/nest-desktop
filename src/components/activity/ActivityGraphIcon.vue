@@ -1,6 +1,6 @@
 <template>
   <div class="activityGraphIcon">
-    <span v-if="state.small">
+    <span v-if="state.small && state.project">
       <v-icon
         :small="state.small"
         v-show="state.project.hasAnalogActivities"
@@ -17,7 +17,7 @@
         v-text="'mdi-axis-arrow'"
       />
     </span>
-    <span v-else>
+    <span v-else-if="state.project">
       <v-icon
         :small="state.small"
         v-if="
