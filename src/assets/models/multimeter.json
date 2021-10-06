@@ -1,7 +1,7 @@
 {
   "abbreviation": "mm",
   "id": "multimeter",
-  "element_type": "recorder",
+  "elementType": "recorder",
   "label": "multimeter",
   "params": [
     {

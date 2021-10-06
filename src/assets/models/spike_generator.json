@@ -1,7 +1,7 @@
 {
   "abbreviation": "sg",
   "id": "spike_generator",
-  "element_type": "stimulator",
+  "elementType": "stimulator",
   "label": "spike generator",
   "params": [
     {

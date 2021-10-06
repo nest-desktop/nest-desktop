@@ -1,6 +1,7 @@
 {
+  "abbreviation": "scg",
   "id": "step_current_generator",
-  "element_type": "stimulator",
+  "elementType": "stimulator",
   "label": "step current generator",
   "recordables": ["I"],
   "params": [
