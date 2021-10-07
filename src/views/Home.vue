@@ -89,7 +89,7 @@
                       <v-col align="center" cols="12">
                         <v-card flat>
                           <v-card-text>
-                            <About />
+                            <NESTDesktopVersionInfo />
                           </v-card-text>
                         </v-card>
                       </v-col>
@@ -157,12 +157,12 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
-import About from '@/components/About.vue';
+import NESTDesktopVersionInfo from '@/components/NESTDesktopVersionInfo.vue';
 
 export default Vue.extend({
   name: 'Home',
   components: {
-    About,
+    NESTDesktopVersionInfo,
   },
   props: {
     includeProjectButtons: Boolean,
