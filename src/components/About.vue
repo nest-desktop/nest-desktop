@@ -9,11 +9,7 @@
             v-text="'Documentation'"
           />
           <v-col class="text-right" cols="8">
-            <a
-              :href="state.doc"
-              target="_blank"
-              v-text="state.doc"
-            />
+            <a :href="state.doc" target="_blank" v-text="state.doc" />
           </v-col>
         </v-row>
       </v-list-item>
@@ -25,11 +21,7 @@
             v-text="'Source code'"
           />
           <v-col class="text-right" cols="8">
-            <a
-              :href="state.repo"
-              target="_blank"
-              v-text="state.repo"
-            />
+            <a :href="state.repo" target="_blank" v-text="state.repo" />
           </v-col>
         </v-row>
       </v-list-item>
