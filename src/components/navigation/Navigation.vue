@@ -110,7 +110,7 @@
 
                 <v-list-item
                   @click="reset"
-                  color="about darken1"
+                  color="amber darken1"
                   title="About"
                   to="/about"
                 >
