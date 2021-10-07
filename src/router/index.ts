@@ -10,7 +10,7 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: () => import('@/views/Home.vue'),
+      component: () => import('@/views/Info.vue'),
       props: {
         includeProjectButtons: true,
       },
@@ -45,7 +45,7 @@ export default new Router({
     {
       path: '/about',
       name: 'About',
-      component: () => import('@/views/Home.vue'),
+      component: () => import('@/views/Info.vue'),
       props: {
         includeProjectButtons: false,
       },
