@@ -21,7 +21,7 @@
           </v-col>
 
           <v-col :cols="12" :md="12" :xl="8" :offset-xl="2">
-            <v-row>
+            <v-row v-if="state.includeProjectButtons">
               <v-col :lg="4" :xs="6" :offset-lg="2">
                 <v-btn class="project" block dark large text to="project">
                   <v-icon left v-text="'mdi-plus'" />
@@ -154,7 +154,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
 import About from '@/components/About.vue';
@@ -164,7 +164,10 @@ export default Vue.extend({
   components: {
     About,
   },
-  setup() {
+  props: {
+    includeProjectButtons: Boolean,
+  },
+  setup(props) {
     const references = [
       {
         color: 'rgba(178, 245, 23, 0.05)',
@@ -192,9 +195,21 @@ export default Vue.extend({
       },
     ];
     const state = reactive({
+      includeProjectButtons: props.includeProjectButtons,
       projects: core.app.projects,
       year: 2021,
     });
+
+    onMounted(() => {
+      state.includeProjectButtons = props.includeProjectButtons as boolean;
+    });
+
+    watch(
+      () => [props.includeProjectButtons],
+      includeProjectButtons => {
+        state.includeProjectButtons = props.includeProjectButtons as boolean;
+      }
+    );
 
     /**
      * Load projects from app core component
