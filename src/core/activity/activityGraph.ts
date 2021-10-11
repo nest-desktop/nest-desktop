@@ -46,6 +46,14 @@ export class ActivityGraph {
     // console.log('Update activity graph');
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
+    this.updateHash();
+  }
+
+  /**
+   * Update code hash for activity graph.
+   */
+  updateHash(): void {
+    // console.log('Update code hash for activity graph');
     this._codeHash = this._project.code.hash;
   }
 
