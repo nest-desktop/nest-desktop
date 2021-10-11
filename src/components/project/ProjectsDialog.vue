@@ -160,7 +160,6 @@ export default Vue.extend({
     );
 
     return {
-      console,
       exportProjects,
       deleteProjects,
       state,
