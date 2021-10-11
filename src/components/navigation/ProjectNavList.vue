@@ -6,7 +6,7 @@
       v-if="state.projectMenu.show"
     />
 
-    <v-list dense class="pa-0">
+    <v-list dense>
       <v-list-item exact to="/project/">
         <v-list-item-icon>
           <v-icon left v-text="'mdi-plus'" />
@@ -15,43 +15,42 @@
       </v-list-item>
     </v-list>
 
-    <v-form>
-      <v-container :key="state.projectId" class="py-0" v-if="state.app.project">
-        <v-text-field
-          clearable
-          hide-details
-          placeholder="Project name"
-          title="Rename the current project"
-          v-model="state.app.project.name"
-        >
-          <template #append-outer>
-            <v-row>
-              <v-btn
-                @click="state.app.project.save()"
-                class="mx-2"
-                icon
-                small
-                title="Save the current project"
-              >
-                <v-icon v-text="'mdi-content-save-outline'" />
-              </v-btn>
-            </v-row>
-          </template>
-        </v-text-field>
-      </v-container>
-    </v-form>
+    <v-container :key="state.projectId" class="py-0" v-if="state.app.project">
+      <v-text-field
+        clearable
+        dense
+        hide-details
+        placeholder="Project name"
+        title="Rename the current project"
+        v-model="state.app.project.name"
+      >
+        <template #append-outer>
+          <v-row>
+            <v-btn
+              @click="state.app.project.save()"
+              class="project mx-2"
+              dark
+              depressed
+              fab
+              small
+              title="Save the current project"
+            >
+              <v-icon v-text="'mdi-content-save-outline'" />
+            </v-btn>
+          </v-row>
+        </template>
+      </v-text-field>
+    </v-container>
 
-    <v-form>
-      <v-container class="py-0">
-        <v-text-field
-          clearable
-          hide-details
-          placeholder="Search project"
-          prepend-inner-icon="mdi-magnify"
-          v-model="state.app.view.project.searchTerm"
-        />
-      </v-container>
-    </v-form>
+    <v-container class="py-0">
+      <v-text-field
+        clearable
+        hide-details
+        placeholder="Search project"
+        prepend-inner-icon="mdi-magnify"
+        v-model="state.app.view.project.searchTerm"
+      />
+    </v-container>
 
     <v-list :key="state.app.projects.length" dense two-line>
       <draggable v-model="state.app.projects">
