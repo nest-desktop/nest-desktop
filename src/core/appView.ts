@@ -110,8 +110,8 @@ export class AppView {
    * Fetch files hosted on GitHub.
    */
   fetchModelsNEST(): void {
-    // Fetch models from NEST Server API.
-    const url = `${this._app.nestServer.url}/api/Models`;
+    // Fetch models from NEST Simulator.
+    const url = `${this._app.NESTSimulator.url}/api/Models`;
     axios.get(url).then(resp => {
       this._model.state.modelsNEST = resp.data;
     });
