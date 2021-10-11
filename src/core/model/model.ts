@@ -104,7 +104,7 @@ export class Model extends Config {
   }
 
   /**
-   * Get defaults of the model from NEST Simulator.
+   * Get parameter defaults of a model from NEST Simulator.
    */
   fetchDefaults(): Promise<any> {
     return this.app.NESTSimulator.httpClient.post(

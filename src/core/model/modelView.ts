@@ -201,7 +201,7 @@ export class ModelView {
   }
 
   /**
-   * Get paramter defaults from NEST Server.
+   * Get paramter defaults from NEST Simulator.
    */
   async getParamDefaults(): Promise<any> {
     return this._state.model
@@ -265,7 +265,7 @@ export class ModelView {
       helptext: '',
       subtitle: '',
       title: '',
-      url: `${this._app.nestServer.url}/api/help?return_text=true&obj=`,
+      url: `${this._app.NESTSimulator.url}/api/help?return_text=true&obj=`,
     };
   }
 

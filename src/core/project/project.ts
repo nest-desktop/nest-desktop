@@ -437,7 +437,7 @@ export class Project extends Config {
         let data: any;
         switch (resp.status) {
           case 0:
-            this._errorMessage = 'Failed to find the server of NEST Simulator.';
+            this._errorMessage = 'Failed to find NEST Simulator.';
             break;
           case 200:
             data = JSON.parse(resp.response).data;
