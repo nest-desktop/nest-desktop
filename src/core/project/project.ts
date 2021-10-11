@@ -21,6 +21,7 @@ export class Project extends Config {
   private _code: ProjectCode; // code script for NEST Simulator
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
+  private _doc: any; // doc data of the database
   private _errorMessage = '';
   private _hasActivities = false;
   private _hasAnalogActivities = false;
@@ -43,6 +44,7 @@ export class Project extends Config {
     this._view = new ProjectView(this);
 
     // Database instance
+    this._doc = project || {};
     this._id = project._id || uuidv4();
     this._rev = project._rev || '';
     this._createdAt = project.createdAt || new Date();
@@ -89,6 +91,10 @@ export class Project extends Config {
 
   get description(): string {
     return this._description;
+  }
+
+  get doc(): any {
+    return this._doc;
   }
 
   get errorMessage(): string {
@@ -150,7 +156,7 @@ export class Project extends Config {
    * Save the current project.
    */
   save(): Promise<any> {
-    return this._app.saveProject(this);
+    return this._app.importProject(this);
   }
 
   /**
@@ -186,17 +192,17 @@ export class Project extends Config {
   }
 
   /**
-   * Download this project.
+   * Export this project.
    */
-  download(): void {
-    this._app.downloadProject(this._id);
+  export(): void {
+    this._app.exportProject(this._id);
   }
 
   /**
-   * Download this project and activities.
+   * Export this project and activities.
    */
-  downloadWithActivities(): void {
-    this._app.downloadProject(this._id, true);
+  exportWithActivities(): void {
+    this._app.exportProject(this._id, true);
   }
 
   /**
@@ -414,13 +420,14 @@ export class Project extends Config {
    * @remarks
    * After the simulation it updates activities and commit network.
    */
-  runSimulation(): Promise<any> {
+  async runSimulation(): Promise<any> {
     // console.log('Run simulation');
     this._errorMessage = '';
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
+    this._activityGraph.updateHash();
     this._simulation.running = true;
     return this.app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
