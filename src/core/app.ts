@@ -3,6 +3,7 @@ import { AppView } from './appView';
 import { Config } from './config';
 import { DatabaseService } from './database';
 import { Model } from './model/model';
+import { ModelView } from './model/modelView';
 import { NESTSimulator } from './backends/nestSimulator';
 import { Project } from './project/project';
 
@@ -19,6 +20,7 @@ const pad = (num: number, size: number = 2): string => {
 export class App extends Config {
   private _modelDB: DatabaseService;
   private _models: Model[] = [];
+  private _modelView: ModelView;
   private _NESTSimulator: NESTSimulator;
   private _project: Project;
   private _projectDB: DatabaseService;
@@ -32,6 +34,7 @@ export class App extends Config {
     super('App');
     this._version = environment.VERSION;
     this._view = new AppView(this);
+    this._modelView = new ModelView(this);
     this._NESTSimulator = new NESTSimulator();
   }
 
@@ -49,6 +52,10 @@ export class App extends Config {
     ];
     const datetime: string = date.join('') + '_' + time.join('');
     return datetime;
+  }
+
+  get modelView(): ModelView {
+    return this._modelView;
   }
 
   get models(): Model[] {
@@ -95,9 +102,11 @@ export class App extends Config {
     return this._view;
   }
 
-  init(): Promise<any> {
+  async init(): Promise<any> {
     this._project = new Project(this);
     this._ready = false;
+    this._view.fetchModelsNEST();
+    this._view.fetchModelFilesGithub();
     return this.initModels().then(() =>
       this.initProjects().then(() => (this._ready = true))
     );
@@ -129,12 +138,12 @@ export class App extends Config {
     );
   }
 
-  resetModelDatabase(): Promise<any> {
+  async resetModelDatabase(): Promise<any> {
     this._models = [];
     return this._modelDB.destroy().then(() => this.initModels());
   }
 
-  resetProjectDatabase(): Promise<any> {
+  async resetProjectDatabase(): Promise<any> {
     this._project = new Project(this);
     this._projects = [];
     return this._projectDB.destroy().then(() => this.initProjects());
@@ -144,21 +153,46 @@ export class App extends Config {
   Models
   */
 
-  initModels(): Promise<any> {
+  /**
+   * Add models to list and database.
+   */
+  addModels(data: any[]): Promise<any> {
+    // console.log('Add models');
+    const models: any[] = data.map(
+      (model: any) =>
+        new Promise<any>(resolve => {
+          this.addModel(model).then(() => {
+            resolve(model);
+          });
+        })
+    );
+    return Promise.all(models);
+  }
+
+  /**
+   * Initialize models.
+   *
+   * @Remarks
+   * It imports models from assets when database is empty.
+   */
+  async initModels(): Promise<any> {
     // console.log('Initialize models');
     this._models = [];
     this._modelDB = new DatabaseService(this, 'MODEL_STORE');
     return this._modelDB.count().then((count: number) => {
       // console.log('Models in db:', count);
       if (count === 0) {
-        return this.loadModelsFromFiles().then(() => this.initModels());
+        return this.importModelsFromFiles().then(() => this.initModels());
       } else {
         return this.updateModels();
       }
     });
   }
 
-  loadModelsFromFiles(): Promise<any> {
+  /**
+   * Import models from all files in assets.
+   */
+  importModelsFromFiles(): Promise<any> {
     // console.log('Load models from files');
     let promise: Promise<any> = Promise.resolve();
     this.config.models.forEach((file: string) => {
@@ -169,6 +203,9 @@ export class App extends Config {
     return promise;
   }
 
+  /**
+   * Filter models by element type.
+   */
   filterModels(elementType: string = null): Model[] {
     if (elementType === null) {
       return this._models;
@@ -178,28 +215,48 @@ export class App extends Config {
     );
   }
 
-  updateModels(): Promise<any> {
-    return this._modelDB.list('id').then((models: any[]) =>
-      models.forEach((model: any) => {
-        this._models.push(new Model(this, model));
-      })
-    );
+  /**
+   * Delete models from database and then update the list.
+   */
+  deleteModels(modelIds: string[]): Promise<any> {
+    return this._modelDB.deleteBulk(modelIds).then(this.updateModels());
+  }
+
+  /**
+   * Update model list.
+   */
+  updateModels(): void {
+    this._modelDB
+      .list('id')
+      .then(
+        (models: any[]) =>
+          (this._models = models.map((model: any) => new Model(this, model)))
+      );
   }
 
   /*
   Model
   */
 
+  /**
+   * Add a model to the database.
+   */
   addModel(data: any): Promise<any> {
     // console.log('Add model:', data.id);
     const model: Model = new Model(this, data);
     return this._modelDB.create(model);
   }
 
+  /**
+   * Delete a model in the database.
+   */
   deleteModel(docId: string): Promise<any> {
     return this._modelDB.delete(docId);
   }
 
+  /**
+   * Get model from the model list.
+   */
   getModel(modelId: string): Model {
     return (
       this._models.find((model: Model) => model.id === modelId) ||
@@ -207,19 +264,41 @@ export class App extends Config {
     );
   }
 
+  /**
+   * Check if model list has model.
+   */
   hasModel(modelId: string): boolean {
     return (
       this._models.find((model: Model) => model.id === modelId) !== undefined
     );
   }
 
-  saveModel(model: Model): Promise<any> {
-    return this._modelDB.update(model);
+  /**
+   * Import a model to the database.
+   */
+  async importModel(data: any): Promise<any> {
+    // console.log('Import model:', data.id);
+    let promise: Promise<any>;
+    if (this.hasModel(data.id)) {
+      const model: Model = this.getModel(data.id);
+      model.update(data);
+      promise = this.updateModel(model);
+    } else {
+      promise = this.addModel(data);
+    }
+    return promise.then(() => this.updateModels());
+    // const promise: Promise<any> = this.hasModel(data.id)
+    //   ? this.updateModel(new Model(this, data))
+    //   : this.addModel(data);
+    // return promise.then(() => this.updateModels());
   }
 
-  initProjectFromAssets(filename: string): Project {
-    const data: any = require(`../assets/projects/${filename}.json`);
-    return new Project(this, data);
+  /**
+   * Update a model in the database.
+   */
+  async updateModel(data: any): Promise<any> {
+    console.log('Update model:', data.id);
+    return this._modelDB.update(data);
   }
 
   /*
@@ -252,7 +331,7 @@ export class App extends Config {
   /**
    * Initialize project list either from database or from files.
    */
-  initProjects(): Promise<any> {
+  async initProjects(): Promise<any> {
     // console.log('Initialize projects');
     this._projects = [];
     this._projectRevisions = [];
@@ -262,15 +341,15 @@ export class App extends Config {
       if (count > 0) {
         return this.updateProjects();
       } else {
-        return this.loadProjectsFromFiles();
+        return this.importProjectsFromFiles();
       }
     });
   }
 
   /**
-   * Load projects from files and adds them to list and database.
+   * Import projects from files to list and database.
    */
-  loadProjectsFromFiles(): Promise<any> {
+  importProjectsFromFiles(): Promise<any> {
     // console.log('Load projects from files');
     let promise: Promise<any> = Promise.resolve();
     this.config.projects.forEach((file: string) => {
@@ -284,7 +363,7 @@ export class App extends Config {
   /**
    * Load projects from database and then update list.
    */
-  updateProjects(): Promise<any> {
+  async updateProjects(): Promise<any> {
     return this._projectDB.list('createdAt', true).then((projects: any[]) => {
       this._projects = projects.map(
         (project: any) => new Project(this, project)
@@ -295,7 +374,7 @@ export class App extends Config {
   /**
    * Load project revision from database and then update revision list.
    */
-  updateProjectRevisions(id: string = null): Promise<any> {
+  async updateProjectRevisions(id: string = null): Promise<any> {
     this._projectRevisions = [];
     if (id === null) {
       return;
@@ -312,6 +391,10 @@ export class App extends Config {
         )
       );
   }
+
+  /*
+   * Project
+   */
 
   /*
   Current project
@@ -343,6 +426,14 @@ export class App extends Config {
     return project;
   }
 
+  /*
+   * Load a project from the asset file.
+   */
+  loadProjectFromFile(filename: string): Project {
+    const data: any = require(`../assets/projects/${filename}.json`);
+    return new Project(this, data);
+  }
+
   /**
    * Delete project in database and remove it from the list.
    */
@@ -352,10 +443,10 @@ export class App extends Config {
   }
 
   /**
-   * Download project from the list.
+   * Export project from the list.
    */
-  downloadProject(projectId: string, withActivities: boolean = false): void {
-    // console.log('Download project:', projectId);
+  exportProject(projectId: string, withActivities: boolean = false): void {
+    // console.log('Export project:', projectId);
     const project: Project = this._projects.find(
       (p: Project) => p.id === projectId
     );
@@ -366,6 +457,18 @@ export class App extends Config {
       );
     }
     this.download(projectData, 'project');
+  }
+
+  /**
+   * Import the project in the database and then update the list.
+   */
+  async importProject(project: Project): Promise<any> {
+    console.log('Save project:', project.name);
+    project.clean();
+    const promise: Promise<any> = project.id
+      ? this._projectDB.update(project)
+      : this._projectDB.create(project);
+    return promise.then(() => this.updateProject(this._project));
   }
 
   /**
@@ -406,7 +509,7 @@ export class App extends Config {
   /**
    * Reload the current project in the list from the database.
    */
-  reloadProject(project: Project): Promise<any> {
+  async reloadProject(project: Project): Promise<any> {
     return this._projectDB.read(project.id).then((doc: any) => {
       this._project = new Project(this, doc);
       const idx: number = this._projects
@@ -414,18 +517,6 @@ export class App extends Config {
         .indexOf(project.id);
       this._projects[idx] = this._project;
     });
-  }
-
-  /**
-   * Save the project in the database and then update the list.
-   */
-  saveProject(project: Project): Promise<any> {
-    console.log('Save project:', project.name);
-    project.clean();
-    const promise: Promise<any> = project.id
-      ? this._projectDB.update(project)
-      : this._projectDB.create(project);
-    return promise.then(() => this.updateProject(this._project));
   }
 
   /**
@@ -454,6 +545,9 @@ export class App extends Config {
   General
   */
 
+  /*
+   * Download data.
+   */
   download(data: any, filenameSuffix: string = '') {
     const dataJSON: string = JSON.stringify(data);
     const element: any = document.createElement('a');

@@ -3,6 +3,7 @@
     <v-menu :close-on-content-click="false" offset-y v-model="state.showMenu">
       <template #activator="{}">
         <v-btn
+          :disabled="state.disabled"
           :loading="state.project.simulation.running"
           @click="simulate"
           @contextmenu="showMenu"
@@ -46,9 +47,11 @@ export default Vue.extend({
   name: 'SimulationButton',
   props: {
     project: Project,
+    disabled: Boolean,
   },
   setup(props) {
     const state = reactive({
+      disabled: props.disabled,
       items: [
         {
           id: 'simulateAfterChange',
@@ -117,8 +120,9 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.project,
+      () => [props.disabled, props.project],
       () => {
+        state.disabled = props.disabled;
         state.project = props.project as Project;
         state.projectConfig = state.project.config;
       }

@@ -12,7 +12,7 @@
   "dependencies": {
     "@mdi/font": "^6.1.95",
     "@vue/composition-api": "^1.0.0-beta.20",
-    "axios": "^0.21.1",
+    "axios": "^0.22.0",
     "codemirror": "^5.59.1",
     "core-js": "2.6.12",
     "d3": "^7.0.0",
@@ -26,7 +26,7 @@
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "stats.js": "^0.17.0",
-    "three": "^0.132.2",
+    "three": "^0.133.1",
     "uuid": "^8.3.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

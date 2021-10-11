@@ -492,6 +492,7 @@ export default Vue.extend({
       }
       if (changed) {
         emit('update:value', deserialize(state.value));
+        emit('change', deserialize(state.value));
       }
     };
 

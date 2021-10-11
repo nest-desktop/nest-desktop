@@ -1,20 +1,25 @@
 {
-  "name": "spike input",
+  "name": "step current (up/down) to model",
   "network": {
     "nodes": [
       {
-        "model": "spike_generator",
+        "model": "step_current_generator",
         "size": 1,
         "view": {
           "position": {
-            "x": -150,
-            "y": 25
+            "x": 50,
+            "y": 100
           }
         },
         "params": [
           {
-            "id": "spike_times",
-            "value": [300],
+            "id": "amplitude_times",
+            "value": [100, 300, 500, 700],
+            "visible": true
+          },
+          {
+            "id": "amplitude_values",
+            "value": [1, 0, -1, 0],
             "visible": true
           }
         ]
@@ -24,8 +29,8 @@
         "size": 1,
         "view": {
           "position": {
-            "x": 0,
-            "y": -25
+            "x": 200,
+            "y": 50
           }
         },
         "params": []
@@ -34,15 +39,15 @@
         "model": "voltmeter",
         "view": {
           "position": {
-            "x": 150,
-            "y": 25
+            "x": 350,
+            "y": 100
           }
         },
         "params": [
           {
             "id": "interval",
             "value": 0.1,
-            "visible": false
+            "visible": true
           }
         ]
       }

@@ -181,7 +181,7 @@ export default Vue.extend({
         // scale: 1, // Multiply title/legend/axis/canvas sizes by this factor
         // width: 800,
       },
-      view: props.view,
+      view: props.view || 'abstract',
       modeBarButtons: [
         [
           {
@@ -215,7 +215,7 @@ export default Vue.extend({
      */
     const update = () => {
       state.loading = true;
-      state.view = props.view;
+      state.view = props.view || 'abstract';
       state.graph = props.graph as ActivityGraph;
       if (state.view === 'abstract') {
         state.loading = false;
@@ -232,7 +232,10 @@ export default Vue.extend({
      */
     const showHelp = () => {
       state.snackbar.show = false;
-      if (!state.graph.project.config.showHelp) {
+      if (
+        !state.graph.project.config.showHelp &&
+        state.graph.project.simulation.running
+      ) {
         return;
       }
       if (!state.graph.project.hasActivities) {
@@ -244,7 +247,7 @@ export default Vue.extend({
             },
           },
         ]);
-      } else if (state.graph.project.code.hash !== state.graph.codeHash) {
+      } else if (state.graph.codeHash !== state.graph.project.code.hash) {
         showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
           [
@@ -274,7 +277,7 @@ export default Vue.extend({
 
     onMounted(() => {
       update();
-      showHelp();
+      setTimeout(() => showHelp(), 1000);
     });
 
     watch(
@@ -284,7 +287,7 @@ export default Vue.extend({
           update();
         }
         if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
-          showHelp();
+          setTimeout(() => showHelp(), 1000);
         }
       }
     );
