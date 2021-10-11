@@ -1,23 +1,27 @@
 <template>
-  <div class="ProjectsLoadDialog">
+  <div class="ProjectsImportDialog">
     <v-dialog v-model="state.dialog" max-width="1024">
       <v-card>
         <v-card-title v-text="'Import projects'" />
-        <v-card-subtitle v-text="'Select a source'" />
 
         <v-card-text>
           <v-row class="mb-1">
             <v-col cols="3">
-              <v-btn-toggle dark dense mandatory v-model="state.source">
-                <v-btn
-                  :key="item.value"
-                  :title="item.title"
-                  :value="item.value"
-                  v-for="item in state.items"
-                >
-                  <v-icon v-text="item.icon" />
-                </v-btn>
-              </v-btn-toggle>
+              <v-select
+                :items="state.items"
+                dense
+                label="Select a source"
+                v-model="state.source"
+              >
+                <template slot="selection" slot-scope="data">
+                  <v-icon left v-text="data.item.icon" />
+                  Import from {{ data.item.text }}
+                </template>
+                <template slot="item" slot-scope="data">
+                  <v-icon left v-text="data.item.icon" />
+                  {{ data.item.text }}
+                </template>
+              </v-select>
             </v-col>
             <v-col class="pa-3" cols="9">
               <v-row v-show="state.source === 'github'">
@@ -127,7 +131,7 @@
           />
           <v-btn
             :disabled="!state.projects.some(p => p.selected)"
-            @click="loadProjects"
+            @click="importProjects"
             outlined
             small
           >
@@ -145,12 +149,12 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 import axios from 'axios';
 
+import { App } from '@/core/app';
 import { Project } from '@/core/project/project';
 import core from '@/core';
-import { App } from '@/core/app';
 
 export default Vue.extend({
-  name: 'ProjectsLoadDialog',
+  name: 'ProjectsImportDialog',
   props: {
     open: Boolean,
   },
@@ -160,18 +164,17 @@ export default Vue.extend({
       items: [
         {
           icon: 'mdi-paperclip',
-          title: 'Load projects from file',
+          text: 'file',
           value: 'file',
         },
         {
           icon: 'mdi-github',
-          title:
-            'Load projects from GitHub repo (nest-desktop/nest-desktop-projects)',
+          text: 'GitHub',
           value: 'github',
         },
         {
           icon: 'mdi-web',
-          title: 'Load projects from URL',
+          text: 'URL',
           value: 'url',
         },
       ],
@@ -181,7 +184,7 @@ export default Vue.extend({
       selectedFile: {},
       selectedProjects: [],
       selectedTree: {},
-      source: 'file',
+      source: '',
       trees: [],
     });
 
@@ -206,6 +209,7 @@ export default Vue.extend({
      */
     const fetchProjects = (data: any) => {
       const projects: any[] = Array.isArray(data) ? data : [data];
+      state.projects = [];
       projects.forEach((project: any) => {
         if (project.name) {
           state.projects.push(project);
@@ -218,7 +222,6 @@ export default Vue.extend({
      * Get projects from file.
      */
     const getProjectsFromFile = (file: any) => {
-      state.projects = [];
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.addEventListener('load', (event: any) =>
@@ -230,6 +233,7 @@ export default Vue.extend({
      * Get trees from github.
      */
     const getTreesFromGithub = () => {
+      state.selectedFile = {};
       state.trees = [];
       const url =
         'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/main?recursive=true';
@@ -269,7 +273,6 @@ export default Vue.extend({
      * Get projects from url.
      */
     const getProjectsFromUrl = (url: string) => {
-      state.projects = [];
       axios.get(url).then((response: any) => fetchProjects(response.data));
     };
 
@@ -285,9 +288,9 @@ export default Vue.extend({
     };
 
     /**
-     * Load selected projects.
+     * Import selected projects.
      */
-    const loadProjects = () => {
+    const importProjects = () => {
       const projects: any[] = state.projects.filter(
         (project: any) => project.selected
       );
@@ -309,7 +312,7 @@ export default Vue.extend({
       getProjectsFromGithub,
       getProjectsFromFile,
       getProjectsFromUrl,
-      loadProjects,
+      importProjects,
       state,
     };
   },
