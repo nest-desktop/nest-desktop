@@ -18,7 +18,7 @@
       class="no-print"
     />
 
-    <svg id="networkGraph" width="800" height="600">
+    <svg id="networkGraph" height="600" width="800">
       <g class="marker" v-if="state.network">
         <defs
           :key="'defs' + connection.idx"
@@ -156,7 +156,7 @@ export default Vue.extend({
     networkHash: String,
   },
   setup(props) {
-    const networkGraph = ref(null);
+    const networkEditor = ref(null);
     const state = reactive({
       network: core.app.project.network,
       graph: undefined,
@@ -273,10 +273,6 @@ export default Vue.extend({
       // console.log('Update network graph');
       state.network = core.app.project.network;
       state.graph.network = state.network;
-      const elem: any = networkGraph.value['parentNode'];
-      state.graph.reset();
-      state.graph.resize(elem.clientWidth, elem.clientHeight);
-      state.graph.init();
       state.graph.update();
       setMenuTrigger();
       showHelp();
@@ -286,7 +282,7 @@ export default Vue.extend({
      * Resize network graph.
      */
     const onResize = () => {
-      const elem: any = networkGraph.value['parentNode'];
+      const elem: any = networkEditor.value['parentNode'];
       if (elem) {
         state.graph.workspace.resize(elem.clientWidth, elem.clientHeight);
         state.graph.workspace.updateTransform();
@@ -322,7 +318,7 @@ export default Vue.extend({
       }
     );
 
-    return { state, networkGraph };
+    return { state, networkEditor };
   },
 });
 </script>
