@@ -427,7 +427,6 @@ export class Project extends Config {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
-    this._activityGraph.updateHash();
     this._simulation.running = true;
     return this.app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
