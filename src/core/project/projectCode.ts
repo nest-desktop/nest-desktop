@@ -55,7 +55,7 @@ export class ProjectCode extends Code {
     this._script += this._project.simulation.code.simulate();
 
     if (this._project.network.recorders.length > 0) {
-      this._script += '\n\n# Get ids of recorded node\n';
+      this._script += '\n\n# Get IDs of recorded node\n';
       this._script += this.defineGetNodeIds();
 
       if (this._project.network.hasSpatialNodes()) {

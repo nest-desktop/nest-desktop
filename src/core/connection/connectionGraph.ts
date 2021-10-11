@@ -66,7 +66,7 @@ export class ConnectionGraph {
    * Update connections in network graph.
    *
    * @remarks
-   * This function should be called when connections in network are changed.
+   * This function should be called when connections in the network are changed.
    */
   update() {
     // console.log('Init network graph');
