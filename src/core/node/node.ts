@@ -97,7 +97,6 @@ export class Node extends Config {
   set modelId(value: string) {
     // console.log('Set Model');
     this._modelId = value;
-    this._size = 1;
     this.initParameters();
     this._network.clean();
     this.initActivity();
