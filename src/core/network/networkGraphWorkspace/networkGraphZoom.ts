@@ -3,9 +3,9 @@ import * as d3 from 'd3';
 import { NetworkGraphWorkspace } from './networkGraphWorkspace';
 
 export class NetworkGraphZoom {
-  private _workspace: NetworkGraphWorkspace;
-  private _transform: any = { k: 1, x: 0, y: 0 };
   private _handler: any;
+  private _transform: any = { k: 1, x: 0, y: 0 };
+  private _workspace: NetworkGraphWorkspace;
 
   constructor(networkGraphWorkspace: NetworkGraphWorkspace) {
     this._workspace = networkGraphWorkspace;

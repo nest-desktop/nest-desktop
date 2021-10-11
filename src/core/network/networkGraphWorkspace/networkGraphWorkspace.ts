@@ -27,7 +27,7 @@ export class NetworkGraphWorkspace extends Config {
     connected: false,
     dragging: false,
     enableConnection: false,
-    keyCode: null,
+    keyCode: undefined,
     transforming: false,
     showGrid: false,
   };
