@@ -34,7 +34,7 @@
                 key="connection"
                 v-if="
                   state.network.view.selectedConnection ||
-                  state.graph.state.enableConnection
+                  state.graph.workspace.state.enableConnection
                 "
               >
                 <v-icon class="ma-1" small v-text="'mdi-arrow-right'" />
@@ -103,8 +103,10 @@
           </v-dialog>
 
           <v-btn
-            :color="state.graph.state.centerSelected ? 'amber' : 'grey'"
-            @click="() => state.graph.toggleCenterSelected()"
+            :color="
+              state.graph.workspace.state.centerSelected ? 'amber' : 'grey'
+            "
+            @click="() => state.graph.workspace.toggleCenterSelected()"
             icon
             small
             title="Auto-centering selected"
@@ -112,7 +114,7 @@
             <v-icon
               small
               v-text="
-                state.graph.state.centerSelected
+                state.graph.workspace.state.centerSelected
                   ? 'mdi-image-filter-center-focus'
                   : 'mdi-image-filter-center-focus-strong-outline'
               "
@@ -120,8 +122,10 @@
           </v-btn>
 
           <v-btn
-            :color="state.graph.state.centerNetwork ? 'amber' : 'grey'"
-            @click="() => state.graph.toggleCenterNetwork()"
+            :color="
+              state.graph.workspace.state.centerNetwork ? 'amber' : 'grey'
+            "
+            @click="() => state.graph.workspace.toggleCenterNetwork()"
             icon
             small
             title="Auto-centering network graph"
@@ -130,15 +134,19 @@
           </v-btn>
 
           <v-btn
-            :color="state.graph.state.showGrid ? 'amber' : 'grey'"
-            @click="() => state.graph.toggleGrid()"
+            :color="state.graph.workspace.state.showGrid ? 'amber' : 'grey'"
+            @click="() => state.graph.workspace.toggleGrid()"
             icon
             small
             title="Show grid"
           >
             <v-icon
               small
-              v-text="state.graph.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
+              v-text="
+                state.graph.workspace.state.showGrid
+                  ? 'mdi-grid'
+                  : 'mdi-grid-off'
+              "
             />
           </v-btn>
         </span>
@@ -156,7 +164,7 @@ import { NetworkGraph } from '@/core/network/networkGraph';
 import NodeChip from '@/components/node/NodeChip.vue';
 
 export default Vue.extend({
-  name: 'NetworkGraphToolbar',
+  name: 'NetworkEditorToolbar',
   components: {
     NodeChip,
   },

@@ -70,7 +70,10 @@ export class ConnectionView {
   /**
    * Focus this connection.
    */
-  focus(): void {
+  focus(forced: boolean = false): void {
+    if (forced) {
+      this._connection.network.view.resetFocus();
+    }
     this._connection.network.view.focusedConnection = this._connection;
   }
 
@@ -87,7 +90,10 @@ export class ConnectionView {
   /**
    * Select this connection.
    */
-  select(): void {
+  select(forced: boolean = false): void {
+    if (forced) {
+      this._connection.network.view.resetSelection();
+    }
     this._connection.network.view.selectedConnection = this._connection;
   }
 

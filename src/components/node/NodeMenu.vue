@@ -44,8 +44,9 @@
               <v-btn-toggle
                 :color="state.node.view.color"
                 :value="state.weight[state.node.view.weight]"
+                class="synWeightButton"
                 dense
-                mandatory
+                group
                 rounded
               >
                 <v-btn
@@ -408,3 +409,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.synWeightButton {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+</style>

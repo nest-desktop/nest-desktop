@@ -1,5 +1,5 @@
 <template>
-  <div class="networkGraph" ref="networkGraph">
+  <div class="networkEditor" ref="networkEditor">
     <ConnectionMenu
       :connection="state.connectionMenu.connection"
       :position="state.connectionMenu.position"
@@ -12,13 +12,13 @@
       v-if="state.nodeMenu.show"
     />
 
-    <NetworkGraphToolbar
+    <NetworkEditorToolbar
       :graph="state.graph"
       :network="state.network"
       class="no-print"
     />
 
-    <svg id="networkGraph" width="800" height="600">
+    <svg id="networkGraph" height="600" width="800">
       <g class="marker" v-if="state.network">
         <defs
           :key="'defs' + connection.idx"
@@ -76,14 +76,12 @@
         </defs>
       </g>
 
-      <rect id="background" fill="white" />
-      <!-- <g class="grid no-print" /> -->
-
-      <g id="network" ref="network">
+      <rect id="workspaceHandler" fill="white" />
+      <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">
           <path
-            :style="{ strokeWidth: state.graph.strokeWidth }"
+            :style="{ strokeWidth: state.graph.config.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
             stroke-linecap="round"
@@ -93,7 +91,8 @@
 
         <g id="connections" />
         <g id="nodes" />
-        <g id="panel" />
+
+        <g id="nodeAddPanel" />
       </g>
     </svg>
 
@@ -144,20 +143,20 @@ import core from '@/core';
 
 import ConnectionMenu from '@/components/connection/ConnectionMenu.vue';
 import NodeMenu from '@/components/node/NodeMenu.vue';
-import NetworkGraphToolbar from '@/components/network/NetworkGraphToolbar.vue';
+import NetworkEditorToolbar from '@/components/network/NetworkEditorToolbar.vue';
 
 export default Vue.extend({
-  name: 'NetworkGraph',
+  name: 'NetworkEditor',
   components: {
     ConnectionMenu,
-    NetworkGraphToolbar,
+    NetworkEditorToolbar,
     NodeMenu,
   },
   props: {
     networkHash: String,
   },
   setup(props) {
-    const networkGraph = ref(null);
+    const networkEditor = ref(null);
     const state = reactive({
       network: core.app.project.network,
       graph: undefined,
@@ -228,7 +227,7 @@ export default Vue.extend({
     };
 
     /**
-     * Show snackbar
+     * Show snackbar.
      */
     const showSnackbar = (text: string, actions: any[] = []) => {
       state.snackbar.text = text;
@@ -236,6 +235,9 @@ export default Vue.extend({
       state.snackbar.show = true;
     };
 
+    /**
+     * Check if nodes with all types are created.
+     */
     const hasAllNodeTypes = () => {
       const types: string[] = state.network.nodes.map(
         node => node.model.elementType
@@ -271,12 +273,7 @@ export default Vue.extend({
       // console.log('Update network graph');
       state.network = core.app.project.network;
       state.graph.network = state.network;
-      const elem: any = networkGraph.value['parentNode'];
-      state.graph.reset();
-      state.graph.resize(elem.clientWidth, elem.clientHeight);
-      state.graph.init();
       state.graph.update();
-      state.graph.transform();
       setMenuTrigger();
       showHelp();
     };
@@ -285,16 +282,19 @@ export default Vue.extend({
      * Resize network graph.
      */
     const onResize = () => {
-      const elem: any = networkGraph.value['parentNode'];
+      const elem: any = networkEditor.value['parentNode'];
       if (elem) {
-        state.graph.resize(elem.clientWidth, elem.clientHeight);
-        state.graph.transform();
+        state.graph.workspace.resize(elem.clientWidth, elem.clientHeight);
+        state.graph.workspace.updateTransform();
       }
     };
 
     onMounted(() => {
       state.graph = new NetworkGraph('svg#networkGraph');
+      onResize();
+      state.graph.workspace.init();
       update();
+      state.graph.workspace.update();
       window.addEventListener('resize', onResize);
     });
 
@@ -315,11 +315,10 @@ export default Vue.extend({
       () => {
         // When (un-)select node or connection button outside of the network graph.
         state.graph.update();
-        state.graph.transform();
       }
     );
 
-    return { state, networkGraph };
+    return { state, networkEditor };
   },
 });
 </script>
