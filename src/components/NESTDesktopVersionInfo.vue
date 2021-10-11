@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="version-info">
     <v-list dense max-width="500px">
       <v-list-item>
         <v-row>
@@ -9,11 +9,7 @@
             v-text="'Documentation'"
           />
           <v-col class="text-right" cols="8">
-            <a
-              :href="state.doc"
-              target="_blank"
-              v-text="state.doc"
-            />
+            <a :href="state.doc" target="_blank" v-text="state.doc" />
           </v-col>
         </v-row>
       </v-list-item>
@@ -25,11 +21,7 @@
             v-text="'Source code'"
           />
           <v-col class="text-right" cols="8">
-            <a
-              :href="state.repo"
-              target="_blank"
-              v-text="state.repo"
-            />
+            <a :href="state.repo" target="_blank" v-text="state.repo" />
           </v-col>
         </v-row>
       </v-list-item>
@@ -95,7 +87,7 @@ import core from '@/core';
 
 import { detect } from 'detect-browser';
 export default {
-  name: 'About',
+  name: 'NESTDesktopVersionInfo',
   setup() {
     const state = reactive({
       browserName: '',
@@ -149,23 +141,23 @@ export default {
 </script>
 
 <style>
-.about .v-list {
+.version-info .v-list {
   font-size: 12px;
 }
-.about .v-list-item {
+.version-info .v-list-item {
   color: black !important;
   min-height: 28px !important;
 }
-.about a {
+.version-info a {
   color: black !important;
   text-decoration: none;
 }
-.about a:hover {
+.version-info a:hover {
   text-decoration: underline;
 }
 
-.about .col-4,
-.about .col-8 {
+.version-info .col-4,
+.version-info .col-8 {
   padding: 4px;
 }
 </style>

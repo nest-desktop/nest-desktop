@@ -108,43 +108,22 @@
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-dialog max-width="450" v-model="state.dialog">
-                  <template #activator="{ on, attrs }">
-                    <v-list-item
-                      @click="reset"
-                      title="About"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-list-item-icon>
-                        <v-list-item-group class="nav-item">
-                          <v-icon v-text="'mdi-information-variant'" />
-                          About
-                        </v-list-item-group>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-text="'About'" />
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                  <v-card class="about-dialog">
-                    <v-card-title
-                      class="headline"
-                      v-text="'About NEST Desktop'"
-                    />
-                    <v-card-text>
-                      <About />
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        @click="state.dialog = false"
-                        text
-                        v-text="'Close'"
-                      />
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <v-list-item
+                  @click="reset"
+                  color="amber darken1"
+                  title="About"
+                  to="/about"
+                >
+                  <v-list-item-icon>
+                    <v-list-item-group class="nav-item">
+                      <v-icon v-text="'mdi-information-variant'" />
+                      About
+                    </v-list-item-group>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="'About'" />
+                  </v-list-item-content>
+                </v-list-item>
               </v-list>
             </div>
           </v-navigation-drawer>
@@ -164,7 +143,6 @@ import { reactive } from '@vue/composition-api';
 
 import core from '@/core';
 
-import About from '@/components/About.vue';
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
@@ -173,7 +151,6 @@ import VueRouter, { Route } from 'vue-router';
 export default {
   name: 'Navigation',
   components: {
-    About,
     ModelNavList,
     ProjectNavList,
     ProjectsMenu,

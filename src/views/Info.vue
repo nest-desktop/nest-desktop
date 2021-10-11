@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="nd-info">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -21,7 +21,7 @@
           </v-col>
 
           <v-col :cols="12" :md="12" :xl="8" :offset-xl="2">
-            <v-row>
+            <v-row v-if="state.includeProjectButtons">
               <v-col :lg="4" :xs="6" :offset-lg="2">
                 <v-btn class="project" block dark large text to="project">
                   <v-icon left v-text="'mdi-plus'" />
@@ -89,7 +89,7 @@
                       <v-col align="center" cols="12">
                         <v-card flat>
                           <v-card-text>
-                            <About />
+                            <NESTDesktopVersionInfo />
                           </v-card-text>
                         </v-card>
                       </v-col>
@@ -154,17 +154,20 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
-import About from '@/components/About.vue';
+import NESTDesktopVersionInfo from '@/components/NESTDesktopVersionInfo.vue';
 
 export default Vue.extend({
-  name: 'Home',
+  name: 'Info',
   components: {
-    About,
+    NESTDesktopVersionInfo,
   },
-  setup() {
+  props: {
+    includeProjectButtons: Boolean,
+  },
+  setup(props) {
     const references = [
       {
         color: 'rgba(178, 245, 23, 0.05)',
@@ -192,9 +195,21 @@ export default Vue.extend({
       },
     ];
     const state = reactive({
+      includeProjectButtons: props.includeProjectButtons,
       projects: core.app.projects,
       year: 2021,
     });
+
+    onMounted(() => {
+      state.includeProjectButtons = props.includeProjectButtons as boolean;
+    });
+
+    watch(
+      () => [props.includeProjectButtons],
+      includeProjectButtons => {
+        state.includeProjectButtons = props.includeProjectButtons as boolean;
+      }
+    );
 
     /**
      * Load projects from app core component
@@ -209,14 +224,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.home .logo {
+.nd-info .logo {
   overflow: hidden;
 }
-.home .logo .v-image {
+.nd-info .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.home .logo:hover .v-image {
+.nd-info .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>
