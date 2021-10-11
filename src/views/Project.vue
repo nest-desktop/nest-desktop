@@ -1,5 +1,5 @@
 <template>
-  <div class="project-container" v-if="state.project">
+  <div class="projectView" v-if="state.project">
     <v-app-bar
       app
       class="no-print"
@@ -533,7 +533,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.project-container .nav-item-right {
+.projectView .nav-item-right {
   text-align: center;
   width: 100%;
   font-size: 9px;
