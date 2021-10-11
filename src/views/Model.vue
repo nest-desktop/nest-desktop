@@ -113,105 +113,112 @@
       </div>
     </v-app-bar>
 
-    <v-main>
-      <v-navigation-drawer
-        :mini-variant="!modelView.state.toolOpened"
-        :width="modelView.state.tool ? modelView.state.tool.width : 0"
-        app
-        class="no-print"
-        clipped
-        mobile-breakpoint="64"
-        mini-variant-width="64"
-        permanent
-        right
-      >
-        <v-row class="fill-height ml-0" no-gutters>
-          <v-navigation-drawer
-            absolute
-            mini-variant
-            mobile-breakpoint="64"
-            mini-variant-width="64"
-            right
-          >
-            <v-list nav>
-              <v-list-item
-                :class="{
-                  'v-list-item--active':
-                    modelView.state.tool === tool && modelView.state.toolOpened,
-                }"
-                :disabled="tool.disabled"
-                :key="tool.name"
-                :title="tool.title"
-                @click="modelView.selectTool(tool)"
-                v-for="tool in modelView.tools"
-                v-show="tool.devMode ? modelView.app.config.devMode : true"
-              >
-                <v-list-item-icon>
-                  <v-list-item-group class="nav-item-right">
-                    <v-icon v-text="tool.icon" />
-                    <div v-text="tool.title" />
-                  </v-list-item-group>
-                </v-list-item-icon>
-                <v-list-item-content />
-              </v-list-item>
-            </v-list>
-          </v-navigation-drawer>
+    <v-navigation-drawer
+      :mini-variant="!modelView.state.toolOpened"
+      :style="{ transition: state.resizing ? 'initial' : '' }"
+      :width="modelView.state.tool ? modelView.state.tool.width : 0"
+      app
+      class="no-print"
+      clipped
+      mobile-breakpoint="64"
+      mini-variant-width="64"
+      permanent
+      right
+    >
+      <div
+        @mousedown="resizeSidebar"
+        class="resize-handle"
+        v-if="modelView.state.toolOpened"
+      />
+      <v-row class="fill-height ml-0" no-gutters>
+        <v-navigation-drawer
+          absolute
+          mini-variant
+          mobile-breakpoint="64"
+          mini-variant-width="64"
+          right
+        >
+          <v-list nav>
+            <v-list-item
+              :class="{
+                'v-list-item--active':
+                  modelView.state.tool === tool && modelView.state.toolOpened,
+              }"
+              :disabled="tool.disabled"
+              :key="tool.name"
+              :title="tool.title"
+              @click="modelView.selectTool(tool)"
+              v-for="tool in modelView.tools"
+              v-show="tool.devMode ? modelView.app.config.devMode : true"
+            >
+              <v-list-item-icon>
+                <v-list-item-group class="nav-item-right">
+                  <v-icon v-text="tool.icon" />
+                  <div v-text="tool.title" />
+                </v-list-item-group>
+              </v-list-item-icon>
+              <v-list-item-content />
+            </v-list-item>
+          </v-list>
+        </v-navigation-drawer>
 
-          <div
-            style="width: 100%; padding-right: 64px"
-            v-if="modelView.state.tool && modelView.state.toolOpened"
-          >
-            <transition name="fade">
-              <v-card
-                :key="modelView.state.defaults.model"
-                flat
-                v-if="
-                  modelView.state.tool.name === 'modelParameterDefaults' &&
-                  modelView.state.params
-                "
-              >
-                <v-card-text class="pa-0">
-                  <v-list dense>
-                    <v-list-item
-                      :key="param.id"
-                      v-for="param in modelView.state.params"
-                    >
-                      {{ param.id }} <v-spacer /> {{ param.value }}
-                    </v-list-item>
-                  </v-list>
-                </v-card-text>
-              </v-card>
-            </transition>
-
+        <div
+          style="padding-right: 64px; width: 100%"
+          v-if="modelView.state.tool && modelView.state.toolOpened"
+        >
+          <transition name="fade">
             <v-card
+              :key="modelView.state.defaults.model"
               flat
               v-if="
-                modelView.state.tool.name === 'modelParameterInput' &&
-                modelView.state.model
+                modelView.state.tool.name === 'modelParameterDefaults' &&
+                modelView.state.params
               "
             >
-              <v-card-text v-if="modelView.state.model.params">
-                <ParameterEdit
-                  @change="modelView.updateProject()"
-                  :key="param.id"
-                  :param="param"
-                  :value.sync="param.value"
-                  v-for="param of modelView.state.model.params"
-                />
+              <v-card-text class="pa-0">
+                <v-list dense>
+                  <v-list-item
+                    :key="param.id"
+                    v-for="param in modelView.state.params"
+                  >
+                    {{ param.id }} <v-spacer /> {{ param.value }}
+                  </v-list-item>
+                </v-list>
               </v-card-text>
             </v-card>
+          </transition>
 
-            <SimulationCodeEditor
-              :code="modelView.state.project.code"
-              v-if="
-                modelView.state.tool.name === 'modelSimulationCode' &&
-                modelView.state.project
-              "
-            />
-          </div>
-        </v-row>
-      </v-navigation-drawer>
+          <v-card
+            flat
+            v-if="
+              modelView.state.tool.name === 'modelParameterInput' &&
+              modelView.state.model
+            "
+          >
+            <v-card-text v-if="modelView.state.model.params">
+              <ParameterEdit
+                @change="modelView.updateProject()"
+                :key="param.id"
+                :param="param"
+                :value.sync="param.value"
+                v-for="param of modelView.state.model.params"
+              />
+            </v-card-text>
+          </v-card>
 
+          <SimulationCodeEditor
+            :code="modelView.state.project.code"
+            style="height: 100%"
+            v-if="
+              modelView.state.tool.name === 'modelSimulationCode' &&
+              modelView.state.project
+            "
+          />
+        </div>
+      </v-row>
+    </v-navigation-drawer>
+
+    <v-main>
       <transition name="fade">
         <ModelDocumentation
           :id="modelView.state.modelId"
@@ -249,7 +256,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, watch } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import core from '@/core';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
@@ -274,6 +281,9 @@ export default Vue.extend({
   },
   setup(props) {
     const modelView = core.app.modelView;
+    const state = reactive({
+      resizing: false,
+    });
     const projects = [
       {
         id: 'model-step-current-up-down',
@@ -314,6 +324,42 @@ export default Vue.extend({
       modelView.initModel(id);
     };
 
+    /**
+     * Handle mouse move on resizing.
+     * @param e MouseEvent from which the x position is taken
+     */
+    const handleMouseMove = (e: MouseEvent) => {
+      window.getSelection().removeAllRanges();
+      const width = window.innerWidth - e.clientX;
+      if (width === modelView.state.tool['minWidth']) {
+        return;
+      }
+      modelView.state.tool['width'] =
+        width > modelView.state.tool['minWidth']
+          ? width
+          : modelView.state.tool['minWidth'];
+      window.dispatchEvent(new Event('resize'));
+    };
+
+    /**
+     * Handle mouse up on resizing.
+     */
+    const handleMouseUp = () => {
+      state.resizing = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.dispatchEvent(new Event('resize'));
+    };
+
+    /**
+     * Resize sidebar.
+     */
+    const resizeSidebar = () => {
+      state.resizing = true;
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    };
+
     onMounted(() => {
       modelView.resetTool();
       update(props.id as string);
@@ -325,7 +371,7 @@ export default Vue.extend({
         update(id as string);
       }
     );
-    return { modelView, projects };
+    return { modelView, projects, resizeSidebar, state };
   },
 });
 </script>
@@ -335,5 +381,14 @@ export default Vue.extend({
   text-align: center;
   width: 100%;
   font-size: 9px;
+}
+
+.modelView .resize-handle {
+  cursor: ew-resize;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  width: 4px;
+  z-index: 10;
 }
 </style>
