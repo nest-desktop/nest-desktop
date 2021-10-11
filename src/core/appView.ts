@@ -1,4 +1,6 @@
 import { reactive } from '@vue/composition-api';
+import axios from 'axios';
+
 import { App } from './app';
 import { Project } from './project/project';
 
@@ -9,12 +11,20 @@ export class AppView {
   private _project: any;
 
   constructor(app: App) {
+    this._app = app;
     this._activity = {
       graphMode: 'chart',
     };
-    this._app = app;
     this._model = {
-      selectedModel: '',
+      repoURL:
+        'https://api.github.com/repos/nest-desktop/nest-desktop-models/git/trees/main?recursive=true',
+      state: reactive({
+        filesGithub: [],
+        filterTags: ['installed'],
+        modelId: '',
+        modelsNEST: [],
+        searchTerm: '',
+      }),
     };
     this._project = {
       searchTerm: '',
@@ -94,5 +104,27 @@ export class AppView {
 
   get project(): any {
     return this._project;
+  }
+
+  /**
+   * Fetch files hosted on GitHub.
+   */
+  fetchModelsNEST(): void {
+    // Fetch models from NEST Server API.
+    const url = `${this._app.nestServer.url}/api/Models`;
+    axios.get(url).then(resp => {
+      this._model.state.modelsNEST = resp.data;
+    });
+  }
+
+  /**
+   * Fetch model files hosted on GitHub.
+   */
+  fetchModelFilesGithub(): void {
+    axios.get(this._model.repoURL).then((response: any) => {
+      this._model.state.filesGithub = response.data.tree
+        .filter((tree: any) => tree.path.endsWith('.json'))
+        .map((tree: any) => tree.path);
+    });
   }
 }

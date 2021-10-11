@@ -1,0 +1,180 @@
+<template>
+  <div class="modelsMenu">
+    <ModelsImportDialog :open="state.openImportDialog" />
+    <ModelsDialog
+      :action="state.modelDialogAction"
+      :open="state.openModelsDialog"
+      :models="state.models"
+    />
+
+    <v-menu
+      :close-on-content-click="false"
+      :position-x="state.position.x"
+      :position-y="state.position.y"
+      :value="state.show"
+      transition="slide-y-transition"
+    >
+      <v-card tile flat style="min-width: 300px">
+        <span v-if="state.content === null">
+          <v-list dense>
+            <v-list-item
+              :key="index"
+              @click="item.onClick"
+              v-for="(item, index) in state.items"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon" />
+              </v-list-item-icon>
+              <v-list-item-title v-text="item.title" />
+
+              <v-list-item-action v-show="item.append">
+                <v-icon small v-text="'mdi-menu-right'" />
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </span>
+
+        <span v-if="state.content === 'modelsReset'">
+          <v-card-title v-text="'Are you sure to reset all models?'" />
+
+          <v-card-text>
+            The database for models will be deleted and then reset.
+            <br />
+            All current models will be lost.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="reset" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-spacer />
+            <v-btn @click="resetModels" outlined small v-text="'Reset'" />
+          </v-card-actions>
+        </span>
+      </v-card>
+    </v-menu>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import { reactive, watch } from '@vue/composition-api';
+
+import { Model } from '@/core/model/model';
+import core from '@/core';
+import ModelsDialog from '@/components/model/ModelsDialog.vue';
+import ModelsImportDialog from '@/components/model/ModelsImportDialog.vue';
+
+export default Vue.extend({
+  name: 'ModelsMenu',
+  components: {
+    ModelsDialog,
+    ModelsImportDialog,
+  },
+  props: {
+    position: Object,
+  },
+  setup(props) {
+    const state = reactive({
+      content: null,
+      selectedModels: [],
+      models: core.app.models as Model[],
+      position: props.position,
+      show: true,
+      openImportDialog: false,
+      openModelsDialog: false,
+      modelDialogAction: 'export',
+      items: [
+        {
+          id: 'modelsReload',
+          icon: 'mdi-reload',
+          title: 'Reload models',
+          onClick: () => {
+            core.app.updateModels();
+            state.show = false;
+          },
+        },
+        {
+          id: 'modelsExport',
+          icon: 'mdi-export',
+          title: 'Export models',
+          onClick: () => {
+            state.models.forEach((model: Model) => {
+              model.state.selected = false;
+            });
+            state.modelDialogAction = 'export';
+            state.openModelsDialog = true;
+            state.show = false;
+          },
+        },
+        {
+          id: 'modelsImport',
+          icon: 'mdi-import',
+          title: 'Import models',
+          onClick: () => {
+            state.openImportDialog = true;
+            state.show = false;
+          },
+        },
+        {
+          id: 'modelsDelete',
+          icon: 'mdi-trash-can-outline',
+          title: 'Delete models',
+          onClick: () => {
+            state.models.forEach((model: Model) => {
+              model.state.selected = false;
+            });
+            state.modelDialogAction = 'delete';
+            state.openModelsDialog = true;
+            state.show = false;
+          },
+        },
+        {
+          id: 'modelsReset',
+          icon: '$mdiDatabaseRefreshOutline',
+          title: 'Reset all models',
+          onClick: () => {
+            state.content = 'modelsReset';
+          },
+          append: true,
+        },
+      ],
+    });
+
+    /**
+     * Reset states.
+     */
+    const reset = () => {
+      state.content = null;
+      state.selectedModels = [];
+    };
+
+    /**
+     * Reset model database.
+     */
+    const resetModels = () => {
+      state.show = false;
+      core.app.resetModelDatabase().then(() => {
+        core.app.updateModels();
+        reset();
+      });
+    };
+
+    watch(
+      () => props.position,
+      () => {
+        state.show = false;
+        reset();
+        state.position = props.position;
+        state.show = true;
+      }
+    );
+
+    return {
+      reset,
+      resetModels,
+      state,
+    };
+  },
+});
+</script>

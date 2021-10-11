@@ -124,6 +124,34 @@
         </v-card>
 
         <v-card flat tile>
+          <v-card-title v-text="'Model'" />
+          <v-card-text>
+            <v-card flat tile>
+              <v-card-subtitle v-text="'Accepted recordables'" />
+              <span
+                :key="recordable.id"
+                v-for="recordable in state.model.config.recordables"
+              >
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-chip
+                      class="ma-1"
+                      outlined
+                      small
+                      v-text="recordable.id"
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  {{ recordable.label }}
+                  <span v-if="recordable.unit"> ({{ recordable.unit }})</span>
+                </v-tooltip>
+              </span>
+            </v-card>
+          </v-card-text>
+        </v-card>
+
+        <v-card flat tile>
           <v-card-title v-text="'Network'" />
           <v-card-text>
             <v-card flat tile>
@@ -192,6 +220,7 @@ export default Vue.extend({
     const state = reactive({
       app: core.app,
       devMode: core.app.config.devMode,
+      model: new Config('Model'),
       simulatorVersion: 'unknown',
       network: new Config('Network'),
       pinNav: core.app.config.pinNav,

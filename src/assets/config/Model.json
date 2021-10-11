@@ -14,8 +14,44 @@
       "unit": "nS"
     },
     {
+      "id": "g_ex.d",
+      "abbr": "g_ex dist",
+      "label": "distal conductance of excitatory input",
+      "unit": "nS"
+    },
+    {
+      "id": "g_ex.p",
+      "abbr": "g_ex prox",
+      "label": "proximal conductance of excitatory input",
+      "unit": "nS"
+    },
+    {
+      "id": "g_ex.s",
+      "abbr": "g_ex soma",
+      "label": "soma conductance of excitatory input",
+      "unit": "nS"
+    },
+    {
       "id": "g_in",
       "label": "inhibitory conductance",
+      "unit": "nS"
+    },
+    {
+      "id": "g_in.d",
+      "abbr": "g_in dist",
+      "label": "distal conductance of inhibitory input",
+      "unit": "nS"
+    },
+    {
+      "id": "g_in.p",
+      "abbr": "g_in prox",
+      "label": "proximal conductance of inhibitory input",
+      "unit": "nS"
+    },
+    {
+      "id": "g_in.s",
+      "abbr": "g_in soma",
+      "label": "soma conductance of inhibitory input",
       "unit": "nS"
     },
     {
@@ -38,9 +74,20 @@
       "label": "sodium channel inactivation"
     },
     {
+      "id": "rate",
+      "label": "firing rate",
+      "unit": "spikes/s"
+    },
+    {
       "id": "t_ref_remaining",
       "label": "time remaining till end of refractory state",
       "unit": "ms"
+    },
+    {
+      "abbr": "V_th",
+      "id": "V_th",
+      "label": "spike threshold",
+      "unit": "mV"
     },
     {
       "id": "V_m",
@@ -48,12 +95,28 @@
       "unit": "mV"
     },
     {
-      "id": "weighted_spikes_ex",
-      "label": "weighted incoming excitatory spikes"
+      "abbr": "V_m dist",
+      "id": "V_m.d",
+      "label": "distal membrane potential",
+      "unit": "mV"
     },
     {
-      "id": "weighted_spikes_in",
-      "label": "weighted incoming inhibitory spikes"
+      "abbr": "V_m prox",
+      "id": "V_m.p",
+      "label": "proximal membrane potential",
+      "unit": "mV"
+    },
+    {
+      "abbr": "V_m soma",
+      "id": "V_m.s",
+      "label": "soma membrane potential",
+      "unit": "mV"
+    },
+    {
+      "abbr": "w",
+      "id": "w",
+      "label": "spike-adaptation current",
+      "unit": "pA"
     }
   ]
 }
