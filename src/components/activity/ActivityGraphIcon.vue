@@ -1,5 +1,5 @@
 <template>
-  <div class="activityGraphIcon">
+  <div class="activityGraphIcon" v-if="state.project">
     <span v-if="state.small">
       <v-icon
         :small="state.small"
