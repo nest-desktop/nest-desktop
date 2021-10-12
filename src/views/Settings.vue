@@ -224,7 +224,7 @@ export default Vue.extend({
       simulatorVersion: 'unknown',
       network: new Config('Network'),
       pinNav: core.app.config.pinNav,
-      showHelp: core.app.project.config.showHelp,
+      showHelp: core.app.projectView.state.project.config.showHelp,
       colorSchemes: colorSchemes,
     });
 
@@ -256,7 +256,7 @@ export default Vue.extend({
      * Update project configuration.
      */
     const updateProjectConfig = (d: any) => {
-      core.app.project.updateConfig(d);
+      core.app.projectView.state.project.updateConfig(d);
     };
 
     /**

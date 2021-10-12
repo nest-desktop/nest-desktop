@@ -1,39 +1,36 @@
 <template>
   <div class="activityGraphIcon" v-if="state.project">
-    <span v-if="state.small">
+    <span v-if="state.append">
       <v-icon
-        :small="state.small"
+        small
         v-show="state.project.hasAnalogActivities"
         v-text="'mdi-chart-bell-curve-cumulative'"
       />
       <v-icon
-        :small="state.small"
+        small
         v-show="state.project.hasSpikeActivities"
         v-text="'mdi-chart-scatter-plot'"
       />
       <v-icon
-        :small="state.small"
+        small
         v-show="state.project.hasSpatialActivities"
         v-text="'mdi-axis-arrow'"
       />
     </span>
     <span v-else>
       <v-icon
-        :small="state.small"
         v-if="
-          state.spatial &&
           state.project.hasSpatialActivities &&
-          state.project.app.view.project.state.activityGraph === 'spatial'
+          !state.fixed &&
+          state.project.app.projectView.state.activityGraph === 'spatial'
         "
         v-text="'mdi-axis-arrow'"
       />
       <v-icon
-        :small="state.small"
         v-else-if="state.project.hasAnalogActivities"
         v-text="'mdi-chart-bell-curve-cumulative'"
       />
       <v-icon
-        :small="state.small"
         v-else-if="state.project.hasSpikeActivities"
         v-text="'mdi-chart-scatter-plot'"
       />
@@ -50,30 +47,28 @@ import { Project } from '@/core/project/project';
 export default Vue.extend({
   name: 'ActivityGraphIcon',
   props: {
+    append: Boolean,
+    fixed: Boolean,
     project: Project,
-    small: Boolean,
-    spatial: Boolean,
   },
   setup(props) {
     const state = reactive({
+      append: false,
+      fixed: false,
       project: undefined as Project,
-      small: false,
-      spatial: false,
     });
 
-    onMounted(() => {
+    const update = () => {
+      state.append = props.append as boolean;
+      state.fixed = props.fixed as boolean;
       state.project = props.project as Project;
-      state.small = props.small as boolean;
-      state.spatial = props.spatial as boolean;
-    });
+    };
+
+    onMounted(() => update());
 
     watch(
       () => [props.project],
-      project => {
-        state.project = props.project as Project;
-        state.small = props.small as boolean;
-        state.spatial = props.spatial as boolean;
-      }
+      () => update()
     );
 
     return { state };

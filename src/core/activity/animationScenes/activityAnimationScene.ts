@@ -54,6 +54,10 @@ export class ActivityAnimationScene {
     return this._graph.config;
   }
 
+  get controls(): OrbitControls {
+    return this._controls;
+  }
+
   get name(): string {
     return this._name;
   }

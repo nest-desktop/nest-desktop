@@ -15,19 +15,23 @@
       </v-list-item>
     </v-list>
 
-    <v-container :key="state.projectId" class="py-0" v-if="state.app.project">
+    <v-container
+      :key="state.projectId"
+      class="py-0"
+      v-if="projectView.state.project"
+    >
       <v-text-field
         clearable
         dense
         hide-details
         placeholder="Project name"
         title="Rename the current project"
-        v-model="state.app.project.name"
+        v-model="projectView.state.project.name"
       >
         <template #append-outer>
           <v-row>
             <v-btn
-              @click="state.app.project.save()"
+              @click="projectView.state.project.save()"
               class="project mx-2"
               dark
               depressed
@@ -48,19 +52,19 @@
         hide-details
         placeholder="Search project"
         prepend-inner-icon="mdi-magnify"
-        v-model="state.app.view.project.searchTerm"
+        v-model="appView.state.project.searchTerm"
       />
     </v-container>
 
-    <v-list :key="state.app.projects.length" dense two-line>
-      <draggable v-model="state.app.projects">
+    <v-list :key="appView.state.projects.length" dense two-line>
+      <draggable v-model="appView.state.projects">
         <transition-group>
           <v-list-item
             :key="project.id"
             :to="'/project/' + project.id"
             @click="state.projectId = project.id"
             @contextmenu="e => showProjectMenu(e, project)"
-            v-for="project in state.app.view.filteredProjects"
+            v-for="project in appView.filteredProjects"
           >
             <v-list-item-content>
               <v-list-item-title v-text="project.name" />
@@ -74,14 +78,9 @@
             <v-list-item-icon>
               <ActivityGraphIcon
                 :project="project"
-                :small="true"
+                append
                 v-if="project.hasActivities"
               />
-              <!-- <v-icon
-                small
-                v-show="!project.rev"
-                v-text="'mdi-alert-circle-outline'"
-              /> -->
             </v-list-item-icon>
           </v-list-item>
         </transition-group>
@@ -108,6 +107,8 @@ export default Vue.extend({
     ProjectMenu,
   },
   setup() {
+    const appView = core.app.view;
+    const projectView = core.app.projectView;
     const state = reactive({
       app: core.app,
       projectId: '',
@@ -134,6 +135,8 @@ export default Vue.extend({
     };
 
     return {
+      appView,
+      projectView,
       showProjectMenu,
       state,
     };

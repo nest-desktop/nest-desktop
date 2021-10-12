@@ -4,7 +4,7 @@
     <ProjectsDialog
       :action="state.projectDialogAction"
       :open="state.openProjectsDialog"
-      :projects="state.projects"
+      :projects="appView.state.projects"
     />
 
     <v-menu
@@ -75,10 +75,10 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
+    const appView = core.app.view;
     const state = reactive({
       content: null,
       selectedProjects: [],
-      projects: core.app.projects as Project[],
       position: props.position,
       show: true,
       openImportDialog: false,
@@ -90,7 +90,7 @@ export default Vue.extend({
           icon: 'mdi-reload',
           title: 'Reload projects',
           onClick: () => {
-            core.app.updateProjects();
+            appView.updateProjects();
             state.show = false;
           },
         },
@@ -99,8 +99,8 @@ export default Vue.extend({
           icon: 'mdi-export',
           title: 'Export projects',
           onClick: () => {
-            state.projects.forEach((project: Project) => {
-              project.view.resetState();
+            appView.state.projects.forEach((project: Project) => {
+              project.resetState();
             });
             state.projectDialogAction = 'export';
             state.openProjectsDialog = true;
@@ -121,8 +121,8 @@ export default Vue.extend({
           icon: 'mdi-trash-can-outline',
           title: 'Delete projects',
           onClick: () => {
-            state.projects.forEach((project: Project) => {
-              project.view.resetState();
+            appView.state.projects.forEach((project: Project) => {
+              project.resetState();
             });
             state.projectDialogAction = 'delete';
             state.openProjectsDialog = true;
@@ -155,7 +155,7 @@ export default Vue.extend({
     const resetProjects = () => {
       state.show = false;
       core.app.resetProjectDatabase().then(() => {
-        core.app.updateProjects();
+        appView.updateProjects();
         reset();
       });
     };
@@ -171,6 +171,7 @@ export default Vue.extend({
     );
 
     return {
+      appView,
       reset,
       resetProjects,
       state,

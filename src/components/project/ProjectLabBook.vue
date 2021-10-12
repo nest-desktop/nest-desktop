@@ -1,5 +1,5 @@
 <template>
-  <div class="projectLabBook" v-if="state.project">
+  <div class="projectLabBook" v-if="projectView.state.project">
     <v-container>
       <v-card
         flat
@@ -9,21 +9,21 @@
         <v-card-title
           class="print"
           style="display: none"
-          v-text="state.project.name"
+          v-text="projectView.state.project.name"
         />
 
         <span class="d-flex flex-md-row">
           <div
             class="mx-1"
             style="width: 100%"
-            v-if="state.project.network.visibleNodes.length > 0"
+            v-if="projectView.state.project.network.visibleNodes.length > 0"
           >
             <v-card
               :key="'node-' + node.idx"
               class="mb-1"
               flat
               tile
-              v-for="node of state.project.network.visibleNodes"
+              v-for="node of projectView.state.project.network.visibleNodes"
             >
               <v-sheet :color="node.view.color">
                 <v-row no-gutters>
@@ -86,14 +86,17 @@
           <div
             class="mx-1"
             style="width: 100%"
-            v-if="state.project.network.visibleConnections.length > 0"
+            v-if="
+              projectView.state.project.network.visibleConnections.length > 0
+            "
           >
             <v-card
               :key="'connection-' + connection.idx"
               class="mb-1"
               flat
               tile
-              v-for="connection of state.project.network.visibleConnections"
+              v-for="connection of projectView.state.project.network
+                .visibleConnections"
             >
               <v-row no-gutters>
                 <v-col cols="4" class="py-0">
@@ -167,35 +170,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import core from '@/core';
 
 export default Vue.extend({
   name: 'ProjectLabBook',
-  props: {
-    hash: String,
-  },
-  setup(props) {
-    const state = reactive({
-      hash: props.hash,
-      project: undefined,
-    });
-
-    watch(
-      () => props.hash,
-      hash => {
-        state.hash = hash;
-        state.project = core.app.project;
-      }
-    );
-
-    onMounted(() => {
-      state.project = core.app.project;
-    });
+  setup() {
+    const projectView = core.app.projectView;
 
     return {
-      state,
+      projectView,
     };
   },
 });

@@ -6,8 +6,7 @@
       max-width="1024"
     >
       <v-card>
-        <v-card-title v-text="'Import model'" />
-        <v-card-subtitle v-text="'Select a source'" />
+        <v-card-title v-text="'Import models'" />
 
         <v-card-text>
           <v-row class="mb-1">
@@ -281,7 +280,7 @@ export default Vue.extend({
     const importModels = () => {
       const models: any[] = state.models.filter((model: any) => model.selected);
       core.app.addModels(models).then(() => {
-        core.app.updateModels();
+        core.app.view.updateModels();
         closeDialog();
       });
     };

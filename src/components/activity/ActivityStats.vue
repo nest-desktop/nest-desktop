@@ -8,7 +8,7 @@
         flat
         hover
         tile
-        v-model="state.project.view.activityStatsPanelId"
+        v-model="projectView.state.project.state.activityStatsPanelId"
       >
         <v-expansion-panel
           :disabled="!activity.hasEvents()"
@@ -17,7 +17,7 @@
             borderLeft: '4px solid ' + activity.recorder.view.color,
           }"
           class="mb-1"
-          v-for="(activity, index) in state.project.activities"
+          v-for="(activity, index) in projectView.state.project.activities"
         >
           <v-expansion-panel-header
             :color="activity.recorder.view.color"
@@ -35,13 +35,13 @@
           </v-expansion-panel-header>
 
           <v-expansion-panel-content
-            :key="state.project.code.hash"
+            :key="projectView.state.project.code.hash"
             class="px-0"
             v-if="activity.hasEvents()"
           >
             <ActivitySpikeStats
               :activity="activity"
-              v-if="activity.recorder.modelId == 'spike_recorder'"
+              v-if="activity.recorder.modelId === 'spike_recorder'"
             />
             <ActivityAnalogStats
               :activity="activity"
@@ -56,9 +56,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
 
-import { Project } from '@/core/project/project';
+import core from '@/core';
 import ActivityAnalogStats from '@/components/activity/ActivityAnalogStats.vue';
 import ActivitySpikeStats from '@/components/activity/ActivitySpikeStats.vue';
 
@@ -68,22 +67,9 @@ export default Vue.extend({
     ActivityAnalogStats,
     ActivitySpikeStats,
   },
-  props: {
-    project: Project,
-  },
-  setup(props) {
-    const state = reactive({
-      project: props.project,
-    });
-
-    watch(
-      () => props.project,
-      () => {
-        state.project = props.project;
-      }
-    );
-
-    return { state };
+  setup() {
+    const projectView = core.app.projectView;
+    return { projectView };
   },
 });
 </script>

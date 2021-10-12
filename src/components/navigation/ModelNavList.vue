@@ -13,7 +13,7 @@
         hide-details
         label="Search model"
         prepend-inner-icon="mdi-magnify"
-        v-model="core.app.view.model.state.searchTerm"
+        v-model="appView.state.model.searchTerm"
       >
         <template #prepend>
           <v-menu offset-y>
@@ -54,7 +54,7 @@
         close
         small
         outlined
-        v-if="core.app.view.model.state.filterTags.includes(tag.value)"
+        v-if="appView.state.model.filterTags.includes(tag.value)"
       >
         <v-icon left small v-text="tag.icon" />
         {{ tag.text }}
@@ -75,8 +75,8 @@
         @contextmenu="e => showModelMenu(e, model)"
         v-for="model in state.models"
         v-show="
-          core.app.view.model.state.searchTerm
-            ? model.includes(core.app.view.model.state.searchTerm)
+          appView.state.model.searchTerm
+            ? model.includes(appView.state.model.searchTerm)
             : true
         "
       >
@@ -88,7 +88,7 @@
           <v-icon
             right
             small
-            v-show="core.app.hasModel(model)"
+            v-show="appView.hasModel(model)"
             v-text="'mdi-database-outline'"
           />
           <v-icon
@@ -116,6 +116,7 @@ export default Vue.extend({
     ModelMenu,
   },
   setup() {
+    const appView = core.app.view;
     const state = reactive({
       modelMenu: {
         model: undefined,
@@ -150,7 +151,7 @@ export default Vue.extend({
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.modelMenu.show = false;
-      state.modelMenu.model = core.app.getModel(model);
+      state.modelMenu.model = appView.getModel(model);
       state.modelMenu.position.x = e.clientX;
       state.modelMenu.position.y = e.clientY;
       this.$nextTick(() => {
@@ -162,14 +163,14 @@ export default Vue.extend({
      * Clear search term.
      */
     const clearSearch = () => {
-      core.app.view.model.state.searchTerm = '';
+      appView.state.model.searchTerm = '';
     };
 
     /**
      * Check if file exists on
      */
     const fileExistGithub = (model: string) => {
-      return core.app.view.model.state.filesGithub.some((file: string) =>
+      return appView.state.model.filesGithub.some((file: string) =>
         file.includes('/' + model)
       );
     };
@@ -178,7 +179,7 @@ export default Vue.extend({
      * Add filter tag.
      */
     const addFilterTag = (tag: string) => {
-      core.app.view.model.state.filterTags.push(tag);
+      appView.state.model.filterTags.push(tag);
       update();
     };
 
@@ -186,13 +187,11 @@ export default Vue.extend({
      * Remove filter tag.
      */
     const removeFilterTag = (tag: string) => {
-      core.app.view.model.state.filterTags.splice(
-        core.app.view.model.state.filterTags.indexOf(tag),
+      appView.state.model.filterTags.splice(
+        appView.state.model.filterTags.indexOf(tag),
         1
       );
-      core.app.view.model.state.filterTags = [
-        ...core.app.view.model.state.filterTags,
-      ];
+      appView.state.model.filterTags = [...appView.state.model.filterTags];
       update();
     };
 
@@ -233,15 +232,15 @@ export default Vue.extend({
      * Update models
      */
     const update = () => {
-      const filterTags: string[] = core.app.view.model.state.filterTags;
+      const filterTags: string[] = appView.state.model.filterTags;
       if (filterTags.includes('installed')) {
-        state.models = core.app.models.map((model: any) => model.id);
+        state.models = appView.state.models.map((model: any) => model.id);
       } else if (filterTags.includes('github')) {
-        state.models = core.app.view.model.state.filesGithub.map(
+        state.models = appView.state.model.filesGithub.map(
           (model: string) => model.split('.json')[0].split('/')[1]
         );
       } else {
-        state.models = core.app.view.model.state.modelsNEST;
+        state.models = appView.state.model.modelsNEST;
       }
 
       if (
@@ -281,8 +280,8 @@ export default Vue.extend({
     });
 
     return {
+      appView,
       addFilterTag,
-      core,
       clearSearch,
       fileExistGithub,
       filterTags,

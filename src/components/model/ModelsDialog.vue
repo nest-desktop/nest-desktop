@@ -85,6 +85,7 @@ export default Vue.extend({
     models: Array,
   },
   setup(props) {
+    const appView = core.app.view;
     const state = reactive({
       action: 'export',
       dialog: false,
@@ -117,18 +118,20 @@ export default Vue.extend({
           return model.id;
         });
       core.app.deleteModels(modelIds).then(() => {
-        core.app.updateModels();
+        appView.updateModels();
         state.dialog = false;
       });
     };
 
+    const update = () => {
+      state.models = props.models as Model[];
+      state.action = props.action as string;
+      state.dialog = true;
+    };
+
     watch(
-      () => [props.action, props.open],
-      () => {
-        state.models = props.models as Model[];
-        state.action = props.action as string;
-        state.dialog = true;
-      }
+      () => [props.action, props.models, props.open],
+      () => update()
     );
 
     return {

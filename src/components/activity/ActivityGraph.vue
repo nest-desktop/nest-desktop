@@ -102,12 +102,12 @@
           :scrollZoom="true"
           :toImageButtonOptions="state.toImageButtonOptions"
           style="position: relative; width: 100%; height: calc(100vh - 48px)"
-          v-if="state.view == 'abstract'"
+          v-if="state.view === 'abstract'"
         />
 
         <ActivityAnimationGraph
           :graph="state.graph.activityAnimationGraph"
-          v-if="state.view == 'spatial'"
+          v-if="state.view === 'spatial'"
         />
       </div>
     </transition>
@@ -147,8 +147,9 @@ import { reactive, onMounted, watch } from '@vue/composition-api';
 import { Plotly } from 'vue-plotly';
 import * as PlotlyJS from 'plotly.js-dist-min';
 
-import ActivityAnimationGraph from '@/components/activity/ActivityAnimationGraph.vue';
 import { ActivityGraph } from '@/core/activity/activityGraph';
+import ActivityAnimationGraph from '@/components/activity/ActivityAnimationGraph.vue';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ActivityGraph',
@@ -163,6 +164,7 @@ export default Vue.extend({
     view: String,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const state = reactive({
       dialog: false,
       gd: undefined,
@@ -242,9 +244,7 @@ export default Vue.extend({
         showSnackbar('No activity found. Please simulate.', [
           {
             text: 'Simulate',
-            onClick: () => {
-              simulate();
-            },
+            onClick: () => state.graph.project.runSimulation(),
           },
         ]);
       } else if (state.graph.codeHash !== state.graph.project.code.hash) {
@@ -253,9 +253,7 @@ export default Vue.extend({
           [
             {
               text: 'Simulate',
-              onClick: () => {
-                simulate();
-              },
+              onClick: () => state.graph.project.runSimulation(),
             },
           ]
         );
@@ -271,13 +269,9 @@ export default Vue.extend({
       state.snackbar.show = true;
     };
 
-    const simulate = () => {
-      state.graph.project.runSimulation();
-    };
-
     onMounted(() => {
       update();
-      setTimeout(() => showHelp(), 1000);
+      setTimeout(() => showHelp(), 100);
     });
 
     watch(
@@ -287,12 +281,12 @@ export default Vue.extend({
           update();
         }
         if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
-          setTimeout(() => showHelp(), 1000);
+          setTimeout(() => showHelp(), 100);
         }
       }
     );
 
-    return { downloadImage, state };
+    return { projectView, downloadImage, state };
   },
 });
 </script>
