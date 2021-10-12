@@ -1,10 +1,6 @@
 <template>
   <div class="ProjectsImportDialog">
-    <v-dialog
-      @click:outside="closeDialog()"
-      v-model="state.dialog"
-      max-width="1024"
-    >
+    <v-dialog v-model="appView.state.dialog.open" max-width="1024">
       <v-card>
         <v-card-title v-text="'Import projects'" />
 
@@ -127,7 +123,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
-            @click="state.dialog = false"
+            @click="closeDialog"
             outlined
             small
             text
@@ -150,7 +146,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 import axios from 'axios';
 
 import { App } from '@/core/app';
@@ -159,10 +155,8 @@ import core from '@/core';
 
 export default Vue.extend({
   name: 'ProjectsImportDialog',
-  props: {
-    open: Boolean,
-  },
-  setup(props, { emit }) {
+  setup() {
+    const appView = core.app.view;
     const state = reactive({
       dialog: false,
       items: [
@@ -183,7 +177,6 @@ export default Vue.extend({
         },
       ],
       files: [],
-      open: props.open,
       projects: [],
       selectedFile: {},
       selectedProjects: [],
@@ -299,8 +292,8 @@ export default Vue.extend({
         (project: any) => project.selected
       );
       core.app.addProjects(projects).then(() => {
-        core.app.view.updateProjects();
-        state.dialog = false;
+        appView.updateProjects();
+        closeDialog();
       });
     };
 
@@ -308,19 +301,13 @@ export default Vue.extend({
      * Close dialog.
      */
     const closeDialog = () => {
-      state.dialog = false;
-      emit('update:open', false);
+      appView.state.dialog.open = false;
     };
 
-    watch(
-      () => props.open,
-      () => {
-        state.dialog = props.open as boolean;
-        getTreesFromGithub();
-      }
-    );
+    onMounted(() => getTreesFromGithub());
 
     return {
+      appView,
       closeDialog,
       getFilesFromGithub,
       getProjectsFromGithub,

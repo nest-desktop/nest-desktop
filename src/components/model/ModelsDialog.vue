@@ -1,14 +1,14 @@
 <template>
   <div class="ModelsDialog">
-    <v-dialog v-model="state.dialog" max-width="1024">
+    <v-dialog v-model="appView.state.dialog.open" max-width="1024">
       <v-card>
         <v-card-title
-          v-text="`Select models to ${state.action}.`"
-          v-if="state.models.length !== 0"
+          v-text="`Select models to ${appView.state.dialog.action}.`"
+          v-if="appView.state.dialog.content.length !== 0"
         />
 
         <v-card-text>
-          <v-simple-table v-if="state.models.length !== 0">
+          <v-simple-table v-if="appView.state.dialog.content.length !== 0">
             <template #default>
               <thead>
                 <tr>
@@ -18,7 +18,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr :key="index" v-for="(model, index) in state.models">
+                <tr
+                  :key="index"
+                  v-for="(model, index) in appView.state.dialog.content"
+                >
                   <td v-text="model.label" />
                   <td v-text="model.elementType" />
                   <td class="text-center">
@@ -38,28 +41,32 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
-            @click="state.dialog = false"
+            @click="appView.state.dialog.open = false"
             outlined
             small
             text
             v-text="'Cancel'"
           />
           <v-btn
-            :disabled="!state.models.some(p => p.state.selected)"
+            :disabled="
+              !appView.state.dialog.content.some(p => p.state.selected)
+            "
             @click="exportModels"
             outlined
             small
-            v-if="state.action === 'export'"
+            v-if="appView.state.dialog.action === 'export'"
           >
             <v-icon left v-text="'mdi-export'" />
             Export
           </v-btn>
           <v-btn
-            :disabled="!state.models.some(p => p.state.selected)"
+            :disabled="
+              !appView.state.dialog.content.some(p => p.state.selected)
+            "
             @click="deleteModels"
             outlined
             small
-            v-if="state.action === 'delete'"
+            v-if="appView.state.dialog.action === 'delete'"
           >
             <v-icon left v-text="'mdi-trash-can-outline'" />
             Delete
@@ -72,72 +79,45 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
 import core from '@/core';
 
 export default Vue.extend({
   name: 'ModelsDialog',
-  props: {
-    action: String,
-    open: Boolean,
-    models: Array,
-  },
-  setup(props) {
+  setup() {
     const appView = core.app.view;
-    const state = reactive({
-      action: 'export',
-      dialog: false,
-      models: props.models as Model[],
-    });
 
     /**
      * Export models.
      */
     const exportModels = () => {
-      const models: any[] = state.models
-        .filter((model: Model) => model.state.selected)
-        .map((model: Model) => {
-          model.state.selected = false;
-          const modelData: any = model.toJSON();
-          return modelData;
-        });
-      core.app.download(models, models.length === 1 ? 'model' : 'models');
-      state.dialog = false;
+      const selectedModels: Model[] = appView.state.dialog.content.filter(
+        (model: Model) => model.state.selected
+      );
+      if (selectedModels.length > 0) {
+        appView.exportModels(selectedModels);
+      }
+      appView.state.dialog.open = false;
     };
 
     /**
      * Delete models.
      */
     const deleteModels = () => {
-      const modelIds: string[] = state.models
-        .filter((model: Model) => model.state.selected)
-        .map((model: Model) => {
-          model.state.selected = false;
-          return model.id;
-        });
-      core.app.deleteModels(modelIds).then(() => {
-        appView.updateModels();
-        state.dialog = false;
-      });
+      const selectedModels: Model[] = appView.state.dialog.content.filter(
+        (model: Model) => model.state.selected
+      );
+      if (selectedModels.length > 0) {
+        appView.deleteModels(selectedModels);
+      }
+      appView.state.dialog.open = false;
     };
-
-    const update = () => {
-      state.models = props.models as Model[];
-      state.action = props.action as string;
-      state.dialog = true;
-    };
-
-    watch(
-      () => [props.action, props.models, props.open],
-      () => update()
-    );
 
     return {
+      appView,
       exportModels,
       deleteModels,
-      state,
     };
   },
 });
