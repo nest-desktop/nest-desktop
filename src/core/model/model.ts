@@ -233,6 +233,13 @@ export class Model extends Config {
   }
 
   /**
+   * Reset state of this model.
+   */
+  resetState(): void {
+    this._state.selected = false;
+  }
+
+  /**
    * Delete model object from model list in app.
    */
   async delete(): Promise<any> {

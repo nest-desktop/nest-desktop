@@ -1,14 +1,14 @@
 <template>
   <div class="ProjectsDialog">
-    <v-dialog v-model="state.dialog" max-width="1024">
+    <v-dialog v-model="appView.state.dialog.open" max-width="1024">
       <v-card>
         <v-card-title
-          v-text="`Select projects to ${state.action}.`"
-          v-if="state.projects.length !== 0"
+          v-text="`Select projects to ${appView.state.dialog.action}.`"
+          v-if="appView.state.dialog.content.length !== 0"
         />
 
         <v-card-text>
-          <v-simple-table v-if="state.projects.length !== 0">
+          <v-simple-table v-if="appView.state.dialog.content.length !== 0">
             <template #default>
               <thead>
                 <tr>
@@ -17,13 +17,16 @@
                   <th class="text-center" v-text="'Selected'" />
                   <th
                     class="text-center"
-                    v-if="state.action === 'export'"
+                    v-if="appView.state.dialog.action === 'export'"
                     v-text="'Activities'"
                   />
                 </tr>
               </thead>
               <tbody>
-                <tr :key="index" v-for="(project, index) in state.projects">
+                <tr
+                  :key="index"
+                  v-for="(project, index) in appView.state.dialog.content"
+                >
                   <td v-text="project.name" />
                   <td v-text="new Date(project.createdAt).toLocaleString()" />
                   <td class="text-center">
@@ -34,10 +37,10 @@
                       v-model="project.state.selected"
                     />
                   </td>
-                  <td v-if="state.action === 'export'">
+                  <td v-if="appView.state.dialog.action === 'export'">
                     <v-row>
                       <v-col class="py-4" cols="4">
-                        <ActivityGraphIcon :project="project" :small="true" />
+                        <ActivityGraphIcon :project="project" small />
                       </v-col>
                       <v-col cols="4">
                         <v-checkbox
@@ -59,28 +62,32 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
-            @click="state.dialog = false"
+            @click="appView.state.dialog.open = false"
             outlined
             small
             text
             v-text="'Cancel'"
           />
           <v-btn
-            :disabled="!state.projects.some(p => p.state.selected)"
+            :disabled="
+              !appView.state.dialog.content.some(p => p.state.selected)
+            "
             @click="exportProjects"
             outlined
             small
-            v-if="state.action === 'export'"
+            v-if="appView.state.dialog.action === 'export'"
           >
             <v-icon left v-text="'mdi-export'" />
             Export
           </v-btn>
           <v-btn
-            :disabled="!state.projects.some(p => p.state.selected)"
+            :disabled="
+              !appView.state.dialog.content.some(p => p.state.selected)
+            "
             @click="deleteProjects"
             outlined
             small
-            v-if="state.action === 'delete'"
+            v-if="appView.state.dialog.action === 'delete'"
           >
             <v-icon left v-text="'mdi-trash-can-outline'" />
             Delete
@@ -93,9 +100,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
 
-import { Activity } from '@/core/activity/activity';
 import { Project } from '@/core/project/project';
 import core from '@/core';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
@@ -105,71 +110,39 @@ export default Vue.extend({
   components: {
     ActivityGraphIcon,
   },
-  props: {
-    action: String,
-    open: Boolean,
-    projects: Array,
-  },
-  setup(props) {
+  setup() {
     const appView = core.app.view;
-    const state = reactive({
-      action: 'export',
-      dialog: false,
-      projects: props.projects as Project[],
-    });
 
     /**
      * Export projects.
      */
     const exportProjects = () => {
-      const projects: any[] = state.projects
-        .filter((project: Project) => project.state.selected)
-        .map((project: Project) => {
-          const projectData: any = project.toJSON();
-          if (project.state.withActivities) {
-            projectData.activities = project.activities.map(
-              (activity: Activity) => activity.toJSON()
-            );
-          }
-          project.resetState();
-          return projectData;
-        });
-      core.app.download(
-        projects,
-        projects.length === 1 ? 'project' : 'projects'
+      const selectedProjects: Project[] = appView.state.dialog.content.filter(
+        (project: Project) => project.state.selected
       );
-      state.dialog = false;
+      if (selectedProjects.length > 0) {
+        appView.exportProjects(selectedProjects);
+      }
+      appView.state.dialog.open = false;
     };
 
     /**
      * Delete projects.
      */
     const deleteProjects = () => {
-      const projectIds: string[] = state.projects
-        .filter((project: Project) => project.state.selected)
-        .map((project: Project) => {
-          project.resetState();
-          return project.id;
-        });
-      core.app.deleteProjects(projectIds).then(() => {
-        appView.updateProjects();
-        state.dialog = false;
-      });
+      const selectedProjects: Project[] = appView.state.dialog.content.filter(
+        (project: Project) => project.state.selected
+      );
+      if (selectedProjects.length > 0) {
+        appView.deleteProjects(selectedProjects);
+      }
+      appView.state.dialog.open = false;
     };
 
-    watch(
-      () => [props.projects, props.action, props.open],
-      () => {
-        state.projects = props.projects as Project[];
-        state.action = props.action as string;
-        state.dialog = true;
-      }
-    );
-
     return {
+      appView,
       exportProjects,
       deleteProjects,
-      state,
     };
   },
 });

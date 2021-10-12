@@ -1,11 +1,5 @@
 <template>
   <div class="modelMenu" v-if="state.model">
-    <ModelsDialog
-      :open="state.openModelsDialog"
-      :models="[state.model]"
-      action="export"
-    />
-
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -55,18 +49,16 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
-import ModelsDialog from '@/components/model/ModelsDialog.vue';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ModelMenu',
-  components: {
-    ModelsDialog,
-  },
   props: {
     model: Model,
     position: Object,
   },
   setup(props) {
+    const appView = core.app.view;
     const state = reactive({
       content: null,
       model: props.model as Model,
@@ -105,11 +97,7 @@ export default Vue.extend({
           id: 'modelExport',
           icon: 'mdi-export',
           title: 'Export model',
-          onClick: () => {
-            state.model.state.selected = true;
-            state.openModelDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('export'),
         },
         {
           id: 'modelDelete',
@@ -138,6 +126,15 @@ export default Vue.extend({
       state.show = true;
       state.model = props.model as Model;
       state.position = props.position;
+    };
+
+    const openDialog = (action: string = 'export') => {
+      state.model.resetState();
+      appView.state.dialog.source = 'model';
+      appView.state.dialog.action = action;
+      appView.state.dialog.content = [state.model];
+      appView.state.dialog.open = true;
+      state.show = false;
     };
 
     watch(

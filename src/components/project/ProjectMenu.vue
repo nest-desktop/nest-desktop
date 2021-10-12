@@ -1,11 +1,5 @@
 <template>
   <div class="projectMenu" v-if="state.project">
-    <ProjectsDialog
-      :open="state.openProjectsDialog"
-      :projects="[state.project]"
-      action="export"
-    />
-
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -55,23 +49,20 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Project } from '@/core/project/project';
-import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ProjectMenu',
-  components: {
-    ProjectsDialog,
-  },
   props: {
     project: Project,
     position: Object,
   },
   setup(props) {
+    const appView = core.app.view;
     const state = reactive({
       content: null,
       project: props.project as Project,
       position: props.position,
-      openProjectsDialog: false,
       show: true,
       items: [
         {
@@ -96,11 +87,7 @@ export default Vue.extend({
           id: 'projectExport',
           icon: 'mdi-export',
           title: 'Export project',
-          onClick: () => {
-            state.project.state.selected = true;
-            state.openProjectsDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('export'),
         },
         {
           id: 'projectDelete',
@@ -121,6 +108,15 @@ export default Vue.extend({
       state.project.delete().then(() => {
         state.project.app.view.updateProjects();
       });
+      state.show = false;
+    };
+
+    const openDialog = (action: string = 'export') => {
+      state.project.resetState();
+      appView.state.dialog.source = 'project';
+      appView.state.dialog.action = action;
+      appView.state.dialog.content = [state.project];
+      appView.state.dialog.open = true;
       state.show = false;
     };
 

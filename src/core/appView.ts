@@ -16,6 +16,12 @@ export class AppView {
       activity: {
         graphMode: 'chart',
       },
+      dialog: {
+        open: false,
+        source: 'project',
+        action: 'export',
+        content: [],
+      },
       model: {
         filesGithub: [],
         filterTags: ['installed'],
@@ -117,6 +123,25 @@ export class AppView {
   }
 
   /**
+   * Export models.
+   */
+  exportModels(models: Model[]) {
+    const modelsJSON: any[] = models.map((model: Model) => model.toJSON());
+    this._app.download(
+      modelsJSON,
+      modelsJSON.length === 1 ? 'model' : 'models'
+    );
+  }
+
+  /**
+   * Delete models.
+   */
+  deleteModels(models: Model[]): void {
+    const modelIds: string[] = models.map((model: Model) => model.id);
+    this._app.deleteModels(modelIds).then(() => this.updateModels());
+  }
+
+  /**
    * Fetch files hosted on GitHub.
    */
   fetchModelsNEST(): void {
@@ -192,6 +217,33 @@ export class AppView {
             )
         )
       );
+  }
+
+  /**
+   * Export projects.
+   */
+  exportProjects(projects: Project[]): void {
+    const projectsJSON: any[] = projects.map((project: Project) => {
+      const projectData: any = project.toJSON();
+      if (project.state.withActivities) {
+        projectData.activities = project.activities.map((activity: Activity) =>
+          activity.toJSON()
+        );
+      }
+      return projectData;
+    });
+    this._app.download(
+      projectsJSON,
+      projectsJSON.length === 1 ? 'project' : 'projects'
+    );
+  }
+
+  /**
+   * Delete projects.
+   */
+  deleteProjects(projects: Project[]): void {
+    const projectIds: string[] = projects.map((project: Project) => project.id);
+    this._app.deleteProjects(projectIds).then(() => this.updateProjects());
   }
 
   /*

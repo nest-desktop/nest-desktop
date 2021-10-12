@@ -1,12 +1,5 @@
 <template>
   <div class="projectsMenu">
-    <ProjectsImportDialog :open="state.openImportDialog" />
-    <ProjectsDialog
-      :action="state.projectDialogAction"
-      :open="state.openProjectsDialog"
-      :projects="appView.state.projects"
-    />
-
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -62,15 +55,10 @@ import { reactive, watch } from '@vue/composition-api';
 
 import { Project } from '@/core/project/project';
 import core from '@/core';
-import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsImportDialog from '@/components/project/ProjectsImportDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectsMenu',
-  components: {
-    ProjectsDialog,
-    ProjectsImportDialog,
-  },
+  components: {},
   props: {
     position: Object,
   },
@@ -81,9 +69,6 @@ export default Vue.extend({
       selectedProjects: [],
       position: props.position,
       show: true,
-      openImportDialog: false,
-      openProjectsDialog: false,
-      projectDialogAction: 'export',
       items: [
         {
           id: 'projectsReload',
@@ -98,36 +83,19 @@ export default Vue.extend({
           id: 'projectsExport',
           icon: 'mdi-export',
           title: 'Export projects',
-          onClick: () => {
-            appView.state.projects.forEach((project: Project) => {
-              project.resetState();
-            });
-            state.projectDialogAction = 'export';
-            state.openProjectsDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('export'),
         },
         {
           id: 'projectsImport',
           icon: 'mdi-import',
           title: 'Import projects',
-          onClick: () => {
-            state.openImportDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('import'),
         },
         {
           id: 'projectsDelete',
           icon: 'mdi-trash-can-outline',
           title: 'Delete projects',
-          onClick: () => {
-            appView.state.projects.forEach((project: Project) => {
-              project.resetState();
-            });
-            state.projectDialogAction = 'delete';
-            state.openProjectsDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('delete'),
         },
         {
           id: 'projectsReset',
@@ -158,6 +126,17 @@ export default Vue.extend({
         appView.updateProjects();
         reset();
       });
+    };
+
+    const openDialog = (action: string = 'export') => {
+      appView.state.projects.forEach((project: Project) =>
+        project.resetState()
+      );
+      appView.state.dialog.source = 'project';
+      appView.state.dialog.action = action;
+      appView.state.dialog.content = appView.state.projects;
+      appView.state.dialog.open = true;
+      state.show = false;
     };
 
     watch(

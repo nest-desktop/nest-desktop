@@ -1,10 +1,6 @@
 <template>
-  <div class="ModelImportDialog">
-    <v-dialog
-      @click:outside="closeDialog()"
-      v-model="state.dialog"
-      max-width="1024"
-    >
+  <div class="ModelsImportDialog">
+    <v-dialog v-model="appView.state.dialog.open" max-width="1024">
       <v-card>
         <v-card-title v-text="'Import models'" />
 
@@ -137,7 +133,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 import axios from 'axios';
 
 import { App } from '@/core/app';
@@ -145,13 +141,10 @@ import { Model } from '@/core/model/model';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'ModelImportDialog',
-  props: {
-    open: Boolean,
-  },
-  setup(props, { emit }) {
+  name: 'ModelsImportDialog',
+  setup() {
+    const appView = core.app.view;
     const state = reactive({
-      dialog: false,
       items: [
         {
           icon: 'mdi-paperclip',
@@ -280,7 +273,7 @@ export default Vue.extend({
     const importModels = () => {
       const models: any[] = state.models.filter((model: any) => model.selected);
       core.app.addModels(models).then(() => {
-        core.app.view.updateModels();
+        appView.updateModels();
         closeDialog();
       });
     };
@@ -289,19 +282,13 @@ export default Vue.extend({
      * Close dialog.
      */
     const closeDialog = () => {
-      state.dialog = false;
-      emit('update:open', false);
+      appView.state.dialog.open = false;
     };
 
-    watch(
-      () => props.open,
-      () => {
-        state.dialog = props.open as boolean;
-        getTreesFromGithub();
-      }
-    );
+    onMounted(() => getTreesFromGithub());
 
     return {
+      appView,
       closeDialog,
       getFilesFromGithub,
       getModelFromGithub,

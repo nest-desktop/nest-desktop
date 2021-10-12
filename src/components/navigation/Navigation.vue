@@ -1,5 +1,32 @@
 <template>
   <div class="navigation">
+    <span v-if="appView.state.dialog.open">
+      <ProjectsImportDialog
+        v-if="
+          appView.state.dialog.source === 'project' &&
+          appView.state.dialog.action === 'import'
+        "
+      />
+      <ProjectsDialog
+        v-if="
+          appView.state.dialog.source === 'project' &&
+          appView.state.dialog.action != 'import'
+        "
+      />
+      <ModelsImportDialog
+        v-if="
+          appView.state.dialog.source === 'model' &&
+          appView.state.dialog.action === 'import'
+        "
+      />
+      <ModelsDialog
+        v-if="
+          appView.state.dialog.source === 'model' &&
+          appView.state.dialog.action != 'import'
+        "
+      />
+    </span>
+
     <span v-if="state.menu.show">
       <ProjectsMenu
         :position="state.menu.position"
@@ -147,21 +174,29 @@
 
 <script lang="ts">
 import { reactive } from '@vue/composition-api';
+import VueRouter, { Route } from 'vue-router';
 
 import core from '@/core';
 
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
+import ModelsDialog from '@/components/model/ModelsDialog.vue';
+import ModelsImportDialog from '@/components/model/ModelsImportDialog.vue';
 import ModelsMenu from '@/components/model/ModelsMenu.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
+import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
+import ProjectsImportDialog from '@/components/project/ProjectsImportDialog.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
-import VueRouter, { Route } from 'vue-router';
 
 export default {
   name: 'Navigation',
   components: {
     ModelNavList,
+    ModelsDialog,
+    ModelsImportDialog,
     ModelsMenu,
     ProjectNavList,
+    ProjectsDialog,
+    ProjectsImportDialog,
     ProjectsMenu,
   },
   setup() {

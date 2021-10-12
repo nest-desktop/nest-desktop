@@ -1,12 +1,5 @@
 <template>
   <div class="modelsMenu">
-    <ModelsImportDialog :open="state.openImportDialog" />
-    <ModelsDialog
-      :action="state.modelDialogAction"
-      :open="state.openModelsDialog"
-      :models="appView.state.models"
-    />
-
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -80,8 +73,6 @@ export default Vue.extend({
       content: null,
       position: props.position,
       show: true,
-      openImportDialog: false,
-      openModelsDialog: false,
       modelDialogAction: 'export',
       items: [
         {
@@ -97,36 +88,19 @@ export default Vue.extend({
           id: 'modelsExport',
           icon: 'mdi-export',
           title: 'Export models',
-          onClick: () => {
-            appView.state.models.forEach((model: Model) => {
-              model.state.selected = false;
-            });
-            state.modelDialogAction = 'export';
-            state.openModelsDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('export'),
         },
         {
           id: 'modelsImport',
           icon: 'mdi-import',
           title: 'Import models',
-          onClick: () => {
-            state.openImportDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('import'),
         },
         {
           id: 'modelsDelete',
           icon: 'mdi-trash-can-outline',
           title: 'Delete models',
-          onClick: () => {
-            appView.state.models.forEach((model: Model) => {
-              model.state.selected = false;
-            });
-            state.modelDialogAction = 'delete';
-            state.openModelsDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('delete'),
         },
         {
           id: 'modelsReset',
@@ -151,11 +125,20 @@ export default Vue.extend({
      * Reset model database.
      */
     const resetModels = () => {
-      state.show = false;
       core.app.resetModelDatabase().then(() => {
         appView.updateModels();
+        state.show = false;
         reset();
       });
+    };
+
+    const openDialog = (action: string = 'export') => {
+      appView.state.models.forEach((model: Model) => model.resetState());
+      appView.state.dialog.source = 'model';
+      appView.state.dialog.action = action;
+      appView.state.dialog.content = appView.state.models;
+      appView.state.dialog.open = true;
+      state.show = false;
     };
 
     watch(

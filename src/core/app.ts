@@ -187,10 +187,10 @@ export class App extends Config {
    * Import models from assets.
    */
   async importModelsFromAssets(): Promise<any> {
-    // console.log('Load models from files');
+    // console.log('Import models from assets');
     let promise: Promise<any> = Promise.resolve();
     this.config.models.forEach((file: string) => {
-      console.log('Load model from file:', file);
+      console.log('Import model from assets:', file);
       const data: any = require('../assets/models/' + file + '.json');
       promise = promise.then(() => this.addModel(data));
     });
@@ -324,10 +324,10 @@ export class App extends Config {
    * Import projects from assets to the database.
    */
   async importProjectsFromAssets(): Promise<any> {
-    // console.log('Load projects from files');
+    // console.log('Import projects from assets');
     let promise: Promise<any> = Promise.resolve();
     this.config.projects.forEach((file: string) => {
-      // console.log('Load project from file:', file);
+      console.log('Import project from assets:', file);
       const data: any = require('../assets/projects/' + file + '.json');
       promise = promise.then(() => this.addProject(data));
     });
