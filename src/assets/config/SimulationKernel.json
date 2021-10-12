@@ -13,9 +13,9 @@
       "input": "valueSlider",
       "label": "seed of random number generator",
       "max": 1000,
-      "min": 1,
+      "min": 0,
       "step": 1,
-      "value": 1
+      "value": 0
     },
     {
       "id": "resolution",

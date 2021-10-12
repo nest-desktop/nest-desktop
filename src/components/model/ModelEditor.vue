@@ -109,7 +109,11 @@
         <v-btn @click="() => modelView.state.model.save()" outlined small>
           Save
         </v-btn>
-        <v-btn @click="() => modelView.importModelFromGithub()" outlined small>
+        <v-btn
+          @click="() => modelView.app.importModelFromGithub()"
+          outlined
+          small
+        >
           Update model from Github
         </v-btn>
       </v-card-actions>
@@ -122,7 +126,7 @@
       <v-card-actions>
         <v-btn
           :disabled="!modelView.state.fileExistedGithub"
-          @click="() => modelView.importModelFromGithub()"
+          @click="() => modelView.app.importModelFromGithub()"
           outlined
           small
         >

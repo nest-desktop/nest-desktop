@@ -168,6 +168,7 @@ export default Vue.extend({
     includeProjectButtons: Boolean,
   },
   setup(props) {
+    const appView = core.app.view;
     const references = [
       {
         color: 'rgba(178, 245, 23, 0.05)',
@@ -196,7 +197,7 @@ export default Vue.extend({
     ];
     const state = reactive({
       includeProjectButtons: props.includeProjectButtons,
-      projects: core.app.projects,
+      projects: [],
       year: 2021,
     });
 
@@ -206,7 +207,7 @@ export default Vue.extend({
 
     watch(
       () => [props.includeProjectButtons],
-      includeProjectButtons => {
+      () => {
         state.includeProjectButtons = props.includeProjectButtons as boolean;
       }
     );
@@ -215,7 +216,7 @@ export default Vue.extend({
      * Load projects from app core component
      */
     const loadProjects = () => {
-      state.projects = core.app.projects;
+      state.projects = appView.state.projects;
     };
 
     return { loadProjects, references, state };

@@ -55,7 +55,6 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
-import core from '@/core';
 import ModelsDialog from '@/components/model/ModelsDialog.vue';
 
 export default Vue.extend({
@@ -99,7 +98,7 @@ export default Vue.extend({
           title: 'Import model',
           onClick: () => {
             state.show = false;
-            core.app.modelView.importModelFromGithub(state.model.id);
+            state.model.app.importModelFromGithub(state.model.id);
           },
         },
         {
@@ -129,7 +128,7 @@ export default Vue.extend({
      */
     const deleteModel = () => {
       state.model.delete().then(() => {
-        state.model.app.updateModels();
+        state.model.app.view.updateModels();
       });
       state.show = false;
     };

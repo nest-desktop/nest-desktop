@@ -24,7 +24,7 @@ export class DatabaseService {
     return this._version;
   }
 
-  destroy(): Promise<any> {
+  async destroy(): Promise<any> {
     return this._db.destroy();
   }
 

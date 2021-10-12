@@ -156,9 +156,10 @@ export default Vue.extend({
     networkHash: String,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const networkEditor = ref(null);
     const state = reactive({
-      network: core.app.project.network,
+      network: projectView.state.project.network,
       graph: undefined,
       nodeMenu: {
         node: undefined,
@@ -271,7 +272,7 @@ export default Vue.extend({
      */
     const update = () => {
       // console.log('Update network graph');
-      state.network = core.app.project.network;
+      state.network = projectView.state.project.network;
       state.graph.network = state.network;
       state.graph.update();
       setMenuTrigger();

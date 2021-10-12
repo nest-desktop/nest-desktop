@@ -35,7 +35,7 @@
         <template v-if="state.items.length > 1" #[`body.append`]="{ headers }">
           <tr>
             <td v-for="(header, i) in headers" :key="i">
-              <div v-if="header.value == 'id'" v-text="'All'" />
+              <div v-if="header.value === 'id'" v-text="'All'" />
               <div v-else>
                 <span>&#956;</span>
                 = {{ mean(header.value).toFixed(2) }}

@@ -29,7 +29,7 @@ export class Model extends Config {
 
     this._doc = model || {};
     this._id = model.id || uuidv4();
-    this._idx = this.app.models.length;
+    this._idx = this.app.view.state.models.length;
 
     this._elementType =
       model.elementType !== undefined ? model.elementType : model.element_type;
@@ -95,7 +95,7 @@ export class Model extends Config {
     return this._recordables;
   }
 
-  get state(): any {
+  get state(): UnwrapRef<any> {
     return this._state;
   }
 
@@ -106,7 +106,7 @@ export class Model extends Config {
   /**
    * Get parameter defaults of a model from NEST Simulator.
    */
-  fetchDefaults(): Promise<any> {
+  async fetchDefaults(): Promise<any> {
     return this.app.NESTSimulator.httpClient.post(
       this.app.NESTSimulator.url + '/api/GetDefaults',
       {
@@ -201,7 +201,7 @@ export class Model extends Config {
    * Clean model index.
    */
   clean(): void {
-    this._idx = this._app.models.indexOf(this);
+    this._idx = this._app.view.state.models.indexOf(this);
   }
 
   /**
@@ -235,14 +235,14 @@ export class Model extends Config {
   /**
    * Delete model object from model list in app.
    */
-  delete(): Promise<any> {
+  async delete(): Promise<any> {
     return this._app.deleteModel(this._doc._id);
   }
 
   /**
    * Save model object to the database.
    */
-  save(): Promise<any> {
+  async save(): Promise<any> {
     return this._app.importModel(this);
   }
 

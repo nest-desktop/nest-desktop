@@ -5,7 +5,7 @@
         <v-btn
           :disabled="state.disabled"
           :loading="state.project.simulation.running"
-          @click="simulate"
+          @click="state.project.runSimulation()"
           @contextmenu="showMenu"
           outlined
         >
@@ -107,28 +107,20 @@ export default Vue.extend({
       });
     };
 
-    /**
-     * Start simulation.
-     */
-    const simulate = () => {
-      state.project.runSimulation();
-    };
-
-    onMounted(() => {
+    const update = () => {
+      state.disabled = props.disabled;
       state.project = props.project as Project;
       state.projectConfig = state.project.config;
-    });
+    };
+
+    onMounted(() => update());
 
     watch(
       () => [props.disabled, props.project],
-      () => {
-        state.disabled = props.disabled;
-        state.project = props.project as Project;
-        state.projectConfig = state.project.config;
-      }
+      () => update()
     );
 
-    return { showMenu, simulate, state };
+    return { showMenu, state };
   },
 });
 </script>

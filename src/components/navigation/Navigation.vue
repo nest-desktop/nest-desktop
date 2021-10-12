@@ -3,12 +3,12 @@
     <span v-if="state.menu.show">
       <ProjectsMenu
         :position="state.menu.position"
-        v-if="state.menu.content == 'project'"
+        v-if="state.menu.content === 'project'"
       />
 
       <ModelsMenu
         :position="state.menu.position"
-        v-else-if="state.menu.content == 'model'"
+        v-else-if="state.menu.content === 'model'"
       />
     </span>
 
@@ -69,7 +69,7 @@
               <v-spacer />
 
               <v-list nav>
-                <template v-if="state.app.config.devMode">
+                <template v-if="appView.app.config.devMode">
                   <v-tooltip right>
                     <template #activator="{ on, attrs }">
                       <v-list-item v-bind="attrs" v-on="on">
@@ -165,8 +165,8 @@ export default {
     ProjectsMenu,
   },
   setup() {
+    const appView = core.app.view;
     const state = reactive({
-      app: core.app,
       dialog: false,
       miniVariant: true,
       navList: '',
@@ -210,20 +210,20 @@ export default {
       if (targetRouteId === 'project') {
         // check if project ID is undefined or project does not exist anymore
         if (
-          recentProjectId == undefined ||
+          recentProjectId === undefined ||
           recentProjectId.length <= 0 ||
-          state.app.view.filteredProjects.filter(
-            project => project.id == recentProjectId
+          appView.filteredProjects.filter(
+            project => project.id === recentProjectId
           ).length <= 0
         ) {
-          recentProjectId = state.app.view.filteredProjects[0].id;
+          recentProjectId = appView.filteredProjects[0].id;
         }
         router.push({
           name: 'ProjectId',
           params: { id: recentProjectId },
         });
       } else {
-        if (recentModelId == undefined || recentModelId.length <= 0) {
+        if (recentModelId === undefined || recentModelId.length <= 0) {
           recentModelId = 'ac_generator';
         }
         router.push({ name: 'ModelId', params: { id: recentModelId } });
@@ -290,12 +290,14 @@ export default {
       {
         id: 'project',
         color: 'project darken1',
+        contextmenu: (e: MouseEvent) => showMenu(e, 'project'),
         icon: 'mdi-brain',
         title: 'Projects',
       },
       {
         id: 'model',
         color: 'model darken1',
+        contextmenu: (e: MouseEvent) => showMenu(e, 'model'),
         icon: 'mdi-square-root',
         title: 'Models',
       },
@@ -335,6 +337,7 @@ export default {
     };
 
     return {
+      appView,
       reset,
       resizeSidebar,
       routes,

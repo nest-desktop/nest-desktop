@@ -31,7 +31,7 @@
                       class="my-0 mx-auto"
                       color="project"
                       hide-details
-                      v-model="project.view.selected"
+                      v-model="project.state.selected"
                     />
                   </td>
                   <td v-if="state.action === 'export'">
@@ -45,7 +45,7 @@
                           class="ma-0"
                           color="project"
                           hide-details
-                          v-model="project.view.withActivities"
+                          v-model="project.state.withActivities"
                         />
                       </v-col>
                     </v-row>
@@ -66,7 +66,7 @@
             v-text="'Cancel'"
           />
           <v-btn
-            :disabled="!state.projects.some(p => p.view.selected)"
+            :disabled="!state.projects.some(p => p.state.selected)"
             @click="exportProjects"
             outlined
             small
@@ -76,7 +76,7 @@
             Export
           </v-btn>
           <v-btn
-            :disabled="!state.projects.some(p => p.view.selected)"
+            :disabled="!state.projects.some(p => p.state.selected)"
             @click="deleteProjects"
             outlined
             small
@@ -111,6 +111,7 @@ export default Vue.extend({
     projects: Array,
   },
   setup(props) {
+    const appView = core.app.view;
     const state = reactive({
       action: 'export',
       dialog: false,
@@ -122,15 +123,15 @@ export default Vue.extend({
      */
     const exportProjects = () => {
       const projects: any[] = state.projects
-        .filter((project: Project) => project.view.selected)
+        .filter((project: Project) => project.state.selected)
         .map((project: Project) => {
           const projectData: any = project.toJSON();
-          if (project.view.withActivities) {
+          if (project.state.withActivities) {
             projectData.activities = project.activities.map(
               (activity: Activity) => activity.toJSON()
             );
           }
-          project.view.resetState();
+          project.resetState();
           return projectData;
         });
       core.app.download(
@@ -145,19 +146,19 @@ export default Vue.extend({
      */
     const deleteProjects = () => {
       const projectIds: string[] = state.projects
-        .filter((project: Project) => project.view.selected)
+        .filter((project: Project) => project.state.selected)
         .map((project: Project) => {
-          project.view.resetState();
+          project.resetState();
           return project.id;
         });
       core.app.deleteProjects(projectIds).then(() => {
-        core.app.updateProjects();
+        appView.updateProjects();
         state.dialog = false;
       });
     };
 
     watch(
-      () => [props.action, props.open],
+      () => [props.projects, props.action, props.open],
       () => {
         state.projects = props.projects as Project[];
         state.action = props.action as string;

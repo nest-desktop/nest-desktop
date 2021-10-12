@@ -114,11 +114,11 @@ export class ModelView {
     }
   }
 
-  get state() {
+  get state(): UnwrapRef<any> {
     return this._state;
   }
 
-  get tools() {
+  get tools(): any[] {
     return this._tools;
   }
 
@@ -127,7 +127,7 @@ export class ModelView {
    */
   initModel(id: string = undefined): void {
     this._state.modelId = id || this._state.modelId;
-    this._state.model = this._app.getModel(this._state.modelId);
+    this._state.model = this._app.view.getModel(this._state.modelId);
     this.checkFileExistedGithub();
     this.getParamDefaults().then(() => {
       this.updateProject();
@@ -143,7 +143,7 @@ export class ModelView {
   reloadModel(): void {
     this._state.model = undefined;
     setTimeout(() => {
-      this._state.model = this._app.getModel(this._state.modelId);
+      this._state.model = this._app.view.getModel(this._state.modelId);
       this.initProject();
       this.updateToolView();
       this.modeIdx = this.modeIdx;
@@ -161,7 +161,7 @@ export class ModelView {
    * Check if the model is implemented.
    */
   hasModel(): boolean {
-    return this._app.hasModel(this._state.modelId);
+    return this._app.view.hasModel(this._state.modelId);
   }
 
   /**
@@ -339,31 +339,8 @@ export class ModelView {
    * Check if file exists on Github
    */
   checkFileExistedGithub(): void {
-    this._state.fileExistedGithub = this._app.view.model.state.filesGithub.some(
+    this._state.fileExistedGithub = this._app.view.state.model.filesGithub.some(
       (file: string) => file.includes('/' + this._state.modelId)
     );
-  }
-
-  /**
-   * Import model from GitHub.
-   */
-  async importModelFromGithub(modelId: string = ''): Promise<any> {
-    const path: string = this._app.view.model.state.filesGithub.find(
-      (file: string) => file.includes('/' + (modelId || this._state.modelId))
-    );
-    if (path === undefined) {
-      return;
-    }
-    const url =
-      'https://raw.githubusercontent.com/nest-desktop/nest-desktop-models/main/';
-    return axios.get(url + path).then((response: any) => {
-      if (response.status === 200) {
-        this._app.importModel(response.data).then(() => {
-          if (response.data.id === this._state.modelId) {
-            this.reloadModel();
-          }
-        });
-      }
-    });
   }
 }

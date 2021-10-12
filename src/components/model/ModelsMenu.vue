@@ -4,7 +4,7 @@
     <ModelsDialog
       :action="state.modelDialogAction"
       :open="state.openModelsDialog"
-      :models="state.models"
+      :models="appView.state.models"
     />
 
     <v-menu
@@ -75,10 +75,9 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
+    const appView = core.app.view;
     const state = reactive({
       content: null,
-      selectedModels: [],
-      models: core.app.models as Model[],
       position: props.position,
       show: true,
       openImportDialog: false,
@@ -90,7 +89,7 @@ export default Vue.extend({
           icon: 'mdi-reload',
           title: 'Reload models',
           onClick: () => {
-            core.app.updateModels();
+            appView.updateModels();
             state.show = false;
           },
         },
@@ -99,7 +98,7 @@ export default Vue.extend({
           icon: 'mdi-export',
           title: 'Export models',
           onClick: () => {
-            state.models.forEach((model: Model) => {
+            appView.state.models.forEach((model: Model) => {
               model.state.selected = false;
             });
             state.modelDialogAction = 'export';
@@ -121,7 +120,7 @@ export default Vue.extend({
           icon: 'mdi-trash-can-outline',
           title: 'Delete models',
           onClick: () => {
-            state.models.forEach((model: Model) => {
+            appView.state.models.forEach((model: Model) => {
               model.state.selected = false;
             });
             state.modelDialogAction = 'delete';
@@ -146,7 +145,6 @@ export default Vue.extend({
      */
     const reset = () => {
       state.content = null;
-      state.selectedModels = [];
     };
 
     /**
@@ -155,7 +153,7 @@ export default Vue.extend({
     const resetModels = () => {
       state.show = false;
       core.app.resetModelDatabase().then(() => {
-        core.app.updateModels();
+        appView.updateModels();
         reset();
       });
     };
@@ -171,6 +169,7 @@ export default Vue.extend({
     );
 
     return {
+      appView,
       reset,
       resetModels,
       state,

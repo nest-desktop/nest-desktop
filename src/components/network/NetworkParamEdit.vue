@@ -315,6 +315,7 @@ export default Vue.extend({
     projectId: String,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const state = reactive({
       displayNodes: [],
       displayConnections: [],
@@ -340,7 +341,7 @@ export default Vue.extend({
         recorder: 'mdi-alpha-r-box-outline',
         stimulator: 'mdi-alpha-s-box-outline',
       },
-      network: core.app.project.network as Network,
+      network: projectView.state.project.network as Network,
       nodeMenu: {
         node: undefined as Node | undefined,
         position: {
@@ -543,9 +544,9 @@ export default Vue.extend({
     });
 
     watch(
-      () => [props.projectId, core.app.project.network.hash],
+      () => [props.projectId, projectView.state.project.network.hash],
       () => {
-        state.network = core.app.project.network as Network;
+        state.network = projectView.state.project.network as Network;
         update();
       }
     );

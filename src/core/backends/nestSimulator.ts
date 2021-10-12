@@ -18,7 +18,7 @@ export class NESTSimulator extends Backend {
   /**
    * Check if the NEST Simulator is serving.
    */
-  check(): Promise<void> {
+  async check(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // console.log('Check NEST Simulator')
       if (this.config.hostname) {
@@ -38,7 +38,7 @@ export class NESTSimulator extends Backend {
   /**
    * Seek the server URL of NEST Simulator.
    */
-  seek(): Promise<any> {
+  async seek(): Promise<any> {
     // console.log('seek the server of NEST Simulator');
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';

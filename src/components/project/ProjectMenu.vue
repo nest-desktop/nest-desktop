@@ -97,7 +97,7 @@ export default Vue.extend({
           icon: 'mdi-export',
           title: 'Export project',
           onClick: () => {
-            state.project.view.selected = true;
+            state.project.state.selected = true;
             state.openProjectsDialog = true;
             state.show = false;
           },
@@ -119,7 +119,7 @@ export default Vue.extend({
      */
     const deleteProject = () => {
       state.project.delete().then(() => {
-        state.project.app.updateProjects();
+        state.project.app.view.updateProjects();
       });
       state.show = false;
     };

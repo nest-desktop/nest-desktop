@@ -1,6 +1,10 @@
 <template>
   <div class="ProjectsImportDialog">
-    <v-dialog v-model="state.dialog" max-width="1024">
+    <v-dialog
+      @click:outside="closeDialog()"
+      v-model="state.dialog"
+      max-width="1024"
+    >
       <v-card>
         <v-card-title v-text="'Import projects'" />
 
@@ -158,7 +162,7 @@ export default Vue.extend({
   props: {
     open: Boolean,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const state = reactive({
       dialog: false,
       items: [
@@ -180,7 +184,7 @@ export default Vue.extend({
       ],
       files: [],
       open: props.open,
-      projects: [] as Project[],
+      projects: [],
       selectedFile: {},
       selectedProjects: [],
       selectedTree: {},
@@ -295,8 +299,17 @@ export default Vue.extend({
         (project: any) => project.selected
       );
       core.app.addProjects(projects).then(() => {
+        core.app.view.updateProjects();
         state.dialog = false;
       });
+    };
+
+    /**
+     * Close dialog.
+     */
+    const closeDialog = () => {
+      state.dialog = false;
+      emit('update:open', false);
     };
 
     watch(
@@ -308,6 +321,7 @@ export default Vue.extend({
     );
 
     return {
+      closeDialog,
       getFilesFromGithub,
       getProjectsFromGithub,
       getProjectsFromFile,
