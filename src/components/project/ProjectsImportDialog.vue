@@ -122,13 +122,7 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn
-            @click="closeDialog"
-            outlined
-            small
-            text
-            v-text="'Cancel'"
-          />
+          <v-btn @click="closeDialog" outlined small text v-text="'Cancel'" />
           <v-btn
             :disabled="!state.projects.some(p => p.selected)"
             @click="importProjects"
