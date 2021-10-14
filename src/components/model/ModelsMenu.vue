@@ -55,15 +55,9 @@ import { reactive, watch } from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
 import core from '@/core';
-import ModelsDialog from '@/components/model/ModelsDialog.vue';
-import ModelsImportDialog from '@/components/model/ModelsImportDialog.vue';
 
 export default Vue.extend({
   name: 'ModelsMenu',
-  components: {
-    ModelsDialog,
-    ModelsImportDialog,
-  },
   props: {
     position: Object,
   },
