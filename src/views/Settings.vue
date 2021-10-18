@@ -32,6 +32,10 @@
               "
               v-model="state.projectViewConfig.coloredToolbar"
             />
+            <v-checkbox
+              label="Colored toolbar"
+              v-model="projectView.state.coloredToolbar"
+            />
           </v-card-text>
         </v-card>
 
