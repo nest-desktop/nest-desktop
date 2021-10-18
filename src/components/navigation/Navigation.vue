@@ -299,15 +299,15 @@ export default {
         id: 'project',
         color: 'project darken1',
         contextmenu: (e: MouseEvent) => showMenu(e, 'project'),
-        icon: 'mdi-brain',
-        title: 'Projects',
+        icon: '$network',
+        title: 'Project',
       },
       {
         id: 'model',
         color: 'model darken1',
         contextmenu: (e: MouseEvent) => showMenu(e, 'model'),
-        icon: 'mdi-square-root',
-        title: 'Models',
+        icon: '$nest',
+        title: 'Model',
       },
     ];
 

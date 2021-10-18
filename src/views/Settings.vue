@@ -25,6 +25,10 @@
               label="Show help"
               v-model="state.showHelp"
             />
+            <v-checkbox
+              label="Colored toolbar"
+              v-model="projectView.state.coloredToolbar"
+            />
           </v-card-text>
         </v-card>
 
@@ -217,6 +221,7 @@ import colorSchemes from '@/assets/config/ColorSchemes.json';
 export default Vue.extend({
   name: 'Settings',
   setup() {
+    const projectView = core.app.projectView;
     const state = reactive({
       app: core.app,
       devMode: core.app.config.devMode,
@@ -285,6 +290,7 @@ export default Vue.extend({
 
     return {
       checkNESTSimulator,
+      projectView,
       state,
       updateAppConfig,
       updateNESTSimulatorConfig,

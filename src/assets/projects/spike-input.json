@@ -42,7 +42,7 @@
           {
             "id": "interval",
             "value": 0.1,
-            "visible": false
+            "visible": true
           }
         ]
       }
@@ -63,7 +63,7 @@
       "resolution": 0.1
     },
     "time": 1000,
-    "randomSeed": 0
+    "randomSeed": 1
   },
   "version": "3.1.0"
 }

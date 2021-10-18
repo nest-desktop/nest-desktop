@@ -26,14 +26,23 @@ export class ConnectionCode extends Code {
   specs(): string {
     let script = '';
     if (this._connection.filteredParams.length > 0) {
-      const specs: string[] = [`"rule": "${this._connection.rule}"`];
+      const specs: string[] = [];
+      if (
+        this._connection.source.size > 1 ||
+        this._connection.target.size > 1
+      ) {
+        specs.push(`"rule": "${this._connection.rule}"`);
+      }
       this._connection.filteredParams.forEach((param: Parameter) =>
         specs.push(`"${param.id}": ${param.toCode()}`)
       );
       script += ', conn_spec={' + this._();
       script += specs.join(',' + this._());
       script += this.end() + '}';
-    } else {
+    } else if (
+      this._connection.source.size > 1 ||
+      this._connection.target.size > 1
+    ) {
       script += `, "${this._connection.rule}"`;
     }
     return script;

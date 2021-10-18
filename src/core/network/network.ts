@@ -196,15 +196,16 @@ export class Network extends Config {
    */
   connectNodes(source: Node, target: Node): void {
     // console.log('Connect nodes');
-    const weight = source.view.weight;
+    const weight: string = source.view.weight;
     const connection: Connection = this.addConnection({
       source: source.idx,
       target: target.idx,
     });
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
+    } else if (weight === 'inhibitory') {
+      source.setWeights(weight);
     }
-    source.setWeights(weight);
     this.networkChanges();
   }
 

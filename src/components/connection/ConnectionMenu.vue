@@ -7,49 +7,47 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="width: 300px">
-        <!-- <v-card-title
-          :style="{ backgroundColor: state.connection.source.view.color }"
-          class="py-1"
-          style="color:white; height:40px"
-        >
-        </v-card-title> -->
-        <v-row no-gutters>
-          <v-col cols="3" class="py-0" style="text-align: center">
-            <v-btn
-              :color="connection.source.view.color"
-              block
-              dark
-              depressed
-              height="40"
-              tile
-              v-text="connection.source.view.label"
-            />
-          </v-col>
-          <v-col cols="6">
-            <v-btn block color="white" depressed height="40" tile>
-              <v-chip
-                label
-                outlined
-                small
-                v-if="connection.network.project.app.config.devMode"
-                v-text="connection.hash.slice(0, 6)"
+      <v-card tile flat style="background-color: white; min-width: 300px">
+        <v-card-title class="pa-0">
+          <v-row no-gutters>
+            <v-col cols="3" class="py-0" style="text-align: center">
+              <v-btn
+                :color="connection.source.view.color"
+                :dark="projectView.state.coloredToolbar"
+                :text="!projectView.state.coloredToolbar"
+                block
+                depressed
+                height="40"
+                tile
+                v-text="connection.source.view.label"
               />
-              <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-            </v-btn>
-          </v-col>
-          <v-col cols="3" class="py-0" style="text-align: center">
-            <v-btn
-              :color="connection.target.view.color"
-              block
-              dark
-              depressed
-              height="40"
-              tile
-              v-text="connection.target.view.label"
-            />
-          </v-col>
-        </v-row>
+            </v-col>
+            <v-col cols="6">
+              <v-btn block color="white" depressed height="40" tile>
+                <v-chip
+                  label
+                  outlined
+                  small
+                  v-if="connection.network.project.app.config.devMode"
+                  v-text="connection.hash.slice(0, 6)"
+                />
+                <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+              </v-btn>
+            </v-col>
+            <v-col cols="3" class="py-0" style="text-align: center">
+              <v-btn
+                :color="connection.target.view.color"
+                :dark="projectView.state.coloredToolbar"
+                :text="!projectView.state.coloredToolbar"
+                block
+                depressed
+                height="40"
+                tile
+                v-text="connection.target.view.label"
+              />
+            </v-col>
+          </v-row>
+        </v-card-title>
 
         <span v-if="state.content == undefined">
           <v-list dense>
@@ -77,7 +75,11 @@
           <v-card-text class="pa-0">
             <ConnectionParamSelect
               :connection="state.connection"
-              :visibleParams="state.visibleParams"
+              :visibleParams="state.visibleParams.connection"
+            />
+            <SynapseParamSelect
+              :synapse="state.connection.synapse"
+              :visibleParams="state.visibleParams.synapse"
             />
           </v-card-text>
 
@@ -94,6 +96,7 @@
         <span v-if="state.content === 'paramEdit'">
           <v-card-text class="px-0">
             <ConnectionParamEdit :connection="state.connection" />
+            <SynapseParamEdit :synapse="state.connection.synapse" />
           </v-card-text>
 
           <v-card-actions>
@@ -143,18 +146,24 @@ import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
 import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import ConnectionParamSelect from '@/components/connection/ConnectionParamSelect.vue';
+import core from '@/core';
+import SynapseParamEdit from '@/components/connection/SynapseParamEdit.vue';
+import SynapseParamSelect from '@/components/connection/SynapseParamSelect.vue';
 
 export default Vue.extend({
   name: 'ConnectionMenu',
   components: {
     ConnectionParamEdit,
     ConnectionParamSelect,
+    SynapseParamEdit,
+    SynapseParamSelect,
   },
   props: {
     connection: Connection,
     position: Object,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const state = reactive({
       content: undefined as string | undefined,
       connection: props.connection as Connection,
@@ -318,9 +327,10 @@ export default Vue.extend({
       deleteConnection,
       hideAllParams,
       paramChange,
+      projectView,
       resetAllParams,
-      showAllParams,
       selectionChange,
+      showAllParams,
       state,
     };
   },
