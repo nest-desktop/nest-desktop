@@ -54,6 +54,11 @@ export class Synapse {
     this.modelId = model.id;
   }
 
+  get models(): Model[] {
+    const elementType: string = this.model.elementType;
+    return this._connection.network.project.app.view.filterModels(elementType);
+  }
+
   get modelId(): string {
     return this._modelId;
   }
@@ -69,6 +74,8 @@ export class Synapse {
   set modelId(value: string) {
     this._modelId = value;
     this.initParameters();
+    this._connection.network.clean();
+    this.synapseChanges();
   }
 
   get name(): string {

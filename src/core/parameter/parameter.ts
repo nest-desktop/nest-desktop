@@ -269,7 +269,7 @@ export class Parameter extends Config {
         .filter((spec: any) => !(spec.optional && spec.value === spec.default))
         .map((spec: any) => spec.value)
         .join(', ');
-      value = `${this._type.id}(${specs})`;
+      value = `list(${this._type.id}(${specs}))`;
     } else if (this._type.id === 'spatial.distance') {
       // Distance-dependent linear function.
       const specs: any[] = this.specs;

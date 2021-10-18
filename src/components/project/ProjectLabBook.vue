@@ -20,44 +20,45 @@
           >
             <v-card
               :key="'node-' + node.idx"
-              class="mb-1"
-              flat
+              :style="{
+                borderLeft: `4px solid ${node.view.color}`,
+              }"
+              class="ma-1"
               tile
+              outlined
               v-for="node of projectView.state.project.network.visibleNodes"
             >
-              <v-sheet :color="node.view.color">
+              <v-card-title class="pa-0">
                 <v-row no-gutters>
                   <v-col cols="4">
                     <v-btn
+                      :color="node.view.color"
+                      :dark="projectView.state.coloredToolbar"
+                      :text="!projectView.state.coloredToolbar"
                       @click="node.view.select()"
                       block
-                      dark
+                      depressed
                       height="40"
-                      text
                       tile
                       v-text="node.view.label"
                     />
                   </v-col>
                   <v-col cols="8">
                     <v-btn
-                      class="ma-0"
+                      :color="node.view.color"
+                      :dark="projectView.state.coloredToolbar"
+                      :text="!projectView.state.coloredToolbar"
                       block
-                      dark
+                      depressed
                       height="40"
-                      text
                       tile
                       v-text="node.model.label"
                     />
                   </v-col>
                 </v-row>
-              </v-sheet>
+              </v-card-title>
 
-              <v-card-text
-                :style="{
-                  borderLeft: `4px solid ${node.view.color}`,
-                }"
-                class="pa-0"
-              >
+              <v-card-text class="pa-0">
                 <v-list v-if="node.filteredParams.length > 0">
                   <v-list-item
                     :key="param.id"
@@ -92,58 +93,60 @@
           >
             <v-card
               :key="'connection-' + connection.idx"
-              class="mb-1"
-              flat
+              :style="{
+                borderLeft: `4px solid ${connection.source.view.color}`,
+                borderRight: `4px solid ${connection.target.view.color}`,
+              }"
+              class="ma-1"
               tile
+              outlined
               v-for="connection of projectView.state.project.network
                 .visibleConnections"
             >
-              <v-row no-gutters>
-                <v-col cols="4" class="py-0">
-                  <v-btn
-                    :color="connection.source.view.color"
-                    @click="() => connection.source.view.select()"
-                    block
-                    dark
-                    depressed
-                    height="40"
-                    tile
-                    v-text="connection.source.view.label"
-                  />
-                </v-col>
-                <v-col cols="4">
-                  <v-btn
-                    @click="() => connection.view.select()"
-                    block
-                    color="white"
-                    depressed
-                    height="40"
-                    tile
-                  >
-                    <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                  </v-btn>
-                </v-col>
-                <v-col cols="4" class="py-0" style="text-align: center">
-                  <v-btn
-                    :color="connection.target.view.color"
-                    @click="() => connection.target.view.select()"
-                    block
-                    dark
-                    depressed
-                    height="40"
-                    tile
-                    v-text="connection.target.view.label"
-                  />
-                </v-col>
-              </v-row>
+              <v-card-title class="pa-0">
+                <v-row no-gutters>
+                  <v-col cols="4" class="py-0">
+                    <v-btn
+                      :color="connection.source.view.color"
+                      :dark="projectView.state.coloredToolbar"
+                      :text="!projectView.state.coloredToolbar"
+                      @click="() => connection.source.view.select()"
+                      block
+                      depressed
+                      height="40"
+                      tile
+                      v-text="connection.source.view.label"
+                    />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn
+                      @click="() => connection.view.select()"
+                      block
+                      color="white"
+                      depressed
+                      height="40"
+                      tile
+                    >
+                      <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="4" class="py-0" style="text-align: center">
+                    <v-btn
+                      :color="connection.target.view.color"
+                      :dark="projectView.state.coloredToolbar"
+                      :text="!projectView.state.coloredToolbar"
+                      @click="() => connection.target.view.select()"
+                      block
+                      depressed
+                      height="40"
+                      tile
+                      v-text="connection.target.view.label"
+                    />
+                  </v-col>
+                </v-row>
+              </v-card-title>
 
-              <v-card-text
-                :style="{
-                  borderLeft: `4px solid ${connection.source.view.color}`,
-                  borderRight: `4px solid ${connection.target.view.color}`,
-                }"
-                class="pa-0"
-              >
+              <v-card-text class="pa-0">
                 <v-list v-if="connection.synapse.filteredParams.length > 0">
                   <v-list-item
                     :key="param.id"

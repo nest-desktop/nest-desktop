@@ -37,7 +37,8 @@ export class ProjectView {
       width: 575,
     },
     {
-      icon: 'mdi-chart-scatter-plot',
+      // icon: 'mdi-chart-scatter-plot',
+      icon: 'mdi-tune-variant',
       minWidth: 440,
       name: 'activityEdit',
       title: 'Activity',
@@ -56,6 +57,7 @@ export class ProjectView {
     this._app = app;
     this._state = reactive({
       activityGraph: 'abstract',
+      coloredToolbar: false,
       modeIdx: 0,
       networkGraphHeight: 'calc(100vh - 48px)',
       project: new Project(app),
