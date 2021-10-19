@@ -23,12 +23,12 @@
 import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 
-import { Synapse } from '@/core/connection/synapse';
+import { Synapse } from '@/core/synapse/synapse';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
-import SynapseModelSelect from '@/components/connection/SynapseModelSelect.vue';
+import SynapseModelSelect from '@/components/synapse/SynapseModelSelect.vue';
 
 export default Vue.extend({
-  name: 'SynapseParamsEdit',
+  name: 'SynapseParamEdit',
   components: {
     ParameterEdit,
     SynapseModelSelect,

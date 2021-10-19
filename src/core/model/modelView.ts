@@ -103,7 +103,7 @@ export class ModelView {
         this._state.project &&
         this._state.project.code.hash !==
           this._state.project.activityGraph.codeHash &&
-        this._state.project.config.simulateAfterLoad
+        this._app.projectView.config.simulateAfterLoad
       ) {
         this._state.project.runSimulation();
       }

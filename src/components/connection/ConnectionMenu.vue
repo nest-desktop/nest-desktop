@@ -13,8 +13,8 @@
             <v-col cols="3" class="py-0" style="text-align: center">
               <v-btn
                 :color="connection.source.view.color"
-                :dark="projectView.state.coloredToolbar"
-                :text="!projectView.state.coloredToolbar"
+                :dark="projectView.config.coloredToolbar"
+                :text="!projectView.config.coloredToolbar"
                 block
                 depressed
                 height="40"
@@ -37,8 +37,8 @@
             <v-col cols="3" class="py-0" style="text-align: center">
               <v-btn
                 :color="connection.target.view.color"
-                :dark="projectView.state.coloredToolbar"
-                :text="!projectView.state.coloredToolbar"
+                :dark="projectView.config.coloredToolbar"
+                :text="!projectView.config.coloredToolbar"
                 block
                 depressed
                 height="40"
@@ -147,8 +147,8 @@ import { Parameter } from '@/core/parameter/parameter';
 import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import ConnectionParamSelect from '@/components/connection/ConnectionParamSelect.vue';
 import core from '@/core';
-import SynapseParamEdit from '@/components/connection/SynapseParamEdit.vue';
-import SynapseParamSelect from '@/components/connection/SynapseParamSelect.vue';
+import SynapseParamEdit from '@/components/synapse/SynapseParamEdit.vue';
+import SynapseParamSelect from '@/components/synapse/SynapseParamSelect.vue';
 
 export default Vue.extend({
   name: 'ConnectionMenu',

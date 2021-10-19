@@ -13,8 +13,8 @@
           <v-card-title class="pa-0">
             <v-btn
               :color="state.color"
-              :dark="projectView.state.coloredToolbar"
-              :text="!projectView.state.coloredToolbar"
+              :dark="projectView.config.coloredToolbar"
+              :text="!projectView.config.coloredToolbar"
               block
               depressed
               tile
@@ -94,8 +94,8 @@
           <v-card-title class="pa-0">
             <v-btn
               :color="state.color"
-              :dark="projectView.state.coloredToolbar"
-              :text="!projectView.state.coloredToolbar"
+              :dark="projectView.config.coloredToolbar"
+              :text="!projectView.config.coloredToolbar"
               block
               depressed
               tile

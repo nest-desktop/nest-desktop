@@ -1,7 +1,7 @@
 <template>
   <div v-if="state.graph && state.network">
     <v-toolbar
-      :key="state.network.hash"
+      :key="state.network.state.hash"
       absolute
       dense
       flat
@@ -14,26 +14,26 @@
               <span
                 key="sourceNode"
                 v-if="
-                  state.network.view.selectedNode ||
-                  state.network.view.selectedConnection
+                  state.network.state.selectedNode ||
+                  state.network.state.selectedConnection
                 "
               >
                 <NodeChip
                   :graph="state.graph"
-                  :node="state.network.view.selectedNode"
-                  v-if="state.network.view.selectedNode"
+                  :node="state.network.state.selectedNode"
+                  v-if="state.network.state.selectedNode"
                 />
                 <NodeChip
                   :graph="state.graph"
-                  :node="state.network.view.selectedConnection.source"
-                  v-if="state.network.view.selectedConnection"
+                  :node="state.network.state.selectedConnection.source"
+                  v-if="state.network.state.selectedConnection"
                 />
               </span>
 
               <span
                 key="connection"
                 v-if="
-                  state.network.view.selectedConnection ||
+                  state.network.state.selectedConnection ||
                   state.graph.workspace.state.enableConnection
                 "
               >
@@ -42,11 +42,11 @@
 
               <span
                 key="targetNode"
-                v-if="state.network.view.selectedConnection"
+                v-if="state.network.state.selectedConnection"
               >
                 <NodeChip
                   :graph="state.graph"
-                  :node="state.network.view.selectedConnection.target"
+                  :node="state.network.state.selectedConnection.target"
                 />
               </span>
             </transition-group>
@@ -62,8 +62,8 @@
             label
             outlined
             small
-            v-text="state.network.hash.slice(0, 6)"
-            v-if="state.network.hash"
+            v-text="state.network.state.hash.slice(0, 6)"
+            v-if="state.network.state.hash"
           />
         </span>
 
@@ -160,7 +160,7 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Network } from '@/core/network/network';
-import { NetworkGraph } from '@/core/network/networkGraph';
+import { NetworkGraph } from '@/core/network/networkGraph/networkGraph';
 import NodeChip from '@/components/node/NodeChip.vue';
 
 export default Vue.extend({

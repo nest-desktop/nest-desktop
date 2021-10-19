@@ -4,9 +4,9 @@
       <template #activator="{ on, attrs }">
         <v-btn
           :color="state.node.view.color"
-          :dark="projectView.state.coloredToolbar"
+          :dark="projectView.config.coloredToolbar"
           :height="40"
-          :text="!projectView.state.coloredToolbar"
+          :text="!projectView.config.coloredToolbar"
           block
           class="nodeModel"
           depressed

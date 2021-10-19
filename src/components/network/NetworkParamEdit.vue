@@ -201,9 +201,9 @@
                 <v-col cols="3">
                   <v-btn
                     :color="node.view.color"
-                    :dark="projectView.state.coloredToolbar"
-                    :text="!projectView.state.coloredToolbar"
-                    @click="() => node.view.select()"
+                    :dark="projectView.config.coloredToolbar"
+                    :text="!projectView.config.coloredToolbar"
+                    @click="() => node.state.select()"
                     block
                     depressed
                     height="40"
@@ -274,9 +274,9 @@
               <v-col cols="3" class="py-0" style="text-align: center">
                 <v-btn
                   :color="connection.source.view.color"
-                  :dark="projectView.state.coloredToolbar"
-                  :text="!projectView.state.coloredToolbar"
-                  @click="() => connection.source.view.select()"
+                  :dark="projectView.config.coloredToolbar"
+                  :text="!projectView.config.coloredToolbar"
+                  @click="() => connection.source.state.select()"
                   block
                   depressed
                   height="40"
@@ -286,7 +286,7 @@
               </v-col>
               <v-col cols="6">
                 <v-btn
-                  @click="() => connection.view.select()"
+                  @click="() => connection.state.select()"
                   block
                   color="white"
                   depressed
@@ -306,9 +306,9 @@
               <v-col cols="3" class="py-0" style="text-align: center">
                 <v-btn
                   :color="connection.target.view.color"
-                  :dark="projectView.state.coloredToolbar"
-                  :text="!projectView.state.coloredToolbar"
-                  @click="() => connection.target.view.select()"
+                  :dark="projectView.config.coloredToolbar"
+                  :text="!projectView.config.coloredToolbar"
+                  @click="() => connection.target.state.select()"
                   block
                   depressed
                   height="40"
@@ -348,7 +348,7 @@ import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
 import NodePosition from '@/components/node/NodePosition.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
-import SynapseParamEdit from '@/components/connection/SynapseParamEdit.vue';
+import SynapseParamEdit from '@/components/synapse/SynapseParamEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
@@ -410,11 +410,11 @@ export default Vue.extend({
      */
     const showNode = (node: Node) => {
       if (
-        state.network.view.selectedConnection ||
-        state.network.view.selectedNode
+        state.network.state.selectedConnection ||
+        state.network.state.selectedNode
       ) {
         // selected view
-        return state.network.view.isNodeSelected(node);
+        return state.network.state.isNodeSelected(node);
       } else if (state.elementType === 0) {
         // all view
         return true;
@@ -491,11 +491,11 @@ export default Vue.extend({
      */
     const showConnection = (connection: Connection) => {
       if (
-        state.network.view.selectedConnection ||
-        state.network.view.selectedNode
+        state.network.state.selectedConnection ||
+        state.network.state.selectedNode
       ) {
         // selected view
-        return state.network.view.isConnectionSelected(connection);
+        return state.network.state.isConnectionSelected(connection);
       } else if (state.elementType === 0) {
         // all views
         return true;
@@ -597,7 +597,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => [props.projectId, projectView.state.project.network.hash],
+      () => [props.projectId, projectView.state.project.network.state.hash],
       () => {
         state.network = projectView.state.project.network as Network;
         update();

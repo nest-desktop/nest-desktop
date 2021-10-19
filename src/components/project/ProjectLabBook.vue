@@ -33,9 +33,9 @@
                   <v-col cols="4">
                     <v-btn
                       :color="node.view.color"
-                      :dark="projectView.state.coloredToolbar"
-                      :text="!projectView.state.coloredToolbar"
-                      @click="node.view.select()"
+                      :dark="projectView.config.coloredToolbar"
+                      :text="!projectView.config.coloredToolbar"
+                      @click="node.state.select()"
                       block
                       depressed
                       height="40"
@@ -46,8 +46,8 @@
                   <v-col cols="8">
                     <v-btn
                       :color="node.view.color"
-                      :dark="projectView.state.coloredToolbar"
-                      :text="!projectView.state.coloredToolbar"
+                      :dark="projectView.config.coloredToolbar"
+                      :text="!projectView.config.coloredToolbar"
                       block
                       depressed
                       height="40"
@@ -108,9 +108,9 @@
                   <v-col cols="4" class="py-0">
                     <v-btn
                       :color="connection.source.view.color"
-                      :dark="projectView.state.coloredToolbar"
-                      :text="!projectView.state.coloredToolbar"
-                      @click="() => connection.source.view.select()"
+                      :dark="projectView.config.coloredToolbar"
+                      :text="!projectView.config.coloredToolbar"
+                      @click="() => connection.source.state.select()"
                       block
                       depressed
                       height="40"
@@ -120,7 +120,7 @@
                   </v-col>
                   <v-col cols="4">
                     <v-btn
-                      @click="() => connection.view.select()"
+                      @click="() => connection.state.select()"
                       block
                       color="white"
                       depressed
@@ -133,9 +133,9 @@
                   <v-col cols="4" class="py-0" style="text-align: center">
                     <v-btn
                       :color="connection.target.view.color"
-                      :dark="projectView.state.coloredToolbar"
-                      :text="!projectView.state.coloredToolbar"
-                      @click="() => connection.target.view.select()"
+                      :dark="projectView.config.coloredToolbar"
+                      :text="!projectView.config.coloredToolbar"
+                      @click="() => connection.target.state.select()"
                       block
                       depressed
                       height="40"

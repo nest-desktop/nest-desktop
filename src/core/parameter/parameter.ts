@@ -2,7 +2,7 @@ import { Config } from '../config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
-import { Synapse } from '../connection/synapse';
+import { Synapse } from '../synapse/synapse';
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet

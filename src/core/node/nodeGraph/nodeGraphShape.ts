@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import { NetworkGraph } from '../network/networkGraph';
-import { Node } from './node';
+import { NetworkGraph } from '../../network/networkGraph/networkGraph';
+import { Node } from '../node';
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;
@@ -152,33 +152,31 @@ export class NodeGraphShape {
     this.drawShape(selector, node);
 
     elem.on('click', (e: MouseEvent) => {
-      node.view.focus();
+      const networkState = this._networkGraph.network.state;
+      const workspaceState = this._networkGraph.workspace.state;
+      node.state.focus();
 
-      if (
-        this._networkGraph.network.view.selectedNode &&
-        this._networkGraph.workspace.state.enableConnection
-      ) {
+      if (networkState.selectedNode && workspaceState.enableConnection) {
         // set cursor position of the clicked node.
-        this._networkGraph.workspace.cursorPosition.x = node.view.position.x;
-        this._networkGraph.workspace.cursorPosition.y = node.view.position.y;
+        this._networkGraph.workspace.updateCursorPosition(node.view.position);
 
         this._networkGraph.workspace.animationOff();
         this._networkGraph.network.connectNodes(
-          this._networkGraph.network.view.selectedNode,
+          networkState.selectedNode,
           node
         );
 
         if (!this._networkGraph.workspace.altPressed) {
           this._networkGraph.workspace.reset();
-          this._networkGraph.network.view.resetSelection();
+          networkState.resetSelection();
           this._networkGraph.workspace.update();
         }
       } else if (this._networkGraph.workspace.altPressed) {
-        node.view.select(true);
+        node.state.select(true);
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
       } else {
-        node.view.select();
+        node.state.select();
       }
 
       this._networkGraph.update();
@@ -213,7 +211,7 @@ export class NodeGraphShape {
 
           (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
-        .style('stroke-dasharray', node.view.isSelected() ? '7.85' : '');
+        .style('stroke-dasharray', node.state.isSelected() ? '7.85' : '');
 
       elem
         .select('text')

@@ -311,7 +311,7 @@
           v-if="[0, 2].includes(projectView.state.modeIdx)"
         >
           <NetworkEditor
-            :networkHash="projectView.state.project.network.hash"
+            :networkHash="projectView.state.project.network.state.hash"
           />
         </div>
       </transition>

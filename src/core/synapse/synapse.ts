@@ -1,4 +1,4 @@
-import { Connection } from './connection';
+import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { SynapseCode } from './synapseCode';

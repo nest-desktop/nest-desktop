@@ -8,7 +8,8 @@ import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { NodeCode } from './nodeCode';
-import { NodeSpatial } from './nodeSpatial';
+import { NodeSpatial } from './nodeSpatial/nodeSpatial';
+import { NodeState } from './nodeState';
 import { NodeView } from './nodeView';
 import { SpikeActivity } from '../activity/spikeActivity';
 
@@ -26,6 +27,7 @@ export class Node extends Config {
   private _recordFrom: string[]; // only for multimeter
   private _size: number;
   private _spatial: NodeSpatial;
+  private _state: NodeState;
   private _view: NodeView;
 
   constructor(network: any, node: any) {
@@ -37,6 +39,7 @@ export class Node extends Config {
 
     this._code = new NodeCode(this);
     this._view = new NodeView(this, node.view);
+    this._state = new NodeState(this);
 
     this.initParameters(node);
     this.initSpatial(node.spatial);
@@ -206,6 +209,10 @@ export class Node extends Config {
       .filter((connection: Connection) => connection.sourceIdx === this._idx)
       .map((connection: Connection) => connection.target);
     return nodes;
+  }
+
+  get state(): NodeState {
+    return this._state;
   }
 
   get view(): NodeView {

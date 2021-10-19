@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { Network } from './../network';
 import { NetworkGraphWorkspace } from './networkGraphWorkspace';
 import { Node } from '../../node/node';
-import drawPath from '../../connection/connectionGraphPath';
+import drawPath from '../../connection/connectionGraph/connectionGraphPath';
 
 export class NetworkGraphDragline {
   private _workspace: NetworkGraphWorkspace;
@@ -29,8 +29,8 @@ export class NetworkGraphDragline {
    * Update drag line.
    */
   update(e: MouseEvent): void {
-    if (this.network.view.selectedNode !== null) {
-      const selectedNode: Node = this.network.view.selectedNode;
+    if (this.network.state.selectedNode !== null) {
+      const selectedNode: Node = this.network.state.selectedNode;
       const sourcePosition: any = selectedNode.view.position;
       const position: number[] = d3.pointer(e, this._workspace.selector.node());
       const targetPosition: any = {

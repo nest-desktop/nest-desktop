@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import { NetworkGraph } from '../network/networkGraph';
-import { Node } from './node';
+import { NetworkGraph } from '../../network/networkGraph/networkGraph';
+import { Node } from '../node';
 import { NodeGraphConnector } from './nodeGraphConnector';
 import { NodeGraphShape } from './nodeGraphShape';
 
@@ -40,11 +40,11 @@ export class NodeGraph {
     this._nodeGraphShape.init(elem, node);
 
     elem.on('mouseover', (_, n: Node) => {
-      node.view.focus();
+      node.state.focus();
       // Draw line between selected node and focused node.
-      if (node.view.isAnySelected() && this.state.enableConnection) {
+      if (node.state.isAnySelected() && this.state.enableConnection) {
         this._networkGraph.workspace.dragline.drawLineNodes(
-          this.network.view.selectedNode,
+          this.network.state.selectedNode,
           n
         );
       }
@@ -53,7 +53,7 @@ export class NodeGraph {
 
     elem.on('mouseout', () => {
       // console.log('Node mouse out');
-      this.network.view.resetFocus();
+      this.network.state.resetFocus();
       this.render();
     });
   }
@@ -80,7 +80,7 @@ export class NodeGraph {
         'transform',
         (n: Node) =>
           `translate(${n.view.position.x},${n.view.position.y}) scale( ${
-            n.view.isFocused() ? 1.2 : 1
+            n.state.isFocused() ? 1.2 : 1
           })`
       )
       .style('opacity', 0)
@@ -131,7 +131,7 @@ export class NodeGraph {
         'transform',
         (n: Node) =>
           `translate(${n.view.position.x},${n.view.position.y}) scale( ${
-            n.view.isFocused() ? 1.2 : 1
+            n.state.isFocused() ? 1.2 : 1
           })`
       );
   }

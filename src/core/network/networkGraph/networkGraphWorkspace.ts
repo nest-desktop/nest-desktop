@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 import { Config } from '../../config';
 import { Network } from '../network';
-import { NetworkGraph } from '../networkGraph';
+import { NetworkGraph } from './networkGraph';
 import { NetworkGraphDragline } from './networkGraphDragline';
 import { NetworkGraphGrid } from './networkGraphGrid';
 import { NetworkGraphNodeAddPanel } from './networkGraphNodeAddPanel';
@@ -10,7 +10,6 @@ import { NetworkGraphZoom } from './networkGraphZoom';
 import { Node } from '../../node/node';
 
 export class NetworkGraphWorkspace extends Config {
-  private _cursorPosition: any = { x: 0, y: 0 };
   private _dragline: NetworkGraphDragline;
   private _grid: NetworkGraphGrid;
   private _handler: d3.Selection<any, any, any, any>;
@@ -25,6 +24,7 @@ export class NetworkGraphWorkspace extends Config {
     centerNetwork: false,
     centerSelected: false,
     connected: false,
+    cursorPosition: { x: 0, y: 0 },
     dragging: false,
     enableConnection: false,
     keyCode: undefined,
@@ -48,10 +48,6 @@ export class NetworkGraphWorkspace extends Config {
   get altPressed(): boolean {
     // Alt (left) or AltGr (right)
     return [18, 225].includes(this._state.keyCode);
-  }
-
-  get cursorPosition(): any {
-    return this._cursorPosition;
   }
 
   get dragline(): NetworkGraphDragline {
@@ -115,8 +111,9 @@ export class NetworkGraphWorkspace extends Config {
 
     this._handler
       .on('mousemove', (e: MouseEvent) => {
-        this.updateCursorPosition(e);
-        this.network.view.resetFocus();
+        const position: number[] = d3.pointer(e, this._selector.node());
+        this.updateCursorPosition({ x: position[0], y: position[1] });
+        this.network.state.resetFocus();
         if (this._state.enableConnection) {
           this._dragline.update(e);
         }
@@ -126,7 +123,7 @@ export class NetworkGraphWorkspace extends Config {
           this._dragline.hide();
           this._state.enableConnection = false;
         } else {
-          this.network.view.resetSelection();
+          this.network.state.resetSelection();
           this.reset();
         }
         this._networkGraph.update();
@@ -135,7 +132,8 @@ export class NetworkGraphWorkspace extends Config {
       .on('contextmenu', (e: MouseEvent) => {
         // console.log(event);
         e.preventDefault();
-        this.updateCursorPosition(e);
+        const position: number[] = d3.pointer(e, this._selector.node());
+        this.updateCursorPosition({ x: position[0], y: position[1] });
         this._nodeAddPanel.open();
       })
       .call(this._zoom.handler);
@@ -152,10 +150,9 @@ export class NetworkGraphWorkspace extends Config {
   /**
    * Update cursor position.
    */
-  updateCursorPosition(e: MouseEvent): void {
-    const position: number[] = d3.pointer(e, this._selector.node());
-    this._cursorPosition.x = position[0];
-    this._cursorPosition.y = position[1];
+  updateCursorPosition(position: any = { x: 0, y: 0 }): void {
+    this._state.cursorPosition.x = position.x;
+    this._state.cursorPosition.y = position.y;
   }
 
   /**
@@ -183,17 +180,16 @@ export class NetworkGraphWorkspace extends Config {
     let x: number = 0,
       y: number = 0;
 
-    if (this._state.centerSelected && this.network.view.selectedNode) {
-      const nodePosition: any = this.network.view.selectedNode.view.position;
+    const networkState = this.network.state;
+    if (this._state.centerSelected && networkState.selectedNode) {
+      const nodePosition: any = networkState.selectedNode.view.position;
       x = nodePosition.x;
       y = nodePosition.y;
-    } else if (
-      this._state.centerSelected &&
-      this.network.view.selectedConnection
-    ) {
-      const selectedConnection = this.network.view.selectedConnection;
-      const sourcePosition: any = selectedConnection.source.view.position;
-      const targetPosition: any = selectedConnection.target.view.position;
+    } else if (this._state.centerSelected && networkState.selectedConnection) {
+      const sourcePosition: any =
+        networkState.selectedConnection.source.view.position;
+      const targetPosition: any =
+        networkState.selectedConnection.target.view.position;
       x = d3.mean([sourcePosition.x, targetPosition.x]);
       y = d3.mean([sourcePosition.y, targetPosition.y]);
     } else if (this._state.centerNetwork && this.network.nodes.length > 0) {
