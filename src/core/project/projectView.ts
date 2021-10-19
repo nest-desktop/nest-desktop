@@ -59,7 +59,6 @@ export class ProjectView extends Config {
     this._app = app;
     this._state = reactive({
       activityGraph: 'abstract',
-      coloredToolbar: false,
       modeIdx: 0,
       networkGraphHeight: 'calc(100vh - 48px)',
       project: new Project(app),
