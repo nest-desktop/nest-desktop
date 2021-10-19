@@ -3,13 +3,14 @@ import { sha1 } from 'object-hash';
 import { Config } from '../config';
 import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
+import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { Parameter } from '../parameter/parameter';
-import { Synapse } from './synapse';
+import { Synapse } from '../synapse/synapse';
 
 enum Rule {
   AllToAll = 'all_to_all',
@@ -31,6 +32,7 @@ export class Connection extends Config {
   private _params: Parameter[];
   private _rule: string;
   private _sourceIdx: number; // Node index
+  private _state: ConnectionState;
   private _synapse: Synapse;
   private _targetIdx: number; // Node index
   private _view: ConnectionView;
@@ -41,6 +43,7 @@ export class Connection extends Config {
     this._idx = network.connections.length;
     this._code = new ConnectionCode(this);
     this._view = new ConnectionView(this);
+    this._state = new ConnectionState(this);
 
     this._sourceIdx = connection.source;
     this._targetIdx = connection.target;
@@ -119,6 +122,10 @@ export class Connection extends Config {
 
   set sourceIdx(value: number) {
     this._sourceIdx = value;
+  }
+
+  get state(): ConnectionState {
+    return this._state;
   }
 
   get synapse(): Synapse {
@@ -225,13 +232,6 @@ export class Connection extends Config {
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
     this.recorder.initActivity();
     this.connectionChanges();
-  }
-
-  /**
-   * Select this connection.
-   */
-  select(): void {
-    this._network.view.selectedConnection = this;
   }
 
   /**

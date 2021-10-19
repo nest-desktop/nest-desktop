@@ -1,7 +1,7 @@
 import { Model } from '../model/model';
 import { Node } from '../node/node';
 import { Parameter } from './parameter';
-import { Synapse } from '../connection/synapse';
+import { Synapse } from '../synapse/synapse';
 
 export class ModelParameter extends Parameter {
   constructor(parent: Model | Node | Synapse, param: any) {

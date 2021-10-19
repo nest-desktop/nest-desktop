@@ -7,7 +7,6 @@ import { Activity } from '../activity/activity';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
-import { Config } from '../config';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
@@ -15,7 +14,7 @@ import { Simulation } from '../simulation/simulation';
 import { SpikeActivity } from '../activity/spikeActivity';
 import { upgradeProject } from './projectUpgrade';
 
-export class Project extends Config {
+export class Project {
   private _activityGraph: ActivityGraph;
   private _app: App; // parent
   private _code: ProjectCode; // code script for NEST Simulator
@@ -25,7 +24,6 @@ export class Project extends Config {
   private _errorMessage = '';
   private _hasActivities = false;
   private _hasAnalogActivities = false;
-  private _hash: string; // obsolete: hash of serialized network
   private _hasSpatialActivities = false;
   private _hasSpikeActivities = false;
   private _id: string; // id of the project
@@ -39,7 +37,6 @@ export class Project extends Config {
   private _updatedAt: string; // when is it updated in database
 
   constructor(app: App, project: any = {}) {
-    super('Project');
     this._app = app;
 
     // Database instance
@@ -49,9 +46,17 @@ export class Project extends Config {
     this._createdAt = project.createdAt || new Date();
     this._updatedAt = project.updatedAt;
 
+    // Project metadata
     this._name = project.name || '';
     this._description = project.description || '';
-    this._hash = project.hash || '';
+
+    // Initialize project state.
+    this._state = reactive({
+      activityStatsPanelId: 0,
+      hash: '',
+      selected: false,
+      withActivities: false,
+    });
 
     // Upgrade old projects.
     project = upgradeProject(this._app, project);
@@ -66,11 +71,6 @@ export class Project extends Config {
 
     this.clean();
     this.commitNetwork(this._network);
-    this._state = reactive({
-      activityStatsPanelId: 0,
-      selected: false,
-      withActivities: false,
-    });
   }
 
   get activityGraph(): ActivityGraph {
@@ -107,10 +107,6 @@ export class Project extends Config {
 
   set errorMessage(value: string) {
     this._errorMessage = value;
-  }
-
-  get hash(): string {
-    return this._hash;
   }
 
   get id(): string {
@@ -277,7 +273,9 @@ export class Project extends Config {
     );
 
     // Limit max amount of network revisions;
-    const maxRev: number = this.config.maxNetworkRevisions || 5;
+    const maxRev: number = this._app.projectView
+      ? this._app.projectView.config.maxNetworkRevisions
+      : 5;
     if (this._networkRevisions.length > maxRev) {
       this._networkRevisions = this._networkRevisions.slice(
         this._networkRevisions.length - maxRev
@@ -359,7 +357,7 @@ export class Project extends Config {
       this._activityGraph.activityChartGraph.init();
     }
 
-    if (this.config.simulateAfterCheckout) {
+    if (this._app.projectView.config.simulateAfterCheckout) {
       // Run simulation.
       setTimeout(() => this.runSimulation(), 1);
     } else {
@@ -645,22 +643,14 @@ export class Project extends Config {
    * Update hash of this project.
    */
   clean(): void {
-    this._hash = this.getHash();
+    this._state.hash = sha1(this.toJSON());
   }
 
   /**
    * Is the hash equal to caluclated hash.
    */
   isHashEqual(): boolean {
-    return this._hash === this.getHash();
-  }
-
-  /**
-   * Calculate hash of this component.
-   */
-  getHash(): string {
-    const project: any = this.toJSON();
-    return sha1(project);
+    return this._state.hash === sha1(this.toJSON());
   }
 
   /**
@@ -679,7 +669,6 @@ export class Project extends Config {
     const project: any = {
       createdAt: this._createdAt,
       description: this._description,
-      hash: this._hash,
       id: this._id,
       name: this._name,
       network: this._network.toJSON(),

@@ -235,7 +235,7 @@ export default Vue.extend({
     const showHelp = () => {
       state.snackbar.show = false;
       if (
-        !state.graph.project.config.showHelp &&
+        !projectView.config.showHelp &&
         state.graph.project.simulation.running
       ) {
         return;

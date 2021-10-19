@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
-import { ConnectionGraph } from '../connection/connectionGraph';
-import { Network } from './network';
-import { NetworkGraphWorkspace } from './networkGraphWorkspace/networkGraphWorkspace';
-import { NodeGraph } from '../node/nodeGraph';
-import { Node } from '../node/node';
+import { ConnectionGraph } from '../../connection/connectionGraph/connectionGraph';
+import { Network } from '../network';
+import { NetworkGraphWorkspace } from './networkGraphWorkspace';
+import { NodeGraph } from '../../node/nodeGraph/nodeGraph';
+import { Node } from '../../node/node';
 
 export class NetworkGraph {
   private _connectionGraph: ConnectionGraph;

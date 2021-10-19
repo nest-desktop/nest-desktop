@@ -15,7 +15,7 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { NetworkGraph } from '@/core/network/networkGraph';
+import { NetworkGraph } from '@/core/network/networkGraph/networkGraph';
 import { Node } from '@/core/node/node';
 
 export default Vue.extend({
@@ -31,7 +31,7 @@ export default Vue.extend({
     });
 
     const selectNode = () => {
-      state.node.view.select();
+      state.node.state.select();
       state.graph.update();
     };
 

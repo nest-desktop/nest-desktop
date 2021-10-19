@@ -38,7 +38,7 @@ export class NodeView {
         return node.view.color;
       }
     }
-    return this._node.network.view.getNodeColor(this._node.idx);
+    return this._node.network.getNodeColor(this._node.idx);
   }
 
   set color(value: string) {
@@ -146,47 +146,6 @@ export class NodeView {
    * Clean node.
    */
   clean(): void {}
-
-  /**
-   * Focus node.
-   */
-  focus(forced: boolean = false): void {
-    if (forced) {
-      this._node.network.view.resetFocus();
-    }
-    this._node.network.view.focusedNode = this._node;
-  }
-
-  /**
-   * Check if this node is focused.
-   */
-  isFocused(): boolean {
-    return this._node.network.view.isNodeFocused(this._node);
-  }
-
-  /**
-   * Select node.
-   */
-  select(forced: boolean = false): void {
-    if (forced) {
-      this._node.network.view.resetSelection();
-    }
-    this._node.network.view.selectedNode = this._node;
-  }
-
-  /**
-   * Check if any node is selected.
-   */
-  isAnySelected(): boolean {
-    return this._node.network.view.selectedNode !== null;
-  }
-
-  /**
-   * Check if this node is selected.
-   */
-  isSelected(unselected: boolean = false): boolean {
-    return this._node.network.view.isNodeSelected(this._node, unselected);
-  }
 
   /**
    * Serialize for JSON.

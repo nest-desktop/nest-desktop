@@ -42,7 +42,7 @@
 import Vue from 'vue';
 import { reactive, onMounted } from '@vue/composition-api';
 
-import { Synapse } from '@/core/connection/synapse';
+import { Synapse } from '@/core/synapse/synapse';
 import { ModelParameter } from '@/core/parameter/modelParameter';
 
 export default Vue.extend({

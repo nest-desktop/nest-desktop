@@ -60,7 +60,7 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { NodeSpatial } from '@/core/node/nodeSpatial';
+import { NodeSpatial } from '@/core/node/nodeSpatial/nodeSpatial';
 
 export default Vue.extend({
   name: 'NodePosition',

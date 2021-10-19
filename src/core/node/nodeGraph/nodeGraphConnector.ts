@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 
-import { NetworkGraph } from '../network/networkGraph';
-import { Node } from './node';
-import drawPath from '../connection/connectionGraphPath';
+import { NetworkGraph } from '../../network/networkGraph/networkGraph';
+import { Node } from '../node';
+import drawPath from '../../connection/connectionGraph/connectionGraphPath';
 
 export class NodeGraphConnector {
   private _connectorRadius: number = 6;
@@ -57,7 +57,7 @@ export class NodeGraphConnector {
       .attr('r', '6px')
       .attr('stroke-width', this.strokeWidth)
       .on('click', (e: MouseEvent) => {
-        node.view.select(true);
+        node.state.select(true);
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
       });
@@ -124,12 +124,14 @@ export class NodeGraphConnector {
       .transition()
       .duration(duration);
 
+    const workspaceState = this._networkGraph.workspace.state;
+
     connector
       .transition(t)
       .style('opacity', (n: Node) =>
-        n.view.isFocused() &&
-        !this._networkGraph.workspace.state.enableConnection &&
-        !this._networkGraph.workspace.state.dragging
+        n.state.isFocused() &&
+        !workspaceState.enableConnection &&
+        !workspaceState.dragging
           ? '1'
           : '0'
       );
@@ -146,9 +148,9 @@ export class NodeGraphConnector {
       .attr('d', (n: Node) =>
         drawPath(
           { x: 0, y: 0 },
-          n.view.isFocused() &&
-            !this._networkGraph.workspace.state.enableConnection &&
-            !this._networkGraph.workspace.state.dragging
+          n.state.isFocused() &&
+            !workspaceState.enableConnection &&
+            !workspaceState.dragging
             ? connectorEndPos
             : { x: 0, y: 0 },
           { isTargetMouse: true }
@@ -159,9 +161,9 @@ export class NodeGraphConnector {
       .select('.end')
       .transition(t)
       .attr('transform', (n: Node) =>
-        n.view.isFocused() &&
-        !this._networkGraph.workspace.state.enableConnection &&
-        !this._networkGraph.workspace.state.dragging
+        n.state.isFocused() &&
+        !workspaceState.enableConnection &&
+        !workspaceState.dragging
           ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
           : 'translate(0,0)'
       );

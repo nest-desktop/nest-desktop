@@ -14,6 +14,11 @@
         :position="state.menu.position"
         v-else-if="state.menu.content === 'model'"
       />
+
+      <SettingsMenu
+        :position="state.menu.position"
+        v-else-if="state.menu.content === 'settings'"
+      />
     </span>
 
     <v-navigation-drawer
@@ -88,6 +93,7 @@
 
                 <v-list-item
                   @click="reset"
+                  @contextmenu="e => showMenu(e, 'settings')"
                   color="settings darken1"
                   title="Settings"
                   to="/settings"
@@ -161,6 +167,7 @@ import ModelsMenu from '@/components/model/ModelsMenu.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
+import SettingsMenu from '@/components/setting/SettingsMenu.vue';
 
 export default {
   name: 'Navigation',
@@ -171,6 +178,7 @@ export default {
     ProjectNavList,
     ProjectsDialog,
     ProjectsMenu,
+    SettingsMenu,
   },
   setup() {
     const appView = core.app.view;
