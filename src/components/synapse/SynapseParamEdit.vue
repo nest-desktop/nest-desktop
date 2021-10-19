@@ -14,6 +14,7 @@
       :param="param"
       :value.sync="param.value"
       @update:value="paramChange"
+      v-for="param in state.synapse.filteredParams"
     />
   </div>
 </template>
