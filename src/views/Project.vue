@@ -484,7 +484,7 @@ export default Vue.extend({
   font-size: 9px;
 }
 
-.project-container .resize-handle {
+.projectView .resize-handle {
   cursor: ew-resize;
   height: 100vh;
   position: fixed;
