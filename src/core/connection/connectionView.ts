@@ -88,16 +88,6 @@ export class ConnectionView {
   }
 
   /**
-   * Check if it is connected by neurons only.
-   */
-  connectOnlyNeurons(): boolean {
-    return (
-      this._connection.source.model.isNeuron() &&
-      this._connection.target.model.isNeuron()
-    );
-  }
-
-  /**
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {

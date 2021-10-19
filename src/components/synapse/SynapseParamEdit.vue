@@ -13,7 +13,11 @@
       :key="'syn' + state.synapse.connection.idx + '-' + param.id"
       :param="param"
       :value.sync="param.value"
+<<<<<<< HEAD
       @update:value="paramChange"
+=======
+      @update:value="paramChange()"
+>>>>>>> cbc112c... Restructure and add synapse and states
       v-for="param in state.synapse.filteredParams"
     />
   </div>
