@@ -18,6 +18,7 @@
               :text="!projectView.config.coloredToolbar"
               block
               depressed
+              height="40"
               tile
             >
               simulation kernel
@@ -102,6 +103,7 @@
               :text="!projectView.config.coloredToolbar"
               block
               depressed
+              height="40"
               tile
             >
               simulation
