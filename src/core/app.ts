@@ -190,7 +190,7 @@ export class App extends Config {
     // console.log('Import models from assets');
     let promise: Promise<any> = Promise.resolve();
     this.config.models.forEach((file: string) => {
-      console.log('Import model from assets:', file);
+      // console.log('Import model from assets:', file);
       const data: any = require('../assets/models/' + file + '.json');
       promise = promise.then(() => this.addModel(data));
     });
@@ -252,7 +252,7 @@ export class App extends Config {
       (file: string) =>
         file.includes('/' + (modelId || this.modelView.state.modelId))
     );
-    if (path === undefined) {
+    if (path == undefined) {
       return;
     }
     const url =
@@ -272,7 +272,7 @@ export class App extends Config {
    * Update a model in the database.
    */
   async updateModel(data: any): Promise<any> {
-    console.log('Update model:', data.id);
+    // console.log('Update model:', data.id);
     return this._modelDB.update(data);
   }
 
@@ -327,7 +327,7 @@ export class App extends Config {
     // console.log('Import projects from assets');
     let promise: Promise<any> = Promise.resolve();
     this.config.projects.forEach((file: string) => {
-      console.log('Import project from assets:', file);
+      // console.log('Import project from assets:', file);
       const data: any = require('../assets/projects/' + file + '.json');
       promise = promise.then(() => this.addProject(data));
     });
@@ -367,7 +367,7 @@ export class App extends Config {
    * Import the project in the database and then update the list.
    */
   async importProject(project: Project): Promise<any> {
-    console.log('Save project:', project.name);
+    // console.log('Save project:', project.name);
     project.clean();
     const promise: Promise<any> = project.id
       ? this._projectDB.update(project)

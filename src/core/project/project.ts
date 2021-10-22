@@ -545,7 +545,7 @@ export class Project extends Config {
    * Initialize activity graph.
    */
   initActivityGraph(): void {
-    if (this._activityGraph === undefined) {
+    if (this._activityGraph == undefined) {
       return;
     }
     this._activityGraph.init();

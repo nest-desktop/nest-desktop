@@ -123,7 +123,7 @@ export class ActivityAnimationSceneSphere extends ActivityAnimationScene {
       object.material.opacity = opacity;
       object.scale.set(scale, scale, scale);
       // const pos: any = object.userData.position;
-      // if (trailIdx === null) {
+      // if (trailIdx == null) {
       //   object.position.setY(pos.y);
       // } else {
       //   object.position.setY(pos.y - ratio / 2);

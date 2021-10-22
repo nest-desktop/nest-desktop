@@ -197,10 +197,10 @@
           >
             <v-card-text v-if="modelView.state.model.params">
               <ParameterEdit
-                @change="modelView.updateProject()"
                 :key="param.id"
                 :param="param"
                 :value.sync="param.value"
+                @update:value="modelView.updateProject()"
                 v-for="param of modelView.state.model.params"
               />
             </v-card-text>

@@ -68,7 +68,7 @@ export class ActivityGraph {
    * Initialize activity chart graph (plotly).
    */
   initActivityChartGraph(panels: any[] = []): void {
-    if (this._activityChartGraph === undefined) {
+    if (this._activityChartGraph == undefined) {
       this._activityChartGraph = new ActivityChartGraph(this._project, panels);
     } else {
       this._activityChartGraph.init(panels);

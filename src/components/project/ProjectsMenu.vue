@@ -8,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width: 300px">
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"

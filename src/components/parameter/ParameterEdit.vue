@@ -11,7 +11,7 @@
       <v-card :min-width="300" flat tile>
         <v-card-subtitle class="pb-0" v-text="state.options.label" />
 
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -492,7 +492,6 @@ export default Vue.extend({
       }
       if (changed) {
         emit('update:value', deserialize(state.value));
-        emit('change', deserialize(state.value));
       }
     };
 

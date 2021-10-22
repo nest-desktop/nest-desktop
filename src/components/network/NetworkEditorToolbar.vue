@@ -81,7 +81,7 @@
                 <v-icon small v-text="'mdi-trash-can-outline'" />
               </v-btn>
             </template>
-            <v-card class="about-dialog">
+            <v-card>
               <v-card-title v-text="'Are you sure to delete this network?'" />
               <v-card-actions>
                 <v-spacer />

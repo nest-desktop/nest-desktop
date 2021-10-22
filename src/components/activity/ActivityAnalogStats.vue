@@ -87,7 +87,7 @@ export default Vue.extend({
       if (state.activity.recordFrom.length === 1) {
         state.selectedRecordFrom = state.activity.recordFrom[0] as string;
       }
-      if (state.selectedRecordFrom === undefined) {
+      if (state.selectedRecordFrom == undefined) {
         return;
       }
       if (state.activity != undefined) {

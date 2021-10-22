@@ -23,7 +23,7 @@
           ],
         }"
         :value.sync="state.node.size"
-        @update:value="paramChange()"
+        @update:value="paramChange"
         v-else
       />
     </div>
@@ -57,7 +57,7 @@
       :key="param.id"
       :param="param"
       :value.sync="param.value"
-      @update:value="paramChange()"
+      @update:value="paramChange"
       v-for="param of state.node.filteredParams"
     />
   </div>

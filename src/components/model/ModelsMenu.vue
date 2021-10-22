@@ -8,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width: 300px">
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -33,7 +33,8 @@
           <v-card-text>
             The cookie containing the local models will be deleted.
             <br />
-            All of your personal changes and all imported models will be removed.
+            All of your personal changes and all imported models will be
+            removed.
           </v-card-text>
 
           <v-card-actions>
@@ -67,7 +68,6 @@ export default Vue.extend({
       content: undefined,
       position: props.position,
       show: true,
-      modelDialogAction: 'export',
       items: [
         {
           id: 'modelsReload',
