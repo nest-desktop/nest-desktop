@@ -1,5 +1,5 @@
 <template>
-  <div class="appInfo">
+  <div class="home">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -225,14 +225,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.appInfo .logo {
+.home .logo {
   overflow: hidden;
 }
-.appInfo .logo .v-image {
+.home .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.appInfo .logo:hover .v-image {
+.home .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>
