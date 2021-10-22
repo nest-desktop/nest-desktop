@@ -102,7 +102,7 @@ export class DatabaseService {
           .forEach((key: string) => (doc[key] = dataJSON[key]));
         return this._db
           .put(doc)
-          .then((_: any) => {
+          .then(() => {
             // console.log(d);
             data.updatedAt = dataJSON.updatedAt;
           })
@@ -162,7 +162,7 @@ export class DatabaseService {
         this._valid =
           appVersion[0] === dbVersion[0] && appVersion[1] === dbVersion[1];
       })
-      .catch((_: any) => {
+      .catch(() => {
         this.setVersion().then(() => this.checkVersion());
       });
   }

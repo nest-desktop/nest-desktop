@@ -10,7 +10,7 @@
       <v-card>
         <!-- <v-card-title class="py-1" height="40" v-text="state.model.name" /> -->
 
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"

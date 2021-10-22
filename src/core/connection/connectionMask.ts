@@ -75,7 +75,7 @@ export class ConnectionMask extends Config {
 
   draw(): void {
     this._graph.layout.shapes = [];
-    if (this._masktype === undefined) {
+    if (this._masktype == undefined) {
       return;
     }
     switch (this._masktype) {

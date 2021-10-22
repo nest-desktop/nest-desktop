@@ -33,7 +33,7 @@
             <v-list dense>
               <v-list-item
                 :key="index"
-                @click="addFilterTag(tag.value)"
+                @click="addFilterTag(tag.text.toLowerCase())"
                 v-for="(tag, index) in filterTags"
               >
                 <v-list-item-title>
@@ -49,12 +49,12 @@
 
     <span :key="index" v-for="(tag, index) of filterTags">
       <v-chip
-        @click:close="removeFilterTag(tag.value)"
+        @click:close="removeFilterTag(tag.text.toLowerCase())"
         class="ma-1 mb-0"
         close
         small
         outlined
-        v-if="appView.state.model.filterTags.includes(tag.value)"
+        v-if="appView.state.model.filterTags.includes(tag.text.toLowerCase())"
       >
         <v-icon left small v-text="tag.icon" />
         {{ tag.text }}
@@ -127,21 +127,18 @@ export default Vue.extend({
     });
 
     const filterTags = [
-      { icon: 'mdi-database-outline', text: 'Installed', value: 'installed' },
-      // { text: 'NEST', value: 'nest' },
-      { icon: 'mdi-github', text: 'GitHub', value: 'github' },
-      { icon: 'mdi-alpha-n-circle-outline', text: 'Neuron', value: 'neuron' },
+      { icon: 'mdi-database-outline', text: 'Installed' },
+      { icon: 'mdi-github', text: 'GitHub' },
+      { icon: 'mdi-alpha-n-circle-outline', text: 'Neuron' },
       {
         icon: 'mdi-alpha-s-circle-outline',
         text: 'Stimulator',
-        value: 'stimulator',
       },
       {
         icon: 'mdi-alpha-r-circle-outline',
         text: 'Recorder',
-        value: 'recorder',
       },
-      { icon: 'mdi-alpha-s-circle', text: 'Synapse', value: 'synapse' },
+      { icon: 'mdi-alpha-s-circle', text: 'Synapse' },
     ];
 
     /**

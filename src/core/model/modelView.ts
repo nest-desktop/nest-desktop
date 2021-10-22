@@ -93,7 +93,7 @@ export class ModelView {
   }
 
   set modeIdx(value: number) {
-    if (this._state.model === undefined) {
+    if (this._state.model == undefined) {
       this._state.modeIdx = value;
     } else {
       this._state.modeIdx = !this.isNeuron() && value === 1 ? 0 : value;

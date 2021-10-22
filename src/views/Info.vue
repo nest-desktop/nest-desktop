@@ -1,5 +1,5 @@
 <template>
-  <div class="nd-info">
+  <div class="info">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -225,14 +225,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.nd-info .logo {
+.info .logo {
   overflow: hidden;
 }
-.nd-info .logo .v-image {
+.info .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.nd-info .logo:hover .v-image {
+.info .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>

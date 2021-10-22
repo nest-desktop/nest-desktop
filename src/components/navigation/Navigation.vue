@@ -1,30 +1,8 @@
 <template>
   <div class="navigation">
     <span v-if="appView.state.dialog.open">
-      <ProjectsImportDialog
-        v-if="
-          appView.state.dialog.source === 'project' &&
-          appView.state.dialog.action === 'import'
-        "
-      />
-      <ProjectsDialog
-        v-if="
-          appView.state.dialog.source === 'project' &&
-          appView.state.dialog.action != 'import'
-        "
-      />
-      <ModelsImportDialog
-        v-if="
-          appView.state.dialog.source === 'model' &&
-          appView.state.dialog.action === 'import'
-        "
-      />
-      <ModelsDialog
-        v-if="
-          appView.state.dialog.source === 'model' &&
-          appView.state.dialog.action != 'import'
-        "
-      />
+      <ProjectsDialog v-if="appView.state.dialog.source === 'project'" />
+      <ModelsDialog v-else-if="appView.state.dialog.source === 'model'" />
     </span>
 
     <span v-if="state.menu.show">
@@ -32,7 +10,6 @@
         :position="state.menu.position"
         v-if="state.menu.content === 'project'"
       />
-
       <ModelsMenu
         :position="state.menu.position"
         v-else-if="state.menu.content === 'model'"
@@ -180,11 +157,9 @@ import core from '@/core';
 
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
 import ModelsDialog from '@/components/model/ModelsDialog.vue';
-import ModelsImportDialog from '@/components/model/ModelsImportDialog.vue';
 import ModelsMenu from '@/components/model/ModelsMenu.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsImportDialog from '@/components/project/ProjectsImportDialog.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
 
 export default {
@@ -192,11 +167,9 @@ export default {
   components: {
     ModelNavList,
     ModelsDialog,
-    ModelsImportDialog,
     ModelsMenu,
     ProjectNavList,
     ProjectsDialog,
-    ProjectsImportDialog,
     ProjectsMenu,
   },
   setup() {
@@ -245,7 +218,7 @@ export default {
       if (targetRouteId === 'project') {
         // check if project ID is undefined or project does not exist anymore
         if (
-          recentProjectId === undefined ||
+          recentProjectId == undefined ||
           recentProjectId.length <= 0 ||
           appView.filteredProjects.filter(
             project => project.id === recentProjectId

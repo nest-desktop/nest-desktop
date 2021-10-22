@@ -26,7 +26,7 @@ export class ModelCode extends Code {
    */
   modelParams(): string {
     let script = '';
-    if (this._model.params === undefined || this._model.params.length === 0) {
+    if (this._model.params == undefined || this._model.params.length === 0) {
       return script;
     }
     const paramsList: string[] = [];

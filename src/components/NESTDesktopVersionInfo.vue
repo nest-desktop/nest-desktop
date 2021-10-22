@@ -1,5 +1,5 @@
 <template>
-  <div class="version-info">
+  <div class="versionInfo">
     <v-list dense max-width="500px">
       <v-list-item>
         <v-row>
