@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="appInfo">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -89,7 +89,7 @@
                       <v-col align="center" cols="12">
                         <v-card flat>
                           <v-card-text>
-                            <AppInfo />
+                            <AppDetails />
                           </v-card-text>
                         </v-card>
                       </v-col>
@@ -157,12 +157,12 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
-import AppInfo from '@/components/AppInfo.vue';
+import AppDetails from '@/components/AppDetails.vue';
 
 export default Vue.extend({
   name: 'AppInfo',
   components: {
-    AppInfo,
+    AppDetails,
   },
   props: {
     includeProjectButtons: Boolean,
@@ -225,14 +225,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.home .logo {
+.appInfo .logo {
   overflow: hidden;
 }
-.home .logo .v-image {
+.appInfo .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.home .logo:hover .v-image {
+.appInfo .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>
