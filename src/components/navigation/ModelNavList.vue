@@ -167,7 +167,8 @@ export default Vue.extend({
     };
 
     /**
-     * Check if file exists on
+     * Check if file exists on GitHub.
+     * @param model Model name
      */
     const fileExistGithub = (model: string) => {
       return appView.state.model.filesGithub.some((file: string) =>

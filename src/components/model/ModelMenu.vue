@@ -128,6 +128,10 @@ export default Vue.extend({
       state.position = props.position;
     };
 
+    /**
+     * Open one of the dialogs to export, import or delete.
+     * @param action Dialog to open
+     */
     const openDialog = (action: string = 'export') => {
       state.model.resetState();
       appView.state.dialog.source = 'model';

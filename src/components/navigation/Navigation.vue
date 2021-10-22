@@ -258,7 +258,7 @@ export default {
           params: { id: recentProjectId },
         });
       } else {
-        if (recentModelId === undefined || recentModelId.length <= 0) {
+        if (recentModelId == undefined || recentModelId.length <= 0) {
           recentModelId = 'ac_generator';
         }
         router.push({ name: 'ModelId', params: { id: recentModelId } });
