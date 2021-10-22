@@ -198,7 +198,7 @@
                 :tick-labels="state.options.ticks"
                 :value="state.value"
                 @change="paramChange"
-                class="mb-1"
+                class="mb-2"
                 dense
                 height="40"
                 tick-size="4"

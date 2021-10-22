@@ -47,10 +47,10 @@ export class ProjectView extends Config {
     },
     {
       icon: 'mdi-table-large',
-      minWidth: 440,
+      minWidth: 510,
       name: 'activityStats',
-      title: 'Statistics',
-      width: 440,
+      title: 'Stats',
+      width: 510,
     },
   ];
 
