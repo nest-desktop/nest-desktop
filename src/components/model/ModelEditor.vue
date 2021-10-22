@@ -114,7 +114,7 @@
           outlined
           small
         >
-          Update model from Github
+          Update model from GitHub
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -130,7 +130,7 @@
           outlined
           small
         >
-          Import model from Github
+          Import model from GitHub
         </v-btn>
       </v-card-actions>
     </v-card>

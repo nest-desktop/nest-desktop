@@ -114,7 +114,7 @@ export class AppView {
    * Filter models by element type.
    */
   filterModels(elementType: string = null): Model[] {
-    if (elementType === null) {
+    if (elementType == null) {
       return this._state.models;
     }
     return this._state.models.filter(
@@ -203,7 +203,7 @@ export class AppView {
    */
   async updateProjectRevisions(id: string = null): Promise<any> {
     this._state.projectRevisions = [];
-    if (id === null) {
+    if (id == null) {
       return;
     }
     return this._app.projectDB

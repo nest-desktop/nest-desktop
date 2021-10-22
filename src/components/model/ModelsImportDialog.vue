@@ -230,7 +230,7 @@ export default Vue.extend({
     };
 
     /**
-     * Get files from github.
+     * Get files from GitHub.
      */
     const getFilesFromGithub = (tree: any) => {
       state.files = [];
@@ -257,7 +257,7 @@ export default Vue.extend({
     };
 
     /**
-     * Get model from github.
+     * Get model from GitHub.
      */
     const getModelFromGithub = () => {
       if (!Object.keys(state.selectedTree).includes('path')) {

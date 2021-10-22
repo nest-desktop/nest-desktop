@@ -31,9 +31,9 @@
           <v-card-title v-text="'Are you sure to reset all models?'" />
 
           <v-card-text>
-            The database for models will be deleted and then reset.
+            The cookie containing the local models will be deleted.
             <br />
-            All current models will be lost.
+            All of your personal changes and all imported models will be removed.
           </v-card-text>
 
           <v-card-actions>
@@ -64,7 +64,7 @@ export default Vue.extend({
   setup(props) {
     const appView = core.app.view;
     const state = reactive({
-      content: null,
+      content: undefined,
       position: props.position,
       show: true,
       modelDialogAction: 'export',
@@ -126,6 +126,10 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Open one of the dialogs to export, import or delete.
+     * @param action Dialog to open
+     */
     const openDialog = (action: string = 'export') => {
       appView.state.models.forEach((model: Model) => model.resetState());
       appView.state.dialog.source = 'model';
