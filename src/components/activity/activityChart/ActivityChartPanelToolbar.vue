@@ -8,6 +8,7 @@
           :text="!projectView.config.coloredToolbar"
           block
           depressed
+          height="40"
           tile
           v-bind="attrs"
           v-on="on"

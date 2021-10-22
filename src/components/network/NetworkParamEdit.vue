@@ -190,7 +190,6 @@
             class="ma-1"
             tile
             outlined
-            style="background-color: white"
             v-if="showNode(node)"
           >
             <v-card-title
@@ -248,7 +247,6 @@
           class="ma-1"
           tile
           outlined
-          style="background-color: white"
           v-for="connection of state.network.connections"
           v-show="showConnection(connection)"
         >
