@@ -24,7 +24,6 @@
               @change="e => updateProjectViewConfig({ showHelp: e || false })"
               label="Show help"
               v-model="state.projectViewConfig.showHelp"
-<<<<<<< HEAD
             />
             <v-checkbox
               label="Colored toolbar"
@@ -32,8 +31,6 @@
                 e => updateProjectViewConfig({ coloredToolbar: e || false })
               "
               v-model="state.projectViewConfig.coloredToolbar"
-=======
->>>>>>> cbc112c... Restructure and add synapse and states
             />
             <v-checkbox
               label="Colored toolbar"
