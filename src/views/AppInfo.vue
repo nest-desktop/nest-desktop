@@ -1,5 +1,5 @@
 <template>
-  <div class="appInfo">
+  <div class="home">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -89,7 +89,7 @@
                       <v-col align="center" cols="12">
                         <v-card flat>
                           <v-card-text>
-                            <NESTDesktopVersionInfo />
+                            <AppInfo />
                           </v-card-text>
                         </v-card>
                       </v-col>
@@ -157,12 +157,12 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
-import NESTDesktopVersionInfo from '@/components/NESTDesktopVersionInfo.vue';
+import AppInfo from '@/components/AppInfo.vue';
 
 export default Vue.extend({
   name: 'AppInfo',
   components: {
-    NESTDesktopVersionInfo,
+    AppInfo,
   },
   props: {
     includeProjectButtons: Boolean,
@@ -225,14 +225,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.appInfo .logo {
+.home .logo {
   overflow: hidden;
 }
-.appInfo .logo .v-image {
+.home .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.appInfo .logo:hover .v-image {
+.home .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>
