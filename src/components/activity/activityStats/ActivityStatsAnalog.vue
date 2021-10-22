@@ -87,11 +87,7 @@ export default Vue.extend({
       if (state.activity.records.length === 1) {
         state.selectedRecords = state.activity.records[0] as string;
       }
-<<<<<<< HEAD:src/components/activity/ActivityAnalogStats.vue
-      if (state.selectedRecordFrom == undefined) {
-=======
-      if (state.selectedRecords === undefined) {
->>>>>>> 415b20a... Better view of activity chart controller:src/components/activity/activityStats/ActivityStatsAnalog.vue
+      if (state.selectedRecords == undefined) {
         return;
       }
       if (state.activity != undefined) {
