@@ -148,7 +148,7 @@ import { Plotly } from 'vue-plotly';
 import * as PlotlyJS from 'plotly.js-dist-min';
 
 import { ActivityGraph } from '@/core/activity/activityGraph';
-import ActivityAnimationGraph from '@/components/activity/ActivityAnimationGraph.vue';
+import ActivityAnimationGraph from '@/components/activity/activityAnimation/ActivityAnimationGraph.vue';
 import core from '@/core';
 
 export default Vue.extend({

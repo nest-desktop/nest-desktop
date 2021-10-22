@@ -276,7 +276,7 @@
           />
 
           <ActivityChartController
-            :graph="projectView.state.project.activityGraph"
+            :graph="projectView.state.project.activityGraph.activityChartGraph"
             v-if="
               projectView.state.tool.name === 'activityEdit' &&
               projectView.state.activityGraph === 'abstract'
@@ -284,7 +284,9 @@
           />
 
           <ActivityAnimationController
-            :graph="projectView.state.project.activityGraph"
+            :graph="
+              projectView.state.project.activityGraph.activityAnimationGraph
+            "
             v-if="
               projectView.state.tool.name === 'activityEdit' &&
               projectView.state.activityGraph === 'spatial'
@@ -353,9 +355,9 @@ import axios from 'axios';
 
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
-import ActivityChartController from '@/components/activity/ActivityChartController.vue';
-import ActivityAnimationController from '@/components/activity/ActivityAnimationController.vue';
-import ActivityStats from '@/components/activity/ActivityStats.vue';
+import ActivityChartController from '@/components/activity/activityChart/ActivityChartController.vue';
+import ActivityAnimationController from '@/components/activity/activityAnimation/ActivityAnimationController.vue';
+import ActivityStats from '@/components/activity/activityStats/ActivityStats.vue';
 import core from '@/core';
 import NetworkEditor from '@/components/network/NetworkEditor.vue';
 import NetworkParamEdit from '@/components/network/NetworkParamEdit.vue';
