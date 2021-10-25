@@ -89,15 +89,30 @@ export class Activity {
   }
 
   /**
-   * Update activity.
+   * Initialize activity.
    */
-  update(activity: any): void {
+  init(activity: any): void {
     this._events = activity.events || {};
     this._records = Object.keys(this._events).filter(
       (event: string) => !['senders', 'times'].includes(event)
     );
     this._nodeIds = activity.nodeIds || [];
     this._nodePositions = activity.nodePositions || [];
+    this._hash = sha1(JSON.stringify(this._events));
+  }
+
+  /**
+   * Update activity.
+   */
+  update(activity: any): void {
+    const events = activity.events;
+    if (events === undefined) {
+      return;
+    }
+    Object.keys(events).forEach((eventKey: string) => {
+      const event: number[] = this._events[eventKey];
+      this._events[eventKey] = event.concat(events[eventKey]);
+    });
     this._hash = sha1(JSON.stringify(this._events));
   }
 
