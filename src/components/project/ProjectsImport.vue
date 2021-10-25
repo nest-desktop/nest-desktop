@@ -60,7 +60,7 @@
               dense
               full-width
               flat
-              label="Enter url"
+              label="Enter URL"
               prepend-icon="mdi-web"
               v-show="state.source === 'url'"
             />
@@ -259,7 +259,7 @@ export default Vue.extend({
     };
 
     /**
-     * Get projects from url.
+     * Get projects from URL.
      */
     const getProjectsFromUrl = (url: string) => {
       axios.get(url).then((response: any) => fetchProjects(response.data));

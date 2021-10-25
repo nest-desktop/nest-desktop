@@ -60,7 +60,7 @@
               dense
               full-width
               flat
-              label="Enter url"
+              label="Enter URL"
               prepend-icon="mdi-web"
               v-show="state.source === 'url'"
             />
@@ -183,7 +183,7 @@ export default Vue.extend({
     };
 
     /**
-     * Fetch model and validate them.
+     * Fetch models and validate them.
      */
     const fetchModels = (data: any) => {
       const models: any[] = Array.isArray(data) ? data : [data];
@@ -248,7 +248,7 @@ export default Vue.extend({
     };
 
     /**
-     * Get model from url.
+     * Get model from URL.
      */
     const getModelFromUrl = (url: string) => {
       axios.get(url).then((response: any) => fetchModels(response.data));
