@@ -368,7 +368,7 @@ export class Project {
       const activities: any[] = this.activities.map((activity: Activity) =>
         activity.toJSON()
       );
-      this.updateActivities(activities);
+      this.initActivities(activities);
     }
   }
 
@@ -456,7 +456,7 @@ export class Project {
                 activity.nodePositions = positions;
               });
             }
-            this.updateActivities(data.activities);
+            this.initActivities(data.activities);
             this.commitNetwork(this._network);
             break;
           default:
@@ -502,14 +502,14 @@ export class Project {
       this._code.generate();
     }
     this._simulation.running = true;
-    this.app.nestServer.httpClient
-      .post(this._app.nestServer.url + '/exec', {
+    this._app.NESTSimulator.httpClient
+      .post(this._app.NESTSimulator.url + '/exec', {
         source: this._code.script,
       })
       .then((resp: any) => {
         switch (resp.status) {
           case 0:
-            this._errorMessage = 'Failed to find NEST Server.';
+            this._errorMessage = 'Failed to find NEST Simulator.';
             break;
           case 200:
             this._errorMessage = 'Simulation is finished.';
@@ -540,31 +540,29 @@ export class Project {
     setTimeout(() => {
       this._simulation.kernel.biologicalTime = this._simulation.time;
 
-      function onlyUnique(value: number, index: number, self: any) {
-        return self.indexOf(value) === index;
-      }
+      // function onlyUnique(value: number, index: number, self: any) {
+      //   return self.indexOf(value) === index;
+      // }
 
+      this.initActivities([{ events: { senders: [], times: [] } }]);
+
+      let fromTime: number = 0;
       this._refreshIntervalId = setInterval(() => {
-        axios.get('http://localhost:8080/nest/spikes').then((response: any) => {
-          const data: any = response.data;
-          const events: any = {
-            senders: data.nodeIds,
-            times: data.simulationTimes,
-          };
+        axios
+          .get('http://localhost:8080/nest/spikes?fromTime=' + fromTime)
+          .then((response: any) => {
+            const data: any = response.data;
+            const events: any = {
+              senders: data.nodeIds,
+              times: data.simulationTimes,
+            };
+            this.initActivities([{ events }]);
 
-          const nodeIds = events.senders.filter(onlyUnique);
-
-          this.updateActivities([
-            {
-              events,
-              nodeIds,
-            },
-          ]);
-
-          if (this._simulation.running === false) {
-            clearInterval(this._refreshIntervalId);
-          }
-        });
+            fromTime = events.times[events.times.length - 1] || 0;
+            if (fromTime + 10 >= this._simulation.time) {
+              clearInterval(this._refreshIntervalId);
+            }
+          });
       }, 1000);
     }, 100);
   }
@@ -634,6 +632,26 @@ export class Project {
     if (this.hasActivities) {
       this._activityGraph.update();
     }
+  }
+
+  /**
+   * Initialize activities in recorder nodes after simulation.
+   */
+  initActivities(data: any): void {
+    // console.log('Initialize activities');
+
+    // Initialize recorded activity.
+    const activities: Activity[] = this.activities;
+    data.forEach((activityData: any, idx: number) => {
+      const activity: Activity = activities[idx];
+      activity.init(activityData);
+    });
+
+    // Check if project has activities.
+    this.checkActivities();
+
+    // Update activity graph.
+    this._activityGraph.update();
   }
 
   /**
