@@ -1,5 +1,5 @@
 <template>
-  <div class="info">
+  <div class="appInfo">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -160,7 +160,7 @@ import core from '@/core';
 import NESTDesktopVersionInfo from '@/components/NESTDesktopVersionInfo.vue';
 
 export default Vue.extend({
-  name: 'Info',
+  name: 'AppInfo',
   components: {
     NESTDesktopVersionInfo,
   },
@@ -225,14 +225,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.info .logo {
+.appInfo .logo {
   overflow: hidden;
 }
-.info .logo .v-image {
+.appInfo .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.info .logo:hover .v-image {
+.appInfo .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>
