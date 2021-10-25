@@ -1,5 +1,5 @@
 <template>
-  <div class="projectMenu" v-if="state.project">
+  <div class="modelMenu" v-if="state.model">
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -8,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-card>
-        <!-- <v-card-title class="py-1" height="40" v-text="state.project.name" /> -->
+        <!-- <v-card-title class="py-1" height="40" v-text="state.model.name" /> -->
 
         <span v-if="state.content == null">
           <v-list dense>
@@ -28,15 +28,15 @@
           </v-list>
         </span>
 
-        <span v-if="state.content === 'projectDelete'">
-          <v-card-title v-text="'Are you sure to delete this project?'" />
+        <span v-if="state.content === 'modelDelete'">
+          <v-card-title v-text="'Are you sure to delete this model?'" />
 
           <v-card-actions>
             <v-btn @click="state.content = null" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn @click="deleteProject" outlined small v-text="'Delete'" />
+            <v-btn @click="deleteModel" outlined small v-text="'Delete'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -48,53 +48,63 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { Project } from '@/core/project/project';
+import { Model } from '@/core/model/model';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'ProjectMenu',
+  name: 'ModelMenu',
   props: {
-    project: Project,
+    model: Model,
     position: Object,
   },
   setup(props) {
     const appView = core.app.view;
     const state = reactive({
       content: null,
-      project: props.project as Project,
+      model: props.model as Model,
+      openModelDialog: false,
       position: props.position,
       show: true,
       items: [
         {
-          id: 'projectReload',
+          id: 'modelReload',
           icon: 'mdi-reload',
-          title: 'Reload project',
+          title: 'Reload model',
           onClick: () => {
-            state.project.reload();
+            // state.model.reload();
             state.show = false;
           },
         },
         {
-          id: 'projectDuplicate',
+          id: 'modelCopy',
           icon: 'mdi-content-duplicate',
-          title: 'Duplicate project',
+          title: 'Copy model',
           onClick: () => {
-            state.project.duplicate();
+            // state.model.copy();
             state.show = false;
           },
         },
         {
-          id: 'projectExport',
+          id: 'modelImport',
+          icon: 'mdi-import',
+          title: 'Import model',
+          onClick: () => {
+            state.show = false;
+            state.model.app.importModelFromGithub(state.model.id);
+          },
+        },
+        {
+          id: 'modelExport',
           icon: 'mdi-export',
-          title: 'Export project',
+          title: 'Export model',
           onClick: () => openDialog('export'),
         },
         {
-          id: 'projectDelete',
+          id: 'modelDelete',
           icon: 'mdi-delete',
-          title: 'Delete project',
+          title: 'Delete model',
           onClick: () => {
-            state.content = 'projectDelete';
+            state.content = 'modelDelete';
           },
           append: true,
         },
@@ -102,35 +112,41 @@ export default Vue.extend({
     });
 
     /**
-     * Delete project.
+     * Delete model.
      */
-    const deleteProject = () => {
-      state.project.delete().then(() => {
-        state.project.app.view.updateProjects();
+    const deleteModel = () => {
+      state.model.delete().then(() => {
+        state.model.app.view.updateModels();
       });
       state.show = false;
     };
 
+    const update = () => {
+      state.content = null;
+      state.show = true;
+      state.model = props.model as Model;
+      state.position = props.position;
+    };
+
+    /**
+     * Open one of the dialogs to export, import or delete.
+     * @param action Dialog to open
+     */
     const openDialog = (action: string = 'export') => {
-      state.project.resetState();
-      appView.state.dialog.source = 'project';
+      state.model.resetState();
+      appView.state.dialog.source = 'model';
       appView.state.dialog.action = action;
-      appView.state.dialog.content = [state.project];
+      appView.state.dialog.content = [state.model];
       appView.state.dialog.open = true;
       state.show = false;
     };
 
     watch(
-      () => props.project,
-      () => {
-        state.content = null;
-        state.show = true;
-        state.project = props.project as Project;
-        state.position = props.position;
-      }
+      () => props.model,
+      () => update()
     );
 
-    return { deleteProject, state };
+    return { deleteModel, state };
   },
 });
 </script>

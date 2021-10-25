@@ -1,5 +1,5 @@
 <template>
-  <div class="project-container" v-if="state.project">
+  <div class="projectView" v-if="projectView.state.project">
     <v-app-bar
       app
       class="no-print"
@@ -10,12 +10,12 @@
       flat
     >
       <v-btn-toggle
-        @change="updateProjectMode"
+        @change="() => projectView.updateProjectMode()"
         group
         light
         mandatory
         style="margin-left: -16px"
-        v-model="core.app.view.project.state.modeIdx"
+        v-model="projectView.state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
@@ -40,8 +40,8 @@
               <v-col>
                 <v-row style="place-content: center">
                   <ActivityGraphIcon
-                    :project="state.project"
-                    v-if="state.project.hasActivities"
+                    :project="projectView.state.project"
+                    v-if="projectView.state.project.hasActivities"
                   />
                   <v-icon
                     class="rotate-90"
@@ -59,13 +59,14 @@
 
           <v-list dense>
             <v-list-item
-              :disabled="!state.project.hasActivities"
-              @click="selectActivityGraph('abstract')"
+              :disabled="!projectView.state.project.hasActivities"
+              @click="projectView.selectActivityGraph('abstract')"
             >
               <v-list-item-icon>
                 <ActivityGraphIcon
-                  :project="state.project"
-                  v-if="state.project.hasActivities"
+                  :project="projectView.state.project"
+                  fixed
+                  v-if="projectView.state.project.hasActivities"
                 />
                 <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
               </v-list-item-icon>
@@ -73,8 +74,8 @@
             </v-list-item>
 
             <v-list-item
-              :disabled="!state.project.hasSpatialActivities"
-              @click="selectActivityGraph('spatial')"
+              :disabled="!projectView.state.project.hasSpatialActivities"
+              @click="projectView.selectActivityGraph('spatial')"
             >
               <v-list-item-icon>
                 <v-icon v-text="'mdi-axis-arrow'" />
@@ -98,15 +99,15 @@
       </v-btn-toggle>
 
       <v-spacer />
-      <v-toolbar-title class="mx-2" v-text="state.project.name" />
+      <v-toolbar-title class="mx-2" v-text="projectView.state.project.name" />
       <v-spacer />
 
       <div class="mx-4" style="width: 144px">
         <v-row no-gutters>
           <v-col col="3">
             <v-btn
-              :disabled="countBefore() <= 0"
-              @click="state.project.network.oldest()"
+              :disabled="projectView.countBefore() <= 0"
+              @click="projectView.state.project.network.oldest()"
               dark
               icon
               small
@@ -117,15 +118,15 @@
 
           <v-col col="3">
             <v-btn
-              :disabled="countBefore() <= 0"
-              @click="state.project.network.older()"
+              :disabled="projectView.countBefore() <= 0"
+              @click="projectView.state.project.network.older()"
               dark
               icon
               small
             >
               <v-badge
-                :content="countBefore()"
-                :value="countBefore()"
+                :content="projectView.countBefore()"
+                :value="projectView.countBefore()"
                 color="project darken-1"
                 offset-y="8"
               >
@@ -136,15 +137,15 @@
 
           <v-col col="3">
             <v-btn
-              :disabled="countAfter() <= 0"
-              @click="state.project.network.newer()"
+              :disabled="projectView.countAfter() <= 0"
+              @click="projectView.state.project.network.newer()"
               dark
               icon
               small
             >
               <v-badge
-                :content="countAfter()"
-                :value="countAfter()"
+                :content="projectView.countAfter()"
+                :value="projectView.countAfter()"
                 color="project darken-1"
                 offset-y="8"
               >
@@ -155,8 +156,8 @@
 
           <v-col col="3">
             <v-btn
-              :disabled="countAfter() <= 0"
-              @click="state.project.network.newest()"
+              :disabled="projectView.countAfter() <= 0"
+              @click="projectView.state.project.network.newest()"
               dark
               icon
               small
@@ -167,18 +168,16 @@
         </v-row>
       </div>
 
-      <div @click="core.app.view.project.state.modeIdx = 1">
-        <SimulationButton :project="state.project" />
+      <div @click="projectView.state.modeIdx = 1">
+        <SimulationButton :project="projectView.state.project" />
       </div>
     </v-app-bar>
 
     <v-navigation-drawer
-      :mini-variant="!core.app.view.project.state.toolOpened"
+      :mini-variant="!projectView.state.toolOpened"
       :style="{ transition: state.resizing ? 'initial' : '' }"
       :width="
-        core.app.view.project.state.tool !== undefined
-          ? core.app.view.project.state.tool.width
-          : 0
+        projectView.state.tool !== undefined ? projectView.state.tool.width : 0
       "
       app
       class="no-print"
@@ -191,7 +190,7 @@
       <div
         @mousedown="resizeSidebar"
         class="resize-handle"
-        v-if="core.app.view.project.state.toolOpened"
+        v-if="projectView.state.toolOpened"
       />
       <v-row class="fill-height ml-0" no-gutters>
         <v-navigation-drawer
@@ -203,13 +202,13 @@
         >
           <!-- <v-list nav dense>
             <v-list-item
-              @click="core.app.view.project.state.toolOpened = !core.app.view.project.state.toolOpened"
+              @click="projectView.state.toolOpened = !projectView.state.toolOpened"
               title="Toggle navigation"
             >
               <v-list-item-icon>
                 <v-icon
                   v-text="
-                    'mdi-chevron-' + (core.app.view.project.state.toolOpened ? 'right' : 'left')
+                    'mdi-chevron-' + (projectView.state.toolOpened ? 'right' : 'left')
                   "
                 />
               </v-list-item-icon>
@@ -223,14 +222,14 @@
             <v-list-item
               :class="{
                 'v-list-item--active':
-                  core.app.view.project.state.tool === tool &&
-                  core.app.view.project.state.toolOpened,
+                  projectView.state.tool === tool &&
+                  projectView.state.toolOpened,
               }"
               :key="tool.name"
               :title="tool.title"
-              @click="selectTool(tool)"
-              v-for="tool in core.app.view.project.tools"
-              v-show="tool.devMode ? core.app.config.devMode : true"
+              @click="projectView.selectTool(tool)"
+              v-for="tool in projectView.tools"
+              v-show="tool.devMode ? appView.app.config.devMode : true"
             >
               <v-list-item-icon>
                 <v-list-item-group class="nav-item-right">
@@ -239,9 +238,8 @@
                   </span>
                   <span v-else>
                     <ActivityGraphIcon
-                      :project="state.project"
-                      :spatial="true"
-                      v-if="state.project.hasActivities"
+                      :project="projectView.state.project"
+                      v-if="projectView.state.project.hasActivities"
                     />
                     <v-icon
                       class="rotate-90"
@@ -259,51 +257,47 @@
 
         <div
           style="width: 100%; padding-right: 64px"
-          v-if="core.app.view.project.state.toolOpened"
+          v-if="projectView.state.toolOpened"
         >
           <NetworkParamEdit
-            :network="state.project.network"
-            :projectId="state.projectId"
-            v-if="core.app.view.project.state.tool.name === 'networkParamEdit'"
+            :network="projectView.state.project.network"
+            :projectId="projectView.state.projectId"
+            v-if="projectView.state.tool.name === 'networkParamEdit'"
           />
 
           <SimulationKernel
-            :simulation="state.project.simulation"
-            v-if="core.app.view.project.state.tool.name === 'simulationKernel'"
+            :simulation="projectView.state.project.simulation"
+            v-if="projectView.state.tool.name === 'simulationKernel'"
           />
 
           <SimulationCodeEditor
-            :code="state.project.code"
-            v-if="core.app.view.project.state.tool.name === 'codeEditor'"
+            :code="projectView.state.project.code"
+            v-if="projectView.state.tool.name === 'codeEditor'"
           />
 
           <ActivityChartController
-            :graph="state.project.activityGraph"
+            :graph="projectView.state.project.activityGraph"
             v-if="
-              core.app.view.project.state.tool.name === 'activityEdit' &&
-              core.app.view.project.state.activityGraph === 'abstract'
+              projectView.state.tool.name === 'activityEdit' &&
+              projectView.state.activityGraph === 'abstract'
             "
           />
 
           <ActivityAnimationController
-            :graph="state.project.activityGraph"
+            :graph="projectView.state.project.activityGraph"
             v-if="
-              core.app.view.project.state.tool.name === 'activityEdit' &&
-              core.app.view.project.state.activityGraph === 'spatial'
+              projectView.state.tool.name === 'activityEdit' &&
+              projectView.state.activityGraph === 'spatial'
             "
           />
 
           <ActivityStats
-            :project="core.app.project"
-            v-if="core.app.view.project.state.tool.name === 'activityStats'"
+            :project="projectView.state.project"
+            v-if="projectView.state.tool.name === 'activityStats'"
           />
 
-          <v-card
-            flat
-            tile
-            v-if="core.app.view.project.state.tool.name === 'dataJSON'"
-          >
-            <ProjectRawData :project="state.project" />
+          <v-card flat tile v-if="projectView.state.tool.name === 'dataJSON'">
+            <ProjectRawData :project="projectView.state.project" />
           </v-card>
         </div>
       </v-row>
@@ -312,35 +306,33 @@
     <v-main>
       <transition name="fade">
         <div
-          :style="{ height: state.networkGraphHeight }"
+          :style="{ height: projectView.state.networkGraphHeight }"
           ref="networkGraph"
-          v-if="[0, 2].includes(core.app.view.project.state.modeIdx)"
+          v-if="[0, 2].includes(projectView.state.modeIdx)"
         >
-          <NetworkEditor :networkHash="state.project.network.hash" />
+          <NetworkEditor
+            :networkHash="projectView.state.project.network.hash"
+          />
         </div>
       </transition>
 
       <transition name="fade">
         <ActivityGraph
-          :codeHash="state.project.code.hash"
-          :graph="state.project.activityGraph"
-          :graphHash="state.project.activityGraph.codeHash"
-          :projectId="state.projectId"
-          :view="core.app.view.project.state.activityGraph"
-          v-if="core.app.view.project.state.modeIdx === 1"
+          :codeHash="projectView.state.project.code.hash"
+          :graph="projectView.state.project.activityGraph"
+          :graphHash="projectView.state.project.activityGraph.codeHash"
+          :view="projectView.state.activityGraph"
+          v-if="projectView.state.modeIdx === 1"
         />
       </transition>
 
       <transition name="fade">
-        <ProjectLabBook
-          :hash="state.project.network.hash"
-          v-if="core.app.view.project.state.modeIdx === 2"
-        />
+        <ProjectLabBook v-if="projectView.state.modeIdx === 2" />
       </transition>
     </v-main>
 
     <v-overlay
-      :value="state.loading || state.project.simulation.running"
+      :value="state.loading || projectView.state.project.simulation.running"
       :z-index="10"
     >
       <v-progress-circular
@@ -359,7 +351,6 @@ import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 import axios from 'axios';
 
-import { Project } from '@/core/project/project';
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import ActivityChartController from '@/components/activity/ActivityChartController.vue';
@@ -394,12 +385,11 @@ export default Vue.extend({
     id: String,
   },
   setup(props, { root }) {
+    const appView = core.app.view;
+    const projectView = core.app.projectView;
     const state = reactive({
       error: false,
       loading: false,
-      networkGraphHeight: 'calc(100vh - 48px)',
-      projectId: props.id as string,
-      project: undefined as Project | undefined,
       resizing: false,
       simulationMenu: {
         position: { x: 0, y: 0 },
@@ -417,90 +407,15 @@ export default Vue.extend({
         // http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
         const url: string = root.$route.query.from as string;
         axios.get(url).then((response: any) => {
-          const project = core.app.addProjectTemporary(response.data);
+          const project = appView.addProjectTemporary(response.data);
           root.$router.replace({ path: `/project/${project.id}` });
         });
       } else {
         state.loading = true;
-        core.app.initProject(state.projectId).then(() => {
-          state.project = core.app.project;
-          if (state.project) {
-            updateProjectMode();
-            state.project.network.view.reset();
-            core.app.view.project.state.activityGraph =
-              state.project.network.view.hasPositions()
-                ? core.app.view.project.state.activityGraph
-                : 'abstract';
-            state.loading = false;
-            if (state.project.config.simulateAfterLoad) {
-              state.project.runSimulation();
-            }
-          }
+        projectView.init().then(() => {
+          state.loading = false;
         });
       }
-    };
-
-    /**
-     * Count networks before the current.
-     */
-    const countBefore = () => {
-      return state.project.networkRevisionIdx;
-    };
-
-    /**
-     * Count networks after the current.
-     */
-    const countAfter = () => {
-      return (
-        state.project.networkRevisions.length -
-        state.project.networkRevisionIdx -
-        1
-      );
-    };
-
-    /**
-     * Select view for activity graph.
-     */
-    const selectActivityGraph = (mode: string) => {
-      core.app.view.project.state.activityGraph = mode;
-      core.app.view.project.state.modeIdx = 1;
-    };
-
-    /**
-     * Set height for network graph.
-     */
-    const resizeNetworkGraph = () => {
-      state.networkGraphHeight =
-        core.app.view.project.state.modeIdx === 2
-          ? 'calc(30vh)'
-          : 'calc(100vh - 48px)';
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 1);
-    };
-
-    /**
-     * Update view mode of the project.
-     */
-    const updateProjectMode = () => {
-      if ([0, 2].includes(core.app.view.project.state.modeIdx)) {
-        core.app.view.project.state.toolOpened = core.app.view.project.state
-          .toolOpened
-          ? core.app.view.project.state.modeIdx !== 2
-          : core.app.view.project.state.toolOpened;
-        resizeNetworkGraph();
-      }
-    };
-
-    /**
-     * Select tool for this project.
-     */
-    const selectTool = (tool: any) => {
-      core.app.view.project.state.toolOpened = core.app.view.project.state
-        .toolOpened
-        ? core.app.view.project.state.tool != tool
-        : true;
-      core.app.view.project.state.tool = tool;
     };
 
     /**
@@ -510,13 +425,13 @@ export default Vue.extend({
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();
       const width = window.innerWidth - e.clientX;
-      if (width === core.app.view.project.state.tool['minWidth']) {
+      if (width === projectView.state.tool['minWidth']) {
         return;
       }
-      core.app.view.project.state.tool['width'] =
-        width > core.app.view.project.state.tool['minWidth']
+      projectView.state.tool['width'] =
+        width > projectView.state.tool['minWidth']
           ? width
-          : core.app.view.project.state.tool['minWidth'];
+          : projectView.state.tool['minWidth'];
       window.dispatchEvent(new Event('resize'));
     };
 
@@ -540,34 +455,30 @@ export default Vue.extend({
     };
 
     onMounted(() => {
-      state.projectId = props.id as string;
+      projectView.state.projectId = props.id as string;
       loadProject();
     });
 
     watch(
       () => props.id,
       (id: string) => {
-        state.projectId = id;
+        projectView.state.projectId = id;
         loadProject();
       }
     );
 
     return {
-      core,
-      countAfter,
-      countBefore,
+      appView,
+      projectView,
       resizeSidebar,
-      selectActivityGraph,
-      selectTool,
       state,
-      updateProjectMode,
     };
   },
 });
 </script>
 
 <style>
-.project-container .nav-item-right {
+.projectView .nav-item-right {
   text-align: center;
   width: 100%;
   font-size: 9px;

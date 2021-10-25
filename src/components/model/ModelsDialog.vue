@@ -1,13 +1,13 @@
 <template>
-  <div class="ProjectsDialog">
+  <div class="ModelsDialog">
     <v-dialog v-model="appView.state.dialog.open" max-width="1024">
       <span v-if="appView.state.dialog.action === 'import'">
-        <ProjectsImport />
+        <ModelsImport />
       </span>
       <span v-else>
         <v-card>
           <v-card-title
-            v-text="`Select projects to ${appView.state.dialog.action}.`"
+            v-text="`Select models to ${appView.state.dialog.action}.`"
             v-if="appView.state.dialog.content.length !== 0"
           />
 
@@ -16,46 +16,25 @@
               <template #default>
                 <thead>
                   <tr>
-                    <th v-text="'Project name'" />
-                    <th v-text="'Created at'" />
+                    <th v-text="'Model name'" />
+                    <th v-text="'Element type'" />
                     <th class="text-center" v-text="'Selected'" />
-                    <th
-                      class="text-center"
-                      v-if="appView.state.dialog.action === 'export'"
-                      v-text="'Activities'"
-                    />
                   </tr>
                 </thead>
                 <tbody>
                   <tr
                     :key="index"
-                    v-for="(project, index) in appView.state.dialog.content"
+                    v-for="(model, index) in appView.state.dialog.content"
                   >
-                    <td v-text="project.name" />
-                    <td v-text="new Date(project.createdAt).toLocaleString()" />
+                    <td v-text="model.label" />
+                    <td v-text="model.elementType" />
                     <td class="text-center">
                       <v-checkbox
                         class="my-0 mx-auto"
-                        color="project"
+                        color="model"
                         hide-details
-                        v-model="project.state.selected"
+                        v-model="model.state.selected"
                       />
-                    </td>
-                    <td v-if="appView.state.dialog.action === 'export'">
-                      <v-row>
-                        <v-col class="py-4" cols="4">
-                          <ActivityGraphIcon :project="project" small />
-                        </v-col>
-                        <v-col cols="4">
-                          <v-checkbox
-                            :disabled="!project.hasActivities"
-                            class="ma-0"
-                            color="project"
-                            hide-details
-                            v-model="project.state.withActivities"
-                          />
-                        </v-col>
-                      </v-row>
                     </td>
                   </tr>
                 </tbody>
@@ -76,7 +55,7 @@
               :disabled="
                 !appView.state.dialog.content.some(p => p.state.selected)
               "
-              @click="exportProjects"
+              @click="exportModels"
               outlined
               small
               v-if="appView.state.dialog.action === 'export'"
@@ -88,7 +67,7 @@
               :disabled="
                 !appView.state.dialog.content.some(p => p.state.selected)
               "
-              @click="deleteProjects"
+              @click="deleteModels"
               outlined
               small
               v-if="appView.state.dialog.action === 'delete'"
@@ -106,50 +85,48 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import { Project } from '@/core/project/project';
+import { Model } from '@/core/model/model';
 import core from '@/core';
-import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
-import ProjectsImport from '@/components/project/ProjectsImport.vue';
+import ModelsImport from '@/components/model/ModelsImport.vue';
 
 export default Vue.extend({
-  name: 'ProjectsDialog',
+  name: 'ModelsDialog',
   components: {
-    ActivityGraphIcon,
-    ProjectsImport,
+    ModelsImport,
   },
   setup() {
     const appView = core.app.view;
 
     /**
-     * Export projects.
+     * Export models.
      */
-    const exportProjects = () => {
-      const selectedProjects: Project[] = appView.state.dialog.content.filter(
-        (project: Project) => project.state.selected
+    const exportModels = () => {
+      const selectedModels: Model[] = appView.state.dialog.content.filter(
+        (model: Model) => model.state.selected
       );
-      if (selectedProjects.length > 0) {
-        appView.exportProjects(selectedProjects);
+      if (selectedModels.length > 0) {
+        appView.exportModels(selectedModels);
       }
       appView.state.dialog.open = false;
     };
 
     /**
-     * Delete projects.
+     * Delete models.
      */
-    const deleteProjects = () => {
-      const selectedProjects: Project[] = appView.state.dialog.content.filter(
-        (project: Project) => project.state.selected
+    const deleteModels = () => {
+      const selectedModels: Model[] = appView.state.dialog.content.filter(
+        (model: Model) => model.state.selected
       );
-      if (selectedProjects.length > 0) {
-        appView.deleteProjects(selectedProjects);
+      if (selectedModels.length > 0) {
+        appView.deleteModels(selectedModels);
       }
       appView.state.dialog.open = false;
     };
 
     return {
       appView,
-      exportProjects,
-      deleteProjects,
+      exportModels,
+      deleteModels,
     };
   },
 });

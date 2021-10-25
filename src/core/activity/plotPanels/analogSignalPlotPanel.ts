@@ -245,7 +245,7 @@ export class AnalogSignalPlotPanel extends ActivityGraphPanel {
       const data: any = this.data.filter(
         (d: any) => d.activityIdx === activity.idx && d.class !== 'background'
       );
-      if (data.length == 0) {
+      if (data.length === 0) {
         return;
       }
       data.forEach((d: any) => {

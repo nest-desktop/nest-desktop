@@ -101,7 +101,7 @@ export class NetworkView {
    * Check if an element type is selected.
    */
   isElementTypeSelected(elementType: string): boolean {
-    if (this._selectedElementType === null) {
+    if (this._selectedElementType == null) {
       return true;
     }
     return this._selectedElementType === elementType;

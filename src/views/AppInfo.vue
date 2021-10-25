@@ -1,5 +1,5 @@
 <template>
-  <div class="nd-info">
+  <div class="appInfo">
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -160,7 +160,7 @@ import core from '@/core';
 import NESTDesktopVersionInfo from '@/components/NESTDesktopVersionInfo.vue';
 
 export default Vue.extend({
-  name: 'Info',
+  name: 'AppInfo',
   components: {
     NESTDesktopVersionInfo,
   },
@@ -168,6 +168,7 @@ export default Vue.extend({
     includeProjectButtons: Boolean,
   },
   setup(props) {
+    const appView = core.app.view;
     const references = [
       {
         color: 'rgba(178, 245, 23, 0.05)',
@@ -196,7 +197,7 @@ export default Vue.extend({
     ];
     const state = reactive({
       includeProjectButtons: props.includeProjectButtons,
-      projects: core.app.projects,
+      projects: [],
       year: 2021,
     });
 
@@ -206,7 +207,7 @@ export default Vue.extend({
 
     watch(
       () => [props.includeProjectButtons],
-      includeProjectButtons => {
+      () => {
         state.includeProjectButtons = props.includeProjectButtons as boolean;
       }
     );
@@ -215,7 +216,7 @@ export default Vue.extend({
      * Load projects from app core component
      */
     const loadProjects = () => {
-      state.projects = core.app.projects;
+      state.projects = appView.state.projects;
     };
 
     return { loadProjects, references, state };
@@ -224,14 +225,14 @@ export default Vue.extend({
 </script>
 
 <style>
-.nd-info .logo {
+.appInfo .logo {
   overflow: hidden;
 }
-.nd-info .logo .v-image {
+.appInfo .logo .v-image {
   transition: all 0.5s ease-in-out;
   transform: scale(1);
 }
-.nd-info .logo:hover .v-image {
+.appInfo .logo:hover .v-image {
   transform: scale(1.5);
 }
 </style>

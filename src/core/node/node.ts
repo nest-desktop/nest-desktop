@@ -70,7 +70,7 @@ export class Node extends Config {
   }
 
   get model(): Model {
-    return this._network.project.app.getModel(this._modelId);
+    return this._network.project.app.view.getModel(this._modelId);
   }
 
   /**
@@ -87,7 +87,7 @@ export class Node extends Config {
 
   get models(): Model[] {
     const elementType: string = this.model.elementType;
-    return this._network.project.app.filterModels(elementType);
+    return this._network.project.app.view.filterModels(elementType);
   }
 
   get modelId(): string {
@@ -106,7 +106,6 @@ export class Node extends Config {
   set modelId(value: string) {
     // console.log('Set Model');
     this._modelId = value;
-    this._size = 1;
     this.initParameters();
     this._network.clean();
     this.initActivity();

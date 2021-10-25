@@ -122,7 +122,7 @@ export class Network extends Config {
     // and the view mode is activity explorer.
     if (
       this._project.config.simulateAfterChange &&
-      this._project.view.modeIdx === 1
+      this._project.app.projectView.state.modeIdx === 1
     ) {
       setTimeout(() => this._project.runSimulation(), 1);
     }

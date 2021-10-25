@@ -133,7 +133,7 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
         }
       }
       // const pos: any = object.userData.position;
-      // if (trailIdx === null) {
+      // if (trailIdx == null) {
       //   object.position.setY(pos.y);
       // } else {
       //   object.position.setY(pos.y - ratio / 2);

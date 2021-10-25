@@ -129,16 +129,16 @@ export class Activity {
   }
 
   /**
-   * Download activity (node indices, positions and events).
+   * Export activity (node indices, positions and events).
    */
-  download(): void {
+  export(): void {
     this._recorder.network.project.app.download(this, 'activity');
   }
 
   /**
-   * Download events.
+   * Export events.
    */
-  downloadEvents(): void {
+  exportEvents(): void {
     this._recorder.network.project.app.download(this._events, 'events');
   }
 

@@ -1,3 +1,6 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+import { v4 as uuidv4 } from 'uuid';
+
 import { App } from '../app';
 import { Config } from '../config';
 import { ModelCode } from './modelCode';
@@ -16,28 +19,28 @@ export class Model extends Config {
   private _idx: number; // generative
   private _label: string; // model label for view
   private _params: ModelParameter[] = []; // model parameters
-  private _recordables: any[]; // recordables for multimeter
+  private _recordables: any[] = []; // recordables for multimeter
+  private _state: UnwrapRef<any>;
 
-  constructor(app: App, model: any) {
+  constructor(app: App, model: any = {}) {
     super('Model');
     this._app = app;
     this._code = new ModelCode(this);
 
-    this._doc = model;
-    this._id = model.id;
-    this._idx = this.app.models.length;
+    this._doc = model || {};
+    this._id = model.id || uuidv4();
+    this._idx = this.app.view.state.models.length;
+
     this._elementType =
       model.elementType !== undefined ? model.elementType : model.element_type;
     this._existing = model.existing || model.id;
 
     this._label = model.label || '';
     this._abbreviation = model.abbreviation;
-    model.params.forEach((param: any) => this.addParameter(param));
-    this._recordables = model.recordables
-      ? this.config.recordables.filter((recordable: any) =>
-          model.recordables.includes(recordable.id)
-        )
-      : [];
+    this.update(model);
+    this._state = reactive({
+      selected: false,
+    });
   }
 
   get abbreviation(): string {
@@ -50,6 +53,10 @@ export class Model extends Config {
 
   get code(): ModelCode {
     return this._code;
+  }
+
+  get doc(): any {
+    return this._doc;
   }
 
   get elementType(): string {
@@ -88,20 +95,35 @@ export class Model extends Config {
     return this._recordables;
   }
 
+  get state(): UnwrapRef<any> {
+    return this._state;
+  }
+
   get value(): string {
     return this.id;
   }
 
   /**
-   * Get defaults of the model from NEST Simulator.
+   * Get parameter defaults of a model from NEST Simulator.
    */
-  fetchDefaults(): Promise<any> {
+  async fetchDefaults(): Promise<any> {
     return this.app.NESTSimulator.httpClient.post(
       this.app.NESTSimulator.url + '/api/GetDefaults',
       {
         model: this._id,
       }
     );
+  }
+
+  /**
+   * Update recordables from the config.
+   */
+  updateRecordables(model: any): void {
+    if ('recordables' in model) {
+      this._recordables = this.config.recordables.filter((recordable: any) =>
+        model.recordables.includes(recordable.id)
+      );
+    }
   }
 
   /**
@@ -151,6 +173,21 @@ export class Model extends Config {
   /**
    * Update parameter.
    */
+  update(model: any): void {
+    this._id = model.id;
+    this.updateRecordables(model);
+    model.params.forEach((param: any) => {
+      if (this.getParameter(param.id)) {
+        this.updateParameter(param);
+      } else {
+        this.addParameter(param);
+      }
+    });
+  }
+
+  /**
+   * Update parameter.
+   */
   updateParameter(param: any): void {
     const idx: number = this._params
       .map((p: ModelParameter) => p.id)
@@ -164,7 +201,7 @@ export class Model extends Config {
    * Clean model index.
    */
   clean(): void {
-    this._idx = this._app.models.indexOf(this);
+    this._idx = this._app.view.state.models.indexOf(this);
   }
 
   /**
@@ -196,17 +233,24 @@ export class Model extends Config {
   }
 
   /**
+   * Reset state of this model.
+   */
+  resetState(): void {
+    this._state.selected = false;
+  }
+
+  /**
    * Delete model object from model list in app.
    */
-  delete(): Promise<any> {
+  async delete(): Promise<any> {
     return this._app.deleteModel(this._doc._id);
   }
 
   /**
-   * Save model object to list and to database.
+   * Save model object to the database.
    */
-  save(): Promise<any> {
-    return this._app.saveModel(this);
+  async save(): Promise<any> {
+    return this._app.importModel(this);
   }
 
   /**

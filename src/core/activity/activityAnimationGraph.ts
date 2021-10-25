@@ -299,7 +299,7 @@ export class ActivityAnimationGraph {
    */
   updateFrames(activity: Activity): void {
     const events: any = JSON.parse(JSON.stringify(activity.events));
-    if (events.senders === undefined) {
+    if (events.senders == undefined) {
       return;
     }
 
@@ -335,7 +335,7 @@ export class ActivityAnimationGraph {
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);
       const frame: any = this._frames[frameIdx - 1];
-      if (frame === undefined) {
+      if (frame == undefined) {
         return;
       }
       const data: any = frame.data[activity.idx];

@@ -1,9 +1,20 @@
 <template>
   <div class="navigation">
-    <ProjectsMenu
-      :position="state.projectsMenu.position"
-      v-if="state.projectsMenu.show"
-    />
+    <span v-if="appView.state.dialog.open">
+      <ProjectsDialog v-if="appView.state.dialog.source === 'project'" />
+      <ModelsDialog v-else-if="appView.state.dialog.source === 'model'" />
+    </span>
+
+    <span v-if="state.menu.show">
+      <ProjectsMenu
+        :position="state.menu.position"
+        v-if="state.menu.content === 'project'"
+      />
+      <ModelsMenu
+        :position="state.menu.position"
+        v-else-if="state.menu.content === 'model'"
+      />
+    </span>
 
     <v-navigation-drawer
       :miniVariant="state.miniVariant"
@@ -62,7 +73,7 @@
               <v-spacer />
 
               <v-list nav>
-                <template v-if="state.app.config.devMode">
+                <template v-if="appView.app.config.devMode">
                   <v-tooltip right>
                     <template #activator="{ on, attrs }">
                       <v-list-item v-bind="attrs" v-on="on">
@@ -128,7 +139,7 @@
             </div>
           </v-navigation-drawer>
 
-          <div style="padding-left: 64px">
+          <div style="padding-left: 64px; width: 100%">
             <ProjectNavList v-if="state.navList === 'project'" />
             <ModelNavList v-if="state.navList === 'model'" />
           </div>
@@ -140,29 +151,36 @@
 
 <script lang="ts">
 import { reactive } from '@vue/composition-api';
+import VueRouter, { Route } from 'vue-router';
 
 import core from '@/core';
 
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
+import ModelsDialog from '@/components/model/ModelsDialog.vue';
+import ModelsMenu from '@/components/model/ModelsMenu.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
+import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
 import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
-import VueRouter, { Route } from 'vue-router';
 
 export default {
   name: 'Navigation',
   components: {
     ModelNavList,
+    ModelsDialog,
+    ModelsMenu,
     ProjectNavList,
+    ProjectsDialog,
     ProjectsMenu,
   },
   setup() {
+    const appView = core.app.view;
     const state = reactive({
-      app: core.app,
       dialog: false,
       miniVariant: true,
       navList: '',
       pinNav: core.app.config.pinNav,
-      projectsMenu: {
+      menu: {
+        content: '',
         position: { x: 0, y: 0 },
         show: false,
       },
@@ -202,11 +220,11 @@ export default {
         if (
           recentProjectId == undefined ||
           recentProjectId.length <= 0 ||
-          state.app.view.filteredProjects.filter(
-            project => project.id == recentProjectId
+          appView.filteredProjects.filter(
+            project => project.id === recentProjectId
           ).length <= 0
         ) {
-          recentProjectId = state.app.view.filteredProjects[0].id;
+          recentProjectId = appView.filteredProjects[0].id;
         }
         router.push({
           name: 'ProjectId',
@@ -241,16 +259,17 @@ export default {
     }
 
     /**
-     * Show project menu.
+     * Show menu.
      */
-    const showProjectsMenu = (e: MouseEvent) => {
+    const showMenu = (e: MouseEvent, content: string = 'project') => {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
-      state.projectsMenu.show = false;
-      state.projectsMenu.position.x = e.clientX;
-      state.projectsMenu.position.y = e.clientY;
+      state.menu.show = false;
+      state.menu.position.x = e.clientX;
+      state.menu.position.y = e.clientY;
+      state.menu.content = content;
       setTimeout(() => {
-        state.projectsMenu.show = true;
+        state.menu.show = true;
       }, 1);
     };
 
@@ -279,16 +298,16 @@ export default {
       {
         id: 'project',
         color: 'project darken1',
+        contextmenu: (e: MouseEvent) => showMenu(e, 'project'),
         icon: 'mdi-brain',
         title: 'Projects',
-        contextmenu: showProjectsMenu,
       },
       {
         id: 'model',
         color: 'model darken1',
+        contextmenu: (e: MouseEvent) => showMenu(e, 'model'),
         icon: 'mdi-square-root',
         title: 'Models',
-        contextmenu: () => {},
       },
     ];
 
@@ -326,9 +345,11 @@ export default {
     };
 
     return {
+      appView,
       reset,
       resizeSidebar,
       routes,
+      showMenu,
       state,
       toggle,
       updatePageContent,

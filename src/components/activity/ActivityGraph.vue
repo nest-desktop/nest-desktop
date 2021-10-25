@@ -102,12 +102,12 @@
           :scrollZoom="true"
           :toImageButtonOptions="state.toImageButtonOptions"
           style="position: relative; width: 100%; height: calc(100vh - 48px)"
-          v-if="state.view == 'abstract'"
+          v-if="state.view === 'abstract'"
         />
 
         <ActivityAnimationGraph
           :graph="state.graph.activityAnimationGraph"
-          v-if="state.view == 'spatial'"
+          v-if="state.view === 'spatial'"
         />
       </div>
     </transition>
@@ -147,8 +147,9 @@ import { reactive, onMounted, watch } from '@vue/composition-api';
 import { Plotly } from 'vue-plotly';
 import * as PlotlyJS from 'plotly.js-dist-min';
 
-import ActivityAnimationGraph from '@/components/activity/ActivityAnimationGraph.vue';
 import { ActivityGraph } from '@/core/activity/activityGraph';
+import ActivityAnimationGraph from '@/components/activity/ActivityAnimationGraph.vue';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ActivityGraph',
@@ -163,6 +164,7 @@ export default Vue.extend({
     view: String,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const state = reactive({
       dialog: false,
       gd: undefined,
@@ -181,7 +183,7 @@ export default Vue.extend({
         // scale: 1, // Multiply title/legend/axis/canvas sizes by this factor
         // width: 800,
       },
-      view: props.view,
+      view: props.view || 'abstract',
       modeBarButtons: [
         [
           {
@@ -215,7 +217,7 @@ export default Vue.extend({
      */
     const update = () => {
       state.loading = true;
-      state.view = props.view;
+      state.view = props.view || 'abstract';
       state.graph = props.graph as ActivityGraph;
       if (state.view === 'abstract') {
         state.loading = false;
@@ -232,27 +234,26 @@ export default Vue.extend({
      */
     const showHelp = () => {
       state.snackbar.show = false;
-      if (!state.graph.project.config.showHelp) {
+      if (
+        !state.graph.project.config.showHelp &&
+        state.graph.project.simulation.running
+      ) {
         return;
       }
       if (!state.graph.project.hasActivities) {
         showSnackbar('No activity found. Please simulate.', [
           {
             text: 'Simulate',
-            onClick: () => {
-              simulate();
-            },
+            onClick: () => state.graph.project.runSimulation(),
           },
         ]);
-      } else if (state.graph.project.code.hash !== state.graph.codeHash) {
+      } else if (state.graph.codeHash !== state.graph.project.code.hash) {
         showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
           [
             {
               text: 'Simulate',
-              onClick: () => {
-                simulate();
-              },
+              onClick: () => state.graph.project.runSimulation(),
             },
           ]
         );
@@ -268,13 +269,9 @@ export default Vue.extend({
       state.snackbar.show = true;
     };
 
-    const simulate = () => {
-      state.graph.project.runSimulation();
-    };
-
     onMounted(() => {
       update();
-      showHelp();
+      setTimeout(() => showHelp(), 100);
     });
 
     watch(
@@ -284,12 +281,12 @@ export default Vue.extend({
           update();
         }
         if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
-          showHelp();
+          setTimeout(() => showHelp(), 100);
         }
       }
     );
 
-    return { downloadImage, state };
+    return { projectView, downloadImage, state };
   },
 });
 </script>

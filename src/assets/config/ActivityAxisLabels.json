@@ -124,7 +124,7 @@
   {
     "id": "rate",
     "label": "firing rate",
-    "unit": "spikes/sec"
+    "unit": "spikes/s"
   },
   {
     "id": "spike_count",
@@ -142,6 +142,12 @@
     "abbr": "ts",
     "label": "time",
     "unit": "ms"
+  },
+  {
+    "abbr": "V_th",
+    "id": "V_th",
+    "label": "spike threshold",
+    "unit": "mV"
   },
   {
     "abbr": "V_m",
@@ -172,15 +178,5 @@
     "id": "V_th",
     "label": "spike threshold",
     "unit": "mV"
-  },
-  {
-    "id": "weighted_spikes_ex",
-    "abbr": "w_spikes_ex",
-    "label": "weighted incoming excitatory spikes"
-  },
-  {
-    "id": "weighted_spikes_in",
-    "abbr": "w_spikes_in",
-    "label": "weighted incoming inhibitory spikes"
   }
 ]

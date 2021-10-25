@@ -79,7 +79,9 @@ function upgradeNetwork(app: App, project: any): any {
     const synapse: any = {
       params: [],
     };
-    const synModel: Model = app.getModel(synapse.model || 'static_synapse');
+    const synModel: Model = app.view.getModel(
+      synapse.model || 'static_synapse'
+    );
     if (simLink.hasOwnProperty('syn_spec')) {
       synModel.params.forEach((modelParam: any) => {
         const simParam: any = simLink.syn_spec[modelParam.id];

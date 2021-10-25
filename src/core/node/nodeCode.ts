@@ -55,7 +55,7 @@ export class NodeCode extends Code {
    */
   nodeParams(): string {
     let script = '';
-    if (this._node.params === undefined || this._node.params.length === 0) {
+    if (this._node.params == undefined || this._node.params.length === 0) {
       return script;
     }
 

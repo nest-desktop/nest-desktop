@@ -16,7 +16,7 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
   }
 
   renderScatter(data: any, options: any = {}): void {
-    if (data === undefined) {
+    if (data == undefined) {
       return;
     }
 

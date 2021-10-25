@@ -26,8 +26,8 @@
         <template #[`body.append`]="{ headers }">
           <tr>
             <td v-for="(header, i) in headers" :key="i">
-              <div v-if="header.value == 'id'" v-text="'All'" />
-              <div v-else-if="header.value == 'count'">
+              <div v-if="header.value === 'id'" v-text="'All'" />
+              <div v-else-if="header.value === 'count'">
                 <span>&#931;</span>
                 = {{ sum(header.value) }}
               </div>

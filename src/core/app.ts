@@ -1,10 +1,13 @@
-import { Activity } from './activity/activity';
+import axios from 'axios';
+
 import { AppView } from './appView';
 import { Config } from './config';
 import { DatabaseService } from './database';
 import { Model } from './model/model';
+import { ModelView } from './model/modelView';
 import { NESTSimulator } from './backends/nestSimulator';
 import { Project } from './project/project';
+import { ProjectView } from './project/projectView';
 
 import { environment } from '../environments/environment';
 
@@ -18,12 +21,10 @@ const pad = (num: number, size: number = 2): string => {
 
 export class App extends Config {
   private _modelDB: DatabaseService;
-  private _models: Model[] = [];
+  private _modelView: ModelView;
   private _NESTSimulator: NESTSimulator;
-  private _project: Project;
   private _projectDB: DatabaseService;
-  private _projectRevisions: Project[] = [];
-  private _projects: Project[] = [];
+  private _projectView: ProjectView;
   private _ready = false;
   private _version: string;
   private _view: AppView;
@@ -31,8 +32,16 @@ export class App extends Config {
   constructor() {
     super('App');
     this._version = environment.VERSION;
-    this._view = new AppView(this);
     this._NESTSimulator = new NESTSimulator();
+
+    // Initialize databases
+    this._projectDB = new DatabaseService(this, 'PROJECT_STORE');
+    this._modelDB = new DatabaseService(this, 'MODEL_STORE');
+
+    // Initialize views
+    this._view = new AppView(this);
+    this._projectView = new ProjectView(this);
+    this._modelView = new ModelView(this);
   }
 
   get datetime(): string {
@@ -51,12 +60,12 @@ export class App extends Config {
     return datetime;
   }
 
-  get models(): Model[] {
-    return this._models;
-  }
-
   get modelDB(): DatabaseService {
     return this._modelDB;
+  }
+
+  get modelView(): ModelView {
+    return this._modelView;
   }
 
   get NESTSimulator(): NESTSimulator {
@@ -67,24 +76,12 @@ export class App extends Config {
     return this._ready;
   }
 
-  get project(): Project {
-    return this._project;
-  }
-
-  get projects(): Project[] {
-    return this._projects;
-  }
-
-  set projects(values: Project[]) {
-    this._projects = values;
-  }
-
   get projectDB(): DatabaseService {
     return this._projectDB;
   }
 
-  get projectRevisions(): Project[] {
-    return this._projectRevisions;
+  get projectView(): ProjectView {
+    return this._projectView;
   }
 
   get version(): string {
@@ -95,12 +92,16 @@ export class App extends Config {
     return this._view;
   }
 
-  init(): Promise<any> {
-    this._project = new Project(this);
+  async init(): Promise<any> {
     this._ready = false;
-    return this.initModels().then(() =>
-      this.initProjects().then(() => (this._ready = true))
-    );
+    let promise: Promise<void> = Promise.resolve();
+    promise = promise.then(() => this.initModels());
+    promise = promise.then(() => this.initProjects());
+    promise = promise.then(() => {
+      this.view.init();
+      this._ready = true;
+    });
+    return promise;
   }
 
   /*
@@ -118,108 +119,161 @@ export class App extends Config {
     return this._modelDB.isValid() && this._projectDB.isValid();
   }
 
-  isDataReady(): boolean {
-    return this._models.length > 0 && this._projects.length > 0;
-  }
-
-  resetDatabases(): void {
+  async resetDatabases(): Promise<void> {
     this._ready = false;
-    this.resetModelDatabase().then(() =>
-      this.resetProjectDatabase().then(() => (this._ready = true))
-    );
+    let promise: Promise<void> = Promise.resolve();
+    promise = promise.then(() => this.resetModelDatabase());
+    promise = promise.then(() => this.resetProjectDatabase());
+    promise = promise.then(() => {
+      this.view.init();
+      this._ready = true;
+    });
+    return promise;
   }
 
-  resetModelDatabase(): Promise<any> {
-    this._models = [];
-    return this._modelDB.destroy().then(() => this.initModels());
+  async resetModelDatabase(): Promise<any> {
+    return this._modelDB.destroy().then(() => {
+      this._modelDB = new DatabaseService(this, 'MODEL_STORE');
+      this.initModels();
+    });
   }
 
-  resetProjectDatabase(): Promise<any> {
-    this._project = new Project(this);
-    this._projects = [];
-    return this._projectDB.destroy().then(() => this.initProjects());
+  async resetProjectDatabase(): Promise<any> {
+    return this._projectDB.destroy().then(() => {
+      this._projectDB = new DatabaseService(this, 'PROJECT_STORE');
+      this.initProjects();
+    });
   }
 
   /*
   Models
   */
 
-  initModels(): Promise<any> {
+  /**
+   * Initialize models.
+   *
+   * @Remarks
+   * It imports models from assets when database is empty.
+   */
+  async initModels(): Promise<any> {
     // console.log('Initialize models');
-    this._models = [];
-    this._modelDB = new DatabaseService(this, 'MODEL_STORE');
-    return this._modelDB.count().then((count: number) => {
+    return this.modelDB.count().then((count: number) => {
       // console.log('Models in db:', count);
       if (count === 0) {
-        return this.loadModelsFromFiles().then(() => this.initModels());
+        return this.importModelsFromAssets().then(() => this.initModels());
       } else {
-        return this.updateModels();
+        return this._view.updateModels();
       }
     });
   }
 
-  loadModelsFromFiles(): Promise<any> {
-    // console.log('Load models from files');
+  /**
+   * Add models to list and database.
+   */
+  async addModels(data: any[]): Promise<any> {
+    // console.log('Add models');
+    const models: any[] = data.map(
+      (model: any) =>
+        new Promise<any>(resolve => {
+          this.addModel(model).then(() => {
+            resolve(model);
+          });
+        })
+    );
+    return Promise.all(models);
+  }
+
+  /**
+   * Import models from assets.
+   */
+  async importModelsFromAssets(): Promise<any> {
+    // console.log('Import models from assets');
     let promise: Promise<any> = Promise.resolve();
     this.config.models.forEach((file: string) => {
-      console.log('Load model from file:', file);
+      // console.log('Import model from assets:', file);
       const data: any = require('../assets/models/' + file + '.json');
       promise = promise.then(() => this.addModel(data));
     });
     return promise;
   }
 
-  filterModels(elementType: string = null): Model[] {
-    if (elementType === null) {
-      return this._models;
-    }
-    return this._models.filter(
-      (model: Model) => model.elementType === elementType
-    );
-  }
-
-  updateModels(): Promise<any> {
-    return this._modelDB.list('id').then((models: any[]) =>
-      models.forEach((model: any) => {
-        this._models.push(new Model(this, model));
-      })
-    );
+  /**
+   * Delete models from database and then update the model list.
+   */
+  async deleteModels(modelIds: string[]): Promise<any> {
+    return this._modelDB.deleteBulk(modelIds).then(this._view.updateModels());
   }
 
   /*
   Model
   */
 
-  addModel(data: any): Promise<any> {
+  /**
+   * Add a model to the database.
+   */
+  async addModel(data: any): Promise<any> {
     // console.log('Add model:', data.id);
     const model: Model = new Model(this, data);
     return this._modelDB.create(model);
   }
 
-  deleteModel(docId: string): Promise<any> {
+  /**
+   * Delete a model in the database.
+   */
+  async deleteModel(docId: string): Promise<any> {
     return this._modelDB.delete(docId);
   }
 
-  getModel(modelId: string): Model {
-    return (
-      this._models.find((model: Model) => model.id === modelId) ||
-      new Model(this, { id: modelId, params: [] })
+  /**
+   * Import a model to the database.
+   */
+  async importModel(data: any): Promise<any> {
+    // console.log('Import model:', data.id);
+    let promise: Promise<any>;
+    if (this._view.hasModel(data.id)) {
+      const model: Model = this._view.getModel(data.id);
+      model.update(data);
+      promise = this.updateModel(model);
+    } else {
+      promise = this.addModel(data);
+    }
+    return promise.then(() => this._view.updateModels());
+    // const promise: Promise<any> = this.hasModel(data.id)
+    //   ? this.updateModel(new Model(this, data))
+    //   : this.addModel(data);
+    // return promise.then(() => this.updateModels());
+  }
+
+  /**
+   * Import model from GitHub.
+   */
+  async importModelFromGithub(modelId: string = ''): Promise<any> {
+    const path: string = this._view.state.model.filesGithub.find(
+      (file: string) =>
+        file.includes('/' + (modelId || this.modelView.state.modelId))
     );
+    if (path == undefined) {
+      return;
+    }
+    const url =
+      'https://raw.githubusercontent.com/nest-desktop/nest-desktop-models/main/';
+    return axios.get(url + path).then((response: any) => {
+      if (response.status === 200) {
+        this.importModel(response.data).then(() => {
+          if (response.data.id === this.modelView.state.modelId) {
+            this.modelView.reloadModel();
+          }
+        });
+      }
+    });
   }
 
-  hasModel(modelId: string): boolean {
-    return (
-      this._models.find((model: Model) => model.id === modelId) !== undefined
-    );
-  }
-
-  saveModel(model: Model): Promise<any> {
-    return this._modelDB.update(model);
-  }
-
-  initProjectFromAssets(filename: string): Project {
-    const data: any = require(`../assets/projects/${filename}.json`);
-    return new Project(this, data);
+  /**
+   * Update a model in the database.
+   */
+  async updateModel(data: any): Promise<any> {
+    // console.log('Update model:', data.id);
+    return this._modelDB.update(data);
   }
 
   /*
@@ -227,9 +281,24 @@ export class App extends Config {
   */
 
   /**
-   * Add projects to list and database.
+   * Initialize project list either updating list from the database or importing from files.
    */
-  addProjects(data: any[]): Promise<any> {
+  async initProjects(): Promise<any> {
+    // console.log('Initialize projects');
+    return this.projectDB.count().then((count: number) => {
+      // console.log('Projects in db:', count);
+      if (count === 0) {
+        return this.importProjectsFromAssets().then(() => this.initProjects());
+      } else {
+        return this._view.updateProjects();
+      }
+    });
+  }
+
+  /**
+   * Add projects to the database.
+   */
+  async addProjects(data: any[]): Promise<any> {
     // console.log('Add projects');
     const projects: any[] = data.map(
       (project: any) =>
@@ -245,216 +314,75 @@ export class App extends Config {
   /**
    * Delete projects from database and then update the list.
    */
-  deleteProjects(projectIds: string[]): Promise<any> {
-    return this._projectDB.deleteBulk(projectIds).then(this.updateProjects());
+  async deleteProjects(projectIds: string[]): Promise<any> {
+    return this._projectDB
+      .deleteBulk(projectIds)
+      .then(this._view.updateProjects());
   }
 
   /**
-   * Initialize project list either from database or from files.
+   * Import projects from assets to the database.
    */
-  initProjects(): Promise<any> {
-    // console.log('Initialize projects');
-    this._projects = [];
-    this._projectRevisions = [];
-    this._projectDB = new DatabaseService(this, 'PROJECT_STORE');
-    return this._projectDB.count().then((count: number) => {
-      // console.log('Projects in db:', count);
-      if (count > 0) {
-        return this.updateProjects();
-      } else {
-        return this.loadProjectsFromFiles();
-      }
-    });
-  }
-
-  /**
-   * Load projects from files and adds them to list and database.
-   */
-  loadProjectsFromFiles(): Promise<any> {
-    // console.log('Load projects from files');
+  async importProjectsFromAssets(): Promise<any> {
+    // console.log('Import projects from assets');
     let promise: Promise<any> = Promise.resolve();
     this.config.projects.forEach((file: string) => {
-      // console.log('Load project from file:', file);
+      // console.log('Import project from assets:', file);
       const data: any = require('../assets/projects/' + file + '.json');
       promise = promise.then(() => this.addProject(data));
     });
     return promise;
   }
 
-  /**
-   * Load projects from database and then update list.
-   */
-  updateProjects(): Promise<any> {
-    return this._projectDB.list('createdAt', true).then((projects: any[]) => {
-      this._projects = projects.map(
-        (project: any) => new Project(this, project)
-      );
-    });
-  }
-
-  /**
-   * Load project revision from database and then update revision list.
-   */
-  updateProjectRevisions(id: string = null): Promise<any> {
-    this._projectRevisions = [];
-    if (id === null) {
-      return;
-    }
-    return this._projectDB
-      .revisions(id)
-      .then((revIds: string[]) =>
-        revIds.forEach((rev: string) =>
-          this._projectDB
-            .read(id, rev)
-            .then((doc: any) =>
-              this._projectRevisions.push(new Project(this, doc))
-            )
-        )
-      );
-  }
-
   /*
-  Current project
-  */
-  getProject(projectId: string): Project {
-    return (
-      this._projects.find((project: Project) => project.id === projectId) ||
-      new Project(this)
-    );
-  }
+   * Project
+   */
 
   /**
-   * Add project to list and database.
+   * Add project to the database.
    */
-  addProject(data: any): Promise<any> {
+  async addProject(data: any): Promise<any> {
     // console.log('Add project:', data.name);
     const project: Project = new Project(this, data);
-    this._projects.unshift(project);
     return this._projectDB.create(project);
   }
 
-  /**
-   * Add project to list.
+  /*
+   * Import a project from the asset file.
    */
-  addProjectTemporary(data: any): Project {
-    // console.log('Add project:', data.name);
-    const project: Project = new Project(this, data);
-    this._projects.unshift(project);
-    return project;
+  loadProjectFromFile(filename: string): Project {
+    const data: any = require(`../assets/projects/${filename}.json`);
+    return new Project(this, data);
   }
 
   /**
-   * Delete project in database and remove it from the list.
+   * Delete project in database and then update the list.
    */
-  deleteProject(projectId: string): Promise<any> {
+  async deleteProject(projectId: string): Promise<any> {
     // console.log('Delete project:', projectId);
-    return this._projectDB.delete(projectId).then(this.updateProjects());
+    return this._projectDB.delete(projectId).then(this._view.updateProjects());
   }
 
   /**
-   * Download project from the list.
+   * Import the project in the database and then update the list.
    */
-  downloadProject(projectId: string, withActivities: boolean = false): void {
-    // console.log('Download project:', projectId);
-    const project: Project = this._projects.find(
-      (p: Project) => p.id === projectId
-    );
-    const projectData: any = project.toJSON();
-    if (withActivities) {
-      projectData.activities = project.activities.map((activity: Activity) =>
-        activity.toJSON()
-      );
-    }
-    this.download(projectData, 'project');
-  }
-
-  /**
-   * Initialize project or project revision from the list.
-   */
-  initProject(id: string = '', rev: string = ''): Promise<any> {
-    // console.log(`Initialize project: id=${id}, rev=${rev}`);
-    return new Promise<any>((resolve, reject) => {
-      try {
-        if (id && rev) {
-          this._project = this._projectRevisions.find(
-            (project: Project) => project.id === id && project.rev === rev
-          );
-        } else if (id) {
-          this._project = this._projects.find(
-            (project: Project) => project.id === id
-          );
-        } else {
-          this.newProject();
-        }
-        resolve(true);
-      } catch {
-        console.log('Error in project initialization');
-        this.newProject();
-        reject(true);
-      }
-    });
-  }
-
-  /**
-   * Create a new project and add it to the list but not to the database.
-   */
-  newProject(): void {
-    this._project = new Project(this);
-    this.updateProject(this._project);
-  }
-
-  /**
-   * Reload the current project in the list from the database.
-   */
-  reloadProject(project: Project): Promise<any> {
-    return this._projectDB.read(project.id).then((doc: any) => {
-      this._project = new Project(this, doc);
-      const idx: number = this._projects
-        .map((p: Project) => p.id)
-        .indexOf(project.id);
-      this._projects[idx] = this._project;
-    });
-  }
-
-  /**
-   * Save the project in the database and then update the list.
-   */
-  saveProject(project: Project): Promise<any> {
-    console.log('Save project:', project.name);
+  async importProject(project: Project): Promise<any> {
+    // console.log('Save project:', project.name);
     project.clean();
     const promise: Promise<any> = project.id
       ? this._projectDB.update(project)
       : this._projectDB.create(project);
-    return promise.then(() => this.updateProject(this._project));
-  }
-
-  /**
-   * Remove project from the list.
-   */
-  unloadProject(project: Project): void {
-    const idx: number = this._projects
-      .map((p: Project) => p.id)
-      .indexOf(project.id);
-    if (idx !== -1) {
-      this._projects = this._projects
-        .slice(0, idx)
-        .concat(this._projects.slice(idx + 1));
-    }
-  }
-
-  /**
-   * Add project to the top of the list.
-   */
-  updateProject(project: Project): void {
-    this.unloadProject(project);
-    this._projects.unshift(project);
+    return promise.then(() => this._view.updateProject(project));
   }
 
   /*
   General
   */
 
-  download(data: any, filenameSuffix: string = '') {
+  /*
+   * Download data.
+   */
+  download(data: any, filenameSuffix: string = ''): void {
     const dataJSON: string = JSON.stringify(data);
     const element: any = document.createElement('a');
     element.setAttribute(
@@ -477,7 +405,7 @@ export class App extends Config {
    * @remarks
    * Global config is loaded in main.ts.
    */
-  public updateConfigs(config: any = {}) {
+  updateConfigs(config: any = {}): void {
     // Update config for NEST Simulator
     if (config.NESTSimulator && !this.NESTSimulator.config.custom) {
       if ('url' in config.NESTSimulator) {

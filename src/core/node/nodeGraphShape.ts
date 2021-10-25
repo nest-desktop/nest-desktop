@@ -127,8 +127,8 @@ export class NodeGraphShape {
     elem.selectAll('*').remove();
 
     if (
-      node.model.elementType == 'neuron' &&
-      node.view.weight == 'inhibitory'
+      node.model.elementType === 'neuron' &&
+      node.view.weight === 'inhibitory'
     ) {
       elem.append('circle').attr('class', 'shape').attr('r', this.nodeRadius);
     } else {
@@ -219,7 +219,8 @@ export class NodeGraphShape {
         .select('text')
         .attr(
           'dy',
-          node.model.elementType == 'neuron' && node.view.weight == 'inhibitory'
+          node.model.elementType === 'neuron' &&
+            node.view.weight === 'inhibitory'
             ? '0.4em'
             : '0.7em'
         )

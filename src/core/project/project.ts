@@ -1,3 +1,4 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
 import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
@@ -10,7 +11,6 @@ import { Config } from '../config';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
-import { ProjectView } from './projectView';
 import { Simulation } from '../simulation/simulation';
 import { SpikeActivity } from '../activity/spikeActivity';
 import { upgradeProject } from './projectUpgrade';
@@ -21,6 +21,7 @@ export class Project extends Config {
   private _code: ProjectCode; // code script for NEST Simulator
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
+  private _doc: any; // doc data of the database
   private _errorMessage = '';
   private _hasActivities = false;
   private _hasAnalogActivities = false;
@@ -34,15 +35,15 @@ export class Project extends Config {
   private _networkRevisions: any[] = []; // network history
   private _rev: string; // rev of the project
   private _simulation: Simulation; // settings for the simulation
+  private _state: UnwrapRef<any>;
   private _updatedAt: string; // when is it updated in database
-  private _view: ProjectView;
 
   constructor(app: App, project: any = {}) {
     super('Project');
     this._app = app;
-    this._view = new ProjectView(this);
 
     // Database instance
+    this._doc = project || {};
     this._id = project._id || uuidv4();
     this._rev = project._rev || '';
     this._createdAt = project.createdAt || new Date();
@@ -65,6 +66,11 @@ export class Project extends Config {
 
     this.clean();
     this.commitNetwork(this._network);
+    this._state = reactive({
+      activityStatsPanelId: 0,
+      selected: false,
+      withActivities: false,
+    });
   }
 
   get activityGraph(): ActivityGraph {
@@ -89,6 +95,10 @@ export class Project extends Config {
 
   get description(): string {
     return this._description;
+  }
+
+  get doc(): any {
+    return this._doc;
   }
 
   get errorMessage(): string {
@@ -127,6 +137,10 @@ export class Project extends Config {
     return this._simulation;
   }
 
+  get state(): UnwrapRef<any> {
+    return this._state;
+  }
+
   get updatedAt(): string {
     return this._updatedAt;
   }
@@ -135,22 +149,18 @@ export class Project extends Config {
     this._updatedAt = value;
   }
 
-  get view(): ProjectView {
-    return this._view;
-  }
-
   /**
    * Is the current project selected?
    */
   isSelected(): boolean {
-    return this._id === this._app.project.id;
+    return this._id === this._app.projectView.state.project.id;
   }
 
   /**
    * Save the current project.
    */
-  save(): Promise<any> {
-    return this._app.saveProject(this);
+  async save(): Promise<any> {
+    return this._app.importProject(this);
   }
 
   /**
@@ -174,36 +184,36 @@ export class Project extends Config {
    */
   duplicate(): Project {
     const newProject: Project = this.clone();
-    this._app.projects.unshift(newProject);
+    this._app.view.state.projects.unshift(newProject);
     return newProject;
   }
 
   /**
    * Delete this project from the list and database.
    */
-  delete(): Promise<any> {
+  async delete(): Promise<any> {
     return this._app.deleteProject(this._id);
   }
 
   /**
-   * Download this project.
+   * Export this project.
    */
-  download(): void {
-    this._app.downloadProject(this._id);
+  export(): void {
+    this._app.view.exportProject(this._id);
   }
 
   /**
-   * Download this project and activities.
+   * Export this project and activities.
    */
-  downloadWithActivities(): void {
-    this._app.downloadProject(this._id, true);
+  exportWithActivities(): void {
+    this._app.view.exportProject(this._id, true);
   }
 
   /**
    * Reload this project.
    */
-  reload(): Promise<any> {
-    return this._app.reloadProject(this);
+  async reload(): Promise<any> {
+    return this._app.view.reloadProject(this);
   }
 
   /*
@@ -214,7 +224,7 @@ export class Project extends Config {
    * Is this revised project selected?
    */
   isRevisionSelected(): boolean {
-    return this._rev === this._app.project.rev;
+    return this._rev === this._app.projectView.state.project.rev;
   }
 
   /**
@@ -414,7 +424,7 @@ export class Project extends Config {
    * @remarks
    * After the simulation it updates activities and commit network.
    */
-  runSimulation(): Promise<any> {
+  async runSimulation(): Promise<any> {
     // console.log('Run simulation');
     this._errorMessage = '';
     if (this._simulation.kernel.config.autoRNGSeed) {
@@ -431,7 +441,7 @@ export class Project extends Config {
         let data: any;
         switch (resp.status) {
           case 0:
-            this._errorMessage = 'Failed to find the server of NEST Simulator.';
+            this._errorMessage = 'Failed to find NEST Simulator.';
             break;
           case 200:
             data = JSON.parse(resp.response).data;
@@ -535,7 +545,7 @@ export class Project extends Config {
    * Initialize activity graph.
    */
   initActivityGraph(): void {
-    if (this._activityGraph === undefined) {
+    if (this._activityGraph == undefined) {
       return;
     }
     this._activityGraph.init();
@@ -651,6 +661,14 @@ export class Project extends Config {
   getHash(): string {
     const project: any = this.toJSON();
     return sha1(project);
+  }
+
+  /**
+   * Reset state of this project.
+   */
+  resetState(): void {
+    this._state.selected = false;
+    this._state._withActivities = false;
   }
 
   /**

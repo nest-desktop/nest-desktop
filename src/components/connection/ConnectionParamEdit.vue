@@ -17,7 +17,7 @@
       :key="'conn' + state.connection.idx + '-' + param.id"
       :options="param"
       :value.sync="param.value"
-      @update:value="paramChange()"
+      @update:value="paramChange"
       v-for="param in state.connection.filteredParams"
     />
 
@@ -26,7 +26,7 @@
       :key="'syn' + state.connection.idx + '-' + param.id"
       :param="param"
       :value.sync="param.value"
-      @update:value="paramChange()"
+      @update:value="paramChange"
       v-for="param in state.connection.synapse.filteredParams"
     />
   </div>

@@ -24,7 +24,7 @@ export class DatabaseService {
     return this._version;
   }
 
-  destroy(): Promise<any> {
+  async destroy(): Promise<any> {
     return this._db.destroy();
   }
 
@@ -91,7 +91,7 @@ export class DatabaseService {
   update(data: any): any {
     // console.log('Update doc in db');
     return this._db
-      .get(data.id)
+      .get(data.doc._id || data.id)
       .then((doc: any) => {
         const dataJSON = data.toJSON();
         dataJSON.version = this._app.version;
@@ -102,7 +102,7 @@ export class DatabaseService {
           .forEach((key: string) => (doc[key] = dataJSON[key]));
         return this._db
           .put(doc)
-          .then((d: any) => {
+          .then(() => {
             // console.log(d);
             data.updatedAt = dataJSON.updatedAt;
           })
@@ -162,7 +162,7 @@ export class DatabaseService {
         this._valid =
           appVersion[0] === dbVersion[0] && appVersion[1] === dbVersion[1];
       })
-      .catch((err: any) => {
+      .catch(() => {
         this.setVersion().then(() => this.checkVersion());
       });
   }

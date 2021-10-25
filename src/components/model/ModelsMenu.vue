@@ -1,5 +1,5 @@
 <template>
-  <div class="projectsMenu">
+  <div class="modelsMenu">
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -27,13 +27,14 @@
           </v-list>
         </span>
 
-        <span v-if="state.content === 'projectsReset'">
-          <v-card-title v-text="'Are you sure to reset all projects?'" />
+        <span v-if="state.content === 'modelsReset'">
+          <v-card-title v-text="'Are you sure to reset all models?'" />
 
           <v-card-text>
-            The database for projects will be deleted and then reset.
+            The cookie containing the local models will be deleted.
             <br />
-            All current projects will be lost.
+            All of your personal changes and all imported models will be
+            removed.
           </v-card-text>
 
           <v-card-actions>
@@ -41,7 +42,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn @click="resetProjects" outlined small v-text="'Reset'" />
+            <v-btn @click="resetModels" outlined small v-text="'Reset'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -53,56 +54,54 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { Project } from '@/core/project/project';
+import { Model } from '@/core/model/model';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'ProjectsMenu',
-  components: {},
+  name: 'ModelsMenu',
   props: {
     position: Object,
   },
   setup(props) {
     const appView = core.app.view;
     const state = reactive({
-      content: null,
-      selectedProjects: [],
+      content: undefined,
       position: props.position,
       show: true,
       items: [
         {
-          id: 'projectsReload',
+          id: 'modelsReload',
           icon: 'mdi-reload',
-          title: 'Reload projects',
+          title: 'Reload models',
           onClick: () => {
-            appView.updateProjects();
+            appView.updateModels();
             state.show = false;
           },
         },
         {
-          id: 'projectsExport',
+          id: 'modelsExport',
           icon: 'mdi-export',
-          title: 'Export projects',
+          title: 'Export models',
           onClick: () => openDialog('export'),
         },
         {
-          id: 'projectsImport',
+          id: 'modelsImport',
           icon: 'mdi-import',
-          title: 'Import projects',
+          title: 'Import models',
           onClick: () => openDialog('import'),
         },
         {
-          id: 'projectsDelete',
+          id: 'modelsDelete',
           icon: 'mdi-trash-can-outline',
-          title: 'Delete projects',
+          title: 'Delete models',
           onClick: () => openDialog('delete'),
         },
         {
-          id: 'projectsReset',
+          id: 'modelsReset',
           icon: '$mdiDatabaseRefreshOutline',
-          title: 'Reset all projects',
+          title: 'Reset all models',
           onClick: () => {
-            state.content = 'projectsReset';
+            state.content = 'modelsReset';
           },
           append: true,
         },
@@ -114,27 +113,28 @@ export default Vue.extend({
      */
     const reset = () => {
       state.content = null;
-      state.selectedProjects = [];
     };
 
     /**
-     * Reset project database.
+     * Reset model database.
      */
-    const resetProjects = () => {
-      state.show = false;
-      core.app.resetProjectDatabase().then(() => {
-        appView.updateProjects();
+    const resetModels = () => {
+      core.app.resetModelDatabase().then(() => {
+        appView.updateModels();
+        state.show = false;
         reset();
       });
     };
 
+    /**
+     * Open one of the dialogs to export, import or delete.
+     * @param action Dialog to open
+     */
     const openDialog = (action: string = 'export') => {
-      appView.state.projects.forEach((project: Project) =>
-        project.resetState()
-      );
-      appView.state.dialog.source = 'project';
+      appView.state.models.forEach((model: Model) => model.resetState());
+      appView.state.dialog.source = 'model';
       appView.state.dialog.action = action;
-      appView.state.dialog.content = appView.state.projects;
+      appView.state.dialog.content = appView.state.models;
       appView.state.dialog.open = true;
       state.show = false;
     };
@@ -152,7 +152,7 @@ export default Vue.extend({
     return {
       appView,
       reset,
-      resetProjects,
+      resetModels,
       state,
     };
   },

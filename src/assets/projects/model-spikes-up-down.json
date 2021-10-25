@@ -1,68 +1,61 @@
 {
-  "name": "spatial neurons",
+  "name": "spikes (up/down) to model",
   "network": {
     "nodes": [
       {
-        "model": "poisson_generator",
+        "model": "spike_generator",
         "size": 1,
         "view": {
           "position": {
             "x": -150,
-            "y": -25
+            "y": 25
           }
         },
         "params": [
           {
-            "id": "rate",
-            "value": 6500,
+            "id": "spike_times",
+            "value": [100, 300],
+            "visible": true
+          },
+          {
+            "id": "spike_weights",
+            "value": [1, -1],
             "visible": true
           }
         ]
       },
       {
         "model": "iaf_psc_alpha",
-        "size": 100,
         "view": {
           "position": {
             "x": 0,
-            "y": 25
-          }
-        },
-        "params": [],
-        "spatial": {
-          "positions": "free",
-          "specs": {
-            "center": [0, 0],
-            "extent": [1, 1],
-            "edgeWrap": false,
-            "numDimensions": 2
-          }
-        }
-      },
-      {
-        "model": "voltmeter",
-        "view": {
-          "position": {
-            "x": 150,
             "y": -25
           }
         },
         "params": []
+      },
+      {
+        "model": "voltmeter",
+        "size": 1,
+        "view": {
+          "position": {
+            "x": 150,
+            "y": 25
+          }
+        },
+        "params": [
+          {
+            "id": "interval",
+            "value": 0.1,
+            "visible": true
+          }
+        ]
       }
     ],
     "connections": [
       {
         "source": 0,
-        "target": 1,
-        "synapse": {
-          "params": [
-            {
-              "id": "weight",
-              "value": 10,
-              "visible": true
-            }
-          ]
-        }
+        "target": 1
       },
       {
         "source": 2,
@@ -72,9 +65,9 @@
   },
   "simulation": {
     "kernel": {
-      "resolution": 1
+      "resolution": 0.1
     },
-    "time": 1000,
+    "time": 500,
     "randomSeed": 0
   },
   "version": "3.1.0"

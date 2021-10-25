@@ -33,7 +33,7 @@
           </v-row>
         </v-sheet>
 
-        <span v-if="state.content === undefined">
+        <span v-if="state.content == undefined">
           <v-list dense>
             <v-list-item>
               <v-list-item-icon>
@@ -265,9 +265,9 @@ export default Vue.extend({
         },
         {
           icon: 'mdi-download',
-          id: 'eventsDownload',
+          id: 'eventsExport',
           onClick: () => {
-            state.node.activity.downloadEvents();
+            state.node.activity.exportEvents();
             closeMenu();
           },
           show: () =>
