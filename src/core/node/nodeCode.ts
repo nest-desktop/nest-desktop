@@ -77,12 +77,6 @@ export class NodeCode extends Code {
       params.push('"record_to": "insite"');
     }
 
-    if (this._node.params !== undefined || this._node.params.length > 0) {
-      this._node.filteredParams.forEach((param: ModelParameter) =>
-        params.push(`"${param.id}": ${param.toCode()}`)
-      );
-    }
-
     if (params.length > 0) {
       script += '{' + this._();
       script += params.join(',' + this._());
