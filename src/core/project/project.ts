@@ -33,7 +33,6 @@ export class Project {
   private _network: Network; // network of neurons and devices
   private _networkRevisionIdx = -1; // Index of the network history;
   private _networkRevisions: any[] = []; // network history
-  private _refreshIntervalId: any;
   private _rev: string; // rev of the project
   private _simulation: Simulation; // settings for the simulation
   private _state: UnwrapRef<any>;
@@ -537,34 +536,57 @@ export class Project {
         return resp;
       });
 
-    setTimeout(() => {
-      this._simulation.kernel.biologicalTime = this._simulation.time;
+    this._app.projectView.state.refreshIntervalId = setInterval(() => {
+      axios
+        .get('http://localhost:8080/nest/simulationTimeInfo')
+        .then((response: any) => {
+          this._simulation.kernel.biologicalTime = response.data.end;
+          clearInterval(this._app.projectView.state.refreshIntervalId);
 
-      // function onlyUnique(value: number, index: number, self: any) {
-      //   return self.indexOf(value) === index;
-      // }
-
-      this.initActivities([{ events: { senders: [], times: [] } }]);
-
-      let fromTime: number = 0;
-      this._refreshIntervalId = setInterval(() => {
-        axios
-          .get('http://localhost:8080/nest/spikes?fromTime=' + fromTime)
-          .then((response: any) => {
-            const data: any = response.data;
-            const events: any = {
-              senders: data.nodeIds,
-              times: data.simulationTimes,
-            };
-            this.initActivities([{ events }]);
-
-            fromTime = events.times[events.times.length - 1] || 0;
-            if (fromTime + 10 >= this._simulation.time) {
-              clearInterval(this._refreshIntervalId);
-            }
-          });
-      }, 1000);
+          axios
+            .get('http://localhost:8080/nest/spikedetectors/')
+            .then((response: any) => {
+              const activities: any[] = response.data.map((data: any) => {
+                return {
+                  nodeIds: data.nodeIds,
+                };
+              });
+              this.initActivities(activities);
+              this._app.projectView.state.fromTime = 0;
+              this.fetchSpikesInsite();
+            });
+        });
     }, 100);
+  }
+
+  /**
+   * Fetch spikes from insite.
+   */
+  fetchSpikesInsite(): void {
+    axios
+      .get(
+        'http://localhost:8080/nest/spikes?fromTime=' +
+          this._app.projectView.state.fromTime
+      )
+      .then((response: any) => {
+        const data: any = response.data;
+        const events: any = {
+          senders: data.nodeIds,
+          times: data.simulationTimes,
+        };
+        this.updateActivities([{ events }]);
+
+        if (
+          this._app.projectView.state.fromTime !==
+          events.times[events.times.length - 1]
+        ) {
+          this._app.projectView.state.fromTime =
+            events.times[events.times.length - 1] || 0;
+          setTimeout(() => {
+            this.fetchSpikesInsite();
+          }, 100);
+        }
+      });
   }
 
   /*

@@ -1,4 +1,3 @@
-// import { Config } from '../config';
 import { Activity } from './activity';
 import { Node } from '../node/node';
 
@@ -10,26 +9,19 @@ export class SpikeActivity extends Activity {
   }
 
   /**
-   * Update spike activity.
+   * Initialize spike activity.
    */
-  override update(activity: any): void {
-    this.events = activity.events || {};
+  override init(activity: any): void {
+    this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
-    if (this.events.hasOwnProperty('senders')) {
-      this.updateTimes();
-    }
-  }
 
-  /**
-   * Update times of spike activity.
-   */
-  updateTimes(): void {
     this._times = Object.create(null);
     this.nodeIds.forEach((id: number) => (this._times[id] = []));
     this.events.senders.forEach((sender: number, idx: number) => {
       this._times[sender].push(this.events.times[idx]);
     });
+    this.updateHash();
   }
 
   /**

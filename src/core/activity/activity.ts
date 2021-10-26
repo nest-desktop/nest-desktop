@@ -14,7 +14,7 @@ export class Activity {
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
-    this.update(activity);
+    this.init(activity);
   }
 
   get elementTypes(): string[] {
@@ -90,6 +90,8 @@ export class Activity {
 
   /**
    * Initialize activity.
+   *
+   * Overwrites events.
    */
   init(activity: any): void {
     this._events = activity.events || {};
@@ -98,21 +100,33 @@ export class Activity {
     );
     this._nodeIds = activity.nodeIds || [];
     this._nodePositions = activity.nodePositions || [];
-    this._hash = sha1(JSON.stringify(this._events));
+    this.updateHash();
   }
 
   /**
    * Update activity.
+   *
+   * Extends events.
    */
   update(activity: any): void {
     const events = activity.events;
     if (events === undefined) {
       return;
     }
-    Object.keys(events).forEach((eventKey: string) => {
-      const event: number[] = this._events[eventKey];
-      this._events[eventKey] = event.concat(events[eventKey]);
+
+    const eventKeys: string[] = Object.keys(events);
+    eventKeys.forEach((eventKey: string) => {
+      const currEvents: number[] = this._events[eventKey];
+      const newEvents: number[] = events[eventKey];
+      this._events[eventKey] = currEvents.concat(newEvents);
     });
+    this.updateHash();
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
     this._hash = sha1(JSON.stringify(this._events));
   }
 
