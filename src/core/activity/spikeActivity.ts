@@ -15,6 +15,7 @@ export class SpikeActivity extends Activity {
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
+    this.nodeCollectionId = activity.spikedetectorId; // from insite
 
     this._times = Object.create(null);
     this.nodeIds.forEach((id: number) => (this._times[id] = []));

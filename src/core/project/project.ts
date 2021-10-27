@@ -496,6 +496,7 @@ export class Project {
   runSimulationInsite(): void {
     // console.log('Run simulation with insite');
     this._errorMessage = '';
+    this._app.projectView.state.fromTime = 0;
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
@@ -543,30 +544,122 @@ export class Project {
           this._simulation.kernel.biologicalTime = response.data.end;
           clearInterval(this._app.projectView.state.refreshIntervalId);
 
+          // spike recorder
           axios
             .get('http://localhost:8080/nest/spikedetectors/')
             .then((response: any) => {
-              const activities: any[] = response.data.map((data: any) => {
-                return {
-                  nodeIds: data.nodeIds,
-                };
-              });
+              const activities: any[] = JSON.parse(
+                JSON.stringify(response.data)
+              );
+              console.log(activities);
               this.initActivities(activities);
-              this._app.projectView.state.fromTime = 0;
-              this.fetchSpikesInsite();
+
+              this._app.projectView.state.refreshIntervalId = setInterval(
+                () => {
+                  // Check if project has activities.
+                  this.checkActivities();
+                  // Update activity graph.
+                  this._activityGraph.update();
+                },
+                100
+              );
+
+              this.getSpikeActivityInsite();
             });
+
+          // multimeter
+          // axios
+          //   .get('http://localhost:8080/nest/multimeters')
+          //   .then((response: any) => {
+          //     const activities: any[] = response.data.map((data: any) => {
+          //       return {
+          //         nodeIds: data.nodeIds,
+          //       };
+          //     });
+          //     this.initActivities(activities);
+          //     this._app.projectView.state.fromTime = 0;
+          //     this.fetchAnalogInsite();
+          //   });
         });
-    }, 100);
+    }, 1000);
   }
 
   /**
-   * Fetch spikes from insite.
+   * Get spike activity from insite.
    */
-  fetchSpikesInsite(): void {
+  getSpikeActivityInsite(): void {
+    // console.log('Get spike activity from insite');
+    const fromTime: number = this._app.projectView.state.fromTime;
+    const insitePromises = this.activities.map((activity: Activity) => {
+      new Promise<void>(resolve => {
+        axios
+          .get(
+            `http://localhost:8080/nest/spikedetectors/${activity.nodeCollectionId}/spikes?fromTime=${fromTime}`
+          )
+          .then((response: any) => {
+            console.log(
+              activity.nodeCollectionId,
+              'from time:',
+              fromTime,
+              'nEvents: ',
+              response.data.simulationTimes.length
+            );
+            const times: number[] = response.data.simulationTimes;
+            activity.update({
+              events: {
+                senders: response.data.nodeIds, // y
+                times, // x
+              },
+            });
+
+            console.log(
+              activity.nodeCollectionId,
+              ' last time:',
+              times[times.length - 1]
+            );
+            resolve();
+          });
+      });
+    });
+
+    Promise.all(insitePromises).then(() => {
+      const lastTime: number = this.getActivitiesLastTimeStep();
+      console.log(this._app.projectView.state.fromTime, lastTime);
+
+      if (this._app.projectView.state.fromTime !== lastTime) {
+        if (lastTime !== -1) {
+          this._app.projectView.state.fromTime = lastTime;
+        }
+        setTimeout(() => this.getSpikeActivityInsite(), 500);
+      } else {
+        // stop interval for updating activity graph
+        clearInterval(this._app.projectView.state.refreshIntervalId);
+      }
+    });
+  }
+
+  /**
+   * Get last time step of all activities
+   */
+  getActivitiesLastTimeStep(): number {
+    const lastTimes: number[] = this.activities.map(
+      (activity: Activity) =>
+        activity.events.times[activity.events.times.length - 1] || -1
+    );
+    console.log(lastTimes);
+    return Math.max(...lastTimes);
+  }
+
+  /**
+   * Fetch analog from insite.
+   */
+  fetchAnalogActivityInsite(): void {
+    const nodeCollectionId: number = 1;
+    const attribute: string = 'V_m';
+    const fromTime: number = this._app.projectView.state.fromTime;
     axios
       .get(
-        'http://localhost:8080/nest/spikes?fromTime=' +
-          this._app.projectView.state.fromTime
+        `http://localhost:8080/nest/multimeters/${nodeCollectionId}/attribute/${attribute}?fromTime=${fromTime}`
       )
       .then((response: any) => {
         const data: any = response.data;
@@ -583,7 +676,7 @@ export class Project {
           this._app.projectView.state.fromTime =
             events.times[events.times.length - 1] || 0;
           setTimeout(() => {
-            this.fetchSpikesInsite();
+            this.fetchAnalogActivityInsite();
           }, 100);
         }
       });
@@ -659,7 +752,7 @@ export class Project {
   /**
    * Initialize activities in recorder nodes after simulation.
    */
-  initActivities(data: any): void {
+  initActivities(data: any[]): void {
     // console.log('Initialize activities');
 
     // Initialize recorded activity.

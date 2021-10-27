@@ -6,6 +6,7 @@ import { Node } from '../node/node';
 export class Activity {
   private _events: any = {};
   private _idx: number; // generative
+  private _nodeCollectionId: number;
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
@@ -47,6 +48,14 @@ export class Activity {
 
   get nEvents(): number {
     return this._events.hasOwnProperty('times') ? this._events.times.length : 0;
+  }
+
+  get nodeCollectionId(): number {
+    return this._nodeCollectionId;
+  }
+
+  set nodeCollectionId(value: number) {
+    this._nodeCollectionId = value;
   }
 
   get nodeIds(): number[] {
