@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { Activity } from './activity';
 import { Node } from '../node/node';
 
@@ -81,5 +83,39 @@ export class SpikeActivity extends Activity {
    */
   override clone(): SpikeActivity {
     return new SpikeActivity(this.recorder, this.toJSON());
+  }
+
+  /**
+   * Get activity from insite.
+   */
+  override getActivityInsite(): void {
+    // console.log('Get spike activity from insite');
+
+    const url = `http://localhost:8080/nest/spikedetectors/${this.nodeCollectionId}/spikes?fromTime=${this.lastTime}`;
+
+    axios.get(url).then((response: any) => {
+      let times: number[] = response.data.simulationTimes;
+      let senders: number[] = response.data.nodeIds;
+      const lastTime = times[times.length - 1];
+
+      if (lastTime > this.endtime) {
+        senders = response.data.nodeIds.slice(0, times.length - 1);
+        times = times.slice(0, times.length - 1);
+      }
+
+      this.update({
+        events: {
+          senders, // y
+          times, // x
+        },
+      });
+
+      if (lastTime <= this.endtime) {
+        // Recursive call after 500ms.
+        setTimeout(() => {
+          this.getActivityInsite();
+        }, 500);
+      }
+    });
   }
 }

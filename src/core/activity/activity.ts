@@ -26,6 +26,12 @@ export class Activity {
     return this._recorder.network.project.simulation.kernel.biologicalTime;
   }
 
+  get lastTime(): number {
+    return this._events.times && this._events.times.length > 0
+      ? this.events.times[this.events.times.length - 1]
+      : -1;
+  }
+
   get events(): any {
     return this._events;
   }
@@ -118,6 +124,7 @@ export class Activity {
    * Extends events.
    */
   update(activity: any): void {
+    // console.log('Update activity');
     const events = activity.events;
     if (events === undefined) {
       return;
@@ -138,6 +145,11 @@ export class Activity {
   updateHash(): void {
     this._hash = sha1(JSON.stringify(this._events));
   }
+
+  /**
+   * get activity from insite.
+   */
+  getActivityInsite(): void {}
 
   /**
    * Check if activity contains analog signal data.
