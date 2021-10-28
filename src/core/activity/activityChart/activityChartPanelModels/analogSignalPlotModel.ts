@@ -45,7 +45,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
       this.state.records[activity.idx].forEach((record: string) => {
         if (activity.nodeIds.length === 1) {
           this.updateSingleLine(activity, record);
-        } else {
+        } else if (activity.nodeIds.length > 1) {
           this.updateMultipleLines(activity, record);
         }
         if (!records.includes(record)) {
@@ -100,13 +100,19 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * Update single line data for analog signal.
    */
   updateSingleLine(activity: AnalogSignalActivity, record: string): void {
+    if (
+      !activity.events.hasOwnProperty(record) ||
+      activity.nodeIds.length === 0
+    ) {
+      return;
+    }
     this.data.push({
       activityIdx: activity.idx,
       id: record,
       legendgroup: record + activity.idx,
       mode: 'lines',
       type: 'scattergl',
-      name: record + ' of ' + activity.senders[0],
+      name: record + ' of ' + activity.nodeIds[0],
       hoverinfo: 'all',
       showlegend: true,
       visible: true,
@@ -123,20 +129,23 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * Update multiple lines data for analog signals.
    */
   updateMultipleLines(activity: AnalogSignalActivity, record: string): void {
-    if (!activity.events.hasOwnProperty(record)) {
+    if (!activity.events.hasOwnProperty(record) ||
+      activity.nodeIds.length === 0
+    ) {
       return;
     }
-    const senders: number[] = activity.senders.slice(0, 100);
-    const events: any[] = senders.map(() => ({ x: [], y: [], name: '' }));
+
+    const nodeIds: number[] = activity.nodeIds.slice(0, 100);
+    const events: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
     activity.events.senders.forEach((sender: number, idx: number) => {
-      const senderIdx: number = senders.indexOf(sender);
+      const senderIdx: number = nodeIds.indexOf(sender);
       if (senderIdx === -1) {
         return;
       }
       events[senderIdx].x.push(activity.events.times[idx]);
       events[senderIdx].y.push(activity.events[record][idx]);
-      events[senderIdx].name = `${record} of [${senders[0]} - ${
-        senders[senders.length - 1]
+      events[senderIdx].name = `${record} of [${nodeIds[0]} - ${
+        nodeIds[nodeIds.length - 1]
       }]`;
     });
 
@@ -164,29 +173,36 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * Update average line for analog signals.
    */
   updateAverageLine(activity: AnalogSignalActivity, record: string): void {
-    const senders: number[] = activity.senders;
-    const events: any[] = senders.map(() => ({ x: [], y: [], name: '' }));
+    if (
+      !activity.events.hasOwnProperty(record) ||
+      activity.nodeIds.length === 0
+    ) {
+      return;
+    }
+
+    const nodeIds: number[] = activity.nodeIds;
+    const events: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
     activity.events.senders.forEach((sender: number, idx: number) => {
       if (!activity.events.hasOwnProperty(record)) {
         return;
       }
-      const senderIdx: number = senders.indexOf(sender);
+      const senderIdx: number = nodeIds.indexOf(sender);
       if (senderIdx === -1) {
         return;
       }
       events[senderIdx].x.push(activity.events.times[idx]);
       events[senderIdx].y.push(activity.events[record][idx]);
-      events[senderIdx].name = `${record} of [${senders[0]} - ${
-        senders[senders.length - 1]
+      events[senderIdx].name = `${record} of [${nodeIds[0]} - ${
+        nodeIds[nodeIds.length - 1]
       }]`;
     });
 
     const x: any[] = events[0].x;
     const y: any[] = x.map((_: any, i: number) => {
       const yi: any[] = [];
-      senders.forEach((_: number, idx: number) => yi.push(events[idx].y[i]));
+      nodeIds.forEach((_: number, idx: number) => yi.push(events[idx].y[i]));
       const sum: number = yi.reduce((a: number, b: number) => a + b);
-      const avg: number = sum / senders.length;
+      const avg: number = sum / nodeIds.length;
       return avg;
     });
 

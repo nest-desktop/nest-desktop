@@ -277,9 +277,12 @@
 
       <transition name="fade">
         <ActivityGraph
+          :activitiesHash="
+            projectView.state.project.activities.map(a => a.hash)
+          "
           :codeHash="projectView.state.project.code.hash"
           :graph="projectView.state.project.activityGraph"
-          :graphHash="projectView.state.project.activityGraph.codeHash"
+          :graphCodeHash="projectView.state.project.activityGraph.codeHash"
           :view="projectView.state.activityGraph"
           v-if="projectView.state.modeIdx === 1"
         />
