@@ -512,8 +512,14 @@ export class Project {
             this._errorMessage = 'Failed to find NEST Simulator.';
             break;
           case 200:
-            this._errorMessage = 'Simulation is finished.';
-            this._simulation.running = false;
+            axios
+              .get('http://localhost:8080/nest/simulationTimeInfo')
+              .then((response: any) => {
+                this._errorMessage = 'Simulation is finished.';
+                this._simulation.running =
+                  response.data.end >
+                  response.data.current + response.data.stepSize;
+              });
             break;
           default:
             this._errorMessage = resp.response;
@@ -537,53 +543,49 @@ export class Project {
         return resp;
       });
 
-    this._app.projectView.state.refreshIntervalId = setInterval(() => {
-      axios
-        .get('http://localhost:8080/nest/simulationTimeInfo')
-        .then((response: any) => {
-          this._simulation.kernel.biologicalTime = response.data.end;
-          clearInterval(this._app.projectView.state.refreshIntervalId);
+    this.getActivitiesInsite();
+  }
 
-          // spike recorder
-          axios
-            .get('http://localhost:8080/nest/spikedetectors/')
-            .then((response: any) => {
-              const activities: any[] = JSON.parse(
-                JSON.stringify(response.data)
-              );
-              this.initActivities(activities);
+  getActivitiesInsite(): void {
+    axios
+      .get('http://localhost:8080/nest/simulationTimeInfo')
+      .catch(() => {
+        setTimeout(() => this.getActivitiesInsite(), 100);
+      })
+      .then((response: any) => {
+        this._simulation.kernel.biologicalTime = response.data.end;
 
-              this._app.projectView.state.refreshIntervalId = setInterval(
-                () => {
-                  // Check if project has activities.
-                  this.checkActivities();
-                  // Update activity graph.
-                  this._activityGraph.update();
+        // spike recorder
+        axios
+          .get('http://localhost:8080/nest/spikedetectors/')
+          .then((response: any) => {
+            const activities: any[] = JSON.parse(JSON.stringify(response.data));
+            this.initActivities(activities);
 
-                  const lastTimes: number[] = this.activities.map(
-                    (activity: Activity) => activity.lastTime
-                  );
+            this._app.projectView.state.refreshIntervalId = setInterval(() => {
+              // Check if project has activities.
+              this.checkActivities();
+              // Update activity graph.
+              this._activityGraph.update();
 
-                  if (
-                    !lastTimes.some(
-                      (time: number) =>
-                        time < this.simulation.kernel.biologicalTime
-                    )
-                  ) {
-                    clearInterval(
-                      this._app.projectView.state.refreshIntervalId
-                    );
-                  }
-                },
-                1000
+              const lastTimes: number[] = this.activities.map(
+                (activity: Activity) => activity.lastTime
               );
 
-              this.activities.forEach((activity: Activity) =>
-                activity.getActivityInsite()
-              );
-            });
-        });
-    }, 1000);
+              if (
+                !lastTimes.some(
+                  (time: number) => time < this.simulation.kernel.biologicalTime
+                )
+              ) {
+                clearInterval(this._app.projectView.state.refreshIntervalId);
+              }
+            }, 1000);
+
+            this.spikeActivities.forEach((activity: SpikeActivity) =>
+              activity.getActivityInsite()
+            );
+          });
+      });
   }
 
   /*
