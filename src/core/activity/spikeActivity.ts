@@ -94,28 +94,19 @@ export class SpikeActivity extends Activity {
     const url = `http://localhost:8080/nest/spikedetectors/${this.nodeCollectionId}/spikes?fromTime=${this.lastTime}`;
 
     axios.get(url).then((response: any) => {
-      let times: number[] = response.data.simulationTimes;
-      let senders: number[] = response.data.nodeIds;
-      const lastTime = times[times.length - 1];
-
-      if (lastTime > this.endtime) {
-        senders = response.data.nodeIds.slice(0, times.length - 1);
-        times = times.slice(0, times.length - 1);
-      }
-
       this.update({
         events: {
-          senders, // y
-          times, // x
+          senders: response.data.nodeIds, // y
+          times: response.data.simulationTimes, // x
         },
       });
 
-      if (lastTime <= this.endtime) {
-        // Recursive call after 500ms.
-        setTimeout(() => {
+      // Recursive call after 500ms.
+      setTimeout(() => {
+        if (this.recorder.network.project.simulation.running) {
           this.getActivityInsite();
-        }, 500);
-      }
+        }
+      }, 500);
     });
   }
 }
