@@ -158,9 +158,10 @@ export default Vue.extend({
     ActivityAnimationGraph,
   },
   props: {
+    activitiesHash: Array,
     codeHash: String,
     graph: ActivityGraph,
-    graphHash: String,
+    graphCodeHash: String,
     view: String,
   },
   setup(props) {
@@ -233,6 +234,7 @@ export default Vue.extend({
      * which should be displayed via snackbar message.
      */
     const showHelp = () => {
+      // console.log('Show help');
       state.snackbar.show = false;
       if (
         !projectView.config.showHelp &&
@@ -271,17 +273,27 @@ export default Vue.extend({
 
     onMounted(() => {
       update();
-      setTimeout(() => showHelp(), 100);
+      setTimeout(() => showHelp(), 300);
     });
 
     watch(
-      () => [props.graph, props.view, props.codeHash, props.graphHash],
+      () => [
+        props.graph,
+        props.view,
+        props.codeHash,
+        props.graphCodeHash,
+        props.activitiesHash,
+      ],
       (newProps, oldProps) => {
         if (oldProps[0] !== newProps[0] || oldProps[1] !== newProps[1]) {
           update();
         }
-        if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
-          setTimeout(() => showHelp(), 100);
+        if (
+          oldProps[2] !== newProps[2] ||
+          oldProps[3] !== newProps[3] ||
+          oldProps[4] !== newProps[4]
+        ) {
+          setTimeout(() => showHelp(), 300);
         }
       }
     );

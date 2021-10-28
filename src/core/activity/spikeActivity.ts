@@ -14,10 +14,12 @@ export class SpikeActivity extends Activity {
    * Initialize spike activity.
    */
   override init(activity: any): void {
+    this.reset();
+
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
-    this.nodeCollectionId = activity.spikedetectorId; // from insite
+    this.nodeCollectionId = activity.nodeCollectionId;
 
     this._times = Object.create(null);
     this.nodeIds.forEach((id: number) => (this._times[id] = []));
@@ -86,27 +88,30 @@ export class SpikeActivity extends Activity {
   }
 
   /**
-   * Get activity from insite.
+   * Get activity from Insite.
    */
   override getActivityInsite(): void {
-    // console.log('Get spike activity from insite');
+    // console.log('Get spike activity from Insite');
 
-    const url = `http://localhost:8080/nest/spikedetectors/${this.nodeCollectionId}/spikes?fromTime=${this.lastTime}`;
+    const url = `http://localhost:8080/nest/spikedetectors/${this.nodeCollectionId}`;
+    axios
+      .get(url + `/spikes?fromTime=${this.lastTime}`)
+      .then((response: any) => {
+        this.update({
+          events: {
+            senders: response.data.nodeIds, // y
+            times: response.data.simulationTimes, // x
+          },
+        });
 
-    axios.get(url).then((response: any) => {
-      this.update({
-        events: {
-          senders: response.data.nodeIds, // y
-          times: response.data.simulationTimes, // x
-        },
-      });
+        this.lastFrame = response.data.lastFrame;
 
-      // Recursive call after 500ms.
-      setTimeout(() => {
-        if (this.recorder.network.project.simulation.running) {
-          this.getActivityInsite();
+        // Recursive call after 500ms.
+        if (!response.data.lastFrame) {
+          setTimeout(() => {
+            this.getActivityInsite();
+          }, 500);
         }
-      }, 500);
-    });
+      });
   }
 }
