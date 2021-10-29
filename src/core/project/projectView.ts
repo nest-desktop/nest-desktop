@@ -67,6 +67,12 @@ export class ProjectView extends Config {
       refreshIntervalId: undefined,
       tool: undefined,
       toolOpened: false,
+      toast: {
+        message: '',
+        pauseOnHover: true,
+        position: 'top-right',
+        type: 'success',
+      },
     });
   }
 
