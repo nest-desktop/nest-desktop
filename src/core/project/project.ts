@@ -417,6 +417,8 @@ export class Project {
    */
   async runSimulation(): Promise<any> {
     // console.log('Run simulation');
+
+    this.cancelGettingActivityInsite();
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
@@ -476,6 +478,8 @@ export class Project {
    */
   runSimulationInsite(): void {
     // console.log('Run simulation with Insite');
+
+    this.cancelGettingActivityInsite();
     this._app.projectView.state.fromTime = 0;
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
@@ -490,6 +494,7 @@ export class Project {
         switch (resp.status) {
           case 0:
             this.openToast('Failed to find NEST Simulator.', 'error');
+            this.cancelGettingActivityInsite();
             break;
           case 200:
             // TODO: ask Marcel if this code is required.
@@ -504,12 +509,14 @@ export class Project {
             break;
           default:
             this.openToast(resp.responseText, 'error');
+            this.cancelGettingActivityInsite();
             break;
         }
         return resp;
       })
       .catch((resp: any) => {
         this.openToast(resp.responseText, 'error');
+        this.cancelGettingActivityInsite();
         return resp;
       })
       .finally(() => {
@@ -526,6 +533,7 @@ export class Project {
    * Afterwards it gets activities from Insite.
    */
   getActivitiesInsite(): void {
+    console.log('Get activites from Insite.');
     axios
       .get('http://localhost:8080/nest/simulationTimeInfo')
       .catch(() => {
@@ -537,25 +545,65 @@ export class Project {
         // update activity graph during the simulation.
         this.continuousUpdateActivityGraph();
 
-        this.getSpikeActivitiesInsite();
-        this.getAnalogSignalActivitiesInsite();
+        const nodePositions: any = {};
+        axios.get('http://localhost:8080/nest/nodes').then((response: any) => {
+          response.data.forEach((data: any) => {
+            if (data.position != null) {
+              nodePositions[data.nodeId] = data.position;
+            }
+          });
+
+          // Check if project has activities.
+          this.checkActivities();
+
+          if (this.hasSpikeActivities) {
+            this.getSpikeActivitiesInsite(nodePositions);
+          }
+
+          if (this.hasAnalogActivities) {
+            this.getAnalogSignalActivitiesInsite(nodePositions);
+          }
+        });
       });
+  }
+
+  /**
+   * Cancel getting activities from Insite.
+   *
+   * When NEST Server repsonds error.
+   * TODO: Check if it is working properly.
+   */
+  cancelGettingActivityInsite(): void {
+    console.log('Cancel getting activity from Insite.');
+    this.activities.forEach(
+      (activity: Activity) => (activity.lastFrame = true)
+    );
   }
 
   /**
    * Get spike activities from Insite.
    */
-  getSpikeActivitiesInsite(): void {
-    // console.log('Get spike activities from insite.');
+  getSpikeActivitiesInsite(nodePositions: any): void {
     axios
       .get('http://localhost:8080/nest/spikedetectors/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
-          return {
+          const activity: any = {
             nodeCollectionId: data.spikedetectorId,
             nodeIds: data.nodeIds,
-            nodePositions: data.nodePositions,
+            nodePositions: [],
           };
+
+          if (Object.keys(nodePositions).length > 0) {
+            console.log('Add node positions in activity');
+            data.nodeIds.forEach((id: number) => {
+              if (id in nodePositions) {
+                activity.nodePositions.push(nodePositions[id]);
+              }
+            });
+          }
+
+          return activity;
         });
 
         // initialize activities.
@@ -571,7 +619,7 @@ export class Project {
   /**
    * Get analog signal activities from Insite.
    */
-  getAnalogSignalActivitiesInsite(): void {
+  getAnalogSignalActivitiesInsite(nodePositions: any): void {
     // console.log('Get analog signal activities from insite.');
     axios
       .get('http://localhost:8080/nest/multimeters')
@@ -582,11 +630,23 @@ export class Project {
             events[attribute] = [];
           });
 
-          return {
+          const activity: any = {
             events,
             nodeCollectionId: data.multimeterId,
             nodeIds: data.nodeIds,
+            nodePositions: [],
           };
+
+          if (Object.keys(nodePositions).length > 0) {
+            console.log('Add node positions in activity');
+            data.nodeIds.forEach((id: number) => {
+              if (id in nodePositions) {
+                activity.nodePositions.push(nodePositions[id]);
+              }
+            });
+          }
+
+          return activity;
         });
 
         // initialize activities.

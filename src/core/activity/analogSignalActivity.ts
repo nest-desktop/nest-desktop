@@ -11,7 +11,7 @@ export class AnalogSignalActivity extends Activity {
   /**
    * Initialize analog signal activity.
    */
-  init(activity: any): void {
+  override init(activity: any): void {
     this.reset();
 
     this.events = activity.events || { senders: [], times: [], V_m: [] };
