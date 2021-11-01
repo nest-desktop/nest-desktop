@@ -117,6 +117,9 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Start simulation.
+     */
     const simulate = () => {
       if (state.project.config.simulateWithInsite) {
         state.project.runSimulationInsite();

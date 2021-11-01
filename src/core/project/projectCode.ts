@@ -1,4 +1,6 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
+
 import { Code } from '../code';
 import { Project } from './project';
 
@@ -6,10 +8,15 @@ export class ProjectCode extends Code {
   private _hash: string;
   private _project: Project; // parent
   private _script: string;
+  private _state: UnwrapRef<any>;
 
   constructor(project: Project) {
     super();
     this._project = project;
+    this._state = reactive({
+      codeInsite: this._project.config.simulateWithInsite,
+    });
+
     this.generate();
   }
 
@@ -28,6 +35,10 @@ export class ProjectCode extends Code {
   set script(value: string) {
     this._script = value;
     this._hash = sha1(this._script);
+  }
+
+  get state(): any {
+    return this._state;
   }
 
   /**
@@ -78,6 +89,7 @@ export class ProjectCode extends Code {
       this._script += this.response();
     }
 
+    this._state.codeInsite = this._project.config.simulateWithInsite;
     this._hash = sha1(this._script);
   }
 
