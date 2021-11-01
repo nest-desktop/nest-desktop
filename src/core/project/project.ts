@@ -419,10 +419,17 @@ export class Project {
     // console.log('Run simulation');
 
     this.cancelGettingActivityInsite();
+
+    if (this.config.simulateWithInsite) {
+      return;
+    }
+
+    // generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
+
     this._simulation.running = true;
     return this.app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
@@ -480,11 +487,19 @@ export class Project {
     // console.log('Run simulation with Insite');
 
     this.cancelGettingActivityInsite();
+
+    if (!this.config.simulateWithInsite) {
+      return;
+    }
+
     this._app.projectView.state.fromTime = 0;
+
+    // generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
+
     this._simulation.running = true;
     this._app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
@@ -533,7 +548,7 @@ export class Project {
    * Afterwards it gets activities from Insite.
    */
   getActivitiesInsite(): void {
-    console.log('Get activites from Insite.');
+    // console.log('Get activites from Insite.');
     axios
       .get('http://localhost:8080/nest/simulationTimeInfo')
       .catch(() => {
@@ -570,11 +585,11 @@ export class Project {
   /**
    * Cancel getting activities from Insite.
    *
-   * When NEST Server repsonds error.
+   * When NEST Server responds error.
    * TODO: Check if it is working properly.
    */
   cancelGettingActivityInsite(): void {
-    console.log('Cancel getting activity from Insite.');
+    // console.log('Cancel getting activity from Insite.');
     this.activities.forEach(
       (activity: Activity) => (activity.lastFrame = true)
     );
@@ -584,6 +599,7 @@ export class Project {
    * Get spike activities from Insite.
    */
   getSpikeActivitiesInsite(nodePositions: any): void {
+    // console.log('Get spike activities from insite.');
     axios
       .get('http://localhost:8080/nest/spikedetectors/')
       .then((response: any) => {
@@ -663,6 +679,7 @@ export class Project {
    * Update activity graph continuously.
    */
   continuousUpdateActivityGraph() {
+    // console.log('Update activity graph continuously.');
     this._app.projectView.state.refreshIntervalId = setInterval(() => {
       // Check if project has activities.
       this.checkActivities();
