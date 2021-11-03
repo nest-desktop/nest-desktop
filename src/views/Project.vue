@@ -9,52 +9,35 @@
       dense
       flat
     >
-      <v-btn-toggle
+      <v-tabs
+        :slider-size="2"
         @change="() => projectView.updateProjectMode()"
-        group
-        light
-        mandatory
-        style="margin-left: -16px"
+        align-with-title
+        fixed-tabs
+        icons-and-text
+        style="flex: 0 1 auto; width: 320px"
         v-model="projectView.state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
-            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
-              <v-col>
-                <v-row style="place-content: center">
-                  <v-icon v-text="'$network'" />
-                </v-row>
-                <v-row
-                  style="place-content: center; font-size: 10px"
-                  v-text="'Editor'"
-                />
-              </v-col>
-            </v-btn>
+            <v-tab v-bind="attrs" v-on="on">
+              <div class="tab-text" v-text="'Editor'" />
+              <v-icon v-text="'$network'" />
+            </v-tab>
           </template>
           Construct network
         </v-tooltip>
 
         <v-menu offset-y open-on-hover>
           <template #activator="{ on, attrs }">
-            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
-              <v-col>
-                <v-row style="place-content: center">
-                  <ActivityGraphIcon
-                    :project="projectView.state.project"
-                    v-if="projectView.state.project.hasActivities"
-                  />
-                  <v-icon
-                    class="rotate-90"
-                    v-else
-                    v-text="'mdi-border-style'"
-                  />
-                </v-row>
-                <v-row
-                  style="place-content: center; font-size: 10px"
-                  v-text="'Explorer'"
-                />
-              </v-col>
-            </v-btn>
+            <v-tab v-bind="attrs" v-on="on">
+              <div class="tab-text" v-text="'Explorer'" />
+              <ActivityGraphIcon
+                :project="projectView.state.project"
+                v-if="projectView.state.project.hasActivities"
+              />
+              <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
+            </v-tab>
           </template>
 
           <v-list dense>
@@ -85,18 +68,11 @@
           </v-list>
         </v-menu>
 
-        <v-btn class="mx-0 px-6">
-          <v-col>
-            <v-row style="place-content: center">
-              <v-icon v-text="'mdi-book-open-outline'" />
-            </v-row>
-            <v-row
-              style="place-content: center; font-size: 10px"
-              v-text="'Lab book'"
-            />
-          </v-col>
-        </v-btn>
-      </v-btn-toggle>
+        <v-tab>
+          <div class="tab-text" v-text="'Lab book'" />
+          <v-icon v-text="'mdi-book-open-outline'" />
+        </v-tab>
+      </v-tabs>
 
       <v-spacer />
       <v-toolbar-title class="mx-2" v-text="projectView.state.project.name" />
@@ -200,24 +176,6 @@
           mini-variant-width="64"
           right
         >
-          <!-- <v-list nav dense>
-            <v-list-item
-              @click="projectView.state.toolOpened = !projectView.state.toolOpened"
-              title="Toggle navigation"
-            >
-              <v-list-item-icon>
-                <v-icon
-                  v-text="
-                    'mdi-chevron-' + (projectView.state.toolOpened ? 'right' : 'left')
-                  "
-                />
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="'Close'" />
-              </v-list-item-content>
-            </v-list-item>
-          </v-list> -->
-
           <v-list nav>
             <v-list-item
               :class="{
@@ -479,21 +437,26 @@ export default Vue.extend({
 
 <style>
 .projectView .nav-item-right {
+  font-size: 9px;
   text-align: center;
   width: 100%;
-  font-size: 9px;
 }
 
 .projectView .resize-handle {
   cursor: ew-resize;
   height: 100vh;
-  position: fixed;
   left: 0;
+  position: fixed;
   width: 4px;
   z-index: 10;
 }
 
 .rotate-90 {
   transform: rotate(-90deg);
+}
+
+.projectView .tab-text {
+  font-size: 10px;
+  margin-bottom: 2px !important;
 }
 </style>
