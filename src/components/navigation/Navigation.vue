@@ -49,6 +49,7 @@
           <v-navigation-drawer
             absolute
             app
+            dark
             mini-variant
             mini-variant-width="64"
             mobile-breakpoint="64"
@@ -58,7 +59,6 @@
               <v-list nav>
                 <v-list-item
                   :class="{ 'v-list-item--active': state.navList === route.id }"
-                  :color="route.color"
                   :key="route.id"
                   :title="route.title"
                   @click="() => updatePageContent(route.id)"
