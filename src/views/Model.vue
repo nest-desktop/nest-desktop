@@ -1,65 +1,30 @@
 <template>
   <div class="modelView" v-if="modelView">
     <v-app-bar app class="no-print" clipped-right color="model" dark dense flat>
-      <v-btn-toggle
-        group
-        light
-        mandatory
-        style="margin-left: -16px"
+      <v-tabs
+        :slider-size="4"
+        align-with-title
+        fixed-tabs
+        icons-and-text
+        style="flex: 0 1 auto; width: 320px"
         v-model="modelView.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
-            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
-              <v-col>
-                <v-row style="place-content: center">
-                  <v-icon v-text="'mdi-text-box-outline'" />
-                </v-row>
-                <v-row
-                  style="place-content: center; font-size: 10px"
-                  v-text="'Doc'"
-                />
-              </v-col>
-            </v-btn>
+            <v-tab v-bind="attrs" v-on="on">
+              <div class="tab-text" v-text="'Doc'" />
+              <v-icon v-text="'mdi-text-box-outline'" />
+            </v-tab>
           </template>
           View model documentation
         </v-tooltip>
 
-        <!-- <v-tooltip :open-delay="1000" bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
-              <v-col>
-                <v-row style="place-content: center">
-                  <v-icon v-text="'mdi-chart-line'" />
-                </v-row>
-                <v-row
-                  style="place-content: center; font-size: 10px"
-                  v-text="'Explorer'"
-                />
-              </v-col>
-            </v-btn>
-          </template>
-          Explore model
-        </v-tooltip> -->
-
         <v-menu :disabled="!modelView.isNeuron()" offset-y open-on-hover>
           <template #activator="{ on, attrs }">
-            <v-btn
-              :disabled="!modelView.isNeuron()"
-              class="mx-0 px-6"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-col>
-                <v-row style="place-content: center">
-                  <v-icon v-text="'mdi-chart-scatter-plot'" />
-                </v-row>
-                <v-row
-                  style="place-content: center; font-size: 10px"
-                  v-text="'Explorer'"
-                />
-              </v-col>
-            </v-btn>
+            <v-tab :disabled="!modelView.isNeuron()" v-bind="attrs" v-on="on">
+              <div class="tab-text" v-text="'Explorer'" />
+              <v-icon v-text="'mdi-chart-scatter-plot'" />
+            </v-tab>
           </template>
 
           <v-list dense>
@@ -80,30 +45,25 @@
 
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
-            <v-btn class="mx-0 px-6" v-bind="attrs" v-on="on">
-              <v-col>
-                <v-row style="place-content: center">
-                  <v-icon v-text="'mdi-pencil'" />
-                </v-row>
-                <v-row
-                  style="place-content: center; font-size: 10px"
-                  v-text="'Editor'"
-                />
-              </v-col>
-            </v-btn>
+            <v-tab v-bind="attrs" v-on="on">
+              <div class="tab-text" v-text="'Editor'" />
+              <v-icon v-text="'mdi-pencil'" />
+            </v-tab>
           </template>
           Edit model
         </v-tooltip>
-      </v-btn-toggle>
+      </v-tabs>
 
       <v-spacer />
       <v-toolbar-title
         :key="modelView.state.model.label"
-        class="pl-12"
+        class="mx-2"
         v-if="modelView.state.model"
         v-text="modelView.state.model.label || modelView.state.model.id"
       />
       <v-spacer />
+
+      <div class="mx-4" style="width: 144px" />
 
       <div @click="modelView.modeIdx = 1">
         <SimulationButton
@@ -242,7 +202,12 @@
       </transition>
     </v-main>
 
-    <v-overlay :value="modelView.state.project.simulation.running">
+    <v-overlay
+      :value="
+        modelView.state.project.simulation.running &&
+        !projectView.state.project.config.simulateWithInsite
+      "
+    >
       <v-progress-circular
         :size="70"
         :width="7"
@@ -378,17 +343,22 @@ export default Vue.extend({
 
 <style>
 .modelView .nav-item-right {
+  font-size: 9px;
   text-align: center;
   width: 100%;
-  font-size: 9px;
 }
 
 .modelView .resize-handle {
   cursor: ew-resize;
   height: 100vh;
-  position: fixed;
   left: 0;
+  position: fixed;
   width: 4px;
   z-index: 10;
+}
+
+.modelView .tab-text {
+  font-size: 10px;
+  margin-bottom: 2px !important;
 }
 </style>
