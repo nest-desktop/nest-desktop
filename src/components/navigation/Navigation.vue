@@ -42,9 +42,9 @@
       <v-row class="fill-height" no-gutters>
         <v-col>
           <v-navigation-drawer
+            :dark="state.darkNav"
             absolute
             app
-            dark
             mini-variant
             mini-variant-width="64"
             mobile-breakpoint="64"
@@ -175,6 +175,7 @@ export default {
   setup() {
     const appView = core.app.view;
     const state = reactive({
+      darkNav: false,
       dialog: false,
       miniVariant: true,
       navList: '',
