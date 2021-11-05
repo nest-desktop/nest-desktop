@@ -2,7 +2,6 @@ import * as math from 'mathjs';
 
 import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { ActivityChartGraph } from './activityChartGraph';
-import { Config } from '../../config';
 
 import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
 import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
@@ -12,7 +11,7 @@ import { SpikeSendersHistogramModel } from './activityChartPanelModels/spikeSend
 import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
 import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
 
-export class ActivityChartPanel extends Config {
+export class ActivityChartPanel {
   // private static readonly _name = 'ActivityGraphPanel';
   // private _activities: Activity[] = [];
   private _graph: ActivityChartGraph; // parent
@@ -100,7 +99,6 @@ export class ActivityChartPanel extends Config {
   private _xaxis = 1;
 
   constructor(graph: ActivityChartGraph, model: any = {}) {
-    super('ActivityGraphPanel');
     this._graph = graph;
     this.selectModel(model.id);
   }
