@@ -76,7 +76,7 @@ export default Vue.extend({
     };
 
     /**
-     * Set an array of visible parameter for checkbox.
+     * Set an array of visible parameters for checkbox.
      */
     const update = () => {
       state.paramsIdx = state.synapse.params

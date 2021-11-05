@@ -64,7 +64,7 @@ export class NodeSpatial extends Config {
    */
   toJSON(): any {
     let spatial: any;
-    if (this._positions === undefined) {
+    if (this._positions == undefined) {
       spatial = {};
     } else {
       spatial = {
