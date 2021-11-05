@@ -1,14 +1,17 @@
+import { sha1 } from 'object-hash';
+
 import { Connection } from '../connection/connection';
 import { Network } from './network';
 import { Node } from '../node/node';
 
-export class NetworkView {
+export class NetworkState {
   private _focusedConnection: number | null = null;
   private _focusedNode: number | null = null;
   private _network: Network; // parent
   private _selectedConnection: number | null = null;
   private _selectedElementType: string | null = null;
   private _selectedNode: number | null = null;
+  private _hash: string; // network hash
 
   constructor(network: Network) {
     this._network = network;
@@ -30,6 +33,10 @@ export class NetworkView {
   set focusedNode(node: Node | null) {
     this._focusedConnection = null;
     this._focusedNode = node.idx;
+  }
+
+  get hash(): string {
+    return this._hash;
   }
 
   get selectedConnection(): Connection | null {
@@ -61,16 +68,6 @@ export class NetworkView {
     this._selectedElementType = null;
     this._selectedConnection = null;
     this._selectedNode = this._selectedNode === node.idx ? null : node.idx;
-  }
-
-  get colors(): string[] {
-    return this._network.config.color.cycle;
-  }
-
-  set colors(value: string[]) {
-    const color: any = this._network.config.color;
-    color.cycle = value;
-    this._network.config.update({ color });
   }
 
   /**
@@ -107,26 +104,9 @@ export class NetworkView {
     return this._selectedElementType === elementType;
   }
 
-  /**
-   * Check if network has any spatial nodes.
-   */
-  hasPositions(): boolean {
-    return this._network.nodes.some((node: Node) =>
-      node.spatial.hasPositions()
-    );
-  }
-
   //
   // Node
   //
-
-  /**
-   * Get node color.
-   */
-  getNodeColor(idx: number): string {
-    const colors: string[] = this._network.config.color.cycle;
-    return colors[idx % colors.length];
-  }
 
   /**
    * Check if node is focused.
@@ -189,5 +169,12 @@ export class NetworkView {
       return this._selectedNode === connection.sourceIdx;
     }
     return unselected;
+  }
+
+  /**
+   * Calculate hash of this component.
+   */
+  updateHash(): void {
+    this._hash = sha1(this._network.toJSON());
   }
 }

@@ -8,27 +8,34 @@
             <v-checkbox
               @change="e => updateAppConfig({ autoUpdate: e || false })"
               label="Auto update"
-              v-model="state.autoUpdate"
+              v-model="state.appConfig.autoUpdate"
             />
             <v-checkbox
               @change="e => updateAppConfig({ devMode: e || false })"
               label="Development mode"
-              v-model="state.devMode"
+              v-model="state.appConfig.devMode"
             />
             <v-checkbox
               @change="e => updateAppConfig({ pinNav: e || false })"
               label="Pin navigation (Page reload required)"
-              v-model="state.pinNav"
+              v-model="state.appConfig.pinNav"
             />
             <v-checkbox
-              @change="e => updateProjectConfig({ showHelp: e || false })"
+              @change="e => updateProjectViewConfig({ showHelp: e || false })"
               label="Show help"
-              v-model="state.showHelp"
+              v-model="state.projectViewConfig.showHelp"
+            />
+            <v-checkbox
+              label="Colored toolbar"
+              @change="
+                e => updateProjectViewConfig({ coloredToolbar: e || false })
+              "
+              v-model="state.projectViewConfig.coloredToolbar"
             />
           </v-card-text>
         </v-card>
 
-        <v-card flat tile>
+        <!-- <v-card flat tile>
           <v-card-title v-text="'Database'" />
           <v-card-text>
             <v-text-field
@@ -40,7 +47,7 @@
               v-model="state.app.config.databases.project.name"
             />
           </v-card-text>
-        </v-card>
+        </v-card> -->
 
         <v-card flat tile>
           <v-card-title v-text="'Backend'" />
@@ -118,8 +125,12 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="checkNESTSimulator">Check</v-btn>
-            <!-- <v-btn @click="() => core.app.NESTSimulator.seek()">seek</v-btn> -->
+            <v-btn
+              @click="checkNESTSimulator"
+              outlined
+              small
+              v-text="'Check'"
+            />
           </v-card-actions>
         </v-card>
 
@@ -217,14 +228,14 @@ import colorSchemes from '@/assets/config/ColorSchemes.json';
 export default Vue.extend({
   name: 'Settings',
   setup() {
+    const projectView = core.app.projectView;
     const state = reactive({
       app: core.app,
-      devMode: core.app.config.devMode,
       model: new Config('Model'),
       simulatorVersion: 'unknown',
       network: new Config('Network'),
-      pinNav: core.app.config.pinNav,
-      showHelp: core.app.projectView.state.project.config.showHelp,
+      appConfig: core.app.config,
+      projectViewConfig: projectView.config,
       colorSchemes: colorSchemes,
     });
 
@@ -255,8 +266,8 @@ export default Vue.extend({
     /**
      * Update project configuration.
      */
-    const updateProjectConfig = (d: any) => {
-      core.app.projectView.state.project.updateConfig(d);
+    const updateProjectViewConfig = (d: any) => {
+      core.app.projectView.updateConfig(d);
     };
 
     /**
@@ -285,11 +296,12 @@ export default Vue.extend({
 
     return {
       checkNESTSimulator,
+      projectView,
       state,
       updateAppConfig,
       updateNESTSimulatorConfig,
       updateNetworkColorScheme,
-      updateProjectConfig,
+      updateProjectViewConfig,
     };
   },
 });

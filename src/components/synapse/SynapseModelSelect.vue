@@ -1,28 +1,25 @@
 <template>
-  <div class="nodeModelSelect">
+  <div class="synapseModelSelect" v-if="state.synapse">
     <v-menu :close-on-content-click="false" tile v-model="state.opened">
       <template #activator="{ on, attrs }">
         <v-btn
-          :color="state.node.view.color"
-          :dark="projectView.config.coloredToolbar"
           :height="40"
-          :text="!projectView.config.coloredToolbar"
           block
-          class="nodeModel"
-          depressed
+          class="synapseModel"
+          text
           tile
           v-bind="attrs"
           v-on="on"
         >
-          <span v-text="state.node.model.label" />
+          <span v-text="state.synapse.model.label" />
           <v-spacer />
           <v-icon class="modelEdit" right v-text="'mdi-pencil'" />
           <v-chip
             label
             outlined
             small
-            v-if="state.node.network.project.app.config.devMode"
-            v-text="state.node.hash.slice(0, 6)"
+            v-if="state.synapse.connection.network.project.app.config.devMode"
+            v-text="state.synapse.connection.hash.slice(0, 6)"
           />
         </v-btn>
       </template>
@@ -30,7 +27,7 @@
       <v-card style="min-width: 300px" tile>
         <v-card-title class="pa-0" style="height: 40px">
           <v-overflow-btn
-            :items="state.node.models"
+            :items="state.synapse.models"
             @change="update()"
             class="ma-0"
             dense
@@ -41,7 +38,7 @@
             item-value="id"
             style="font-weight: 700"
             tile
-            v-model="state.node.modelId"
+            v-model="state.synapse.modelId"
           />
         </v-card-title>
 
@@ -57,7 +54,7 @@
                 :key="param.idx"
                 class="mx-0"
                 style="font-size: 12px"
-                v-for="param of state.node.params"
+                v-for="param of state.synapse.params"
               >
                 <template #default="">
                   <v-list-item-content class="pa-1">
@@ -71,7 +68,7 @@
 
                   <v-list-item-action class="my-1">
                     <v-checkbox
-                      :color="node.view.color"
+                      :color="synapse.connection.source.view.color"
                       :input-value="param.visible"
                       :value="param.visible"
                       hide-details
@@ -119,20 +116,18 @@
 import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 
-import { Node } from '@/core/node/node';
+import { Synapse } from '@/core/synapse/synapse';
 import { ModelParameter } from '@/core/parameter/modelParameter';
-import core from '@/core';
 
 export default Vue.extend({
-  name: 'NodeModelSelect',
+  name: 'SynapseModelSelect',
   props: {
-    node: Node,
+    synapse: Synapse,
   },
   setup(props) {
-    const projectView = core.app.projectView;
     const state = reactive({
-      node: props.node as Node,
       opened: false,
+      synapse: props.synapse as Synapse,
       visibleParams: [],
     });
 
@@ -140,19 +135,19 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const selectionChange = () => {
-      state.node.params.forEach(
+      state.synapse.params.forEach(
         (param: ModelParameter) =>
           (param.visible = state.visibleParams.includes(param.idx))
       );
-      state.node.nodeChanges();
+      state.synapse.synapseChanges();
     };
 
     /**
      * Update states.
      */
     const update = () => {
-      state.node = props.node as Node;
-      state.visibleParams = state.node.params
+      state.synapse = props.synapse as Synapse;
+      state.visibleParams = state.synapse.params
         .filter((param: ModelParameter) => param.visible)
         .map((param: ModelParameter) => param.idx);
     };
@@ -161,8 +156,8 @@ export default Vue.extend({
      * Hide all parameters.
      */
     const hideAllParams = () => {
-      state.node.hideAllParams();
-      state.node.nodeChanges();
+      state.synapse.hideAllParams();
+      state.synapse.synapseChanges();
       update();
     };
 
@@ -170,8 +165,8 @@ export default Vue.extend({
      * Show all parameters.
      */
     const showAllParams = () => {
-      state.node.showAllParams();
-      state.node.nodeChanges();
+      state.synapse.showAllParams();
+      state.synapse.synapseChanges();
       update();
     };
 
@@ -180,13 +175,12 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.node,
+      () => props.synapse,
       () => update()
     );
 
     return {
       hideAllParams,
-      projectView,
       showAllParams,
       selectionChange,
       state,
@@ -197,11 +191,11 @@ export default Vue.extend({
 </script>
 
 <style>
-.nodeModel .modelEdit {
+.synapseModel .modelEdit {
   display: none;
 }
 
-.nodeModel:hover .modelEdit {
+.synapseModel:hover .modelEdit {
   display: block;
 }
 

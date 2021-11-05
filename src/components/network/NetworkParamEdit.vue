@@ -183,32 +183,57 @@
     <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
       <v-col>
         <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
-          <v-card class="mb-1" flat tile v-if="showNode(node)">
-            <v-sheet :color="node.view.color">
-              <v-row @contextmenu="e => showNodeMenu(e, node)" no-gutters>
+          <v-card
+            :style="{
+              borderLeft: `4px solid ${node.view.color}`,
+            }"
+            class="ma-1"
+            tile
+            outlined
+            style="background-color: white"
+            v-if="showNode(node)"
+          >
+            <v-card-title
+              @contextmenu="e => showNodeMenu(e, node)"
+              class="pa-0"
+            >
+              <v-row no-gutters>
                 <v-col cols="3">
                   <v-btn
-                    @click="() => node.view.select()"
+                    :color="node.view.color"
+                    :dark="projectView.config.coloredToolbar"
+                    :text="!projectView.config.coloredToolbar"
+                    @click="() => node.state.select()"
                     block
-                    dark
+                    depressed
                     height="40"
-                    text
                     tile
                     v-text="node.view.label"
                   />
                 </v-col>
                 <v-col cols="9">
-                  <NodeModelSelect :node="node" />
+                  <NodeModelSelect :text="state.text" :node="node" />
                 </v-col>
               </v-row>
-            </v-sheet>
 
-            <v-card-text
-              :style="{
-                borderLeft: `4px solid ${node.view.color}`,
-              }"
-              class="pa-0"
-            >
+              <v-row no-gutters v-if="!node.model.isRecorder()">
+                <v-col>
+                  <NodePosition
+                    :node="node"
+                    v-if="node.spatial.hasPositions()"
+                  />
+                  <ParameterEdit
+                    :color="node.view.color"
+                    :options="state.sizeOptions"
+                    :value.sync="node.size"
+                    @update:value="node.nodeChanges"
+                    v-else
+                  />
+                </v-col>
+              </v-row>
+            </v-card-title>
+
+            <v-card-text class="pa-0">
               <NodeParamEdit :node="node" />
             </v-card-text>
           </v-card>
@@ -216,69 +241,76 @@
 
         <v-card
           :key="'connection-' + connection.idx"
-          class="mb-1"
-          flat
+          :style="{
+            borderLeft: `4px solid ${connection.source.view.color}`,
+            borderRight: `4px solid ${connection.target.view.color}`,
+          }"
+          class="ma-1"
           tile
+          outlined
+          style="background-color: white"
           v-for="connection of state.network.connections"
           v-show="showConnection(connection)"
         >
-          <v-row
-            @contextmenu="e => showConnectionMenu(e, connection)"
-            no-gutters
-          >
-            <v-col cols="3" class="py-0" style="text-align: center">
-              <v-btn
-                :color="connection.source.view.color"
-                @click="() => connection.source.view.select()"
-                block
-                dark
-                depressed
-                height="40"
-                tile
-                v-text="connection.source.view.label"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-btn
-                @click="() => connection.view.select()"
-                block
-                color="white"
-                depressed
-                height="40"
-                tile
-              >
-                <v-chip
-                  label
-                  outlined
-                  small
-                  v-if="connection.network.project.app.config.devMode"
-                  v-text="connection.hash.slice(0, 6)"
+          <v-card-title class="pa-0 ma-0">
+            <v-row
+              @contextmenu="e => showConnectionMenu(e, connection)"
+              no-gutters
+            >
+              <v-col cols="3" class="py-0" style="text-align: center">
+                <v-btn
+                  :color="connection.source.view.color"
+                  :dark="projectView.config.coloredToolbar"
+                  :text="!projectView.config.coloredToolbar"
+                  @click="() => connection.source.state.select()"
+                  block
+                  depressed
+                  height="40"
+                  tile
+                  v-text="connection.source.view.label"
                 />
-                <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-              </v-btn>
-            </v-col>
-            <v-col cols="3" class="py-0" style="text-align: center">
-              <v-btn
-                :color="connection.target.view.color"
-                @click="() => connection.target.view.select()"
-                block
-                dark
-                depressed
-                height="40"
-                tile
-                v-text="connection.target.view.label"
-              />
-            </v-col>
-          </v-row>
+              </v-col>
+              <v-col cols="6">
+                <v-btn
+                  @click="() => connection.state.select()"
+                  block
+                  color="white"
+                  depressed
+                  height="40"
+                  tile
+                >
+                  <v-chip
+                    label
+                    outlined
+                    small
+                    v-if="connection.network.project.app.config.devMode"
+                    v-text="connection.hash.slice(0, 6)"
+                  />
+                  <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                </v-btn>
+              </v-col>
+              <v-col cols="3" class="py-0" style="text-align: center">
+                <v-btn
+                  :color="connection.target.view.color"
+                  :dark="projectView.config.coloredToolbar"
+                  :text="!projectView.config.coloredToolbar"
+                  @click="() => connection.target.state.select()"
+                  block
+                  depressed
+                  height="40"
+                  tile
+                  v-text="connection.target.view.label"
+                />
+              </v-col>
+            </v-row>
+          </v-card-title>
 
-          <v-card-text
-            :style="{
-              borderLeft: `4px solid ${connection.source.view.color}`,
-              borderRight: `4px solid ${connection.target.view.color}`,
-            }"
-            class="pa-0 pt-2 ma-0"
-          >
-            <ConnectionParamEdit :connection="connection" />
+          <v-card-text class="pa-0">
+            <ConnectionParamEdit
+              :connection="connection"
+              v-if="connection.source.size > 1 || connection.target.size > 1"
+            />
+            <SynapseParamEdit :synapse="connection.synapse" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -300,6 +332,9 @@ import core from '@/core';
 import NodeMenu from '@/components/node/NodeMenu.vue';
 import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
+import NodePosition from '@/components/node/NodePosition.vue';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
+import SynapseParamEdit from '@/components/synapse/SynapseParamEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
@@ -310,6 +345,9 @@ export default Vue.extend({
     NodeMenu,
     NodeModelSelect,
     NodeParamEdit,
+    NodePosition,
+    ParameterEdit,
+    SynapseParamEdit,
   },
   props: {
     projectId: String,
@@ -350,6 +388,22 @@ export default Vue.extend({
         },
         show: false,
       },
+      sizeOptions: {
+        id: 'populationSize',
+        input: 'valueSlider',
+        label: 'population size',
+        max: 1000,
+        min: 1,
+        value: 1,
+        rules: [
+          [
+            'value >= 1000',
+            'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
+      },
+      text: true,
     });
 
     /**
@@ -357,11 +411,11 @@ export default Vue.extend({
      */
     const showNode = (node: Node) => {
       if (
-        state.network.view.selectedConnection ||
-        state.network.view.selectedNode
+        state.network.state.selectedConnection ||
+        state.network.state.selectedNode
       ) {
         // selected view
-        return state.network.view.isNodeSelected(node);
+        return state.network.state.isNodeSelected(node);
       } else if (state.elementType === 0) {
         // all view
         return true;
@@ -438,11 +492,11 @@ export default Vue.extend({
      */
     const showConnection = (connection: Connection) => {
       if (
-        state.network.view.selectedConnection ||
-        state.network.view.selectedNode
+        state.network.state.selectedConnection ||
+        state.network.state.selectedNode
       ) {
         // selected view
-        return state.network.view.isConnectionSelected(connection);
+        return state.network.state.isConnectionSelected(connection);
       } else if (state.elementType === 0) {
         // all views
         return true;
@@ -544,7 +598,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => [props.projectId, projectView.state.project.network.hash],
+      () => [props.projectId, projectView.state.project.network.state.hash],
       () => {
         state.network = projectView.state.project.network as Network;
         update();
@@ -556,6 +610,7 @@ export default Vue.extend({
       iconConnections,
       iconNodes,
       nodeDisplayChange,
+      projectView,
       showConnection,
       showConnectionMenu,
       showNode,

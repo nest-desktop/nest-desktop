@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import { Connection } from './connection';
-import { NetworkGraph } from '../network/networkGraph';
+import { Connection } from '../connection';
+import { NetworkGraph } from '../../network/networkGraph/networkGraph';
 import drawPath from './connectionGraphPath';
 
 export class ConnectionGraph {
@@ -48,16 +48,16 @@ export class ConnectionGraph {
 
     elem
       .on('mouseover', () => {
-        connection.view.focus();
+        connection.state.focus();
         this._networkGraph.update();
       })
       .on('mouseout', () => {
-        this._networkGraph.network.view.resetFocus();
+        this._networkGraph.network.state.resetFocus();
         this._networkGraph.update();
       })
       .on('click', () => {
-        connection.view.focus();
-        this._networkGraph.network.view.selectedConnection = connection;
+        connection.state.focus();
+        this._networkGraph.network.state.selectedConnection = connection;
         this._networkGraph.update();
       });
   }
@@ -152,7 +152,7 @@ export class ConnectionGraph {
         .style('stroke', connection.source.view.color)
         .style(
           'stroke-width',
-          this.strokeWidth * (connection.view.isFocused(false) ? 1.2 : 1)
+          this.strokeWidth * (connection.state.isFocused(false) ? 1.2 : 1)
         )
         .attr('marker-end', connection.view.markerEnd())
         .style(

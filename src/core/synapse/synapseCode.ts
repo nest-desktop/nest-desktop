@@ -17,7 +17,7 @@ export class SynapseCode extends Code {
   specs(): string {
     const specs: string[] = [];
     if (this._synapse.modelId !== 'static_synapse') {
-      specs.push(`"model": "${this._synapse.modelId}"`);
+      specs.push(`"synapse_model": "${this._synapse.modelId}"`);
     }
 
     this._synapse.filteredParams.forEach((param: ModelParameter) =>

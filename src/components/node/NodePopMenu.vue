@@ -21,7 +21,7 @@
           </v-row>
         </v-card-title>
 
-        <span v-if="state.content == undefined">
+        <span v-if="state.content === undefined">
           <v-list dense>
             <v-list-item>
               <v-list-item-icon>
@@ -173,33 +173,11 @@ export default Vue.extend({
       spatialNode: false,
       visibleParams: [],
       weight: {
-        mixed: null,
-        inhibitory: 0,
         excitatory: 1,
+        inhibitory: 0,
+        mixed: null,
       },
       items: [
-        {
-          icon: 'mdi-pencil',
-          id: 'paramEdit',
-          onClick: () => {
-            state.content = 'nodeParamEdit';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-          show: () => true,
-          title: 'Edit parameters',
-        },
-        {
-          icon: 'mdi-restart',
-          id: 'paramsReset',
-          onClick: () => {
-            state.node.resetParameters();
-            closeMenu();
-          },
-          append: false,
-          show: () => true,
-          title: 'Reset all parameters',
-        },
         {
           icon: 'mdi-axis-arrow',
           id: 'nodeSpatial',
@@ -211,68 +189,6 @@ export default Vue.extend({
           show: () => !state.node.model.isRecorder(),
           title: 'Spatial node',
           value: 'spatialNode',
-        },
-        {
-          icon: 'mdi-format-color-fill',
-          id: 'nodeColor',
-          onClick: () => {
-            state.content = 'nodeColor';
-            window.dispatchEvent(new Event('resize'));
-          },
-          append: true,
-          show: () => true,
-          title: 'Colorize node',
-        },
-        {
-          icon: 'mdi-information-outline',
-          id: 'modelDescription',
-          onClick: () => {
-            state.content = 'modelDocumentation';
-            setTimeout(() => {
-              window.dispatchEvent(new Event('resize'));
-            }, 300);
-          },
-          show: () => state.node.model.id !== 'voltmeter',
-          title: 'Model documentation',
-        },
-        {
-          icon: 'mdi-content-copy',
-          id: 'nodeClone',
-          onClick: () => {
-            const newNode: any = JSON.parse(
-              JSON.stringify(state.node.toJSON())
-            );
-            newNode.view.position.x += 50;
-            newNode.view.color = undefined;
-            state.node.network.addNode(newNode);
-            state.node.network.networkChanges();
-            closeMenu();
-          },
-          show: () => true,
-          title: 'Clone node',
-        },
-        {
-          icon: 'mdi-download',
-          id: 'eventsExport',
-          onClick: () => {
-            state.node.activity.exportEvents();
-            closeMenu();
-          },
-          show: () =>
-            state.node.activity &&
-            state.node.activity.hasEvents() &&
-            state.node.model.isRecorder(),
-          title: 'Download events',
-        },
-        {
-          icon: 'mdi-trash-can-outline',
-          id: 'nodeDelete',
-          onClick: () => {
-            state.content = 'nodeDelete';
-          },
-          show: () => true,
-          title: 'Delete node',
-          append: true,
         },
       ],
     });
@@ -320,7 +236,7 @@ export default Vue.extend({
     };
 
     /**
-     * Set weigths of all connection in this node.
+     * Set weights of all connection in this node.
      */
     const setWeights = (mode: string) => {
       state.node.setWeights(mode);
@@ -328,7 +244,7 @@ export default Vue.extend({
     };
 
     /**
-     * Set an array of visible parameter for checkbox.
+     * Set an array of visible parameters for checkbox.
      */
     const setVisibleParams = () => {
       state.visibleParams = state.node.params

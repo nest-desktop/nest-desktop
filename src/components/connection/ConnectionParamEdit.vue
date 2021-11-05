@@ -7,8 +7,8 @@
       hide-details
       item-value="value"
       item-text="label"
-      label="Connection rule"
-      class="ml-1 pa-1"
+      label="connection rule"
+      class="px-2 py-3"
       v-model="state.connection.rule"
     />
 
@@ -19,15 +19,6 @@
       :value.sync="param.value"
       @update:value="paramChange"
       v-for="param in state.connection.filteredParams"
-    />
-
-    <ParameterEdit
-      :color="state.connection.source.view.color"
-      :key="'syn' + state.connection.idx + '-' + param.id"
-      :param="param"
-      :value.sync="param.value"
-      @update:value="paramChange"
-      v-for="param in state.connection.synapse.filteredParams"
     />
   </div>
 </template>

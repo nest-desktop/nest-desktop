@@ -1,31 +1,38 @@
-import { sha1 } from 'object-hash';
-
 import { Config } from '../config';
 import { Connection } from '../connection/connection';
 import { NetworkCode } from './networkCode';
-import { NetworkView } from './networkView';
+import { NetworkState } from './networkState';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
 export class Network extends Config {
-  private _code: NetworkCode; // code
+  private _code: NetworkCode; // network code
   private _connections: Connection[] = []; // for nest.Connect
   private _nodes: Node[] = []; // for nest.Create
-  private _project: Project; // parent
-  private _view: NetworkView; // view
-  private _hash: string; // network hash
+  private _project: Project; // project
+  private _state: NetworkState; // network state
 
   constructor(project: Project, network: any = {}) {
     super('Network');
     this._project = project;
     this._code = new NetworkCode(this);
-    this._view = new NetworkView(this);
+    this._state = new NetworkState(this);
 
     this.update(network);
   }
 
   get code(): NetworkCode {
     return this._code;
+  }
+
+  get colors(): string[] {
+    return this.config.color.cycle;
+  }
+
+  set colors(value: string[]) {
+    const color: any = this.config.color;
+    color.cycle = value;
+    this.config.update({ color });
   }
 
   get connections(): Connection[] {
@@ -38,10 +45,6 @@ export class Network extends Config {
       connection.clean();
     });
     this.networkChanges();
-  }
-
-  get hash(): string {
-    return this._hash;
   }
 
   get neurons(): Node[] {
@@ -76,14 +79,14 @@ export class Network extends Config {
     return this._nodes.filter((node: Node) => node.model.isRecorder());
   }
 
+  get state(): NetworkState {
+    return this._state;
+  }
+
   get stimulators(): Node[] {
     return this._nodes.filter(
       (node: Node) => node.model.elementType === 'stimulator'
     );
-  }
-
-  get view(): NetworkView {
-    return this._view;
   }
 
   get visibleNodes(): Node[] {
@@ -114,15 +117,16 @@ export class Network extends Config {
    * It commits the network in the network history.
    */
   networkChanges(): void {
-    this.updateHash();
+    this._state.updateHash();
     this._project.code.generate();
     this._project.commitNetwork(this);
 
     // Simulate when the configuration is set
     // and the view mode is activity explorer.
+    const projectView = this._project.app.projectView;
     if (
-      this._project.config.simulateAfterChange &&
-      this._project.app.projectView.state.modeIdx === 1
+      projectView.config.simulateAfterChange &&
+      projectView.state.modeIdx === 1
     ) {
       setTimeout(() => this._project.runSimulation(), 1);
     }
@@ -196,15 +200,16 @@ export class Network extends Config {
    */
   connectNodes(source: Node, target: Node): void {
     // console.log('Connect nodes');
-    const weight = source.view.weight;
+    const weight: string = source.view.weight;
     const connection: Connection = this.addConnection({
       source: source.idx,
       target: target.idx,
     });
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
+    } else if (weight === 'inhibitory') {
+      source.setWeights(weight);
     }
-    source.setWeights(weight);
     this.networkChanges();
   }
 
@@ -216,7 +221,7 @@ export class Network extends Config {
    */
   deleteNode(node: Node): void {
     // console.log('Delete node');
-    this._view.reset();
+    this._state.reset();
     this._connections = this._connections.filter(
       (connection: Connection) =>
         connection.source !== node && connection.target !== node
@@ -250,7 +255,7 @@ export class Network extends Config {
    */
   deleteConnection(connection: Connection): void {
     // console.log('Delete connection');
-    this._view.reset();
+    this._state.reset();
     // this.connections = this.connections.filter((c: Connection) => c.idx !== connection.idx);
     const idx: number = connection.idx;
     this._connections = this._connections
@@ -269,6 +274,7 @@ export class Network extends Config {
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
     this._connections.forEach((connection: Connection) => connection.clean());
+    this._state.updateHash();
   }
 
   /**
@@ -304,7 +310,6 @@ export class Network extends Config {
     }
 
     this.clean();
-    this.updateHash();
   }
 
   /**
@@ -314,8 +319,7 @@ export class Network extends Config {
    * It emits network changes.
    */
   empty(): void {
-    this._view.resetFocus();
-    this._view.resetSelection();
+    this._state.reset();
     this._connections = [];
     this._nodes = [];
     this.clean();
@@ -327,10 +331,18 @@ export class Network extends Config {
   }
 
   /**
-   * Calculate hash of this component.
+   * Check if network has any spatial nodes.
    */
-  updateHash(): void {
-    this._hash = sha1(this.toJSON());
+  hasPositions(): boolean {
+    return this._nodes.some((node: Node) => node.spatial.hasPositions());
+  }
+
+  /**
+   * Get node color.
+   */
+  getNodeColor(idx: number): string {
+    const colors: string[] = this.config.color.cycle;
+    return colors[idx % colors.length];
   }
 
   /**

@@ -1,5 +1,5 @@
 <template>
-  <div class="connectionParamSelect">
+  <div class="synapseParamSelect">
     <v-list class="pa-0" dense>
       <v-list-item-group
         @change="selectionChange"
@@ -11,7 +11,7 @@
           :key="param.id"
           class="mx-0"
           style="font-size: 12px"
-          v-for="param of state.connection.params"
+          v-for="param of state.synapse.params"
         >
           <template #default="{ active }">
             <v-list-item-content class="pa-1">
@@ -24,7 +24,12 @@
             </v-list-item-content>
 
             <v-list-item-action class="mx-0 my-1">
-              <v-checkbox :input-value="active" color="black" hide-details />
+              <v-checkbox
+                :input-value="active"
+                class="shrink mr-2"
+                color="black"
+                hide-details
+              />
             </v-list-item-action>
           </template>
         </v-list-item>
@@ -37,18 +42,18 @@
 import Vue from 'vue';
 import { reactive, onMounted, watch } from '@vue/composition-api';
 
-import { Connection } from '@/core/connection/connection';
-import { Parameter } from '@/core/parameter/parameter';
+import { Synapse } from '@/core/synapse/synapse';
+import { ModelParameter } from '@/core/parameter/modelParameter';
 
 export default Vue.extend({
-  name: 'ConnectionParamSelect',
+  name: 'SynapseParamSelect',
   props: {
-    connection: Connection,
+    synapse: Synapse,
     paramsIdx: Array,
   },
   setup(props) {
     const state = reactive({
-      connection: props.connection as Connection,
+      synapse: props.synapse as Synapse,
       paramsIdx: (props.paramsIdx as Number[]) || [],
     });
 
@@ -56,36 +61,36 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const paramChange = () => {
-      state.connection.connectionChanges();
+      state.synapse.synapseChanges();
     };
 
     /**
      * Triggers when parameter is changed.
      */
     const selectionChange = () => {
-      state.connection.params.forEach(
-        (param: Parameter) =>
+      state.synapse.params.forEach(
+        (param: ModelParameter) =>
           (param.visible = state.paramsIdx.includes(param.idx))
       );
-      state.connection.connectionChanges();
+      state.synapse.synapseChanges();
     };
 
     /**
-     * Set an array of visible parameter for checkbox.
+     * Set an array of visible parameters for checkbox.
      */
     const update = () => {
-      state.paramsIdx = state.connection.params
-        .filter((param: Parameter) => param.visible)
-        .map((param: Parameter) => param.idx);
+      state.paramsIdx = state.synapse.params
+        .filter((param: ModelParameter) => param.visible)
+        .map((param: ModelParameter) => param.idx);
     };
 
     const showAllParams = () => {
-      state.connection.showAllParams();
+      state.synapse.showAllParams();
       update();
     };
 
     const hideAllParams = () => {
-      state.connection.hideAllParams();
+      state.synapse.hideAllParams();
       update();
     };
 

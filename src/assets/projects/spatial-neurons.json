@@ -75,7 +75,7 @@
       "resolution": 1
     },
     "time": 1000,
-    "randomSeed": 0
+    "randomSeed": 1
   },
   "version": "3.1.0"
 }

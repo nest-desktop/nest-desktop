@@ -1,9 +1,10 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
 
 import { App } from '../app';
+import { Config } from '../config';
 import { Project } from './project';
 
-export class ProjectView {
+export class ProjectView extends Config {
   private _app: App;
   private _state: UnwrapRef<any>;
   private _tools: any[] = [
@@ -37,7 +38,8 @@ export class ProjectView {
       width: 575,
     },
     {
-      icon: 'mdi-chart-scatter-plot',
+      // icon: 'mdi-chart-scatter-plot',
+      icon: 'mdi-tune-variant',
       minWidth: 440,
       name: 'activityEdit',
       title: 'Activity',
@@ -53,6 +55,7 @@ export class ProjectView {
   ];
 
   constructor(app: App) {
+    super('ProjectView');
     this._app = app;
     this._state = reactive({
       activityGraph: 'abstract',
@@ -103,13 +106,12 @@ export class ProjectView {
     return this._app.view.initProject(this._state.projectId).then(() => {
       if (this._state.project) {
         this.updateProjectMode();
-        this._state.project.network.view.reset();
-        this._state.activityGraph =
-          this._state.project.network.view.hasPositions()
-            ? this._state.activityGraph
-            : 'abstract';
+        this._state.project.network.state.reset();
+        this._state.activityGraph = this._state.project.network.hasPositions()
+          ? this._state.activityGraph
+          : 'abstract';
         if (
-          this._state.project.config.simulateAfterLoad &&
+          this.config.simulateAfterLoad &&
           this._state.modeIdx === 1 &&
           this._state.project.code.hash !==
             this._state.project.activityGraph.codeHash
@@ -164,7 +166,7 @@ export class ProjectView {
       this.resizeNetworkGraph();
     }
     if (
-      this._state.project.config.simulateAfterLoad &&
+      this.config.simulateAfterLoad &&
       this._state.modeIdx === 1 &&
       this._state.project.code.hash !==
         this._state.project.activityGraph.codeHash

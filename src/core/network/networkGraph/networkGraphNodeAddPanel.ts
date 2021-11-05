@@ -14,7 +14,7 @@ export class NetworkGraphNodeAddPanel {
   }
 
   get color(): string {
-    return this.network.view.getNodeColor(this.network.nodes.length);
+    return this.network.getNodeColor(this.network.nodes.length);
   }
 
   get network(): Network {
@@ -22,7 +22,7 @@ export class NetworkGraphNodeAddPanel {
   }
 
   get position(): any {
-    return this._workspace.cursorPosition;
+    return this._workspace.state.cursorPosition;
   }
 
   get nodeRadius(): number {

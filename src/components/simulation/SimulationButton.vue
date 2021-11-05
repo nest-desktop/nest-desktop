@@ -41,6 +41,7 @@
 import Vue from 'vue';
 import { reactive, onMounted, watch } from '@vue/composition-api';
 
+import core from '@/core';
 import { Project } from '@/core/project/project';
 
 export default Vue.extend({
@@ -50,6 +51,7 @@ export default Vue.extend({
     disabled: Boolean,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const state = reactive({
       disabled: props.disabled,
       items: [
@@ -61,7 +63,7 @@ export default Vue.extend({
           onClick: () => {
             state.projectConfig.simulateAfterChange =
               !state.projectConfig.simulateAfterChange;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
           },
         },
         {
@@ -72,7 +74,7 @@ export default Vue.extend({
           onClick: () => {
             state.projectConfig.simulateAfterLoad =
               !state.projectConfig.simulateAfterLoad;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
           },
         },
         {
@@ -83,17 +85,13 @@ export default Vue.extend({
           onClick: () => {
             state.projectConfig.simulateAfterCheckout =
               !state.projectConfig.simulateAfterCheckout;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
           },
         },
       ],
       project: props.project as Project,
       showMenu: false,
-      projectConfig: {
-        simulateAfterChange: false,
-        simulateAfterLoad: false,
-        simulateAfterCheckout: false,
-      },
+      projectConfig: projectView.config,
     });
 
     /**
@@ -110,7 +108,7 @@ export default Vue.extend({
     const update = () => {
       state.disabled = props.disabled;
       state.project = props.project as Project;
-      state.projectConfig = state.project.config;
+      state.projectConfig = projectView.config;
     };
 
     onMounted(() => update());

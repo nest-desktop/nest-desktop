@@ -1,5 +1,5 @@
 <template>
-  <div class="versionInfo">
+  <div class="appDetails">
     <v-list dense max-width="500px">
       <v-list-item>
         <v-row>
@@ -87,7 +87,7 @@ import core from '@/core';
 
 import { detect } from 'detect-browser';
 export default {
-  name: 'NESTDesktopVersionInfo',
+  name: 'AppDetails',
   setup() {
     const state = reactive({
       browserName: '',
@@ -141,23 +141,23 @@ export default {
 </script>
 
 <style>
-.version-info .v-list {
+.appDetails .v-list {
   font-size: 12px;
 }
-.version-info .v-list-item {
+.appDetails .v-list-item {
   color: black !important;
   min-height: 28px !important;
 }
-.version-info a {
+.appDetails a {
   color: black !important;
   text-decoration: none;
 }
-.version-info a:hover {
+.appDetails a:hover {
   text-decoration: underline;
 }
 
-.version-info .col-4,
-.version-info .col-8 {
+.appDetails .col-4,
+.appDetails .col-8 {
   padding: 4px;
 }
 </style>

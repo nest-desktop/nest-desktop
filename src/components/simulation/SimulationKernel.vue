@@ -2,22 +2,27 @@
   <div class="simulationKernel">
     <v-row class="full-height" no-gutters>
       <v-col>
-        <v-card class="mb-1" flat tile>
-          <v-btn
-            :color="state.color"
-            block
-            dark
-            depressed
-            tile
-            v-text="'simulation kernel'"
-          />
+        <v-card
+          :style="{
+            borderLeft: `4px solid ${state.color}`,
+          }"
+          class="ma-1"
+          outlined
+          tile
+        >
+          <v-card-title class="pa-0">
+            <v-btn
+              :color="state.color"
+              :dark="projectView.config.coloredToolbar"
+              :text="!projectView.config.coloredToolbar"
+              block
+              depressed
+              tile
+              v-text="'simulation kernel'"
+            />
+          </v-card-title>
 
-          <v-card-text
-            :style="{
-              borderLeft: `4px solid ${state.color}`,
-            }"
-            class="pa-0"
-          >
+          <v-card-text class="pa-0">
             <ParameterEdit
               :options="{
                 input: 'tickSlider',
@@ -78,21 +83,26 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mb-1" flat tile>
-          <v-btn
-            :color="state.color"
-            block
-            dark
-            depressed
-            tile
-            v-text="'Simulation'"
-          />
-          <v-card-text
-            :style="{
-              borderLeft: `4px solid ${state.color}`,
-            }"
-            class="pa-0"
-          >
+        <v-card
+          :style="{
+            borderLeft: `4px solid ${state.color}`,
+          }"
+          class="ma-1"
+          outlined
+          tile
+        >
+          <v-card-title class="pa-0">
+            <v-btn
+              :color="state.color"
+              :dark="projectView.config.coloredToolbar"
+              :text="!projectView.config.coloredToolbar"
+              block
+              depressed
+              tile
+              v-text="'Simulation'"
+            />
+          </v-card-title>
+          <v-card-text class="pa-0">
             <ParameterEdit
               :options="{
                 id: 'simulationTime',
@@ -126,6 +136,7 @@ import Vue from 'vue';
 import { reactive, onMounted } from '@vue/composition-api';
 
 import { Simulation } from '@/core/simulation/simulation';
+import core from '@/core';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
@@ -137,6 +148,7 @@ export default Vue.extend({
     simulation: Simulation,
   },
   setup(props) {
+    const projectView = core.app.projectView;
     const state = reactive({
       color: '#9e9e9e',
       autoRNGSeed: false,
@@ -157,6 +169,7 @@ export default Vue.extend({
 
     return {
       paramChange,
+      projectView,
       state,
     };
   },

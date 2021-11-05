@@ -2,7 +2,7 @@ import { Config } from '../config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
-import { Synapse } from '../connection/synapse';
+import { Synapse } from '../synapse/synapse';
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
@@ -269,7 +269,7 @@ export class Parameter extends Config {
         .filter((spec: any) => !(spec.optional && spec.value === spec.default))
         .map((spec: any) => spec.value)
         .join(', ');
-      value = `${this._type.id}(${specs})`;
+      value = `list(${this._type.id}(${specs}))`;
     } else if (this._type.id === 'spatial.distance') {
       // Distance-dependent linear function.
       const specs: any[] = this.specs;

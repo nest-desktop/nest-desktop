@@ -137,7 +137,7 @@ import {
 import * as d3 from 'd3';
 
 import { Connection } from '@/core/connection/connection';
-import { NetworkGraph } from '@/core/network/networkGraph';
+import { NetworkGraph } from '@/core/network/networkGraph/networkGraph';
 import { Node } from '@/core/node/node';
 import core from '@/core';
 
@@ -241,7 +241,7 @@ export default Vue.extend({
      */
     const hasAllNodeTypes = () => {
       const types: string[] = state.network.nodes.map(
-        node => node.model.elementType
+        (node: Node) => node.model.elementType
       );
       return (
         types.includes('stimulator') &&
@@ -255,7 +255,7 @@ export default Vue.extend({
      */
     const showHelp = () => {
       state.snackbar.show = false;
-      if (!state.network.project.config.showHelp) {
+      if (!projectView.config.showHelp) {
         return;
       }
       if (state.network.nodes.length === 0) {
@@ -310,8 +310,8 @@ export default Vue.extend({
 
     watch(
       () => [
-        state.network.view.selectedNode,
-        state.network.view.selectedConnection,
+        state.network.state.selectedNode,
+        state.network.state.selectedConnection,
       ],
       () => {
         // When (un-)select node or connection button outside of the network graph.

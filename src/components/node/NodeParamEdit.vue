@@ -1,33 +1,5 @@
 <template>
   <div class="nodeParamEdit" v-if="state.node">
-    <div v-if="!state.node.model.isRecorder()">
-      <NodePosition
-        :node="state.node"
-        v-if="state.node.spatial.hasPositions()"
-      />
-      <ParameterEdit
-        :color="state.node.view.color"
-        :options="{
-          id: 'populationSize',
-          input: 'valueSlider',
-          label: 'population size',
-          max: 1000,
-          min: 1,
-          value: 1,
-          rules: [
-            [
-              'value >= 1000',
-              'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
-              'warning',
-            ],
-          ],
-        }"
-        :value.sync="state.node.size"
-        @update:value="paramChange"
-        v-else
-      />
-    </div>
-
     <template v-if="node.model.existing === 'multimeter'">
       <v-row no-gutters>
         <v-col>
@@ -68,13 +40,11 @@ import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
-import NodePosition from '@/components/node/NodePosition.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
   name: 'NodeParamEdit',
   components: {
-    NodePosition,
     ParameterEdit,
   },
   props: {
