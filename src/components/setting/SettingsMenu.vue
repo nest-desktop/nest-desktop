@@ -8,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width: 300px">
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -61,7 +61,7 @@ export default Vue.extend({
   setup(props) {
     const appView = core.app.view;
     const state = reactive({
-      content: null,
+      content: undefined,
       position: props.position,
       show: true,
       items: [
@@ -81,7 +81,7 @@ export default Vue.extend({
      * Reset states.
      */
     const reset = () => {
-      state.content = null;
+      state.content = undefined;
     };
 
     /**

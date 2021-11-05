@@ -173,9 +173,9 @@ export default Vue.extend({
       spatialNode: false,
       visibleParams: [],
       weight: {
-        mixed: null,
-        inhibitory: 0,
         excitatory: 1,
+        inhibitory: 0,
+        mixed: null,
       },
       items: [
         {
@@ -236,7 +236,7 @@ export default Vue.extend({
     };
 
     /**
-     * Set weigths of all connection in this node.
+     * Set weights of all connection in this node.
      */
     const setWeights = (mode: string) => {
       state.node.setWeights(mode);
@@ -244,7 +244,7 @@ export default Vue.extend({
     };
 
     /**
-     * Set an array of visible parameter for checkbox.
+     * Set an array of visible parameters for checkbox.
      */
     const setVisibleParams = () => {
       state.visibleParams = state.node.params
