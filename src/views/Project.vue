@@ -10,17 +10,16 @@
       flat
     >
       <v-tabs
-        :slider-size="2"
+        :show-arrows="false"
         @change="() => projectView.updateProjectMode()"
         align-with-title
-        fixed-tabs
         icons-and-text
-        style="flex: 0 1 auto; width: 320px"
+        style="flex: 0 1 auto; width: 271px"
         v-model="projectView.state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
-            <v-tab v-bind="attrs" v-on="on">
+            <v-tab class="ma-0" v-bind="attrs" v-on="on">
               <div class="tab-text" v-text="'Editor'" />
               <v-icon v-text="'$network'" />
             </v-tab>

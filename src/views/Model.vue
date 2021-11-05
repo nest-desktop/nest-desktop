@@ -2,16 +2,15 @@
   <div class="modelView" v-if="modelView">
     <v-app-bar app class="no-print" clipped-right color="model" dark dense flat>
       <v-tabs
-        :slider-size="4"
+        :show-arrows="false"
         align-with-title
-        fixed-tabs
         icons-and-text
-        style="flex: 0 1 auto; width: 320px"
+        style="flex: 0 1 auto; width: 271px"
         v-model="modelView.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
           <template #activator="{ on, attrs }">
-            <v-tab v-bind="attrs" v-on="on">
+            <v-tab class="ma-0" v-bind="attrs" v-on="on">
               <div class="tab-text" v-text="'Doc'" />
               <v-icon v-text="'mdi-text-box-outline'" />
             </v-tab>
