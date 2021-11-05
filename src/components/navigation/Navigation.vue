@@ -47,6 +47,7 @@
       <v-row class="fill-height" no-gutters>
         <v-col>
           <v-navigation-drawer
+            :dark="state.darkNav"
             absolute
             app
             mini-variant
@@ -58,7 +59,6 @@
               <v-list nav>
                 <v-list-item
                   :class="{ 'v-list-item--active': state.navList === route.id }"
-                  :color="route.color"
                   :key="route.id"
                   :title="route.title"
                   @click="() => updatePageContent(route.id)"
@@ -183,6 +183,7 @@ export default {
   setup() {
     const appView = core.app.view;
     const state = reactive({
+      darkNav: false,
       dialog: false,
       miniVariant: true,
       navList: '',
