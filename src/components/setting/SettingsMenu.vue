@@ -68,7 +68,7 @@ export default Vue.extend({
         {
           id: 'configsReset',
           icon: 'mdi-cog-refresh',
-          title: 'Reset all confurations',
+          title: 'Reset all configurations',
           onClick: () => {
             state.content = 'configsReset';
           },
