@@ -1,6 +1,5 @@
 import * as math from 'mathjs';
 
-import { Node } from '../node';
 import { NodeSpatial } from './nodeSpatial';
 
 export class GridPositions {

@@ -72,14 +72,14 @@
         </span>
 
         <span v-if="state.content === 'paramSelect'">
-          <v-card-text class="pa-0">
+          <v-card-text class="px-0 py-1">
             <ConnectionParamSelect
               :connection="state.connection"
-              :visibleParams="state.visibleParams.connection"
+              :paramsIdx="state.connectionParamsIdx"
             />
             <SynapseParamSelect
               :synapse="state.connection.synapse"
-              :visibleParams="state.visibleParams.synapse"
+              :paramsIdx="state.synapseParamsIdx"
             />
           </v-card-text>
 
@@ -165,11 +165,12 @@ export default Vue.extend({
   setup(props) {
     const projectView = core.app.projectView;
     const state = reactive({
-      content: undefined as string | undefined,
       connection: props.connection as Connection,
+      connectionParamsIdx: [],
+      content: undefined as string | undefined,
       position: props.position,
-      visibleParams: { connection: [], synapse: [] },
       show: true,
+      synapseParamsIdx: [],
       items: [
         {
           id: 'paramSelect',
@@ -243,11 +244,11 @@ export default Vue.extend({
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
-          (param.visible = state.visibleParams.connection.includes(param.idx))
+          (param.visible = state.connectionParamsIdx.includes(param.idx))
       );
       state.connection.synapse.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.visibleParams.synapse.includes(param.idx))
+          (param.visible = state.synapseParamsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
     };
@@ -256,10 +257,10 @@ export default Vue.extend({
      * Set an array of visible parameter for checkbox.
      */
     const setVisibleParams = () => {
-      state.visibleParams.connection = state.connection.params
+      state.connectionParamsIdx = state.connection.params
         .filter((param: Parameter) => param.visible)
         .map((param: Parameter) => param.idx);
-      state.visibleParams.synapse = state.connection.synapse.params
+      state.synapseParamsIdx = state.connection.synapse.params
         .filter((param: ModelParameter) => param.visible)
         .map((param: ModelParameter) => param.idx);
     };

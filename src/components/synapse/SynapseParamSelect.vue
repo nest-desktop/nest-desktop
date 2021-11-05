@@ -1,11 +1,11 @@
 <template>
   <div class="synapseParamSelect">
-    <v-list dense>
+    <v-list class="pa-0" dense>
       <v-list-item-group
         @change="selectionChange"
         active-class=""
         multiple
-        v-model="state.visibleParams"
+        v-model="state.paramsIdx"
       >
         <v-list-item
           :key="param.id"
@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted } from '@vue/composition-api';
+import { reactive, onMounted, watch } from '@vue/composition-api';
 
 import { Synapse } from '@/core/synapse/synapse';
 import { ModelParameter } from '@/core/parameter/modelParameter';
@@ -49,12 +49,12 @@ export default Vue.extend({
   name: 'SynapseParamSelect',
   props: {
     synapse: Synapse,
-    visibleParams: Array,
+    paramsIdx: Array,
   },
   setup(props) {
     const state = reactive({
       synapse: props.synapse as Synapse,
-      visibleParams: (props.visibleParams as Number[]) || [],
+      paramsIdx: (props.paramsIdx as Number[]) || [],
     });
 
     /**
@@ -70,7 +70,7 @@ export default Vue.extend({
     const selectionChange = () => {
       state.synapse.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.visibleParams.includes(param.idx))
+          (param.visible = state.paramsIdx.includes(param.idx))
       );
       state.synapse.synapseChanges();
     };
@@ -79,7 +79,7 @@ export default Vue.extend({
      * Set an array of visible parameter for checkbox.
      */
     const update = () => {
-      state.visibleParams = state.synapse.params
+      state.paramsIdx = state.synapse.params
         .filter((param: ModelParameter) => param.visible)
         .map((param: ModelParameter) => param.idx);
     };
@@ -97,6 +97,13 @@ export default Vue.extend({
     onMounted(() => {
       update();
     });
+
+    watch(
+      () => props.paramsIdx,
+      () => {
+        state.paramsIdx = props.paramsIdx as Number[];
+      }
+    );
 
     return {
       hideAllParams,

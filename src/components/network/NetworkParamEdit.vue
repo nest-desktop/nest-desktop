@@ -224,21 +224,7 @@
                   />
                   <ParameterEdit
                     :color="node.view.color"
-                    :options="{
-                      id: 'populationSize',
-                      input: 'valueSlider',
-                      label: 'population size',
-                      max: 1000,
-                      min: 1,
-                      value: 1,
-                      rules: [
-                        [
-                          'value >= 1000',
-                          'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
-                          'warning',
-                        ],
-                      ],
-                    }"
+                    :options="state.sizeOptions"
                     :value.sync="node.size"
                     @update:value="node.nodeChanges"
                     v-else
@@ -401,6 +387,21 @@ export default Vue.extend({
           y: 0,
         },
         show: false,
+      },
+      sizeOptions: {
+        id: 'populationSize',
+        input: 'valueSlider',
+        label: 'population size',
+        max: 1000,
+        min: 1,
+        value: 1,
+        rules: [
+          [
+            'value >= 1000',
+            'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
       },
       text: true,
     });
