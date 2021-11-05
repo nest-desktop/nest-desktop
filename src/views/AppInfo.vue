@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <div class="home">
-=======
   <div class="appInfo">
->>>>>>> c2f8ae5... rename components
     <v-main style="height: 100vh; overflow-y: auto">
       <v-container fill-height>
         <v-spacer />
@@ -229,16 +225,6 @@ export default Vue.extend({
 </script>
 
 <style>
-<<<<<<< HEAD
-.home .logo {
-  overflow: hidden;
-}
-.home .logo .v-image {
-  transition: all 0.5s ease-in-out;
-  transform: scale(1);
-}
-.home .logo:hover .v-image {
-=======
 .appInfo .logo {
   overflow: hidden;
 }
@@ -247,7 +233,6 @@ export default Vue.extend({
   transform: scale(1);
 }
 .appInfo .logo:hover .v-image {
->>>>>>> c2f8ae5... rename components
   transform: scale(1.5);
 }
 </style>
