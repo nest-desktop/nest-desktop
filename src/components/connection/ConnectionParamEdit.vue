@@ -7,8 +7,8 @@
       hide-details
       item-value="value"
       item-text="label"
-      label="Connection rule"
-      class="pa-1 pt-3"
+      label="connection rule"
+      class="px-2 py-3"
       v-model="state.connection.rule"
     />
 

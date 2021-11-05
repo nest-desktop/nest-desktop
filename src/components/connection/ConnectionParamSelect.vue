@@ -1,11 +1,11 @@
 <template>
   <div class="connectionParamSelect">
-    <v-list dense>
+    <v-list class="pa-0" dense>
       <v-list-item-group
         @change="selectionChange"
         active-class=""
         multiple
-        v-model="state.visibleParams"
+        v-model="state.paramsIdx"
       >
         <v-list-item
           :key="param.id"
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted } from '@vue/composition-api';
+import { reactive, onMounted, watch } from '@vue/composition-api';
 
 import { Connection } from '@/core/connection/connection';
 import { Parameter } from '@/core/parameter/parameter';
@@ -44,12 +44,12 @@ export default Vue.extend({
   name: 'ConnectionParamSelect',
   props: {
     connection: Connection,
-    visibleParams: Array,
+    paramsIdx: Array,
   },
   setup(props) {
     const state = reactive({
       connection: props.connection as Connection,
-      visibleParams: (props.visibleParams as Number[]) || [],
+      paramsIdx: (props.paramsIdx as Number[]) || [],
     });
 
     /**
@@ -65,7 +65,7 @@ export default Vue.extend({
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
-          (param.visible = state.visibleParams.includes(param.idx))
+          (param.visible = state.paramsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
     };
@@ -74,7 +74,7 @@ export default Vue.extend({
      * Set an array of visible parameter for checkbox.
      */
     const update = () => {
-      state.visibleParams = state.connection.params
+      state.paramsIdx = state.connection.params
         .filter((param: Parameter) => param.visible)
         .map((param: Parameter) => param.idx);
     };
@@ -92,6 +92,13 @@ export default Vue.extend({
     onMounted(() => {
       update();
     });
+
+    watch(
+      () => props.paramsIdx,
+      () => {
+        state.paramsIdx = props.paramsIdx as Number[];
+      }
+    );
 
     return {
       hideAllParams,
