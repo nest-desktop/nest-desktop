@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "noImplicitOverride": true,
     "strictPropertyInitialization": false,
     "resolveJsonModule": true,
     "sourceMap": true,
