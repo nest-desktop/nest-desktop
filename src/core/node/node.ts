@@ -433,7 +433,7 @@ export class Node extends Config {
    *
    * @return copied node object
    */
-  copy(item: any): any {
+  override copy(item: any): any {
     return JSON.parse(JSON.stringify(item));
   }
 

@@ -11,7 +11,7 @@ export class ModelParameter extends Parameter {
   /**
    * Get options from model component.
    */
-  get options(): ModelParameter | undefined {
+  override get options(): ModelParameter | undefined {
     let model: Model;
     if (this.parent.name === 'Model') {
       model = this.parent as Model;
