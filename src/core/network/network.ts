@@ -280,7 +280,7 @@ export class Network extends Config {
   /**
    * Copy network component.
    */
-  copy(item: any): any {
+  override copy(item: any): any {
     return JSON.parse(JSON.stringify(item));
   }
 

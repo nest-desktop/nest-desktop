@@ -11,7 +11,7 @@ export class ModelParameter extends Parameter {
   /**
    * Get options from model component.
    */
-  get options(): ModelParameter | undefined {
+  override get options(): ModelParameter | undefined {
     let model: Model;
     if (this.parent.name === 'Model') {
       model = this.parent as Model;
@@ -28,7 +28,7 @@ export class ModelParameter extends Parameter {
   /**
    * Reset constant value taken from model component.
    */
-  reset(): void {
+  override reset(): void {
     this.type = 'constant';
     this.value = this.options.value;
   }
@@ -36,7 +36,7 @@ export class ModelParameter extends Parameter {
   /**
    * Trigger changes when parameter is changed.
    */
-  paramChanges(): void {
+  override paramChanges(): void {
     if (this.parent.name === 'Node') {
       const node = this.parent as Node;
       node.nodeChanges();
@@ -50,7 +50,7 @@ export class ModelParameter extends Parameter {
    * Serialize for JSON.
    * @return model parameter object
    */
-  toJSON(): any {
+  override toJSON(): any {
     const param: any = {
       id: this.id,
       value: this.value,

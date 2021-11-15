@@ -28,14 +28,14 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
     this.init();
   }
 
-  get params(): any[] {
+  override get params(): any[] {
     return this._params;
   }
 
   /**
    * Update data for ISI histogram.
    */
-  updateData(activity: SpikeActivity): void {
+  override updateData(activity: SpikeActivity): void {
     // console.log('Update data for ISI histogram.').
     const isi: number[][] = activity.ISI();
     const x: number[] = [].concat.apply([], isi);
@@ -72,7 +72,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
   /**
    * Update layout label for ISI histogram.
    */
-  updateLayoutLabel(): void {
+  override updateLayoutLabel(): void {
     this.panel.layout.xaxis.type = this.state.xaxisType;
     this.panel.layout.xaxis.title = 'Inter-spike interval [ms]';
   }

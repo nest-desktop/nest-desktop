@@ -12,7 +12,7 @@ export class SpikeActivity extends Activity {
   /**
    * Update spike activity.
    */
-  update(activity: any): void {
+  override update(activity: any): void {
     this.events = activity.events || {};
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
@@ -86,7 +86,7 @@ export class SpikeActivity extends Activity {
   /**
    * Clone spike activity.
    */
-  clone(): SpikeActivity {
+  override clone(): SpikeActivity {
     return new SpikeActivity(this.recorder, this.toJSON());
   }
 }

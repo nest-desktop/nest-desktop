@@ -26,14 +26,14 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
     this.init();
   }
 
-  get params(): any[] {
+  override get params(): any[] {
     return this._params;
   }
 
   /**
    * Update data for spike time histogram.
    */
-  updateData(activity: SpikeActivity): void {
+  override updateData(activity: SpikeActivity): void {
     // console.log('Update data of spike time histogram.');
     const x: number[] = activity.events.times;
     const start: number = this.state.start;
@@ -69,7 +69,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
   /**
    * Update layout label for spike time histogram.
    */
-  updateLayoutLabel(): void {
+  override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Time [ms]';
     this.panel.layout.yaxis.title = 'Spike count';
   }

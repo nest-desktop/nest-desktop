@@ -15,7 +15,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
   /**
    * Update data for raster plot.
    */
-  updateData(activity: SpikeActivity): void {
+  override updateData(activity: SpikeActivity): void {
     // console.log('Update data for raster plot.');
     this.data.push({
       activityIdx: activity.idx,
@@ -37,7 +37,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
   /**
    * Update layout label for raster plot.
    */
-  updateLayoutLabel(): void {
+  override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Time [ms]';
     this.panel.layout.yaxis.title = 'Neuron ID';
   }

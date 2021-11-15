@@ -17,7 +17,7 @@ export class SpikeSendersHistogramModel extends SpikeTimesPlotModel {
   /**
    * Update data for spike sender histogram.
    */
-  updateData(activity: SpikeActivity): void {
+  override updateData(activity: SpikeActivity): void {
     // console.log('Update data of spike time histogram.');
     const x: number[] = activity.events.senders;
     const start: number = d3.min(x);
@@ -53,7 +53,7 @@ export class SpikeSendersHistogramModel extends SpikeTimesPlotModel {
   /**
    * Update layout label for spike sender histogram.
    */
-  updateLayoutLabel(): void {
+  override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Neuron ID';
     this.panel.layout.yaxis.title = 'Spike count';
   }
