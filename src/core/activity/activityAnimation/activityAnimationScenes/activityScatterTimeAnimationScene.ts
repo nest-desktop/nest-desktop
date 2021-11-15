@@ -8,7 +8,7 @@ export class ActivityScatterTimeAnimationScene extends ActivityAnimationScene {
     super('timeSphere', graph);
   }
 
-  render(): void {
+  override render(): void {
     if (this.graph.frame) {
       this.graph.frame.data.forEach((data: any) => this.renderScatter(data));
       this.renderTrail();

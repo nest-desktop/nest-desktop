@@ -32,7 +32,7 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
   /**
    * Initialize histogram panel for analog signal.
    */
-  init(): void {
+  override init(): void {
     this.data = [];
     this.activities = this.panel.graph.project.analogSignalActivities;
   }
@@ -43,7 +43,7 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
    * @remarks
    * It requires activity data.
    */
-  updateData(): void {
+  override updateData(): void {
     // console.log('Init histogram panel of spike times')
     this.data = [];
     this.panel.xaxis = this.panel.graph.panels.indexOf(this.panel) + 1;
@@ -102,7 +102,7 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
   /**
    * Update layout label for analog signal histogram.
    */
-  updateLayoutLabel(records: string[] = []): void {
+  override updateLayoutLabel(records: string[] = []): void {
     // console.log('Update layout label for analog signal histogram.');
     // Label x-axis if only one record existed.
     this.panel.layout.xaxis.title = '';

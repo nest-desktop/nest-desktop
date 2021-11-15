@@ -14,7 +14,7 @@ export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
   /**
    * Initialize plot panel for neuronal analog signals.
    */
-  init(): void {
+  override init(): void {
     this.data = [];
     this.activities = this.panel.graph.project.neuronAnalogSignalActivities;
   }

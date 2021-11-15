@@ -30,7 +30,7 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
   /**
    * Update data for CV of ISI histogram.
    */
-  updateData(activity: SpikeActivity): void {
+  override updateData(activity: SpikeActivity): void {
     // console.log('Update data for CV_ISI histogram.')
     const start = 0;
     const end = 5;
@@ -70,7 +70,7 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
   /**
    * Update layout label for CV_ISI histogram.
    */
-  updateLayoutLabel(): void {
+  override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'CV of ISI';
   }
 }
