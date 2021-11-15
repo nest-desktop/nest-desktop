@@ -9,19 +9,6 @@ export class AnalogSignalActivity extends Activity {
   }
 
   /**
-   * Initialize analog signal activity.
-   */
-  override init(activity: any): void {
-    this.reset();
-
-    this.events = activity.events || { senders: [], times: [], V_m: [] };
-    this.nodeIds = activity.nodeIds || [];
-    this.nodePositions = activity.nodePositions || [];
-    this.nodeCollectionId = activity.nodeCollectionId;
-    this.updateHash();
-  }
-
-  /**
    * Clone analog signal activity.
    * It creates a new component with JSON data.
    */

@@ -39,9 +39,9 @@ export class App extends Config {
     this._modelDB = new DatabaseService(this, 'MODEL_STORE');
 
     // Initialize views
-    this._view = new AppView(this);
-    this._projectView = new ProjectView(this);
     this._modelView = new ModelView(this);
+    this._projectView = new ProjectView(this);
+    this._view = new AppView(this);
   }
 
   get datetime(): string {

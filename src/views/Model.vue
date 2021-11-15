@@ -204,7 +204,7 @@
     <v-overlay
       :value="
         modelView.state.project.simulation.running &&
-        !projectView.state.project.config.simulateWithInsite
+        !projectView.config.simulateWithInsite
       "
     >
       <v-progress-circular

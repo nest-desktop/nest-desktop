@@ -16,7 +16,7 @@ export class ActivityAnimationGraph {
   private _project: Project;
   private _recordables: string[] = [];
   private _recordablesOptions: any[] = [];
-  private _recordFrom = 'V_m';
+  private _records = 'V_m';
   private _ref: any;
   private _scene: any;
   private _sceneIdx: number = 0;
@@ -152,12 +152,12 @@ export class ActivityAnimationGraph {
     return this._recordablesOptions;
   }
 
-  get recordFrom(): string {
-    return this._recordFrom;
+  get records(): string {
+    return this._records;
   }
 
-  set recordFrom(value: string) {
-    this._recordFrom = value;
+  set records(value: string) {
+    this._records = value;
   }
 
   get sceneIdx(): number {
@@ -209,7 +209,7 @@ export class ActivityAnimationGraph {
     this._layers = [];
     this._recordables = [];
     this._recordablesOptions = [];
-    this._recordFrom = 'V_m';
+    this._records = 'V_m';
     this._frames = this.createEmptyFrames();
   }
 

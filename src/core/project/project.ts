@@ -420,7 +420,7 @@ export class Project {
 
     this.cancelGettingActivityInsite();
 
-    if (this.config.simulateWithInsite) {
+    if (this.app.projectView.config.simulateWithInsite) {
       return;
     }
 
@@ -488,7 +488,7 @@ export class Project {
 
     this.cancelGettingActivityInsite();
 
-    if (!this.config.simulateWithInsite) {
+    if (!this.app.projectView.config.simulateWithInsite) {
       return;
     }
 
@@ -611,7 +611,7 @@ export class Project {
           };
 
           if (Object.keys(nodePositions).length > 0) {
-            console.log('Add node positions in activity');
+            // console.log('Add node positions in activity');
             data.nodeIds.forEach((id: number) => {
               if (id in nodePositions) {
                 activity.nodePositions.push(nodePositions[id]);

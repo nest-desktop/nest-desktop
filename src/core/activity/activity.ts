@@ -97,14 +97,6 @@ export class Activity {
     return this._records;
   }
 
-  // get senders(): number[] {
-  //   const senders: any[] = [...new Set(this._events.senders)];
-  //   if (senders.length > 0) {
-  //     senders.sort((a: number, b: number) => a - b);
-  //   }
-  //   return senders;
-  // }
-
   /**
    * Check if activity has events.
    */
@@ -129,15 +121,15 @@ export class Activity {
    * Overwrites events.
    */
   init(activity: any): void {
+    // console.log('Initialize activity.');
     this.reset();
 
-    this._lastFrame = false;
-    this._events = activity.events || {};
-    this._records = Object.keys(this._events).filter(
-      (event: string) => !['senders', 'times'].includes(event)
-    );
-    this._nodeIds = activity.nodeIds || [];
-    this._nodePositions = activity.nodePositions || [];
+    this.events = activity.events || { senders: [], times: [] };
+    this.nodeIds = activity.nodeIds || [];
+    this.nodePositions = activity.nodePositions || [];
+    this.nodeCollectionId = activity.nodeCollectionId;
+
+    this.updateRecords();
     this.updateHash();
   }
 
@@ -161,6 +153,15 @@ export class Activity {
     });
 
     this.updateHash();
+  }
+
+  /**
+   * Update record from event keys.
+   */
+  updateRecords(): void {
+    this._records = Object.keys(this._events).filter(
+      (event: string) => !['senders', 'times'].includes(event)
+    );
   }
 
   /**

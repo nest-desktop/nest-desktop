@@ -297,7 +297,7 @@
       :value="
         state.loading ||
         (projectView.state.project.simulation.running &&
-          !projectView.state.project.config.simulateWithInsite)
+          !projectView.config.simulateWithInsite)
       "
       :z-index="10"
     >

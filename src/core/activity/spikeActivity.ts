@@ -7,7 +7,8 @@ export class SpikeActivity extends Activity {
   private _times: any;
 
   constructor(recorder: Node, activity: any = {}) {
-    super(recorder, activity);
+    super(recorder);
+    this.init(activity);
   }
 
   /**

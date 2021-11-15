@@ -14,7 +14,7 @@ export class ProjectCode extends Code {
     super();
     this._project = project;
     this._state = reactive({
-      codeInsite: this._project.config.simulateWithInsite,
+      codeInsite: false,
     });
 
     this.generate();
@@ -46,11 +46,14 @@ export class ProjectCode extends Code {
    */
   generate(): void {
     // console.log('Generate script');
+
+    const simulateWithInsite =
+      this._project.app.projectView.config.simulateWithInsite;
     this._script = '';
     this._script += this.importModules();
     this._script += 'nest.ResetKernel()\n';
 
-    if (this._project.config.simulateWithInsite) {
+    if (simulateWithInsite) {
       this._script += '# "insitemodule" can only be loaded once.\n';
       this._script += 'try:';
       this._script += this._() + 'nest.Install("insitemodule")\n';
@@ -73,10 +76,7 @@ export class ProjectCode extends Code {
     this._script += '\n\n# Run simulation\n';
     this._script += this._project.simulation.code.simulate();
 
-    if (
-      !this._project.config.simulateWithInsite &&
-      this._project.network.recorders.length > 0
-    ) {
+    if (!simulateWithInsite && this._project.network.recorders.length > 0) {
       this._script += '\n\n# Get IDs of recorded node\n';
       this._script += this.defineGetNodeIds();
 
@@ -89,7 +89,7 @@ export class ProjectCode extends Code {
       this._script += this.response();
     }
 
-    this._state.codeInsite = this._project.config.simulateWithInsite;
+    this._state.codeInsite = simulateWithInsite;
     this._hash = sha1(this._script);
   }
 
