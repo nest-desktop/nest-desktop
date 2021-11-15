@@ -19,16 +19,16 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
     // console.log('Update data for FI curve.');
     this.data.push({
       activityIdx: activity.idx,
-      mode: 'lines',
-      type: 'scattergl',
       hoverinfo: 'none',
       legendgroup: 'spikes' + activity.idx,
-      name: 'Spikes of ' + activity.recorder.view.label,
-      showlegend: true,
       marker: {
         size: 5,
         color: activity.recorder.view.color,
       },
+      mode: 'lines',
+      name: 'Spikes of ' + activity.recorder.view.label,
+      showlegend: true,
+      type: 'scattergl',
       x: activity.events.times,
       y: activity.events.senders,
     });
@@ -39,6 +39,6 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
    */
   updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Neuron ID';
-    this.panel.layout.yaxis.title = 'Spike countd3';
+    this.panel.layout.yaxis.title = 'Spike count d3';
   }
 }

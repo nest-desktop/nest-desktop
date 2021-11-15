@@ -78,8 +78,8 @@
                   :value="record"
                   @change="paramChange"
                   class="ma-0 pa-0"
-                  hide-details
                   dense
+                  hide-details
                   v-for="record in activity.records"
                   v-model="panel.model.state.records[activity.idx]"
                 />

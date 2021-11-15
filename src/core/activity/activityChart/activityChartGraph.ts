@@ -2,10 +2,10 @@ import { Project } from '../../project/project';
 import { ActivityChartPanel } from './activityChartPanel';
 
 export class ActivityChartGraph {
-  private _options: any = {};
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
+  private _options: any = {};
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
 
