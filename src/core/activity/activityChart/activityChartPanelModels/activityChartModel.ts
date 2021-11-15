@@ -4,8 +4,8 @@ import { ActivityChartPanel } from '../activityChartPanel';
 export abstract class ActivityChartModel {
   // private static readonly _name = 'ActivityGraphPanel';
   private _activities: Activity[] = [];
-  private _data: any[] = [];
   private _activityType: string = '';
+  private _data: any[] = [];
   private _icon: string = '';
   private _id: string = '';
   private _label: string = '';

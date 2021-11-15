@@ -45,19 +45,9 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      type: 'histogram',
-      source: 'x',
       histfunc: 'count',
-      legendgroup: 'spikes' + activity.idx,
-      name: 'Histogram of ISI in' + activity.recorder.view.label,
       hoverinfo: 'y',
-      showlegend: false,
-      opacity: 0.6,
-      xbins: {
-        start,
-        end,
-        size,
-      },
+      legendgroup: 'spikes' + activity.idx,
       marker: {
         color: activity.recorder.view.color,
         line: {
@@ -65,7 +55,17 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
+      name: 'Histogram of ISI in' + activity.recorder.view.label,
+      opacity: 0.6,
+      showlegend: false,
+      source: 'x',
+      type: 'histogram',
       x,
+      xbins: {
+        start,
+        end,
+        size,
+      },
     });
   }
 
