@@ -25,7 +25,7 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
     this.init();
   }
 
-  get params(): any[] {
+  override get params(): any[] {
     return this._params;
   }
 

@@ -210,7 +210,7 @@ export class Parameter extends Config {
   /**
    * Copy paramter component
    */
-  copy(): any {
+  override copy(): any {
     return new Parameter(this._parent, this);
   }
 
