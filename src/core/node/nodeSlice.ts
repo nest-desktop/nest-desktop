@@ -5,8 +5,8 @@ import { Parameter } from '../parameter/parameter';
 export class NodeSlice extends Config {
   private readonly _name = 'NodeSlice';
   private _node: Node;
-  private _visible: boolean = false;
   private _params: Parameter[] = [];
+  private _visible: boolean = false;
 
   constructor(node: Node, params: any[] = []) {
     super('NodeSlice');
