@@ -21,7 +21,7 @@
           </v-row>
         </v-card-title>
 
-        <span v-if="state.content === undefined">
+        <span v-if="state.content == undefined">
           <v-list dense>
             <v-list-item>
               <v-list-item-icon>

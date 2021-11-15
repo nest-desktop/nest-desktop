@@ -1,6 +1,6 @@
 import { Activity } from './activity';
-import { ActivityChartGraph } from '../activity/activityChartGraph';
-import { ActivityAnimationGraph } from '../activity/activityAnimationGraph';
+import { ActivityChartGraph } from './activityChart/activityChartGraph';
+import { ActivityAnimationGraph } from './activityAnimation/activityAnimationGraph';
 import { Project } from '../project/project';
 
 export class ActivityGraph {
@@ -67,11 +67,11 @@ export class ActivityGraph {
   /**
    * Initialize activity chart graph (plotly).
    */
-  initActivityChartGraph(panels: any[] = []): void {
+  initActivityChartGraph(): void {
     if (this._activityChartGraph == undefined) {
-      this._activityChartGraph = new ActivityChartGraph(this._project, panels);
+      this._activityChartGraph = new ActivityChartGraph(this._project);
     } else {
-      this._activityChartGraph.init(panels);
+      this._activityChartGraph.init();
     }
   }
 
@@ -93,7 +93,7 @@ export class ActivityGraph {
    * Check if it has any analog data.
    */
   hasAnyAnalogData(): boolean {
-    return this.project.activities.some((activity: Activity) =>
+    return this._project.activities.some((activity: Activity) =>
       activity.hasAnalogData()
     );
   }
@@ -102,7 +102,7 @@ export class ActivityGraph {
    * Check if it has any spike data.
    */
   hasAnySpikeData(): boolean {
-    return this.project.activities.some((activity: Activity) =>
+    return this._project.activities.some((activity: Activity) =>
       activity.hasSpikeData()
     );
   }

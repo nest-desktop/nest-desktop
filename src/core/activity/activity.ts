@@ -1,6 +1,7 @@
+import { sha1 } from 'object-hash';
+
 // import { Config } from '../config';
 import { Node } from '../node/node';
-import { sha1 } from 'object-hash';
 
 export class Activity {
   private _events: any = {};
@@ -8,7 +9,7 @@ export class Activity {
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
-  private _recordFrom: String[] = [];
+  private _records: String[] = [];
   private _hash: string;
 
   constructor(recorder: Node, activity: any = {}) {
@@ -68,8 +69,8 @@ export class Activity {
     return this._recorder;
   }
 
-  get recordFrom(): String[] {
-    return this._recordFrom;
+  get records(): String[] {
+    return this._records;
   }
 
   get senders(): number[] {
@@ -92,7 +93,7 @@ export class Activity {
    */
   update(activity: any): void {
     this._events = activity.events || {};
-    this._recordFrom = Object.keys(this._events).filter(
+    this._records = Object.keys(this._events).filter(
       (event: string) => !['senders', 'times'].includes(event)
     );
     this._nodeIds = activity.nodeIds || [];

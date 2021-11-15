@@ -14,12 +14,16 @@
             <v-btn
               :color="state.color"
               :dark="projectView.config.coloredToolbar"
+              :ripple="false"
               :text="!projectView.config.coloredToolbar"
               block
               depressed
+              height="40"
               tile
-              v-text="'simulation kernel'"
-            />
+            >
+              simulation kernel
+              <v-spacer />
+            </v-btn>
           </v-card-title>
 
           <v-card-text class="pa-0">
@@ -95,12 +99,16 @@
             <v-btn
               :color="state.color"
               :dark="projectView.config.coloredToolbar"
+              :ripple="false"
               :text="!projectView.config.coloredToolbar"
               block
               depressed
+              height="40"
               tile
-              v-text="'Simulation'"
-            />
+            >
+              simulation
+              <v-spacer />
+            </v-btn>
           </v-card-title>
           <v-card-text class="pa-0">
             <ParameterEdit
