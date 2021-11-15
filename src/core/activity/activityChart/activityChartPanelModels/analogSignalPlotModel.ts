@@ -129,7 +129,8 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * Update multiple lines data for analog signals.
    */
   updateMultipleLines(activity: AnalogSignalActivity, record: string): void {
-    if (!activity.events.hasOwnProperty(record) ||
+    if (
+      !activity.events.hasOwnProperty(record) ||
       activity.nodeIds.length === 0
     ) {
       return;

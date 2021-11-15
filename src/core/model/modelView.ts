@@ -78,7 +78,7 @@ export class ModelView {
       model: undefined as Model | undefined,
       modelId: '',
       projectFilename: 'current-input',
-      project: new Project(app),
+      project: undefined,
       tool: undefined,
       toolOpened: false,
     });

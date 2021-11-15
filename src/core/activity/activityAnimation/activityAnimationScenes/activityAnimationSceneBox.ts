@@ -115,8 +115,8 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
       // @ts-ignore
       const object: THREE.Mesh = activityLayerGroup.children[sender];
       let value: number;
-      if (data.hasOwnProperty(this.graph.recordFrom)) {
-        value = this.graph.normalize(data[this.graph.recordFrom][senderIdx]);
+      if (data.hasOwnProperty(this.graph.records)) {
+        value = this.graph.normalize(data[this.graph.records][senderIdx]);
         colorRGB = this.graph.colorRGB(value);
       }
       // @ts-ignore

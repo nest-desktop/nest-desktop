@@ -64,7 +64,7 @@ export class ProjectView extends Config {
       fromTime: 0,
       modeIdx: 0,
       networkGraphHeight: 'calc(100vh - 48px)',
-      project: new Project(app),
+      project: undefined,
       projectId: '',
       refreshIntervalId: undefined,
       tool: undefined,
@@ -118,7 +118,7 @@ export class ProjectView extends Config {
       if (this._state.project) {
         // generate simulation code.
         if (
-          this._state.project.config.simulateWithInsite !==
+          this.config.simulateWithInsite !==
           this._state.project.code.state.codeInsite
         ) {
           this._state.project.code.generate();
@@ -127,14 +127,13 @@ export class ProjectView extends Config {
         // update view mode for project.
         this.updateProjectMode();
 
-        // reset network graph view.
-        this._state.project.network.view.reset();
+        // reset network graph.
+        this._state.project.network.state.reset();
 
         // update activity graph view.
-        this._state.activityGraph =
-          this._state.project.network.hasPositions()
-            ? this._state.activityGraph
-            : 'abstract';
+        this._state.activityGraph = this._state.project.network.hasPositions()
+          ? this._state.activityGraph
+          : 'abstract';
 
         // run simulation if allowed.
         if (

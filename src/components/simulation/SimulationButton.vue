@@ -96,7 +96,7 @@ export default Vue.extend({
           onClick: () => {
             state.projectConfig.simulateWithInsite =
               !state.projectConfig.simulateWithInsite;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
             state.project.code.generate();
           },
         },
@@ -121,7 +121,7 @@ export default Vue.extend({
      * Start simulation.
      */
     const simulate = () => {
-      if (state.project.config.simulateWithInsite) {
+      if (projectView.config.simulateWithInsite) {
         state.project.runSimulationInsite();
       } else {
         state.project.runSimulation();

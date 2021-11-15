@@ -18,7 +18,7 @@
             label="Record from"
             multiple
             persistent-hint
-            v-model="state.node.recordFrom"
+            v-model="state.node.records"
           />
         </v-col>
       </v-row>

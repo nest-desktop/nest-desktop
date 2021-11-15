@@ -190,7 +190,7 @@ export default Vue.extend({
      * Start simulation.
      */
     const simulate = () => {
-      if (state.graph.project.config.simulateWithInsite) {
+      if (projectView.config.simulateWithInsite) {
         state.graph.project.runSimulationInsite();
       } else {
         state.graph.project.runSimulation();
