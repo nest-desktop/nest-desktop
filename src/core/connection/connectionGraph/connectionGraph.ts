@@ -143,8 +143,7 @@ export class ConnectionGraph {
           'd',
           drawPath(
             connection.source.view.position,
-            connection.target.view.position,
-            {ellipticalArc: 2.5 / (connection.idx + 1)}
+            connection.target.view.position
           )
         );
 
