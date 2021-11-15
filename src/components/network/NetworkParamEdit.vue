@@ -197,7 +197,7 @@
               @contextmenu="e => showNodeMenu(e, node)"
               class="pa-0"
             >
-              <v-row no-gutters>
+              <v-row no-gutters style="width: 100%">
                 <v-col cols="3">
                   <v-btn
                     :color="node.view.color"

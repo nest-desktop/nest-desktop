@@ -1,7 +1,10 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+
 import { Config } from '../config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
+import { NodeSlice } from '../node/nodeSlice';
 import { Synapse } from '../synapse/synapse';
 
 export class Parameter extends Config {
@@ -12,24 +15,31 @@ export class Parameter extends Config {
   private _label: string;
   private _max: number;
   private _min: number;
-  private _parent: Connection | Model | Node | Synapse; // parent
+  private _parent: Connection | Model | Node | NodeSlice | Synapse; // parent
   private _readonly: boolean;
   private _rules: string[][];
+  private _state: UnwrapRef<any>;
   private _step: number;
   private _ticks: any[];
   private _type: any = { id: 'constant' };
   private _unit: string;
   private _value: boolean | number | number[]; // constant value;
-  private _visible: boolean;
 
-  constructor(parent: Connection | Model | Node | Synapse, param: any) {
+  constructor(
+    parent: Connection | Model | Node | NodeSlice | Synapse,
+    param: any
+  ) {
     super('Parameter');
     this._parent = parent;
     this._idx = param.idx || parent.params.length;
 
     this._id = param.id;
     this._value = param.value || 0;
-    this._visible = param.visible !== undefined ? param.visible : false;
+
+    this._state = reactive({
+      visible: param.visible != undefined ? param.visible : false,
+      disabled: param.disabled != undefined ? param.disabled : true,
+    });
 
     // optional param specifications
     this._rules = param.rules || [];
@@ -44,6 +54,10 @@ export class Parameter extends Config {
     this._step = param.step;
     this._ticks = param.ticks;
     this._unit = param.unit || '';
+  }
+
+  get disabled(): boolean {
+    return this._state.disabled;
   }
 
   get id(): string {
@@ -94,7 +108,7 @@ export class Parameter extends Config {
     return this;
   }
 
-  get parent(): Connection | Model | Node | Synapse {
+  get parent(): Connection | Model | Node | NodeSlice | Synapse {
     return this._parent;
   }
 
@@ -112,6 +126,10 @@ export class Parameter extends Config {
     } else {
       return this._type.specs || [];
     }
+  }
+
+  get state(): UnwrapRef<any> {
+    return this._state;
   }
 
   get step(): number {
@@ -170,11 +188,7 @@ export class Parameter extends Config {
   }
 
   get visible(): boolean {
-    return this._visible;
-  }
-
-  set visible(value: boolean) {
-    this._visible = value;
+    return this._state.visible;
   }
 
   /**
@@ -207,6 +221,12 @@ export class Parameter extends Config {
     }
   }
 
+  toggleDisabled(): void {
+    // console.log('Toggle parameter disabled.');
+    this._state.disabled = !this._state.disabled;
+    this.paramChanges();
+  }
+
   /**
    * Copy paramter component
    */
@@ -226,27 +246,28 @@ export class Parameter extends Config {
    * Updates when parameter is changed.
    */
   paramChanges(): void {
-    let node: Node;
-    let connection: Connection;
-    let synapse: Synapse;
-    let model: Model;
+    let parent: Connection | Model | Node | NodeSlice | Synapse;
 
     switch (this.parent.name) {
-      case 'Node':
-        node = this.parent as Node;
-        node.nodeChanges();
-        break;
       case 'Connection':
-        connection = this.parent as Connection;
-        connection.connectionChanges();
-        break;
-      case 'Synapse':
-        synapse = this.parent as Synapse;
-        synapse.synapseChanges();
+        parent = this.parent as Connection;
+        parent.connectionChanges();
         break;
       case 'Model':
-        model = this.parent as Model;
-        model.modelChanges();
+        parent = this.parent as Model;
+        parent.modelChanges();
+        break;
+      case 'Node':
+        parent = this.parent as Node;
+        parent.nodeChanges();
+        break;
+      case 'NodeSlice':
+        parent = this.parent as NodeSlice;
+        parent.node.nodeChanges();
+        break;
+      case 'Synapse':
+        parent = this.parent as Synapse;
+        parent.synapseChanges();
         break;
     }
   }
@@ -301,7 +322,7 @@ export class Parameter extends Config {
     const param: any = {
       id: this._id,
       value: this._value,
-      visible: this._visible,
+      visible: this._state.visible,
     };
 
     // Add value factors if existed

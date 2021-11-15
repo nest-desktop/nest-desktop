@@ -290,7 +290,7 @@ export default Vue.extend({
     const selectionChange = () => {
       state.node.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.visibleParams.includes(param.idx))
+          (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
     };

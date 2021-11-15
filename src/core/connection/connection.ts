@@ -9,6 +9,7 @@ import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
+import { NodeSlice } from '../node/nodeSlice';
 import { Parameter } from '../parameter/parameter';
 import { Synapse } from '../synapse/synapse';
 
@@ -32,21 +33,26 @@ export class Connection extends Config {
   private _params: Parameter[];
   private _rule: string;
   private _sourceIdx: number; // Node index
+  private _sourceSlice: NodeSlice;
   private _state: ConnectionState;
   private _synapse: Synapse;
   private _targetIdx: number; // Node index
+  private _targetSlice: NodeSlice;
   private _view: ConnectionView;
 
   constructor(network: any, connection: any) {
     super('Connection');
     this._network = network;
     this._idx = network.connections.length;
+
     this._code = new ConnectionCode(this);
-    this._view = new ConnectionView(this);
     this._state = new ConnectionState(this);
+    this._view = new ConnectionView(this);
 
     this._sourceIdx = connection.source;
     this._targetIdx = connection.target;
+    this._sourceSlice = new NodeSlice(this.source);
+    this._targetSlice = new NodeSlice(this.target);
 
     this._rule = connection.rule || Rule.AllToAll;
     this.initParameters(connection.params);
@@ -124,6 +130,10 @@ export class Connection extends Config {
     this._sourceIdx = value;
   }
 
+  get sourceSlice(): NodeSlice {
+    return this._sourceSlice;
+  }
+
   get state(): ConnectionState {
     return this._state;
   }
@@ -148,6 +158,10 @@ export class Connection extends Config {
     this._targetIdx = value;
   }
 
+  get targetSlice(): NodeSlice {
+    return this._targetSlice;
+  }
+
   get view(): ConnectionView {
     return this._view;
   }
@@ -156,14 +170,14 @@ export class Connection extends Config {
    * Sets all params to visible.
    */
   public showAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.visible = true));
+    this.params.forEach((param: Parameter) => (param.state.visible = true));
   }
 
   /**
    * Sets all params to invisible.
    */
   public hideAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.visible = false));
+    this.params.forEach((param: Parameter) => (param.state.visible = false));
   }
 
   /**

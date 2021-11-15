@@ -407,7 +407,7 @@ export default Vue.extend({
           icon: 'mdi-eye-off-outline',
           title: 'Hide parameter',
           onClick: () => {
-            state.param.visible = false;
+            state.param.state.visible = false;
             state.param.paramChanges();
             closeMenu();
           },

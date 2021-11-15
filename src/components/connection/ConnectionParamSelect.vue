@@ -65,7 +65,7 @@ export default Vue.extend({
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
-          (param.visible = state.paramsIdx.includes(param.idx))
+          (param.state.visible = state.paramsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
     };

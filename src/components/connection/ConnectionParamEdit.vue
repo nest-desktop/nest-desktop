@@ -1,5 +1,47 @@
 <template>
   <div class="connectionParamEdit" v-if="state.connection">
+    <v-row class="mx-1 my-2" v-if="state.connection.sourceSlice.visible">
+      <v-col
+        :cols="4"
+        :key="'conn' + state.connection.idx + '-' + param.id"
+        class="pa-1"
+        v-for="param in state.connection.sourceSlice.params"
+      >
+        <v-card @dblclick="enableSliceParam(param)" flat>
+          <v-text-field
+            :disabled="param.state.disabled"
+            :label="'source ' + param.label"
+            @change="paramChange"
+            dense
+            hide-details
+            type="number"
+            v-model="param.value"
+          />
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row class="mx-1 my-2" v-if="state.connection.targetSlice.visible">
+      <v-col
+        :cols="4"
+        :key="'conn' + state.connection.idx + '-' + param.id"
+        class="pa-1"
+        v-for="param in state.connection.targetSlice.params"
+      >
+        <v-card @dblclick="enableSliceParam(param)" flat>
+          <v-text-field
+            :disabled="param.state.disabled"
+            :label="'target ' + param.label"
+            @change="paramChange"
+            dense
+            hide-details
+            type="number"
+            v-model="param.value"
+          />
+        </v-card>
+      </v-col>
+    </v-row>
+
     <v-select
       :items="connection.config.rules"
       @change="paramChange()"
@@ -28,6 +70,7 @@ import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Connection } from '@/core/connection/connection';
+import { Parameter } from '@/core/parameter/parameter';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
@@ -50,6 +93,12 @@ export default Vue.extend({
       state.connection.connectionChanges();
     };
 
+    const enableSliceParam = (param: Parameter) => {
+      param.state.disabled = false;
+
+      state.connection.connectionChanges();
+    };
+
     const update = () => {
       state.connection = props.connection as Connection;
     };
@@ -65,10 +114,7 @@ export default Vue.extend({
       }
     );
 
-    return {
-      paramChange,
-      state,
-    };
+    return { enableSliceParam, paramChange, state };
   },
 });
 </script>

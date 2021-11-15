@@ -159,14 +159,18 @@ export class Synapse {
    * Sets all params to visible.
    */
   public showAllParams(): void {
-    this.params.forEach((param: ModelParameter) => (param.visible = true));
+    this.params.forEach(
+      (param: ModelParameter) => (param.state.visible = true)
+    );
   }
 
   /**
    * Sets all params to invisible.
    */
   public hideAllParams(): void {
-    this.params.forEach((param: ModelParameter) => (param.visible = false));
+    this.params.forEach(
+      (param: ModelParameter) => (param.state.visible = false)
+    );
   }
 
   /**
@@ -176,7 +180,7 @@ export class Synapse {
     const weight: ModelParameter = this._params.find(
       (param: ModelParameter) => param.id === 'weight'
     );
-    weight.visible = true;
+    weight.state.visible = true;
     weight.value = -1 * weight.value;
     this._connection.connectionChanges();
   }
