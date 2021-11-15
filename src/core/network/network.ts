@@ -118,6 +118,10 @@ export class Network extends Config {
    */
   networkChanges(): void {
     this._state.updateHash();
+    this._connections.forEach((connection: Connection) => {
+      connection.sourceSlice.update();
+      connection.targetSlice.update();
+    });
     this._project.code.generate();
     this._project.commitNetwork(this);
 
