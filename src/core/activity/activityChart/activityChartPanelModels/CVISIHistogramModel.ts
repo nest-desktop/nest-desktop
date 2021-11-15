@@ -23,7 +23,7 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
     this.init();
   }
 
-  get params(): any[] {
+  override get params(): any[] {
     return this._params;
   }
 
