@@ -15,7 +15,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
   /**
    * Initialize trace panel for analog signals.
    */
-  init(): void {
+  override init(): void {
     this.data = [];
     this.activities = this.panel.graph.project.analogSignalActivities;
   }
@@ -26,7 +26,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * @remarks
    * It requires activity data.
    */
-  update(): void {
+  override update(): void {
     this.data = [];
     this.updateStateRecords();
 
@@ -229,7 +229,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
   /**
    * Update color traces of analog signals.
    */
-  updateColor(): void {
+  override updateColor(): void {
     this.activities.forEach((activity: AnalogSignalActivity) => {
       const data: any = this.data.filter(
         (d: any) => d.activityIdx === activity.idx && d.class !== 'background'
@@ -246,7 +246,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
   /**
    * Update layout label for analog signals.
    */
-  updateLayoutLabel(records: string[]): void {
+  override updateLayoutLabel(records: string[]): void {
     // console.log('Update layout label for analog signal.');
     // Label y-axis if only one record existed.
     this.panel.layout.xaxis.title = 'Time [ms]';

@@ -12,7 +12,7 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
   /**
    * Create layer group in update.
    */
-  createLayerGroup(layer: any, activity: Activity): THREE.Group {
+  override createLayerGroup(layer: any, activity: Activity): THREE.Group {
     // console.log('Create activity layer');
     const layerGroup: THREE.Group = new THREE.Group();
     const activityLayerGroup: THREE.Group = new THREE.Group();
@@ -45,7 +45,7 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
   /**
    * Render scene.
    */
-  render(): void {
+  override render(): void {
     if (this.graph.frame) {
       const scale: number = this.graph.config.objectSize;
       this.graph.frame.data.forEach((data: any, idx: number) => {

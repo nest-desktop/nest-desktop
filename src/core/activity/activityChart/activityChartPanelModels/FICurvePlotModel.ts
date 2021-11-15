@@ -15,7 +15,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
   /**
    * Update data for FI curve.
    */
-  updateData(activity: SpikeActivity): void {
+  override updateData(activity: SpikeActivity): void {
     // console.log('Update data for FI curve.');
     this.data.push({
       activityIdx: activity.idx,
@@ -37,7 +37,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
   /**
    * Update layout label for FI curve.
    */
-  updateLayoutLabel(): void {
+  override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Neuron ID';
     this.panel.layout.yaxis.title = 'Spike count d3';
   }

@@ -13,7 +13,7 @@ export class SpikeTimesPlotModel extends ActivityChartPanelModel {
   /**
    * Initialize model for spike activities.
    */
-  init(): void {
+  override init(): void {
     this.data = [];
     this.activities = this.panel.graph.project.spikeActivities;
     this.state.records = this.activities.map(() => ['spike']);

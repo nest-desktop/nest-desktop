@@ -13,7 +13,7 @@ export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
   /**
    * Create layer group in update.
    */
-  createLayerGroup(layer: any, activity: Activity): THREE.Group {
+  override createLayerGroup(layer: any, activity: Activity): THREE.Group {
     // console.log('Create activity layer');
     const layerGroup: THREE.Group = new THREE.Group();
     const activityLayerGroup: THREE.Group = new THREE.Group();
@@ -103,7 +103,7 @@ export class ActivityAnimationSceneBoxHistogram extends ActivityAnimationScene {
   /**
    * Render scene.
    */
-  render(): void {
+  override render(): void {
     if (this.graph.frame) {
       const size = 10;
       const opacity: number = this.graph.config.opacity;
