@@ -70,7 +70,7 @@ export default Vue.extend({
     const selectionChange = () => {
       state.synapse.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.paramsIdx.includes(param.idx))
+          (param.state.visible = state.paramsIdx.includes(param.idx))
       );
       state.synapse.synapseChanges();
     };

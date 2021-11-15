@@ -318,14 +318,14 @@ export class Node extends Config {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    this.params.map((param: ModelParameter) => (param.visible = false));
+    this.params.map((param: ModelParameter) => (param.state.visible = false));
   }
 
   /**
    * Sets all params to visible.
    */
   showAllParams(): void {
-    this.params.map((param: ModelParameter) => (param.visible = true));
+    this.params.map((param: ModelParameter) => (param.state.visible = true));
   }
 
   /**

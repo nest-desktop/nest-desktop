@@ -55,6 +55,7 @@
               :key="index"
               @click="item.onClick"
               v-for="(item, index) in state.items"
+              v-show="item.show()"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
@@ -94,7 +95,7 @@
         </span>
 
         <span v-if="state.content === 'paramEdit'">
-          <v-card-text class="px-0">
+          <v-card-text class="px-0" style="max-width: 300px">
             <ConnectionParamEdit :connection="state.connection" />
             <SynapseParamEdit :synapse="state.connection.synapse" />
           </v-card-text>
@@ -181,6 +182,7 @@ export default Vue.extend({
             window.dispatchEvent(new Event('resize'));
           },
           append: true,
+          show: () => true,
         },
         {
           id: 'paramEdit',
@@ -191,6 +193,7 @@ export default Vue.extend({
             window.dispatchEvent(new Event('resize'));
           },
           append: true,
+          show: () => true,
         },
         {
           id: 'connectionReverse',
@@ -200,15 +203,39 @@ export default Vue.extend({
             state.connection.reverse();
             closeMenu();
           },
+          show: () => true,
         },
         {
-          id: 'connectionReverse',
+          id: 'sourceSlice',
+          icon: 'mdi-code-brackets',
+          title: 'Toggle source slicing',
+          onClick: () => {
+            state.connection.sourceSlice.toggleVisible();
+            state.connection.connectionChanges();
+            closeMenu();
+          },
+          show: () => state.connection.source.size > 1,
+        },
+        {
+          id: 'targetSlice',
+          icon: 'mdi-code-brackets',
+          title: 'Toggle target slicing',
+          onClick: () => {
+            state.connection.targetSlice.toggleVisible();
+            state.connection.connectionChanges();
+            closeMenu();
+          },
+          show: () => state.connection.target.size > 1,
+        },
+        {
+          id: 'synapticWeightInverse',
           icon: 'mdi-contrast',
           title: 'Inverse synaptic weight',
           onClick: () => {
             state.connection.synapse.inverseWeight();
             closeMenu();
           },
+          show: () => true,
         },
         {
           id: 'connectionReset',
@@ -218,6 +245,7 @@ export default Vue.extend({
             state.connection.reset();
             closeMenu();
           },
+          show: () => true,
         },
         {
           id: 'connectionDelete',
@@ -227,6 +255,7 @@ export default Vue.extend({
             state.content = 'connectionDelete';
           },
           append: true,
+          show: () => true,
         },
       ],
     });
@@ -244,11 +273,11 @@ export default Vue.extend({
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
-          (param.visible = state.connectionParamsIdx.includes(param.idx))
+          (param.state.visible = state.connectionParamsIdx.includes(param.idx))
       );
       state.connection.synapse.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.synapseParamsIdx.includes(param.idx))
+          (param.state.visible = state.synapseParamsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
     };

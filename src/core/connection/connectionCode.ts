@@ -59,8 +59,17 @@ export class ConnectionCode extends Code {
       [sourceNode, targetNode] = [targetNode, sourceNode];
     }
 
-    let script = '';
-    script += `nest.Connect(${this.sourceLabel}, ${this.targetLabel}`;
+    let source: string = `${this.sourceLabel}`;
+    if (this._connection.sourceSlice.visible) {
+      source += `${this._connection.sourceSlice.indices()}`;
+    }
+
+    let target: string = `${this.targetLabel}`;
+    if (this._connection.targetSlice.visible) {
+      target += `${this._connection.targetSlice.indices()}`;
+    }
+
+    let script: string = `nest.Connect(${source}, ${target}`;
     script += this.specs();
     script += this._connection.synapse.code.specs();
     script += ')';
