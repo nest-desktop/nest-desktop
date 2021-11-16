@@ -9,6 +9,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
     this.id = 'AnalogSignalPlot';
     this.icon = 'mdi-chart-bell-curve-cumulative';
     this.label = 'analog signals';
+
     this.init();
   }
 
@@ -16,6 +17,9 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * Initialize trace panel for analog signals.
    */
   override init(): void {
+    // console.log('Initialize analog signal plot model');
+    this.initState();
+
     this.data = [];
     this.activities = this.panel.graph.project.analogSignalActivities;
   }
@@ -27,8 +31,13 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * It requires activity data.
    */
   override update(): void {
+    // console.log('Update analog signal plot model');
+    this.updateState();
+
     this.data = [];
-    this.updateStateRecords();
+    if (this.state.records.length === 0) {
+      return;
+    }
 
     // Update spike threshold for membrane potential
     this.activities.forEach((activity: AnalogSignalActivity) => {

@@ -39,15 +39,19 @@ export class NodeSpatial extends Config {
    * Initialize spatial node.
    */
   init(spatial: any) {
-    switch (spatial.positions) {
-      case 'free':
-        this._positions = new FreePositions(this, spatial.specs);
-        break;
-      case 'grid':
-        this._positions = new GridPositions(this, spatial.specs);
-        break;
-      default:
-        this._positions = undefined;
+    if (spatial !== undefined) {
+      switch (spatial.positions) {
+        case 'free':
+          this._positions = new FreePositions(this, spatial.specs);
+          break;
+        case 'grid':
+          this._positions = new GridPositions(this, spatial.specs);
+          break;
+        default:
+          this._positions = undefined;
+      }
+    } else {
+      this._positions = undefined;
     }
   }
 
@@ -55,7 +59,7 @@ export class NodeSpatial extends Config {
    * Check if it has positions (free or grid) component.
    */
   hasPositions(): boolean {
-    return this._positions !== undefined;
+    return this._positions != undefined;
   }
 
   /**

@@ -65,6 +65,13 @@ export class ActivityChartGraph {
   }
 
   /**
+   * Add panel.
+   */
+  addPanel(model: any = { id: 'spikeTimesRasterPlot' }): void {
+    this._panels.push(new ActivityChartPanel(this, model));
+  }
+
+  /**
    * Empty graph data.
    */
   empty(): void {
@@ -86,21 +93,14 @@ export class ActivityChartGraph {
       this.addPanel({ id: 'analogSignalPlot' });
     }
 
-    this.updatePanelsVisibleLayout();
+    this.updateVisiblePanelsLayout();
   }
 
   /**
-   * Initialize panels.
+   * Initialize panel models.
    */
-  initPanels(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.init());
-  }
-
-  /**
-   * Add panel.
-   */
-  addPanel(model: any = { id: 'spikeTimesRasterPlot' }): void {
-    this._panels.push(new ActivityChartPanel(this, model));
+  initPanelModels(): void {
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
   }
 
   /**
@@ -109,40 +109,6 @@ export class ActivityChartGraph {
   removePanel(panel: ActivityChartPanel): void {
     this._panels = this._panels.filter((p: ActivityChartPanel) => p !== panel);
     this.update();
-  }
-
-  /**
-   * Update colors of the chart panels.
-   */
-  updateColor(): void {
-    this._panels.forEach((panel: ActivityChartPanel) =>
-      panel.model.updateColor()
-    );
-  }
-
-  /**
-   * Update panel layout of the chart graph.
-   */
-  updatePanelsVisibleLayout(): void {
-    this.panelsVisible.forEach((panel: ActivityChartPanel) =>
-      panel.updateLayout()
-    );
-  }
-
-  /**
-   * Updates chart graph with activities.
-   */
-  update(): void {
-    // console.log('Update activity chart graph');
-    this.updatePanelsVisibleLayout();
-    this.resetLayout();
-
-    this._data = [];
-    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      panel.update();
-      this.updateLayout(panel);
-      this.updateData(panel);
-    });
   }
 
   /**
@@ -155,6 +121,36 @@ export class ActivityChartGraph {
     };
   }
 
+  /**
+   * Updates chart graph with activities.
+   */
+  update(): void {
+    // console.log('Update activity chart graph');
+    this.updateVisiblePanelsLayout();
+    this.resetLayout();
+
+    this._data = [];
+    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
+      this.updateData(panel);
+      this.updateLayout(panel);
+    });
+  }
+
+  /**
+   * Update data of the chart graph
+   */
+  updateData(panel: ActivityChartPanel): void {
+    panel.model.data.forEach((data: any) => {
+      data.panelIdx = panel.idx;
+      data.xaxis = 'x' + panel.xaxis;
+      data.yaxis = 'y' + panel.yaxis;
+      this._data.push(data);
+    });
+  }
+
+  /**
+   * Update layout of the chart graph
+   */
   updateLayout(panel: ActivityChartPanel): void {
     this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
       panel.layout.yaxis;
@@ -165,12 +161,28 @@ export class ActivityChartGraph {
     }
   }
 
-  updateData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: any) => {
-      data.panelIdx = panel.idx;
-      data.xaxis = 'x' + panel.xaxis;
-      data.yaxis = 'y' + panel.yaxis;
-      this._data.push(data);
-    });
+  /**
+   * Update panel models.
+   */
+  updatePanelModels(): void {
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
+  }
+
+  /**
+   * Update colors of the panel models.
+   */
+  updatePanelModelsColor(): void {
+    this._panels.forEach((panel: ActivityChartPanel) =>
+      panel.model.updateColor()
+    );
+  }
+
+  /**
+   * Update visible panel layout of the chart graph.
+   */
+  updateVisiblePanelsLayout(): void {
+    this.panelsVisible.forEach((panel: ActivityChartPanel) =>
+      panel.updatePanelLayout()
+    );
   }
 }

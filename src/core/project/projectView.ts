@@ -64,7 +64,7 @@ export class ProjectView extends Config {
       fromTime: 0,
       modeIdx: 0,
       networkGraphHeight: 'calc(100vh - 48px)',
-      project: undefined,
+      project: new Project(this._app),
       projectId: '',
       refreshIntervalId: undefined,
       tool: undefined,

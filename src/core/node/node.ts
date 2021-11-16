@@ -40,9 +40,9 @@ export class Node extends Config {
     this._code = new NodeCode(this);
     this._view = new NodeView(this, node.view);
     this._state = new NodeState(this);
+    this._spatial = new NodeSpatial(this, node.spatial);
 
     this.initParameters(node);
-    this.initSpatial(node.spatial);
     this.initActivity();
 
     this.updateHash();
@@ -353,19 +353,11 @@ export class Node extends Config {
   }
 
   /**
-   * Initialize spatial component.
-   * @param spatial - spatial specifications
-   */
-  initSpatial(spatial: any = {}): void {
-    this._spatial = new NodeSpatial(this, spatial);
-  }
-
-  /**
    * Toggle spatial mode.
    */
   toggleSpatial(): void {
     const term: string = this._size === 1 ? 'grid' : 'free';
-    this.initSpatial({
+    this._spatial.init({
       positions: this.spatial.hasPositions() ? undefined : term,
     });
     this.nodeChanges();

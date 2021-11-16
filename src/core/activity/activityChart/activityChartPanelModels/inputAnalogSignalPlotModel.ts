@@ -15,6 +15,8 @@ export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
    * Initialize plot panel for input signals.
    */
   override init(): void {
+    this.initState();
+    
     this.data = [];
     this.activities = this.panel.graph.project.inputAnalogSignalActivities;
   }

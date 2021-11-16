@@ -345,7 +345,7 @@ export class Project {
 
     // Compare recorder models and then update chart graph.
     if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
-      this._activityGraph.activityChartGraph.initPanels();
+      this._activityGraph.activityChartGraph.initPanelModels();
     } else {
       this._activityGraph.activityChartGraph.init();
     }
@@ -417,7 +417,6 @@ export class Project {
    */
   async runSimulation(): Promise<any> {
     // console.log('Run simulation');
-
     this.cancelGettingActivityInsite();
 
     if (this.app.projectView.config.simulateWithInsite) {
@@ -654,7 +653,7 @@ export class Project {
           };
 
           if (Object.keys(nodePositions).length > 0) {
-            console.log('Add node positions in activity');
+            // console.log('Add node positions in activity');
             data.nodeIds.forEach((id: number) => {
               if (id in nodePositions) {
                 activity.nodePositions.push(nodePositions[id]);
