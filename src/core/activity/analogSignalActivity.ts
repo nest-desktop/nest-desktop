@@ -44,7 +44,6 @@ export class AnalogSignalActivity extends Activity {
             times, // x
             senders,
           },
-          senders: response.data.nodeIds, // will be removed
           nodeIds: response.data.nodeIds, // from insite
           times: response.data.simulationTimes, // from insite
         };

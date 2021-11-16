@@ -225,7 +225,7 @@
                     :color="node.view.color"
                     :options="state.sizeOptions"
                     :value.sync="node.size"
-                    @update:value="node.nodeChanges"
+                    @update:value="() => node.nodeChanges()"
                     v-else
                   />
                 </v-col>

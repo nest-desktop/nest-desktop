@@ -103,14 +103,6 @@ export class ActivityChartPanel {
     this.selectModel(model.id);
   }
 
-  // get activities(): Activity[] {
-  //   return this._activities;
-  // }
-  //
-  // set activities(value: Activity[]) {
-  //   this._activities = value;
-  // }
-
   get graph(): ActivityChartGraph {
     return this._graph;
   }
@@ -178,13 +170,6 @@ export class ActivityChartPanel {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
-  // /**
-  //  * Check if it has any activities.
-  //  */
-  // hasActivities(): boolean {
-  //   return this.activities.length > 0;
-  // }
-
   toggleVisible(): void {
     this._state.visible = !this._state.visible;
     this._graph.update();
@@ -218,28 +203,16 @@ export class ActivityChartPanel {
       this._model = new SpikeTimesRasterPlotModel(this);
       this._state.initialized = true;
     }
+
+    if (this._model) {
+      this._model.update();
+    }
   }
 
   /**
-   * Initialize activity graph panel.
+   * Update layout of the panel.
    */
-  init(): void {
-    // console.log('Init model for activities.');
-    this._model.init();
-  }
-
-  /**
-   * Update model for activities.
-   *
-   * @remarks
-   * It requires activity data.
-   */
-  update(): void {
-    // console.log('Update model for activities.');
-    this._model.update();
-  }
-
-  updateLayout(): void {
+  updatePanelLayout(): void {
     const panels: ActivityChartPanel[] = this.graph.panelsVisible;
     const heights: number[] = panels.map(
       (panel: ActivityChartPanel) => panel.layout.yaxis.height
@@ -263,42 +236,6 @@ export class ActivityChartPanel {
     this.layout.yaxis.domain = domain;
     this.layout.xaxis.anchor = 'y' + this.yaxis;
   }
-
-  /**
-   * Update model for activities.
-   *
-   * @remarks
-   * It requires activity data.
-   */
-  updateColor(): void {
-    // console.log('Update model for activities.');
-    this._model.updateColor();
-  }
-
-  /**
-   * Update layout label.
-   *
-   * @remarks
-   * It is a replacement for abstract component.
-   */
-  updateLayoutLabel(data: any = undefined): void {
-    data;
-  }
-
-  // /**
-  //  * Update records in panel state.
-  //  *
-  //  * @remarks
-  //  * It needs activity data.
-  //  */
-  // updateStateRecords(): void {
-  //   if (this.state.records.length === this.model.activities.length) {
-  //     return;
-  //   }
-  //   this.state.records = this.model.activities.map(
-  //     (activity: Activity) => activity.records
-  //   );
-  // }
 
   /**
    * Remove this panel.

@@ -78,7 +78,7 @@ export class ModelView {
       model: undefined as Model | undefined,
       modelId: '',
       projectFilename: 'current-input',
-      project: undefined,
+      project: new Project(this._app),
       tool: undefined,
       toolOpened: false,
     });
@@ -189,7 +189,7 @@ export class ModelView {
     const node: Node = this._state.project.network.nodes[1];
     node.modelId = this._state.modelId;
     node.params = this._state.model.params;
-    node.params.forEach((param: any) => (param.visible = true));
+    node.params.forEach((param: any) => (param.state.visible = true));
     this._state.project.code.generate();
   }
 

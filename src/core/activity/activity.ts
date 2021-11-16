@@ -121,7 +121,7 @@ export class Activity {
    * Overwrites events.
    */
   init(activity: any): void {
-    // console.log('Initialize activity.');
+    // console.log('Initialize activity');
     this.reset();
 
     this.events = activity.events || { senders: [], times: [] };
@@ -152,6 +152,7 @@ export class Activity {
       this._events[eventKey] = currEvents.concat(newEvents);
     });
 
+    this.updateRecords();
     this.updateHash();
   }
 

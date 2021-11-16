@@ -47,8 +47,9 @@ export class ProjectCode extends Code {
   generate(): void {
     // console.log('Generate script');
 
-    const simulateWithInsite =
-      this._project.app.projectView.config.simulateWithInsite;
+    const simulateWithInsite = this._project.app.projectView
+      ? this._project.app.projectView.config.simulateWithInsite
+      : false;
     this._script = '';
     this._script += this.importModules();
     this._script += 'nest.ResetKernel()\n';
