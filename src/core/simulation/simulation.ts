@@ -1,3 +1,5 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+
 import { Config } from '../config';
 import { Project } from '../project/project';
 import { SimulationKernel } from './simulationKernel';
@@ -8,6 +10,7 @@ export class Simulation extends Config {
   private _kernel: SimulationKernel; // simulation kernel
   private _project: Project; // parent
   private _running = false;
+  private _state: UnwrapRef<any>;
   private _time: number; // simulation time
 
   constructor(project: Project, simulation: any = {}) {
@@ -16,6 +19,17 @@ export class Simulation extends Config {
     this._kernel = new SimulationKernel(this, simulation.kernel);
     this._code = new SimulationCode(this);
     this._time = parseFloat(simulation.time) || 1000;
+
+    // Initialize simulation state.
+    this._state = reactive({
+      biologicalTime: 0,
+      timeInfo: {
+        begin: 0,
+        current: 0,
+        end: 0,
+        stepSize: 1,
+      },
+    });
   }
 
   get code(): SimulationCode {
@@ -38,12 +52,30 @@ export class Simulation extends Config {
     this._running = value;
   }
 
+  get state(): UnwrapRef<any> {
+    return this._state;
+  }
+
   get time(): number {
     return this._time;
   }
 
   set time(value: number) {
     this._time = value;
+  }
+
+  /**
+   * Reset state in simulation
+   */
+  resetState(): void {
+    // Reset simulation state.
+    this._state.biologicalTime = 0;
+    this._state.timeInfo = {
+      begin: 0,
+      current: 0,
+      end: 0,
+      stepSize: 1,
+    };
   }
 
   /**

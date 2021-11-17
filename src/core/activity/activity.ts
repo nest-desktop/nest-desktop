@@ -19,18 +19,19 @@ export class Activity {
     this.init(activity);
   }
 
+  get currenttime(): number {
+    const simulationState = this._recorder.network.project.simulation.state;
+    return simulationState.timeInfo.current > 0
+      ? simulationState.timeInfo.current
+      : simulationState.biologicalTime;
+  }
+
   get elementTypes(): string[] {
     return this._recorder.nodes.map((node: Node) => node.model.elementType);
   }
 
   get endtime(): number {
-    return this._recorder.network.project.simulation.kernel.biologicalTime;
-  }
-
-  get lastTime(): number {
-    return this._events.times && this._events.times.length > 0
-      ? this.events.times[this.events.times.length - 1]
-      : 0;
+    return this._recorder.network.project.simulation.state.biologicalTime;
   }
 
   get events(): any {
@@ -59,6 +60,12 @@ export class Activity {
 
   set lastFrame(value: boolean) {
     this._lastFrame = value;
+  }
+
+  get lastTime(): number {
+    return this._events.times && this._events.times.length > 0
+      ? this.events.times[this.events.times.length - 1]
+      : 0;
   }
 
   get nEvents(): number {
@@ -97,6 +104,14 @@ export class Activity {
     return this._records;
   }
 
+  set records(value: String[]) {
+    this._records = value;
+  }
+
+  get simulationTimeInfo(): number {
+    return this._recorder.network.project.simulation.state.timeInfo;
+  }
+
   /**
    * Check if activity has events.
    */
@@ -122,14 +137,20 @@ export class Activity {
    */
   init(activity: any): void {
     // console.log('Initialize activity');
-    this.reset();
+    this.initEvents(activity);
+  }
 
+  /**
+   * Initialize events.
+   *
+   * Overwrites events.
+   */
+  initEvents(activity: any): void {
+    this.reset();
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
     this.nodeCollectionId = activity.nodeCollectionId;
-
-    this.updateRecords();
     this.updateHash();
   }
 
@@ -140,29 +161,25 @@ export class Activity {
    */
   update(activity: any): void {
     // console.log('Update activity');
-    const events = activity.events;
-    if (events === undefined) {
+    if (activity.events === undefined) {
       return;
     }
 
+    this.updateEvents(activity);
+  }
+
+  /**
+   * Update events.
+   */
+  updateEvents(activity: any): void {
+    const events = activity.events;
     const eventKeys: string[] = Object.keys(events);
     eventKeys.forEach((eventKey: string) => {
       const currEvents: number[] = this._events[eventKey];
       const newEvents: number[] = events[eventKey];
       this._events[eventKey] = currEvents.concat(newEvents);
     });
-
-    this.updateRecords();
     this.updateHash();
-  }
-
-  /**
-   * Update record from event keys.
-   */
-  updateRecords(): void {
-    this._records = Object.keys(this._events).filter(
-      (event: string) => !['senders', 'times'].includes(event)
-    );
   }
 
   /**

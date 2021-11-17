@@ -429,6 +429,7 @@ export class Project {
       this._code.generate();
     }
 
+    this._simulation.resetState();
     this._simulation.running = true;
     return this.app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
@@ -444,8 +445,7 @@ export class Project {
             break;
           case 200:
             data = JSON.parse(resp.response).data;
-            this._simulation.kernel.biologicalTime =
-              data.kernel.biological_time;
+            this._simulation.state.biologicalTime = data.kernel.biological_time;
             if (data.positions) {
               data.activities.forEach((activity: any) => {
                 const positions = activity.nodeIds.map(
@@ -499,6 +499,8 @@ export class Project {
       this._code.generate();
     }
 
+    this._simulation.resetState();
+    this._simulation.state.biologicalTime = this._simulation.time;
     this._simulation.running = true;
     this._app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
@@ -554,7 +556,7 @@ export class Project {
         setTimeout(() => this.getActivitiesInsite(), 100);
       })
       .then((response: any) => {
-        this._simulation.kernel.biologicalTime = response.data.end;
+        this._simulation.state.timeInfo = response.data;
 
         // update activity graph during the simulation.
         this.continuousUpdateActivityGraph();

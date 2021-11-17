@@ -99,7 +99,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
           dash: 'dot',
           width: 2,
         },
-        x: [0.1, activity.endtime],
+        x: [0.1, activity.currenttime],
         y: [thresholds[0], thresholds[0]],
       });
     }

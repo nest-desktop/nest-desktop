@@ -194,7 +194,7 @@ export abstract class ActivityChartPanelModel {
     this.state.time.start = 0;
     this.state.time.end = Math.max(
       this.state.time.end,
-      this._panel.graph.endtime + 1
+      this._panel.graph.currenttime + 1
     );
 
     // Update records

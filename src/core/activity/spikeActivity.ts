@@ -13,21 +13,46 @@ export class SpikeActivity extends Activity {
 
   /**
    * Initialize spike activity.
+   *
+   * Overwrites events.
    */
   override init(activity: any): void {
-    this.reset();
+    // console.log('Init spike activity');
+    this.initEvents(activity);
+    this.initTimes();
+  }
 
-    this.events = activity.events || { senders: [], times: [] };
-    this.nodeIds = activity.nodeIds || [];
-    this.nodePositions = activity.nodePositions || [];
-    this.nodeCollectionId = activity.nodeCollectionId;
-
+  /**
+   * Init times for ISI or CV(ISI).
+   */
+  initTimes(): void {
     this._times = Object.create(null);
     this.nodeIds.forEach((id: number) => (this._times[id] = []));
-    this.events.senders.forEach((sender: number, idx: number) => {
+    this.updateTimes(this.events);
+  }
+
+  /**
+   * Update spike activity.
+   *
+   * Extends events.
+   */
+  override update(activity: any): void {
+    // console.log('Update spike activity');
+    if (activity.events === undefined) {
+      return;
+    }
+
+    this.updateEvents(activity);
+    this.updateTimes(activity.events);
+  }
+
+  /**
+   * Update times for ISI or CV(ISI).
+   */
+  updateTimes(events: any): void {
+    events.senders.forEach((sender: number, idx: number) => {
       this._times[sender].push(this.events.times[idx]);
     });
-    this.updateHash();
   }
 
   /**

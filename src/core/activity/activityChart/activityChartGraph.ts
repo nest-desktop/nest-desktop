@@ -25,16 +25,19 @@ export class ActivityChartGraph {
     this.init();
   }
 
-  get options(): any {
-    return this._options;
-  }
-
   get data(): any[] {
     return this._data;
   }
 
+  get currenttime(): number {
+    const simulationState = this._project.simulation.state;
+    return simulationState.timeInfo.current > 0
+      ? simulationState.timeInfo.current
+      : simulationState.biologicalTime;
+  }
+
   get endtime(): number {
-    return this._project.simulation.kernel.biologicalTime;
+    return this._project.simulation.state.biologicalTime;
   }
 
   get imageButtonOptions(): any {
@@ -43,6 +46,10 @@ export class ActivityChartGraph {
 
   get layout(): any {
     return this._layout;
+  }
+
+  get options(): any {
+    return this._options;
   }
 
   get panels(): ActivityChartPanel[] {
