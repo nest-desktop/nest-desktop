@@ -9,6 +9,41 @@ export class AnalogSignalActivity extends Activity {
   }
 
   /**
+   * Initialize activity of analog signals.
+   *
+   * Overwrites events.
+   */
+  override init(activity: any): void {
+    // console.log('Initialize analog signal activity');
+    this.initEvents(activity);
+    this.updateRecords();
+  }
+
+  /**
+   * Update activity of analog signals.
+   *
+   * Extends events.
+   */
+  override update(activity: any): void {
+    // console.log('Update analog signal activity');
+    if (activity.events === undefined) {
+      return;
+    }
+
+    this.updateEvents(activity);
+    this.updateRecords();
+  }
+
+  /**
+   * Update record from event keys.
+   */
+  updateRecords(): void {
+    this.records = Object.keys(this.events).filter(
+      (event: string) => !['senders', 'times'].includes(event)
+    );
+  }
+
+  /**
    * Clone analog signal activity.
    * It creates a new component with JSON data.
    */
