@@ -14,7 +14,7 @@
         @change="() => projectView.updateProjectMode()"
         align-with-title
         icons-and-text
-        style="flex: 0 1 auto; width: 271px"
+        style="flex: 0 1 auto; width: 278px"
         v-model="projectView.state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
