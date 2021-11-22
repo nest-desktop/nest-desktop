@@ -351,7 +351,7 @@ export default Vue.extend({
     projectId: String,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       displayNodes: [],
       displayConnections: [],

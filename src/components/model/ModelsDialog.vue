@@ -1,18 +1,18 @@
 <template>
   <div class="ModelsDialog">
-    <v-dialog v-model="appView.state.dialog.open" max-width="1024">
-      <span v-if="appView.state.dialog.action === 'import'">
+    <v-dialog v-model="dialogState.open" max-width="1024">
+      <span v-if="dialogState.action === 'import'">
         <ModelsImport />
       </span>
       <span v-else>
         <v-card>
           <v-card-title
-            v-text="`Select models to ${appView.state.dialog.action}.`"
-            v-if="appView.state.dialog.content.length !== 0"
+            v-text="`Select models to ${dialogState.action}.`"
+            v-if="dialogState.content.length !== 0"
           />
 
           <v-card-text>
-            <v-simple-table v-if="appView.state.dialog.content.length !== 0">
+            <v-simple-table v-if="dialogState.content.length !== 0">
               <template #default>
                 <thead>
                   <tr>
@@ -24,7 +24,7 @@
                 <tbody>
                   <tr
                     :key="index"
-                    v-for="(model, index) in appView.state.dialog.content"
+                    v-for="(model, index) in dialogState.content"
                   >
                     <td v-text="model.label" />
                     <td v-text="model.elementType" />
@@ -45,32 +45,28 @@
           <v-card-actions>
             <v-spacer />
             <v-btn
-              @click="appView.state.dialog.open = false"
+              @click="() => closeDialog()"
               outlined
               small
               text
               v-text="'Cancel'"
             />
             <v-btn
-              :disabled="
-                !appView.state.dialog.content.some(p => p.state.selected)
-              "
+              :disabled="!dialogState.content.some(p => p.state.selected)"
               @click="exportModels"
               outlined
               small
-              v-if="appView.state.dialog.action === 'export'"
+              v-if="dialogState.action === 'export'"
             >
               <v-icon left v-text="'mdi-export'" />
               Export
             </v-btn>
             <v-btn
-              :disabled="
-                !appView.state.dialog.content.some(p => p.state.selected)
-              "
+              :disabled="!dialogState.content.some(p => p.state.selected)"
               @click="deleteModels"
               outlined
               small
-              v-if="appView.state.dialog.action === 'delete'"
+              v-if="dialogState.action === 'delete'"
             >
               <v-icon left v-text="'mdi-trash-can-outline'" />
               Delete
@@ -95,38 +91,39 @@ export default Vue.extend({
     ModelsImport,
   },
   setup() {
-    const appView = core.app.view;
+    const dialogState = core.app.state.dialog;
 
     /**
-     * Export models.
+     * Export selected models.
      */
     const exportModels = () => {
-      const selectedModels: Model[] = appView.state.dialog.content.filter(
+      const selectedModels: Model[] = dialogState.content.filter(
         (model: Model) => model.state.selected
       );
       if (selectedModels.length > 0) {
-        appView.exportModels(selectedModels);
+        core.app.model.exportModels(selectedModels);
       }
-      appView.state.dialog.open = false;
+      core.app.closeDialog();
     };
 
     /**
-     * Delete models.
+     * Delete selected models.
      */
     const deleteModels = () => {
-      const selectedModels: Model[] = appView.state.dialog.content.filter(
+      const selectedModels: Model[] = dialogState.content.filter(
         (model: Model) => model.state.selected
       );
       if (selectedModels.length > 0) {
-        appView.deleteModels(selectedModels);
+        core.app.model.deleteModels(selectedModels);
       }
-      appView.state.dialog.open = false;
+      core.app.closeDialog();
     };
 
     return {
-      appView,
-      exportModels,
+      closeDialog: () => core.app.closeDialog(),
       deleteModels,
+      dialogState,
+      exportModels,
     };
   },
 });

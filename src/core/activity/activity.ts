@@ -1,7 +1,7 @@
 import { sha1 } from 'object-hash';
 
-// import { Config } from '../config';
 import { Node } from '../node/node';
+import { Project } from '../project/project';
 
 export class Activity {
   private _events: any = {};
@@ -94,6 +94,10 @@ export class Activity {
 
   set nodePositions(value: number[][]) {
     this._nodePositions = value;
+  }
+
+  get project(): Project {
+    return this.recorder.network.project;
   }
 
   get recorder(): Node {

@@ -1,18 +1,18 @@
 <template>
   <div class="ProjectsDialog">
-    <v-dialog v-model="appView.state.dialog.open" max-width="1024">
-      <span v-if="appView.state.dialog.action === 'import'">
+    <v-dialog v-model="dialogState.open" max-width="1024">
+      <span v-if="dialogState.action === 'import'">
         <ProjectsImport />
       </span>
       <span v-else>
         <v-card>
           <v-card-title
-            v-text="`Select projects to ${appView.state.dialog.action}.`"
-            v-if="appView.state.dialog.content.length !== 0"
+            v-text="`Select projects to ${dialogState.action}.`"
+            v-if="dialogState.content.length !== 0"
           />
 
           <v-card-text>
-            <v-simple-table v-if="appView.state.dialog.content.length !== 0">
+            <v-simple-table v-if="dialogState.content.length !== 0">
               <template #default>
                 <thead>
                   <tr>
@@ -21,7 +21,7 @@
                     <th class="text-center" v-text="'Selected'" />
                     <th
                       class="text-center"
-                      v-if="appView.state.dialog.action === 'export'"
+                      v-if="dialogState.action === 'export'"
                       v-text="'Activities'"
                     />
                   </tr>
@@ -29,7 +29,7 @@
                 <tbody>
                   <tr
                     :key="index"
-                    v-for="(project, index) in appView.state.dialog.content"
+                    v-for="(project, index) in dialogState.content"
                   >
                     <td v-text="project.name" />
                     <td v-text="new Date(project.createdAt).toLocaleString()" />
@@ -41,7 +41,7 @@
                         v-model="project.state.selected"
                       />
                     </td>
-                    <td v-if="appView.state.dialog.action === 'export'">
+                    <td v-if="dialogState.action === 'export'">
                       <v-row>
                         <v-col class="py-4" cols="4">
                           <ActivityGraphIcon :project="project" small />
@@ -65,33 +65,23 @@
 
           <v-card-actions>
             <v-spacer />
+            <v-btn @click="closeDialog" outlined small text v-text="'Cancel'" />
             <v-btn
-              @click="appView.state.dialog.open = false"
-              outlined
-              small
-              text
-              v-text="'Cancel'"
-            />
-            <v-btn
-              :disabled="
-                !appView.state.dialog.content.some(p => p.state.selected)
-              "
+              :disabled="!dialogState.content.some(p => p.state.selected)"
               @click="exportProjects"
               outlined
               small
-              v-if="appView.state.dialog.action === 'export'"
+              v-if="dialogState.action === 'export'"
             >
               <v-icon left v-text="'mdi-export'" />
               Export
             </v-btn>
             <v-btn
-              :disabled="
-                !appView.state.dialog.content.some(p => p.state.selected)
-              "
+              :disabled="!dialogState.content.some(p => p.state.selected)"
               @click="deleteProjects"
               outlined
               small
-              v-if="appView.state.dialog.action === 'delete'"
+              v-if="dialogState.action === 'delete'"
             >
               <v-icon left v-text="'mdi-trash-can-outline'" />
               Delete
@@ -118,38 +108,39 @@ export default Vue.extend({
     ProjectsImport,
   },
   setup() {
-    const appView = core.app.view;
+    const dialogState = core.app.state.dialog;
 
     /**
-     * Export projects.
+     * Export selected projects.
      */
     const exportProjects = () => {
-      const selectedProjects: Project[] = appView.state.dialog.content.filter(
+      const selectedProjects: Project[] = dialogState.content.filter(
         (project: Project) => project.state.selected
       );
       if (selectedProjects.length > 0) {
-        appView.exportProjects(selectedProjects);
+        core.app.project.exportProjects(selectedProjects);
       }
-      appView.state.dialog.open = false;
+      core.app.closeDialog();
     };
 
     /**
-     * Delete projects.
+     * Delete selected projects.
      */
     const deleteProjects = () => {
-      const selectedProjects: Project[] = appView.state.dialog.content.filter(
+      const selectedProjects: Project[] = dialogState.content.filter(
         (project: Project) => project.state.selected
       );
       if (selectedProjects.length > 0) {
-        appView.deleteProjects(selectedProjects);
+        core.app.project.deleteProjects(selectedProjects);
       }
-      appView.state.dialog.open = false;
+      core.app.closeDialog();
     };
 
     return {
-      appView,
-      exportProjects,
+      closeDialog: () => core.app.closeDialog(),
       deleteProjects,
+      dialogState,
+      exportProjects,
     };
   },
 });

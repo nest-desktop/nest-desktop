@@ -1,6 +1,6 @@
 import { sha1 } from 'object-hash';
 
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionState } from './connectionState';

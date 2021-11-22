@@ -1,6 +1,6 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
 
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { Node } from '../node/node';

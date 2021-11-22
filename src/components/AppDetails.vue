@@ -95,15 +95,15 @@ export default {
       clientType: '',
       contactMailHeader:
         'mailto:spreizer@uni-trier.de?subject=[NEST Desktop ' +
-        core.app.version +
+        core.app.state.version +
         ']',
       contactName: '📧 Sebastian Spreizer',
       doc: 'https://nest-desktop.readthedocs.io',
       license: 'MIT License',
       osType: '',
       repo: 'https://github.com/nest-desktop/nest-desktop',
-      simulatorVersion: core.app.NESTSimulator.state.simulatorVersion,
-      version: core.app.version,
+      simulatorVersion: core.app.backends.nestSimulator.state.version.nest,
+      version: core.app.state.version,
     });
     const mailText = [
       '&body=%2D%2D%2D%2D %0D%0APlease do not delete the following lines! %0D%0AClient type: ',
@@ -117,11 +117,6 @@ export default {
 
     // TODO: change to onRenderTriggered in Vue 3 to catch updates as well
     onBeforeMount(() => {
-      // Fetch the NEST Simulator version.
-      core.app.NESTSimulator.check().then(() => {
-        state.simulatorVersion = core.app.NESTSimulator.state.simulatorVersion;
-      });
-
       // Fetch the debugging information
       const info = detect();
       if (info) {

@@ -75,13 +75,14 @@ export default Vue.extend({
      * Ping every 5 min.
      */
     const keepConnectionToNESTSimulatorAlive = () => {
-      core.app.NESTSimulator.check()
+      core.app.backends.nestSimulator
+        .check()
         .then(() => {
           const NESTSimulatorFrame = document.getElementById(
             'NESTSimulatorFrame'
           ) as HTMLIFrameElement;
           setInterval(() => {
-            NESTSimulatorFrame.src = core.app.NESTSimulator.url;
+            NESTSimulatorFrame.src = core.app.backends.nestSimulator.url;
             // NESTFrame.contentDocument.location.reload(true);
           }, 300000);
         })
@@ -99,7 +100,7 @@ export default Vue.extend({
       keepConnectionToNESTSimulatorAlive();
     });
 
-    return { refreshApp, state };
+    return { core, refreshApp, state };
   },
 });
 </script>
@@ -146,6 +147,10 @@ export default Vue.extend({
 }
 .fade-enter {
   opacity: 0;
+}
+
+.v-tabs-slider-wrapper {
+  pointer-events: none;
 }
 
 .paramLabel {

@@ -32,7 +32,7 @@ export class Synapse {
   }
 
   get model(): Model {
-    return this._connection.network.project.app.view.getModel(this._modelId);
+    return this._connection.network.project.app.model.getModel(this._modelId);
   }
 
   /**
@@ -56,7 +56,7 @@ export class Synapse {
 
   get models(): Model[] {
     const elementType: string = this.model.elementType;
-    return this._connection.network.project.app.view.filterModels(elementType);
+    return this._connection.network.project.app.model.filterModels(elementType);
   }
 
   get modelId(): string {

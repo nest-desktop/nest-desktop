@@ -79,7 +79,7 @@ function upgradeNetwork(app: App, project: any): any {
     const synapse: any = {
       params: [],
     };
-    const synModel: Model = app.view.getModel(
+    const synModel: Model = app.model.getModel(
       synapse.model || 'static_synapse'
     );
     if (simLink.hasOwnProperty('syn_spec')) {

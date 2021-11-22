@@ -1,4 +1,4 @@
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 
 export class Config {
   private _configName: string;
@@ -11,7 +11,7 @@ export class Config {
   }
 
   get assetConfig(): any {
-    return require(`../assets/config/${this._configName}.json`);
+    return require(`../../assets/config/${this._configName}.json`);
   }
 
   get config(): any {

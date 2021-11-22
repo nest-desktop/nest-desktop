@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { Model } from './model';
 import { ModelParameter } from '../parameter/modelParameter';
 

@@ -179,7 +179,7 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ProjectLabBook',
   setup() {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
 
     return {
       projectView,

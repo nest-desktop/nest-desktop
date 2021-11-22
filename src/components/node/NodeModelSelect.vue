@@ -129,7 +129,7 @@ export default Vue.extend({
     node: Node,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       node: props.node as Node,
       opened: false,

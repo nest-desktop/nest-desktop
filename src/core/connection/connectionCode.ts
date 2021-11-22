@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { Connection } from './connection';
 import { Model } from '../model/model';
 import { Node } from '../node/node';

@@ -18,6 +18,7 @@
           :key="index"
           @click="item.onClick"
           v-for="(item, index) in state.items"
+          v-show="item.show()"
         >
           <v-list-item-title v-text="item.title" />
 
@@ -51,7 +52,7 @@ export default Vue.extend({
     disabled: Boolean,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       disabled: props.disabled,
       items: [
@@ -60,6 +61,7 @@ export default Vue.extend({
           input: 'checkbox',
           title: 'Simulate after change',
           value: 'simulateAfterChange',
+          show: () => true,
           onClick: () => {
             state.projectConfig.simulateAfterChange =
               !state.projectConfig.simulateAfterChange;
@@ -71,6 +73,7 @@ export default Vue.extend({
           input: 'checkbox',
           title: 'Simulate after load',
           value: 'simulateAfterLoad',
+          show: () => true,
           onClick: () => {
             state.projectConfig.simulateAfterLoad =
               !state.projectConfig.simulateAfterLoad;
@@ -82,6 +85,7 @@ export default Vue.extend({
           input: 'checkbox',
           title: 'Simulate after checkout',
           value: 'simulateAfterCheckout',
+          show: () => true,
           onClick: () => {
             state.projectConfig.simulateAfterCheckout =
               !state.projectConfig.simulateAfterCheckout;
@@ -93,6 +97,8 @@ export default Vue.extend({
           input: 'checkbox',
           title: 'Simulate with Insite',
           value: 'simulateWithInsite',
+          show: () =>
+            core.app.backends.insiteAccess.state.version.insite != undefined,
           onClick: () => {
             state.projectConfig.simulateWithInsite =
               !state.projectConfig.simulateWithInsite;

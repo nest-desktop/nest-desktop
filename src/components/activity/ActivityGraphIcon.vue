@@ -2,19 +2,22 @@
   <div class="activityGraphIcon" v-if="state.project">
     <span v-if="state.append">
       <v-icon
+        class="mx-1"
+        small
+        v-show="state.project.hasSpatialActivities"
+        v-text="'mdi-axis-arrow'"
+      />
+      <v-icon
+        class="mx-1"
         small
         v-show="state.project.hasAnalogActivities"
         v-text="'mdi-chart-bell-curve-cumulative'"
       />
       <v-icon
+        class="mx-1"
         small
         v-show="state.project.hasSpikeActivities"
         v-text="'mdi-chart-scatter-plot'"
-      />
-      <v-icon
-        small
-        v-show="state.project.hasSpatialActivities"
-        v-text="'mdi-axis-arrow'"
       />
     </span>
     <span v-else>
@@ -22,7 +25,7 @@
         v-if="
           state.project.hasSpatialActivities &&
           !state.fixed &&
-          state.project.app.projectView.state.activityGraph === 'spatial'
+          state.project.app.project.view.state.activityGraph === 'spatial'
         "
         v-text="'mdi-axis-arrow'"
       />

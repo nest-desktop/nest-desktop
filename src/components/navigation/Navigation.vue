@@ -1,8 +1,8 @@
 <template>
   <div class="navigation">
-    <span v-if="appView.state.dialog.open">
-      <ProjectsDialog v-if="appView.state.dialog.source === 'project'" />
-      <ModelsDialog v-else-if="appView.state.dialog.source === 'model'" />
+    <span v-if="dialogState.open">
+      <ProjectsDialog v-if="dialogState.source === 'project'" />
+      <ModelsDialog v-else-if="dialogState.source === 'model'" />
     </span>
 
     <span v-if="state.menu.show">
@@ -78,7 +78,7 @@
               <v-spacer />
 
               <v-list nav>
-                <template v-if="appView.app.config.devMode">
+                <template v-if="appConfig.devMode">
                   <v-tooltip right>
                     <template #activator="{ on, attrs }">
                       <v-list-item v-bind="attrs" v-on="on">
@@ -181,7 +181,6 @@ export default {
     SettingsMenu,
   },
   setup() {
-    const appView = core.app.view;
     const state = reactive({
       darkNav: false,
       dialog: false,
@@ -228,12 +227,12 @@ export default {
         // check if project ID is undefined or project does not exist anymore
         if (
           recentProjectId == undefined ||
-          recentProjectId.length <= 0 ||
-          appView.filteredProjects.filter(
-            project => project.id === recentProjectId
-          ).length <= 0
+          recentProjectId.length <= 0
+          // core.app.project.filteredProjects.filter(
+          //   (project: Project) => project.id === recentProjectId
+          // ).length <= 0
         ) {
-          recentProjectId = appView.filteredProjects[0].id;
+          recentProjectId = core.app.project.recentProjectId;
         }
         router.push({
           name: 'ProjectId',
@@ -354,7 +353,8 @@ export default {
     };
 
     return {
-      appView,
+      appConfig: core.app.config,
+      dialogState: core.app.state.dialog,
       reset,
       resizeSidebar,
       routes,

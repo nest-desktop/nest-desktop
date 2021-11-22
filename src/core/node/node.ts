@@ -2,7 +2,7 @@ import { sha1 } from 'object-hash';
 
 import { Activity } from '../activity/activity';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
@@ -73,7 +73,7 @@ export class Node extends Config {
   }
 
   get model(): Model {
-    return this._network.project.app.view.getModel(this._modelId);
+    return this._network.project.app.model.getModel(this._modelId);
   }
 
   /**
@@ -90,7 +90,7 @@ export class Node extends Config {
 
   get models(): Model[] {
     const elementType: string = this.model.elementType;
-    return this._network.project.app.view.filterModels(elementType);
+    return this._network.project.app.model.filterModels(elementType);
   }
 
   get modelId(): string {

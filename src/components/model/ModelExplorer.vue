@@ -24,7 +24,7 @@ export default Vue.extend({
     ActivityGraph,
   },
   setup() {
-    const modelView = core.app.modelView;
+    const modelView = core.app.model.view;
     return { modelView };
   },
 });

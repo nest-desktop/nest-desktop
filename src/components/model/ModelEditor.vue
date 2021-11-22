@@ -147,7 +147,7 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ModelEditor',
   setup() {
-    const modelView = core.app.modelView;
+    const modelView = core.app.model.view;
 
     const headers: any[] = [
       {

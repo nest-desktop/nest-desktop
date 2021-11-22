@@ -186,7 +186,7 @@
               :title="tool.title"
               @click="projectView.selectTool(tool)"
               v-for="tool in projectView.tools"
-              v-show="tool.devMode ? appView.app.config.devMode : true"
+              v-show="tool.devMode ? appConfig.devMode : true"
             >
               <v-list-item-icon>
                 <v-list-item-group class="nav-item-right">
@@ -351,8 +351,7 @@ export default Vue.extend({
     id: String,
   },
   setup(props, { root }) {
-    const appView = core.app.view;
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       error: false,
       loading: false,
@@ -373,12 +372,17 @@ export default Vue.extend({
         // http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
         const url: string = root.$route.query.from as string;
         axios.get(url).then((response: any) => {
-          const project = appView.addProjectTemporary(response.data);
-          root.$router.replace({ path: `/project/${project.id}` });
+          core.app.project.addProjectTemporary(response.data);
         });
       } else {
         state.loading = true;
         projectView.init().then(() => {
+          const project = projectView.state.project;
+          if (!root.$route.path.endsWith(project.id)) {
+            root.$router.push({
+              path: `/project/${project.id}`,
+            });
+          }
           state.loading = false;
         });
       }
@@ -434,7 +438,7 @@ export default Vue.extend({
     );
 
     return {
-      appView,
+      appConfig: core.app.config,
       projectView,
       resizeSidebar,
       state,

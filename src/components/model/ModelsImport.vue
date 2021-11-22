@@ -114,7 +114,13 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="closeDialog" outlined small text v-text="'Cancel'" />
+        <v-btn
+          @click="() => closeDialog()"
+          outlined
+          small
+          text
+          v-text="'Cancel'"
+        />
         <v-btn
           :disabled="!state.models.some(p => p.selected)"
           @click="importModels"
@@ -141,7 +147,6 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ModelsImport',
   setup() {
-    const appView = core.app.view;
     const state = reactive({
       items: [
         {
@@ -270,24 +275,14 @@ export default Vue.extend({
      */
     const importModels = () => {
       const models: any[] = state.models.filter((model: any) => model.selected);
-      core.app.addModels(models).then(() => {
-        appView.updateModels();
-        closeDialog();
-      });
-    };
-
-    /**
-     * Close dialog.
-     */
-    const closeDialog = () => {
-      appView.state.dialog.open = false;
+      core.app.model.importModels(models);
+      core.app.closeDialog();
     };
 
     onMounted(() => getTreesFromGithub());
 
     return {
-      appView,
-      closeDialog,
+      closeDialog: () => core.app.closeDialog(),
       getFilesFromGithub,
       getModelFromGithub,
       getModelFromFile,
