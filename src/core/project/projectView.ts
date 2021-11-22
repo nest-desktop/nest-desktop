@@ -1,7 +1,9 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
 
+import { consoleLog } from '../common/logger';
+
 import { App } from '../app';
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Project } from './project';
 
 export class ProjectView extends Config {
@@ -90,6 +92,10 @@ export class ProjectView extends Config {
     return this._tools;
   }
 
+  consoleLog(text: string): void {
+    consoleLog(this, text, 3);
+  }
+
   /**
    * Count networks before the current.
    */
@@ -112,23 +118,23 @@ export class ProjectView extends Config {
    * Initialize project view
    */
   async init(): Promise<any> {
-    // console.log('Load project: ' + id);
+    this.consoleLog('Initialize project: ' + this._state.projectId);
 
-    return this._app.view.initProject(this._state.projectId).then(() => {
+    if (this._app.backends.insiteAccess.state.version.insite == undefined) {
+      this.updateConfig({ simulateWithInsite: false });
+    }
+
+    return this._app.project.initProject(this._state.projectId).then(() => {
       if (this._state.project) {
-        // generate simulation code.
-        if (
+        const generateCode =
           this.config.simulateWithInsite !==
-          this._state.project.code.state.codeInsite
-        ) {
-          this._state.project.code.generate();
-        }
+          this._state.project.code.state.codeInsite;
+        this._state.project.init({
+          generateCode,
+        });
 
         // update view mode for project.
         this.updateProjectMode();
-
-        // reset network graph.
-        this._state.project.network.state.reset();
 
         // update activity graph view.
         this._state.activityGraph = this._state.project.network.hasPositions()
@@ -152,6 +158,8 @@ export class ProjectView extends Config {
    * Set height for network graph.
    */
   resizeNetworkGraph(): void {
+    this.consoleLog('Resize network graph');
+
     // caluclate height for network graph.
     this._state.networkGraphHeight =
       this._state.modeIdx === 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
@@ -166,6 +174,8 @@ export class ProjectView extends Config {
    * Select view for activity graph.
    */
   selectActivityGraph(mode: string): void {
+    this.consoleLog('Select activity graph');
+
     this._state.activityGraph = mode;
     this._state.modeIdx = 1;
   }
@@ -174,6 +184,8 @@ export class ProjectView extends Config {
    * Select tool for this project.
    */
   selectTool(tool: any): void {
+    this.consoleLog('Select project tool');
+
     // open tool if closed or select other tool.
     this._state.toolOpened = this._state.toolOpened
       ? this._state.tool !== tool
@@ -190,6 +202,8 @@ export class ProjectView extends Config {
    * Update view mode of the project.
    */
   updateProjectMode(): void {
+    this.consoleLog('Update project view');
+
     // select tool and resize network graph if netwot editor or lab view is selected.
     if ([0, 2].includes(this._state.modeIdx)) {
       this._state.toolOpened = this._state.toolOpened

@@ -244,7 +244,8 @@ export default Vue.extend({
     id: String,
   },
   setup(props) {
-    const modelView = core.app.modelView;
+    const modelView = core.app.model.view;
+    const projectView = core.app.project.view;
     const state = reactive({
       resizing: false,
     });
@@ -335,7 +336,7 @@ export default Vue.extend({
         update(id as string);
       }
     );
-    return { modelView, projects, resizeSidebar, state };
+    return { modelView, projects, projectView, resizeSidebar, state };
   },
 });
 </script>

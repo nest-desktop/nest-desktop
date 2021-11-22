@@ -1,4 +1,4 @@
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Simulation } from './simulation';
 
 export class SimulationKernel extends Config {

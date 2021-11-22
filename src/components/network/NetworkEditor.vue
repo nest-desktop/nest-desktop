@@ -156,7 +156,7 @@ export default Vue.extend({
     networkHash: String,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const networkEditor = ref(null);
     const state = reactive({
       network: projectView.state.project.network,

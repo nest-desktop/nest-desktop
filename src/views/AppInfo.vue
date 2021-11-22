@@ -168,7 +168,6 @@ export default Vue.extend({
     includeProjectButtons: Boolean,
   },
   setup(props) {
-    const appView = core.app.view;
     const references = [
       {
         color: 'rgba(178, 245, 23, 0.05)',
@@ -216,7 +215,7 @@ export default Vue.extend({
      * Load projects from app core component
      */
     const loadProjects = () => {
-      state.projects = appView.state.projects;
+      state.projects = core.app.project.state.projects;
     };
 
     return { loadProjects, references, state };

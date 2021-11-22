@@ -8,12 +8,12 @@
 
     <v-container class="py-0">
       <v-text-field
-        @click:append="clearSearch"
+        @click:append="modelStore.clearSearch"
         clearable
         hide-details
         label="Search model"
         prepend-inner-icon="mdi-magnify"
-        v-model="appView.state.model.searchTerm"
+        v-model="modelStore.state.searchTerm"
       >
         <template #prepend>
           <v-menu offset-y>
@@ -54,7 +54,7 @@
         close
         small
         outlined
-        v-if="appView.state.model.filterTags.includes(tag.text.toLowerCase())"
+        v-if="modelStore.state.filterTags.includes(tag.text.toLowerCase())"
       >
         <v-icon left small v-text="tag.icon" />
         {{ tag.text }}
@@ -75,8 +75,8 @@
         @contextmenu="e => showModelMenu(e, model)"
         v-for="model in state.models"
         v-show="
-          appView.state.model.searchTerm
-            ? model.includes(appView.state.model.searchTerm)
+          modelStore.state.searchTerm
+            ? model.includes(modelStore.state.searchTerm)
             : true
         "
       >
@@ -88,13 +88,13 @@
           <v-icon
             right
             small
-            v-show="appView.hasModel(model)"
+            v-show="modelStore.hasModel(model)"
             v-text="'mdi-database-outline'"
           />
           <v-icon
             right
             small
-            v-show="fileExistGithub(model)"
+            v-show="modelStore.fileExistGithub(model)"
             v-text="'mdi-github'"
           />
         </v-list-item-icon>
@@ -116,7 +116,7 @@ export default Vue.extend({
     ModelMenu,
   },
   setup() {
-    const appView = core.app.view;
+    const modelStore = core.app.model;
     const state = reactive({
       modelMenu: {
         model: undefined,
@@ -148,7 +148,7 @@ export default Vue.extend({
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.modelMenu.show = false;
-      state.modelMenu.model = appView.getModel(model);
+      state.modelMenu.model = core.app.model.getModel(model);
       state.modelMenu.position.x = e.clientX;
       state.modelMenu.position.y = e.clientY;
       this.$nextTick(() => {
@@ -157,27 +157,10 @@ export default Vue.extend({
     };
 
     /**
-     * Clear search term.
-     */
-    const clearSearch = () => {
-      appView.state.model.searchTerm = '';
-    };
-
-    /**
-     * Check if file exists on GitHub.
-     * @param model Model name
-     */
-    const fileExistGithub = (model: string) => {
-      return appView.state.model.filesGithub.some((file: string) =>
-        file.includes('/' + model)
-      );
-    };
-
-    /**
      * Add filter tag.
      */
     const addFilterTag = (tag: string) => {
-      appView.state.model.filterTags.push(tag);
+      modelStore.state.filterTags.push(tag);
       update();
     };
 
@@ -185,11 +168,11 @@ export default Vue.extend({
      * Remove filter tag.
      */
     const removeFilterTag = (tag: string) => {
-      appView.state.model.filterTags.splice(
-        appView.state.model.filterTags.indexOf(tag),
+      modelStore.state.filterTags.splice(
+        modelStore.state.filterTags.indexOf(tag),
         1
       );
-      appView.state.model.filterTags = [...appView.state.model.filterTags];
+      modelStore.state.filterTags = [...modelStore.state.filterTags];
       update();
     };
 
@@ -227,18 +210,18 @@ export default Vue.extend({
       model.endsWith('gap_junction') || model.endsWith('_synapse');
 
     /**
-     * Update models
+     * Update models.
      */
     const update = () => {
-      const filterTags: string[] = appView.state.model.filterTags;
+      const filterTags: string[] = modelStore.state.filterTags;
       if (filterTags.includes('installed')) {
-        state.models = appView.state.models.map((model: any) => model.id);
+        state.models = modelStore.state.models.map((model: any) => model.id);
       } else if (filterTags.includes('github')) {
-        state.models = appView.state.model.filesGithub.map(
+        state.models = modelStore.state.filesGithub.map(
           (model: string) => model.split('.json')[0].split('/')[1]
         );
       } else {
-        state.models = appView.state.model.modelsNEST;
+        state.models = modelStore.state.modelsNEST;
       }
 
       if (
@@ -278,10 +261,8 @@ export default Vue.extend({
     });
 
     return {
-      appView,
+      modelStore,
       addFilterTag,
-      clearSearch,
-      fileExistGithub,
       filterTags,
       removeFilterTag,
       showModelMenu,

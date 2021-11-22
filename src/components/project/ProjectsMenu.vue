@@ -53,7 +53,6 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { Project } from '@/core/project/project';
 import core from '@/core';
 
 export default Vue.extend({
@@ -63,7 +62,6 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
-    const appView = core.app.view;
     const state = reactive({
       content: null,
       selectedProjects: [],
@@ -75,7 +73,7 @@ export default Vue.extend({
           icon: 'mdi-reload',
           title: 'Reload projects',
           onClick: () => {
-            appView.updateProjects();
+            core.app.project.initProjectList();
             state.show = false;
           },
         },
@@ -122,20 +120,18 @@ export default Vue.extend({
      */
     const resetProjects = () => {
       state.show = false;
-      core.app.resetProjectDatabase().then(() => {
-        appView.updateProjects();
+      core.app.project.resetDatabase().then(() => {
         reset();
       });
     };
 
+    /**
+     * Open one of the dialogs to export, import or delete.
+     * @param action Dialog to open
+     */
     const openDialog = (action: string = 'export') => {
-      appView.state.projects.forEach((project: Project) =>
-        project.resetState()
-      );
-      appView.state.dialog.source = 'project';
-      appView.state.dialog.action = action;
-      appView.state.dialog.content = appView.state.projects;
-      appView.state.dialog.open = true;
+      core.app.project.resetProjectStates();
+      core.app.openDialog('project', action, core.app.project.state.projects);
       state.show = false;
     };
 
@@ -150,7 +146,6 @@ export default Vue.extend({
     );
 
     return {
-      appView,
       reset,
       resetProjects,
       state,

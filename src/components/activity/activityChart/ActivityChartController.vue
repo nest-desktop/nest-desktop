@@ -113,7 +113,7 @@ export default Vue.extend({
     graph: ActivityChartGraph,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       color: '#9e9e9e',
       graph: props.graph as ActivityChartGraph | undefined,

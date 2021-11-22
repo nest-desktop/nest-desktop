@@ -121,7 +121,13 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="closeDialog" outlined small text v-text="'Cancel'" />
+        <v-btn
+          @click="() => closeDialog()"
+          outlined
+          small
+          text
+          v-text="'Cancel'"
+        />
         <v-btn
           :disabled="!state.projects.some(p => p.selected)"
           @click="importProjects"
@@ -148,7 +154,6 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ProjectsImport',
   setup() {
-    const appView = core.app.view;
     const state = reactive({
       dialog: false,
       items: [
@@ -283,24 +288,14 @@ export default Vue.extend({
       const projects: any[] = state.projects.filter(
         (project: any) => project.selected
       );
-      core.app.addProjects(projects).then(() => {
-        appView.updateProjects();
-        closeDialog();
-      });
-    };
-
-    /**
-     * Close dialog.
-     */
-    const closeDialog = () => {
-      appView.state.dialog.open = false;
+      core.app.project.importProjects(projects);
+      core.app.closeDialog();
     };
 
     onMounted(() => getTreesFromGithub());
 
     return {
-      appView,
-      closeDialog,
+      closeDialog: () => core.app.closeDialog(),
       getFilesFromGithub,
       getProjectsFromGithub,
       getProjectsFromFile,

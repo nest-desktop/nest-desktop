@@ -27,6 +27,20 @@
           </v-list>
         </span>
 
+        <span v-if="state.content === 'databasesReset'">
+          <v-card-title v-text="'Are you sure to reset all databases?'" />
+
+          <v-card-text> The databases will be reset. </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="reset" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-spacer />
+            <v-btn @click="resetDatabases" outlined small v-text="'Reset'" />
+          </v-card-actions>
+        </span>
+
         <span v-if="state.content === 'configsReset'">
           <v-card-title v-text="'Are you sure to reset all configs?'" />
 
@@ -59,7 +73,6 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
-    const appView = core.app.view;
     const state = reactive({
       content: undefined,
       position: props.position,
@@ -74,6 +87,15 @@ export default Vue.extend({
           },
           append: true,
         },
+        {
+          id: 'databasesReset',
+          icon: '$mdiDatabaseRefreshOutline',
+          title: 'Reset all databases',
+          onClick: () => {
+            state.content = 'databasesReset';
+          },
+          append: true,
+        },
       ],
     });
 
@@ -82,6 +104,14 @@ export default Vue.extend({
      */
     const reset = () => {
       state.content = undefined;
+    };
+
+    /**
+     * Reset configurations.
+     */
+    const resetDatabases = () => {
+      core.app.resetDatabases();
+      state.show = false;
     };
 
     /**
@@ -103,8 +133,8 @@ export default Vue.extend({
     );
 
     return {
-      appView,
       reset,
+      resetDatabases,
       resetConfigs,
       state,
     };

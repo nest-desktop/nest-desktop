@@ -156,7 +156,7 @@ export default Vue.extend({
     simulation: Simulation,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       color: '#9e9e9e',
       autoRNGSeed: false,

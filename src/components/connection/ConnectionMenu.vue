@@ -164,7 +164,7 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       connection: props.connection as Connection,
       connectionParamsIdx: [],

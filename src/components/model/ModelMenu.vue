@@ -58,7 +58,6 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
-    const appView = core.app.view;
     const state = reactive({
       content: null,
       model: props.model as Model,
@@ -90,7 +89,7 @@ export default Vue.extend({
           title: 'Import model',
           onClick: () => {
             state.show = false;
-            state.model.app.importModelFromGithub(state.model.id);
+            core.app.model.importFromGithub(state.model.id);
           },
         },
         {
@@ -116,9 +115,8 @@ export default Vue.extend({
      */
     const deleteModel = () => {
       state.model.delete().then(() => {
-        state.model.app.view.updateModels();
+        state.show = false;
       });
-      state.show = false;
     };
 
     const update = () => {
@@ -134,10 +132,7 @@ export default Vue.extend({
      */
     const openDialog = (action: string = 'export') => {
       state.model.resetState();
-      appView.state.dialog.source = 'model';
-      appView.state.dialog.action = action;
-      appView.state.dialog.content = [state.model];
-      appView.state.dialog.open = true;
+      core.app.openDialog('model', action, [state.model]);
       state.show = false;
     };
 

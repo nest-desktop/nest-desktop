@@ -1,5 +1,6 @@
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
+import { consoleLog } from '../common/logger';
 import { NetworkCode } from './networkCode';
 import { NetworkState } from './networkState';
 import { Node } from '../node/node';
@@ -99,6 +100,10 @@ export class Network extends Config {
     );
   }
 
+  consoleLog(text: string): void {
+    consoleLog(this, text, 5);
+  }
+
   /**
    * Check if the network has any spatial nodes.
    */
@@ -117,17 +122,20 @@ export class Network extends Config {
    * It commits the network in the network history.
    */
   networkChanges(): void {
-    this._state.updateHash();
     this._connections.forEach((connection: Connection) => {
       connection.sourceSlice.update();
       connection.targetSlice.update();
     });
+
     this._project.code.generate();
+    this._state.updateHash();
+    this._project.updateHash();
+
     this._project.commitNetwork(this);
 
     // Simulate when the configuration is set
     // and the view mode is activity explorer.
-    const projectView = this._project.app.projectView;
+    const projectView = this._project.app.project.view;
     if (
       projectView.config.simulateAfterChange &&
       projectView.state.modeIdx === 1
@@ -175,6 +183,8 @@ export class Network extends Config {
    * Create node component by user interaction.
    */
   createNode(view: any): void {
+    this.consoleLog('Create node');
+
     const defaultModels: any = {
       neuron: 'iaf_psc_alpha',
       recorder: 'voltmeter',
@@ -203,7 +213,8 @@ export class Network extends Config {
    * When it connects to a recorder, it initializes activity graph.
    */
   connectNodes(source: Node, target: Node): void {
-    // console.log('Connect nodes');
+    this.consoleLog('Connect nodes');
+
     const weight: string = source.view.weight;
     const connection: Connection = this.addConnection({
       source: source.idx,
@@ -224,7 +235,8 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteNode(node: Node): void {
-    // console.log('Delete node');
+    this.consoleLog('Delete node');
+
     this._state.reset();
     this._connections = this._connections.filter(
       (connection: Connection) =>
@@ -258,7 +270,8 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteConnection(connection: Connection): void {
-    // console.log('Delete connection');
+    this.consoleLog('Delete connection');
+
     this._state.reset();
     // this.connections = this.connections.filter((c: Connection) => c.idx !== connection.idx);
     const idx: number = connection.idx;

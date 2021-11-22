@@ -1,4 +1,4 @@
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Node } from '../node/node';
 import { Parameter } from '../parameter/parameter';
 

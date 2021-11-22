@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { Simulation } from './simulation';
 
 export class SimulationCode extends Code {

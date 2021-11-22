@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 // import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Synapse } from './synapse';

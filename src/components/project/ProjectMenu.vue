@@ -57,8 +57,7 @@ export default Vue.extend({
     project: Project,
     position: Object,
   },
-  setup(props) {
-    const appView = core.app.view;
+  setup(props, { root }) {
     const state = reactive({
       content: null,
       project: props.project as Project,
@@ -79,7 +78,12 @@ export default Vue.extend({
           icon: 'mdi-content-duplicate',
           title: 'Duplicate project',
           onClick: () => {
-            state.project.duplicate();
+            const project: Project = state.project.duplicate();
+            if (!root.$route.path.endsWith(project.id)) {
+              root.$router.push({
+                path: `/project/${project.id}`,
+              });
+            }
             state.show = false;
           },
         },
@@ -105,18 +109,13 @@ export default Vue.extend({
      * Delete project.
      */
     const deleteProject = () => {
-      state.project.delete().then(() => {
-        state.project.app.view.updateProjects();
-      });
+      state.project.delete();
       state.show = false;
     };
 
     const openDialog = (action: string = 'export') => {
       state.project.resetState();
-      appView.state.dialog.source = 'project';
-      appView.state.dialog.action = action;
-      appView.state.dialog.content = [state.project];
-      appView.state.dialog.open = true;
+      core.app.openDialog('project', action, [state.project]);
       state.show = false;
     };
 

@@ -2,7 +2,7 @@ import { reactive, UnwrapRef } from '@vue/composition-api';
 import { v4 as uuidv4 } from 'uuid';
 
 import { App } from '../app';
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { ModelCode } from './modelCode';
 import { ModelParameter } from '../parameter/modelParameter';
 
@@ -29,7 +29,7 @@ export class Model extends Config {
 
     this._doc = model || {};
     this._id = model.id || uuidv4();
-    this._idx = this.app.view.state.models.length;
+    this._idx = this.app.model.state.models.length;
 
     this._elementType =
       model.elementType !== undefined ? model.elementType : model.element_type;
@@ -107,12 +107,9 @@ export class Model extends Config {
    * Get parameter defaults of a model from NEST Simulator.
    */
   async fetchDefaults(): Promise<any> {
-    return this.app.NESTSimulator.httpClient.post(
-      this.app.NESTSimulator.url + '/api/GetDefaults',
-      {
-        model: this._id,
-      }
-    );
+    return this._app.backends.nestSimulator.post('api/GetDefaults', {
+      model: this._id,
+    });
   }
 
   /**
@@ -201,7 +198,7 @@ export class Model extends Config {
    * Clean model index.
    */
   clean(): void {
-    this._idx = this._app.view.state.models.indexOf(this);
+    this._idx = this._app.model.state.models.indexOf(this);
   }
 
   /**
@@ -243,14 +240,14 @@ export class Model extends Config {
    * Delete model object from model list in app.
    */
   async delete(): Promise<any> {
-    return this._app.deleteModel(this._doc._id);
+    return this._app.model.deleteModel(this._doc._id);
   }
 
   /**
    * Save model object to the database.
    */
   async save(): Promise<any> {
-    return this._app.importModel(this);
+    return this._app.model.saveModel(this);
   }
 
   /**
@@ -265,7 +262,7 @@ export class Model extends Config {
       id: this._id,
       label: this._label,
       params: this._params.map((param: ModelParameter) => param.toJSON()),
-      version: this._app.version,
+      version: this._app.state.version,
     };
 
     // Add recordables if provided.

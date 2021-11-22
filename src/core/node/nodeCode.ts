@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Node } from './node';
 // import { ParameterRandom } from '../parameterRandom';
@@ -72,7 +72,7 @@ export class NodeCode extends Code {
 
     if (
       this._node.model.elementType === 'recorder' &&
-      this._node.network.project.app.projectView.config.simulateWithInsite
+      this._node.network.project.app.project.view.config.simulateWithInsite
     ) {
       params.push('"record_to": "insite"');
     }

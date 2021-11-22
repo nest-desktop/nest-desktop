@@ -54,7 +54,6 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { Model } from '@/core/model/model';
 import core from '@/core';
 
 export default Vue.extend({
@@ -63,7 +62,6 @@ export default Vue.extend({
     position: Object,
   },
   setup(props) {
-    const appView = core.app.view;
     const state = reactive({
       content: undefined,
       position: props.position,
@@ -74,7 +72,7 @@ export default Vue.extend({
           icon: 'mdi-reload',
           title: 'Reload models',
           onClick: () => {
-            appView.updateModels();
+            core.app.model.initModelList();
             state.show = false;
           },
         },
@@ -119,9 +117,8 @@ export default Vue.extend({
      * Reset model database.
      */
     const resetModels = () => {
-      core.app.resetModelDatabase().then(() => {
-        appView.updateModels();
-        state.show = false;
+      state.show = false;
+      core.app.model.resetDatabase().then(() => {
         reset();
       });
     };
@@ -131,11 +128,8 @@ export default Vue.extend({
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {
-      appView.state.models.forEach((model: Model) => model.resetState());
-      appView.state.dialog.source = 'model';
-      appView.state.dialog.action = action;
-      appView.state.dialog.content = appView.state.models;
-      appView.state.dialog.open = true;
+      core.app.model.resetModelStates();
+      core.app.openDialog('model', action, core.app.model.state.models);
       state.show = false;
     };
 
@@ -150,7 +144,6 @@ export default Vue.extend({
     );
 
     return {
-      appView,
       reset,
       resetModels,
       state,

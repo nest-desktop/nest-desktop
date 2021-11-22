@@ -1,8 +1,9 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
-import axios from 'axios';
+
+import { consoleLog } from '../common/logger';
 
 import { App } from '../app';
-import { Model } from './model';
+import { Model } from '../model/model';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
@@ -71,7 +72,6 @@ export class ModelView {
         helptext: '',
         subtitle: '',
         title: '',
-        url: '',
       },
       fileExistedGithub: false,
       modeIdx: 0,
@@ -103,7 +103,7 @@ export class ModelView {
         this._state.project &&
         this._state.project.code.hash !==
           this._state.project.activityGraph.codeHash &&
-        this._app.projectView.config.simulateAfterLoad
+        this._app.project.view.config.simulateAfterLoad
       ) {
         this._state.project.runSimulation();
       }
@@ -122,12 +122,17 @@ export class ModelView {
     return this._tools;
   }
 
+  consoleLog(text: string): void {
+    consoleLog(this, text, 3);
+  }
+
   /**
    * Initialize model from the list.
    */
   initModel(id: string = undefined): void {
+    this.consoleLog('Initialize model: ' + id);
     this._state.modelId = id || this._state.modelId;
-    this._state.model = this._app.view.getModel(this._state.modelId);
+    this._state.model = this._app.model.getModel(this._state.modelId);
     this.checkFileExistedGithub();
     this.getParamDefaults().then(() => {
       this.updateProject();
@@ -141,9 +146,10 @@ export class ModelView {
    * Reload model from the list.
    */
   reloadModel(): void {
+    this.consoleLog('Reload model');
     this._state.model = undefined;
     setTimeout(() => {
-      this._state.model = this._app.view.getModel(this._state.modelId);
+      this._state.model = this._app.model.getModel(this._state.modelId);
       this.initProject();
       this.updateToolView();
       this.modeIdx = this.modeIdx;
@@ -154,6 +160,7 @@ export class ModelView {
    * Create a new model and add it to the list but not to the database.
    */
   newModel(): void {
+    this.consoleLog('New model');
     this._state.model = new Model(this._app);
   }
 
@@ -161,7 +168,7 @@ export class ModelView {
    * Check if the model is implemented.
    */
   hasModel(): boolean {
-    return this._app.view.hasModel(this._state.modelId);
+    return this._app.model.hasModel(this._state.modelId);
   }
 
   /**
@@ -210,11 +217,12 @@ export class ModelView {
     return this._state.model
       .fetchDefaults()
       .then((resp: any) => {
-        const responseText = resp.responseText.replace(
-          /(NaN|-?Infinity)/g,
-          '"$1"'
-        );
-        this._state.defaults = JSON.parse(responseText);
+        if (typeof resp.data === 'string') {
+          const data = resp.data.replace(/(NaN|-?Infinity)/g, '"$1"');
+          this._state.defaults = JSON.parse(data);
+        } else {
+          this._state.defaults = resp.data;
+        }
         this._state.params = Object.keys(this._state.defaults).map(
           (key: string) => {
             return { id: key, value: this._state.defaults[key] };
@@ -268,16 +276,15 @@ export class ModelView {
       helptext: '',
       subtitle: '',
       title: '',
-      url: `${this._app.NESTSimulator.url}/api/help?return_text=true&obj=`,
     };
   }
 
   isNeuron(): boolean {
-    if (this._state.model && this._state.model.elementType !== undefined) {
+    if (this._state.model && this._state.model.elementType != undefined) {
       return this._state.model.elementType === 'neuron';
     } else if (
       this._state.defaults &&
-      this._state.defaults.element_type !== undefined
+      this._state.defaults.element_type != undefined
     ) {
       return this._state.defaults.element_type === 'neuron';
     } else {
@@ -293,8 +300,9 @@ export class ModelView {
     if (!this._state.modelId) {
       return;
     }
-    axios
-      .get(this._state.doc.url + this._state.modelId)
+    const path = 'api/help?return_text=true&obj=' + this._state.modelId;
+    this._app.backends.nestSimulator
+      .get(path)
       .then((resp: any) => {
         if (resp.status !== 200) {
           return;
@@ -339,7 +347,7 @@ export class ModelView {
    * Check if file exists on Github
    */
   checkFileExistedGithub(): void {
-    this._state.fileExistedGithub = this._app.view.state.model.filesGithub.some(
+    this._state.fileExistedGithub = this._app.model.state.filesGithub.some(
       (file: string) => file.includes('/' + this._state.modelId)
     );
   }

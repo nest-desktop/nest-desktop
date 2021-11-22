@@ -122,7 +122,7 @@ export default Vue.extend({
     view: String,
   },
   setup(props) {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     const state = reactive({
       dialog: false,
       gd: undefined,

@@ -18,20 +18,21 @@
     <v-container
       :key="state.projectId"
       class="py-0"
-      v-if="projectView.state.project"
+      v-if="projectStore.view.state.project"
     >
       <v-text-field
+        @change="() => projectStore.view.state.project.clean()"
         clearable
         dense
         hide-details
         placeholder="Project name"
         title="Rename the current project"
-        v-model="projectView.state.project.name"
+        v-model="projectStore.view.state.project.name"
       >
         <template #append-outer>
           <v-row>
             <v-btn
-              @click="projectView.state.project.save()"
+              @click="saveProject"
               class="project mx-2"
               dark
               depressed
@@ -52,19 +53,19 @@
         hide-details
         placeholder="Search project"
         prepend-inner-icon="mdi-magnify"
-        v-model="appView.state.project.searchTerm"
+        v-model="projectStore.state.searchTerm"
       />
     </v-container>
 
-    <v-list :key="appView.state.projects.length" dense two-line>
-      <draggable v-model="appView.state.projects">
+    <v-list :key="projectStore.state.projects.length" dense two-line>
+      <draggable v-model="projectStore.state.projects">
         <transition-group>
           <v-list-item
             :key="project.id"
             :to="'/project/' + project.id"
             @click="state.projectId = project.id"
             @contextmenu="e => showProjectMenu(e, project)"
-            v-for="project in appView.filteredProjects"
+            v-for="project in projectStore.filteredProjects"
           >
             <v-list-item-content>
               <v-list-item-title v-text="project.name" />
@@ -76,6 +77,15 @@
             </v-list-item-content>
 
             <v-list-item-icon>
+              <v-icon
+                class="px-1"
+                small
+                v-if="
+                  project.id != project.doc._id ||
+                  project.state.hash != project.doc.hash
+                "
+                v-text="'mdi-alert-circle-outline'"
+              />
               <ActivityGraphIcon
                 :project="project"
                 append
@@ -106,9 +116,8 @@ export default Vue.extend({
     draggable,
     ProjectMenu,
   },
-  setup() {
-    const appView = core.app.view;
-    const projectView = core.app.projectView;
+  setup(_, { root }) {
+    const projectStore = core.app.project;
     const state = reactive({
       app: core.app,
       projectId: '',
@@ -134,9 +143,20 @@ export default Vue.extend({
       });
     };
 
+    const saveProject = () => {
+      const project = projectStore.view.state.project;
+      project.save().then(() => {
+        if (!root.$route.path.endsWith(project.id)) {
+          root.$router.push({
+            path: `/project/${project.id}`,
+          });
+        }
+      });
+    };
+
     return {
-      appView,
-      projectView,
+      projectStore,
+      saveProject,
       showProjectMenu,
       state,
     };

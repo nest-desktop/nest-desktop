@@ -57,7 +57,7 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ModelDocumentation',
   setup() {
-    const modelView = core.app.modelView;
+    const modelView = core.app.model.view;
     const NESTVersion = 'v3.1';
     const NESTDocURL = () => {
       return `https://nest-simulator.readthedocs.io/en/${NESTVersion}/models/${modelView.state.modelId}.html`;

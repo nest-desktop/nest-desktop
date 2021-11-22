@@ -1,40 +1,60 @@
 import * as PouchDB from 'pouchdb/dist/pouchdb';
 import * as PouchDBUpsert from 'pouchdb-upsert/dist/pouchdb.upsert';
 
-import { App } from './app';
+import { App } from '../app';
 
 export class DatabaseService {
   private _app: App;
   private _db: PouchDB;
-  private _ready = false;
-  private _valid = false;
-  private _version: string;
+  private _options: any;
+  private _state: any = {
+    ready: false,
+    valid: false,
+    version: '',
+  };
+  private _url: string;
 
   constructor(app: App, url: string, options: any = {}) {
     this._app = app;
+    this._url = url;
+    this._options = options;
     this._db = new PouchDB(url, options);
     this.getVersion().then((version: string) => {
-      this._version = version;
+      this._state.version = version;
     });
     this.checkVersion();
-    this._ready = true;
+    this._state.ready = true;
   }
 
-  get version(): string {
-    return this._version;
+  get app(): App {
+    return this._app;
+  }
+
+  get db(): PouchDB {
+    return this._db;
+  }
+
+  get state(): any {
+    return this._state;
   }
 
   async destroy(): Promise<any> {
     return this._db.destroy();
   }
 
+  async reset(): Promise<any> {
+    return this.destroy().then(() => {
+      this._db = new PouchDB(this._url, this._options);
+    });
+  }
+
   isReady(): boolean {
-    return this._ready;
+    return this._state.ready;
     // return this._db !== undefined;
   }
 
   isValid(): boolean {
-    return this._valid;
+    return this._state.valid;
   }
 
   count(): any {
@@ -65,12 +85,15 @@ export class DatabaseService {
   create(data: any): any {
     // console.log('Create doc in db');
     const dataJSON = data.toJSON();
-    dataJSON.version = this._app.version;
     dataJSON.createdAt = new Date();
+    dataJSON.hash = data.state.hash || undefined;
+    dataJSON.version = this._app.state.version;
     return this._db
       .post(dataJSON)
       .then((res: any) => {
-        data._id = res.id;
+        data.id = res.id;
+        data.doc._id = res.id;
+        data.doc.hash = data.state.hash;
         if (!data.createdAt) {
           data.createdAt = dataJSON.createdAt;
         }
@@ -91,11 +114,14 @@ export class DatabaseService {
   update(data: any): any {
     // console.log('Update doc in db');
     return this._db
-      .get(data.doc._id || data.id)
+      .get(data.doc._id)
       .then((doc: any) => {
+        data.doc = doc;
         const dataJSON = data.toJSON();
-        dataJSON.version = this._app.version;
+        dataJSON.hash = data.state.hash || undefined;
         dataJSON.updatedAt = new Date();
+        dataJSON.version = this._app.state.version;
+        console.log(dataJSON.hash);
         const keys: string[] = Object.keys(dataJSON);
         keys
           .filter((key: string) => !key.startsWith('_'))
@@ -150,7 +176,7 @@ export class DatabaseService {
   setVersion(): any {
     return this._db.put({
       _id: '_local/version',
-      version: this._app.version,
+      version: this._app.state.version,
     });
   }
 
@@ -158,8 +184,8 @@ export class DatabaseService {
     this.getVersion()
       .then((version: string) => {
         const dbVersion: string[] = version.split('.');
-        const appVersion: string[] = this._app.version.split('.');
-        this._valid =
+        const appVersion: string[] = this._app.state.version.split('.');
+        this._state.valid =
           appVersion[0] === dbVersion[0] && appVersion[1] === dbVersion[1];
       })
       .catch(() => {

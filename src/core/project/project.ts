@@ -3,12 +3,11 @@ import { sha1 } from 'object-hash';
 import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
 
-import axios from 'axios';
-
 import { Activity } from '../activity/activity';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
+import { consoleLog } from '../common/logger';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
@@ -71,7 +70,6 @@ export class Project {
     this._activityGraph = new ActivityGraph(this);
 
     this.clean();
-    this.commitNetwork(this._network);
   }
 
   get activityGraph(): ActivityGraph {
@@ -102,8 +100,16 @@ export class Project {
     return this._doc;
   }
 
+  set doc(value: any) {
+    this._doc = value;
+  }
+
   get id(): string {
     return this._id;
+  }
+
+  set id(value: string) {
+    this._id = value;
   }
 
   get name(): string {
@@ -138,18 +144,38 @@ export class Project {
     this._updatedAt = value;
   }
 
+  consoleLog(text: string): void {
+    consoleLog(this, text, 4);
+  }
+
   /**
    * Is the current project selected?
    */
   isSelected(): boolean {
-    return this._id === this._app.projectView.state.project.id;
+    return this._id === this._app.project.view.state.project.id;
   }
 
   /**
    * Save the current project.
    */
   async save(): Promise<any> {
-    return this._app.importProject(this);
+    return this._app.project.importProject(this);
+  }
+
+  /**
+   * Initialize project.
+   */
+  init(options: any = { generateCode: true }): void {
+    this.clean();
+
+    if (options.generateCode) {
+      this.code.generate();
+    }
+    // reset network graph.
+    this._network.state.reset();
+
+    // commit network in history.
+    this.commitNetwork(this._network);
   }
 
   /**
@@ -162,6 +188,7 @@ export class Project {
     const newProject = new Project(this._app, this.toJSON());
     newProject._id = uuidv4();
     newProject._updatedAt = '';
+    newProject.init();
     return newProject;
   }
 
@@ -173,7 +200,7 @@ export class Project {
    */
   duplicate(): Project {
     const newProject: Project = this.clone();
-    this._app.view.state.projects.unshift(newProject);
+    this._app.project.state.projects.unshift(newProject);
     return newProject;
   }
 
@@ -181,28 +208,28 @@ export class Project {
    * Delete this project from the list and database.
    */
   async delete(): Promise<any> {
-    return this._app.deleteProject(this._id);
+    return this._app.project.deleteProject(this._id);
   }
 
   /**
    * Export this project.
    */
   export(): void {
-    this._app.view.exportProject(this._id);
+    this._app.project.exportProject(this._id);
   }
 
   /**
    * Export this project and activities.
    */
   exportWithActivities(): void {
-    this._app.view.exportProject(this._id, true);
+    this._app.project.exportProject(this._id, true);
   }
 
   /**
    * Reload this project.
    */
   async reload(): Promise<any> {
-    return this._app.view.reloadProject(this);
+    return this._app.project.reloadProject(this);
   }
 
   /*
@@ -213,7 +240,7 @@ export class Project {
    * Is this revised project selected?
    */
   isRevisionSelected(): boolean {
-    return this._rev === this._app.projectView.state.project.rev;
+    return this._rev === this._app.project.view.state.project.rev;
   }
 
   /**
@@ -257,7 +284,7 @@ export class Project {
    * Add network to the history list.
    */
   commitNetwork(network: Network): void {
-    // console.log('Commit network');
+    this.consoleLog('Commit network of ' + network.project.name);
 
     // Remove networks after the current.
     this._networkRevisions = this._networkRevisions.slice(
@@ -266,8 +293,8 @@ export class Project {
     );
 
     // Limit max amount of network revisions;
-    const maxRev: number = this._app.projectView
-      ? this._app.projectView.config.maxNetworkRevisions
+    const maxRev: number = this._app.project.view
+      ? this._app.project.view.config.maxNetworkRevisions
       : 5;
     if (this._networkRevisions.length > maxRev) {
       this._networkRevisions = this._networkRevisions.slice(
@@ -319,7 +346,7 @@ export class Project {
    * @remarks It generates code.
    */
   checkoutNetwork(): void {
-    // console.log('Checkout network');
+    this.consoleLog('Checkout network');
 
     // Update revision idx.
     if (this._networkRevisionIdx >= this._networkRevisions.length) {
@@ -350,7 +377,7 @@ export class Project {
       this._activityGraph.activityChartGraph.init();
     }
 
-    if (this._app.projectView.config.simulateAfterCheckout) {
+    if (this._app.project.view.config.simulateAfterCheckout) {
       // Run simulation.
       setTimeout(() => this.runSimulation(), 1);
     } else {
@@ -416,10 +443,10 @@ export class Project {
    * After the simulation it updates activities and commit network.
    */
   async runSimulation(): Promise<any> {
-    // console.log('Run simulation');
+    this.consoleLog('Run simulation');
     this.cancelGettingActivityInsite();
 
-    if (this.app.projectView.config.simulateWithInsite) {
+    if (this.app.project.view.config.simulateWithInsite) {
       return;
     }
 
@@ -431,20 +458,19 @@ export class Project {
 
     this._simulation.resetState();
     this._simulation.running = true;
-    return this.app.NESTSimulator.httpClient
-      .post(this._app.NESTSimulator.url + '/exec', {
+    return this.app.backends.nestSimulator
+      .post('exec', {
         source: this._code.script,
         return: 'response',
       })
-      .then((resp: any) => {
+      .then((response: any) => {
         let data: any;
-        switch (resp.status) {
+        switch (response.status) {
           case 0:
             this.openToast('Failed to find NEST Simulator.', 'error');
-
             break;
           case 200:
-            data = JSON.parse(resp.response).data;
+            data = response.data.data;
             this._simulation.state.biologicalTime = data.kernel.biological_time;
             if (data.positions) {
               data.activities.forEach((activity: any) => {
@@ -458,21 +484,17 @@ export class Project {
             this.commitNetwork(this._network);
             break;
           default:
-            this.openToast(resp.responseText, 'error');
+            this.openToast(response.data, 'error');
             break;
         }
-        return resp;
+        return response;
       })
-      .catch((resp: any) => {
-        this.openToast(resp.responseText, 'error');
-        return resp;
+      .catch((error: any) => {
+        this.openToast(error.response.data, 'error');
+        return error;
       })
       .finally(() => {
         this._simulation.running = false;
-
-        // setTimeout(() => {
-        //   this._simulation.running = false;
-        // }, 100);
       });
   }
 
@@ -483,15 +505,15 @@ export class Project {
    * During the simulation it gets and updates activities.
    */
   runSimulationInsite(): void {
-    // console.log('Run simulation with Insite');
+    this.consoleLog('Run simulation with Insite');
 
     this.cancelGettingActivityInsite();
 
-    if (!this.app.projectView.config.simulateWithInsite) {
+    if (!this.app.project.view.config.simulateWithInsite) {
       return;
     }
 
-    this._app.projectView.state.fromTime = 0;
+    this._app.project.view.state.fromTime = 0;
 
     // generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
@@ -502,20 +524,18 @@ export class Project {
     this._simulation.resetState();
     this._simulation.state.biologicalTime = this._simulation.time;
     this._simulation.running = true;
-    this._app.NESTSimulator.httpClient
-      .post(this._app.NESTSimulator.url + '/exec', {
-        source: this._code.script,
-      })
-      .then((resp: any) => {
-        switch (resp.status) {
+    this._app.backends.nestSimulator
+      .post('exec', { source: this._code.script })
+      .then((response: any) => {
+        switch (response.status) {
           case 0:
             this.openToast('Failed to find NEST Simulator.', 'error');
             this.cancelGettingActivityInsite();
             break;
           case 200:
             // TODO: ask Marcel if this code is required.
-            axios
-              .get('http://localhost:8080/nest/simulationTimeInfo')
+            this._app.backends.insiteAccess
+              .get('nest/simulationTimeInfo')
               .then((response: any) => {
                 this.openToast('Simulation is finished.', 'success');
                 this._simulation.running =
@@ -524,16 +544,16 @@ export class Project {
               });
             break;
           default:
-            this.openToast(resp.responseText, 'error');
+            this.openToast(response.responseText, 'error');
             this.cancelGettingActivityInsite();
             break;
         }
-        return resp;
+        return response;
       })
-      .catch((resp: any) => {
-        this.openToast(resp.responseText, 'error');
+      .catch((error: any) => {
+        this.openToast(error.response.data, 'error');
         this.cancelGettingActivityInsite();
-        return resp;
+        return error;
       })
       .finally(() => {
         this._simulation.running = false;
@@ -549,37 +569,42 @@ export class Project {
    * Afterwards it gets activities from Insite.
    */
   getActivitiesInsite(): void {
-    // console.log('Get activites from Insite.');
-    axios
-      .get('http://localhost:8080/nest/simulationTimeInfo')
+    this.consoleLog('Get activites from Insite');
+    this._app.backends.insiteAccess
+      .get('nest/simulationTimeInfo')
       .catch(() => {
         setTimeout(() => this.getActivitiesInsite(), 100);
       })
       .then((response: any) => {
+        if (response == undefined) {
+          return;
+        }
         this._simulation.state.timeInfo = response.data;
 
         // update activity graph during the simulation.
         this.continuouslyUpdateActivityGraph();
 
         const nodePositions: any = {};
-        axios.get('http://localhost:8080/nest/nodes').then((response: any) => {
-          response.data.forEach((data: any) => {
-            if (data.position != null) {
-              nodePositions[data.nodeId] = data.position;
+        this._app.backends.insiteAccess
+          .get('nest/nodes')
+          .then((response: any) => {
+            response.data.forEach((data: any) => {
+              if (data.position != null) {
+                nodePositions[data.nodeId] = data.position;
+              }
+            });
+
+            // Check if project has activities.
+            this.checkActivities();
+
+            if (this.hasSpikeActivities) {
+              this.getSpikeActivitiesInsite(nodePositions);
+            }
+
+            if (this.hasAnalogActivities) {
+              this.getAnalogSignalActivitiesInsite(nodePositions);
             }
           });
-
-          // Check if project has activities.
-          this.checkActivities();
-
-          if (this.hasSpikeActivities) {
-            this.getSpikeActivitiesInsite(nodePositions);
-          }
-
-          if (this.hasAnalogActivities) {
-            this.getAnalogSignalActivitiesInsite(nodePositions);
-          }
-        });
       });
   }
 
@@ -599,8 +624,9 @@ export class Project {
    * Get spike activities from Insite.
    */
   getSpikeActivitiesInsite(nodePositions: any): void {
-    axios
-      .get('http://localhost:8080/nest/spikedetectors/')
+    this.consoleLog('Get spike activities from insite');
+    this._app.backends.insiteAccess
+      .get('nest/spikedetectors/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
           const activity: any = {
@@ -634,8 +660,9 @@ export class Project {
    * Get analog signal activities from Insite.
    */
   getAnalogSignalActivitiesInsite(nodePositions: any): void {
-    axios
-      .get('http://localhost:8080/nest/multimeters')
+    this.consoleLog('Get analog signal activities from Insite');
+    this._app.backends.insiteAccess
+      .get('nest/multimeters')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
           const events = { times: [], senders: [] };
@@ -675,7 +702,8 @@ export class Project {
    * Update activity graph continuously.
    */
   continuouslyUpdateActivityGraph() {
-    this._app.projectView.state.refreshIntervalId = setInterval(() => {
+    this.consoleLog('Update activity graph continuously');
+    this._app.project.view.state.refreshIntervalId = setInterval(() => {
       // Check if project has activities.
       this.checkActivities();
 
@@ -686,7 +714,7 @@ export class Project {
         (activity: Activity) => activity.lastFrame
       );
       if (lastFrames) {
-        clearInterval(this._app.projectView.state.refreshIntervalId);
+        clearInterval(this._app.project.view.state.refreshIntervalId);
       }
 
       // TODO
@@ -704,7 +732,7 @@ export class Project {
    * Get a list of activities.
    */
   get activities(): Activity[] {
-    // console.log('Get activities')
+    // this.consoleLog('Get activities');
     const activities: Activity[] = this._network
       ? this._network.recorders.map((recorder: Node) => recorder.activity)
       : [];
@@ -754,6 +782,7 @@ export class Project {
    * Initialize activity graph.
    */
   initActivityGraph(): void {
+    this.consoleLog('Initialize activity graph of ' + this._name);
     if (this._activityGraph == undefined) {
       return;
     }
@@ -880,14 +909,7 @@ export class Project {
    * Update hash of this project.
    */
   clean(): void {
-    this._state.hash = sha1(this.toJSON());
-  }
-
-  /**
-   * Is the hash equal to caluclated hash.
-   */
-  isHashEqual(): boolean {
-    return this._state.hash === sha1(this.toJSON());
+    this.updateHash();
   }
 
   /**
@@ -895,20 +917,32 @@ export class Project {
    */
   resetState(): void {
     this._state.selected = false;
-    this._state._withActivities = false;
+    this._state.withActivities = false;
   }
 
   /**
    * Open toast of message from the back end
    */
   openToast(message: string, type: string = 'success') {
-    this._app.projectView.state.toast.message = message;
-    this._app.projectView.state.toast.type = type;
+    this._app.project.view.state.toast.message = message;
+    this._app.project.view.state.toast.type = type;
 
     // Show NEST or Python error message via toast notification.
-    if (this._app.projectView.state.toast.message) {
-      Vue.$toast.open(this._app.projectView.state.toast);
+    if (this._app.project.view.state.toast.message) {
+      Vue.$toast.open(this._app.project.view.state.toast);
     }
+  }
+
+  /**
+   * Calculate hash of this component.
+   */
+  updateHash(): void {
+    this._state.hash = sha1({
+      description: this._description,
+      name: this._name,
+      network: this._network.toJSON(),
+      simulation: this._simulation.toJSON(),
+    });
   }
 
   /**
@@ -924,7 +958,7 @@ export class Project {
       network: this._network.toJSON(),
       simulation: this._simulation.toJSON(),
       updatedAt: this._updatedAt,
-      version: this._app.version,
+      version: this._app.state.version,
     };
     return project;
   }

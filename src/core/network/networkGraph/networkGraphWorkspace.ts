@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import { Config } from '../../config';
+import { Config } from '../../common/config';
 import { Network } from '../network';
 import { NetworkGraph } from './networkGraph';
 import { NetworkGraphDragline } from './networkGraphDragline';

@@ -85,7 +85,7 @@ export default Vue.extend({
     ActivityStatsSpike,
   },
   setup() {
-    const projectView = core.app.projectView;
+    const projectView = core.app.project.view;
     return { projectView };
   },
 });

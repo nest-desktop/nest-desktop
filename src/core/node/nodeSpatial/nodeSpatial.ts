@@ -1,6 +1,6 @@
 import { sha1 } from 'object-hash';
 
-import { Config } from '../../config';
+import { Config } from '../../common/config';
 import { FreePositions } from './freePositions';
 import { GridPositions } from './gridPositions';
 import { Node } from '../node';
