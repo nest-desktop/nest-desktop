@@ -559,7 +559,7 @@ export class Project {
         this._simulation.state.timeInfo = response.data;
 
         // update activity graph during the simulation.
-        this.continuousUpdateActivityGraph();
+        this.continuouslyUpdateActivityGraph();
 
         const nodePositions: any = {};
         axios.get('http://localhost:8080/nest/nodes').then((response: any) => {
@@ -590,7 +590,6 @@ export class Project {
    * TODO: Check if it is working properly.
    */
   cancelGettingActivityInsite(): void {
-    // console.log('Cancel getting activity from Insite.');
     this.activities.forEach(
       (activity: Activity) => (activity.lastFrame = true)
     );
@@ -600,7 +599,6 @@ export class Project {
    * Get spike activities from Insite.
    */
   getSpikeActivitiesInsite(nodePositions: any): void {
-    // console.log('Get spike activities from insite.');
     axios
       .get('http://localhost:8080/nest/spikedetectors/')
       .then((response: any) => {
@@ -612,7 +610,6 @@ export class Project {
           };
 
           if (Object.keys(nodePositions).length > 0) {
-            // console.log('Add node positions in activity');
             data.nodeIds.forEach((id: number) => {
               if (id in nodePositions) {
                 activity.nodePositions.push(nodePositions[id]);
@@ -637,7 +634,6 @@ export class Project {
    * Get analog signal activities from Insite.
    */
   getAnalogSignalActivitiesInsite(nodePositions: any): void {
-    // console.log('Get analog signal activities from insite.');
     axios
       .get('http://localhost:8080/nest/multimeters')
       .then((response: any) => {
@@ -655,7 +651,6 @@ export class Project {
           };
 
           if (Object.keys(nodePositions).length > 0) {
-            // console.log('Add node positions in activity');
             data.nodeIds.forEach((id: number) => {
               if (id in nodePositions) {
                 activity.nodePositions.push(nodePositions[id]);
@@ -679,8 +674,7 @@ export class Project {
   /**
    * Update activity graph continuously.
    */
-  continuousUpdateActivityGraph() {
-    // console.log('Update activity graph continuously.');
+  continuouslyUpdateActivityGraph() {
     this._app.projectView.state.refreshIntervalId = setInterval(() => {
       // Check if project has activities.
       this.checkActivities();
@@ -773,7 +767,6 @@ export class Project {
    * Initialize activities in recorder nodes after simulation.
    */
   initActivities(data: any[]): void {
-    // console.log('Initialize activities');
 
     // Initialize recorded activity.
     const activities: Activity[] = this.activities;

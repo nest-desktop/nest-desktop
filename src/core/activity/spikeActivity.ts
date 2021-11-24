@@ -38,7 +38,7 @@ export class SpikeActivity extends Activity {
    */
   override update(activity: any): void {
     // console.log('Update spike activity');
-    if (activity.events === undefined) {
+    if (activity.events == undefined) {
       return;
     }
 

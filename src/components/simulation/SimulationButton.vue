@@ -91,7 +91,7 @@ export default Vue.extend({
         {
           id: 'simulateWithInsite',
           input: 'checkbox',
-          title: 'Simulate with insite',
+          title: 'Simulate with Insite',
           value: 'simulateWithInsite',
           onClick: () => {
             state.projectConfig.simulateWithInsite =

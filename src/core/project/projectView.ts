@@ -152,8 +152,6 @@ export class ProjectView extends Config {
    * Set height for network graph.
    */
   resizeNetworkGraph(): void {
-    // console.log('Resize network graph');
-
     // caluclate height for network graph.
     this._state.networkGraphHeight =
       this._state.modeIdx === 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
@@ -168,8 +166,6 @@ export class ProjectView extends Config {
    * Select view for activity graph.
    */
   selectActivityGraph(mode: string): void {
-    // console.log('Select activity graph');
-
     this._state.activityGraph = mode;
     this._state.modeIdx = 1;
   }
@@ -178,8 +174,6 @@ export class ProjectView extends Config {
    * Select tool for this project.
    */
   selectTool(tool: any): void {
-    // console.log('Select project tool');
-
     // open tool if closed or select other tool.
     this._state.toolOpened = this._state.toolOpened
       ? this._state.tool !== tool
@@ -196,8 +190,6 @@ export class ProjectView extends Config {
    * Update view mode of the project.
    */
   updateProjectMode(): void {
-    // console.log('Update project view');
-
     // select tool and resize network graph if netwot editor or lab view is selected.
     if ([0, 2].includes(this._state.modeIdx)) {
       this._state.toolOpened = this._state.toolOpened

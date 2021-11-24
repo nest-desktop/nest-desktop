@@ -124,7 +124,6 @@ export abstract class ActivityChartPanelModel {
    * Reset activity panel model.
    */
   reset(): any {
-    // console.log('Reset panels for activity.');
     this.data = [];
   }
 
@@ -135,7 +134,6 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    */
   update(): any {
-    // console.log('Update panels for activity.');
     this.updateState();
 
     this.data = [];
@@ -188,7 +186,6 @@ export abstract class ActivityChartPanelModel {
    * It needs activity data.
    */
   updateState(): void {
-    // console.log('Update state');
 
     // Update time
     this.state.time.start = 0;
