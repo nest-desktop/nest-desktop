@@ -39,7 +39,7 @@ export class NodeSpatial extends Config {
    * Initialize spatial node.
    */
   init(spatial: any) {
-    if (spatial !== undefined) {
+    if (spatial != undefined) {
       switch (spatial.positions) {
         case 'free':
           this._positions = new FreePositions(this, spatial.specs);

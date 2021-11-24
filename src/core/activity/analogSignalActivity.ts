@@ -14,7 +14,6 @@ export class AnalogSignalActivity extends Activity {
    * Overwrites events.
    */
   override init(activity: any): void {
-    // console.log('Initialize analog signal activity');
     this.initEvents(activity);
     this.updateRecords();
   }
@@ -25,7 +24,6 @@ export class AnalogSignalActivity extends Activity {
    * Extends events.
    */
   override update(activity: any): void {
-    // console.log('Update analog signal activity');
     if (activity.events === undefined) {
       return;
     }

@@ -17,7 +17,6 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * Initialize trace panel for analog signals.
    */
   override init(): void {
-    // console.log('Initialize analog signal plot model');
     this.initState();
 
     this.data = [];
@@ -31,7 +30,6 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * It requires activity data.
    */
   override update(): void {
-    // console.log('Update analog signal plot model');
     this.updateState();
 
     this.data = [];

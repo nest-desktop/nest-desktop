@@ -161,7 +161,7 @@ export class Activity {
    */
   update(activity: any): void {
     // console.log('Update activity');
-    if (activity.events === undefined) {
+    if (activity.events == undefined) {
       return;
     }
 
