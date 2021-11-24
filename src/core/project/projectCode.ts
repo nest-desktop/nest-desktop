@@ -43,15 +43,10 @@ export class ProjectCode extends Code {
    * Generate script code.
    */
   generate(): void {
-<<<<<<< HEAD
-    const simulateWithInsite = this._project.app.projectView
-      ? this._project.app.projectView.config.simulateWithInsite
-=======
     // console.log('Generate script');
 
     const simulateWithInsite = this._project.app.project.view
       ? this._project.app.project.view.config.simulateWithInsite
->>>>>>> f47a6739... Restructure app and components
       : false;
     this._script = '';
     this._script += this.importModules();
