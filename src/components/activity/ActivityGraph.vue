@@ -202,29 +202,24 @@ export default Vue.extend({
      * which should be displayed via snackbar message.
      */
     const showHelp = () => {
-      // console.log('Show help');
+      const buttonProps = [
+        {
+          text: 'Simulate',
+          onClick: () => simulate(),
+          disabled: state.graph.project.simulation.running,
+        },
+      ];
+
       state.snackbar.show = false;
       if (!projectView.config.showHelp) {
         return;
       }
       if (!state.graph.project.hasActivities) {
-        showSnackbar('No activity found.', [
-          {
-            text: 'Simulate',
-            onClick: () => simulate(),
-            disabled: state.graph.project.simulation.running,
-          },
-        ]);
+        showSnackbar('No simulation results found.', buttonProps);
       } else if (state.graph.codeHash !== state.graph.project.code.hash) {
         showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
-          [
-            {
-              text: 'Simulate',
-              onClick: () => simulate(),
-              disabled: state.graph.project.simulation.running,
-            },
-          ]
+          buttonProps
         );
       }
     };
