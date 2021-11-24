@@ -64,11 +64,19 @@ export class NodeCode extends Code {
     );
 
     if (this._node.model.existing === 'multimeter') {
-      const recordFrom: string[] = this._node.recordFrom.map(
+      const records: string[] = this._node.records.map(
         (rec: any) => '"' + rec + '"'
       );
-      params.push(`"record_from": [${recordFrom.join(',')}]`);
+      params.push(`"record_from": [${records.join(',')}]`);
     }
+
+    if (
+      this._node.model.elementType === 'recorder' &&
+      this._node.network.project.app.projectView.config.simulateWithInsite
+    ) {
+      params.push('"record_to": "insite"');
+    }
+
     if (params.length > 0) {
       script += '{' + this._();
       script += params.join(',' + this._());

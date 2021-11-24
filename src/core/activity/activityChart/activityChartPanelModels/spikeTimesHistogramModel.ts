@@ -3,31 +3,26 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
-  private _params: any[] = [
-    {
-      id: 'binSize',
-      input: 'tickSlider',
-      label: 'bin size',
-      ticks: [5, 10, 25, 50, 100, 250, 500, 1000],
-      unit: 'ms',
-      value: 25,
-    },
-  ];
-
   constructor(panel: ActivityChartPanel) {
     super(panel);
     this.id = 'SpikeTimesHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'spike times';
-    this.panel.layout.barmode = 'overlay';
-    this.state.barnorm = '';
-    this.state.start = 0;
-    this.state.end = 1000;
-    this.init();
-  }
 
-  override get params(): any[] {
-    return this._params;
+    this.panel.layout.barmode = 'overlay';
+
+    this.params = [
+      {
+        id: 'binSize',
+        input: 'tickSlider',
+        label: 'bin size',
+        ticks: [5, 10, 25, 50, 100, 250, 500, 1000],
+        unit: 'ms',
+        value: 25,
+      },
+    ];
+
+    this.init();
   }
 
   /**
@@ -35,10 +30,11 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
    */
   override updateData(activity: SpikeActivity): void {
     // console.log('Update data of spike time histogram.');
+
     const x: number[] = activity.events.times;
-    const start: number = this.state.start;
-    const end: number = this.state.end;
-    const size: number = this._params[0].value;
+    const start: number = this.state.time.start;
+    const end: number = this.state.time.end;
+    const size: number = this.params[0].value;
 
     this.data.push({
       activityIdx: activity.idx,
@@ -72,13 +68,5 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Time [ms]';
     this.panel.layout.yaxis.title = 'Spike count';
-  }
-
-  /**
-   * Update params for spike time histogram.
-   */
-  updateParams(activity: SpikeActivity): void {
-    this.state.start = 0;
-    this.state.end = activity.endtime + 1;
   }
 }

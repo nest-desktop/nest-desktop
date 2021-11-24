@@ -5,7 +5,7 @@
         :show-arrows="false"
         align-with-title
         icons-and-text
-        style="flex: 0 1 auto; width: 271px"
+        style="flex: 0 1 auto; width: 278px"
         v-model="modelView.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
@@ -204,7 +204,7 @@
     <v-overlay
       :value="
         modelView.state.project.simulation.running &&
-        !projectView.state.project.config.simulateWithInsite
+        !projectView.config.simulateWithInsite
       "
     >
       <v-progress-circular

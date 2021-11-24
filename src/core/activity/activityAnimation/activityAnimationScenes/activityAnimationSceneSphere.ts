@@ -111,9 +111,9 @@ export class ActivityAnimationSceneSphere extends ActivityAnimationScene {
     data.senders.forEach((sender: number, senderIdx: number) => {
       // @ts-ignore
       const object: THREE.Mesh = activityLayerGroup.children[sender];
-      if (data.hasOwnProperty(this.graph.recordFrom)) {
+      if (data.hasOwnProperty(this.graph.records)) {
         const value: number = this.graph.normalize(
-          data[this.graph.recordFrom][senderIdx]
+          data[this.graph.records][senderIdx]
         );
         colorRGB = this.graph.colorRGB(value);
       }

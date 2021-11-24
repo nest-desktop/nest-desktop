@@ -10,13 +10,19 @@ export abstract class ActivityChartPanelModel {
   private _id: string = '';
   private _label: string = '';
   private _panel: ActivityChartPanel; // parent
+  private _params: any[] = [];
   private _state = {
     records: [],
+    time: {
+      end: 0,
+      start: 0,
+    },
   };
 
   constructor(panel: ActivityChartPanel) {
     this._id = 'activityChart';
     this._panel = panel;
+    this.init();
   }
 
   get activities(): Activity[] {
@@ -72,7 +78,11 @@ export abstract class ActivityChartPanelModel {
   }
 
   get params(): any[] {
-    return [];
+    return this._params;
+  }
+
+  set params(value: any[]) {
+    this._params = value;
   }
 
   get state(): any {
@@ -94,12 +104,28 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Initialize activity graph panel.
+   * Initialize activity panel model.
    *
    * @remarks
    * This method will be overwritten in child classes.
    */
-  abstract init(): void;
+  init(): void {
+    this.initState();
+  }
+
+  /**
+   * Initialize state for activity panel model.
+   */
+  initState(): void {
+    this.state.records = new Array(this.activities.length).fill([]);
+  }
+
+  /**
+   * Reset activity panel model.
+   */
+  reset(): any {
+    this.data = [];
+  }
 
   /**
    * Update data activities.
@@ -108,7 +134,8 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    */
   update(): any {
-    // console.log('Update panels for activity.');
+    this.updateState();
+
     this.data = [];
     this.activities.forEach((activity: Activity) => {
       this.updateData(activity);
@@ -148,20 +175,25 @@ export abstract class ActivityChartPanelModel {
    * @remarks
    * It is a replacement for abstract component.
    */
-  updateLayoutLabel(data: any = undefined): void {
-    data;
+  updateLayoutLabel(records: any = undefined): void {
+    records;
   }
 
   /**
-   * Update records in panel state.
+   * Update state of the panel model.
    *
    * @remarks
    * It needs activity data.
    */
-  updateStateRecords(): void {
-    if (this.state.records.length === this.activities.length) {
-      return;
-    }
+  updateState(): void {
+    // Update time
+    this.state.time.start = 0;
+    this.state.time.end = Math.max(
+      this.state.time.end,
+      this._panel.graph.currenttime + 1
+    );
+
+    // Update records
     this.state.records = this.activities.map(
       (activity: Activity) => activity.records
     );

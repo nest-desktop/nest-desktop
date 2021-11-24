@@ -1,4 +1,5 @@
-// import { Config } from '../config';
+import axios from 'axios';
+
 import { Activity } from './activity';
 import { Node } from '../node/node';
 
@@ -6,28 +7,50 @@ export class SpikeActivity extends Activity {
   private _times: any;
 
   constructor(recorder: Node, activity: any = {}) {
-    super(recorder, activity);
+    super(recorder);
+    this.init(activity);
+  }
+
+  /**
+   * Initialize spike activity.
+   *
+   * Overwrites events.
+   */
+  override init(activity: any): void {
+    // console.log('Init spike activity');
+    this.initEvents(activity);
+    this.initTimes();
+  }
+
+  /**
+   * Init times for ISI or CV(ISI).
+   */
+  initTimes(): void {
+    this._times = Object.create(null);
+    this.nodeIds.forEach((id: number) => (this._times[id] = []));
+    this.updateTimes(this.events);
   }
 
   /**
    * Update spike activity.
+   *
+   * Extends events.
    */
   override update(activity: any): void {
-    this.events = activity.events || {};
-    this.nodeIds = activity.nodeIds || [];
-    this.nodePositions = activity.nodePositions || [];
-    if (this.events.hasOwnProperty('senders')) {
-      this.updateTimes();
+    // console.log('Update spike activity');
+    if (activity.events == undefined) {
+      return;
     }
+
+    this.updateEvents(activity);
+    this.updateTimes(activity.events);
   }
 
   /**
-   * Update times of spike activity.
+   * Update times for ISI or CV(ISI).
    */
-  updateTimes(): void {
-    this._times = Object.create(null);
-    this.nodeIds.forEach((id: number) => (this._times[id] = []));
-    this.events.senders.forEach((sender: number, idx: number) => {
+  updateTimes(events: any): void {
+    events.senders.forEach((sender: number, idx: number) => {
       this._times[sender].push(this.events.times[idx]);
     });
   }
@@ -88,5 +111,33 @@ export class SpikeActivity extends Activity {
    */
   override clone(): SpikeActivity {
     return new SpikeActivity(this.recorder, this.toJSON());
+  }
+
+  /**
+   * Get activity from Insite.
+   */
+  override getActivityInsite(): void {
+    // console.log('Get spike activity from Insite');
+
+    const url = `http://localhost:8080/nest/spikedetectors/${this.nodeCollectionId}`;
+    axios
+      .get(url + `/spikes?fromTime=${this.lastTime}`)
+      .then((response: any) => {
+        this.update({
+          events: {
+            senders: response.data.nodeIds, // y
+            times: response.data.simulationTimes, // x
+          },
+        });
+
+        this.lastFrame = response.data.lastFrame;
+
+        // Recursive call after 500ms.
+        if (!response.data.lastFrame) {
+          setTimeout(() => {
+            this.getActivityInsite();
+          }, 500);
+        }
+      });
   }
 }

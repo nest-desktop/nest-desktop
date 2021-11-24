@@ -138,6 +138,7 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const paramChange = () => {
+      state.graph.updatePanelModels();
       state.graph.update();
     };
 

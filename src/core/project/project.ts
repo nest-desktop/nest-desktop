@@ -3,6 +3,8 @@ import { sha1 } from 'object-hash';
 import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
 
+import axios from 'axios';
+
 import { Activity } from '../activity/activity';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
@@ -21,7 +23,6 @@ export class Project {
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc: any; // doc data of the database
-  private _errorMessage = '';
   private _hasActivities = false;
   private _hasAnalogActivities = false;
   private _hasSpatialActivities = false;
@@ -99,14 +100,6 @@ export class Project {
 
   get doc(): any {
     return this._doc;
-  }
-
-  get errorMessage(): string {
-    return this._errorMessage;
-  }
-
-  set errorMessage(value: string) {
-    this._errorMessage = value;
   }
 
   get id(): string {
@@ -352,7 +345,7 @@ export class Project {
 
     // Compare recorder models and then update chart graph.
     if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
-      this._activityGraph.activityChartGraph.initPanels();
+      this._activityGraph.activityChartGraph.initPanelModels();
     } else {
       this._activityGraph.activityChartGraph.init();
     }
@@ -365,7 +358,7 @@ export class Project {
       const activities: any[] = this.activities.map((activity: Activity) =>
         activity.toJSON()
       );
-      this.updateActivities(activities);
+      this.initActivities(activities);
     }
   }
 
@@ -424,11 +417,19 @@ export class Project {
    */
   async runSimulation(): Promise<any> {
     // console.log('Run simulation');
-    this._errorMessage = '';
+    this.cancelGettingActivityInsite();
+
+    if (this.app.projectView.config.simulateWithInsite) {
+      return;
+    }
+
+    // generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
+
+    this._simulation.resetState();
     this._simulation.running = true;
     return this.app.NESTSimulator.httpClient
       .post(this._app.NESTSimulator.url + '/exec', {
@@ -439,12 +440,12 @@ export class Project {
         let data: any;
         switch (resp.status) {
           case 0:
-            this._errorMessage = 'Failed to find NEST Simulator.';
+            this.openToast('Failed to find NEST Simulator.', 'error');
+
             break;
           case 200:
             data = JSON.parse(resp.response).data;
-            this._simulation.kernel.biologicalTime =
-              data.kernel.biological_time;
+            this._simulation.state.biologicalTime = data.kernel.biological_time;
             if (data.positions) {
               data.activities.forEach((activity: any) => {
                 const positions = activity.nodeIds.map(
@@ -453,36 +454,246 @@ export class Project {
                 activity.nodePositions = positions;
               });
             }
-            this.updateActivities(data.activities);
+            this.initActivities(data.activities);
             this.commitNetwork(this._network);
             break;
           default:
-            this._errorMessage = resp.response;
+            this.openToast(resp.responseText, 'error');
             break;
         }
-
-        // Show error message via toast notification.
-        if (this._errorMessage) {
-          Vue.$toast.open({
-            message: this._errorMessage,
-            pauseOnHover: true,
-            position: 'top-right',
-            type: 'error',
-          });
-        }
-
-        setTimeout(() => {
-          this._simulation.running = false;
-        }, 100);
         return resp;
       })
       .catch((resp: any) => {
-        this._errorMessage = resp.responseText;
-        setTimeout(() => {
-          this._simulation.running = false;
-        }, 100);
+        this.openToast(resp.responseText, 'error');
         return resp;
+      })
+      .finally(() => {
+        this._simulation.running = false;
+
+        // setTimeout(() => {
+        //   this._simulation.running = false;
+        // }, 100);
       });
+  }
+
+  /**
+   * Start simulation with recording backend Insite.
+   *
+   * @remarks
+   * During the simulation it gets and updates activities.
+   */
+  runSimulationInsite(): void {
+    // console.log('Run simulation with Insite');
+
+    this.cancelGettingActivityInsite();
+
+    if (!this.app.projectView.config.simulateWithInsite) {
+      return;
+    }
+
+    this._app.projectView.state.fromTime = 0;
+
+    // generate seed and simulation code.
+    if (this._simulation.kernel.config.autoRNGSeed) {
+      this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
+      this._code.generate();
+    }
+
+    this._simulation.resetState();
+    this._simulation.state.biologicalTime = this._simulation.time;
+    this._simulation.running = true;
+    this._app.NESTSimulator.httpClient
+      .post(this._app.NESTSimulator.url + '/exec', {
+        source: this._code.script,
+      })
+      .then((resp: any) => {
+        switch (resp.status) {
+          case 0:
+            this.openToast('Failed to find NEST Simulator.', 'error');
+            this.cancelGettingActivityInsite();
+            break;
+          case 200:
+            // TODO: ask Marcel if this code is required.
+            axios
+              .get('http://localhost:8080/nest/simulationTimeInfo')
+              .then((response: any) => {
+                this.openToast('Simulation is finished.', 'success');
+                this._simulation.running =
+                  response.data.end >
+                  response.data.current + response.data.stepSize;
+              });
+            break;
+          default:
+            this.openToast(resp.responseText, 'error');
+            this.cancelGettingActivityInsite();
+            break;
+        }
+        return resp;
+      })
+      .catch((resp: any) => {
+        this.openToast(resp.responseText, 'error');
+        this.cancelGettingActivityInsite();
+        return resp;
+      })
+      .finally(() => {
+        this._simulation.running = false;
+      });
+
+    setTimeout(() => this.getActivitiesInsite(), 100); // TODO: suboptimal
+  }
+
+  /**
+   * Get activities from Insite.
+   *
+   * First it checks the simulation has started, then it updates activity graph frequently.
+   * Afterwards it gets activities from Insite.
+   */
+  getActivitiesInsite(): void {
+    // console.log('Get activites from Insite.');
+    axios
+      .get('http://localhost:8080/nest/simulationTimeInfo')
+      .catch(() => {
+        setTimeout(() => this.getActivitiesInsite(), 100);
+      })
+      .then((response: any) => {
+        this._simulation.state.timeInfo = response.data;
+
+        // update activity graph during the simulation.
+        this.continuouslyUpdateActivityGraph();
+
+        const nodePositions: any = {};
+        axios.get('http://localhost:8080/nest/nodes').then((response: any) => {
+          response.data.forEach((data: any) => {
+            if (data.position != null) {
+              nodePositions[data.nodeId] = data.position;
+            }
+          });
+
+          // Check if project has activities.
+          this.checkActivities();
+
+          if (this.hasSpikeActivities) {
+            this.getSpikeActivitiesInsite(nodePositions);
+          }
+
+          if (this.hasAnalogActivities) {
+            this.getAnalogSignalActivitiesInsite(nodePositions);
+          }
+        });
+      });
+  }
+
+  /**
+   * Cancel getting activities from Insite.
+   *
+   * When NEST Server responds error.
+   * TODO: Check if it is working properly.
+   */
+  cancelGettingActivityInsite(): void {
+    this.activities.forEach(
+      (activity: Activity) => (activity.lastFrame = true)
+    );
+  }
+
+  /**
+   * Get spike activities from Insite.
+   */
+  getSpikeActivitiesInsite(nodePositions: any): void {
+    axios
+      .get('http://localhost:8080/nest/spikedetectors/')
+      .then((response: any) => {
+        const activities: any[] = response.data.map((data: any) => {
+          const activity: any = {
+            nodeCollectionId: data.spikedetectorId,
+            nodeIds: data.nodeIds,
+            nodePositions: [],
+          };
+
+          if (Object.keys(nodePositions).length > 0) {
+            data.nodeIds.forEach((id: number) => {
+              if (id in nodePositions) {
+                activity.nodePositions.push(nodePositions[id]);
+              }
+            });
+          }
+
+          return activity;
+        });
+
+        // initialize activities.
+        this.initActivities(activities);
+
+        // get spike activities from spike recorders.
+        this.spikeActivities.forEach((activity: SpikeActivity) =>
+          activity.getActivityInsite()
+        );
+      });
+  }
+
+  /**
+   * Get analog signal activities from Insite.
+   */
+  getAnalogSignalActivitiesInsite(nodePositions: any): void {
+    axios
+      .get('http://localhost:8080/nest/multimeters')
+      .then((response: any) => {
+        const activities: any[] = response.data.map((data: any) => {
+          const events = { times: [], senders: [] };
+          data.attributes.forEach((attribute: string) => {
+            events[attribute] = [];
+          });
+
+          const activity: any = {
+            events,
+            nodeCollectionId: data.multimeterId,
+            nodeIds: data.nodeIds,
+            nodePositions: [],
+          };
+
+          if (Object.keys(nodePositions).length > 0) {
+            data.nodeIds.forEach((id: number) => {
+              if (id in nodePositions) {
+                activity.nodePositions.push(nodePositions[id]);
+              }
+            });
+          }
+
+          return activity;
+        });
+
+        // initialize activities.
+        this.initActivities(activities);
+
+        // get analog signal activities from multimeters.
+        this.analogSignalActivities.forEach((activity: AnalogSignalActivity) =>
+          activity.getActivityInsite()
+        );
+      });
+  }
+
+  /**
+   * Update activity graph continuously.
+   */
+  continuouslyUpdateActivityGraph() {
+    this._app.projectView.state.refreshIntervalId = setInterval(() => {
+      // Check if project has activities.
+      this.checkActivities();
+
+      // Update activity graph.
+      this._activityGraph.update();
+
+      const lastFrames: boolean = this.activities.every(
+        (activity: Activity) => activity.lastFrame
+      );
+      if (lastFrames) {
+        clearInterval(this._app.projectView.state.refreshIntervalId);
+      }
+
+      // TODO
+      //
+      // Find better algoritm for stop updating activity graph, e.g. recursive call in timeout
+      //
+    }, 1000);
   }
 
   /*
@@ -553,6 +764,24 @@ export class Project {
   }
 
   /**
+   * Initialize activities in recorder nodes after simulation.
+   */
+  initActivities(data: any[]): void {
+    // Initialize recorded activity.
+    const activities: Activity[] = this.activities;
+    data.forEach((activityData: any, idx: number) => {
+      const activity: Activity = activities[idx];
+      activity.init(activityData);
+    });
+
+    // Check if project has activities.
+    this.checkActivities();
+
+    // Update activity graph.
+    this._activityGraph.update();
+  }
+
+  /**
    * Update activities in recorder nodes after simulation.
    */
   updateActivities(data: any): void {
@@ -573,24 +802,32 @@ export class Project {
   }
 
   /**
-   * Check whether the project has some events in (spatial) activities.
+   * Check whether the project has some events in activities.
    */
   checkActivities(): void {
     const activities: Activity[] = this.activities;
+
+    // check if it has activities.
     this._hasActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasEvents())
         : false;
+
+    // check if it has analog signal activities.
     this._hasAnalogActivities =
       activities.length > 0
         ? activities.some((activity: Activity) =>
             activity.hasNeuronAnalogData()
           )
         : false;
+
+    // check if it has spike activities.
     this._hasSpikeActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasSpikeData())
         : false;
+
+    // check if it has spatial activities.
     this._hasSpatialActivities = this.hasActivities
       ? activities.some(
           (activity: Activity) =>
@@ -659,6 +896,19 @@ export class Project {
   resetState(): void {
     this._state.selected = false;
     this._state._withActivities = false;
+  }
+
+  /**
+   * Open toast of message from the back end
+   */
+  openToast(message: string, type: string = 'success') {
+    this._app.projectView.state.toast.message = message;
+    this._app.projectView.state.toast.type = type;
+
+    // Show NEST or Python error message via toast notification.
+    if (this._app.projectView.state.toast.message) {
+      Vue.$toast.open(this._app.projectView.state.toast);
+    }
   }
 
   /**

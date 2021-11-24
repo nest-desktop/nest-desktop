@@ -1,4 +1,6 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
+
 import { Code } from '../code';
 import { Project } from './project';
 
@@ -6,10 +8,15 @@ export class ProjectCode extends Code {
   private _hash: string;
   private _project: Project; // parent
   private _script: string;
+  private _state: UnwrapRef<any>;
 
   constructor(project: Project) {
     super();
     this._project = project;
+    this._state = reactive({
+      codeInsite: false,
+    });
+
     this.generate();
   }
 
@@ -30,14 +37,28 @@ export class ProjectCode extends Code {
     this._hash = sha1(this._script);
   }
 
+  get state(): any {
+    return this._state;
+  }
+
   /**
    * Generate script code.
    */
   generate(): void {
-    // console.log('Generate script');
+    const simulateWithInsite = this._project.app.projectView
+      ? this._project.app.projectView.config.simulateWithInsite
+      : false;
     this._script = '';
     this._script += this.importModules();
     this._script += 'nest.ResetKernel()\n';
+
+    if (simulateWithInsite) {
+      this._script += '# "insitemodule" can only be loaded once.\n';
+      this._script += 'try:';
+      this._script += this._() + 'nest.Install("insitemodule")\n';
+      this._script += 'except:';
+      this._script += this._() + 'pass';
+    }
 
     this._script += '\n\n# Simulation kernel\n';
     this._script += this._project.simulation.code.setKernelStatus();
@@ -54,7 +75,7 @@ export class ProjectCode extends Code {
     this._script += '\n\n# Run simulation\n';
     this._script += this._project.simulation.code.simulate();
 
-    if (this._project.network.recorders.length > 0) {
+    if (!simulateWithInsite && this._project.network.recorders.length > 0) {
       this._script += '\n\n# Get IDs of recorded node\n';
       this._script += this.defineGetNodeIds();
 
@@ -62,11 +83,12 @@ export class ProjectCode extends Code {
         this._script += '\n\n# Get node positions\n';
         this._script += this.defineGetNodePositions();
       }
+
+      this._script += '\n\n# Collect response\n';
+      this._script += this.response();
     }
 
-    this._script += '\n\n# Collect response\n';
-    this._script += this.response();
-
+    this._state.codeInsite = simulateWithInsite;
     this._hash = sha1(this._script);
   }
 

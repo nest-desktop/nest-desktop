@@ -5,34 +5,34 @@ import { ActivityChartPanel } from '../activityChartPanel';
 import { ActivityChartPanelModel } from '../activityChartPanelModel';
 
 export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
-  private _params: any[] = [
-    {
-      id: 'bins',
-      input: 'tickSlider',
-      label: 'number of bins',
-      ticks: [1, 5, 10, 20, 50, 100, 200],
-      value: 50,
-    },
-  ];
-
   constructor(panel: ActivityChartPanel) {
     super(panel);
     this.id = 'AnalogSignalHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'analog signals';
-    this.panel.layout.barmode = 'overlay';
-    this.panel.xaxis = 2;
-    this.init();
-  }
 
-  override get params(): any[] {
-    return this._params;
+    this.panel.xaxis = 2;
+
+    this.params = [
+      {
+        id: 'bins',
+        input: 'tickSlider',
+        label: 'number of bins',
+        ticks: [1, 5, 10, 20, 50, 100, 200],
+        value: 50,
+      },
+    ];
+
+    this.initState();
+    this.init();
   }
 
   /**
    * Initialize histogram panel for analog signal.
    */
   override init(): void {
+    this.initState();
+
     this.data = [];
     this.activities = this.panel.graph.project.analogSignalActivities;
   }
@@ -46,8 +46,10 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
   override updateData(): void {
     // console.log('Init histogram panel of spike times')
     this.data = [];
-    this.panel.xaxis = this.panel.graph.panels.indexOf(this.panel) + 1;
-    this.updateStateRecords();
+
+    if (this.state.records.length === 0) {
+      return;
+    }
 
     const records: string[] = [];
     this.activities.forEach((activity: AnalogSignalActivity) => {
@@ -70,7 +72,7 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
     const x: number[] = activity.events[record];
     const start: number = d3.min(x);
     const end: number = d3.max(x) + 1;
-    const size: number = (end - start) / this._params[0].value;
+    const size: number = (end - start) / this.params[0].value;
 
     this.data.push({
       activityIdx: activity.idx,

@@ -14,7 +14,7 @@
         @change="() => projectView.updateProjectMode()"
         align-with-title
         icons-and-text
-        style="flex: 0 1 auto; width: 271px"
+        style="flex: 0 1 auto; width: 278px"
         v-model="projectView.state.modeIdx"
       >
         <v-tooltip :open-delay="1000" bottom>
@@ -277,9 +277,12 @@
 
       <transition name="fade">
         <ActivityGraph
+          :activitiesHash="
+            projectView.state.project.activities.map(a => a.hash)
+          "
           :codeHash="projectView.state.project.code.hash"
           :graph="projectView.state.project.activityGraph"
-          :graphHash="projectView.state.project.activityGraph.codeHash"
+          :graphCodeHash="projectView.state.project.activityGraph.codeHash"
           :view="projectView.state.activityGraph"
           v-if="projectView.state.modeIdx === 1"
         />
@@ -291,7 +294,11 @@
     </v-main>
 
     <v-overlay
-      :value="state.loading || projectView.state.project.simulation.running"
+      :value="
+        state.loading ||
+        (projectView.state.project.simulation.running &&
+          !projectView.config.simulateWithInsite)
+      "
       :z-index="10"
     >
       <v-progress-circular

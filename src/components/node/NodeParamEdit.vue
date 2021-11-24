@@ -18,7 +18,7 @@
             label="Record from"
             multiple
             persistent-hint
-            v-model="state.node.recordFrom"
+            v-model="state.node.records"
           />
         </v-col>
       </v-row>
@@ -29,7 +29,7 @@
       :key="param.id"
       :param="param"
       :value.sync="param.value"
-      @update:value="paramChange"
+      @update:value="paramChange()"
       v-for="param of state.node.filteredParams"
     />
   </div>

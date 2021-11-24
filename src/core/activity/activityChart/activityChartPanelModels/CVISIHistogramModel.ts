@@ -3,28 +3,24 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class CVISIHistogramModel extends SpikeTimesPlotModel {
-  private _params: any[] = [
-    {
-      input: 'tickSlider',
-      label: 'bin size',
-      ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
-      value: 0.05,
-    },
-  ];
-
   constructor(panel: ActivityChartPanel) {
     super(panel);
     this.id = 'CVISIHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'CV of ISI';
-    this.panel.layout.barmode = 'overlay';
-    this.state.barnorm = '';
     this.panel.xaxis = 3;
-    this.init();
-  }
 
-  override get params(): any[] {
-    return this._params;
+    this.params = [
+      {
+        input: 'tickSlider',
+        label: 'bin size',
+        ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
+        value: 0.05,
+      },
+    ];
+
+    this.state.barnorm = '';
+    this.init();
   }
 
   /**
@@ -34,7 +30,7 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
     // console.log('Update data for CV_ISI histogram.')
     const start = 0;
     const end = 5;
-    const size = this._params[0].value;
+    const size = this.params[0].value;
     const isi: number[][] = activity.ISI();
     const x: number[] = isi.map(
       (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)

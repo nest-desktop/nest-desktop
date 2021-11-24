@@ -20,50 +20,6 @@
               />
             </v-col>
           </v-row>
-
-          <!-- <v-row no-gutters>
-                  <v-col cols="5">
-                    <v-subheader>
-                      Image size
-                    </v-subheader>
-                  </v-col>
-
-                  <v-col cols="3">
-                    <v-text-field
-                      dense
-                      hide-details
-                      label="width"
-                      outlined
-                      single-line
-                      v-model="state.toImageButtonOptions.width"
-                    />
-                  </v-col>
-                  <v-col cols="1" class="py-2 text-center" v-text="'x'" />
-                  <v-col cols="3">
-                    <v-text-field
-                      dense
-                      hide-details
-                      label="height"
-                      outlined
-                      single-line
-                      v-model="state.toImageButtonOptions.height"
-                    />
-                  </v-col>
-                </v-row> -->
-
-          <!-- <v-row no-gutters>
-                  <v-col cols="10">
-                    <v-slider
-                      hide-details
-                      label="scale"
-                      min="0.5"
-                      max="2"
-                      step="0.5"
-                      v-model="state.toImageButtonOptions.scale"
-                    />
-                  </v-col>
-                  <v-col cols="2" v-text="state.toImageButtonOptions.scale" />
-                </v-row> -->
         </v-card-text>
 
         <v-card-actions>
@@ -128,6 +84,7 @@
         <template v-if="state.snackbar.actions.length > 0">
           <v-btn
             :key="actionIdx"
+            :disabled="action.disabled"
             @click="action.onClick"
             outlined
             small
@@ -158,9 +115,10 @@ export default Vue.extend({
     ActivityAnimationGraph,
   },
   props: {
+    activitiesHash: Array,
     codeHash: String,
     graph: ActivityGraph,
-    graphHash: String,
+    graphCodeHash: String,
     view: String,
   },
   setup(props) {
@@ -229,33 +187,39 @@ export default Vue.extend({
     };
 
     /**
+     * Start simulation.
+     */
+    const simulate = () => {
+      if (projectView.config.simulateWithInsite) {
+        state.graph.project.runSimulationInsite();
+      } else {
+        state.graph.project.runSimulation();
+      }
+    };
+
+    /**
      * Check if there are any activities or changes to the network
      * which should be displayed via snackbar message.
      */
     const showHelp = () => {
+      const buttonProps = [
+        {
+          text: 'Simulate',
+          onClick: () => simulate(),
+          disabled: state.graph.project.simulation.running,
+        },
+      ];
+
       state.snackbar.show = false;
-      if (
-        !projectView.config.showHelp &&
-        state.graph.project.simulation.running
-      ) {
+      if (!projectView.config.showHelp) {
         return;
       }
       if (!state.graph.project.hasActivities) {
-        showSnackbar('No activity found. Please simulate.', [
-          {
-            text: 'Simulate',
-            onClick: () => state.graph.project.runSimulation(),
-          },
-        ]);
+        showSnackbar('No simulation results found.', buttonProps);
       } else if (state.graph.codeHash !== state.graph.project.code.hash) {
         showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
-          [
-            {
-              text: 'Simulate',
-              onClick: () => state.graph.project.runSimulation(),
-            },
-          ]
+          buttonProps
         );
       }
     };
@@ -271,17 +235,27 @@ export default Vue.extend({
 
     onMounted(() => {
       update();
-      setTimeout(() => showHelp(), 100);
+      setTimeout(() => showHelp(), 500);
     });
 
     watch(
-      () => [props.graph, props.view, props.codeHash, props.graphHash],
+      () => [
+        props.graph,
+        props.view,
+        props.codeHash,
+        props.graphCodeHash,
+        props.activitiesHash,
+      ],
       (newProps, oldProps) => {
         if (oldProps[0] !== newProps[0] || oldProps[1] !== newProps[1]) {
           update();
         }
-        if (oldProps[2] !== newProps[2] || oldProps[3] !== newProps[3]) {
-          setTimeout(() => showHelp(), 100);
+        if (
+          oldProps[2] !== newProps[2] ||
+          oldProps[3] !== newProps[3] ||
+          oldProps[4] !== newProps[4]
+        ) {
+          setTimeout(() => showHelp(), 500);
         }
       }
     );

@@ -24,7 +24,7 @@ export class Node extends Config {
   private _network: Network; // parent
   private _params: ModelParameter[];
   private _positions: number[][] = [];
-  private _recordFrom: string[]; // only for multimeter
+  private _records: string[]; // only for multimeter
   private _size: number;
   private _spatial: NodeSpatial;
   private _state: NodeState;
@@ -40,9 +40,9 @@ export class Node extends Config {
     this._code = new NodeCode(this);
     this._view = new NodeView(this, node.view);
     this._state = new NodeState(this);
+    this._spatial = new NodeSpatial(this, node.spatial);
 
     this.initParameters(node);
-    this.initSpatial(node.spatial);
     this.initActivity();
 
     this.updateHash();
@@ -171,13 +171,13 @@ export class Node extends Config {
     return recordablesSet;
   }
 
-  get recordFrom(): string[] {
-    return this._recordFrom;
+  get records(): string[] {
+    return this._records;
   }
 
-  set recordFrom(value: string[]) {
+  set records(value: string[]) {
     // console.log('Set record from');
-    this._recordFrom = value;
+    this._records = value;
     this.network.project.initActivityGraph();
   }
 
@@ -268,7 +268,7 @@ export class Node extends Config {
       node.params.forEach((param: any) => this.addParameter(param));
     }
     if (this.model.existing === 'multimeter') {
-      this._recordFrom = node !== null ? node.recordFrom || ['V_m'] : ['V_m'];
+      this._records = node !== null ? node.records || ['V_m'] : ['V_m'];
     }
   }
 
@@ -353,19 +353,11 @@ export class Node extends Config {
   }
 
   /**
-   * Initialize spatial component.
-   * @param spatial - spatial specifications
-   */
-  initSpatial(spatial: any = {}): void {
-    this._spatial = new NodeSpatial(this, spatial);
-  }
-
-  /**
    * Toggle spatial mode.
    */
   toggleSpatial(): void {
     const term: string = this._size === 1 ? 'grid' : 'free';
-    this.initSpatial({
+    this._spatial.init({
       positions: this.spatial.hasPositions() ? undefined : term,
     });
     this.nodeChanges();
@@ -401,9 +393,9 @@ export class Node extends Config {
     const recordables = this.recordables.map(
       (recordable: any) => recordable.id
     );
-    this._recordFrom =
+    this._records =
       recordables.length > 0
-        ? this.recordFrom.filter((rec: any) => recordables.includes(rec))
+        ? this.records.filter((rec: any) => recordables.includes(rec))
         : [];
   }
 
@@ -449,9 +441,9 @@ export class Node extends Config {
       view: this._view.toJSON(),
     };
 
-    // Add recordFrom if this model is multimeter.
+    // Add records if this model is multimeter.
     if (this.model.existing === 'multimeter') {
-      node.recordFrom = this._recordFrom;
+      node.records = this._records;
     }
 
     // Add positions if this node is spatial.
