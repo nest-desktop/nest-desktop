@@ -767,7 +767,6 @@ export class Project {
    * Initialize activities in recorder nodes after simulation.
    */
   initActivities(data: any[]): void {
-
     // Initialize recorded activity.
     const activities: Activity[] = this.activities;
     data.forEach((activityData: any, idx: number) => {

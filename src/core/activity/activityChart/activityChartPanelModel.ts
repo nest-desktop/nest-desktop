@@ -186,7 +186,6 @@ export abstract class ActivityChartPanelModel {
    * It needs activity data.
    */
   updateState(): void {
-
     // Update time
     this.state.time.start = 0;
     this.state.time.end = Math.max(
