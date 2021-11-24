@@ -45,7 +45,6 @@ export class ProjectCode extends Code {
    * Generate script code.
    */
   generate(): void {
-
     const simulateWithInsite = this._project.app.projectView
       ? this._project.app.projectView.config.simulateWithInsite
       : false;
