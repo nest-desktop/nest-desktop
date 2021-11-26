@@ -1,0 +1,32 @@
+name: Mirror to EBRAINS
+
+on:
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  sync_to_ebrains:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'nest' }}
+    steps:
+      - name: syncmain
+        uses: wei/git-sync@v3
+        with:
+          source_repo: "nest-desktop/nest-desktop"
+          source_branch: "main"
+          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
+          destination_branch: "main"
+      - name: syncdev
+        uses: wei/git-sync@v3
+        with:
+          source_repo: "nest-desktop/nest-desktop"
+          source_branch: "dev"
+          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
+          destination_branch: "dev"
+      - name: synctags
+        uses: wei/git-sync@v3
+        with:
+          source_repo: "nest-desktop/nest-desktop"
+          source_branch: "refs/tags/*"
+          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
+          destination_branch: "refs/tags/*"
