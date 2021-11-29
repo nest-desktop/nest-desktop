@@ -29,13 +29,11 @@ build_app_dev:
 
 package_app_dev:
   stage: packaging
-  image: ubuntu:20.04
+  image: python:latest
   needs:
     - build_app_dev
   script:
-    - apt update && apt install -y curl python3-pip
-    - pip3 install pip setuptools wheel --upgrade
-    - python3 setup.py sdist bdist_wheel
+    - python setup.py sdist bdist_wheel
   only: 
     - main
   artifacts:
