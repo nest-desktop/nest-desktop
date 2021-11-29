@@ -19,7 +19,8 @@ build_app:
     - TAG_VERSION=$(echo "$GIT_DESCRIBE" | cut -d- -f1)
     - GIT_COMMIT_NUMBER=$(echo "$GIT_DESCRIBE" | cut -d- -f2)
     - echo '__version__ = "'${TAG_VERSION:1}dev${GIT_COMMIT_NUMBER}'"' >> nest_desktop/__init__.py    
-  only: main
+  only: 
+    - main
   artifacts:
     paths:
       - nest_desktop
@@ -39,7 +40,8 @@ package_app:
     - apt update && apt install -y curl python3-pip
     - pip3 install pip setuptools wheel --upgrade
     - python3 setup.py sdist bdist_wheel
-  only: main
+  only: 
+    - main
   artifacts:
     paths:
       - dist
@@ -58,7 +60,8 @@ upload_app_pypi:
   script:
     - pip install twine
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
-  only: main
+  only: 
+    - main
   tags:
     - docker-runner
 
@@ -70,6 +73,7 @@ upload_app_pypi:
 #   script:
 #     - docker build -t docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID .
 #     - docker push docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID
-#   only: main
+#   only: 
+#     - main
 #   tags:
 #     - shell-runner
