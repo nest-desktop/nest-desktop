@@ -11,7 +11,6 @@ build_app_dev:
   stage: build
   image: node:16-alpine
   script:
-    - apk add --no-cache git
     - yarn install
     - yarn build
     - VERSION=`node -p "require('./package.json').version"`
@@ -32,7 +31,7 @@ package_app_dev:
   stage: packaging
   image: ubuntu:20.04
   needs:
-    - build_app
+    - build_app_dev
   script:
     - apt update && apt install -y curl python3-pip
     - pip3 install pip setuptools wheel --upgrade
@@ -53,7 +52,7 @@ upload_app_testpypi:
   stage: deploy
   image: python:latest
   needs:
-    - package_app
+    - package_app_dev
   script:
     - pip install twine
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
