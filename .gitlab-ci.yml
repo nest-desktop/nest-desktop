@@ -1,0 +1,90 @@
+stages:
+  - build
+  - packaging
+  - deploy
+
+#
+# BUILD
+#
+
+# build_foo:
+#   stage: build
+#   script:
+#     - cat /etc/os-release
+#     - set
+#   tags:
+#     - shell-runner
+
+build_app:
+  stage: build
+  image: node:16-alpine
+  script:
+    - apk add --no-cache git
+    - yarn install
+    - yarn build
+    - git fetch --prune --unshallow
+    - GIT_DESCRIBE=`git describe`
+    - TAG_VERSION=$(echo "$GIT_DESCRIBE" | cut -d- -f1)
+    - GIT_COMMIT_NUMBER=$(echo "$GIT_DESCRIBE" | cut -d- -f2)
+    - echo '__version__ = "'${TAG_VERSION:1}dev${GIT_COMMIT_NUMBER}'"' >> nest_desktop/__init__.py
+
+  artifacts:
+    paths:
+      - nest_desktop
+  tags:
+    - docker-runner
+
+
+# build_doc:
+#   stage: build
+#   script:
+#     - apt update && apt install -y curl python3-pip git
+#     - pip3 install pip sphinx sphinx_rtd_theme --upgrade
+
+
+# build_docker_image_dev:
+#   stage: build
+#   image: ubuntu:20.04
+#   before_script:
+#     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
+#   script:
+#     - docker build -t docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID .
+#     - docker images
+#     - docker push docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID
+#   tags:
+#     - shell-runner
+
+
+#
+# PACKAGING
+#
+
+package_app:
+  stage: packaging
+  image: ubuntu:20.04
+  needs:
+    - build_app
+  script:
+    - apt update && apt install -y curl python3-pip git
+    - pip3 install pip setuptools wheel --upgrade
+    - python3 setup.py sdist bdist_wheel
+  artifacts:
+    paths:
+      - dist
+  tags:
+    - docker-runner
+
+#
+# DEPLOY
+#
+
+upload_app_pypi:
+  stage: deploy
+  image: python:latest
+  needs:
+    - package_app
+  script:
+    - pip install twine
+    - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
+  tags:
+    - docker-runner
