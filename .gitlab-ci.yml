@@ -14,7 +14,7 @@ build_app_dev:
     - yarn install
     - yarn build
     - VERSION=`node -p "require('./package.json').version"`
-    - echo '__version__ = "${VERSION}dev${CI_PIPELINE_IID}"' >> nest_desktop/__init__.py    
+    - echo '__version__ = "'${VERSION}dev${CI_PIPELINE_IID}'"' >> nest_desktop/__init__.py    
   only: 
     - main
   artifacts:
