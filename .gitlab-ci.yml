@@ -7,14 +7,6 @@ stages:
 # BUILD
 #
 
-# build_foo:
-#   stage: build
-#   script:
-#     - cat /etc/os-release
-#     - set
-#   tags:
-#     - shell-runner
-
 build_app:
   stage: build
   image: node:16-alpine
@@ -26,34 +18,13 @@ build_app:
     - GIT_DESCRIBE=`git describe`
     - TAG_VERSION=$(echo "$GIT_DESCRIBE" | cut -d- -f1)
     - GIT_COMMIT_NUMBER=$(echo "$GIT_DESCRIBE" | cut -d- -f2)
-    - echo '__version__ = "'${TAG_VERSION:1}dev${GIT_COMMIT_NUMBER}'"' >> nest_desktop/__init__.py
-
+    - echo '__version__ = "'${TAG_VERSION:1}dev${GIT_COMMIT_NUMBER}'"' >> nest_desktop/__init__.py    
+  only: main
   artifacts:
     paths:
       - nest_desktop
   tags:
     - docker-runner
-
-
-# build_doc:
-#   stage: build
-#   script:
-#     - apt update && apt install -y curl python3-pip git
-#     - pip3 install pip sphinx sphinx_rtd_theme --upgrade
-
-
-# build_docker_image_dev:
-#   stage: build
-#   image: ubuntu:20.04
-#   before_script:
-#     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
-#   script:
-#     - docker build -t docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID .
-#     - docker images
-#     - docker push docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID
-#   tags:
-#     - shell-runner
-
 
 #
 # PACKAGING
@@ -65,9 +36,10 @@ package_app:
   needs:
     - build_app
   script:
-    - apt update && apt install -y curl python3-pip git
+    - apt update && apt install -y curl python3-pip
     - pip3 install pip setuptools wheel --upgrade
     - python3 setup.py sdist bdist_wheel
+  only: main
   artifacts:
     paths:
       - dist
@@ -86,5 +58,18 @@ upload_app_pypi:
   script:
     - pip install twine
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
+  only: main
   tags:
     - docker-runner
+
+# build_ebrains_docker_dev:
+#   stage: deploy
+#   image: ubuntu:20.04
+#   before_script:
+#     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
+#   script:
+#     - docker build -t docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID .
+#     - docker push docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID
+#   only: main
+#   tags:
+#     - shell-runner
