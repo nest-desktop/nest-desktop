@@ -576,7 +576,7 @@ export class Project {
         setTimeout(() => this.getActivitiesInsite(), 100);
       })
       .then((response: any) => {
-        if (response == undefined) {
+        if (response == null) {
           return;
         }
         this._simulation.state.timeInfo = response.data;

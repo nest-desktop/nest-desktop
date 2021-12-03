@@ -101,7 +101,7 @@ export class App extends Config {
    * Reset all databases.
    */
   resetDatabases(): void {
-    consoleLog(this, 'Reset all databases');
+    consoleLog(this, 'Reset all client-side databases');
     this._state.ready = false;
     let promise: Promise<void> = Promise.resolve();
     promise = promise.then(() => this._model.resetDatabase());
