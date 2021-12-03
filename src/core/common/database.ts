@@ -50,7 +50,7 @@ export class DatabaseService {
 
   isReady(): boolean {
     return this._state.ready;
-    // return this._db !== undefined;
+    // return this._db != undefined;
   }
 
   isValid(): boolean {

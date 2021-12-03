@@ -123,9 +123,9 @@ export class NetworkState {
     unselected: boolean = true,
     withConnection: boolean = true
   ): boolean {
-    if (this._selectedNode !== null) {
+    if (this._selectedNode != null) {
       return this._selectedNode === node.idx;
-    } else if (this._selectedConnection !== null && withConnection) {
+    } else if (this._selectedConnection != null && withConnection) {
       const connections: Connection[] = node.network.connections.filter(
         (connection: Connection) =>
           connection.sourceIdx === node.idx || connection.targetIdx === node.idx
@@ -148,9 +148,9 @@ export class NetworkState {
     connection: Connection,
     unselected: boolean = true
   ): boolean {
-    if (this._focusedConnection !== null) {
+    if (this._focusedConnection != null) {
       return this._focusedConnection === connection.idx;
-    } else if (this._focusedNode !== null) {
+    } else if (this._focusedNode != null) {
       return this._focusedNode === connection.sourceIdx;
     }
     return unselected;
@@ -163,9 +163,9 @@ export class NetworkState {
     connection: Connection,
     unselected: boolean = true
   ): boolean {
-    if (this._selectedConnection !== null) {
+    if (this._selectedConnection != null) {
       return this._selectedConnection === connection.idx;
-    } else if (this._selectedNode !== null) {
+    } else if (this._selectedNode != null) {
       return this._selectedNode === connection.sourceIdx;
     }
     return unselected;

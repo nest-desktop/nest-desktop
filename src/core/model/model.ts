@@ -32,7 +32,7 @@ export class Model extends Config {
     this._idx = this.app.model.state.models.length;
 
     this._elementType =
-      model.elementType !== undefined ? model.elementType : model.element_type;
+      model.elementType != undefined ? model.elementType : model.element_type;
     this._existing = model.existing || model.id;
 
     this._label = model.label || '';

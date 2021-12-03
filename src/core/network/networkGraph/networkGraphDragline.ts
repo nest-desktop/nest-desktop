@@ -29,7 +29,7 @@ export class NetworkGraphDragline {
    * Update drag line.
    */
   update(e: MouseEvent): void {
-    if (this.network.state.selectedNode !== null) {
+    if (this.network.state.selectedNode != null) {
       const selectedNode: Node = this.network.state.selectedNode;
       const sourcePosition: any = selectedNode.view.position;
       const position: number[] = d3.pointer(e, this._workspace.selector.node());

@@ -91,9 +91,9 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
   ): void {
     const trail: any = this.graph.config.trail;
     const size: number = this.graph.config.objectSize;
-    const ratio: number = trailIdx !== null ? trailIdx / (trail.length + 1) : 0;
+    const ratio: number = trailIdx != null ? trailIdx / (trail.length + 1) : 0;
     const opacity: number =
-      trailIdx !== null
+      trailIdx != null
         ? trail.fading
           ? 1 - ratio
           : 1
@@ -123,9 +123,9 @@ export class ActivityAnimationSceneBox extends ActivityAnimationScene {
       object.material.color.set(colorRGB);
       // @ts-ignore
       object.material.opacity = opacity;
-      object.scale.set(scale, value !== undefined ? 0.5 : scale, scale);
+      object.scale.set(scale, value != undefined ? 0.5 : scale, scale);
       object.position.setY(object.userData.position.y);
-      if (value !== undefined && !this.graph.config.flatHeight) {
+      if (value != undefined && !this.graph.config.flatHeight) {
         const height: number = value * size;
         object.position.setY(object.userData.position.y + height / 200);
         if (!this.graph.config.flyingBoxes) {
