@@ -89,7 +89,7 @@ export default Vue.extend({
           title: 'Import model',
           onClick: () => {
             state.show = false;
-            core.app.model.importFromGithub(state.model.id);
+            core.app.model.importModelFromGithub(state.model.id);
           },
         },
         {
