@@ -80,7 +80,7 @@ export class ModelStore {
    * Initialize model list.
    */
   async initModelList(): Promise<any> {
-    this.consoleLog('Update model list');
+    this.consoleLog('Initialize model list');
     await this._db
       .list('id')
       .then(
@@ -117,7 +117,7 @@ export class ModelStore {
    * Import model from GitHub.
    */
   async importModelFromGithub(modelId: string = ''): Promise<any> {
-    this.consoleLog('Import models from GitHub');
+    this.consoleLog('Import model from GitHub');
     const url =
       'https://raw.githubusercontent.com/nest-desktop/nest-desktop-models/main/';
     const path: string = this._state.filesGithub.find((file: string) =>
@@ -128,10 +128,13 @@ export class ModelStore {
     }
     return axios.get(url + path).then((response: any) => {
       if (response.status === 200) {
-        this._db.importModel(response.data).then(() => {
-          if (response.data.id === this._state.modelId) {
-            this._view.reloadModel();
-          }
+        const data = response.data;
+        this._db.importModel(data).then(() => {
+          this.initModelList().then(() => {
+            if (modelId === this._view.state.modelId) {
+              this._view.initModel(modelId);
+            }
+          });
         });
       }
     });
