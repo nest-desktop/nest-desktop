@@ -97,7 +97,7 @@ export default Vue.extend({
     onBeforeMount(() => checkInsiteAccess());
 
     /**
-     * Check if Insite access is running in the backend.
+     * Check if Insite is running in the backend.
      */
     async function checkInsiteAccess() {
       core.app.backends.insiteAccess.check().finally(function () {

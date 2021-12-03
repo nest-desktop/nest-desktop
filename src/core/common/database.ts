@@ -120,7 +120,7 @@ export class DatabaseService {
         dataJSON.hash = data.state.hash || undefined;
         dataJSON.updatedAt = new Date();
         dataJSON.version = this._app.state.version;
-        console.log(dataJSON.hash);
+//        console.log(dataJSON.hash);
         const keys: string[] = Object.keys(dataJSON);
         keys
           .filter((key: string) => !key.startsWith('_'))
