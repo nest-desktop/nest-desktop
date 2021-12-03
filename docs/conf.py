@@ -67,9 +67,17 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
-             You are looking at version 'latest', which is in active and ongoing development. \
-             You can change versions at the bottom left of the screen."
+if os.environ.get("READTHEDOCS") == "True":
+    # The short X.Y version.
+    version = os.environ.get("READTHEDOCS_VERSION")
+    print(f"NEST Version: {version}")
+    if version == "latest":
+        rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
+                     You are looking at 'latest', which is in active and ongoing development. \
+                     You can change versions on the bottom left of the screen."
+        rst_epilog = ""
+else:
+    version = "latest"
 
 intersphinx_mapping = {
     'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
