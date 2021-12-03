@@ -76,15 +76,9 @@ export class ModelDB extends DatabaseService {
    */
   async importModel(data: any): Promise<any> {
     this.consoleLog('Import model: ' + data.id);
-    let promise: Promise<any>;
-    if (this.app.model.hasModel(data.id)) {
-      const model: Model = this.app.model.getModel(data.id);
-      model.update(data);
-      promise = this.updateModel(model);
-    } else {
-      promise = this.addModel(data);
-    }
-    return promise.then(() => this.app.model.update());
+    return this.app.model.hasModel(data.id)
+      ? this.updateModel(data)
+      : this.addModel(data);
     // const promise: Promise<any> = this.hasModel(data.id)
     //   ? this.updateModel(new Model(this, data))
     //   : this.addModel(data);
@@ -96,6 +90,8 @@ export class ModelDB extends DatabaseService {
    */
   async updateModel(data: any): Promise<any> {
     this.consoleLog('Update model: ' + data.id);
-    return this.update(data);
+    const model: Model = this.app.model.getModel(data.id);
+    model.update(data);
+    return this.update(model);
   }
 }
