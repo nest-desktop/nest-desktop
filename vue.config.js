@@ -32,4 +32,10 @@ module.exports = {
       skipWaiting: true,
     },
   },
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].title = 'NEST Desktop';
+      return args;
+    });
+  },
 };
