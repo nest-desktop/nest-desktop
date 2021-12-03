@@ -91,7 +91,6 @@ export class DatabaseService {
     return this._db
       .post(dataJSON)
       .then((res: any) => {
-        data.id = res.id;
         data.doc._id = res.id;
         data.doc.hash = data.state.hash;
         if (!data.createdAt) {
