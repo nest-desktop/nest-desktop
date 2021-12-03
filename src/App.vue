@@ -149,6 +149,7 @@ export default Vue.extend({
   opacity: 0;
 }
 
+/* Overrides default Vuetify style */
 .v-tabs-slider-wrapper {
   pointer-events: none;
 }

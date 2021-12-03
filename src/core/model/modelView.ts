@@ -280,11 +280,11 @@ export class ModelView {
   }
 
   isNeuron(): boolean {
-    if (this._state.model && this._state.model.elementType != undefined) {
+    if (this._state.model && this._state.model.elementType != null) {
       return this._state.model.elementType === 'neuron';
     } else if (
       this._state.defaults &&
-      this._state.defaults.element_type != undefined
+      this._state.defaults.element_type != null
     ) {
       return this._state.defaults.element_type === 'neuron';
     } else {

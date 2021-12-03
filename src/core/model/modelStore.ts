@@ -123,7 +123,7 @@ export class ModelStore {
     const path: string = this._state.filesGithub.find((file: string) =>
       file.includes('/' + (modelId || this._state.modelId))
     );
-    if (path == undefined) {
+    if (path == null) {
       return;
     }
     return axios.get(url + path).then((response: any) => {
