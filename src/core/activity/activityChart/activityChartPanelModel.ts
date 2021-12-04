@@ -152,7 +152,7 @@ export abstract class ActivityChartPanelModel {
       const data: any = this.data.find(
         (d: any) => d.activityIdx === activity.idx
       );
-      if (data != undefined) {
+      if (data != null) {
         data.marker.color = activity.recorder.view.color;
       }
     });

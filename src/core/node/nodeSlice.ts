@@ -40,9 +40,9 @@ export class NodeSlice extends Config {
   initParameters(params: any[] = undefined): void {
     this._params = [];
     this.config.params.forEach((param: any) => {
-      if (params != undefined) {
+      if (params != null) {
         const p: any = params.find((p: any) => p.id === param.id);
-        if (p != undefined) {
+        if (p != null) {
           param.value = p.value;
           param.disabled = p.disabled;
         }

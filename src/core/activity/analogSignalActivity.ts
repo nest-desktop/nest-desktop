@@ -22,7 +22,7 @@ export class AnalogSignalActivity extends Activity {
    * Extends events.
    */
   override update(activity: any): void {
-    if (activity.events == undefined) {
+    if (activity.events == null) {
       return;
     }
 

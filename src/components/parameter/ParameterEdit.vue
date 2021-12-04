@@ -621,7 +621,7 @@ export default Vue.extend({
         if (state.options.unit && state.options.unit === 'ms' && value < 0) {
           messageType = 'error';
           state.message = `The ${state.options.label} cannot be negative.`;
-        } else if (state.options.rules != undefined) {
+        } else if (state.options.rules != null) {
           state.options.rules.forEach((rule: string[]) => {
             state.message = eval(rule[0]) ? rule[1] : '';
             messageType = eval(rule[0]) ? rule[2] : '';
