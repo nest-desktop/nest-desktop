@@ -67,8 +67,8 @@ function upgradeNetwork(app: App, project: any): any {
 
   project.simulation.connectomes.forEach((simLink: any) => {
     const connection: any = {
-      source: simLink.source !== undefined ? simLink.source : simLink.pre,
-      target: simLink.target !== undefined ? simLink.target : simLink.post,
+      source: simLink.source != null ? simLink.source : simLink.pre,
+      target: simLink.target != null ? simLink.target : simLink.post,
     };
     if (simLink.hasOwnProperty('conn_spec')) {
       connection.rule = simLink.conn_spec.rule || 'all_to_all';
@@ -87,8 +87,8 @@ function upgradeNetwork(app: App, project: any): any {
         const simParam: any = simLink.syn_spec[modelParam.id];
         const param: any = {
           id: modelParam.id,
-          value: simParam !== undefined ? simParam : modelParam.value,
-          visible: simParam !== undefined,
+          value: simParam != null ? simParam : modelParam.value,
+          visible: simParam != null,
         };
         synapse.params.push(param);
       });

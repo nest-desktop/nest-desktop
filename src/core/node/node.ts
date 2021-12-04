@@ -268,7 +268,7 @@ export class Node extends Config {
       node.params.forEach((param: any) => this.addParameter(param));
     }
     if (this.model.existing === 'multimeter') {
-      this._records = node !== null ? node.records || ['V_m'] : ['V_m'];
+      this._records = node != null ? node.records || ['V_m'] : ['V_m'];
     }
   }
 

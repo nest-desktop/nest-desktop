@@ -43,7 +43,7 @@ export class ConnectionState {
    * Check if any connection is selected.
    */
   isAnySelected(): boolean {
-    return this._connection.network.state.selectedConnection !== null;
+    return this._connection.network.state.selectedConnection != null;
   }
 
   /**

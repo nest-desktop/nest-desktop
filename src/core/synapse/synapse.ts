@@ -14,7 +14,7 @@ export class Synapse {
     this._connection = connection;
     this._code = new SynapseCode(this);
 
-    if (synapse !== undefined && synapse.params.length > 0) {
+    if (synapse != null && synapse.params.length > 0) {
       this._modelId = synapse.model || 'static_synapse';
       this.initParameters(synapse);
     } else {

@@ -210,9 +210,9 @@ export class Connection extends Config {
     this._params = [];
     const ruleConfig: any = this.getRuleConfig();
     ruleConfig.params.forEach((param: any) => {
-      if (params !== undefined) {
+      if (params != null) {
         const p: any = params.find((p: any) => p.id === param.id);
-        if (p !== undefined) {
+        if (p != null) {
           param.value = p.value;
           param.visible = p.visible;
         }

@@ -88,9 +88,9 @@ export class ActivityAnimationSceneSphere extends ActivityAnimationScene {
   ): void {
     const trail: any = this.graph.config.trail;
     const size: number = this.graph.config.objectSize;
-    const ratio: number = trailIdx !== null ? trailIdx / (trail.length + 1) : 0;
+    const ratio: number = trailIdx != null ? trailIdx / (trail.length + 1) : 0;
     const opacity: number =
-      trailIdx !== null
+      trailIdx != null
         ? trail.fading
           ? 1 - ratio
           : 1

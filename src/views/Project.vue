@@ -152,7 +152,7 @@
       :mini-variant="!projectView.state.toolOpened"
       :style="{ transition: state.resizing ? 'initial' : '' }"
       :width="
-        projectView.state.tool !== undefined ? projectView.state.tool.width : 0
+        projectView.state.tool != null ? projectView.state.tool.width : 0
       "
       app
       class="no-print"

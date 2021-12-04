@@ -15,7 +15,7 @@
 
       <v-card-subtitle
         v-if="
-          modelView.state.model.recordables !== undefined &&
+          modelView.state.model.recordables != null &&
           modelView.state.model.recordables.length > 0
         "
       >
