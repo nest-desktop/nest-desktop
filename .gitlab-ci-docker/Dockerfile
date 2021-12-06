@@ -9,7 +9,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Add default to available sites
-COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY ./.gitlab-ci-docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 
 # Copy app from build
 COPY ./nest_desktop/app/ .
