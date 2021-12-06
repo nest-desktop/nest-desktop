@@ -97,6 +97,7 @@
     "sass: >1.32.12 introduces warning that '/' as a divisor is deprecated,but is used in Vuetify multiple times, c.f. https://stackoverflow.com/questions/67631879/nuxtjs-vuetify-throwing-lots-of-using-for-division-is-deprecated-and-will-be#67647496",
     "sass-loader:  // >= 11.0.0 requires webpack5, but that raises errors",
     "vue-toast-notification: >=v2.0.0 requires Vue 3, but we still need Vue 2 for Vuetify",
+    "vuetify-loader: 2.0.0-alpha.8 produces Error: Cannot find module 'vuetify-loader/lib/plugin'",
     "webpack: installed manually in v4.x.y to prevent sass error"
   ]
 }
