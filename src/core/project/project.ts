@@ -284,7 +284,7 @@ export class Project {
    * Add network to the history list.
    */
   commitNetwork(network: Network): void {
-    this.consoleLog('Commit network of ' + network.project.name);
+    this.consoleLog('Commit network of ' + network.project.id.slice(0, 6));
 
     // Remove networks after the current.
     this._networkRevisions = this._networkRevisions.slice(
