@@ -39,19 +39,27 @@
       <transition-group>
         <v-card
           :key="'panel' + index"
-          :style="{
-            borderLeft: `4px solid ${state.color}`,
-          }"
           class="ma-1"
           outlined
           tile
           v-for="(panel, index) in state.graph.panels"
         >
-          <v-card-title class="pa-0">
+          <v-card-title
+            :style="{
+              borderLeft: `4px solid ${state.color}`,
+            }"
+            class="pa-0"
+          >
             <ActivityChartPanelToolbar :panel="panel" style="width: 100%" />
           </v-card-title>
 
-          <v-card-text class="pa-0" v-if="panel.state.visible">
+          <v-card-text
+            :style="{
+              borderLeft: `4px solid ${state.color}`,
+            }"
+            class="pa-0"
+            v-if="panel.state.visible"
+          >
             <ParameterEdit
               :key="'param' + index"
               :options="param"

@@ -2,15 +2,13 @@
   <div class="simulationKernel">
     <v-row class="full-height" no-gutters>
       <v-col>
-        <v-card
-          :style="{
-            borderLeft: `4px solid ${state.color}`,
-          }"
-          class="ma-1"
-          outlined
-          tile
-        >
-          <v-card-title class="pa-0">
+        <v-card class="ma-1" outlined tile>
+          <v-card-title
+            :style="{
+              borderLeft: `4px solid ${state.color}`,
+            }"
+            class="pa-0"
+          >
             <v-btn
               :color="state.color"
               :dark="projectView.config.coloredToolbar"
@@ -26,7 +24,12 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-text class="pa-0">
+          <v-card-text
+            :style="{
+              borderLeft: `4px solid ${state.color}`,
+            }"
+            class="pa-0"
+          >
             <ParameterEdit
               :options="{
                 input: 'tickSlider',
@@ -87,15 +90,13 @@
           </v-card-text>
         </v-card>
 
-        <v-card
-          :style="{
-            borderLeft: `4px solid ${state.color}`,
-          }"
-          class="ma-1"
-          outlined
-          tile
-        >
-          <v-card-title class="pa-0">
+        <v-card class="ma-1" outlined tile>
+          <v-card-title
+            :style="{
+              borderLeft: `4px solid ${state.color}`,
+            }"
+            class="pa-0"
+          >
             <v-btn
               :color="state.color"
               :dark="projectView.config.coloredToolbar"
@@ -110,7 +111,13 @@
               <v-spacer />
             </v-btn>
           </v-card-title>
-          <v-card-text class="pa-0">
+
+          <v-card-text
+            :style="{
+              borderLeft: `4px solid ${state.color}`,
+            }"
+            class="pa-0"
+          >
             <ParameterEdit
               :options="{
                 id: 'simulationTime',

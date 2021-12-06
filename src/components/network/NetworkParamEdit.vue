@@ -183,16 +183,11 @@
     <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
       <v-col>
         <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
-          <v-card
-            :style="{
-              borderLeft: `4px solid ${node.view.color}`,
-            }"
-            class="ma-1"
-            tile
-            outlined
-            v-if="showNode(node)"
-          >
+          <v-card class="ma-1" tile outlined v-if="showNode(node)">
             <v-card-title
+              :style="{
+                borderLeft: `4px solid ${node.view.color}`,
+              }"
               @contextmenu="e => showNodeMenu(e, node)"
               class="pa-0"
             >
@@ -232,7 +227,12 @@
               </v-row>
             </v-card-title>
 
-            <v-card-text class="pa-0">
+            <v-card-text
+              :style="{
+                borderLeft: `4px solid ${node.view.color}`,
+              }"
+              class="pa-0"
+            >
               <NodeParamEdit :node="node" />
             </v-card-text>
           </v-card>
@@ -240,17 +240,19 @@
 
         <v-card
           :key="'connection-' + connection.idx"
-          :style="{
-            borderLeft: `4px solid ${connection.source.view.color}`,
-            borderRight: `4px solid ${connection.target.view.color}`,
-          }"
           class="ma-1"
           tile
           outlined
           v-for="connection of state.network.connections"
           v-show="showConnection(connection)"
         >
-          <v-card-title class="pa-0 ma-0">
+          <v-card-title
+            :style="{
+              borderLeft: `4px solid ${connection.source.view.color}`,
+              borderRight: `4px solid ${connection.target.view.color}`,
+            }"
+            class="pa-0 ma-0"
+          >
             <v-row
               @contextmenu="e => showConnectionMenu(e, connection)"
               no-gutters
@@ -303,7 +305,13 @@
             </v-row>
           </v-card-title>
 
-          <v-card-text class="pa-0">
+          <v-card-text
+            :style="{
+              borderLeft: `4px solid ${connection.source.view.color}`,
+              borderRight: `4px solid ${connection.target.view.color}`,
+            }"
+            class="pa-0"
+          >
             <ConnectionParamEdit
               :connection="connection"
               v-if="connection.source.size > 1 || connection.target.size > 1"
