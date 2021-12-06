@@ -2,17 +2,14 @@
 FROM nginx:stable
 LABEL maintainer="Sebastian Spreizer <spreizer@web.de>"
 
-# Set working directory to nginx asset directory
-WORKDIR /usr/share/nginx/html
-
-# Remove default nginx static assets
-RUN rm -rf ./*
-
 # Add default to available sites
 COPY ./.gitlab-ci-docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 
+# Remove default nginx static assets
+RUN rm -rf /usr/share/nginx/html/*
+
 # Copy app from build
-COPY ./nest_desktop/app/ .
+COPY ./nest_desktop/app/ /usr/share/nginx/html/
 
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
