@@ -1,10 +1,10 @@
 #!/bin/bash
 
-HOST="127.0.0.1"
-PORT="8000"
+HOST="${NEST_DESKTOP_HOST:-127.0.0.1}"
+PORT="${NEST_DESKTOP_PORT:-8000}"
 
 usage() {
-  echo "NEST Desktop "`version`
+  echo "NEST Desktop $(version)"
   echo "------------------"
   echo "Usage: nest-desktop status|start|stop|restart [-h <HOST>] [-p <PORT>]"
   echo ""
@@ -15,44 +15,41 @@ usage() {
   echo "  restart     restart (i.e. stop and start) a server on <HOST>:<PORT>"
   echo
   echo "Options:"
-  echo "  -h <HOST>   use hostname/IP address <HOST> for the server [default: ${HOST}]"
-  echo "  -p <PORT>   use port <PORT> for opening the socket [default: ${PORT}]" >&2; exit 1
+  echo "  -h <HOST>   use hostname/IP address <HOST> for the server [default: 127.0.0.1]"
+  echo "  -p <PORT>   use port <PORT> for opening the socket [default: 8000]" >&2; exit 1
 }
 
 pid() {
-  pgrep -f "python3 -m nest_desktop.app"
-}
-
-ps-aux() {
-  ps aux | grep "[p]ython3 -m nest_desktop.app"
-}
-
-ps-cmd() {
-  ps-aux | awk '{ for(i=1;i<=NF;i++) {if ( i >= 11 ) printf $i" "}; printf "\n" }'
+  pgrep -f "python3 -m nest_desktop.app ${HOST} ${PORT}"
 }
 
 start() {
-  echo "NEST Desktop "`version`
+  echo "NEST Desktop $(version)"
   echo "------------------"
 
-  if [ `pid` ]; then
-    echo "NEST Desktop is already serving."
+  if pid > /dev/null; then
+    echo "NEST Desktop is already running at http://${HOST}:${PORT}."
   else
-    echo "NEST Desktop is serving at http://$HOST:$PORT."
+    echo "NEST Desktop is running at http://${HOST}:${PORT}."
     echo "Use Control-C to stop this service."
-    python3 -m nest_desktop.app $HOST $PORT
+    python3 -m nest_desktop.app ${HOST} ${PORT}
   fi
 }
 
 status() {
-  printf "HTTP-SOCKET\t\tUID\n"
-  ps-cmd | awk '{ for(i=1;i<=NF;i++) {if ( i == 5 || i == 7 ) printf $i"\t\t"}; printf "\n" }'
+  PS_AUX="$(ps aux | grep "[p]ython3 -m nest_desktop.app")"
+  PS_CMD="$(echo ${PS_AUX} | awk '{ for(i=1;i<=NF;i++) {if ( i >= 11 ) printf $i" "}; printf "\n" }')"
+  printf "HTTP-SOCKET\n"
+  echo "${PS_CMD}" | awk '{ for(i=1;i<=NF;i++) {if ( i == 4 || i == 5 ) printf $i" "}; printf "\n" }'
 }
 
 stop() {
-  if [ `nest-desktop pid` ]; then
-    kill `nest-desktop pid`
-    echo "NEST Desktop has stopped."
+  if pid > /dev/null; then
+    kill "$(pid)"
+    echo "NEST Desktop running at http://${HOST}:${PORT} has stopped."
+  else
+    echo "NEST Desktop is not running at http://${HOST}:${PORT}."
+    false
   fi
 }
 
