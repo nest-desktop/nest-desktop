@@ -247,6 +247,7 @@
                 :min="state.options.min || 0"
                 :persistent-hint="state.message.length > 0"
                 :rules="rules"
+                :readonly="state.options.readonly || false"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
                 :value="state.value"
@@ -280,7 +281,10 @@
                 </template>
                 <template #prepend>
                   <v-btn
-                    :disabled="state.value <= state.options.min && false"
+                    :disabled="
+                      (state.value <= state.options.min && false) ||
+                      state.options.readonly
+                    "
                     @click="decrement"
                     icon
                     small
@@ -289,12 +293,16 @@
                       :color="color"
                       class="slider-icon"
                       v-text="'mdi-minus'"
+                      v-show="!state.options.readonly"
                     />
                   </v-btn>
                 </template>
                 <template #append>
                   <v-btn
-                    :disabled="state.value >= state.options.max && false"
+                    :disabled="
+                      (state.value >= state.options.max && false) ||
+                      state.options.readonly
+                    "
                     @click="increment"
                     icon
                     small
@@ -303,9 +311,11 @@
                       :color="color"
                       class="slider-icon"
                       v-text="'mdi-plus'"
+                      v-show="!state.options.readonly"
                     />
                   </v-btn>
                   <v-text-field
+                    :readonly="state.options.readonly"
                     :step="state.options.step || 1"
                     :value="state.value"
                     @blur="e => paramChange(e.target.value)"
