@@ -68,7 +68,7 @@ export class NodeGraph {
     const nodes: d3.Selection<any, any, any, any> = this._networkGraph.selector
       .select('g#nodes')
       .selectAll('g.node')
-      .data(this.network.nodes, (n: Node) => n.hash);
+      .data(this.network.nodes, (n: Node) => (n.network.project.id + n.hash));
 
     nodes
       .enter()

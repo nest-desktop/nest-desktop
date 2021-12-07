@@ -4,6 +4,7 @@ import { Activity } from '../activity/activity';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
+import { consoleLog } from '../common/logger';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
@@ -217,6 +218,10 @@ export class Node extends Config {
 
   get view(): NodeView {
     return this._view;
+  }
+
+  consoleLog(text: string): void {
+    consoleLog(this, text, 6);
   }
 
   /**

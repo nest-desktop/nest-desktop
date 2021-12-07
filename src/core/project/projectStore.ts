@@ -201,7 +201,7 @@ export class ProjectStore {
    * Initialize project or project revision from the list.
    */
   initProject(id: string = '', rev: string = ''): Promise<any> {
-    this.consoleLog(`Initialize project: id=${id}, rev=${rev}`);
+    this.consoleLog(`Initialize project: id=${id.slice(0, 6)}, rev=${rev}`);
     return new Promise<any>(resolve => {
       try {
         if (id && rev) {
