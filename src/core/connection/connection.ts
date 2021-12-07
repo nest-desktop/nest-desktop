@@ -50,9 +50,10 @@ export class Connection extends Config {
     this._view = new ConnectionView(this);
 
     this._sourceIdx = connection.source;
+    this._sourceSlice = new NodeSlice(this.source, connection.sourceSlice);
+
     this._targetIdx = connection.target;
-    this._sourceSlice = new NodeSlice(this.source);
-    this._targetSlice = new NodeSlice(this.target);
+    this._targetSlice = new NodeSlice(this.target, connection.targetSlice);
 
     this._rule = connection.rule || Rule.AllToAll;
     this.initParameters(connection.params);
@@ -302,12 +303,20 @@ export class Connection extends Config {
    */
   toJSON(): any {
     const connection: any = {
-      source: this._sourceIdx,
-      target: this._targetIdx,
-      rule: this._rule,
       params: this._params.map((param: Parameter) => param.toJSON()),
+      rule: this._rule,
+      source: this._sourceIdx,
       synapse: this._synapse.toJSON(),
+      target: this._targetIdx,
     };
+
+    if (this._sourceSlice.visible) {
+      connection.sourceSlice = this._sourceSlice.toJSON()
+    }
+
+    if (this._targetSlice.visible) {
+      connection.targetSlice = this._targetSlice.toJSON()
+    }
 
     if (this._mask.hasMask()) {
       connection.mask = this._mask.toJSON();
