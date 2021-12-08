@@ -74,7 +74,7 @@ deploy_pypi:
 
 
 #
-# DEPLOY DOCKER IMAGE
+# DEPLOY DOCKER IMAGE ON EBRAINS
 #
 
 .deploy_ebrains_docker_base:
@@ -97,6 +97,37 @@ deploy_ebrains_docker_dev:
     - if: $CI_COMMIT_BRANCH == "gitlab-ci"
 
 deploy_ebrains_docker:
+  extends: .deploy_ebrains_docker_base
+  needs:
+    - build_app_prod
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+
+#
+# DEPLOY DOCKER IMAGE ON DOCKER HUB
+#
+
+.deploy_docker_hub_base:
+  stage: deploy
+  image: ubuntu:20.04
+  before_script:
+    - source meta.txt
+  script:    
+    - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
+    - docker build -f .gitlab-ci-docker/Dockerfile -t nestdesktop/app:${VERSION} .
+    - docker push nestdesktop/app:${VERSION}
+  tags:
+    - shell-runner
+
+deploy_docker_hub_dev:
+  extends: .deploy_ebrains_docker_base
+  needs:
+    - build_app_dev
+  rules:
+    - if: $CI_COMMIT_BRANCH == "gitlab-ci"
+
+deploy_docker_hub:
   extends: .deploy_ebrains_docker_base
   needs:
     - build_app_prod
