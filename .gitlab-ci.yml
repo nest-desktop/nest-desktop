@@ -87,7 +87,7 @@ deploy_pypi:
     - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
     - docker push docker-registry.ebrains.eu/nest/nest-desktop:${VERSION}
   after_script:
-    - docker logout
+    - docker logout docker-registry.ebrains.eu
   tags:
     - shell-runner
 
