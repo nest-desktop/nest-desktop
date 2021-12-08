@@ -23,7 +23,7 @@ jobs:
           source_branch: "dev"
           destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
           destination_branch: "dev"
-      - name: syncgitlabcidev
+      - name: syncgitlabci
         uses: wei/git-sync@v3
         with:
           source_repo: "nest-desktop/nest-desktop"
