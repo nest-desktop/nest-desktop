@@ -3,7 +3,8 @@ stages:
   - deploy
   
 variables:
-  DEV_CI_COMMIT_BRANCH: ${DEV_CI_COMMIT_BRANCH}
+  DEV_CI_COMMIT_BRANCH: gitlab-ci
+
 
 #
 # BUILD APP
