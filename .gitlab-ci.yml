@@ -3,7 +3,7 @@ stages:
   - deploy
   
 variables:
-  DEV_CI_COMMIT_BRANCH=${DEV_CI_COMMIT_BRANCH}
+  DEV_CI_COMMIT_BRANCH: ${DEV_CI_COMMIT_BRANCH}
 
 #
 # BUILD APP
