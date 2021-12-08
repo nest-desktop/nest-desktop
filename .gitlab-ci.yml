@@ -3,9 +3,6 @@ stages:
   - deploy
   
 
-variables:
-
-
 #
 # BUILD
 #
