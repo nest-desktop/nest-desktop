@@ -121,14 +121,14 @@ deploy_ebrains_docker:
     - shell-runner
 
 deploy_docker_hub_dev:
-  extends: .deploy_ebrains_docker_base
+  extends: .deploy_docker_hub_base
   needs:
     - build_app_dev
   rules:
     - if: $CI_COMMIT_BRANCH == "gitlab-ci"
 
 deploy_docker_hub:
-  extends: .deploy_ebrains_docker_base
+  extends: .deploy_docker_hub_base
   needs:
     - build_app_prod
   rules:
