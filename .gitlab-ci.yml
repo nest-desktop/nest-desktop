@@ -86,6 +86,8 @@ deploy_pypi:
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
     - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
     - docker push docker-registry.ebrains.eu/nest/nest-desktop:${VERSION}
+  after_script:
+    - docker logout
   tags:
     - shell-runner
 
@@ -117,6 +119,8 @@ deploy_ebrains_docker:
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
     - docker build -f .gitlab-ci-docker/Dockerfile -t nestdesktop/app:${VERSION} .
     - docker push nestdesktop/app:${VERSION}
+  after_script:
+    - docker logout
   tags:
     - shell-runner
 
