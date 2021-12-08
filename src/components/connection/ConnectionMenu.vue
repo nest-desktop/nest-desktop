@@ -7,7 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="background-color: white; min-width: 300px">
+      <v-card tile flat style="min-width: 300px">
         <v-card-title class="pa-0">
           <v-row no-gutters>
             <v-col cols="3" class="py-0" style="text-align: center">
@@ -23,7 +23,7 @@
               />
             </v-col>
             <v-col cols="6">
-              <v-btn block color="white" depressed height="40" tile>
+              <v-btn block depressed height="40" tile>
                 <v-chip
                   label
                   outlined

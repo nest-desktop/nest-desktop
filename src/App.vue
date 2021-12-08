@@ -125,7 +125,6 @@ export default Vue.extend({
 }
 
 .iframe {
-  background-color: white;
   display: none;
   position: absolute;
   z-index: 1000;

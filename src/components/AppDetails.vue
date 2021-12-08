@@ -9,7 +9,12 @@
             v-text="'Documentation'"
           />
           <v-col class="text-right" cols="8">
-            <a :href="state.doc" target="_blank" v-text="state.doc" />
+            <a
+              :href="state.doc"
+              class="text-decoration-none text--primary"
+              target="_blank"
+              v-text="state.doc"
+            />
           </v-col>
         </v-row>
       </v-list-item>
@@ -21,7 +26,12 @@
             v-text="'Source code'"
           />
           <v-col class="text-right" cols="8">
-            <a :href="state.repo" target="_blank" v-text="state.repo" />
+            <a
+              :href="state.repo"
+              class="text-decoration-none text--primary"
+              target="_blank"
+              v-text="state.repo"
+            />
           </v-col>
         </v-row>
       </v-list-item>
@@ -70,8 +80,7 @@
                 state.osType +
                 mailText[6]
               "
-              onmouseout="style='text-decoration:none'"
-              onmouseover="style='text-decoration:underline'"
+              class="text-decoration-none text--primary"
               v-text="state.contactName"
             />
           </v-col>
@@ -140,17 +149,11 @@ export default {
   font-size: 12px;
 }
 .appDetails .v-list-item {
-  color: black !important;
   min-height: 28px !important;
 }
-.appDetails a {
-  color: black !important;
-  text-decoration: none;
-}
 .appDetails a:hover {
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
-
 .appDetails .col-4,
 .appDetails .col-8 {
   padding: 4px;

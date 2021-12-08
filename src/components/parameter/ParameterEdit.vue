@@ -147,7 +147,7 @@
       </v-card>
     </v-menu>
 
-    <v-card @contextmenu="e => showMenu(e)" color="white" flat light tile>
+    <v-card @contextmenu="e => showMenu(e)" flat tile>
       <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
           <template v-if="state.expertMode">
