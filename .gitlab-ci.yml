@@ -13,7 +13,7 @@ stages:
   artifacts:
     paths:
       - nest_desktop
-      - meta.txt
+      - version.txt
   before_script:
     - yarn install
     - yarn build
@@ -27,16 +27,17 @@ build_app_dev:
   rules:
     - if: $CI_COMMIT_BRANCH == "gitlab-ci"
   script:
-    - echo "VERSION='${VERSION}dev${CI_PIPELINE_IID}'" >> meta.txt
-    - echo '__version__ = "'${VERSION}dev${CI_PIPELINE_IID}'"' >> nest_desktop/__init__.py
+    - VERSION_DEV="${VERSION}dev${CI_PIPELINE_IID}"
+    - echo "VERSION='${VERSION_DEV}'" >> version.txt
+    - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
     
 build_app_prod:
   extends: .build_app_base
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
   script:
-    - echo "VERSION='$VERSION'" >> meta.txt
-    - echo '__version__ = "'${VERSION}'"' >> nest_desktop/__init__.py
+    - echo "VERSION='${VERSION}'" >> version.txt
+    - echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
 
 
 #
@@ -81,7 +82,7 @@ deploy_pypi:
   stage: deploy
   image: ubuntu:20.04
   before_script:
-    - source meta.txt
+    - source version.txt
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
   script:    
     - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
@@ -114,7 +115,7 @@ deploy_ebrains_docker:
   stage: deploy
   image: ubuntu:20.04
   before_script:
-    - source meta.txt
+    - source version.txt
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
   script:
     - docker build -f .gitlab-ci-docker/Dockerfile -t nestdesktop/app:${VERSION} .
