@@ -24,7 +24,7 @@ stages:
 build_app_dev:
   extends: .build_app_base
   rules:
-    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
+    - if: ${CI_COMMIT_BRANCH} == ${DEV_CI_COMMIT_BRANCH}
   script:
     - VERSION_DEV="${VERSION}dev${CI_PIPELINE_IID}"
     - echo "VERSION='${VERSION_DEV}'" >> version.txt
@@ -57,7 +57,7 @@ deploy_testpypi:
   needs:
     - build_app_dev
   rules:
-    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
+    - if: ${CI_COMMIT_BRANCH} == ${DEV_CI_COMMIT_BRANCH}
       when: manual
   script:
     - TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
@@ -96,7 +96,7 @@ deploy_ebrains_docker_dev:
   needs:
     - build_app_dev
   rules:
-    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
+    - if: ${CI_COMMIT_BRANCH} == ${DEV_CI_COMMIT_BRANCH}
 
 deploy_ebrains_docker_prod:
   extends: .deploy_ebrains_docker_base
@@ -129,7 +129,7 @@ deploy_docker_hub_dev:
   needs:
     - build_app_dev
   rules:
-    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
+    - if: ${CI_COMMIT_BRANCH} == ${DEV_CI_COMMIT_BRANCH}
 
 deploy_docker_hub_prod:
   extends: .deploy_docker_hub_base
