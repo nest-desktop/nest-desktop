@@ -48,7 +48,7 @@ package_app_dev:
 # DEPLOY
 #
 
-upload_app_testpypi:
+deploy_app_testpypi:
   extends: .dev_base
   stage: deploy
   image: python:latest
@@ -63,10 +63,12 @@ upload_app_testpypi:
   tags:
     - docker-runner
 
-build_ebrains_docker_dev:
+deploy_ebrains_docker_dev:
   extends: .dev_base
   stage: deploy
   image: ubuntu:20.04
+  needs:
+    - build_app_dev
   before_script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
   script:
