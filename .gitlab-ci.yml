@@ -21,11 +21,10 @@ stages:
   tags:
     - docker-runner
 
-
 build_app_dev:
   extends: .build_app_base
   rules:
-    - if: $CI_COMMIT_BRANCH == "gitlab-ci"
+    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
   script:
     - VERSION_DEV="${VERSION}dev${CI_PIPELINE_IID}"
     - echo "VERSION='${VERSION_DEV}'" >> version.txt
@@ -58,7 +57,7 @@ deploy_testpypi:
   needs:
     - build_app_dev
   rules:
-    - if: $CI_COMMIT_BRANCH == "gitlab-ci"
+    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
       when: manual
   script:
     - TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
@@ -68,7 +67,7 @@ deploy_pypi:
   needs:
     - build_app_prod
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: ${CI_COMMIT_BRANCH} == "main"
       when: manual
   script:
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload dist/*
@@ -97,14 +96,14 @@ deploy_ebrains_docker_dev:
   needs:
     - build_app_dev
   rules:
-    - if: $CI_COMMIT_BRANCH == "gitlab-ci"
+    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
 
-deploy_ebrains_docker:
+deploy_ebrains_docker_prod:
   extends: .deploy_ebrains_docker_base
   needs:
     - build_app_prod
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: ${CI_COMMIT_BRANCH} == "main"
 
 
 #
@@ -130,11 +129,11 @@ deploy_docker_hub_dev:
   needs:
     - build_app_dev
   rules:
-    - if: $CI_COMMIT_BRANCH == "gitlab-ci"
+    - if: ${CI_COMMIT_BRANCH} == "${DEV_CI_COMMIT_BRANCH}"
 
-deploy_docker_hub:
+deploy_docker_hub_prod:
   extends: .deploy_docker_hub_base
   needs:
     - build_app_prod
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: ${CI_COMMIT_BRANCH} == "main"
