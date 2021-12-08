@@ -15,7 +15,7 @@ stages:
       - nest_desktop
     variables:
       - VERSION
-  before-script:
+  before_script:
     - VERSION=`node -p "require('./package.json').version"`
   script:
     - yarn install
@@ -28,7 +28,7 @@ build_app_dev:
   extends: .build_app_base
   rules:
     - if: $CI_COMMIT_BRANCH == "gitlab-ci"
-  before-script:
+  before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - echo '__version__ = "'${VERSION}dev${CI_PIPELINE_IID}'"' >> nest_desktop/__init__.py    
     
