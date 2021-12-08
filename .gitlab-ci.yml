@@ -13,13 +13,11 @@ stages:
   artifacts:
     paths:
       - nest_desktop
-    variables:
-      - VERSION
+      - meta.txt
   before_script:
-    - VERSION=`node -p "require('./package.json').version"`
-  script:
     - yarn install
     - yarn build
+    - VERSION=`node -p "require('./package.json').version"`
   tags:
     - docker-runner
 
@@ -28,14 +26,17 @@ build_app_dev:
   extends: .build_app_base
   rules:
     - if: $CI_COMMIT_BRANCH == "gitlab-ci"
-  before_script:
-    - VERSION=`node -p "require('./package.json').version"`
-    - echo '__version__ = "'${VERSION}dev${CI_PIPELINE_IID}'"' >> nest_desktop/__init__.py    
+  script:
+    - echo "VERSION='${VERSION}dev${CI_PIPELINE_IID}'" >> meta.txt
+    - echo '__version__ = "'${VERSION}dev${CI_PIPELINE_IID}'"' >> nest_desktop/__init__.py
     
 build_app_prod:
   extends: .build_app_base
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+  script:
+    - echo "VERSION='$VERSION'" >> meta.txt
+    - echo '__version__ = "'${VERSION}'"' >> nest_desktop/__init__.py
 
 
 #
@@ -79,8 +80,14 @@ deploy_pypi:
 .deploy_ebrains_docker_base:
   stage: deploy
   image: ubuntu:20.04
-  before_script:
+  before_script: 
+    - cat meta.txt
+    - source meta.txt
+    - echo $VERSION
+  script:
     - docker login -u $EBRAINS_DOCKER_REGISTRY_USER -p $EBRAINS_DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
+    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:$VERSION .
+    - docker push docker-registry.ebrains.eu/nest/nest-desktop:$VERSION
   tags:
     - shell-runner
 
@@ -90,9 +97,6 @@ deploy_ebrains_docker_dev:
     - build_app_dev
   rules:
     - if: $CI_COMMIT_BRANCH == "gitlab-ci"
-  script:
-    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:$VERSIONdev$CI_PIPELINE_IID .
-    - docker push docker-registry.ebrains.eu/nest/nest-desktop:$VERSIONdev$CI_PIPELINE_IID
 
 deploy_ebrains_docker:
   extends: .deploy_ebrains_docker_base
@@ -100,6 +104,3 @@ deploy_ebrains_docker:
     - build_app_prod
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-  script:
-    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:$VERSION .
-    - docker push docker-registry.ebrains.eu/nest/nest-desktop:$VERSION
