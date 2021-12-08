@@ -1,7 +1,6 @@
-
 .dev_base:
-   only: 
-    - gitlab-ci
+   rules:
+      - if: $CI_COMMIT_BRANCH == "gitlab-ci"
 
 stages:
   - build
@@ -59,7 +58,8 @@ upload_app_testpypi:
     - pip install twine
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
   rules:
-    - when: manual
+    - if: $CI_COMMIT_BRANCH == "gitlab-ci"
+      when: manual
   tags:
     - docker-runner
 
