@@ -82,8 +82,8 @@ deploy_pypi:
   image: ubuntu:20.04
   before_script:
     - source meta.txt
-  script:    
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
+  script:    
     - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
     - docker push docker-registry.ebrains.eu/nest/nest-desktop:${VERSION}
   after_script:
@@ -115,8 +115,8 @@ deploy_ebrains_docker:
   image: ubuntu:20.04
   before_script:
     - source meta.txt
-  script:    
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
+  script:
     - docker build -f .gitlab-ci-docker/Dockerfile -t nestdesktop/app:${VERSION} .
     - docker push nestdesktop/app:${VERSION}
   after_script:
