@@ -52,7 +52,7 @@ build_app_prod:
     - docker-runner
 
 deploy_testpypi:
-  extends: .deploy_app_base  
+  extends: .deploy_pip_base  
   needs:
     - build_app_dev
   rules:
@@ -62,7 +62,7 @@ deploy_testpypi:
     - TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
 
 deploy_pypi:
-  extends: .deploy_app_base  
+  extends: .deploy_pip_base  
   needs:
     - build_app_prod
   rules:
@@ -85,7 +85,7 @@ deploy_pypi:
     - shell-runner
 
 deploy_ebrains_docker_dev:
-  extends: .ebrains_deploy_docker_base
+  extends: .deploy_ebrains_docker_base
   needs:
     - build_app_dev
   rules:
@@ -95,7 +95,7 @@ deploy_ebrains_docker_dev:
     - docker push docker-registry.ebrains.eu/nest/nest-desktop:$VERSIONdev$CI_PIPELINE_IID
 
 deploy_ebrains_docker:
-  extends: .ebrains_deploy_docker_base
+  extends: .deploy_ebrains_docker_base
   needs:
     - build_app_prod
   rules:
