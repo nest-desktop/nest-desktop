@@ -3,7 +3,7 @@ import VueCodemirror from 'vue-codemirror';
 
 import 'codemirror/mode/python/python.js';
 import 'codemirror/addon/selection/active-line.js';
-// import '@/assets/codemirror/addon/hint/pyNEST-hint.js';
+// import '@/assets/codemirror/addon/hint/pyNEST-hint.ts';
 
 import 'codemirror/lib/codemirror.css';
 // import 'codemirror/theme/base16-dark.css'
