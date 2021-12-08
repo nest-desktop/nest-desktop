@@ -154,6 +154,7 @@ export default Vue.extend({
   },
   props: {
     networkHash: String,
+    projectId: String,
   },
   setup(props) {
     const projectView = core.app.project.view;
@@ -304,7 +305,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.networkHash,
+      () => [props.networkHash, props.projectId],
       () => update()
     );
 

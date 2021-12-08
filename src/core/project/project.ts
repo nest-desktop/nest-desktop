@@ -132,6 +132,10 @@ export class Project {
     return this._simulation;
   }
 
+  get shortId(): string {
+    return this._id.slice(0, 6);
+  }
+
   get state(): UnwrapRef<any> {
     return this._state;
   }
@@ -284,7 +288,7 @@ export class Project {
    * Add network to the history list.
    */
   commitNetwork(network: Network): void {
-    this.consoleLog('Commit network of ' + network.project.name);
+    this.consoleLog('Commit network of ' + network.project.shortId);
 
     // Remove networks after the current.
     this._networkRevisions = this._networkRevisions.slice(

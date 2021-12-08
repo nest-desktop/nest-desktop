@@ -15,6 +15,7 @@ export class NodeState {
    * Focus this node.
    */
   focus(forced: boolean = false): void {
+    this._node.consoleLog('Focus node of ' + this._node.network.project.shortId);
     const networkState = this._node.network.state;
     if (forced) {
       networkState.resetFocus();
@@ -30,9 +31,10 @@ export class NodeState {
   }
 
   /**
-   * Select thisnode.
+   * Select this node.
    */
   select(forced: boolean = false): void {
+    this._node.consoleLog('Select node of ' + this._node.network.project.shortId);
     const networkState = this._node.network.state;
     if (forced) {
       networkState.resetSelection();

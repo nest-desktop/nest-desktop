@@ -271,6 +271,7 @@
         >
           <NetworkEditor
             :networkHash="projectView.state.project.network.state.hash"
+            :projectId="projectView.state.projectId"
           />
         </div>
       </transition>
