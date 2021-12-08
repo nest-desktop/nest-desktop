@@ -2,9 +2,11 @@ stages:
   - build
   - deploy
   
+VARIABLES:
+  DEV_CI_COMMIT_BRANCH=${DEV_CI_COMMIT_BRANCH}
 
 #
-# BUILD
+# BUILD APP
 #
 
 .build_app_base:
@@ -43,7 +45,7 @@ build_app_prod:
 # DEPLOY PYTHON PACKAGE
 #
 
-.deploy_pip_base:
+.deploy_pyp_base:
   stage: deploy
   image: python:latest
   before_script:
@@ -53,7 +55,7 @@ build_app_prod:
     - docker-runner
 
 deploy_testpypi:
-  extends: .deploy_pip_base  
+  extends: .deploy_pyp_base  
   needs:
     - build_app_dev
   rules:
@@ -63,7 +65,7 @@ deploy_testpypi:
     - TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
 
 deploy_pypi:
-  extends: .deploy_pip_base  
+  extends: .deploy_pyp_base  
   needs:
     - build_app_prod
   rules:
