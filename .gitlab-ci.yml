@@ -1,3 +1,8 @@
+
+.dev_base:
+   only: 
+    - gitlab-ci
+
 stages:
   - build
   - packaging
@@ -8,6 +13,7 @@ stages:
 #
 
 build_app_dev:
+  extends: .dev_base
   stage: build
   image: node:16-alpine
   script:
@@ -15,8 +21,6 @@ build_app_dev:
     - yarn build
     - VERSION=`node -p "require('./package.json').version"`
     - echo '__version__ = "'${VERSION}dev${CI_PIPELINE_IID}'"' >> nest_desktop/__init__.py    
-  only: 
-    - main
   artifacts:
     paths:
       - nest_desktop
@@ -28,14 +32,13 @@ build_app_dev:
 #
 
 package_app_dev:
+  extends: .dev_base
   stage: packaging
   image: python:latest
   needs:
     - build_app_dev
   script:
     - python setup.py sdist bdist_wheel
-  only: 
-    - main
   artifacts:
     paths:
       - dist
@@ -47,6 +50,7 @@ package_app_dev:
 #
 
 upload_app_testpypi:
+  extends: .dev_base
   stage: deploy
   image: python:latest
   needs:
@@ -54,20 +58,19 @@ upload_app_testpypi:
   script:
     - pip install twine
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
-  only: 
-    - main
+  rules:
+    - when: manual
   tags:
     - docker-runner
 
-# build_ebrains_docker_dev:
-#   stage: deploy
-#   image: ubuntu:20.04
-#   before_script:
-#     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
-#   script:
-#     - docker build -t docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID .
-#     - docker push docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_ID
-#   only: 
-#     - main
-#   tags:
-#     - shell-runner
+build_ebrains_docker_dev:
+  extends: .dev_base
+  stage: deploy
+  image: ubuntu:20.04
+  before_script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
+  script:
+    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_IID .
+    - docker push docker-registry.ebrains.eu/nest/nest-desktop:dev.$CI_PIPELINE_IID
+  tags:
+    - shell-runner
