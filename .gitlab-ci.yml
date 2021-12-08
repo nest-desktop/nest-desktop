@@ -80,14 +80,12 @@ deploy_pypi:
 .deploy_ebrains_docker_base:
   stage: deploy
   image: ubuntu:20.04
-  before_script: 
-    - cat meta.txt
+  before_script:
     - source meta.txt
-    - echo $VERSION
-  script:
-    - docker login -u $EBRAINS_DOCKER_REGISTRY_USER -p $EBRAINS_DOCKER_REGISTRY_TOKEN docker-registry.ebrains.eu
-    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:$VERSION .
-    - docker push docker-registry.ebrains.eu/nest/nest-desktop:$VERSION
+  script:    
+    - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
+    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
+    - docker push docker-registry.ebrains.eu/nest/nest-desktop:${VERSION}
   tags:
     - shell-runner
 
