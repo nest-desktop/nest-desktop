@@ -37,64 +37,55 @@
 
     <draggable handle=".handle" v-model="state.graph.panels">
       <transition-group>
-        <v-card
+        <v-sheet
           :key="'panel' + index"
           class="ma-1"
+          color="primary"
           outlined
-          tile
           v-for="(panel, index) in state.graph.panels"
         >
-          <v-card-title
-            :style="{
-              borderLeft: `4px solid ${state.color}`,
-            }"
-            class="pa-0"
-          >
-            <ActivityChartPanelToolbar :panel="panel" style="width: 100%" />
-          </v-card-title>
+          <v-card class="ml-1" outlined tile>
+            <v-card-title class="pa-0">
+              <ActivityChartPanelToolbar :panel="panel" style="width: 100%" />
+            </v-card-title>
 
-          <v-card-text
-            :style="{
-              borderLeft: `4px solid ${state.color}`,
-            }"
-            class="pa-0"
-            v-if="panel.state.visible"
-          >
-            <ParameterEdit
-              :key="'param' + index"
-              :options="param"
-              :value.sync="param.value"
-              @update:value="paramChange"
-              v-for="(param, index) of panel.model.params"
-            />
-
-            <span v-if="panel.model.activityType !== 'spike'">
-              <v-subheader
-                class="ma-0"
-                style="height: 28px"
-                v-text="'Data sources'"
+            <v-card-text class="pa-0" v-if="panel.state.visible">
+              <ParameterEdit
+                :key="'param' + index"
+                :options="param"
+                :value.sync="param.value"
+                @update:value="paramChange"
+                v-for="(param, index) of panel.model.params"
               />
-              <div
-                class="px-1 pb-1 flex"
-                :key="activity.idx"
-                v-for="activity in panel.model.activities"
-              >
-                <v-checkbox
-                  :color="activity.recorder.view.color"
-                  :key="record + activity.idx"
-                  :label="record"
-                  :value="record"
-                  @change="paramChange"
-                  class="ma-0 pa-0"
-                  dense
-                  hide-details
-                  v-for="record in activity.records"
-                  v-model="panel.model.state.records[activity.idx]"
+
+              <span v-if="panel.model.activityType !== 'spike'">
+                <v-subheader
+                  class="ma-0"
+                  style="height: 28px"
+                  v-text="'Data sources'"
                 />
-              </div>
-            </span>
-          </v-card-text>
-        </v-card>
+                <div
+                  class="px-1 pb-1 flex"
+                  :key="activity.idx"
+                  v-for="activity in panel.model.activities"
+                >
+                  <v-checkbox
+                    :color="activity.recorder.view.color"
+                    :key="record + activity.idx"
+                    :label="record"
+                    :value="record"
+                    @change="paramChange"
+                    class="ma-0 pa-0"
+                    dense
+                    hide-details
+                    v-for="record in activity.records"
+                    v-model="panel.model.state.records[activity.idx]"
+                  />
+                </div>
+              </span>
+            </v-card-text>
+          </v-card>
+        </v-sheet>
       </transition-group>
     </draggable>
   </div>
@@ -165,3 +156,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.activityChartController .v-sheet {
+  border-color: #e0e0e0 !important;
+  border-width: 1px 1px 1px 0;
+}
+.activityChartController .v-card {
+  border-width: 0;
+}
+</style>
