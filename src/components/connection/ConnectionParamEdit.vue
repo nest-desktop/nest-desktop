@@ -63,12 +63,12 @@
         <v-select
           :items="connection.config.rules"
           @change="paramChange()"
+          class="px-2"
           dense
           hide-details
-          item-value="value"
           item-text="label"
+          item-value="value"
           label="connection rule"
-          class="px-2"
           v-model="state.connection.rule"
         />
       </v-col>
