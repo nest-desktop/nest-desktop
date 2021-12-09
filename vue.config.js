@@ -22,7 +22,11 @@ module.exports = {
     // copy the options from the original ones, but modify memory and CPUs
     const newForkTsCheckerOptions = existingForkTsChecker.options;
     newForkTsCheckerOptions.memoryLimit = 8192;
-    newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
+    console.log("process.env.CI = " + process.env.CI);
+    if (process.env.CI)
+      newForkTsCheckerOptions.workers = require('os').cpus().length + 2;
+    else
+      newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin(newForkTsCheckerOptions)
     );
