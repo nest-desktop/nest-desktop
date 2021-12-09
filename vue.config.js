@@ -24,7 +24,7 @@ module.exports = {
     newForkTsCheckerOptions.memoryLimit = 8192;
     console.log("process.env.CI = " + process.env.CI);
     if (process.env.CI)
-      newForkTsCheckerOptions.workers = require('os').cpus().length + 2;
+      newForkTsCheckerOptions.workers = require('os').cpus().length;
     else
       newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
     config.plugins.push(
