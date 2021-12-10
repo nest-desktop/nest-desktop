@@ -10,13 +10,13 @@
                 :ripple="false"
                 :text="!projectView.config.coloredToolbar"
                 block
-                flat
                 color="primary"
                 depressed
+                flat
                 height="40"
                 tile
               >
-                simulation kernel
+                Simulation kernel
                 <v-spacer />
               </v-btn>
             </v-card-title>
@@ -96,7 +96,7 @@
                 height="40"
                 tile
               >
-                simulation
+                Simulation
                 <v-spacer />
               </v-btn>
             </v-card-title>
