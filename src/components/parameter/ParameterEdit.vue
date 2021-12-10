@@ -271,8 +271,8 @@
                     <v-row class="mx-0 py-1">
                       <v-col class="text-center" cols="2">
                         <v-icon
-                          :small="state.options.iconSize != null ? true : false"
-                          :large="state.options.iconSize != null ? false : true"
+                          :small="state.options.iconSize === 'small'"
+                          :large="state.options.iconSize === 'large'"
                           right
                           v-text="
                             state.options.rules[0].includes('info')
