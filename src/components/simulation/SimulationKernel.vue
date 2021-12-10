@@ -2,138 +2,85 @@
   <div class="simulationKernel">
     <v-row class="full-height" no-gutters>
       <v-col>
-        <v-card
-          :style="{
-            borderLeft: `4px solid ${state.color}`,
-          }"
-          class="ma-1"
-          outlined
-          tile
-        >
-          <v-card-title class="pa-0">
-            <v-btn
-              :color="state.color"
-              :dark="projectView.config.coloredToolbar"
-              :ripple="false"
-              :text="!projectView.config.coloredToolbar"
-              block
-              depressed
-              height="40"
-              tile
-            >
-              simulation kernel
-              <v-spacer />
-            </v-btn>
-          </v-card-title>
+        <v-sheet class="ma-1" color="primary" outlined>
+          <v-card class="ml-1" outlined tile>
+            <v-card-title class="pa-0">
+              <v-btn
+                :dark="projectView.config.coloredToolbar"
+                :ripple="false"
+                :text="!projectView.config.coloredToolbar"
+                block
+                color="primary"
+                depressed
+                flat
+                height="40"
+                tile
+              >
+                Simulation kernel
+                <v-spacer />
+              </v-btn>
+            </v-card-title>
 
-          <v-card-text class="pa-0">
-            <ParameterEdit
-              :options="{
-                input: 'tickSlider',
-                label: 'local number of threads',
-                ticks: [1, 2, 4, 8],
-              }"
-              :value.sync="simulation.kernel.localNumThreads"
-              @update:value="paramChange"
-              class="mx-1 py-2"
-            />
+            <v-card-text class="pa-0">
+              <ParameterEdit
+                :options="options.threadSettings"
+                :value.sync="simulation.kernel.localNumThreads"
+                @update:value="paramChange"
+                class="mx-1 py-2"
+              />
 
-            <ParameterEdit
-              :options="{
-                id: 'simulationResolution',
-                input: 'tickSlider',
-                label: 'simulation resolution',
-                ticks: [0.01, 0.1, 1, 10],
-                unit: 'ms',
-                rules: [
-                  [
-                    'value < 1',
-                    'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
-                    'warning',
-                  ],
-                ],
-              }"
-              :value.sync="simulation.kernel.resolution"
-              @update:value="paramChange"
-              class="mx-1 py-2"
-            />
+              <ParameterEdit
+                :options="options.resolutionSettings"
+                :value.sync="simulation.kernel.resolution"
+                @update:value="paramChange"
+                class="mx-1 py-2"
+              />
 
-            <ParameterEdit
-              :options="{
-                input: 'valueSlider',
-                label: 'seed of the random number generator',
-                max: 1000,
-                min: 1,
-                value: 1,
-              }"
-              :value.sync="simulation.kernel.rngSeed"
-              @update:value="paramChange"
-              class="mx-1 py-1"
-            />
+              <ParameterEdit
+                :options="options.rngSeedSettings"
+                :value.sync="simulation.kernel.rngSeed"
+                @update:value="paramChange"
+                class="mx-1 py-1"
+              />
 
-            <ParameterEdit
-              :options="{
-                input: 'checkbox',
-                label: 'randomize seed',
-              }"
-              :value.sync="state.autoRNGSeed"
-              class="mx-1"
-              @update:value="
-                state.simulation.kernel.updateConfig({
-                  autoRNGSeed: state.autoRNGSeed,
-                })
-              "
-            />
-          </v-card-text>
-        </v-card>
+              <ParameterEdit
+                :options="options.autoRNGSeedSettings"
+                :value.sync="state.autoRNGSeed"
+                class="mx-1"
+                @update:value="updateAutoRNGSeed"
+              />
+            </v-card-text>
+          </v-card>
+        </v-sheet>
 
-        <v-card
-          :style="{
-            borderLeft: `4px solid ${state.color}`,
-          }"
-          class="ma-1"
-          outlined
-          tile
-        >
-          <v-card-title class="pa-0">
-            <v-btn
-              :color="state.color"
-              :dark="projectView.config.coloredToolbar"
-              :ripple="false"
-              :text="!projectView.config.coloredToolbar"
-              block
-              depressed
-              height="40"
-              tile
-            >
-              simulation
-              <v-spacer />
-            </v-btn>
-          </v-card-title>
-          <v-card-text class="pa-0">
-            <ParameterEdit
-              :options="{
-                id: 'simulationTime',
-                input: 'valueSlider',
-                label: 'simulation time',
-                max: 2000,
-                min: 0,
-                unit: 'ms',
-                value: 1000,
-                rules: [
-                  [
-                    'value >= 2000',
-                    'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
-                    'warning',
-                  ],
-                ],
-              }"
-              :value.sync="simulation.time"
-              @update:value="paramChange"
-              class="mx-1 py-2"
-            />
-          </v-card-text>
-        </v-card>
+        <v-sheet class="ma-1" color="primary" outlined>
+          <v-card class="ml-1" outlined tile>
+            <v-card-title class="pa-0">
+              <v-btn
+                :dark="projectView.config.coloredToolbar"
+                :ripple="false"
+                :text="!projectView.config.coloredToolbar"
+                block
+                color="primary"
+                depressed
+                height="40"
+                tile
+              >
+                Simulation
+                <v-spacer />
+              </v-btn>
+            </v-card-title>
+
+            <v-card-text class="pa-0">
+              <ParameterEdit
+                :options="options.simulationTimeSettings"
+                :value.sync="simulation.time"
+                @update:value="paramChange"
+                class="mx-1 py-2"
+              />
+            </v-card-text>
+          </v-card>
+        </v-sheet>
       </v-col>
     </v-row>
   </div>
@@ -156,9 +103,56 @@ export default Vue.extend({
     simulation: Simulation,
   },
   setup(props) {
+    const options = {
+      autoRNGSeedSettings: {
+        input: 'checkbox',
+        label: 'randomize seed',
+      },
+      resolutionSettings: {
+        id: 'simulationResolution',
+        input: 'tickSlider',
+        label: 'simulation resolution',
+        ticks: [0.01, 0.1, 1, 10],
+        unit: 'ms',
+        rules: [
+          [
+            'value < 1',
+            'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
+      },
+      rngSeedSettings: {
+        input: 'valueSlider',
+        label: 'seed of the random number generator',
+        max: 1000,
+        min: 1,
+        value: 1,
+      },
+      simulationTimeSettings: {
+        id: 'simulationTime',
+        input: 'valueSlider',
+        label: 'simulation time',
+        max: 2000,
+        min: 0,
+        unit: 'ms',
+        value: 1000,
+        rules: [
+          [
+            'value >= 2000',
+            'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
+      },
+      threadSettings: {
+        input: 'tickSlider',
+        label: 'local number of threads',
+        ticks: [1, 2, 4, 8],
+      },
+    };
     const projectView = core.app.project.view;
     const state = reactive({
-      color: '#9e9e9e',
       autoRNGSeed: false,
       simulation: props.simulation as Simulation,
     });
@@ -170,16 +164,37 @@ export default Vue.extend({
       state.simulation.project.code.generate();
     };
 
+    /**
+     * Updates when the usage of automatic RNG seed is switched on/off.
+     */
+    function updateAutoRNGSeed() {
+      state.simulation.kernel.updateConfig({
+        autoRNGSeed: state.autoRNGSeed,
+      });
+    }
+
     onMounted(() => {
       state.simulation = props.simulation as Simulation;
       state.autoRNGSeed = state.simulation.kernel.config.autoRNGSeed;
     });
 
     return {
+      options,
       paramChange,
       projectView,
       state,
+      updateAutoRNGSeed,
     };
   },
 });
 </script>
+
+<style>
+.simulationKernel .v-sheet {
+  border-color: #e0e0e0 !important;
+  border-width: 1px 1px 1px 0;
+}
+.simulationKernel .v-card {
+  border-width: 0;
+}
+</style>
