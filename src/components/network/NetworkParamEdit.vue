@@ -267,7 +267,6 @@
                   <v-btn
                     @click="() => connection.state.select()"
                     block
-                    color="white"
                     depressed
                     height="40"
                     tile
