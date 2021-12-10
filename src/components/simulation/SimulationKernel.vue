@@ -23,61 +23,31 @@
 
             <v-card-text class="pa-0">
               <ParameterEdit
-                :options="{
-                  input: 'tickSlider',
-                  label: 'local number of threads',
-                  ticks: [1, 2, 4, 8],
-                }"
+                :options="options.threadSettings"
                 :value.sync="simulation.kernel.localNumThreads"
                 @update:value="paramChange"
                 class="mx-1 py-2"
               />
 
               <ParameterEdit
-                :options="{
-                  id: 'simulationResolution',
-                  input: 'tickSlider',
-                  label: 'simulation resolution',
-                  ticks: [0.01, 0.1, 1, 10],
-                  unit: 'ms',
-                  rules: [
-                    [
-                      'value < 1',
-                      'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
-                      'warning',
-                    ],
-                  ],
-                }"
+                :options="options.resolutionSettings"
                 :value.sync="simulation.kernel.resolution"
                 @update:value="paramChange"
                 class="mx-1 py-2"
               />
 
               <ParameterEdit
-                :options="{
-                  input: 'valueSlider',
-                  label: 'seed of the random number generator',
-                  max: 1000,
-                  min: 1,
-                  value: 1,
-                }"
+                :options="options.rngSeedSettings"
                 :value.sync="simulation.kernel.rngSeed"
                 @update:value="paramChange"
                 class="mx-1 py-1"
               />
 
               <ParameterEdit
-                :options="{
-                  input: 'checkbox',
-                  label: 'randomize seed',
-                }"
+                :options="options.autoRNGSeedSettings"
                 :value.sync="state.autoRNGSeed"
                 class="mx-1"
-                @update:value="
-                  state.simulation.kernel.updateConfig({
-                    autoRNGSeed: state.autoRNGSeed,
-                  })
-                "
+                @update:value="updateAutoRNGSeed"
               />
             </v-card-text>
           </v-card>
@@ -103,22 +73,7 @@
 
             <v-card-text class="pa-0">
               <ParameterEdit
-                :options="{
-                  id: 'simulationTime',
-                  input: 'valueSlider',
-                  label: 'simulation time',
-                  max: 2000,
-                  min: 0,
-                  unit: 'ms',
-                  value: 1000,
-                  rules: [
-                    [
-                      'value >= 2000',
-                      'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
-                      'warning',
-                    ],
-                  ],
-                }"
+                :options="options.simulationTimeSettings"
                 :value.sync="simulation.time"
                 @update:value="paramChange"
                 class="mx-1 py-2"
@@ -148,6 +103,54 @@ export default Vue.extend({
     simulation: Simulation,
   },
   setup(props) {
+    const options = {
+      autoRNGSeedSettings: {
+        input: 'checkbox',
+        label: 'randomize seed',
+      },
+      resolutionSettings: {
+        id: 'simulationResolution',
+        input: 'tickSlider',
+        label: 'simulation resolution',
+        ticks: [0.01, 0.1, 1, 10],
+        unit: 'ms',
+        rules: [
+          [
+            'value < 1',
+            'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
+      },
+      rngSeedSettings: {
+        input: 'valueSlider',
+        label: 'seed of the random number generator',
+        max: 1000,
+        min: 1,
+        value: 1,
+      },
+      simulationTimeSettings: {
+        id: 'simulationTime',
+        input: 'valueSlider',
+        label: 'simulation time',
+        max: 2000,
+        min: 0,
+        unit: 'ms',
+        value: 1000,
+        rules: [
+          [
+            'value >= 2000',
+            'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
+      },
+      threadSettings: {
+        input: 'tickSlider',
+        label: 'local number of threads',
+        ticks: [1, 2, 4, 8],
+      },
+    };
     const projectView = core.app.project.view;
     const state = reactive({
       autoRNGSeed: false,
@@ -161,15 +164,26 @@ export default Vue.extend({
       state.simulation.project.code.generate();
     };
 
+    /**
+     * Updates when the usage of automatic RNG seed is switched on/off.
+     */
+    function updateAutoRNGSeed() {
+      state.simulation.kernel.updateConfig({
+        autoRNGSeed: state.autoRNGSeed,
+      });
+    }
+
     onMounted(() => {
       state.simulation = props.simulation as Simulation;
       state.autoRNGSeed = state.simulation.kernel.config.autoRNGSeed;
     });
 
     return {
+      options,
       paramChange,
       projectView,
       state,
+      updateAutoRNGSeed,
     };
   },
 });
