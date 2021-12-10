@@ -270,7 +270,16 @@
                     <v-divider />
                     <v-row class="mx-0 py-1">
                       <v-col class="text-center" cols="2">
-                        <v-icon large right v-text="'mdi-alert-outline'" />
+                        <v-icon
+                          :small="state.options.iconSize != null ? true : false"
+                          :large="state.options.iconSize != null ? false : true"
+                          right
+                          v-text="
+                            state.options.rules[0].includes('info')
+                              ? 'mdi-information-outline'
+                              : 'mdi-alert-outline'
+                          "
+                        />
                       </v-col>
                       <v-col cols="10">
                         <div v-text="state.message" />
