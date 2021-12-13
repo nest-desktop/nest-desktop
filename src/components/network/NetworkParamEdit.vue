@@ -277,7 +277,7 @@
                       outlined
                       small
                       v-if="connection.network.project.app.config.devMode"
-                      v-text="connection.hash.slice(0, 6)"
+                      v-text="connection.shortHash"
                     />
                     <v-icon v-text="'mdi-arrow-right-bold-outline'" />
                   </v-btn>

@@ -194,6 +194,10 @@ export class Node extends Config {
     this.nodeChanges();
   }
 
+  get shortHash(): string {
+    return this._hash ? this._hash.slice(0, 6) : '';
+  }
+
   get sources(): Node[] {
     const nodes: Node[] = this._network.connections
       .filter((connection: Connection) => connection.targetIdx === this._idx)

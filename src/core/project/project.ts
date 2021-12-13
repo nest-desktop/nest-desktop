@@ -133,7 +133,7 @@ export class Project {
   }
 
   get shortId(): string {
-    return this._id.slice(0, 6);
+    return this._id ? this._id.slice(0, 6) : '';
   }
 
   get state(): UnwrapRef<any> {
@@ -313,7 +313,10 @@ export class Project {
         : {};
 
     let currentNetwork: any;
-    if (lastNetwork.codeHash === this._code.hash) {
+    if (
+      lastNetwork.codeHash != undefined &&
+      lastNetwork.codeHash === this._code.hash
+    ) {
       currentNetwork = this._networkRevisions.pop();
 
       // Add activity to recorder nodes

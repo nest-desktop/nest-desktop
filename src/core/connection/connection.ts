@@ -114,6 +114,10 @@ export class Connection extends Config {
     this.initParameters();
   }
 
+  get shortHash(): string {
+    return this._hash ? this._hash.slice(0, 6) : '';
+  }
+
   get source(): Node {
     return this._network.nodes[this._sourceIdx];
   }

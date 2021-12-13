@@ -35,6 +35,10 @@ export class ProjectCode extends Code {
     this._hash = sha1(this._script);
   }
 
+  get shortHash(): string {
+    return this._hash ? this._hash.slice(0, 6) : '';
+  }
+
   get state(): any {
     return this._state;
   }
