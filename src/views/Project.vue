@@ -151,9 +151,7 @@
     <v-navigation-drawer
       :mini-variant="!projectView.state.toolOpened"
       :style="{ transition: state.resizing ? 'initial' : '' }"
-      :width="
-        projectView.state.tool != null ? projectView.state.tool.width : 0
-      "
+      :width="projectView.state.tool != null ? projectView.state.tool.width : 0"
       app
       class="no-print"
       clipped
@@ -373,7 +371,13 @@ export default Vue.extend({
         // http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
         const url: string = root.$route.query.from as string;
         axios.get(url).then((response: any) => {
-          core.app.project.addProjectTemporary(response.data);
+          if (Array.isArray(response.data)) {
+            response.data.forEach((d: any) => {
+              core.app.project.createNewProject(d);
+            });
+          } else {
+            core.app.project.createNewProject(response.data);
+          }
         });
       } else {
         state.loading = true;
