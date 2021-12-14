@@ -3,6 +3,7 @@
 HOST="${NEST_DESKTOP_HOST:-127.0.0.1}"
 PORT="${NEST_DESKTOP_PORT:-8000}"
 
+# Returns a short overview of the available command options. 
 usage() {
   echo "NEST Desktop $(version)"
   echo "------------------"
@@ -19,10 +20,13 @@ usage() {
   echo "  -p <PORT>   use port <PORT> for opening the socket [default: 8000]" >&2; exit 1
 }
 
+# Returns the process ID of a running NEST Desktop instance or null if none is
+# running.
 pid() {
   pgrep -f "python3 -m nest_desktop.app ${HOST} ${PORT}"
 }
 
+# Starts NEST Desktop (if no instance is already running).
 start() {
   echo "NEST Desktop $(version)"
   echo "------------------"
@@ -36,6 +40,8 @@ start() {
   fi
 }
 
+# Returns the status of NEST Desktop instances started with the Python webserver
+# by giving the IP addresses and ports.
 status() {
   PS_AUX="$(ps aux | grep "[p]ython3 -m nest_desktop.app")"
   PS_CMD="$(echo ${PS_AUX} | awk '{ for(i=1;i<=NF;i++) {if ( i >= 11 ) printf $i" "}; printf "\n" }')"
@@ -43,6 +49,7 @@ status() {
   echo "${PS_CMD}" | awk '{ for(i=1;i<=NF;i++) {if ( i == 4 || i == 5 ) printf $i" "}; printf "\n" }'
 }
 
+# Tries to stop a running NEST Desktop instance.
 stop() {
   if pid > /dev/null; then
     kill "$(pid)"
@@ -53,6 +60,7 @@ stop() {
   fi
 }
 
+# Returns the version of this NEST Desktop instance.
 version() {
    python3 -c "from nest_desktop import __version__; print(__version__)"
 }
