@@ -12,6 +12,7 @@ export class NodeSlice extends Config {
     super('NodeSlice');
     this._node = node;
     this.initParameters(params);
+    this._visible = params.length > 0;
   }
 
   get node(): Node {
@@ -44,13 +45,16 @@ export class NodeSlice extends Config {
         const p: any = params.find((p: any) => p.id === param.id);
         if (p != null) {
           param.value = p.value;
-          param.disabled = p.disabled;
+          param.disabled = false;
         }
       }
       this._params.push(new Parameter(this, param));
     });
   }
 
+  /**
+   * Get indices of node slicing
+   */
   indices(): string {
     const start: Parameter = this._params[0];
     const stop: Parameter = this._params[1];
@@ -71,9 +75,27 @@ export class NodeSlice extends Config {
     return `[${indices.join(':')}]`;
   }
 
+  /**
+   * Update node slice.
+   */
   update(): void {
     if (this._params[1].disabled) {
       this._params[1].value = this._node.size;
     }
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return node slice object
+   */
+  toJSON(): any {
+    return this._params
+      .filter((param: Parameter) => !param.disabled)
+      .map((param: Parameter) => {
+        return {
+          id: param.id,
+          value: param.value,
+        };
+      });
   }
 }
