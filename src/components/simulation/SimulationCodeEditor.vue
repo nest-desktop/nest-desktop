@@ -17,7 +17,8 @@
         <v-col>
           <codemirror
             :options="options"
-            :style="state.width"
+            :style="state.style"
+            @ready="onCmReady"
             ref="codeMirror"
             v-model="state.code.script"
           />
@@ -31,6 +32,8 @@
 import Vue from 'vue';
 import { ref, reactive, watch, onMounted } from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
+import 'codemirror/addon/hint/show-hint';
+import '@/assets/codemirror/addon/hint/pyNEST-hint';
 
 import { ProjectCode } from '@/core/project/projectCode';
 
@@ -48,10 +51,13 @@ export default Vue.extend({
 
     const state = reactive({
       code: props.code as ProjectCode,
-      width: 300,
+      style: {
+        width: 300,
+      },
     });
 
     const options: any = {
+      autoCloseBrackets: true,
       cursorBlinkRate: 700,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
@@ -61,12 +67,32 @@ export default Vue.extend({
       },
       lineNumbers: true,
       lineWrapping: true,
+      matchBrackets: true,
       mode: 'python',
       styleActiveLine: true,
       extraKeys: {
         'Ctrl-Space': 'autocomplete',
-        // '"."': this.showHint,
       },
+    };
+
+    /**
+     * Initialize hint (only for NEST commands!) after CodeMirror is ready.
+     */
+    const onCmReady = (cm: any) => {
+      cm.on('keypress', () => {
+        const currentCursorPosition: any = cm.getCursor();
+        const backwardCursorPosition: any = {
+          line: currentCursorPosition.line,
+          ch: currentCursorPosition.ch - 4,
+        };
+        const backwardCharacter: string = cm.getRange(
+          backwardCursorPosition,
+          currentCursorPosition
+        );
+        if (backwardCharacter === 'nest') {
+          cm.showHint();
+        }
+      });
     };
 
     /**
@@ -92,6 +118,7 @@ export default Vue.extend({
 
     return {
       codeMirror,
+      onCmReady,
       options,
       simulationCodeEditor,
       state,
