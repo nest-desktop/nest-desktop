@@ -31,6 +31,7 @@ For more information, please read the :doc:`detailed setup guides <setup>`.
 Guides for NEST Desktop
   - :doc:`How to setup NEST Desktop <setup>`
   - :doc:`How to use NEST Desktop <usage>`
+  - :doc:`How to use NEST Desktop with Insite <usage-insite>`
   - :doc:`Troubleshooting <troubleshooting>`
 
 Guides for the infrastructure

@@ -1,7 +1,7 @@
 {
   "name": "nest-desktop",
   "homepage": "https://nest-desktop.readthedocs.io/en/stable/",
-  "version": "3.0.3",
+  "version": "3.1.0b",
   "license": "MIT",
   "private": false,
   "description": "NEST Desktop is a web-based application which provides a graphical user interface for NEST Simulator.",

@@ -1,24 +1,31 @@
+# NEST Desktop
+
 <p>
   <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/v3.0/docs/_static/img/screenshots/start-page.png" />
 </p>
 
-GitHub
-[![commit activity](https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
-[![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers)
-[![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members)
-
-PyPI
-[![pypi](https://img.shields.io/pypi/v/nest-desktop?label=version)](https://pypi.org/project/nest-desktop/)
-[![downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/)
-
-DockerHub
-[![docker version](https://img.shields.io/docker/v/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
-[![image size](https://img.shields.io/docker/image-size/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
-[![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)](https://hub.docker.com/r/nestdesktop/app)
+###### General
 
 [![docs](https://img.shields.io/readthedocs/nest-desktop)](https://nest-desktop.readthedocs.io)
 [![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
 [![DOI](https://img.shields.io/badge/DOI-10.1101%2F2021.06.15.444791-blue)](https://doi.org/10.1101/2021.06.15.444791)
+
+###### DockerHub
+
+[![docker version](https://img.shields.io/docker/v/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
+[![image size](https://img.shields.io/docker/image-size/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
+[![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)](https://hub.docker.com/r/nestdesktop/app)
+
+###### GitHub
+
+[![commit activity](https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
+[![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers)
+[![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members)
+
+###### PyPI
+
+[![pypi](https://img.shields.io/pypi/v/nest-desktop?label=version)](https://pypi.org/project/nest-desktop/)
+[![downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/)
 
 ---
 

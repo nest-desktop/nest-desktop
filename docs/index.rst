@@ -85,3 +85,16 @@ Select the appropriate section that fits your needs.
       </a>
     </div>
   </div>
+
+|
+
+**Version info**
+
+On Read the Docs, it is possible to select versions of this documentation.
+This can be done in the left side bar at the very bottom.
+These versions basically relate to the program versions (as found in the GitHub repository).
+This can be noticed when clicking on a the "Edit on Github" text at the top in the middle.
+
+Since the changes between patch level versions (e.g. 3.0.0 and 3.0.1) are usually not noticeable, we show a single branch for the recent minor version releases (e.g. '3.0' for all 3.0.x releases).
+This branch contains all patch releases and always points to the latest patch release of that release branch.
+Please keep this in mind when searching for information on a specific version of NEST Desktop!
