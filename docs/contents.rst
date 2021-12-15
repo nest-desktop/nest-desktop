@@ -18,6 +18,7 @@ Contents
   user/index
   user/setup
   user/usage
+  user/usage-insite
   user/troubleshooting
   user/use-ebrains
 
