@@ -57,6 +57,7 @@ export default Vue.extend({
     });
 
     const options: any = {
+      autoCloseBrackets: true,
       cursorBlinkRate: 700,
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
@@ -66,6 +67,7 @@ export default Vue.extend({
       },
       lineNumbers: true,
       lineWrapping: true,
+      matchBrackets: true,
       mode: 'python',
       styleActiveLine: true,
       extraKeys: {
