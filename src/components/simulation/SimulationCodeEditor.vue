@@ -74,7 +74,7 @@ export default Vue.extend({
     };
 
     /**
-     * Initialize hint after CodeMirror is ready.
+     * Initialize hint (only for NEST commands!) after CodeMirror is ready.
      */
     const onCmReady = (cm: any) => {
       cm.on('keypress', () => {
