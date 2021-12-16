@@ -76,7 +76,7 @@
         </defs>
       </g>
 
-      <rect id="workspaceHandler" fill="white" />
+      <rect id="workspaceHandler" fill="#ffffff" />
       <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">

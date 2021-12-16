@@ -67,8 +67,8 @@
                 >
                   <v-list-item-icon>
                     <v-list-item-group class="nav-item">
-                      <v-icon v-text="route.icon" />
-                      <div v-text="route.title" />
+                      <v-icon :color="route.color" v-text="route.icon" />
+                      {{ route.title }}
                     </v-list-item-group>
                   </v-list-item-icon>
                   <v-list-item-content />
@@ -94,13 +94,12 @@
                 <v-list-item
                   @click="reset"
                   @contextmenu="e => showMenu(e, 'settings')"
-                  color="settings darken1"
                   title="Settings"
                   to="/settings"
                 >
                   <v-list-item-icon>
                     <v-list-item-group class="nav-item">
-                      <v-icon v-text="'mdi-cogs'" />
+                      <v-icon color="settings darken1" v-text="'mdi-cogs'" />
                       Settings
                     </v-list-item-group>
                   </v-list-item-icon>
@@ -125,15 +124,13 @@
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item
-                  @click="reset"
-                  color="amber darken1"
-                  title="About"
-                  to="/about"
-                >
+                <v-list-item @click="reset" title="About" to="/about">
                   <v-list-item-icon>
                     <v-list-item-group class="nav-item">
-                      <v-icon v-text="'mdi-information-variant'" />
+                      <v-icon
+                        color="amber darken1"
+                        v-text="'mdi-information-variant'"
+                      />
                       About
                     </v-list-item-group>
                   </v-list-item-icon>

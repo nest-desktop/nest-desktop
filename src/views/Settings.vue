@@ -32,6 +32,13 @@
               "
               v-model="state.projectViewConfig.coloredToolbar"
             />
+            <v-switch
+              dense
+              inset
+              label="Vuetify Theme Dark"
+              v-model="$vuetify.theme.dark"
+              v-show="state.appConfig.devMode"
+            />
           </v-card-text>
         </v-card>
 

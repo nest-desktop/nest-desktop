@@ -6,9 +6,8 @@
       <v-expansion-panels
         v-model="projectView.state.project.state.activityStatsPanelId"
         accordion
-        flat
-        tile
         class="pa-1"
+        flat
       >
         <v-expansion-panel
           :disabled="!activity.hasEvents()"
