@@ -132,6 +132,10 @@ export class Project {
     return this._simulation;
   }
 
+  /**
+   * Returns the first six digits of the project ID.
+   * @returns 6-digit hash value
+   */
   get shortId(): string {
     return this._id ? this._id.slice(0, 6) : '';
   }
@@ -314,7 +318,7 @@ export class Project {
 
     let currentNetwork: any;
     if (
-      lastNetwork.codeHash != undefined &&
+      lastNetwork.codeHash != null &&
       lastNetwork.codeHash === this._code.hash
     ) {
       currentNetwork = this._networkRevisions.pop();

@@ -114,6 +114,10 @@ export class Connection extends Config {
     this.initParameters();
   }
 
+  /**
+   * Returns the first six digits of the SHA-1 connection hash.
+   * @returns 6-digit hash value
+   */
   get shortHash(): string {
     return this._hash ? this._hash.slice(0, 6) : '';
   }

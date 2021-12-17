@@ -194,6 +194,10 @@ export class Node extends Config {
     this.nodeChanges();
   }
 
+  /**
+   * Returns the first six digits of the SHA-1 node hash.
+   * @returns 6-digit hash value
+   */
   get shortHash(): string {
     return this._hash ? this._hash.slice(0, 6) : '';
   }
