@@ -1,14 +1,19 @@
 <template>
-  <div class="ProjectRawData">
+  <div class="projectRawData" ref="projectRawData">
     <v-row class="full-height" no-gutters>
-      <codemirror :options="options" :value="state.data" />
+      <codemirror
+        :options="state.options"
+        :style="state.style"
+        :value="state.data"
+        ref="codeMirror"
+      />
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted } from '@vue/composition-api';
+import { reactive, watch, onMounted, ref } from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
 
 import { Project } from '@/core/project/project';
@@ -21,24 +26,50 @@ export default Vue.extend({
   props: {
     project: Project,
   },
-  setup(props) {
+  setup(props, { root }) {
+    const projectRawData = ref(null);
+    const codeMirror = ref(null);
+
     const state = reactive({
       data: '',
+      options: {
+        cursorBlinkRate: 700,
+        foldGutter: true,
+        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+        lineNumbers: true,
+        lineWrapping: true,
+        mode: { name: 'javascript', json: true },
+        readOnly: true,
+        theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
+      },
+      style: {
+        width: 300,
+      },
     });
 
-    const options: any = {
-      cursorBlinkRate: 700,
-      foldGutter: true,
-      gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      lineNumbers: true,
-      lineWrapping: true,
-      mode: { name: 'javascript', json: true },
-      readOnly: true,
+    /**
+     * Update theme for CodeMirror.
+     */
+    const updateTheme = () => {
+      state.options.theme = root.$vuetify.theme.dark
+        ? 'base16-dark'
+        : 'default';
+    };
+
+    /**
+     * Resize CodeMirror.
+     */
+    const resizeCodeMirror = () => {
+      const height = projectRawData.value.clientHeight;
+      const width = projectRawData.value.clientWidth;
+      codeMirror.value.cminstance.setSize(width, height);
+      updateTheme();
     };
 
     onMounted(() => {
       const project = props.project as Project;
       state.data = JSON.stringify(project.toJSON(), null, '\t');
+      window.addEventListener('resize', resizeCodeMirror);
     });
 
     watch(
@@ -48,10 +79,7 @@ export default Vue.extend({
       }
     );
 
-    return {
-      options,
-      state,
-    };
+    return { codeMirror, projectRawData, state };
   },
 });
 </script>

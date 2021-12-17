@@ -7,11 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card
-        tile
-        flat
-        style="min-width: 300px"
-      >
+      <v-card tile flat style="min-width: 300px">
         <v-card-title class="pa-0">
           <v-row no-gutters>
             <v-col cols="12">
@@ -71,7 +67,10 @@
                 <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :input-value="state[item.value]" />
+                <v-checkbox
+                  :color="state.node.view.color"
+                  :input-value="state[item.value]"
+                />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'switch'">
                 <v-switch

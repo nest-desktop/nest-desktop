@@ -13,6 +13,10 @@ export class NetworkGraphNodeAddPanel {
     this.init();
   }
 
+  get darkMode(): boolean {
+    return this.network.project.app.darkMode;
+  }
+
   get color(): string {
     return this.network.getNodeColor(this.network.nodes.length);
   }
@@ -40,8 +44,7 @@ export class NetworkGraphNodeAddPanel {
     this._selector.style('display', 'none');
     this._selector
       .append('circle')
-      .attr('class', 'select')
-      .attr('fill', 'white')
+      .attr('class', 'bgcolor select')
       .attr('fill-opacity', '0.8')
       .attr('r', this.nodeRadius - this.strokeWidth)
       .on('click', () => {
@@ -63,11 +66,11 @@ export class NetworkGraphNodeAddPanel {
         .append('g')
         .attr('class', 'select ' + elementType)
         .append('path')
+        .attr('class', 'bgcolor')
         .datum({
           startAngle: (Math.PI * idx * 2) / 3,
           endAngle: (Math.PI * (idx + 1) * 2) / 3,
         })
-        .style('fill', 'white')
         .attr('fill-opacity', '0.8')
         .style('cursor', 'pointer')
         .style('stroke', this.network ? this.color : 'grey')
@@ -80,7 +83,9 @@ export class NetworkGraphNodeAddPanel {
             .select('text.label')
             .text(elementType);
           panel.style('fill', this.network ? this.color : 'grey');
-          this._selector.selectAll('.' + elementType).style('fill', 'white');
+          this._selector
+            .selectAll('.' + elementType)
+            .style('fill', this.darkMode ? '#121212' : 'white');
         })
         .on('mouseout', () => {
           this._selector
@@ -88,8 +93,10 @@ export class NetworkGraphNodeAddPanel {
             .style('visibility', 'hidden')
             .select('text.label')
             .text('');
-          panel.style('fill', 'white');
-          this._selector.selectAll('.label').style('fill', 'black');
+          panel.style('fill', this.darkMode ? '#121212' : 'white');
+          this._selector
+            .selectAll('.label')
+            .style('fill', this.darkMode ? 'white' : '#121212');
         })
         .on('mouseup', () => {
           this.close();
@@ -105,12 +112,11 @@ export class NetworkGraphNodeAddPanel {
       const f: number = (idx * 2) / 3 + 1 / 3;
       this._selector
         .append('text')
-        .attr('class', 'select label ' + elementType)
+        .attr('class', 'label select textcolor ' + elementType)
         .style('font-size', '11px')
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
         .style('pointer-events', 'none')
-        .attr('fill', 'black')
         .attr('dx', Math.sin(Math.PI * f) * 28)
         .attr('dy', -Math.cos(Math.PI * f) * 28 + 5)
         .text(elementType.slice(0, 1).toUpperCase());
@@ -125,23 +131,46 @@ export class NetworkGraphNodeAddPanel {
     this._selector
       .select('g.tooltip')
       .append('rect')
+      .attr('class', 'bgcolor')
       .attr('transform', 'translate(-37, -14)')
       .attr('width', '74px')
-      .attr('height', '16px')
-      .attr('fill', 'white');
+      .attr('height', '16px');
 
     this._selector
       .select('g.tooltip')
       .append('text')
-      .attr('class', 'label')
+      .attr('class', 'label textcolor')
       .style('text-anchor', 'middle');
+  }
+
+  /**
+   * Update color of node add panel.
+   */
+  update(): void {
+
+    this._selector
+      .selectAll('.bgcolor')
+      .attr('fill', this.darkMode ? '#121212' : 'white');
+
+    this._selector
+      .selectAll('path.bgcolor')
+      .style('fill', this.darkMode ? '#121212' : 'white')
+      .style('stroke', () => this.color);
+
+    this._selector
+      .selectAll('.textcolor')
+      .attr('fill', this.darkMode ? 'white' : '#121212');
+
+    this._selector
+      .selectAll('.label')
+      .style('fill', this.darkMode ? 'white' : '#121212');
   }
 
   /**
    * Open panel to add node.
    */
   open(): void {
-    this._selector.selectAll('path').style('stroke', () => this.color);
+    this.update();
     this._selector
       .style('display', 'block')
       .attr(

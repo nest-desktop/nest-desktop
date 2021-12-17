@@ -19,8 +19,6 @@
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                color="model lighten-1"
-                dark
                 depressed
                 fab
                 x-small

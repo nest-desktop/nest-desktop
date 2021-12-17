@@ -75,8 +75,6 @@ export class ActivityAnimationScene {
    */
   init(): void {
     // console.log('Init animation scene');
-    this._scene.background = new THREE.Color(0xfefefe);
-
     this.setCameraPosition();
     this._scene.add(this._camera);
     this._scene.add(this.initAxesHelper());
@@ -157,6 +155,9 @@ export class ActivityAnimationScene {
    * Update animation scene.
    */
   update(): void {
+    this._scene.background = this._graph.project.app.darkMode
+      ? new THREE.Color(0x121212)
+      : new THREE.Color(0xfefefe);
     this._scene.remove(this.activityLayers);
 
     const layersGraph: THREE.Group = new THREE.Group();

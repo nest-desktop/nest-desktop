@@ -139,9 +139,11 @@
 
           <v-row>
             <v-col class="py-0">
-              <v-checkbox v-model="state.node.spatial.positions.edgeWrap">
-                <template #label>Edge wrap</template>
-              </v-checkbox>
+              <v-checkbox
+                color="accent"
+                label="Edge wrap"
+                v-model="state.node.spatial.positions.edgeWrap"
+              />
             </v-col>
           </v-row>
         </v-card-text>

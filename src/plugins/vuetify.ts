@@ -37,27 +37,24 @@ export default new Vuetify({
     themes: {
       light: {
         primary: colors.grey.base,
-        secondary: colors.grey.lighten2,
+        secondary: colors.shades.white,
         accent: colors.grey.darken2,
-        kernel: {
-          base: '#FF6633',
-          darken1: '#B33A12',
-          lighten1: '#FF794D',
-        },
         model: {
           base: '#FF6633',
-          darken1: '#B33A12',
-          lighten1: '#FF794D',
         },
         project: {
           base: '#1281B3',
-          darken1: '#054766',
-          lighten1: '#26BCFF',
         },
-        settings: {
-          base: '#36B34F',
-          darken1: '#146625',
-          lighten1: '#40FF66',
+      },
+      dark: {
+        primary: colors.grey.base,
+        secondary: colors.grey.darken4,
+        accent: colors.grey.lighten4,
+        model: {
+          base: '#FF6633',
+        },
+        project: {
+          base: '#1281B3',
         },
       },
     },

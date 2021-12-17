@@ -208,7 +208,7 @@
                   <div
                     @click="closeMessage"
                     class="mb-1 mt-2"
-                    style="background-color: #eeeeee; cursor: pointer"
+                    style="background-color: rgba(0,0,0,0.12); cursor: pointer"
                   >
                     <v-divider />
                     <v-row class="mx-0 py-1">
@@ -261,7 +261,7 @@
                     @click="closeMessage"
                     class="mb-1"
                     style="
-                      background-color: #eeeeee;
+                      background-color: rgba(0,0,0,0.12);
                       cursor: pointer;
                       margin-left: -37px;
                       margin-right: -105px;

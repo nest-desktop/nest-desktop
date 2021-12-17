@@ -269,6 +269,7 @@
                     block
                     depressed
                     height="40"
+                    text
                     tile
                   >
                     <v-chip
@@ -388,6 +389,7 @@ export default Vue.extend({
         max: 1000,
         min: 1,
         value: 1,
+        iconSize: 'large',
         rules: [
           [
             'value >= 1000',

@@ -54,7 +54,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
       marker: {
         color: activity.recorder.view.color,
         line: {
-          color: 'white',
+          color: activity.project.app.darkMode ? '#121212' : 'white',
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },

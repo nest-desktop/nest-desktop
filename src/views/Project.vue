@@ -13,6 +13,7 @@
         :show-arrows="false"
         @change="() => projectView.updateProjectMode()"
         align-with-title
+        color="secondary"
         icons-and-text
         style="flex: 0 1 auto; width: 278px"
         v-model="projectView.state.modeIdx"

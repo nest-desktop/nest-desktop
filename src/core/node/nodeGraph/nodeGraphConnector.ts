@@ -12,6 +12,16 @@ export class NodeGraphConnector {
     this._networkGraph = networkGraph;
   }
 
+  get color(): string {
+    if (this._networkGraph.network == undefined) {
+      return 'white';
+    }
+
+    return this._networkGraph.network.project.app.darkMode
+      ? '#121212'
+      : 'white';
+  }
+
   get nodeRadius(): number {
     return this._networkGraph.config.nodeRadius;
   }
@@ -53,7 +63,7 @@ export class NodeGraphConnector {
     connectorEnd
       .append('circle')
       .attr('class', 'color')
-      .attr('fill', 'white')
+      .attr('fill', this.color)
       .attr('r', '6px')
       .attr('stroke-width', this.strokeWidth)
       .on('click', (e: MouseEvent) => {
@@ -67,8 +77,9 @@ export class NodeGraphConnector {
     // coordinates with current config: x1: 30, y1: 25.5, x2: 39.5, y2: 25.5
     connectorEnd
       .append('line')
+      .attr('class', 'bgcolor')
       .attr('stroke-width', 4)
-      .attr('stroke', 'white')
+      .attr('stroke', this.color)
       .attr('x1', this._connectorRadius / 3)
       .attr('x2', (23 / 12) * this._connectorRadius)
       .attr('y1', -(13 / 12) * this._connectorRadius)
@@ -78,8 +89,9 @@ export class NodeGraphConnector {
     // coordinates with current config: x1: 35, y1: 21.5, x2: 35, y2: 31
     connectorEnd
       .append('line')
+      .attr('class', 'bgcolor')
       .attr('stroke-width', 4)
-      .attr('stroke', 'white')
+      .attr('stroke', this.color)
       .attr('x1', (7 / 6) * this._connectorRadius)
       .attr('x2', (7 / 6) * this._connectorRadius)
       .attr('y1', -(21 / 12) * this._connectorRadius)
@@ -163,5 +175,7 @@ export class NodeGraphConnector {
       );
 
     connector.selectAll('.color').style('stroke', (n: Node) => n.view.color);
+    connector.selectAll('line.bgcolor').attr('stroke', this.color);
+    connector.select('circle.color').attr('fill', this.color);
   }
 }

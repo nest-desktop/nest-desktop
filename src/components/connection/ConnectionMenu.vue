@@ -23,7 +23,7 @@
               />
             </v-col>
             <v-col cols="6">
-              <v-btn block depressed height="40" tile>
+              <v-btn block depressed height="40" text tile>
                 <v-chip
                   label
                   outlined
@@ -66,7 +66,8 @@
                 <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :input-value="state[item.value]" />
+                <v-checkbox :input-value="state[item.value]"
+                :color="connection.source.view.color" />
               </v-list-item-action>
             </v-list-item>
           </v-list>

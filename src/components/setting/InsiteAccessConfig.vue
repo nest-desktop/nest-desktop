@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <v-card>
-      <v-card-subtitle v-text="'Insite'" />
+  <div class="InsiteAccessConfig">
+    <v-card outlined>
+      <v-card-subtitle v-text="'Insite Access'" />
       <v-card-text>
         <v-tooltip top open-delay="300">
           <template v-slot:activator="{ on, attrs }">

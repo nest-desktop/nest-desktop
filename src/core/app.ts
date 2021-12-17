@@ -21,6 +21,7 @@ export class App extends Config {
   private _project: ProjectStore;
   private _state: any = {
     ready: false,
+    theme: { dark: false },
     version: '',
     dialog: {
       open: false,
@@ -68,6 +69,18 @@ export class App extends Config {
     ];
     const datetime: string = date.join('') + '_' + time.join('');
     return datetime;
+  }
+
+  get darkMode(): boolean {
+    return this.state.theme.dark;
+  }
+
+  set darkMode(value: boolean) {
+    this.state.theme.dark = value;
+    this.updateConfig({ darkMode: value });
+    this._project.view.update();
+    this._model.view.update();
+    window.dispatchEvent(new Event('resize'));
   }
 
   get model(): any {
@@ -147,6 +160,14 @@ export class App extends Config {
   closeDialog(): void {
     consoleLog(this, 'Close dialog');
     this._state.dialog.open = false;
+  }
+
+  /**
+   * Initialize theme.
+   */
+  initTheme(theme: any): void {
+    this._state.theme = theme;
+    this._state.theme.dark = this.config.darkMode;
   }
 
   /**

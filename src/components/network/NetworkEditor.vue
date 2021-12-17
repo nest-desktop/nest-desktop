@@ -76,7 +76,10 @@
         </defs>
       </g>
 
-      <rect id="workspaceHandler" fill="#ffffff" />
+      <rect
+        id="workspaceHandler"
+        :fill="$vuetify.theme.dark ? '#121212' : 'white'"
+      />
       <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">
@@ -328,9 +331,9 @@ export default Vue.extend({
 <style>
 .networkGraph {
   display: inline-block;
+  overflow: hidden;
   position: relative;
   width: 100%;
-  overflow: hidden;
 }
 
 .connection {
@@ -338,13 +341,12 @@ export default Vue.extend({
 }
 
 .node .shape {
-  fill: white;
   cursor: pointer;
 }
 
 .node text {
-  pointer-events: none;
   font-size: 12px;
+  pointer-events: none;
   text-anchor: middle;
 }
 

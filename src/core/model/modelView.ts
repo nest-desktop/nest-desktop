@@ -351,4 +351,12 @@ export class ModelView {
       (file: string) => file.includes('/' + this._state.modelId)
     );
   }
+
+  /**
+   * Update project view.
+   */
+  update(): void {
+    this._state.project.network.networkChanges();
+    this._state.project.activityGraph.update();
+  }
 }

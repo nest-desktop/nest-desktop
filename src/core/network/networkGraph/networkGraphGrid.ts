@@ -63,7 +63,7 @@ export class NetworkGraphGrid {
       .enter()
       .append('line')
       .attr('class', 'gridLine')
-      .attr('stroke', '#eee')
+      .attr('stroke', 'rgba(128,128,128,0.12)')
       .style('pointer-events', 'none')
       .merge(gridLines)
       .attr('x1', (d: any) => d.x1)

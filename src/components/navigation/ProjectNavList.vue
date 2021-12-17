@@ -33,8 +33,7 @@
           <v-row>
             <v-btn
               @click="saveProject"
-              class="project mx-2"
-              dark
+              class="mx-2"
               depressed
               fab
               small

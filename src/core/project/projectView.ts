@@ -115,7 +115,7 @@ export class ProjectView extends Config {
   }
 
   /**
-   * Initialize project view
+   * Initialize project view.
    */
   async init(): Promise<any> {
     this.consoleLog('Initialize project: ' + this._state.projectId.slice(0, 6));
@@ -141,6 +141,8 @@ export class ProjectView extends Config {
           ? this._state.activityGraph
           : 'abstract';
 
+        this.update();
+
         // run simulation if allowed.
         if (
           this.config.simulateAfterLoad &&
@@ -152,6 +154,14 @@ export class ProjectView extends Config {
         }
       }
     });
+  }
+
+  /**
+   * Update project view.
+   */
+  update(): void {
+    this._state.project.network.networkChanges();
+    this._state.project.activityGraph.update();
   }
 
   /**

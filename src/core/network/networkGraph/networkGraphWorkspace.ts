@@ -145,6 +145,7 @@ export class NetworkGraphWorkspace extends Config {
   update(): void {
     this.updateState();
     this._grid.update();
+    this._nodeAddPanel.update();
   }
 
   /**
