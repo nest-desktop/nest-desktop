@@ -9,7 +9,7 @@
         label
         outlined
         small
-        v-text="state.code.hash.slice(0, 6)"
+        v-text="state.code.shortHash"
       />
     </span>
     <v-card flat tile>

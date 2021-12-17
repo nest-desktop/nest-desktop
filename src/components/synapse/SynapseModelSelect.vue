@@ -19,7 +19,7 @@
             outlined
             small
             v-if="state.synapse.connection.network.project.app.config.devMode"
-            v-text="state.synapse.connection.hash.slice(0, 6)"
+            v-text="state.synapse.connection.shortHash"
           />
         </v-btn>
       </template>
