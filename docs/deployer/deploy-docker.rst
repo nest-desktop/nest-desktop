@@ -8,11 +8,13 @@ Deploy with Docker Compose
 
 |
 
-Docker is a virtualization software packaging applications and its dependencies in a virtual container that can run on any Linux server.
+Docker is a virtualization software packaging applications and its dependencies in a virtual container
+that can run on any Linux server.
 It is available for a variety of the operating systems, e.g. Linux, Mac and Windows.
 For more information follow the link `here <https://www.docker.com/resources/what-container>`__.
 
-NEST Desktop and NEST Simulator are prepared in different containers, but you can use docker-compose to start multiple containers, e.g. NEST Desktop, NEST Simulator.
+NEST Desktop and NEST Simulator are prepared in different containers,
+but you can use docker-compose to start multiple containers, e.g. NEST Desktop, NEST Simulator.
 Docker Compose needs the configuration file (``docker-compose.yml``).
 
 Here, the guide shows you how to build containers with ``docker-compose``.
@@ -65,7 +67,8 @@ Here, you can find the details of the configuration file.
 +----------------+------------------------------------+
 
 
-Alternatively, you can clone the source code so that you can change the Dockerfile and build custom docker images on your  machine.
+Alternatively, you can clone the source code so that you can change the Dockerfile
+and build custom docker images on your machine.
 For more information, visit the page https://github.com/nest-desktop/nest-desktop-docker.
 
 
@@ -100,7 +103,8 @@ List containers.
 
   docker-compose ps
 
-If there are no services (``nest-desktop`` and ``nest-server``) in the displayed list, it means that no containers can be started.
+If there are no services (``nest-desktop`` and ``nest-server``) in the displayed list,
+it means that no containers can be started.
 You can attach a container for services without starting it using ``--no-start``.
 
 .. code-block:: bash

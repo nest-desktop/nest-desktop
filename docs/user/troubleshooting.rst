@@ -29,7 +29,8 @@ It has two possible reasons:
 **NEST error**
 
   NEST Simulator produces a value error, e.g. ``The value cannot be negative.``.
-  Please have a look at the official `NEST documentation <https://nest-simulator.readthedocs.io/en/latest/>`__ to obtain the correct syntax for the commads.
+  Please have a look at the official `NEST documentation <https://nest-simulator.readthedocs.io/en/latest/>`__
+  to obtain the correct syntax for the commands.
 
 |
 |
@@ -99,27 +100,36 @@ How can I empty a network?
   In the network graph you will find top right a trash button that empties the network.
 
 How can I create nodes?
-  In the network graph you can click with the right mouse button, then a selector panel appears to select the element type of the new node.
+  In the network graph you can click with the right mouse button,
+  then a selector panel appears to select the element type of the new node.
 
 How can I connect nodes?
-  In the network graph you can click on the connector of a source node, then move the mouse towards the target node and click on the target node.
+  In the network graph you can click on the connector of a source node,
+  then move the mouse towards the target node and click on the target node.
 
 How can I connect a node with multiple nodes?
   Hold down the :guilabel:`ALT` key when clicking on the target nodes.
 
 How can I (un)select a node / a connection?
-  When a node or connection is selected you can press :guilabel:`ESC` to unselect it or in network graph you can click on another node or connection to select it (and to remove the selection of the former one).
-  Click on the background area of the network graph or on the selected entry in the network controller to unselect a node or connection.
-  An other method to (un)select is to click on the node label or the connection toolbar in the network controller on the right side again.
+  When a node or connection is selected you can press :guilabel:`ESC` to unselect it
+  or in network graph you can click on another node
+  or connection to select it (and to remove the selection of the former one).
+  Click on the background area of the network graph
+  or on the selected entry in the network controller to unselect a node or connection.
+  An other method to (un)select is to click on the node label
+  or the connection toolbar in the network controller on the right side again.
 
 How can I colorize nodes?
-  You will find the method to color in the context menu of the node by clicking with the right mouse button on the node shape in the network graph or the node toolbar in the controller.
+  You will find the method to color in the context menu of the node
+  by clicking with the right mouse button on the node shape in the network graph or the node toolbar in the controller.
 
 How can I change the color cycle of nodes?
   In the network settings you will find the way to change the color cycle.
 
 How can I delete node / connection?
-  You will find this method in the context menu of the node or connection by clicking with the right mouse button on the element graph in the network graph or on the colored toolbar in the network controller.
+  You will find this method in the context menu of the node or connection
+  by clicking with the right mouse button on the element graph in the network graph
+  or on the colored toolbar in the network controller.
 
 How can I modify parameters?
   You will find a list of parameters in the network controller.
@@ -147,7 +157,8 @@ How can I generate grid/free positions?
   Modifying a value will generate positions, at the end of the panel you will find a button to generate positions.
 
 How can I generate an array?
-  In the context menu of the array parameters (e.g. the spike times of a spike generator) you will find a method to generate an array.
+  In the context menu of the array parameters (e.g. the spike times of a spike generator)
+  you will find a method to generate an array.
 
 |
 
@@ -160,14 +171,17 @@ How can I stop a simulation?
   Unfortunately, the option to stop simulation is not implemented.
 
 How can I activate "simulation after change"?
-  In the context menu of the :guilabel:`SIMULATE` button (by clicking it with the right mouse right button) you will find an option to activate :guilabel:`simulation after change`.
+  In the context menu of the :guilabel:`SIMULATE` button (by clicking it with the right mouse right button)
+  you will find an option to activate :guilabel:`simulation after change`.
 
 How can I activate "simulation after load"?
-  In the context menu of the :guilabel:`SIMULATE` button (by clicking it with the right mouse button) you will find an option to activate :guilabel:`simulation after load`.
+  In the context menu of the :guilabel:`SIMULATE` button (by clicking it with the right mouse button)
+  you will find an option to activate :guilabel:`simulation after load`.
 
 How can I activate "simulation after checkout"?
   When you go to another network version of the history, it automatically starts the simulation.
-  In the context menu of the :guilabel:`SIMULATE` button (by clicking it with the right mouse button) you will find an option to activate :guilabel:`simulation after checkout`.
+  In the context menu of the :guilabel:`SIMULATE` button (by clicking it with the right mouse button)
+  you will find an option to activate :guilabel:`simulation after checkout`.
 
 Where can I find the kernel controller of the simulation?
   The kernel controller can be shown by clicking on the engine icon on the right side.
