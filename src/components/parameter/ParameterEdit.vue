@@ -147,7 +147,7 @@
       </v-card>
     </v-menu>
 
-    <v-card @contextmenu="e => showMenu(e)" color="white" flat light tile>
+    <v-card @contextmenu="e => showMenu(e)" flat tile>
       <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
           <template v-if="state.expertMode">
@@ -247,6 +247,7 @@
                 :min="state.options.min || 0"
                 :persistent-hint="state.message.length > 0"
                 :rules="rules"
+                :readonly="state.options.readonly || false"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
                 :value="state.value"
@@ -269,7 +270,16 @@
                     <v-divider />
                     <v-row class="mx-0 py-1">
                       <v-col class="text-center" cols="2">
-                        <v-icon large right v-text="'mdi-alert-outline'" />
+                        <v-icon
+                          :small="state.options.iconSize === 'small'"
+                          :large="state.options.iconSize === 'large'"
+                          right
+                          v-text="
+                            state.options.rules[0].includes('info')
+                              ? 'mdi-information-outline'
+                              : 'mdi-alert-outline'
+                          "
+                        />
                       </v-col>
                       <v-col cols="10">
                         <div v-text="state.message" />
@@ -280,7 +290,10 @@
                 </template>
                 <template #prepend>
                   <v-btn
-                    :disabled="state.value <= state.options.min && false"
+                    :disabled="
+                      (state.value <= state.options.min && false) ||
+                      state.options.readonly
+                    "
                     @click="decrement"
                     icon
                     small
@@ -289,12 +302,16 @@
                       :color="color"
                       class="slider-icon"
                       v-text="'mdi-minus'"
+                      v-show="!state.options.readonly"
                     />
                   </v-btn>
                 </template>
                 <template #append>
                   <v-btn
-                    :disabled="state.value >= state.options.max && false"
+                    :disabled="
+                      (state.value >= state.options.max && false) ||
+                      state.options.readonly
+                    "
                     @click="increment"
                     icon
                     small
@@ -303,9 +320,11 @@
                       :color="color"
                       class="slider-icon"
                       v-text="'mdi-plus'"
+                      v-show="!state.options.readonly"
                     />
                   </v-btn>
                   <v-text-field
+                    :readonly="state.options.readonly"
                     :step="state.options.step || 1"
                     :value="state.value"
                     @blur="e => paramChange(e.target.value)"

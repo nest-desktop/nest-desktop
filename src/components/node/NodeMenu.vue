@@ -8,10 +8,9 @@
       transition="slide-y-transition"
     >
       <v-card
-        :color="state.node.view.color"
         tile
         flat
-        style="background-color: white; min-width: 300px"
+        style="min-width: 300px"
       >
         <v-card-title class="pa-0">
           <v-row no-gutters>

@@ -132,6 +132,14 @@ export class Project {
     return this._simulation;
   }
 
+  /**
+   * Returns the first six digits of the project ID.
+   * @returns 6-digit hash value
+   */
+  get shortId(): string {
+    return this._id ? this._id.slice(0, 6) : '';
+  }
+
   get state(): UnwrapRef<any> {
     return this._state;
   }
@@ -284,7 +292,7 @@ export class Project {
    * Add network to the history list.
    */
   commitNetwork(network: Network): void {
-    this.consoleLog('Commit network of ' + network.project.name);
+    this.consoleLog('Commit network of ' + network.project.shortId);
 
     // Remove networks after the current.
     this._networkRevisions = this._networkRevisions.slice(
@@ -309,7 +317,10 @@ export class Project {
         : {};
 
     let currentNetwork: any;
-    if (lastNetwork.codeHash === this._code.hash) {
+    if (
+      lastNetwork.codeHash != null &&
+      lastNetwork.codeHash === this._code.hash
+    ) {
       currentNetwork = this._networkRevisions.pop();
 
       // Add activity to recorder nodes
@@ -490,8 +501,16 @@ export class Project {
         return response;
       })
       .catch((error: any) => {
-        this.openToast(error.response.data, 'error');
-        return error;
+        if (error.response) {
+          // Request made and server responded.
+          this.openToast(error.response.data, 'error');
+        } else if (error.request) {
+          // The request was made but no response was received.
+          this.openToast('Failed to find NEST Simulator.', 'error');
+        } else {
+          // Something happened in setting up the request that triggered an Error.
+          this.openToast(error.message, 'error');
+        }
       })
       .finally(() => {
         this._simulation.running = false;
@@ -626,7 +645,7 @@ export class Project {
   getSpikeActivitiesInsite(nodePositions: any): void {
     this.consoleLog('Get spike activities from insite');
     this._app.backends.insiteAccess
-      .get('nest/spikedetectors/')
+      .get('nest/spikedetectors')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
           const activity: any = {

@@ -22,7 +22,7 @@
             outlined
             small
             v-if="state.node.network.project.app.config.devMode"
-            v-text="state.node.hash.slice(0, 6)"
+            v-text="state.node.shortHash"
           />
         </v-btn>
       </template>

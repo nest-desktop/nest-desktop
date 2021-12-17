@@ -4,6 +4,7 @@ import { Activity } from '../activity/activity';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
+import { consoleLog } from '../common/logger';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
@@ -193,6 +194,14 @@ export class Node extends Config {
     this.nodeChanges();
   }
 
+  /**
+   * Returns the first six digits of the SHA-1 node hash.
+   * @returns 6-digit hash value
+   */
+  get shortHash(): string {
+    return this._hash ? this._hash.slice(0, 6) : '';
+  }
+
   get sources(): Node[] {
     const nodes: Node[] = this._network.connections
       .filter((connection: Connection) => connection.targetIdx === this._idx)
@@ -217,6 +226,10 @@ export class Node extends Config {
 
   get view(): NodeView {
     return this._view;
+  }
+
+  consoleLog(text: string): void {
+    consoleLog(this, text, 6);
   }
 
   /**

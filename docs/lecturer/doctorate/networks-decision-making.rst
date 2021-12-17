@@ -15,7 +15,7 @@ In the basal ganglia, for example, decisions are made whether a planned action, 
 
 To explore decision making with computer simulations, we recommend that you start with the network models that were prepared for the course.
 In the navigation sidebar on the left, click with the right mouse button on the projects icon (contains a brain symbol).
-Then choose the option “Upload projects" (icon: arrow pointing upwards) from the dropdown menu (three vertical dots) and upload the file provided in the repository (tba).
+Then choose the option "Import projects" (icon: arrow pointing upwards) from the dropdown menu (three vertical dots) and import the file provided in the repository (tba).
 This is, by the way, a general method with which you can share models with others, including all settings and parameters.
 
 

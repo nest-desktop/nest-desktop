@@ -144,14 +144,36 @@ Simulate neuronal networks
 You can click on the :guilabel:`Simulate` button to start the simulation of your network.
 In the code editor you can have an insight into the generated script code (see below for further information).
 
-|
+
+
+**Kernel settings**
+
+.. image:: ../_static/img/screenshots/kernel-settings.png
+  :width: 360px
+  :align: right
+
+The simulation parameters can be adjusted in the right sidebar.
+They are contained in the NEST Server code (more information below), so they will be passed to the NEST Server whenever a simulation is started.
+In the Kernel settings, the slider 'local number of threads' allows to set the number of processes used by the NEST Server.
+Please be aware that the shown number of threads does not match the number of processors used by the NEST Server machine.
+Therefore, selecting a number that is too large could lead to freezes on the NEST Server machine.
+
+It is possible to select the simulation resolution.
+Here, you should be aware of the created load on the NEST Server as well: small values for the resolution size create many calculations and data points.
+Therefore, selecting small values for the simulation resolution can lead to freezes and lags, so please be patient when you choose a small number. :)
+
+The seed of the random number generator can also be chosen.
+It is possible to choose a randomized seed.
+
+The simulation time can be set as well (in Milliseconds).
+
+
+
+**Code editor**
 
 .. image:: ../_static/img/screenshots/code-editor.png
   :width: 360px
   :align: right
-
-
-**Code editor**
 
 NEST Desktop generates textual code from the constructed network.
 The generated code can be executed in any Python interpreter.
@@ -234,8 +256,8 @@ It is useful to give project a proper name so that you can recognize your projec
 |
 
 Below the search field it shows a list of the projects.
-Clicking with right mouse button on a project item shows a menu with options to reload, duplicate, download or delete the project.
-In the projects menu, you can find methods to reload, download, upload, delete or reset projects.
+Clicking with right mouse button on a project item shows a menu with options to reload, duplicate, export or delete a project.
+In the projects menu, you can find methods to reload, export, import, delete or reset single or multiple projects.
 
 .. note::
   Unless you click on the save button, the project is not stored in database and is lost when you reload the page!

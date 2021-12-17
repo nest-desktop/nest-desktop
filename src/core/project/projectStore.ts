@@ -188,20 +188,10 @@ export class ProjectStore {
   }
 
   /**
-   * Add project to list.
-   */
-  addProjectTemporary(data: any): Project {
-    this.consoleLog('Add temporary project: ' + data.name);
-    const project: Project = new Project(this._app, data);
-    this._state.projects.unshift(project);
-    return project;
-  }
-
-  /**
    * Initialize project or project revision from the list.
    */
   initProject(id: string = '', rev: string = ''): Promise<any> {
-    this.consoleLog(`Initialize project: id=${id}, rev=${rev}`);
+    this.consoleLog(`Initialize project: id=${id.slice(0, 6)}, rev=${rev}`);
     return new Promise<any>(resolve => {
       try {
         if (id && rev) {
@@ -213,12 +203,12 @@ export class ProjectStore {
             (project: Project) => project.id === id
           );
         } else {
-          this.createProject();
+          this.createNewProject();
         }
         resolve(true);
       } catch {
         this.consoleLog('Error in project initialization');
-        this.createProject();
+        this.createNewProject();
         resolve(true);
       }
     });
@@ -237,9 +227,9 @@ export class ProjectStore {
   /**
    * Create a new project and add it to the list but not to the database.
    */
-  createProject(): void {
+  createNewProject(data: any = {}): void {
     this.consoleLog('Create new project');
-    this.project = new Project(this._app);
+    this.project = new Project(this._app, data);
     this.project.init();
     this.addToList(this.project);
   }

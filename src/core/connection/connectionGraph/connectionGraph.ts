@@ -84,7 +84,7 @@ export class ConnectionGraph {
       .append('g')
       .attr('class', 'connection')
       .attr('idx', (c: Connection) => c.idx)
-      .attr('hash', (c: Connection) => c.hash.slice(0, 6))
+      .attr('hash', (c: Connection) => c.shortHash)
       .style('opacity', 0)
       .call(
         d3

@@ -76,7 +76,7 @@
         </defs>
       </g>
 
-      <rect id="workspaceHandler" fill="white" />
+      <rect id="workspaceHandler" fill="#ffffff" />
       <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">
@@ -154,6 +154,7 @@ export default Vue.extend({
   },
   props: {
     networkHash: String,
+    projectId: String,
   },
   setup(props) {
     const projectView = core.app.project.view;
@@ -304,7 +305,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.networkHash,
+      () => [props.networkHash, props.projectId],
       () => update()
     );
 

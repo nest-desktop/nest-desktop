@@ -99,20 +99,23 @@
       </v-card-text>
     </v-card>
 
-    <!-- <v-card flat tile>
+    <v-card flat tile>
       <v-card-text class="pa-0">
         <ParameterEdit
           :options="{
+            iconSize: 'small',
             input: 'valueSlider',
-            min: 1,
-            max: state.graph.frames.length - 1,
             label: 'Current time',
+            max: state.graph.frames.length - 1,
+            min: 1,
+            readonly: state.graph.config.frames.speed !== 0,
+            rules: [['true', 'Please pause to select a time point!', 'info']],
             unit: 'ms',
           }"
           :value.sync="state.graph.frameIdx"
         />
       </v-card-text>
-    </v-card> -->
+    </v-card>
 
     <v-card flat tile>
       <v-subheader v-text="'Frames'" />
