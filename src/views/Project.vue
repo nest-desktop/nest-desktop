@@ -368,7 +368,7 @@ export default Vue.extend({
       // console.log('Load project: ' + id);
 
       if (root.$route.query.from) {
-        // http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
+        // URL contains a from-query, like in http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
         const url: string = root.$route.query.from as string;
         axios.get(url).then((response: any) => {
           if (Array.isArray(response.data)) {
