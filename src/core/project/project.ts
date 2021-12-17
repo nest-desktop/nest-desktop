@@ -494,8 +494,16 @@ export class Project {
         return response;
       })
       .catch((error: any) => {
-        this.openToast(error.response.data, 'error');
-        return error;
+        if (error.response) {
+          // Request made and server responded.
+          this.openToast(error.response.data, 'error');
+        } else if (error.request) {
+          // The request was made but no response was received.
+          this.openToast('Failed to find NEST Simulator.', 'error');
+        } else {
+          // Something happened in setting up the request that triggered an Error.
+          this.openToast(error.message, 'error');
+        }
       })
       .finally(() => {
         this._simulation.running = false;
