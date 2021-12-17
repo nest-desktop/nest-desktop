@@ -12,7 +12,6 @@
                 block
                 color="primary"
                 depressed
-                flat
                 height="40"
                 tile
               >
