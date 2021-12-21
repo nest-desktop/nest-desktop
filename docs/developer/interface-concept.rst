@@ -5,7 +5,8 @@ Concept of the interface
 
 NEST Desktop contains three columns with clear function.
 The left column shows the navigation to route pages.
-The center column renders the main content of the page, whereas the right column displays the controller content for the modification.
+The center column renders the main content of the page,
+whereas the right column displays the controller content for the modification.
 
 **Pages**
 

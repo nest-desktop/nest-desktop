@@ -1,8 +1,8 @@
 User documentation
 ==================
 
-We use `Sphinx <https://www.sphinx-doc.org/en/master/>`__ to generate the documentation and `Read the Docs <https://readthedocs.org/>`__  to publish it.
-Sphinx uses reStructuredText.
+We use reStructuredText for `Sphinx <https://www.sphinx-doc.org/en/master/>`__ to generate the documentation locally
+and online on `Read the Docs <https://readthedocs.org/>`__.
 To learn more about the syntax, check out this quick reference.
 
 Requirements
@@ -16,7 +16,14 @@ To install Sphinx and the Read the Docs theme via ``pip``:
 
   python3 -m pip install sphinx sphinx_rtd_theme
 
-**Development: Render HTML offline**
+
+**Development: Build HTML locally**
+
+Build a singularity image:
+
+.. code-block:: bash
+
+  singularity build nest-desktop-prod.sif singularity/nest-desktop-prod.def
 
 Build the documentation which your created with Sphinx in the ``docs`` folder offline:
 
@@ -24,8 +31,18 @@ Build the documentation which your created with Sphinx in the ``docs`` folder of
 
   rm -r _build/; make html
 
+Start the python server for local documentation.
+
+.. code-block:: bash
+
+python3 -m http.server 8002
+
+Then open the browser with `http://localhost:8002`.
+
 
 **Publication: Push to ReadTheDocs**
 
-The documentation files for the main branch are automatically rebuilt (and updated) each time a push is made to the repository.
+The documentation files for the dev branch are automatically rebuilt (and updated)
+each time a push is made to the repository.
 The docs for other versions depend on the GitHub tags.
+The latest tags refers to the latest release version.
