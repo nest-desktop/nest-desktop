@@ -1,14 +1,15 @@
 # NEST Desktop
 
 <p>
-  <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/v3.0/docs/_static/img/screenshots/start-page.png" />
+  <!-- <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/latest/docs/_static/img/screenshots/start-page.png" /> -->
+  <img src="docs/_static/img/screenshots/start-page.png" />
 </p>
 
 ###### General
 
 [![docs](https://img.shields.io/readthedocs/nest-desktop)](https://nest-desktop.readthedocs.io)
 [![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
-[![DOI](https://img.shields.io/badge/DOI-10.1101%2F2021.06.15.444791-blue)](https://doi.org/10.1101/2021.06.15.444791)
+[![DOI](https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue)](https://doi.org/10.1523/eneuro.0274-21.2021)
 
 ###### DockerHub
 
@@ -54,10 +55,10 @@ For more information, please see the [User Documentation Page](https://nest-desk
 ### Cite NEST Desktop
 
 In order to cite NEST Desktop in general, please use the DOI [10.5281/zenodo.5037050](https://doi.org/10.5281/zenodo.5037050) for all versions (always redirecting to the latest version).
-If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.0.
-You can use the reference to the preprint for NEST Desktop (DOI: [10.1101/2021.06.15.444791](https://doi.org/10.1101/2021.06.15.444791)) as well, which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1), if that is more appropriate in the context of your reference.
+If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.
+You can use the reference to the paper for NEST Desktop (DOI: `10.1523/ENEURO.0274-21.2021 <https://doi.org/10.1523/ENEURO.0274-21.2021>`__) mentioned above as well, if that is more appropriate in the context of your reference.
 
-You will also find the exports for the citation managers on Zenodo and bioRxiv.
+You will also find the exports for the citation managers on Zenodo and eNeuro.
 
 ### License
 
