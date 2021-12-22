@@ -7,7 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card :color="state.node.view.color" tile flat style="min-width: 300px">
+      <v-card :color="state.node.view.color" flat style="min-width: 300px" tile>
         <v-card-title class="pa-0">
           <v-row no-gutters>
             <v-col cols="12">

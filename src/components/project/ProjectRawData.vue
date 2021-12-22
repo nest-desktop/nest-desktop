@@ -27,8 +27,8 @@ export default Vue.extend({
     project: Project,
   },
   setup(props, { root }) {
-    const projectRawData = ref(null);
     const codeMirror = ref(null);
+    const projectRawData = ref(null);
 
     const state = reactive({
       data: '',

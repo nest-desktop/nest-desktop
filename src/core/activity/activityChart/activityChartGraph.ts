@@ -159,7 +159,7 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update layout color of the chart graph.
+   * Update the layout color of the chart graph.
    */
   updateLayoutColor(): void {
     const darkMode: boolean = this._project.app.darkMode;
@@ -169,7 +169,7 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update layout of the chart graph from each panel.
+   * Update the layout of the chart graph from each panel.
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
     this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
