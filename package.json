@@ -64,7 +64,7 @@
     "@types/dat.gui": "^0.7.6",
     "@types/mathjs": "^9.4.2",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.0.1",
+    "@types/node": "^17.0.1",
     "@types/object-hash": "^2.1.1",
     "@types/plotly.js": "^1.54.8",
     "@types/pouchdb": "^6.4.0",
