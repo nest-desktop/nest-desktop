@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'stats.js';
-import { GUI } from 'dat.gui';
 
 import { Activity } from '../activity';
 import { ActivityAnimationGraph } from './activityAnimationGraph';
@@ -352,88 +351,5 @@ export class ActivityAnimationScene {
    */
   enableCameraControl(): void {
     this.graph.config.camera.control = false;
-  }
-
-  // TODO: @security Permitting direct access to the DOM can make your application more vulnerable to XSS attacks.
-  // Carefully review any use of ElementRef in your code.
-  // For more detail, see the Security Guide, https://angular.io/guide/security
-  addGUI(ref: any) {
-    // Init gui
-    const gui = new GUI({ autoPlace: false, closed: false, closeOnTop: true });
-    ref.nativeElement.appendChild(gui.domElement);
-    const _this = this;
-
-    // var sceneFolder = gui.addFolder('Scene');
-    // sceneFolder.add(this.config.scene.fog, 'density', 0, 1, 0.001);
-    // sceneFolder.add(this.config.scene.fog, 'near', 0, 100, 0.1);
-    // sceneFolder.add(this.config.scene.fog, 'far', 0, 100, 0.1);
-
-    const cameraProps = {
-      get control() {
-        return _this.config.camera.control;
-      },
-      set control(v) {
-        _this.config.camera.control = v;
-      },
-      get 'rotation speed'() {
-        return _this.config.camera.rotation.speed;
-      },
-      set 'rotation speed'(v) {
-        _this.config.camera.rotation.speed = v;
-      },
-    };
-
-    const cameraFolder = gui.addFolder('Camera');
-    cameraFolder.add(cameraProps, 'control');
-    cameraFolder.add(this.config.camera, 'distance', 10, 20, 1);
-    cameraFolder.add(cameraProps, 'rotation speed', 0, 3, 0.01);
-    cameraFolder.add(this.config.camera.position, 'x', 0, 20, 0.1);
-    cameraFolder.add(this.config.camera.position, 'y', 0, 20, 0.1);
-    cameraFolder.add(this.config.camera.position, 'z', 0, 20, 0.1);
-
-    // const layers: any = {
-    //   'toggle grid': () => this._camera.layers.toggle(0),
-    //   'enable all': () => this._camera.layers.enableAll(),
-    //   'disable all': () => this._camera.layers.disableAll()
-    // };
-    // this._activityLayers.children.forEach((d, i) => {
-    //   layers['toggle layer ' + (i + 1)] = () => this._camera.layers.toggle(i + 1);
-    // });
-    //
-    // const layerFolder = gui.addFolder('Layer');
-    //
-    // const visLayerFolder = layerFolder.addFolder('Show');
-    // this.data.map((d, i) => { visLayerFolder.add(layers, 'toggle layer ' + (i + 1)); });
-    // visLayerFolder.add(layers, 'enable all');
-    // visLayerFolder.add(layers, 'disable all');
-    // //
-    // const layerOffsetFolder = layerFolder.addFolder('Offset')
-    // layerOffsetFolder.add(this.config.layer.offset, 'x', 0, 1.1, 0.1);
-    // layerOffsetFolder.add(this.config.layer.offset, 'y', 0, 1.1, 0.1);
-    // layerOffsetFolder.add(this.config.layer.offset, 'z', 0, 1.1, 0.1);
-    //
-    // const colormapFolder = layerFolder.addFolder('Colormap');
-    // this.data.map((d, i) => { colormapFolder.add(this.config.layer.colormap, 'layer ' + (i + 1)); })
-
-    // const dotsFolder = gui.addFolder('Dot marker');
-    // dotsFolder.add(this.config.dots, 'size', 1, 20);
-    // dotsFolder.add(this.config.dots, 'opacity');
-
-    // const clippingProps: any = {
-    // get 'enabled'() { return _this._renderer.localClippingEnabled; },
-    // set 'enabled'(v) { _this._renderer.localClippingEnabled = v; },
-    //   get 'x plane'() { return _this.clippingPlanes[0].constant; },
-    //   set 'x plane'(v) { _this.clippingPlanes[0].constant = v; },
-    //   get 'y plane'() { return _this.clippingPlanes[1].constant; },
-    //   set 'y plane'(v) { _this.clippingPlanes[1].constant = v; },
-    //   get 'z plane'() { return _this.clippingPlanes[2].constant; },
-    //   set 'z plane'(v) { _this.clippingPlanes[2].constant = v; },
-    // };
-
-    // const clippingFolder = gui.addFolder('Clipping');
-    // clippingFolder.add(clippingProps, 'Enabled');
-    // clippingFolder.add(clippingProps, 'x plane', -.5, .5, 0.01);
-    // clippingFolder.add(clippingProps, 'y plane', -.5, .5, 0.01);
-    // clippingFolder.add(clippingProps, 'z plane', -.5, .5, 0.01);
   }
 }
