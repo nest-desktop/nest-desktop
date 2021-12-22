@@ -118,7 +118,7 @@ export class ProjectView extends Config {
    * Initialize project view
    */
   async init(): Promise<any> {
-    if (this._state.projectId != undefined) {
+    if (this._state.projectId != null) {
       this.consoleLog(
         'Initialize project: ' + this._state.projectId.slice(0, 6)
       );
