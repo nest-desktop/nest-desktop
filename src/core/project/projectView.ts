@@ -118,7 +118,11 @@ export class ProjectView extends Config {
    * Initialize project view.
    */
   async init(): Promise<any> {
-    this.consoleLog('Initialize project: ' + this._state.projectId.slice(0, 6));
+    if (this._state.projectId != null) {
+      this.consoleLog(
+        'Initialize project: ' + this._state.projectId.slice(0, 6)
+      );
+    }
 
     if (this._app.backends.insiteAccess.state.version.insite == null) {
       this.updateConfig({ simulateWithInsite: false });
