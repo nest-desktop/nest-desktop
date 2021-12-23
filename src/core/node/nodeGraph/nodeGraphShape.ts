@@ -111,6 +111,10 @@ export class NodeGraphShape {
     this._networkGraph = networkGraph;
   }
 
+  get darkMode(): boolean {
+    return this._networkGraph.network ? this._networkGraph.network.project.app.darkMode : false;
+  }
+
   get nodeRadius(): number {
     return this._networkGraph.config.nodeRadius;
   }
@@ -206,9 +210,9 @@ export class NodeGraphShape {
       elem
         .select('.shape')
         .style('stroke', node.view.color)
+        .style('fill', this.darkMode ? '#121212' : 'white')
         .style(
           'stroke-width',
-
           (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
         .style('stroke-dasharray', node.state.isSelected() ? '7.85' : '');
@@ -222,6 +226,7 @@ export class NodeGraphShape {
             ? '0.4em'
             : '0.7em'
         )
+        .style('fill', this.darkMode ? 'white' : '#121212')
         .text(node.view.label);
     });
   }

@@ -2,47 +2,46 @@
   <div style="height: 100vh; overflow-y: auto">
     <v-main>
       <v-container>
-        <v-card flat tile>
+        <v-card class="my-1" flat tile>
           <v-card-title v-text="'App'" />
           <v-card-text>
             <v-checkbox
               @change="e => updateAppConfig({ autoUpdate: e || false })"
+              color="accent"
               label="Auto update"
               v-model="state.appConfig.autoUpdate"
             />
             <v-checkbox
               @change="e => updateAppConfig({ devMode: e || false })"
-              label="Development mode"
+              color="accent"
+              label="Development mode *"
               v-model="state.appConfig.devMode"
             />
             <v-checkbox
               @change="e => updateAppConfig({ pinNav: e || false })"
-              label="Pin navigation (Page reload required)"
+              color="accent"
+              label="Pin navigation *"
               v-model="state.appConfig.pinNav"
             />
             <v-checkbox
               @change="e => updateProjectViewConfig({ showHelp: e || false })"
+              color="accent"
               label="Show help"
               v-model="state.projectViewConfig.showHelp"
             />
             <v-checkbox
-              label="Colored toolbar"
               @change="
                 e => updateProjectViewConfig({ coloredToolbar: e || false })
               "
+              color="accent"
+              label="Colored toolbar"
               v-model="state.projectViewConfig.coloredToolbar"
             />
-            <v-switch
-              dense
-              inset
-              label="Vuetify Theme Dark"
-              v-model="$vuetify.theme.dark"
-              v-show="state.appConfig.devMode"
-            />
+            <span>* Page restart required</span>
           </v-card-text>
         </v-card>
 
-        <!-- <v-card flat tile>
+        <!-- <v-card class="my-1" flat tile>
           <v-card-title v-text="'Database'" />
           <v-card-text>
             <v-text-field
@@ -56,7 +55,7 @@
           </v-card-text>
         </v-card> -->
 
-        <v-card flat tile>
+        <v-card class="my-1" flat tile>
           <v-card-title v-text="'Backends'" />
           <v-card-text>
             <v-row>
@@ -70,7 +69,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card flat tile>
+        <v-card class="my-1" flat tile>
           <v-card-title v-text="'Model'" />
           <v-card-text>
             <v-card flat tile>
@@ -98,7 +97,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card flat tile>
+        <v-card class="my-1" flat tile>
           <v-card-title v-text="'Network'" />
           <v-card-text>
             <v-card flat tile>

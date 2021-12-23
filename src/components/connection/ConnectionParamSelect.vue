@@ -24,7 +24,7 @@
             </v-list-item-content>
 
             <v-list-item-action class="mx-0 my-1">
-              <v-checkbox :input-value="active" color="black" hide-details />
+              <v-checkbox :color="state.connection.source.view.color" :input-value="active" hide-details />
             </v-list-item-action>
           </template>
         </v-list-item>

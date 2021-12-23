@@ -38,6 +38,7 @@ export default Vue.extend({
 .nest.icon path.content {
   -inkscape-font-specification: 'Courier 10 Pitch Bold';
   fill-opacity: 1;
+  fill: white;
   font-family: 'Courier 10 Pitch';
   font-size: 74px;
   font-stretch: normal;
@@ -52,7 +53,6 @@ export default Vue.extend({
   text-anchor: start;
   word-spacing: 0px;
   writing-mode: lr-tb;
-  fill: white;
 }
 .nest.icon circle.content {
   fill-opacity: 1;

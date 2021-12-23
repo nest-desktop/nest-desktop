@@ -29,7 +29,7 @@
           <v-list-item-action v-if="item.input === 'checkbox'">
             <v-checkbox
               :input-value="state.projectConfig[item.value]"
-              color="black"
+              color="accent"
             />
           </v-list-item-action>
         </v-list-item>

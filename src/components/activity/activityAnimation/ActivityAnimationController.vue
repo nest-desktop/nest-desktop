@@ -201,6 +201,7 @@
         </v-row>
 
         <v-checkbox
+          color="accent"
           label="Reverse colormap"
           v-model="state.graph.config.colorMap.reverse"
         />

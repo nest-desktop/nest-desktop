@@ -4,6 +4,7 @@
       <v-tabs
         :show-arrows="false"
         align-with-title
+        color="secondary"
         icons-and-text
         style="flex: 0 1 auto; width: 278px"
         v-model="modelView.modeIdx"

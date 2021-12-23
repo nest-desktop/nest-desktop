@@ -175,6 +175,9 @@ export class NetworkState {
    * Calculate hash of this component.
    */
   updateHash(): void {
-    this._hash = sha1(this._network.toJSON());
+    this._hash = sha1({
+      network: this._network.toJSON(),
+      darkMode: this._network.project.app.darkMode,
+    });
   }
 }

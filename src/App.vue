@@ -35,7 +35,7 @@ export default Vue.extend({
   components: {
     Navigation,
   },
-  setup() {
+  setup(_, { root }) {
     // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
     const state = reactive({
       refreshing: false,
@@ -95,6 +95,7 @@ export default Vue.extend({
       document.addEventListener('swUpdated', updateAvailable, {
         once: true,
       });
+      core.app.initTheme(root.$vuetify.theme);
       core.app.init();
       core.app.updateConfigs(Vue.prototype.$config);
       keepConnectionToNESTSimulatorAlive();

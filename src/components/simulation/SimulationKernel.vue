@@ -113,6 +113,7 @@ export default Vue.extend({
         label: 'simulation resolution',
         ticks: [0.01, 0.1, 1, 10],
         unit: 'ms',
+        iconSize: 'large',
         rules: [
           [
             'value < 1',
@@ -136,6 +137,7 @@ export default Vue.extend({
         min: 0,
         unit: 'ms',
         value: 1000,
+        iconSize: 'large',
         rules: [
           [
             'value >= 2000',

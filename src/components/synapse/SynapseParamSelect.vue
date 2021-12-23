@@ -25,9 +25,9 @@
 
             <v-list-item-action class="mx-0 my-1">
               <v-checkbox
+                :color="state.synapse.connection.source.view.color"
                 :input-value="active"
                 class="shrink mr-2"
-                color="black"
                 hide-details
               />
             </v-list-item-action>

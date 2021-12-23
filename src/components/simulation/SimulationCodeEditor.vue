@@ -16,7 +16,8 @@
       <v-row class="full-height" no-gutters>
         <v-col>
           <codemirror
-            :options="options"
+            :key="$vuetify.theme.dark"
+            :options="state.options"
             :style="state.style"
             @ready="onCmReady"
             ref="codeMirror"
@@ -45,35 +46,35 @@ export default Vue.extend({
   props: {
     code: ProjectCode,
   },
-  setup(props) {
+  setup(props, { root }) {
     const simulationCodeEditor = ref(null);
     const codeMirror = ref(null);
 
     const state = reactive({
       code: props.code as ProjectCode,
+      options: {
+        autoCloseBrackets: true,
+        cursorBlinkRate: 700,
+        foldGutter: true,
+        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+        hintOptions: {
+          completeSingle: false,
+          hintWords: [],
+        },
+        lineNumbers: true,
+        lineWrapping: true,
+        matchBrackets: true,
+        mode: 'python',
+        styleActiveLine: true,
+        extraKeys: {
+          'Ctrl-Space': 'autocomplete',
+        },
+        theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
+      },
       style: {
         width: 300,
       },
     });
-
-    const options: any = {
-      autoCloseBrackets: true,
-      cursorBlinkRate: 700,
-      foldGutter: true,
-      gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      hintOptions: {
-        completeSingle: false,
-        hintWords: [],
-      },
-      lineNumbers: true,
-      lineWrapping: true,
-      matchBrackets: true,
-      mode: 'python',
-      styleActiveLine: true,
-      extraKeys: {
-        'Ctrl-Space': 'autocomplete',
-      },
-    };
 
     /**
      * Initialize hint (only for NEST commands!) after CodeMirror is ready.
@@ -96,12 +97,22 @@ export default Vue.extend({
     };
 
     /**
+     * Update theme for CodeMirror.
+     */
+    const updateTheme = () => {
+      state.options.theme = root.$vuetify.theme.dark
+        ? 'base16-dark'
+        : 'default';
+    };
+
+    /**
      * Resize CodeMirror.
      */
     const resizeCodeMirror = () => {
       const height = simulationCodeEditor.value.clientHeight;
       const width = simulationCodeEditor.value.clientWidth;
       codeMirror.value.cminstance.setSize(width, height);
+      updateTheme();
     };
 
     onMounted(() => {
@@ -119,7 +130,6 @@ export default Vue.extend({
     return {
       codeMirror,
       onCmReady,
-      options,
       simulationCodeEditor,
       state,
     };

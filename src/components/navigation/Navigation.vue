@@ -91,6 +91,15 @@
                   </v-tooltip>
                 </template>
 
+                <v-list-item v-if="appConfig.devMode">
+                  <v-checkbox
+                    off-icon="mdi-theme-light-dark"
+                    on-icon="mdi-theme-light-dark"
+                    dense
+                    v-model="app.darkMode"
+                  />
+                </v-list-item>
+
                 <v-list-item
                   @click="reset"
                   @contextmenu="e => showMenu(e, 'settings')"
@@ -99,7 +108,7 @@
                 >
                   <v-list-item-icon>
                     <v-list-item-group class="nav-item">
-                      <v-icon color="settings darken1" v-text="'mdi-cogs'" />
+                      <v-icon v-text="'mdi-cogs'" />
                       Settings
                     </v-list-item-group>
                   </v-list-item-icon>
@@ -127,10 +136,7 @@
                 <v-list-item @click="reset" title="About" to="/about">
                   <v-list-item-icon>
                     <v-list-item-group class="nav-item">
-                      <v-icon
-                        color="amber darken1"
-                        v-text="'mdi-information-variant'"
-                      />
+                      <v-icon v-text="'mdi-information-variant'" />
                       About
                     </v-list-item-group>
                   </v-list-item-icon>
@@ -302,14 +308,14 @@ export default {
     const routes: any[] = [
       {
         id: 'project',
-        color: 'project darken1',
+        color: 'project',
         contextmenu: (e: MouseEvent) => showMenu(e, 'project'),
         icon: '$network',
         title: 'Project',
       },
       {
         id: 'model',
-        color: 'model darken1',
+        color: 'model',
         contextmenu: (e: MouseEvent) => showMenu(e, 'model'),
         icon: '$nest',
         title: 'Model',
@@ -350,6 +356,7 @@ export default {
     };
 
     return {
+      app: core.app,
       appConfig: core.app.config,
       dialogState: core.app.state.dialog,
       reset,

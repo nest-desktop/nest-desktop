@@ -7,7 +7,11 @@
         <v-row>
           <v-col align="center">
             <v-img
-              :src="require('@/assets/img/logo/nest-desktop-logo.png')"
+              :src="
+                $vuetify.theme.dark
+                  ? require('@/assets/img/logo/nest-desktop-logo-white.svg')
+                  : require('@/assets/img/logo/nest-desktop-logo.svg')
+              "
               class="my-6"
               contain
               height="250"
@@ -110,7 +114,7 @@
                 <v-tooltip :open-delay="200" top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
-                      :color="reference.color"
+                      :color="$vuetify.theme.dark ? 'none' : reference.color"
                       :href="reference.url"
                       block
                       class="logo"
@@ -123,7 +127,12 @@
                       x-large
                     >
                       <v-img
-                        :src="require(`@/assets/img/logo/` + reference.iconSrc)"
+                        :src="
+                          require(`@/assets/img/logo/` +
+                            ($vuetify.theme.dark
+                              ? reference.iconSrcDark
+                              : reference.iconSrc))
+                        "
                         contain
                         height="32px"
                       />
@@ -170,26 +179,30 @@ export default Vue.extend({
   setup(props) {
     const references = [
       {
-        color: 'rgba(178, 245, 23, 0.05)',
+        color: 'rgba(178, 245, 23, 0.1)',
         iconSrc: 'ebrains-logo.svg',
+        iconSrcDark: 'ebrains-logo-white-text.svg',
         title: 'EBRAINS',
         url: 'https://www.ebrains.eu',
       },
       {
-        color: 'rgba(17,31,138,0.05)',
+        color: 'rgba(17,31,138,0.1)',
         iconSrc: 'eu-logo.png',
+        iconSrcDark: 'eu-logo-white-text.png',
         title: 'European Union',
         url: 'https://europa.eu/european-union/index_en',
       },
       {
-        color: 'rgba(16, 188, 220, 0.05)',
+        color: 'rgba(16, 188, 220, 0.1)',
         iconSrc: 'hbp-logo.png',
+        iconSrcDark: 'hbp-logo-white-text.png',
         title: 'Human Brain Project',
         url: 'https://www.humanbrainproject.eu',
       },
       {
-        color: 'rgba(255,102,51,0.05)',
+        color: 'rgba(255,102,51,0.1)',
         iconSrc: 'nest.svg',
+        iconSrcDark: 'nest.svg',
         title: 'NEST Simulator',
         url: 'https://www.nest-simulator.org',
       },

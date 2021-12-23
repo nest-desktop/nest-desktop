@@ -11,10 +11,16 @@ export class ActivityChartGraph {
 
   constructor(project: Project) {
     this._project = project;
+    const darkMode: boolean = this._project.app.darkMode;
     this._layout = {
+      font: {
+        color: darkMode ? 'white' : '#121212',
+      },
       margin: {
         t: 40,
       },
+      paper_bgcolor: darkMode ? '#121212' : 'white',
+      plot_bgcolor: darkMode ? '#121212' : 'white',
       title: {
         text: '',
         xref: 'paper',
@@ -122,24 +128,21 @@ export class ActivityChartGraph {
    * Reset layout of the chart graph.
    */
   resetLayout(): void {
-    this._layout = {
-      margin: this._layout.margin,
-      title: this._layout.title,
-    };
+    this._layout = JSON.parse(JSON.stringify(this._layout));
   }
 
   /**
    * Updates chart graph with activities.
    */
   update(): void {
-    // console.log('Update activity chart graph');
     this.updateVisiblePanelsLayout();
     this.resetLayout();
+    this.updateLayoutColor();
 
     this._data = [];
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       this.updateData(panel);
-      this.updateLayout(panel);
+      this.updateLayoutPanel(panel);
     });
   }
 
@@ -156,9 +159,19 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update layout of the chart graph
+   * Update the layout color of the chart graph.
    */
-  updateLayout(panel: ActivityChartPanel): void {
+  updateLayoutColor(): void {
+    const darkMode: boolean = this._project.app.darkMode;
+    this._layout.font.color = darkMode ? 'white' : '#121212';
+    this._layout.paper_bgcolor = darkMode ? '#121212' : 'white';
+    this._layout.plot_bgcolor = darkMode ? '#121212' : 'white';
+  }
+
+  /**
+   * Update the layout of the chart graph from each panel.
+   */
+  updateLayoutPanel(panel: ActivityChartPanel): void {
     this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
       panel.layout.yaxis;
     this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =

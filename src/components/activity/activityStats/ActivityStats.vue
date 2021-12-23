@@ -1,23 +1,25 @@
 <template>
   <div class="activityStats">
-    <v-card flat tile>
+    <v-card flat tile class="ma-1">
       <!-- <v-subheader v-text="'Activity statistics'" /> -->
 
       <v-expansion-panels
         v-model="projectView.state.project.state.activityStatsPanelId"
         accordion
-        class="pa-1"
         flat
       >
         <v-expansion-panel
           :disabled="!activity.hasEvents()"
           :key="index"
-          class="my-1"
           v-for="(activity, index) in projectView.state.project.activities"
         >
           <v-expansion-panel-header>
-            <v-sheet :color="activity.recorder.view.color" outlined>
-              <v-card class="pa-0 ml-1" flat outlined tile width="100%">
+            <v-sheet
+              :color="activity.recorder.view.color"
+              class="pl-1"
+              outlined
+            >
+              <v-card class="pa-0" flat outlined tile width="100%">
                 <v-btn
                   :color="activity.recorder.view.color"
                   :dark="projectView.config.coloredToolbar"

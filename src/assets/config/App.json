@@ -12,6 +12,7 @@
       "name": "project"
     }
   },
+  "darkMode": false,
   "devMode": false,
   "log": false,
   "models": [

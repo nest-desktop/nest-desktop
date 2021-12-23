@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-card>
+  <div class="NESTSimulatorConfig">
+    <v-card outlined>
       <v-card-subtitle v-text="'NEST Simulator'" />
       <v-card-text>
         <v-tooltip top open-delay="300">

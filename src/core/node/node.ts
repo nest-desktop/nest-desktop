@@ -383,6 +383,7 @@ export class Node extends Config {
     this._hash = sha1({
       color: this.view.color,
       idx: this.idx,
+      darkMode: this._network.project.app.darkMode,
     });
   }
 

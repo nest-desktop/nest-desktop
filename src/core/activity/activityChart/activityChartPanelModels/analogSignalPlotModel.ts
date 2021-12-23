@@ -224,7 +224,7 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
       legendgroup: record + '_avg' + activity.idx,
       showlegend: false,
       line: {
-        color: 'white',
+        color: activity.project.app.darkMode ? '#121212' : 'white',
         width: 4.5,
       },
       x,
