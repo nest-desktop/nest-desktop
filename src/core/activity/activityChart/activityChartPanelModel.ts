@@ -224,17 +224,17 @@ export abstract class ActivityChartPanelModel {
       });
 
     if (this._state.records.length > 0) {
-      if (this._state.events.length === 0) {
-        this._state.events = [...this._state.records];
-      } else {
-        this._state.events = this._state.events.map((event: any) =>
-          this._state.records.find(
-            (record: any) => record.value === event.value
-          )
-        );
-      }
+      this._state.events =
+        this._state.events.length === 0
+          ? [...this._state.records]
+          : this._state.events.map((event: any) => {
+              const rec = this._state.records.find(
+                (record: any) => record.value === event.value
+              );
+              rec.color = event.color;
+              return rec;
+            });
     }
-
   }
 
   /**
