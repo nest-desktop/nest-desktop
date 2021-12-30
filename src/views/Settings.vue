@@ -82,15 +82,16 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-chip
                       class="ma-1"
+                      label
                       outlined
                       small
-                      v-text="recordable.id"
                       v-bind="attrs"
                       v-on="on"
+                      v-text="recordable.id"
                     />
                   </template>
-                  {{ recordable.label }}
-                  <span v-if="recordable.unit"> ({{ recordable.unit }})</span>
+                  <span v-text="recordable.label" />
+                  <span v-if="recordable.unit" v-text="` (${recordable.unit})`" />
                 </v-tooltip>
               </span>
             </v-card>
@@ -172,11 +173,11 @@ export default Vue.extend({
     const projectView = core.app.project.view;
     const state = reactive({
       app: core.app,
+      appConfig: core.app.config,
+      colorSchemes: colorSchemes,
       model: new Config('Model'),
       network: new Config('Network'),
-      appConfig: core.app.config,
       projectViewConfig: projectView.config,
-      colorSchemes: colorSchemes,
     });
     /**
      * Update app configuration.

@@ -3,13 +3,13 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
     this.icon = 'mdi-chart-scatter-plot';
-    this.id = 'SpikeTimesRasterPlotModel';
+    this.id = 'spikeTimesRasterPlot';
     this.label = 'spike times';
     this.panel.layout.yaxis.height = 3;
-    this.init();
+    this.initActivities();
   }
 
   /**

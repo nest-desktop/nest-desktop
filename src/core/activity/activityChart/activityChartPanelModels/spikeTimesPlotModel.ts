@@ -2,22 +2,18 @@ import { ActivityChartPanelModel } from '../activityChartPanelModel';
 import { ActivityChartPanel } from '../activityChartPanel';
 
 export class SpikeTimesPlotModel extends ActivityChartPanelModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'SpikeTimesModel';
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'spikeTimesPlotModel';
     this.label = 'spike times';
     this.activityType = 'spike';
-    this.init();
+    this.initActivities();
   }
 
   /**
    * Initialize model for spike activities.
    */
-  override init(): void {
-    this.initState();
-
-    this.data = [];
+  override initActivities(): void {
     this.activities = this.panel.graph.project.spikeActivities;
-    this.state.records = this.activities.map(() => ['spike']);
   }
 }

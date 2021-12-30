@@ -142,6 +142,23 @@ export class NodeView {
       .map(param => param.id);
   }
 
+  recordLabel(recordId: string): string {
+    const recordables = this._node.recordables;
+    const recordable = recordables.find(
+      recordable => recordable.id == recordId
+    );
+    if (recordable == undefined) {
+      return recordId;
+    }
+    let label = `${recordable.label
+      .slice(0, 1)
+      .toUpperCase()}${recordable.label.slice(1)}`;
+    if (recordable.unit) {
+      label += ` (${recordable.unit})`;
+    }
+    return label;
+  }
+
   /**
    * Clean node.
    */

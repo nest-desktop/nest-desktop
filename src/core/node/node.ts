@@ -244,6 +244,14 @@ export class Node extends Config {
   }
 
   /**
+   * Update record from the state.
+   */
+  removeRecord(recordId: string): void {
+    this._records.splice(this._records.indexOf(recordId), 1);
+    this._records = [...this._records];
+  }
+
+  /**
    * Initialize activity for the recorder.
    */
   initActivity(): void {

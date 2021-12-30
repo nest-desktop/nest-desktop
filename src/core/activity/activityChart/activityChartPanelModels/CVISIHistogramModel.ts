@@ -3,8 +3,8 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class CVISIHistogramModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
     this.id = 'CVISIHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'CV of ISI';
@@ -20,7 +20,7 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
     ];
 
     this.state.barnorm = '';
-    this.init();
+    this.initActivities();
   }
 
   /**

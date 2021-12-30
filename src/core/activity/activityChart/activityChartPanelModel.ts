@@ -1,3 +1,5 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+
 import { Activity } from '../activity';
 import { ActivityChartPanel } from './activityChartPanel';
 
@@ -11,18 +13,23 @@ export abstract class ActivityChartPanelModel {
   private _label: string = '';
   private _panel: ActivityChartPanel; // parent
   private _params: any[] = [];
-  private _state = {
-    records: [],
-    time: {
-      end: 0,
-      start: 0,
-    },
-  };
+  private _state: UnwrapRef<any>;
 
-  constructor(panel: ActivityChartPanel) {
+  constructor(panel: ActivityChartPanel, model: any = {}) {
     this._id = 'activityChart';
     this._panel = panel;
-    this.init();
+    this._state = reactive({
+      events: [],
+      records: [],
+      time: {
+        end: 0,
+        start: 0,
+      },
+    });
+
+    if (model.events != null) {
+      this._state.events = model.events;
+    }
   }
 
   get activities(): Activity[] {
@@ -109,16 +116,7 @@ export abstract class ActivityChartPanelModel {
    * @remarks
    * This method will be overwritten in child classes.
    */
-  init(): void {
-    this.initState();
-  }
-
-  /**
-   * Initialize state for activity panel model.
-   */
-  initState(): void {
-    this.state.records = new Array(this.activities.length).fill([]);
-  }
+  abstract initActivities(): void;
 
   /**
    * Reset activity panel model.
@@ -134,13 +132,14 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    */
   update(): any {
-    this.updateState();
+    this.updateTime();
 
     this.data = [];
     this.activities.forEach((activity: Activity) => {
       this.updateData(activity);
     });
 
+    this.updateAnalogRecords();
     this.updateLayoutLabel();
   }
 
@@ -180,22 +179,92 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update state of the panel model.
+   * Update time of the panel model.
    *
    * @remarks
    * It needs activity data.
    */
-  updateState(): void {
+  updateTime(): void {
     // Update time
-    this.state.time.start = 0;
-    this.state.time.end = Math.max(
-      this.state.time.end,
+    this._state.time.start = 0;
+    this._state.time.end = Math.max(
+      this._state.time.end,
       this._panel.graph.currenttime + 1
     );
+  }
 
-    // Update records
-    this.state.records = this.activities.map(
-      (activity: Activity) => activity.records
-    );
+  /**
+   * Init records from analog activities.
+   */
+  initAnalogRecords(): void {
+    this._state.records = [];
+    this.activities
+      .filter((activity: Activity) => activity.hasAnalogData())
+      .forEach((activity: Activity) => {
+        const record = {
+          activityIdx: activity.idx,
+          color: activity.recorder.view.color,
+          id: 'V_m',
+          label: activity.recorder.view.recordLabel('V_m'),
+          nodeSize: 0,
+          value: 'V_m' + activity.idx,
+        };
+        if (activity.recorder.records != undefined) {
+          activity.recorder.records.forEach((recordId: string) => {
+            const recordCopied = Object.assign({}, record, {
+              id: recordId,
+              label: activity.recorder.view.recordLabel(recordId),
+              value: recordId + activity.idx,
+            });
+            this._state.records.push(recordCopied);
+          });
+        } else {
+          this._state.records.push(record);
+        }
+      });
+
+    if (this._state.records.length > 0) {
+      if (this._state.events.length === 0) {
+        this._state.events = [...this._state.records];
+      } else {
+        this._state.events = this._state.events.map((event: any) =>
+          this._state.records.find(
+            (record: any) => record.value === event.value
+          )
+        );
+      }
+    }
+
+  }
+
+  /**
+   * Update records of the panel models from all analog activities.
+   */
+  updateAnalogRecords(): void {
+    this._state.records.forEach((record: any) => {
+      const activity = this.activities[record.activityIdx];
+      record.nodeSize = activity.nodeIds.length;
+    });
+  }
+
+  /**
+   * Update record from the state.
+   */
+  removeRecord(record: any): void {
+    this._state.events.splice(this._state.events.indexOf(record), 1);
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart panel model object
+   */
+  toJSON(): any {
+    const model: any = {
+      id: this._id,
+    };
+    if (this._state.events.length > 0) {
+      model.events = this._state.events;
+    }
+    return model;
   }
 }

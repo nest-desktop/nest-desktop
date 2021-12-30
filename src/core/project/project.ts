@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
 
 import { Activity } from '../activity/activity';
+import { ActivityChartPanel } from '../activity/activityChart/activityChartPanel';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
@@ -67,7 +68,7 @@ export class Project {
 
     // Initialize code and activity graph.
     this._code = new ProjectCode(this);
-    this._activityGraph = new ActivityGraph(this);
+    this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
   }
@@ -383,7 +384,9 @@ export class Project {
 
     // Compare recorder models and then update chart graph.
     if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
-      this._activityGraph.activityChartGraph.initPanelModels();
+      this._activityGraph.activityChartGraph.panels.forEach(
+        (panel: ActivityChartPanel) => panel.model.initActivities()
+      );
     } else {
       this._activityGraph.activityChartGraph.init();
     }
@@ -970,6 +973,7 @@ export class Project {
    */
   toJSON(): any {
     const project: any = {
+      activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,

@@ -3,9 +3,9 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'SpikeTimesHistogram';
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'spikeTimesHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'spike times';
 
@@ -22,7 +22,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
       },
     ];
 
-    this.init();
+    this.initActivities();
   }
 
   /**

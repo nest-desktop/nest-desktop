@@ -5,9 +5,9 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'InterSpikeIntervalHistogram';
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'interSpikeIntervalHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'inter-spike interval';
     this.panel.xaxis = 2;
@@ -26,7 +26,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
     this.state.barnorm = '';
     this.state.xaxisType = 'linear';
 
-    this.init();
+    this.initActivities();
   }
 
   /**

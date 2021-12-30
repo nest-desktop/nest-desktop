@@ -5,13 +5,13 @@ import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
 
 export class SpikeSendersHistogramModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'SpikeSendersHistogram';
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'spikeSendersHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'spike senders';
     this.panel.xaxis = 4;
-    this.init();
+    this.initActivities();
   }
 
   /**

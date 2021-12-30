@@ -1,25 +1,72 @@
 <template>
   <div class="nodeParamEdit" v-if="state.node">
-    <template v-if="node.model.existing === 'multimeter'">
-      <v-row no-gutters>
+    <template v-if="state.node.model.existing === 'multimeter'">
+      <v-row no-gutters class="px-2 pt-3 pb-1">
         <v-col>
           <v-select
             :color="node.view.color"
-            :item-text="
-              item => item.label + (item.unit ? ` (${item.unit})` : '')
-            "
             :items="node.recordables"
+            :menu-props="{ offsetY: true }"
             @change="paramChange()"
             attach
-            class="ma-0 pt-4 px-1"
+            class="pa-1"
+            clearable
             dense
             hide-details
             item-value="id"
             label="Record from"
             multiple
             persistent-hint
+            small
             v-model="state.node.records"
-          />
+          >
+            <template v-slot:selection="{ item }">
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <v-chip
+                    :color="state.node.view.color"
+                    @click:close="
+                      () => {
+                        state.node.removeRecord(item.id);
+                        paramChange();
+                      }
+                    "
+                    close
+                    disable-lookup
+                    outlined
+                    label
+                    small
+                    style="margin: 1px 2px"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    {{ item.id }}
+                  </v-chip>
+                </template>
+                <span v-text="item.label" />
+                <span v-if="item.unit" v-text="` (${item.unit})`" />
+              </v-tooltip>
+            </template>
+
+            <template v-slot:item="{ item }">
+              <v-chip
+                :color="
+                  state.node.records.indexOf(item.id) !== -1
+                    ? state.node.view.color
+                    : 'primary'
+                "
+                class="mx-2"
+                outlined
+                label
+                small
+                v-text="item.id"
+              />
+              <div style="font-size: 12px">
+                <span v-text="item.label" />
+                <span v-if="item.unit" v-text="` (${item.unit})`" />
+              </div>
+            </template>
+          </v-select>
         </v-col>
       </v-row>
     </template>

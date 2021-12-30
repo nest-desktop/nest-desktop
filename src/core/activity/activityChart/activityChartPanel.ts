@@ -98,9 +98,9 @@ export class ActivityChartPanel {
   };
   private _xaxis = 1;
 
-  constructor(graph: ActivityChartGraph, model: any = {}) {
+  constructor(graph: ActivityChartGraph, panel: any = {}) {
     this._graph = graph;
-    this.selectModel(model.id);
+    this.selectModel(panel.model.id, panel.model);
   }
 
   get graph(): ActivityChartGraph {
@@ -188,23 +188,28 @@ export class ActivityChartPanel {
     this._graph.update();
   }
 
-  selectModel(modelId: string = 'spikeTimesRasterPlot'): void {
+  selectModel(
+    modelId: string = 'spikeTimesRasterPlot',
+    modelSpecs: any = {}
+  ): void {
+
     if (modelId) {
       const model: any = this._models.find(
         (model: any) => model.id === modelId
       );
       if (model) {
-        this._model = new model.component(this);
+        this._model = new model.component(this, modelSpecs);
         this._state.initialized = true;
       }
     }
 
     if (!this._state.initialized) {
-      this._model = new SpikeTimesRasterPlotModel(this);
+      this._model = new SpikeTimesRasterPlotModel(this, modelSpecs);
       this._state.initialized = true;
     }
 
     if (this._model) {
+      this._model.initAnalogRecords();
       this._model.update();
     }
   }
@@ -242,5 +247,13 @@ export class ActivityChartPanel {
    */
   remove(): void {
     this._graph.removePanel(this);
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart panel object
+   */
+  toJSON(): any {
+    return { model: this._model.toJSON() };
   }
 }

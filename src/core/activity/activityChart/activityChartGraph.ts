@@ -9,7 +9,7 @@ export class ActivityChartGraph {
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
 
-  constructor(project: Project) {
+  constructor(project: Project, panels: any = []) {
     this._project = project;
     const darkMode: boolean = this._project.app.darkMode;
     this._layout = {
@@ -28,7 +28,7 @@ export class ActivityChartGraph {
       },
     };
 
-    this.init();
+    this.init(panels);
   }
 
   get data(): any[] {
@@ -80,8 +80,8 @@ export class ActivityChartGraph {
   /**
    * Add panel.
    */
-  addPanel(model: any = { id: 'spikeTimesRasterPlot' }): void {
-    this._panels.push(new ActivityChartPanel(this, model));
+  addPanel(panel: any = { model: 'spikeTimesRasterPlot' }): void {
+    this._panels.push(new ActivityChartPanel(this, panel));
   }
 
   /**
@@ -94,26 +94,24 @@ export class ActivityChartGraph {
   /**
    * Initialize network chart graph.
    */
-  init(): void {
+  init(panels: any[] = []): void {
     // console.log('Init activity chart graph for', this.project.name);
     this._project.checkActivities();
 
     this._panels = [];
-    if (this._project.hasSpikeActivities) {
-      this.addPanel({ id: 'spikeTimesRasterPlot' });
-      this.addPanel({ id: 'spikeTimesHistogram' });
-    } else if (this._project.hasAnalogActivities) {
-      this.addPanel({ id: 'analogSignalPlot' });
+    if (panels.length > 0) {
+      panels.forEach((panel: any) => this.addPanel(panel));
+    } else {
+      if (this._project.hasAnalogActivities) {
+        this.addPanel({ model: { id: 'analogSignalPlot' } });
+      }
+      if (this._project.hasSpikeActivities) {
+        this.addPanel({ model: { id: 'spikeTimesRasterPlot' } });
+        this.addPanel({ model: { id: 'spikeTimesHistogram' } });
+      }
     }
 
     this.updateVisiblePanelsLayout();
-  }
-
-  /**
-   * Initialize panel models.
-   */
-  initPanelModels(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
   }
 
   /**
@@ -204,5 +202,15 @@ export class ActivityChartGraph {
     this.panelsVisible.forEach((panel: ActivityChartPanel) =>
       panel.updatePanelLayout()
     );
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart graph object
+   */
+  toJSON(): any {
+    return {
+      panels: this._panels.map((panel: ActivityChartPanel) => panel.toJSON()),
+    };
   }
 }

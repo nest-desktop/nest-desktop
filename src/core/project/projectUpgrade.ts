@@ -144,5 +144,9 @@ export function upgradeProject(app: App, project: any): any {
     });
   }
 
-  return { network, simulation: project.simulation };
+  return {
+    activityGraph: project.activityGraph || {},
+    network,
+    simulation: project.simulation,
+  };
 }
