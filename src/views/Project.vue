@@ -254,8 +254,11 @@
             v-if="projectView.state.tool.name === 'activityStats'"
           />
 
+          <v-card flat tile v-if="projectView.state.tool.name === 'docJSON'">
+            <CodeMirror :data="projectView.state.project.doc" />
+          </v-card>
           <v-card flat tile v-if="projectView.state.tool.name === 'dataJSON'">
-            <ProjectRawData :project="projectView.state.project" />
+            <CodeMirror :data="projectView.state.project.toJSON()" />
           </v-card>
         </div>
       </v-row>
@@ -322,11 +325,11 @@ import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import ActivityChartController from '@/components/activity/activityChart/ActivityChartController.vue';
 import ActivityAnimationController from '@/components/activity/activityAnimation/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/activityStats/ActivityStats.vue';
+import CodeMirror from '@/components/CodeMirror.vue';
 import core from '@/core';
 import NetworkEditor from '@/components/network/NetworkEditor.vue';
 import NetworkParamEdit from '@/components/network/NetworkParamEdit.vue';
 import ProjectLabBook from '@/components/project/ProjectLabBook.vue';
-import ProjectRawData from '@/components/project/ProjectRawData.vue';
 import SimulationButton from '@/components/simulation/SimulationButton.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
 import SimulationKernel from '@/components/simulation/SimulationKernel.vue';
@@ -339,10 +342,10 @@ export default Vue.extend({
     ActivityGraph,
     ActivityGraphIcon,
     ActivityStats,
+    CodeMirror,
     NetworkEditor,
     NetworkParamEdit,
     ProjectLabBook,
-    ProjectRawData,
     SimulationButton,
     SimulationCodeEditor,
     SimulationKernel,

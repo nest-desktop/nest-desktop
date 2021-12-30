@@ -25,6 +25,14 @@ export class ProjectView extends Config {
       width: 440,
     },
     {
+      icon: 'mdi-database',
+      minWidth: 575,
+      name: 'docJSON',
+      title: 'Doc',
+      devMode: true,
+      width: 575,
+    },
+    {
       icon: 'mdi-code-braces',
       minWidth: 575,
       name: 'dataJSON',
