@@ -92,10 +92,9 @@ export default Vue.extend({
 
 <style>
 .activityStats .v-expansion-panel {
+  border-width: 1px 1px 1px 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   margin: 1px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .activityStats .v-expansion-panel-content__wrap {
@@ -103,7 +102,7 @@ export default Vue.extend({
 }
 .activityStats .v-expansion-panel > .v-expansion-panel-header,
 .activityStats .v-expansion-panel--active > .v-expansion-panel-header {
-  padding: 0;
   min-height: 40px;
+  padding: 0;
 }
 </style>

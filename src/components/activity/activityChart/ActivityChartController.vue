@@ -186,6 +186,8 @@ export default Vue.extend({
   setup(props) {
     const projectView = core.app.project.view;
     const state = reactive({
+      color: '#9e9e9e',
+      graph: props.graph as ActivityChartGraph | undefined,
       menu: {
         position: {
           x: 0,
@@ -194,8 +196,6 @@ export default Vue.extend({
         record: null,
         show: false,
       },
-      color: '#9e9e9e',
-      graph: props.graph as ActivityChartGraph | undefined,
     });
 
     /**
