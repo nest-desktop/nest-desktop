@@ -103,7 +103,7 @@ export class NetworkGraphNodeAddPanel {
           this._workspace.animationOff();
           this.network.createNode({
             elementType,
-            position: JSON.parse(JSON.stringify(this.position)),
+            position: Object.assign({}, this.position),
           });
           this._workspace.networkGraph.update();
           this._workspace.networkGraph.workspace.updateTransform();

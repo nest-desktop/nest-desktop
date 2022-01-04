@@ -248,13 +248,6 @@ export class ActivityChartPanel {
   }
 
   /**
-   * Reselect model.
-   */
-  reselectModel() {
-    this.selectModel(this._model.toJSON());
-  }
-
-  /**
    * Serialize for JSON.
    * @return activity chart panel object
    */

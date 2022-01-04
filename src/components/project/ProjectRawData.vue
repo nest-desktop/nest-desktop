@@ -68,14 +68,14 @@ export default Vue.extend({
 
     onMounted(() => {
       const project = props.project as Project;
-      state.data = JSON.stringify(project.doc, null, '\t');
+      state.data = JSON.stringify(project.toJSON(), null, '\t');
       window.addEventListener('resize', resizeCodeMirror);
     });
 
     watch(
       () => props.project,
       (project: Project) => {
-        state.data = JSON.stringify(project.doc, null, '\t');
+        state.data = JSON.stringify(project.toJSON(), null, '\t');
       }
     );
 

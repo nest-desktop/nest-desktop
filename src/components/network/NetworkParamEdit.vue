@@ -205,7 +205,7 @@
                       />
                     </v-col>
                     <v-col cols="9">
-                      <NodeModelSelect :text="state.text" :node="node" />
+                      <NodeModelSelect :node="node" :text="state.text" />
                     </v-col>
                   </v-row>
 
@@ -238,7 +238,12 @@
           :key="'connection-' + connection.idx"
           v-for="connection of state.network.connections"
         >
-          <v-card class="ma-2px" outlined tile v-if="showConnection(connection)">
+          <v-card
+            class="ma-2px"
+            outlined
+            tile
+            v-if="showConnection(connection)"
+          >
             <v-sheet :color="connection.source.view.color">
               <v-card class="ml-1" flat tile>
                 <v-card-title class="pa-0 ma-0">

@@ -147,16 +147,14 @@ export class ActivityChartGraph {
     // console.log('Update activity graph.');
     this.updateVisiblePanelsLayout();
     this.resetLayout();
-
     this.updatePanelModels();
+    this.updateLayoutColor();
 
     this._data = [];
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       this.updateData(panel);
       this.updateLayoutPanel(panel);
     });
-
-    this.updateLayoutColor();
   }
 
   /**
@@ -199,7 +197,7 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update color of records.
+   * Update records color.
    */
   updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) =>

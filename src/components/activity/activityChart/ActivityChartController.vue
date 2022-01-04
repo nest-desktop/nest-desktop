@@ -23,11 +23,6 @@
         Reset
       </v-btn>
 
-      <!-- <v-btn @click="updatePanels" class="mt-1" outlined small>
-        <v-icon left v-text="'mdi-reload'" />
-        Update
-      </v-btn> -->
-
       <v-spacer />
       <v-menu offset-y left>
         <template #activator="{ on, attrs }">
@@ -203,18 +198,19 @@ export default Vue.extend({
       graph: props.graph as ActivityChartGraph | undefined,
     });
 
+    /**
+    * Add panel.
+    */
     const addPanel = (modelId: string) => {
       state.graph.addPanel({ model: { id: modelId } });
       state.graph.update();
     };
 
+    /**
+    * Reset panels.
+    */
     const resetPanels = () => {
       state.graph.init();
-      state.graph.update();
-    };
-
-    const updatePanels = () => {
-      state.graph.panels.forEach(panel => panel.reselectModel());
       state.graph.update();
     };
 
@@ -271,7 +267,6 @@ export default Vue.extend({
       resetPanels,
       showColorPopup,
       state,
-      updatePanels,
     };
   },
 });

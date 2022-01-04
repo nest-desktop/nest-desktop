@@ -307,7 +307,7 @@ export class Network extends Config {
    * Copy network component.
    */
   override copy(item: any): any {
-    return JSON.parse(JSON.stringify(item));
+    return Object.assign({}, item);
   }
 
   /**
