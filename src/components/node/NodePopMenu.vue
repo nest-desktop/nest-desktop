@@ -98,7 +98,7 @@
 
         <span v-if="state.content === 'nodeColor'">
           <v-color-picker
-            @update:color="updateColor"
+            @update:color="nodeColorChange"
             flat
             show-swatches
             style="border-radius: 0"
@@ -212,9 +212,9 @@ export default Vue.extend({
     /**
      * Update colors of network and activity.
      */
-    const updateColor = () => {
+    const nodeColorChange = () => {
       state.node.network.networkChanges();
-      state.node.network.project.activityGraph.updateColor();
+      state.node.network.updateRecordsColor();
     };
 
     /**
@@ -222,7 +222,7 @@ export default Vue.extend({
      */
     const resetColor = () => {
       state.node.view.color = null;
-      updateColor();
+      nodeColorChange();
     };
 
     /**
@@ -300,13 +300,13 @@ export default Vue.extend({
       backMenu,
       deleteNode,
       hideAllParams,
+      nodeColorChange,
       paramChange,
       resetColor,
       selectionChange,
       setWeights,
       showAllParams,
       state,
-      updateColor,
     };
   },
 });

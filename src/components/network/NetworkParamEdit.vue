@@ -23,8 +23,8 @@
         <v-btn
           :key="elementType"
           small
-          v-text="elementType"
           v-for="elementType in state.elementTypes"
+          v-text="elementType"
         />
         <v-menu :close-on-content-click="false" :max-height="600" offset-y>
           <template #activator="{ on, attrs }">
@@ -182,131 +182,131 @@
 
     <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
       <v-col>
-        <v-sheet
-          :color="node.view.color"
-          :key="'node-' + node.idx"
-          class="ma-1"
-          outlined
-          v-for="node of state.network.nodes"
-        >
-          <v-card class="ml-1" tile outlined v-if="showNode(node)">
-            <v-card-title
-              @contextmenu="e => showNodeMenu(e, node)"
-              class="pa-0"
-            >
-              <v-row no-gutters style="width: 100%">
-                <v-col cols="3">
-                  <v-btn
-                    :color="node.view.color"
-                    :dark="projectView.config.coloredToolbar"
-                    :text="!projectView.config.coloredToolbar"
-                    @click="() => node.state.select()"
-                    block
-                    depressed
-                    height="40"
-                    tile
-                    v-text="node.view.label"
-                  />
-                </v-col>
-                <v-col cols="9">
-                  <NodeModelSelect :text="state.text" :node="node" />
-                </v-col>
-              </v-row>
+        <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
+          <v-card class="ma-2px" outlined tile v-if="showNode(node)">
+            <v-sheet :color="node.view.color">
+              <v-card class="ml-1" flat tile>
+                <v-card-title
+                  @contextmenu="e => showNodeMenu(e, node)"
+                  class="pa-0"
+                >
+                  <v-row no-gutters style="width: 100%">
+                    <v-col cols="3">
+                      <v-btn
+                        :color="node.view.color"
+                        :dark="projectView.config.coloredToolbar"
+                        :text="!projectView.config.coloredToolbar"
+                        @click="() => node.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        tile
+                        v-text="node.view.label"
+                      />
+                    </v-col>
+                    <v-col cols="9">
+                      <NodeModelSelect :text="state.text" :node="node" />
+                    </v-col>
+                  </v-row>
 
-              <v-row no-gutters v-if="!node.model.isRecorder()">
-                <v-col>
-                  <NodePosition
-                    :node="node"
-                    v-if="node.spatial.hasPositions()"
-                  />
-                  <ParameterEdit
-                    :color="node.view.color"
-                    :options="state.sizeOptions"
-                    :value.sync="node.size"
-                    @update:value="() => node.nodeChanges()"
-                    v-else
-                  />
-                </v-col>
-              </v-row>
-            </v-card-title>
+                  <v-row no-gutters v-if="!node.model.isRecorder()">
+                    <v-col>
+                      <NodePosition
+                        :node="node"
+                        v-if="node.spatial.hasPositions()"
+                      />
+                      <ParameterEdit
+                        :color="node.view.color"
+                        :options="state.sizeOptions"
+                        :value.sync="node.size"
+                        @update:value="() => node.nodeChanges()"
+                        v-else
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card-title>
 
-            <v-card-text class="pa-0">
-              <NodeParamEdit :node="node" />
-            </v-card-text>
+                <v-card-text class="pa-0">
+                  <NodeParamEdit :node="node" />
+                </v-card-text>
+              </v-card>
+            </v-sheet>
           </v-card>
-        </v-sheet>
+        </span>
 
-        <v-sheet
-          :color="connection.source.view.color"
+        <span
           :key="'connection-' + connection.idx"
-          class="ma-1"
-          outlined
           v-for="connection of state.network.connections"
-          v-show="showConnection(connection)"
         >
-          <v-card class="ml-1" tile outlined>
-            <v-card-title class="pa-0 ma-0">
-              <v-row
-                @contextmenu="e => showConnectionMenu(e, connection)"
-                no-gutters
-              >
-                <v-col cols="3" class="py-0" style="text-align: center">
-                  <v-btn
-                    :color="connection.source.view.color"
-                    :dark="projectView.config.coloredToolbar"
-                    :text="!projectView.config.coloredToolbar"
-                    @click="() => connection.source.state.select()"
-                    block
-                    depressed
-                    height="40"
-                    tile
-                    v-text="connection.source.view.label"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-btn
-                    @click="() => connection.state.select()"
-                    block
-                    depressed
-                    height="40"
-                    text
-                    tile
+          <v-card class="ma-2px" outlined tile v-if="showConnection(connection)">
+            <v-sheet :color="connection.source.view.color">
+              <v-card class="ml-1" flat tile>
+                <v-card-title class="pa-0 ma-0">
+                  <v-row
+                    @contextmenu="e => showConnectionMenu(e, connection)"
+                    no-gutters
                   >
-                    <v-chip
-                      label
-                      outlined
-                      small
-                      v-if="connection.network.project.app.config.devMode"
-                      v-text="connection.shortHash"
-                    />
-                    <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                  </v-btn>
-                </v-col>
-                <v-col cols="3" class="py-0" style="text-align: center">
-                  <v-btn
-                    :color="connection.target.view.color"
-                    :dark="projectView.config.coloredToolbar"
-                    :text="!projectView.config.coloredToolbar"
-                    @click="() => connection.target.state.select()"
-                    block
-                    depressed
-                    height="40"
-                    tile
-                    v-text="connection.target.view.label"
-                  />
-                </v-col>
-              </v-row>
-            </v-card-title>
+                    <v-col cols="3" class="py-0" style="text-align: center">
+                      <v-btn
+                        :color="connection.source.view.color"
+                        :dark="projectView.config.coloredToolbar"
+                        :text="!projectView.config.coloredToolbar"
+                        @click="() => connection.source.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        tile
+                        v-text="connection.source.view.label"
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-btn
+                        @click="() => connection.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        text
+                        tile
+                      >
+                        <v-chip
+                          label
+                          outlined
+                          small
+                          v-if="connection.network.project.app.config.devMode"
+                          v-text="connection.shortHash"
+                        />
+                        <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                      </v-btn>
+                    </v-col>
+                    <v-col cols="3" class="py-0" style="text-align: center">
+                      <v-btn
+                        :color="connection.target.view.color"
+                        :dark="projectView.config.coloredToolbar"
+                        :text="!projectView.config.coloredToolbar"
+                        @click="() => connection.target.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        tile
+                        v-text="connection.target.view.label"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card-title>
 
-            <v-card-text class="pa-0">
-              <ConnectionParamEdit
-                :connection="connection"
-                v-if="connection.source.size > 1 || connection.target.size > 1"
-              />
-              <SynapseParamEdit :synapse="connection.synapse" />
-            </v-card-text>
+                <v-card-text class="pa-0">
+                  <ConnectionParamEdit
+                    :connection="connection"
+                    v-if="
+                      connection.source.size > 1 || connection.target.size > 1
+                    "
+                  />
+                  <SynapseParamEdit :synapse="connection.synapse" />
+                </v-card-text>
+              </v-card>
+            </v-sheet>
           </v-card>
-        </v-sheet>
+        </span>
       </v-col>
     </v-row>
   </div>
@@ -647,13 +647,5 @@ export default Vue.extend({
 }
 .v-list-item:hover .handle {
   opacity: 1;
-}
-
-.networkParamEdit .v-sheet {
-  border-color: #e0e0e0 !important;
-  border-width: 1px 1px 1px 0;
-}
-.networkParamEdit .v-card {
-  border-width: 0;
 }
 </style>

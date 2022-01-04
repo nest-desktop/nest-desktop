@@ -1,23 +1,14 @@
-import { Activity } from '../../activity';
 import { ActivityChartPanel } from '../activityChartPanel';
-import { ActivityChartPanelModel } from '../activityChartPanelModel';
-import { AnalogSignalActivity } from '../../analogSignalActivity';
+import { AnalogSignalPanelModel } from './analogSignalPanelModel';
 import { Node } from '../../../node/node';
+import { NodeRecord } from '../../../node/nodeRecord';
 
-export class AnalogSignalPlotModel extends ActivityChartPanelModel {
+export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.id = 'analogSignalPlot';
     this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.label = 'analog signals';
-    this.initActivities();
-  }
-
-  /**
-   * Initialize trace panel for analog signals.
-   */
-  override initActivities(): void {
-    this.activities = this.panel.graph.project.analogSignalActivities;
+    this.panel.xaxis = 1;
   }
 
   /**
@@ -27,35 +18,34 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
    * It requires activity data.
    */
   override update(): void {
-    this.updateTime();
-
     this.data = [];
-    if (this.state.records.length === 0) {
+    if (this.state.recordsVisible.length === 0) {
       return;
     }
 
     this.updateAnalogRecords();
+    this.updateTime();
 
     // Update spike threshold for membrane potential
-    this.state.events.forEach((event: any) => {
-      if (event.id === 'V_m') {
-        this.updateSpikeThresholdLine(event);
+    this.state.recordsVisible.forEach((record: NodeRecord) => {
+      if (record.id === 'V_m') {
+        this.updateSpikeThresholdLine(record);
       }
     });
 
     // Update single line or multiple lines.
-    this.state.events.forEach((event: any) => {
-      if (event.nodeSize > 0) {
-        event.nodeSize > 1
-          ? this.updateMultipleLines(event)
-          : this.updateSingleLine(event);
+    this.state.recordsVisible.forEach((record: NodeRecord) => {
+      if (record.nodeSize > 0) {
+        record.nodeSize > 1
+          ? this.updateMultipleLines(record)
+          : this.updateSingleLine(record);
       }
     });
 
     // Update average line for recorded population.
-    this.state.events.forEach((event: any) => {
-      if (event.nodeSize > 1) {
-        this.updateAverageLine(event);
+    this.state.recordsVisible.forEach((record: NodeRecord) => {
+      if (record.nodeSize > 1) {
+        this.updateAverageLine(record);
       }
     });
 
@@ -65,31 +55,32 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
   /**
    * Update spike threshold data for membrane potential.
    */
-  updateSpikeThresholdLine(event: any): void {
-    const activity: Activity = this.activities[event.activityIdx];
-
-    const thresholds: number[] = activity.recorder.nodes
+  updateSpikeThresholdLine(record: NodeRecord): void {
+    const thresholds: number[] = record.node.nodes
       .filter((node: Node) => node.modelId.startsWith('iaf'))
       .map((target: Node) => target.getParameter('V_th') || -55);
 
     if (thresholds.length > 0) {
+      const line = {
+        color: record.color,
+        dash: 'dot',
+        width: 2,
+      };
+
       this.data.push({
-        activityIdx: event.activityIdx,
-        id: 'threshold',
-        mode: 'lines',
-        type: 'scattergl',
-        showlegend: true,
+        activityIdx: record.activity.idx,
         hoverinfo: 'none',
+        id: 'threshold',
+        line,
+        mode: 'lines',
         name: 'Spike threshold',
         opacity: 0.5,
+        recordId: record.id,
+        showlegend: true,
+        type: 'scattergl',
         visible: 'legendonly',
-        line: {
-          color: event.color,
-          dash: 'dot',
-          width: 2,
-        },
-        x: [0.1, activity.currenttime],
-        y: [thresholds[0], thresholds[0]],
+        x: [0.1, record.activity.currenttime],
+        y: [thresholds[0], thresholds[0]], // gets only first threshold, TODO: find better solution
       });
     }
   }
@@ -97,68 +88,69 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
   /**
    * Update single line data for analog signal.
    */
-  updateSingleLine(event: any): void {
-    const activity: Activity = this.activities[event.activityIdx];
-
-    if (!activity.events.hasOwnProperty(event.id)) {
+  updateSingleLine(record: NodeRecord): void {
+    if (!record.hasEvent()) {
       return;
     }
 
+    const line = {
+      color: record.color,
+      width: 1.5,
+    };
+
     this.data.push({
-      activityIdx: event.activityIdx,
-      id: event.id,
-      legendgroup: event.value,
-      mode: 'lines',
-      type: 'scattergl',
-      name: event.id + ' of ' + activity.recorder.view.label,
+      activityIdx: record.activity.idx,
       hoverinfo: 'all',
+      legendgroup: record.groupId,
+      line,
+      mode: 'lines',
+      name: record.id + ' of ' + record.nodeLabel,
+      recordId: record.id,
       showlegend: true,
+      type: 'scattergl',
       visible: true,
-      line: {
-        color: event.color,
-        width: 1.5,
-      },
-      x: activity.events.times,
-      y: activity.events[event.id],
+      x: record.times,
+      y: record.values,
     });
   }
 
   /**
    * Update multiple lines data for analog signals.
    */
-  updateMultipleLines(event: any): void {
-    const activity: Activity = this.activities[event.activityIdx];
-
-    if (!activity.events.hasOwnProperty(event.id)) {
+  updateMultipleLines(record: NodeRecord): void {
+    if (!record.hasEvent()) {
       return;
     }
 
-    const nodeIds: number[] = activity.nodeIds.slice(0, 10);
+    const nodeIds: number[] = record.activity.nodeIds.slice(0, 10);
     const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
-    activity.events.senders.forEach((sender: number, idx: number) => {
+    record.activity.events.senders.forEach((sender: number, idx: number) => {
       const senderIdx: number = nodeIds.indexOf(sender);
       if (senderIdx === -1) {
         return;
       }
-      data[senderIdx].x.push(activity.events.times[idx]);
-      data[senderIdx].y.push(activity.events[event.id][idx]);
-      data[senderIdx].name = event.id + ' of ' + activity.recorder.view.label;
+      data[senderIdx].x.push(record.times[idx]);
+      data[senderIdx].y.push(record.values[idx]);
+      data[senderIdx].name = record.id + ' of ' + record.nodeLabel;
     });
 
     data.forEach((d: any, idx: number) => {
+      const line = {
+        color: record.color,
+        width: 1,
+      };
+
       this.data.push({
-        activityIdx: event.activityIdx,
-      legendgroup: event.value,
-        mode: 'lines',
-        type: 'scattergl',
+        activityIdx: record.activity.idx,
         hoverinfo: 'none',
+        legendgroup: record.groupId,
+        line,
+        mode: 'lines',
         name: d.name,
         opacity: idx === 0 ? 0.5 : 0.3,
+        recordId: record.id,
         showlegend: idx === 0,
-        line: {
-          color: event.color,
-          width: 1,
-        },
+        type: 'scattergl',
         x: d.x,
         y: d.y,
       });
@@ -168,22 +160,21 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
   /**
    * Update average line for analog signals.
    */
-  updateAverageLine(event: any): void {
-    const activity: Activity = this.activities[event.activityIdx];
-    if (!activity.events.hasOwnProperty(event.id)) {
+  updateAverageLine(record: NodeRecord): void {
+    if (!record.hasEvent()) {
       return;
     }
 
-    const nodeIds: number[] = activity.nodeIds;
+    const nodeIds: number[] = record.activity.nodeIds;
     const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
-    activity.events.senders.forEach((sender: number, idx: number) => {
+    record.activity.events.senders.forEach((sender: number, idx: number) => {
       const senderIdx: number = nodeIds.indexOf(sender);
       if (senderIdx === -1) {
         return;
       }
-      data[senderIdx].x.push(activity.events.times[idx]);
-      data[senderIdx].y.push(activity.events[event.id][idx]);
-      data[senderIdx].name = event.id + ' of ' + activity.recorder.view.label;
+      data[senderIdx].x.push(record.times[idx]);
+      data[senderIdx].y.push(record.values[idx]);
+      data[senderIdx].name = record.id + ' of ' + record.node.view.label;
     });
 
     const x: any[] = data[0].x;
@@ -195,56 +186,43 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
       return avg;
     });
 
+    const bgLine = {
+      color: record.activity.project.app.darkMode ? '#121212' : 'white',
+      width: 4.5,
+    };
+
     this.data.push({
-      activityIdx: event.activityIdx,
+      activityIdx: record.activity.idx,
       class: 'background',
-      record: event.id,
-      mode: 'lines',
-      type: 'scattergl',
       hoverinfo: 'none',
-      legendgroup: event.value,
+      legendgroup: record.groupId,
+      line: bgLine,
+      mode: 'lines',
+      recordId: record.id,
       showlegend: false,
-      line: {
-        color: activity.project.app.darkMode ? '#121212' : 'white',
-        width: 4.5,
-      },
+      type: 'scattergl',
       x,
       y,
     });
+
+    const line = {
+      color: record.color,
+      width: 1.5,
+    };
 
     // average line
     this.data.push({
-      activityIdx: activity.idx,
-      record: event.id,
-      mode: 'lines',
-      type: 'scattergl',
-      name: event.id + ' average',
-      legendgroup: event.value,
+      activityIdx: record.activity.idx,
       hoverinfo: 'all',
-      showlegend: true,
-      line: {
-        color: event.color,
-        width: 1.5,
-      },
+      legendgroup: record.groupId,
+      line,
+      mode: 'lines',
+      name: record.groupId + ' average',
+      recordId: record.id,
+      showlegend: false,
+      type: 'scattergl',
       x,
       y,
-    });
-  }
-
-  /**
-   * Update color traces of analog signals.
-   */
-  override updateColor(): void {
-    this.activities.forEach((activity: AnalogSignalActivity) => {
-      const data: any = this.data.filter(
-        (d: any) => d.activityIdx === activity.idx && d.class !== 'background'
-      );
-      if (data.length === 0) {
-        return;
-      }
-      data.forEach((d: any) => {
-        d.line.color = activity.recorder.view.color;
-      });
     });
   }
 
@@ -255,33 +233,6 @@ export class AnalogSignalPlotModel extends ActivityChartPanelModel {
     // console.log('Update layout label for analog signal.');
     // Label y-axis if only one record existed.
     this.panel.layout.xaxis.title = 'Time [ms]';
-    this.panel.layout.yaxis.title = '';
-
-    const events = this.state.events;
-    let yAxisTitle: string = '';
-    if (events.length === 1) {
-      const recordable: any =
-        this.activities[0].recorder.model.config.recordables.find(
-          (recordable: any) => recordable.id === events[0].id
-        );
-      yAxisTitle = this.capitalize(recordable.label);
-      if (recordable.unit) {
-        yAxisTitle += ` [${recordable.unit}]`;
-      }
-      this.panel.layout.yaxis.title = yAxisTitle;
-    } else if (events.length > 1) {
-      if (events.every((event:any) => event.id.includes('ct_'))) {
-        yAxisTitle = 'Channel activation';
-      } else if (events.every((event:any) => event.id.includes('g_'))) {
-        yAxisTitle = 'Conductance [nS]';
-      } else if (events.every((event:any) => event.id.includes('I_syn_'))) {
-        yAxisTitle = 'Total synaptic current [pA]';
-      } else if (events.every((event:any) => event.id.includes('weighted_spikes_'))) {
-        yAxisTitle = 'Weighted incoming spikes';
-      } else {
-        yAxisTitle = 'Multiple events';
-      }
-    }
-    this.panel.layout.yaxis.title = yAxisTitle;
+    this.panel.layout.yaxis.title = this.axisTitle;
   }
 }

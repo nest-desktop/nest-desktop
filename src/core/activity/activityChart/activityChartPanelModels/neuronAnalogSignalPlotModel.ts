@@ -7,8 +7,11 @@ export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
     this.icon = 'mdi-chart-bell-curve-cumulative';
     this.id = 'neuronAnalogSignalPlot';
     this.label = 'neuron analog signals';
-    this.panel.layout.yaxis.height = 2;
+    this.panel.height = 20;
+    this.panel.xaxis = 1;
+
     this.initActivities();
+    this.init(model.records);
   }
 
   /**

@@ -2,16 +2,15 @@ import * as d3 from 'd3';
 
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
+import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
-export class SpikeSendersHistogramModel extends SpikeTimesPlotModel {
+export class SpikeSendersHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.id = 'spikeSendersHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'spike senders';
     this.panel.xaxis = 4;
-    this.initActivities();
   }
 
   /**

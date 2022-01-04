@@ -21,7 +21,7 @@ export class ActivityChartPanel {
       title: '',
     },
     yaxis: {
-      height: 1,
+      height: 10,
       showgrid: true,
       title: '',
     },
@@ -100,7 +100,10 @@ export class ActivityChartPanel {
 
   constructor(graph: ActivityChartGraph, panel: any = {}) {
     this._graph = graph;
-    this.selectModel(panel.model.id, panel.model);
+    this.selectModel(
+      panel.model ? panel.model.id : 'spikeTimesRasterPlot',
+      panel.model
+    );
   }
 
   get graph(): ActivityChartGraph {
@@ -190,27 +193,22 @@ export class ActivityChartPanel {
 
   selectModel(
     modelId: string = 'spikeTimesRasterPlot',
-    modelSpecs: any = {}
+    modelSpec: any = {}
   ): void {
-
+    // console.log('Select panel model.');
     if (modelId) {
       const model: any = this._models.find(
         (model: any) => model.id === modelId
       );
       if (model) {
-        this._model = new model.component(this, modelSpecs);
+        this._model = new model.component(this, modelSpec);
         this._state.initialized = true;
       }
     }
 
     if (!this._state.initialized) {
-      this._model = new SpikeTimesRasterPlotModel(this, modelSpecs);
+      this._model = new SpikeTimesRasterPlotModel(this, modelSpec);
       this._state.initialized = true;
-    }
-
-    if (this._model) {
-      this._model.initAnalogRecords();
-      this._model.update();
     }
   }
 
@@ -247,6 +245,13 @@ export class ActivityChartPanel {
    */
   remove(): void {
     this._graph.removePanel(this);
+  }
+
+  /**
+   * Reselect model.
+   */
+  reselectModel() {
+    this.selectModel(this._model.toJSON());
   }
 
   /**

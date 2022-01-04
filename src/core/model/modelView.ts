@@ -281,7 +281,7 @@ export class ModelView {
 
   isNeuron(): boolean {
     if (this._state.model && this._state.model.elementType != null) {
-      return this._state.model.elementType === 'neuron';
+      return this._state.model.isNeuron();
     } else if (
       this._state.defaults &&
       this._state.defaults.element_type != null

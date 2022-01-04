@@ -8,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-color-picker
-        @update:color="paramChange"
+        @update:color="state.graph.updateRecordsColor()"
         flat
         show-swatches
         style="border-radius: 0"
@@ -22,6 +22,11 @@
         <v-icon left v-text="'mdi-reload'" />
         Reset
       </v-btn>
+
+      <!-- <v-btn @click="updatePanels" class="mt-1" outlined small>
+        <v-icon left v-text="'mdi-reload'" />
+        Update
+      </v-btn> -->
 
       <v-spacer />
       <v-menu offset-y left>
@@ -37,7 +42,7 @@
             :disabled="!state.graph.project.hasAnalogActivities"
             :key="'analogPanel' + index"
             @click="addPanel(model.id)"
-            v-for="(model, index) in state.graph.panels[0].modelsAnalog"
+            v-for="(model, index) in state.graph.panel.modelsAnalog"
           >
             <v-icon left small v-text="model.icon" />
             <v-list-item-title v-text="model.label" />
@@ -48,7 +53,7 @@
             :disabled="!state.graph.project.hasSpikeActivities"
             :key="'spikePanel' + index"
             @click="addPanel(model.id)"
-            v-for="(model, index) in state.graph.panels[0].modelsSpike"
+            v-for="(model, index) in state.graph.panel.modelsSpike"
           >
             <v-icon class="mr-2" small v-text="model.icon" />
             <v-list-item-title v-text="model.label" />
@@ -59,92 +64,104 @@
 
     <draggable handle=".handle" v-model="state.graph.panels">
       <transition-group>
-        <v-sheet
+        <div
           :key="'panel' + index"
-          class="ma-1"
-          color="primary"
-          outlined
           v-for="(panel, index) in state.graph.panels"
         >
-          <v-card class="ml-1" outlined tile>
-            <v-card-title class="pa-0">
-              <ActivityChartPanelToolbar :panel="panel" style="width: 100%" />
-            </v-card-title>
+          <v-card class="ma-2px" outlined tile>
+            <v-sheet color="primary">
+              <v-card class="ml-1" flat tile>
+                <v-card-title class="pa-0">
+                  <ActivityChartPanelToolbar
+                    :panel="panel"
+                    style="width: 100%"
+                  />
+                </v-card-title>
 
-            <v-card-text class="pa-0" v-if="panel.state.visible">
-              <ParameterEdit
-                :key="'param' + index"
-                :options="param"
-                :value.sync="param.value"
-                @update:value="paramChange"
-                v-for="(param, index) of panel.model.params"
-              />
+                <v-card-text class="pa-0" v-if="panel.state.visible">
+                  <span v-if="panel.model.state.records.length > 0">
+                    <v-select
+                      :items="panel.model.state.records"
+                      :menu-props="{ offsetY: true }"
+                      @change="
+                        () => {
+                          panel.model.init();
+                          state.graph.update();
+                        }
+                      "
+                      attach
+                      chips
+                      class="pa-1 pt-3"
+                      clearable
+                      dense
+                      hide-details
+                      item-value="groupId"
+                      label="Recorded events"
+                      multiple
+                      persistent-hint
+                      return-object
+                      small
+                      v-model="panel.model.state.recordsVisible"
+                    >
+                      <template v-slot:selection="{ item }">
+                        <v-tooltip bottom>
+                          <template #activator="{ on, attrs }">
+                            <v-chip
+                              :color="item.color"
+                              @click="e => showColorPopup(e, item)"
+                              @click:close="
+                                () => {
+                                  panel.model.removeRecord(item);
+                                  state.graph.update();
+                                }
+                              "
+                              close
+                              disable-lookup
+                              outlined
+                              label
+                              small
+                              style="margin: 1px 2px"
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              {{ item.id }}
+                            </v-chip>
+                          </template>
+                          <div style="font-size: 12px">
+                            <span v-text="item.label" />
+                            <span v-if="item.unit" v-text="` (${item.unit})`" />
+                          </div>
+                        </v-tooltip>
+                      </template>
 
-              <span v-if="panel.model.state.records.length > 0">
-                <v-select
-                  :items="panel.model.state.records"
-                  :menu-props="{ offsetY: true }"
-                  @change="paramChange()"
-                  attach
-                  class="pa-1 pt-3"
-                  clearable
-                  dense
-                  hide-details
-                  label="Records"
-                  multiple
-                  persistent-hint
-                  return-object
-                  small
-                  v-model="panel.model.state.events"
-                >
-                  <template v-slot:selection="{ item }">
-                    <v-tooltip bottom>
-                      <template #activator="{ on, attrs }">
+                      <template v-slot:item="{ item }">
                         <v-chip
                           :color="item.color"
-                          @click="e => showMenu(e, item)"
-                          @click:close="
-                            () => {
-                              panel.model.removeRecord(item);
-                              paramChange();
-                            }
-                          "
-                          close
-                          disable-lookup
+                          class="mx-2"
                           outlined
                           label
                           small
-                          style="margin: 1px 2px"
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                          {{ item.id }}
-                        </v-chip>
+                          v-text="item.id"
+                        />
+                        <div style="font-size: 12px">
+                          <span v-text="item.label" />
+                          <span v-if="item.unit" v-text="` (${item.unit})`" />
+                        </div>
                       </template>
-                      <div v-text="item.label" />
-                    </v-tooltip>
-                  </template>
-
-                  <template v-slot:item="{ item }">
-                    <v-chip
-                      :color="
-                        panel.model.state.events.indexOf(item) !== -1
-                          ? item.color
-                          : 'primary'
-                      "
-                      class="mx-2"
-                      outlined
-                      label
-                      small
-                      v-text="item.id"
-                    />
-                    <div style="font-size: 12px" v-text="item.label" />
-                  </template>
-                </v-select>
-              </span>
-            </v-card-text>
+                    </v-select>
+                  </span>
+                  <ParameterEdit
+                    :key="'param' + index"
+                    :options="param"
+                    :value.sync="param.value"
+                    @update:value="state.graph.update()"
+                    v-for="(param, index) of panel.model.params"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-sheet>
           </v-card>
-        </v-sheet>
+        </div>
       </transition-group>
     </draggable>
   </div>
@@ -156,7 +173,7 @@ import { reactive, onMounted, watch } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import { ActivityChartGraph } from '@/core/activity/activityChart/activityChartGraph';
-import { Node } from '@/core/node/node';
+import { NodeRecord } from '@/core/node/nodeRecord';
 import ActivityChartPanelToolbar from '@/components/activity/activityChart/ActivityChartPanelToolbar.vue';
 import core from '@/core';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
@@ -196,29 +213,15 @@ export default Vue.extend({
       state.graph.update();
     };
 
-    /**
-     * Update activity graph controller.
-     */
-    const update = () => {
-      resetMenu();
-      state.graph = undefined;
-      setTimeout(() => {
-        state.graph = props.graph as ActivityChartGraph;
-      }, 1);
-    };
-
-    /**
-     * Triggers when parameter is changed.
-     */
-    const paramChange = () => {
-      state.graph.updatePanelModels();
+    const updatePanels = () => {
+      state.graph.panels.forEach(panel => panel.reselectModel());
       state.graph.update();
     };
 
     /**
-     * Show record menu.
+     * Show color popup for the selected record.
      */
-    const showMenu = function (e: MouseEvent, record: Node) {
+    const showColorPopup = function (e: MouseEvent, record: NodeRecord) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.menu.show = false;
@@ -240,6 +243,17 @@ export default Vue.extend({
       state.menu.record = null;
     };
 
+    /**
+     * Update activity graph controller.
+     */
+    const update = () => {
+      resetMenu();
+      state.graph = undefined;
+      setTimeout(() => {
+        state.graph = props.graph as ActivityChartGraph;
+      }, 1);
+    };
+
     onMounted(() => {
       update();
     });
@@ -253,22 +267,12 @@ export default Vue.extend({
 
     return {
       addPanel,
-      paramChange,
       projectView,
       resetPanels,
-      showMenu,
+      showColorPopup,
       state,
+      updatePanels,
     };
   },
 });
 </script>
-
-<style>
-.activityChartController .v-sheet {
-  border-color: #e0e0e0 !important;
-  border-width: 1px 1px 1px 0;
-}
-.activityChartController .v-card {
-  border-width: 0;
-}
-</style>

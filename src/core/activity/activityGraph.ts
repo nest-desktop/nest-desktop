@@ -44,7 +44,6 @@ export class ActivityGraph {
    */
   update(): void {
     // console.log('Update activity graph');
-    this._activityChartGraph.updatePanelModels();
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
     this.updateHash();
@@ -81,13 +80,6 @@ export class ActivityGraph {
    */
   emptyActivityGraph(): void {
     this._activityChartGraph.empty();
-  }
-
-  /**
-   * Update color in activity graph.
-   */
-  updateColor(): void {
-    this._activityChartGraph.updatePanelModelsColor();
   }
 
   /**

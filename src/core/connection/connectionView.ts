@@ -91,6 +91,6 @@ export class ConnectionView {
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.target.model.existing === 'spike_recorder';
+    return this._connection.target.model.isSpikeRecorder();
   }
 }

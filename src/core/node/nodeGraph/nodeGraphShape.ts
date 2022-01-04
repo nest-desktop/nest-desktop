@@ -94,10 +94,10 @@ function nodePoints(node: Node, radius: number): string {
     case 'recorder':
       return getRectanglePoints(radius);
     case 'neuron':
-      if (node.view.weight === 'excitatory') {
-        return getTrianglePoints(radius);
-      } else {
+      if (node.isInhibitoryNeuron()) {
         return getSquarePoints(radius);
+      } else {
+        return getTrianglePoints(radius);
       }
     default:
       return getSquarePoints(radius);
@@ -112,7 +112,9 @@ export class NodeGraphShape {
   }
 
   get darkMode(): boolean {
-    return this._networkGraph.network ? this._networkGraph.network.project.app.darkMode : false;
+    return this._networkGraph.network
+      ? this._networkGraph.network.project.app.darkMode
+      : false;
   }
 
   get nodeRadius(): number {
@@ -130,10 +132,7 @@ export class NodeGraphShape {
     const elem = selector.select('.core');
     elem.selectAll('*').remove();
 
-    if (
-      node.model.elementType === 'neuron' &&
-      node.view.weight === 'inhibitory'
-    ) {
+    if (node.isInhibitoryNeuron()) {
       elem.append('circle').attr('class', 'shape').attr('r', this.nodeRadius);
     } else {
       elem
@@ -219,13 +218,7 @@ export class NodeGraphShape {
 
       elem
         .select('text')
-        .attr(
-          'dy',
-          node.model.elementType === 'neuron' &&
-            node.view.weight === 'inhibitory'
-            ? '0.4em'
-            : '0.7em'
-        )
+        .attr('dy', node.isInhibitoryNeuron() ? '0.4em' : '0.7em')
         .style('fill', this.darkMode ? 'white' : '#121212')
         .text(node.view.label);
     });

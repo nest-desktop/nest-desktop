@@ -45,13 +45,13 @@ export class Network extends Config {
     this._connections.forEach((connection: Connection) => {
       connection.clean();
     });
+    this.updateRecords();
+    this.updateRecordsColor();
     this.networkChanges();
   }
 
   get neurons(): Node[] {
-    return this._nodes.filter(
-      (node: Node) => node.model.elementType === 'neuron'
-    );
+    return this._nodes.filter((node: Node) => node.model.isNeuron());
   }
 
   get nodes(): Node[] {
@@ -69,6 +69,8 @@ export class Network extends Config {
       connection.targetIdx = nodeIdx.indexOf(connection.targetIdx);
       connection.clean();
     });
+    this.updateRecords();
+    this.updateRecordsColor();
     this.networkChanges();
   }
 
@@ -80,14 +82,16 @@ export class Network extends Config {
     return this._nodes.filter((node: Node) => node.model.isRecorder());
   }
 
+  get recordersAnalog(): Node[] {
+    return this._nodes.filter((node: Node) => node.model.isAnalogRecorder());
+  }
+
   get state(): NetworkState {
     return this._state;
   }
 
   get stimulators(): Node[] {
-    return this._nodes.filter(
-      (node: Node) => node.model.elementType === 'stimulator'
-    );
+    return this._nodes.filter((node: Node) => node.model.isStimulator());
   }
 
   get visibleNodes(): Node[] {
@@ -122,10 +126,7 @@ export class Network extends Config {
    * It commits the network in the network history.
    */
   networkChanges(): void {
-    this._connections.forEach((connection: Connection) => {
-      connection.sourceSlice.update();
-      connection.targetSlice.update();
-    });
+    this.clean();
 
     this._project.code.generate();
     this._state.updateHash();
@@ -176,6 +177,7 @@ export class Network extends Config {
    * Add node component to the network.
    */
   addNode(data: any): void {
+    this.consoleLog('Add node');
     this._nodes.push(new Node(this, data));
   }
 
@@ -201,6 +203,7 @@ export class Network extends Config {
    * Add connection component to the network.
    */
   addConnection(data: any): Connection {
+    this.consoleLog('Add connection');
     const connection: Connection = new Connection(this, data);
     this._connections.push(connection);
     return connection;
@@ -291,6 +294,12 @@ export class Network extends Config {
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
     this._connections.forEach((connection: Connection) => connection.clean());
+
+    this._connections.forEach((connection: Connection) => {
+      connection.sourceSlice.update();
+      connection.targetSlice.update();
+    });
+
     this._state.updateHash();
   }
 
@@ -314,19 +323,37 @@ export class Network extends Config {
    * @param network - network object
    */
   update(network: any): void {
-    // add nodes to network.
+    // Add nodes to network.
     this._nodes = [];
     if (network.nodes) {
       network.nodes.forEach((data: any) => this.addNode(data));
     }
 
-    // add connections to network.
+    // Add connections to network.
     this._connections = [];
     if (network.connections) {
       network.connections.forEach((data: any) => this.addConnection(data));
     }
 
+    this.updateRecords();
     this.clean();
+  }
+
+  /**
+   * Update records of recorders.
+   *
+   * @remarks
+   * It should be called after network created.
+   */
+  updateRecords(): void {
+    this.recorders.forEach((recorder: Node) => recorder.updateRecords());
+  }
+
+  /**
+   * Update records color of recorders.
+   */
+  updateRecordsColor(): void {
+    this.recorders.forEach((recorder: Node) => recorder.updateRecordsColor());
   }
 
   /**

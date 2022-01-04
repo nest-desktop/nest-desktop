@@ -1,11 +1,12 @@
-import { Project } from '../../project/project';
 import { ActivityChartPanel } from './activityChartPanel';
+import { Project } from '../../project/project';
 
 export class ActivityChartGraph {
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
   private _options: any = {};
+  private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
 
@@ -13,6 +14,7 @@ export class ActivityChartGraph {
     this._project = project;
     const darkMode: boolean = this._project.app.darkMode;
     this._layout = {
+      barmode: 'overlay',
       font: {
         color: darkMode ? 'white' : '#121212',
       },
@@ -27,6 +29,7 @@ export class ActivityChartGraph {
         x: 0,
       },
     };
+    this._panel = new ActivityChartPanel(this);
 
     this.init(panels);
   }
@@ -56,6 +59,10 @@ export class ActivityChartGraph {
 
   get options(): any {
     return this._options;
+  }
+
+  get panel(): ActivityChartPanel {
+    return this._panel;
   }
 
   get panels(): ActivityChartPanel[] {
@@ -114,6 +121,10 @@ export class ActivityChartGraph {
     this.updateVisiblePanelsLayout();
   }
 
+  initPanels(): void {
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
+  }
+
   /**
    * Remove panel.
    */
@@ -126,22 +137,26 @@ export class ActivityChartGraph {
    * Reset layout of the chart graph.
    */
   resetLayout(): void {
-    this._layout = JSON.parse(JSON.stringify(this._layout));
+    this._layout = Object.assign({}, this._layout);
   }
 
   /**
    * Updates chart graph with activities.
    */
   update(): void {
+    // console.log('Update activity graph.');
     this.updateVisiblePanelsLayout();
     this.resetLayout();
-    this.updateLayoutColor();
+
+    this.updatePanelModels();
 
     this._data = [];
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       this.updateData(panel);
       this.updateLayoutPanel(panel);
     });
+
+    this.updateLayoutColor();
   }
 
   /**
@@ -174,9 +189,6 @@ export class ActivityChartGraph {
       panel.layout.yaxis;
     this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
       panel.layout.xaxis;
-    if (panel.layout.barmode) {
-      this.layout.barmode = panel.layout.barmode;
-    }
   }
 
   /**
@@ -187,11 +199,11 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update colors of the panel models.
+   * Update color of records.
    */
-  updatePanelModelsColor(): void {
+  updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) =>
-      panel.model.updateColor()
+      panel.model.updateRecordsColor()
     );
   }
 

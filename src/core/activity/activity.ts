@@ -202,7 +202,7 @@ export class Activity {
    * Check if activity contains analog signal data.
    */
   hasAnalogData(): boolean {
-    return ['voltmeter', 'multimeter'].includes(this._recorder.model.existing);
+    return this._recorder.model.isAnalogRecorder();
   }
 
   /**
@@ -223,7 +223,7 @@ export class Activity {
    * Check if activity contains spike data.
    */
   hasSpikeData(): boolean {
-    return this._recorder.model.existing === 'spike_recorder';
+    return this._recorder.model.isSpikeRecorder();
   }
 
   /**

@@ -1,8 +1,8 @@
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
+import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
-export class CVISIHistogramModel extends SpikeTimesPlotModel {
+export class CVISIHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.id = 'CVISIHistogram';
@@ -18,9 +18,6 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
         value: 0.05,
       },
     ];
-
-    this.state.barnorm = '';
-    this.initActivities();
   }
 
   /**
@@ -68,5 +65,6 @@ export class CVISIHistogramModel extends SpikeTimesPlotModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'CV of ISI';
+    this.panel.layout.yaxis.title = 'Count';
   }
 }

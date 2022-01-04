@@ -1,22 +1,40 @@
 <template>
   <div class="nodeParamEdit" v-if="state.node">
-    <template v-if="state.node.model.existing === 'multimeter'">
+    <template v-if="state.node.model.isMultimeter()">
+      <v-menu
+        :close-on-content-click="false"
+        :position-x="state.menu.position.x"
+        :position-y="state.menu.position.y"
+        :value="state.menu.show"
+        transition="slide-y-transition"
+      >
+        <v-color-picker
+          @update:color="updateRecordsColor()"
+          flat
+          show-swatches
+          style="border-radius: 0"
+          v-model="state.menu.record.color"
+          v-if="state.menu.record"
+        />
+      </v-menu>
+
       <v-row no-gutters class="px-2 pt-3 pb-1">
         <v-col>
           <v-select
-            :color="node.view.color"
-            :items="node.recordables"
+            :items="state.node.recordables"
             :menu-props="{ offsetY: true }"
-            @change="paramChange()"
+            @change="state.node.nodeChanges()"
             attach
+            chips
             class="pa-1"
             clearable
             dense
             hide-details
-            item-value="id"
+            item-value="groupId"
             label="Record from"
             multiple
             persistent-hint
+            return-object
             small
             v-model="state.node.records"
           >
@@ -24,11 +42,12 @@
               <v-tooltip bottom>
                 <template #activator="{ on, attrs }">
                   <v-chip
-                    :color="state.node.view.color"
+                    :color="item.color"
+                    @click="e => showColorPopup(e, item)"
                     @click:close="
                       () => {
-                        state.node.removeRecord(item.id);
-                        paramChange();
+                        state.node.removeRecord(item);
+                        state.node.nodeChanges();
                       }
                     "
                     close
@@ -43,18 +62,16 @@
                     {{ item.id }}
                   </v-chip>
                 </template>
-                <span v-text="item.label" />
-                <span v-if="item.unit" v-text="` (${item.unit})`" />
+                <div style="font-size: 12px">
+                  <span v-text="item.label" />
+                  <span v-if="item.unit" v-text="` (${item.unit})`" />
+                </div>
               </v-tooltip>
             </template>
 
             <template v-slot:item="{ item }">
               <v-chip
-                :color="
-                  state.node.records.indexOf(item.id) !== -1
-                    ? state.node.view.color
-                    : 'primary'
-                "
+                :color="item.color"
                 class="mx-2"
                 outlined
                 label
@@ -76,7 +93,7 @@
       :key="param.id"
       :param="param"
       :value.sync="param.value"
-      @update:value="paramChange()"
+      @update:value="state.node.nodeChanges()"
       v-for="param of state.node.filteredParams"
     />
   </div>
@@ -87,6 +104,7 @@ import Vue from 'vue';
 import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
+import { NodeRecord } from '@/core/node/nodeRecord';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
@@ -100,16 +118,50 @@ export default Vue.extend({
   setup(props) {
     const state = reactive({
       node: props.node as Node,
+      menu: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        record: null,
+        show: false,
+      },
     });
 
     /**
-     * Triggers when node parameter is changed.
+     * Show color popup for record.
      */
-    const paramChange = () => {
-      state.node.nodeChanges();
+    const showColorPopup = function (e: MouseEvent, record: NodeRecord) {
+      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
+      e.preventDefault();
+      state.menu.show = false;
+      state.menu.record = record;
+      state.menu.position.x = e.clientX;
+      state.menu.position.y = e.clientY;
+      this.$nextTick(() => {
+        state.menu.show = true;
+      });
+    };
+
+    /**
+     * Triggers when record color is changed.
+     */
+    const updateRecordsColor = () => {
+      state.node.network.project.activityGraph.activityChartGraph.updateRecordsColor();
+    };
+
+    /**
+     * Reset menu.
+     */
+    const resetMenu = () => {
+      state.menu.show = false;
+      state.menu.position.x = 0;
+      state.menu.position.y = 0;
+      state.menu.record = null;
     };
 
     const update = () => {
+      resetMenu();
       state.node = props.node as Node;
     };
 
@@ -126,8 +178,9 @@ export default Vue.extend({
     );
 
     return {
-      paramChange,
+      showColorPopup,
       state,
+      updateRecordsColor,
     };
   },
 });

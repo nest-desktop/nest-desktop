@@ -7,8 +7,11 @@ export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
     this.icon = 'mdi-chart-bell-curve-cumulative';
     this.id = 'inputAnalogSignalPlot';
     this.label = 'input analog signals';
-    this.panel.layout.yaxis.height = 1;
+    this.panel.height = 10;
+    this.panel.xaxis = 1;
+
     this.initActivities();
+    this.init(model.records);
   }
 
   /**

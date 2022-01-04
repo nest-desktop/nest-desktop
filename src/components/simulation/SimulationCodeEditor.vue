@@ -1,7 +1,7 @@
 <template>
   <div class="simulationCodeEditor" ref="simulationCodeEditor">
     <span
-      style="position: absolute; right: 60px; top: 0; z-index: 1000"
+      style="position: absolute; right: 82px; top: 0; z-index: 1000"
       v-if="state.code.project.app.config.devMode"
     >
       <v-chip

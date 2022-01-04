@@ -15,12 +15,44 @@
       </v-card-title> -->
       <v-card-title class="pa-2" v-if="state.activity.records.length > 1">
         <v-select
-          :items="state.activity.records.map(r => ({ value: r, text: r }))"
+          :items="state.activity.recorder.records"
           @change="update"
+          chips
           dense
           hide-details
+          item-value="id"
           v-model="state.selectedRecords"
-        />
+        >
+          <template v-slot:selection="{ item }">
+            <v-chip
+              :color="item.color"
+              class="mx-2"
+              outlined
+              label
+              small
+              v-text="item.id"
+            />
+            <div style="font-size: 12px">
+              <span v-text="item.label" />
+              <span v-if="item.unit" v-text="` (${item.unit})`" />
+            </div>
+          </template>
+
+          <template v-slot:item="{ item }">
+            <v-chip
+              :color="item.color"
+              class="mx-2"
+              outlined
+              label
+              small
+              v-text="item.id"
+            />
+            <div style="font-size: 12px">
+              <span v-text="item.label" />
+              <span v-if="item.unit" v-text="` (${item.unit})`" />
+            </div>
+          </template>
+        </v-select>
       </v-card-title>
       <v-data-table
         :headers="state.headers"
