@@ -55,4 +55,3 @@ Contents
   developer/user-doc
   developer/semantic-version
   developer/interface-concept
-  developer/references

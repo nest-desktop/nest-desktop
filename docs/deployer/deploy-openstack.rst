@@ -13,7 +13,8 @@ Deploy on OpenStack
 The guide provides a step-by-step documentation on how to deploy NEST Desktop on OpenStack resources.
 For more information on OpenStack, please follow this link: https://www.redhat.com/en/topics/openstack.
 
-As an example of an OpenStack infrastructure, we show the deployment on bwCloud, which is assigned to the universities in Baden-Württemberg, Germany.
+As an example of an OpenStack infrastructure, we show the deployment on bwCloud,
+which is assigned to the universities in Baden-Württemberg, Germany.
 For more information bwCloud, follow the link:  https://www.bw-cloud.org/.
 
 Deployers can build an OpenStack image via Packer and Ansible.

@@ -26,8 +26,6 @@ Guides for the developers
   - :doc:`Command API <command-API>`
   - :doc:`The semantic versioning <semantic-version>`
   - :doc:`The concept of the interface <interface-concept>`
-  - :doc:`References for images <references>`
-
 
 
 .. |developer| image:: ../_static/img/icons/user-edit.svg
