@@ -43,7 +43,7 @@
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "stats.js": "^0.17.0",
-    "three": "^0.135.0",
+    "three": "^0.136.0",
     "uuid": "^8.3.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -96,7 +96,6 @@
     "sass: >1.32 introduces warning that '/' as a divisor is deprecated,but is used in Vuetify multiple times, c.f. https://stackoverflow.com/questions/67631879/nuxtjs-vuetify-throwing-lots-of-using-for-division-is-deprecated-and-will-be#67647496",
     "sass-loader:  // >= 11.0 requires webpack5, but that raises errors",
     "vue-toast-notification: >=v2.0 requires Vue 3, but we still need Vue 2 for Vuetify",
-    "vuetify-loader: 2.0.0-alpha.8 produces Error: Cannot find module 'vuetify-loader/lib/plugin'",
     "webpack: installed manually in v4.x.y to prevent sass error"
   ]
 }
