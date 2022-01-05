@@ -1,5 +1,5 @@
 <template>
-  <div class="projectRawData" ref="projectRawData">
+  <div class="codeMirror" ref="codeMirrorWrapper">
     <v-row class="full-height" no-gutters>
       <codemirror
         :options="state.options"
@@ -16,19 +16,17 @@ import Vue from 'vue';
 import { reactive, watch, onMounted, ref } from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
 
-import { Project } from '@/core/project/project';
-
 export default Vue.extend({
-  name: 'ProjectRawData',
+  name: 'CodeMirror',
   components: {
     codemirror,
   },
   props: {
-    project: Project,
+    data: Object,
   },
   setup(props, { root }) {
     const codeMirror = ref(null);
-    const projectRawData = ref(null);
+    const codeMirrorWrapper = ref(null);
 
     const state = reactive({
       data: '',
@@ -60,32 +58,31 @@ export default Vue.extend({
      * Resize CodeMirror.
      */
     const resizeCodeMirror = () => {
-      const height = projectRawData.value.clientHeight;
-      const width = projectRawData.value.clientWidth;
+      const height = codeMirrorWrapper.value.clientHeight;
+      const width = codeMirrorWrapper.value.clientWidth;
       codeMirror.value.cminstance.setSize(width, height);
       updateTheme();
     };
 
     onMounted(() => {
-      const project = props.project as Project;
-      state.data = JSON.stringify(project.toJSON(), null, '\t');
+      state.data = JSON.stringify(props.data, null, '\t');
       window.addEventListener('resize', resizeCodeMirror);
     });
 
     watch(
-      () => props.project,
-      (project: Project) => {
-        state.data = JSON.stringify(project.toJSON(), null, '\t');
+      () => props.data,
+      (data: any) => {
+        state.data = JSON.stringify(data, null, '\t');
       }
     );
 
-    return { codeMirror, projectRawData, state };
+    return { codeMirror, codeMirrorWrapper, state };
   },
 });
 </script>
 
 <style>
-.ProjectRawData {
+.codeMirror {
   overflow: hidden;
 }
 
