@@ -23,10 +23,6 @@ export class Project {
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc: any; // doc data of the database
-  private _hasActivities = false;
-  private _hasAnalogActivities = false;
-  private _hasSpatialActivities = false;
-  private _hasSpikeActivities = false;
   private _id: string; // id of the project
   private _name: string; // project name
   private _network: Network; // network of neurons and devices
@@ -42,7 +38,7 @@ export class Project {
 
     // Database instance
     this._doc = project || {};
-    this._id = project._id || uuidv4();
+    this._id =  project.id || project._id || uuidv4();
     this._rev = project._rev || '';
     this._createdAt = project.createdAt || new Date();
     this._updatedAt = project.updatedAt;
@@ -54,7 +50,11 @@ export class Project {
     // Initialize project state.
     this._state = reactive({
       activityStatsPanelId: 0,
+      hasActivities: false,
+      hasAnalogActivities: false,
       hash: '',
+      hasSpatialActivities: false,
+      hasSpikeActivities: false,
       selected: false,
       withActivities: false,
     });
@@ -619,11 +619,11 @@ export class Project {
             // Check if project has activities.
             this.checkActivities();
 
-            if (this.hasSpikeActivities) {
+            if (this._state.hasSpikeActivities) {
               this.getSpikeActivitiesInsite(nodePositions);
             }
 
-            if (this.hasAnalogActivities) {
+            if (this._state.hasAnalogActivities) {
               this.getAnalogSignalActivitiesInsite(nodePositions);
             }
           });
@@ -809,7 +809,7 @@ export class Project {
       return;
     }
     this._activityGraph.init();
-    if (this.hasActivities) {
+    if (this._state.hasActivities) {
       this._activityGraph.update();
     }
   }
@@ -859,13 +859,13 @@ export class Project {
     const activities: Activity[] = this.activities;
 
     // check if it has activities.
-    this._hasActivities =
+    this._state.hasActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasEvents())
         : false;
 
     // check if it has analog signal activities.
-    this._hasAnalogActivities =
+    this._state.hasAnalogActivities =
       activities.length > 0
         ? activities.some((activity: Activity) =>
             activity.hasNeuronAnalogData()
@@ -873,54 +873,18 @@ export class Project {
         : false;
 
     // check if it has spike activities.
-    this._hasSpikeActivities =
+    this._state.hasSpikeActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasSpikeData())
         : false;
 
     // check if it has spatial activities.
-    this._hasSpatialActivities = this.hasActivities
+    this._state.hasSpatialActivities = this._state.hasActivities
       ? activities.some(
           (activity: Activity) =>
             activity.hasEvents() && activity.nodePositions.length > 0
         )
       : false;
-  }
-
-  /**
-   * Does the project have events in activities?
-   *
-   * @returns True if such activities exist, false otherwise
-   */
-  get hasActivities(): boolean {
-    return this._hasActivities;
-  }
-
-  /**
-   * Does the project have events in analog activities?
-   *
-   * @returns True if such analog activities exist, false otherwise
-   */
-  get hasAnalogActivities(): boolean {
-    return this._hasAnalogActivities;
-  }
-
-  /**
-   * Does the project have events in spatial activities?
-   *
-   * @returns True if such spatial activities exist, false otherwise
-   */
-  get hasSpatialActivities(): boolean {
-    return this._hasSpatialActivities;
-  }
-
-  /**
-   * Does the project have events in spike activities?
-   *
-   * @returns True if such spike activities exist, false otherwise
-   */
-  get hasSpikeActivities(): boolean {
-    return this._hasSpikeActivities;
   }
 
   /**

@@ -14,7 +14,6 @@
         :position="state.menu.position"
         v-else-if="state.menu.content === 'model'"
       />
-
       <SettingsMenu
         :position="state.menu.position"
         v-else-if="state.menu.content === 'settings'"
