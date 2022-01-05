@@ -13,7 +13,7 @@ export class AnalogSignalActivity extends Activity {
    */
   override init(activity: any): void {
     this.initEvents(activity);
-    this.updateRecords();
+    this.updateActivityRecords();
   }
 
   /**
@@ -27,16 +27,14 @@ export class AnalogSignalActivity extends Activity {
     }
 
     this.updateEvents(activity);
-    this.updateRecords();
+    this.updateActivityRecords();
   }
 
   /**
-   * Update record from event keys.
+   * Update records from recorder.
    */
-  updateRecords(): void {
-    this.records = Object.keys(this.events).filter(
-      (event: string) => !['senders', 'times'].includes(event)
-    );
+  updateActivityRecords(): void {
+    this.state.records = [...this.recorder.records];
   }
 
   /**

@@ -491,7 +491,6 @@ export class Node extends Config {
    */
   clean(): void {
     this._idx = this._network.nodes.indexOf(this);
-    // this.updateRecords();
     this.view.clean();
     this.updateHash();
   }

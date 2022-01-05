@@ -93,7 +93,7 @@ export abstract class ActivityChartPanelModel {
     this._params = value;
   }
 
-  get state(): any {
+  get state(): UnwrapRef<any> {
     return this._state;
   }
 
@@ -243,21 +243,25 @@ export abstract class ActivityChartPanelModel {
    * Update color for records.
    */
   updateRecordsColor(): void {
-    this._state.recordsVisible.forEach((record: NodeRecord) => {
-      const data: any[] = this.data.filter(
-        data =>
-          data.activityIdx === record.activity.idx &&
-          data.recordId === record.id
+    this._data.forEach((data: any) => {
+      if (data.class === 'background') {
+        return;
+      }
+
+      const record = this._state.recordsVisible.find(
+        (record: NodeRecord) =>
+          record.id === data.recordId &&
+          record.activity.idx === data.activityIdx
       );
-      data
-        .filter((d: any) => d.class !== 'background')
-        .forEach((d: any) => {
-          if (d.marker) {
-            d.marker.color = record.color;
-          } else if (d.line) {
-            d.line.color = record.color;
-          }
-        });
+
+      const activity = this._activities[data.activityIdx];
+      const color = record ? record.color : activity.recorder.view.color;
+
+      if (data.marker) {
+        data.marker.color = color;
+      } else if (data.line) {
+        data.line.color = color;
+      }
     });
   }
 

@@ -13,14 +13,15 @@
           hide-details
         ></v-text-field>
       </v-card-title> -->
-      <v-card-title class="pa-2" v-if="state.activity.records.length > 1">
+      <v-card-title class="pa-2" v-if="state.activity.state.records.length > 1">
         <v-select
-          :items="state.activity.recorder.records"
+          :items="state.activity.state.records"
           @change="update"
           chips
           dense
           hide-details
           item-value="id"
+          return-object
           v-model="state.selectedRecords"
         >
           <template v-slot:selection="{ item }">
@@ -108,7 +109,7 @@ export default Vue.extend({
       items: [],
       loading: false,
       search: '',
-      selectedRecords: 'V_m',
+      selectedRecords: null,
     });
 
     /**
@@ -116,16 +117,13 @@ export default Vue.extend({
      */
     const update = () => {
       state.items = [];
-      if (state.activity.records.length === 1) {
-        state.selectedRecords = state.activity.records[0] as string;
-      }
-      if (state.selectedRecords == undefined) {
-        return;
+      if (state.selectedRecords == null && state.activity.state.records.length > 0) {
+        state.selectedRecords = state.activity.state.records[0];
       }
       if (state.activity != undefined) {
         state.loading = true;
         const activityData: any[] =
-          state.activity.events[state.selectedRecords];
+          state.activity.events[state.selectedRecords.id];
         const data: any[] = Object.create(null);
         state.activity.nodeIds.forEach(id => (data[id] = []));
         state.activity.events.senders.forEach((sender: number, idx: number) => {

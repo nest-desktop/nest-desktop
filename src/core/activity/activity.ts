@@ -1,3 +1,4 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
 
 import { Node } from '../node/node';
@@ -12,10 +13,13 @@ export class Activity {
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
-  private _records: String[] = [];
+  private _state: UnwrapRef<any>
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
+    this._state = reactive({
+      records: [],
+    })
     this.init(activity);
   }
 
@@ -104,12 +108,8 @@ export class Activity {
     return this._recorder;
   }
 
-  get records(): String[] {
-    return this._records;
-  }
-
-  set records(value: String[]) {
-    this._records = value;
+  get state(): UnwrapRef<any> {
+    return this._state;
   }
 
   get simulationTimeInfo(): number {
@@ -131,7 +131,7 @@ export class Activity {
     this._lastFrame = false;
     this._nodeIds = [];
     this._nodePositions = [];
-    this._records = [];
+    this._state.records = [];
   }
 
   /**
