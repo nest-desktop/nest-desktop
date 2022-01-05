@@ -1,7 +1,7 @@
 <template>
   <div class="simulationCodeEditor" ref="simulationCodeEditor">
     <span
-      style="position: absolute; right: 60px; top: 0; z-index: 1000"
+      style="position: absolute; right: 82px; top: 0; z-index: 1000"
       v-if="state.code.project.app.config.devMode"
     >
       <v-chip
@@ -143,7 +143,7 @@ export default Vue.extend({
 }
 
 .CodeMirror {
-  border: 1px solid #eee;
+  border: 1px solid rgba(0,0,0,0.12);
   font-family: monospace;
   font-size: 12px;
 }
