@@ -31,13 +31,13 @@ Build the documentation which your created with Sphinx in the ``docs`` folder of
 
   rm -r _build/; make html
 
-Start the python server for local documentation.
+Start the python server to serve the documentation locally, i.e. available only on your personal machine.
 
 .. code-block:: bash
 
 python3 -m http.server 8002
 
-Then open the browser with `http://localhost:8002`.
+Then open the URL `http://localhost:8002` with your browser.
 
 
 **Publication: Push to ReadTheDocs**
