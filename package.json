@@ -73,7 +73,7 @@
     "babel-loader": "^8.2.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "electron": "^13.0.0",
+    "electron": "^16.0.6",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^8.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -96,16 +96,20 @@
     "vue-toast-notification: >=v2.0 requires Vue 3, but we still need Vue 2 for Vuetify",
     "webpack: installed manually in v4.x.y to prevent sass error"
   ],
+  "contributors": [
+    "Sebastian Spreizer",
+    "Jens Bruchertseifer"
+  ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
   },
   "homepage": "https://nest-desktop.readthedocs.io",
   "keywords": [
-    "NEST Desktop",
     "NEST",
-    "simulation",
-    "neuroscience",
-    "biological neural networks"
+    "neuronal simulation",
+    "computational neuroscience",
+    "spiking neuronal networks",
+    "biological neuronal networks"
   ],
   "license": "MIT",
   "repository": {
