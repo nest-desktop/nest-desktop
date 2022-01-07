@@ -1,6 +1,6 @@
 {
   "custom": false,
-  "hostname": "",
+  "hostname": "localhost",
   "port": "5000",
-  "protocol": ""
+  "protocol": "http:"
 }
