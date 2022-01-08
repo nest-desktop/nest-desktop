@@ -55,6 +55,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { onMounted, watch } from '@vue/composition-api';
 
 import core from '@/core';
 
@@ -63,12 +64,28 @@ import core from '@/core';
  */
 export default Vue.extend({
   name: 'ModelDocumentation',
-  setup() {
+  props: {
+    id: String,
+  },
+  setup(props) {
     const modelView = core.app.model.view;
     const NESTVersion = 'v3.1';
     const NESTDocURL = () => {
       return `https://nest-simulator.readthedocs.io/en/${NESTVersion}/models/${modelView.state.modelId}.html`;
     };
+
+    onMounted(() => {
+      modelView.state.modelId = props.id;
+      modelView.updateModelDoc();
+    });
+
+    watch(
+      () => props.id,
+      (id: string) => {
+        modelView.state.modelId = id;
+        modelView.updateModelDoc();
+      }
+    );
 
     return { NESTDocURL, modelView };
   },

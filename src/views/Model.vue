@@ -150,6 +150,7 @@
 
           <v-card
             flat
+            tile
             v-if="
               modelView.state.tool.name === 'modelParameterInput' &&
               modelView.state.model
