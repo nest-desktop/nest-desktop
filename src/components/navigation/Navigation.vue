@@ -49,7 +49,6 @@
           <v-navigation-drawer
             :dark="state.darkNav"
             absolute
-            app
             mini-variant
             mini-variant-width="64"
             mobile-breakpoint="64"
