@@ -126,10 +126,8 @@
             <v-spacer />
             <v-btn
               @click="deleteConnection"
-              color="warning"
               outlined
               small
-              text
               v-text="'delete'"
             />
           </v-card-actions>
