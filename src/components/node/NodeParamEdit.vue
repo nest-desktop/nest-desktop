@@ -52,8 +52,8 @@
                     "
                     close
                     disable-lookup
-                    outlined
                     label
+                    outlined
                     small
                     style="margin: 1px 2px"
                     v-bind="attrs"

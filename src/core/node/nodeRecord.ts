@@ -4,12 +4,12 @@ import { Node } from './node';
 export class NodeRecord {
   private _activity: Activity;
   private _color: string;
+ private _groupId: string;
   private _id: string;
   private _label: string;
   private _node: Node;
-  private _unit: string;
-  private _groupId: string;
   private _nodeSize: number;
+  private _unit: string;
 
   constructor(node: Node, record: any) {
     this._node = node;

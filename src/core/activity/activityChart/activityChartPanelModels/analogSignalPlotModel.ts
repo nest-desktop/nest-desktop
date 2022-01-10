@@ -29,22 +29,17 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     // Update spike threshold for membrane potential
     this.state.recordsVisible.forEach((record: NodeRecord) => {
       if (record.id === 'V_m') {
+        // Update spike threshold for membrane potential
         this.updateSpikeThresholdLine(record);
       }
-    });
-
-    // Update single line or multiple lines.
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
       if (record.nodeSize > 0) {
+        // Update single line or multiple lines.
         record.nodeSize > 1
           ? this.updateMultipleLines(record)
           : this.updateSingleLine(record);
       }
-    });
-
-    // Update average line for recorded population.
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
       if (record.nodeSize > 1) {
+        // Update average line for recorded population.
         this.updateAverageLine(record);
       }
     });
@@ -52,6 +47,27 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateLayoutLabel();
   }
 
+  /**
+   * Creates the graph data points from a list of node IDs and the recorded
+   * data of a node.
+   * @param nodeIds Array of node IDs
+   * @param record Array of NodeRecords (containing the events)
+   * @returns Array containing x, y and name value for every data point
+   */
+  createGraphDataPoints(nodeIds: number[], record: NodeRecord): any[] {
+    const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
+    record.activity.events.senders.forEach((sender: number, idx: number) => {
+      const senderIdx: number = nodeIds.indexOf(sender);
+      if (senderIdx === -1) {
+        return;
+      }
+      data[senderIdx].x.push(record.times[idx]);
+      data[senderIdx].y.push(record.values[idx]);
+      data[senderIdx].name = record.id + ' of ' + record.nodeLabel;
+    });
+    return data;
+  }
+  
   /**
    * Update spike threshold data for membrane potential.
    */
@@ -123,16 +139,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     }
 
     const nodeIds: number[] = record.activity.nodeIds.slice(0, 10);
-    const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
-    record.activity.events.senders.forEach((sender: number, idx: number) => {
-      const senderIdx: number = nodeIds.indexOf(sender);
-      if (senderIdx === -1) {
-        return;
-      }
-      data[senderIdx].x.push(record.times[idx]);
-      data[senderIdx].y.push(record.values[idx]);
-      data[senderIdx].name = record.id + ' of ' + record.nodeLabel;
-    });
+    const data: any[] = this.createGraphDataPoints(nodeIds, record);
 
     data.forEach((d: any, idx: number) => {
       const line = {
@@ -166,16 +173,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     }
 
     const nodeIds: number[] = record.activity.nodeIds;
-    const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
-    record.activity.events.senders.forEach((sender: number, idx: number) => {
-      const senderIdx: number = nodeIds.indexOf(sender);
-      if (senderIdx === -1) {
-        return;
-      }
-      data[senderIdx].x.push(record.times[idx]);
-      data[senderIdx].y.push(record.values[idx]);
-      data[senderIdx].name = record.id + ' of ' + record.node.view.label;
-    });
+    const data: any[] = this.createGraphDataPoints(nodeIds, record);
 
     const x: any[] = data[0].x;
     const y: any[] = x.map((_: any, i: number) => {

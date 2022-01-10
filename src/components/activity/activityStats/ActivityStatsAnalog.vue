@@ -28,8 +28,8 @@
             <v-chip
               :color="item.color"
               class="mx-2"
-              outlined
               label
+              outlined
               small
               v-text="item.id"
             />

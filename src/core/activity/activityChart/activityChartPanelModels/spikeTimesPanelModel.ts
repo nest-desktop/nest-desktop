@@ -14,7 +14,7 @@ export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   /**
    * Initialize panel model.
    */
-  override init(model: any = {}): void {
+  override init(): void {
     // console.log('Initialize panel model.');
     this.initActivities();
   }

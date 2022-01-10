@@ -209,7 +209,7 @@ export class Model extends Config {
   }
 
   /**
-   * Check if the model is a analog recorder.
+   * Check if the model is an analog recorder.
    */
   isAnalogRecorder(): boolean {
     return this._elementType === 'recorder' && this._existing.endsWith('meter');

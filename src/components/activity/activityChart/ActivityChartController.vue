@@ -12,8 +12,8 @@
         flat
         show-swatches
         style="border-radius: 0"
-        v-model="state.menu.record.color"
         v-if="state.menu.record"
+        v-model="state.menu.record.color"
       />
     </v-menu>
 
