@@ -4,7 +4,7 @@ import { Node } from './node';
 export class NodeRecord {
   private _activity: Activity;
   private _color: string;
- private _groupId: string;
+  private _groupId: string;
   private _id: string;
   private _label: string;
   private _node: Node;
