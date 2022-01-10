@@ -167,7 +167,9 @@ export class ProjectStore {
   }
 
   /**
-   * Get project from the list if existed otherwise new project.
+   * Fetch a project from the list if if exists, otherwise a new project.
+   * @param projectId ID of the project
+   * @returns searched project resp. new project
    */
   getProject(projectId: string): Project {
     this.consoleLog('Get project');
