@@ -1,16 +1,12 @@
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
+import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
-export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'SpikeTimesHistogram';
+export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'spikeTimesHistogram';
     this.icon = 'mdi-chart-bar';
-    this.label = 'spike times';
-
-    this.panel.layout.barmode = 'overlay';
-
     this.params = [
       {
         id: 'binSize',
@@ -21,8 +17,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPlotModel {
         value: 25,
       },
     ];
-
-    this.init();
+    this.panel.xaxis = 1;
   }
 
   /**

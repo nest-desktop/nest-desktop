@@ -9,9 +9,9 @@ export class ActivityGraph {
   private _codeHash: string;
   private _project: Project;
 
-  constructor(project: Project) {
+  constructor(project: Project, activityGraph: any = {}) {
     this._project = project;
-    this.init();
+    this.init(activityGraph);
   }
 
   get activityAnimationGraph(): ActivityAnimationGraph {
@@ -33,9 +33,9 @@ export class ActivityGraph {
   /**
    * Initialize activity graph.
    */
-  init(): void {
+  init(activityGraph: any = {}): void {
     // console.log('Init activity graph');
-    this.initActivityChartGraph();
+    this.initActivityChartGraph(activityGraph.panels);
     this.initActivityAnimationGraph();
   }
 
@@ -44,7 +44,6 @@ export class ActivityGraph {
    */
   update(): void {
     // console.log('Update activity graph');
-    this._activityChartGraph.updatePanelModels();
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
     this.updateHash();
@@ -68,11 +67,11 @@ export class ActivityGraph {
   /**
    * Initialize activity chart graph (plotly).
    */
-  initActivityChartGraph(): void {
+  initActivityChartGraph(panels: any[] = []): void {
     if (this._activityChartGraph == undefined) {
-      this._activityChartGraph = new ActivityChartGraph(this._project);
+      this._activityChartGraph = new ActivityChartGraph(this._project, panels);
     } else {
-      this._activityChartGraph.init();
+      this._activityChartGraph.init(panels);
     }
   }
 
@@ -81,13 +80,6 @@ export class ActivityGraph {
    */
   emptyActivityGraph(): void {
     this._activityChartGraph.empty();
-  }
-
-  /**
-   * Update color in activity graph.
-   */
-  updateColor(): void {
-    this._activityChartGraph.updatePanelModelsColor();
   }
 
   /**
@@ -106,5 +98,13 @@ export class ActivityGraph {
     return this._project.activities.some((activity: Activity) =>
       activity.hasSpikeData()
     );
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity graph object
+   */
+  toJSON(): any {
+    return this._activityChartGraph.toJSON();
   }
 }

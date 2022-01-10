@@ -1,18 +1,20 @@
-import { Project } from '../../project/project';
 import { ActivityChartPanel } from './activityChartPanel';
+import { Project } from '../../project/project';
 
 export class ActivityChartGraph {
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
   private _options: any = {};
+  private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
 
-  constructor(project: Project) {
+  constructor(project: Project, panels: any = []) {
     this._project = project;
     const darkMode: boolean = this._project.app.darkMode;
     this._layout = {
+      barmode: 'overlay',
       font: {
         color: darkMode ? 'white' : '#121212',
       },
@@ -27,8 +29,9 @@ export class ActivityChartGraph {
         x: 0,
       },
     };
+    this._panel = new ActivityChartPanel(this);
 
-    this.init();
+    this.init(panels);
   }
 
   get data(): any[] {
@@ -58,6 +61,10 @@ export class ActivityChartGraph {
     return this._options;
   }
 
+  get panel(): ActivityChartPanel {
+    return this._panel;
+  }
+
   get panels(): ActivityChartPanel[] {
     return this._panels;
   }
@@ -80,8 +87,8 @@ export class ActivityChartGraph {
   /**
    * Add panel.
    */
-  addPanel(model: any = { id: 'spikeTimesRasterPlot' }): void {
-    this._panels.push(new ActivityChartPanel(this, model));
+  addPanel(panel: any = { model: 'spikeTimesRasterPlot' }): void {
+    this._panels.push(new ActivityChartPanel(this, panel));
   }
 
   /**
@@ -94,25 +101,27 @@ export class ActivityChartGraph {
   /**
    * Initialize network chart graph.
    */
-  init(): void {
+  init(panels: any[] = []): void {
     // console.log('Init activity chart graph for', this.project.name);
     this._project.checkActivities();
 
     this._panels = [];
-    if (this._project.hasSpikeActivities) {
-      this.addPanel({ id: 'spikeTimesRasterPlot' });
-      this.addPanel({ id: 'spikeTimesHistogram' });
-    } else if (this._project.hasAnalogActivities) {
-      this.addPanel({ id: 'analogSignalPlot' });
+    if (panels.length > 0) {
+      panels.forEach((panel: any) => this.addPanel(panel));
+    } else {
+      if (this._project.hasAnalogActivities) {
+        this.addPanel({ model: { id: 'analogSignalPlot' } });
+      }
+      if (this._project.hasSpikeActivities) {
+        this.addPanel({ model: { id: 'spikeTimesRasterPlot' } });
+        this.addPanel({ model: { id: 'spikeTimesHistogram' } });
+      }
     }
 
     this.updateVisiblePanelsLayout();
   }
 
-  /**
-   * Initialize panel models.
-   */
-  initPanelModels(): void {
+  initPanels(): void {
     this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
   }
 
@@ -128,15 +137,17 @@ export class ActivityChartGraph {
    * Reset layout of the chart graph.
    */
   resetLayout(): void {
-    this._layout = JSON.parse(JSON.stringify(this._layout));
+    this._layout = Object.assign({}, this._layout);
   }
 
   /**
    * Updates chart graph with activities.
    */
   update(): void {
+    // console.log('Update activity graph.');
     this.updateVisiblePanelsLayout();
     this.resetLayout();
+    this.updatePanelModels();
     this.updateLayoutColor();
 
     this._data = [];
@@ -176,9 +187,6 @@ export class ActivityChartGraph {
       panel.layout.yaxis;
     this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
       panel.layout.xaxis;
-    if (panel.layout.barmode) {
-      this.layout.barmode = panel.layout.barmode;
-    }
   }
 
   /**
@@ -189,11 +197,11 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update colors of the panel models.
+   * Update records color.
    */
-  updatePanelModelsColor(): void {
+  updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) =>
-      panel.model.updateColor()
+      panel.model.updateRecordsColor()
     );
   }
 
@@ -204,5 +212,15 @@ export class ActivityChartGraph {
     this.panelsVisible.forEach((panel: ActivityChartPanel) =>
       panel.updatePanelLayout()
     );
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart graph object
+   */
+  toJSON(): any {
+    return {
+      panels: this._panels.map((panel: ActivityChartPanel) => panel.toJSON()),
+    };
   }
 }

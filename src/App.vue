@@ -150,6 +150,10 @@ export default Vue.extend({
   opacity: 0;
 }
 
+.ma-2px {
+  margin: 2px !important;
+}
+
 /* Overrides default Vuetify style */
 .v-tabs-slider-wrapper {
   pointer-events: none;

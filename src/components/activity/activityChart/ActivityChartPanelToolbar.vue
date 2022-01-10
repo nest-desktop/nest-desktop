@@ -99,7 +99,7 @@ export default Vue.extend({
     });
 
     const selectModel = (modelId: string) => {
-      state.panel.selectModel(modelId);
+      state.panel.selectModel(modelId, state.panel.model.toJSON());
       state.panel.graph.update();
     };
 

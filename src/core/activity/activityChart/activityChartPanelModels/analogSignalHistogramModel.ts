@@ -1,16 +1,14 @@
 import * as d3 from 'd3';
 
-import { AnalogSignalActivity } from '../../analogSignalActivity';
 import { ActivityChartPanel } from '../activityChartPanel';
-import { ActivityChartPanelModel } from '../activityChartPanelModel';
+import { AnalogSignalPanelModel } from './analogSignalPanelModel';
+import { NodeRecord } from '../../../node/nodeRecord';
 
-export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'AnalogSignalHistogram';
+export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'analogSignalHistogram';
     this.icon = 'mdi-chart-bar';
-    this.label = 'analog signals';
-
     this.panel.xaxis = 2;
 
     this.params = [
@@ -22,19 +20,6 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
         value: 50,
       },
     ];
-
-    this.initState();
-    this.init();
-  }
-
-  /**
-   * Initialize histogram panel for analog signal.
-   */
-  override init(): void {
-    this.initState();
-
-    this.data = [];
-    this.activities = this.panel.graph.project.analogSignalActivities;
   }
 
   /**
@@ -47,90 +32,88 @@ export class AnalogSignalHistogramModel extends ActivityChartPanelModel {
     // console.log('Init histogram panel of spike times')
     this.data = [];
 
-    if (this.state.records.length === 0) {
+    if (this.state.recordsVisible.length === 0) {
       return;
     }
 
-    const records: string[] = [];
-    this.activities.forEach((activity: AnalogSignalActivity) => {
-      this.state.records[activity.idx].forEach((record: string) => {
-        this.updateEventData(activity, record);
-        if (!records.includes(record)) {
-          records.push(record);
-        }
-      });
+    this.state.recordsVisible.forEach((record: NodeRecord) => {
+      this.updateHistogramRange(record.values);
     });
 
-    this.updateLayoutLabel(records);
+    this.state.recordsVisible.forEach((record: NodeRecord) =>
+      this.updateEventData(record)
+    );
+  }
+
+  /**
+   * Update range for histogram.
+   *
+   * @remarks
+   * It needs activity data.
+   */
+  updateHistogramRange(values: number[] = []): void {
+    // Update time
+    if (values.length === 0) {
+      return;
+    }
+
+    this.state.histogram.start = Math.min(
+      this.state.histogram.start,
+      d3.min(values)
+    );
+    this.state.histogram.end = Math.max(
+      this.state.histogram.end,
+      d3.max(values)
+    );
   }
 
   /**
    * Update data for analog signal histogram.
    */
-  updateEventData(activity: AnalogSignalActivity, record: string): void {
+  updateEventData(record: NodeRecord): void {
     // console.log('Update data for analog signal histogram.');
-    const x: number[] = activity.events[record];
-    const start: number = d3.min(x);
-    const end: number = d3.max(x) + 1;
+    if (record.values == null || record.values.length === 0) {
+      return;
+    }
+
+    const start: number = this.state.histogram.start;
+    const end: number = this.state.histogram.end + 1;
     const size: number = (end - start) / this.params[0].value;
 
     this.data.push({
-      activityIdx: activity.idx,
-      legendgroup: record + activity.idx,
-      type: 'histogram',
-      source: 'x',
+      activityIdx: record.activity.idx,
       histfunc: 'count',
-      name: 'Histogram of ' + activity.recorder.view.label,
       hoverinfo: 'y',
-      showlegend: false,
+      legendgroup: record.groupId,
+      marker: {
+        color: record.color,
+        line: {
+          color: record.darkMode ? '#121212' : 'white',
+          width: this.params[0].value > 100 ? 0 : 1,
+        },
+      },
+      name: 'Histogram of ' + record.nodeLabel,
       opacity: 0.6,
+      recordId: record.id,
+      showlegend: false,
+      source: 'x',
+      type: 'histogram',
+      x: record.values,
+      xaxis: 'x' + this.panel.xaxis,
       xbins: {
         start,
         end,
         size,
       },
-      marker: {
-        color: activity.recorder.view.color,
-        line: {
-          color: activity.project.app.darkMode ? '#121212' : 'white',
-          width: (end - start) / size > 100 ? 0 : 1,
-        },
-      },
-      x,
-      xaxis: 'x' + this.panel.xaxis,
     });
   }
 
   /**
    * Update layout label for analog signal histogram.
    */
-  override updateLayoutLabel(records: string[] = []): void {
-    // console.log('Update layout label for analog signal histogram.');
-    // Label x-axis if only one record existed.
-    this.panel.layout.xaxis.title = '';
-    if (records.length === 1) {
-      const record = records[0];
-      const recordable: any =
-        this.activities[0].recorder.model.config.recordables.find(
-          (recordable: any) => recordable.id === record
-        );
-      let xAxisTitle: string = this.capitalize(recordable.label);
-      if (recordable.unit) {
-        xAxisTitle += ` [${recordable.unit}]`;
-      }
-      this.panel.layout.xaxis.title = xAxisTitle;
-    } else if (records.length > 1) {
-      if (records.every(rec => rec.includes('ct_'))) {
-        this.panel.layout.xaxis.title = 'Channel activation';
-      } else if (records.every(rec => rec.includes('g_'))) {
-        this.panel.layout.xaxis.title = 'Conductance [nS]';
-      } else if (records.every(rec => rec.includes('I_syn_'))) {
-        this.panel.layout.xaxis.title = 'Total synaptic current [pA]';
-      } else if (records.every(rec => rec.includes('weighted_spikes_'))) {
-        this.panel.layout.xaxis.title = 'Weighted incoming spikes';
-      } else {
-        this.panel.layout.xaxis.title = 'Multiple events';
-      }
-    }
+  override updateLayoutLabel(): void {
+    // console.log('Update layout label for analog signal.');
+    this.panel.layout.xaxis.title = this.axisTitle;
+    this.panel.layout.yaxis.title = 'Count';
   }
 }

@@ -1,6 +1,28 @@
 <template>
   <div class="activityChartController" v-if="state.graph">
+    <v-menu
+      :close-on-content-click="false"
+      :position-x="state.menu.position.x"
+      :position-y="state.menu.position.y"
+      :value="state.menu.show"
+      transition="slide-y-transition"
+    >
+      <v-color-picker
+        @update:color="state.graph.updateRecordsColor()"
+        flat
+        show-swatches
+        style="border-radius: 0"
+        v-if="state.menu.record"
+        v-model="state.menu.record.color"
+      />
+    </v-menu>
+
     <v-toolbar dense flat height="40">
+      <v-btn @click="resetPanels" class="mt-1" outlined small>
+        <v-icon left v-text="'mdi-reload'" />
+        Reset
+      </v-btn>
+
       <v-spacer />
       <v-menu offset-y left>
         <template #activator="{ on, attrs }">
@@ -14,8 +36,8 @@
           <v-list-item
             :disabled="!state.graph.project.hasAnalogActivities"
             :key="'analogPanel' + index"
-            @click="addPanel({ id: model.id })"
-            v-for="(model, index) in state.graph.panels[0].modelsAnalog"
+            @click="addPanel(model.id)"
+            v-for="(model, index) in state.graph.panel.modelsAnalog"
           >
             <v-icon left small v-text="model.icon" />
             <v-list-item-title v-text="model.label" />
@@ -25,8 +47,8 @@
           <v-list-item
             :disabled="!state.graph.project.hasSpikeActivities"
             :key="'spikePanel' + index"
-            @click="addPanel({ id: model.id })"
-            v-for="(model, index) in state.graph.panels[0].modelsSpike"
+            @click="addPanel(model.id)"
+            v-for="(model, index) in state.graph.panel.modelsSpike"
           >
             <v-icon class="mr-2" small v-text="model.icon" />
             <v-list-item-title v-text="model.label" />
@@ -37,55 +59,104 @@
 
     <draggable handle=".handle" v-model="state.graph.panels">
       <transition-group>
-        <v-sheet
+        <div
           :key="'panel' + index"
-          class="ma-1"
-          color="primary"
-          outlined
           v-for="(panel, index) in state.graph.panels"
         >
-          <v-card class="ml-1" outlined tile>
-            <v-card-title class="pa-0">
-              <ActivityChartPanelToolbar :panel="panel" style="width: 100%" />
-            </v-card-title>
-
-            <v-card-text class="pa-0" v-if="panel.state.visible">
-              <ParameterEdit
-                :key="'param' + index"
-                :options="param"
-                :value.sync="param.value"
-                @update:value="paramChange"
-                v-for="(param, index) of panel.model.params"
-              />
-
-              <span v-if="panel.model.activityType !== 'spike'">
-                <v-subheader
-                  class="ma-0"
-                  style="height: 28px"
-                  v-text="'Data sources'"
-                />
-                <div
-                  class="px-1 pb-1 flex"
-                  :key="activity.idx"
-                  v-for="activity in panel.model.activities"
-                >
-                  <v-checkbox
-                    :color="activity.recorder.view.color"
-                    :key="record + activity.idx"
-                    :label="record"
-                    :value="record"
-                    @change="paramChange"
-                    class="ma-0 pa-0"
-                    dense
-                    hide-details
-                    v-for="record in activity.records"
-                    v-model="panel.model.state.records[activity.idx]"
+          <v-card class="ma-2px" outlined tile>
+            <v-sheet color="primary">
+              <v-card class="ml-1" flat tile>
+                <v-card-title class="pa-0">
+                  <ActivityChartPanelToolbar
+                    :panel="panel"
+                    style="width: 100%"
                   />
-                </div>
-              </span>
-            </v-card-text>
+                </v-card-title>
+
+                <v-card-text class="pa-0" v-if="panel.state.visible">
+                  <span v-if="panel.model.state.records.length > 0">
+                    <v-select
+                      :items="panel.model.state.records"
+                      :menu-props="{ offsetY: true }"
+                      @change="
+                        () => {
+                          panel.model.init();
+                          state.graph.update();
+                        }
+                      "
+                      attach
+                      chips
+                      class="pa-1 pt-3"
+                      clearable
+                      dense
+                      hide-details
+                      item-value="groupId"
+                      label="Recorded events"
+                      multiple
+                      persistent-hint
+                      return-object
+                      small
+                      v-model="panel.model.state.recordsVisible"
+                    >
+                      <template v-slot:selection="{ item }">
+                        <v-tooltip bottom>
+                          <template #activator="{ on, attrs }">
+                            <v-chip
+                              :color="item.color"
+                              @click="e => showColorPopup(e, item)"
+                              @click:close="
+                                () => {
+                                  panel.model.removeRecord(item);
+                                  state.graph.update();
+                                }
+                              "
+                              close
+                              disable-lookup
+                              outlined
+                              label
+                              small
+                              style="margin: 1px 2px"
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              {{ item.id }}
+                            </v-chip>
+                          </template>
+                          <div style="font-size: 12px">
+                            <span v-text="item.label" />
+                            <span v-if="item.unit" v-text="` (${item.unit})`" />
+                          </div>
+                        </v-tooltip>
+                      </template>
+
+                      <template v-slot:item="{ item }">
+                        <v-chip
+                          :color="item.color"
+                          class="mx-2"
+                          outlined
+                          label
+                          small
+                          v-text="item.id"
+                        />
+                        <div style="font-size: 12px">
+                          <span v-text="item.label" />
+                          <span v-if="item.unit" v-text="` (${item.unit})`" />
+                        </div>
+                      </template>
+                    </v-select>
+                  </span>
+                  <ParameterEdit
+                    :key="'param' + index"
+                    :options="param"
+                    :value.sync="param.value"
+                    @update:value="state.graph.update()"
+                    v-for="(param, index) of panel.model.params"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-sheet>
           </v-card>
-        </v-sheet>
+        </div>
       </transition-group>
     </draggable>
   </div>
@@ -97,8 +168,9 @@ import { reactive, onMounted, watch } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import { ActivityChartGraph } from '@/core/activity/activityChart/activityChartGraph';
-import core from '@/core';
+import { NodeRecord } from '@/core/node/nodeRecord';
 import ActivityChartPanelToolbar from '@/components/activity/activityChart/ActivityChartPanelToolbar.vue';
+import core from '@/core';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 export default Vue.extend({
@@ -116,29 +188,66 @@ export default Vue.extend({
     const state = reactive({
       color: '#9e9e9e',
       graph: props.graph as ActivityChartGraph | undefined,
+      menu: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        record: null,
+        show: false,
+      },
     });
 
-    const addPanel = (panel: any) => {
-      state.graph.addPanel(panel);
+    /**
+    * Add panel.
+    */
+    const addPanel = (modelId: string) => {
+      state.graph.addPanel({ model: { id: modelId } });
       state.graph.update();
+    };
+
+    /**
+    * Reset panels.
+    */
+    const resetPanels = () => {
+      state.graph.init();
+      state.graph.update();
+    };
+
+    /**
+     * Show color popup for the selected record.
+     */
+    const showColorPopup = function (e: MouseEvent, record: NodeRecord) {
+      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
+      e.preventDefault();
+      state.menu.show = false;
+      state.menu.record = record;
+      state.menu.position.x = e.clientX;
+      state.menu.position.y = e.clientY;
+      this.$nextTick(() => {
+        state.menu.show = true;
+      });
+    };
+
+    /**
+     * Reset menu.
+     */
+    const resetMenu = () => {
+      state.menu.show = false;
+      state.menu.position.x = 0;
+      state.menu.position.y = 0;
+      state.menu.record = null;
     };
 
     /**
      * Update activity graph controller.
      */
     const update = () => {
+      resetMenu();
       state.graph = undefined;
       setTimeout(() => {
         state.graph = props.graph as ActivityChartGraph;
       }, 1);
-    };
-
-    /**
-     * Triggers when parameter is changed.
-     */
-    const paramChange = () => {
-      state.graph.updatePanelModels();
-      state.graph.update();
     };
 
     onMounted(() => {
@@ -152,17 +261,13 @@ export default Vue.extend({
       }
     );
 
-    return { addPanel, paramChange, projectView, state };
+    return {
+      addPanel,
+      projectView,
+      resetPanels,
+      showColorPopup,
+      state,
+    };
   },
 });
 </script>
-
-<style>
-.activityChartController .v-sheet {
-  border-color: #e0e0e0 !important;
-  border-width: 1px 1px 1px 0;
-}
-.activityChartController .v-card {
-  border-width: 0;
-}
-</style>

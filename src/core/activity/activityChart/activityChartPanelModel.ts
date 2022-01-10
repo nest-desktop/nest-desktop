@@ -1,5 +1,8 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+
 import { Activity } from '../activity';
 import { ActivityChartPanel } from './activityChartPanel';
+import { NodeRecord } from '../../node/nodeRecord';
 
 export abstract class ActivityChartPanelModel {
   // private static readonly _name = 'ActivityGraphPanel';
@@ -11,18 +14,23 @@ export abstract class ActivityChartPanelModel {
   private _label: string = '';
   private _panel: ActivityChartPanel; // parent
   private _params: any[] = [];
-  private _state = {
-    records: [],
-    time: {
-      end: 0,
-      start: 0,
-    },
-  };
+  private _state: UnwrapRef<any>;
 
   constructor(panel: ActivityChartPanel) {
     this._id = 'activityChart';
     this._panel = panel;
-    this.init();
+    this._state = reactive({
+      histogram: {
+        end: -1e100,
+        start: 1e100,
+      },
+      records: [],
+      recordsVisible: [],
+      time: {
+        end: 0,
+        start: 0,
+      },
+    });
   }
 
   get activities(): Activity[] {
@@ -85,7 +93,7 @@ export abstract class ActivityChartPanelModel {
     this._params = value;
   }
 
-  get state(): any {
+  get state(): UnwrapRef<any> {
     return this._state;
   }
 
@@ -104,20 +112,10 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Initialize activity panel model.
-   *
-   * @remarks
-   * This method will be overwritten in child classes.
+   * Check if record is selected.
    */
-  init(): void {
-    this.initState();
-  }
-
-  /**
-   * Initialize state for activity panel model.
-   */
-  initState(): void {
-    this.state.records = new Array(this.activities.length).fill([]);
+  isRecordSelected(record: NodeRecord): boolean {
+    return this._state.recordsVisible.some((rec: NodeRecord) => rec === record);
   }
 
   /**
@@ -128,13 +126,75 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update data activities.
+   * Initialize panel model.
+   *
+   * @remarks
+   * This method will be overwritten in child classes.
+   */
+  abstract init(): void;
+
+  /**
+   * Initialize activities of panel model.
+   *
+   * @remarks
+   * This method will be overwritten in child classes.
+   */
+  abstract initActivities(): void;
+
+  /**
+   * Initialize records from analog activities.
+   */
+  initAnalogRecords(): void {
+    // console.log('Initialize records for analog signals.');
+    this._state.records = [];
+    this.activities
+      .filter((activity: Activity) =>
+        activity.recorder.model.isAnalogRecorder()
+      )
+      .forEach((activity: Activity) => {
+        // activity.recorder.initRecords();
+        if (activity.recorder.records != null) {
+          activity.recorder.records.forEach((record: NodeRecord) => {
+            record.activity = activity;
+            this._state.records.push(record);
+          });
+        }
+      });
+    if (this._state.recordsVisible.length === 0) {
+      this._state.recordsVisible = [...this.state.records];
+    }
+  }
+
+  /**
+   * Update visible records from analog activities.
+   */
+  initAnalogRecordsVisible(records: any[] = []): void {
+    // console.log('Initialize visible records for analog signals.');
+    if (this._state.records.length === 0) {
+      return;
+    }
+
+    if (records.length > 0) {
+      this._state.recordsVisible = records.map((record: any) => {
+        const recordVisible = this._state.records.find(
+          (rec: NodeRecord) => rec.groupId === record.groupId
+        );
+        recordVisible.color = record.color;
+        return recordVisible;
+      });
+    }
+  }
+
+  /**
+   * Update panel model.
    *
    * @remarks
    * It requires activity data.
    */
-  update(): any {
-    this.updateState();
+  update(): void {
+    // console.log('Update activity chart panel model.');
+    this.updateTime();
+    this.updateAnalogRecords();
 
     this.data = [];
     this.activities.forEach((activity: Activity) => {
@@ -145,15 +205,62 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update marker color for activities.
+   * Update records of the panel models from all analog activities.
    */
-  updateColor(): void {
-    this.activities.forEach((activity: Activity) => {
-      const data: any = this.data.find(
-        (d: any) => d.activityIdx === activity.idx
+  updateAnalogRecords(): void {
+    // Remove old records from other recorder.
+    this._state.records = this._state.records.filter(
+      (panelRecord: NodeRecord) => {
+        return panelRecord.node.records.some(
+          (record: NodeRecord) => record.groupId === panelRecord.groupId
+        );
+      }
+    );
+
+    // Add new records from current recorder.
+    this._activities
+      .filter((activity: Activity) =>
+        activity.recorder.model.isAnalogRecorder()
+      )
+      .forEach((activity: Activity) => {
+        if (activity.recorder.records != null) {
+          activity.recorder.records.forEach((record: NodeRecord) => {
+            if (!this._state.records.includes(record)) {
+              record.activity = activity;
+              this._state.records.push(record);
+            }
+          });
+        }
+      });
+
+    // Update node size.
+    this._state.records.forEach((record: NodeRecord) => {
+      record.nodeSize = record.activity.nodeIds.length;
+    });
+  }
+
+  /**
+   * Update color for records.
+   */
+  updateRecordsColor(): void {
+    this._data.forEach((data: any) => {
+      if (data.class === 'background') {
+        return;
+      }
+
+      const record = this._state.recordsVisible.find(
+        (record: NodeRecord) =>
+          record.id === data.recordId &&
+          record.activity.idx === data.activityIdx
       );
-      if (data != null) {
-        data.marker.color = activity.recorder.view.color;
+
+      const activity = this._activities[data.activityIdx];
+      const color = record ? record.color : activity.recorder.view.color;
+
+      if (data.marker) {
+        data.marker.color = color;
+      } else if (data.line) {
+        data.line.color = color;
       }
     });
   }
@@ -180,22 +287,43 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update state of the panel model.
+   * Update time of the panel model.
    *
    * @remarks
    * It needs activity data.
    */
-  updateState(): void {
+  updateTime(): void {
     // Update time
-    this.state.time.start = 0;
-    this.state.time.end = Math.max(
-      this.state.time.end,
+    this._state.time.start = 0;
+    this._state.time.end = Math.max(
+      this._state.time.end,
       this._panel.graph.currenttime + 1
     );
+  }
 
-    // Update records
-    this.state.records = this.activities.map(
-      (activity: Activity) => activity.records
+  /**
+   * Remove record from the state.
+   */
+  removeRecord(record: NodeRecord): void {
+    this._state.recordsVisible.splice(
+      this._state.recordsVisible.indexOf(record),
+      1
     );
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart panel model object
+   */
+  toJSON(): any {
+    const model: any = {
+      id: this._id,
+    };
+    if (this._state.recordsVisible.length > 0) {
+      model.records = this._state.recordsVisible.map((record: NodeRecord) =>
+        record.toJSON()
+      );
+    }
+    return model;
   }
 }

@@ -2,12 +2,12 @@ import * as d3 from 'd3';
 
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPlotModel } from './spikeTimesPlotModel';
+import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
-export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
-  constructor(panel: ActivityChartPanel) {
-    super(panel);
-    this.id = 'InterSpikeIntervalHistogram';
+export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
+  constructor(panel: ActivityChartPanel, model: any = {}) {
+    super(panel, model);
+    this.id = 'interSpikeIntervalHistogram';
     this.icon = 'mdi-chart-bar';
     this.label = 'inter-spike interval';
     this.panel.xaxis = 2;
@@ -22,11 +22,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
         value: 5,
       },
     ];
-
-    this.state.barnorm = '';
     this.state.xaxisType = 'linear';
-
-    this.init();
   }
 
   /**
@@ -73,5 +69,6 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPlotModel {
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.type = this.state.xaxisType;
     this.panel.layout.xaxis.title = 'Inter-spike interval [ms]';
+    this.panel.layout.yaxis.title = 'Count';
   }
 }

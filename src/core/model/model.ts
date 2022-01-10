@@ -209,6 +209,20 @@ export class Model extends Config {
   }
 
   /**
+   * Check if the model is an analog recorder.
+   */
+  isAnalogRecorder(): boolean {
+    return this._elementType === 'recorder' && this._existing.endsWith('meter');
+  }
+
+  /**
+   * Check if the model is a multimeter.
+   */
+  isMultimeter(): boolean {
+    return this._existing === 'multimeter';
+  }
+
+  /**
    * Check if the model is a neuron.
    */
   isNeuron(): boolean {
@@ -220,6 +234,13 @@ export class Model extends Config {
    */
   isRecorder(): boolean {
     return this._elementType === 'recorder';
+  }
+
+  /**
+   * Check if the model is a spike recorder.
+   */
+  isSpikeRecorder(): boolean {
+    return this._existing === 'spike_recorder';
   }
 
   /**

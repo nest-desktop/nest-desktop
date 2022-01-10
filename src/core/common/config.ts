@@ -37,7 +37,7 @@ export class Config {
   }
 
   copy(item: any): any {
-    return JSON.parse(JSON.stringify(item));
+    return Object.assign({}, item);
   }
 
   isConfigReady(): boolean {

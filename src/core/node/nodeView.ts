@@ -20,7 +20,7 @@ export class NodeView {
   get color(): string {
     if (typeof this._color === 'string') {
       return this._color;
-    } else if (this._node.model.elementType === 'recorder') {
+    } else if (this._node.model.isRecorder()) {
       const connections: Connection[] = this._node.network.connections.filter(
         (connection: Connection) =>
           connection.sourceIdx === this._node.idx ||
@@ -110,13 +110,13 @@ export class NodeView {
    * Get term based on synapse weight.
    */
   get weight(): string {
-    if (this._node.model.elementType === 'recorder') {
+    if (this._node.model.isRecorder()) {
       return '';
     }
     const connections: Connection[] = this._node.network.connections.filter(
       (connection: Connection) =>
         connection.source.idx === this._node.idx &&
-        connection.target.model.elementType !== 'recorder'
+        !connection.target.model.isRecorder()
     );
     if (connections.length > 0) {
       const weights: number[] = connections.map(
@@ -140,6 +140,23 @@ export class NodeView {
     return this._node.params
       .filter((param: ModelParameter) => param.visible)
       .map(param => param.id);
+  }
+
+  recordLabel(recordId: string): string {
+    const recordables = this._node.recordables;
+    const recordable = recordables.find(
+      recordable => recordable.id == recordId
+    );
+    if (recordable == undefined) {
+      return recordId;
+    }
+    let label = `${recordable.label
+      .slice(0, 1)
+      .toUpperCase()}${recordable.label.slice(1)}`;
+    if (recordable.unit) {
+      label += ` (${recordable.unit})`;
+    }
+    return label;
   }
 
   /**

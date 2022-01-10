@@ -25,7 +25,7 @@ export class NodeCode extends Code {
       !this._node.spatial.hasPositions() ||
       (this._node.spatial.hasPositions() &&
         this._node.spatial.positions.name === 'free');
-    if (addSizeInSpatial && this._node.model.elementType !== 'recorder') {
+    if (addSizeInSpatial && !this._node.model.isRecorder()) {
       script += `, ${this._node.size}`;
     }
     const params: string = this.nodeParams();
@@ -63,9 +63,9 @@ export class NodeCode extends Code {
       (param: ModelParameter) => `"${param.id}": ${param.toCode()}`
     );
 
-    if (this._node.model.existing === 'multimeter') {
+    if (this._node.model.isMultimeter()) {
       const records: string[] = this._node.records.map(
-        (rec: any) => '"' + rec + '"'
+        (record: any) => '"' + record.id + '"'
       );
       params.push(`"record_from": [${records.join(',')}]`);
     }

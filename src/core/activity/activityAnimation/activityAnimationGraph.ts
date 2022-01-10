@@ -298,7 +298,7 @@ export class ActivityAnimationGraph {
    * Update frames for a population.
    */
   updateFrames(activity: Activity): void {
-    const events: any = JSON.parse(JSON.stringify(activity.events));
+    const events: any = Object.assign({}, activity.events);
     if (events.senders == undefined) {
       return;
     }

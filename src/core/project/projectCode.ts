@@ -43,7 +43,7 @@ export class ProjectCode extends Code {
     return this._hash ? this._hash.slice(0, 6) : '';
   }
 
-  get state(): any {
+  get state(): UnwrapRef<any> {
     return this._state;
   }
 
