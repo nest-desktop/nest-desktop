@@ -26,10 +26,10 @@ build_app_dev:
   rules:
     - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
   script:
-    - VERSION_DEV="${VERSION}dev${CI_PIPELINE_IID}"
+    - VERSION_DEV="${VERSION}${CI_PIPELINE_IID}"
     - echo "VERSION='${VERSION_DEV}'" >> version.txt
     - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
-    
+
 build_app_prod:
   extends: .build_app_base
   rules:
@@ -53,7 +53,7 @@ build_app_prod:
     - docker-runner
 
 deploy_testpypi:
-  extends: .deploy_pyp_base  
+  extends: .deploy_pyp_base
   needs:
     - build_app_dev
   rules:
@@ -63,7 +63,7 @@ deploy_testpypi:
     - TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
 
 deploy_pypi:
-  extends: .deploy_pyp_base  
+  extends: .deploy_pyp_base
   needs:
     - build_app_prod
   rules:
@@ -83,7 +83,7 @@ deploy_pypi:
   before_script:
     - source version.txt
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
-  script:    
+  script:
     - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
     - docker push docker-registry.ebrains.eu/nest/nest-desktop:${VERSION}
   after_script:
