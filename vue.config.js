@@ -24,8 +24,7 @@ module.exports = {
     newForkTsCheckerOptions.memoryLimit = 8192;
     if (process.env.CI)
       newForkTsCheckerOptions.workers = require('os').cpus().length;
-    else
-      newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
+    else newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin(newForkTsCheckerOptions)
     );
@@ -40,5 +39,13 @@ module.exports = {
       args[0].title = 'NEST Desktop';
       return args;
     });
+  },
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        icon: 'icons/icon.png',
+        productName: 'NEST Desktop',
+      },
+    },
   },
 };

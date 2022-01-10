@@ -130,3 +130,6 @@ selenium-debug.log
 build
 __pycache__
 *.egg-info
+
+# Electron-builder output
+/dist_electron
