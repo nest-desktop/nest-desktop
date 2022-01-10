@@ -63,12 +63,11 @@
             :key="project.id"
             :to="'/project/' + project.id"
             @click="state.projectId = project.id"
-            @contextmenu="e => showProjectMenu(e, project)"
+            @contextmenu="e => showProjectMenu(e, project.id)"
             v-for="project in projectStore.filteredProjects"
           >
             <v-list-item-content>
               <v-list-item-title v-text="project.name" />
-              <!-- <v-list-item-subtitle v-html="timeSince(project.createdAt)" /> -->
               <v-list-item-subtitle>
                 {{ project.network.nodes.length }} nodes,
                 {{ project.network.connections.length }} connections
@@ -76,20 +75,22 @@
             </v-list-item-content>
 
             <v-list-item-icon>
-              <v-icon
-                class="px-1"
-                small
-                v-if="
-                  project.id != project.doc._id ||
-                  project.state.hash != project.doc.hash
-                "
-                v-text="'mdi-alert-circle-outline'"
-              />
-              <ActivityGraphIcon
-                :project="project"
-                append
-                v-if="project.hasActivities"
-              />
+              <span v-if="project.doc">
+                <v-icon
+                  class="px-1"
+                  small
+                  v-if="
+                    project.id !== project.doc.id ||
+                    project.state.hash !== project.doc.hash
+                  "
+                  v-text="'mdi-alert-circle-outline'"
+                />
+                <ActivityGraphIcon
+                  :project="project"
+                  append
+                  v-if="project.state.hasActivities"
+                />
+              </span>
             </v-list-item-icon>
           </v-list-item>
         </transition-group>
@@ -103,7 +104,6 @@ import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
-import { Project } from '@/core/project/project';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import core from '@/core';
 import ProjectMenu from '@/components/project/ProjectMenu.vue';
@@ -130,11 +130,11 @@ export default Vue.extend({
     /**
      * Show project menu.
      */
-    const showProjectMenu = function (e: MouseEvent, project: Project) {
+    const showProjectMenu = function (e: MouseEvent, projectId: string) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.projectMenu.show = false;
-      state.projectMenu.project = project;
+      state.projectMenu.project = projectStore.getProject(projectId);
       state.projectMenu.position.x = e.clientX;
       state.projectMenu.position.y = e.clientY;
       this.$nextTick(() => {

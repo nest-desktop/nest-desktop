@@ -130,6 +130,9 @@ export default Vue.extend({
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {
+      core.app.project.state.projects.forEach((project: any) =>
+        core.app.project.getProject(project.id)
+      );
       core.app.project.resetProjectStates();
       core.app.openDialog('project', action, core.app.project.state.projects);
       state.show = false;

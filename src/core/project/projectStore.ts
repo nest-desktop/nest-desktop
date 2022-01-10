@@ -95,11 +95,11 @@ export class ProjectStore {
     this._state.projects = [];
     this._state.projectRevisions = [];
     await this._db.list('createdAt', true).then((projects: any[]) => {
-      this._state.projects = projects.map((data: any) => {
-        const project = new Project(this._app, data);
-        project.init();
-        return project;
-      });
+      this._state.projects = projects;
+      if (this._view.state.projectId != null) {
+        this.project =
+          this.getProject(this._view.state.projectId) || new Project(this._app);
+      }
     });
   }
 
@@ -167,15 +167,27 @@ export class ProjectStore {
   }
 
   /**
-   * Get current project from the list.
+   * Fetch a project from the list if if exists, otherwise a new project.
+   * @param projectId ID of the project
+   * @returns searched project resp. new project
    */
   getProject(projectId: string): Project {
     this.consoleLog('Get project');
-    return (
-      this._state.projects.find(
-        (project: Project) => project.id === projectId
-      ) || new Project(this._app)
-    );
+    const projectIds = this._state.projects.map((project: any) => project.id);
+    if (!projectIds.includes(projectId)) {
+      return;
+    }
+
+    const projectIdx = projectIds.indexOf(projectId);
+    let project = this._state.projects[projectIdx];
+    if (project.doc == undefined) {
+      project = new Project(this._app, project);
+      project.init();
+      const projectIdx = projectIds.indexOf(projectId);
+      this._state.projects[projectIdx] = project;
+    }
+
+    return project;
   }
 
   /*
@@ -199,9 +211,7 @@ export class ProjectStore {
             (project: Project) => project.id === id && project.rev === rev
           );
         } else if (id) {
-          this.project = this._state.projects.find(
-            (project: Project) => project.id === id
-          );
+          this.project = this.getProject(id);
         } else {
           this.createNewProject();
         }
@@ -240,11 +250,15 @@ export class ProjectStore {
   async reloadProject(project: Project): Promise<any> {
     this.consoleLog('Reload project');
     return this._db.read(project.id).then((doc: any) => {
-      this.project = new Project(this._app, doc);
       const idx: number = this._state.projects
         .map((p: Project) => p.id)
         .indexOf(project.id);
-      this._state.projects[idx] = this.project;
+      const newProject = new Project(this._app, doc);
+      this._state.projects[idx] = project;
+
+      if (this._view.state.projectId === project.id) {
+        this.project = newProject;
+      }
     });
   }
 

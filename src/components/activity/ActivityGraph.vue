@@ -214,7 +214,7 @@ export default Vue.extend({
       if (!projectView.config.showHelp) {
         return;
       }
-      if (!state.graph.project.hasActivities) {
+      if (!state.graph.project.state.hasActivities) {
         showSnackbar('No simulation results found.', buttonProps);
       } else if (state.graph.codeHash !== state.graph.project.code.hash) {
         showSnackbar(

@@ -109,10 +109,10 @@ export class ActivityChartGraph {
     if (panels.length > 0) {
       panels.forEach((panel: any) => this.addPanel(panel));
     } else {
-      if (this._project.hasAnalogActivities) {
+      if (this._project.state.hasAnalogActivities) {
         this.addPanel({ model: { id: 'analogSignalPlot' } });
       }
-      if (this._project.hasSpikeActivities) {
+      if (this._project.state.hasSpikeActivities) {
         this.addPanel({ model: { id: 'spikeTimesRasterPlot' } });
         this.addPanel({ model: { id: 'spikeTimesHistogram' } });
       }

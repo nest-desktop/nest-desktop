@@ -4,37 +4,37 @@
       <v-icon
         class="mx-1"
         small
-        v-show="state.project.hasSpatialActivities"
+        v-show="state.project.state.hasSpatialActivities"
         v-text="'mdi-axis-arrow'"
       />
       <v-icon
         class="mx-1"
         small
-        v-show="state.project.hasAnalogActivities"
+        v-show="state.project.state.hasAnalogActivities"
         v-text="'mdi-chart-bell-curve-cumulative'"
       />
       <v-icon
         class="mx-1"
         small
-        v-show="state.project.hasSpikeActivities"
+        v-show="state.project.state.hasSpikeActivities"
         v-text="'mdi-chart-scatter-plot'"
       />
     </span>
     <span v-else>
       <v-icon
         v-if="
-          state.project.hasSpatialActivities &&
+          state.project.state.hasSpatialActivities &&
           !state.fixed &&
           state.project.app.project.view.state.activityGraph === 'spatial'
         "
         v-text="'mdi-axis-arrow'"
       />
       <v-icon
-        v-else-if="state.project.hasAnalogActivities"
+        v-else-if="state.project.state.hasAnalogActivities"
         v-text="'mdi-chart-bell-curve-cumulative'"
       />
       <v-icon
-        v-else-if="state.project.hasSpikeActivities"
+        v-else-if="state.project.state.hasSpikeActivities"
         v-text="'mdi-chart-scatter-plot'"
       />
     </span>
