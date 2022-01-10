@@ -4,18 +4,18 @@ Continuous integration (CI) with GitLab
 
 Since the source code of NEST Desktop is mirrored (`.github/workflows/ebrains-push.yml`)
 to `EBRAINS GitLab <https://gitlab.ebrains.eu/nest/nest-desktop>`__,
-we are able to setup an automated CI systems for the compilation and deployment.
-You can find the configurations in `.gitlab-ci.yml` that we prepared two stages, `build` and `deploy`.
+we are able to setup automated CI systems for the compilation and the deployment.
+You can find the configurations in `.gitlab-ci.yml`. It consists of two stages, `build` and `deploy`.
 
 In each stage, we prepared two parallel pipelines in which jobs will be executed when a specific branch is pushed:
   - the development pipeline for the `dev` branch to check the functional operation of the CI (later with testing).
   - the production pipeline for the `main` branch when NEST Desktop is released.
 
-In the build stage CI uses `Node.js` to produce NEST Desktop to `nest_desktop/app` folder.
+In the build stage CI uses `Node.js` to produce NEST Desktop and store it in the `nest_desktop/app` folder.
 
-In the deploy stage CI deploys Python package and Docker images for `docker-registry.ebrains.eu` and `hub.docker.com`.
-All jobs in the deploy stage depend on the job successfully executed in the build stage.
+In the deploy stage the CI deploys NEST Desktop as a Python package and as Docker images for `EBRAINS Harbor <https://docker-registry.ebrains.eu>`__` (the Docker container registry of EBRAINS) and `Docker Hub <https://hub.docker.com>`__`.
+All jobs in the deploy stage depend on the job of the build stage being executed successfully.
 
-Each executable job of development and production pipelines has a base job
-that the job script in both cases are identical
-but it is only different in version variable for Python package and Docker image.
+Each executable job of the development and production pipelines has a base job,
+so that the job script in both cases are identical
+but they only differ in the version variable for the Python package and the Docker image.

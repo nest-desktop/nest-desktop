@@ -9,9 +9,9 @@ Deploy Insite with Docker Compose
 |
 
 Insite can be started as a backend for NEST Desktop.
-It allows to render activity during the simulation.
+It allows to render activity during the simulation already.
 
-First get asset of Insite from GitHub and then unzip it.
+First get the asset of Insite from GitHub and then unzip it.
 
 .. code-block:: bash
 
@@ -27,4 +27,4 @@ For more information about Docker Compose, please read the :doc:`documentation <
 
   docker-compose up --build
 
-The backend is now served but you have to start the frontend NEST Desktop.
+The backend is now served and you are ready to start the frontend NEST Desktop.
