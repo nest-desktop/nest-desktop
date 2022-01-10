@@ -38,7 +38,7 @@ export class Project {
 
     // Database instance
     this._doc = project || {};
-    this._id =  project.id || uuidv4();
+    this._id = project.id || uuidv4();
     this._rev = project._rev || '';
     this._createdAt = project.createdAt || new Date();
     this._updatedAt = project.updatedAt;
