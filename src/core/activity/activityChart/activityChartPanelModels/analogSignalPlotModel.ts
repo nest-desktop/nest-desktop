@@ -26,20 +26,19 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateAnalogRecords();
     this.updateTime();
 
-    // Update spike threshold for membrane potential
     this.state.recordsVisible.forEach((record: NodeRecord) => {
       if (record.id === 'V_m') {
-        // Update spike threshold for membrane potential
+        // Update spike threshold for membrane potential.
         this.updateSpikeThresholdLine(record);
       }
-      if (record.nodeSize > 0) {
-        // Update single line or multiple lines.
-        record.nodeSize > 1
-          ? this.updateMultipleLines(record)
-          : this.updateSingleLine(record);
-      }
-      if (record.nodeSize > 1) {
-        // Update average line for recorded population.
+
+      if (record.nodeSize === 1) {
+        // Update line for a single node.
+        this.updateSingleLine(record);
+      } else if (record.nodeSize > 1) {
+        // Update multiple lines for population.
+        this.updateMultipleLines(record);
+        // Update average line for population.
         this.updateAverageLine(record);
       }
     });
@@ -67,7 +66,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     });
     return data;
   }
-  
+
   /**
    * Update spike threshold data for membrane potential.
    */
