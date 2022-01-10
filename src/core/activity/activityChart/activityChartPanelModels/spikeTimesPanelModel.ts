@@ -8,7 +8,7 @@ export class SpikeTimesPanelModel extends ActivityChartPanelModel {
     this.label = 'spike times';
     this.activityType = 'spike';
 
-    this.init(model);
+    this.init();
   }
 
   /**
