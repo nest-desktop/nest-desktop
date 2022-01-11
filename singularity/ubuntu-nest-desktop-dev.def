@@ -19,6 +19,7 @@ From: ubuntu:20.04
     p7zip-full \
     p7zip-rar \
     python3-pip \
+    rpm \
     wine-stable
   dpkg --add-architecture i386 && apt update && apt install -y wine32
 

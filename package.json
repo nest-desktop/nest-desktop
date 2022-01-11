@@ -96,8 +96,11 @@
     "vue-toast-notification: >=v2.0 requires Vue 3, but we still need Vue 2 for Vuetify",
     "webpack: installed manually in v4.x.y to prevent sass error"
   ],
+  "author": {
+    "name": "Sebastian Spreizer",
+    "email": "spreizer@web.de"
+  },
   "contributors": [
-    "Sebastian Spreizer",
     "Jens Bruchertseifer"
   ],
   "bugs": {
