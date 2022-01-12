@@ -40,12 +40,4 @@ module.exports = {
       return args;
     });
   },
-  pluginOptions: {
-    electronBuilder: {
-      builderOptions: {
-        icon: 'icons/icon.png',
-        productName: 'NEST Desktop',
-      },
-    },
-  },
 };

@@ -2,7 +2,6 @@ stages:
   - build
   - deploy
 
-
 #
 # BUILD APP
 #
@@ -38,6 +37,38 @@ build_app_prod:
     - echo "VERSION='${VERSION}'" >> version.txt
     - echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
 
+#
+# BUILD ELECTRON
+#
+
+.build_electron_base:
+  stage: build
+  image: node:16-alpine
+  artifacts:
+    paths:
+      - dist_electron
+      - version.txt
+  before_script:
+    - yarn install
+    - yarn electron:build
+    - VERSION=`node -p "require('./package.json').version"`
+  tags:
+    - docker-runner
+
+build_electron_dev:
+  extends: .build_electron_base
+  rules:
+    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
+  script:
+    - VERSION_DEV="${VERSION}${CI_PIPELINE_IID}"
+    - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
+
+build_electron_prod:
+  extends: .build_electron_base
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  script:
+    - echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
 
 #
 # DEPLOY PYTHON PACKAGE
@@ -72,7 +103,6 @@ deploy_pypi:
   script:
     - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload dist/*
 
-
 #
 # DEPLOY DOCKER IMAGE ON EBRAINS
 #
@@ -105,7 +135,6 @@ deploy_ebrains_docker_prod:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
-
 #
 # DEPLOY DOCKER IMAGE ON DOCKER HUB
 #
@@ -137,3 +166,34 @@ deploy_docker_hub_prod:
     - build_app_prod
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+
+#
+# DEPLOY SNAP ON SNAPCRAFT
+#
+
+.deploy_snap_base:
+  stage: deploy
+  image: ubuntu:20.04
+  before_script:
+    - apt update && apt install -y snapcraft
+    - echo "$SNAP_ACCESS_TOKEN" | snapcraft login --with -
+
+deploy_snap_dev:
+  extends: .deploy_snap_base
+  needs:
+    - build_electron_dev
+  rules:
+    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
+      when: manual
+  script:
+    - snapcraft upload --release=${SNAP_RELEASE} dist_electron/nest-desktop*.snap
+
+deploy_snap_prod:
+  extends: .deploy_snap_base
+  needs:
+    - build_electron_prod
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+  script:
+    - snapcraft upload --release=stable dist_electron/nest-desktop*.snap
