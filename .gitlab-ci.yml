@@ -181,7 +181,7 @@ deploy_docker_hub_prod:
 deploy_snap_dev:
   extends: .deploy_snap_base
   needs:
-    - build_snap_dev
+    - build_electron_dev
   rules:
     - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
       when: manual
@@ -191,7 +191,7 @@ deploy_snap_dev:
 deploy_snap_prod:
   extends: .deploy_snap_base
   needs:
-    - build_snap_prod
+    - build_electron_prod
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: manual
