@@ -124,9 +124,9 @@ deploy_snap:
     - when: manual
   before_script:
     - apt update && apt install -y snapcraft
-    - echo "$SNAP_ACCESS_TOKEN" | snapcraft login --with -
+    - echo "${SNAP_ACCESS_TOKEN}" | snapcraft login --with -
   script:
-    - snapcraft upload --release=${SNAP_RELEASE} dist_electron/nest-desktop*.snap
+    - snapcraft upload --release="${SNAP_RELEASE}" dist_electron/nest-desktop*.snap
   after_script:
     - snapcraft logout
   tags:
