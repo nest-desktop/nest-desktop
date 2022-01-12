@@ -6,110 +6,80 @@ stages:
 # BUILD APP
 #
 
-.build_app_base:
+build_app:
   stage: build
   image: node:16-alpine
   artifacts:
     paths:
       - nest_desktop
       - version.txt
-  before_script:
-    - yarn
-    - yarn build
-    - VERSION=`node -p "require('./package.json').version"`
-  tags:
-    - docker-runner
-
-build_app_dev:
-  extends: .build_app_base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
   script:
-    - VERSION_DEV="${VERSION}${CI_PIPELINE_IID}"
+    - VERSION=`node -p "require('./package.json').version"`
+    - |-
+      if [[ $CI_COMMIT_BRANCH != "main" ]]; then
+        VERSION="${VERSION}${CI_PIPELINE_IID}"
+      fi
     - echo "VERSION='${VERSION_DEV}'" >> version.txt
     - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
-
-build_app_prod:
-  extends: .build_app_base
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-  script:
-    - echo "VERSION='${VERSION}'" >> version.txt
-    - echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
+    - yarn
+    - yarn build
+  tags:
+    - docker-runner
 
 #
 # BUILD ELECTRON
 #
 
-.build_electron_base:
+build_electron:
   stage: build
   image: electronuserland/builder:wine
   artifacts:
     paths:
       - dist_electron
       - version.txt
-  before_script:
+  script:
+    - VERSION=`node -p "require('./package.json').version"`
+    - |-
+      if [[ $CI_COMMIT_BRANCH != "main" ]]; then
+        VERSION="${VERSION}${CI_PIPELINE_IID}"
+      fi
+    - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
     - yarn
     - yarn electron:build
-    - VERSION=`node -p "require('./package.json').version"`
   tags:
     - docker-runner
-
-build_electron_dev:
-  extends: .build_electron_base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
-  script:
-    - VERSION_DEV="${VERSION}${CI_PIPELINE_IID}"
-    - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
-
-build_electron_prod:
-  extends: .build_electron_base
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-  script:
-    - echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
 
 #
 # DEPLOY PYTHON PACKAGE
 #
 
-.deploy_pyp_base:
+deploy_pypi:
   stage: deploy
   image: python:latest
+  rules:
+    - when: manual
   before_script:
-    - pip install twine
     - python setup.py sdist bdist_wheel
+    - pip install twine
+  script:
+    - |-
+      if [[ $CI_COMMIT_BRANCH != "main" ]]; then
+        TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
+      else
+        TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload dist/*
+      fi
   tags:
     - docker-runner
-
-deploy_testpypi:
-  extends: .deploy_pyp_base
-  needs:
-    - build_app_dev
-  rules:
-    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
-      when: manual
-  script:
-    - TWINE_PASSWORD=${TESTPYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload --repository testpypi dist/*
-
-deploy_pypi:
-  extends: .deploy_pyp_base
-  needs:
-    - build_app_prod
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      when: manual
-  script:
-    - TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload dist/*
 
 #
 # DEPLOY DOCKER IMAGE ON EBRAINS
 #
 
-.deploy_ebrains_docker_base:
+deploy_ebrains_docker:
   stage: deploy
   image: ubuntu:20.04
+  needs:
+    - build_app
   before_script:
     - source version.txt
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
@@ -121,27 +91,15 @@ deploy_pypi:
   tags:
     - shell-runner
 
-deploy_ebrains_docker_dev:
-  extends: .deploy_ebrains_docker_base
-  needs:
-    - build_app_dev
-  rules:
-    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
-
-deploy_ebrains_docker_prod:
-  extends: .deploy_ebrains_docker_base
-  needs:
-    - build_app_prod
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-
 #
 # DEPLOY DOCKER IMAGE ON DOCKER HUB
 #
 
-.deploy_docker_hub_base:
+deploy_docker_hub:
   stage: deploy
   image: ubuntu:20.04
+  needs:
+    - build_app
   before_script:
     - source version.txt
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
@@ -153,47 +111,23 @@ deploy_ebrains_docker_prod:
   tags:
     - shell-runner
 
-deploy_docker_hub_dev:
-  extends: .deploy_docker_hub_base
-  needs:
-    - build_app_dev
-  rules:
-    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
-
-deploy_docker_hub_prod:
-  extends: .deploy_docker_hub_base
-  needs:
-    - build_app_prod
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-
 #
 # DEPLOY SNAP ON SNAPCRAFT
 #
 
-.deploy_snap_base:
+deploy_snap:
   stage: deploy
   image: ubuntu:20.04
+  needs:
+    - build_electron
+  rules:
+    - when: manual
   before_script:
     - apt update && apt install -y snapcraft
     - echo "$SNAP_ACCESS_TOKEN" | snapcraft login --with -
-
-deploy_snap_dev:
-  extends: .deploy_snap_base
-  needs:
-    - build_electron_dev
-  rules:
-    - if: $CI_COMMIT_BRANCH == $DEV_CI_COMMIT_BRANCH
-      when: manual
   script:
     - snapcraft upload --release=${SNAP_RELEASE} dist_electron/nest-desktop*.snap
-
-deploy_snap_prod:
-  extends: .deploy_snap_base
-  needs:
-    - build_electron_prod
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      when: manual
-  script:
-    - snapcraft upload --release=stable dist_electron/nest-desktop*.snap
+  after_script:
+    - snapcraft logout
+  tags:
+    - shell-runner
