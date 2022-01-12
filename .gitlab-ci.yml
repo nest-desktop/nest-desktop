@@ -14,7 +14,7 @@ stages:
       - nest_desktop
       - version.txt
   before_script:
-    - yarn install
+    - yarn
     - yarn build
     - VERSION=`node -p "require('./package.json').version"`
   tags:
@@ -43,13 +43,13 @@ build_app_prod:
 
 .build_electron_base:
   stage: build
-  image: node:16-slim
+  image: electronuserland/builder:wine
   artifacts:
     paths:
       - dist_electron
       - version.txt
   before_script:
-    - yarn install
+    - yarn
     - yarn electron:build
     - VERSION=`node -p "require('./package.json').version"`
   tags:
