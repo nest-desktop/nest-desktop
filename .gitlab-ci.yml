@@ -176,7 +176,7 @@ deploy_docker_hub_prod:
   image: ubuntu:20.04
   before_script:
     - apt update && apt install -y snapcraft
-    - echo "$SNAP_TOKEN" | snapcraft login --with -
+    - echo "$SNAP_ACCESS_TOKEN" | snapcraft login --with -
 
 deploy_snap_dev:
   extends: .deploy_snap_base
