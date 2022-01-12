@@ -43,15 +43,20 @@ build_app_prod:
 
 .build_electron_base:
   stage: build
-  image: node:16-alpine
+  image: ubuntu:20.04
   artifacts:
     paths:
       - dist_electron
       - version.txt
   before_script:
+    - apt update && DEBIAN_FRONTEND=noninteractive apt install -y curl libasound2 libatk-bridge2.0-0 libgbm-dev libgconf2-dev libgtk-3-0 libgtkextra-dev libnss3 libxtst-dev
+    - curl -sL https://deb.nodesource.com/setup_16.x -o node_setup.sh
+    - bash node_setup.sh
+    - apt install -y nodejs
+    - npm install -g npm yarn
+    - VERSION=`node -p "require('./package.json').version"`
     - yarn install
     - yarn electron:build
-    - VERSION=`node -p "require('./package.json').version"`
   tags:
     - docker-runner
 
