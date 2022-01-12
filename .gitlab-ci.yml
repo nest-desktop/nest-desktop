@@ -49,9 +49,9 @@ build_app_prod:
       - dist_electron
       - version.txt
   before_script:
-    - VERSION=`node -p "require('./package.json').version"`
     - yarn install
     - yarn electron:build
+    - VERSION=`node -p "require('./package.json').version"`
   tags:
     - docker-runner
 
