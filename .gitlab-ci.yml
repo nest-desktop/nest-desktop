@@ -13,7 +13,7 @@ build_app:
     paths:
       - nest_desktop
       - version.txt
-  script:
+  before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
       if [[ $CI_COMMIT_BRANCH != "main" ]]; then
@@ -22,6 +22,7 @@ build_app:
     - echo "VERSION='${VERSION_DEV}'" >> version.txt
     - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
     - yarn
+  script:
     - yarn build
   tags:
     - docker-runner
@@ -37,7 +38,7 @@ build_electron:
     paths:
       - dist_electron
       - version.txt
-  script:
+  before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
       if [[ $CI_COMMIT_BRANCH != "main" ]]; then
@@ -45,6 +46,7 @@ build_electron:
       fi
     - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
     - yarn
+  script:
     - yarn electron:build
   tags:
     - docker-runner
