@@ -123,7 +123,7 @@ deploy_docker_hub:
 
 deploy_snap:
   stage: deploy
-  image: snapcore/snapcraft
+  image: snapcore/snapcraft:latest
   needs:
     - build_electron
   rules:
@@ -135,4 +135,4 @@ deploy_snap:
   after_script:
     - snapcraft logout
   tags:
-    - shell-runner
+    - docker-runner
