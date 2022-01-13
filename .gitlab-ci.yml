@@ -13,6 +13,7 @@ build_app:
     paths:
       - nest_desktop
       - version.txt
+    expire_in: 1 week
   before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
@@ -38,6 +39,7 @@ build_electron:
     paths:
       - dist_electron
       - version.txt
+    expire_in: 1 week
   before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
@@ -58,6 +60,8 @@ build_electron:
 deploy_pypi:
   stage: deploy
   image: python:latest
+  needs:
+    - build_app
   rules:
     - when: manual
   before_script:
@@ -119,13 +123,12 @@ deploy_docker_hub:
 
 deploy_snap:
   stage: deploy
-  image: ubuntu:20.04
+  image: snapcore/snapcraft
   needs:
     - build_electron
   rules:
     - when: manual
   before_script:
-    - apt update && apt install -y snapcraft
     - echo "${SNAP_ACCESS_TOKEN}" | snapcraft login --with -
   script:
     - snapcraft upload --release="${SNAP_RELEASE}" dist_electron/nest-desktop*.snap
