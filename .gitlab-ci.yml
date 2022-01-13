@@ -19,8 +19,8 @@ build_app:
       if [[ $CI_COMMIT_BRANCH != "main" ]]; then
         VERSION="${VERSION}${CI_PIPELINE_IID}"
       fi
+      echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
     - echo "VERSION='${VERSION}'" > version.txt
-    - echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
     - yarn
   script:
     - yarn build
@@ -44,7 +44,7 @@ build_electron:
       if [[ $CI_COMMIT_BRANCH != "main" ]]; then
         VERSION="${VERSION}${CI_PIPELINE_IID}"
       fi
-    - echo "__version__ = '${VERSION_DEV}'" >> nest_desktop/__init__.py
+      echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
     - yarn
   script:
     - yarn electron:build
