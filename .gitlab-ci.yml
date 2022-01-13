@@ -13,7 +13,7 @@ build_app:
     paths:
       - nest_desktop
       - version.txt
-    expire_in: 30 days
+    expire_in: 1 week
   before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
@@ -39,7 +39,7 @@ build_electron:
     paths:
       - dist_electron
       - version.txt
-    expire_in: 30 days
+    expire_in: 1 week
   before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
