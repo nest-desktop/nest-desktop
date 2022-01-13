@@ -1,14 +1,18 @@
 // For authoring Nightwatch tests, see
-// http://nightwatchjs.org/guide#usage
+// https://nightwatchjs.org/guide
 
 module.exports = {
-  "default e2e tests": browser => {
+  'test app container': browser => {
     browser
-      .url(process.env.VUE_DEV_SERVER_URL)
-      .waitForElementVisible("#app", 5000)
-      .assert.elementPresent(".hello")
-      .assert.containsText("h1", "Welcome to Your Vue.js + TypeScript App")
-      .assert.elementCount("img", 1)
+      .init()
+      .waitForElementVisible('#app')
+      .assert.elementPresent('.appInfo')
+      .assert.containsText('h1', 'NEST Desktop')
+      .assert.elementCount('div.logo', 1)
       .end();
-  }
+  },
+
+  'test app info': browser => {
+    browser.openHomepage().assert.elementPresent('.appInfo').end();
+  },
 };
