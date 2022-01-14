@@ -39,7 +39,7 @@ build_electron:
     paths:
       - dist_electron
       - version.txt
-    expire_in: 1 week
+    expire_in: 1 day
   before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
