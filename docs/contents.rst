@@ -49,6 +49,7 @@ Contents
 
   developer/index
   developer/preparation
+  developer/coding-conventions
   developer/development
   developer/production
   developer/command-API
