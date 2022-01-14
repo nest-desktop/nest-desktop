@@ -3,10 +3,18 @@ Concept of the interface
 
 **General layout concept of the interface.**
 
-NEST Desktop contains three columns with clear function.
-The left column shows the navigation to route pages.
-The center column renders the main content of the page,
-whereas the right column displays the controller content for the modification.
+NEST Desktop consists of three segments with different purposes.
+
+.. figure:: ../_static/img/screenshots/program-overview_expanded.png
+   :scale: 25 %
+   :alt: NEST Desktop
+   :align: center
+
+   The layout of NEST Desktop with the three main areas (1) - (3).
+
+The left column (1) shows the navigation to route pages.
+The center area (2) renders the main content of the page,
+whereas the right column (3) displays the controller for the modification of the content.
 
 **Pages**
 
