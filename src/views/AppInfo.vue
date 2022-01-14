@@ -12,14 +12,14 @@
                   ? require('@/assets/img/logo/nest-desktop-logo-white.svg')
                   : require('@/assets/img/logo/nest-desktop-logo.svg')
               "
-              class="my-6"
+              class="logo my-6"
               contain
               height="250"
             />
 
             <h1 class="display-3 font-weight-light" v-text="'NEST Desktop'" />
             <p
-              class="subheading font-weight-regular ma-3"
+              class="font-weight-regular ma-3 subheading"
               v-text="'An educational GUI for neuroscience'"
             />
           </v-col>
@@ -87,7 +87,7 @@
               </v-col>
 
               <v-col :cols="12" :md="6">
-                <v-card class="app-details" flat height="100%" outlined tile>
+                <v-card flat height="100%" outlined tile>
                   <v-layout fill-height="true">
                     <v-row align="center">
                       <v-col align="center" cols="12">
