@@ -94,9 +94,9 @@
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "colors: keep v1.4.0 for now, @dabh/colors as alternative?",
     "electron: version should contain all numbers.",
-    "sass-loader: >= 11.0 doesn't work with vue@2 (https://stackoverflow.com/questions/66082397/typeerror-this-getoptions-is-not-a-function).",
+    "sass-loader: >= 11.0 doesn't work with vue@2 because of vuetify@2 (https://stackoverflow.com/questions/66082397/typeerror-this-getoptions-is-not-a-function).",
     "vue-toast-notification: >= 2.0 doesn't work with vue@2 (https://github.com/ankurk91/vue-toast-notification).",
-    "webpack: >= 5.0 produces invalid configuration object in electron:test (https://stackoverflow.com/questions/42060243/invalid-configuration-object-webpack-has-been-initialised-using-a-configuration)."
+    "webpack: >= 5.0 produces invalid configuration object in unit test because of mochapack -> wait for @vue/cli@5."
   ],
   "author": {
     "name": "Sebastian Spreizer",
