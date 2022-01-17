@@ -1,31 +1,31 @@
-import testWithSpectron from 'vue-cli-plugin-electron-builder/lib/testWithSpectron'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
+import testWithSpectron from 'vue-cli-plugin-electron-builder/lib/testWithSpectron';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 // eslint-disable-next-line no-undef
-const spectron = __non_webpack_require__('spectron')
+const spectron = __non_webpack_require__('spectron');
 
-chai.should()
-chai.use(chaiAsPromised)
+chai.should();
+chai.use(chaiAsPromised);
 
 describe('Application launch', function () {
-  this.timeout(30000)
+  this.timeout(30000);
 
   beforeEach(function () {
-    return testWithSpectron(spectron).then((instance) => {
-      this.app = instance.app
-      this.stopServe = instance.stopServe
-    })
-  })
+    return testWithSpectron(spectron).then(instance => {
+      this.app = instance.app;
+      this.stopServe = instance.stopServe;
+    });
+  });
 
   beforeEach(function () {
-    chaiAsPromised.transferPromiseness = this.app.transferPromiseness
-  })
+    chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
+  });
 
   afterEach(function () {
     if (this.app && this.app.isRunning()) {
-      return this.stopServe()
+      return this.stopServe();
     }
-  })
+  });
 
   it('opens a window', function () {
     return Promise.all([
@@ -39,7 +39,7 @@ describe('Application launch', function () {
       this.app.client.browserWindow
         .getBounds()
         .should.eventually.have.property('height')
-        .and.be.above(0)
-    ])
-  })
-})
+        .and.be.above(0),
+    ]);
+  });
+});
