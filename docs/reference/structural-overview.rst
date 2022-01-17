@@ -25,7 +25,7 @@ The navigation sidebar contains the folllowing icon buttons, which lead to the p
 For a lot of these buttons, there are further options available via right click.
 
 Project
-  create, edit and run simulations
+  create and edit networks as well as run simulations
 Model
   manage and edit your models
 Settings
