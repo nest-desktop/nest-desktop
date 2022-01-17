@@ -183,7 +183,6 @@ export class ProjectStore {
     if (project.doc == undefined) {
       project = new Project(this._app, project);
       project.init();
-      const projectIdx = projectIds.indexOf(projectId);
       this._state.projects[projectIdx] = project;
     }
 
@@ -218,8 +217,8 @@ export class ProjectStore {
         resolve(true);
       } catch {
         this.consoleLog('Error in project initialization');
-        this.createNewProject();
-        resolve(true);
+        // this.createNewProject();
+        resolve(false);
       }
     });
   }

@@ -166,22 +166,29 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update visible records from analog activities.
+   * Initialize visible records from analog activities.
    */
   initAnalogRecordsVisible(records: any[] = []): void {
     // console.log('Initialize visible records for analog signals.');
     if (this._state.records.length === 0) {
+      this._state.recordsVisible = [];
       return;
     }
 
     if (records.length > 0) {
-      this._state.recordsVisible = records.map((record: any) => {
-        const recordVisible = this._state.records.find(
-          (rec: NodeRecord) => rec.groupId === record.groupId
-        );
-        recordVisible.color = record.color;
-        return recordVisible;
-      });
+      this._state.recordsVisible = records
+        .filter((record: any) =>
+          this._state.records.some(
+            (rec: NodeRecord) => rec.groupId === record.groupId
+          )
+        )
+        .map((record: any) => {
+          const recordVisible = this._state.records.find(
+            (rec: NodeRecord) => rec.groupId === record.groupId
+          );
+          recordVisible.color = record.color;
+          return recordVisible;
+        });
     }
   }
 
@@ -208,6 +215,8 @@ export abstract class ActivityChartPanelModel {
    * Update records of the panel models from all analog activities.
    */
   updateAnalogRecords(): void {
+    // console.log('Update analog records.');
+
     // Remove old records from other recorder.
     this._state.records = this._state.records.filter(
       (panelRecord: NodeRecord) => {

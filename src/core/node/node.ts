@@ -471,6 +471,7 @@ export class Node extends Config {
           recordIds.includes(record.id)
         ),
       ];
+      this.records.forEach((record: NodeRecord) => record.update());
     } else {
       this._records = [...this._recordables];
     }
@@ -491,6 +492,7 @@ export class Node extends Config {
    */
   clean(): void {
     this._idx = this._network.nodes.indexOf(this);
+    this.updateRecords();
     this.view.clean();
     this.updateHash();
   }

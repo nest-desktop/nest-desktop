@@ -119,11 +119,17 @@
                               v-bind="attrs"
                               v-on="on"
                             >
-                              {{ item.id }}
+                              <span
+                                v-text="
+                                  projectView.app.config.devMode
+                                    ? item.groupId
+                                    : item.id
+                                "
+                              />
                             </v-chip>
                           </template>
                           <div style="font-size: 12px">
-                            <span v-text="item.label" />
+                            <span v-text="item.labelCapitalize" />
                             <span v-if="item.unit" v-text="` (${item.unit})`" />
                           </div>
                         </v-tooltip>
@@ -136,10 +142,14 @@
                           outlined
                           label
                           small
-                          v-text="item.id"
+                          v-text="
+                            projectView.app.config.devMode
+                              ? item.groupId
+                              : item.id
+                          "
                         />
                         <div style="font-size: 12px">
-                          <span v-text="item.label" />
+                          <span v-text="item.labelCapitalize" />
                           <span v-if="item.unit" v-text="` (${item.unit})`" />
                         </div>
                       </template>
@@ -199,16 +209,16 @@ export default Vue.extend({
     });
 
     /**
-    * Add panel.
-    */
+     * Add panel.
+     */
     const addPanel = (modelId: string) => {
       state.graph.addPanel({ model: { id: modelId } });
       state.graph.update();
     };
 
     /**
-    * Reset panels.
-    */
+     * Reset panels.
+     */
     const resetPanels = () => {
       state.graph.init();
       state.graph.update();
