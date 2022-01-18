@@ -13,7 +13,7 @@
           hide-details
         ></v-text-field>
       </v-card-title> -->
-      <v-card-title class="pa-2" v-if="state.activity.state.records.length > 1">
+      <v-card-title class="pa-2">
         <v-select
           :items="state.activity.state.records"
           @change="update"
