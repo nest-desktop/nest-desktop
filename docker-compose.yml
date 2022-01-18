@@ -1,8 +1,12 @@
 version: '3'
+
 services:
   nest-desktop:
     image: docker-registry.ebrains.eu/nest/nest-desktop:3.1
     container_name: 'nest-desktop'
+    environment:
+      NEST_DESKTOP_HOST: '0.0.0.0'
+      NEST_DESKTOP_PORT: 8000
     ports:
       - '8000:8000'
 
