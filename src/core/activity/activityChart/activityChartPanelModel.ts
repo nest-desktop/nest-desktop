@@ -186,7 +186,7 @@ export abstract class ActivityChartPanelModel {
           const recordVisible = this._state.records.find(
             (rec: NodeRecord) => rec.groupId === record.groupId
           );
-          recordVisible.color = record.color;
+          if (recordVisible != null) recordVisible.color = record.color;
           return recordVisible;
         });
     }
@@ -215,8 +215,6 @@ export abstract class ActivityChartPanelModel {
    * Update records of the panel models from all analog activities.
    */
   updateAnalogRecords(): void {
-    // console.log('Update analog records.');
-
     // Remove old records from other recorder.
     this._state.records = this._state.records.filter(
       (panelRecord: NodeRecord) => {

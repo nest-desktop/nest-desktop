@@ -17,7 +17,7 @@ export class NodeRecord {
     this._node = node;
     this._unit = record.unit;
 
-    this.update();
+    this.updateGroupID();
     this.updateColor();
   }
 
@@ -96,7 +96,7 @@ export class NodeRecord {
   /**
    * Update node record.
    */
-  update(): void {
+  updateGroupID(): void {
     this._groupId = this.id + '.' + this.node.view.label;
   }
 

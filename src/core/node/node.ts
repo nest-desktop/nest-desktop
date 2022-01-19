@@ -471,7 +471,7 @@ export class Node extends Config {
           recordIds.includes(record.id)
         ),
       ];
-      this.records.forEach((record: NodeRecord) => record.update());
+      this.records.forEach((record: NodeRecord) => record.updateGroupID());
     } else {
       this._records = [...this._recordables];
     }
