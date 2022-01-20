@@ -184,6 +184,9 @@ export class ActivityAnimationLayer {
     this.initGraph();
   }
 
+  /**
+   * Initialize geometry model for activity layer.
+   */
   initModel(): void {
     if (this._state.modelSelected == null) {
       this._state.modelSelected = this._models[0];
