@@ -10,6 +10,12 @@ declare module '*.vue' {
 // }
 declare module 'pouchdb-upsert/dist/pouchdb.upsert';
 
+// Plotly.js
+// declare module 'plotly.js-dist-min';
+// {
+//   import * as Plotly from 'plotly.js';
+//   export default Plotly;
+// }
 declare module 'vue-plotly';
 
 // THREE.js
