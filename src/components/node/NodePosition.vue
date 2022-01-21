@@ -24,14 +24,15 @@
           <v-select
             :items="state.positions"
             @change="initPositions"
+            class="ma-0 pa-0"
             hide-details
             item-text="name"
             item-value="id"
             v-model="state.selectedPositions"
           />
 
-          <v-row>
-            <v-col class="py-3" cols="8" v-text="'number of dimensions'" />
+          <v-row class="mt-1">
+            <v-col cols="8" v-text="'number of dimensions'" />
             <v-col class="py-0" cols="4">
               <v-slider
                 :tick-labels="[2, 3]"
@@ -57,8 +58,8 @@
           </span>
 
           <span v-if="state.node.spatial.positions.name === 'grid'">
-            <v-row>
-              <v-col class="py-4" cols="3" v-text="'shape'" />
+            <v-row class="mt-1">
+              <v-col class="ma-auto" cols="3" v-text="'shape'" />
               <v-spacer />
               <v-col
                 :key="idx"
@@ -85,8 +86,8 @@
               </v-col>
             </v-row>
 
-            <v-row>
-              <v-col class="py-4" cols="3" v-text="'center'" />
+            <v-row class="mt-1">
+              <v-col class="ma-auto" cols="3" v-text="'center'" />
               <v-spacer />
               <v-col
                 :key="idx"
@@ -111,8 +112,8 @@
             </v-row>
           </span>
 
-          <v-row>
-            <v-col class="py-4" cols="3" v-text="'extent'" />
+          <v-row class="mt-1">
+            <v-col class="ma-auto" cols="3" v-text="'extent'" />
             <v-spacer />
             <v-col
               :key="idx"
@@ -140,6 +141,7 @@
           <v-row>
             <v-col class="py-0">
               <v-checkbox
+                class="ma-0"
                 color="accent"
                 label="Edge wrap"
                 v-model="state.node.spatial.positions.edgeWrap"
