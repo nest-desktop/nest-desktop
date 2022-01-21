@@ -10,21 +10,22 @@ import { SphereGeometryLayerModel } from './activityAnimationLayerModels/SphereG
 
 export class ActivityAnimationLayer {
   private _activity: Activity;
+  private _config: any = {
+    object: {
+      size: 4,
+      opacity: 1,
+      flatHeight: false,
+      flyingBoxes: false,
+    },
+    trail: {
+      mode: 'off',
+      length: 0,
+      fading: false,
+    },
+  };
   private _frames: any[];
   private _graph: ActivityAnimationGraph;
   private _graphGroup: THREE.Group;
-  private _layout = {
-    extent: [
-      [-1, 0],
-      [-0.5, 0.5],
-      [0.5, -0.5],
-    ],
-  };
-  private _ndim: number = -1;
-  private _node: any = {
-    color: 'black',
-    positions: [],
-  };
   private _model: ActivityAnimationLayerModel;
   private _models: any[] = [
     {
@@ -38,22 +39,20 @@ export class ActivityAnimationLayer {
       label: 'sphere geometry',
     },
   ];
-  private _object: any = {
-    size: 4,
-    opacity: 1,
-    flatHeight: false,
-    flyingBoxes: false,
-  };
   private _offset: any = { x: 0, y: 0, z: 0 };
   private _state: any = {
+    layout: {
+      extent: [
+        [-1, 0],
+        [-0.5, 0.5],
+        [0.5, -0.5],
+      ],
+    },
     modelSelected: null,
-    records: [],
+    ndim: -1,
+    positions: [],
     record: null,
-  };
-  private _trail: any = {
-    mode: 'off',
-    length: 0,
-    fading: false,
+    records: [],
   };
 
   constructor(graph: ActivityAnimationGraph, activity: Activity) {
@@ -69,8 +68,8 @@ export class ActivityAnimationLayer {
     return this._graph.config.grid.divisions;
   }
 
-  get color(): string {
-    return this._node.color;
+  get config(): any {
+    return this._config;
   }
 
   get frame(): any {
@@ -87,10 +86,6 @@ export class ActivityAnimationLayer {
 
   get graphGroup(): THREE.Group {
     return this._graphGroup;
-  }
-
-  get layout(): any {
-    return this._layout;
   }
 
   get model(): ActivityAnimationLayerModel {
@@ -111,24 +106,8 @@ export class ActivityAnimationLayer {
     return this._models;
   }
 
-  get node(): any {
-    return this._node;
-  }
-
-  get ndim(): number {
-    return this._ndim;
-  }
-
-  get object(): any {
-    return this._object;
-  }
-
   get offset(): any[] {
     return this._offset;
-  }
-
-  get positions(): any[] {
-    return this._node.positions;
   }
 
   get state(): any {
@@ -150,18 +129,13 @@ export class ActivityAnimationLayer {
     return positions;
   }
 
-  get trail(): any {
-    return this._trail;
-  }
-
   /**
    * Initialize layer for activity animation.
    */
   init(): void {
-    this._node.color = this._activity.recorder.view.color;
     if (this._activity.nodePositions.length > 0) {
-      this._ndim = this._activity.nodePositions[0].length;
-      this._node.positions = this._activity.nodePositions.map(
+      this._state.ndim = this._activity.nodePositions[0].length;
+      this._state.positions = this._activity.nodePositions.map(
         (pos: number[]) => ({
           x: pos[0],
           y: pos.length === 3 ? pos[1] : 0,
@@ -227,7 +201,7 @@ export class ActivityAnimationLayer {
     const grid: THREE.Group = new THREE.Group();
     const scale: any = { x: 1, y: 1, z: 1 };
 
-    if (this.ndim === 3) {
+    if (this._state.ndim === 3) {
       const gridX: THREE.GridHelper = new THREE.GridHelper(1, divisions);
       gridX.geometry.rotateZ(Math.PI / 2);
       gridX.position.x = -scale.x / 2;
@@ -235,10 +209,10 @@ export class ActivityAnimationLayer {
     }
 
     const gridY: THREE.GridHelper = new THREE.GridHelper(1, divisions);
-    gridY.position.y = this.ndim === 2 ? 0 : -scale.y / 2;
+    gridY.position.y = this._state.ndim === 2 ? 0 : -scale.y / 2;
     grid.add(gridY);
 
-    if (this.ndim === 3) {
+    if (this._state.ndim === 3) {
       const gridZ: THREE.GridHelper = new THREE.GridHelper(1, divisions);
       gridZ.geometry.rotateX(Math.PI / 2);
       gridZ.position.z = -scale.z / 2;

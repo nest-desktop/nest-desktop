@@ -165,7 +165,7 @@
       tile
       v-for="layer in state.graph.layers"
     >
-      <v-sheet :color="layer.node.color">
+      <v-sheet :color="layer.activity.recorder.view.color">
         <v-card class="ml-1 pb-1" flat tile>
           <v-card-title class="pa-0">
             <v-btn
@@ -262,9 +262,9 @@
                   <v-row no-gutters>
                     <v-col class="py-0" cols="2">
                       <v-text-field
+                        :label="`min (${layer.state.record.unit})`"
                         :step="0.1"
                         hide-details
-                        label="min"
                         style="font-size: 13px"
                         type="number"
                         v-model="layer.state.record.colorMap.min"
@@ -302,9 +302,9 @@
                     <v-spacer />
                     <v-col class="py-0" cols="2">
                       <v-text-field
+                        :label="`max (${layer.state.record.unit})`"
                         :step="0.1"
                         hide-details
-                        label="max"
                         style="font-size: 13px"
                         type="number"
                         v-model="layer.state.record.colorMap.max"
@@ -345,7 +345,7 @@
                     step: 0.1,
                     label: 'Object size',
                   }"
-                  :value.sync="layer.object.size"
+                  :value.sync="layer.config.object.size"
                 />
 
                 <ParameterEdit
@@ -356,7 +356,7 @@
                     step: 0.01,
                     label: 'Object opacity',
                   }"
-                  :value.sync="layer.object.opacity"
+                  :value.sync="layer.config.object.opacity"
                 />
               </v-card-text>
             </v-card>
@@ -374,7 +374,7 @@
                         step: state.graph.config.frames.sampleRate,
                         label: 'Trail length',
                       }"
-                      :value.sync="layer.trail.length"
+                      :value.sync="layer.config.trail.length"
                     />
                   </v-col>
                 </v-row>
@@ -383,7 +383,7 @@
                   :disabled="layer.activity.hasAnalogData()"
                   hide-details
                   label="Trail fading"
-                  v-model="layer.trail.fading"
+                  v-model="layer.config.trail.fading"
                 />
 
                 <v-select
@@ -391,26 +391,26 @@
                   :items="['off', 'growing', 'shrinking']"
                   hide-details
                   label="Trail mode"
-                  v-model="layer.trail.mode"
+                  v-model="layer.config.trail.mode"
                 />
               </v-card-text>
             </v-card>
 
             <v-card flat tile v-if="layer.modelSelected.label.includes('box')">
-              <v-subheader v-text="'Box'" />
+              <v-subheader style="height: 12px" v-text="'Box style'" />
               <v-card-text class="py-0">
                 <v-checkbox
                   hide-details
                   dense
                   label="Flatten height"
-                  v-model="layer.object.flatHeight"
+                  v-model="layer.config.object.flatHeight"
                 />
 
                 <v-checkbox
                   hide-details
                   dense
-                  label="Flying Planes"
-                  v-model="layer.object.flyingBoxes"
+                  label="Flying planes"
+                  v-model="layer.config.object.flyingBoxes"
                 />
               </v-card-text>
             </v-card>

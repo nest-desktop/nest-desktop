@@ -15,9 +15,9 @@ export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
     const scale = 0.01;
     const geometry: THREE.SphereGeometry = new THREE.SphereGeometry(scale / 2);
 
-    this.layer.positions.forEach((position: any) => {
+    this.layer.state.positions.forEach((position: any) => {
       const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({
-        color: this.layer.node.color,
+        color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
       const mesh: THREE.Mesh = new THREE.Mesh(geometry, material);
@@ -26,7 +26,7 @@ export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);
       mesh.layers.set(this.layer.activity.idx + 1);
-      
+
       this.graphGroup.add(mesh);
     });
   }

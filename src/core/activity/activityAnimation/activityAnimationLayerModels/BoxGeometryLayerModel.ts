@@ -19,9 +19,9 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
       scale
     );
 
-    this.layer.positions.forEach((position: any) => {
+    this.layer.state.positions.forEach((position: any) => {
       const material: THREE.MeshBasicMaterial = new THREE.MeshLambertMaterial({
-        color: this.layer.node.color,
+        color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
       const mesh: THREE.Mesh = new THREE.Mesh(geometry, material);
@@ -43,9 +43,9 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     mesh.material.opacity = options.opacity;
     mesh.scale.set(options.scale, options.scale, options.scale);
     mesh.position.setY(mesh.userData.position.y);
-    if (this.layer.object.flatHeight) {
+    if (this.layer.config.object.flatHeight) {
       mesh.scale.setY(0.5);
-      if (this.layer.object.flyingBoxes) {
+      if (this.layer.config.object.flyingBoxes) {
         mesh.position.setY(options.height * 0.01);
       }
     } else {

@@ -53,8 +53,9 @@ export class ActivityAnimationLayerModel {
    * Render trails.
    */
   renderTrails(): void {
-    if (this.layer.trail.length > 0) {
-      for (let trailIdx = this.layer.trail.length; trailIdx > 0; trailIdx--) {
+    const trail = this.layer.config.trail;
+    if (trail.length > 0) {
+      for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
         const frame: any =
           this.layer.frames[this.layer.graph.state.frameIdx - trailIdx];
         if (frame) {
@@ -68,7 +69,7 @@ export class ActivityAnimationLayerModel {
    * Reset graph objects
    */
   resetObjects(): void {
-    const scale: number = this._layer.object.size;
+    const scale: number = this._layer.config.object.size;
     this._graphGroup.children.forEach((mesh: THREE.Mesh) => {
       // @ts-ignore
       mesh.material.opacity = 0;
@@ -83,16 +84,14 @@ export class ActivityAnimationLayerModel {
    */
   updateObjects(frame: any, trailIdx: number = null): void {
     // console.log('Update objects');
-    const trail: any = this.layer.trail;
+    const trail: any = this.layer.config.trail;
+    const object: any = this.layer.config.object;
+
     const ratio: number = trailIdx != null ? trailIdx / (trail.length + 1) : 0;
     const opacity: number =
-      trailIdx != null
-        ? trail.fading
-          ? 1 - ratio
-          : 1
-        : this.layer.object.opacity;
+      trailIdx != null ? (trail.fading ? 1 - ratio : 1) : object.opacity;
 
-    const size: number = this.layer.object.size;
+    const size: number = object.size;
     let scale: number;
     switch (trail.mode) {
       case 'growing':
@@ -116,7 +115,7 @@ export class ActivityAnimationLayerModel {
         color = record.valueColor(valueNormed);
         height = valueNormed * size;
       } else {
-        color = this.layer.node.color;
+        color = this.layer.activity.recorder.view.color;
         height = size;
       }
 
