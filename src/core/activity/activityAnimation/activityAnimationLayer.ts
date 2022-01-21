@@ -53,6 +53,8 @@ export class ActivityAnimationLayer {
     positions: [],
     record: null,
     records: [],
+    reset: false,
+    visible: true,
   };
 
   constructor(graph: ActivityAnimationGraph, activity: Activity) {
@@ -298,6 +300,10 @@ export class ActivityAnimationLayer {
    * Render frame of activity.
    */
   renderFrame(): void {
-    this._model.render(this.frame);
+    if (this._state.visible) {
+      this._model.render(this.frame);
+    } else if (!this._state.reset) {
+      this._model.resetObjects();
+    }
   }
 }

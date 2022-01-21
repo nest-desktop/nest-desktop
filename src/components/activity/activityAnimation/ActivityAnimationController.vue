@@ -166,7 +166,7 @@
       v-for="layer in state.graph.layers"
     >
       <v-sheet :color="layer.activity.recorder.view.color">
-        <v-card class="ml-1 pb-1" flat tile>
+        <v-card class="ml-1" flat tile>
           <v-card-title class="pa-0">
             <v-btn
               :color="layer.activity.recorder.view.color"
@@ -174,18 +174,28 @@
               :height="48"
               :ripple="false"
               :text="!projectView.config.coloredToolbar"
+              @click="() => (layer.state.visible = !layer.state.visible)"
               block
               depressed
               tile
             >
               <v-row>
                 <v-col cols="3" v-text="layer.activity.recorder.view.label" />
-                <v-col cols="9" v-text="layer.activity.recorder.model.label" />
+                <v-col cols="7" v-text="layer.activity.recorder.model.label" />
+                <v-col cols="2">
+                  <v-icon
+                    :dark="projectView.config.coloredToolbar"
+                    class="mx-1"
+                    right
+                    small
+                    v-text="layer.state.visible ? 'mdi-eye' : 'mdi-eye-off'"
+                  />
+                </v-col>
               </v-row>
             </v-btn>
           </v-card-title>
 
-          <v-card-text class="px-1 py-0">
+          <v-card-text class="px-1 py-0" v-if="layer.state.visible">
             <v-card flat tile>
               <v-select
                 :items="layer.models"

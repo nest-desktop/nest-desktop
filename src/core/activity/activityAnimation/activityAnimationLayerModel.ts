@@ -74,9 +74,10 @@ export class ActivityAnimationLayerModel {
       // @ts-ignore
       mesh.material.opacity = 0;
       const position = mesh.userData.position;
-      mesh.position.set(position.x, position.y, position.z);
+      mesh.position.set(position.x, -1, position.z);
       mesh.scale.set(scale, scale, scale);
     });
+    this._layer.state.reset = true;
   }
 
   /**
@@ -84,6 +85,7 @@ export class ActivityAnimationLayerModel {
    */
   updateObjects(frame: any, trailIdx: number = null): void {
     // console.log('Update objects');
+    this._layer.state.reset = false;
     const trail: any = this.layer.config.trail;
     const object: any = this.layer.config.object;
 
