@@ -154,6 +154,7 @@
           <v-btn
             @click="updatePositions"
             outlined
+            small
             v-text="'Update positions'"
           />
           <!-- <v-spacer />
