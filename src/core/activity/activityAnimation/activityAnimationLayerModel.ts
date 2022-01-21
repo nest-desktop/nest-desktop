@@ -140,6 +140,8 @@ export class ActivityAnimationLayerModel {
     mesh.material.color.set(options.color);
     // @ts-ignore
     mesh.material.opacity = options.opacity;
+    const position = mesh.userData.position;
+    mesh.position.set(position.x, position.y, position.z);
     mesh.scale.set(options.scale, options.scale, options.scale);
   }
 }
