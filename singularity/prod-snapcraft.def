@@ -1,0 +1,5 @@
+Bootstrap: docker
+From: snapcore/snapcraft:latest
+
+%labels
+  Author Sebastian Spreizer <spreizer@web.de>

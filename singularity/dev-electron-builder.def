@@ -1,0 +1,5 @@
+Bootstrap: docker
+From: electronuserland/builder:wine
+
+%labels
+  Author Sebastian Spreizer <spreizer@web.de>

@@ -1,9 +1,0 @@
-Bootstrap: docker
-From: ubuntu:20.04
-
-%labels
-  Author Sebastian Spreizer <spreizer@web.de>
-
-%post
-  apt update && apt install -y curl python3-pip git
-  python3 -m pip install pip setuptools sphinx sphinx_rtd_theme wheel --upgrade
