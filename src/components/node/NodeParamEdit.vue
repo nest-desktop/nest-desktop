@@ -63,7 +63,7 @@
                   </v-chip>
                 </template>
                 <div style="font-size: 12px">
-                  <span v-text="item.label" />
+                  <span v-text="item.labelCapitalize"/>
                   <span v-if="item.unit" v-text="` (${item.unit})`" />
                 </div>
               </v-tooltip>
@@ -79,7 +79,7 @@
                 v-text="item.id"
               />
               <div style="font-size: 12px">
-                <span v-text="item.label" />
+                <span v-text="item.labelCapitalize" />
                 <span v-if="item.unit" v-text="` (${item.unit})`" />
               </div>
             </template>

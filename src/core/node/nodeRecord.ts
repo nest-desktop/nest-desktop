@@ -12,12 +12,13 @@ export class NodeRecord {
   private _unit: string;
 
   constructor(node: Node, record: any) {
-    this._node = node;
-    this._color = node.view.color;
-    this._groupId = record.id + '.' + node.view.label;
     this._id = record.id;
     this._label = record.label;
+    this._node = node;
     this._unit = record.unit;
+
+    this.updateGroupID();
+    this.updateColor();
   }
 
   get activity(): Activity {
@@ -49,6 +50,10 @@ export class NodeRecord {
   }
 
   get label(): string {
+    return this._label;
+  }
+
+  get labelCapitalize(): string {
     return this._label.charAt(0).toUpperCase() + this._label.slice(1);
   }
 
@@ -86,6 +91,20 @@ export class NodeRecord {
 
   hasValues(): boolean {
     return this.values.length > 0;
+  }
+
+  /**
+   * Update node record.
+   */
+  updateGroupID(): void {
+    this._groupId = this.id + '.' + this.node.view.label;
+  }
+
+  /**
+   * Update color of the node record.
+   */
+  updateColor(): void {
+    this._color = this.node.view.color;
   }
 
   toJSON(): any {

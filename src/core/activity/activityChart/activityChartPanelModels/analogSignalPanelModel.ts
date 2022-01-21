@@ -40,7 +40,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
     );
     if (uniqueRecords.size === 1) {
       const record = records[0];
-      title = record.label;
+      title = record.labelCapitalize;
       if (record.unit) {
         title += ` [${record.unit}]`;
       }

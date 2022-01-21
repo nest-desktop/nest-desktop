@@ -85,9 +85,9 @@ export class DatabaseService {
   create(data: any): any {
     // console.log('Create doc in db');
     const dataJSON = data.toJSON();
-    dataJSON.createdAt = new Date();
     dataJSON.hash = data.state.hash || undefined;
     dataJSON.version = this._app.state.version;
+    dataJSON.createdAt = new Date();
     return this._db
       .post(dataJSON)
       .then((res: any) => {
@@ -118,9 +118,8 @@ export class DatabaseService {
         data.doc = doc;
         const dataJSON = data.toJSON();
         dataJSON.hash = data.state.hash || undefined;
-        dataJSON.updatedAt = new Date();
         dataJSON.version = this._app.state.version;
-//        console.log(dataJSON.hash);
+        dataJSON.updatedAt = new Date();
         const keys: string[] = Object.keys(dataJSON);
         keys
           .filter((key: string) => !key.startsWith('_'))

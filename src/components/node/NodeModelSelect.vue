@@ -31,7 +31,7 @@
         <v-card-title class="pa-0" style="height: 40px">
           <v-overflow-btn
             :items="state.node.models"
-            @change="update()"
+            @change="updateOnModelChange()"
             class="ma-0"
             dense
             editable
@@ -48,7 +48,7 @@
         <v-card-text class="ma-0 pa-0">
           <v-list class="no-highlight" dense>
             <v-list-item-group
-              @change="selectionChange"
+              @change="paramSelectionChange()"
               active-class=""
               multiple
               v-model="state.visibleParams"
@@ -137,14 +137,21 @@ export default Vue.extend({
     });
 
     /**
-     * Triggers when parameter is changed.
+     * Triggers when parameter selection is changed.
      */
-    const selectionChange = () => {
+    const paramSelectionChange = () => {
       state.node.params.forEach(
         (param: ModelParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
+    };
+
+    /**
+     * Update when node model is changed.
+     */
+    const updateOnModelChange = () => {
+      update();
     };
 
     /**
@@ -186,9 +193,10 @@ export default Vue.extend({
 
     return {
       hideAllParams,
+      updateOnModelChange,
+      paramSelectionChange,
       projectView,
       showAllParams,
-      selectionChange,
       state,
       update,
     };

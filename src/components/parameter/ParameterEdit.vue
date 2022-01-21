@@ -205,17 +205,13 @@
                 ticks="always"
               >
                 <template #message>
-                  <div
-                    @click="closeMessage"
-                    class="mb-1 mt-2"
-                    style="background-color: rgba(0,0,0,0.12); cursor: pointer"
-                  >
+                  <div @click="closeMessage" class="mb-1 message mt-2">
                     <v-divider />
                     <v-row class="mx-0 py-1">
                       <v-col class="text-center" cols="2">
                         <v-icon large right v-text="'mdi-alert-outline'" />
                       </v-col>
-                      <v-col cols="10">
+                      <v-col cols="10" style="margin: auto">
                         <div v-text="state.message" />
                       </v-col>
                     </v-row>
@@ -259,13 +255,8 @@
                 <template #message>
                   <div
                     @click="closeMessage"
-                    class="mb-1"
-                    style="
-                      background-color: rgba(0,0,0,0.12);
-                      cursor: pointer;
-                      margin-left: -37px;
-                      margin-right: -105px;
-                    "
+                    class="mb-1 message"
+                    style="margin-left: -37px; margin-right: -105px"
                   >
                     <v-divider />
                     <v-row class="mx-0 py-1">
@@ -646,11 +637,11 @@ export default Vue.extend({
             messageType = eval(rule[0]) ? rule[2] : '';
           });
         }
-        if (state.message.length > 0) {
-          state.timeoutId = setTimeout(() => {
-            state.message = '';
-          }, 7500);
-        }
+        // if (state.message.length > 0) {
+        //   state.timeoutId = setTimeout(() => {
+        //     state.message = '';
+        //   }, 7500);
+        // }
         return messageType === 'error' ? state.message : true;
       },
     ];
@@ -702,5 +693,10 @@ export default Vue.extend({
 
 .parameterEdit:hover .slider-icon {
   display: block;
+}
+
+.parameterEdit .message {
+  background-color: rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }
 </style>
