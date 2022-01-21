@@ -201,78 +201,138 @@
             </v-card>
 
             <v-card flat tile v-if="layer.activity.hasAnalogData()">
-              <v-card-text class="px-1 py-0">
-                <v-row no-gutters>
-                  <v-col class="py-0" cols="2">
-                    <v-text-field
-                      :step="0.1"
-                      hide-details
-                      label="min"
-                      style="font-size: 13px"
-                      type="number"
-                      v-model="layer.colorMap.min"
-                    />
-                  </v-col>
-                  <v-spacer />
-                  <v-col class="py-0" cols="6">
-                    <v-select
-                      :items="colorScales"
-                      hide-details
-                      style="font-size: 13px"
-                      v-model="layer.colorMap.scale"
-                    >
-                      <template #item="{ item }">
-                        <v-row style="width: 200px">
-                          <v-col class="py-0" cols="4">
-                            <img
-                              :src="
-                                require(`@/assets/img/colorscales/${item}.png`)
-                              "
-                              :style="{
-                                transform: layer.colorMap.reverse
-                                  ? 'scaleX(-1)'
-                                  : null,
-                              }"
-                              height="20"
-                              width="100%"
-                            />
-                          </v-col>
-                          <v-col class="py-0" cols="8" v-text="item" />
-                        </v-row>
-                      </template>
-                    </v-select>
-                  </v-col>
-                  <v-spacer />
-                  <v-col class="py-0" cols="2">
-                    <v-text-field
-                      :step="0.1"
-                      hide-details
-                      label="max"
-                      style="font-size: 13px"
-                      type="number"
-                      v-model="layer.colorMap.max"
-                    />
-                  </v-col>
-
-                  <img
-                    :src="
-                      require(`@/assets/img/colorscales/${layer.colorMap.scale}.png`)
-                    "
-                    :style="{
-                      transform: layer.colorMap.reverse ? 'scaleX(-1)' : null,
-                    }"
-                    height="8"
-                    width="100%"
-                  />
-                </v-row>
-
-                <v-checkbox
-                  color="accent"
+              <span v-if="layer.state.records.length > 0">
+                <v-select
+                  :items="layer.state.records"
+                  :menu-props="{ offsetY: true }"
+                  @change="
+                    () => {
+                      panel.model.init();
+                      state.graph.update();
+                    }
+                  "
+                  attach
+                  chips
+                  class="pa-1 pt-3"
                   dense
-                  label="Reverse colormap"
-                  v-model="layer.colorMap.reverse"
-                />
-              </v-card-text>
+                  hide-details
+                  item-value="groupId"
+                  label="Recorded events"
+                  persistent-hint
+                  return-object
+                  small
+                  v-model="layer.state.record"
+                >
+                  <template v-slot:selection="{ item }">
+                    <v-chip
+                      :color="item.color"
+                      class="mx-2"
+                      disable-lookup
+                      outlined
+                      label
+                      small
+                    >
+                      {{ item.id }}
+                    </v-chip>
+                    <div style="font-size: 12px">
+                      <span v-text="item.label" />
+                      <span v-if="item.unit" v-text="` (${item.unit})`" />
+                    </div>
+                  </template>
+
+                  <template v-slot:item="{ item }">
+                    <v-chip
+                      :color="item.color"
+                      class="mx-2"
+                      outlined
+                      label
+                      small
+                      v-text="item.id"
+                    />
+                    <div style="font-size: 12px">
+                      <span v-text="item.label" />
+                      <span v-if="item.unit" v-text="` (${item.unit})`" />
+                    </div>
+                  </template>
+                </v-select>
+              </span>
+
+              <v-card flat tile v-if="layer.state.record">
+                <v-card-text class="px-1 py-0">
+                  <v-row no-gutters>
+                    <v-col class="py-0" cols="2">
+                      <v-text-field
+                        :step="0.1"
+                        hide-details
+                        label="min"
+                        style="font-size: 13px"
+                        type="number"
+                        v-model="layer.state.record.colorMap.min"
+                      />
+                    </v-col>
+                    <v-spacer />
+                    <v-col class="py-0" cols="6">
+                      <v-select
+                        :items="colorScales"
+                        hide-details
+                        style="font-size: 13px"
+                        v-model="layer.state.record.colorMap.scale"
+                      >
+                        <template #item="{ item }">
+                          <v-row style="width: 200px">
+                            <v-col class="py-0" cols="4">
+                              <img
+                                :src="
+                                  require(`@/assets/img/colorscales/${item}.png`)
+                                "
+                                :style="{
+                                  transform: layer.state.record.colorMap.reverse
+                                    ? 'scaleX(-1)'
+                                    : null,
+                                }"
+                                height="20"
+                                width="100%"
+                              />
+                            </v-col>
+                            <v-col class="py-0" cols="8" v-text="item" />
+                          </v-row>
+                        </template>
+                      </v-select>
+                    </v-col>
+                    <v-spacer />
+                    <v-col class="py-0" cols="2">
+                      <v-text-field
+                        :step="0.1"
+                        hide-details
+                        label="max"
+                        style="font-size: 13px"
+                        type="number"
+                        v-model="layer.state.record.colorMap.max"
+                      />
+                    </v-col>
+
+                    <img
+                      :src="
+                        require(`@/assets/img/colorscales/${layer.state.record.colorMap.scale}.png`)
+                      "
+                      :style="{
+                        transform: layer.state.record.colorMap.reverse
+                          ? 'scaleX(-1)'
+                          : null,
+                      }"
+                      height="8"
+                      width="100%"
+                    />
+                  </v-row>
+
+                  <v-checkbox
+                    color="accent"
+                    dense
+                    label="Reverse colormap"
+                    v-model="layer.state.record.colorMap.reverse"
+                  />
+                </v-card-text>
+              </v-card>
             </v-card>
 
             <v-card flat tile>

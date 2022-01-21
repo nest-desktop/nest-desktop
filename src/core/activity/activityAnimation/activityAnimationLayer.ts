@@ -1,4 +1,3 @@
-import * as d3 from 'd3';
 import * as math from 'mathjs';
 import * as THREE from 'three';
 
@@ -6,16 +5,11 @@ import { Activity } from '../activity';
 import { ActivityAnimationGraph } from './activityAnimationGraph';
 import { ActivityAnimationLayerModel } from './activityAnimationLayerModel';
 import { BoxGeometryLayerModel } from './activityAnimationLayerModels/BoxGeometryLayerModel';
+import { NodeRecord } from '../../node/nodeRecord';
 import { SphereGeometryLayerModel } from './activityAnimationLayerModels/SphereGeometryLayerModel';
 
 export class ActivityAnimationLayer {
   private _activity: Activity;
-  private _colorMap: any = {
-    min: -70,
-    max: -55,
-    reverse: false,
-    scale: 'Spectral',
-  };
   private _frames: any[];
   private _graph: ActivityAnimationGraph;
   private _graphGroup: THREE.Group;
@@ -51,9 +45,10 @@ export class ActivityAnimationLayer {
     flyingBoxes: false,
   };
   private _offset: any = { x: 0, y: 0, z: 0 };
-  private _record = 'V_m';
   private _state: any = {
     modelSelected: null,
+    records: [],
+    record: null,
   };
   private _trail: any = {
     mode: 'off',
@@ -76,10 +71,6 @@ export class ActivityAnimationLayer {
 
   get color(): string {
     return this._node.color;
-  }
-
-  get colorMap(): string {
-    return this._colorMap;
   }
 
   get frame(): any {
@@ -140,8 +131,8 @@ export class ActivityAnimationLayer {
     return this._node.positions;
   }
 
-  get record(): string {
-    return this._record;
+  get state(): any {
+    return this._state;
   }
 
   /**
@@ -179,9 +170,31 @@ export class ActivityAnimationLayer {
       );
     }
 
+    this.initAnalogRecords();
     this.initFrames();
     this.initModel();
     this.initGraph();
+  }
+
+  /**
+   * Initialize records from analog activities.
+   */
+  initAnalogRecords(): void {
+    // console.log('Initialize records for analog signals.');
+    if (!this._activity.hasAnalogData()) return;
+
+    this._state.records = [];
+    if (this._activity.recorder.records == null) return;
+    this._activity.recorder.records.forEach((record: NodeRecord) => {
+      record.activity = this._activity;
+      this._state.records.push(record);
+    });
+    if (this._state.record === null) {
+      const record = this._state.records.find(
+        (record: NodeRecord) => record.id === 'V_m'
+      );
+      this._state.record = record != null ? record : this._state._records[0];
+    }
   }
 
   /**
@@ -244,23 +257,6 @@ export class ActivityAnimationLayer {
   }
 
   /**
-   * Normalize value for color or height.
-   */
-  normalize(value: number): number {
-    const min: number = this._colorMap.min;
-    const max: number = this._colorMap.max;
-    return (value - min) / (max - min);
-  }
-
-  /**
-   * RGB color for a value in range [0 - 1].
-   */
-  valueColor(value: number): string {
-    const colorScale: any = d3['interpolate' + this._colorMap.scale];
-    return colorScale(this._colorMap.reverse ? 1 - value : value);
-  }
-
-  /**
    * Initialize frames.
    */
   initFrames() {
@@ -289,6 +285,11 @@ export class ActivityAnimationLayer {
     const events: any = Object.assign({}, this._activity.events);
     if (events.senders == undefined) {
       return;
+    }
+
+    // Update records of analog signals.
+    if (this._activity.hasAnalogData()) {
+      this._state.records.forEach((record: NodeRecord) => record.update());
     }
 
     // Collect senders based on events.

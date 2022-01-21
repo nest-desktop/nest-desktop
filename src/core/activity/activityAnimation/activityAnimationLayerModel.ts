@@ -104,15 +104,16 @@ export class ActivityAnimationLayerModel {
       default:
         scale = size;
     }
-    const values = frame.hasOwnProperty(this.layer.record)
-      ? frame[this.layer.record]
-      : [];
+
+    const record = this.layer.state.record;
+    const values =
+      record != null && frame.hasOwnProperty(record.id) ? frame[record.id] : [];
     frame.senders.forEach((sender: number, senderIdx: number) => {
       let color: string;
       let height: number;
       if (values.length === frame.senders.length) {
-        const valueNormed = this.layer.normalize(values[senderIdx]);
-        color = this.layer.valueColor(valueNormed);
+        const valueNormed = record.normalize(values[senderIdx]);
+        color = record.valueColor(valueNormed);
         height = valueNormed * size;
       } else {
         color = this.layer.node.color;

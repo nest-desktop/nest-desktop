@@ -240,10 +240,8 @@ export abstract class ActivityChartPanelModel {
         }
       });
 
-    // Update node size.
-    this._state.records.forEach((record: NodeRecord) => {
-      record.nodeSize = record.activity.nodeIds.length;
-    });
+    // Update records.
+    this._state.records.forEach((record: NodeRecord) => record.update());
   }
 
   /**
