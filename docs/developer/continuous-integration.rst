@@ -13,7 +13,9 @@ In each stage, we prepared two parallel pipelines in which jobs will be executed
 
 In the build stage CI uses `Node.js` to produce NEST Desktop and store it in the `nest_desktop/app` folder.
 
-In the deploy stage the CI deploys NEST Desktop as a Python package and as Docker images for `EBRAINS Harbor <https://docker-registry.ebrains.eu>`__` (the Docker container registry of EBRAINS) and `Docker Hub <https://hub.docker.com>`__`.
+In the deploy stage the CI deploys NEST Desktop as a Python package
+and as Docker images for `EBRAINS Harbor <https://docker-registry.ebrains.eu>`__` (the Docker container registry of EBRAINS)
+and `Docker Hub <https://hub.docker.com>`__`.
 All jobs in the deploy stage depend on the job of the build stage being executed successfully.
 
 Each executable job of the development and production pipelines has a base job,

@@ -7,8 +7,13 @@ First, prepare the development environment with the required packages.
 
   yarn serve
 
-The Live Development Server is serving at ``http://localhost:8080``.
+The Live Development Server is now serving at ``http://localhost:8080``.
 
+.. note::
+
+  For more information how to prepare the environment for the development, check the :doc:`guide <preparation>`.
+
+|
 
 **Setup**
 
@@ -23,6 +28,7 @@ The recommended method is to install it in the user's home directory using the c
 .. note::
   Do not forget to start NEST Simulator.
 
+|
 
 **Commit changes**
 
@@ -36,7 +42,7 @@ Fetch the data from GitHub (download it to your local directory):
 
 .. code-block:: bash
 
-  git fetch
+  git fetch # [--all] [--prune]
 
 If required, intergrate the changes from GitHub into your local repository:
 
@@ -58,6 +64,8 @@ If your changes are ready to be commited, stage and commit them:
   git commit -m 'This is my commit.'
 
 |
+
+**Push changes to GitHub**
 
 Finally, push all of them to repository on the internet (and create a merge request afterwards).
 

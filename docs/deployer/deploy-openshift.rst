@@ -29,6 +29,8 @@ EBRAINS provides two OKD infrastructures
 .. Note::
   I strongly recommend to use the development page for testing.
 
+|
+
 **Register client for authentication on EBRAINS**
 
 To access to NEST Desktop on EBRAINS infrastructure, an authentication is requested.
@@ -48,10 +50,11 @@ Change the configuration file and then create a client for your application.
 
 Keep ``client_id`` and ``client_secret`` for the **okd** infrastructure.
 
+|
 
 **Build NEST Desktop on EBRAINS**
 
-First, copy the command line from the web console of ``https://okd-dev.hbp.eu`` and enter in terminal to login via oc:
+First, copy the command line from the web console of ``https://okd-dev.hbp.eu`` and enter in terminal to login via ``oc``:
 
 .. code-block:: bash
 
@@ -62,7 +65,6 @@ Get the status of the current project:
 .. code-block:: bash
 
   oc status
-
 
 You can find the configurations on https://github.com/nest-desktop/nest-desktop-ebrains.
 Therein, you have to modify the environment for EBRAINS authentication,
@@ -75,6 +77,7 @@ Execute the bash script to deploy the ``nest-desktop``, ``nest-server`` and ``ap
 
   bash setup-nest-desktop.sh
 
+|
 
 **Further usage**
 
@@ -83,7 +86,6 @@ Scaling up the replicas (pods or nodes):
 .. code-block:: bash
 
   oc scale --replicas=2 dc nest-desktop
-
 
 |
 

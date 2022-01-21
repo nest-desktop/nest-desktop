@@ -39,7 +39,8 @@ Contents
   :caption: Deployer Documentation
 
   deployer/index
-  deployer/deploy-docker
+  deployer/deploy-docker-compose
+  deployer/deploy-insite
   deployer/deploy-openshift
   deployer/deploy-openstack
 
