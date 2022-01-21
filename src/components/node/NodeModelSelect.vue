@@ -31,7 +31,7 @@
         <v-card-title class="pa-0" style="height: 40px">
           <v-overflow-btn
             :items="state.node.models"
-            @change="modelChange()"
+            @change="updateOnModelChange()"
             class="ma-0"
             dense
             editable
@@ -148,9 +148,9 @@ export default Vue.extend({
     };
 
     /**
-     * Triggers when node model is changed.
+     * Update when node model is changed.
      */
-    const modelChange = () => {
+    const updateOnModelChange = () => {
       update();
     };
 
@@ -193,7 +193,7 @@ export default Vue.extend({
 
     return {
       hideAllParams,
-      modelChange,
+      updateOnModelChange,
       paramSelectionChange,
       projectView,
       showAllParams,
