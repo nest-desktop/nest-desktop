@@ -337,9 +337,9 @@ export class ModelView {
           });
       })
       .catch(() => {
-        this._state.doc.blocks.push({
+        this._state.doc.blocks = [{
           content: `Sorry, there is no help for '${this._state.modelId}'.`,
-        });
+        }];
       });
   }
 
