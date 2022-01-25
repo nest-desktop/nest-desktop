@@ -9,8 +9,8 @@
             <v-img
               :src="
                 $vuetify.theme.dark
-                  ? require('@/assets/img/logo/nest-desktop-logo-white.svg')
-                  : require('@/assets/img/logo/nest-desktop-logo.svg')
+                  ? require('@/assets/img/logo/nest-desktop-logo-dark.svg')
+                  : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               "
               class="logo my-6"
               contain
