@@ -15,6 +15,7 @@ Clone NEST Desktop from the GitHub repository:
   git clone https://github.com/nest-desktop/nest-desktop
   cd nest-desktop
 
+|
 
 ||||
 
@@ -30,7 +31,7 @@ Guides for the developers
   - :doc:`The concept of the interface <interface-concept>`
 
 
-.. |developer| image:: ../_static/img/icons/user-edit.svg
+.. |developer| image:: ../_static/img/icons/user-pen.svg
   :width: 120px
   :alt:
   :align: top

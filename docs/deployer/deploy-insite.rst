@@ -22,6 +22,7 @@ First, get the configuration file for Docker Compose to start NEST Desktop and I
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose-insite.yml docker-compose.yml
 
 Next, start the services of NEST Desktop and Insite including NEST Module and Access Node.
+
 For more information about Docker Compose, please read the :doc:`documentation <deploy-docker-compose>`.
 
 .. code-block:: bash

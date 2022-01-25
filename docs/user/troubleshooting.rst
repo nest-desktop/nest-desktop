@@ -17,8 +17,9 @@ It has two possible reasons:
   - The server is down. Contact the server operators and enter the URL of the NEST Simulator, e.g. ``localhost:5000`` in a web browser to check if it is running again.
 
 .. note::
-  For advanced users:
-  Check in a terminal whether NEST Simulator is running (``curl localhost:5000``).
+  For advanced users: Check in a terminal whether NEST Simulator is running:
+
+  ``curl localhost:5000``
 
 
 **Internal server error**

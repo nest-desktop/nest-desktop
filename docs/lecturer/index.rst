@@ -1,5 +1,5 @@
-|lecturer| How to lecture with NEST Desktop
-===========================================
+|lecturer| How to lecture in course
+===================================
 
 This section gives directions for lecturers who want to teach computational neuroscience with NEST Desktop.
 Using computer simulations, students are able to explore models ranging from single neurons to large neuronal networks.
@@ -20,7 +20,10 @@ Additionally, we provide course materials to be handed out to participants:
   - :doc:`first-steps`
   - :doc:`course-protocol`
 
-This guide shows how you can teach the biophysics of neurons, synapses and large networks of the brain to students using NEST Desktop.
+|
+
+This guide shows how you can teach the biophysics of neurons, synapses
+and large networks of the brain to students using NEST Desktop.
 Video tutorials illustrate important aspects of the course work.
 The provided material could be used to prepare handouts for students.
 
@@ -28,45 +31,61 @@ Select the level of the course that you plan to conduct with NEST Desktop:
 
 .. raw:: html
 
-  <div class="doc" style="height:200px">
-    <div class="column col-3 color pa-1">
-      <a href="bachelor/index.html">
-        <div class="black pa-1">
-          <h3>Bachelor students</h3>
-          <p>
-            ... learn basic computational neuroscience with little prior knowledge.
-          </p>
-          <span class="bottom pa-1">For bachelor students</span>
-        </div>
-      </a>
-    </div>
+  <div class="container-fluid">
+    <div class="row" style="height:250px">
 
-
-    <div class="column col-3 color pa-1">
-      <a href="master/index.html">
-        <div class="black pa-1">
-          <h3>Master students</h3>
-          <p>
-          ... explore core concepts of computational neuroscience arising in the literature.
-          </p>
-          <span class="bottom pa-1">For master students</span>
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Bachelor students</h5>
+            <p class="card-text">
+              ... learn basic computational neuroscience with little prior knowledge.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a class="btn btn-primary btn-sm stretched-link" href="bachelor/index.html" role="button">
+              For bachelor students
+            </a>
+          </div>
         </div>
-      </a>
-    </div>
+      </div>
 
-    <div class="column col-3 color pa-1">
-      <a href="doctorate/index.html">
-        <div class="black pa-1">
-          <h3>Doctoral students</h3>
-          <p>
-            ... deal with advanced concepts of computational neuroscience arising in research.
-          </p>
-          <span class="bottom pa-1">For doctoral students</span>
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Master students</h5>
+            <p class="card-text">
+              ... explore core concepts of computational neuroscience arising in the literature.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a class="btn btn-primary btn-sm stretched-link" href="master/index.html" role="button">
+              For master students
+            </a>
+          </div>
         </div>
-      </a>
+      </div>
+
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Doctoral students</h5>
+            <p class="card-text">
+              ... deal with advanced concepts of computational neuroscience arising in research.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a class="btn btn-primary btn-sm stretched-link" href="doctoral/index.html" role="button">
+              For doctoral students
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
+|
 
 ||||
 
