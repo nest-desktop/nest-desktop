@@ -253,8 +253,15 @@ export class Connection extends Config {
   reverse(): void {
     // console.log('Reverse connection');
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
-    this.recorder.initActivity();
+
+    // trigger connection change
     this.connectionChanges();
+
+    // initialize activity graph
+    if (this._view.connectRecorder()) {
+      this.recorder.initActivity();
+      this._network.project.initActivityGraph();
+    }
   }
 
   /**
@@ -319,11 +326,11 @@ export class Connection extends Config {
     };
 
     if (this._sourceSlice.visible) {
-      connection.sourceSlice = this._sourceSlice.toJSON()
+      connection.sourceSlice = this._sourceSlice.toJSON();
     }
 
     if (this._targetSlice.visible) {
-      connection.targetSlice = this._targetSlice.toJSON()
+      connection.targetSlice = this._targetSlice.toJSON();
     }
 
     if (this._mask.hasMask()) {

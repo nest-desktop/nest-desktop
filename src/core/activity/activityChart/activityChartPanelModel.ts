@@ -262,7 +262,9 @@ export abstract class ActivityChartPanelModel {
       );
 
       const activity = this._activities[data.activityIdx];
-      const color = record ? record.color : activity.recorder.view.color;
+      const color = record
+        ? record.color
+        : activity.recorder.view.color || 'black';
 
       if (data.marker) {
         data.marker.color = color;

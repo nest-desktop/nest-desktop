@@ -112,14 +112,21 @@ export class Node extends Config {
    * @param value - id of the model
    */
   set modelId(value: string) {
-    // console.log('Set node model');
     this._modelId = value;
+
     this.initParameters();
     this.initActivity();
+
     this.updateRecords();
     this.updateRecordsColor();
-    this._network.clean();
+
+    // trigger node change
     this.nodeChanges();
+
+    // initialize activity graph
+    if (this.model.isRecorder()) {
+      this._network.project.initActivityGraph();
+    }
   }
 
   get n(): number {
@@ -156,10 +163,6 @@ export class Node extends Config {
     return this._positions;
   }
 
-  // set positions(value: number[][]) {
-  //   this._positions = value;
-  // }
-
   get recordables(): NodeRecord[] {
     return this._recordables;
   }
@@ -169,9 +172,7 @@ export class Node extends Config {
   }
 
   set records(value: NodeRecord[]) {
-    // console.log('Set record from');
     this._records = value;
-    // this.network.project.initActivityGraph();
   }
 
   get size(): number {
@@ -257,7 +258,6 @@ export class Node extends Config {
     if (!this.model.isRecorder()) {
       return;
     }
-    // console.log('Initialize activity');
     if (this.model.isSpikeRecorder()) {
       this._activity = new SpikeActivity(this);
     } else if (this.model.isAnalogRecorder()) {
@@ -265,7 +265,6 @@ export class Node extends Config {
     } else {
       this._activity = new Activity(this);
     }
-    // this._network.project.initActivityGraph();
   }
 
   /**
@@ -492,9 +491,10 @@ export class Node extends Config {
    */
   clean(): void {
     this._idx = this._network.nodes.indexOf(this);
-    this.updateRecords();
     this.view.clean();
     this.updateHash();
+
+    this.updateRecords();
   }
 
   /**
