@@ -1,4 +1,5 @@
 import axios from 'axios';
+import combineURLs from 'axios/lib/helpers/combineURLs';
 
 import { Config } from './config';
 
@@ -40,6 +41,10 @@ export class Backend extends Config {
 
   set hostname(value: string) {
     this.updateConfig({ hostname: value });
+  }
+
+  get instance() {
+    return axios.create({ baseURL: this.url });
   }
 
   get port(): string {
@@ -104,14 +109,6 @@ export class Backend extends Config {
     this.host = '';
   }
 
-  get(path: string = ''): Promise<any> {
-    return axios.get([this.url, path].join('/'));
-  }
-
-  post(path: string = '', data: any = {}): Promise<any> {
-    return axios.post([this.url, path].join('/'), data);
-  }
-
   /**
    * Reset state of the backend.
    */
@@ -142,13 +139,13 @@ export class Backend extends Config {
     const hostname: string = window.location.hostname || 'localhost';
     const port: string = this.port || this._state.config.port;
     const hosts: string[] = [
-      hostname + ':' + port,
-      hostname + this._state.config.path,
+      combineURLs(hostname) + ':' + port,
+      combineURLs(hostname, this._state.config.path),
     ];
     const hostPromises: any[] = hosts.map((host: string) =>
       this.ping(protocol + '//' + host)
     );
-    return Promise.all(hostPromises);
+    return axios.all(hostPromises);
   }
 
   /**
@@ -159,7 +156,7 @@ export class Backend extends Config {
     // console.log('Ping the backend');
 
     return axios
-      .get(url + this.state.config.versionPath)
+      .get(combineURLs(url, this.state.config.versionPath))
       .then((response: any) => {
         switch (response.status) {
           case 0:

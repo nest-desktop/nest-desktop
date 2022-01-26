@@ -37,12 +37,12 @@ export class App extends Config {
 
     // Backends
     this._backends.insiteAccess = new Backend('InsiteAccess', {
-      path: '/insite',
+      path: 'insite',
       port: 8080,
-      versionPath: '/version',
+      versionPath: 'version/',
     });
     this._backends.nestSimulator = new Backend('NESTSimulator', {
-      path: '/nest',
+      path: 'nest',
       port: 5000,
       versionPath: '',
     });
@@ -178,12 +178,22 @@ export class App extends Config {
    */
   updateConfigs(config: any = {}): void {
     consoleLog(this, 'Update config from file');
+
     // Update config for NEST Simulator
     if (config.NESTSimulator && !this.backends.nestSimulator.config.custom) {
       if ('url' in config.NESTSimulator) {
         this.backends.nestSimulator.url = config.NESTSimulator.url;
       } else {
         this.backends.nestSimulator.updateConfig(config.NESTSimulator);
+      }
+    }
+
+    // Update config for Insite Access
+    if (config.insiteAccess && !this.backends.insiteAccess.config.custom) {
+      if ('url' in config.insiteAccess) {
+        this.backends.insiteAccess.url = config.insiteAccess.url;
+      } else {
+        this.backends.insiteAccess.updateConfig(config.insiteAccess);
       }
     }
   }

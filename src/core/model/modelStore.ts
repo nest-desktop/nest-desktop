@@ -1,4 +1,5 @@
 import axios from 'axios';
+import combineURLs from 'axios/lib/helpers/combineURLs';
 import { reactive, UnwrapRef } from '@vue/composition-api';
 
 import { consoleLog } from '../common/logger';
@@ -126,7 +127,7 @@ export class ModelStore {
     if (path == null) {
       return;
     }
-    return axios.get(url + path).then((response: any) => {
+    return axios.get(combineURLs(url, path)).then((response: any) => {
       if (response.status === 200) {
         const data = response.data;
         this._db.importModel(data).then(() => {
@@ -171,9 +172,11 @@ export class ModelStore {
    * Fetch models from NEST Simulator.
    */
   fetchModelsNEST(): void {
-    this._app.backends.nestSimulator.get('api/Models').then((response: any) => {
-      this._state.modelsNEST = response.data;
-    });
+    this._app.backends.nestSimulator.instance
+      .get('api/Models')
+      .then((response: any) => {
+        this._state.modelsNEST = response.data;
+      });
   }
 
   /**

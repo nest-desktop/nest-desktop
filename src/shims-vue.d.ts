@@ -3,6 +3,8 @@ declare module '*.vue' {
   export default Vue;
 }
 
+declare module 'axios/lib/helpers/combineURLs';
+
 // PouchDB
 // declare module 'pouchdb/dist/pouchdb' {
 //   import * as PouchDB from 'pouchdb/dist/pouchdb';

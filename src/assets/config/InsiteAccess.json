@@ -1,6 +1,6 @@
 {
   "custom": false,
-  "hostname": "",
+  "hostname": "localhost",
   "port": "8080",
-  "protocol": ""
+  "protocol": "http:"
 }
