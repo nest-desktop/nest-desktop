@@ -189,11 +189,11 @@ export class App extends Config {
     }
 
     // Update config for Insite Access
-    if (config.insiteAccess && !this.backends.insiteAccess.config.custom) {
-      if ('url' in config.insiteAccess) {
-        this.backends.insiteAccess.url = config.insiteAccess.url;
+    if (config.InsiteAccess && !this.backends.insiteAccess.config.custom) {
+      if ('url' in config.InsiteAccess) {
+        this.backends.insiteAccess.url = config.InsiteAccess.url;
       } else {
-        this.backends.insiteAccess.updateConfig(config.insiteAccess);
+        this.backends.insiteAccess.updateConfig(config.InsiteAccess);
       }
     }
   }
