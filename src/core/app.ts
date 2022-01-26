@@ -98,8 +98,10 @@ export class App extends Config {
   /**
    * Initialize application.
    */
-  init(): void {
+  init(config: any): void {
     consoleLog(this, 'Initialize app');
+    this.updateConfigs(config);
+
     this._model.fetchModelsNEST();
     this._model.fetchModelFilesGithub();
 
@@ -177,24 +179,15 @@ export class App extends Config {
    * Global config is loaded in main.ts.
    */
   updateConfigs(config: any = {}): void {
-    consoleLog(this, 'Update config from file');
+    consoleLog(this, 'Update backend config');
+    if (config == null) return;
 
-    // Update config for NEST Simulator
-    if (config.NESTSimulator && !this.backends.nestSimulator.config.custom) {
-      if ('url' in config.NESTSimulator) {
-        this.backends.nestSimulator.url = config.NESTSimulator.url;
-      } else {
-        this.backends.nestSimulator.updateConfig(config.NESTSimulator);
-      }
+    if (config.nestSimulator && !this.backends.nestSimulator.config.custom) {
+      this.backends.nestSimulator.updateURL(config.nestSimulator);
     }
 
-    // Update config for Insite Access
-    if (config.InsiteAccess && !this.backends.insiteAccess.config.custom) {
-      if ('url' in config.InsiteAccess) {
-        this.backends.insiteAccess.url = config.InsiteAccess.url;
-      } else {
-        this.backends.insiteAccess.updateConfig(config.InsiteAccess);
-      }
+    if (config.insiteAccess && !this.backends.insiteAccess.config.custom) {
+      this.backends.insiteAccess.updateURL(config.insiteAccess);
     }
   }
 }

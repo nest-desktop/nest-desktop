@@ -1,25 +1,29 @@
 <template>
   <v-app>
-    <iframe id="NESTSimulatorFrame" class="iframe" />
-    <Navigation class="no-print" />
-
     <transition name="fade">
-      <router-view />
+      <div v-if="core.app.state.ready">
+        <iframe id="NESTSimulatorFrame" class="iframe" />
+        <Navigation class="no-print" />
+
+        <transition name="fade">
+          <router-view />
+        </transition>
+
+        <v-snackbar :timeout="-1" :value="state.updateExists">
+          An update is available.
+
+          <template #action="{ attrs }">
+            <v-btn
+              @click="refreshApp"
+              outlined
+              small
+              v-bind="attrs"
+              v-text="'Update'"
+            />
+          </template>
+        </v-snackbar>
+      </div>
     </transition>
-
-    <v-snackbar :timeout="-1" :value="state.updateExists">
-      An update is available.
-
-      <template #action="{ attrs }">
-        <v-btn
-          @click="refreshApp"
-          outlined
-          small
-          v-bind="attrs"
-          v-text="'Update'"
-        />
-      </template>
-    </v-snackbar>
   </v-app>
 </template>
 
@@ -86,7 +90,7 @@ export default Vue.extend({
             // NESTFrame.contentDocument.location.reload(true);
           }, 300000);
         })
-        .catch((e: Error) => {
+        .catch(() => {
           // Errors are already logged inside the httpClient
         });
     };
@@ -96,8 +100,7 @@ export default Vue.extend({
         once: true,
       });
       core.app.initTheme(root.$vuetify.theme);
-      core.app.init();
-      core.app.updateConfigs(Vue.prototype.$config);
+      core.app.init(Vue.prototype.$config);
       keepConnectionToNESTSimulatorAlive();
     });
 

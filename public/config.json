@@ -1,8 +1,8 @@
 {
-  "InsiteAccess": {
+  "insiteAccess": {
     "port": "8080"
   },
-  "NESTSimulator": {
+  "nestSimulator": {
     "port": "5000"
   }
 }

@@ -173,4 +173,16 @@ export class Backend extends Config {
         }
       });
   }
+
+  /**
+   * Update URL.
+   * @param config The configuration to update URL in local config.
+   */
+  updateURL(config: any = {}) {
+    if (config.url != null) {
+      this.url = config.url;
+    } else if (config.port != null) {
+      this.updateConfig({ port: config.port });
+    }
+  }
 }
