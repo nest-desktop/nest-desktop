@@ -1,9 +1,9 @@
 # nginx state for serving content
-FROM nginx:stable
+FROM nginx:stable-alpine
 LABEL maintainer="Sebastian Spreizer <spreizer@web.de>"
 
 # Add default to available sites
-COPY ./.gitlab-ci-docker/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*

@@ -90,7 +90,7 @@ deploy_ebrains_docker:
     - source version.txt
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
   script:
-    - docker build -f .gitlab-ci-docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
+    - docker build -f docker/Dockerfile -t docker-registry.ebrains.eu/nest/nest-desktop:${VERSION} .
     - docker push docker-registry.ebrains.eu/nest/nest-desktop:${VERSION}
   after_script:
     - docker logout docker-registry.ebrains.eu
@@ -110,7 +110,7 @@ deploy_docker_hub:
     - source version.txt
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
   script:
-    - docker build -f .gitlab-ci-docker/Dockerfile -t nestdesktop/app:${VERSION} .
+    - docker build -f docker/Dockerfile -t nestdesktop/app:${VERSION} .
     - docker push nestdesktop/app:${VERSION}
   after_script:
     - docker logout
