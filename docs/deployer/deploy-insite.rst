@@ -1,33 +1,35 @@
-Deploy Insite with Docker Compose
-=================================
+Deploy NEST Desktop with Insite
+===============================
 
 
 .. image:: ../_static/img/logo/docker-compose-logo.png
-  :width: 240px
   :alt: Docker Compose
+  :target: #deploy-nest-desktop-with-insite
+  :width: 240px
 
 |
 
-Insite can be started as a backend module for NEST Desktop.
-It allows to render activity during the simulation already.
+The Insite system can be served as a backend for NEST Desktop.
+It allows to visualize activity of the live simulation.
 
-.. note::
+|
 
-  For more information about Insite, please read the `documentation <https://vrgrouprwth.github.io/insite/>`__.
-
-First, get the configuration file for Docker Compose to start NEST Desktop and Insite:
+First get the configuration file for Docker Compose.
 
 .. code-block:: bash
 
-  wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose-insite.yml docker-compose.yml
-
-Next, start the services of NEST Desktop and Insite including NEST Module and Access Node.
+  wget https://raw.githubusercontent.com/nest-desktop/nest-desktop-docker/main/docker-compose-insite.yml
 
 For more information about Docker Compose, please read the :doc:`documentation <deploy-docker-compose>`.
 
+|
+
+Next, start all services of the Docker compose.
+
 .. code-block:: bash
 
-  docker-compose up --build
+  docker-compose -f docker-compose-insite.yml up
 
-The services are now served and you are ready to use NEST Desktop with Insite.
-For how to use NEST Desktop with Insite, please consult the :doc:`guide </user/usage-insite>`.
+NEST Desktop is now serving at ``http://localhost:8000``
+whereas Insite NEST Module and Insite Access Node are serving at ``http://localhost:5000``
+and ``http://localhost:8080``, respectively.
