@@ -25,7 +25,7 @@ build_app:
         echo "__version__ = '${VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
         echo "DOCKER_TAG='${VERSION}${CI_PIPELINE_IID}'" >> .env
       fi
-    - yarn
+    - yarn install
   script:
     - yarn build
   tags:
