@@ -76,15 +76,14 @@ export class ActivityAnimationGraph {
 
     // Update activity layers and frames.
     this.project.activities.forEach((activity: Activity) => {
-      let layer = this._layers[activity.idx];
-      if (layer == null) {
-        layer = new ActivityAnimationLayer(this, activity);
-        this._layers.push(layer);
+      const layer = new ActivityAnimationLayer(this, activity);
+      let position = activity.idx;
+      if (this._layers[position] == null) {
+        position = this._layers.push(layer) - 1;
       } else if (layer.activity !== activity) {
-        layer = new ActivityAnimationLayer(this, activity);
-        this._layers[activity.idx] = layer;
+        this._layers[position] = layer;
       }
-      layer.init();
+      this._layers[position].init();
     });
 
     this.updateScene();
