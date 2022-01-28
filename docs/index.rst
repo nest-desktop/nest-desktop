@@ -2,7 +2,7 @@ NEST Desktop
 ============
 
 
-.. image:: _static/img/logo/nest-desktop-logo.png
+.. image:: ./_static/img/logo/nest-desktop-logo.png
    :alt: NEST Desktop
    :align: right
 
