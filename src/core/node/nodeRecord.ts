@@ -105,6 +105,7 @@ export class NodeRecord {
    * Update node record.
    */
   update(): void {
+    this._nodeSize = this._activity.nodeIds.length;
     this.updateGroupID();
     this.updateState();
   }
