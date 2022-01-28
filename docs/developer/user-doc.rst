@@ -53,7 +53,7 @@ Build a singularity image:
 
   singularity build doc-sphinx.sif singularity/doc-sphinx.def
 
-Start Singularity container:
+Start the Singularity container:
 
 .. code-block:: bash
 

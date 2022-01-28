@@ -10,7 +10,8 @@ Coding conventions
   but the .editorconfig seems `not to be able to guarantee this <https://github.com/editorconfig/editorconfig/issues/387#ruler>`__ \
   and we have not found a convincing alternative. \
   A bigger problem is that there are cases, where longer lines make sense \
-  (e.g when they contain very long URLs or within bullet points).
+  (e.g when they contain very long URLs or within bullet points, \
+  the latter with the possibility to use backslashes, which is sometimes quite cumbersome).
 - The general coding conventions for Vue, TypeScript \
   and for Python (see `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`__) should be followed.
 - For `.ts` files, the type ``any`` should be used as rarely as possible (and might be removed in the future).

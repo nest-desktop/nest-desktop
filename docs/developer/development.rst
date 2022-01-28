@@ -11,7 +11,7 @@ The Live Development Server is now serving at ``http://localhost:8080``.
 
 .. note::
 
-  For more information how to prepare the environment for the development, check the :doc:`guide <preparation>`.
+  For more information on how to prepare the environment for the development, please check the :doc:`guide <preparation>`.
 
 |
 
@@ -42,8 +42,10 @@ Fetch the data from GitHub (download it to your local directory):
 
 .. code-block:: bash
 
-  git fetch # [--all] [--prune]
+  git fetch
 
+This command can be varied with options to e.g. fetch all branches (`git fetch --all`) or to discard unreachable content (`git fetch --prune`),
+even with multiple of them.
 If required, intergrate the changes from GitHub into your local repository:
 
 .. code-block:: bash
