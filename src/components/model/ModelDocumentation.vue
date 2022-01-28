@@ -69,7 +69,7 @@ export default Vue.extend({
   },
   setup(props) {
     const modelView = core.app.model.view;
-    const NESTVersion = 'v3.1';
+    const NESTVersion = 'v3.2';
     const NESTDocURL = () => {
       return `https://nest-simulator.readthedocs.io/en/${NESTVersion}/models/${modelView.state.modelId}.html`;
     };
