@@ -128,10 +128,8 @@
             <v-spacer />
             <v-btn
               @click="deleteNode"
-              color="warning"
               outlined
               small
-              text
               v-text="'delete'"
             />
           </v-card-actions>
