@@ -30,4 +30,4 @@ For more information about Docker Compose, please read the :doc:`documentation <
   docker-compose up --build
 
 The services are now served and you are ready to use NEST Desktop with Insite.
-For how to use NEST Desktop with Insite, please consult the :doc:`guide <user/usage-insite>`.
+For how to use NEST Desktop with Insite, please consult the :doc:`guide </user/usage-insite>`.
