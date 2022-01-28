@@ -39,7 +39,8 @@ You can read the deployment instructions by clicking one of these images below:
 ||||
 
 Guides to deploy NEST Desktop
-  - :doc:`deploy-docker`
+  - :doc:`deploy-docker-compose`
+  - :doc:`deploy-insite`
   - :doc:`deploy-openshift`
   - :doc:`deploy-openstack`
 

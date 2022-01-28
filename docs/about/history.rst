@@ -18,6 +18,8 @@ History
 :08 - 09 Apr: "NEST Desktop insitufication" on In-Situ Hackathon, online (HCI).
 :08 - 19 Feb: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
 
+|
+
 **2020**
 
 :30 Sep - 1 Oct: Hand-on Session and Poster at `Bernstein Conference 2020 <https://abstracts.g-node.org/conference/BC20/abstracts#/uuid/f33d04d5-27fc-45b1-9d7a-44e2a0f28360>`__, online (Berlin, Germany).
@@ -26,6 +28,8 @@ History
 :02 - 17 Jun: MSc course "Biophysics of Neurons and Networks" at [BCF]_, online (Freiburg, Germany).
 :16 Apr: Presentation and demo at `NeuroMat <https://neuromat.numec.prp.usp.br/content/nmweb/presentations/>`__, online (Sao Paulo, Brazil).
 :03 - 06 Feb: Talk and Demo/Hand-on session at `HBP Summit and Open Days <https://summit2020.humanbrainproject.eu/>`__ , Athene, Greece.
+
+|
 
 **2019**
 
@@ -39,6 +43,8 @@ History
 :25 - 31 Mar: Tutorial workshop for `IICCSSS <http://iiccsss.org/>`__ at [BCF]_, Freiburg, Germany.
 :11 - 22 Feb: BSc course "Simple Neuron Models" at [BCF]_, Freiburg, Germany.
 
+|
+
 **2018**
 
 :26 - 27 Sep: Poster/Live presentation `NEST Desktop  <https://abstracts.g-node.org/conference/BC18/abstracts#/uuid-2840bf9b-0d35-4002-ae80-0cb087abf8a8>`__ at Bernstein Conference, Berlin, Germany.
@@ -47,12 +53,16 @@ History
 :23 - 27 Apr: MSc course "Biophysics of Neurons and Networks" at [BCF]_, Freiburg, Germany.
 :12 - 23 Feb: BSc course "Simple Neuron Models" at [BCF]_, Freiburg, Germany.
 
+|
+
 **2017**
 
 :19 - 20 Dec: Talk `"NEST Desktop" <https://indico-jsc.fz-juelich.de/event/52/material/2/0.pdf)>`__ at NEST Conference, Jülich, Germany.
 :20 - 22 Nov: Live presentation with Ad Aertsen at `Neural networks mini school <https://www.neurex.org/events/archives/item/304-neural-networks-meeting-mini-school>`__, Strasbourg, France.
 :02 - 05 May: MSc course "Biophysics of Neurons and Networks" at [BCF]_, Freiburg, Germany.
 :24 Jan: Talk (Informal Seminar) `"NEST Desktop" <https://www.bcf.uni-freiburg.de/events/informal-seminar/announcements/170124_Spreizer.htm>`__ at  [BCF]_, Freiburg, Germany.
+
+|
 
 **2016**
 

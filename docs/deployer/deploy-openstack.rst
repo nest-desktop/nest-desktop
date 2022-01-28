@@ -56,7 +56,6 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 
 5. Start an instance on the bwCloud dashboard and it will have a public IP of the virtual machine.
 
-
 |
 
 **Acknowledgements**

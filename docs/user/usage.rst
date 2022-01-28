@@ -7,6 +7,8 @@ This guides provides detailed documentation for the Graphical User Interface (GU
   If you want to see a quick start guide for in NEST Desktop, we have prepared a :doc:`video <index>` showing the steps
   how to construct networks and explore activity.
 
+|
+
 **Getting Started**
 
 Once you start NEST Desktop, you can see the start page containing an image of a laptop with the NEST logo on its screen.
@@ -14,8 +16,6 @@ At the bottom it shows a short description of NEST Desktop (left) and some usefu
 
 .. image:: ../_static/img/screenshots/start-page.png
   :width: 100%
-
-|
 
 .. note::
   You can reload the page if NEST Desktop has somehow crashed.
@@ -39,7 +39,9 @@ The network editor shows the network graph composing of nodes (shapes) and conne
 
 Here, we explain steps to create and connect nodes.
 
-.. topic:: Create nodes
+|
+
+**Create nodes**
 
   .. image:: ../_static/img/gif/create-nodes.gif
     :align: left
@@ -53,6 +55,7 @@ Here, we explain steps to create and connect nodes.
 
 |
 |
+|
 
 **Node labels**
 
@@ -61,15 +64,19 @@ By default, it creates direct current generator (:guilabel:`dc`) for a stimulus 
 Neurons are just labeled with :guilabel:`n`.
 You can find the full label of the node model in the network controller.
 
-.. image:: ../_static/img/screenshots/node-shapes.png
-  :align: right
+|
 
 **Node colors**
+
+.. image:: ../_static/img/screenshots/node-shapes.png
+  :align: right
 
 Nodes and connections contain parameter configurations which are displayed in the controller panel in the side navigation.
 The color of nodes helps you to associate the network graph with the controller
 as well as the corresponding visualization of the network activity.
 The color of lines is defined by the source node.
+
+|
 
 **Node shapes**
 
@@ -78,6 +85,8 @@ The specific shape defines an element type of a node:
   - **Hexagon:** A stimulus device alias stimulator is an instrument which only produces signals towards target nodes.
   - **Parallelogram:** A recording device alias recorder is also an instrument which observes states of a recordable node.
   - **Square/Triangle/Circle:** A neuron node is the core engine of a neuronal network model which received inputs from other nodes and produces specific output using intrinsic equation.
+
+|
 
 **Neuron shapes**
 
@@ -90,6 +99,7 @@ The shape of neurons is represented differently by the set of synaptic weights o
   - **Triangle:** Neurons with excitatory connections to neurons (all synapse weights are positive)
   - **Circle:** Neurons with inhibitory connections to neurons (all synapse weights are negative)
 
+|
 
 **Connect nodes**
 
@@ -109,8 +119,6 @@ It creates a connection between source and target nodes.
 
 |
 |
-
-
 
 **Select model and parameters**
 
@@ -147,7 +155,7 @@ Simulate neuronal networks
 You can click on the :guilabel:`Simulate` button to start the simulation of your network.
 In the code editor you can have an insight into the generated script code (see below for further information).
 
-
+|
 
 **Kernel settings**
 
@@ -156,14 +164,14 @@ In the code editor you can have an insight into the generated script code (see b
   :align: right
 
 The simulation parameters can be adjusted in the right sidebar.
-They are contained in the NEST Server code (more information below), so they will be passed to the NEST Server
+They are contained in the NEST Simulator code (more information below), so they will be passed to the NEST Simulator
 whenever a simulation is started.
-In the Kernel settings, the slider 'local number of threads' allows to set the number of processes used by the NEST Server.
-Please be aware that the shown number of threads does not match the number of processors used by the NEST Server machine.
-Therefore, selecting a number that is too large could lead to freezes on the NEST Server machine.
+In the Kernel settings, the slider 'local number of threads' allows to set the number of processes used by the NEST Simulator.
+Please be aware that the shown number of threads does not match the number of processors used by the NEST Simulator machine.
+Therefore, selecting a number that is too large could lead to freezes on the NEST Simulator machine.
 
 It is possible to select the simulation resolution.
-Here, you should be aware of the created load on the NEST Server as well:
+Here, you should be aware of the created load on the NEST Simulator as well:
 small values for the resolution size create many calculations and data points.
 Therefore, selecting small values for the simulation resolution can lead to freezes and lags,
 so please be patient when you choose a small number. :)
@@ -173,7 +181,7 @@ It is possible to choose a randomized seed.
 
 The simulation time can be set as well (in Milliseconds).
 
-
+|
 
 **Code editor**
 
@@ -207,10 +215,12 @@ The network activity is composed of neuronal properties (positions and ids of ne
 and recorded events from recording devices.
 Events can be subdivided in two groups: spike events and analog signals.
 Spike events contain times and ids of the senders emitting events to the recording devices
-which can be considered as collectors (``spike detector``).
+which can be considered as collectors (``spike recorder``).
 Analog signals contain continuous quantities from the recording devices aka samplers (``voltmeter`` or ``multimeter``)
 which query their targets at given time intervals.
 Network activity can be explored in a graph or table.
+
+|
 
 **Activity graph**
 
@@ -228,6 +238,7 @@ it shows a histogram graph of spike times or of inter-spike intervals.
 
 |
 |
+|
 
 **Activity table**
 
@@ -235,7 +246,7 @@ it shows a histogram graph of spike times or of inter-spike intervals.
   :width: 320px
   :align: right
 
-You can go to the table by clicking on the :guilabel:`Activity statistics` button in the right side navigation.
+You can go to the table by clicking on the |br| :guilabel:`Activity statistics` button in the right side navigation.
 A table shows simple statistics of recorded elements (rows) of a node (population) connected to a recording device.
 
 In spike events, the columns show the spike counts, mean and standard deviation of :math:`ISI` (inter-spike interval)
@@ -263,7 +274,7 @@ Manage projects
 NEST Desktop has a project management helping you to organize your networks and network activity.
 If you want to explore the network activity of the project, you will have to start the simulation (see :ref:`Simulation`).
 
-Clicking on :guilabel:`New project` creates a new project where you can construct a network from the scratch (see :ref:`Construction`).
+Clicking on :guilabel:`+ New project` creates a new project where you can construct a network from the scratch (see :ref:`Construction`).
 It is useful to give project a proper name so that you can recognize your projects.
 
 |
@@ -292,3 +303,8 @@ Explore neuron models and devices
 |
 
 The model page provides you detailed documentation of the models.
+
+
+.. |br| raw:: html
+
+  <br/>

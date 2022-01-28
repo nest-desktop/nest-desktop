@@ -14,7 +14,7 @@ For more information, please have a look `here <https://nest-simulator.readthedo
 
 |
 
-Docker (+ Docker Compose) and Singularity provide both NEST Desktop and NEST Simulator,
+Docker (or Docker Compose) and Singularity provide both NEST Desktop and NEST Simulator,
 so you have everything you need to run NEST Desktop.
 
 Alternatively, you can install NEST Desktop with the pip command.
@@ -46,7 +46,6 @@ To get more information, see the `official page of Docker Compose <https://githu
 Docker Compose is included in Docker Desktop for Windows and macOS.
 For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
 
-
 Please keep in mind that on Windows you can also use the Windows Subsystem for Linux (WSL) version 2 or higher,
 which allows you to run Docker without emulation.
 This offers performance advantages and more features.
@@ -54,6 +53,7 @@ Detailed instructions on how to use Docker on WSL (version 2+) are provided by
 `Docker <https://docs.docker.com/desktop/windows/wsl/>`__ and
 `Microsoft <https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers>`__.
 
+|
 
 **Quick setup in Linux** |linux|
 
@@ -199,6 +199,8 @@ For more information read the complete installing guide :doc:`here <setup>`.
 
 Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
+
+|
 
 **The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! <usage>`

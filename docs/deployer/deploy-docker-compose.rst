@@ -22,12 +22,15 @@ Here, the guide shows you how to build containers with ``docker-compose``.
 Requirements
   * `Docker Compose <https://docs.docker.com/compose/>`__
 
+|
+
 **Preparation**
 
 .. code-block:: bash
 
   apt install docker-compose
 
+|
 
 **Get the configuration file `docker-compose.yml` from GitHub**
 
@@ -38,6 +41,7 @@ Requirements
 It will pull images of NEST Desktop from https://hub.docker.com/r/nestdesktop/app)
 and NEST Simulator can be started from within the official NEST image (https://hub.docker.com/r/nestsim/nest).
 
+|
 
 **Getting started**
 
@@ -71,6 +75,7 @@ Alternatively, you can clone the source code so that you can change the Dockerfi
 and build custom docker images on your machine.
 For more information, visit the page https://github.com/nest-desktop/nest-desktop-docker.
 
+|
 
 **Upgrade images**
 
@@ -94,6 +99,7 @@ Afterwards, you can start the services and containers.
   docker-compose up --no-start
   docker-compose start
 
+|
 
 **Useful commands for docker-compose**
 
@@ -111,13 +117,11 @@ You can attach a container for services without starting it using ``--no-start``
 
   docker-compose up --no-start
 
-
 Then start the services ``nest-desktop`` and ``nest-server`` as daemon.
 
 .. code-block:: bash
 
   docker-compose start
-
 
 Stop the services ``nest-desktop`` and ``nest-server``.
 
@@ -125,13 +129,11 @@ Stop the services ``nest-desktop`` and ``nest-server``.
 
   docker-compose stop
 
-
 Shutdown the services ``nest-desktop`` and ``nest-server``.
 
 .. code-block:: bash
 
   docker-compose down
-
 
 |
 

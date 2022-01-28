@@ -12,7 +12,6 @@ The formal convention of the version releases for specifying compatibility in NE
 It is incremented for the compatibility with the NEST Simulator.
 It implies that the major version of the NEST Desktop (2.x.x) has to match with the one of NEST Simulator (currently 2.x.x).
 
-
 **A minor number**
 
 It is a breaking feature such as a new library or a minor changes of the data structure.
