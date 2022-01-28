@@ -146,7 +146,6 @@ export default Vue.extend({
         [
           {
             name: 'Download plot',
-            // @ts-ignore
             icon: PlotlyJS.Icons.camera,
             click: (gd: any) => {
               state.gd = gd;
@@ -168,8 +167,6 @@ export default Vue.extend({
       state.dialog = false;
       const date: string = new Date().toISOString();
       state.toImageButtonOptions.filename = `nest_desktop-${state.graph.project.name}-${date}`;
-
-      // @ts-ignore
       PlotlyJS.downloadImage(state.gd, state.toImageButtonOptions);
     };
 
