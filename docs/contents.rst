@@ -18,6 +18,7 @@ Contents
   user/index
   user/setup
   user/usage
+  user/nest-models
   user/usage-insite
   user/troubleshooting
   user/use-ebrains
