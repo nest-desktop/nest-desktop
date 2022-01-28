@@ -61,7 +61,7 @@ export class ActivityGraph {
    * Initialize activity animation graph (Three).
    */
   initActivityAnimationGraph(): void {
-    if (this._activityAnimationGraph == undefined) {
+    if (this._activityAnimationGraph == null) {
       this._activityAnimationGraph = new ActivityAnimationGraph(this._project);
     } else {
       this._activityAnimationGraph.init();

@@ -131,9 +131,9 @@
               <ParameterEdit
                 :options="{
                   input: 'valueSlider',
-                  min: 1,
-                  max: 60,
                   label: 'Frame rate',
+                  max: 60,
+                  min: 1,
                   unit: 'fps',
                 }"
                 :value.sync="state.graph.config.frames.rate"
@@ -146,9 +146,9 @@
               <ParameterEdit
                 :options="{
                   input: 'valueSlider',
-                  min: 1,
-                  max: 20,
                   label: 'Grid divisions',
+                  max: 20,
+                  min: 1,
                 }"
                 :value.sync="state.graph.config.grid.divisions"
               />

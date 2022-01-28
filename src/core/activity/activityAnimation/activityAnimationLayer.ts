@@ -12,15 +12,15 @@ export class ActivityAnimationLayer {
   private _activity: Activity;
   private _config: any = {
     object: {
-      size: 4,
-      opacity: 1,
       flatHeight: false,
       flyingBoxes: false,
+      opacity: 1,
+      size: 4,
     },
     trail: {
-      mode: 'off',
-      length: 0,
       fading: false,
+      length: 0,
+      mode: 'off',
     },
   };
   private _frames: any[];
@@ -48,10 +48,10 @@ export class ActivityAnimationLayer {
         [0.5, -0.5],
       ],
     },
-    modelSelected: null,
+    modelSelected: undefined,
     ndim: -1,
     positions: [],
-    record: null,
+    record: undefined,
     records: [],
     reset: false,
     visible: true,
@@ -117,7 +117,7 @@ export class ActivityAnimationLayer {
   }
 
   /**
-   * get binned positions for histogram.
+   * Get binned positions for histogram.
    */
   get positionsBinned(): any[] {
     const X: number[] = this.interval(-0.5, 0.5, this.bins);
@@ -156,7 +156,6 @@ export class ActivityAnimationLayer {
    * Initialize records from analog activities.
    */
   initAnalogRecords(): void {
-    // console.log('Initialize records for analog signals.');
     if (!this._activity.hasAnalogData()) return;
 
     this._state.records = [];
@@ -165,7 +164,7 @@ export class ActivityAnimationLayer {
       record.activity = this._activity;
       this._state.records.push(record);
     });
-    if (this._state.record === null) {
+    if (this._state.record == null) {
       const record = this._state.records.find(
         (record: NodeRecord) => record.id === 'V_m'
       );
@@ -197,7 +196,7 @@ export class ActivityAnimationLayer {
    * Create grids.
    *
    * @remarks
-   * returns a group of GridHelber
+   * returns a group of GridHelpers
    */
   createGrids(divisions: number = 2): THREE.Group {
     const grid: THREE.Group = new THREE.Group();
@@ -259,7 +258,7 @@ export class ActivityAnimationLayer {
    */
   updateFrames(): void {
     const events: any = Object.assign({}, this._activity.events);
-    if (events.senders == undefined) {
+    if (events.senders == null) {
       return;
     }
 
@@ -285,7 +284,7 @@ export class ActivityAnimationLayer {
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);
       const frame: any = this._frames[frameIdx - 1];
-      if (frame == undefined) {
+      if (frame == null) {
         return;
       }
 

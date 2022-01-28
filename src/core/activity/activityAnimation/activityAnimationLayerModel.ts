@@ -83,8 +83,7 @@ export class ActivityAnimationLayerModel {
   /**
    * Update graph objects.
    */
-  updateObjects(frame: any, trailIdx: number = null): void {
-    // console.log('Update objects');
+  updateObjects(frame: any, trailIdx: number = undefined): void {
     this._layer.state.reset = false;
     const trail: any = this.layer.config.trail;
     const object: any = this.layer.config.object;
