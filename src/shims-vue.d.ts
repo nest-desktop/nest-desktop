@@ -23,10 +23,6 @@ declare module 'vue-plotly';
 //   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 //   export default OrbitControls;
 // }
-// declare module 'three' {
-//   import * as THREE from 'three';
-//   export default THREE;
-// }
 
 // Codemirror
 declare module 'vue-codemirror';

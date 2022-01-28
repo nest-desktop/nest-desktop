@@ -2,7 +2,7 @@
   <div
     class="activityAnimationGraph"
     ref="activityAnimationGraph"
-    style="width: 100%; height: 800px"
+    style="width: 100%; height: calc(100vh - 48px)"
   />
 </template>
 
@@ -21,13 +21,15 @@ export default Vue.extend({
     let graph: ActivityAnimationGraph;
     const activityAnimationGraph = ref(null);
 
-    onMounted(() => {
+    const init = () => {
       graph = props.graph as ActivityAnimationGraph;
       graph.initScene(activityAnimationGraph.value);
-    });
+    };
+
+    onMounted(() => init());
 
     onUnmounted(() => {
-      graph.scene.destroy();
+      graph.destroyScene();
     });
 
     return {

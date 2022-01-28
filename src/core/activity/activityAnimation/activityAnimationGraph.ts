@@ -1,102 +1,33 @@
-import * as d3 from 'd3';
+import * as THREE from 'three';
 
 import { Activity } from '../activity';
-import { ActivityAnimationSceneBox } from './activityAnimationScenes/activityAnimationSceneBox';
-import { ActivityAnimationSceneBoxHistogram } from './activityAnimationScenes/activityAnimationSceneBoxHistogram';
-import { ActivityAnimationSceneSphere } from './activityAnimationScenes/activityAnimationSceneSphere';
+import { ActivityAnimationLayer } from './activityAnimationLayer';
+import { ActivityAnimationScene } from './activityAnimationScene';
 import { Project } from '../../project/project';
 
 export class ActivityAnimationGraph {
-  private _config: any;
-  private _frameIdx = 0;
-  private _frames: any[] = [];
-  private _layers: any[] = [];
-  private _layout: any = {};
-  private _loading: boolean = false;
+  private _config: any = {
+    frames: {
+      rate: 24,
+      sampleRate: 1,
+      speed: 1,
+      windowSize: 1,
+    },
+    grid: {
+      divisions: 10,
+    },
+  };
+
+  private _layers: ActivityAnimationLayer[] = [];
   private _project: Project;
-  private _recordables: string[] = [];
-  private _recordablesOptions: any[] = [];
-  private _records = 'V_m';
-  private _ref: any;
-  private _scene: any;
-  private _sceneIdx: number = 0;
-  private _scenes: any[] = [];
-  private _style: any = {};
+  private _scene: ActivityAnimationScene;
+  private _state: any = {
+    frameIdx: 0,
+    nSamples: 0,
+  };
 
   constructor(project: Project) {
     this._project = project;
-    this._config = {
-      camera: {
-        position: {
-          x: 16,
-          y: 8,
-          z: 8,
-        },
-        distance: 12,
-        rotation: {
-          theta: 0,
-          speed: 0,
-        },
-        control: false,
-      },
-      layer: {
-        offset: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-      },
-      colorMap: {
-        min: -70,
-        max: -55,
-        reverse: false,
-        scale: 'Spectral',
-      },
-      frames: {
-        sampleRate: 1,
-        speed: 1,
-        rate: 24,
-        windowSize: 1,
-      },
-      trail: {
-        mode: 'off',
-        length: 0,
-        fading: false,
-      },
-      grid: {
-        divisions: 10,
-      },
-      objectSize: 4,
-      opacity: 1,
-      flatHeight: false,
-      flyingBoxes: false,
-    };
-
-    this._layout = {
-      extent: [
-        [-1, 0],
-        [-0.5, 0.5],
-        [0.5, -0.5],
-      ],
-    };
-
-    this._scenes = [
-      {
-        idx: 0,
-        label: 'Sphere',
-        scene: () => new ActivityAnimationSceneSphere(this),
-      },
-      {
-        idx: 1,
-        label: 'Box',
-        scene: () => new ActivityAnimationSceneBox(this),
-      },
-      {
-        idx: 2,
-        label: 'Box Histogram',
-        scene: () => new ActivityAnimationSceneBoxHistogram(this),
-      },
-    ];
     this.init();
   }
 
@@ -104,98 +35,20 @@ export class ActivityAnimationGraph {
     return this._config;
   }
 
-  get endtime(): number {
-    return this._project.simulation.time;
-  }
-
-  get frame(): any {
-    return this.frames[this._frameIdx] || { data: [] };
-  }
-
-  get frameIdx(): number {
-    return this._frameIdx;
-  }
-
-  set frameIdx(value: number) {
-    this._frameIdx = value;
-  }
-
-  get frames(): any[] {
-    return this._frames;
-  }
-
   get layers(): any[] {
     return this._layers;
-  }
-
-  get layout(): any {
-    return this._layout;
-  }
-
-  get loading(): boolean {
-    return this._loading;
   }
 
   get project(): Project {
     return this._project;
   }
 
-  get ref(): any {
-    return this._ref;
-  }
-
-  get recordables(): string[] {
-    return this._recordables;
-  }
-
-  get recordablesOptions(): any[] {
-    return this._recordablesOptions;
-  }
-
-  get records(): string {
-    return this._records;
-  }
-
-  set records(value: string) {
-    this._records = value;
-  }
-
-  get sceneIdx(): number {
-    return this._sceneIdx;
-  }
-
-  set sceneIdx(idx: number) {
-    this._sceneIdx = idx;
-    this.initScene();
-  }
-
-  get scene(): any {
+  get scene(): ActivityAnimationScene {
     return this._scene;
   }
 
-  get scenes(): any[] {
-    return this._scenes;
-  }
-
-  get style(): any {
-    return this._style;
-  }
-
-  /**
-   * Normalize value for color or height.
-   */
-  normalize(value: number): number {
-    const min: number = this._config.colorMap.min;
-    const max: number = this._config.colorMap.max;
-    return (value - min) / (max - min);
-  }
-
-  /**
-   * RGB color for a value in range [0 - 1].
-   */
-  colorRGB(value: number): string {
-    const colorScale: any = d3['interpolate' + this._config.colorMap.scale];
-    return colorScale(this._config.colorMap.reverse ? 1 - value : value);
+  get state(): any {
+    return this._state;
   }
 
   /**
@@ -205,45 +58,8 @@ export class ActivityAnimationGraph {
    * It runs without checking activities.
    */
   init(): void {
-    // console.log('Init activity animation');
+    // console.log('Initialize activity animation');
     this._layers = [];
-    this._recordables = [];
-    this._recordablesOptions = [];
-    this._records = 'V_m';
-    this._frames = this.createEmptyFrames();
-  }
-
-  /**
-   * Initialize animation scene.
-   */
-  initScene(ref: any = undefined): void {
-    if (this._scene) {
-      this._scene.destroy();
-    }
-    if (ref) {
-      this._ref = ref;
-    }
-    this._scene = this._scenes[this._sceneIdx].scene();
-  }
-
-  /**
-   * Initialize frames for animation.
-   *
-   * @remarks
-   * It requires simulation time.
-   */
-  createEmptyFrames(): any[] {
-    // Add empty frames if not existed
-    const sampleRate: number = this._config.frames.sampleRate;
-    const nframes: number = this.endtime * sampleRate;
-    const frames: any[] = [];
-    for (let i = 0; i < nframes; i++) {
-      frames.push({
-        frameIdx: i,
-        data: [],
-      });
-    }
-    return frames;
   }
 
   /**
@@ -254,165 +70,151 @@ export class ActivityAnimationGraph {
    */
   update(): void {
     // console.log('Update activity animation graph');
-    this.init();
+    this._state.nSamples =
+      this._project.simulation.state.biologicalTime *
+      this._config.frames.sampleRate;
 
     // Update activity layers and frames.
     this.project.activities.forEach((activity: Activity) => {
-      this.updateLayers(activity);
-      this.updateFrames(activity);
-    });
-
-    // Update scene if loaded.
-    if (this._scene) {
-      this._scene.update();
-    }
-
-    // Update options for recordables.
-    this._recordablesOptions = this._recordables.map((recordable: string) => ({
-      value: recordable,
-    }));
-  }
-
-  /**
-   * Update layers for a population.
-   */
-  updateLayers(activity: Activity): void {
-    const layer: any = {
-      activityIdx: activity.idx,
-      color: activity.recorder.view.color,
-      ndim: -1,
-      positions: [],
-    };
-    if (activity.nodePositions.length > 0) {
-      layer.ndim = activity.nodePositions[0].length;
-      layer.positions = activity.nodePositions.map((pos: number[]) => ({
-        x: pos[0],
-        y: pos.length === 3 ? pos[1] : 0,
-        z: pos.length === 3 ? pos[2] : pos[1],
-      }));
-    }
-    this._layers.push(layer);
-  }
-
-  /**
-   * Update frames for a population.
-   */
-  updateFrames(activity: Activity): void {
-    const events: any = Object.assign({}, activity.events);
-    if (events.senders == undefined) {
-      return;
-    }
-
-    // Collect senders based on events.
-    events.senders = events.senders.map((sender: number) =>
-      activity.nodeIds.indexOf(sender)
-    );
-
-    // Collect recordables from event keys.
-    const eventKeys: string[] = Object.keys(events);
-    eventKeys.forEach((eventKey: string) => {
-      if (
-        !this._recordables.includes(eventKey) &&
-        !['senders', 'times'].includes(eventKey)
-      ) {
-        this._recordables.push(eventKey);
+      const layer = new ActivityAnimationLayer(this, activity);
+      let position = activity.idx;
+      if (this._layers[position] == null) {
+        position = this._layers.push(layer) - 1;
+      } else if (layer.activity !== activity) {
+        this._layers[position] = layer;
       }
+      this._layers[position].init();
     });
 
-    // Add empty data (from individual recorder) in each frame
-    this._frames.forEach((frame: any) => {
-      const data: any = {};
-      eventKeys.forEach((eventKey: string) => {
-        data[eventKey] = [];
-      });
-      data.activityIdx = activity.idx;
-      frame.data.push(data);
-      frame.data[frame.data.length - 1].idx = frame.data.length - 1;
-    });
+    this.updateScene();
+  }
 
-    // Push values in data frames
-    const sampleRate: number = this._config.frames.sampleRate;
-    events.times.forEach((time: number, idx: number) => {
-      const frameIdx: number = Math.floor(time * sampleRate);
-      const frame: any = this._frames[frameIdx - 1];
-      if (frame == undefined) {
-        return;
-      }
-      const data: any = frame.data[activity.idx];
-      eventKeys.forEach((eventKey: string) => {
-        data[eventKey].push(events[eventKey][idx]);
-      });
+  /**
+   * Add layer groups to the parent group.
+   */
+  addLayersToGroup(group: THREE.Group): void {
+    this._layers.forEach((layer: ActivityAnimationLayer) => {
+      group.add(layer.graphGroup);
     });
   }
 
   /**
-   * Increase frame speed by 1.
+   * Update frame of activity layers.
    */
-  increment(): void {
-    this.config.frames.speed += 1;
+  updateFrame(): void {
+    this.updateFrameIdx();
+    this.renderFrameLayers();
   }
 
   /**
-   * Decrease frame speed by 1.
+   * Update frame index.
    */
-  decrement(): void {
-    this.config.frames.speed -= 1;
+  updateFrameIdx(): void {
+    const frames: any = this._config.frames;
+    if (this._state.nSamples === 0 || Number.isNaN(this.state.frameIdx)) {
+      this.state.frameIdx = 0;
+    } else {
+      this._state.frameIdx =
+        (this._state.frameIdx +
+          frames.speed * frames.windowSize +
+          this._state.nSamples) %
+        this._state.nSamples;
+    }
   }
 
   /**
-   * Stop frame animation.
+   * Render frames of activity layers.
    */
-  stop(): void {
-    this.config.frames.speed = 0;
-  }
-
-  /**
-   * Play frame animation.
-   */
-  play(): void {
-    this.config.frames.speed = 1;
-  }
-
-  /**
-   * Play frame animation backward.
-   */
-  playBackward(): void {
-    this.config.frames.speed = -1;
+  renderFrameLayers(): void {
+    this._layers.forEach((layer: ActivityAnimationLayer) => {
+      layer.renderFrame();
+    });
   }
 
   /**
    * Move one frame forward in the animation.
    */
-  step(): void {
-    this.stop();
-    const framesLength: number = this._frames.length;
-    this._frameIdx = (this._frameIdx + 1) % framesLength;
+  stepForwardFrame(): void {
+    this.pauseFrameAnimation();
+    this._state.frameIdx = (this._state.frameIdx + 1) % this._state.nSamples;
   }
 
   /**
    * Go back one frame in the animation.
    */
-  stepBackward(): void {
-    this.stop();
-    const framesLength: number = this._frames.length;
-    this._frameIdx = (this._frameIdx - 1 + framesLength) % framesLength;
+  stepBackwardFrame(): void {
+    this.pauseFrameAnimation();
+    this._state.frameIdx =
+      (this._state.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
   }
 
   /**
-   * Check if it has any analog data.
+   * Increase frame speed by 1.
    */
-  hasAnyAnalogData(): boolean {
-    return this._project.activities.some((activity: Activity) =>
-      activity.hasAnalogData()
-    );
+  incrementFrameSpeed(): void {
+    this._config.frames.speed += 1;
   }
 
   /**
-   * Check if it has any spike data.
+   * Decrease frame speed by 1.
    */
-  hasAnySpikeData(): boolean {
-    return this._project.activities.some((activity: Activity) =>
-      activity.hasSpikeData()
-    );
+  decrementFrameSpeed(): void {
+    this._config.frames.speed -= 1;
+  }
+
+  /**
+   * Pause frame animation.
+   */
+  pauseFrameAnimation(): void {
+    this._config.frames.speed = 0;
+  }
+
+  /**
+   * Play frame animation.
+   */
+  playFrameAnimation(): void {
+    this._config.frames.speed = 1;
+  }
+
+  /**
+   * Play frame animation backward.
+   */
+  playBackwardFrameAnimation(): void {
+    this._config.frames.speed = -1;
+  }
+
+  /**
+   * Initialize animation scene.
+   *
+   * @remarks
+   * It should be initialized in the vue component is mounted.
+   */
+  initScene(ref: any): void {
+    this.destroyScene();
+    this._scene = new ActivityAnimationScene(this, ref);
+    this.updateScene();
+  }
+
+  /**
+   * Update animation scene.
+   */
+  updateScene(): void {
+    if (this._scene) {
+      this._scene.update();
+
+      // Enable camera for all layers.
+      this._layers.forEach((layer: ActivityAnimationLayer) =>
+        this._scene.camera.layers.enable(layer.activity.idx + 1)
+      );
+    }
+  }
+
+  /**
+   * Destroy animation scene.
+   */
+  destroyScene(): void {
+    if (this._scene) {
+      this._scene.destroy();
+    }
   }
 }

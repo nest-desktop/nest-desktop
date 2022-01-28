@@ -1,9 +1,17 @@
+import * as d3 from 'd3';
+
 import { Activity } from '../activity/activity';
 import { Node } from './node';
 
 export class NodeRecord {
   private _activity: Activity;
   private _color: string;
+  private _colorMap: any = {
+    max: -55,
+    min: -70,
+    reverse: false,
+    scale: 'Spectral',
+  };
   private _groupId: string;
   private _id: string;
   private _label: string;
@@ -37,6 +45,10 @@ export class NodeRecord {
     this._color = value;
   }
 
+  get colorMap(): string {
+    return this._colorMap;
+  }
+
   get darkMode(): boolean {
     return this._activity.project.app.darkMode;
   }
@@ -65,6 +77,10 @@ export class NodeRecord {
     return this._node.view.label;
   }
 
+  get nodeSize(): number {
+    return this._nodeSize;
+  }
+
   get times(): number[] {
     return this._activity.events.times;
   }
@@ -75,14 +91,6 @@ export class NodeRecord {
 
   get values(): number[] {
     return this._activity.events[this._id];
-  }
-
-  get nodeSize(): number {
-    return this._nodeSize;
-  }
-
-  set nodeSize(value: number) {
-    this._nodeSize = value;
   }
 
   hasEvent(): boolean {
@@ -96,8 +104,10 @@ export class NodeRecord {
   /**
    * Update node record.
    */
-  updateGroupID(): void {
-    this._groupId = this.id + '.' + this.node.view.label;
+  update(): void {
+    this._nodeSize = this._activity.nodeIds.length;
+    this.updateGroupID();
+    this.updateState();
   }
 
   /**
@@ -105,6 +115,44 @@ export class NodeRecord {
    */
   updateColor(): void {
     this._color = this.node.view.color;
+  }
+
+  /**
+   * Update group id of node record.
+   */
+  updateGroupID(): void {
+    this._groupId = this.id + '.' + this.node.view.label;
+  }
+
+  /**
+   * Update state of node record.
+   *
+   * @remarks:
+   * It requires network activity.
+   */
+  updateState(): void {
+    if (!this.hasEvent() || !this.hasValues()) return;
+
+    const values = this.values;
+    this._colorMap.max = d3.max(values);
+    this._colorMap.min = d3.min(values);
+  }
+
+  /**
+   * Normalize value for color or height.
+   */
+  normalize(value: number): number {
+    const min: number = this._colorMap.min;
+    const max: number = this._colorMap.max;
+    return (value - min) / (max - min);
+  }
+
+  /**
+   * RGB color for a value in range [0 - 1].
+   */
+  valueColor(value: number): string {
+    const colorScale: any = d3['interpolate' + this._colorMap.scale];
+    return colorScale(this._colorMap.reverse ? 1 - value : value);
   }
 
   toJSON(): any {
