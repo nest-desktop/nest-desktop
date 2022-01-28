@@ -46,26 +46,31 @@ master_doc = 'contents'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+html_logo = '_static/img/logo/nest-desktop-logo.png'
 
 html_theme_options = {
-    'logo_only': True,
+    'collapse_navigation': True,
     'display_version': True,
-    'prev_next_buttons_location': 'none',
-    'style_external_links': False,
-    'style_nav_header_background': '#0F6D99',
-    # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 3,
+    # 'github_url': 'https://github.com/nest-desktop/nest-desktop',
     'includehidden': False,
+    'logo_only': True,
+    'navigation_depth': 3,
+    'prev_next_buttons_location': 'none',
+    'sticky_navigation': True,
+    'style_external_links': False,
+    'style_nav_header_background': '#fff',
     'titles_only': False,
-    # 'github_url': 'https://github.com/nest-desktop/nest-desktop'
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+intersphinx_mapping = {
+    'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
+    'simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
+}
 
 if os.environ.get("READTHEDOCS") == "True":
     version = os.environ.get("READTHEDOCS_VERSION")
@@ -74,10 +79,6 @@ if os.environ.get("READTHEDOCS") == "True":
                      You are reading the documentation version which is in active and ongoing development. \
                      You can change versions on the bottom left of the screen."
 
-intersphinx_mapping = {
-    'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
-    'simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
-}
-
 def setup(app):
+  app.add_css_file('css/bootstrap.min.css')
   app.add_css_file('css/styles.css')

@@ -44,7 +44,6 @@ Contents
   deployer/deploy-openshift
   deployer/deploy-openstack
 
-
 .. toctree::
   :caption: Developer Documentation
 
