@@ -55,7 +55,7 @@ export class ModelStore {
    * It imports models from assets when database is empty.
    */
   async init(): Promise<any> {
-    this.consoleLog('Initialize models');
+    this.consoleLog('Initialize model store');
     return this._db.count().then((count: number) => {
       // this.consoleLog('Models in db: ' + count);
       if (count === 0) {

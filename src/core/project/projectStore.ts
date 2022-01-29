@@ -66,7 +66,7 @@ export class ProjectStore {
    * Initialize project list either updating list from the database or importing from files.
    */
   async init(): Promise<any> {
-    this.consoleLog('Initialize projects');
+    this.consoleLog('Initialize project store');
     return this._db.count().then((count: number) => {
       // this.consoleLog('Projects in db: '+ count);
       if (count === 0) {
@@ -91,7 +91,7 @@ export class ProjectStore {
    * Initialize project list from the database.
    */
   async initProjectList(): Promise<any> {
-    this.consoleLog('Update project list');
+    this.consoleLog('Initialize project list');
     this._state.projects = [];
     this._state.projectRevisions = [];
     await this._db.list('createdAt', true).then((projects: any[]) => {
