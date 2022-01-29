@@ -8,7 +8,7 @@ COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy app from build
+# Copy static from from current directory
 COPY ./nest_desktop/app/ /usr/share/nginx/html/
 
 # Containers run nginx with global directives and daemon off
