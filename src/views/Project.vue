@@ -376,8 +376,8 @@ export default Vue.extend({
         const url: string = root.$route.query.from as string;
         axios.get(url).then((response: any) => {
           if (Array.isArray(response.data)) {
-            response.data.forEach((d: any) => {
-              core.app.project.createNewProject(d);
+            response.data.forEach((project: any) => {
+              core.app.project.createNewProject(project);
             });
           } else {
             core.app.project.createNewProject(response.data);
