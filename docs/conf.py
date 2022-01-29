@@ -42,12 +42,12 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 templates_path = ['_templates']
 
 # Include text at the beginning of every file.
-if os.environ.get("READTHEDOCS") == "True":
-    version = os.environ.get("READTHEDOCS_VERSION")
-    if version == "dev":
-        rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
+if os.environ.get("READTHEDOCS") == 'True':
+    version = os.environ.get('READTHEDOCS_VERSION')
+    if version == 'dev':
+        rst_prolog = '.. warning:: \n   This version of the documentation is NOT an official release. \
                      You are reading the documentation version which is in active and ongoing development. \
-                     You can change versions on the bottom left of the screen."
+                     You can change versions on the bottom left of the screen.'
 
 
 # -- Options for HTML output -------------------------------------------------
