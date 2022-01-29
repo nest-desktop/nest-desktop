@@ -80,7 +80,7 @@ html_css_files = [
 ]
 
 html_js_files = [
-    'css/bootstrap.min.js',
+    'js/bootstrap.min.js',
 ]
 
 # Add any paths that contain custom static files (such as style sheets) here,
