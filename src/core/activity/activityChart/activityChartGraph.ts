@@ -102,7 +102,6 @@ export class ActivityChartGraph {
    * Initialize network chart graph.
    */
   init(panels: any[] = []): void {
-    // console.log('Init activity chart graph for', this.project.name);
     this._project.checkActivities();
 
     this._panels = [];
@@ -142,15 +141,18 @@ export class ActivityChartGraph {
 
   /**
    * Updates chart graph with activities.
+   *
+   * @remarks
+   * It required network activities.
    */
   update(): void {
-    // console.log('Update activity graph.');
-    this.updateVisiblePanelsLayout();
+    this.empty();
     this.resetLayout();
+
+    this.updateVisiblePanelsLayout();
     this.updatePanelModels();
     this.updateLayoutColor();
 
-    this._data = [];
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       this.updateData(panel);
       this.updateLayoutPanel(panel);

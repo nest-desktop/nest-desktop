@@ -45,8 +45,10 @@ export class Network extends Config {
     this._connections.forEach((connection: Connection) => {
       connection.clean();
     });
+
     this.updateRecords();
     this.updateRecordsColor();
+
     this.networkChanges();
   }
 
@@ -69,8 +71,10 @@ export class Network extends Config {
       connection.targetIdx = nodeIdx.indexOf(connection.targetIdx);
       connection.clean();
     });
+
     this.updateRecords();
     this.updateRecordsColor();
+
     this.networkChanges();
   }
 
@@ -223,12 +227,18 @@ export class Network extends Config {
       source: source.idx,
       target: target.idx,
     });
-    if (connection.view.connectRecorder()) {
-      connection.recorder.initActivity();
-    } else if (weight === 'inhibitory') {
+    if (weight === 'inhibitory') {
       source.setWeights(weight);
     }
+
+    // trigger network change
     this.networkChanges();
+
+    // initialize activity graph
+    if (connection.view.connectRecorder()) {
+      connection.recorder.initActivity();
+      this._project.initActivityGraph();
+    }
   }
 
   /**
@@ -260,10 +270,11 @@ export class Network extends Config {
     const idx: number = node.idx;
     this._nodes = this._nodes.slice(0, idx).concat(this.nodes.slice(idx + 1));
 
-    // clean network
-    this.clean();
-    this._project.initActivityGraph();
+    // trigger network change
     this.networkChanges();
+
+    // initialize activity graph
+    this._project.initActivityGraph();
   }
 
   /**
@@ -282,10 +293,11 @@ export class Network extends Config {
       .slice(0, idx)
       .concat(this.connections.slice(idx + 1));
 
-    // clean network
-    this.clean();
-    this._project.initActivityGraph();
+    // trigger network change
     this.networkChanges();
+
+    // initialize activity graph
+    this._project.initActivityGraph();
   }
 
   /**

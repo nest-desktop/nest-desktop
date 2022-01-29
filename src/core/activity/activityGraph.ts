@@ -35,7 +35,7 @@ export class ActivityGraph {
    */
   init(activityGraph: any = {}): void {
     // console.log('Init activity graph');
-    this.initActivityChartGraph(activityGraph.panels);
+    this.initActivityChartGraph(activityGraph.panels || []);
     this.initActivityAnimationGraph();
   }
 
