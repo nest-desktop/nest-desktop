@@ -24,7 +24,7 @@ For more information about Docker Compose, please read the :doc:`documentation <
 
 |
 
-Next, start all services of the Docker compose.
+Next, start all services of the Docker Compose file.
 
 .. code-block:: bash
 

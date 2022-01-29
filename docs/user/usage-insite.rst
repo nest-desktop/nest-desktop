@@ -10,9 +10,9 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 .. note::
 
-  Simulation with Insite needs to run with Insite docker images
+  Simulation with Insite needs to be run with Insite docker images
   ``nest-module`` and ``access-node``.
-  Best method is to use Docker Compose that deploys NEST Desktop and Insite.
+  The best method is to use Docker Compose, which also deploys NEST Desktop and Insite.
   For more information, please read the :doc:`deployment guide of Insite </deployer/deploy-insite>`.
 
 |
@@ -34,9 +34,9 @@ In the settings page you can check whether the Insite backend is running.
 
 **Enable simulation with Insite**
 
-  After successfully ping of the backend Insite Access,
+  After successfully receiving a ping from the Insite Access node of the backend,
   you can check the item :guilabel:`Simulate with Insite`
-  in the menu context (clicking with right mouse button) of the :guilabel:`Simulate` button.
+  in the context menu of the :guilabel:`Simulate` button (opens by clicking with the right mouse button).
 
 |
 |
@@ -47,7 +47,7 @@ In the settings page you can check whether the Insite backend is running.
 **Script code for simulation with Insite**
 
 The Insite module has to be loaded in the NEST kernel.
-Preferentially load insite module directly after importing nest.
+Preferentially load the Insite module directly after importing NEST.
 Second, the parameter ``record_to`` of any recording device
 (e.g. spike recorder, multimeter or voltmeter) has to been modified:
 
@@ -60,10 +60,10 @@ Second, the parameter ``record_to`` of any recording device
   recorder.set({"record_to": "insite"})
   ...
 
-Now, Insite recording module collects activity events from modified recording devices.
+Now, the Insite recording module collects activity events from the modified recording devices.
 The client receives activity from the Insite ``Access Node`` on another port (default: ``8080``).
 
-For more information about Insite, please visit the official `documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group in RWTH Aachen.
+For more information about Insite, please visit the official `documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group at RWTH Aachen.
 
 |
 
@@ -71,5 +71,5 @@ For more information about Insite, please visit the official `documentation of I
 
 Thanks for integrating Insite in NEST Simulator and NEST Desktop:
 
-  - Simon Oerhl (Conceptual design for Insitification in NEST Desktop)
-  - Marcel Krüger (Collaboration of Insitification in NEST Desktop)
+  - Simon Oehrl (Conceptual design for Insitufication in NEST Desktop)
+  - Marcel Krüger (Collaboration of Insitufication in NEST Desktop)
