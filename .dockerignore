@@ -1,1 +1,11 @@
+/.git
+/.github
+/build
+/dist
+/dist_electron
+/docs
+/icon
+/images
+/nest_desktop.egg-info
 /node_modules
+/singularity
