@@ -5,7 +5,7 @@
 
       <v-card-text>
         <v-row class="mb-1">
-          <v-col cols="3">
+          <v-col cols="4">
             <v-select
               :items="state.items"
               dense
@@ -22,9 +22,9 @@
               </template>
             </v-select>
           </v-col>
-          <v-col class="pa-3" cols="9">
+          <v-col class="pa-3" cols="8">
             <v-row v-show="state.source === 'github'">
-              <v-col cols="6">
+              <v-col cols="4">
                 <v-select
                   :disabled="state.trees.length === 0"
                   :items="state.trees"
@@ -35,7 +35,7 @@
                   v-model="state.selectedTree"
                 />
               </v-col>
-              <v-col cols="6">
+              <v-col cols="8">
                 <v-select
                   :disabled="state.files.length === 0"
                   :items="state.files"
