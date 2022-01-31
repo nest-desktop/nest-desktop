@@ -102,6 +102,7 @@ deploy_ebrains_docker:
         docker tag docker-registry.ebrains.eu/nest/nest-desktop:${DOCKER_TAG} docker-registry.ebrains.eu/nest/nest-desktop:latest
       else
         docker tag docker-registry.ebrains.eu/nest/nest-desktop:${DOCKER_TAG} docker-registry.ebrains.eu/nest/nest-desktop:dev
+      fi
     -docker push docker-registry.ebrains.eu/nest/nest-desktop --all-tags
   after_script:
     - docker logout docker-registry.ebrains.eu
@@ -130,6 +131,7 @@ deploy_docker_hub:
         docker tag nestdesktop/app:${DOCKER_TAG} nestdesktop/app:latest
       else
         docker tag nestdesktop/app:${DOCKER_TAG} nestdesktop/app:dev
+      fi
     - docker push nestdesktop/app --all-tags
   after_script:
     - docker logout
