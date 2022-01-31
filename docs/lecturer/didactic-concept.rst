@@ -22,10 +22,15 @@ This way, the students get some insight into the script-based interface of NEST,
 
 |
 
-For a typical course in computational neuroscience, the following combination of three course elements has proven to be effective:
+For a typical course in computational neuroscience,
+the following combination of three course elements has proven to be effective:
 
-  1. **A theoretical introduction to computational neuroscience** using slide-based presentations, possibly enhanced by the interactive use of NEST Desktop as a demonstrator during the lecture.
-  2. **An interactive tutorial** explaining how NEST Desktop can be employed to work on course assignments.
-  3. **Structured lab reports** exploiting the capabilities of NEST Desktop with regard to creation, simulation and analysis of models, potentially prepared in small working groups.
+1. **A theoretical introduction to computational neuroscience** using slide-based presentations,
+   possibly enhanced by the interactive use of NEST Desktop as a demonstrator during the lecture.
+
+2. **An interactive tutorial** explaining how NEST Desktop can be employed to work on course assignments.
+
+3. **Structured lab reports** exploiting the capabilities of NEST Desktop with regard to creation, simulation
+   and analysis of models, potentially prepared in small working groups.
 
 Please refer to the various examples of specific assignments offered in this documentation.

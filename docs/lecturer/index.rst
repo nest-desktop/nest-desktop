@@ -2,8 +2,10 @@
 =========================================
 
 This section gives directions for lecturers who want to teach computational neuroscience with NEST Desktop.
-Using computer simulations, students are able to explore models ranging from single neurons to large neuronal networks.
-Numerical experiments of increasing complexity help to understand how brain networks function and what the features of their dynamic behavior are.
+Using computer simulations, students are able to explore models
+ranging from single neurons to large neuronal networks.
+Numerical experiments of increasing complexity help to understand how brain networks function
+and what the features of their dynamic behavior are.
 
 .. note::
 
@@ -12,13 +14,13 @@ Numerical experiments of increasing complexity help to understand how brain netw
 
 To support the organization of a course, we provide some hints for course instructors:
 
-  - :doc:`course-design`
-  - :doc:`didactic-concept`
+- :doc:`course-design`
+- :doc:`didactic-concept`
 
 Additionally, we provide course materials to be handed out to participants:
 
-  - :doc:`first-steps`
-  - :doc:`course-protocol`
+- :doc:`first-steps`
+- :doc:`course-protocol`
 
 |
 
@@ -93,8 +95,8 @@ Select the level of the course that you plan to conduct with NEST Desktop:
 
 Thanks for the help:
 
-  - Stefan Rotter (course instructor)
-  - Jeanine Laturner (tutor)
+- Stefan Rotter (course instructor)
+- Jeanine Laturner (tutor)
 
 
 
