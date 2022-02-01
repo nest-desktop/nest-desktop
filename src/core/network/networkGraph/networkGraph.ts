@@ -77,7 +77,7 @@ export class NetworkGraph {
   /**
    * Render network graph.
    */
-  render() {
+  render(): void {
     this._network.consoleLog('Render network graph of ' + this._network.project.shortId);
     this._connectionGraph.render();
     this._nodeGraph.render();
@@ -89,7 +89,7 @@ export class NetworkGraph {
    * @remarks
    * This function should be called when the network is changed.
    */
-  update() {
+  update(): void {
     this._network.consoleLog('Update network graph of ' + this._network.project.shortId);
     this._workspace.update();
     this._connectionGraph.update();

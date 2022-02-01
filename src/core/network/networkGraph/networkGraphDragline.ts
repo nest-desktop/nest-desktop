@@ -56,7 +56,7 @@ export class NetworkGraphDragline {
   /**
    * Draw drag line between nodes.
    */
-  drawLineNodes(source: Node, target: Node) {
+  drawLineNodes(source: Node, target: Node): void {
     this._workspace.selector
       .select('.dragline')
       .style('opacity', 1)

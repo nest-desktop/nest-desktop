@@ -208,7 +208,7 @@ export class ConnectionMask extends Config {
     ];
   }
 
-  toJSON() {
+  toJSON(): any {
     const mask: any = {
       masktype: this._masktype,
       specs: this._specs,

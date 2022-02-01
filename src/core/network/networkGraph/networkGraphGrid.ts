@@ -20,7 +20,7 @@ export class NetworkGraphGrid {
   /**
    * Get data for grid graph.
    */
-  data() {
+  data(): Array<any> {
     const data = new Array();
     const offset = 10;
     const cellHeight = 25;
@@ -53,7 +53,7 @@ export class NetworkGraphGrid {
   /**
    * Update grid graph.
    */
-  update() {
+  update(): void {
     const gridLines: d3.Selection<any, any, any, any> = this._workspace.selector
       .selectAll('.grid')
       .selectAll('.gridLine')

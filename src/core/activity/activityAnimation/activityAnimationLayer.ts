@@ -234,7 +234,7 @@ export class ActivityAnimationLayer {
   /**
    * Initialize frames.
    */
-  initFrames() {
+  initFrames(): void {
     this.addEmptyFrames();
     this.updateFrames();
   }

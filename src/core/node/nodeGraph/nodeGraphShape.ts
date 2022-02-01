@@ -125,7 +125,7 @@ export class NodeGraphShape {
     return this._networkGraph.config.strokeWidth;
   }
 
-  drawShape(selector: d3.Selection<any, any, any, any>, node: Node) {
+  drawShape(selector: d3.Selection<any, any, any, any>, node: Node): void {
     selector.attr('elementType', node.model.elementType);
     selector.attr('weight', node.view.weight);
 
@@ -192,7 +192,7 @@ export class NodeGraphShape {
   /**
    * Render all node shapes.
    */
-  render() {
+  render(): void {
     const nodes = d3.select('g#nodes').selectAll('g.node');
 
     // check if neuron has to change its shape
