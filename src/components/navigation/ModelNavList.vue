@@ -18,13 +18,7 @@
         <template #prepend>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                depressed
-                fab
-                x-small
-                v-bind="attrs"
-                v-on="on"
-              >
+              <v-btn depressed fab x-small v-bind="attrs" v-on="on">
                 <v-icon v-text="'mdi-filter-outline'" />
               </v-btn>
             </template>
@@ -212,14 +206,23 @@ export default Vue.extend({
      */
     const update = () => {
       const filterTags: string[] = modelStore.state.filterTags;
+      state.models =
+        modelStore.state.modelsNEST ||
+        modelStore.state.models.map((model: any) => model.id);
+
       if (filterTags.includes('installed')) {
-        state.models = modelStore.state.models.map((model: any) => model.id);
-      } else if (filterTags.includes('github')) {
-        state.models = modelStore.state.filesGithub.map(
+        let models = modelStore.state.models.map((model: any) => model.id);
+        state.models = state.models.filter((model: string) =>
+          models.includes(model)
+        );
+      }
+      if (filterTags.includes('github')) {
+        let models = modelStore.state.filesGithub.map(
           (model: string) => model.split('.json')[0].split('/')[1]
         );
-      } else {
-        state.models = modelStore.state.modelsNEST;
+        state.models = state.models.filter((model: string) =>
+          models.some((modelGroup: string) => model.startsWith(modelGroup))
+        );
       }
 
       if (

@@ -15,6 +15,7 @@
             <v-list-item
               :key="index"
               @click="item.onClick"
+              v-show="item.show"
               v-for="(item, index) in state.items"
             >
               <v-list-item-icon>
@@ -46,7 +47,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
 import core from '@/core';
@@ -73,6 +74,7 @@ export default Vue.extend({
             // state.model.reload();
             state.show = false;
           },
+          show: false,
         },
         {
           id: 'modelCopy',
@@ -82,21 +84,21 @@ export default Vue.extend({
             // state.model.copy();
             state.show = false;
           },
+          show: false,
         },
         {
           id: 'modelImport',
           icon: 'mdi-import',
           title: 'Import model',
-          onClick: () => {
-            state.show = false;
-            core.app.model.importModelFromGithub(state.model.id);
-          },
+          onClick: () => openDialog('import'),
+          show: false,
         },
         {
           id: 'modelExport',
           icon: 'mdi-export',
           title: 'Export model',
           onClick: () => openDialog('export'),
+          show: false,
         },
         {
           id: 'modelDelete',
@@ -105,6 +107,7 @@ export default Vue.extend({
           onClick: () => {
             state.content = 'modelDelete';
           },
+          show: false,
           append: true,
         },
       ],
@@ -119,11 +122,24 @@ export default Vue.extend({
       });
     };
 
+    /**
+     * Update show state of items.
+     */
+    const updateItemShow = () => {
+      state.items[0].show = core.app.model.hasModel(state.model.id);
+      state.items[1].show = core.app.model.hasModel(state.model.id);
+      state.items[2].show = core.app.model.fileExistGithub(state.model.id);
+      state.items[3].show = core.app.model.hasModel(state.model.id);
+      state.items[4].show = core.app.model.hasModel(state.model.id);
+    };
+
     const update = () => {
       state.content = null;
       state.show = true;
       state.model = props.model as Model;
       state.position = props.position;
+
+      updateItemShow();
     };
 
     /**
@@ -135,6 +151,8 @@ export default Vue.extend({
       core.app.openDialog('model', action, [state.model]);
       state.show = false;
     };
+
+    onMounted(() => update());
 
     watch(
       () => props.model,
