@@ -20,6 +20,4 @@ jq -n \
     }
   }' > /usr/share/nginx/html/config.json
 
-cat /usr/share/nginx/html/config.json
-
 exec "$@"

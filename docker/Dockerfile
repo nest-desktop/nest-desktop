@@ -12,10 +12,13 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the built app from the build folder to the NGINX serve folder
 COPY ./nest_desktop/app/ /usr/share/nginx/html/
-RUN chmod 666 /usr/share/nginx/html/config.json
 
+
+# Copy entrypoint.sh and make it executable
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Define the entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Containers run nginx with global directives and daemon off
