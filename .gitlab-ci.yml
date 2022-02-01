@@ -103,7 +103,7 @@ deploy_ebrains_docker:
       else
         docker tag docker-registry.ebrains.eu/nest/nest-desktop:${DOCKER_TAG} docker-registry.ebrains.eu/nest/nest-desktop:dev
       fi
-    -docker push docker-registry.ebrains.eu/nest/nest-desktop --all-tags
+    - docker push docker-registry.ebrains.eu/nest/nest-desktop --all-tags
   after_script:
     - docker logout docker-registry.ebrains.eu
   tags:
