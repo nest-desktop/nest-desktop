@@ -24,24 +24,15 @@ Vue.use(VueToast);
 // Production
 Vue.config.productionTip = false;
 
-/**
- * Initialize the app.
- */
-const initApp = () => {
-  new Vue({
-    router,
-    store,
-    vuetify,
-    render: h => h(App),
-  }).$mount('#app');
-};
-
-// Load the data from public/config.json for the global config and initialize the app.
+// Load the data from public/config.json for the global config and mount the app.
 fetch(process.env.BASE_URL + 'config.json')
   .then(response => response.json())
-  .then(config => {
-    Vue.prototype.$config = config;
-  })
+  .then(appConfig => (Vue.prototype.$appConfig = appConfig))
   .finally(() => {
-    initApp();
+    new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App),
+    }).$mount('#app');
   });

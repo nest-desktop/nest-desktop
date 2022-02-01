@@ -100,9 +100,17 @@ export class App extends Config {
    */
   init(config: any): void {
     consoleLog(this, 'Initialize app');
+
+    // Update configs from global config.
     this.updateConfigs(config);
 
+    // Check if backends is running.
+    this.checkBackends();
+
+    // Fetch models from NEST Simulator.
     this._model.fetchModelsNEST();
+
+    // Fetch model files from Github.
     this._model.fetchModelFilesGithub();
 
     this._state.ready = false;
@@ -189,5 +197,16 @@ export class App extends Config {
     if (config.insiteAccess && !this.backends.insiteAccess.config.custom) {
       this.backends.insiteAccess.updateURL(config.insiteAccess);
     }
+  }
+
+  /**
+   * Update configs from global config.
+   *
+   * @remarks
+   * Global config is loaded in main.ts.
+   */
+  checkBackends(): void {
+    this._backends.nestSimulator.check();
+    this._backends.insiteAccess.check();
   }
 }

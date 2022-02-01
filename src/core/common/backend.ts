@@ -7,26 +7,24 @@ export class Backend extends Config {
   private _state: any = {
     ready: false,
     version: {},
-    config: {
+    seek: {
       path: '',
       port: 5000,
       versionPath: '',
     },
   };
 
-  constructor(
-    name: string,
-    config = { path: '', port: 5000, versionPath: '' }
-  ) {
+  constructor(name: string, seek = { path: '', port: 5000, versionPath: '' }) {
     super(name);
-    this._state.config = config;
-
-    // Check the backend.
-    this.check();
+    this._state.seek = seek;
   }
 
   get host(): string {
-    return this.hostname + (this.port ? ':' + this.port : '');
+    return (
+      this.hostname +
+      (this.port ? ':' + this.port : '') +
+      (this.path ? '/' + this.path : '')
+    );
   }
 
   set host(value: string) {
@@ -45,6 +43,14 @@ export class Backend extends Config {
 
   get instance() {
     return axios.create({ baseURL: this.url });
+  }
+
+  get path(): string {
+    return this.config.path || '';
+  }
+
+  set path(value: string) {
+    this.updateConfig({ path: value });
   }
 
   get port(): string {
@@ -112,7 +118,7 @@ export class Backend extends Config {
   /**
    * Reset state of the backend.
    */
-  resetState() {
+  resetState(): void {
     this.state.ready = false;
     this.state.version = {};
   }
@@ -137,10 +143,9 @@ export class Backend extends Config {
     // console.log('Seek the backend');
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
-    const port: string = this.port || this._state.config.port;
     const hosts: string[] = [
-      combineURLs(hostname) + ':' + port,
-      combineURLs(hostname, this._state.config.path),
+      combineURLs(hostname) + ':' + this._state.seek.port,
+      combineURLs(hostname, this._state.seek.path),
     ];
     const hostPromises: any[] = hosts.map((host: string) =>
       this.ping(protocol + '//' + host)
@@ -156,7 +161,7 @@ export class Backend extends Config {
     // console.log('Ping the backend');
 
     return axios
-      .get(combineURLs(url, this.state.config.versionPath))
+      .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {
         switch (response.status) {
           case 0:
@@ -178,10 +183,12 @@ export class Backend extends Config {
    * Update URL.
    * @param config The configuration to update URL in local config.
    */
-  updateURL(config: any = {}) {
-    if (config.url != null) {
+  updateURL(config: any = {}): void {
+    if (config.url != null && config.url != '') {
       this.url = config.url;
-    } else if (config.port != null) {
+    } else if (config.path != null && config.path != '') {
+      this.updateConfig({ path: config.path });
+    } else if (config.port != null && config.port != '') {
       this.updateConfig({ port: config.port });
     }
   }

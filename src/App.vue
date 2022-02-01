@@ -96,11 +96,18 @@ export default Vue.extend({
     };
 
     onMounted(() => {
+      // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
         once: true,
       });
+
+      // Initialize Vuetify theme (light / dark).
       core.app.initTheme(root.$vuetify.theme);
-      core.app.init(Vue.prototype.$config);
+
+      // Initialize app with global config.
+      core.app.init(Vue.prototype.$appConfig);
+
+      // Ping every 5 min to keep connection to NEST Simulator alive.
       keepConnectionToNESTSimulatorAlive();
     });
 
