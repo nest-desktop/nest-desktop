@@ -185,7 +185,7 @@ export class ModelView {
   /**
    * Update project.
    */
-  updateProject() {
+  updateProject(): void {
     if (this._state.projectFilename !== this._state.project.name) {
       this.initProject();
     }

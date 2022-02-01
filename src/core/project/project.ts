@@ -723,7 +723,7 @@ export class Project {
   /**
    * Update activity graph continuously.
    */
-  continuouslyUpdateActivityGraph() {
+  continuouslyUpdateActivityGraph(): void {
     this.consoleLog('Update activity graph continuously');
     this._app.project.view.state.refreshIntervalId = setInterval(() => {
       // Check if project has activities.
