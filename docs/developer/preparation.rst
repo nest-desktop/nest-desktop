@@ -21,6 +21,8 @@ You can find the definition file in ``singularity/dev-node-16-alpine.def`` for b
 
 |
 
+.. _build-an-environment-with-singularity:
+
 **Build an environment with Singularity**
 
 The definition file ``singularity/dev-node-16-alpine.def``
@@ -40,6 +42,8 @@ Go to the shell of singularity container:
 
 |
 
+.. _commands:
+
 **Commands**
 
 Install node modules for NEST Desktop:
@@ -55,6 +59,8 @@ Start a development server:
   yarn serve
 
 |
+
+.. _useful-commands:
 
 **Useful commands**
 

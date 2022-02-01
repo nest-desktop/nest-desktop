@@ -8,8 +8,9 @@ we are able to setup automated CI systems for the compilation and the deployment
 You can find the configuration in `.gitlab-ci.yml`. It consists of two stages, `build` and `deploy`.
 
 In each stage, we prepared two parallel pipelines in which jobs will be executed when a specific branch is pushed:
-  - the development pipeline for the `dev` branch to check the functional operation of the CI (later with testing).
-  - the production pipeline for the `main` branch when NEST Desktop is released.
+
+- the development pipeline for the `dev` branch to check the functional operation of the CI (later with testing).
+- the production pipeline for the `main` branch when NEST Desktop is released.
 
 In the build stage CI uses `Node.js` to produce NEST Desktop and store it in the `nest_desktop/app` folder.
 

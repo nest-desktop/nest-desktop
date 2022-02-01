@@ -1,8 +1,8 @@
 User documentation
 ==================
 
-We use reStructuredText for `Sphinx <https://www.sphinx-doc.org/en/master/>`__ to generate the documentation locally
-and online on `Read the Docs <https://readthedocs.org/>`__.
+We use reStructuredText for `Sphinx <https://www.sphinx-doc.org/en/master/>`__
+to generate the documentation locally and online on `Read the Docs <https://readthedocs.org/>`__.
 To learn more about the syntax, check out this quick reference.
 
 Requirements
@@ -17,24 +17,27 @@ To install Sphinx and the Read the Docs theme via ``pip``:
   python3 -m pip install sphinx sphinx_rtd_theme
 
 
+.. _development-build-html-locally:
+
 **Development: Build HTML locally**
 
 Build the documentation which your created with Sphinx in the ``docs`` folder offline:
 
 .. code-block:: bash
 
-  rm -r ./_build
-  make html
+  rm -r ./_build; make html
 
 Start the python server to serve the documentation locally, i.e. available only on your personal machine.
 
 .. code-block:: bash
 
-  cd _build/html
-  python3 -m http.server 8002
+  python3 -m http.server --directory ./_build/html 8002
 
 Then open the URL `http://localhost:8002` with your browser.
 
+|
+
+.. _publicartion-push-to-readthedocs:
 
 **Publication: Push to ReadTheDocs**
 
@@ -43,6 +46,7 @@ each time a push is made to the repository.
 The docs for other versions depend on the GitHub tags.
 The latest tags refers to the latest release version.
 
+|
 
 Optional: Use Singularity
 -------------------------

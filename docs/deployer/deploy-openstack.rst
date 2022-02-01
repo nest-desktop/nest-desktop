@@ -8,8 +8,6 @@ Deploy on OpenStack
 
 |
 
-
-
 The guide provides a step-by-step documentation on how to deploy NEST Desktop on OpenStack resources.
 For more information on OpenStack, please follow this link: https://www.redhat.com/en/topics/openstack.
 
@@ -34,7 +32,8 @@ Requirements
 
 You can find the source code on https://github.com/nest-desktop/nest-desktop-bwCloud.
 
-1. Download the OpenStack RC File from `bwCloud dashboard <https://portal.bw-cloud.org/project/api_access/>`__:
+1. Download the OpenStack RC File from
+   `bwCloud dashboard <https://portal.bw-cloud.org/project/api_access/>`__:
 
   :guilabel:`Project` -> :guilabel:`API Access` -> :guilabel:`Download OpenStack RC File`
 
@@ -62,8 +61,8 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 
 Thanks for the help to integrate NEST Desktop on *bwCloud*:
 
-  - Bernd Wiebelt
-  - Jonathan Bauer
-  - Michael Janczyk
-  - Manuel Messner
-  - Christopher Ill
+- Bernd Wiebelt
+- Jonathan Bauer
+- Michael Janczyk
+- Manuel Messner
+- Christopher Ill

@@ -24,6 +24,8 @@ Requirements
 
 |
 
+.. _preparation:
+
 **Preparation**
 
 .. code-block:: bash
@@ -31,6 +33,8 @@ Requirements
   apt install docker-compose
 
 |
+
+.. _get-configuration-file:
 
 **Get the configuration file `docker-compose.yml` from GitHub**
 
@@ -42,6 +46,8 @@ It will pull images of NEST Desktop from https://hub.docker.com/r/nestdesktop/ap
 and NEST Simulator can be started from within the official NEST image (https://hub.docker.com/r/nestsim/nest).
 
 |
+
+.. _getting-started:
 
 **Getting started**
 
@@ -77,6 +83,8 @@ For more information, visit the page https://github.com/nest-desktop/nest-deskto
 
 |
 
+.. _upgrade-images:
+
 **Upgrade images**
 
 First stop the containers and shut down services of nest-desktop and nest-server.
@@ -100,6 +108,8 @@ Afterwards, you can start the services and containers.
   docker-compose start
 
 |
+
+.. _usefull-commands:
 
 **Useful commands for docker-compose**
 
@@ -141,5 +151,5 @@ Shutdown the services ``nest-desktop`` and ``nest-server``.
 
 Thanks for the help:
 
-  - Steffen Graber (Docker Hub for NEST Simulator)
-  - Jochen Martin Eppler (API Server for NEST Simulator)
+- Steffen Graber (Docker Hub for NEST Simulator)
+- Jochen Martin Eppler (API Server for NEST Simulator)

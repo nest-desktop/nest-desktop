@@ -14,6 +14,8 @@ Requirements
   * `OC Client Tools <https://www.okd.io/download.html#oc-platforms>`__
 
 
+.. _deploy-nest-desktop-on-ebrains:
+
 **Deploy NEST Desktop on EBRAINS**
 
 .. image:: ../_static/img/logo/ebrains-logo.svg
@@ -27,9 +29,12 @@ EBRAINS provides two OKD infrastructures
   * https://okd.hbp.eu for the production.
 
 .. Note::
+
   I strongly recommend to use the development page for testing.
 
 |
+
+.. _register-client-for-authentication-on-ebrains:
 
 **Register client for authentication on EBRAINS**
 
@@ -51,6 +56,8 @@ Change the configuration file and then create a client for your application.
 Keep ``client_id`` and ``client_secret`` for the **okd** infrastructure.
 
 |
+
+.. _build-nest-desktop-on-ebrains:
 
 **Build NEST Desktop on EBRAINS**
 
@@ -79,6 +86,8 @@ Execute the bash script to deploy the ``nest-desktop``, ``nest-server`` and ``ap
 
 |
 
+.. _further-usage:
+
 **Further usage**
 
 Scaling up the replicas (pods or nodes):
@@ -93,8 +102,8 @@ Scaling up the replicas (pods or nodes):
 
 Thanks for the help to integrate NEST Desktop on EBRAINS resources:
 
-  - Alberto Madonna (Conceptual design of the user authentication)
-  - Collin McMurtrie (Conceptual design of the user authentication)
-  - Fabrice Gaillard (Conceptual design of the user authentication)
-  - Jonathan Villemaire-Krajden (Conceptual design of the user authentication)
-  - Martin Jochen Eppler (For the contacts)
+- Alberto Madonna (Conceptual design of the user authentication)
+- Collin McMurtrie (Conceptual design of the user authentication)
+- Fabrice Gaillard (Conceptual design of the user authentication)
+- Jonathan Villemaire-Krajden (Conceptual design of the user authentication)
+- Martin Jochen Eppler (For the contacts)
