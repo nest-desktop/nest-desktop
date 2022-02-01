@@ -41,7 +41,7 @@ export class Backend extends Config {
     this.updateConfig({ hostname: value });
   }
 
-  get instance() {
+  get instance(): any {
     return axios.create({ baseURL: this.url });
   }
 
