@@ -1,6 +1,8 @@
 |user| How to use NEST Desktop
 ==============================
 
+.. _quick-start:
+
 **Quick start**
 
 The video shows the few steps to construct a network and explore its activity.
@@ -12,9 +14,11 @@ For more information, please read :doc:`detailed guides of usage <usage>`.
     <iframe src="https://drive.ebrains.eu/f/157fc20ea0734e21aa2e/?raw=1" frameborder="0" allowfullscreen></iframe>
   </div>
 
+||||
 
 |
-|
+
+.. _getting-started-in-terminal-with-docker-compose:
 
 **Getting started in Terminal with Docker-compose**
 
@@ -32,6 +36,7 @@ For more information, please read the :doc:`detailed setup guides <setup>`.
 Guides for NEST Desktop
   - :doc:`How to setup NEST Desktop <setup>`
   - :doc:`How to use NEST Desktop <usage>`
+  - :doc:`How to explore activity graph <activity-graph>`
   - :doc:`How to manage NEST models <nest-models>`
   - :doc:`How to use NEST Desktop with Insite <usage-insite>`
   - :doc:`Troubleshooting <troubleshooting>`
