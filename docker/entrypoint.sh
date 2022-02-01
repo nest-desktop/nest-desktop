@@ -16,7 +16,7 @@ jq -n \
     nestSimulator: {
       path: $nest_simulator_path,
       port: $nest_simulator_port,
-      url: $insite_access_url
+      url: $nest_simulator_url
     }
   }' > /usr/share/nginx/html/config.json
 
