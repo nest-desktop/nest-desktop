@@ -1,8 +1,12 @@
 {
   "insiteAccess": {
-    "port": "8080"
+    "path": "",
+    "port": "",
+    "url": ""
   },
   "nestSimulator": {
-    "port": "5000"
+    "path": "",
+    "port": "",
+    "url": ""
   }
 }
