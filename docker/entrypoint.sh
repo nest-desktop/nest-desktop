@@ -6,7 +6,7 @@ jq -n \
   --arg insite_access_url "${INSITE_ACCESS_URL}" \
   --arg nest_simulator_path "${NEST_SIMULATOR_PATH}" \
   --arg nest_simulator_port "${NEST_SIMULATOR_PORT}" \
-  --arg nest_simulator_url "${INSITE_ACCESS_URL}" \
+  --arg nest_simulator_url "${NEST_SIMULATOR_URL}" \
   '{
     insiteAccess: {
       path: $insite_access_path,
