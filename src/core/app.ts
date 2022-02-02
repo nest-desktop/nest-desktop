@@ -37,12 +37,12 @@ export class App extends Config {
 
     // Backends
     this._backends.insiteAccess = new Backend('InsiteAccess', {
-      path: 'insite',
+      path: '/insite',
       port: 8080,
-      versionPath: 'version/',
+      versionPath: '/version/',
     });
     this._backends.nestSimulator = new Backend('NESTSimulator', {
-      path: 'nest',
+      path: '/nest',
       port: 5000,
       versionPath: '',
     });
