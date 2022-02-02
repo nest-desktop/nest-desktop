@@ -111,7 +111,7 @@ export class Backend extends Config {
   async check(): Promise<void> {
     this.resetState();
 
-    // seek if hostname in config not existed.
+    // Seek if hostname in config not existed.
     if (this.config.hostname) {
       return this.ping(this.url);
     } else {
@@ -145,7 +145,7 @@ export class Backend extends Config {
       .then((response: any) => {
         switch (response.status) {
           case 0:
-            // see https://fetch.spec.whatwg.org/#concept-network-error
+            // See https://fetch.spec.whatwg.org/#concept-network-error
             break;
           case 200:
             this.url = url;
