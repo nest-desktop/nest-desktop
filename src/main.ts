@@ -25,6 +25,9 @@ Vue.use(VueToast);
 // Production
 Vue.config.productionTip = false;
 
+/**
+* Mount application.
+*/
 const mountApp = () => {
   new Vue({
     router,
