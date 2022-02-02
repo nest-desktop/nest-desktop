@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
+import combineURLs from 'axios/lib/helpers/combineURLs';
 
 import router from './router';
 import store from './store';
@@ -24,15 +25,25 @@ Vue.use(VueToast);
 // Production
 Vue.config.productionTip = false;
 
-// Load the data from public/config.json for the global config and mount the app.
-fetch(process.env.BASE_URL + 'config.json')
-  .then(response => response.json())
-  .then(appConfig => (Vue.prototype.$appConfig = appConfig))
-  .finally(() => {
-    new Vue({
-      router,
-      store,
-      vuetify,
-      render: h => h(App),
-    }).$mount('#app');
-  });
+const mountApp = () => {
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: h => h(App),
+  }).$mount('#app');
+};
+
+if (process.env.IS_ELECTRON) {
+  Vue.prototype.$appConfig = {
+    insiteAccess: { url: 'http://localhost:8080' },
+    nestSimulator: { url: 'http://localhost:5000' },
+  };
+  mountApp();
+} else {
+  // Load the data from public/config.json for the global config and mount the app.
+  fetch(combineURLs(process.env.BASE_URL, 'config.json'))
+    .then(response => response.json())
+    .then(appConfig => (Vue.prototype.$appConfig = appConfig))
+    .finally(mountApp);
+}
