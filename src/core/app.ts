@@ -44,7 +44,7 @@ export class App extends Config {
     this._backends.nestSimulator = new Backend('NESTSimulator', {
       path: '/nest',
       port: 5000,
-      versionPath: '',
+      versionPath: '/',
     });
 
     this._model = new ModelStore(this);
