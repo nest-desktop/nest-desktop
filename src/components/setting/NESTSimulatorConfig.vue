@@ -23,7 +23,7 @@
 
         <div class="my-1">
           <span
-            v-if="state.simulatorVersion && state.simulatorVersion != 'unknown'"
+            v-if="state.simulatorVersion && state.simulatorVersion !== 'unknown'"
           >
             <label>Response: </label>
             <v-tooltip right open-delay="300">

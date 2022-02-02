@@ -174,11 +174,13 @@ export class Backend extends Config {
         newConfig['port'] = config.port;
       }
 
-      // Update local config.
-      this.updateConfig(newConfig);
+      if (Object.keys(newConfig).length > 0) {
+        // Update local config.
+        this.updateConfig(newConfig);
 
-      // Update current url to set hostname.
-      this.url = this.url;
+        // Update current url to set hostname.
+        this.url = this.url;
+      }
     }
   }
 }
