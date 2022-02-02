@@ -20,10 +20,9 @@ export class Backend extends Config {
   }
 
   get host(): string {
-    return (
-      this.hostname +
-      (this.port ? ':' + this.port : '') +
-      (this.path ? '/' + this.path : '')
+    return combineURLs(
+      this.hostname + (this.port ? ':' + this.port : ''),
+      this.path
     );
   }
 
@@ -144,7 +143,7 @@ export class Backend extends Config {
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
     const hosts: string[] = [
-      combineURLs(hostname) + ':' + this._state.seek.port,
+      combineURLs(hostname + ':' + this._state.seek.port),
       combineURLs(hostname, this._state.seek.path),
     ];
     const hostPromises: any[] = hosts.map((host: string) =>
