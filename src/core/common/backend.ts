@@ -170,7 +170,8 @@ export class Backend extends Config {
       const newConfig = {};
       if (config.path != null && config.path !== '') {
         newConfig['path'] = config.path;
-      } else if (config.port != null && config.port !== '') {
+      }
+      if (config.port != null && config.port !== '') {
         newConfig['port'] = config.port;
       }
 
