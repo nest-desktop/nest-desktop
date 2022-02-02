@@ -26,18 +26,8 @@ export class Backend extends Config {
     );
   }
 
-  set host(value: string) {
-    const values: string[] = value.split(':');
-    this.hostname = values[0];
-    this.port = values[1] || '';
-  }
-
   get hostname(): string {
     return this.config.hostname || window.location.hostname || 'localhost';
-  }
-
-  set hostname(value: string) {
-    this.updateConfig({ hostname: value });
   }
 
   get instance(): any {
@@ -48,32 +38,16 @@ export class Backend extends Config {
     return this.config.path || '';
   }
 
-  set path(value: string) {
-    this.updateConfig({ path: value });
-  }
-
   get port(): string {
     return this.config.port;
-  }
-
-  set port(value: string) {
-    this.updateConfig({ port: value });
   }
 
   get protocol(): string {
     return this.config.protocol || window.location.protocol;
   }
 
-  set protocol(value: string) {
-    this.updateConfig({ protocol: value });
-  }
-
   get state(): any {
     return this._state;
-  }
-
-  set state(value: any) {
-    this._state = value;
   }
 
   /**
@@ -87,8 +61,8 @@ export class Backend extends Config {
     if (
       this.protocol != undefined &&
       this.host != undefined &&
-      this.protocol != '' &&
-      this.host != ''
+      this.protocol !== '' &&
+      this.host !== ''
     )
       return this.protocol + '//' + this.host;
     return '';
@@ -102,16 +76,25 @@ export class Backend extends Config {
    * @param value URL to save as hostname and protocol
    */
   set url(value: string) {
-    if (value != undefined && value != '') {
+    let hostname: string = '';
+    let path: string = '/';
+    let port: string = '';
+    let protocol: string = '';
+
+    if (value != undefined && value !== '') {
       const values: string[] = value.split('//');
       if (values.length > 1) {
-        this.protocol = values[0];
-        this.host = values[1];
-        return;
+        const paths: string[] = values[1].split('/');
+        const host: string[] = paths[0].split(':');
+
+        hostname = host[0];
+        path = paths.length > 1 ? paths[1] : '/';
+        port = host.length > 1 ? host[1] : '';
+        protocol = values[0];
       }
     }
-    this.protocol = '';
-    this.host = '';
+
+    this.updateConfig({ hostname, path, port, protocol });
   }
 
   /**
@@ -126,8 +109,9 @@ export class Backend extends Config {
    * Check if the backend is serving.
    */
   async check(): Promise<void> {
-    // console.log('Check the backend');
     this.resetState();
+
+    // seek if hostname in config not existed.
     if (this.config.hostname) {
       return this.ping(this.url);
     } else {
@@ -139,7 +123,6 @@ export class Backend extends Config {
    * Seek the server URL of the backend.
    */
   async seek(): Promise<any> {
-    // console.log('Seek the backend');
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
     const hosts: string[] = [
@@ -157,8 +140,6 @@ export class Backend extends Config {
    * @param url The URL which should be pinged.
    */
   async ping(url: string): Promise<any> {
-    // console.log('Ping the backend');
-
     return axios
       .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {
@@ -183,12 +164,21 @@ export class Backend extends Config {
    * @param config The configuration to update URL in local config.
    */
   updateURL(config: any = {}): void {
-    if (config.url != null && config.url != '') {
+    if (config.url != null && config.url !== '') {
       this.url = config.url;
-    } else if (config.path != null && config.path != '') {
-      this.updateConfig({ path: config.path });
-    } else if (config.port != null && config.port != '') {
-      this.updateConfig({ port: config.port });
+    } else {
+      const newConfig = {};
+      if (config.path != null && config.path !== '') {
+        newConfig['path'] = config.path;
+      } else if (config.port != null && config.port !== '') {
+        newConfig['port'] = config.port;
+      }
+
+      // Update local config.
+      this.updateConfig(newConfig);
+
+      // Update current url to set hostname.
+      this.url = this.url;
     }
   }
 }
