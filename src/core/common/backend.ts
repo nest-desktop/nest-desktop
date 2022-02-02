@@ -8,7 +8,7 @@ export class Backend extends Config {
     ready: false,
     version: {},
     seek: {
-      path: '',
+      path: '/',
       port: 5000,
       versionPath: '',
     },
