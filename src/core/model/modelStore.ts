@@ -195,10 +195,9 @@ export class ModelStore {
    */
   fileExistGithub(model: string): boolean {
     return this._state.filesGithub.some((file: string) => {
-      const modelGroup = file.split('.json')[0].split('/')[1]
-      return model.startsWith(modelGroup)
-    }
-    );
+      const modelGroup = file.split('.json')[0].split('/')[1];
+      return model.startsWith(modelGroup);
+    });
   }
 
   /**
