@@ -22,7 +22,7 @@
         </v-tooltip>
 
         <div class="my-1">
-          <span v-if="state.insiteVersion && state.insiteVersion != 'unknown'">
+          <span v-if="state.insiteVersion && state.insiteVersion !== 'unknown'">
             <label>Response: </label>
             <v-tooltip right open-delay="300">
               <template v-slot:activator="{ on, attrs }">

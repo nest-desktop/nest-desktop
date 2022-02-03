@@ -1,25 +1,29 @@
 <template>
   <v-app>
-    <iframe id="NESTSimulatorFrame" class="iframe" />
-    <Navigation class="no-print" />
-
     <transition name="fade">
-      <router-view />
+      <div v-if="core.app.state.ready">
+        <iframe id="NESTSimulatorFrame" class="iframe" />
+        <Navigation class="no-print" />
+
+        <transition name="fade">
+          <router-view />
+        </transition>
+
+        <v-snackbar :timeout="-1" :value="state.updateExists">
+          An update is available.
+
+          <template #action="{ attrs }">
+            <v-btn
+              @click="refreshApp"
+              outlined
+              small
+              v-bind="attrs"
+              v-text="'Update'"
+            />
+          </template>
+        </v-snackbar>
+      </div>
     </transition>
-
-    <v-snackbar :timeout="-1" :value="state.updateExists">
-      An update is available.
-
-      <template #action="{ attrs }">
-        <v-btn
-          @click="refreshApp"
-          outlined
-          small
-          v-bind="attrs"
-          v-text="'Update'"
-        />
-      </template>
-    </v-snackbar>
   </v-app>
 </template>
 
@@ -86,18 +90,24 @@ export default Vue.extend({
             // NESTFrame.contentDocument.location.reload(true);
           }, 300000);
         })
-        .catch((e: Error) => {
+        .catch(() => {
           // Errors are already logged inside the httpClient
         });
     };
 
     onMounted(() => {
+      // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
         once: true,
       });
+
+      // Initialize Vuetify theme (light / dark).
       core.app.initTheme(root.$vuetify.theme);
-      core.app.init();
-      core.app.updateConfigs(Vue.prototype.$config);
+
+      // Initialize app with global config.
+      core.app.init(Vue.prototype.$appConfig);
+
+      // Ping every 5 min to keep connection to NEST Simulator alive.
       keepConnectionToNESTSimulatorAlive();
     });
 

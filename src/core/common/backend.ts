@@ -1,4 +1,5 @@
 import axios from 'axios';
+import combineURLs from 'axios/lib/helpers/combineURLs';
 
 import { Config } from './config';
 
@@ -6,64 +7,47 @@ export class Backend extends Config {
   private _state: any = {
     ready: false,
     version: {},
-    config: {
-      path: '',
+    seek: {
+      path: '/',
       port: 5000,
       versionPath: '',
     },
   };
 
-  constructor(
-    name: string,
-    config = { path: '', port: 5000, versionPath: '' }
-  ) {
+  constructor(name: string, seek = { path: '', port: 5000, versionPath: '' }) {
     super(name);
-    this._state.config = config;
-
-    // Check the backend.
-    this.check();
+    this._state.seek = seek;
   }
 
   get host(): string {
-    return this.hostname + (this.port ? ':' + this.port : '');
-  }
-
-  set host(value: string) {
-    const values: string[] = value.split(':');
-    this.hostname = values[0];
-    this.port = values[1] || '';
+    return combineURLs(
+      this.hostname + (this.port ? ':' + this.port : ''),
+      this.path
+    );
   }
 
   get hostname(): string {
     return this.config.hostname || window.location.hostname || 'localhost';
   }
 
-  set hostname(value: string) {
-    this.updateConfig({ hostname: value });
+  get instance(): any {
+    return axios.create({ baseURL: this.url });
+  }
+
+  get path(): string {
+    return this.config.path || '';
   }
 
   get port(): string {
     return this.config.port;
   }
 
-  set port(value: string) {
-    this.updateConfig({ port: value });
-  }
-
   get protocol(): string {
     return this.config.protocol || window.location.protocol;
   }
 
-  set protocol(value: string) {
-    this.updateConfig({ protocol: value });
-  }
-
   get state(): any {
     return this._state;
-  }
-
-  set state(value: any) {
-    this._state = value;
   }
 
   /**
@@ -77,8 +61,8 @@ export class Backend extends Config {
     if (
       this.protocol != undefined &&
       this.host != undefined &&
-      this.protocol != '' &&
-      this.host != ''
+      this.protocol !== '' &&
+      this.host !== ''
     )
       return this.protocol + '//' + this.host;
     return '';
@@ -92,30 +76,31 @@ export class Backend extends Config {
    * @param value URL to save as hostname and protocol
    */
   set url(value: string) {
-    if (value != undefined && value != '') {
+    let hostname: string = '';
+    let path: string = '/';
+    let port: string = '';
+    let protocol: string = '';
+
+    if (value != null && value !== '') {
       const values: string[] = value.split('//');
       if (values.length > 1) {
-        this.protocol = values[0];
-        this.host = values[1];
-        return;
+        const paths: string[] = values[1].split('/');
+        const host: string[] = paths[0].split(':');
+
+        hostname = host[0];
+        path = paths.length > 1 ? paths[1] : '/';
+        port = host.length > 1 ? host[1] : '';
+        protocol = values[0];
       }
     }
-    this.protocol = '';
-    this.host = '';
-  }
 
-  get(path: string = ''): Promise<any> {
-    return axios.get([this.url, path].join('/'));
-  }
-
-  post(path: string = '', data: any = {}): Promise<any> {
-    return axios.post([this.url, path].join('/'), data);
+    this.updateConfig({ hostname, path, port, protocol });
   }
 
   /**
    * Reset state of the backend.
    */
-  resetState() {
+  resetState(): void {
     this.state.ready = false;
     this.state.version = {};
   }
@@ -124,8 +109,9 @@ export class Backend extends Config {
    * Check if the backend is serving.
    */
   async check(): Promise<void> {
-    // console.log('Check the backend');
     this.resetState();
+
+    // Check if the hostname does not already exist in the config.
     if (this.config.hostname) {
       return this.ping(this.url);
     } else {
@@ -137,18 +123,16 @@ export class Backend extends Config {
    * Seek the server URL of the backend.
    */
   async seek(): Promise<any> {
-    // console.log('Seek the backend');
     const protocol: string = window.location.protocol;
     const hostname: string = window.location.hostname || 'localhost';
-    const port: string = this.port || this._state.config.port;
     const hosts: string[] = [
-      hostname + ':' + port,
-      hostname + this._state.config.path,
+      combineURLs(hostname + ':' + this._state.seek.port),
+      combineURLs(hostname, this._state.seek.path),
     ];
     const hostPromises: any[] = hosts.map((host: string) =>
       this.ping(protocol + '//' + host)
     );
-    return Promise.all(hostPromises);
+    return axios.all(hostPromises);
   }
 
   /**
@@ -156,14 +140,12 @@ export class Backend extends Config {
    * @param url The URL which should be pinged.
    */
   async ping(url: string): Promise<any> {
-    // console.log('Ping the backend');
-
     return axios
-      .get(url + this.state.config.versionPath)
+      .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {
         switch (response.status) {
           case 0:
-            // see https://fetch.spec.whatwg.org/#concept-network-error
+            // See https://fetch.spec.whatwg.org/#concept-network-error
             break;
           case 200:
             this.url = url;
@@ -175,5 +157,31 @@ export class Backend extends Config {
             break;
         }
       });
+  }
+
+  /**
+   * Update URL.
+   * @param config The configuration to update URL in local config.
+   */
+  updateURL(config: any = {}): void {
+    if (config.url != null && config.url !== '') {
+      this.url = config.url;
+    } else {
+      const newConfig = {};
+      if (config.path != null && config.path !== '') {
+        newConfig['path'] = config.path;
+      }
+      if (config.port != null && config.port !== '') {
+        newConfig['port'] = config.port;
+      }
+
+      if (Object.keys(newConfig).length > 0) {
+        // Update local config.
+        this.updateConfig(newConfig);
+
+        // Update current url to set hostname.
+        this.url = this.url;
+      }
+    }
   }
 }

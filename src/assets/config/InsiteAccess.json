@@ -1,6 +1,7 @@
 {
   "custom": false,
   "hostname": "",
-  "port": "8080",
+  "path": "/",
+  "port": "",
   "protocol": ""
 }

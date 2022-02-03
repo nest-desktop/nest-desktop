@@ -2,6 +2,8 @@
 FROM nginx:stable-alpine
 LABEL maintainer="Sebastian Spreizer <spreizer@web.de>"
 
+RUN apk add --no-cache jq bash
+
 # Add default to available sites
 COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 
@@ -11,5 +13,13 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy the built app from the build folder to the NGINX serve folder
 COPY ./nest_desktop/app/ /usr/share/nginx/html/
 
+
+# Copy entrypoint.sh and make it executable
+COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Define the entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 # Containers run nginx with global directives and daemon off
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]

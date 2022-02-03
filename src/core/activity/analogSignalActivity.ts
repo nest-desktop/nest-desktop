@@ -62,29 +62,31 @@ export class AnalogSignalActivity extends Activity {
     // console.log('Get analog signal activity from Insite');
     const attribute: string = 'V_m';
 
-    const path = `nest/multimeters/${this.nodeCollectionId}/attributes/${attribute}?fromTime=${this.lastTime}`;
-    this.project.app.backends.insiteAccess.get(path).then((response: any) => {
-      const times: number[] = this.repeat(response.data);
-      const senders: number[] = this.tile(response.data);
-      const activity: any = {
-        events: {
-          times, // x
-          senders,
-        },
-        nodeIds: response.data.nodeIds, // from insite
-        times: response.data.simulationTimes, // from insite
-      };
-      activity.events[attribute] = response.data.values;
-      this.update(activity);
+    const path = `nest/multimeters/${this.nodeCollectionId}/attributes/${attribute}/?fromTime=${this.lastTime}`;
+    this.project.app.backends.insiteAccess.instance
+      .get(path)
+      .then((response: any) => {
+        const times: number[] = this.repeat(response.data);
+        const senders: number[] = this.tile(response.data);
+        const activity: any = {
+          events: {
+            times, // x
+            senders,
+          },
+          nodeIds: response.data.nodeIds, // from insite
+          times: response.data.simulationTimes, // from insite
+        };
+        activity.events[attribute] = response.data.values;
+        this.update(activity);
 
-      this.lastFrame = this.lastTime + 1 >= this.endtime;
+        this.lastFrame = this.lastTime + 1 >= this.endtime;
 
-      // Recursive call after 100ms.
-      setTimeout(() => {
-        if (!this.lastFrame) {
-          this.getActivityInsite();
-        }
-      }, 100);
-    });
+        // Recursive call after 100ms.
+        setTimeout(() => {
+          if (!this.lastFrame) {
+            this.getActivityInsite();
+          }
+        }, 100);
+      });
   }
 }

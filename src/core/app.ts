@@ -39,12 +39,12 @@ export class App extends Config {
     this._backends.insiteAccess = new Backend('InsiteAccess', {
       path: '/insite',
       port: 8080,
-      versionPath: '/version',
+      versionPath: '/version/',
     });
     this._backends.nestSimulator = new Backend('NESTSimulator', {
       path: '/nest',
       port: 5000,
-      versionPath: '',
+      versionPath: '/',
     });
 
     this._model = new ModelStore(this);
@@ -98,9 +98,19 @@ export class App extends Config {
   /**
    * Initialize application.
    */
-  init(): void {
+  init(config: any): void {
     consoleLog(this, 'Initialize app');
+
+    // Update configs from global config.
+    this.updateConfigs(config);
+
+    // Check if backends is running.
+    this.checkBackends();
+
+    // Fetch models from NEST Simulator.
     this._model.fetchModelsNEST();
+
+    // Fetch model files from Github.
     this._model.fetchModelFilesGithub();
 
     this._state.ready = false;
@@ -177,14 +187,26 @@ export class App extends Config {
    * Global config is loaded in main.ts.
    */
   updateConfigs(config: any = {}): void {
-    consoleLog(this, 'Update config from file');
-    // Update config for NEST Simulator
-    if (config.NESTSimulator && !this.backends.nestSimulator.config.custom) {
-      if ('url' in config.NESTSimulator) {
-        this.backends.nestSimulator.url = config.NESTSimulator.url;
-      } else {
-        this.backends.nestSimulator.updateConfig(config.NESTSimulator);
-      }
+    consoleLog(this, 'Update backend config');
+    if (config == null) return;
+
+    if (config.nestSimulator && !this.backends.nestSimulator.config.custom) {
+      this.backends.nestSimulator.updateURL(config.nestSimulator);
     }
+
+    if (config.insiteAccess && !this.backends.insiteAccess.config.custom) {
+      this.backends.insiteAccess.updateURL(config.insiteAccess);
+    }
+  }
+
+  /**
+   * Update configs from global config.
+   *
+   * @remarks
+   * Global config is loaded in main.ts.
+   */
+  checkBackends(): void {
+    this._backends.nestSimulator.check();
+    this._backends.insiteAccess.check();
   }
 }

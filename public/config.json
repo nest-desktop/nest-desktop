@@ -1,5 +1,12 @@
 {
-  "NESTSimulator": {
-    "port": "5000"
+  "insiteAccess": {
+    "path": "",
+    "port": "",
+    "url": ""
+  },
+  "nestSimulator": {
+    "path": "",
+    "port": "",
+    "url": ""
   }
 }

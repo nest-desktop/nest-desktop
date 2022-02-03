@@ -185,7 +185,7 @@ export class ModelView {
   /**
    * Update project.
    */
-  updateProject() {
+  updateProject(): void {
     if (this._state.projectFilename !== this._state.project.name) {
       this.initProject();
     }
@@ -301,7 +301,7 @@ export class ModelView {
       return;
     }
     const path = 'api/help?return_text=true&obj=' + this._state.modelId;
-    this._app.backends.nestSimulator
+    this._app.backends.nestSimulator.instance
       .get(path)
       .then((resp: any) => {
         if (resp.status !== 200) {

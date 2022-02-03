@@ -472,7 +472,7 @@ export class Project {
 
     this._simulation.resetState();
     this._simulation.running = true;
-    return this.app.backends.nestSimulator
+    return this.app.backends.nestSimulator.instance
       .post('exec', {
         source: this._code.script,
         return: 'response',
@@ -546,7 +546,7 @@ export class Project {
     this._simulation.resetState();
     this._simulation.state.biologicalTime = this._simulation.time;
     this._simulation.running = true;
-    this._app.backends.nestSimulator
+    this._app.backends.nestSimulator.instance
       .post('exec', { source: this._code.script })
       .then((response: any) => {
         switch (response.status) {
@@ -556,8 +556,8 @@ export class Project {
             break;
           case 200:
             // TODO: ask Marcel if this code is required.
-            this._app.backends.insiteAccess
-              .get('nest/simulationTimeInfo')
+            this._app.backends.insiteAccess.instance
+              .get('nest/simulationTimeInfo/')
               .then((response: any) => {
                 this.openToast('Simulation is finished.', 'success');
                 this._simulation.running =
@@ -592,8 +592,8 @@ export class Project {
    */
   getActivitiesInsite(): void {
     this.consoleLog('Get activites from Insite');
-    this._app.backends.insiteAccess
-      .get('nest/simulationTimeInfo')
+    this._app.backends.insiteAccess.instance
+      .get('nest/simulationTimeInfo/')
       .catch(() => {
         setTimeout(() => this.getActivitiesInsite(), 100);
       })
@@ -607,8 +607,8 @@ export class Project {
         this.continuouslyUpdateActivityGraph();
 
         const nodePositions: any = {};
-        this._app.backends.insiteAccess
-          .get('nest/nodes')
+        this._app.backends.insiteAccess.instance
+          .get('nest/nodes/')
           .then((response: any) => {
             response.data.forEach((data: any) => {
               if (data.position != null) {
@@ -647,8 +647,8 @@ export class Project {
    */
   getSpikeActivitiesInsite(nodePositions: any): void {
     this.consoleLog('Get spike activities from insite');
-    this._app.backends.insiteAccess
-      .get('nest/spikedetectors')
+    this._app.backends.insiteAccess.instance
+      .get('nest/spikedetectors/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
           const activity: any = {
@@ -684,7 +684,7 @@ export class Project {
   getAnalogSignalActivitiesInsite(nodePositions: any): void {
     this.consoleLog('Get analog signal activities from Insite');
     this._app.backends.insiteAccess
-      .get('nest/multimeters')
+      .get('nest/multimeters/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
           const events = { times: [], senders: [] };
@@ -723,7 +723,7 @@ export class Project {
   /**
    * Update activity graph continuously.
    */
-  continuouslyUpdateActivityGraph() {
+  continuouslyUpdateActivityGraph(): void {
     this.consoleLog('Update activity graph continuously');
     this._app.project.view.state.refreshIntervalId = setInterval(() => {
       // Check if project has activities.
