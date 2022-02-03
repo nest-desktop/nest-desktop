@@ -18,7 +18,7 @@
         <template #prepend>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn depressed fab x-small v-bind="attrs" v-on="on">
+              <v-btn depressed fab v-bind="attrs" v-on="on" x-small>
                 <v-icon v-text="'mdi-filter-outline'" />
               </v-btn>
             </template>
