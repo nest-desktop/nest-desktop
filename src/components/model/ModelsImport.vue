@@ -235,8 +235,8 @@ export default Vue.extend({
           });
 
         if (state.GitHubFile) {
-          state.selectedTree = state.trees.find(
-            (tree: any) => state.GitHubFile.startsWith(tree.text)
+          state.selectedTree = state.trees.find((tree: any) =>
+            state.GitHubFile.startsWith(tree.text)
           ).value;
           getFilesFromGithub(state.selectedTree);
         }
@@ -261,12 +261,12 @@ export default Vue.extend({
             };
           });
 
-          if (state.GitHubFile) {
-            state.selectedFile = state.files.find(
-              (file: any) => state.GitHubFile.endsWith(file.value.path)
-            ).value;
-            getModelFromGithub();
-          }
+        if (state.GitHubFile) {
+          state.selectedFile = state.files.find((file: any) =>
+            state.GitHubFile.endsWith(file.value.path)
+          ).value;
+          getModelFromGithub();
+        }
       });
     };
 
@@ -306,7 +306,7 @@ export default Vue.extend({
         state.modelId = dialogState.content[0].id;
         state.GitHubFile = core.app.model.state.filesGithub.find(
           (filename: string) =>
-          state.modelId.startsWith(filename.split('.')[0].split('/')[1])
+            state.modelId.startsWith(filename.split('.')[0].split('/')[1])
         );
       }
 

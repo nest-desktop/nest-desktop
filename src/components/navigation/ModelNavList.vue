@@ -101,6 +101,7 @@ import { reactive, onMounted } from '@vue/composition-api';
 
 import core from '@/core';
 import ModelMenu from '@/components/model/ModelMenu.vue';
+import { Model } from '@/core/model/model';
 
 export default Vue.extend({
   name: 'Models',
@@ -211,7 +212,7 @@ export default Vue.extend({
         modelStore.state.models.map((model: any) => model.id);
 
       if (filterTags.includes('installed')) {
-        let models = modelStore.state.models.map((model: any) => model.id);
+        let models = modelStore.state.models.map((model: Model) => model.id);
         state.models = state.models.filter((model: string) =>
           models.includes(model)
         );
