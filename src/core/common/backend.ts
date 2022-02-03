@@ -81,7 +81,7 @@ export class Backend extends Config {
     let port: string = '';
     let protocol: string = '';
 
-    if (value != undefined && value !== '') {
+    if (value != null && value !== '') {
       const values: string[] = value.split('//');
       if (values.length > 1) {
         const paths: string[] = values[1].split('/');
@@ -111,7 +111,7 @@ export class Backend extends Config {
   async check(): Promise<void> {
     this.resetState();
 
-    // Seek if hostname in config not existed.
+    // Check if the hostname does not already exist in the config.
     if (this.config.hostname) {
       return this.ping(this.url);
     } else {
