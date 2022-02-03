@@ -15,8 +15,8 @@
             <v-list-item
               :key="index"
               @click="item.onClick"
-              v-show="item.show"
               v-for="(item, index) in state.items"
+              v-show="item.show"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />

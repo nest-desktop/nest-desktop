@@ -18,7 +18,7 @@
       class="no-print"
     />
 
-    <svg id="networkGraph" height="600" width="800">
+    <svg height="600" id="networkGraph" width="800">
       <g class="marker" v-if="state.network">
         <defs
           :key="'defs' + connection.idx"
@@ -77,8 +77,8 @@
       </g>
 
       <rect
-        id="workspaceHandler"
         :fill="$vuetify.theme.dark ? '#121212' : 'white'"
+        id="workspaceHandler"
       />
       <g id="networkWorkspace">
         <g class="grid no-print" />
@@ -87,8 +87,8 @@
             :style="{ strokeWidth: state.graph.config.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
-            stroke-linecap="round"
             fill="none"
+            stroke-linecap="round"
           />
         </g>
 

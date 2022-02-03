@@ -13,8 +13,8 @@
           flat
           show-swatches
           style="border-radius: 0"
-          v-model="state.menu.record.color"
           v-if="state.menu.record"
+          v-model="state.menu.record.color"
         />
       </v-menu>
 
@@ -63,7 +63,7 @@
                   </v-chip>
                 </template>
                 <div style="font-size: 12px">
-                  <span v-text="item.labelCapitalize"/>
+                  <span v-text="item.labelCapitalize" />
                   <span v-if="item.unit" v-text="` (${item.unit})`" />
                 </div>
               </v-tooltip>
@@ -73,8 +73,8 @@
               <v-chip
                 :color="item.color"
                 class="mx-2"
-                outlined
                 label
+                outlined
                 small
                 v-text="item.id"
               />

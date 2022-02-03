@@ -10,8 +10,8 @@
               hide-details
               label="URL of NEST Simulator"
               placeholder="http://127.0.0.1:5000"
-              v-model="state.app.backends.nestSimulator.url"
               v-bind="attrs"
+              v-model="state.app.backends.nestSimulator.url"
               v-on="on"
             />
           </template>
@@ -23,10 +23,12 @@
 
         <div class="my-1">
           <span
-            v-if="state.simulatorVersion && state.simulatorVersion !== 'unknown'"
+            v-if="
+              state.simulatorVersion && state.simulatorVersion !== 'unknown'
+            "
           >
             <label>Response: </label>
-            <v-tooltip right open-delay="300">
+            <v-tooltip open-delay="300" right>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip color="green" dark small v-bind="attrs" v-on="on">
                   <v-avatar left>
@@ -35,16 +37,15 @@
                   NEST version: {{ state.simulatorVersion }}
                 </v-chip>
               </template>
-              <span
-                >A server of NEST Simulator has been found at the given
-                URL.</span
-              >
+              <span>
+                A server of NEST Simulator has been found at the given URL.
+              </span>
             </v-tooltip>
           </span>
 
           <span v-else-if="state.simulatorVersion === 'unknown'">
             <label>Response: </label>
-            <v-tooltip right open-delay="300">
+            <v-tooltip open-delay="300" right>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip color="gray" dark small v-bind="attrs" v-on="on">
                   <v-avatar left>
@@ -61,7 +62,7 @@
 
           <span v-else>
             <label>Response: </label>
-            <v-tooltip right open-delay="300">
+            <v-tooltip open-delay="300" right>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip color="red" dark small v-bind="attrs" v-on="on">
                   <v-avatar left>

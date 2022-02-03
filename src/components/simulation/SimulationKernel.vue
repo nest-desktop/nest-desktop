@@ -46,8 +46,8 @@
                 <ParameterEdit
                   :options="options.autoRNGSeedSettings"
                   :value.sync="state.autoRNGSeed"
-                  class="mx-1"
                   @update:value="updateAutoRNGSeed"
+                  class="mx-1"
                 />
               </v-card-text>
             </v-card>

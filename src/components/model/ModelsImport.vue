@@ -48,8 +48,8 @@
             </v-row>
             <v-file-input
               @change="getModelFromFile"
-              label="File input"
               dense
+              label="File input"
               truncate-length="100"
               v-show="state.source === 'file'"
             />
@@ -58,8 +58,8 @@
               class="ma-0 pa-0"
               clearable
               dense
-              full-width
               flat
+              full-width
               label="Enter URL"
               prepend-icon="mdi-web"
               v-show="state.source === 'url'"

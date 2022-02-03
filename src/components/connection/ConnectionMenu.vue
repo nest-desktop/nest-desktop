@@ -10,7 +10,7 @@
       <v-card tile flat style="min-width: 300px">
         <v-card-title class="pa-0">
           <v-row no-gutters>
-            <v-col cols="3" class="py-0" style="text-align: center">
+            <v-col class="py-0" cols="3" style="text-align: center">
               <v-btn
                 :color="connection.source.view.color"
                 :dark="projectView.config.coloredToolbar"
@@ -34,7 +34,7 @@
                 <v-icon v-text="'mdi-arrow-right-bold-outline'" />
               </v-btn>
             </v-col>
-            <v-col cols="3" class="py-0" style="text-align: center">
+            <v-col class="py-0" cols="3" style="text-align: center">
               <v-btn
                 :color="connection.target.view.color"
                 :dark="projectView.config.coloredToolbar"
@@ -66,8 +66,10 @@
                 <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :input-value="state[item.value]"
-                :color="connection.source.view.color" />
+                <v-checkbox
+                  :color="connection.source.view.color"
+                  :input-value="state[item.value]"
+                />
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -80,8 +82,8 @@
               :paramsIdx="state.connectionParamsIdx"
             />
             <SynapseParamSelect
-              :synapse="state.connection.synapse"
               :paramsIdx="state.synapseParamsIdx"
+              :synapse="state.connection.synapse"
             />
           </v-card-text>
 
@@ -124,12 +126,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteConnection"
-              outlined
-              small
-              v-text="'delete'"
-            />
+            <v-btn @click="deleteConnection" outlined small v-text="'delete'" />
           </v-card-actions>
         </span>
       </v-card>

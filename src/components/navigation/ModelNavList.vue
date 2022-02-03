@@ -44,8 +44,8 @@
         @click:close="removeFilterTag(tag.text.toLowerCase())"
         class="ma-1 mb-0"
         close
-        small
         outlined
+        small
         v-if="modelStore.state.filterTags.includes(tag.text.toLowerCase())"
       >
         <v-icon left small v-text="tag.icon" />

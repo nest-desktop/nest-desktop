@@ -1,6 +1,6 @@
 <template>
   <div class="activityGraph">
-    <v-dialog v-model="state.dialog" max-width="290">
+    <v-dialog max-width="290" v-model="state.dialog">
       <v-card>
         <v-card-title v-text="'Download plot'" />
 
@@ -83,8 +83,8 @@
         </v-btn>
         <template v-if="state.snackbar.actions.length > 0">
           <v-btn
-            :key="actionIdx"
             :disabled="action.disabled"
+            :key="actionIdx"
             @click="action.onClick"
             outlined
             small

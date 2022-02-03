@@ -24,8 +24,8 @@
         label
         outlined
         small
-        v-text="state.spatial.positions.numDimensions + 'D'"
         v-if="state.spatial.positions.name === 'free'"
+        v-text="state.spatial.positions.numDimensions + 'D'"
       />
       <v-chip
         class="mx-1"
@@ -40,8 +40,8 @@
         label
         outlined
         small
-        v-text="state.spatial.node.size"
         v-if="state.spatial.positions.name === 'free'"
+        v-text="state.spatial.node.size"
       />
       <v-chip
         class="mx-1"

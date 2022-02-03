@@ -1,8 +1,8 @@
 <template>
   <div class="projects">
     <ProjectMenu
-      :project="state.projectMenu.project"
       :position="state.projectMenu.position"
+      :project="state.projectMenu.project"
       v-if="state.projectMenu.show"
     />
 
