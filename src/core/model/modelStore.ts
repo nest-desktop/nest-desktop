@@ -197,9 +197,10 @@ export class ModelStore {
    * @param model Model name
    */
   fileExistGithub(model: string): boolean {
-    return this._state.filesGithub.some((file: string) =>
-      file.includes('/' + model)
-    );
+    return this._state.filesGithub.some((file: string) => {
+      const modelGroup = file.split('.json')[0].split('/')[1];
+      return model.startsWith(modelGroup);
+    });
   }
 
   /**

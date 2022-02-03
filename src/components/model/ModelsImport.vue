@@ -147,6 +147,7 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ModelsImport',
   setup() {
+    const dialogState = core.app.state.dialog;
     const state = reactive({
       items: [
         {
@@ -166,6 +167,8 @@ export default Vue.extend({
         },
       ],
       files: [],
+      GitHubFile: '',
+      modelId: '',
       models: [],
       selectedFile: {},
       selectedTree: {},
@@ -195,6 +198,7 @@ export default Vue.extend({
       state.models = [];
       models.forEach((model: any) => {
         if (model.id) {
+          model.selected = model.id === state.modelId;
           state.models.push(model);
           validateModel(model);
         }
@@ -229,6 +233,13 @@ export default Vue.extend({
               value: d,
             };
           });
+
+        if (state.GitHubFile) {
+          state.selectedTree = state.trees.find((tree: any) =>
+            state.GitHubFile.startsWith(tree.text)
+          ).value;
+          getFilesFromGithub(state.selectedTree);
+        }
       });
     };
 
@@ -249,6 +260,13 @@ export default Vue.extend({
               value: d,
             };
           });
+
+        if (state.GitHubFile) {
+          state.selectedFile = state.files.find((file: any) =>
+            state.GitHubFile.endsWith(file.value.path)
+          ).value;
+          getModelFromGithub();
+        }
       });
     };
 
@@ -279,7 +297,23 @@ export default Vue.extend({
       core.app.closeDialog();
     };
 
-    onMounted(() => getTreesFromGithub());
+    /**
+     * Update model import dialog.
+     */
+    const update = () => {
+      if (dialogState != null && dialogState.content.length === 1) {
+        state.source = 'github';
+        state.modelId = dialogState.content[0].id;
+        state.GitHubFile = core.app.model.state.filesGithub.find(
+          (filename: string) =>
+            state.modelId.startsWith(filename.split('.')[0].split('/')[1])
+        );
+      }
+
+      getTreesFromGithub();
+    };
+
+    onMounted(() => update());
 
     return {
       closeDialog: () => core.app.closeDialog(),
