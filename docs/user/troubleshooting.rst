@@ -8,29 +8,38 @@ Maybe we can help with some answers to commonly asked questions and troublesome 
 Error messages
 --------------
 
+.. _server-not-found:
+
 **Server not found**
 
 NEST Desktop cannot find the NEST Simulator.
 It has two possible reasons:
 
-  - NEST Desktop has a wrong URL under which it tries to contact the server. See the FAQ for NEST Simulator below.
-  - The server is down. Contact the server operators and enter the URL of the NEST Simulator, e.g. ``localhost:5000`` in a web browser to check if it is running again.
+- NEST Desktop has a wrong URL under which it tries to contact the server.
+  See the FAQ for NEST Simulator below.
+
+- The server is down. Contact the server operators and enter the URL of the NEST Simulator,
+  e.g. ``localhost:5000`` in a web browser to check if it is running again.
 
 .. note::
+
   For advanced users: Check in a terminal whether NEST Simulator is running:
 
   ``curl localhost:5000``
 
+.. _internal-server-error:
 
 **Internal server error**
 
   It says that the back end (i.e, ``nest-server``) ended with an internal error.
   In this case, you have to monitor or debug the back end.
 
+.. _nest-error:
+
 **NEST error**
 
   NEST Simulator produces a value error, e.g. ``The value cannot be negative.``.
-  Please have a look at the official `NEST documentation <https://nest-simulator.readthedocs.io/en/latest/>`__
+  Please have a look at the official :doc:`NEST documentation <nest-simulator:index>`
   to obtain the correct syntax for the commands.
 
 |
@@ -39,7 +48,7 @@ It has two possible reasons:
 Frequently asked questions (FAQ)
 --------------------------------
 
-|
+.. _nest-simulator:
 
 **NEST Simulator**
 
@@ -50,12 +59,14 @@ How can I check NEST Simulator?
   On the settings page you can click on :guilabel:`CHECK` button.
   If a chip with NEST version appears, this indicates that NEST Simulator is working.
 
-|
+||||
+
+.. _project:
 
 **Project**
 
 How can I make a new project?
-  In the navigation sidebar you will find a list item :guilabel:`New Project` to create a new project.
+  In the navigation sidebar you will find a list item :guilabel:`+ New project` to create a new project.
 
 How can I duplicate a project?
   In the project toolbox you will find a button to clone project.
@@ -68,17 +79,21 @@ How can I save a project?
   In the left navigation of the page you will find a floppy disc icon to save a project.
 
 How can I delete a project?
-  In the context menu of the projects (by clicking with the mouse right button on a project) you will find a method to delete a project.
+  In the context menu of the projects (by clicking with the mouse right button on a project)
+  you will find a method to delete a project.
 
 How can I export a project?
-  In the context menu of the projects (by clicking with the mouse right button on a project) you will find a method to export a project to a file.
+  In the context menu of the projects (by clicking with the mouse right button on a project)
+  you will find a method to export a project to a file.
 
 How can I delete multiple projects at once?
-  In the context menu of the projects icon in the navigation side bar you will find a dialog to delete projects.
+  In the context menu of the projects icon in the navigation side bar
+  you will find a dialog to delete projects.
   Then select several projects and delete them.
 
 How can I export multiple projects at once?
-  In the context menu of the projects icon in the navigation side bar you will find a dialog to download projects.
+  In the context menu of the projects icon in the navigation side bar
+  you will find a dialog to download projects.
   Then select several projects and export them to a file.
 
 How can I import projects?
@@ -87,9 +102,13 @@ How can I import projects?
   Select wanted project and then import them.
 
 Where can I find the data for the project in JSON format?
-  When the development mode is enabled, clicking on the button :guilabel:`{}` (on which the prominent brackets used in JSON are shown) you will find the JSON data of the current project.
+  When the development mode is enabled, clicking on the button :guilabel:`{}`
+  (on which the prominent brackets used in JSON are shown)
+  you will find the JSON data of the current project.
 
-|
+||||
+
+.. _network:
 
 **Network**
 
@@ -122,7 +141,8 @@ How can I (un)select a node / a connection?
 
 How can I colorize nodes?
   You will find the method to color in the context menu of the node
-  by clicking with the right mouse button on the node shape in the network graph or the node toolbar in the controller.
+  by clicking with the right mouse button on the node shape in the network graph
+  or the node toolbar in the controller.
 
 How can I change the color cycle of nodes?
   In the network settings you will find the way to change the color cycle.
@@ -137,10 +157,12 @@ How can I modify parameters?
   If they are not visible, click on the model selection to check the visibility of the parameters.
 
 How can I reset all parameter values?
-  In the context menu of a node or connection you will find the method to reset all parameters of the corresponding node or connection.
+  In the context menu of a node or connection you will find the method
+  to reset all parameters of the corresponding node or connection.
 
 How can I reset a parameter value?
-  In the context menu of a parameter (by clicking right button on a parameter) you can find the method to reset a parameter.
+  In the context menu of a parameter (by clicking right button on a parameter)
+  you can find the method to reset a parameter.
   It also shows the default value of the parameter.
 
 How can I set a connection to "inhibitory"?
@@ -155,13 +177,16 @@ How can I get a spatial node?
 How can I generate grid/free positions?
   When the node is spatial, a position item will replace the population item.
   Click on the position item to open a popup of the position specifications.
-  Modifying a value will generate positions, at the end of the panel you will find a button to generate positions.
+  Modifying a value will generate positions, at the end of the panel
+  you will find a button to generate positions.
 
 How can I generate an array?
   In the context menu of the array parameters (e.g. the spike times of a spike generator)
   you will find a method to generate an array.
 
-|
+||||
+
+.. _simulation:
 
 **Simulation**
 
@@ -194,6 +219,7 @@ Where can I change the time resolution of the kernel?
   You will find the time resolution for the NEST Simulator in the kernel controller.
 
 .. warning::
+
    Please verify that the resolution of the recorders are larger than the resolution in the kernel!
 
 Where can I change the seed?
@@ -205,7 +231,9 @@ How can I activate the seed randomization?
 How can I find the Python script code of the simulation?
   On the right side you can find a code symbol :guilabel:`<\>` opening the code editor.
 
-|
+||||
+
+.. _activity:
 
 **Activity**
 
@@ -214,6 +242,12 @@ How can I download the activity data of a single recorder?
 
 How can I download activity data of all recorders?
   In the projects dialog to download projects you can find options to download the activity of projects.
+
+||||
+
+.. _activity-chart-graph:
+
+**Activity chart graph**
 
 How can I drag/zoom the chart?
   You will find those modes in the mode bar (top) in the activity graph.
@@ -227,7 +261,6 @@ How can I download plot of the chart?
   You can choose which format will be used.
 
 Where can I find activity controller?
-  The controller for the animated activity is placed in the activity controller.
   You can find the activity controller by clicking on the `chart` icon on the right side.
 
 How can I modify the bin size of the PSTH?
@@ -238,6 +271,18 @@ How can I change the labeling of axes or the title?
 
 How can I hide/show dots/lines?
   Click on the legend to alter the visibility of the dots/lines.
+
+||||
+
+.. _activity-animation-graph:
+
+**Activity animation graph**
+
+How can I rotate camera?
+  Click and hold the (left) mouse button on the animation area and then move it around to rotate the camera.
+
+Where can I find activity controller?
+  You can find the activity controller by clicking on the `axes` icon on the right side.
 
 How can I stop an animation?
   Go to the animation controller. You will find a pause icon to stop the animation.
@@ -255,10 +300,10 @@ How can I change the size of dots?
 How can I add a "trailing" effect for dots?
   It only works with the animation of the spikes.
 
-How can I rotate camera?
-  Click and hold the (left) mouse button on the animation area and then move it around to rotate the camera.
 
-|
+||||
+
+.. _model:
 
 **Model**
 
@@ -268,7 +313,9 @@ What is the terminology of this model?
 How can I read the documentation of a model?
   In the context menu of a node you will find a documentation of these models.
 
-|
+||||
+
+.. _settings:
 
 **Settings**
 

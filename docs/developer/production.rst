@@ -27,8 +27,8 @@ First, build a package of NEST Desktop using ``vue-cli-service``.
 
 Initially, you have to upgrade the version of nest-desktop in:
 
-  - ``packages.json``
-  - ``nest_desktop/__init__.py``
+- ``packages.json``
+- ``nest_desktop/__init__.py``
 
 Then generate the app package using `yarn`. It builds the folder ``nest_desktop/app``:
 

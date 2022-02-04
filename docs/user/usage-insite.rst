@@ -15,34 +15,34 @@ Basically, with Insite neuronal or network activity can be observed during the s
   The best method is to use Docker Compose, which also deploys NEST Desktop and Insite.
   For more information, please read the :doc:`deployment guide of Insite </deployer/deploy-insite>`.
 
-|
+|br|
 
 .. image:: ../_static/img/screenshots/settings-insite.png
   :align: left
+  :target: #check-if-insite-is-running
+
+.. _check-if-insite-is-running:
 
 **Check if Insite is running**
 
 In the settings page you can check whether the Insite backend is running.
 
-|
-|
-|
-|
+|br|
 
 .. image:: ../_static/img/screenshots/simulate-with-insite.png
   :align: right
+  :target: #enable-simulation-with-insite
+
+.. _enable-simulation-with-insite:
 
 **Enable simulation with Insite**
 
-  After successfully receiving a ping from the Insite Access node of the backend,
-  you can check the item :guilabel:`Simulate with Insite`
-  in the context menu of the :guilabel:`Simulate` button (opens by clicking with the right mouse button).
+| After successfully receiving a ping from the Insite Access
+| node of the backend, you can check the item
+| :guilabel:`Simulate with Insite` in the context menu of the :guilabel:`Simulate`
+| button (opens by clicking with the right mouse button).
 
-|
-|
-|
-|
-|
+|br|
 
 **Script code for simulation with Insite**
 
@@ -63,13 +63,19 @@ Second, the parameter ``record_to`` of any recording device
 Now, the Insite recording module collects activity events from the modified recording devices.
 The client receives activity from the Insite ``Access Node`` on another port (default: ``8080``).
 
-For more information about Insite, please visit the official `documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group at RWTH Aachen.
+For more information about Insite, please visit the official
+`documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group at RWTH Aachen.
 
-|
+|br|
 
 **Acknowledgements**
 
 Thanks for integrating Insite in NEST Simulator and NEST Desktop:
 
-  - Simon Oehrl (Conceptual design for Insitufication in NEST Desktop)
-  - Marcel Krüger (Collaboration of Insitufication in NEST Desktop)
+- Simon Oehrl (Conceptual design for Insitufication in NEST Desktop)
+- Marcel Krüger (Collaboration of Insitufication in NEST Desktop)
+
+
+.. |br| raw:: html
+
+  <div style="display:inline-block; width:100%"/>

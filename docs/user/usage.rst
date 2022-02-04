@@ -88,9 +88,9 @@ The color of lines is defined by the source node.
 
 The specific shape defines an element type of a node:
 
-  - **Hexagon:** A stimulus device alias stimulator is an instrument which only produces signals towards target nodes.
-  - **Parallelogram:** A recording device alias recorder is also an instrument which observes states of a recordable node.
-  - **Square/Triangle/Circle:** A neuron node is the core engine of a neuronal network model which received inputs from other nodes and produces specific output using intrinsic equation.
+- **Hexagon:** A stimulus device alias stimulator is an instrument which only produces signals towards target nodes.
+- **Parallelogram:** A recording device alias recorder is also an instrument which observes states of a recordable node.
+- **Square/Triangle/Circle:** A neuron node is the core engine of a neuronal network model which received inputs from other nodes and produces specific output using intrinsic equation.
 
 |br|
 
@@ -104,9 +104,9 @@ The specific shape defines an element type of a node:
 
 The shape of neurons is represented differently by the set of synaptic weights of their connections.
 
-  - **Square:** Neurons without connections or mixed (positive and negative) synaptic weights to neurons
-  - **Triangle:** Neurons with excitatory connections to neurons (all synapse weights are positive)
-  - **Circle:** Neurons with inhibitory connections to neurons (all synapse weights are negative)
+- **Square:** Neurons without connections or mixed (positive and negative) synaptic weights to neurons
+- **Triangle:** Neurons with excitatory connections to neurons (all synapse weights are positive)
+- **Circle:** Neurons with inhibitory connections to neurons (all synapse weights are negative)
 
 |br|
 
