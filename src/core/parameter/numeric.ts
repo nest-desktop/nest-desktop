@@ -100,14 +100,14 @@ export class Numeric {
   /**
    * Convert radian to degree.
    */
-  radToDeg(rad: number) {
+  radToDeg(rad: number): number {
     return rad * (180 / Math.PI);
   }
 
   /**
    * Convert degree to radian.
    */
-  degToRad(deg: number) {
+  degToRad(deg: number): number {
     return deg * (Math.PI / 180);
   }
 }

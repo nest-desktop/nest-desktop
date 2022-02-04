@@ -14,14 +14,14 @@ function execute(command: string, callback = null) {
   }
 }
 
-function start() {
+function start(): void {
   execute('nest-server start -h 0.0.0.0 -d"');
   // execute(
   //   'uwsgi --module nest.server:app --http-socket 0.0.0.0:5000 --uid $USER --daemonize "/tmp/nest-server.log"'
   // );
 }
 
-async function stop() {
+async function stop(): Promise<any> {
   execute('nest-server stop -h 0.0.0.0');
 }
 

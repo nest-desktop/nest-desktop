@@ -236,7 +236,7 @@ export class ActivityAnimationScene {
   /**
    * Destroy animation scene.
    */
-  destroy() {
+  destroy(): void {
     cancelAnimationFrame(this._animationFrameIdx);
     if (this._ref.firstChild === this._renderer.domElement) {
       this._ref.removeChild(this._renderer.domElement);

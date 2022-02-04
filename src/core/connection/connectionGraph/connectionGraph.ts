@@ -68,7 +68,7 @@ export class ConnectionGraph {
    * @remarks
    * This function should be called when connections in the network are changed.
    */
-  update() {
+  update(): void {
     // console.log('Init network graph');
     const connections: d3.Selection<any, any, any, any> =
       this._networkGraph.selector
@@ -118,7 +118,7 @@ export class ConnectionGraph {
   /**
    * Render connection graphs.
    */
-  render() {
+  render(): void {
     // console.log('Render connection graph');
     const selector = d3.select('g#connections').selectAll('g.connection');
 

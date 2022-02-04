@@ -64,7 +64,7 @@ export class NodeGraph {
    * @remarks
    * This function should be called when nodes is changed.
    */
-  update() {
+  update(): void {
     const nodes: d3.Selection<any, any, any, any> = this._networkGraph.selector
       .select('g#nodes')
       .selectAll('g.node')
@@ -112,7 +112,7 @@ export class NodeGraph {
   /**
    * Render node graph.
    */
-  render() {
+  render(): void {
     // console.log('Update node graph');
 
     this._nodeGraphShape.render();
