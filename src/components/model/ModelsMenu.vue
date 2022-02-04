@@ -7,7 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width: 300px">
+      <v-card flat style="min-width: 300px" tile>
         <span v-if="state.content == null">
           <v-list dense>
             <v-list-item

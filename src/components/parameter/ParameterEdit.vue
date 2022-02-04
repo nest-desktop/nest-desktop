@@ -31,8 +31,8 @@
                     v-for="action in item.actions"
                   >
                     <v-switch
-                      :value="action.value()"
                       :color="state.color"
+                      :value="action.value()"
                       dense
                       hide-details
                       v-if="action.id === 'switch'"
@@ -59,7 +59,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6" class="py-0">
+              <v-col class="py-0" cols="6">
                 <v-text-field
                   hide-details
                   label="default"
@@ -67,16 +67,16 @@
                   v-model="state.options.value"
                 />
               </v-col>
-              <v-col cols="6" class="py-0">
+              <v-col class="py-0" cols="6">
                 <v-text-field
-                  v-model="state.options.unit"
                   hide-details
                   label="unit"
+                  v-model="state.options.unit"
                 />
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="4" class="py-0">
+              <v-col class="py-0" cols="4">
                 <v-text-field
                   hide-details
                   label="min"
@@ -84,7 +84,7 @@
                   v-model="state.options.min"
                 />
               </v-col>
-              <v-col cols="4" class="py-0">
+              <v-col class="py-0" cols="4">
                 <v-text-field
                   hide-details
                   label="step"
@@ -93,7 +93,7 @@
                   v-model="state.options.step"
                 />
               </v-col>
-              <v-col cols="4" class="py-0">
+              <v-col class="py-0" cols="4">
                 <v-text-field
                   hide-details
                   label="max"
@@ -141,7 +141,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn @click="generateValues" small outlined v-text="'generate'" />
+            <v-btn @click="generateValues" outlined small v-text="'generate'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -242,8 +242,8 @@
                 :max="state.options.max || 1"
                 :min="state.options.min || 0"
                 :persistent-hint="state.message.length > 0"
-                :rules="rules"
                 :readonly="state.options.readonly || false"
+                :rules="rules"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
                 :value="state.value"
@@ -262,8 +262,8 @@
                     <v-row class="mx-0 py-1">
                       <v-col class="text-center" cols="2">
                         <v-icon
-                          :small="state.options.iconSize === 'small'"
                           :large="state.options.iconSize === 'large'"
+                          :small="state.options.iconSize === 'small'"
                           right
                           v-text="
                             state.options.rules[0].includes('info')
@@ -292,8 +292,8 @@
                     <v-icon
                       :color="color"
                       class="slider-icon"
-                      v-text="'mdi-minus'"
                       v-show="!state.options.readonly"
+                      v-text="'mdi-minus'"
                     />
                   </v-btn>
                 </template>
@@ -310,8 +310,8 @@
                     <v-icon
                       :color="color"
                       class="slider-icon"
-                      v-text="'mdi-plus'"
                       v-show="!state.options.readonly"
+                      v-text="'mdi-plus'"
                     />
                   </v-btn>
                   <v-text-field

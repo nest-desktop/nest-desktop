@@ -4,13 +4,7 @@
       style="position: absolute; right: 82px; top: 0; z-index: 1000"
       v-if="state.code.project.app.config.devMode"
     >
-      <v-chip
-        class="ma-1"
-        label
-        outlined
-        small
-        v-text="state.code.shortHash"
-      />
+      <v-chip class="ma-1" label outlined small v-text="state.code.shortHash" />
     </span>
     <v-card flat tile>
       <v-row class="full-height" no-gutters>
@@ -143,7 +137,7 @@ export default Vue.extend({
 }
 
 .CodeMirror {
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   font-family: monospace;
   font-size: 12px;
 }

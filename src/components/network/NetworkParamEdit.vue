@@ -28,7 +28,7 @@
         />
         <v-menu :close-on-content-click="false" :max-height="600" offset-y>
           <template #activator="{ on, attrs }">
-            <v-btn small v-text="'custom'" v-bind="attrs" v-on="on" />
+            <v-btn small v-bind="attrs" v-on="on" v-text="'custom'" />
           </template>
 
           <v-card :width="280">
@@ -100,7 +100,7 @@
                   multiple
                   v-model="state.displayNodes"
                 >
-                  <draggable v-model="state.network.nodes" handle=".handle">
+                  <draggable handle=".handle" v-model="state.network.nodes">
                     <transition-group>
                       <v-list-item
                         :key="'node' + node.idx"
@@ -138,8 +138,8 @@
                   v-model="state.displayConnections"
                 >
                   <draggable
-                    v-model="state.network.connections"
                     handle=".handle"
+                    v-model="state.network.connections"
                   >
                     <transition-group>
                       <v-list-item
@@ -251,7 +251,7 @@
                     @contextmenu="e => showConnectionMenu(e, connection)"
                     no-gutters
                   >
-                    <v-col cols="3" class="py-0" style="text-align: center">
+                    <v-col class="py-0" cols="3" style="text-align: center">
                       <v-btn
                         :color="connection.source.view.color"
                         :dark="projectView.config.coloredToolbar"
@@ -283,7 +283,7 @@
                         <v-icon v-text="'mdi-arrow-right-bold-outline'" />
                       </v-btn>
                     </v-col>
-                    <v-col cols="3" class="py-0" style="text-align: center">
+                    <v-col class="py-0" cols="3" style="text-align: center">
                       <v-btn
                         :color="connection.target.view.color"
                         :dark="projectView.config.coloredToolbar"

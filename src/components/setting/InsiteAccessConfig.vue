@@ -3,15 +3,15 @@
     <v-card outlined>
       <v-card-subtitle v-text="'Insite Access'" />
       <v-card-text>
-        <v-tooltip top open-delay="300">
+        <v-tooltip open-delay="300" top>
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               @change="updateInsiteAccessConfig"
               hide-details
               label="URL of Insite access"
               placeholder="http://127.0.0.1:8080"
-              v-model="state.app.backends.insiteAccess.url"
               v-bind="attrs"
+              v-model="state.app.backends.insiteAccess.url"
               v-on="on"
             />
           </template>
@@ -24,7 +24,7 @@
         <div class="my-1">
           <span v-if="state.insiteVersion && state.insiteVersion !== 'unknown'">
             <label>Response: </label>
-            <v-tooltip right open-delay="300">
+            <v-tooltip open-delay="300" right>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip color="green" dark small v-bind="attrs" v-on="on">
                   <v-avatar left>
@@ -39,7 +39,7 @@
 
           <span v-else-if="state.insiteVersion === 'unknown'">
             <label>Response: </label>
-            <v-tooltip right open-delay="300">
+            <v-tooltip open-delay="300" right>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip color="gray" dark small v-bind="attrs" v-on="on">
                   <v-avatar left>
@@ -56,7 +56,7 @@
 
           <span v-else>
             <label>Response: </label>
-            <v-tooltip right open-delay="300">
+            <v-tooltip open-delay="300" right>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip color="red" dark small v-bind="attrs" v-on="on">
                   <v-avatar left>

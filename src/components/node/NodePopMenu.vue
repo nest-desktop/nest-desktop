@@ -68,8 +68,8 @@
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
                 <v-checkbox
-                  :input-value="state[item.value]"
                   :color="state.node.view.color"
+                  :input-value="state[item.value]"
                 />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'switch'">
@@ -126,12 +126,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteNode"
-              outlined
-              small
-              v-text="'delete'"
-            />
+            <v-btn @click="deleteNode" outlined small v-text="'delete'" />
           </v-card-actions>
         </span>
       </v-card>

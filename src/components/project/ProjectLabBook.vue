@@ -88,7 +88,7 @@
                 <v-card class="ml-1" flat tile>
                   <v-card-title class="pa-0">
                     <v-row no-gutters>
-                      <v-col cols="4" class="py-0">
+                      <v-col class="py-0" cols="4">
                         <v-btn
                           :color="connection.source.view.color"
                           :dark="projectView.config.coloredToolbar"
@@ -113,7 +113,7 @@
                           <v-icon v-text="'mdi-arrow-right-bold-outline'" />
                         </v-btn>
                       </v-col>
-                      <v-col cols="4" class="py-0" style="text-align: center">
+                      <v-col class="py-0" cols="4" style="text-align: center">
                         <v-btn
                           :color="connection.target.view.color"
                           :dark="projectView.config.coloredToolbar"

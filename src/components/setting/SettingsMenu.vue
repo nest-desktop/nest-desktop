@@ -7,7 +7,7 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width: 300px">
+      <v-card flat style="min-width: 300px" tile>
         <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
@@ -30,7 +30,10 @@
         <span v-if="state.content === 'databasesReset'">
           <v-card-title v-text="'Are you sure to reset all databases?'" />
 
-          <v-card-text> The databases (stored in the NEST Desktop cookies of your browser) will be reset. </v-card-text>
+          <v-card-text>
+            The databases (stored in the NEST Desktop cookies of your browser)
+            will be reset.
+          </v-card-text>
 
           <v-card-actions>
             <v-btn @click="reset" outlined small text>

@@ -2,7 +2,7 @@
   <div class="NodePosition">
     <v-menu :close-on-content-click="false" v-if="state.node.spatial.positions">
       <template #activator="{ on, attrs }">
-        <v-card height="40" tile flat v-bind="attrs" v-on="on">
+        <v-card flat height="40" tile v-bind="attrs" v-on="on">
           <v-card-text class="px-2" style="padding: 10px 0">
             <NodePositionTitle
               :key="state.node.spatial.hash"
@@ -36,8 +36,8 @@
             <v-col class="py-0" cols="4">
               <v-slider
                 :tick-labels="[2, 3]"
-                min="2"
                 max="3"
+                min="2"
                 ticks="always"
                 v-model="state.node.spatial.positions.numDimensions"
               />

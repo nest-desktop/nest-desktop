@@ -24,7 +24,7 @@
       </v-btn>
 
       <v-spacer />
-      <v-menu offset-y left>
+      <v-menu left offset-y>
         <template #activator="{ on, attrs }">
           <v-btn class="mt-1" outlined small v-bind="attrs" v-on="on">
             <v-icon left v-text="'mdi-plus'" />
@@ -112,8 +112,8 @@
                               "
                               close
                               disable-lookup
-                              outlined
                               label
+                              outlined
                               small
                               style="margin: 1px 2px"
                               v-bind="attrs"
@@ -139,8 +139,8 @@
                         <v-chip
                           :color="item.color"
                           class="mx-2"
-                          outlined
                           label
+                          outlined
                           small
                           v-text="
                             projectView.app.config.devMode

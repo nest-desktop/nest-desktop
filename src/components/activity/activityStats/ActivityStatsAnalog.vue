@@ -57,8 +57,8 @@
       </v-card-title>
       <v-data-table
         :headers="state.headers"
-        :items="state.items"
         :items-per-page="15"
+        :items="state.items"
         :loading="state.loading"
         dense
         fixed-header
@@ -67,7 +67,7 @@
       >
         <template v-if="state.items.length > 1" #[`body.append`]="{ headers }">
           <tr>
-            <td v-for="(header, i) in headers" :key="i">
+            <td :key="idx" v-for="(header, idx) in headers">
               <div v-if="header.value === 'id'" v-text="'All'" />
               <div v-else>
                 <span>&#956;</span>
@@ -117,7 +117,10 @@ export default Vue.extend({
      */
     const update = () => {
       state.items = [];
-      if (state.selectedRecords == null && state.activity.state.records.length > 0) {
+      if (
+        state.selectedRecords == null &&
+        state.activity.state.records.length > 0
+      ) {
         state.selectedRecords = state.activity.state.records[0];
       }
       if (state.activity != undefined) {

@@ -10,7 +10,7 @@
     >
       <v-col :cols="6">
         <span v-if="state.connection.sourceSlice.visible">
-          <div class="mb-1 mx-1" style="font-size:12px" v-text="'Source'" />
+          <div class="mb-1 mx-1" style="font-size: 12px" v-text="'Source'" />
           <v-row no-gutters>
             <v-col
               :cols="4"
@@ -34,7 +34,7 @@
       </v-col>
       <v-col :cols="6">
         <span v-if="state.connection.targetSlice.visible">
-          <div class="mb-1 mx-1" style="font-size:12px" v-text="'Target'" />
+          <div class="mb-1 mx-1" style="font-size: 12px" v-text="'Target'" />
           <v-row no-gutters>
             <v-col
               :cols="4"

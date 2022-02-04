@@ -7,8 +7,8 @@
     >
       <v-card-title>
         <v-text-field
-          label="label"
           hide-details
+          label="label"
           v-model="modelView.state.model.label"
         />
       </v-card-title>
@@ -30,9 +30,9 @@
                 class="ma-1"
                 outlined
                 small
-                v-text="recordable.id"
                 v-bind="attrs"
                 v-on="on"
+                v-text="recordable.id"
               />
             </template>
             {{ recordable.label }}
@@ -52,10 +52,10 @@
         >
           <template #[`item.value`]="{ item }">
             <v-text-field
+              @change="modelView.updateProject()"
               dense
               hide-details
               v-model="item.value"
-              @change="modelView.updateProject()"
             />
           </template>
           <template #[`item.unit`]="{ item }">

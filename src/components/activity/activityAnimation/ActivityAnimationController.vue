@@ -96,7 +96,7 @@
                     @click="state.graph.incrementFrameSpeed()"
                     icon
                   >
-                    <v-icon v-text="'mdi-fast-forward'" :rotate="180" />
+                    <v-icon :rotate="180" v-text="'mdi-fast-forward'" />
                   </v-btn>
                 </v-col>
 

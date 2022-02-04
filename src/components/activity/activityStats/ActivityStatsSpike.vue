@@ -15,8 +15,8 @@
       </v-card-title> -->
       <v-data-table
         :headers="state.headers"
-        :items="state.items"
         :items-per-page="15"
+        :items="state.items"
         :loading="state.loading"
         dense
         fixed-header
@@ -25,7 +25,7 @@
       >
         <template #[`body.append`]="{ headers }">
           <tr>
-            <td v-for="(header, i) in headers" :key="i">
+            <td :key="idx" v-for="(header, idx) in headers">
               <div v-if="header.value === 'id'" v-text="'All'" />
               <div v-else-if="header.value === 'count'">
                 <span>&#931;</span>

@@ -5,15 +5,15 @@
         {{ modelView.state.doc.title || modelView.state.modelId }}
         <v-chip
           class="mx-4"
-          small
           outlined
+          small
           v-if="modelView.state.defaults.element_type"
           v-text="modelView.state.defaults.element_type"
         />
         <v-chip
           class="mx-4"
-          small
           outlined
+          small
           v-if="'synapse_model' in modelView.state.defaults"
           v-text="'synapse'"
         />

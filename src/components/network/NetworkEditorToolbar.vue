@@ -62,8 +62,8 @@
             label
             outlined
             small
-            v-text="state.network.state.hash.slice(0, 6)"
             v-if="state.network.state.hash"
+            v-text="state.network.state.hash.slice(0, 6)"
           />
         </span>
 
@@ -87,15 +87,15 @@
                 <v-spacer />
                 <v-btn
                   @click="state.dialog = false"
-                  small
                   outlined
+                  small
                   text
                   v-text="'close'"
                 />
                 <v-btn
                   @click="deleteNetwork"
-                  small
                   outlined
+                  small
                   v-text="'delete'"
                 />
               </v-card-actions>

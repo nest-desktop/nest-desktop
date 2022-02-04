@@ -26,8 +26,8 @@
       :width="state.width"
       app
       left
-      mobile-breakpoint="64"
       mini-variant-width="64"
+      mobile-breakpoint="64"
       permanent
       v-click-outside="
         () => {
@@ -91,9 +91,9 @@
 
                 <v-list-item v-if="appConfig.devMode">
                   <v-checkbox
+                    dense
                     off-icon="mdi-theme-light-dark"
                     on-icon="mdi-theme-light-dark"
-                    dense
                     v-model="app.darkMode"
                   />
                 </v-list-item>
@@ -127,7 +127,7 @@
                     </v-list-item-group>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title v-text="'Help'" class="text-h1" />
+                    <v-list-item-title class="text-h1" v-text="'Help'" />
                   </v-list-item-content>
                 </v-list-item>
 

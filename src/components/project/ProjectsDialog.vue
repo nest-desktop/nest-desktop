@@ -1,14 +1,14 @@
 <template>
   <div class="ProjectsDialog">
-    <v-dialog v-model="dialogState.open" max-width="1024">
+    <v-dialog max-width="1024" v-model="dialogState.open">
       <span v-if="dialogState.action === 'import'">
         <ProjectsImport />
       </span>
       <span v-else>
         <v-card>
           <v-card-title
-            v-text="`Select projects to ${dialogState.action}.`"
             v-if="dialogState.content.length !== 0"
+            v-text="`Select projects to ${dialogState.action}.`"
           />
 
           <v-card-text>

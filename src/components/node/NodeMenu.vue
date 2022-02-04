@@ -126,12 +126,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteNode"
-              outlined
-              small
-              v-text="'delete'"
-            />
+            <v-btn @click="deleteNode" outlined small v-text="'delete'" />
           </v-card-actions>
         </span>
       </v-card>
