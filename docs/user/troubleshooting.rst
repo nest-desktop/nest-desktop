@@ -66,7 +66,7 @@ How can I check NEST Simulator?
 **Project**
 
 How can I make a new project?
-  In the navigation sidebar you will find a list item :guilabel:`+ new Project` to create a new project.
+  In the navigation sidebar you will find a list item :guilabel:`+ New project` to create a new project.
 
 How can I duplicate a project?
   In the project toolbox you will find a button to clone project.
