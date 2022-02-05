@@ -18,7 +18,7 @@ import os
 
 project = 'NEST Desktop'
 author = 'Sebastian Spreizer'
-copyright = '2021, Sebastian Spreizer'
+copyright = '2016-2022, Sebastian Spreizer'
 
 
 # -- General configuration ---------------------------------------------------
