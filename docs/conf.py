@@ -28,8 +28,12 @@ copyright = '2016-2022, Sebastian Spreizer'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.intersphinx'
 ]
+
+# Ensure unique targets
+autosectionlabel_prefix_document = True
 
 root_doc = 'contents'
 
