@@ -168,7 +168,7 @@ export class ActivityAnimationLayer {
       const record = this._state.records.find(
         (record: NodeRecord) => record.id === 'V_m'
       );
-      this._state.record = record != null ? record : this._state._records[0];
+      this._state.record = record != null ? record : this._state.records[0];
     }
   }
 
