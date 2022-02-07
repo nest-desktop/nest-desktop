@@ -226,10 +226,10 @@ export class ProjectStore {
   /**
    * Delete project in database and then update the list.
    */
-  async deleteProject(projectId: string): Promise<any> {
+  async deleteProject(project: Project): Promise<any> {
     this.consoleLog('Delete project');
-    return this._db.delete(projectId).then(() => {
-      this.removeFromList(projectId);
+    return this._db.delete(project.docId).then(() => {
+      this.removeFromList(project.id);
     });
   }
 
@@ -278,7 +278,7 @@ export class ProjectStore {
     this.consoleLog('Import project: ' + project.name);
     project.clean();
 
-    const promise: Promise<any> = project.doc._id
+    const promise: Promise<any> = project.docId
       ? this._db.update(project)
       : this._db.create(project);
     return promise.then(() => this.addToList(project));

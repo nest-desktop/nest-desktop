@@ -105,6 +105,10 @@ export class Project {
     this._doc = value;
   }
 
+  get docId(): string {
+    return this._doc ? this._doc._id : undefined;
+  }
+
   get id(): string {
     return this._id;
   }
@@ -217,7 +221,7 @@ export class Project {
    * Delete this project from the list and database.
    */
   async delete(): Promise<any> {
-    return this._app.project.deleteProject(this._id);
+    return this._app.project.deleteProject(this);
   }
 
   /**

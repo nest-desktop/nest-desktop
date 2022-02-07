@@ -59,6 +59,10 @@ export class Model extends Config {
     return this._doc;
   }
 
+  get docId(): string {
+    return this._doc ? this._doc._id : undefined;
+  }
+
   get elementType(): string {
     return this._elementType;
   }
@@ -261,7 +265,7 @@ export class Model extends Config {
    * Delete model object from model list in app.
    */
   async delete(): Promise<any> {
-    return this._app.model.deleteModel(this._doc._id);
+    return this._app.model.deleteModel(this.docId);
   }
 
   /**
