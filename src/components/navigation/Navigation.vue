@@ -196,7 +196,6 @@ export default {
   },
   setup() {
     const state = reactive({
-      darkNav: false,
       dialog: false,
       miniVariant: true,
       navList: '',
