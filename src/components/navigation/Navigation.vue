@@ -79,9 +79,16 @@
                 <template v-if="appConfig.devMode">
                   <v-tooltip right>
                     <template #activator="{ on, attrs }">
-                      <v-list-item v-bind="attrs" v-on="on">
+                      <v-list-item
+                        @click="app.updateConfig({ devMode: false })"
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      >
                         <v-list-item-icon v-bind="attrs" v-on="on">
-                          <v-icon v-text="'mdi-dev-to'" />
+                          <v-list-item-group class="nav-item">
+                            <v-icon dense v-text="'mdi-dev-to'" />
+                          </v-list-item-group>
                         </v-list-item-icon>
                       </v-list-item>
                     </template>
@@ -89,13 +96,19 @@
                   </v-tooltip>
                 </template>
 
-                <v-list-item v-if="appConfig.devMode">
-                  <v-checkbox
-                    dense
-                    off-icon="mdi-theme-light-dark"
-                    on-icon="mdi-theme-light-dark"
-                    v-model="app.darkMode"
-                  />
+                <v-list-item
+                  @click="app.darkMode = !app.darkMode"
+                  dense
+                  v-if="appConfig.devMode"
+                >
+                  <v-list-item-icon>
+                    <v-list-item-group class="nav-item">
+                      <v-icon dense v-text="'mdi-theme-light-dark'" />
+                    </v-list-item-group>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="'Dark mode'" />
+                  </v-list-item-content>
                 </v-list-item>
 
                 <v-list-item
