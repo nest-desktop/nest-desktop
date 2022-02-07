@@ -61,7 +61,7 @@ You can import models from various sources,
 e.g. a file you uploaded from you computer, a file from a GitHub repository or from a specified URL.
 
 .. note::
-  Model files should be formatted in JSON.
+   Model files should be formatted in JSON.
 
 When you select ``Import from GitHub``, choose an element type
 and then a JSON file of your desired model group which includes all functions of synapse currents.
@@ -97,8 +97,7 @@ Then start the simulation by clicking on the :guilabel:`Simulate` button.
 You can use the code editor to see changes in activity.
 
 .. note::
-
-  It is important to disable the simulation with Insite.
+   It is important to disable the simulation with Insite.
 
 .. image:: ../_static/img/screenshots/model-activity.png
 

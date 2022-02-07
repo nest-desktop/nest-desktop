@@ -49,7 +49,9 @@ A typical value for the connection probability in local cortical networks is 10%
 1. Set up a large-enough population of excitatory neurons, based on the standard LIF model.
    Establish random synaptic connections among neurons.
 
-   .. note:: There are several different options to wire up a network randomly (see https://www.nest-simulator.org/connection-management).
+   .. note::
+      There are several different options to wire up a network randomly
+      (see https://www.nest-simulator.org/connection-management).
 
    Find a meaningful way to monitor neuronal activity in the network, both on the level of individual neurons (membrane potentials and spike trains), and on the level of the whole population (PSTH, as a proxy for the EEG).
    Characterize the type of activity that you observe.

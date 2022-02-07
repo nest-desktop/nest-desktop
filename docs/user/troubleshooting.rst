@@ -22,10 +22,9 @@ It has two possible reasons:
   e.g. ``localhost:5000`` in a web browser to check if it is running again.
 
 .. note::
+   For advanced users: Check in a terminal whether NEST Simulator is running:
 
-  For advanced users: Check in a terminal whether NEST Simulator is running:
-
-  ``curl localhost:5000``
+   ``curl localhost:5000``
 
 .. _internal-server-error:
 
@@ -122,18 +121,22 @@ How can I empty a network?
 How can I create nodes?
   In the network graph you can click with the right mouse button,
   then a selector panel appears to select the element type of the new node.
+  See `create nodes in usage guide <usage.html#create-nodes>`__.
 
 How can I connect nodes?
   In the network graph you can click on the connector of a source node,
   then move the mouse towards the target node and click on the target node.
+  See `connect nodes in usage guide <usage.html#connect-nodes>`__.
 
 How can I connect a node with multiple nodes?
   Hold down the :guilabel:`ALT` key when clicking on the target nodes.
+  See `the note in connect nodes in usage guide <usage.html#connect-nodes>`__.
 
 How can I (un)select a node / a connection?
   When a node or connection is selected you can press :guilabel:`ESC` to unselect it
   or in network graph you can click on another node
   or connection to select it (and to remove the selection of the former one).
+
   Click on the background area of the network graph
   or on the selected entry in the network controller to unselect a node or connection.
   An other method to (un)select is to click on the node label
@@ -152,9 +155,15 @@ How can I delete node / connection?
   by clicking with the right mouse button on the element graph in the network graph
   or on the colored toolbar in the network controller.
 
+How can I change node model?
+  You can click on model name twice and
+  it opens a dropdown of models.
+  See `select model and parameters in usage guide <usage.html#select-model-and-parameters>`__.
+
 How can I modify parameters?
   You will find a list of parameters in the network controller.
   If they are not visible, click on the model selection to check the visibility of the parameters.
+  See `select model and parameters in usage guide <usage.html#select-model-and-parameters>`__.
 
 How can I reset all parameter values?
   In the context menu of a node or connection you will find the method
@@ -219,8 +228,8 @@ Where can I change the time resolution of the kernel?
   You will find the time resolution for the NEST Simulator in the kernel controller.
 
 .. warning::
-
-   Please verify that the resolution of the recorders are larger than the resolution in the kernel!
+   Please verify that the resolution of the recorders are equal to
+   or larger than the resolution in the kernel!
 
 Where can I change the seed?
   You can find the seed value in the kernel controller.
@@ -229,7 +238,7 @@ How can I activate the seed randomization?
   You can find an option to activate the seed randomization in the kernel controller.
 
 How can I find the Python script code of the simulation?
-  On the right side you can find a code symbol :guilabel:`<\>` opening the code editor.
+  On the right side you can find a code symbol :guilabel:`<\\>` opening the code editor.
 
 ||||
 
@@ -238,10 +247,10 @@ How can I find the Python script code of the simulation?
 **Activity**
 
 How can I download the activity data of a single recorder?
-  In the context menu of the recorder you will find a menu option to download the events of this recorder.
+  In the context menu of the recorder you will find a menu option to download events of this recorder.
 
 How can I download activity data of all recorders?
-  In the projects dialog to download projects you can find options to download the activity of projects.
+  In the projects dialog to download projects you can find options to download network activities of projects.
 
 ||||
 

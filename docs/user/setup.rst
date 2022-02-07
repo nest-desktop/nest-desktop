@@ -25,12 +25,14 @@ See instructions below for details.
 
 ||||
 
+.. _via-docker-compose-linux-windows-apple:
+
 Via Docker Compose |linux| |windows| |apple|
 --------------------------------------------
 
 .. image:: ../_static/img/logo/docker-compose-logo.png
   :width: 240px
-  :target: #via-docker
+  :target: #via-docker-compose-linux-windows-apple
 
 |
 
@@ -86,8 +88,8 @@ You can use NEST Desktop in the web browser at http://localhost:8000.
 :doc:`Now we can start constructing networks for the simulation! <usage>`
 
 .. note::
-  For more information (like running the containers without root password, etc.),
-  please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
+   For more information (like running the containers without root password, etc.),
+   please read the full documentation of `NEST Desktop Docker <https://github.com/nest-desktop/nest-desktop-docker>`__.
 
 |
 
@@ -118,9 +120,9 @@ For more information read the full documentation of Singularity
   export PATH=$PATH:$PWD/bin/
 
 .. note::
-  You will have to repeat this every time you end a terminal session.
-  If you like to register this command permanently,
-  please proceed according to the `full documentation <https://github.com/nest-desktop/nest-desktop-singularity>`__.
+   You will have to repeat this every time you end a terminal session.
+   If you like to register this command permanently,
+   please proceed according to the `full documentation <https://github.com/nest-desktop/nest-desktop-singularity>`__.
 
 3. Build the Singularity images (it will ask for sudo password):
 
@@ -129,8 +131,8 @@ For more information read the full documentation of Singularity
   nest-desktop-singularity build
 
 .. note::
-  This command (and the following ones) need to be executed inside the folder where the container files are located,
-  i.e. the `nest-desktop-singularity` folder.
+   This command (and the following ones) need to be executed inside the folder
+   where the container files are located, i.e. the `nest-desktop-singularity` folder.
 
 4. Start the Singularity instances of NEST Desktop and NEST Simulator:
 
