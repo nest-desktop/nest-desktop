@@ -867,9 +867,7 @@ export class Project {
     // check if it has analog signal activities.
     this._state.hasAnalogActivities =
       activities.length > 0
-        ? activities.some((activity: Activity) =>
-            activity.hasAnalogData()
-          )
+        ? activities.some((activity: Activity) => activity.hasAnalogData())
         : false;
 
     // check if it has spike activities.
