@@ -281,6 +281,8 @@ and :math:`\sigma` (standard deviation) of analog signal values.
 
 |br|
 
+.. _manage-projects:
+
 Manage projects
 ---------------
 
