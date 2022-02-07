@@ -4,7 +4,7 @@ Project section
 The project section manages all project-related tasks.
 
 Sidebar
-*******
+-------
 
 A click on the project switches to the project area.
 If you are already in that area, this button toggles the list of projects,
@@ -14,7 +14,7 @@ e.g create, rename, arrange or delete them.
 More details can be found in the :ref:`usage guide <user/usage:manage projects>`.
 
 Main content
-************
+------------
 
 In the project area, the main content consists of an area,
 where you can switch between the network graph of the project,
