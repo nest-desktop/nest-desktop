@@ -868,7 +868,7 @@ export class Project {
     this._state.hasAnalogActivities =
       activities.length > 0
         ? activities.some((activity: Activity) =>
-            activity.hasNeuronAnalogData()
+            activity.hasAnalogData()
           )
         : false;
 
