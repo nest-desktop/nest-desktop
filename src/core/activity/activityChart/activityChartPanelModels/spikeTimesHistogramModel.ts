@@ -12,9 +12,9 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         id: 'binSize',
         input: 'tickSlider',
         label: 'bin size',
-        ticks: [5, 10, 25, 50, 100, 250, 500, 1000],
+        ticks: [5, 10, 20, 50, 100, 200, 500, 1000],
         unit: 'ms',
-        value: 25,
+        value: 20,
       },
     ];
     this.panel.xaxis = 1;
