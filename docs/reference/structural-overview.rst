@@ -21,7 +21,9 @@ whereas the right column (3) displays the controller for content modification.
 Navigation sidebar
 ******************
 
-The navigation sidebar contains the following icon buttons, which lead to the pages described below.
+The navigation sidebar is the main navigation element and available in (nearly) every view.
+It contains the following icon buttons, which lead to the pages described below.
+
 For a lot of these buttons, there are further options available via right click.
 
 Project
