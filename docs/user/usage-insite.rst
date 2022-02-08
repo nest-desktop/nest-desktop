@@ -17,32 +17,33 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 |br|
 
-.. image:: ../_static/img/screenshots/settings-insite.png
-  :align: left
-  :target: #check-if-insite-is-running
-
 .. _check-if-insite-is-running:
 
 **Check if Insite is running**
+
+.. image:: ../_static/img/screenshots/settings-insite.png
+  :align: left
+  :target: #check-if-insite-is-running
 
 In the settings page you can check whether the Insite backend is running.
 
 |br|
 
-.. image:: ../_static/img/screenshots/simulate-with-insite.png
-  :align: right
-  :target: #enable-simulation-with-insite
-
 .. _enable-simulation-with-insite:
 
 **Enable simulation with Insite**
 
-| After successfully receiving a ping from the Insite Access
-| node of the backend, you can check the item
-| :guilabel:`Simulate with Insite` in the context menu of the :guilabel:`Simulate`
-| button (opens by clicking with the right mouse button).
+.. image:: ../_static/img/screenshots/simulate-with-insite.png
+  :align: right
+  :target: #enable-simulation-with-insite
+
+After successfully receiving a ping from the Insite Access node of the backend,
+you can check the item :guilabel:`Simulate with Insite` in the context menu of
+the :guilabel:`Simulate` button (opens by clicking with the right mouse button).
 
 |br|
+
+.. _script-code-for-simulation-with-insite:
 
 **Script code for simulation with Insite**
 
