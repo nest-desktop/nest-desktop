@@ -43,6 +43,8 @@ the :guilabel:`Simulate` button (opens by clicking with the right mouse button).
 
 |br|
 
+.. _script-code-for-simulation-with-insite:
+
 **Script code for simulation with Insite**
 
 The Insite module has to be loaded in the NEST kernel.
