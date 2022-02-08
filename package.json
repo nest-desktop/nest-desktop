@@ -10,7 +10,7 @@
     "test:e2e": "vue-cli-service test:e2e --env firefox --headless",
     "lint": "vue-cli-service lint",
     "docs:serve": "python3 -m http.server --directory ./docs/_build/html",
-    "docs:build": "cd docs; rm -rf _build; make html",
+    "docs:build": "cd docs; make clean; make html",
     "electron:build": "vue-cli-service electron:build --publish never",
     "electron:serve": "vue-cli-service electron:serve",
     "electron:test": "vue-cli-service test:unit tests/unit/electron.spec.js",

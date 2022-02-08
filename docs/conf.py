@@ -29,7 +29,7 @@ copyright = '2016-2022, Sebastian Spreizer'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosectionlabel',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
 ]
 
 # Ensure unique targets
