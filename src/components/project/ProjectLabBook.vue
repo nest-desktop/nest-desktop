@@ -1,5 +1,9 @@
 <template>
-  <div class="projectLabBook" v-if="projectView.state.project">
+  <div
+    class="projectLabBook"
+    style="height: calc(70vh - 48px); overflow-y: auto"
+    v-if="projectView.state.project"
+  >
     <v-container>
       <span class="d-flex flex-md-row">
         <div
@@ -177,10 +181,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.projectLabBook .v-sheet {
-  border-color: #e0e0e0 !important;
-  border-width: 1px 1px 1px 0;
-}
 .projectLabBook .v-card {
   border-width: 0;
 }
