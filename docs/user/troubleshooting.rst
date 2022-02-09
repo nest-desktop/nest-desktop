@@ -121,16 +121,16 @@ How can I empty a network?
 How can I create nodes?
   In the network graph you can click with the right mouse button,
   then a selector panel appears to select the element type of the new node.
-  See `create nodes in usage guide <usage.html#create-nodes>`__.
+  Please see section `'Create nodes' in the usage guide <usage.html#create-nodes>`__.
 
 How can I connect nodes?
   In the network graph you can click on the connector of a source node,
   then move the mouse towards the target node and click on the target node.
-  See `connect nodes in usage guide <usage.html#connect-nodes>`__.
+  Please see section `'Connect nodes' in the usage guide <usage.html#connect-nodes>`__.
 
 How can I connect a node with multiple nodes?
   Hold down the :guilabel:`ALT` key when clicking on the target nodes.
-  See `the note in connect nodes in usage guide <usage.html#connect-nodes>`__.
+  Please see `the note in 'Connect nodes' in the usage guide <usage.html#connect-nodes>`__.
 
 How can I (un)select a node / a connection?
   When a node or connection is selected you can press :guilabel:`ESC` to unselect it
@@ -155,15 +155,15 @@ How can I delete node / connection?
   by clicking with the right mouse button on the element graph in the network graph
   or on the colored toolbar in the network controller.
 
-How can I change node model?
+How can I change the node model?
   You can click on model name twice and
   it opens a dropdown of models.
-  See `select model and parameters in usage guide <usage.html#select-model-and-parameters>`__.
+  Please see `'Select model and parameters' in the usage guide <usage.html#select-model-and-parameters>`__.
 
 How can I modify parameters?
   You will find a list of parameters in the network controller.
   If they are not visible, click on the model selection to check the visibility of the parameters.
-  See `select model and parameters in usage guide <usage.html#select-model-and-parameters>`__.
+  Please see `'Select model and parameters' in the usage guide <usage.html#select-model-and-parameters>`__.
 
 How can I reset all parameter values?
   In the context menu of a node or connection you will find the method
