@@ -4,9 +4,9 @@ import { ActivityChartPanel } from '../activityChartPanel';
 export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel);
+    this.activityType = 'spike';
     this.id = 'spikeTimesPanelModel';
     this.label = 'spike times';
-    this.activityType = 'spike';
 
     this.init();
   }

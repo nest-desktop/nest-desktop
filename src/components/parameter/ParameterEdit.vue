@@ -186,6 +186,20 @@
               />
             </template>
 
+            <template v-if="state.options.input === 'select'">
+              <v-select
+                :color="state.color"
+                :items="state.options.items"
+                :label="label()"
+                :readonly="state.options.readonly"
+                @change="paramChange()"
+                class="ma-1 mt-3"
+                dense
+                hide-details
+                v-model="state.value"
+              />
+            </template>
+
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider

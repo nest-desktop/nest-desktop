@@ -5,11 +5,10 @@ import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.id = 'CVISIHistogram';
     this.icon = 'mdi-chart-bar';
+    this.id = 'CVISIHistogram';
     this.label = 'CV of ISI';
     this.panel.xaxis = 3;
-
     this.params = [
       {
         input: 'tickSlider',
@@ -36,19 +35,9 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     // console.log('Add histogram data of inter-spike interval')
     this.data.push({
       activityIdx: activity.idx,
-      type: 'histogram',
-      source: 'x',
       histfunc: 'count',
-      legendgroup: 'spikes' + activity.idx,
-      name: 'Histogram of CV(ISI) in' + activity.recorder.view.label,
       hoverinfo: 'y',
-      showlegend: false,
-      opacity: 0.6,
-      xbins: {
-        start,
-        end,
-        size,
-      },
+      legendgroup: 'spikes' + activity.idx,
       marker: {
         color: activity.recorder.view.color,
         line: {
@@ -56,7 +45,17 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
+      name: 'Histogram of CV(ISI) in' + activity.recorder.view.label,
+      opacity: 0.6,
+      showlegend: false,
+      source: 'x+y',
+      type: 'histogram',
       x,
+      xbins: {
+        end,
+        size,
+        start,
+      },
     });
   }
 

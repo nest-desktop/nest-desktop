@@ -7,10 +7,9 @@ import { NodeRecord } from '../../../node/nodeRecord';
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.id = 'analogSignalHistogram';
     this.icon = 'mdi-chart-bar';
+    this.id = 'analogSignalHistogram';
     this.panel.xaxis = 2;
-
     this.params = [
       {
         id: 'bins',
@@ -83,7 +82,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     this.data.push({
       activityIdx: record.activity.idx,
       histfunc: 'count',
-      hoverinfo: 'y',
+      hoverinfo: 'x+y',
       legendgroup: record.groupId,
       marker: {
         color: record.color,
@@ -101,9 +100,9 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       x: record.values,
       xaxis: 'x' + this.panel.xaxis,
       xbins: {
-        start,
         end,
         size,
+        start,
       },
     });
   }

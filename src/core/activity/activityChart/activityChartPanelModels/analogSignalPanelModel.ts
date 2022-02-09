@@ -5,9 +5,9 @@ import { NodeRecord } from '../../../node/nodeRecord';
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel);
+    this.activityType = 'analog';
     this.id = 'analogSignalPanelModel';
     this.label = 'analog signals';
-    this.activityType = 'analog';
 
     this.init(model);
   }

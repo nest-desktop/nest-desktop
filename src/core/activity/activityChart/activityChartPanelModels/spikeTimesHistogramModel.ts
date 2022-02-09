@@ -5,8 +5,9 @@ import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.id = 'spikeTimesHistogram';
     this.icon = 'mdi-chart-bar';
+    this.id = 'spikeTimesHistogram';
+    this.panel.xaxis = 1;
     this.params = [
       {
         id: 'binSize',
@@ -17,7 +18,6 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         value: 20,
       },
     ];
-    this.panel.xaxis = 1;
   }
 
   /**
@@ -33,19 +33,9 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      type: 'histogram',
-      source: 'x',
       histfunc: 'count',
+      hoverinfo: 'x+y',
       legendgroup: 'spikes' + activity.idx,
-      name: 'Histogram of spike times in' + activity.recorder.view.label,
-      hoverinfo: 'y',
-      showlegend: false,
-      opacity: 0.6,
-      xbins: {
-        start,
-        end,
-        size,
-      },
       marker: {
         color: activity.recorder.view.color,
         line: {
@@ -53,7 +43,17 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
+      name: 'Histogram of spike times in' + activity.recorder.view.label,
+      opacity: 0.6,
+      showlegend: false,
+      source: 'x+y',
+      type: 'histogram',
       x,
+      xbins: {
+        end,
+        size,
+        start,
+      },
     });
   }
 

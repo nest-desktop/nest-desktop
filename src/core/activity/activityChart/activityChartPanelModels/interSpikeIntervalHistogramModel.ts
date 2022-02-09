@@ -7,11 +7,10 @@ import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.id = 'interSpikeIntervalHistogram';
     this.icon = 'mdi-chart-bar';
+    this.id = 'interSpikeIntervalHistogram';
     this.label = 'inter-spike interval';
     this.panel.xaxis = 2;
-
     this.params = [
       {
         id: 'binSize',
@@ -40,7 +39,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     this.data.push({
       activityIdx: activity.idx,
       histfunc: 'count',
-      hoverinfo: 'y',
+      hoverinfo: 'x-y',
       legendgroup: 'spikes' + activity.idx,
       marker: {
         color: activity.recorder.view.color,
@@ -56,9 +55,9 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
       type: 'histogram',
       x,
       xbins: {
-        start,
         end,
         size,
+        start,
       },
     });
   }

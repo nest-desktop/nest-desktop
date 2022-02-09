@@ -3,13 +3,15 @@ import * as math from 'mathjs';
 import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { ActivityChartGraph } from './activityChartGraph';
 
-import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
 import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
-import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
-import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
-import { SpikeSendersHistogramModel } from './activityChartPanelModels/spikeSendersHistogramModel';
-import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
+import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
 import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
+import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
+import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
+import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
+import { SenderSpikeCountPlotModel } from './activityChartPanelModels/senderSpikeCountPlotModel';
+import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
+import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
 
 export class ActivityChartPanel {
   // private static readonly _name = 'ActivityGraphPanel';
@@ -27,26 +29,12 @@ export class ActivityChartPanel {
     },
   };
   private _models: any[] = [
-    // {
-    //   activityType: 'analog',
-    //   component: InputAnalogSignalPlotPanel,
-    //   id: 'input-analog-signal-plot',
-    //   icon: 'mdi-chart-bell-curve-cumulative',
-    //   label: 'input analog signals',
-    // },
-    // {
-    //   activityType: 'analog',
-    //   component: NeuronAnalogSignalPlotPanel,
-    //   id: 'neuron-analog-signal-plot',
-    //   icon: 'mdi-chart-bell-curve-cumulative',
-    //   label: 'neuron analog signals',
-    // },
     {
       activityType: 'analog',
       component: AnalogSignalPlotModel,
       id: 'analogSignalPlot',
       icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'analog signals',
+      label: 'Analog signals',
     },
     {
       activityType: 'analog',
@@ -60,28 +48,21 @@ export class ActivityChartPanel {
       component: SpikeTimesRasterPlotModel,
       id: 'spikeTimesRasterPlot',
       icon: 'mdi-chart-scatter-plot',
-      label: 'spike times',
+      label: 'Spike times',
     },
     {
       activityType: 'spike',
       component: SpikeTimesHistogramModel,
       id: 'spikeTimesHistogram',
       icon: 'mdi-chart-bar',
-      label: 'spike times',
-    },
-    {
-      activityType: 'spike',
-      component: SpikeSendersHistogramModel,
-      id: 'spikeSendersHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'spike senders',
+      label: 'Spike times',
     },
     {
       activityType: 'spike',
       component: InterSpikeIntervalHistogramModel,
       id: 'interSpikeIntervalHistogram',
       icon: 'mdi-chart-bar',
-      label: 'inter-spike interval',
+      label: 'Inter-spike interval',
     },
     {
       activityType: 'spike',
@@ -89,6 +70,27 @@ export class ActivityChartPanel {
       id: 'CVISIHistogram',
       icon: 'mdi-chart-bar',
       label: 'CV of ISI',
+    },
+    {
+      activityType: 'spike',
+      component: SenderSpikeCountPlotModel,
+      id: 'senderSpikeCountPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Spike count in each sender',
+    },
+    {
+      activityType: 'spike',
+      component: SenderMeanISIPlotModel,
+      id: 'senderMeanISIPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Mean ISI in each sender',
+    },
+    {
+      activityType: 'spike',
+      component: SenderCVISIPlotModel,
+      id: 'senderCVISIPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'CV ISI in each sender',
     },
   ];
   private _model: ActivityChartPanelModel;
