@@ -256,7 +256,7 @@ export class Activity {
     });
     let csv = eventKeys.join(',') + '\n';
     csv += this._events.times
-      .map((_, idx: number) =>
+      .map((_: any, idx: number) =>
         eventKeys.map(key => this._events[key][idx]).join(',')
       )
       .join('\n');
