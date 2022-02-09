@@ -1,7 +1,10 @@
+import * as Plotly from 'plotly.js-dist-min';
+
 import { ActivityChartPanel } from './activityChartPanel';
 import { Project } from '../../project/project';
 
 export class ActivityChartGraph {
+  private _config: any = {};
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
@@ -9,11 +12,43 @@ export class ActivityChartGraph {
   private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
+  private _state: any = {
+    dialog: false,
+    gd: undefined,
+    ref: undefined,
+  };
 
   constructor(project: Project, panels: any = []) {
     this._project = project;
+    this._config = {
+      autoResize: true,
+      autoSizable: true,
+      displaylogo: false,
+      displayModeBar: true,
+      editable: true,
+      modeBarButtons: [
+        [
+          {
+            name: 'Download plot',
+            // @ts-ignore
+            icon: Plotly.Icons.camera,
+            click: (gd: any) => {
+              this._state.gd = gd;
+              this._state.dialog = true;
+            },
+          },
+          // 'toImage',
+        ],
+        ['zoom2d', 'pan2d'],
+        ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
+        ['hoverClosestCartesian', 'hoverCompareCartesian'],
+      ],
+      scrollZoom: true,
+    };
+
     const darkMode: boolean = this._project.app.darkMode;
     this._layout = {
+      autosize: true,
       barmode: 'overlay',
       font: {
         color: darkMode ? 'white' : '#121212',
@@ -29,9 +64,12 @@ export class ActivityChartGraph {
         x: 0,
       },
     };
+
     this._panel = new ActivityChartPanel(this);
 
     this.init(panels);
+
+    window.addEventListener('resize', () => this.update());
   }
 
   get data(): any[] {
@@ -84,6 +122,10 @@ export class ActivityChartGraph {
     return this._project;
   }
 
+  get state(): any {
+    return this._state;
+  }
+
   /**
    * Add panel.
    */
@@ -118,6 +160,8 @@ export class ActivityChartGraph {
     }
 
     this.updateVisiblePanelsLayout();
+
+    this.react();
   }
 
   initPanels(): void {
@@ -157,6 +201,8 @@ export class ActivityChartGraph {
       this.updateData(panel);
       this.updateLayoutPanel(panel);
     });
+
+    this.react();
   }
 
   /**
@@ -214,6 +260,30 @@ export class ActivityChartGraph {
     this.panelsVisible.forEach((panel: ActivityChartPanel) =>
       panel.updatePanelLayout()
     );
+  }
+
+  /**
+   * Create new Plot of the DOM reference.
+   */
+  newPlot(ref: string): void {
+    this._state.ref = ref;
+    Plotly.newPlot(this._state.ref, this._data, this._layout, this._config);
+  }
+
+  /**
+   * React plots to new updates.
+   */
+  react(): void {
+    if (this._state.ref == null) return;
+    Plotly.react(this._state.ref, this._data, this._layout);
+  }
+
+  /**
+   * Download image of the activity chart graph.
+   */
+  downloadImage(options: any): void {
+    if (this._state.gd == null) return;
+    Plotly.downloadImage(this._state.gd, options);
   }
 
   /**
