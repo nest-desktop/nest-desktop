@@ -13,13 +13,13 @@ export class Activity {
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
-  private _state: UnwrapRef<any>
+  private _state: UnwrapRef<any>;
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
     this._state = reactive({
       records: [],
-    })
+    });
     this.init(activity);
   }
 
@@ -230,14 +230,37 @@ export class Activity {
    * Export activity (node indices, positions and events).
    */
   export(): void {
-    this._recorder.network.project.app.download(this, 'activity');
+    this._recorder.network.project.app.download(
+      JSON.stringify(this.toJSON()),
+      'activity'
+    );
   }
 
   /**
-   * Export events.
+   * Export events to file in json format.
    */
   exportEvents(): void {
-    this._recorder.network.project.app.download(this._events, 'events');
+    this._recorder.network.project.app.download(
+      JSON.stringify(this._events),
+      'events'
+    );
+  }
+
+  /**
+   * Export events to file in csv format.
+   */
+  exportEventsCSV(): void {
+    const eventKeys = ['senders', 'times'];
+    Object.keys(this._events).forEach((eventKey: string) => {
+      if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);
+    });
+    let csv = eventKeys.join(',') + '\n';
+    csv += this._events.times
+      .map((_, idx: number) =>
+        eventKeys.map(key => this._events[key][idx]).join(',')
+      )
+      .join('\n');
+    this._recorder.network.project.app.download(csv, 'events', 'csv');
   }
 
   /**

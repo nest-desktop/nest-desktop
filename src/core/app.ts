@@ -135,17 +135,20 @@ export class App extends Config {
   /*
    * Download data.
    */
-  download(data: any, filenameSuffix: string = ''): void {
+  download(
+    data: string,
+    filenameSuffix: string = '',
+    format: string = 'json'
+  ): void {
     consoleLog(this, 'Download data');
-    const dataJSON: string = JSON.stringify(data);
     const element: any = document.createElement('a');
     element.setAttribute(
       'href',
-      'data:text/json;charset=UTF-8,' + encodeURIComponent(dataJSON)
+      `data:text/${format};charset=UTF-8,${encodeURIComponent(data)}`
     );
     element.setAttribute(
       'download',
-      `nest-desktop-${filenameSuffix}-${this.datetime}.json`
+      `nest-desktop-${filenameSuffix}-${this.datetime}.${format}`
     );
     element.style.display = 'none';
     document.body.appendChild(element);
