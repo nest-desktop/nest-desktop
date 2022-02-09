@@ -322,7 +322,7 @@ In the projects menu, you can find methods to reload, export, import, delete
 or reset single or multiple projects.
 
 .. note::
-   Unless you click on the save button, the project is not stored in the database of the web page cookie cookie
+   Unless you click on the save button, the project is not stored in the database of the web page cookie
    and is lost when you reload the page!
 
    An important remark is that it stores only projects with neuronal networks in that database,
