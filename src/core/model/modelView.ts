@@ -193,10 +193,10 @@ export class ModelView {
     if (elementType !== 'neuron') {
       return;
     }
-    const node: Node = this._state.project.network.nodes[1];
-    node.modelId = this._state.modelId;
-    node.params = this._state.model.params;
-    node.params.forEach((param: any) => (param.state.visible = true));
+    const neuron: Node = this._state.project.network.neurons[0];
+    neuron.modelId = this._state.modelId;
+    neuron.params = this._state.model.params;
+    neuron.params.forEach((param: any) => (param.state.visible = true));
     this._state.project.code.generate();
   }
 
@@ -337,9 +337,11 @@ export class ModelView {
           });
       })
       .catch(() => {
-        this._state.doc.blocks = [{
-          content: `Sorry, there is no help for '${this._state.modelId}'.`,
-        }];
+        this._state.doc.blocks = [
+          {
+            content: `Sorry, there is no help for '${this._state.modelId}'.`,
+          },
+        ];
       });
   }
 
