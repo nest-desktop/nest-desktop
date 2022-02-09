@@ -184,7 +184,7 @@ export class Parameter extends Config {
   }
 
   set value(value: any) {
-    this._value = this.isNumeric(value) ? parseFloat(value) : value;
+    this._value = value;
   }
 
   get visible(): boolean {
@@ -196,13 +196,6 @@ export class Parameter extends Config {
    */
   isConstant(): boolean {
     return this._type.id === 'constant';
-  }
-
-  /**
-   * Check if this parameter is a number.
-   */
-  isNumeric(value: any): boolean {
-    return /^-?\d+$/.test(value);
   }
 
   /**
