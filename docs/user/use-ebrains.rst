@@ -20,8 +20,7 @@ NEST Desktop is available as a prototype online.
 |
 
 .. note::
-
-  You need an **EBRAINS** account to access NEST Desktop.
+   You need an **EBRAINS** account to access NEST Desktop.
 
 
 ||||

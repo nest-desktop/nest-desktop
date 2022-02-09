@@ -73,7 +73,8 @@ the goal is to understand which factors contribute a bias in the activation of o
 1. Consider now an alternative decision making system, which is based on a EII scenario.
    You should devise a strategy to study its behavior similar to the one you developed for the EEI model.
 
-   .. note:: Inhibitory synapses have opposite effects as compared to excitatory ones.
+   .. note::
+      Inhibitory synapses have opposite effects as compared to excitatory ones.
 
 ||||
 

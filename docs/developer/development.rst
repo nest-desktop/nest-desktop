@@ -10,8 +10,8 @@ First, prepare the development environment with the required packages.
 The Live Development Server is now serving at ``http://localhost:8080``.
 
 .. note::
-
-  For more information on how to prepare the environment for the development, please check the :doc:`guide <preparation>`.
+   For more information on how to prepare the environment for the development,
+   please check the :doc:`guide <preparation>`.
 
 |
 
@@ -28,7 +28,7 @@ The recommended method is to install it in the user's home directory using the c
   nest-desktop start
 
 .. note::
-  Do not forget to start NEST Simulator.
+   Do not forget to start NEST Simulator.
 
 |
 

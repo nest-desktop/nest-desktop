@@ -28,9 +28,8 @@ EBRAINS provides two OKD infrastructures
   * https://okd-dev.hbp.eu for the development.
   * https://okd.hbp.eu for the production.
 
-.. Note::
-
-  I strongly recommend to use the development page for testing.
+.. note::
+   I strongly recommend to use the development page for testing.
 
 |
 

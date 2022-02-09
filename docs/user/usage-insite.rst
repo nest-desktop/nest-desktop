@@ -9,11 +9,10 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 
 .. note::
-
-  Simulation with Insite needs to be run with Insite docker images
-  ``nest-module`` and ``access-node``.
-  The best method is to use Docker Compose, which also deploys NEST Desktop and Insite.
-  For more information, please read the :doc:`deployment guide of Insite </deployer/deploy-insite>`.
+   Simulation with Insite needs to be run with Insite docker images
+   ``nest-module`` and ``access-node``.
+   The best method is to use Docker Compose, which also deploys NEST Desktop and Insite.
+   For more information, please read the :doc:`deployment guide of Insite </deployer/deploy-insite>`.
 
 |br|
 
