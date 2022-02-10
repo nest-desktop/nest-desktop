@@ -118,6 +118,32 @@
           <ModelDocumentation :id="state.node.modelId" />
         </span>
 
+        <span v-if="state.content === 'eventsExport'">
+          <v-card-text class="py-1 px-0">
+            <v-list dense>
+              <v-list-item @click="exportEvents('json')">
+                <v-list-item-icon>
+                  <v-icon v-text="'mdi-code-json'" />
+                </v-list-item-icon>
+                <v-list-item-title v-text="'Export events to JSON file'" />
+              </v-list-item>
+
+              <v-list-item @click="exportEvents('csv')">
+                <v-list-item-icon>
+                  <v-icon v-text="'mdi-file-delimited-outline'" />
+                </v-list-item-icon>
+                <v-list-item-title v-text="'Export events to CSV file'" />
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+          </v-card-actions>
+        </span>
+
         <span v-if="state.content === 'nodeDelete'">
           <v-card-title v-text="'Are you sure to delete this node?'" />
 
@@ -246,14 +272,14 @@ export default Vue.extend({
           icon: 'mdi-download',
           id: 'eventsExport',
           onClick: () => {
-            state.node.activity.exportEvents();
-            closeMenu();
+            state.content = 'eventsExport';
           },
           show: () =>
             state.node.activity &&
             state.node.activity.hasEvents() &&
             state.node.model.isRecorder(),
-          title: 'Download events',
+          title: 'Export events',
+          append: true,
         },
         {
           icon: 'mdi-trash-can-outline',
@@ -346,6 +372,18 @@ export default Vue.extend({
     };
 
     /**
+     * Export events.
+     */
+    const exportEvents = (format: string = 'json') => {
+      if (format === 'json') {
+        state.node.activity.exportEvents();
+      } else if (format === 'csv') {
+        state.node.activity.exportEventsCSV();
+      }
+      closeMenu();
+    };
+
+    /**
      * Update states.
      */
     const updateStates = () => {
@@ -376,6 +414,7 @@ export default Vue.extend({
     return {
       backMenu,
       deleteNode,
+      exportEvents,
       hideAllParams,
       nodeColorChange,
       paramChange,

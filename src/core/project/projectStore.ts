@@ -123,7 +123,7 @@ export class ProjectStore {
       return projectData;
     });
     this._app.download(
-      projectsJSON,
+      JSON.stringify(projectsJSON),
       projectsJSON.length === 1 ? 'project' : 'projects'
     );
   }
@@ -298,7 +298,7 @@ export class ProjectStore {
         activity.toJSON()
       );
     }
-    this._app.download(projectData, 'project');
+    this._app.download(JSON.stringify(projectData), 'project');
   }
 
   /**

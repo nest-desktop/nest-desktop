@@ -148,7 +148,7 @@ export class ModelStore {
     this.consoleLog('Export models');
     const modelsJSON: any[] = models.map((model: Model) => model.toJSON());
     this._app.download(
-      modelsJSON,
+      JSON.stringify(modelsJSON),
       modelsJSON.length === 1 ? 'model' : 'models'
     );
   }
