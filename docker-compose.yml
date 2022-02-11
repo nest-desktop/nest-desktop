@@ -4,7 +4,7 @@ services:
   nest-desktop:
     image: docker-registry.ebrains.eu/nest/nest-desktop:3.1
     ports:
-      - '8000:80'
+      - '8000:8000'
 
   nest-simulator:
     image: docker-registry.ebrains.eu/nest/nest-simulator:3.2
