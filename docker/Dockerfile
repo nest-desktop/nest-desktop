@@ -13,6 +13,13 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy the built app from the build folder to the NGINX serve folder
 COPY ./nest_desktop/app/ /usr/share/nginx/html/
 
+# Run nginx as non-root
+RUN chmod -R 777 /var/cache/nginx
+
+RUN touch /var/run/nginx.pid && \
+    chmod -R 777 /var/run/nginx.pid
+
+EXPOSE 8000
 
 # Copy entrypoint.sh and make it executable
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
