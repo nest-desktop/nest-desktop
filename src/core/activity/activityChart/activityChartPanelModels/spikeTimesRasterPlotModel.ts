@@ -18,16 +18,16 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     // console.log('Update data for raster plot.');
     this.data.push({
       activityIdx: activity.idx,
-      mode: 'markers',
-      type: 'scattergl',
       hoverinfo: 'x',
       legendgroup: 'spikes' + activity.idx,
+      marker: {
+        color: activity.recorder.view.color,
+        size: 5,
+      },
+      mode: 'markers',
       name: 'Spikes of ' + activity.recorder.view.label,
       showlegend: true,
-      marker: {
-        size: 5,
-        color: activity.recorder.view.color,
-      },
+      type: 'scattergl',
       x: activity.events.times,
       y: activity.events.senders,
     });

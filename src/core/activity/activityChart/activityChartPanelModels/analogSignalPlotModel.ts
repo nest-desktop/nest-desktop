@@ -6,8 +6,8 @@ import { NodeRecord } from '../../../node/nodeRecord';
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.id = 'analogSignalPlot';
     this.icon = 'mdi-chart-bell-curve-cumulative';
+    this.id = 'analogSignalPlot';
     this.panel.xaxis = 1;
   }
 
@@ -115,7 +115,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
     this.data.push({
       activityIdx: record.activity.idx,
-      hoverinfo: 'all',
+      hoverinfo: 'x+y',
       legendgroup: record.groupId,
       line,
       mode: 'lines',
@@ -210,7 +210,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     // average line
     this.data.push({
       activityIdx: record.activity.idx,
-      hoverinfo: 'all',
+      hoverinfo: 'x+y',
       legendgroup: record.groupId,
       line,
       mode: 'lines',
