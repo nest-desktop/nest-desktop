@@ -93,7 +93,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         recordId: record.id,
         showlegend: true,
         type: 'scattergl',
-        visible: 'legendonly',
+        visible: this.state.visibleThreshold,
         x: [0.1, record.activity.currenttime],
         y: [thresholds[0], thresholds[0]], // gets only first threshold, TODO: find better solution
       });
@@ -123,7 +123,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       recordId: record.id,
       showlegend: true,
       type: 'scattergl',
-      visible: true,
+      visible: this.state.visible,
       x: record.times,
       y: record.values,
     });
@@ -157,6 +157,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         recordId: record.id,
         showlegend: idx === 0,
         type: 'scattergl',
+        visible: this.state.visible,
         x: d.x,
         y: d.y,
       });
@@ -198,6 +199,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       recordId: record.id,
       showlegend: false,
       type: 'scattergl',
+      visible: this.state.visible,
       x,
       y,
     });
@@ -218,6 +220,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       recordId: record.id,
       showlegend: false,
       type: 'scattergl',
+      visible: this.state.visible,
       x,
       y,
     });

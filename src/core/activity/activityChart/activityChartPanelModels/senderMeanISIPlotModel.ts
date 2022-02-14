@@ -77,6 +77,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
       opacity: 0.6,
       showlegend: false,
       type: this.plotType,
+      visible: this.state.visible,
       x,
       y,
     });

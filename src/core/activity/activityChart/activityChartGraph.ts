@@ -15,6 +15,7 @@ export class ActivityChartGraph {
   private _state: any = {
     dialog: false,
     gd: undefined,
+    plot: undefined,
     ref: undefined,
   };
 
@@ -164,6 +165,29 @@ export class ActivityChartGraph {
     this.react();
   }
 
+  /**
+   * Initialize Plotly events.
+   */
+  initEvents(): void {
+    this._state.plot.on('plotly_legendclick', (plot: any) => {
+      setTimeout(() => {
+        if (plot != null && plot.data != null) {
+          plot.data.forEach((d: any) => {
+            const panel = this._panels[d.panelIdx];
+            if (d.id === 'threshold') {
+              panel.model.state.visibleThreshold = d.visible;
+            } else {
+              panel.model.state.visible = d.visible;
+            }
+          });
+        }
+      }, 1000);
+    });
+  }
+
+  /**
+   * Initialize panels.
+   */
   initPanels(): void {
     this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
   }
@@ -267,7 +291,15 @@ export class ActivityChartGraph {
    */
   newPlot(ref: string): void {
     this._state.ref = ref;
-    Plotly.newPlot(this._state.ref, this._data, this._layout, this._config);
+    Plotly.newPlot(
+      this._state.ref,
+      this._data,
+      this._layout,
+      this._config
+    ).then(plot => {
+      this._state.plot = plot;
+      this.initEvents();
+    });
   }
 
   /**

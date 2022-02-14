@@ -5,7 +5,6 @@ import { ActivityChartPanel } from './activityChartPanel';
 import { NodeRecord } from '../../node/nodeRecord';
 
 export abstract class ActivityChartPanelModel {
-  // private static readonly _name = 'ActivityGraphPanel';
   private _activities: Activity[] = [];
   private _activityType: string = '';
   private _data: any[] = [];
@@ -30,6 +29,8 @@ export abstract class ActivityChartPanelModel {
         end: 0,
         start: 0,
       },
+      visible: true,
+      visibleThreshold: 'legendonly',
     });
   }
 
