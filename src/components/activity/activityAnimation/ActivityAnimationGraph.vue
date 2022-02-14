@@ -2,7 +2,7 @@
   <div
     class="activityAnimationGraph"
     ref="activityAnimationGraph"
-    style="width: 100%; height: calc(100vh - 48px)"
+    style="height: calc(100vh - 48px); width: 100%"
   />
 </template>
 
