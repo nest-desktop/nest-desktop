@@ -21,7 +21,7 @@
   "dependencies": {
     "@mdi/font": "^6.5",
     "@vue/composition-api": "^1.4",
-    "axios": "^0.25",
+    "axios": "^0.26",
     "codemirror": "^5.65",
     "core-js": "^3.21",
     "d3": "^7.3",
@@ -80,7 +80,7 @@
     "colors": "~1.4.0",
     "electron": "^17.0.0",
     "electron-devtools-installer": "^3.2",
-    "eslint": "^8.8",
+    "eslint": "^8.9",
     "eslint-plugin-prettier": "^4.0",
     "eslint-plugin-vue": "^8.4",
     "prettier": "^2.5",
