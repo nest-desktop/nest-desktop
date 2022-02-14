@@ -212,12 +212,12 @@ export class ProjectStore {
         } else if (id) {
           this.project = this.getProject(id);
         } else {
-          this.createNewProject();
+          const name = 'Project ' + (this._state.projects.length + 1);
+          this.createNewProject({ name });
         }
         resolve(true);
       } catch {
         this.consoleLog('Error in project initialization');
-        // this.createNewProject();
         resolve(false);
       }
     });
@@ -228,9 +228,13 @@ export class ProjectStore {
    */
   async deleteProject(project: Project): Promise<any> {
     this.consoleLog('Delete project');
-    return this._db.delete(project.docId).then(() => {
+    if (project.docId) {
+      return this._db.delete(project.docId).finally(() => {
+        this.removeFromList(project.id);
+      });
+    } else {
       this.removeFromList(project.id);
-    });
+    }
   }
 
   /**
@@ -252,6 +256,7 @@ export class ProjectStore {
       const idx: number = this._state.projects
         .map((p: Project) => p.id)
         .indexOf(project.id);
+
       const newProject = new Project(this._app, doc);
       this._state.projects[idx] = project;
 
@@ -281,6 +286,7 @@ export class ProjectStore {
     const promise: Promise<any> = project.docId
       ? this._db.update(project)
       : this._db.create(project);
+
     return promise.then(() => this.addToList(project));
   }
 
@@ -292,6 +298,7 @@ export class ProjectStore {
     const project: Project = this._state.projects.find(
       (p: Project) => p.id === projectId
     );
+
     const projectData: any = project.toJSON();
     if (withActivities) {
       projectData.activities = project.activities.map((activity: Activity) =>
@@ -309,6 +316,7 @@ export class ProjectStore {
     const idx: number = this._state.projects
       .map((p: Project) => p.id)
       .indexOf(projectId);
+
     if (idx !== -1) {
       this._state.projects = this._state.projects
         .slice(0, idx)
