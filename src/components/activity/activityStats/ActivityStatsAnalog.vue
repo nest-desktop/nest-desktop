@@ -136,8 +136,8 @@ export default Vue.extend({
           const d: any = data[id];
           return {
             id,
-            mean: d.length === 0 ? NaN : d3.mean(d).toFixed(2),
-            std: d.length === 0 ? NaN : d3.deviation(d).toFixed(2),
+            mean: d.length > 0 ? d3.mean(d).toFixed(2) : NaN,
+            std: d.length > 0 ? d3.deviation(d).toFixed(2): NaN,
           };
         });
         state.activityHash = state.activity.hash;

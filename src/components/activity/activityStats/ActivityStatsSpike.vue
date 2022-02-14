@@ -33,7 +33,7 @@
               </div>
               <div v-else>
                 <span>&#956;</span>
-                = {{ mean(header.value).toFixed(2) }}
+                = {{ mean(header.value) }}
               </div>
             </td>
           </tr>
@@ -116,18 +116,25 @@ export default Vue.extend({
           times[sender].push(state.activity.events.times[idx]);
         });
         state.items = state.activity.nodeIds.map(id => {
-          const timesSorted: number[] = times[id].sort(
-            (a: number, b: number) => a - b
-          );
-          const isi: number[] = diff(timesSorted);
-          const isiMean: number = isi.length > 0 ? d3.mean(isi) : 0;
-          const isiStd: number = isi.length > 1 ? d3.deviation(isi) : 0;
+          let spikeTimes: number[] = times[id];
+          let isi: number[] = [];
+          let isiMean = NaN,
+            isiStd = NaN;
+          if (spikeTimes.length > 1) {
+            spikeTimes = spikeTimes.sort((a: number, b: number) => a - b);
+            isi = diff(spikeTimes);
+            isiMean = isi.length > 0 ? d3.mean(isi) : NaN;
+            isiStd = isi.length > 0 ? d3.deviation(isi) : NaN;
+          }
           return {
             id,
-            count: timesSorted.length,
-            meanISI: isiMean.toFixed(2),
-            stdISI: isiStd.toFixed(2),
-            cvISI: isiMean === 0 ? NaN : (isiStd / isiMean).toFixed(2),
+            count: spikeTimes.length,
+            meanISI: !isNaN(isiMean) ? isiMean.toFixed(2) : NaN,
+            stdISI: !isNaN(isiStd) ? isiStd.toFixed(2) : NaN,
+            cvISI:
+              !isNaN(isiMean) && !isNaN(isiStd)
+                ? (isiStd / isiMean).toFixed(2)
+                : NaN,
           };
         });
         state.activityHash = state.activity.hash;
@@ -140,7 +147,8 @@ export default Vue.extend({
     };
 
     const mean = (key: string) => {
-      return d3.mean(state.items.map(item => item[key]));
+      const mean: number = d3.mean(state.items.map(item => item[key]));
+      return mean != null ? mean.toFixed(2) : NaN;
     };
 
     onMounted(() => {
