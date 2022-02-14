@@ -34,7 +34,9 @@ export class ProjectDB extends DatabaseService {
    */
   async deleteProjects(projects: Project[]): Promise<any> {
     this.consoleLog('Delete projects');
-    const projectIds: string[] = projects.map((project: Project) => project.id);
+    const projectIds: string[] = projects.map(
+      (project: Project) => project.docId
+    );
     return this.deleteBulk(projectIds);
   }
 
