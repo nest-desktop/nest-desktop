@@ -278,6 +278,11 @@ export default Vue.extend({
         icon: 'mdi-chart-line',
       },
       {
+        id: 'model-f-i-curve',
+        name: 'F-I curve',
+        icon: 'mdi-chart-line',
+      },
+      {
         id: 'spike-activity',
         name: 'spike activity',
         icon: 'mdi-chart-scatter-plot',
