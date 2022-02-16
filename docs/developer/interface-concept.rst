@@ -8,9 +8,10 @@ Concept of the interface
 NEST Desktop consists of three segments with different purposes.
 
 .. figure:: ../_static/img/screenshots/program-overview_expanded.png
-   :scale: 25 %
-   :alt: NEST Desktop
    :align: center
+   :alt: NEST Desktop
+   :target: #general-layout-concept-of-the-interface
+   :width: 100%
 
    The layout of NEST Desktop with the three main areas (1) - (3).
 

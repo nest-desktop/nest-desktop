@@ -2,14 +2,14 @@ Structural Overview
 ===================
 
 General layout concept of the interface
-***************************************
+---------------------------------------
 
 NEST Desktop consists of three segments with different purposes.
 
 .. figure:: ../_static/img/screenshots/program-overview_expanded.png
-   :scale: 25 %
-   :alt: NEST Desktop
    :align: center
+   :alt: NEST Desktop
+   :width: 100%
 
    The layout of NEST Desktop with the three main areas (1) - (3).
 
@@ -19,7 +19,7 @@ whereas the right column (3) displays the controller for content modification.
 
 
 Navigation sidebar
-******************
+------------------
 
 The navigation sidebar is the main navigation element and available in (nearly) every view.
 It contains the following icon buttons, which lead to the pages described below.
@@ -42,7 +42,7 @@ containing a list of available projects and models, respectively.
 
 
 Main content
-************
+------------
 
 This area displays the main page content.
 In the project and model section, it contains a header bar with the possibility to select different sub-views
@@ -52,7 +52,7 @@ On the right side, it contains a sidebar (described below) to control and edit t
 
 
 Controller sidebar
-++++++++++++++++++
+------------------
 
 This sidebar allows to edit the content.
 A lot of its functions can also be found in the context menu of the main section.
