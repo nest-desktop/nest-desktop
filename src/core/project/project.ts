@@ -687,7 +687,7 @@ export class Project {
    */
   getAnalogSignalActivitiesInsite(nodePositions: any): void {
     this.consoleLog('Get analog signal activities from Insite');
-    this._app.backends.insiteAccess
+    this._app.backends.insiteAccess.instance
       .get('nest/multimeters/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
