@@ -652,11 +652,11 @@ export class Project {
   getSpikeActivitiesInsite(nodePositions: any): void {
     this.consoleLog('Get spike activities from insite');
     this._app.backends.insiteAccess.instance
-      .get('nest/spikedetectors/')
+      .get('nest/spikerecorders/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
           const activity: any = {
-            nodeCollectionId: data.spikedetectorId,
+            nodeCollectionId: data.spikerecorderId,
             nodeIds: data.nodeIds,
             nodePositions: [],
           };
