@@ -650,7 +650,7 @@ export class Project {
    * Get spike activities from Insite.
    */
   getSpikeActivitiesInsite(nodePositions: any): void {
-    this.consoleLog('Get spike activities from insite');
+    this.consoleLog('Get spike activities from Insite');
     this._app.backends.insiteAccess.instance
       .get('nest/spikerecorders/')
       .then((response: any) => {
