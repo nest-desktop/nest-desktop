@@ -15,6 +15,13 @@ export class ProjectCode extends Code {
     this._project = project;
     this._state = reactive({
       codeInsite: false,
+      blocks: [
+        'resetKernel',
+        'setKernel',
+        'createNodes',
+        'connectNodes',
+        'runSimulation',
+      ],
     });
   }
 
@@ -54,47 +61,61 @@ export class ProjectCode extends Code {
     const simulateWithInsite = this._project.app.project.view
       ? this._project.app.project.view.config.simulateWithInsite
       : false;
-    this._script = '';
-    this._script += this.importModules();
-    this._script += 'nest.ResetKernel()\n';
 
-    if (simulateWithInsite) {
-      this._script += '# "insitemodule" can only be loaded once.\n';
-      this._script += 'try:';
-      this._script += this._() + 'nest.Install("insitemodule")\n';
-      this._script += 'except:';
-      this._script += this._() + 'pass';
+    let script = '';
+    script += this.importModules();
+
+    if (this._state.blocks.includes('resetKernel')) {
+      script += 'nest.ResetKernel()\n';
     }
 
-    this._script += '\n\n# Simulation kernel\n';
-    this._script += this._project.simulation.code.setKernelStatus();
+    if (simulateWithInsite) {
+      script += '# "insitemodule" can only be loaded once.\n';
+      script += 'try:';
+      script += this._() + 'nest.Install("insitemodule")\n';
+      script += 'except:';
+      script += this._() + 'pass';
+    }
+
+    if (this._state.blocks.includes('setKernel')) {
+      script += '\n\n# Simulation kernel\n';
+      script += this._project.simulation.code.setKernelStatus();
+    }
 
     // this._script += '\n\n# Copy models\n';
     // this.project.models.forEach((model: Model) => this._script += model.code.copyModel());
 
-    this._script += '\n\n# Create nodes\n';
-    this._script += this._project.network.code.createNodes();
+    if (this._state.blocks.includes('createNodes')) {
+      script += '\n\n# Create nodes\n';
+      script += this._project.network.code.createNodes();
+    }
 
-    this._script += '\n\n# Connect nodes\n';
-    this._script += this._project.network.code.connectNodes();
+    if (this._state.blocks.includes('connectNodes')) {
+      script += '\n\n# Connect nodes\n';
+      script += this._project.network.code.connectNodes();
+    }
 
-    this._script += '\n\n# Run simulation\n';
-    this._script += this._project.simulation.code.simulate();
+    if (this._state.blocks.includes('runSimulation')) {
+      script += '\n\n# Run simulation\n';
+      script += this._project.simulation.code.simulate();
 
-    if (!simulateWithInsite && this._project.network.recorders.length > 0) {
-      this._script += '\n\n# Get IDs of recorded node\n';
-      this._script += this.defineGetNodeIds();
+      if (!simulateWithInsite && this._project.network.recorders.length > 0) {
+        script += '\n\n# Get IDs of recorded node\n';
+        script += this.defineGetNodeIds();
 
-      if (this._project.network.hasSpatialNodes()) {
-        this._script += '\n\n# Get node positions\n';
-        this._script += this.defineGetNodePositions();
+        if (this._project.network.hasSpatialNodes()) {
+          script += '\n\n# Get node positions\n';
+          script += this.defineGetNodePositions();
+        }
+
+        script += '\n\n# Collect response\n';
+        script += this.response();
+
       }
-
-      this._script += '\n\n# Collect response\n';
-      this._script += this.response();
     }
 
     this._state.codeInsite = simulateWithInsite;
+    this._script = script;
     this._hash = sha1(this._script);
   }
 
@@ -157,5 +178,53 @@ export class ProjectCode extends Code {
     }
     script += this.end() + '}';
     return script + '\n';
+  }
+
+  /**
+   * Export script to file.
+   */
+  export(format: string = 'py'): void {
+    let data: any;
+    if (format === 'py') {
+      data = this._script;
+    } else if (format === 'ipynb') {
+      const source: string[] = this._script
+        .split('\n')
+        .map((s: string) => s + '\n');
+
+      data = JSON.stringify(
+        {
+          cells: [
+            {
+              cell_type: 'code',
+              execution_count: null,
+              id: 'nest-desktop',
+              metadata: {},
+              outputs: [],
+              source,
+            },
+          ],
+          metadata: {
+            language_info: {
+              codemirror_mode: {
+                name: 'ipython',
+                version: 3,
+              },
+              file_extension: '.py',
+              mimetype: 'text/x-python',
+              name: 'python',
+              nbconvert_exporter: 'python',
+              pygments_lexer: 'ipython3',
+              version: '3.8.10',
+            },
+          },
+          nbformat: 4,
+          nbformat_minor: 5,
+        },
+        null,
+        '\t'
+      );
+    }
+    this._project.app.download(data, 'script', format);
   }
 }
