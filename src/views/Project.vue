@@ -211,10 +211,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div
-          style="width: 100%; padding-right: 64px"
-          v-if="projectView.state.toolOpened"
-        >
+        <div class="controller" v-if="projectView.state.toolOpened">
           <NetworkParamEdit
             :network="projectView.state.project.network"
             :projectId="projectView.state.projectId"
@@ -455,6 +452,13 @@ export default Vue.extend({
 </script>
 
 <style>
+.projectView .controller {
+  height: calc(100vh - 48px);
+  overflow-y: hidden;
+  padding-right: 64px;
+  width: 100%;
+}
+
 .projectView .nav-item-right {
   font-size: 9px;
   text-align: center;
@@ -470,12 +474,12 @@ export default Vue.extend({
   z-index: 10;
 }
 
-.rotate-90 {
-  transform: rotate(-90deg);
-}
-
 .projectView .tab-text {
   font-size: 10px;
   margin-bottom: 2px !important;
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
 }
 </style>
