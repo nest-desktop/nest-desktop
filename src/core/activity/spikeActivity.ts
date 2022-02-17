@@ -117,7 +117,7 @@ export class SpikeActivity extends Activity {
   override getActivityInsite(): void {
     // console.log('Get spike activity from Insite');
 
-    const path = `nest/spikedetectors/${this.nodeCollectionId}/spikes/?fromTime=${this.lastTime}`;
+    const path = `nest/spikerecorders/${this.nodeCollectionId}/spikes/?fromTime=${this.lastTime}`;
     this.project.app.backends.insiteAccess.instance
       .get(path)
       .then((response: any) => {
