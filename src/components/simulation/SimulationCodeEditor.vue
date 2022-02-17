@@ -1,24 +1,80 @@
 <template>
-  <div class="simulationCodeEditor" ref="simulationCodeEditor">
-    <span
-      style="position: absolute; right: 82px; top: 0; z-index: 1000"
-      v-if="state.code.project.app.config.devMode"
-    >
-      <v-chip class="ma-1" label outlined small v-text="state.code.shortHash" />
-    </span>
-    <v-card flat tile>
-      <v-row class="full-height" no-gutters>
-        <v-col>
-          <codemirror
-            :key="$vuetify.theme.dark"
-            :options="state.options"
-            :style="state.style"
-            @ready="onCmReady"
-            ref="codeMirror"
-            v-model="state.code.script"
-          />
-        </v-col>
+  <div
+    class="simulationCodeEditor"
+    ref="simulationCodeEditor"
+    style="height: calc(100vh - 48px)"
+  >
+    <v-toolbar dense flat height="42">
+      <v-row>
+        <v-btn-toggle
+          @change="state.code.generate()"
+          class="ma-2px"
+          color="light"
+          dense
+          group
+          multiple
+          v-model="state.code.state.blocks"
+        >
+          <v-tooltip :key="item.value" bottom v-for="item of state.blockItems">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn :value="item.value" dense text v-bind="attrs" v-on="on">
+                <span class="d-flex flex-column">
+                  <v-icon small v-text="item.icon" style="width:auto" />
+                  <span style="font-size: 7px" v-text="item.icontext" />
+                </span>
+              </v-btn>
+            </template>
+            <span v-text="item.text" />
+          </v-tooltip>
+        </v-btn-toggle>
+
+        <v-spacer />
+
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn fab small text v-bind="attrs" v-on="on">
+              <v-icon small v-text="'mdi-download'" />
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item
+              :key="item.value"
+              @click="state.code.export(item.value)"
+              v-for="item in state.fileFormatItems"
+            >
+              <v-list-item-icon class="mx-1 py-1">
+                <Icon :icon="item.icon" />
+              </v-list-item-icon>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-row>
+    </v-toolbar>
+
+    <v-card flat tile>
+      <span
+        style="position: absolute; right: 18px; top: 0; z-index: 1000"
+        v-if="state.code.project.app.config.devMode"
+      >
+        <v-chip
+          class="ma-1"
+          label
+          outlined
+          small
+          v-text="state.code.shortHash"
+        />
+      </span>
+
+      <codemirror
+        :key="$vuetify.theme.dark"
+        :options="state.options"
+        :style="state.style"
+        @ready="onCmReady"
+        class="ma-0"
+        ref="codeMirror"
+        v-model="state.code.script"
+      />
     </v-card>
   </div>
 </template>
@@ -32,10 +88,15 @@ import '@/assets/codemirror/addon/hint/pyNEST-hint';
 
 import { ProjectCode } from '@/core/project/projectCode';
 
+import { Icon } from '@iconify/vue2';
+import jupyterIcon from '@iconify-icons/logos/jupyter';
+import pythonIcon from '@iconify-icons/logos/python';
+
 export default Vue.extend({
   name: 'SimulationCodeEditor',
   components: {
     codemirror,
+    Icon,
   },
   props: {
     code: ProjectCode,
@@ -46,6 +107,50 @@ export default Vue.extend({
 
     const state = reactive({
       code: props.code as ProjectCode,
+      blockItems: [
+        {
+          icon: 'mdi-delete-empty-outline',
+          icontext: 'reset',
+          text: 'Reset kernel',
+          value: 'resetKernel',
+        },
+        {
+          icon: 'mdi-engine-outline',
+          icontext: 'kernel',
+          text: 'Set simulation kernel',
+          value: 'setKernel',
+        },
+        {
+          icon: 'mdi-shape',
+          icontext: 'create',
+          text: 'Create nodes',
+          value: 'createNodes',
+        },
+        {
+          icon: '$network',
+          icontext: 'connect',
+          text: 'Connect nodes',
+          value: 'connectNodes',
+        },
+        {
+          icon: 'mdi-play',
+          icontext: 'simulate',
+          text: 'Run Simulation',
+          value: 'runSimulation',
+        },
+      ],
+      fileFormatItems: [
+        {
+          icon: pythonIcon,
+          title: 'Python',
+          value: 'py',
+        },
+        {
+          icon: jupyterIcon,
+          title: 'Jupyter',
+          value: 'ipynb',
+        },
+      ],
       options: {
         autoCloseBrackets: true,
         cursorBlinkRate: 700,
@@ -103,7 +208,7 @@ export default Vue.extend({
      * Resize CodeMirror.
      */
     const resizeCodeMirror = () => {
-      const height = simulationCodeEditor.value.clientHeight;
+      const height = simulationCodeEditor.value.clientHeight - 43;
       const width = simulationCodeEditor.value.clientWidth;
       codeMirror.value.cminstance.setSize(width, height);
       updateTheme();
@@ -132,10 +237,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.simulationCodeEditor {
-  overflow: hidden;
-}
-
 .CodeMirror {
   border: 1px solid rgba(0, 0, 0, 0.12);
   font-family: monospace;
