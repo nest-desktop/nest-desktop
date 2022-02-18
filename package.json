@@ -78,7 +78,7 @@
     "chai": "^4.3",
     "chai-as-promised": "^7.1",
     "colors": "~1.4.0",
-    "electron": "^17.0.0",
+    "electron": "^17.0.1",
     "electron-devtools-installer": "^3.2",
     "eslint": "^8.9",
     "eslint-plugin-prettier": "^4.0",
@@ -92,7 +92,7 @@
     "vue-cli-plugin-vuetify": "^2.4",
     "vue-template-compiler": "^2.6",
     "vuetify-loader": "^1.7",
-    "webpack": "^5.68"
+    "webpack": "^5.69"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
