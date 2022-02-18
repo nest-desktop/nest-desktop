@@ -123,6 +123,7 @@
         </v-navigation-drawer>
 
         <div
+          class="controller"
           style="padding-right: 64px; width: 100%"
           v-if="modelView.state.tool && modelView.state.toolOpened"
         >
@@ -206,7 +207,7 @@
     <v-overlay
       :value="
         modelView.state.project.simulation.running &&
-        !projectView.config.simulateWithInsite
+        !projectView.state.project.code.state.codeInsite
       "
     >
       <v-progress-circular
@@ -349,6 +350,13 @@ export default Vue.extend({
 </script>
 
 <style>
+.modelView .controller {
+  height: calc(100vh - 48px);
+  overflow-y: hidden;
+  padding-right: 64px;
+  width: 100%;
+}
+
 .modelView .nav-item-right {
   font-size: 9px;
   text-align: center;

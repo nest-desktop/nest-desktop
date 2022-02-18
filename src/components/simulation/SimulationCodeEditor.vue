@@ -115,6 +115,12 @@ export default Vue.extend({
           value: 'resetKernel',
         },
         {
+          icon: 'mdi-debug-step-into',
+          icontext: 'insite',
+          text: 'Run Simulation with Insite',
+          value: 'runSimulationInsite',
+        },
+        {
           icon: 'mdi-engine-outline',
           icontext: 'kernel',
           text: 'Set simulation kernel',

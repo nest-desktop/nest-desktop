@@ -18,7 +18,7 @@ export class NodeCode extends Code {
   /**
    * Write script to create node.
    */
-  create(): string {
+  create(spec: any = {}): string {
     let script = '';
     script += `${this.label} = nest.Create("${this._node.modelId}"`;
     const addSizeInSpatial: boolean =
@@ -28,7 +28,7 @@ export class NodeCode extends Code {
     if (addSizeInSpatial && !this._node.model.isRecorder()) {
       script += `, ${this._node.size}`;
     }
-    const params: string = this.nodeParams();
+    const params: string = this.nodeParams(spec);
     if (params.length > 0) {
       script += `, params=${params}`;
     }
@@ -53,7 +53,7 @@ export class NodeCode extends Code {
   /**
    * Write script for node parameters.
    */
-  nodeParams(): string {
+  nodeParams(spec: any = {}): string {
     let script = '';
     if (this._node.params == undefined || this._node.params.length === 0) {
       return script;
@@ -72,7 +72,7 @@ export class NodeCode extends Code {
 
     if (
       this._node.model.elementType === 'recorder' &&
-      this._node.network.project.app.project.view.config.simulateWithInsite
+      spec.runSimulationInsite
     ) {
       params.push('"record_to": "insite"');
     }
