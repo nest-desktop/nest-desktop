@@ -10,20 +10,22 @@ export class ProjectCode extends Code {
   private _script: string;
   private _state: UnwrapRef<any>;
 
-  constructor(project: Project) {
+  constructor(project: Project, projectCode: any = {}) {
     super();
     this._project = project;
     this._state = reactive({
       codeInsite: false,
-      blocks: [
-        'importModules',
-        'importInsiteModule',
-        'resetKernel',
-        'setKernel',
-        'createNodes',
-        'connectNodes',
-        'runSimulation',
-      ],
+      blocks: projectCode.blocks
+        ? projectCode.blocks
+        : [
+            'importModules',
+            'importInsiteModule',
+            'resetKernel',
+            'setKernel',
+            'createNodes',
+            'connectNodes',
+            'runSimulation',
+          ],
     });
   }
 
@@ -114,7 +116,6 @@ export class ProjectCode extends Code {
 
         script += '\n\n# Collect response\n';
         script += this.response();
-
       }
     }
 
@@ -230,5 +231,9 @@ export class ProjectCode extends Code {
       );
     }
     this._project.app.download(data, 'script', format);
+  }
+
+  toJSON(): any {
+    return { blocks: this._state.blocks };
   }
 }
