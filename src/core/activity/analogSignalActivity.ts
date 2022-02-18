@@ -59,9 +59,7 @@ export class AnalogSignalActivity extends Activity {
    * Get activity from Insite.
    */
   override getActivityInsite(): void {
-    // console.log('Get analog signal activity from Insite');
     const attribute: string = 'V_m';
-
     const path = `nest/multimeters/${this.nodeCollectionId}/attributes/${attribute}/?fromTime=${this.lastTime}`;
     this.project.app.backends.insiteAccess.instance
       .get(path)

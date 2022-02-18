@@ -231,10 +231,10 @@ export class Network extends Config {
       source.setWeights(weight);
     }
 
-    // trigger network change
+    // Trigger network change.
     this.networkChanges();
 
-    // initialize activity graph
+    // Initialize activity graph.
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
       this._project.initActivityGraph();
@@ -270,10 +270,10 @@ export class Network extends Config {
     const idx: number = node.idx;
     this._nodes = this._nodes.slice(0, idx).concat(this.nodes.slice(idx + 1));
 
-    // trigger network change
+    // Trigger network change.
     this.networkChanges();
 
-    // initialize activity graph
+    // Initialize activity graph.
     this._project.initActivityGraph();
   }
 
@@ -293,10 +293,10 @@ export class Network extends Config {
       .slice(0, idx)
       .concat(this.connections.slice(idx + 1));
 
-    // trigger network change
+    // Trigger network change.
     this.networkChanges();
 
-    // initialize activity graph
+    // Initialize activity graph.
     this._project.initActivityGraph();
   }
 

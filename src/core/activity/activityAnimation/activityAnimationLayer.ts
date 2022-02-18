@@ -243,7 +243,7 @@ export class ActivityAnimationLayer {
    * Add empty frames.
    */
   addEmptyFrames(): void {
-    // Add empty frames if not existed
+    // Add empty frames if not existed.
     this._frames = [];
     for (let i = 0; i < this._graph.state.nSamples; i++) {
       this._frames.push({});
@@ -272,14 +272,14 @@ export class ActivityAnimationLayer {
       this._activity.nodeIds.indexOf(sender)
     );
 
-    // Add empty data (from individual recorder) in each frame
+    // Add empty data (from individual recorder) in each frame.
     this._frames.forEach((frame: any) => {
       Object.keys(events).forEach((eventKey: string) => {
         frame[eventKey] = [];
       });
     });
 
-    // Push values in data frames
+    // Push values in data frames.
     const sampleRate: number = this._graph.config.frames.sampleRate;
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);

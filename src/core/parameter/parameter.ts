@@ -215,7 +215,6 @@ export class Parameter extends Config {
   }
 
   toggleDisabled(): void {
-    // console.log('Toggle parameter disabled.');
     this._state.disabled = !this._state.disabled;
     this.paramChanges();
   }
@@ -271,9 +270,9 @@ export class Parameter extends Config {
   toCode(): string {
     let value: string;
     if (this.isConstant()) {
-      // Constant value
+      // Constant value.
       if (typeof this._value === 'boolean') {
-        // Boolean value for Python
+        // Boolean value for Python.
         value = this._value ? 'True' : 'False';
       } else {
         value = JSON.stringify(this._value);
@@ -318,7 +317,7 @@ export class Parameter extends Config {
       visible: this._state.visible,
     };
 
-    // Add value factors if existed
+    // Add value factors if existed.
     if (this._factors.length > 0) {
       param.factors = this._factors;
     }

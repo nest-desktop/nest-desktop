@@ -60,7 +60,6 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
    * Update data for spike sender histogram.
    */
   override updateData(activity: SpikeActivity): void {
-    // console.log('Update data of spike time histogram.');
     const x: number[] = activity.nodeIds;
     const senders: number[] = activity.events.senders;
 

@@ -140,7 +140,6 @@ export class Activity {
    * Overwrites events.
    */
   init(activity: any): void {
-    // console.log('Initialize activity');
     this.initEvents(activity);
   }
 
@@ -164,7 +163,6 @@ export class Activity {
    * Extends events.
    */
   update(activity: any): void {
-    // console.log('Update activity');
     if (activity.events == undefined) {
       return;
     }

@@ -15,7 +15,6 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * Update data for raster plot.
    */
   override updateData(activity: SpikeActivity): void {
-    // console.log('Update data for raster plot.');
     this.data.push({
       activityIdx: activity.idx,
       hoverinfo: 'x',

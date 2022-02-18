@@ -95,7 +95,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         type: 'scattergl',
         visible: this.state.visibleThreshold,
         x: [0.1, record.activity.currenttime],
-        y: [thresholds[0], thresholds[0]], // gets only first threshold, TODO: find better solution
+        y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
       });
     }
   }
@@ -230,7 +230,6 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Update layout label for analog signals.
    */
   override updateLayoutLabel(): void {
-    // console.log('Update layout label for analog signal.');
     // Label y-axis if only one record existed.
     this.panel.layout.xaxis.title = 'Time [ms]';
     this.panel.layout.yaxis.title = this.axisTitle;

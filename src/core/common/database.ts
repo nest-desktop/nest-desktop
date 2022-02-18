@@ -50,7 +50,6 @@ export class DatabaseService {
 
   isReady(): boolean {
     return this._state.ready;
-    // return this._db != null;
   }
 
   isValid(): boolean {
@@ -83,7 +82,6 @@ export class DatabaseService {
   // CRUD - Create, Read, Update, Delete
 
   create(data: any): any {
-    // console.log('Create doc in db');
     const dataJSON = data.toJSON();
     dataJSON.hash = data.state.hash || undefined;
     dataJSON.version = this._app.state.version;
@@ -102,7 +100,6 @@ export class DatabaseService {
   }
 
   read(id: string, rev: string = null): any {
-    // console.log('Read doc in db');
     const options: any = { rev };
     return this._db
       .get(id, options)
@@ -111,7 +108,6 @@ export class DatabaseService {
   }
 
   update(data: any): any {
-    // console.log('Update doc in db');
     return this._db
       .get(data.doc._id)
       .then((doc: any) => {
@@ -127,7 +123,6 @@ export class DatabaseService {
         return this._db
           .put(doc)
           .then(() => {
-            // console.log(d);
             data.updatedAt = dataJSON.updatedAt;
           })
           .catch((err: any) => console.log(err));
@@ -139,7 +134,6 @@ export class DatabaseService {
   }
 
   delete(id: string): any {
-    // console.log('Delete doc in db');
     return this._db.get(id).then((doc: any) => this._db.remove(doc));
   }
 
@@ -153,7 +147,6 @@ export class DatabaseService {
   }
 
   revisions(id: string): any {
-    console.log('Read doc revisions in db');
     return this._db
       .get(id, { revs: true })
       .then((doc: any) =>

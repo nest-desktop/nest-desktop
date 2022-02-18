@@ -77,7 +77,6 @@ export class FreePositions {
     const maxY: number = this._extent[1] / 2;
     const minZ: number = (-1 * this._extent[2]) / 2;
     const maxZ: number = this._extent[2] / 2;
-    // console.log(center,extent,minX,maxX,minY,maxY,length)
 
     this._pos = Array.from({ length: this._spatial.node.size }, () => {
       const x: number = math.random(minX, maxX);

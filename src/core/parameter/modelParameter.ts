@@ -57,7 +57,7 @@ export class ModelParameter extends Parameter {
     };
 
     if (this.parent.name === 'Model') {
-      // For model component
+      // For model component.
       param.input = this.input;
       param.label = this.label;
       param.unit = this.unit;

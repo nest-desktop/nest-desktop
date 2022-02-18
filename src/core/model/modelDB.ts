@@ -36,7 +36,6 @@ export class ModelDB extends DatabaseService {
     this.consoleLog('Import models from assets');
     let promise: Promise<any> = Promise.resolve();
     this.app.config.models.forEach((file: string) => {
-      // this.consoleLog('Import model from assets: ' + file);
       const data: any = require('../../assets/models/' + file + '.json');
       promise = promise.then(() => this.addModel(data));
     });

@@ -197,7 +197,6 @@ export class ActivityChartPanel {
     modelId: string = 'spikeTimesRasterPlot',
     modelSpec: any = {}
   ): void {
-    // console.log('Select panel model.');
     if (modelId) {
       const model: any = this._models.find(
         (model: any) => model.id === modelId

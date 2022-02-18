@@ -58,7 +58,6 @@ export class ActivityAnimationGraph {
    * It runs without checking activities.
    */
   init(): void {
-    // console.log('Initialize activity animation');
     this._layers = [];
   }
 
@@ -69,7 +68,6 @@ export class ActivityAnimationGraph {
    * It requires network activities.
    */
   update(): void {
-    // console.log('Update activity animation graph');
     this._state.nSamples =
       this._project.simulation.state.biologicalTime *
       this._config.frames.sampleRate;

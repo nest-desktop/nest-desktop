@@ -48,8 +48,7 @@ export class ProjectView extends Config {
       width: 575,
     },
     {
-      // icon: 'mdi-chart-scatter-plot',
-      icon: 'mdi-tune-variant',
+      icon: 'mdi-tune-variant', //'mdi-chart-scatter-plot'
       minWidth: 440,
       name: 'activityEdit',
       title: 'Activity',
@@ -68,7 +67,7 @@ export class ProjectView extends Config {
     super('ProjectView');
     this._app = app;
 
-    // global state for project view.
+    // Global state for project view.
     this._state = reactive({
       activityGraph: 'abstract',
       fromTime: 0,
@@ -145,17 +144,17 @@ export class ProjectView extends Config {
           generateCode,
         });
 
-        // update view mode for project.
+        // Update view mode for project.
         this.updateProjectMode();
 
-        // update activity graph view.
+        // Update activity graph view.
         this._state.activityGraph = this._state.project.network.hasPositions()
           ? this._state.activityGraph
           : 'abstract';
 
         this.update();
 
-        // run simulation if allowed.
+        // Run simulation if allowed.
         if (
           this.config.simulateAfterLoad &&
           this._state.modeIdx === 1 &&
@@ -182,11 +181,11 @@ export class ProjectView extends Config {
   resizeNetworkGraph(): void {
     this.consoleLog('Resize network graph');
 
-    // caluclate height for network graph.
+    // Caluclate height for network graph.
     this._state.networkGraphHeight =
       this._state.modeIdx === 2 ? 'calc(30vh)' : 'calc(100vh - 48px)';
 
-    // call resize event.
+    // Call resize event.
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
     }, 1);
@@ -208,11 +207,11 @@ export class ProjectView extends Config {
   selectTool(tool: any): void {
     this.consoleLog('Select project tool');
 
-    // open tool if closed or select other tool.
+    // Open tool if closed or select other tool.
     this._state.toolOpened = this._state.toolOpened
       ? this._state.tool !== tool
       : true;
-    // set project tool.
+    // Set project tool.
     this._state.tool = tool;
   }
 
@@ -226,7 +225,8 @@ export class ProjectView extends Config {
   updateProjectMode(): void {
     this.consoleLog('Update project view');
 
-    // select tool and resize network graph if netwot editor or lab view is selected.
+    // Select tool and resize network graph
+    // if network editor or lab view is selected.
     if ([0, 2].includes(this._state.modeIdx)) {
       this._state.toolOpened = this._state.toolOpened
         ? this._state.modeIdx !== 2
@@ -234,7 +234,7 @@ export class ProjectView extends Config {
       this.resizeNetworkGraph();
     }
 
-    // run simulation if allowed.
+    // Run simulation if allowed.
     if (
       this.config.simulateAfterLoad &&
       this._state.modeIdx === 1 &&

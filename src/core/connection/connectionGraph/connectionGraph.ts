@@ -27,7 +27,6 @@ export class ConnectionGraph {
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
-    // console.log('Init connection graph');
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
 
     elem.selectAll('*').remove();
@@ -69,7 +68,6 @@ export class ConnectionGraph {
    * This function should be called when connections in the network are changed.
    */
   update(): void {
-    // console.log('Init network graph');
     const connections: d3.Selection<any, any, any, any> =
       this._networkGraph.selector
         .select('g#connections')
@@ -119,7 +117,6 @@ export class ConnectionGraph {
    * Render connection graphs.
    */
   render(): void {
-    // console.log('Render connection graph');
     const selector = d3.select('g#connections').selectAll('g.connection');
 
     selector.style('pointer-events', () =>

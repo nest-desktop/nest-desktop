@@ -28,7 +28,7 @@ export class NetworkGraphGrid {
     const nrows = (this.height / cellHeight) * 3;
     const ncolumns = (this.width / cellWidth) * 3;
 
-    // iterate for rows
+    // Iterate for rows.
     for (let row = 0; row < nrows - 1; row++) {
       data.push({
         x1: -this.width,
@@ -38,7 +38,7 @@ export class NetworkGraphGrid {
       });
     }
 
-    // iterate for columns
+    // Iterate for columns.
     for (let column = 0; column < ncolumns - 1; column++) {
       data.push({
         x1: offset + column * cellWidth - this.width,

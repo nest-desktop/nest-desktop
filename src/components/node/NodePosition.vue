@@ -195,7 +195,6 @@ export default Vue.extend({
     });
 
     const initPositions = () => {
-      // console.log(this.positionType, event);
       const specs: any = state.node.spatial.positions.toJSON();
       state.node.spatial.init({
         positions: state.selectedPositions,
