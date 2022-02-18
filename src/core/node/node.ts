@@ -1,12 +1,17 @@
+import { sha1 } from 'object-hash';
+
 import { Activity } from '../activity/activity';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
+import { consoleLog } from '../common/logger';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
 import { NodeCode } from './nodeCode';
-import { NodeSpatial } from './nodeSpatial';
+import { NodeRecord } from './nodeRecord';
+import { NodeSpatial } from './nodeSpatial/nodeSpatial';
+import { NodeState } from './nodeState';
 import { NodeView } from './nodeView';
 import { SpikeActivity } from '../activity/spikeActivity';
 
@@ -15,14 +20,18 @@ export class Node extends Config {
 
   private _activity: SpikeActivity | AnalogSignalActivity | Activity;
   private _code: NodeCode; // code service for node
+  private _doc: any = {};
   private _idx: number; // generative
+  private _hash: string;
   private _modelId: string;
   private _network: Network; // parent
   private _params: ModelParameter[];
   private _positions: number[][] = [];
-  private _recordFrom: string[]; // only for multimeter
+  private _recordables: NodeRecord[] = [];
+  private _records: NodeRecord[] = []; // only for multimeter
   private _size: number;
   private _spatial: NodeSpatial;
+  private _state: NodeState;
   private _view: NodeView;
 
   constructor(network: any, node: any) {
@@ -31,13 +40,17 @@ export class Node extends Config {
     this._modelId = node.model;
     this._network = network;
     this._size = node.size || 1;
+    this._doc = node;
 
     this._code = new NodeCode(this);
     this._view = new NodeView(this, node.view);
+    this._state = new NodeState(this);
+    this._spatial = new NodeSpatial(this, node.spatial);
 
     this.initParameters(node);
-    this.initSpatial(node.spatial);
-    this.initActivity();
+    this.initActivity(node.activity);
+
+    this.updateHash();
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity {
@@ -56,12 +69,16 @@ export class Node extends Config {
     return this._params.filter((param: ModelParameter) => param.visible);
   }
 
+  get hash(): string {
+    return this._hash;
+  }
+
   get idx(): number {
     return this._idx;
   }
 
   get model(): Model {
-    return this._network.project.app.getModel(this._modelId);
+    return this._network.project.app.model.getModel(this._modelId);
   }
 
   /**
@@ -78,7 +95,7 @@ export class Node extends Config {
 
   get models(): Model[] {
     const elementType: string = this.model.elementType;
-    return this._network.project.app.filterModels(elementType);
+    return this._network.project.app.model.filterModels(elementType);
   }
 
   get modelId(): string {
@@ -95,13 +112,21 @@ export class Node extends Config {
    * @param value - id of the model
    */
   set modelId(value: string) {
-    // console.log('Set Model');
     this._modelId = value;
-    this._size = 1;
+
     this.initParameters();
-    this._network.clean();
     this.initActivity();
+
+    this.updateRecords();
+    this.updateRecordsColor();
+
+    // Trigger node change.
     this.nodeChanges();
+
+    // Initialize activity graph.
+    if (this.model.isRecorder()) {
+      this._network.project.initActivityGraph();
+    }
   }
 
   get n(): number {
@@ -117,10 +142,10 @@ export class Node extends Config {
   }
 
   get nodes(): Node[] {
-    if (this.model.existing === 'spike_recorder') {
+    if (this.model.isSpikeRecorder()) {
       return this.sources;
     }
-    if (['multimeter', 'voltmeter'].includes(this.model.existing)) {
+    if (this.model.isAnalogRecorder()) {
       return this.targets;
     }
     return [];
@@ -130,40 +155,24 @@ export class Node extends Config {
     return this._params;
   }
 
+  set params(values: any[]) {
+    this._params = values.map(value => new ModelParameter(this, value));
+  }
+
   get positions(): number[][] {
     return this._positions;
   }
 
-  // set positions(value: number[][]) {
-  //   this._positions = value;
-  // }
-
-  get recordables(): any[] {
-    if (this.model.existing !== 'multimeter') {
-      return [];
-    }
-    const targets: Node[] = this.targets;
-    if (targets.length === 0) {
-      return [];
-    }
-    const recordables = targets.map((target: Node) => target.model.recordables);
-    if (recordables.length === 0) {
-      return [];
-    }
-    const recordablesFlat: any[] = [].concat(...recordables);
-    const recordablesSet: any[] = [...new Set(recordablesFlat)];
-    recordablesSet.sort((a: any, b: any) => a.id - b.id);
-    return recordablesSet;
+  get recordables(): NodeRecord[] {
+    return this._recordables;
   }
 
-  get recordFrom(): string[] {
-    return this._recordFrom;
+  get records(): NodeRecord[] {
+    return this._records;
   }
 
-  set recordFrom(value: string[]) {
-    // console.log('Set record from');
-    this._recordFrom = value;
-    this.network.project.initActivityGraph();
+  set records(value: NodeRecord[]) {
+    this._records = value;
   }
 
   get size(): number {
@@ -176,6 +185,14 @@ export class Node extends Config {
   set size(value: number) {
     this._size = value;
     this.nodeChanges();
+  }
+
+  /**
+   * Returns the first six digits of the SHA-1 node hash.
+   * @returns 6-digit hash value
+   */
+  get shortHash(): string {
+    return this._hash ? this._hash.slice(0, 6) : '';
   }
 
   get sources(): Node[] {
@@ -196,17 +213,40 @@ export class Node extends Config {
     return nodes;
   }
 
+  get state(): NodeState {
+    return this._state;
+  }
+
   get view(): NodeView {
     return this._view;
+  }
+
+  consoleLog(text: string): void {
+    consoleLog(this, text, 6);
+  }
+
+  /**
+   * Check if it is an excitatory neuron.
+   */
+  isExcitatoryNeuron(): boolean {
+    return this.model.isNeuron() && this._view.weight === 'excitatory';
+  }
+
+  /**
+   * Check if it is an inhibitory neuron.
+   */
+  isInhibitoryNeuron(): boolean {
+    return this.model.isNeuron() && this._view.weight === 'inhibitory';
   }
 
   /**
    * Observer for node changes.
    *
    * @remarks
-   * It emits network changes
+   * It emits network changes.
    */
   nodeChanges(): void {
+    this.clean();
     this._spatial.updateHash();
     this._network.networkChanges();
   }
@@ -214,19 +254,17 @@ export class Node extends Config {
   /**
    * Initialize activity for the recorder.
    */
-  initActivity(): void {
-    if (this.model.elementType !== 'recorder') {
+  initActivity(data: any = {}): void {
+    if (!this.model.isRecorder()) {
       return;
     }
-    // console.log('Initialize activity');
-    if (this.model.existing === 'spike_recorder') {
-      this._activity = new SpikeActivity(this);
-    } else if (['voltmeter', 'multimeter'].includes(this.model.existing)) {
-      this._activity = new AnalogSignalActivity(this);
+    if (this.model.isSpikeRecorder()) {
+      this._activity = new SpikeActivity(this, data);
+    } else if (this.model.isAnalogRecorder()) {
+      this._activity = new AnalogSignalActivity(this, data);
     } else {
-      this._activity = new Activity(this);
+      this._activity = new Activity(this, data);
     }
-    this._network.project.initActivityGraph();
   }
 
   /**
@@ -236,7 +274,7 @@ export class Node extends Config {
   initParameters(node: any = null): void {
     // Update parameters from model or node
     this._params = [];
-    if (this.model && node && node.hasOwnProperty('params')) {
+    if (this.model && node && this.hasParameters(node)) {
       this.model.params.forEach((modelParam: ModelParameter) => {
         const nodeParam = node.params.find((p: any) => p.id === modelParam.id);
         this.addParameter(nodeParam || modelParam.toJSON());
@@ -245,12 +283,16 @@ export class Node extends Config {
       this.model.params.forEach((param: ModelParameter) =>
         this.addParameter(param.toJSON())
       );
-    } else if (node.hasOwnProperty('params')) {
+    } else if (this.hasParameters(node)) {
       node.params.forEach((param: any) => this.addParameter(param));
     }
-    if (this.model.existing === 'multimeter') {
-      this._recordFrom = node !== null ? node.recordFrom || ['V_m'] : ['V_m'];
-    }
+  }
+
+  /**
+   * Check if node has params.
+   */
+  hasParameters(node: any): boolean {
+    return node.hasOwnProperty('params');
   }
 
   /**
@@ -273,7 +315,7 @@ export class Node extends Config {
   }
 
   /**
-   * Get parameter component
+   * Get parameter component.
    * @param paramId - parameter id
    * @return parameter component
    */
@@ -299,14 +341,14 @@ export class Node extends Config {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    this.params.map((param: ModelParameter) => (param.visible = false));
+    this.params.map((param: ModelParameter) => (param.state.visible = false));
   }
 
   /**
    * Sets all params to visible.
    */
   showAllParams(): void {
-    this.params.map((param: ModelParameter) => (param.visible = true));
+    this.params.map((param: ModelParameter) => (param.state.visible = true));
   }
 
   /**
@@ -321,7 +363,7 @@ export class Node extends Config {
     const connections: Connection[] = this._network.connections.filter(
       (connection: Connection) =>
         connection.source.idx === this._idx &&
-        connection.target.model.elementType !== 'recorder'
+        !connection.target.model.isRecorder()
     );
     connections.forEach((connection: Connection) => {
       const weight: any = connection.synapse.params.find(
@@ -334,22 +376,113 @@ export class Node extends Config {
   }
 
   /**
-   * Initialize spatial component.
-   * @param spatial - spatial specifications
-   */
-  initSpatial(spatial: any = {}): void {
-    this._spatial = new NodeSpatial(this, spatial);
-  }
-
-  /**
    * Toggle spatial mode.
    */
   toggleSpatial(): void {
     const term: string = this._size === 1 ? 'grid' : 'free';
-    this.initSpatial({
+    this._spatial.init({
       positions: this.spatial.hasPositions() ? undefined : term,
     });
     this.nodeChanges();
+  }
+
+  /**
+   * Update hash for node graph.
+   */
+  updateHash(): void {
+    this._hash = sha1({
+      color: this.view.color,
+      idx: this.idx,
+      darkMode: this._network.project.app.darkMode,
+    });
+  }
+
+  /**
+   * Remove record from the state.
+   */
+  removeRecord(record: any): void {
+    this._records.splice(this._records.indexOf(record), 1);
+    this._records = [...this._records];
+  }
+
+  /**
+   * Update records.
+   *
+   * @remarks
+   * It should be called after connections are created.
+   */
+  updateRecords(): void {
+    if (this.targets.length === 0) {
+      return;
+    }
+
+    let recordables: any[] = [];
+    // Initialize recordables.
+    if (this.targets.length > 0) {
+      if (this.model.isMultimeter()) {
+        const recordablesNodes = this.targets.map((target: Node) => [
+          ...target.model.recordables,
+        ]);
+        if (recordablesNodes.length > 0) {
+          const recordablesPooled: any[] = [].concat(...recordablesNodes);
+          recordables = [...new Set(recordablesPooled)];
+          recordables.sort((a: any, b: any) => a.id - b.id);
+        }
+      } else {
+        recordables.push(
+          this.model.config.recordables.find(
+            (record: any) => record.id === 'V_m'
+          )
+        );
+      }
+    }
+
+    let recordableIds: string[];
+    recordableIds = recordables.map((record: any) => record.id);
+    this._recordables = [
+      ...this._recordables.filter((record: NodeRecord) =>
+        recordableIds.includes(record.id)
+      ),
+    ];
+
+    recordableIds = this._recordables.map((record: any) => record.id);
+    recordables
+      .filter((record: any) => !recordableIds.includes(record.id))
+      .forEach((record: any) => {
+        this._recordables.push(new NodeRecord(this, record));
+      });
+
+    // Initialize selected records.
+    if (this._doc.records != null) {
+      // Load record from stored nodes.
+      const recordIds = this._doc.records.map((record: any) => record.id);
+      this._records = [
+        ...this._recordables.filter((record: NodeRecord) =>
+          recordIds.includes(record.id)
+        ),
+      ];
+    } else if (this._records.length > 0) {
+      // In case when user select other model.
+      const recordIds = this._records.map((record: NodeRecord) => record.id);
+      this._records = [
+        ...this._recordables.filter((record: NodeRecord) =>
+          recordIds.includes(record.id)
+        ),
+      ];
+      this.records.forEach((record: NodeRecord) => record.updateGroupID());
+    } else {
+      this._records = [...this._recordables];
+    }
+  }
+
+  /**
+   * Update record colors.
+   */
+  updateRecordsColor(): void {
+    this._recordables.forEach(
+      (record: NodeRecord) => (record.color = this._view.color)
+    );
+    this._network.project.activityGraph.activityChartGraph.updateRecordsColor();
   }
 
   /**
@@ -357,24 +490,10 @@ export class Node extends Config {
    */
   clean(): void {
     this._idx = this._network.nodes.indexOf(this);
-    this.collectRecordFromTargets();
     this.view.clean();
-  }
+    this.updateHash();
 
-  /**
-   * Collect record data from target nodes.
-   */
-  collectRecordFromTargets(): void {
-    if (this.model.existing !== 'multimeter') {
-      return;
-    }
-    const recordables = this.recordables.map(
-      (recordable: any) => recordable.id
-    );
-    this._recordFrom =
-      recordables.length > 0
-        ? this.recordFrom.filter((rec: any) => recordables.includes(rec))
-        : [];
+    this.updateRecords();
   }
 
   /**
@@ -403,8 +522,8 @@ export class Node extends Config {
    *
    * @return copied node object
    */
-  copy(item: any): any {
-    return JSON.parse(JSON.stringify(item));
+  override copy(item: any): any {
+    return Object.assign({}, item);
   }
 
   /**
@@ -419,9 +538,11 @@ export class Node extends Config {
       view: this._view.toJSON(),
     };
 
-    // Add recordFrom if this model is multimeter.
-    if (this.model.existing === 'multimeter') {
-      node.recordFrom = this._recordFrom;
+    // Add records if this model is multimeter.
+    if (this.model.isMultimeter()) {
+      node.records = this._records.map((nodeRecord: NodeRecord) =>
+        nodeRecord.toJSON()
+      );
     }
 
     // Add positions if this node is spatial.

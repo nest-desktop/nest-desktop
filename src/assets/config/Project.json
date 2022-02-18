@@ -1,7 +1,0 @@
-{
-  "maxNetworkRevisions": 5,
-  "simulateAfterChange": false,
-  "simulateAfterCheckout": false,
-  "simulateAfterLoad": false,
-  "showHelp": true
-}

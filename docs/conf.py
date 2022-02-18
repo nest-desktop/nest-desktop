@@ -10,15 +10,15 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
 project = 'NEST Desktop'
-copyright = '2021, Sebastian Spreizer'
 author = 'Sebastian Spreizer'
+copyright = '2016-2022, Sebastian Spreizer'
 
 
 # -- General configuration ---------------------------------------------------
@@ -28,17 +28,31 @@ author = 'Sebastian Spreizer'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.intersphinx',
 ]
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+# Ensure unique targets
+autosectionlabel_prefix_document = True
+
+root_doc = 'contents'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-master_doc = 'contents'
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
+# Include text at the beginning of every file.
+if os.environ.get('READTHEDOCS') == 'True':
+    version = os.environ.get('READTHEDOCS_VERSION')
+    if version == 'dev':
+        rst_prolog = '.. warning:: \n   This version of the documentation is NOT an official release. \
+                     You are reading the documentation version which is in active and ongoing development. \
+                     You can change versions on the bottom left of the screen.'
+
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -48,33 +62,37 @@ master_doc = 'contents'
 html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
-    'logo_only': True,
+    'collapse_navigation': True,
     'display_version': True,
-    'prev_next_buttons_location': 'none',
-    'style_external_links': False,
-    'style_nav_header_background': '#0F6D99',
-    # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 3,
+    # 'github_url': 'https://github.com/nest-desktop/nest-desktop',
     'includehidden': False,
+    'logo_only': True,
+    'navigation_depth': 3,
+    'prev_next_buttons_location': 'none',
+    'sticky_navigation': True,
+    'style_external_links': False,
+    'style_nav_header_background': '#fff',
     'titles_only': False,
-    # 'github_url': 'https://github.com/nest-desktop/nest-desktop'
 }
+
+html_logo = '_static/img/logo/nest-desktop-logo.png'
+html_favicon = '_static/favicon.ico'
+
+html_css_files = [
+    'css/bootstrap.min.css',
+    'css/styles.css'
+]
+
+html_js_files = [
+    'js/bootstrap.min.js',
+]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-rst_prolog = ".. warning:: \n   This version of the documentation is NOT an official release. \
-             You are looking at version 'latest', which is in active and ongoing development. \
-             You can change versions at the bottom left of the screen."
-
+# add links to modules and objects.
 intersphinx_mapping = {
-    'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
-    'simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
+    'nest-simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
 }
-
-def setup(app):
-  app.add_css_file('css/styles.css')

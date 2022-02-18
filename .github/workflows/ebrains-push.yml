@@ -1,8 +1,8 @@
-name: Mirror to EBRAINS
+name: Mirror repository to EBRAINS GitLab
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, gitlab-ci ]
 
 jobs:
   sync_to_ebrains:
@@ -23,6 +23,13 @@ jobs:
           source_branch: "dev"
           destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
           destination_branch: "dev"
+      - name: syncgitlabci
+        uses: wei/git-sync@v3
+        with:
+          source_repo: "nest-desktop/nest-desktop"
+          source_branch: "gitlab-ci"
+          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
+          destination_branch: "gitlab-ci"
       - name: synctags
         uses: wei/git-sync@v3
         with:

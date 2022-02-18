@@ -2,7 +2,7 @@
   <div class="NodePosition">
     <v-menu :close-on-content-click="false" v-if="state.node.spatial.positions">
       <template #activator="{ on, attrs }">
-        <v-card height="40" tile flat v-bind="attrs" v-on="on">
+        <v-card flat height="40" tile v-bind="attrs" v-on="on">
           <v-card-text class="px-2" style="padding: 10px 0">
             <NodePositionTitle
               :key="state.node.spatial.hash"
@@ -24,19 +24,20 @@
           <v-select
             :items="state.positions"
             @change="initPositions"
+            class="ma-0 pa-0"
             hide-details
             item-text="name"
             item-value="id"
             v-model="state.selectedPositions"
           />
 
-          <v-row>
-            <v-col class="py-3" cols="8" v-text="'number of dimensions'" />
+          <v-row class="mt-1">
+            <v-col cols="8" v-text="'number of dimensions'" />
             <v-col class="py-0" cols="4">
               <v-slider
                 :tick-labels="[2, 3]"
-                min="2"
                 max="3"
+                min="2"
                 ticks="always"
                 v-model="state.node.spatial.positions.numDimensions"
               />
@@ -57,8 +58,8 @@
           </span>
 
           <span v-if="state.node.spatial.positions.name === 'grid'">
-            <v-row>
-              <v-col class="py-4" cols="3" v-text="'shape'" />
+            <v-row class="mt-1">
+              <v-col class="ma-auto" cols="3" v-text="'shape'" />
               <v-spacer />
               <v-col
                 :key="idx"
@@ -85,8 +86,8 @@
               </v-col>
             </v-row>
 
-            <v-row>
-              <v-col class="py-4" cols="3" v-text="'center'" />
+            <v-row class="mt-1">
+              <v-col class="ma-auto" cols="3" v-text="'center'" />
               <v-spacer />
               <v-col
                 :key="idx"
@@ -111,8 +112,8 @@
             </v-row>
           </span>
 
-          <v-row>
-            <v-col class="py-4" cols="3" v-text="'extent'" />
+          <v-row class="mt-1">
+            <v-col class="ma-auto" cols="3" v-text="'extent'" />
             <v-spacer />
             <v-col
               :key="idx"
@@ -139,9 +140,12 @@
 
           <v-row>
             <v-col class="py-0">
-              <v-checkbox v-model="state.node.spatial.positions.edgeWrap">
-                <template #label>Edge wrap</template>
-              </v-checkbox>
+              <v-checkbox
+                class="ma-0"
+                color="accent"
+                label="Edge wrap"
+                v-model="state.node.spatial.positions.edgeWrap"
+              />
             </v-col>
           </v-row>
         </v-card-text>
@@ -150,6 +154,7 @@
           <v-btn
             @click="updatePositions"
             outlined
+            small
             v-text="'Update positions'"
           />
           <!-- <v-spacer />
@@ -190,9 +195,8 @@ export default Vue.extend({
     });
 
     const initPositions = () => {
-      // console.log(this.positionType, event);
       const specs: any = state.node.spatial.positions.toJSON();
-      state.node.initSpatial({
+      state.node.spatial.init({
         positions: state.selectedPositions,
         specs: specs,
       });

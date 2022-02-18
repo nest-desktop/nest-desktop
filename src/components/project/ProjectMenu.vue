@@ -1,11 +1,5 @@
 <template>
   <div class="projectMenu" v-if="state.project">
-    <ProjectsDialog
-      :open="state.openProjectsDialog"
-      :projects="[state.project]"
-      action="download"
-    />
-
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -16,7 +10,7 @@
       <v-card>
         <!-- <v-card-title class="py-1" height="40" v-text="state.project.name" /> -->
 
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -42,14 +36,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteProject"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'Delete'"
-            />
+            <v-btn @click="deleteProject" outlined small v-text="'Delete'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -62,23 +49,19 @@ import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
 import { Project } from '@/core/project/project';
-import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ProjectMenu',
-  components: {
-    ProjectsDialog,
-  },
   props: {
     project: Project,
     position: Object,
   },
-  setup(props) {
+  setup(props, { root }) {
     const state = reactive({
       content: null,
       project: props.project as Project,
       position: props.position,
-      openProjectsDialog: false,
       show: true,
       items: [
         {
@@ -95,19 +78,20 @@ export default Vue.extend({
           icon: 'mdi-content-duplicate',
           title: 'Duplicate project',
           onClick: () => {
-            state.project.duplicate();
+            const project: Project = state.project.duplicate();
+            if (!root.$route.path.endsWith(project.id)) {
+              root.$router.push({
+                path: `/project/${project.id}`,
+              });
+            }
             state.show = false;
           },
         },
         {
-          id: 'projectDownload',
-          icon: 'mdi-download',
-          title: 'Download project',
-          onClick: () => {
-            state.project.view.selected = true;
-            state.openProjectsDialog = true;
-            state.show = false;
-          },
+          id: 'projectExport',
+          icon: 'mdi-export',
+          title: 'Export project',
+          onClick: () => openDialog('export'),
         },
         {
           id: 'projectDelete',
@@ -125,9 +109,13 @@ export default Vue.extend({
      * Delete project.
      */
     const deleteProject = () => {
-      state.project.delete().then(() => {
-        state.project.app.updateProjects();
-      });
+      state.project.delete();
+      state.show = false;
+    };
+
+    const openDialog = (action: string = 'export') => {
+      state.project.resetState();
+      core.app.openDialog('project', action, [state.project]);
       state.show = false;
     };
 

@@ -11,7 +11,7 @@
       <v-card :min-width="300" flat tile>
         <v-card-subtitle class="pb-0" v-text="state.options.label" />
 
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -31,8 +31,8 @@
                     v-for="action in item.actions"
                   >
                     <v-switch
-                      :value="action.value()"
                       :color="state.color"
+                      :value="action.value()"
                       dense
                       hide-details
                       v-if="action.id === 'switch'"
@@ -45,6 +45,69 @@
               </v-list-item-action>
             </v-list-item>
           </v-list>
+        </span>
+
+        <span v-if="state.content === 'configSlider'">
+          <v-card-text>
+            <v-row>
+              <v-col class="py-0">
+                <v-text-field
+                  hide-details
+                  label="label"
+                  v-model="state.options.label"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="py-0" cols="6">
+                <v-text-field
+                  hide-details
+                  label="default"
+                  type="number"
+                  v-model="state.options.value"
+                />
+              </v-col>
+              <v-col class="py-0" cols="6">
+                <v-text-field
+                  hide-details
+                  label="unit"
+                  v-model="state.options.unit"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="py-0" cols="4">
+                <v-text-field
+                  hide-details
+                  label="min"
+                  type="number"
+                  v-model="state.options.min"
+                />
+              </v-col>
+              <v-col class="py-0" cols="4">
+                <v-text-field
+                  hide-details
+                  label="step"
+                  type="number"
+                  v-if="state.options.step"
+                  v-model="state.options.step"
+                />
+              </v-col>
+              <v-col class="py-0" cols="4">
+                <v-text-field
+                  hide-details
+                  label="max"
+                  type="number"
+                  v-model="state.param.options.max"
+                />
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+          </v-card-actions>
         </span>
 
         <span v-if="state.content === 'generateValues'">
@@ -74,16 +137,17 @@
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="backMenu" text>
+            <v-btn @click="backMenu" small outlined text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
-            <v-btn @click="generateValues" text v-text="'Generate'" />
+            <v-spacer />
+            <v-btn @click="generateValues" outlined small v-text="'generate'" />
           </v-card-actions>
         </span>
       </v-card>
     </v-menu>
 
-    <v-card @contextmenu="e => showMenu(e)" color="white" flat light tile>
+    <v-card @contextmenu="e => showMenu(e)" flat tile>
       <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
           <template v-if="state.expertMode">
@@ -112,10 +176,24 @@
             <template v-if="state.options.input === 'checkbox'">
               <v-checkbox
                 :color="state.color"
-                :readonly="state.options.readonly"
                 :label="label()"
+                :readonly="state.options.readonly"
                 @change="paramChange()"
                 class="ma-1"
+                dense
+                hide-details
+                v-model="state.value"
+              />
+            </template>
+
+            <template v-if="state.options.input === 'select'">
+              <v-select
+                :color="state.color"
+                :items="state.options.items"
+                :label="label()"
+                :readonly="state.options.readonly"
+                @change="paramChange()"
+                class="ma-1 mt-3"
                 dense
                 hide-details
                 v-model="state.value"
@@ -125,58 +203,143 @@
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :max="state.options.ticks.length - 1"
+                :persistent-hint="state.message.length > 0"
+                :rules="rules"
                 :thumb-color="state.color"
                 :tick-labels="state.options.ticks"
+                :value="state.value"
                 @change="paramChange"
-                class="mb-1"
+                class="mb-2"
                 dense
                 height="40"
-                hide-details
-                ticks="always"
                 tick-size="4"
-                :value="state.value"
-              />
+                ticks="always"
+              >
+                <template #message>
+                  <div @click="closeMessage" class="mb-1 message mt-2">
+                    <v-divider />
+                    <v-row class="mx-0 py-1">
+                      <v-col class="text-center" cols="2">
+                        <v-icon large right v-text="'mdi-alert-outline'" />
+                      </v-col>
+                      <v-col cols="10" style="margin: auto">
+                        <div v-text="state.message" />
+                      </v-col>
+                    </v-row>
+                    <v-divider />
+                  </div>
+                </template>
+              </v-slider>
             </template>
 
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
+                :value="state.value"
                 @blur="e => paramChange(e.target.value)"
                 @change="paramChange"
                 auto-grow
                 hide-details
                 outlined
                 small
-                :value="state.value"
               />
             </template>
 
             <template v-if="state.options.input === 'valueSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :max="state.options.max || 1"
                 :min="state.options.min || 0"
+                :persistent-hint="state.message.length > 0"
+                :readonly="state.options.readonly || false"
+                :rules="rules"
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
+                :value="state.value"
                 @change="paramChange"
                 dense
                 height="40"
-                hide-details
-                :value="state.value"
+                thumb-label
               >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="mb-1 message"
+                    style="margin-left: -37px; margin-right: -105px"
+                  >
+                    <v-divider />
+                    <v-row class="mx-0 py-1">
+                      <v-col class="text-center" cols="2">
+                        <v-icon
+                          :large="state.options.iconSize === 'large'"
+                          :small="state.options.iconSize === 'small'"
+                          right
+                          v-text="
+                            state.options.rules[0].includes('info')
+                              ? 'mdi-information-outline'
+                              : 'mdi-alert-outline'
+                          "
+                        />
+                      </v-col>
+                      <v-col cols="10">
+                        <div v-text="state.message" />
+                      </v-col>
+                    </v-row>
+                    <v-divider />
+                  </div>
+                </template>
+                <template #prepend>
+                  <v-btn
+                    :disabled="
+                      (state.value <= state.options.min && false) ||
+                      state.options.readonly
+                    "
+                    @click="decrement"
+                    icon
+                    small
+                  >
+                    <v-icon
+                      :color="color"
+                      class="slider-icon"
+                      v-show="!state.options.readonly"
+                      v-text="'mdi-minus'"
+                    />
+                  </v-btn>
+                </template>
                 <template #append>
+                  <v-btn
+                    :disabled="
+                      (state.value >= state.options.max && false) ||
+                      state.options.readonly
+                    "
+                    @click="increment"
+                    icon
+                    small
+                  >
+                    <v-icon
+                      :color="color"
+                      class="slider-icon"
+                      v-show="!state.options.readonly"
+                      v-text="'mdi-plus'"
+                    />
+                  </v-btn>
                   <v-text-field
+                    :readonly="state.options.readonly"
+                    :step="state.options.step || 1"
+                    :value="state.value"
                     @blur="e => paramChange(e.target.value)"
                     @change="paramChange"
-                    :step="state.options.step || 1"
-                    class="mt-0 pt-0"
+                    class="mt-0 ml-2 pt-0"
                     height="32"
                     hide-details
                     single-line
                     style="width: 60px; font-size: 12px"
                     type="number"
-                    :value="state.value"
                   />
                 </template>
               </v-slider>
@@ -255,10 +418,20 @@ export default Vue.extend({
         },
         {
           actions: [],
+          append: true,
+          icon: 'mdi-pencil-outline',
+          title: 'Config slider',
+          onClick: () => {
+            state.content = 'configSlider';
+          },
+          visible: true,
+        },
+        {
+          actions: [],
           icon: 'mdi-eye-off-outline',
           title: 'Hide parameter',
           onClick: () => {
-            state.param.visible = false;
+            state.param.state.visible = false;
             state.param.paramChanges();
             closeMenu();
           },
@@ -272,8 +445,11 @@ export default Vue.extend({
           y: 0,
         },
       },
+      message: '',
       options: props.param ? props.param['options'] : props.options,
       param: props.param as ModelParameter | Parameter | undefined,
+      showConfig: false,
+      timeoutId: undefined,
       value: undefined,
       valueGenerator: new ValueGenerator(),
     });
@@ -311,6 +487,8 @@ export default Vue.extend({
     };
 
     const generateValues = () => {
+      state.valueGenerator.sort =
+        state.param.id.includes('time') || state.param.id.includes('Time');
       state.value = state.valueGenerator.generate();
       paramChange();
     };
@@ -319,6 +497,13 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const paramChange = (value: any = undefined) => {
+      // if (state.value < state.options.min) {
+      //   state.options.min = state.value;
+      // }
+      // if (state.value > state.options.max) {
+      //   state.options.max = state.value;
+      // }
+
       let changed: boolean = true;
       if (typeof value === 'number') {
         // slider
@@ -346,9 +531,9 @@ export default Vue.extend({
      * Show parameter menu.
      */
     const showMenu = function (e: MouseEvent) {
+      e.preventDefault();
       if (this.param) {
         // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-        e.preventDefault();
         state.menu.show = false;
         state.menu.position.x = e.clientX;
         state.menu.position.y = e.clientY;
@@ -363,7 +548,36 @@ export default Vue.extend({
      * Parameter label.
      */
     const label = () => {
-      return state.param ? state.param.title : state.options.label;
+      if (state.param) {
+        return state.param.title;
+      } else {
+        let text = state.options.label;
+        return state.options.unit ? text + ` (${state.options.unit})` : text;
+      }
+    };
+
+    /**
+     * Increment value
+     */
+    const increment = (e: any) => {
+      if (e.ctrlKey) {
+        state.value += parseFloat(state.options.step) * 10 || 10;
+      } else {
+        state.value += parseFloat(state.options.step) || 1;
+      }
+      paramChange();
+    };
+
+    /**
+     * Increment value
+     */
+    const decrement = (e: any) => {
+      if (e.ctrlKey) {
+        state.value += parseFloat(state.options.step) * 10 || 10;
+      } else {
+        state.value -= parseFloat(state.options.step) || 1;
+      }
+      paramChange();
     };
 
     /**
@@ -382,6 +596,17 @@ export default Vue.extend({
     };
 
     /**
+     * show menu items.
+     */
+    const showMenuItems = () => {
+      state.items[1].visible = state.options.input === 'arrayInput';
+      state.items[2].visible = ['valueSlider', 'arrayInput'].includes(
+        state.options.input
+      );
+      state.items[3].visible = state.options.input === 'valueSlider';
+    };
+
+    /**
      * Update param and expert mode.
      */
     const update = () => {
@@ -391,14 +616,49 @@ export default Vue.extend({
         state.options = props.param['options'];
         state.param = props.param as ModelParameter | Parameter;
         state.expertMode = !state.param.isConstant();
-        state.items[1].visible = 'arrayInput' === state.options.input;
-        state.items[2].visible = ['valueSlider', 'arrayInput'].includes(
-          state.options.input
-        );
       } else {
         state.options = props.options;
       }
+      state.options.errorMessages = [];
+      showMenuItems();
     };
+
+    /**
+     * Close message text.
+     */
+    const closeMessage = () => {
+      if (state.timeoutId) {
+        clearTimeout(state.timeoutId);
+      }
+      state.message = '';
+    };
+
+    /**
+     * Rules for value validation.
+     */
+    const rules = [
+      (value: number) => {
+        if (state.timeoutId) {
+          clearTimeout(state.timeoutId);
+        }
+        let messageType: string = '';
+        if (state.options.unit && state.options.unit === 'ms' && value < 0) {
+          messageType = 'error';
+          state.message = `The ${state.options.label} cannot be negative.`;
+        } else if (state.options.rules != null) {
+          state.options.rules.forEach((rule: string[]) => {
+            state.message = eval(rule[0]) ? rule[1] : '';
+            messageType = eval(rule[0]) ? rule[2] : '';
+          });
+        }
+        // if (state.message.length > 0) {
+        //   state.timeoutId = setTimeout(() => {
+        //     state.message = '';
+        //   }, 7500);
+        // }
+        return messageType === 'error' ? state.message : true;
+      },
+    ];
 
     onMounted(() => {
       update();
@@ -412,11 +672,15 @@ export default Vue.extend({
     );
 
     return {
+      closeMessage,
       backMenu,
+      decrement,
       generateValues,
+      increment,
       label,
       paramChange,
       paramExpertChange,
+      rules,
       showMenu,
       state,
     };
@@ -435,5 +699,18 @@ export default Vue.extend({
 
 .parameterEdit .v-slider__tick {
   font-size: 11px;
+}
+
+.parameterEdit .slider-icon {
+  display: none;
+}
+
+.parameterEdit:hover .slider-icon {
+  display: block;
+}
+
+.parameterEdit .message {
+  background-color: rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }
 </style>

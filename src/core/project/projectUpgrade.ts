@@ -9,7 +9,6 @@ import { Model } from '../model/model';
  * @returns Network changed to new format
  */
 function upgradeNetwork(app: App, project: any): any {
-  // console.log('Upgrade network:', project.name);
   const network: any = {
     nodes: [],
     connections: [],
@@ -67,8 +66,8 @@ function upgradeNetwork(app: App, project: any): any {
 
   project.simulation.connectomes.forEach((simLink: any) => {
     const connection: any = {
-      source: simLink.source !== undefined ? simLink.source : simLink.pre,
-      target: simLink.target !== undefined ? simLink.target : simLink.post,
+      source: simLink.source != null ? simLink.source : simLink.pre,
+      target: simLink.target != null ? simLink.target : simLink.post,
     };
     if (simLink.hasOwnProperty('conn_spec')) {
       connection.rule = simLink.conn_spec.rule || 'all_to_all';
@@ -79,14 +78,16 @@ function upgradeNetwork(app: App, project: any): any {
     const synapse: any = {
       params: [],
     };
-    const synModel: Model = app.getModel(synapse.model || 'static_synapse');
+    const synModel: Model = app.model.getModel(
+      synapse.model || 'static_synapse'
+    );
     if (simLink.hasOwnProperty('syn_spec')) {
       synModel.params.forEach((modelParam: any) => {
         const simParam: any = simLink.syn_spec[modelParam.id];
         const param: any = {
           id: modelParam.id,
-          value: simParam !== undefined ? simParam : modelParam.value,
-          visible: simParam !== undefined,
+          value: simParam != null ? simParam : modelParam.value,
+          visible: simParam != null,
         };
         synapse.params.push(param);
       });
@@ -94,8 +95,6 @@ function upgradeNetwork(app: App, project: any): any {
     connection.synapse = synapse;
     network.connections.push(connection);
   });
-
-  // console.log(network);
   return network;
 }
 
@@ -109,7 +108,6 @@ function upgradeNetwork(app: App, project: any): any {
  * @returns Network changed to new format
  */
 export function upgradeProject(app: App, project: any): any {
-  // console.log('Upgrade project:', project.name);
   if (Object.keys(project).length === 0) {
     return {};
   }
@@ -119,7 +117,7 @@ export function upgradeProject(app: App, project: any): any {
   }
   const version: string[] = project.version.split('.');
 
-  // checks when version is 2.5 or newer.
+  // Checks if version is 2.5 or newer.
   const valid_2_5: boolean =
     (Number(version[0]) === 2 && Number(version[1]) >= 5) ||
     Number(version[0]) > 2;
@@ -127,7 +125,7 @@ export function upgradeProject(app: App, project: any): any {
     ? project.network
     : upgradeNetwork(app, project);
 
-  // checks when version is 3.0 or newer.
+  // Checks if version is 3.0 or newer.
   const valid_3: boolean = Number(version[0]) === 3;
   if (!valid_3) {
     network.nodes
@@ -142,5 +140,9 @@ export function upgradeProject(app: App, project: any): any {
     });
   }
 
-  return { network, simulation: project.simulation };
+  return {
+    activityGraph: project.activityGraph || {},
+    network,
+    simulation: project.simulation,
+  };
 }

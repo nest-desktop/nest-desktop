@@ -1,5 +1,8 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+import { v4 as uuidv4 } from 'uuid';
+
 import { App } from '../app';
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { ModelCode } from './modelCode';
 import { ModelParameter } from '../parameter/modelParameter';
 
@@ -16,28 +19,28 @@ export class Model extends Config {
   private _idx: number; // generative
   private _label: string; // model label for view
   private _params: ModelParameter[] = []; // model parameters
-  private _recordables: any[]; // recordables for multimeter
+  private _recordables: any[] = []; // recordables for multimeter
+  private _state: UnwrapRef<any>;
 
-  constructor(app: App, model: any) {
+  constructor(app: App, model: any = {}) {
     super('Model');
     this._app = app;
     this._code = new ModelCode(this);
 
-    this._doc = model;
-    this._id = model.id;
-    this._idx = this.app.models.length;
+    this._doc = model || {};
+    this._id = model.id || uuidv4();
+    this._idx = this.app.model.state.models.length;
+
     this._elementType =
-      model.elementType !== undefined ? model.elementType : model.element_type;
+      model.elementType != null ? model.elementType : model.element_type;
     this._existing = model.existing || model.id;
 
     this._label = model.label || '';
     this._abbreviation = model.abbreviation;
-    model.params.forEach((param: any) => this.addParameter(param));
-    this._recordables = model.recordables
-      ? this.config.recordables.filter((recordable: any) =>
-          model.recordables.includes(recordable.id)
-        )
-      : [];
+    this.update(model);
+    this._state = reactive({
+      selected: false,
+    });
   }
 
   get abbreviation(): string {
@@ -50,6 +53,14 @@ export class Model extends Config {
 
   get code(): ModelCode {
     return this._code;
+  }
+
+  get doc(): any {
+    return this._doc;
+  }
+
+  get docId(): string {
+    return this._doc ? this._doc._id : undefined;
   }
 
   get elementType(): string {
@@ -88,8 +99,32 @@ export class Model extends Config {
     return this._recordables;
   }
 
+  get state(): UnwrapRef<any> {
+    return this._state;
+  }
+
   get value(): string {
     return this.id;
+  }
+
+  /**
+   * Get parameter defaults of a model from NEST Simulator.
+   */
+  async fetchDefaults(): Promise<any> {
+    return this._app.backends.nestSimulator.instance.post('api/GetDefaults', {
+      model: this._id,
+    });
+  }
+
+  /**
+   * Update recordables from the config.
+   */
+  updateRecordables(model: any): void {
+    if ('recordables' in model) {
+      this._recordables = this.config.recordables.filter((recordable: any) =>
+        model.recordables.includes(recordable.id)
+      );
+    }
   }
 
   /**
@@ -139,6 +174,21 @@ export class Model extends Config {
   /**
    * Update parameter.
    */
+  update(model: any): void {
+    this._id = model.id;
+    this.updateRecordables(model);
+    model.params.forEach((param: any) => {
+      if (this.getParameter(param.id)) {
+        this.updateParameter(param);
+      } else {
+        this.addParameter(param);
+      }
+    });
+  }
+
+  /**
+   * Update parameter.
+   */
   updateParameter(param: any): void {
     const idx: number = this._params
       .map((p: ModelParameter) => p.id)
@@ -152,7 +202,7 @@ export class Model extends Config {
    * Clean model index.
    */
   clean(): void {
-    this._idx = this._app.models.indexOf(this);
+    this._idx = this._app.model.state.models.indexOf(this);
   }
 
   /**
@@ -160,6 +210,20 @@ export class Model extends Config {
    */
   clone(): Model {
     return new Model(this._app, this);
+  }
+
+  /**
+   * Check if the model is an analog recorder.
+   */
+  isAnalogRecorder(): boolean {
+    return this._elementType === 'recorder' && this._existing.endsWith('meter');
+  }
+
+  /**
+   * Check if the model is a multimeter.
+   */
+  isMultimeter(): boolean {
+    return this._existing === 'multimeter';
   }
 
   /**
@@ -177,6 +241,13 @@ export class Model extends Config {
   }
 
   /**
+   * Check if the model is a spike recorder.
+   */
+  isSpikeRecorder(): boolean {
+    return this._existing === 'spike_recorder';
+  }
+
+  /**
    * Check if the model is a stimulator.
    */
   isStimulator(): boolean {
@@ -184,17 +255,24 @@ export class Model extends Config {
   }
 
   /**
-   * Delete model object from model list in app.
+   * Reset state of this model.
    */
-  delete(): Promise<any> {
-    return this._app.deleteModel(this._doc._id);
+  resetState(): void {
+    this._state.selected = false;
   }
 
   /**
-   * Save model object to list and to database.
+   * Delete model object from model list in app.
    */
-  save(): Promise<any> {
-    return this._app.saveModel(this);
+  async delete(): Promise<any> {
+    return this._app.model.deleteModel(this.docId);
+  }
+
+  /**
+   * Save model object to the database.
+   */
+  async save(): Promise<any> {
+    return this._app.model.saveModel(this);
   }
 
   /**
@@ -209,11 +287,11 @@ export class Model extends Config {
       id: this._id,
       label: this._label,
       params: this._params.map((param: ModelParameter) => param.toJSON()),
-      version: this._app.version,
+      version: this._app.state.version,
     };
 
     // Add recordables if provided.
-    if (this.recordables.length > 0) {
+    if (this._recordables.length > 0) {
       model.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );

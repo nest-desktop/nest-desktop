@@ -3,26 +3,35 @@
     <v-menu :close-on-content-click="false" tile v-model="state.opened">
       <template #activator="{ on, attrs }">
         <v-btn
+          :color="state.node.view.color"
+          :dark="projectView.config.coloredToolbar"
           :height="40"
+          :text="!projectView.config.coloredToolbar"
           block
           class="nodeModel"
-          dark
-          text
+          depressed
           tile
           v-bind="attrs"
           v-on="on"
         >
-          {{ state.node.model.label }}
+          <span v-text="state.node.model.label" />
           <v-spacer />
           <v-icon class="modelEdit" right v-text="'mdi-pencil'" />
+          <v-chip
+            label
+            outlined
+            small
+            v-if="state.node.network.project.app.config.devMode"
+            v-text="state.node.shortHash"
+          />
         </v-btn>
       </template>
 
       <v-card style="min-width: 300px" tile>
-        <v-card-title class="pa-0" style="color: white; height: 40px">
+        <v-card-title class="pa-0" style="height: 40px">
           <v-overflow-btn
             :items="state.node.models"
-            @change="update()"
+            @change="updateOnModelChange()"
             class="ma-0"
             dense
             editable
@@ -39,7 +48,7 @@
         <v-card-text class="ma-0 pa-0">
           <v-list class="no-highlight" dense>
             <v-list-item-group
-              @change="selectionChange"
+              @change="paramSelectionChange()"
               active-class=""
               multiple
               v-model="state.visibleParams"
@@ -112,6 +121,7 @@ import { reactive, watch, onMounted } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
 import { ModelParameter } from '@/core/parameter/modelParameter';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'NodeModelSelect',
@@ -119,6 +129,7 @@ export default Vue.extend({
     node: Node,
   },
   setup(props) {
+    const projectView = core.app.project.view;
     const state = reactive({
       node: props.node as Node,
       opened: false,
@@ -126,14 +137,21 @@ export default Vue.extend({
     });
 
     /**
-     * Triggers when parameter is changed.
+     * Triggers when parameter selection is changed.
      */
-    const selectionChange = () => {
+    const paramSelectionChange = () => {
       state.node.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.visibleParams.includes(param.idx))
+          (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
+    };
+
+    /**
+     * Update when node model is changed.
+     */
+    const updateOnModelChange = () => {
+      update();
     };
 
     /**
@@ -175,8 +193,10 @@ export default Vue.extend({
 
     return {
       hideAllParams,
+      updateOnModelChange,
+      paramSelectionChange,
+      projectView,
       showAllParams,
-      selectionChange,
       state,
       update,
     };

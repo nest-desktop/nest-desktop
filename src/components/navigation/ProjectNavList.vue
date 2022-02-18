@@ -1,12 +1,12 @@
 <template>
   <div class="projects">
     <ProjectMenu
-      :project="state.projectMenu.project"
       :position="state.projectMenu.position"
+      :project="state.projectMenu.project"
       v-if="state.projectMenu.show"
     />
 
-    <v-list dense class="pa-0">
+    <v-list dense>
       <v-list-item exact to="/project/">
         <v-list-item-icon>
           <v-icon left v-text="'mdi-plus'" />
@@ -15,57 +15,59 @@
       </v-list-item>
     </v-list>
 
-    <v-form>
-      <v-container :key="state.projectId" class="py-0" v-if="state.app.project">
-        <v-text-field
-          clearable
-          hide-details
-          placeholder="Project name"
-          title="Rename the current project"
-          v-model="state.app.project.name"
-        >
-          <template #append-outer>
-            <v-row>
-              <v-btn
-                @click="state.app.project.save()"
-                class="mx-2"
-                icon
-                small
-                title="Save the current project"
-              >
-                <v-icon v-text="'mdi-content-save-outline'" />
-              </v-btn>
-            </v-row>
-          </template>
-        </v-text-field>
-      </v-container>
-    </v-form>
+    <v-container
+      :key="state.projectId"
+      class="py-0"
+      v-if="projectStore.view.state.project"
+    >
+      <v-text-field
+        @change="() => projectStore.view.state.project.clean()"
+        clearable
+        dense
+        hide-details
+        placeholder="Project name"
+        title="Rename the current project"
+        v-model="projectStore.view.state.project.name"
+      >
+        <template #append-outer>
+          <v-row>
+            <v-btn
+              @click="saveProject"
+              class="mx-2"
+              depressed
+              fab
+              small
+              title="Save the current project"
+            >
+              <v-icon v-text="'mdi-content-save-outline'" />
+            </v-btn>
+          </v-row>
+        </template>
+      </v-text-field>
+    </v-container>
 
-    <v-form>
-      <v-container class="py-0">
-        <v-text-field
-          clearable
-          hide-details
-          placeholder="Search project"
-          prepend-inner-icon="mdi-magnify"
-          v-model="state.app.view.project.searchTerm"
-        />
-      </v-container>
-    </v-form>
+    <v-container class="py-0">
+      <v-text-field
+        clearable
+        hide-details
+        placeholder="Search project"
+        prepend-inner-icon="mdi-magnify"
+        v-model="projectStore.state.searchTerm"
+      />
+    </v-container>
 
-    <v-list :key="state.app.projects.length" dense two-line>
-      <draggable v-model="state.app.projects">
+    <v-list :key="projectStore.state.projects.length" dense two-line>
+      <draggable v-model="projectStore.state.projects">
         <transition-group>
           <v-list-item
             :key="project.id"
             :to="'/project/' + project.id"
             @click="state.projectId = project.id"
-            @contextmenu="e => showProjectMenu(e, project)"
-            v-for="project in state.app.view.filteredProjects"
+            @contextmenu="e => showProjectMenu(e, project.id)"
+            v-for="project in projectStore.filteredProjects"
           >
             <v-list-item-content>
               <v-list-item-title v-text="project.name" />
-              <!-- <v-list-item-subtitle v-html="timeSince(project.createdAt)" /> -->
               <v-list-item-subtitle>
                 {{ project.network.nodes.length }} nodes,
                 {{ project.network.connections.length }} connections
@@ -73,14 +75,22 @@
             </v-list-item-content>
 
             <v-list-item-icon>
-              <!-- <v-icon
-                v-show="project.activityGraph.codeHash !== undefined"
-                v-text="'mdi-chart-scatter-plot'"
-              /> -->
-              <v-icon
-                v-show="!project.rev"
-                v-text="'mdi-alert-circle-outline'"
-              />
+              <span v-if="project.doc">
+                <v-icon
+                  class="px-1"
+                  small
+                  v-if="
+                    project.id !== project.doc.id ||
+                    project.state.hash !== project.doc.hash
+                  "
+                  v-text="'mdi-alert-circle-outline'"
+                />
+                <ActivityGraphIcon
+                  :project="project"
+                  append
+                  v-if="project.state.hasActivities"
+                />
+              </span>
             </v-list-item-icon>
           </v-list-item>
         </transition-group>
@@ -94,17 +104,19 @@ import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
-import { Project } from '@/core/project/project';
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import core from '@/core';
 import ProjectMenu from '@/components/project/ProjectMenu.vue';
 
 export default Vue.extend({
   name: 'ProjectNavList',
   components: {
+    ActivityGraphIcon,
     draggable,
     ProjectMenu,
   },
-  setup() {
+  setup(_, { root }) {
+    const projectStore = core.app.project;
     const state = reactive({
       app: core.app,
       projectId: '',
@@ -118,11 +130,11 @@ export default Vue.extend({
     /**
      * Show project menu.
      */
-    const showProjectMenu = function (e: MouseEvent, project: Project) {
+    const showProjectMenu = function (e: MouseEvent, projectId: string) {
       // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
       e.preventDefault();
       state.projectMenu.show = false;
-      state.projectMenu.project = project;
+      state.projectMenu.project = projectStore.getProject(projectId);
       state.projectMenu.position.x = e.clientX;
       state.projectMenu.position.y = e.clientY;
       this.$nextTick(() => {
@@ -130,7 +142,20 @@ export default Vue.extend({
       });
     };
 
+    const saveProject = () => {
+      const project = projectStore.view.state.project;
+      project.save().then(() => {
+        if (!root.$route.path.endsWith(project.id)) {
+          root.$router.push({
+            path: `/project/${project.id}`,
+          });
+        }
+      });
+    };
+
     return {
+      projectStore,
+      saveProject,
       showProjectMenu,
       state,
     };

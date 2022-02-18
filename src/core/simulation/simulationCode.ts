@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { Simulation } from './simulation';
 
 export class SimulationCode extends Code {
@@ -13,17 +13,11 @@ export class SimulationCode extends Code {
    * Write script for simulation kernel.
    */
   setKernelStatus(): string {
-    let script = 'nest.SetKernelStatus({';
-    script +=
-      this._() +
-      `"local_num_threads": ${this._simulation.kernel.localNumThreads},`;
-    script +=
-      this._() +
-      `"resolution": ${this.format(this._simulation.kernel.resolution)},`;
-    script += this._() + `"rng_seed": ${this._simulation.kernel.rngSeed}`;
-
-    script += this.end() + '})';
-    return script + '\n';
+    let script = '';
+    script += `nest.local_num_threads = ${this._simulation.kernel.localNumThreads}\n`;
+    script += `nest.resolution = ${this._simulation.kernel.resolution}\n`;
+    script += `nest.rng_seed = ${this._simulation.kernel.rngSeed}\n`;
+    return script;
   }
 
   /**

@@ -1,6 +1,6 @@
 import { Activity } from './activity';
-import { ActivityChartGraph } from '../activity/activityChartGraph';
-import { ActivityAnimationGraph } from '../activity/activityAnimationGraph';
+import { ActivityChartGraph } from './activityChart/activityChartGraph';
+import { ActivityAnimationGraph } from './activityAnimation/activityAnimationGraph';
 import { Project } from '../project/project';
 
 export class ActivityGraph {
@@ -9,9 +9,9 @@ export class ActivityGraph {
   private _codeHash: string;
   private _project: Project;
 
-  constructor(project: Project) {
+  constructor(project: Project, activityGraph: any = {}) {
     this._project = project;
-    this.init();
+    this.init(activityGraph);
   }
 
   get activityAnimationGraph(): ActivityAnimationGraph {
@@ -33,9 +33,8 @@ export class ActivityGraph {
   /**
    * Initialize activity graph.
    */
-  init(): void {
-    // console.log('Init activity graph');
-    this.initActivityChartGraph();
+  init(activityGraph: any = {}): void {
+    this.initActivityChartGraph(activityGraph.panels || []);
     this.initActivityAnimationGraph();
   }
 
@@ -43,9 +42,15 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    // console.log('Update activity graph');
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
+    this.updateHash();
+  }
+
+  /**
+   * Update code hash for activity graph.
+   */
+  updateHash(): void {
     this._codeHash = this._project.code.hash;
   }
 
@@ -53,14 +58,18 @@ export class ActivityGraph {
    * Initialize activity animation graph (Three).
    */
   initActivityAnimationGraph(): void {
-    this._activityAnimationGraph = new ActivityAnimationGraph(this._project);
+    if (this._activityAnimationGraph == null) {
+      this._activityAnimationGraph = new ActivityAnimationGraph(this._project);
+    } else {
+      this._activityAnimationGraph.init();
+    }
   }
 
   /**
    * Initialize activity chart graph (plotly).
    */
   initActivityChartGraph(panels: any[] = []): void {
-    if (this._activityChartGraph === undefined) {
+    if (this._activityChartGraph == undefined) {
       this._activityChartGraph = new ActivityChartGraph(this._project, panels);
     } else {
       this._activityChartGraph.init(panels);
@@ -75,17 +84,10 @@ export class ActivityGraph {
   }
 
   /**
-   * Update color in activity graph.
-   */
-  updateColor(): void {
-    this._activityChartGraph.updateColor();
-  }
-
-  /**
    * Check if it has any analog data.
    */
   hasAnyAnalogData(): boolean {
-    return this.project.activities.some((activity: Activity) =>
+    return this._project.activities.some((activity: Activity) =>
       activity.hasAnalogData()
     );
   }
@@ -94,8 +96,16 @@ export class ActivityGraph {
    * Check if it has any spike data.
    */
   hasAnySpikeData(): boolean {
-    return this.project.activities.some((activity: Activity) =>
+    return this._project.activities.some((activity: Activity) =>
       activity.hasSpikeData()
     );
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity graph object
+   */
+  toJSON(): any {
+    return this._activityChartGraph.toJSON();
   }
 }

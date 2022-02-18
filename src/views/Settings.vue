@@ -2,33 +2,46 @@
   <div style="height: 100vh; overflow-y: auto">
     <v-main>
       <v-container>
-        <v-card flat tile>
+        <v-card class="my-1" flat tile>
           <v-card-title v-text="'App'" />
           <v-card-text>
             <v-checkbox
               @change="e => updateAppConfig({ autoUpdate: e || false })"
+              color="accent"
               label="Auto update"
-              v-model="state.autoUpdate"
+              v-model="state.appConfig.autoUpdate"
             />
             <v-checkbox
               @change="e => updateAppConfig({ devMode: e || false })"
-              label="Development mode"
-              v-model="state.devMode"
+              color="accent"
+              label="Development mode *"
+              v-model="state.appConfig.devMode"
             />
             <v-checkbox
               @change="e => updateAppConfig({ pinNav: e || false })"
-              label="Pin navigation (Page reload required)"
-              v-model="state.pinNav"
+              color="accent"
+              label="Pin navigation *"
+              v-model="state.appConfig.pinNav"
             />
             <v-checkbox
-              @change="e => updateProjectConfig({ showHelp: e || false })"
+              @change="e => updateProjectViewConfig({ showHelp: e || false })"
+              color="accent"
               label="Show help"
-              v-model="state.showHelp"
+              v-model="state.projectViewConfig.showHelp"
             />
+            <v-checkbox
+              @change="
+                e => updateProjectViewConfig({ coloredToolbar: e || false })
+              "
+              color="accent"
+              label="Colored toolbar"
+              v-model="state.projectViewConfig.coloredToolbar"
+            />
+            <span>* Page restart required</span>
           </v-card-text>
         </v-card>
 
-        <v-card flat tile>
+        <!-- <v-card class="my-1" flat tile>
           <v-card-title v-text="'Database'" />
           <v-card-text>
             <v-text-field
@@ -40,33 +53,52 @@
               v-model="state.app.config.databases.project.name"
             />
           </v-card-text>
-        </v-card>
+        </v-card> -->
 
-        <v-card flat tile>
-          <v-card-title v-text="'Backend'" />
+        <v-card class="my-1" flat tile>
+          <v-card-title v-text="'Backends'" />
           <v-card-text>
-            <v-text-field
-              label="NEST Server"
-              v-model="state.app.nestServer.url"
-            />
-            <span v-if="state.nestVersion">
-              Response:
-              <v-chip color="orange darken-3" dark small>
-                <v-avatar left>
-                  <v-icon small v-text="'mdi-checkbox-marked-circle'" />
-                </v-avatar>
-                NEST version: {{ state.nestVersion }}
-              </v-chip>
-            </span>
+            <v-row>
+              <v-col cols="6">
+                <NESTSimulatorConfig />
+              </v-col>
+              <v-col cols="6">
+                <InsiteAccessConfig />
+              </v-col>
+            </v-row>
           </v-card-text>
-
-          <v-card-actions>
-            <v-btn @click="checkNEST">Check</v-btn>
-            <!-- <v-btn @click="() => core.app.nestServer.seek()">seek</v-btn> -->
-          </v-card-actions>
         </v-card>
 
-        <v-card flat tile>
+        <v-card class="my-1" flat tile>
+          <v-card-title v-text="'Model'" />
+          <v-card-text>
+            <v-card flat tile>
+              <v-card-subtitle v-text="'Accepted recordables'" />
+              <span
+                :key="recordable.id"
+                v-for="recordable in state.model.config.recordables"
+              >
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-chip
+                      class="ma-1"
+                      label
+                      outlined
+                      small
+                      v-bind="attrs"
+                      v-on="on"
+                      v-text="recordable.id"
+                    />
+                  </template>
+                  <span v-text="recordable.label" />
+                  <span v-if="recordable.unit" v-text="` (${recordable.unit})`" />
+                </v-tooltip>
+              </span>
+            </v-card>
+          </v-card-text>
+        </v-card>
+
+        <v-card class="my-1" flat tile>
           <v-card-title v-text="'Network'" />
           <v-card-text>
             <v-card flat tile>
@@ -124,33 +156,29 @@
 import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 
-import { Config } from '@/core/config';
+import { Config } from '@/core/common/config';
 import core from '@/core';
+import InsiteAccessConfig from '@/components/setting/InsiteAccessConfig.vue';
+import NESTSimulatorConfig from '@/components/setting/NESTSimulatorConfig.vue';
 
 import colorSchemes from '@/assets/config/ColorSchemes.json';
 
 export default Vue.extend({
   name: 'Settings',
+  components: {
+    InsiteAccessConfig,
+    NESTSimulatorConfig,
+  },
   setup() {
+    const projectView = core.app.project.view;
     const state = reactive({
       app: core.app,
-      devMode: core.app.config.devMode,
-      nestVersion: '',
-      network: new Config('Network'),
-      pinNav: core.app.config.pinNav,
-      showHelp: core.app.project.config.showHelp,
+      appConfig: core.app.config,
       colorSchemes: colorSchemes,
+      model: new Config('Model'),
+      network: new Config('Network'),
+      projectViewConfig: projectView.config,
     });
-
-    /**
-     * Check if NEST is running in the backend.
-     */
-    const checkNEST = () => {
-      core.app.nestServer.check().then(() => {
-        state.nestVersion = core.app.nestServer.state.simulatorVersion;
-      });
-    };
-
     /**
      * Update app configuration.
      */
@@ -161,8 +189,8 @@ export default Vue.extend({
     /**
      * Update project configuration.
      */
-    const updateProjectConfig = (d: any) => {
-      core.app.project.updateConfig(d);
+    const updateProjectViewConfig = (d: any) => {
+      core.app.project.view.updateConfig(d);
     };
 
     /**
@@ -182,11 +210,11 @@ export default Vue.extend({
     };
 
     return {
-      checkNEST,
+      projectView,
       state,
       updateAppConfig,
       updateNetworkColorScheme,
-      updateProjectConfig,
+      updateProjectViewConfig,
     };
   },
 });

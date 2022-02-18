@@ -1,25 +1,29 @@
 <template>
   <v-app>
-    <iframe id="NESTFrame" class="iframe" />
-    <Navigation class="no-print" />
-
     <transition name="fade">
-      <router-view />
+      <div v-if="core.app.state.ready">
+        <iframe id="NESTSimulatorFrame" class="iframe" />
+        <Navigation class="no-print" />
+
+        <transition name="fade">
+          <router-view />
+        </transition>
+
+        <v-snackbar :timeout="-1" :value="state.updateExists">
+          An update is available.
+
+          <template #action="{ attrs }">
+            <v-btn
+              @click="refreshApp"
+              outlined
+              small
+              v-bind="attrs"
+              v-text="'Update'"
+            />
+          </template>
+        </v-snackbar>
+      </div>
     </transition>
-
-    <v-snackbar :timeout="-1" :value="state.updateExists">
-      An update is available.
-
-      <template #action="{ attrs }">
-        <v-btn
-          @click="refreshApp"
-          outlined
-          small
-          v-bind="attrs"
-          v-text="'Update'"
-        />
-      </template>
-    </v-snackbar>
   </v-app>
 </template>
 
@@ -35,7 +39,7 @@ export default Vue.extend({
   components: {
     Navigation,
   },
-  setup() {
+  setup(_, { root }) {
     // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
     const state = reactive({
       refreshing: false,
@@ -71,30 +75,43 @@ export default Vue.extend({
     };
 
     /**
-     * Keep connection to NEST Server alive.
+     * Keep connection to NEST Simulator alive.
      * Ping every 5 min.
      */
-    const keepConnectionToNESTServerAlive = () => {
-      core.app.nestServer.check().then(() => {
-        const NESTFrame = document.getElementById(
-          'NESTFrame'
-        ) as HTMLIFrameElement;
-        setInterval(() => {
-          NESTFrame.src = core.app.nestServer.url;
-          // NESTFrame.contentDocument.location.reload(true);
-        }, 300000);
-      });
+    const keepConnectionToNESTSimulatorAlive = () => {
+      core.app.backends.nestSimulator
+        .check()
+        .then(() => {
+          const NESTSimulatorFrame = document.getElementById(
+            'NESTSimulatorFrame'
+          ) as HTMLIFrameElement;
+          setInterval(() => {
+            NESTSimulatorFrame.src = core.app.backends.nestSimulator.url;
+            // NESTFrame.contentDocument.location.reload(true);
+          }, 300000);
+        })
+        .catch(() => {
+          // Errors are already logged inside the httpClient
+        });
     };
 
     onMounted(() => {
+      // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
         once: true,
       });
-      core.app.init();
-      keepConnectionToNESTServerAlive();
+
+      // Initialize Vuetify theme (light / dark).
+      core.app.initTheme(root.$vuetify.theme);
+
+      // Initialize app with global config.
+      core.app.init(Vue.prototype.$appConfig);
+
+      // Ping every 5 min to keep connection to NEST Simulator alive.
+      keepConnectionToNESTSimulatorAlive();
     });
 
-    return { refreshApp, state };
+    return { core, refreshApp, state };
   },
 });
 </script>
@@ -141,5 +158,26 @@ export default Vue.extend({
 }
 .fade-enter {
   opacity: 0;
+}
+
+.ma-2px {
+  margin: 2px !important;
+}
+
+/* Overrides default Vuetify style */
+.v-tabs-slider-wrapper {
+  pointer-events: none;
+}
+
+.paramLabel {
+  color: black;
+  font-size: 12px;
+  font-weight: 400;
+  height: 12px;
+  left: -8px;
+  line-height: 12px;
+  pointer-events: none;
+  position: absolute;
+  top: 2px;
 }
 </style>

@@ -41,6 +41,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# npm lockfile (since yarn's is already included)
+package-lock.json
+
 # TypeScript v1 declaration files
 typings/
 
@@ -119,6 +122,7 @@ selenium-debug.log
 /docs/_build
 
 # Singularity image file
+/images
 *.sif
 
 # local env files
@@ -130,3 +134,6 @@ selenium-debug.log
 build
 __pycache__
 *.egg-info
+
+# Electron-builder output
+/dist_electron

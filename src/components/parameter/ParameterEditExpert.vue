@@ -3,8 +3,8 @@
     <v-menu :close-on-content-click="false" :max-width="300">
       <template #activator="{ on, attrs }">
         <v-btn
-          color="white"
           block
+          color="white"
           depressed
           style="font-size: 10px"
           tile
@@ -25,10 +25,10 @@
             <v-select
               :items="state.param.types"
               @change="updateParam"
-              item-text="label"
-              item-value="id"
               dense
               hide-details
+              item-text="label"
+              item-value="id"
               label="Select a parameter type"
               v-model="state.param.type"
             >
@@ -57,8 +57,8 @@
                   :min="spec.min"
                   :step="spec.step"
                   hide-details
-                  type="number"
                   style="font-size: 13px"
+                  type="number"
                   v-model="spec.value"
                 />
               </v-col>

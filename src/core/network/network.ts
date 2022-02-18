@@ -1,31 +1,39 @@
-import { sha1 } from 'object-hash';
-
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
+import { consoleLog } from '../common/logger';
 import { NetworkCode } from './networkCode';
-import { NetworkView } from './networkView';
+import { NetworkState } from './networkState';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
 export class Network extends Config {
-  private _code: NetworkCode; // code
+  private _code: NetworkCode; // network code
   private _connections: Connection[] = []; // for nest.Connect
   private _nodes: Node[] = []; // for nest.Create
-  private _project: Project; // parent
-  private _view: NetworkView; // view
-  private _hash: string; // network hash
+  private _project: Project; // project
+  private _state: NetworkState; // network state
 
   constructor(project: Project, network: any = {}) {
     super('Network');
     this._project = project;
     this._code = new NetworkCode(this);
-    this._view = new NetworkView(this);
+    this._state = new NetworkState(this);
 
     this.update(network);
   }
 
   get code(): NetworkCode {
     return this._code;
+  }
+
+  get colors(): string[] {
+    return this.config.color.cycle;
+  }
+
+  set colors(value: string[]) {
+    const color: any = this.config.color;
+    color.cycle = value;
+    this.config.update({ color });
   }
 
   get connections(): Connection[] {
@@ -37,17 +45,15 @@ export class Network extends Config {
     this._connections.forEach((connection: Connection) => {
       connection.clean();
     });
+
+    this.updateRecords();
+    this.updateRecordsColor();
+
     this.networkChanges();
   }
 
-  get hash(): string {
-    return this._hash;
-  }
-
   get neurons(): Node[] {
-    return this._nodes.filter(
-      (node: Node) => node.model.elementType === 'neuron'
-    );
+    return this._nodes.filter((node: Node) => node.model.isNeuron());
   }
 
   get nodes(): Node[] {
@@ -65,6 +71,10 @@ export class Network extends Config {
       connection.targetIdx = nodeIdx.indexOf(connection.targetIdx);
       connection.clean();
     });
+
+    this.updateRecords();
+    this.updateRecordsColor();
+
     this.networkChanges();
   }
 
@@ -76,14 +86,16 @@ export class Network extends Config {
     return this._nodes.filter((node: Node) => node.model.isRecorder());
   }
 
-  get stimulators(): Node[] {
-    return this._nodes.filter(
-      (node: Node) => node.model.elementType === 'stimulator'
-    );
+  get recordersAnalog(): Node[] {
+    return this._nodes.filter((node: Node) => node.model.isAnalogRecorder());
   }
 
-  get view(): NetworkView {
-    return this._view;
+  get state(): NetworkState {
+    return this._state;
+  }
+
+  get stimulators(): Node[] {
+    return this._nodes.filter((node: Node) => node.model.isStimulator());
   }
 
   get visibleNodes(): Node[] {
@@ -94,6 +106,10 @@ export class Network extends Config {
     return this._connections.filter(
       (connection: Connection) => connection.view.visible
     );
+  }
+
+  consoleLog(text: string): void {
+    consoleLog(this, text, 5);
   }
 
   /**
@@ -114,15 +130,20 @@ export class Network extends Config {
    * It commits the network in the network history.
    */
   networkChanges(): void {
-    this.updateHash();
+    this.clean();
+
     this._project.code.generate();
+    this._state.updateHash();
+    this._project.updateHash();
+
     this._project.commitNetwork(this);
 
     // Simulate when the configuration is set
     // and the view mode is activity explorer.
+    const projectView = this._project.app.project.view;
     if (
-      this._project.config.simulateAfterChange &&
-      this._project.view.modeIdx === 1
+      projectView.config.simulateAfterChange &&
+      projectView.state.modeIdx === 1
     ) {
       setTimeout(() => this._project.runSimulation(), 1);
     }
@@ -159,14 +180,17 @@ export class Network extends Config {
   /**
    * Add node component to the network.
    */
-  addNode(node: any): void {
-    this._nodes.push(new Node(this, node));
+  addNode(data: any): void {
+    this.consoleLog('Add node');
+    this._nodes.push(new Node(this, data));
   }
 
   /**
    * Create node component by user interaction.
    */
   createNode(view: any): void {
+    this.consoleLog('Create node');
+
     const defaultModels: any = {
       neuron: 'iaf_psc_alpha',
       recorder: 'voltmeter',
@@ -182,8 +206,9 @@ export class Network extends Config {
   /**
    * Add connection component to the network.
    */
-  addConnection(conn: any): Connection {
-    const connection: Connection = new Connection(this, conn);
+  addConnection(data: any): Connection {
+    this.consoleLog('Add connection');
+    const connection: Connection = new Connection(this, data);
     this._connections.push(connection);
     return connection;
   }
@@ -195,15 +220,25 @@ export class Network extends Config {
    * When it connects to a recorder, it initializes activity graph.
    */
   connectNodes(source: Node, target: Node): void {
-    // console.log('Connect nodes');
+    this.consoleLog('Connect nodes');
+
+    const weight: string = source.view.weight;
     const connection: Connection = this.addConnection({
       source: source.idx,
       target: target.idx,
     });
+    if (weight === 'inhibitory') {
+      source.setWeights(weight);
+    }
+
+    // Trigger network change.
+    this.networkChanges();
+
+    // Initialize activity graph.
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
+      this._project.initActivityGraph();
     }
-    this.networkChanges();
   }
 
   /**
@@ -213,14 +248,16 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteNode(node: Node): void {
-    // console.log('Delete node');
-    this._view.reset();
+    this.consoleLog('Delete node');
+
+    this._state.reset();
     this._connections = this._connections.filter(
-      (c: Connection) => c.source !== node && c.target !== node
+      (connection: Connection) =>
+        connection.source !== node && connection.target !== node
     );
 
     // Update source and target idx in connections
-    this._connections.forEach(connection => {
+    this._connections.forEach((connection: Connection) => {
       if (connection.sourceIdx > node.idx) {
         connection.sourceIdx -= 1;
       }
@@ -233,10 +270,11 @@ export class Network extends Config {
     const idx: number = node.idx;
     this._nodes = this._nodes.slice(0, idx).concat(this.nodes.slice(idx + 1));
 
-    // clean network
-    this.clean();
-    this._project.initActivityGraph();
+    // Trigger network change.
     this.networkChanges();
+
+    // Initialize activity graph.
+    this._project.initActivityGraph();
   }
 
   /**
@@ -246,18 +284,20 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteConnection(connection: Connection): void {
-    // console.log('Delete connection');
-    this._view.reset();
+    this.consoleLog('Delete connection');
+
+    this._state.reset();
     // this.connections = this.connections.filter((c: Connection) => c.idx !== connection.idx);
     const idx: number = connection.idx;
     this._connections = this._connections
       .slice(0, idx)
       .concat(this.connections.slice(idx + 1));
 
-    // clean network
-    this.clean();
-    this._project.initActivityGraph();
+    // Trigger network change.
     this.networkChanges();
+
+    // Initialize activity graph.
+    this._project.initActivityGraph();
   }
 
   /**
@@ -266,13 +306,20 @@ export class Network extends Config {
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
     this._connections.forEach((connection: Connection) => connection.clean());
+
+    this._connections.forEach((connection: Connection) => {
+      connection.sourceSlice.update();
+      connection.targetSlice.update();
+    });
+
+    this._state.updateHash();
   }
 
   /**
    * Copy network component.
    */
-  copy(item: any): any {
-    return JSON.parse(JSON.stringify(item));
+  override copy(item: any): any {
+    return Object.assign({}, item);
   }
 
   /**
@@ -288,22 +335,37 @@ export class Network extends Config {
    * @param network - network object
    */
   update(network: any): void {
-    // add nodes to network.
+    // Add nodes to network.
     this._nodes = [];
     if (network.nodes) {
-      network.nodes.forEach((node: any) => this.addNode(node));
+      network.nodes.forEach((data: any) => this.addNode(data));
     }
 
-    // add connections to network.
+    // Add connections to network.
     this._connections = [];
     if (network.connections) {
-      network.connections.forEach((connection: any) =>
-        this.addConnection(connection)
-      );
+      network.connections.forEach((data: any) => this.addConnection(data));
     }
 
+    this.updateRecords();
     this.clean();
-    this.updateHash();
+  }
+
+  /**
+   * Update records of recorders.
+   *
+   * @remarks
+   * It should be called after network created.
+   */
+  updateRecords(): void {
+    this.recorders.forEach((recorder: Node) => recorder.updateRecords());
+  }
+
+  /**
+   * Update records color of recorders.
+   */
+  updateRecordsColor(): void {
+    this.recorders.forEach((recorder: Node) => recorder.updateRecordsColor());
   }
 
   /**
@@ -313,8 +375,7 @@ export class Network extends Config {
    * It emits network changes.
    */
   empty(): void {
-    this._view.resetFocus();
-    this._view.resetSelection();
+    this._state.reset();
     this._connections = [];
     this._nodes = [];
     this.clean();
@@ -326,10 +387,18 @@ export class Network extends Config {
   }
 
   /**
-   * Calculate hash of this component.
+   * Check if network has any spatial nodes.
    */
-  updateHash(): void {
-    this._hash = sha1(this.toJSON());
+  hasPositions(): boolean {
+    return this._nodes.some((node: Node) => node.spatial.hasPositions());
+  }
+
+  /**
+   * Get node color.
+   */
+  getNodeColor(idx: number): string {
+    const colors: string[] = this.config.color.cycle;
+    return colors[idx % colors.length];
   }
 
   /**

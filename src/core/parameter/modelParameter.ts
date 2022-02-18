@@ -1,7 +1,7 @@
 import { Model } from '../model/model';
 import { Node } from '../node/node';
 import { Parameter } from './parameter';
-import { Synapse } from '../connection/synapse';
+import { Synapse } from '../synapse/synapse';
 
 export class ModelParameter extends Parameter {
   constructor(parent: Model | Node | Synapse, param: any) {
@@ -11,7 +11,7 @@ export class ModelParameter extends Parameter {
   /**
    * Get options from model component.
    */
-  get options(): ModelParameter | undefined {
+  override get options(): ModelParameter | undefined {
     let model: Model;
     if (this.parent.name === 'Model') {
       model = this.parent as Model;
@@ -28,7 +28,7 @@ export class ModelParameter extends Parameter {
   /**
    * Reset constant value taken from model component.
    */
-  reset(): void {
+  override reset(): void {
     this.type = 'constant';
     this.value = this.options.value;
   }
@@ -36,7 +36,7 @@ export class ModelParameter extends Parameter {
   /**
    * Trigger changes when parameter is changed.
    */
-  paramChanges(): void {
+  override paramChanges(): void {
     if (this.parent.name === 'Node') {
       const node = this.parent as Node;
       node.nodeChanges();
@@ -50,32 +50,43 @@ export class ModelParameter extends Parameter {
    * Serialize for JSON.
    * @return model parameter object
    */
-  toJSON(): any {
-    const params: any = {
+  override toJSON(): any {
+    const param: any = {
       id: this.id,
       value: this.value,
     };
+
     if (this.parent.name === 'Model') {
-      // For model component
-      params.input = this.input;
-      params.label = this.label;
-      params.unit = this.unit;
+      // For model component.
+      param.input = this.input;
+      param.label = this.label;
+      param.unit = this.unit;
       if (this.input === 'valueSlider') {
-        params.min = this.min;
-        params.max = this.max;
-        params.step = this.step;
+        param.min = this.min;
+        param.max = this.max;
+        param.step = this.step;
       } else if (this.input === 'tickSlider') {
-        params.ticks = this.ticks;
+        param.ticks = this.ticks;
       }
     } else {
-      params.visible = this.visible;
+      param.visible = this.visible;
+
+      // Add value factors if existed.
       if (this.factors.length > 0) {
-        params.factors = this.factors;
+        param.factors = this.factors;
       }
+
+      // Add parameter type if not constant.
       if (!this.isConstant()) {
-        params.type = this.type;
+        param.type = this.type;
       }
     }
-    return params;
+
+    // Add rules for validation if existed.
+    if (this.rules.length > 0) {
+      param.rules = this.rules;
+    }
+
+    return param;
   }
 }

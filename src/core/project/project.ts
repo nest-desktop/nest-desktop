@@ -1,30 +1,28 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
 import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
 
 import { Activity } from '../activity/activity';
+import { ActivityChartPanel } from '../activity/activityChart/activityChartPanel';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
-import { Config } from '../config';
+import { consoleLog } from '../common/logger';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { ProjectCode } from './projectCode';
-import { ProjectView } from './projectView';
 import { Simulation } from '../simulation/simulation';
 import { SpikeActivity } from '../activity/spikeActivity';
 import { upgradeProject } from './projectUpgrade';
 
-export class Project extends Config {
+export class Project {
   private _activityGraph: ActivityGraph;
   private _app: App; // parent
-  private _code: ProjectCode; // code script for NEST Server
+  private _code: ProjectCode; // code script for NEST Simulator
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
-  private _errorMessage = '';
-  private _hasActivities = false;
-  private _hash: string; // obsolete: hash of serialized network
-  private _hasSpatialActivities = false;
+  private _doc: any; // doc data of the database
   private _id: string; // id of the project
   private _name: string; // project name
   private _network: Network; // network of neurons and devices
@@ -32,23 +30,34 @@ export class Project extends Config {
   private _networkRevisions: any[] = []; // network history
   private _rev: string; // rev of the project
   private _simulation: Simulation; // settings for the simulation
+  private _state: UnwrapRef<any>;
   private _updatedAt: string; // when is it updated in database
-  private _view: ProjectView;
 
   constructor(app: App, project: any = {}) {
-    super('Project');
     this._app = app;
-    this._view = new ProjectView(this);
 
     // Database instance
-    this._id = project._id || uuidv4();
+    this._doc = project || {};
+    this._id = project.id || uuidv4();
     this._rev = project._rev || '';
     this._createdAt = project.createdAt || new Date();
     this._updatedAt = project.updatedAt;
 
+    // Project metadata
     this._name = project.name || '';
     this._description = project.description || '';
-    this._hash = project.hash || '';
+
+    // Initialize project state.
+    this._state = reactive({
+      activityStatsPanelId: 0,
+      hasActivities: false,
+      hasAnalogActivities: false,
+      hash: '',
+      hasSpatialActivities: false,
+      hasSpikeActivities: false,
+      selected: false,
+      withActivities: false,
+    });
 
     // Upgrade old projects.
     project = upgradeProject(this._app, project);
@@ -59,10 +68,9 @@ export class Project extends Config {
 
     // Initialize code and activity graph.
     this._code = new ProjectCode(this);
-    this._activityGraph = new ActivityGraph(this);
+    this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
-    this.commitNetwork(this._network);
   }
 
   get activityGraph(): ActivityGraph {
@@ -89,20 +97,24 @@ export class Project extends Config {
     return this._description;
   }
 
-  get errorMessage(): string {
-    return this._errorMessage;
+  get doc(): any {
+    return this._doc;
   }
 
-  set errorMessage(value: string) {
-    this._errorMessage = value;
+  set doc(value: any) {
+    this._doc = value;
   }
 
-  get hash(): string {
-    return this._hash;
+  get docId(): string {
+    return this._doc ? this._doc._id : undefined;
   }
 
   get id(): string {
     return this._id;
+  }
+
+  set id(value: string) {
+    this._id = value;
   }
 
   get name(): string {
@@ -125,6 +137,18 @@ export class Project extends Config {
     return this._simulation;
   }
 
+  /**
+   * Returns the first six digits of the project ID.
+   * @returns 6-digit hash value
+   */
+  get shortId(): string {
+    return this._id ? this._id.slice(0, 6) : '';
+  }
+
+  get state(): UnwrapRef<any> {
+    return this._state;
+  }
+
   get updatedAt(): string {
     return this._updatedAt;
   }
@@ -133,22 +157,38 @@ export class Project extends Config {
     this._updatedAt = value;
   }
 
-  get view(): ProjectView {
-    return this._view;
+  consoleLog(text: string): void {
+    consoleLog(this, text, 4);
   }
 
   /**
    * Is the current project selected?
    */
   isSelected(): boolean {
-    return this._id === this._app.project.id;
+    return this._id === this._app.project.view.state.project.id;
   }
 
   /**
    * Save the current project.
    */
-  save(): Promise<any> {
-    return this._app.saveProject(this);
+  async save(): Promise<any> {
+    return this._app.project.importProject(this);
+  }
+
+  /**
+   * Initialize project.
+   */
+  init(options: any = { generateCode: true }): void {
+    this.clean();
+
+    if (options.generateCode) {
+      this.code.generate();
+    }
+    // Reset network graph.
+    this._network.state.reset();
+
+    // Commit network in history.
+    this.commitNetwork(this._network);
   }
 
   /**
@@ -161,6 +201,7 @@ export class Project extends Config {
     const newProject = new Project(this._app, this.toJSON());
     newProject._id = uuidv4();
     newProject._updatedAt = '';
+    newProject.init();
     return newProject;
   }
 
@@ -172,36 +213,36 @@ export class Project extends Config {
    */
   duplicate(): Project {
     const newProject: Project = this.clone();
-    this._app.projects.unshift(newProject);
+    this._app.project.state.projects.unshift(newProject);
     return newProject;
   }
 
   /**
    * Delete this project from the list and database.
    */
-  delete(): Promise<any> {
-    return this._app.deleteProject(this._id);
+  async delete(): Promise<any> {
+    return this._app.project.deleteProject(this);
   }
 
   /**
-   * Download this project.
+   * Export this project.
    */
-  download(): void {
-    this._app.downloadProject(this._id);
+  export(): void {
+    this._app.project.exportProject(this._id);
   }
 
   /**
-   * Download this project and activities.
+   * Export this project and activities.
    */
-  downloadWithActivities(): void {
-    this._app.downloadProject(this._id, true);
+  exportWithActivities(): void {
+    this._app.project.exportProject(this._id, true);
   }
 
   /**
    * Reload this project.
    */
-  reload(): Promise<any> {
-    return this._app.reloadProject(this);
+  async reload(): Promise<any> {
+    return this._app.project.reloadProject(this);
   }
 
   /*
@@ -212,7 +253,7 @@ export class Project extends Config {
    * Is this revised project selected?
    */
   isRevisionSelected(): boolean {
-    return this._rev === this._app.project.rev;
+    return this._rev === this._app.project.view.state.project.rev;
   }
 
   /**
@@ -256,7 +297,7 @@ export class Project extends Config {
    * Add network to the history list.
    */
   commitNetwork(network: Network): void {
-    // console.log('Commit network');
+    this.consoleLog('Commit network of ' + network.project.shortId);
 
     // Remove networks after the current.
     this._networkRevisions = this._networkRevisions.slice(
@@ -264,8 +305,10 @@ export class Project extends Config {
       this._networkRevisionIdx + 1
     );
 
-    // Limit max amount of network revisions;
-    const maxRev: number = this.config.maxNetworkRevisions || 5;
+    // Limit max amount of network revisions.
+    const maxRev: number = this._app.project.view
+      ? this._app.project.view.config.maxNetworkRevisions
+      : 5;
     if (this._networkRevisions.length > maxRev) {
       this._networkRevisions = this._networkRevisions.slice(
         this._networkRevisions.length - maxRev
@@ -279,19 +322,23 @@ export class Project extends Config {
         : {};
 
     let currentNetwork: any;
-    if (lastNetwork.codeHash === this._code.hash) {
+    if (
+      lastNetwork.codeHash != null &&
+      lastNetwork.codeHash === this._code.hash
+    ) {
       currentNetwork = this._networkRevisions.pop();
 
-      // Add activity to recorder nodes
+      // Add activity to recorder nodes.
       network.nodes
         .filter(node => node.model.isRecorder())
         .forEach(node => {
           currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
         });
     } else {
-      // Get network object
+      // Get network object.
       currentNetwork = network.toJSON();
-      currentNetwork.codeHash = this._code.hash; // Copy code hash to current network
+      // Copy code hash to current network.
+      currentNetwork.codeHash = this._code.hash;
 
       // Add activity to recorder nodes only if hashes is matched.
       if (this._code.hash === this._activityGraph.codeHash) {
@@ -316,17 +363,12 @@ export class Project extends Config {
    * @remarks It generates code.
    */
   checkoutNetwork(): void {
-    // console.log('Checkout network');
+    this.consoleLog('Checkout network');
 
     // Update revision idx.
     if (this._networkRevisionIdx >= this._networkRevisions.length) {
       this._networkRevisionIdx = this._networkRevisions.length - 1;
     }
-
-    // Collect recorder models of old network.
-    const oldModels: string[] = this._network.recorders.map(
-      (node: Node) => node.modelId
-    );
 
     // Update network.
     const network: any = this._networkRevisions[this._networkRevisionIdx];
@@ -335,19 +377,12 @@ export class Project extends Config {
     // Generate simulation code.
     this.code.generate();
 
-    // Collect recorder models of new network.
-    const newModels: string[] = this._network.recorders.map(
-      (node: Node) => node.modelId
-    );
+    // Initialize activity graph.
+    // It resets always the panels.
+    // TODO: Better solution to update activity graph.
+    this._activityGraph.init();
 
-    // Compare recorder models and then update chart graph.
-    if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
-      this._activityGraph.activityChartGraph.initPanels();
-    } else {
-      this._activityGraph.activityChartGraph.init();
-    }
-
-    if (this.config.simulateAfterCheckout) {
+    if (this._app.project.view.config.simulateAfterCheckout) {
       // Run simulation.
       setTimeout(() => this.runSimulation(), 1);
     } else {
@@ -355,7 +390,7 @@ export class Project extends Config {
       const activities: any[] = this.activities.map((activity: Activity) =>
         activity.toJSON()
       );
-      this.updateActivities(activities);
+      this.initActivities(activities);
     }
   }
 
@@ -412,29 +447,36 @@ export class Project extends Config {
    * @remarks
    * After the simulation it updates activities and commit network.
    */
-  runSimulation(): Promise<any> {
-    // console.log('Run simulation');
-    this._errorMessage = '';
+  async runSimulation(): Promise<any> {
+    this.consoleLog('Run simulation');
+    this.cancelGettingActivityInsite();
+
+    if (this.app.project.view.config.simulateWithInsite) {
+      return;
+    }
+
+    // Generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
     }
+
+    this._simulation.resetState();
     this._simulation.running = true;
-    return this.app.nestServer.httpClient
-      .post(this._app.nestServer.url + '/exec', {
+    return this.app.backends.nestSimulator.instance
+      .post('exec', {
         source: this._code.script,
         return: 'response',
       })
-      .then((resp: any) => {
+      .then((response: any) => {
         let data: any;
-        switch (resp.status) {
+        switch (response.status) {
           case 0:
-            this._errorMessage = 'Failed to find NEST Server.';
+            this.openToast('Failed to find NEST Simulator.', 'error');
             break;
           case 200:
-            data = JSON.parse(resp.response).data;
-            this._simulation.kernel.biologicalTime =
-              data.kernel.biological_time;
+            data = response.data.data;
+            this._simulation.state.biologicalTime = data.kernel.biological_time;
             if (data.positions) {
               data.activities.forEach((activity: any) => {
                 const positions = activity.nodeIds.map(
@@ -443,36 +485,257 @@ export class Project extends Config {
                 activity.nodePositions = positions;
               });
             }
-            this.updateActivities(data.activities);
+            this.initActivities(data.activities);
             this.commitNetwork(this._network);
             break;
           default:
-            this._errorMessage = resp.response;
+            this.openToast(response.data, 'error');
             break;
         }
-
-        // Show error message via toast notification.
-        if (this._errorMessage) {
-          Vue.$toast.open({
-            message: this._errorMessage,
-            pauseOnHover: true,
-            position: 'top-right',
-            type: 'error',
-          });
-        }
-
-        setTimeout(() => {
-          this._simulation.running = false;
-        }, 100);
-        return resp;
+        return response;
       })
-      .catch((resp: any) => {
-        this._errorMessage = resp.responseText;
-        setTimeout(() => {
-          this._simulation.running = false;
-        }, 100);
-        return resp;
+      .catch((error: any) => {
+        if (error.response) {
+          // Request made and server responded.
+          this.openToast(error.response.data, 'error');
+        } else if (error.request) {
+          // The request was made but no response was received.
+          this.openToast('Failed to find NEST Simulator.', 'error');
+        } else {
+          // Something happened in setting up the request
+          // that triggered an error.
+          this.openToast(error.message, 'error');
+        }
+      })
+      .finally(() => {
+        this._simulation.running = false;
       });
+  }
+
+  /**
+   * Start simulation with recording backend Insite.
+   *
+   * @remarks
+   * During the simulation it gets and updates activities.
+   */
+  runSimulationInsite(): void {
+    this.consoleLog('Run simulation with Insite');
+
+    this.cancelGettingActivityInsite();
+
+    if (!this.app.project.view.config.simulateWithInsite) {
+      return;
+    }
+
+    this._app.project.view.state.fromTime = 0;
+
+    // Generate seed and simulation code.
+    if (this._simulation.kernel.config.autoRNGSeed) {
+      this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
+      this._code.generate();
+    }
+
+    this._simulation.resetState();
+    this._simulation.state.biologicalTime = this._simulation.time;
+    this._simulation.running = true;
+    this._app.backends.nestSimulator.instance
+      .post('exec', { source: this._code.script })
+      .then((response: any) => {
+        switch (response.status) {
+          case 0:
+            this.openToast('Failed to find NEST Simulator.', 'error');
+            this.cancelGettingActivityInsite();
+            break;
+          case 200:
+            this._app.backends.insiteAccess.instance
+              .get('nest/simulationTimeInfo/')
+              .then((response: any) => {
+                this.openToast('Simulation is finished.', 'success');
+                this._simulation.running =
+                  response.data.end >
+                  response.data.current + response.data.stepSize;
+              });
+            break;
+          default:
+            this.openToast(response.responseText, 'error');
+            this.cancelGettingActivityInsite();
+            break;
+        }
+        return response;
+      })
+      .catch((error: any) => {
+        this.openToast(error.response.data, 'error');
+        this.cancelGettingActivityInsite();
+        return error;
+      })
+      .finally(() => {
+        this._simulation.running = false;
+      });
+
+      // TODO: Find better solution for fetching activities.
+      setTimeout(() => this.getActivitiesInsite(), 100);
+  }
+
+  /**
+   * Get activities from Insite.
+   *
+   * First it checks the simulation has started,
+   * then it updates activity graph frequently.
+   * Afterwards it gets activities from Insite.
+   */
+  getActivitiesInsite(): void {
+    this.consoleLog('Get activites from Insite');
+    this._app.backends.insiteAccess.instance
+      .get('nest/simulationTimeInfo/')
+      .catch(() => {
+        setTimeout(() => this.getActivitiesInsite(), 100);
+      })
+      .then((response: any) => {
+        if (response == null) {
+          return;
+        }
+        this._simulation.state.timeInfo = response.data;
+
+        // Update activity graph during the simulation.
+        this.continuouslyUpdateActivityGraph();
+
+        const nodePositions: any = {};
+        this._app.backends.insiteAccess.instance
+          .get('nest/nodes/')
+          .then((response: any) => {
+            response.data.forEach((data: any) => {
+              if (data.position != null) {
+                nodePositions[data.nodeId] = data.position;
+              }
+            });
+
+            // Check if project has activities.
+            this.checkActivities();
+
+            if (this._state.hasSpikeActivities) {
+              this.getSpikeActivitiesInsite(nodePositions);
+            }
+
+            if (this._state.hasAnalogActivities) {
+              this.getAnalogSignalActivitiesInsite(nodePositions);
+            }
+          });
+      });
+  }
+
+  /**
+   * Cancel getting activities from Insite.
+   *
+   * When NEST Server responds error.
+   * TODO: Check if it is working properly.
+   */
+  cancelGettingActivityInsite(): void {
+    this.activities.forEach(
+      (activity: Activity) => (activity.lastFrame = true)
+    );
+  }
+
+  /**
+   * Get spike activities from Insite.
+   */
+  getSpikeActivitiesInsite(nodePositions: any): void {
+    this.consoleLog('Get spike activities from Insite');
+    this._app.backends.insiteAccess.instance
+      .get('nest/spikerecorders/')
+      .then((response: any) => {
+        const activities: any[] = response.data.map((data: any) => {
+          const activity: any = {
+            nodeCollectionId: data.spikerecorderId,
+            nodeIds: data.nodeIds,
+            nodePositions: [],
+          };
+
+          if (Object.keys(nodePositions).length > 0) {
+            data.nodeIds.forEach((id: number) => {
+              if (id in nodePositions) {
+                activity.nodePositions.push(nodePositions[id]);
+              }
+            });
+          }
+
+          return activity;
+        });
+
+        // Initialize activities.
+        this.initActivities(activities);
+
+        // Get spike activities from spike recorders.
+        this.spikeActivities.forEach((activity: SpikeActivity) =>
+          activity.getActivityInsite()
+        );
+      });
+  }
+
+  /**
+   * Get analog signal activities from Insite.
+   */
+  getAnalogSignalActivitiesInsite(nodePositions: any): void {
+    this.consoleLog('Get analog signal activities from Insite');
+    this._app.backends.insiteAccess.instance
+      .get('nest/multimeters/')
+      .then((response: any) => {
+        const activities: any[] = response.data.map((data: any) => {
+          const events = { times: [], senders: [] };
+          data.attributes.forEach((attribute: string) => {
+            events[attribute] = [];
+          });
+
+          const activity: any = {
+            events,
+            nodeCollectionId: data.multimeterId,
+            nodeIds: data.nodeIds,
+            nodePositions: [],
+          };
+
+          if (Object.keys(nodePositions).length > 0) {
+            data.nodeIds.forEach((id: number) => {
+              if (id in nodePositions) {
+                activity.nodePositions.push(nodePositions[id]);
+              }
+            });
+          }
+
+          return activity;
+        });
+
+        // Initialize activities.
+        this.initActivities(activities);
+
+        // Get analog signal activities from multimeters.
+        this.analogSignalActivities.forEach((activity: AnalogSignalActivity) =>
+          activity.getActivityInsite()
+        );
+      });
+  }
+
+  /**
+   * Update activity graph continuously.
+   */
+  continuouslyUpdateActivityGraph(): void {
+    this.consoleLog('Update activity graph continuously');
+    this._app.project.view.state.refreshIntervalId = setInterval(() => {
+      // Check if project has activities.
+      this.checkActivities();
+
+      // Update activity graph.
+      this._activityGraph.update();
+
+      const lastFrames: boolean = this.activities.every(
+        (activity: Activity) => activity.lastFrame
+      );
+      if (lastFrames) {
+        clearInterval(this._app.project.view.state.refreshIntervalId);
+      }
+
+      // TODO:
+      // Find better algoritm for stop updating activity graph,
+      // e.g. recursive call in timeout
+    }, 1000);
   }
 
   /*
@@ -483,7 +746,6 @@ export class Project extends Config {
    * Get a list of activities.
    */
   get activities(): Activity[] {
-    // console.log('Get activities')
     const activities: Activity[] = this._network
       ? this._network.recorders.map((recorder: Node) => recorder.activity)
       : [];
@@ -533,21 +795,38 @@ export class Project extends Config {
    * Initialize activity graph.
    */
   initActivityGraph(): void {
-    if (this._activityGraph === undefined) {
+    this.consoleLog('Initialize activity graph of ' + this._name);
+    if (this._activityGraph == undefined) {
       return;
     }
     this._activityGraph.init();
-    if (this.hasActivities) {
+    if (this._state.hasActivities) {
       this._activityGraph.update();
     }
+  }
+
+  /**
+   * Initialize activities in recorder nodes after simulation.
+   */
+  initActivities(data: any[]): void {
+    // Initialize recorded activity.
+    const activities: Activity[] = this.activities;
+    data.forEach((activityData: any, idx: number) => {
+      const activity: Activity = activities[idx];
+      activity.init(activityData);
+    });
+
+    // Check if project has activities.
+    this.checkActivities();
+
+    // Update activity graph.
+    this._activityGraph.update();
   }
 
   /**
    * Update activities in recorder nodes after simulation.
    */
   updateActivities(data: any): void {
-    // console.log('Update activities');
-
     // Update recorded activity.
     const activities: Activity[] = this.activities;
     data.forEach((activityData: any, idx: number) => {
@@ -563,34 +842,36 @@ export class Project extends Config {
   }
 
   /**
-   * Check whether the project has some events in (spatial) activities.
+   * Check whether the project has some events in activities.
    */
   checkActivities(): void {
     const activities: Activity[] = this.activities;
-    this._hasActivities =
+
+    // Check if it has activities.
+    this._state.hasActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasEvents())
         : false;
-    this._hasSpatialActivities = this.hasActivities
+
+    // Check if it has analog signal activities.
+    this._state.hasAnalogActivities =
+      activities.length > 0
+        ? activities.some((activity: Activity) => activity.hasAnalogData())
+        : false;
+
+    // Check if it has spike activities.
+    this._state.hasSpikeActivities =
+      activities.length > 0
+        ? activities.some((activity: Activity) => activity.hasSpikeData())
+        : false;
+
+    // Check if it has spatial activities.
+    this._state.hasSpatialActivities = this._state.hasActivities
       ? activities.some(
           (activity: Activity) =>
             activity.hasEvents() && activity.nodePositions.length > 0
         )
       : false;
-  }
-
-  /**
-   * Does the project have events in activities?
-   */
-  get hasActivities(): boolean {
-    return this._hasActivities;
-  }
-
-  /**
-   * Does the project have events in spatial activities?
-   */
-  get hasSpatialActivities(): boolean {
-    return this._hasSpatialActivities;
   }
 
   /**
@@ -601,22 +882,40 @@ export class Project extends Config {
    * Update hash of this project.
    */
   clean(): void {
-    this._hash = this.getHash();
+    this.updateHash();
   }
 
   /**
-   * Is the hash equal to caluclated hash.
+   * Reset state of this project.
    */
-  isHashEqual(): boolean {
-    return this._hash === this.getHash();
+  resetState(): void {
+    this._state.selected = false;
+    this._state.withActivities = false;
+  }
+
+  /**
+   * Open toast of message from the back end
+   */
+  openToast(message: string, type: string = 'success') {
+    this._app.project.view.state.toast.message = message;
+    this._app.project.view.state.toast.type = type;
+
+    // Show NEST or Python error message via toast notification.
+    if (this._app.project.view.state.toast.message) {
+      Vue.$toast.open(this._app.project.view.state.toast);
+    }
   }
 
   /**
    * Calculate hash of this component.
    */
-  getHash(): string {
-    const project: any = this.toJSON();
-    return sha1(project);
+  updateHash(): void {
+    this._state.hash = sha1({
+      description: this._description,
+      name: this._name,
+      network: this._network.toJSON(),
+      simulation: this._simulation.toJSON(),
+    });
   }
 
   /**
@@ -625,15 +924,15 @@ export class Project extends Config {
    */
   toJSON(): any {
     const project: any = {
+      activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
-      hash: this._hash,
       id: this._id,
       name: this._name,
       network: this._network.toJSON(),
       simulation: this._simulation.toJSON(),
       updatedAt: this._updatedAt,
-      version: this._app.version,
+      version: this._app.state.version,
     };
     return project;
   }

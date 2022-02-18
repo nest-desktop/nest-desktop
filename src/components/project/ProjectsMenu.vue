@@ -1,12 +1,5 @@
 <template>
   <div class="projectsMenu">
-    <ProjectsUploadDialog :open="state.openUploadDialog" />
-    <ProjectsDialog
-      :action="state.projectDialogAction"
-      :open="state.openProjectsDialog"
-      :projects="state.projects"
-    />
-
     <v-menu
       :close-on-content-click="false"
       :position-x="state.position.x"
@@ -15,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-card tile flat style="min-width: 300px">
-        <span v-if="state.content === null">
+        <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
               :key="index"
@@ -48,14 +41,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="resetProjects"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'Reset'"
-            />
+            <v-btn @click="resetProjects" outlined small v-text="'Reset'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -67,17 +53,11 @@
 import Vue from 'vue';
 import { reactive, watch } from '@vue/composition-api';
 
-import { Project } from '@/core/project/project';
 import core from '@/core';
-import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsUploadDialog from '@/components/project/ProjectsUploadDialog.vue';
 
 export default Vue.extend({
   name: 'ProjectsMenu',
-  components: {
-    ProjectsDialog,
-    ProjectsUploadDialog,
-  },
+  components: {},
   props: {
     position: Object,
   },
@@ -85,56 +65,35 @@ export default Vue.extend({
     const state = reactive({
       content: null,
       selectedProjects: [],
-      projects: core.app.projects as Project[],
       position: props.position,
       show: true,
-      openUploadDialog: false,
-      openProjectsDialog: false,
-      projectDialogAction: 'download',
       items: [
         {
           id: 'projectsReload',
           icon: 'mdi-reload',
           title: 'Reload projects',
           onClick: () => {
-            core.app.updateProjects();
+            core.app.project.initProjectList();
             state.show = false;
           },
         },
         {
-          id: 'projectsDownload',
-          icon: 'mdi-download',
-          title: 'Download projects',
-          onClick: () => {
-            state.projects.forEach((project: Project) => {
-              project.view.resetState();
-            });
-            state.projectDialogAction = 'download';
-            state.openProjectsDialog = true;
-            state.show = false;
-          },
+          id: 'projectsExport',
+          icon: 'mdi-export',
+          title: 'Export projects',
+          onClick: () => openDialog('export'),
         },
         {
-          id: 'projectsUpload',
-          icon: 'mdi-upload',
-          title: 'Upload projects',
-          onClick: () => {
-            state.openUploadDialog = true;
-            state.show = false;
-          },
+          id: 'projectsImport',
+          icon: 'mdi-import',
+          title: 'Import projects',
+          onClick: () => openDialog('import'),
         },
         {
           id: 'projectsDelete',
           icon: 'mdi-trash-can-outline',
           title: 'Delete projects',
-          onClick: () => {
-            state.projects.forEach((project: Project) => {
-              project.view.resetState();
-            });
-            state.projectDialogAction = 'delete';
-            state.openProjectsDialog = true;
-            state.show = false;
-          },
+          onClick: () => openDialog('delete'),
         },
         {
           id: 'projectsReset',
@@ -161,10 +120,22 @@ export default Vue.extend({
      */
     const resetProjects = () => {
       state.show = false;
-      core.app.resetProjectDatabase().then(() => {
-        core.app.updateProjects();
+      core.app.project.resetDatabase().then(() => {
         reset();
       });
+    };
+
+    /**
+     * Open one of the dialogs to export, import or delete.
+     * @param action Dialog to open
+     */
+    const openDialog = (action: string = 'export') => {
+      core.app.project.state.projects.forEach((project: any) =>
+        core.app.project.getProject(project.id)
+      );
+      core.app.project.resetProjectStates();
+      core.app.openDialog('project', action, core.app.project.state.projects);
+      state.show = false;
     };
 
     watch(

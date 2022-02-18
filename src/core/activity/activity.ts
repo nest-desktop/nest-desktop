@@ -1,19 +1,33 @@
-// import { Config } from '../config';
-import { Node } from '../node/node';
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
+
+import { Node } from '../node/node';
+import { Project } from '../project/project';
 
 export class Activity {
   private _events: any = {};
+  private _hash: string;
   private _idx: number; // generative
+  private _lastFrame: boolean = false;
+  private _nodeCollectionId: number;
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
-  private _recordFrom: String[] = [];
-  private _hash: string;
+  private _state: UnwrapRef<any>;
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
-    this.update(activity);
+    this._state = reactive({
+      records: [],
+    });
+    this.init(activity);
+  }
+
+  get currenttime(): number {
+    const simulationState = this._recorder.network.project.simulation.state;
+    return simulationState.timeInfo.current > 0
+      ? simulationState.timeInfo.current
+      : simulationState.biologicalTime;
   }
 
   get elementTypes(): string[] {
@@ -21,7 +35,7 @@ export class Activity {
   }
 
   get endtime(): number {
-    return this._recorder.network.project.simulation.kernel.biologicalTime;
+    return this._recorder.network.project.simulation.state.biologicalTime;
   }
 
   get events(): any {
@@ -44,8 +58,30 @@ export class Activity {
     this._idx = value;
   }
 
+  get lastFrame(): boolean {
+    return this._lastFrame;
+  }
+
+  set lastFrame(value: boolean) {
+    this._lastFrame = value;
+  }
+
+  get lastTime(): number {
+    return this._events.times && this._events.times.length > 0
+      ? this.events.times[this.events.times.length - 1]
+      : 0;
+  }
+
   get nEvents(): number {
     return this._events.hasOwnProperty('times') ? this._events.times.length : 0;
+  }
+
+  get nodeCollectionId(): number {
+    return this._nodeCollectionId;
+  }
+
+  set nodeCollectionId(value: number) {
+    this._nodeCollectionId = value;
   }
 
   get nodeIds(): number[] {
@@ -64,20 +100,20 @@ export class Activity {
     this._nodePositions = value;
   }
 
+  get project(): Project {
+    return this.recorder.network.project;
+  }
+
   get recorder(): Node {
     return this._recorder;
   }
 
-  get recordFrom(): String[] {
-    return this._recordFrom;
+  get state(): UnwrapRef<any> {
+    return this._state;
   }
 
-  get senders(): number[] {
-    const senders: any[] = [...new Set(this._events.senders)];
-    if (senders.length > 0) {
-      senders.sort((a: number, b: number) => a - b);
-    }
-    return senders;
+  get simulationTimeInfo(): number {
+    return this._recorder.network.project.simulation.state.timeInfo;
   }
 
   /**
@@ -88,23 +124,83 @@ export class Activity {
   }
 
   /**
+   * Reset activity.
+   */
+  reset(): void {
+    this._events = {};
+    this._lastFrame = false;
+    this._nodeIds = [];
+    this._nodePositions = [];
+    this._state.records = [];
+  }
+
+  /**
+   * Initialize activity.
+   *
+   * Overwrites events.
+   */
+  init(activity: any): void {
+    this.initEvents(activity);
+  }
+
+  /**
+   * Initialize events.
+   *
+   * Overwrites events.
+   */
+  initEvents(activity: any): void {
+    this.reset();
+    this.events = activity.events || { senders: [], times: [] };
+    this.nodeIds = activity.nodeIds || [];
+    this.nodePositions = activity.nodePositions || [];
+    this.nodeCollectionId = activity.nodeCollectionId;
+    this.updateHash();
+  }
+
+  /**
    * Update activity.
+   *
+   * Extends events.
    */
   update(activity: any): void {
-    this._events = activity.events || {};
-    this._recordFrom = Object.keys(this._events).filter(
-      (event: string) => !['senders', 'times'].includes(event)
-    );
-    this._nodeIds = activity.nodeIds || [];
-    this._nodePositions = activity.nodePositions || [];
+    if (activity.events == undefined) {
+      return;
+    }
+
+    this.updateEvents(activity);
+  }
+
+  /**
+   * Update events.
+   */
+  updateEvents(activity: any): void {
+    const events = activity.events;
+    const eventKeys: string[] = Object.keys(events);
+    eventKeys.forEach((eventKey: string) => {
+      const currEvents: number[] = this._events[eventKey];
+      const newEvents: number[] = events[eventKey];
+      this._events[eventKey] = currEvents.concat(newEvents);
+    });
+    this.updateHash();
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
     this._hash = sha1(JSON.stringify(this._events));
   }
+
+  /**
+   * get activity from insite.
+   */
+  getActivityInsite(): void {}
 
   /**
    * Check if activity contains analog signal data.
    */
   hasAnalogData(): boolean {
-    return ['voltmeter', 'multimeter'].includes(this._recorder.model.existing);
+    return this._recorder.model.isAnalogRecorder();
   }
 
   /**
@@ -125,21 +221,44 @@ export class Activity {
    * Check if activity contains spike data.
    */
   hasSpikeData(): boolean {
-    return this._recorder.model.existing === 'spike_recorder';
+    return this._recorder.model.isSpikeRecorder();
   }
 
   /**
-   * Download activity (node indices, positions and events).
+   * Export activity (node indices, positions and events).
    */
-  download(): void {
-    this._recorder.network.project.app.download(this, 'activity');
+  export(): void {
+    this._recorder.network.project.app.download(
+      JSON.stringify(this.toJSON()),
+      'activity'
+    );
   }
 
   /**
-   * Download events.
+   * Export events to file in json format.
    */
-  downloadEvents(): void {
-    this._recorder.network.project.app.download(this._events, 'events');
+  exportEvents(): void {
+    this._recorder.network.project.app.download(
+      JSON.stringify(this._events),
+      'events'
+    );
+  }
+
+  /**
+   * Export events to file in csv format.
+   */
+  exportEventsCSV(): void {
+    const eventKeys = ['senders', 'times'];
+    Object.keys(this._events).forEach((eventKey: string) => {
+      if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);
+    });
+    let csv = eventKeys.join(',') + '\n';
+    csv += this._events.times
+      .map((_: any, idx: number) =>
+        eventKeys.map(key => this._events[key][idx]).join(',')
+      )
+      .join('\n');
+    this._recorder.network.project.app.download(csv, 'events', 'csv');
   }
 
   /**

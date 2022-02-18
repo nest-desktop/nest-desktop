@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
+import combineURLs from 'axios/lib/helpers/combineURLs';
 
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
+import './plugins/codemirror';
 
 // Style
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
@@ -20,24 +22,31 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 Vue.use(VueToast);
 
-// CodeMirror
-import VueCodemirror from 'vue-codemirror';
-import 'codemirror/mode/python/python.js';
-import 'codemirror/mode/javascript/javascript.js';
-import 'codemirror/addon/selection/active-line.js';
-// import '@/assets/codemirror/addon/hint/pyNEST-hint.js';
-
-import 'codemirror/lib/codemirror.css';
-// import 'codemirror/theme/base16-dark.css'
-import 'codemirror/addon/hint/show-hint.css';
-Vue.use(VueCodemirror);
-
 // Production
 Vue.config.productionTip = false;
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App),
-}).$mount('#app');
+/**
+ * Mount application.
+ */
+const mountApp = () => {
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: h => h(App),
+  }).$mount('#app');
+};
+
+if (process.env.IS_ELECTRON) {
+  Vue.prototype.$appConfig = {
+    insiteAccess: { url: 'http://localhost:8080' },
+    nestSimulator: { url: 'http://localhost:5000' },
+  };
+  mountApp();
+} else {
+  // Load the data from config.json for the global config and mount the app.
+  fetch(combineURLs(process.env.BASE_URL, 'config.json'))
+    .then(response => response.json())
+    .then(appConfig => (Vue.prototype.$appConfig = appConfig))
+    .finally(mountApp);
+}

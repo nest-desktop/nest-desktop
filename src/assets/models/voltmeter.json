@@ -1,8 +1,8 @@
 {
-  "id": "voltmeter",
-  "element_type": "recorder",
-  "label": "voltmeter",
   "abbreviation": "vm",
+  "id": "voltmeter",
+  "elementType": "recorder",
+  "label": "voltmeter",
   "params": [
     {
       "id": "interval",
@@ -10,7 +10,14 @@
       "unit": "ms",
       "value": 1,
       "input": "tickSlider",
-      "ticks": [0.01, 0.1, 1, 10]
+      "ticks": [0.01, 0.1, 1, 10],
+      "rules": [
+        [
+          "value < 1",
+          "A small recording intervals produce many data points which could cause a high system load and thus freezes and lags!",
+          "warning"
+        ]
+      ]
     },
     {
       "id": "start",

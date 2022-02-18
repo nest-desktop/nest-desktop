@@ -1,4 +1,3 @@
-// import { Config } from '../config';
 import { Activity } from './activity';
 import { Node } from '../node/node';
 
@@ -6,47 +5,51 @@ export class SpikeActivity extends Activity {
   private _times: any;
 
   constructor(recorder: Node, activity: any = {}) {
-    super(recorder, activity);
+    super(recorder);
+    this.init(activity);
+  }
+
+  /**
+   * Initialize spike activity.
+   *
+   * Overwrites events.
+   */
+  override init(activity: any): void {
+    this.initEvents(activity);
+    this.initTimes();
+  }
+
+  /**
+   * Init times for ISI or CV(ISI).
+   */
+  initTimes(): void {
+    this._times = Object.create(null);
+    this.nodeIds.forEach((id: number) => (this._times[id] = []));
+    this.updateTimes(this.events);
   }
 
   /**
    * Update spike activity.
+   *
+   * Extends events.
    */
-  update(activity: any): void {
-    this.events = activity.events || {};
-    this.nodeIds = activity.nodeIds || [];
-    this.nodePositions = activity.nodePositions || [];
-    if (this.events.hasOwnProperty('senders')) {
-      this.updateTimes();
+  override update(activity: any): void {
+    if (activity.events == undefined) {
+      return;
     }
+
+    this.updateEvents(activity);
+    this.updateTimes(activity.events);
   }
 
   /**
-   * Update times of spike activity.
+   * Update times for ISI or CV(ISI).
    */
-  updateTimes(): void {
-    this._times = Object.create(null);
-    this.nodeIds.forEach((id: number) => (this._times[id] = []));
-    this.events.senders.forEach((sender: number, idx: number) => {
+  updateTimes(events: any): void {
+    events.senders.forEach((sender: number, idx: number) => {
       this._times[sender].push(this.events.times[idx]);
     });
   }
-
-  // updateStats(): void {
-  //   this._stats = this.nodeIds.map((id: number) => {
-  //     const isi: number[] = this.getISI(this._times[id]);
-  //     const isiMean: number = isi.length > 1 ? this.getAverage(isi) : 0;
-  //     const isiStd: number =
-  //       isi.length > 1 ? this.getStandardDeviation(isi) : 0;
-  //     return {
-  //       id,
-  //       count: this._times[id].length,
-  //       isi_mean: isiMean,
-  //       isi_std: isiStd,
-  //       cv_isi: isiMean > 0 ? isiStd / isiMean : 0,
-  //     };
-  //   });
-  // }
 
   /**
    * Get ISI of all nodes.
@@ -102,7 +105,33 @@ export class SpikeActivity extends Activity {
   /**
    * Clone spike activity.
    */
-  clone(): SpikeActivity {
+  override clone(): SpikeActivity {
     return new SpikeActivity(this.recorder, this.toJSON());
+  }
+
+  /**
+   * Get activity from Insite.
+   */
+  override getActivityInsite(): void {
+    const path = `nest/spikerecorders/${this.nodeCollectionId}/spikes/?fromTime=${this.lastTime}`;
+    this.project.app.backends.insiteAccess.instance
+      .get(path)
+      .then((response: any) => {
+        this.update({
+          events: {
+            senders: response.data.nodeIds, // y
+            times: response.data.simulationTimes, // x
+          },
+        });
+
+        this.lastFrame = response.data.lastFrame;
+
+        // Recursive call after 500ms.
+        if (!response.data.lastFrame) {
+          setTimeout(() => {
+            this.getActivityInsite();
+          }, 500);
+        }
+      });
   }
 }

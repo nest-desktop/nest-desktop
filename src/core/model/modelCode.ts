@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { Model } from './model';
 import { ModelParameter } from '../parameter/modelParameter';
 
@@ -26,7 +26,7 @@ export class ModelCode extends Code {
    */
   modelParams(): string {
     let script = '';
-    if (this._model.params === undefined || this._model.params.length === 0) {
+    if (this._model.params == undefined || this._model.params.length === 0) {
       return script;
     }
     const paramsList: string[] = [];
@@ -34,16 +34,11 @@ export class ModelCode extends Code {
       .filter((param: ModelParameter) => param.visible)
       .map((param: ModelParameter) => {
         if (param.id === 'record_from') {
-          const recordFrom: string[] = param.value.map(
-            (val: string) => `"${val}"`
-          );
           paramsList.push(
-            this._() + `"${param.id}": [${recordFrom.join(',')}]`
+            this._() + `"${param.id}": [${param.value.join(',')}]`
           );
         } else {
-          paramsList.push(
-            this._() + `"${param.id}": ${this.format(param.value)}`
-          );
+          paramsList.push(this._() + `"${param.id}": ${param.value}`);
         }
       });
     if (paramsList.length > 0) {

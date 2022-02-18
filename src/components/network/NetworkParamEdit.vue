@@ -12,34 +12,6 @@
       v-if="state.connectionMenu.show"
     />
 
-    <!--
-    <v-select
-      :items="state.items"
-      dense
-      placeholder="Filter"
-      hide-details
-      multiple
-      small
-      deletable-chips
-      small-chips
-      v-model="state.filtered"
-    >
-      <template #prepend-item>
-        <v-list-item ripple @click="toggle">
-          <v-list-item-action>
-            <v-icon
-              :color="state.filtered.length > 0 ? 'indigo darken-4' : ''"
-              v-text="icon()"
-            />
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="'Select All'" />
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider class="mt-2"></v-divider>
-      </template>
-    </v-select> -->
-
     <v-banner
       class="elementType"
       height="28"
@@ -47,23 +19,16 @@
       single-line
       sticky
     >
-      <v-btn-toggle
-        :max="4"
-        dense
-        group
-        mandatory
-        tile
-        v-model="state.elementType"
-      >
+      <v-btn-toggle dense group mandatory tile v-model="state.elementType">
         <v-btn
           :key="elementType"
           small
-          v-text="elementType"
           v-for="elementType in state.elementTypes"
+          v-text="elementType"
         />
         <v-menu :close-on-content-click="false" :max-height="600" offset-y>
           <template #activator="{ on, attrs }">
-            <v-btn small v-text="'Custom'" v-bind="attrs" v-on="on" />
+            <v-btn small v-bind="attrs" v-on="on" v-text="'custom'" />
           </template>
 
           <v-card :width="280">
@@ -135,7 +100,7 @@
                   multiple
                   v-model="state.displayNodes"
                 >
-                  <draggable v-model="state.network.nodes" handle=".handle">
+                  <draggable handle=".handle" v-model="state.network.nodes">
                     <transition-group>
                       <v-list-item
                         :key="'node' + node.idx"
@@ -173,8 +138,8 @@
                   v-model="state.displayConnections"
                 >
                   <draggable
-                    v-model="state.network.connections"
                     handle=".handle"
+                    v-model="state.network.connections"
                   >
                     <transition-group>
                       <v-list-item
@@ -218,97 +183,135 @@
     <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
       <v-col>
         <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
-          <v-card class="mb-1" flat tile v-if="showNode(node)">
+          <v-card class="ma-2px" outlined tile v-if="showNode(node)">
             <v-sheet :color="node.view.color">
-              <v-row @contextmenu="e => showNodeMenu(e, node)" no-gutters>
-                <v-col cols="3">
-                  <v-btn
-                    @click="() => node.view.select()"
-                    block
-                    dark
-                    height="40"
-                    text
-                    tile
-                    v-text="node.view.label"
-                  />
-                </v-col>
-                <v-col cols="9">
-                  <NodeModelSelect :node="node" />
-                </v-col>
-              </v-row>
-            </v-sheet>
+              <v-card class="ml-1" flat tile>
+                <v-card-title
+                  @contextmenu="e => showNodeMenu(e, node)"
+                  class="pa-0"
+                >
+                  <v-row no-gutters style="width: 100%">
+                    <v-col cols="3">
+                      <v-btn
+                        :color="node.view.color"
+                        :dark="projectView.config.coloredToolbar"
+                        :text="!projectView.config.coloredToolbar"
+                        @click="() => node.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        tile
+                        v-text="node.view.label"
+                      />
+                    </v-col>
+                    <v-col cols="9">
+                      <NodeModelSelect :node="node" :text="state.text" />
+                    </v-col>
+                  </v-row>
 
-            <v-card-text
-              :style="{
-                borderLeft: `4px solid ${node.view.color}`,
-              }"
-              class="pa-0"
-            >
-              <NodeParamEdit :node="node" />
-            </v-card-text>
+                  <v-row no-gutters v-if="!node.model.isRecorder()">
+                    <v-col>
+                      <NodePosition
+                        :node="node"
+                        v-if="node.spatial.hasPositions()"
+                      />
+                      <ParameterEdit
+                        :color="node.view.color"
+                        :options="state.sizeOptions"
+                        :value.sync="node.size"
+                        @update:value="() => node.nodeChanges()"
+                        v-else
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card-title>
+
+                <v-card-text class="pa-0">
+                  <NodeParamEdit :node="node" />
+                </v-card-text>
+              </v-card>
+            </v-sheet>
           </v-card>
         </span>
 
-        <v-card
+        <span
           :key="'connection-' + connection.idx"
-          class="mb-1"
-          flat
-          tile
           v-for="connection of state.network.connections"
-          v-show="showConnection(connection)"
         >
-          <v-row
-            @contextmenu="e => showConnectionMenu(e, connection)"
-            no-gutters
+          <v-card
+            class="ma-2px"
+            outlined
+            tile
+            v-if="showConnection(connection)"
           >
-            <v-col cols="3" class="py-0" style="text-align: center">
-              <v-btn
-                :color="connection.source.view.color"
-                @click="() => connection.source.view.select()"
-                block
-                dark
-                depressed
-                height="40"
-                tile
-                v-text="connection.source.view.label"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-btn
-                @click="() => connection.view.select()"
-                block
-                color="white"
-                depressed
-                height="40"
-                tile
-              >
-                <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-              </v-btn>
-            </v-col>
-            <v-col cols="3" class="py-0" style="text-align: center">
-              <v-btn
-                :color="connection.target.view.color"
-                @click="() => connection.target.view.select()"
-                block
-                dark
-                depressed
-                height="40"
-                tile
-                v-text="connection.target.view.label"
-              />
-            </v-col>
-          </v-row>
+            <v-sheet :color="connection.source.view.color">
+              <v-card class="ml-1" flat tile>
+                <v-card-title class="pa-0 ma-0">
+                  <v-row
+                    @contextmenu="e => showConnectionMenu(e, connection)"
+                    no-gutters
+                  >
+                    <v-col class="py-0" cols="3" style="text-align: center">
+                      <v-btn
+                        :color="connection.source.view.color"
+                        :dark="projectView.config.coloredToolbar"
+                        :text="!projectView.config.coloredToolbar"
+                        @click="() => connection.source.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        tile
+                        v-text="connection.source.view.label"
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-btn
+                        @click="() => connection.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        text
+                        tile
+                      >
+                        <v-chip
+                          label
+                          outlined
+                          small
+                          v-if="connection.network.project.app.config.devMode"
+                          v-text="connection.shortHash"
+                        />
+                        <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                      </v-btn>
+                    </v-col>
+                    <v-col class="py-0" cols="3" style="text-align: center">
+                      <v-btn
+                        :color="connection.target.view.color"
+                        :dark="projectView.config.coloredToolbar"
+                        :text="!projectView.config.coloredToolbar"
+                        @click="() => connection.target.state.select()"
+                        block
+                        depressed
+                        height="40"
+                        tile
+                        v-text="connection.target.view.label"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card-title>
 
-          <v-card-text
-            :style="{
-              borderLeft: `4px solid ${connection.source.view.color}`,
-              borderRight: `4px solid ${connection.target.view.color}`,
-            }"
-            class="pa-0 pt-2 ma-0"
-          >
-            <ConnectionParamEdit :connection="connection" />
-          </v-card-text>
-        </v-card>
+                <v-card-text class="pa-0">
+                  <ConnectionParamEdit
+                    :connection="connection"
+                    v-if="
+                      connection.source.size > 1 || connection.target.size > 1
+                    "
+                  />
+                  <SynapseParamEdit :synapse="connection.synapse" />
+                </v-card-text>
+              </v-card>
+            </v-sheet>
+          </v-card>
+        </span>
       </v-col>
     </v-row>
   </div>
@@ -328,6 +331,9 @@ import core from '@/core';
 import NodeMenu from '@/components/node/NodeMenu.vue';
 import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
+import NodePosition from '@/components/node/NodePosition.vue';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
+import SynapseParamEdit from '@/components/synapse/SynapseParamEdit.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
@@ -338,11 +344,15 @@ export default Vue.extend({
     NodeMenu,
     NodeModelSelect,
     NodeParamEdit,
+    NodePosition,
+    ParameterEdit,
+    SynapseParamEdit,
   },
   props: {
     projectId: String,
   },
   setup(props) {
+    const projectView = core.app.project.view;
     const state = reactive({
       displayNodes: [],
       displayConnections: [],
@@ -368,7 +378,7 @@ export default Vue.extend({
         recorder: 'mdi-alpha-r-box-outline',
         stimulator: 'mdi-alpha-s-box-outline',
       },
-      network: core.app.project.network as Network,
+      network: projectView.state.project.network as Network,
       nodeMenu: {
         node: undefined as Node | undefined,
         position: {
@@ -377,6 +387,23 @@ export default Vue.extend({
         },
         show: false,
       },
+      sizeOptions: {
+        id: 'populationSize',
+        input: 'valueSlider',
+        label: 'population size',
+        max: 1000,
+        min: 1,
+        value: 1,
+        iconSize: 'large',
+        rules: [
+          [
+            'value >= 1000',
+            'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
+            'warning',
+          ],
+        ],
+      },
+      text: true,
     });
 
     /**
@@ -384,11 +411,11 @@ export default Vue.extend({
      */
     const showNode = (node: Node) => {
       if (
-        state.network.view.selectedConnection ||
-        state.network.view.selectedNode
+        state.network.state.selectedConnection ||
+        state.network.state.selectedNode
       ) {
         // selected view
-        return state.network.view.isNodeSelected(node);
+        return state.network.state.isNodeSelected(node);
       } else if (state.elementType === 0) {
         // all view
         return true;
@@ -465,11 +492,11 @@ export default Vue.extend({
      */
     const showConnection = (connection: Connection) => {
       if (
-        state.network.view.selectedConnection ||
-        state.network.view.selectedNode
+        state.network.state.selectedConnection ||
+        state.network.state.selectedNode
       ) {
         // selected view
-        return state.network.view.isConnectionSelected(connection);
+        return state.network.state.isConnectionSelected(connection);
       } else if (state.elementType === 0) {
         // all views
         return true;
@@ -571,9 +598,9 @@ export default Vue.extend({
     });
 
     watch(
-      () => [props.projectId, core.app.project.network.hash],
+      () => [props.projectId, projectView.state.project.network.state.hash],
       () => {
-        state.network = core.app.project.network as Network;
+        state.network = projectView.state.project.network as Network;
         update();
       }
     );
@@ -583,6 +610,7 @@ export default Vue.extend({
       iconConnections,
       iconNodes,
       nodeDisplayChange,
+      projectView,
       showConnection,
       showConnectionMenu,
       showNode,

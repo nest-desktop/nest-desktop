@@ -68,40 +68,6 @@ export class ConnectionView {
   }
 
   /**
-   * Focus this connection.
-   */
-  focus(): void {
-    this._connection.network.view.focusedConnection = this._connection;
-  }
-
-  /**
-   * Check if the connection is focused.
-   */
-  isFocused(unselected: boolean = true): boolean {
-    return this._connection.network.view.isConnectionFocused(
-      this._connection,
-      unselected
-    );
-  }
-
-  /**
-   * Select this connection.
-   */
-  select(): void {
-    this._connection.network.view.selectedConnection = this._connection;
-  }
-
-  /**
-   * Check if the connection is selected.
-   */
-  isSelected(unselected: boolean = true): boolean {
-    return this._connection.network.view.isConnectionSelected(
-      this._connection,
-      unselected
-    );
-  }
-
-  /**
    * Check if it is connected to any recorder.
    */
   connectRecorder(): boolean {
@@ -112,9 +78,19 @@ export class ConnectionView {
   }
 
   /**
+   * Check if it is connected by neurons only.
+   */
+  connectOnlyNeurons(): boolean {
+    return (
+      this._connection.source.model.isNeuron() &&
+      this._connection.target.model.isNeuron()
+    );
+  }
+
+  /**
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.target.model.existing === 'spike_recorder';
+    return this._connection.target.model.isSpikeRecorder();
   }
 }

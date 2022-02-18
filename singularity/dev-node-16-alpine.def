@@ -1,0 +1,5 @@
+Bootstrap: docker
+From: node:16-alpine
+
+%labels
+  Author Sebastian Spreizer <spreizer@web.de>

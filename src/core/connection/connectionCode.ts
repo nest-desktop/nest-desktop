@@ -1,4 +1,4 @@
-import { Code } from '../code';
+import { Code } from '../common/code';
 import { Connection } from './connection';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
@@ -23,15 +23,28 @@ export class ConnectionCode extends Code {
   /**
    * Write script of connection specifications.
    */
-  connSpec(): string {
-    const connSpecList: string[] = [`"rule": "${this._connection.rule}"`];
-    this._connection.filteredParams.forEach((param: Parameter) =>
-      connSpecList.push(`"${param.id}": ${param.toCode()}`)
-    );
-
-    let script = ', conn_spec={' + this._();
-    script += connSpecList.join(',' + this._());
-    script += this.end() + '}';
+  specs(): string {
+    let script = '';
+    if (this._connection.filteredParams.length > 0) {
+      const specs: string[] = [];
+      if (
+        this._connection.source.size > 1 ||
+        this._connection.target.size > 1
+      ) {
+        specs.push(`"rule": "${this._connection.rule}"`);
+      }
+      this._connection.filteredParams.forEach((param: Parameter) =>
+        specs.push(`"${param.id}": ${param.toCode()}`)
+      );
+      script += ', conn_spec={' + this._();
+      script += specs.join(',' + this._());
+      script += this.end() + '}';
+    } else if (
+      this._connection.source.size > 1 ||
+      this._connection.target.size > 1
+    ) {
+      script += `, "${this._connection.rule}"`;
+    }
     return script;
   }
 
@@ -46,10 +59,19 @@ export class ConnectionCode extends Code {
       [sourceNode, targetNode] = [targetNode, sourceNode];
     }
 
-    let script = '';
-    script += `nest.Connect(${this.sourceLabel}, ${this.targetLabel}`;
-    script += this.connSpec();
-    script += this._connection.synapse.code.synSpec();
+    let source: string = `${this.sourceLabel}`;
+    if (this._connection.sourceSlice.visible) {
+      source += `${this._connection.sourceSlice.indices()}`;
+    }
+
+    let target: string = `${this.targetLabel}`;
+    if (this._connection.targetSlice.visible) {
+      target += `${this._connection.targetSlice.indices()}`;
+    }
+
+    let script: string = `nest.Connect(${source}, ${target}`;
+    script += this.specs();
+    script += this._connection.synapse.code.specs();
     script += ')';
     return script + '\n';
   }

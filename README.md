@@ -1,24 +1,28 @@
+# NEST Desktop
+
 <p>
-  <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/v3.0/docs/_static/img/screenshots/start-page.png" />
+  <!-- <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/latest/docs/_static/img/screenshots/start-page.png" /> -->
+  <img src="docs/_static/img/screenshots/start-page.png" />
 </p>
 
-GitHub
-[![commit activity](https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
-[![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers)
-[![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members)
+**General:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+[![docs](https://img.shields.io/readthedocs/nest-desktop)](https://nest-desktop.readthedocs.io)
+[![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
+[![DOI](https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue)](https://doi.org/10.1523/eneuro.0274-21.2021)
 
-PyPI
-[![pypi](https://img.shields.io/pypi/v/nest-desktop?label=version)](https://pypi.org/project/nest-desktop/)
-[![downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/)
-
-DockerHub
+**DockerHub:** &nbsp; &nbsp;
 [![docker version](https://img.shields.io/docker/v/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
 [![image size](https://img.shields.io/docker/image-size/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
 [![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)](https://hub.docker.com/r/nestdesktop/app)
 
-[![docs](https://img.shields.io/readthedocs/nest-desktop)](https://nest-desktop.readthedocs.io)
-[![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
-[![DOI](https://img.shields.io/badge/DOI-10.1101%2F2021.06.15.444791-blue)](https://doi.org/10.1101/2021.06.15.444791)
+**GitHub:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+[![commit activity](https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
+[![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers)
+[![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members)
+
+**PyPI:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+[![pypi](https://img.shields.io/pypi/v/nest-desktop?label=version)](https://pypi.org/project/nest-desktop/)
+[![downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/)
 
 ---
 
@@ -35,7 +39,7 @@ NEST Desktop is available on [EBRAINS](https://ebrains.eu/service/nest-desktop) 
 
 ### Quick start
 
-To get started with NEST Desktop and NEST Server, use Docker compose with the configuration file:
+To get started with NEST Desktop and NEST Simulator, use Docker compose with the configuration file:
 
 ```
 wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
@@ -47,10 +51,10 @@ For more information, please see the [User Documentation Page](https://nest-desk
 ### Cite NEST Desktop
 
 In order to cite NEST Desktop in general, please use the DOI [10.5281/zenodo.5037050](https://doi.org/10.5281/zenodo.5037050) for all versions (always redirecting to the latest version).
-If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.0.
-You can use the reference to the preprint for NEST Desktop (DOI: [10.1101/2021.06.15.444791](https://doi.org/10.1101/2021.06.15.444791)) as well, which is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.06.15.444791v1), if that is more appropriate in the context of your reference.
+If you like to refer to a single version, you can find these also on Zenodo, e.g. [10.5281/zenodo.5037051](https://doi.org/10.5281/zenodo.5037051) for Version 3.0.
+You can use the reference to the paper for NEST Desktop (DOI: [10.1523/ENEURO.0274-21.2021](https://doi.org/10.1523/ENEURO.0274-21.2021)) mentioned above as well, if that is more appropriate in the context of your reference.
 
-You will also find the exports for the citation managers on Zenodo and bioRxiv.
+You will also find the exports for the citation managers on Zenodo and eNeuro.
 
 ### License
 

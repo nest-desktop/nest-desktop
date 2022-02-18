@@ -3,8 +3,9 @@
     <v-menu :close-on-content-click="false" offset-y v-model="state.showMenu">
       <template #activator="{}">
         <v-btn
+          :disabled="state.disabled"
           :loading="state.project.simulation.running"
-          @click="simulate"
+          @click="simulate()"
           @contextmenu="showMenu"
           outlined
         >
@@ -17,6 +18,7 @@
           :key="index"
           @click="item.onClick"
           v-for="(item, index) in state.items"
+          v-show="item.show()"
         >
           <v-list-item-title v-text="item.title" />
 
@@ -27,7 +29,7 @@
           <v-list-item-action v-if="item.input === 'checkbox'">
             <v-checkbox
               :input-value="state.projectConfig[item.value]"
-              color="black"
+              color="accent"
             />
           </v-list-item-action>
         </v-list-item>
@@ -40,25 +42,30 @@
 import Vue from 'vue';
 import { reactive, onMounted, watch } from '@vue/composition-api';
 
+import core from '@/core';
 import { Project } from '@/core/project/project';
 
 export default Vue.extend({
   name: 'SimulationButton',
   props: {
     project: Project,
+    disabled: Boolean,
   },
   setup(props) {
+    const projectView = core.app.project.view;
     const state = reactive({
+      disabled: props.disabled,
       items: [
         {
           id: 'simulateAfterChange',
           input: 'checkbox',
           title: 'Simulate after change',
           value: 'simulateAfterChange',
+          show: () => true,
           onClick: () => {
             state.projectConfig.simulateAfterChange =
               !state.projectConfig.simulateAfterChange;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
           },
         },
         {
@@ -66,10 +73,11 @@ export default Vue.extend({
           input: 'checkbox',
           title: 'Simulate after load',
           value: 'simulateAfterLoad',
+          show: () => true,
           onClick: () => {
             state.projectConfig.simulateAfterLoad =
               !state.projectConfig.simulateAfterLoad;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
           },
         },
         {
@@ -77,20 +85,31 @@ export default Vue.extend({
           input: 'checkbox',
           title: 'Simulate after checkout',
           value: 'simulateAfterCheckout',
+          show: () => true,
           onClick: () => {
             state.projectConfig.simulateAfterCheckout =
               !state.projectConfig.simulateAfterCheckout;
-            state.project.updateConfig(state.projectConfig);
+            projectView.updateConfig(state.projectConfig);
+          },
+        },
+        {
+          id: 'simulateWithInsite',
+          input: 'checkbox',
+          title: 'Simulate with Insite',
+          value: 'simulateWithInsite',
+          show: () =>
+            core.app.backends.insiteAccess.state.version.insite != undefined,
+          onClick: () => {
+            state.projectConfig.simulateWithInsite =
+              !state.projectConfig.simulateWithInsite;
+            projectView.updateConfig(state.projectConfig);
+            state.project.code.generate();
           },
         },
       ],
       project: props.project as Project,
       showMenu: false,
-      projectConfig: {
-        simulateAfterChange: false,
-        simulateAfterLoad: false,
-        simulateAfterCheckout: false,
-      },
+      projectConfig: projectView.config,
     });
 
     /**
@@ -108,20 +127,24 @@ export default Vue.extend({
      * Start simulation.
      */
     const simulate = () => {
-      state.project.runSimulation();
+      if (projectView.config.simulateWithInsite) {
+        state.project.runSimulationInsite();
+      } else {
+        state.project.runSimulation();
+      }
     };
 
-    onMounted(() => {
+    const update = () => {
+      state.disabled = props.disabled;
       state.project = props.project as Project;
-      state.projectConfig = state.project.config;
-    });
+      state.projectConfig = projectView.config;
+    };
+
+    onMounted(() => update());
 
     watch(
-      () => props.project,
-      () => {
-        state.project = props.project as Project;
-        state.projectConfig = state.project.config;
-      }
+      () => [props.disabled, props.project],
+      () => update()
     );
 
     return { showMenu, simulate, state };

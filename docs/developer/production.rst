@@ -16,6 +16,8 @@ Requirements
 
 The Python Package Index **nest-desktop** includes an executive command ``nest-desktop`` and a Python library ``nest_desktop``.
 
+|
+
 **Build**
 
 The current working directory is ``nest-desktop``.
@@ -25,15 +27,14 @@ First, build a package of NEST Desktop using ``vue-cli-service``.
 
 Initially, you have to upgrade the version of nest-desktop in:
 
-  - ``packages.json``
-  - ``nest_desktop/__init__.py``
+- ``packages.json``
+- ``nest_desktop/__init__.py``
 
 Then generate the app package using `yarn`. It builds the folder ``nest_desktop/app``:
 
 .. code-block:: bash
 
   yarn build
-
 
 The second step is to build a pip package for PyPI:
 
@@ -47,6 +48,7 @@ Then generate the distribution packages of `nest-desktop` for PyPI:
 
   python3 setup.py sdist bdist_wheel
 
+|
 
 **Upload**
 
@@ -56,7 +58,6 @@ You can upload the pip-package of ``nest-desktop`` to PyPI:
 .. code-block:: bash
 
   python3 -m twine upload dist/*
-
 
 Do not forget to commit the changes you made and set a new version tag in git.
 

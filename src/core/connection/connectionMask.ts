@@ -1,4 +1,4 @@
-import { Config } from '../config';
+import { Config } from '../common/config';
 import { Connection } from './connection';
 
 enum MaskType {
@@ -75,7 +75,7 @@ export class ConnectionMask extends Config {
 
   draw(): void {
     this._graph.layout.shapes = [];
-    if (this._masktype === undefined) {
+    if (this._masktype == undefined) {
       return;
     }
     switch (this._masktype) {
@@ -208,7 +208,7 @@ export class ConnectionMask extends Config {
     ];
   }
 
-  toJSON() {
+  toJSON(): any {
     const mask: any = {
       masktype: this._masktype,
       specs: this._specs,

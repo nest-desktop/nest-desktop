@@ -22,7 +22,9 @@ module.exports = {
     // copy the options from the original ones, but modify memory and CPUs
     const newForkTsCheckerOptions = existingForkTsChecker.options;
     newForkTsCheckerOptions.memoryLimit = 8192;
-    newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
+    if (process.env.CI)
+      newForkTsCheckerOptions.workers = require('os').cpus().length;
+    else newForkTsCheckerOptions.workers = require('os').cpus().length - 1;
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin(newForkTsCheckerOptions)
     );
@@ -31,5 +33,11 @@ module.exports = {
     workboxOptions: {
       skipWaiting: true,
     },
+  },
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].title = 'NEST Desktop';
+      return args;
+    });
   },
 };

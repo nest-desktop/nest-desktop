@@ -7,33 +7,16 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="min-width: 300px">
-        <!-- <v-card-title
-          :style="{ backgroundColor: state.node.view.color }"
-          class="py-1"
-          style="color: white; height: 40px"
-          v-if="state.content !== 'modelDocumentation'"
-          v-text="state.node.model.label"
-        /> -->
-        <v-sheet :color="state.node.view.color">
+      <v-card flat style="min-width: 300px" tile>
+        <v-card-title class="pa-0">
           <v-row no-gutters>
-            <!-- <v-col cols="3">
-              <v-btn
-                block
-                dark
-                height="40"
-                text
-                tile
-                v-text="node.view.label"
-              />
-            </v-col> -->
             <v-col cols="12">
               <NodeModelSelect :node="state.node" />
             </v-col>
           </v-row>
-        </v-sheet>
+        </v-card-title>
 
-        <span v-if="state.content === undefined">
+        <span v-if="state.content == undefined">
           <v-list dense>
             <v-list-item>
               <v-list-item-icon>
@@ -44,8 +27,9 @@
               <v-btn-toggle
                 :color="state.node.view.color"
                 :value="state.weight[state.node.view.weight]"
+                class="synWeightButton"
                 dense
-                mandatory
+                group
                 rounded
               >
                 <v-btn
@@ -83,7 +67,10 @@
                 <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :input-value="state[item.value]" />
+                <v-checkbox
+                  :color="state.node.view.color"
+                  :input-value="state[item.value]"
+                />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'switch'">
                 <v-switch
@@ -111,7 +98,7 @@
 
         <span v-if="state.content === 'nodeColor'">
           <v-color-picker
-            @update:color="updateColor"
+            @update:color="nodeColorChange()"
             flat
             show-swatches
             style="border-radius: 0"
@@ -131,6 +118,32 @@
           <ModelDocumentation :id="state.node.modelId" />
         </span>
 
+        <span v-if="state.content === 'eventsExport'">
+          <v-card-text class="py-1 px-0">
+            <v-list dense>
+              <v-list-item @click="exportEvents('json')">
+                <v-list-item-icon>
+                  <v-icon v-text="'mdi-code-json'" />
+                </v-list-item-icon>
+                <v-list-item-title v-text="'Export events to JSON file'" />
+              </v-list-item>
+
+              <v-list-item @click="exportEvents('csv')">
+                <v-list-item-icon>
+                  <v-icon v-text="'mdi-file-delimited-outline'" />
+                </v-list-item-icon>
+                <v-list-item-title v-text="'Export events to CSV file'" />
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+          </v-card-actions>
+        </span>
+
         <span v-if="state.content === 'nodeDelete'">
           <v-card-title v-text="'Are you sure to delete this node?'" />
 
@@ -139,14 +152,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteNode"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'delete'"
-            />
+            <v-btn @click="deleteNode" outlined small v-text="'delete'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -264,16 +270,16 @@ export default Vue.extend({
         },
         {
           icon: 'mdi-download',
-          id: 'eventsDownload',
+          id: 'eventsExport',
           onClick: () => {
-            state.node.activity.downloadEvents();
-            closeMenu();
+            state.content = 'eventsExport';
           },
           show: () =>
             state.node.activity &&
             state.node.activity.hasEvents() &&
             state.node.model.isRecorder(),
-          title: 'Download events',
+          title: 'Export events',
+          append: true,
         },
         {
           icon: 'mdi-trash-can-outline',
@@ -301,7 +307,7 @@ export default Vue.extend({
     const selectionChange = () => {
       state.node.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.visibleParams.includes(param.idx))
+          (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
     };
@@ -309,9 +315,9 @@ export default Vue.extend({
     /**
      * Update colors of network and activity.
      */
-    const updateColor = () => {
+    const nodeColorChange = () => {
       state.node.network.networkChanges();
-      state.node.network.project.activityGraph.updateColor();
+      state.node.network.updateRecordsColor();
     };
 
     /**
@@ -319,7 +325,7 @@ export default Vue.extend({
      */
     const resetColor = () => {
       state.node.view.color = null;
-      updateColor();
+      nodeColorChange();
     };
 
     /**
@@ -366,6 +372,18 @@ export default Vue.extend({
     };
 
     /**
+     * Export events.
+     */
+    const exportEvents = (format: string = 'json') => {
+      if (format === 'json') {
+        state.node.activity.exportEvents();
+      } else if (format === 'csv') {
+        state.node.activity.exportEventsCSV();
+      }
+      closeMenu();
+    };
+
+    /**
      * Update states.
      */
     const updateStates = () => {
@@ -396,15 +414,22 @@ export default Vue.extend({
     return {
       backMenu,
       deleteNode,
+      exportEvents,
       hideAllParams,
+      nodeColorChange,
       paramChange,
       resetColor,
       selectionChange,
       setWeights,
       showAllParams,
       state,
-      updateColor,
     };
   },
 });
 </script>
+
+<style>
+.synWeightButton {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+</style>

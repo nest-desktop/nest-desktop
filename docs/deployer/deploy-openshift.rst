@@ -14,6 +14,8 @@ Requirements
   * `OC Client Tools <https://www.okd.io/download.html#oc-platforms>`__
 
 
+.. _deploy-nest-desktop-on-ebrains:
+
 **Deploy NEST Desktop on EBRAINS**
 
 .. image:: ../_static/img/logo/ebrains-logo.svg
@@ -26,8 +28,12 @@ EBRAINS provides two OKD infrastructures
   * https://okd-dev.hbp.eu for the development.
   * https://okd.hbp.eu for the production.
 
-.. Note::
-  I strongly recommend to use the development page for testing.
+.. note::
+   I strongly recommend to use the development page for testing.
+
+|
+
+.. _register-client-for-authentication-on-ebrains:
 
 **Register client for authentication on EBRAINS**
 
@@ -48,10 +54,13 @@ Change the configuration file and then create a client for your application.
 
 Keep ``client_id`` and ``client_secret`` for the **okd** infrastructure.
 
+|
+
+.. _build-nest-desktop-on-ebrains:
 
 **Build NEST Desktop on EBRAINS**
 
-First, copy the command line from the web console of ``https://okd-dev.hbp.eu`` and enter in terminal to login via oc:
+First, copy the command line from the web console of ``https://okd-dev.hbp.eu`` and enter in terminal to login via ``oc``:
 
 .. code-block:: bash
 
@@ -62,7 +71,6 @@ Get the status of the current project:
 .. code-block:: bash
 
   oc status
-
 
 You can find the configurations on https://github.com/nest-desktop/nest-desktop-ebrains.
 Therein, you have to modify the environment for EBRAINS authentication,
@@ -75,6 +83,9 @@ Execute the bash script to deploy the ``nest-desktop``, ``nest-server`` and ``ap
 
   bash setup-nest-desktop.sh
 
+|
+
+.. _further-usage:
 
 **Further usage**
 
@@ -84,15 +95,14 @@ Scaling up the replicas (pods or nodes):
 
   oc scale --replicas=2 dc nest-desktop
 
-
 |
 
 **Acknowledgements**
 
 Thanks for the help to integrate NEST Desktop on EBRAINS resources:
 
-  - Alberto Madonna (Conceptual design of the user authentication)
-  - Collin McMurtrie (Conceptual design of the user authentication)
-  - Fabrice Gaillard (Conceptual design of the user authentication)
-  - Jonathan Villemaire-Krajden (Conceptual design of the user authentication)
-  - Martin Jochen Eppler (For the contacts)
+- Alberto Madonna (Conceptual design of the user authentication)
+- Collin McMurtrie (Conceptual design of the user authentication)
+- Fabrice Gaillard (Conceptual design of the user authentication)
+- Jonathan Villemaire-Krajden (Conceptual design of the user authentication)
+- Martin Jochen Eppler (For the contacts)

@@ -7,49 +7,55 @@
       :value="state.show"
       transition="slide-y-transition"
     >
-      <v-card tile flat style="width: 300px">
-        <!-- <v-card-title
-          :style="{ backgroundColor: state.connection.source.view.color }"
-          class="py-1"
-          style="color:white; height:40px"
-        >
-        </v-card-title> -->
-        <v-row no-gutters>
-          <v-col cols="3" class="py-0" style="text-align: center">
-            <v-btn
-              :color="connection.source.view.color"
-              block
-              dark
-              depressed
-              height="40"
-              tile
-              v-text="connection.source.view.label"
-            />
-          </v-col>
-          <v-col cols="6">
-            <v-btn block color="white" depressed height="40" tile>
-              <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-            </v-btn>
-          </v-col>
-          <v-col cols="3" class="py-0" style="text-align: center">
-            <v-btn
-              :color="connection.target.view.color"
-              block
-              dark
-              depressed
-              height="40"
-              tile
-              v-text="connection.target.view.label"
-            />
-          </v-col>
-        </v-row>
+      <v-card tile flat style="min-width: 300px">
+        <v-card-title class="pa-0">
+          <v-row no-gutters>
+            <v-col class="py-0" cols="3" style="text-align: center">
+              <v-btn
+                :color="connection.source.view.color"
+                :dark="projectView.config.coloredToolbar"
+                :text="!projectView.config.coloredToolbar"
+                block
+                depressed
+                height="40"
+                tile
+                v-text="connection.source.view.label"
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-btn block depressed height="40" text tile>
+                <v-chip
+                  label
+                  outlined
+                  small
+                  v-if="connection.network.project.app.config.devMode"
+                  v-text="connection.shortHash"
+                />
+                <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+              </v-btn>
+            </v-col>
+            <v-col class="py-0" cols="3" style="text-align: center">
+              <v-btn
+                :color="connection.target.view.color"
+                :dark="projectView.config.coloredToolbar"
+                :text="!projectView.config.coloredToolbar"
+                block
+                depressed
+                height="40"
+                tile
+                v-text="connection.target.view.label"
+              />
+            </v-col>
+          </v-row>
+        </v-card-title>
 
-        <span v-if="state.content === undefined">
+        <span v-if="state.content == undefined">
           <v-list dense>
             <v-list-item
               :key="index"
               @click="item.onClick"
               v-for="(item, index) in state.items"
+              v-show="item.show()"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
@@ -60,17 +66,24 @@
                 <v-icon small v-text="'mdi-menu-right'" />
               </v-list-item-action>
               <v-list-item-action v-if="item.input === 'checkbox'">
-                <v-checkbox :input-value="state[item.value]" />
+                <v-checkbox
+                  :color="connection.source.view.color"
+                  :input-value="state[item.value]"
+                />
               </v-list-item-action>
             </v-list-item>
           </v-list>
         </span>
 
         <span v-if="state.content === 'paramSelect'">
-          <v-card-text class="pa-0">
+          <v-card-text class="px-0 py-1">
             <ConnectionParamSelect
               :connection="state.connection"
-              :visibleParams="state.visibleParams"
+              :paramsIdx="state.connectionParamsIdx"
+            />
+            <SynapseParamSelect
+              :paramsIdx="state.synapseParamsIdx"
+              :synapse="state.connection.synapse"
             />
           </v-card-text>
 
@@ -85,8 +98,9 @@
         </span>
 
         <span v-if="state.content === 'paramEdit'">
-          <v-card-text class="px-0">
+          <v-card-text class="px-0" style="max-width: 300px">
             <ConnectionParamEdit :connection="state.connection" />
+            <SynapseParamEdit :synapse="state.connection.synapse" />
           </v-card-text>
 
           <v-card-actions>
@@ -112,14 +126,7 @@
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="deleteConnection"
-              color="warning"
-              outlined
-              small
-              text
-              v-text="'delete'"
-            />
+            <v-btn @click="deleteConnection" outlined small v-text="'delete'" />
           </v-card-actions>
         </span>
       </v-card>
@@ -136,24 +143,31 @@ import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
 import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import ConnectionParamSelect from '@/components/connection/ConnectionParamSelect.vue';
+import core from '@/core';
+import SynapseParamEdit from '@/components/synapse/SynapseParamEdit.vue';
+import SynapseParamSelect from '@/components/synapse/SynapseParamSelect.vue';
 
 export default Vue.extend({
   name: 'ConnectionMenu',
   components: {
     ConnectionParamEdit,
     ConnectionParamSelect,
+    SynapseParamEdit,
+    SynapseParamSelect,
   },
   props: {
     connection: Connection,
     position: Object,
   },
   setup(props) {
+    const projectView = core.app.project.view;
     const state = reactive({
-      content: undefined as string | undefined,
       connection: props.connection as Connection,
+      connectionParamsIdx: [],
+      content: undefined as string | undefined,
       position: props.position,
-      visibleParams: { connection: [], synapse: [] },
       show: true,
+      synapseParamsIdx: [],
       items: [
         {
           id: 'paramSelect',
@@ -164,6 +178,7 @@ export default Vue.extend({
             window.dispatchEvent(new Event('resize'));
           },
           append: true,
+          show: () => true,
         },
         {
           id: 'paramEdit',
@@ -174,6 +189,7 @@ export default Vue.extend({
             window.dispatchEvent(new Event('resize'));
           },
           append: true,
+          show: () => true,
         },
         {
           id: 'connectionReverse',
@@ -183,15 +199,39 @@ export default Vue.extend({
             state.connection.reverse();
             closeMenu();
           },
+          show: () => true,
         },
         {
-          id: 'connectionReverse',
+          id: 'sourceSlice',
+          icon: 'mdi-code-brackets',
+          title: 'Toggle source slicing',
+          onClick: () => {
+            state.connection.sourceSlice.toggleVisible();
+            state.connection.connectionChanges();
+            closeMenu();
+          },
+          show: () => state.connection.source.size > 1,
+        },
+        {
+          id: 'targetSlice',
+          icon: 'mdi-code-brackets',
+          title: 'Toggle target slicing',
+          onClick: () => {
+            state.connection.targetSlice.toggleVisible();
+            state.connection.connectionChanges();
+            closeMenu();
+          },
+          show: () => state.connection.target.size > 1,
+        },
+        {
+          id: 'synapticWeightInverse',
           icon: 'mdi-contrast',
           title: 'Inverse synaptic weight',
           onClick: () => {
             state.connection.synapse.inverseWeight();
             closeMenu();
           },
+          show: () => true,
         },
         {
           id: 'connectionReset',
@@ -201,6 +241,7 @@ export default Vue.extend({
             state.connection.reset();
             closeMenu();
           },
+          show: () => true,
         },
         {
           id: 'connectionDelete',
@@ -210,6 +251,7 @@ export default Vue.extend({
             state.content = 'connectionDelete';
           },
           append: true,
+          show: () => true,
         },
       ],
     });
@@ -227,11 +269,11 @@ export default Vue.extend({
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
-          (param.visible = state.visibleParams.connection.includes(param.idx))
+          (param.state.visible = state.connectionParamsIdx.includes(param.idx))
       );
       state.connection.synapse.params.forEach(
         (param: ModelParameter) =>
-          (param.visible = state.visibleParams.synapse.includes(param.idx))
+          (param.state.visible = state.synapseParamsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
     };
@@ -240,10 +282,10 @@ export default Vue.extend({
      * Set an array of visible parameter for checkbox.
      */
     const setVisibleParams = () => {
-      state.visibleParams.connection = state.connection.params
+      state.connectionParamsIdx = state.connection.params
         .filter((param: Parameter) => param.visible)
         .map((param: Parameter) => param.idx);
-      state.visibleParams.synapse = state.connection.synapse.params
+      state.synapseParamsIdx = state.connection.synapse.params
         .filter((param: ModelParameter) => param.visible)
         .map((param: ModelParameter) => param.idx);
     };
@@ -311,9 +353,10 @@ export default Vue.extend({
       deleteConnection,
       hideAllParams,
       paramChange,
+      projectView,
       resetAllParams,
-      showAllParams,
       selectionChange,
+      showAllParams,
       state,
     };
   },

@@ -1,161 +1,146 @@
 <template>
   <div class="ProjectsDialog">
-    <v-dialog v-model="state.dialog" max-width="1024">
-      <v-card>
-        <v-card-title
-          v-text="`Select projects to ${state.action}.`"
-          v-if="state.projects.length !== 0"
-        />
+    <v-dialog max-width="1024" v-model="dialogState.open">
+      <span v-if="dialogState.action === 'import'">
+        <ProjectsImport />
+      </span>
+      <span v-else>
+        <v-card>
+          <v-card-title
+            v-if="dialogState.content.length !== 0"
+            v-text="`Select projects to ${dialogState.action}.`"
+          />
 
-        <v-card-text>
-          <v-simple-table v-if="state.projects.length !== 0">
-            <template #default>
-              <thead>
-                <tr>
-                  <th v-text="'Name'" />
-                  <th v-text="'Created at'" />
-                  <th class="text-center" v-text="'Selected'" />
-                  <th
-                    class="text-center"
-                    v-if="state.action === 'download'"
-                    v-text="'Activities'"
-                  />
-                </tr>
-              </thead>
-              <tbody>
-                <tr :key="index" v-for="(project, index) in state.projects">
-                  <td v-text="project.name" />
-                  <td v-text="new Date(project.createdAt).toLocaleString()" />
-                  <td class="text-center">
-                    <v-checkbox
-                      class="my-0 mx-auto"
-                      color="project"
-                      hide-details
-                      v-model="project.view.selected"
+          <v-card-text>
+            <v-simple-table v-if="dialogState.content.length !== 0">
+              <template #default>
+                <thead>
+                  <tr>
+                    <th v-text="'Project name'" />
+                    <th v-text="'Created at'" />
+                    <th class="text-center" v-text="'Selected'" />
+                    <th
+                      class="text-center"
+                      v-if="dialogState.action === 'export'"
+                      v-text="'Activities'"
                     />
-                  </td>
-                  <td class="text-center" v-if="state.action === 'download'">
-                    <v-checkbox
-                      :disabled="!project.hasActivities"
-                      @change="
-                        value => {
-                          project.view.state.selected = value;
-                        }
-                      "
-                      class="ma-0"
-                      color="project"
-                      hide-details
-                      v-model="project.view.withActivities"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </v-card-text>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    :key="index"
+                    v-for="(project, index) in dialogState.content"
+                  >
+                    <td v-text="project.name" />
+                    <td v-text="new Date(project.createdAt).toLocaleString()" />
+                    <td class="text-center">
+                      <v-checkbox
+                        class="my-0 mx-auto"
+                        color="project"
+                        hide-details
+                        v-model="project.state.selected"
+                      />
+                    </td>
+                    <td v-if="dialogState.action === 'export'">
+                      <v-row>
+                        <v-col class="py-4" cols="4">
+                          <ActivityGraphIcon :project="project" small />
+                        </v-col>
+                        <v-col cols="4">
+                          <v-checkbox
+                            :disabled="!project.state.hasActivities"
+                            class="ma-0"
+                            color="project"
+                            hide-details
+                            v-model="project.state.withActivities"
+                          />
+                        </v-col>
+                      </v-row>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="state.dialog = false" text v-text="'Cancel'" />
-          <v-btn
-            :disabled="state.projects.length === 0"
-            @click="downloadProjects"
-            text
-            v-if="state.action === 'download'"
-          >
-            <v-icon left v-text="'mdi-download'" />
-            Download
-          </v-btn>
-          <v-btn
-            :disabled="state.projects.length === 0"
-            @click="deleteProjects"
-            text
-            v-if="state.action === 'delete'"
-          >
-            <v-icon left v-text="'mdi-trash-can-outline'" />
-            Delete
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="closeDialog" outlined small text v-text="'Cancel'" />
+            <v-btn
+              :disabled="!dialogState.content.some(p => p.state.selected)"
+              @click="exportProjects"
+              outlined
+              small
+              v-if="dialogState.action === 'export'"
+            >
+              <v-icon left v-text="'mdi-export'" />
+              Export
+            </v-btn>
+            <v-btn
+              :disabled="!dialogState.content.some(p => p.state.selected)"
+              @click="deleteProjects"
+              outlined
+              small
+              v-if="dialogState.action === 'delete'"
+            >
+              <v-icon left v-text="'mdi-trash-can-outline'" />
+              Delete
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </span>
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
 
-import { Activity } from '@/core/activity/activity';
 import { Project } from '@/core/project/project';
 import core from '@/core';
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
+import ProjectsImport from '@/components/project/ProjectsImport.vue';
 
 export default Vue.extend({
-  name: 'ProjectsDownloadDialog',
-  props: {
-    action: String,
-    open: Boolean,
-    projects: Array,
+  name: 'ProjectsDialog',
+  components: {
+    ActivityGraphIcon,
+    ProjectsImport,
   },
-  setup(props) {
-    const state = reactive({
-      action: 'download',
-      dialog: false,
-      projects: props.projects as Project[],
-    });
+  setup() {
+    const dialogState = core.app.state.dialog;
 
     /**
-     * Download projects.
+     * Export selected projects.
      */
-    const downloadProjects = () => {
-      const projects: any[] = state.projects
-        .filter((project: Project) => project.view.selected)
-        .map((project: Project) => {
-          const projectData: any = project.toJSON();
-          if (project.view.withActivities) {
-            projectData.activities = project.activities.map(
-              (activity: Activity) => activity.toJSON()
-            );
-          }
-          project.view.resetState();
-          return projectData;
-        });
-      core.app.download(
-        projects,
-        projects.length === 1 ? 'project' : 'projects'
+    const exportProjects = () => {
+      const selectedProjects: Project[] = dialogState.content.filter(
+        (project: Project) => project.state.selected
       );
-      state.dialog = false;
+      if (selectedProjects.length > 0) {
+        core.app.project.exportProjects(selectedProjects);
+      }
+      core.app.closeDialog();
     };
 
     /**
-     * Delete projects.
+     * Delete selected projects.
      */
     const deleteProjects = () => {
-      const projectIds: string[] = state.projects
-        .filter((project: Project) => project.view.selected)
-        .map((project: Project) => {
-          project.view.resetState();
-          return project.id;
-        });
-      core.app.deleteProjects(projectIds).then(() => {
-        core.app.updateProjects();
-        state.dialog = false;
-      });
+      const selectedProjects: Project[] = dialogState.content.filter(
+        (project: Project) => project.state.selected
+      );
+      if (selectedProjects.length > 0) {
+        core.app.project.deleteProjects(selectedProjects);
+      }
+      core.app.closeDialog();
     };
 
-    watch(
-      () => [props.action, props.open],
-      () => {
-        state.projects = props.projects as Project[];
-        state.action = props.action as string;
-        state.dialog = true;
-      }
-    );
-
     return {
-      console,
-      downloadProjects,
+      closeDialog: () => core.app.closeDialog(),
       deleteProjects,
-      state,
+      dialogState,
+      exportProjects,
     };
   },
 });
