@@ -50,6 +50,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
       showlegend: false,
       source: 'x+y',
       type: 'histogram',
+      visible: this.state.visible,
       x,
       xbins: {
         end,

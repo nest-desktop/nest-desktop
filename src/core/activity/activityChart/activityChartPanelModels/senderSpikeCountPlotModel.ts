@@ -74,7 +74,6 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       counts[nodeId] ? counts[nodeId] / time : 0
     );
     const size = x.length;
-    const mode = this.params[0].value;
 
     this.data.push({
       activityIdx: activity.idx,
@@ -95,6 +94,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       opacity: 0.6,
       showlegend: false,
       type: this.plotType,
+      visible: this.state.visible,
       x,
       y,
     });

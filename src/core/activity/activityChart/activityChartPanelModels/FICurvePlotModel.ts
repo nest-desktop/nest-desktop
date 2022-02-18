@@ -29,6 +29,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       name: 'Spikes of ' + activity.recorder.view.label,
       showlegend: true,
       type: 'scattergl',
+      visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,
     });

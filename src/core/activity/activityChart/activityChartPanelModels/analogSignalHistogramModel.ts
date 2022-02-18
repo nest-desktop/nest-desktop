@@ -97,6 +97,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       showlegend: false,
       source: 'x',
       type: 'histogram',
+      visible: this.state.visible,
       x: record.values,
       xaxis: 'x' + this.panel.xaxis,
       xbins: {

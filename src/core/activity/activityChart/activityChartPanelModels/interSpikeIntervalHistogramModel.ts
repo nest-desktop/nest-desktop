@@ -53,6 +53,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
       showlegend: false,
       source: 'x',
       type: 'histogram',
+      visible: this.state.visible,
       x,
       xbins: {
         end,
