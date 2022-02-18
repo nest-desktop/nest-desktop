@@ -18,8 +18,8 @@ containing an image of a laptop with the NEST logo on its screen.
 At the bottom it shows a short description of NEST Desktop (left) and some useful links and the current version (right).
 
 .. image:: ../_static/img/screenshots/start-page.png
-  :width: 100%
   :target: #getting-started
+  :width: 100%
 
 .. note::
    You can reload the page if NEST Desktop has somehow crashed.
@@ -35,8 +35,8 @@ If you want to construct a network, you will have to open the network editor.
 The network editor shows the network graph composing of nodes (shapes) and connections (lines).
 
 .. image:: ../_static/img/screenshots/network-editor.png
-  :width: 100%
   :target: #construct-neuronal-networks
+  :width: 100%
 
 |br|
 
