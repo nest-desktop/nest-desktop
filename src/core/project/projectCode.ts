@@ -19,7 +19,6 @@ export class ProjectCode extends Code {
         ? projectCode.blocks
         : [
             'importModules',
-            'importInsiteModule',
             'resetKernel',
             'setKernel',
             'createNodes',
@@ -83,10 +82,6 @@ export class ProjectCode extends Code {
    * Generate script code.
    */
   generate(): void {
-    const simulateWithInsite = this._project.app.project.view
-      ? this._project.app.project.view.config.simulateWithInsite
-      : false;
-
     let script = '';
     if (this._state.blocks.includes('importModules')) {
       script += this.importModules();
@@ -96,8 +91,8 @@ export class ProjectCode extends Code {
       script += 'nest.ResetKernel()\n';
     }
 
-    if (simulateWithInsite) {
-      script += '# "insitemodule" can only be loaded once.\n';
+    if (this.runSimulationInsite) {
+      script += '\n# "insitemodule" can only be loaded once.\n';
       script += 'try:';
       script += this._() + 'nest.Install("insitemodule")\n';
       script += 'except:';
@@ -114,7 +109,9 @@ export class ProjectCode extends Code {
 
     if (this._state.blocks.includes('createNodes')) {
       script += '\n\n# Create nodes\n';
-      script += this._project.network.code.createNodes();
+      script += this._project.network.code.createNodes({
+        runSimulationInsite: this.runSimulationInsite,
+      });
     }
 
     if (this._state.blocks.includes('connectNodes')) {
@@ -126,7 +123,10 @@ export class ProjectCode extends Code {
       script += '\n\n# Run simulation\n';
       script += this._project.simulation.code.simulate();
 
-      if (!simulateWithInsite && this._project.network.recorders.length > 0) {
+      if (
+        !this.runSimulationInsite &&
+        this._project.network.recorders.length > 0
+      ) {
         script += '\n\n# Get IDs of recorded node\n';
         script += this.defineGetNodeIds();
 
@@ -140,7 +140,7 @@ export class ProjectCode extends Code {
       }
     }
 
-    this._state.codeInsite = simulateWithInsite;
+    this._state.codeInsite = this.runSimulationInsite;
     this._script = script;
     this._hash = sha1(this._script);
   }
