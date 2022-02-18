@@ -48,7 +48,7 @@ export class Node extends Config {
     this._spatial = new NodeSpatial(this, node.spatial);
 
     this.initParameters(node);
-    this.initActivity();
+    this.initActivity(node.activity);
 
     this.updateHash();
   }
@@ -120,10 +120,10 @@ export class Node extends Config {
     this.updateRecords();
     this.updateRecordsColor();
 
-    // trigger node change
+    // Trigger node change.
     this.nodeChanges();
 
-    // initialize activity graph
+    // Initialize activity graph.
     if (this.model.isRecorder()) {
       this._network.project.initActivityGraph();
     }
@@ -254,16 +254,16 @@ export class Node extends Config {
   /**
    * Initialize activity for the recorder.
    */
-  initActivity(): void {
+  initActivity(data: any = {}): void {
     if (!this.model.isRecorder()) {
       return;
     }
     if (this.model.isSpikeRecorder()) {
-      this._activity = new SpikeActivity(this);
+      this._activity = new SpikeActivity(this, data);
     } else if (this.model.isAnalogRecorder()) {
-      this._activity = new AnalogSignalActivity(this);
+      this._activity = new AnalogSignalActivity(this, data);
     } else {
-      this._activity = new Activity(this);
+      this._activity = new Activity(this, data);
     }
   }
 
@@ -289,7 +289,7 @@ export class Node extends Config {
   }
 
   /**
-   * check if node has params.
+   * Check if node has params.
    */
   hasParameters(node: any): boolean {
     return node.hasOwnProperty('params');
@@ -315,7 +315,7 @@ export class Node extends Config {
   }
 
   /**
-   * Get parameter component
+   * Get parameter component.
    * @param paramId - parameter id
    * @return parameter component
    */
@@ -412,13 +412,12 @@ export class Node extends Config {
    * It should be called after connections are created.
    */
   updateRecords(): void {
-    // console.log('Update records.');
     if (this.targets.length === 0) {
       return;
     }
 
     let recordables: any[] = [];
-    // initialize recordables.
+    // Initialize recordables.
     if (this.targets.length > 0) {
       if (this.model.isMultimeter()) {
         const recordablesNodes = this.targets.map((target: Node) => [
@@ -453,9 +452,9 @@ export class Node extends Config {
         this._recordables.push(new NodeRecord(this, record));
       });
 
-    // initialize selected records.
+    // Initialize selected records.
     if (this._doc.records != null) {
-      // load record from stored nodes.
+      // Load record from stored nodes.
       const recordIds = this._doc.records.map((record: any) => record.id);
       this._records = [
         ...this._recordables.filter((record: NodeRecord) =>
@@ -463,7 +462,7 @@ export class Node extends Config {
         ),
       ];
     } else if (this._records.length > 0) {
-      // in case when user select other model.
+      // In case when user select other model.
       const recordIds = this._records.map((record: NodeRecord) => record.id);
       this._records = [
         ...this._recordables.filter((record: NodeRecord) =>
