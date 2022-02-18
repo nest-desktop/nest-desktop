@@ -117,7 +117,7 @@ export function upgradeProject(app: App, project: any): any {
   }
   const version: string[] = project.version.split('.');
 
-  // Checks when version is 2.5 or newer.
+  // Checks if version is 2.5 or newer.
   const valid_2_5: boolean =
     (Number(version[0]) === 2 && Number(version[1]) >= 5) ||
     Number(version[0]) > 2;
@@ -125,7 +125,7 @@ export function upgradeProject(app: App, project: any): any {
     ? project.network
     : upgradeNetwork(app, project);
 
-  // Checks when version is 3.0 or newer.
+  // Checks if version is 3.0 or newer.
   const valid_3: boolean = Number(version[0]) === 3;
   if (!valid_3) {
     network.nodes
