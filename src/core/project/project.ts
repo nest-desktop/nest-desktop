@@ -670,7 +670,7 @@ export class Project {
             });
           }
           const activity: any = {
-            nodeCollectionId: data.spikedetectorId,
+            nodeCollectionId: data.spikerecorderId,
             nodeIds: data.nodeIds,
             nodePositions,
           };
