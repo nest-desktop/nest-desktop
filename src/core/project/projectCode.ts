@@ -16,6 +16,8 @@ export class ProjectCode extends Code {
     this._state = reactive({
       codeInsite: false,
       blocks: [
+        'importModules',
+        'importInsiteModule',
         'resetKernel',
         'setKernel',
         'createNodes',
@@ -84,7 +86,9 @@ export class ProjectCode extends Code {
       : false;
 
     let script = '';
-    script += this.importModules();
+    if (this._state.blocks.includes('importModules')) {
+      script += this.importModules();
+    }
 
     if (this._state.blocks.includes('resetKernel')) {
       script += 'nest.ResetKernel()\n';
