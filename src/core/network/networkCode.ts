@@ -14,10 +14,10 @@ export class NetworkCode extends Code {
   /**
    * Generate script to create nodes.
    */
-  createNodes(): string {
+  createNodes(spec: any = {}): string {
     let script = '';
     this._network.nodes.forEach((node: Node) => {
-      script += node.code.create();
+      script += node.code.create(spec);
     });
     return script;
   }

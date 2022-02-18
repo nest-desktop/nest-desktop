@@ -295,9 +295,8 @@
 
     <v-overlay
       :value="
-        state.loading ||
-        (projectView.state.project.simulation.running &&
-          !projectView.config.simulateWithInsite)
+        projectView.state.project.simulation.running &&
+        !projectView.state.project.code.state.codeInsite
       "
       :z-index="10"
     >
@@ -354,7 +353,6 @@ export default Vue.extend({
     const projectView = core.app.project.view;
     const state = reactive({
       error: false,
-      loading: false,
       resizing: false,
       simulationMenu: {
         position: { x: 0, y: 0 },
@@ -379,7 +377,6 @@ export default Vue.extend({
           }
         });
       } else {
-        state.loading = true;
         projectView.init().then(() => {
           const project = projectView.state.project;
           if (!root.$route.path.endsWith(project.id)) {
@@ -387,7 +384,6 @@ export default Vue.extend({
               path: `/project/${project.id}`,
             });
           }
-          state.loading = false;
         });
       }
     };
