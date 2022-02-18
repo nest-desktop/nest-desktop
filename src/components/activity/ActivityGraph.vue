@@ -111,17 +111,6 @@ export default Vue.extend({
     };
 
     /**
-     * Start simulation.
-     */
-    const simulate = () => {
-      if (projectView.config.simulateWithInsite) {
-        state.graph.project.runSimulationInsite();
-      } else {
-        state.graph.project.runSimulation();
-      }
-    };
-
-    /**
      * Check if there are any activities or changes to the network
      * which should be displayed via snackbar message.
      */
@@ -129,7 +118,7 @@ export default Vue.extend({
       const buttonProps = [
         {
           text: 'Simulate',
-          onClick: () => simulate(),
+          onClick: () => state.graph.project.startSimulation(),
           disabled: state.graph.project.simulation.running,
         },
       ];
