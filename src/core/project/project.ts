@@ -184,10 +184,10 @@ export class Project {
     if (options.generateCode) {
       this.code.generate();
     }
-    // reset network graph.
+    // Reset network graph.
     this._network.state.reset();
 
-    // commit network in history.
+    // Commit network in history.
     this.commitNetwork(this._network);
   }
 
@@ -305,7 +305,7 @@ export class Project {
       this._networkRevisionIdx + 1
     );
 
-    // Limit max amount of network revisions;
+    // Limit max amount of network revisions.
     const maxRev: number = this._app.project.view
       ? this._app.project.view.config.maxNetworkRevisions
       : 5;
@@ -328,16 +328,17 @@ export class Project {
     ) {
       currentNetwork = this._networkRevisions.pop();
 
-      // Add activity to recorder nodes
+      // Add activity to recorder nodes.
       network.nodes
         .filter(node => node.model.isRecorder())
         .forEach(node => {
           currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
         });
     } else {
-      // Get network object
+      // Get network object.
       currentNetwork = network.toJSON();
-      currentNetwork.codeHash = this._code.hash; // Copy code hash to current network
+      // Copy code hash to current network.
+      currentNetwork.codeHash = this._code.hash;
 
       // Add activity to recorder nodes only if hashes is matched.
       if (this._code.hash === this._activityGraph.codeHash) {
@@ -369,11 +370,6 @@ export class Project {
       this._networkRevisionIdx = this._networkRevisions.length - 1;
     }
 
-    // Collect recorder models of old network.
-    const oldModels: string[] = this._network.recorders.map(
-      (node: Node) => node.modelId
-    );
-
     // Update network.
     const network: any = this._networkRevisions[this._networkRevisionIdx];
     this._network.update(network);
@@ -381,19 +377,10 @@ export class Project {
     // Generate simulation code.
     this.code.generate();
 
-    // Collect recorder models of new network.
-    const newModels: string[] = this._network.recorders.map(
-      (node: Node) => node.modelId
-    );
-
-    // Compare recorder models and then update chart graph.
-    if (sha1(JSON.stringify(oldModels)) === sha1(JSON.stringify(newModels))) {
-      this._activityGraph.activityChartGraph.panels.forEach(
-        (panel: ActivityChartPanel) => panel.model.initActivities()
-      );
-    } else {
-      this._activityGraph.activityChartGraph.init();
-    }
+    // Initialize activity graph.
+    // It resets always the panels.
+    // TODO: Better solution to update activity graph.
+    this._activityGraph.init();
 
     if (this._app.project.view.config.simulateAfterCheckout) {
       // Run simulation.
@@ -468,7 +455,7 @@ export class Project {
       return;
     }
 
-    // generate seed and simulation code.
+    // Generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
@@ -515,7 +502,8 @@ export class Project {
           // The request was made but no response was received.
           this.openToast('Failed to find NEST Simulator.', 'error');
         } else {
-          // Something happened in setting up the request that triggered an Error.
+          // Something happened in setting up the request
+          // that triggered an error.
           this.openToast(error.message, 'error');
         }
       })
@@ -541,7 +529,7 @@ export class Project {
 
     this._app.project.view.state.fromTime = 0;
 
-    // generate seed and simulation code.
+    // Generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
       this._code.generate();
@@ -559,7 +547,6 @@ export class Project {
             this.cancelGettingActivityInsite();
             break;
           case 200:
-            // TODO: ask Marcel if this code is required.
             this._app.backends.insiteAccess.instance
               .get('nest/simulationTimeInfo/')
               .then((response: any) => {
@@ -585,13 +572,15 @@ export class Project {
         this._simulation.running = false;
       });
 
-    setTimeout(() => this.getActivitiesInsite(), 100); // TODO: suboptimal
+      // TODO: Find better solution for fetching activities.
+      setTimeout(() => this.getActivitiesInsite(), 100);
   }
 
   /**
    * Get activities from Insite.
    *
-   * First it checks the simulation has started, then it updates activity graph frequently.
+   * First it checks the simulation has started,
+   * then it updates activity graph frequently.
    * Afterwards it gets activities from Insite.
    */
   getActivitiesInsite(): void {
@@ -607,7 +596,7 @@ export class Project {
         }
         this._simulation.state.timeInfo = response.data;
 
-        // update activity graph during the simulation.
+        // Update activity graph during the simulation.
         this.continuouslyUpdateActivityGraph();
 
         const nodePositions: any = {};
@@ -672,10 +661,10 @@ export class Project {
           return activity;
         });
 
-        // initialize activities.
+        // Initialize activities.
         this.initActivities(activities);
 
-        // get spike activities from spike recorders.
+        // Get spike activities from spike recorders.
         this.spikeActivities.forEach((activity: SpikeActivity) =>
           activity.getActivityInsite()
         );
@@ -714,10 +703,10 @@ export class Project {
           return activity;
         });
 
-        // initialize activities.
+        // Initialize activities.
         this.initActivities(activities);
 
-        // get analog signal activities from multimeters.
+        // Get analog signal activities from multimeters.
         this.analogSignalActivities.forEach((activity: AnalogSignalActivity) =>
           activity.getActivityInsite()
         );
@@ -743,10 +732,9 @@ export class Project {
         clearInterval(this._app.project.view.state.refreshIntervalId);
       }
 
-      // TODO
-      //
-      // Find better algoritm for stop updating activity graph, e.g. recursive call in timeout
-      //
+      // TODO:
+      // Find better algoritm for stop updating activity graph,
+      // e.g. recursive call in timeout
     }, 1000);
   }
 
@@ -758,7 +746,6 @@ export class Project {
    * Get a list of activities.
    */
   get activities(): Activity[] {
-    // this.consoleLog('Get activities');
     const activities: Activity[] = this._network
       ? this._network.recorders.map((recorder: Node) => recorder.activity)
       : [];
@@ -840,8 +827,6 @@ export class Project {
    * Update activities in recorder nodes after simulation.
    */
   updateActivities(data: any): void {
-    // console.log('Update activities');
-
     // Update recorded activity.
     const activities: Activity[] = this.activities;
     data.forEach((activityData: any, idx: number) => {
@@ -862,25 +847,25 @@ export class Project {
   checkActivities(): void {
     const activities: Activity[] = this.activities;
 
-    // check if it has activities.
+    // Check if it has activities.
     this._state.hasActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasEvents())
         : false;
 
-    // check if it has analog signal activities.
+    // Check if it has analog signal activities.
     this._state.hasAnalogActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasAnalogData())
         : false;
 
-    // check if it has spike activities.
+    // Check if it has spike activities.
     this._state.hasSpikeActivities =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasSpikeData())
         : false;
 
-    // check if it has spatial activities.
+    // Check if it has spatial activities.
     this._state.hasSpatialActivities = this._state.hasActivities
       ? activities.some(
           (activity: Activity) =>
