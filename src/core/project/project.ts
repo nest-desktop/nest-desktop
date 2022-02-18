@@ -67,7 +67,7 @@ export class Project {
     this.initNetwork(project.network);
 
     // Initialize code and activity graph.
-    this._code = new ProjectCode(this);
+    this._code = new ProjectCode(this, project.code);
     this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
@@ -956,6 +956,7 @@ export class Project {
   toJSON(): any {
     const project: any = {
       activityGraph: this._activityGraph.toJSON(),
+      code: this._code.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,
