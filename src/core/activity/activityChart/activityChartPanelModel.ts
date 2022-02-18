@@ -146,14 +146,12 @@ export abstract class ActivityChartPanelModel {
    * Initialize records from analog activities.
    */
   initAnalogRecords(): void {
-    // console.log('Initialize records for analog signals.');
     this._state.records = [];
     this.activities
       .filter((activity: Activity) =>
         activity.recorder.model.isAnalogRecorder()
       )
       .forEach((activity: Activity) => {
-        // activity.recorder.initRecords();
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
             record.activity = activity;
@@ -170,7 +168,6 @@ export abstract class ActivityChartPanelModel {
    * Initialize visible records from analog activities.
    */
   initAnalogRecordsVisible(records: any[] = []): void {
-    // console.log('Initialize visible records for analog signals.');
     if (this._state.records.length === 0) {
       this._state.recordsVisible = [];
       return;
@@ -200,7 +197,6 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    */
   update(): void {
-    // console.log('Update activity chart panel model.');
     this.updateTime();
     this.updateAnalogRecords();
 

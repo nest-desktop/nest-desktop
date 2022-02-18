@@ -32,7 +32,6 @@ export class NodeGraph {
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
-    // console.log('Init node graph');
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
     elem.selectAll('*').remove();
 
@@ -52,7 +51,6 @@ export class NodeGraph {
     });
 
     elem.on('mouseout', () => {
-      // console.log('Node mouse out');
       this.network.state.resetFocus();
       this.render();
     });
@@ -68,7 +66,7 @@ export class NodeGraph {
     const nodes: d3.Selection<any, any, any, any> = this._networkGraph.selector
       .select('g#nodes')
       .selectAll('g.node')
-      .data(this.network.nodes, (n: Node) => (n.network.project.id + n.hash));
+      .data(this.network.nodes, (n: Node) => n.network.project.id + n.hash);
 
     nodes
       .enter()
@@ -113,8 +111,6 @@ export class NodeGraph {
    * Render node graph.
    */
   render(): void {
-    // console.log('Update node graph');
-
     this._nodeGraphShape.render();
     this._nodeGraphConnector.render();
 

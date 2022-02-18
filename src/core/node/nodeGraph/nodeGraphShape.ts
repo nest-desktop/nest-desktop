@@ -160,7 +160,7 @@ export class NodeGraphShape {
       node.state.focus();
 
       if (networkState.selectedNode && workspaceState.enableConnection) {
-        // set cursor position of the clicked node.
+        // Set cursor position of the clicked node.
         this._networkGraph.workspace.updateCursorPosition(node.view.position);
 
         this._networkGraph.workspace.animationOff();
@@ -195,7 +195,7 @@ export class NodeGraphShape {
   render(): void {
     const nodes = d3.select('g#nodes').selectAll('g.node');
 
-    // check if neuron has to change its shape
+    // Check if neuron has to change its shape.
     nodes.each((node: Node, idx: number, elements: any[]) => {
       const elem = d3.select(elements[idx]);
 

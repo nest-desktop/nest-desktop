@@ -23,7 +23,6 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
    * Update data for CV of ISI histogram.
    */
   override updateData(activity: SpikeActivity): void {
-    // console.log('Update data for CV_ISI histogram.')
     const start = 0;
     const end = 5;
     const size = this.params[0].value;
@@ -32,7 +31,6 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
       (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
     );
 
-    // console.log('Add histogram data of inter-spike interval')
     this.data.push({
       activityIdx: activity.idx,
       histfunc: 'count',

@@ -128,7 +128,7 @@ export class Synapse {
    * Initialize synapse parameters.
    */
   initParameters(synapse: any = null): void {
-    // Update parameters from model or node
+    // Update parameters from model or node.
     this._params = [];
     if (this.model && synapse && synapse.hasOwnProperty('params')) {
       this.model.params.forEach((modelParam: ModelParameter) => {

@@ -275,7 +275,6 @@ export default Vue.extend({
      * Update network graph.
      */
     const update = () => {
-      // console.log('Update network graph');
       state.network = projectView.state.project.network;
       state.graph.network = state.network;
       state.graph.update();

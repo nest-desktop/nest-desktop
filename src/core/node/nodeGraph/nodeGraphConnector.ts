@@ -125,7 +125,6 @@ export class NodeGraphConnector {
    * Render all node connectors.
    */
   render(): void {
-    // console.log('Update connector');
     const connector: d3.Selection<any, any, any, any> = d3
       .select('g#nodes')
       .selectAll('g.node')
@@ -146,7 +145,7 @@ export class NodeGraphConnector {
         n.state.isFocused() && !connectionDrag ? '1' : '0'
       );
 
-    // connector animation
+    // Connector animation.
     const connectorEndPos: any = {
       x: this.nodeRadius + 8,
       y: this.nodeRadius + 12,

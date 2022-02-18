@@ -66,7 +66,7 @@ export class ActivityAnimationLayerModel {
   }
 
   /**
-   * Reset graph objects
+   * Reset graph objects.
    */
   resetObjects(): void {
     const scale: number = this._layer.config.object.size;

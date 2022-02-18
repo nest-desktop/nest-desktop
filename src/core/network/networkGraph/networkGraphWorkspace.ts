@@ -46,7 +46,7 @@ export class NetworkGraphWorkspace extends Config {
   }
 
   get altPressed(): boolean {
-    // Alt (left) or AltGr (right)
+    // Alt (left) or AltGr (right).
     return [18, 225].includes(this._state.keyCode);
   }
 
@@ -100,7 +100,7 @@ export class NetworkGraphWorkspace extends Config {
       .on('keyup', (event: any) => {
         this._state.keyCode = null;
         if (event.keyCode === 27) {
-          // Reset workspace when user pressed escape
+          // Reset workspace when user pressed escape.
           this.reset();
           this.update();
         }
@@ -130,7 +130,6 @@ export class NetworkGraphWorkspace extends Config {
         this._networkGraph.workspace.updateTransform();
       })
       .on('contextmenu', (e: MouseEvent) => {
-        // console.log(event);
         e.preventDefault();
         const position: number[] = d3.pointer(e, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
@@ -174,7 +173,6 @@ export class NetworkGraphWorkspace extends Config {
    * Update transform of the workspace.
    */
   updateTransform(): void {
-    // console.log('Transform network graph');
     if (!this._state.centerNetwork && !this._state.centerSelected) {
       return;
     }
@@ -216,7 +214,6 @@ export class NetworkGraphWorkspace extends Config {
    * Center position of nodes.
    */
   centerNetworkPos(): { x: number; y: number } {
-    // console.log('Center network pos');
     const X: number[] = [];
     const Y: number[] = [];
     this.network.nodes.forEach((node: Node) => {
@@ -281,7 +278,6 @@ export class NetworkGraphWorkspace extends Config {
    * Reset graph.
    */
   reset(): void {
-    // console.log('Reset graph');
     this._handler.style('cursor', 'default');
     this._nodeAddPanel.close();
     if (!this.altPressed) {

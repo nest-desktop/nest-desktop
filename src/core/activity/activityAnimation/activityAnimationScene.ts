@@ -76,7 +76,6 @@ export class ActivityAnimationScene {
    * Initialize animation scene.
    */
   init(): void {
-    // console.log('Init animation scene');
     this.setCameraPosition();
     this._scene.add(this._camera);
     this._scene.add(new THREE.AxesHelper(0.1));
@@ -169,7 +168,6 @@ export class ActivityAnimationScene {
    * Animate scene.
    */
   animate(): void {
-    // console.log('Start animation');
     this._animationFrameIdx = requestAnimationFrame(() => this.animate());
 
     // Cumulate interval for frame rate.
@@ -204,7 +202,7 @@ export class ActivityAnimationScene {
       this._stats.end();
     }
 
-    // Modulo delta
+    // Modulo delta.
     this._delta = this._delta % interval;
   }
 

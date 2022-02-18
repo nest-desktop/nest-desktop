@@ -147,7 +147,6 @@ export class NetworkGraphNodeAddPanel {
    * Update color of node add panel.
    */
   update(): void {
-
     this._selector
       .selectAll('.bgcolor')
       .attr('fill', this.darkMode ? '#121212' : 'white');
@@ -184,7 +183,6 @@ export class NetworkGraphNodeAddPanel {
    * Close panel to add node.
    */
   close(): void {
-    // console.log('Close panel');
     this._selector.style('display', 'none').style('opacity', '0');
   }
 }

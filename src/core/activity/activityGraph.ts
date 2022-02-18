@@ -34,7 +34,6 @@ export class ActivityGraph {
    * Initialize activity graph.
    */
   init(activityGraph: any = {}): void {
-    // console.log('Init activity graph');
     this.initActivityChartGraph(activityGraph.panels || []);
     this.initActivityAnimationGraph();
   }
@@ -43,7 +42,6 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    // console.log('Update activity graph');
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
     this.updateHash();
@@ -53,7 +51,6 @@ export class ActivityGraph {
    * Update code hash for activity graph.
    */
   updateHash(): void {
-    // console.log('Update code hash for activity graph');
     this._codeHash = this._project.code.hash;
   }
 

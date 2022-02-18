@@ -28,7 +28,6 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * It requires activity data.
    */
   override updateData(): void {
-    // console.log('Init histogram panel of spike times')
     this.data = [];
 
     if (this.state.recordsVisible.length === 0) {
@@ -51,7 +50,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * It needs activity data.
    */
   updateHistogramRange(values: number[] = []): void {
-    // Update time
+    // Update time.
     if (values.length === 0) {
       return;
     }
@@ -70,7 +69,6 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * Update data for analog signal histogram.
    */
   updateEventData(record: NodeRecord): void {
-    // console.log('Update data for analog signal histogram.');
     if (record.values == null || record.values.length === 0) {
       return;
     }
@@ -112,7 +110,6 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * Update layout label for analog signal histogram.
    */
   override updateLayoutLabel(): void {
-    // console.log('Update layout label for analog signal.');
     this.panel.layout.xaxis.title = this.axisTitle;
     this.panel.layout.yaxis.title = 'Count';
   }

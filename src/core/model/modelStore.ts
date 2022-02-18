@@ -58,7 +58,6 @@ export class ModelStore {
   async init(): Promise<any> {
     this.consoleLog('Initialize model store');
     return this._db.count().then((count: number) => {
-      // this.consoleLog('Models in db: ' + count);
       if (count === 0) {
         return this._db
           .importModelsFromAssets()

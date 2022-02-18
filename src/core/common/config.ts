@@ -15,21 +15,21 @@ export class Config {
   }
 
   get config(): any {
-    // check if item is existed in localstorage
+    // Check if item is existed in localstorage.
     if (localStorage.hasOwnProperty(this.configItemName)) {
       const dataJSON: string | null = localStorage.getItem(this.configItemName);
       if (dataJSON) {
         return JSON.parse(dataJSON);
       }
     }
-    this.config = this.assetConfig; // create item in localstorage
-    return this.config; // recursive call after item created in localstorage
+    this.config = this.assetConfig; // Create item in localstorage.
+    return this.config; // Recursive call after item created in localstorage.
   }
 
   set config(value: any) {
-    value.version = environment.VERSION; // update version of config in localstorage
-    const dataJSON = JSON.stringify(value); // convert object to string
-    localStorage.setItem(this.configItemName, dataJSON); // save item in localstorage
+    value.version = environment.VERSION; // Update version of config in localstorage.
+    const dataJSON = JSON.stringify(value); // Convert object to string.
+    localStorage.setItem(this.configItemName, dataJSON); // Save item in localstorage.
   }
 
   get configItemName(): string {

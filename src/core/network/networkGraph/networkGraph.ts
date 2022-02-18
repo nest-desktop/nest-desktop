@@ -62,8 +62,8 @@ export class NetworkGraph {
 
   dragEnd(event: any): void {
     this._workspace.state.dragging = false;
-    // If-clause to prevent the error message when mouseup happens
-    // outside the window:
+    // If-clause to prevent the error message
+    // when mouseup happens outside the window.
     if (event.sourceEvent.srcElement.parentNode instanceof Node) {
       d3.select(event.sourceEvent.srcElement.parentNode).classed(
         'active',
@@ -78,7 +78,9 @@ export class NetworkGraph {
    * Render network graph.
    */
   render(): void {
-    this._network.consoleLog('Render network graph of ' + this._network.project.shortId);
+    this._network.consoleLog(
+      'Render network graph of ' + this._network.project.shortId
+    );
     this._connectionGraph.render();
     this._nodeGraph.render();
   }
@@ -90,7 +92,9 @@ export class NetworkGraph {
    * This function should be called when the network is changed.
    */
   update(): void {
-    this._network.consoleLog('Update network graph of ' + this._network.project.shortId);
+    this._network.consoleLog(
+      'Update network graph of ' + this._network.project.shortId
+    );
     this._workspace.update();
     this._connectionGraph.update();
     this._nodeGraph.update();

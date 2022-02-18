@@ -50,7 +50,6 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
    * Update data for mean ISI histogram.
    */
   override updateData(activity: SpikeActivity): void {
-    // console.log('Update data for mean ISI histogram.').
     const x: number[] = activity.nodeIds;
     const isi: number[][] = activity.ISI();
     const y: number[] = isi.map((ii: number[]) =>

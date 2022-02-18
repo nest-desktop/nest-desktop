@@ -251,13 +251,12 @@ export class Connection extends Config {
    * It emits connection changes.
    */
   reverse(): void {
-    // console.log('Reverse connection');
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
 
-    // trigger connection change
+    // Trigger connection change.
     this.connectionChanges();
 
-    // initialize activity graph
+    // Initialize activity graph.
     if (this._view.connectRecorder()) {
       this.recorder.initActivity();
       this._network.project.initActivityGraph();

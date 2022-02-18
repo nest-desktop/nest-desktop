@@ -15,7 +15,6 @@ export class SpikeActivity extends Activity {
    * Overwrites events.
    */
   override init(activity: any): void {
-    // console.log('Init spike activity');
     this.initEvents(activity);
     this.initTimes();
   }
@@ -35,7 +34,6 @@ export class SpikeActivity extends Activity {
    * Extends events.
    */
   override update(activity: any): void {
-    // console.log('Update spike activity');
     if (activity.events == undefined) {
       return;
     }
@@ -115,8 +113,6 @@ export class SpikeActivity extends Activity {
    * Get activity from Insite.
    */
   override getActivityInsite(): void {
-    // console.log('Get spike activity from Insite');
-
     const path = `nest/spikerecorders/${this.nodeCollectionId}/spikes/?fromTime=${this.lastTime}`;
     this.project.app.backends.insiteAccess.instance
       .get(path)
