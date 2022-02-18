@@ -5,7 +5,7 @@ Left sidebar
 ------------
 
 In this view you can manage your models.
-In the left sidebar, a list of the available models is shown.
+The left sidebar shows a list of the available models.
 You can search the models list in the search bar on top of the list.
 Below the search bar, you have the possibility to select the following filter options regarding node type and model source:
 
@@ -29,7 +29,7 @@ The node and source filters are combined with a logical AND (e.g. "(Installed AN
 Center area
 -----------
 
-In the center area, the content for the model is displayed.
+The center area displays the content for the model.
 The bar on top contains three selectors on the left side,
 which allow to switch between different content for the center area:
 
