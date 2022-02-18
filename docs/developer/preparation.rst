@@ -58,6 +58,28 @@ Start a development server:
 
   yarn serve
 
+.. note::
+   The command ``yarn serve`` uses the configuration file ``vue.config.js``.
+   This file controls the threads used for the linting (the statical-syntactical code checks).
+   With the default configuration, all available threads are used to minimize the build time.
+   This might slow down other programs.
+   There are cases where you cannot afford that
+   and prefer a slightly longer execution time.
+   In that cases, you can either adjust the number of threads in that file.
+   This reduces the CPU load, but some CPU resources might stay unused.
+   Alternatively you can execute the console in which you want to spawn the ``yarn`` command with a lower priority.
+   On Linux (even on MacOS or Windows using WSL2 and an available shell command) this can be done using
+
+   .. code-block:: bash
+
+     nice -n 20 bash
+
+   This will spawn a new console inside your current console, but with the lowest processing priority possible,
+   i.e. this console and its tasks do not block other tasks (like video conferences, etc.) significantly.
+   Do not be confused that there will be no new window
+   and no major visual cues that you are now in another process.
+   In that console you can now execute the commands mentioned above.
+
 |
 
 .. _useful-commands:
