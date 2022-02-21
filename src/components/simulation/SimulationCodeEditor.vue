@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ref, reactive, watch, onMounted } from '@vue/composition-api';
+import { onMounted, reactive, ref, watch } from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
 import 'codemirror/addon/hint/show-hint';
 import '@/assets/codemirror/addon/hint/pyNEST-hint';
