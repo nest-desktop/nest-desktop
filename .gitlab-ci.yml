@@ -126,10 +126,40 @@ deploy_ebrains_docker:
     - shell-runner
 
 #
-# DEPLOY DOCKER IMAGE ON DOCKER HUB
+# DEPLOY DOCKER IMAGE ON DOCKER HUB in nestsim organisation
 #
 
-deploy_docker_hub:
+deploy_docker_hub_nestsim:
+  stage: deploy
+  image: ubuntu:20.04
+  needs:
+    - build_app
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: manual
+  before_script:
+    - source .env
+    - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
+  script:
+    - docker build -f docker/Dockerfile -t nestsim/nest-desktop:${DOCKER_TAG} .
+    - |-
+      if [[ $CI_COMMIT_BRANCH == "main" ]]; then
+        docker tag nestsim/nest-desktop:${DOCKER_TAG} nestsim/nest-desktop:${DOCKER_TAG%.*}
+        docker tag nestsim/nest-desktop:${DOCKER_TAG} nestsim/nest-desktop:latest
+      else
+        docker tag nestsim/nest-desktop:${DOCKER_TAG} nestsim/nest-desktop:dev
+      fi
+    - docker push nestsim/nest-desktop --all-tags
+  after_script:
+    - docker logout
+  tags:
+    - shell-runner
+
+#
+# DEPLOY DOCKER IMAGE ON DOCKER HUB in nestdesktop organisation
+#
+
+deploy_docker_hub_nestdesktop:
   stage: deploy
   image: ubuntu:20.04
   needs:
