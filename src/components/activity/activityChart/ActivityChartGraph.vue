@@ -39,7 +39,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, ref, onMounted, watch } from '@vue/composition-api';
+import {
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from '@vue/composition-api';
 
 import { ActivityChartGraph } from '@/core/activity/activityChart/activityChartGraph';
 
@@ -88,7 +94,21 @@ export default Vue.extend({
       state.graph.downloadImage(state.toImageButtonOptions);
     };
 
-    onMounted(() => init());
+    /**
+     * Resize activity graph.
+     */
+    const onResize = () => {
+      state.graph.update();
+    };
+
+    onMounted(() => {
+      init();
+      window.addEventListener('resize', onResize);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', onResize);
+    });
 
     watch(
       () => props.graph,
