@@ -17,6 +17,7 @@ build_app:
   rules:
     - if: $CI_COMMIT_TAG
       when: never
+    - when: always
   before_script:
     - touch .env
     - VERSION=`node -p "require('./package.json').version"`
@@ -48,6 +49,7 @@ build_electron:
   rules:
     - if: $CI_COMMIT_TAG
       when: never
+    - when: always
   before_script:
     - VERSION=`node -p "require('./package.json').version"`
     - |-
@@ -76,6 +78,7 @@ deploy_pypi:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       when: manual
+    - when: always
   before_script:
     - python setup.py sdist bdist_wheel
     - pip install twine
@@ -103,6 +106,7 @@ deploy_ebrains_docker:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       when: manual
+    - when: always
   before_script:
     - source .env
     - echo "${EBRAINS_DOCKER_REGISTRY_TOKEN}" | docker login -u ${EBRAINS_DOCKER_REGISTRY_USER} --password-stdin docker-registry.ebrains.eu
@@ -135,6 +139,7 @@ deploy_docker_hub:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       when: manual
+    - when: always
   before_script:
     - source .env
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
@@ -167,6 +172,7 @@ deploy_snap:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       when: manual
+    - when: always
   before_script:
     - echo "${SNAP_ACCESS_TOKEN}" | snapcraft login --with -
   script:
