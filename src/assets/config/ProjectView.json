@@ -4,5 +4,5 @@
   "showHelp": true,
   "simulateAfterChange": false,
   "simulateAfterCheckout": false,
-  "simulateAfterLoad": false,
+  "simulateAfterLoad": false
 }
