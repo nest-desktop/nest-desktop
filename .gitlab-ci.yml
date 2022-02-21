@@ -135,10 +135,10 @@ deploy_docker_hub_nestsim:
   needs:
     - build_app
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       when: manual
-  except:
-    - tags
   before_script:
     - source .env
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
