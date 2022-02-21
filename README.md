@@ -1,8 +1,7 @@
 # NEST Desktop
 
 <p>
-  <!-- <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/latest/docs/_static/img/screenshots/start-page.png" /> -->
-  <img src="docs/_static/img/screenshots/start-page.png" />
+  <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/latest/docs/_static/img/screenshots/start-page.png" />
 </p>
 
 **General:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
