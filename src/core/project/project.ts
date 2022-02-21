@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
 
 import { Activity } from '../activity/activity';
-import { ActivityChartPanel } from '../activity/activityChart/activityChartPanel';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
