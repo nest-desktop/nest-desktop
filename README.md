@@ -10,9 +10,9 @@
 [![DOI](https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue)](https://doi.org/10.1523/eneuro.0274-21.2021)
 
 **Docker Hub:** &nbsp; &nbsp;
-[![docker version](https://img.shields.io/docker/v/nestdesktop/app/3.1)](https://hub.docker.com/r/nestdesktop/app)
-[![image size](https://img.shields.io/docker/image-size/nestdesktop/app/3.1)](https://hub.docker.com/r/nestdesktop/app)
-[![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)](https://hub.docker.com/r/nestdesktop/app)
+[![docker version](https://img.shields.io/docker/v/nestsim/nest-desktop/latest)](https://hub.docker.com/r/nestsim/nest-desktop)
+[![image size](https://img.shields.io/docker/image-size/nestsim/nest-desktop/latest)](https://hub.docker.com/r/nestsim/nest-desktop)
+[![docker pulls](https://img.shields.io/docker/pulls/nestsim/nest-desktop)](https://hub.docker.com/r/nestsim/nest-desktop)
 
 **GitHub:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 [![commit activity](https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
