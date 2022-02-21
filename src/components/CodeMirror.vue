@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted, ref } from '@vue/composition-api';
+import { onMounted, reactive, ref, watch } from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
 
 export default Vue.extend({

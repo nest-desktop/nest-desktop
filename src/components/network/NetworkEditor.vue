@@ -18,7 +18,7 @@
       class="no-print"
     />
 
-    <svg height="600" id="networkGraph" width="800">
+    <svg height="600" id="networkGraph" ref="networkGraph" width="800">
       <g class="marker" v-if="state.network">
         <defs
           :key="'defs' + connection.idx"
@@ -162,6 +162,7 @@ export default Vue.extend({
   setup(props) {
     const projectView = core.app.project.view;
     const networkEditor = ref(null);
+    const networkGraph = ref(null);
     const state = reactive({
       network: projectView.state.project.network,
       graph: undefined,
@@ -294,12 +295,15 @@ export default Vue.extend({
     };
 
     onMounted(() => {
-      state.graph = new NetworkGraph('svg#networkGraph');
-      onResize();
-      state.graph.workspace.init();
-      update();
-      state.graph.workspace.update();
-      window.addEventListener('resize', onResize);
+      const ref: any = networkGraph.value;
+      if (ref) {
+        state.graph = new NetworkGraph(ref);
+        onResize();
+        state.graph.workspace.init();
+        update();
+        state.graph.workspace.update();
+        window.addEventListener('resize', onResize);
+      }
     });
 
     onBeforeUnmount(() => {
@@ -322,7 +326,7 @@ export default Vue.extend({
       }
     );
 
-    return { state, networkEditor };
+    return { state, networkEditor, networkGraph };
   },
 });
 </script>

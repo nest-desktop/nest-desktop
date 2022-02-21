@@ -144,7 +144,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted } from '@vue/composition-api';
+import { onMounted, reactive } from '@vue/composition-api';
 import axios from 'axios';
 
 import { App } from '@/core/app';
