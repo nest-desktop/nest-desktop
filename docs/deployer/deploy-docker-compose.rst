@@ -43,7 +43,7 @@ Requirements
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 
 It will pull images of NEST Desktop from
-https://docker-registry.ebrains.eu/harbor/projects/6/repositories/nest-desktop)
+https://docker-registry.ebrains.eu/harbor/projects/6/repositories/nest-desktop
 and NEST Simulator can be started from within the official NEST image
 (https://docker-registry.ebrains.eu/harbor/projects/6/repositories/nest-simulator).
 
