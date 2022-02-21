@@ -128,7 +128,7 @@ Please keep this in mind when searching for information on a specific version of
 ||||
 
 :General: |docs| |license| |doi|
-:DockerHub: |dockerhub-version| |dockerhub-image-size| |dockerhub-pulls|
+:Docker Hub: |dockerhub-version| |dockerhub-image-size| |dockerhub-pulls|
 :GitHub: |github-commit-activitiy| |github-stars| |github-forks|
 :PyPI: |pypi-version| |pypi-dm|
 
