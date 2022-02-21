@@ -128,7 +128,7 @@ Please keep this in mind when searching for information on a specific version of
 ||||
 
 :General: |docs| |license| |doi|
-:DockerHub: |dockerhub-version| |dockerhub-image-size| |dockerhub-pulls|
+:Docker Hub: |dockerhub-version| |dockerhub-image-size| |dockerhub-pulls|
 :GitHub: |github-commit-activitiy| |github-stars| |github-forks|
 :PyPI: |pypi-version| |pypi-dm|
 
@@ -144,11 +144,11 @@ Please keep this in mind when searching for information on a specific version of
   :target: https://doi.org/10.1523/eneuro.0274-21.2021
   :alt: DOI
 
-.. |dockerhub-version| image:: https://img.shields.io/docker/v/nestdesktop/app/3.0
+.. |dockerhub-version| image:: https://img.shields.io/docker/v/nestdesktop/app/3.1
   :target: https://hub.docker.com/r/nestdesktop/app
   :alt: Latest version
 
-.. |dockerhub-image-size| image:: https://img.shields.io/docker/image-size/nestdesktop/app/3.0
+.. |dockerhub-image-size| image:: https://img.shields.io/docker/image-size/nestdesktop/app/3.1
   :target: https://hub.docker.com/r/nestdesktop/app
   :alt: Image size
 

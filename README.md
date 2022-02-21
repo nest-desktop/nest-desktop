@@ -9,9 +9,9 @@
 [![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
 [![DOI](https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue)](https://doi.org/10.1523/eneuro.0274-21.2021)
 
-**DockerHub:** &nbsp; &nbsp;
-[![docker version](https://img.shields.io/docker/v/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
-[![image size](https://img.shields.io/docker/image-size/nestdesktop/app/3.0)](https://hub.docker.com/r/nestdesktop/app)
+**Docker Hub:** &nbsp; &nbsp;
+[![docker version](https://img.shields.io/docker/v/nestdesktop/app/3.1)](https://hub.docker.com/r/nestdesktop/app)
+[![image size](https://img.shields.io/docker/image-size/nestdesktop/app/3.1)](https://hub.docker.com/r/nestdesktop/app)
 [![docker pulls](https://img.shields.io/docker/pulls/nestdesktop/app)](https://hub.docker.com/r/nestdesktop/app)
 
 **GitHub:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
