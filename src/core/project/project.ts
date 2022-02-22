@@ -458,18 +458,6 @@ export class Project {
    * @remarks
    * After the simulation it updates activities and commit network.
    */
-  async startSimulation(): Promise<any> {
-    return this._code.runSimulationInsite
-      ? this.runSimulationInsite()
-      : this.runSimulation();
-  }
-
-  /**
-   * Start simulation.
-   *
-   * @remarks
-   * After the simulation it updates activities and commit network.
-   */
   async runSimulation(): Promise<any> {
     this.consoleLog('Run simulation');
     this.cancelGettingActivityInsite();
