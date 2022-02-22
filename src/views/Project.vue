@@ -211,10 +211,7 @@
           </v-list>
         </v-navigation-drawer>
 
-        <div
-          style="width: 100%; padding-right: 64px"
-          v-if="projectView.state.toolOpened"
-        >
+        <div class="controller" v-if="projectView.state.toolOpened">
           <NetworkParamEdit
             :network="projectView.state.project.network"
             :projectId="projectView.state.projectId"
@@ -298,9 +295,8 @@
 
     <v-overlay
       :value="
-        state.loading ||
-        (projectView.state.project.simulation.running &&
-          !projectView.config.simulateWithInsite)
+        projectView.state.project.simulation.running &&
+        !projectView.state.project.code.state.codeInsite
       "
       :z-index="10"
     >
@@ -357,7 +353,6 @@ export default Vue.extend({
     const projectView = core.app.project.view;
     const state = reactive({
       error: false,
-      loading: false,
       resizing: false,
       simulationMenu: {
         position: { x: 0, y: 0 },
@@ -382,7 +377,6 @@ export default Vue.extend({
           }
         });
       } else {
-        state.loading = true;
         projectView.init().then(() => {
           const project = projectView.state.project;
           if (!root.$route.path.endsWith(project.id)) {
@@ -390,7 +384,6 @@ export default Vue.extend({
               path: `/project/${project.id}`,
             });
           }
-          state.loading = false;
         });
       }
     };
@@ -455,6 +448,13 @@ export default Vue.extend({
 </script>
 
 <style>
+.projectView .controller {
+  height: calc(100vh - 48px);
+  overflow-y: hidden;
+  padding-right: 64px;
+  width: 100%;
+}
+
 .projectView .nav-item-right {
   font-size: 9px;
   text-align: center;
@@ -470,12 +470,12 @@ export default Vue.extend({
   z-index: 10;
 }
 
-.rotate-90 {
-  transform: rotate(-90deg);
-}
-
 .projectView .tab-text {
   font-size: 10px;
   margin-bottom: 2px !important;
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
 }
 </style>

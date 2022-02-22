@@ -142,6 +142,7 @@ export function upgradeProject(app: App, project: any): any {
 
   return {
     activityGraph: project.activityGraph || {},
+    code: project.code,
     network,
     simulation: project.simulation,
   };

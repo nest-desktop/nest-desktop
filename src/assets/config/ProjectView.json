@@ -4,6 +4,5 @@
   "showHelp": true,
   "simulateAfterChange": false,
   "simulateAfterCheckout": false,
-  "simulateAfterLoad": false,
-  "simulateWithInsite": false
+  "simulateAfterLoad": false
 }

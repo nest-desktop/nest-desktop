@@ -5,7 +5,7 @@
         <v-btn
           :disabled="state.disabled"
           :loading="state.project.simulation.running"
-          @click="simulate()"
+          @click="state.project.startSimulation()"
           @contextmenu="showMenu"
           outlined
         >
@@ -92,20 +92,6 @@ export default Vue.extend({
             projectView.updateConfig(state.projectConfig);
           },
         },
-        {
-          id: 'simulateWithInsite',
-          input: 'checkbox',
-          title: 'Simulate with Insite',
-          value: 'simulateWithInsite',
-          show: () =>
-            core.app.backends.insiteAccess.state.version.insite != undefined,
-          onClick: () => {
-            state.projectConfig.simulateWithInsite =
-              !state.projectConfig.simulateWithInsite;
-            projectView.updateConfig(state.projectConfig);
-            state.project.code.generate();
-          },
-        },
       ],
       project: props.project as Project,
       showMenu: false,
@@ -123,17 +109,6 @@ export default Vue.extend({
       });
     };
 
-    /**
-     * Start simulation.
-     */
-    const simulate = () => {
-      if (projectView.config.simulateWithInsite) {
-        state.project.runSimulationInsite();
-      } else {
-        state.project.runSimulation();
-      }
-    };
-
     const update = () => {
       state.disabled = props.disabled;
       state.project = props.project as Project;
@@ -147,7 +122,7 @@ export default Vue.extend({
       () => update()
     );
 
-    return { showMenu, simulate, state };
+    return { showMenu, state };
   },
 });
 </script>

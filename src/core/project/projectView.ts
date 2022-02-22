@@ -131,14 +131,10 @@ export class ProjectView extends Config {
       );
     }
 
-    if (this._app.backends.insiteAccess.state.version.insite == null) {
-      this.updateConfig({ simulateWithInsite: false });
-    }
-
     return this._app.project.initProject(this._state.projectId).then(() => {
       if (this._state.project) {
         const generateCode =
-          this.config.simulateWithInsite !==
+          this._state.project.code.state.runSimulationInsite !==
           this._state.project.code.state.codeInsite;
         this._state.project.init({
           generateCode,

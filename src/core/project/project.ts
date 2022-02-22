@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Vue from 'vue';
 
 import { Activity } from '../activity/activity';
-import { ActivityChartPanel } from '../activity/activityChart/activityChartPanel';
 import { ActivityGraph } from '../activity/activityGraph';
 import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { App } from '../app';
@@ -67,7 +66,7 @@ export class Project {
     this.initNetwork(project.network);
 
     // Initialize code and activity graph.
-    this._code = new ProjectCode(this);
+    this._code = new ProjectCode(this, project.code);
     this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
@@ -445,13 +444,25 @@ export class Project {
    * Start simulation.
    *
    * @remarks
+   * After the simulation, it updates the activities and commits the network.
+   */
+  async startSimulation(): Promise<any> {
+    return this._code.runSimulationInsite
+      ? this.runSimulationInsite()
+      : this.runSimulation();
+  }
+
+  /**
+   * Start simulation.
+   *
+   * @remarks
    * After the simulation it updates activities and commit network.
    */
   async runSimulation(): Promise<any> {
     this.consoleLog('Run simulation');
     this.cancelGettingActivityInsite();
 
-    if (this.app.project.view.config.simulateWithInsite) {
+    if (this._code.runSimulationInsite) {
       return;
     }
 
@@ -462,6 +473,7 @@ export class Project {
     }
 
     this._simulation.resetState();
+    this.resetActivities();
     this._simulation.running = true;
     return this.app.backends.nestSimulator.instance
       .post('exec', {
@@ -475,17 +487,32 @@ export class Project {
             this.openToast('Failed to find NEST Simulator.', 'error');
             break;
           case 200:
-            data = response.data.data;
-            this._simulation.state.biologicalTime = data.kernel.biological_time;
-            if (data.positions) {
-              data.activities.forEach((activity: any) => {
-                const positions = activity.nodeIds.map(
-                  (nodeId: number) => data.positions[nodeId]
-                );
-                activity.nodePositions = positions;
-              });
+            if (response.data.data != null) {
+              data = response.data.data;
+              // get biological time
+              this._simulation.state.biologicalTime =
+                data.kernel != null
+                  ? data.kernel.biological_time
+                  : this._simulation.time;
+
+              // get activities
+              if (data.activities != null) {
+                // get positions
+                if (data.positions != null) {
+                  data.activities.forEach((activity: any) => {
+                    const positions = activity.nodeIds.map(
+                      (nodeId: number) => data.positions[nodeId]
+                    );
+                    activity.nodePositions = positions;
+                  });
+                }
+
+                // initialize activities
+                this.initActivities(data.activities);
+              }
             }
-            this.initActivities(data.activities);
+
+            // commit network for history
             this.commitNetwork(this._network);
             break;
           default:
@@ -523,7 +550,7 @@ export class Project {
 
     this.cancelGettingActivityInsite();
 
-    if (!this.app.project.view.config.simulateWithInsite) {
+    if (!this._code.runSimulationInsite) {
       return;
     }
 
@@ -536,6 +563,7 @@ export class Project {
     }
 
     this._simulation.resetState();
+    this.resetActivities();
     this._simulation.state.biologicalTime = this._simulation.time;
     this._simulation.running = true;
     this._app.backends.nestSimulator.instance
@@ -564,16 +592,16 @@ export class Project {
         return response;
       })
       .catch((error: any) => {
-        this.openToast(error.response.data, 'error');
         this.cancelGettingActivityInsite();
+        this.openToast(error.response.data, 'error');
         return error;
       })
       .finally(() => {
         this._simulation.running = false;
       });
 
-      // TODO: Find better solution for fetching activities.
-      setTimeout(() => this.getActivitiesInsite(), 100);
+    // TODO: Find better solution for fetching activities.
+    setTimeout(() => this.getActivitiesInsite(), 100);
   }
 
   /**
@@ -599,13 +627,13 @@ export class Project {
         // Update activity graph during the simulation.
         this.continuouslyUpdateActivityGraph();
 
-        const nodePositions: any = {};
+        const positions: any = {};
         this._app.backends.insiteAccess.instance
           .get('nest/nodes/')
           .then((response: any) => {
             response.data.forEach((data: any) => {
               if (data.position != null) {
-                nodePositions[data.nodeId] = data.position;
+                positions[data.nodeId] = data.position;
               }
             });
 
@@ -613,11 +641,11 @@ export class Project {
             this.checkActivities();
 
             if (this._state.hasSpikeActivities) {
-              this.getSpikeActivitiesInsite(nodePositions);
+              this.getSpikeActivitiesInsite(positions);
             }
 
             if (this._state.hasAnalogActivities) {
-              this.getAnalogSignalActivitiesInsite(nodePositions);
+              this.getAnalogSignalActivitiesInsite(positions);
             }
           });
       });
@@ -638,25 +666,25 @@ export class Project {
   /**
    * Get spike activities from Insite.
    */
-  getSpikeActivitiesInsite(nodePositions: any): void {
+  getSpikeActivitiesInsite(positions: any): void {
     this.consoleLog('Get spike activities from Insite');
     this._app.backends.insiteAccess.instance
       .get('nest/spikerecorders/')
       .then((response: any) => {
         const activities: any[] = response.data.map((data: any) => {
-          const activity: any = {
-            nodeCollectionId: data.spikerecorderId,
-            nodeIds: data.nodeIds,
-            nodePositions: [],
-          };
-
-          if (Object.keys(nodePositions).length > 0) {
+          const nodePositions: number[][] = [];
+          if (Object.keys(positions).length > 0) {
             data.nodeIds.forEach((id: number) => {
-              if (id in nodePositions) {
-                activity.nodePositions.push(nodePositions[id]);
+              if (id in positions) {
+                nodePositions.push(positions[id]);
               }
             });
           }
+          const activity: any = {
+            nodeCollectionId: data.spikerecorderId,
+            nodeIds: data.nodeIds,
+            nodePositions,
+          };
 
           return activity;
         });
@@ -674,7 +702,7 @@ export class Project {
   /**
    * Get analog signal activities from Insite.
    */
-  getAnalogSignalActivitiesInsite(nodePositions: any): void {
+  getAnalogSignalActivitiesInsite(positions: any): void {
     this.consoleLog('Get analog signal activities from Insite');
     this._app.backends.insiteAccess.instance
       .get('nest/multimeters/')
@@ -685,20 +713,21 @@ export class Project {
             events[attribute] = [];
           });
 
+          const nodePositions: number[][] = [];
+          if (Object.keys(positions).length > 0) {
+            data.nodeIds.forEach((id: number) => {
+              if (id in positions) {
+                nodePositions.push(positions[id]);
+              }
+            });
+          }
+
           const activity: any = {
             events,
             nodeCollectionId: data.multimeterId,
             nodeIds: data.nodeIds,
-            nodePositions: [],
+            nodePositions,
           };
-
-          if (Object.keys(nodePositions).length > 0) {
-            data.nodeIds.forEach((id: number) => {
-              if (id in nodePositions) {
-                activity.nodePositions.push(nodePositions[id]);
-              }
-            });
-          }
 
           return activity;
         });
@@ -746,6 +775,7 @@ export class Project {
    * Get a list of activities.
    */
   get activities(): Activity[] {
+    this.consoleLog('Get activities');
     const activities: Activity[] = this._network
       ? this._network.recorders.map((recorder: Node) => recorder.activity)
       : [];
@@ -806,14 +836,28 @@ export class Project {
   }
 
   /**
+   * Reset activities.
+   */
+  resetActivities(): void {
+    // Reset activities.
+    this.activities.forEach((activity: Activity) => {
+      activity.reset();
+    });
+
+    // Check if project has activities.
+    this.checkActivities();
+
+    // Update activity graph.
+    this._activityGraph.update();
+  }
+
+  /**
    * Initialize activities in recorder nodes after simulation.
    */
   initActivities(data: any[]): void {
-    // Initialize recorded activity.
-    const activities: Activity[] = this.activities;
-    data.forEach((activityData: any, idx: number) => {
-      const activity: Activity = activities[idx];
-      activity.init(activityData);
+    // Initialize recorded activities.
+    this.activities.forEach((activity: Activity, idx: number) => {
+      activity.init(data[idx]);
     });
 
     // Check if project has activities.
@@ -826,20 +870,18 @@ export class Project {
   /**
    * Update activities in recorder nodes after simulation.
    */
-  updateActivities(data: any): void {
-    // Update recorded activity.
-    const activities: Activity[] = this.activities;
-    data.forEach((activityData: any, idx: number) => {
-      const activity: Activity = activities[idx];
-      activity.update(activityData);
-    });
-
-    // Check if project has activities.
-    this.checkActivities();
-
-    // Update activity graph.
-    this._activityGraph.update();
-  }
+  // updateActivities(data: any[]): void {
+  //   // Update recorded activities.
+  //   this.activities.forEach((activity: Activity, idx: number) => {
+  //     activity.update(data[idx]);
+  //   });
+  //
+  //   // Check if project has activities.
+  //   this.checkActivities();
+  //
+  //   // Update activity graph.
+  //   this._activityGraph.update();
+  // }
 
   /**
    * Check whether the project has some events in activities.
@@ -879,9 +921,14 @@ export class Project {
    */
 
   /**
+   * Clean project.
+   *
+   * @remarks
+   * Clean project code.
    * Update hash of this project.
    */
   clean(): void {
+    this.code.clean();
     this.updateHash();
   }
 
@@ -925,6 +972,7 @@ export class Project {
   toJSON(): any {
     const project: any = {
       activityGraph: this._activityGraph.toJSON(),
+      code: this._code.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,
