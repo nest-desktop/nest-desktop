@@ -91,7 +91,7 @@ export default Vue.extend({
               !state.projectConfig.simulateAfterCheckout;
             projectView.updateConfig(state.projectConfig);
           },
-        }
+        },
       ],
       project: props.project as Project,
       showMenu: false,
