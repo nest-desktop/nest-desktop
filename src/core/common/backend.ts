@@ -101,7 +101,6 @@ export class Backend extends Config {
    * Reset state of the backend.
    */
   resetState(): void {
-    this.state.ready = false;
     this.state.version = {};
   }
 
@@ -152,10 +151,13 @@ export class Backend extends Config {
             this.state.ready = true;
             this.state.version = response.data;
             break;
-          case 502:
-            console.log(response.data);
+          default:
+            this.state.ready = false;
             break;
         }
+      })
+      .catch(() => {
+        this.state.ready = false;
       });
   }
 

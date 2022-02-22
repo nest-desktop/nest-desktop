@@ -65,12 +65,18 @@
 
       <div class="mx-4" style="width: 144px" />
 
-      <div @click="modelView.modeIdx = 1">
+      <div @click="modelView.modeIdx = 1" class="mx-1">
         <SimulationButton
           :disabled="!modelView.isNeuron()"
           :project="modelView.state.project"
         />
       </div>
+
+      <v-card color="model" flat to="/settings">
+        <div class="d-flex flex-column">
+          <BackendStatus :backend="{ id: 'nestSimulator', text: 'NEST' }" />
+        </div>
+      </v-card>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -224,6 +230,7 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
+import BackendStatus from '@/components/BackendStatus.vue';
 import core from '@/core';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 import ModelEditor from '@/components/model/ModelEditor.vue';
@@ -235,6 +242,7 @@ import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.v
 export default Vue.extend({
   name: 'Model',
   components: {
+    BackendStatus,
     ModelDocumentation,
     ModelEditor,
     ModelExplorer,

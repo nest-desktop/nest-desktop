@@ -78,7 +78,7 @@
       <v-toolbar-title class="mx-2" v-text="projectView.state.project.name" />
       <v-spacer />
 
-      <div class="mx-4" style="width: 144px">
+      <v-card class="mx-4" color="project" flat style="width: 144px" text tile>
         <v-row no-gutters>
           <v-col col="3">
             <v-btn
@@ -142,11 +142,18 @@
             </v-btn>
           </v-col>
         </v-row>
-      </div>
+      </v-card>
 
-      <div @click="projectView.state.modeIdx = 1">
+      <div @click="projectView.state.modeIdx = 1" class="mx-1">
         <SimulationButton :project="projectView.state.project" />
       </div>
+
+      <v-card color="project" flat to="/settings">
+        <div class="d-flex flex-column">
+          <BackendStatus :backend="{ id: 'nestSimulator', text: 'NEST' }" />
+          <BackendStatus :backend="{ id: 'insiteAccess', text: 'Insite' }" />
+        </div>
+      </v-card>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -325,6 +332,7 @@ import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import ActivityChartController from '@/components/activity/activityChart/ActivityChartController.vue';
 import ActivityAnimationController from '@/components/activity/activityAnimation/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/activityStats/ActivityStats.vue';
+import BackendStatus from '@/components/BackendStatus.vue';
 import CodeMirror from '@/components/CodeMirror.vue';
 import core from '@/core';
 import NetworkEditor from '@/components/network/NetworkEditor.vue';
@@ -342,6 +350,7 @@ export default Vue.extend({
     ActivityGraph,
     ActivityGraphIcon,
     ActivityStats,
+    BackendStatus,
     CodeMirror,
     NetworkEditor,
     NetworkParamEdit,
