@@ -26,7 +26,7 @@
                 v-on="on"
               >
                 <span class="d-flex flex-column">
-                  <v-icon small v-text="item.icon" style="width: auto" />
+                  <v-icon small style="width: auto" v-text="item.icon" />
                   <span style="font-size: 7px" v-text="item.icontext" />
                 </span>
               </v-btn>
