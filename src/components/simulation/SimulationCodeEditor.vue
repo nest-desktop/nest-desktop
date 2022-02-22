@@ -132,7 +132,7 @@ export default Vue.extend({
           disabled: false,
           icon: 'mdi-debug-step-into',
           icontext: 'insite',
-          text: 'Run Simulation with Insite',
+          text: 'Run simulation with Insite',
           value: 'runSimulationInsite',
         },
         {
@@ -160,7 +160,7 @@ export default Vue.extend({
           disabled: false,
           icon: 'mdi-play',
           icontext: 'simulate',
-          text: 'Run Simulation',
+          text: 'Run simulation',
           value: 'runSimulation',
         },
       ],
