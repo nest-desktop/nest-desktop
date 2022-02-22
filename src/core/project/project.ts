@@ -921,9 +921,14 @@ export class Project {
    */
 
   /**
+   * Clean project.
+   *
+   * @remarks
+   * Clean project code.
    * Update hash of this project.
    */
   clean(): void {
+    this.code.clean();
     this.updateHash();
   }
 

@@ -26,6 +26,12 @@ export class ProjectCode extends Code {
             'runSimulation',
           ],
     });
+
+    this.clean();
+  }
+
+  get isInsiteReady(): boolean {
+    return this._project.app.backends.insiteAccess.state.ready;
   }
 
   get hash(): string {
@@ -62,6 +68,17 @@ export class ProjectCode extends Code {
   }
 
   /**
+   * Clean project code.
+   */
+  clean(): void {
+    if (!this.isInsiteReady) {
+      this._state.blocks = this._state.blocks.filter(
+        (item: string) => item !== 'runSimulationInsite'
+      );
+    }
+  }
+
+  /**
    * Generate script code.
    */
   generate(): void {
@@ -74,7 +91,7 @@ export class ProjectCode extends Code {
       script += 'nest.ResetKernel()\n';
     }
 
-    if (this.runSimulationInsite) {
+    if (this._state.blocks.includes('runSimulationInsite')) {
       script += '\n# "insitemodule" can only be loaded once.\n';
       script += 'try:';
       script += this._() + 'nest.Install("insitemodule")\n';
@@ -107,7 +124,7 @@ export class ProjectCode extends Code {
       script += this._project.simulation.code.simulate();
 
       if (
-        !this.runSimulationInsite &&
+        !this._state.blocks.includes('runSimulationInsite') &&
         this._project.network.recorders.length > 0
       ) {
         script += '\n\n# Get IDs of recorded node\n';
@@ -123,7 +140,7 @@ export class ProjectCode extends Code {
       }
     }
 
-    this._state.codeInsite = this.runSimulationInsite;
+    this._state.codeInsite = this._state.blocks.includes('runSimulationInsite');
     this._script = script;
     this._hash = sha1(this._script);
   }
