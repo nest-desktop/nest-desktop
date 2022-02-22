@@ -444,7 +444,7 @@ export class Project {
    * Start simulation.
    *
    * @remarks
-   * After the simulation it updates activities and commit network.
+   * After the simulation, it updates the activities and commits the network.
    */
   async startSimulation(): Promise<any> {
     return this._code.runSimulationInsite
