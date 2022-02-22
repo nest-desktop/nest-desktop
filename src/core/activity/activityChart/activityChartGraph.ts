@@ -15,7 +15,6 @@ export class ActivityChartGraph {
   private _state: any = {
     dialog: false,
     gd: undefined,
-    plot: undefined,
     ref: undefined,
   };
 
@@ -67,10 +66,7 @@ export class ActivityChartGraph {
     };
 
     this._panel = new ActivityChartPanel(this);
-
     this.init(panels);
-
-    window.addEventListener('resize', () => this.update());
   }
 
   get data(): any[] {
@@ -169,7 +165,7 @@ export class ActivityChartGraph {
    * Initialize Plotly events.
    */
   initEvents(): void {
-    this._state.plot.on('plotly_legendclick', (plot: any) => {
+    this._state.ref.on('plotly_legendclick', (plot: any) => {
       setTimeout(() => {
         if (plot != null && plot.data != null) {
           plot.data.forEach((d: any) => {
@@ -296,8 +292,7 @@ export class ActivityChartGraph {
       this._data,
       this._layout,
       this._config
-    ).then(plot => {
-      this._state.plot = plot;
+    ).then(() => {
       this.initEvents();
     });
   }

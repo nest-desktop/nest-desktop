@@ -1,6 +1,6 @@
 {
   "name": "nest-desktop",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "private": false,
   "description": "NEST Desktop is a web-based application which provides a graphical user interface for NEST Simulator.",
   "scripts": {

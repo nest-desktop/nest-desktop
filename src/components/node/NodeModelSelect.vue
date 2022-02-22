@@ -117,7 +117,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, watch, onMounted } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
 import { ModelParameter } from '@/core/parameter/modelParameter';

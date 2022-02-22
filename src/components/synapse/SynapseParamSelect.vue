@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted, watch } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Synapse } from '@/core/synapse/synapse';
 import { ModelParameter } from '@/core/parameter/modelParameter';
