@@ -17,9 +17,16 @@
         >
           <v-tooltip :key="item.value" bottom v-for="item of state.blockItems">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn :value="item.value" dense text v-bind="attrs" v-on="on">
+              <v-btn
+                :disabled="item.disabled"
+                :value="item.value"
+                dense
+                text
+                v-bind="attrs"
+                v-on="on"
+              >
                 <span class="d-flex flex-column">
-                  <v-icon small v-text="item.icon" style="width:auto" />
+                  <v-icon small v-text="item.icon" style="width: auto" />
                   <span style="font-size: 7px" v-text="item.icontext" />
                 </span>
               </v-btn>
@@ -81,7 +88,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive, ref, watch } from '@vue/composition-api';
+import {
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
 import 'codemirror/addon/hint/show-hint';
 import '@/assets/codemirror/addon/hint/pyNEST-hint';
@@ -109,36 +122,42 @@ export default Vue.extend({
       code: props.code as ProjectCode,
       blockItems: [
         {
+          disabled: false,
           icon: 'mdi-delete-empty-outline',
           icontext: 'reset',
           text: 'Reset kernel',
           value: 'resetKernel',
         },
         {
+          disabled: false,
           icon: 'mdi-debug-step-into',
           icontext: 'insite',
           text: 'Run Simulation with Insite',
           value: 'runSimulationInsite',
         },
         {
+          disabled: false,
           icon: 'mdi-engine-outline',
           icontext: 'kernel',
           text: 'Set simulation kernel',
           value: 'setKernel',
         },
         {
+          disabled: false,
           icon: 'mdi-shape',
           icontext: 'create',
           text: 'Create nodes',
           value: 'createNodes',
         },
         {
+          disabled: false,
           icon: '$network',
           icontext: 'connect',
           text: 'Connect nodes',
           value: 'connectNodes',
         },
         {
+          disabled: false,
           icon: 'mdi-play',
           icontext: 'simulate',
           text: 'Run Simulation',
@@ -211,6 +230,13 @@ export default Vue.extend({
     };
 
     /**
+     * Check if Insite is running as backend.
+     */
+    const checkInsite = () => {
+      state.blockItems[1].disabled = !state.code.isInsiteReady;
+    };
+
+    /**
      * Resize CodeMirror.
      */
     const resizeCodeMirror = () => {
@@ -221,8 +247,13 @@ export default Vue.extend({
     };
 
     onMounted(() => {
+      checkInsite();
       window.addEventListener('resize', resizeCodeMirror);
       setTimeout(resizeCodeMirror, 1);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', resizeCodeMirror);
     });
 
     watch(
