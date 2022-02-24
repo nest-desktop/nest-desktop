@@ -160,6 +160,10 @@ export default Vue.extend({
   opacity: 0;
 }
 
+.ma-1px {
+  margin: 1px !important;
+}
+
 .ma-2px {
   margin: 2px !important;
 }
