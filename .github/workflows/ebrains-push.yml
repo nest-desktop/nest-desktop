@@ -2,7 +2,7 @@ name: Mirror repository to EBRAINS GitLab
 
 on:
   push:
-    branches: [main, dev, gitlab-ci]
+    branches: [main, dev]
 
 jobs:
   sync_to_ebrains:
