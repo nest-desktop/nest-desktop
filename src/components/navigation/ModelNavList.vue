@@ -208,8 +208,9 @@ export default Vue.extend({
     const update = () => {
       const filterTags: string[] = modelStore.state.filterTags;
       state.models =
-        modelStore.state.modelsNEST ||
-        modelStore.state.models.map((model: any) => model.id);
+        modelStore.state.modelsNEST.length > 0
+          ? modelStore.state.modelsNEST
+          : modelStore.state.models.map((model: any) => model.id);
 
       if (filterTags.includes('installed')) {
         let models = modelStore.state.models.map((model: Model) => model.id);

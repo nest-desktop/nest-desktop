@@ -24,6 +24,8 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
    * Update data for spike time histogram.
    */
   override updateData(activity: SpikeActivity): void {
+    if (activity.nodeIds.length === 0) return;
+
     const x: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;

@@ -135,10 +135,10 @@ export class ModelView {
     this._state.model = this._app.model.getModel(this._state.modelId);
     this.checkFileExistedGithub();
     this.getParamDefaults().then(() => {
-      this.updateProject();
+      this.initProject();
       this._state.project.activityGraph.emptyActivityGraph();
-      this.modeIdx = this.modeIdx;
       this.updateToolView();
+      this.modeIdx = this.modeIdx;
     });
   }
 
@@ -186,17 +186,15 @@ export class ModelView {
    * Update project.
    */
   updateProject(): void {
-    if (this._state.projectFilename !== this._state.project.name) {
-      this.initProject();
-    }
     const elementType: string = this._state.defaults['element_type'];
     if (elementType !== 'neuron') {
       return;
     }
-    const neuron: Node = this._state.project.network.neurons[0];
-    neuron.modelId = this._state.modelId;
-    neuron.params = this._state.model.params;
-    neuron.params.forEach((param: any) => (param.state.visible = true));
+    this._state.project.network.neurons.forEach((neuron: Node) => {
+      neuron.modelId = this._state.modelId;
+      neuron.params = this._state.model.params;
+      neuron.params.forEach((param: any) => (param.state.visible = true));
+    });
     this._state.project.code.generate();
   }
 
