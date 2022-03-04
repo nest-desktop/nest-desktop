@@ -1,5 +1,17 @@
-Build and publish package
-=========================
+Build and publish
+=================
+
+Currently, we build NEST Desktop for multiple targets and
+publish them on various platforms.
+Some are discussed below.
+
+.. note::
+   Please be aware that a lot of steps are already covered by our GitLab CI process.
+   Therefore, we recommend to inspect the `.yml` files together with this chapter.
+   It might also be helpful to have a look at the commands defined in `project.json`.
+
+Python Package Index (PyPI)
+---------------------------
 
 .. image:: ../_static/img/logo/pypi-logo-large.svg
   :width: 240px
@@ -65,3 +77,10 @@ Do not forget to commit the changes you made and set a new version tag in git.
 
   git tag -a v3.0 -m 'v3.0.0'
   git push --tags
+
+
+Electron and Snap
+-----------------
+
+In `package.json`, there are also yarn commands configured to build an Electron app.
+If you want to build a Snap package, please have a look into `.gitlab-ci.yml`.
