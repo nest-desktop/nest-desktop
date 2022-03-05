@@ -1162,7 +1162,7 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@iconify-icons/logos@^1.2.1":
+"@iconify-icons/logos@^1.2":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@iconify-icons/logos/-/logos-1.2.4.tgz#ec6e20ce06b7ec89baa2890a20845755de7b52ef"
   integrity sha512-+etkp+++IiW9ckmET6WaoxZ1rgZUlRhXbvw4+rWTLBBUUp4HjTc9+x2OjpJBCcR9sPMF7l9wFLUvCyGLsm4tKA==
@@ -1174,7 +1174,7 @@
   resolved "https://registry.yarnpkg.com/@iconify/types/-/types-1.0.12.tgz#839f1f784b7030b94482d51996570f4dbd7d6796"
   integrity sha512-6er6wSGF3hgc1JEZqiGpg21CTCjHBYOUwqLmb2Idzkjiw6ogalGP0ZMLVutCzah+0WB4yP+Zd2oVPN8jvJ+Ftg==
 
-"@iconify/vue2@^1.1.3":
+"@iconify/vue2@^1.1":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@iconify/vue2/-/vue2-1.1.4.tgz#6cf3afa4660c5b20418591b3647457a1e3cd426e"
   integrity sha512-U9gqcj4hD/odF0QxSxwpGXEj/QSE9pY/4gAd8JF4ZidEFvZDHRrChLyBqBBid5O8hS8eejXlJEJBfpVxKq8bVg==
@@ -1923,7 +1923,7 @@
     "@types/node" "*"
     xmlbuilder ">=11.0.1"
 
-"@types/plotly.js-dist-min@^2.3.0":
+"@types/plotly.js-dist-min@^2.3":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@types/plotly.js-dist-min/-/plotly.js-dist-min-2.3.0.tgz#b1b86b94b86e4628d97beca95cc7dd26c2f30758"
   integrity sha512-MPvZbG2RA3zuU+AYgsVysJvNLyf3bvi1nt3ywHARwMW2TB38VQuYhQFD1pTRzBuqiV5ieYif7mLY5bHWGUVZqw==
