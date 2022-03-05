@@ -4,7 +4,6 @@ import './registerServiceWorker';
 import combineURLs from 'axios/lib/helpers/combineURLs';
 
 import router from './router';
-import store from './store';
 import vuetify from './plugins/vuetify';
 import './plugins/codemirror';
 
@@ -31,7 +30,6 @@ Vue.config.productionTip = false;
 const mountApp = () => {
   new Vue({
     router,
-    store,
     vuetify,
     render: h => h(App),
   }).$mount('#app');
