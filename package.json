@@ -29,7 +29,7 @@
     "detect-browser": "^5.3",
     "mathjs": "^10.3",
     "object-hash": "^3.0",
-    "plotly.js-dist-min": "^2.9",
+    "plotly.js-dist-min": "^2.10",
     "pouchdb": "^7.2",
     "pouchdb-upsert": "^2.2",
     "register-service-worker": "^1.7",
@@ -44,8 +44,7 @@
     "vue-router": "^3.5",
     "vue-toast-notification": "^0.6",
     "vuedraggable": "^2.24",
-    "vuetify": "^2.6",
-    "vuex": "^3.6"
+    "vuetify": "^2.6"
   },
   "devDependencies": {
     "@iconify-icons/logos": "^1.2.1",
