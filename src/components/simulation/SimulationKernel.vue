@@ -166,7 +166,7 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const paramChange = () => {
-      state.simulation.project.code.generate();
+      state.simulation.project.simulation.code.generate();
     };
 
     /**

@@ -93,11 +93,11 @@ export class NodeRecord {
     return this._activity.events[this._id];
   }
 
-  hasEvent(): boolean {
+  get hasEvent(): boolean {
     return this._activity.events.hasOwnProperty(this._id);
   }
 
-  hasValues(): boolean {
+  get hasValues(): boolean {
     return this.values.length > 0;
   }
 
@@ -131,7 +131,7 @@ export class NodeRecord {
    * It requires network activity.
    */
   updateState(): void {
-    if (!this.hasEvent() || !this.hasValues()) return;
+    if (!this.hasEvent || !this.hasValues) return;
 
     const values = this.values;
     this._colorMap.max = d3.max(values);

@@ -20,7 +20,7 @@ export class NodeView {
   get color(): string {
     if (typeof this._color === 'string') {
       return this._color;
-    } else if (this._node.model.isRecorder()) {
+    } else if (this._node.model.isRecorder) {
       const connections: Connection[] = this._node.network.connections.filter(
         (connection: Connection) =>
           connection.sourceIdx === this._node.idx ||
@@ -110,13 +110,13 @@ export class NodeView {
    * Get term based on synapse weight.
    */
   get weight(): string {
-    if (this._node.model.isRecorder()) {
+    if (this._node.model.isRecorder) {
       return '';
     }
     const connections: Connection[] = this._node.network.connections.filter(
       (connection: Connection) =>
         connection.source.idx === this._node.idx &&
-        !connection.target.model.isRecorder()
+        !connection.target.model.isRecorder
     );
     if (connections.length > 0) {
       const weights: number[] = connections.map(

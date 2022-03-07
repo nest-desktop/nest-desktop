@@ -72,8 +72,8 @@ export class ConnectionView {
    */
   connectRecorder(): boolean {
     return (
-      this._connection.source.model.isRecorder() ||
-      this._connection.target.model.isRecorder()
+      this._connection.source.model.isRecorder ||
+      this._connection.target.model.isRecorder
     );
   }
 
@@ -82,8 +82,8 @@ export class ConnectionView {
    */
   connectOnlyNeurons(): boolean {
     return (
-      this._connection.source.model.isNeuron() &&
-      this._connection.target.model.isNeuron()
+      this._connection.source.model.isNeuron &&
+      this._connection.target.model.isNeuron
     );
   }
 
@@ -91,6 +91,6 @@ export class ConnectionView {
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.target.model.isSpikeRecorder();
+    return this._connection.target.model.isSpikeRecorder;
   }
 }

@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { App } from '../app';
 import { Config } from '../common/config';
-import { ModelCode } from './modelCode';
 import { ModelParameter } from '../parameter/modelParameter';
 
 export class Model extends Config {
@@ -11,7 +10,6 @@ export class Model extends Config {
 
   private _abbreviation: string;
   private _app: App; // parent
-  private _code: ModelCode; // code for model
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
   private _existing: string; // existing model in NEST
@@ -25,7 +23,6 @@ export class Model extends Config {
   constructor(app: App, model: any = {}) {
     super('Model');
     this._app = app;
-    this._code = new ModelCode(this);
 
     this._doc = model || {};
     this._id = model.id || uuidv4();
@@ -49,10 +46,6 @@ export class Model extends Config {
 
   get app(): App {
     return this._app;
-  }
-
-  get code(): ModelCode {
-    return this._code;
   }
 
   get doc(): any {
@@ -215,42 +208,42 @@ export class Model extends Config {
   /**
    * Check if the model is an analog recorder.
    */
-  isAnalogRecorder(): boolean {
+  get isAnalogRecorder(): boolean {
     return this._elementType === 'recorder' && this._existing.endsWith('meter');
   }
 
   /**
    * Check if the model is a multimeter.
    */
-  isMultimeter(): boolean {
+  get isMultimeter(): boolean {
     return this._existing === 'multimeter';
   }
 
   /**
    * Check if the model is a neuron.
    */
-  isNeuron(): boolean {
+  get isNeuron(): boolean {
     return this._elementType === 'neuron';
   }
 
   /**
    * Check if the model is a recorder.
    */
-  isRecorder(): boolean {
+  get isRecorder(): boolean {
     return this._elementType === 'recorder';
   }
 
   /**
    * Check if the model is a spike recorder.
    */
-  isSpikeRecorder(): boolean {
+  get isSpikeRecorder(): boolean {
     return this._existing === 'spike_recorder';
   }
 
   /**
    * Check if the model is a stimulator.
    */
-  isStimulator(): boolean {
+  get isStimulator(): boolean {
     return this._elementType === 'stimulator';
   }
 

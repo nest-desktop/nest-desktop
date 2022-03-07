@@ -51,7 +51,7 @@ export class ActivityGraph {
    * Update code hash for activity graph.
    */
   updateHash(): void {
-    this._codeHash = this._project.code.hash;
+    this._codeHash = this._project.simulation.code.hash;
   }
 
   /**
@@ -87,8 +87,8 @@ export class ActivityGraph {
    * Check if it has any analog data.
    */
   hasAnyAnalogData(): boolean {
-    return this._project.activities.some((activity: Activity) =>
-      activity.hasAnalogData()
+    return this._project.activities.some(
+      (activity: Activity) => activity.hasAnalogData
     );
   }
 
@@ -96,8 +96,8 @@ export class ActivityGraph {
    * Check if it has any spike data.
    */
   hasAnySpikeData(): boolean {
-    return this._project.activities.some((activity: Activity) =>
-      activity.hasSpikeData()
+    return this._project.activities.some(
+      (activity: Activity) => activity.hasSpikeData
     );
   }
 

@@ -1,7 +1,6 @@
 import { sha1 } from 'object-hash';
 
 import { Config } from '../common/config';
-import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
@@ -25,7 +24,6 @@ enum Rule {
 export class Connection extends Config {
   private readonly _name = 'Connection';
 
-  private _code: ConnectionCode;
   private _hash: string;
   private _idx: number; // generative
   private _mask: ConnectionMask;
@@ -45,7 +43,6 @@ export class Connection extends Config {
     this._network = network;
     this._idx = network.connections.length;
 
-    this._code = new ConnectionCode(this);
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
 
@@ -61,10 +58,6 @@ export class Connection extends Config {
     this._synapse = new Synapse(this, connection.synapse);
 
     this.updateHash();
-  }
-
-  get code(): ConnectionCode {
-    return this._code;
   }
 
   /**
@@ -103,7 +96,7 @@ export class Connection extends Config {
   }
 
   get recorder(): Node {
-    return this.source.model.isRecorder() ? this.source : this.target;
+    return this.source.model.isRecorder ? this.source : this.target;
   }
 
   get rule(): string {
@@ -121,6 +114,10 @@ export class Connection extends Config {
    */
   get shortHash(): string {
     return this._hash ? this._hash.slice(0, 6) : '';
+  }
+
+  get someParams(): boolean {
+    return this._params.some((param: Parameter) => param.visible);
   }
 
   get source(): Node {
@@ -284,10 +281,8 @@ export class Connection extends Config {
   /**
    * Check if source and target nodes has positions.
    */
-  isBothSpatial(): boolean {
-    return (
-      this.source.spatial.hasPositions() && this.target.spatial.hasPositions()
-    );
+  get isBothSpatial(): boolean {
+    return this.source.spatial.hasPositions && this.target.spatial.hasPositions;
   }
 
   /**
@@ -332,7 +327,7 @@ export class Connection extends Config {
       connection.targetSlice = this._targetSlice.toJSON();
     }
 
-    if (this._mask.hasMask()) {
+    if (this._mask.hasMask) {
       connection.mask = this._mask.toJSON();
     }
 

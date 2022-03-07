@@ -46,7 +46,7 @@
           </v-expansion-panel-header>
 
           <v-expansion-panel-content
-            :key="projectView.state.project.code.hash"
+            :key="projectView.state.project.simulation.code.hash"
             v-if="activity.hasEvents()"
           >
             <v-card flat tile>
@@ -54,11 +54,11 @@
                 <v-card class="ml-1" flat tile>
                   <ActivityStatsSpike
                     :activity="activity"
-                    v-if="activity.recorder.model.isSpikeRecorder()"
+                    v-if="activity.recorder.model.isSpikeRecorder"
                   />
                   <ActivityStatsAnalog
                     :activity="activity"
-                    v-if="activity.recorder.model.isAnalogRecorder()"
+                    v-if="activity.recorder.model.isAnalogRecorder"
                   />
                 </v-card>
               </v-sheet>

@@ -1,0 +1,89 @@
+{{ #simulation.code.importModules }}
+import nest
+import numpy
+{{ /simulation.code.importModules }}
+
+{{ #simulation.code.resetKernel }}
+nest.ResetKernel()
+{{ /simulation.code.resetKernel }}
+
+{{ #simulation.code.runSimulationInsite }}
+try:
+  nest.Install('insitemodule')
+except:
+  pass
+{{ /simulation.code.runSimulationInsite }}
+
+{{ #simulation.code.setKernelStatus }}
+# Set simulation kernel
+nest.SetKernel({
+  "local_num_threads": {{ simulation.kernel.localNumThreads }},
+  "resolution": {{ simulation.kernel.resolution }}
+  "rng_seed": {{ simulation.kernel.rngSeed }}
+})
+{{ /simulation.code.setKernelStatus }}
+
+{{ #simulation.code.createNodes }}
+# Create nodes
+{{ #network.nodes }}
+{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #someParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ valueFixed }},
+{{ /filteredParams }}
+{{ #model.isRecorder }}
+{{ #model.isMultimeter }}
+  "record_from": {{ recordsFixed }},
+{{ /model.isMultimeter }}
+{{ #simulation.code.runSimulationInsite }}
+  "record_to": "insite",
+{{ /simulation.code.runSimulationInsite }}
+{{ /model.isRecorder }}
+}{{ /someParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
+{{ /network.nodes }}
+{{ /simulation.code.createNodes }}
+
+{{ #simulation.code.connectNodes }}
+# Connect nodes
+{{ #network.connections }}
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #someParams }}, conn_spec={
+{{ #filteredParams }}
+  "{{ id }}": {{ value }},
+{{ /filteredParams }}
+}{{ /someParams }}{{ #synapse.someParams }}, syn_spec={
+{{ #synapse.filteredParams }}
+  "{{ id }}": {{ valueFixed }},
+{{ /synapse.filteredParams }}
+}{{ /synapse.someParams }})
+{{ /network.connections }}
+{{ /simulation.code.connectNodes }}
+
+{{ #simulation.code.runSimulation }}
+# Run simulation
+nest.Simulate({{ simulation.timeFixed }})
+
+{{ ^simulation.code.runSimulationInsite }}
+# Get activities
+def getNodeIds(node):
+  if node.model == "spike_recorder":
+    return list(nest.GetConnections(None, node).sources())
+  else:
+    return list(nest.GetConnections(node).targets())
+{{ #network.someSpatialNodes }}
+
+def getPosition(node):
+  return list(zip(node.tolist(), nest.GetPosition(node)))
+{{ /network.someSpatialNodes }}
+
+response = {
+  "kernel": {
+    "biological_time": nest.GetKernelStatus("biological_time")
+  },
+  "activities": [{{ #network.recorders }}
+    {"events": {{ view.label }}.get("events"), "nodeIds": getNodeIds({{ view.label }})},
+  {{ /network.recorders }}]{{ #network.someSpatialNodes }},
+  "positions": dict(numpy.concatenate([{{ #network.spatial }}
+    getPosition({{ view.label }}),
+  {{ /network.spatial }}))]{{ /network.someSpatialNodes }}
+}
+{{ /simulation.code.runSimulationInsite }}
+{{ /simulation.code.runSimulation }}

@@ -3,6 +3,16 @@ module.exports = {
   outputDir: './nest_desktop/app',
   transpileDependencies: ['vuetify'],
   productionSourceMap: false,
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.code/i,
+          use: 'raw-loader',
+        },
+      ],
+    },
+  },
   chainWebpack: config => {
     config.plugin('html').tap(args => {
       args[0].title = 'NEST Desktop';

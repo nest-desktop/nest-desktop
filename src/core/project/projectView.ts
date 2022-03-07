@@ -134,8 +134,8 @@ export class ProjectView extends Config {
     return this._app.project.initProject(this._state.projectId).then(() => {
       if (this._state.project) {
         const generateCode =
-          this._state.project.code.state.runSimulationInsite !==
-          this._state.project.code.state.codeInsite;
+          this._state.project.simulation.code.state.runSimulationInsite !==
+          this._state.project.simulation.code.state.codeInsite;
         this._state.project.init({
           generateCode,
         });
@@ -144,7 +144,7 @@ export class ProjectView extends Config {
         this.updateProjectMode();
 
         // Update activity graph view.
-        this._state.activityGraph = this._state.project.network.hasPositions()
+        this._state.activityGraph = this._state.project.network.hasPositions
           ? this._state.activityGraph
           : 'abstract';
 
@@ -154,7 +154,7 @@ export class ProjectView extends Config {
         if (
           this.config.simulateAfterLoad &&
           this._state.modeIdx === 1 &&
-          this._state.project.code.hash !==
+          this._state.project.simulation.code.hash !==
             this._state.project.activityGraph.codeHash
         ) {
           this._state.project.runSimulation();
@@ -234,7 +234,7 @@ export class ProjectView extends Config {
     if (
       this.config.simulateAfterLoad &&
       this._state.modeIdx === 1 &&
-      this._state.project.code.hash !==
+      this._state.project.simulation.code.hash !==
         this._state.project.activityGraph.codeHash
     ) {
       this._state.project.runSimulation();

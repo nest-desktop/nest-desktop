@@ -1,7 +1,7 @@
 <template>
   <div class="modelExplorer" v-if="modelView.state.model">
     <ActivityGraph
-      :codeHash="modelView.state.project.code.hash"
+      :codeHash="modelView.state.project.simulation.code.hash"
       :graph="modelView.state.project.activityGraph"
       :graphHash="modelView.state.project.activityGraph.codeHash"
       v-if="modelView.state.project"
