@@ -175,9 +175,9 @@ export default Vue.extend({
           input: 'switch',
           onClick: () => {
             state.node.toggleSpatial();
-            state.spatialNode = state.node.spatial.hasPositions();
+            state.spatialNode = state.node.spatial.hasPositions;
           },
-          show: () => !state.node.model.isRecorder(),
+          show: () => !state.node.model.isRecorder,
           title: 'Spatial node',
           value: 'spatialNode',
         },
@@ -265,7 +265,7 @@ export default Vue.extend({
      * Update states.
      */
     const updateStates = () => {
-      state.spatialNode = state.node.spatial.hasPositions();
+      state.spatialNode = state.node.spatial.hasPositions;
       setVisibleParams();
     };
 

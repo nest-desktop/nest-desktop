@@ -119,7 +119,7 @@ export class Activity {
   /**
    * Check if activity has events.
    */
-  hasEvents(): boolean {
+  get hasEvents(): boolean {
     return this.nEvents > 0;
   }
 
@@ -199,29 +199,29 @@ export class Activity {
   /**
    * Check if activity contains analog signal data.
    */
-  hasAnalogData(): boolean {
-    return this._recorder.model.isAnalogRecorder();
+  get hasAnalogData(): boolean {
+    return this._recorder.model.isAnalogRecorder;
   }
 
   /**
    * Check if activity contains analog signal data from input devices.
    */
-  hasInputAnalogData(): boolean {
-    return this.hasAnalogData() && this.elementTypes.includes('stimulator');
+  get hasInputAnalogData(): boolean {
+    return this.hasAnalogData && this.elementTypes.includes('stimulator');
   }
 
   /**
    * Check if activity contains analog signal data from neurons.
    */
-  hasNeuronAnalogData(): boolean {
-    return this.hasAnalogData() && this.elementTypes.includes('neuron');
+  get hasNeuronAnalogData(): boolean {
+    return this.hasAnalogData && this.elementTypes.includes('neuron');
   }
 
   /**
    * Check if activity contains spike data.
    */
-  hasSpikeData(): boolean {
-    return this._recorder.model.isSpikeRecorder();
+  get hasSpikeData(): boolean {
+    return this._recorder.model.isSpikeRecorder;
   }
 
   /**

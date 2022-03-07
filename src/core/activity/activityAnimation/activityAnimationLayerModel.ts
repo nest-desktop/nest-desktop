@@ -42,7 +42,7 @@ export class ActivityAnimationLayerModel {
   render(frame: any): void {
     this.resetObjects();
     if (frame.senders == null) return;
-    if (this._layer.activity.hasSpikeData()) {
+    if (this._layer.activity.hasSpikeData) {
       this.renderTrails();
     }
     if (frame.senders.length === 0) return;

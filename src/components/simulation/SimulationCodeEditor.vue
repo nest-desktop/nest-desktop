@@ -37,6 +37,17 @@
 
         <v-spacer />
 
+        <v-select
+          :items="state.nestVersions"
+          @change="state.code.generate()"
+          dense
+          height="40"
+          hide-details
+          small
+          style="width: 64px"
+          v-model="state.code.state.version"
+        />
+
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn fab small text v-bind="attrs" v-on="on">
@@ -62,7 +73,7 @@
     <v-card flat tile>
       <span
         style="position: absolute; right: 18px; top: 0; z-index: 1000"
-        v-if="state.code.project.app.config.devMode"
+        v-if="state.code.simulation.project.app.config.devMode"
       >
         <v-chip
           class="ma-1"
@@ -99,7 +110,7 @@ import { codemirror } from 'vue-codemirror';
 import 'codemirror/addon/hint/show-hint';
 import '@/assets/codemirror/addon/hint/pyNEST-hint';
 
-import { ProjectCode } from '@/core/project/projectCode';
+import { SimulationCode } from '@/core/simulation/simulationCode';
 
 import { Icon } from '@iconify/vue2';
 import jupyterIcon from '@iconify-icons/logos/jupyter';
@@ -112,14 +123,14 @@ export default Vue.extend({
     Icon,
   },
   props: {
-    code: ProjectCode,
+    code: SimulationCode,
   },
   setup(props, { root }) {
     const simulationCodeEditor = ref(null);
     const codeMirror = ref(null);
 
     const state = reactive({
-      code: props.code as ProjectCode,
+      code: props.code as SimulationCode,
       blockItems: [
         {
           disabled: false,
@@ -195,6 +206,11 @@ export default Vue.extend({
         },
         theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
       },
+      nestVersions: [
+        { text: 'NEST 3.2', value: '3.2' },
+        { text: 'NEST 3.1', value: '3.1' },
+        { text: 'NEST 3.0', value: '3.0' },
+      ],
       style: {
         width: 300,
       },
@@ -259,7 +275,7 @@ export default Vue.extend({
     watch(
       () => props.code,
       code => {
-        state.code = code as ProjectCode;
+        state.code = code as SimulationCode;
       }
     );
 

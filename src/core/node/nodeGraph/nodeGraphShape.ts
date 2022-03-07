@@ -218,7 +218,7 @@ export class NodeGraphShape {
 
       elem
         .select('text')
-        .attr('dy', node.isInhibitoryNeuron() ? '0.4em' : '0.7em')
+        .attr('dy', node.isInhibitoryNeuron ? '0.4em' : '0.7em')
         .style('fill', this.darkMode ? 'white' : '#121212')
         .text(node.view.label);
     });

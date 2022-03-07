@@ -187,6 +187,28 @@ export class Parameter extends Config {
     this._value = value;
   }
 
+  get valueFixed(): string {
+    if (Array.isArray(this._value)) {
+      return (
+        '[' +
+        this._value.map((value: number) => this.toFixed(value)).join(',') +
+        ']'
+      );
+    } else if (typeof this._value === 'number') {
+      return this.toFixed(this._value);
+    } else {
+      return this._value.toString();
+    }
+  }
+
+  get valueAsString(): string {
+    if (Array.isArray(this._value)) {
+      return JSON.stringify(this._value.map((value: number) => value));
+    } else {
+      return JSON.stringify(this._value);
+    }
+  }
+
   get visible(): boolean {
     return this._state.visible;
   }
@@ -205,10 +227,10 @@ export class Parameter extends Config {
   isSpatial(): boolean {
     if (this._parent.name === 'Connection') {
       const connection = this._parent as Connection;
-      return connection.isBothSpatial();
+      return connection.isBothSpatial;
     } else if (this._parent.name === 'Synapse') {
       const synapse = this._parent as Synapse;
-      return synapse.connection.isBothSpatial();
+      return synapse.connection.isBothSpatial;
     } else {
       return false;
     }
@@ -262,6 +284,15 @@ export class Parameter extends Config {
         parent.synapseChanges();
         break;
     }
+  }
+
+  toFixed(value: number): string {
+    const valueAsString = value.toString();
+    let fractionDigits = 1;
+    if (valueAsString.includes('.')) {
+      fractionDigits = valueAsString.split('.')[1].length;
+    }
+    return value.toFixed(fractionDigits);
   }
 
   /**

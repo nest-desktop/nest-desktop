@@ -55,7 +55,11 @@ export class NodeSlice extends Config {
   /**
    * Get indices of node slicing
    */
-  indices(): string {
+  get indices(): string {
+    if (this._params.length === 0) {
+      return '';
+    }
+
     const start: Parameter = this._params[0];
     const stop: Parameter = this._params[1];
     const step: Parameter = this._params[2];
