@@ -156,7 +156,7 @@ export class Project {
   /**
    * Is the current project selected?
    */
-  isSelected(): boolean {
+  get isSelected(): boolean {
     return this._id === this._app.project.view.state.project.id;
   }
 
@@ -244,7 +244,7 @@ export class Project {
   /**
    * Is this revised project selected?
    */
-  isRevisionSelected(): boolean {
+  get isRevisionSelected(): boolean {
     return this._rev === this._app.project.view.state.project.rev;
   }
 

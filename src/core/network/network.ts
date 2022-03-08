@@ -377,7 +377,7 @@ export class Network extends Config {
     this.networkChanges();
   }
 
-  isEmpty(): boolean {
+  get isEmpty(): boolean {
     return this._nodes.length === 0 && this._connections.length === 0;
   }
 

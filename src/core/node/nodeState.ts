@@ -56,7 +56,7 @@ export class NodeState {
   /**
    * Check if this node is selected.
    */
-  isSelected(unselected: boolean = false): boolean {
-    return this._node.network.state.isNodeSelected(this._node, unselected);
+  get isSelected(): boolean {
+    return this._node.network.state.isNodeSelected(this._node, false);
   }
 }

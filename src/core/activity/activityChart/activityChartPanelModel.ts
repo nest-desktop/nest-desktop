@@ -108,15 +108,8 @@ export abstract class ActivityChartPanelModel {
   /**
    * Check if it has any activities.
    */
-  hasActivities(): boolean {
+  get hasActivities(): boolean {
     return this.activities.length > 0;
-  }
-
-  /**
-   * Check if record is selected.
-   */
-  isRecordSelected(record: NodeRecord): boolean {
-    return this._state.recordsVisible.some((rec: NodeRecord) => rec === record);
   }
 
   /**
