@@ -9,7 +9,7 @@
         v-model="projectView.state.project.state.activityStatsPanelId"
       >
         <v-expansion-panel
-          :disabled="!activity.hasEvents()"
+          :disabled="!activity.hasEvents"
           :key="index"
           v-for="(activity, index) in projectView.state.project.activities"
         >
@@ -47,7 +47,7 @@
 
           <v-expansion-panel-content
             :key="projectView.state.project.simulation.code.hash"
-            v-if="activity.hasEvents()"
+            v-if="activity.hasEvents"
           >
             <v-card flat tile>
               <v-sheet :color="activity.recorder.view.color">

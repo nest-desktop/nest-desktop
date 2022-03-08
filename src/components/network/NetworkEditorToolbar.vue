@@ -71,7 +71,7 @@
           <v-dialog max-width="450" v-model="state.dialog">
             <template #activator="{ on, attrs }">
               <v-btn
-                :disabled="state.network.isEmpty()"
+                :disabled="state.network.isEmpty"
                 icon
                 small
                 title="Delete network"

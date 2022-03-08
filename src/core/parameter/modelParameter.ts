@@ -77,7 +77,7 @@ export class ModelParameter extends Parameter {
       }
 
       // Add parameter type if not constant.
-      if (!this.isConstant()) {
+      if (!this.isConstant) {
         param.type = this.type;
       }
     }

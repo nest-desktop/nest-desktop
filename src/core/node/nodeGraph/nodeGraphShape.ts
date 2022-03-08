@@ -94,7 +94,7 @@ function nodePoints(node: Node, radius: number): string {
     case 'recorder':
       return getRectanglePoints(radius);
     case 'neuron':
-      if (node.isInhibitoryNeuron()) {
+      if (node.isInhibitoryNeuron) {
         return getSquarePoints(radius);
       } else {
         return getTrianglePoints(radius);
@@ -132,7 +132,7 @@ export class NodeGraphShape {
     const elem = selector.select('.core');
     elem.selectAll('*').remove();
 
-    if (node.isInhibitoryNeuron()) {
+    if (node.isInhibitoryNeuron) {
       elem.append('circle').attr('class', 'shape').attr('r', this.nodeRadius);
     } else {
       elem

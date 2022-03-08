@@ -15,7 +15,9 @@ export class NodeState {
    * Focus this node.
    */
   focus(forced: boolean = false): void {
-    this._node.consoleLog('Focus node of ' + this._node.network.project.shortId);
+    this._node.consoleLog(
+      'Focus node of ' + this._node.network.project.shortId
+    );
     const networkState = this._node.network.state;
     if (forced) {
       networkState.resetFocus();
@@ -26,7 +28,7 @@ export class NodeState {
   /**
    * Check if this node is focused.
    */
-  isFocused(): boolean {
+  get isFocused(): boolean {
     return this._node.network.state.isNodeFocused(this._node);
   }
 
@@ -34,7 +36,9 @@ export class NodeState {
    * Select this node.
    */
   select(forced: boolean = false): void {
-    this._node.consoleLog('Select node of ' + this._node.network.project.shortId);
+    this._node.consoleLog(
+      'Select node of ' + this._node.network.project.shortId
+    );
     const networkState = this._node.network.state;
     if (forced) {
       networkState.resetSelection();
@@ -45,7 +49,7 @@ export class NodeState {
   /**
    * Check if any node is selected.
    */
-  isAnySelected(): boolean {
+  get isAnySelected(): boolean {
     return this._node.network.state.selectedNode != null;
   }
 

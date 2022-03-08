@@ -166,7 +166,7 @@ export class Parameter extends Config {
 
   get types(): any[] {
     const types: any[] = this.config.types;
-    return !this.isSpatial()
+    return !this.isSpatial
       ? types.filter((type: any) => !type.id.startsWith('spatial'))
       : types;
   }
@@ -216,7 +216,7 @@ export class Parameter extends Config {
   /**
    * Check if this parameter is constant.
    */
-  isConstant(): boolean {
+  get isConstant(): boolean {
     return this._type.id === 'constant';
   }
 
@@ -300,7 +300,7 @@ export class Parameter extends Config {
    */
   toCode(): string {
     let value: string;
-    if (this.isConstant()) {
+    if (this.isConstant) {
       // Constant value.
       if (typeof this._value === 'boolean') {
         // Boolean value for Python.
@@ -359,7 +359,7 @@ export class Parameter extends Config {
     }
 
     // Add param type if not constant.
-    if (!this.isConstant()) {
+    if (!this.isConstant) {
       param.type = this._type;
     }
 
