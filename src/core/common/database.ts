@@ -48,11 +48,11 @@ export class DatabaseService {
     });
   }
 
-  isReady(): boolean {
+  get isReady(): boolean {
     return this._state.ready;
   }
 
-  isValid(): boolean {
+  get isValid(): boolean {
     return this._state.valid;
   }
 

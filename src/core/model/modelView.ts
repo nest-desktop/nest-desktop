@@ -167,7 +167,7 @@ export class ModelView {
   /**
    * Check if the model is implemented.
    */
-  hasModel(): boolean {
+  get hasModel(): boolean {
     return this._app.model.hasModel(this._state.modelId);
   }
 
@@ -277,7 +277,7 @@ export class ModelView {
     };
   }
 
-  isNeuron(): boolean {
+  get isNeuron(): boolean {
     if (this._state.model && this._state.model.elementType != null) {
       return this._state.model.isNeuron;
     } else if (

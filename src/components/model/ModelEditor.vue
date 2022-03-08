@@ -3,7 +3,7 @@
     <v-card
       flat
       style="height: calc(100vh - 48px); overflow-y: auto"
-      v-if="modelView.hasModel()"
+      v-if="modelView.hasModel"
     >
       <v-card-title>
         <v-text-field

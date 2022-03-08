@@ -224,7 +224,7 @@ export class Parameter extends Config {
    * Check if this parameter can be spatial
    * when the connection is spatial.
    */
-  isSpatial(): boolean {
+  get isSpatial(): boolean {
     if (this._parent.name === 'Connection') {
       const connection = this._parent as Connection;
       return connection.isBothSpatial;

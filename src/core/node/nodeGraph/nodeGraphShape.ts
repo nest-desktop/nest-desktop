@@ -214,7 +214,7 @@ export class NodeGraphShape {
           'stroke-width',
           (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
-        .style('stroke-dasharray', node.state.isSelected() ? '7.85' : '');
+        .style('stroke-dasharray', node.state.isSelected ? '7.85' : '');
 
       elem
         .select('text')

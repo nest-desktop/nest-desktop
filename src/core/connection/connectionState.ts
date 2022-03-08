@@ -21,10 +21,10 @@ export class ConnectionState {
   /**
    * Check if this connection is focused.
    */
-  isFocused(unselected: boolean = true): boolean {
+  get isFocused(): boolean {
     return this._connection.network.state.isConnectionFocused(
       this._connection,
-      unselected
+      false
     );
   }
 
@@ -42,17 +42,17 @@ export class ConnectionState {
   /**
    * Check if any connection is selected.
    */
-  isAnySelected(): boolean {
+  get isAnySelected(): boolean {
     return this._connection.network.state.selectedConnection != null;
   }
 
   /**
    * Check if this connection is selected.
    */
-  isSelected(unselected: boolean = true): boolean {
+  get isSelected(): boolean {
     return this._connection.network.state.isConnectionSelected(
       this._connection,
-      unselected
+      true
     );
   }
 }

@@ -5,7 +5,7 @@ export class Config {
 
   constructor(name: string) {
     this._configName = name;
-    if (!this.isConfigValid()) {
+    if (!this.isConfigValid) {
       this.upgradeConfig();
     }
   }
@@ -40,11 +40,11 @@ export class Config {
     return Object.assign({}, item);
   }
 
-  isConfigReady(): boolean {
+  get isConfigReady(): boolean {
     return true;
   }
 
-  isConfigValid(): boolean {
+  get isConfigValid(): boolean {
     const appVersion: string[] = environment.VERSION.split('.');
     const configVersion: string[] = this.config.version.split('.');
     return (
