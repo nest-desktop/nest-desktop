@@ -184,7 +184,7 @@ export class NodeGraphConnector {
     connector
       .transition(t)
       .style('opacity', (n: Node) =>
-        n.state.isFocused() && !connectionDrag ? '1' : '0'
+        n.state.isFocused && !connectionDrag ? '1' : '0'
       );
 
     // Connector animation.
@@ -199,7 +199,7 @@ export class NodeGraphConnector {
       .attr('d', (n: Node) =>
         drawPath(
           { x: 0, y: 0 },
-          n.state.isFocused() && !connectionDrag
+          n.state.isFocused && !connectionDrag
             ? connectorEndPos
             : { x: 0, y: 0 },
           { isTargetMouse: true }
@@ -210,7 +210,7 @@ export class NodeGraphConnector {
       .select('.end')
       .transition(t)
       .attr('transform', (n: Node) =>
-        n.state.isFocused() && !connectionDrag
+        n.state.isFocused && !connectionDrag
           ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
           : 'translate(0,0)'
       );

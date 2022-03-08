@@ -237,14 +237,14 @@ export class Node extends Config {
   /**
    * Check if it is an excitatory neuron.
    */
-  isExcitatoryNeuron(): boolean {
+  get isExcitatoryNeuron(): boolean {
     return this.model.isNeuron && this._view.weight === 'excitatory';
   }
 
   /**
    * Check if it is an inhibitory neuron.
    */
-  isInhibitoryNeuron(): boolean {
+  get isInhibitoryNeuron(): boolean {
     return this.model.isNeuron && this._view.weight === 'inhibitory';
   }
 

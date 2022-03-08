@@ -523,7 +523,7 @@ export default Vue.extend({
      * Triggers when parameter in expert mode is changed.
      */
     const paramExpertChange = () => {
-      state.expertMode = !state.param.isConstant();
+      state.expertMode = !state.param.isConstant;
       state.param.paramChanges();
     };
 
@@ -615,7 +615,7 @@ export default Vue.extend({
       if (props.param) {
         state.options = props.param['options'];
         state.param = props.param as ModelParameter | Parameter;
-        state.expertMode = !state.param.isConstant();
+        state.expertMode = !state.param.isConstant;
       } else {
         state.options = props.options;
       }
