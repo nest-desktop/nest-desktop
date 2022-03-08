@@ -3,10 +3,10 @@
 HOST="${NEST_DESKTOP_HOST:-127.0.0.1}"
 PORT="${NEST_DESKTOP_PORT:-8000}"
 
-# Returns a short overview of the available command options. 
+# Returns a short overview of the available command options.
 usage() {
-  echo "NEST Desktop $(version)"
-  echo "------------------"
+  echo "NEST Desktop"
+  echo "------------"
   echo "Usage: nest-desktop status|start|stop|restart [-h <HOST>] [-p <PORT>]"
   echo ""
   echo "Commands:"
@@ -28,14 +28,11 @@ pid() {
 
 # Starts NEST Desktop (if no instance is already running).
 start() {
-  echo "NEST Desktop $(version)"
-  echo "------------------"
-
   if pid > /dev/null; then
     echo "NEST Desktop is already running at http://${HOST}:${PORT}."
   else
     echo "NEST Desktop is now running at http://${HOST}:${PORT}."
-    echo "Use Control-C to stop this service."
+    echo "Use CTRL + C to stop this service."
     python3 -m nest_desktop.app ${HOST} ${PORT}
   fi
 }
