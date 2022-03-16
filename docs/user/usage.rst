@@ -323,15 +323,19 @@ in the outer left sidebar, you can open the projects menu containing actions for
 In the projects menu, you can find methods to reload, export, import, delete
 or reset single or multiple projects.
 It is possible to import projects from different sources.
-The same holds for saving projects:
+The same holds for exporting projects:
 You can choose between :guilabel`File` (local storage), :guilabel`GitHub` and
 :guilabel`URL` (meaning other URLS than GitHub URLs).
 
-.. note::
+.. warning::
    Unless you click on the save button, the project is not stored in the database of the web page cookie
    and is lost when you reload the page!
 
-   An important remark is that it stores only projects with neuronal networks in that database,
+   You should export projects that you want to keep: If you refresh your browser
+   or delete the wep page cookie, the project will be lost!
+
+   Another important remark is that NEST Desktop stores only projects
+   with neuronal networks in the cookie database,
    but all activity will be lost after page reload!
 
 
