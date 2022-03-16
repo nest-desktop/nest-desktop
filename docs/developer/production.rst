@@ -6,7 +6,7 @@ publish them on various platforms.
 Some are discussed below.
 
 .. note::
-   Please be aware that a lot of steps are already covered by our GitLab CI process.
+   Please be aware that a lot of steps are already covered by our `GitLab CI process <continuous-integration.html#gitlab>`__.
    Therefore, we recommend to inspect the `.yml` files together with this chapter.
    It might also be helpful to have a look at the commands defined in `project.json`.
 
