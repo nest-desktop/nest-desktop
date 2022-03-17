@@ -209,11 +209,11 @@
                     </v-col>
                   </v-row>
 
-                  <v-row no-gutters v-if="!node.model.isRecorder()">
+                  <v-row no-gutters v-if="!node.model.isRecorder">
                     <v-col>
                       <NodePosition
                         :node="node"
-                        v-if="node.spatial.hasPositions()"
+                        v-if="node.spatial.hasPositions"
                       />
                       <ParameterEdit
                         :color="node.view.color"

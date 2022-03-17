@@ -10,7 +10,6 @@ import { App } from '../app';
 import { consoleLog } from '../common/logger';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
-import { ProjectCode } from './projectCode';
 import { Simulation } from '../simulation/simulation';
 import { SpikeActivity } from '../activity/spikeActivity';
 import { upgradeProject } from './projectUpgrade';
@@ -18,7 +17,6 @@ import { upgradeProject } from './projectUpgrade';
 export class Project {
   private _activityGraph: ActivityGraph;
   private _app: App; // parent
-  private _code: ProjectCode; // code script for NEST Simulator
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc: any; // doc data of the database
@@ -65,8 +63,7 @@ export class Project {
     this.initSimulation(project.simulation);
     this.initNetwork(project.network);
 
-    // Initialize code and activity graph.
-    this._code = new ProjectCode(this, project.code);
+    // Initialize activity graph.
     this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
@@ -78,10 +75,6 @@ export class Project {
 
   get app(): App {
     return this._app;
-  }
-
-  get code(): ProjectCode {
-    return this._code;
   }
 
   get createdAt(): string {
@@ -163,7 +156,7 @@ export class Project {
   /**
    * Is the current project selected?
    */
-  isSelected(): boolean {
+  get isSelected(): boolean {
     return this._id === this._app.project.view.state.project.id;
   }
 
@@ -181,7 +174,7 @@ export class Project {
     this.clean();
 
     if (options.generateCode) {
-      this.code.generate();
+      this._simulation.code.generate();
     }
     // Reset network graph.
     this._network.state.reset();
@@ -251,7 +244,7 @@ export class Project {
   /**
    * Is this revised project selected?
    */
-  isRevisionSelected(): boolean {
+  get isRevisionSelected(): boolean {
     return this._rev === this._app.project.view.state.project.rev;
   }
 
@@ -323,13 +316,13 @@ export class Project {
     let currentNetwork: any;
     if (
       lastNetwork.codeHash != null &&
-      lastNetwork.codeHash === this._code.hash
+      lastNetwork.codeHash === this._simulation.code.hash
     ) {
       currentNetwork = this._networkRevisions.pop();
 
       // Add activity to recorder nodes.
       network.nodes
-        .filter(node => node.model.isRecorder())
+        .filter(node => node.model.isRecorder)
         .forEach(node => {
           currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
         });
@@ -337,12 +330,12 @@ export class Project {
       // Get network object.
       currentNetwork = network.toJSON();
       // Copy code hash to current network.
-      currentNetwork.codeHash = this._code.hash;
+      currentNetwork.codeHash = this._simulation.code.hash;
 
       // Add activity to recorder nodes only if hashes is matched.
-      if (this._code.hash === this._activityGraph.codeHash) {
+      if (this._simulation.code.hash === this._activityGraph.codeHash) {
         network.nodes
-          .filter(node => node.model.isRecorder())
+          .filter(node => node.model.isRecorder)
           .forEach(node => {
             currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
           });
@@ -374,7 +367,7 @@ export class Project {
     this._network.update(network);
 
     // Generate simulation code.
-    this.code.generate();
+    this._simulation.code.generate();
 
     // Initialize activity graph.
     // It resets always the panels.
@@ -447,7 +440,7 @@ export class Project {
    * After the simulation, it updates the activities and commits the network.
    */
   async startSimulation(): Promise<any> {
-    return this._code.runSimulationInsite
+    return this._simulation.code.runSimulationInsite
       ? this.runSimulationInsite()
       : this.runSimulation();
   }
@@ -462,14 +455,14 @@ export class Project {
     this.consoleLog('Run simulation');
     this.cancelGettingActivityInsite();
 
-    if (this._code.runSimulationInsite) {
+    if (this._simulation.code.runSimulationInsite) {
       return;
     }
 
     // Generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
-      this._code.generate();
+      this._simulation.code.generate();
     }
 
     this._simulation.resetState();
@@ -477,7 +470,7 @@ export class Project {
     this._simulation.running = true;
     return this.app.backends.nestSimulator.instance
       .post('exec', {
-        source: this._code.script,
+        source: this._simulation.code.script,
         return: 'response',
       })
       .then((response: any) => {
@@ -550,7 +543,7 @@ export class Project {
 
     this.cancelGettingActivityInsite();
 
-    if (!this._code.runSimulationInsite) {
+    if (!this._simulation.code.runSimulationInsite) {
       return;
     }
 
@@ -559,7 +552,7 @@ export class Project {
     // Generate seed and simulation code.
     if (this._simulation.kernel.config.autoRNGSeed) {
       this._simulation.kernel.rngSeed = Math.round(Math.random() * 1000);
-      this._code.generate();
+      this._simulation.code.generate();
     }
 
     this._simulation.resetState();
@@ -567,7 +560,7 @@ export class Project {
     this._simulation.state.biologicalTime = this._simulation.time;
     this._simulation.running = true;
     this._app.backends.nestSimulator.instance
-      .post('exec', { source: this._code.script })
+      .post('exec', { source: this._simulation.code.script })
       .then((response: any) => {
         switch (response.status) {
           case 0:
@@ -789,8 +782,8 @@ export class Project {
    * Get a list of analog signal activities.
    */
   get analogSignalActivities(): AnalogSignalActivity[] {
-    return this.activities.filter((activity: Activity) =>
-      activity.hasAnalogData()
+    return this.activities.filter(
+      (activity: Activity) => activity.hasAnalogData
     ) as AnalogSignalActivity[];
   }
 
@@ -798,8 +791,8 @@ export class Project {
    * Get a list of neuronal analog signal activities.
    */
   get neuronAnalogSignalActivities(): AnalogSignalActivity[] {
-    return this.activities.filter((activity: Activity) =>
-      activity.hasNeuronAnalogData()
+    return this.activities.filter(
+      (activity: Activity) => activity.hasNeuronAnalogData
     ) as AnalogSignalActivity[];
   }
 
@@ -807,8 +800,8 @@ export class Project {
    * Get a list of input analog signal activities.
    */
   get inputAnalogSignalActivities(): AnalogSignalActivity[] {
-    return this.activities.filter((activity: Activity) =>
-      activity.hasInputAnalogData()
+    return this.activities.filter(
+      (activity: Activity) => activity.hasInputAnalogData
     ) as AnalogSignalActivity[];
   }
 
@@ -816,8 +809,8 @@ export class Project {
    * Get a list of spike activities.
    */
   get spikeActivities(): SpikeActivity[] {
-    return this.activities.filter((activity: Activity) =>
-      activity.hasSpikeData()
+    return this.activities.filter(
+      (activity: Activity) => activity.hasSpikeData
     ) as SpikeActivity[];
   }
 
@@ -892,26 +885,26 @@ export class Project {
     // Check if it has activities.
     this._state.hasActivities =
       activities.length > 0
-        ? activities.some((activity: Activity) => activity.hasEvents())
+        ? activities.some((activity: Activity) => activity.hasEvents)
         : false;
 
     // Check if it has analog signal activities.
     this._state.hasAnalogActivities =
       activities.length > 0
-        ? activities.some((activity: Activity) => activity.hasAnalogData())
+        ? activities.some((activity: Activity) => activity.hasAnalogData)
         : false;
 
     // Check if it has spike activities.
     this._state.hasSpikeActivities =
       activities.length > 0
-        ? activities.some((activity: Activity) => activity.hasSpikeData())
+        ? activities.some((activity: Activity) => activity.hasSpikeData)
         : false;
 
     // Check if it has spatial activities.
     this._state.hasSpatialActivities = this._state.hasActivities
       ? activities.some(
           (activity: Activity) =>
-            activity.hasEvents() && activity.nodePositions.length > 0
+            activity.hasEvents && activity.nodePositions.length > 0
         )
       : false;
   }
@@ -928,7 +921,7 @@ export class Project {
    * Update hash of this project.
    */
   clean(): void {
-    this.code.clean();
+    this._simulation.code.clean();
     this.updateHash();
   }
 
@@ -972,7 +965,6 @@ export class Project {
   toJSON(): any {
     const project: any = {
       activityGraph: this._activityGraph.toJSON(),
-      code: this._code.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,

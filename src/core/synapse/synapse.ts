@@ -1,18 +1,15 @@
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
-import { SynapseCode } from './synapseCode';
 
 export class Synapse {
   private readonly _name = 'Synapse';
-  private _code: SynapseCode;
   private _connection: Connection; // parent
   private _modelId: string;
   private _params: ModelParameter[] = [];
 
   constructor(connection: any, synapse: any) {
     this._connection = connection;
-    this._code = new SynapseCode(this);
 
     if (synapse != null && synapse.params.length > 0) {
       this._modelId = synapse.model || 'static_synapse';
@@ -21,10 +18,6 @@ export class Synapse {
       this._modelId = 'static_synapse';
       this.initParameters();
     }
-  }
-
-  get code(): SynapseCode {
-    return this._code;
   }
 
   get connection(): Connection {
@@ -84,6 +77,10 @@ export class Synapse {
 
   get params(): ModelParameter[] {
     return this._params;
+  }
+
+  get someParams(): boolean {
+    return this._params.some((param: ModelParameter) => param.visible);
   }
 
   get weight(): number {

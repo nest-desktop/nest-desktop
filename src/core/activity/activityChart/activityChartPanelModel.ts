@@ -108,15 +108,8 @@ export abstract class ActivityChartPanelModel {
   /**
    * Check if it has any activities.
    */
-  hasActivities(): boolean {
+  get hasActivities(): boolean {
     return this.activities.length > 0;
-  }
-
-  /**
-   * Check if record is selected.
-   */
-  isRecordSelected(record: NodeRecord): boolean {
-    return this._state.recordsVisible.some((rec: NodeRecord) => rec === record);
   }
 
   /**
@@ -148,9 +141,7 @@ export abstract class ActivityChartPanelModel {
   initAnalogRecords(): void {
     this._state.records = [];
     this.activities
-      .filter((activity: Activity) =>
-        activity.recorder.model.isAnalogRecorder()
-      )
+      .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
       .forEach((activity: Activity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
@@ -223,9 +214,7 @@ export abstract class ActivityChartPanelModel {
 
     // Add new records from current recorder.
     this._activities
-      .filter((activity: Activity) =>
-        activity.recorder.model.isAnalogRecorder()
-      )
+      .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
       .forEach((activity: Activity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {

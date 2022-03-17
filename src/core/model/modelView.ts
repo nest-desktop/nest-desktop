@@ -96,12 +96,12 @@ export class ModelView {
     if (this._state.model == undefined) {
       this._state.modeIdx = value;
     } else {
-      this._state.modeIdx = !this.isNeuron() && value === 1 ? 0 : value;
+      this._state.modeIdx = !this.isNeuron && value === 1 ? 0 : value;
       if (
-        this.isNeuron() &&
+        this.isNeuron &&
         this._state.modeIdx === 1 &&
         this._state.project &&
-        this._state.project.code.hash !==
+        this._state.project.simulation.code.hash !==
           this._state.project.activityGraph.codeHash &&
         this._app.project.view.config.simulateAfterLoad
       ) {
@@ -167,7 +167,7 @@ export class ModelView {
   /**
    * Check if the model is implemented.
    */
-  hasModel(): boolean {
+  get hasModel(): boolean {
     return this._app.model.hasModel(this._state.modelId);
   }
 
@@ -195,7 +195,7 @@ export class ModelView {
       neuron.params = this._state.model.params;
       neuron.params.forEach((param: any) => (param.state.visible = true));
     });
-    this._state.project.code.generate();
+    this._state.project.simulation.code.generate();
   }
 
   /**
@@ -247,14 +247,14 @@ export class ModelView {
    */
   updateToolView(): void {
     if (
-      (!this.isNeuron() && this._state.tool.title === 'code') ||
+      (!this.isNeuron && this._state.tool.title === 'code') ||
       (this._state.model.params.length === 0 &&
         this._state.tool.title === 'input')
     ) {
       this.selectTool(this._tools[0]);
     }
     this._tools[1].disabled = this._state.model.params.length === 0;
-    this._tools[2].disabled = !this.isNeuron();
+    this._tools[2].disabled = !this.isNeuron;
   }
 
   /**
@@ -277,9 +277,9 @@ export class ModelView {
     };
   }
 
-  isNeuron(): boolean {
+  get isNeuron(): boolean {
     if (this._state.model && this._state.model.elementType != null) {
-      return this._state.model.isNeuron();
+      return this._state.model.isNeuron;
     } else if (
       this._state.defaults &&
       this._state.defaults.element_type != null

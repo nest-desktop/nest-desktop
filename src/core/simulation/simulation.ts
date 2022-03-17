@@ -16,8 +16,10 @@ export class Simulation extends Config {
   constructor(project: Project, simulation: any = {}) {
     super('Simulation');
     this._project = project;
+
+    // Initialize code, kernel and time.
+    this._code = new SimulationCode(this, simulation.code);
     this._kernel = new SimulationKernel(this, simulation.kernel);
-    this._code = new SimulationCode(this);
     this._time = parseFloat(simulation.time) || 1000;
 
     // Initialize simulation state.
@@ -64,6 +66,10 @@ export class Simulation extends Config {
     this._time = value;
   }
 
+  get timeFixed(): string {
+    return this._time.toFixed(1);
+  }
+
   /**
    * Reset state in simulation
    */
@@ -84,6 +90,7 @@ export class Simulation extends Config {
    */
   toJSON(): any {
     const simulation: any = {
+      code: this._code.toJSON(),
       kernel: this._kernel.toJSON(),
       time: this._time,
     };

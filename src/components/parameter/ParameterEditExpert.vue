@@ -104,7 +104,7 @@ export default Vue.extend({
     };
 
     const updateParam = () => {
-      if (!state.param.isConstant()) {
+      if (!state.param.isConstant) {
         state.param.specs.forEach((p: any) => (p.value = parseFloat(p.value)));
       }
       emit('update:param', state.param);

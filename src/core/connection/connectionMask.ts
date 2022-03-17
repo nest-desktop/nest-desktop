@@ -50,7 +50,7 @@ export class ConnectionMask extends Config {
     return Object.keys(this.config);
   }
 
-  hasMask(): boolean {
+  get hasMask(): boolean {
     return this._masktype !== 'none';
   }
 

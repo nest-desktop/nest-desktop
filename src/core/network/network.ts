@@ -1,13 +1,11 @@
 import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
 import { consoleLog } from '../common/logger';
-import { NetworkCode } from './networkCode';
 import { NetworkState } from './networkState';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
 export class Network extends Config {
-  private _code: NetworkCode; // network code
   private _connections: Connection[] = []; // for nest.Connect
   private _nodes: Node[] = []; // for nest.Create
   private _project: Project; // project
@@ -16,14 +14,9 @@ export class Network extends Config {
   constructor(project: Project, network: any = {}) {
     super('Network');
     this._project = project;
-    this._code = new NetworkCode(this);
     this._state = new NetworkState(this);
 
     this.update(network);
-  }
-
-  get code(): NetworkCode {
-    return this._code;
   }
 
   get colors(): string[] {
@@ -52,8 +45,15 @@ export class Network extends Config {
     this.networkChanges();
   }
 
+  /**
+   * Check if the network has some spatial nodes.
+   */
+  get someSpatialNodes(): boolean {
+    return this._nodes.some((node: Node) => node.spatial.hasPositions);
+  }
+
   get neurons(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.isNeuron());
+    return this._nodes.filter((node: Node) => node.model.isNeuron);
   }
 
   get nodes(): Node[] {
@@ -83,11 +83,15 @@ export class Network extends Config {
   }
 
   get recorders(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.isRecorder());
+    return this._nodes.filter((node: Node) => node.model.isRecorder);
   }
 
   get recordersAnalog(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.isAnalogRecorder());
+    return this._nodes.filter((node: Node) => node.model.isAnalogRecorder);
+  }
+
+  get spatial(): Node[] {
+    return this._nodes.filter((node: Node) => node.spatial.hasPositions);
   }
 
   get state(): NetworkState {
@@ -95,7 +99,7 @@ export class Network extends Config {
   }
 
   get stimulators(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.isStimulator());
+    return this._nodes.filter((node: Node) => node.model.isStimulator);
   }
 
   get visibleNodes(): Node[] {
@@ -113,15 +117,6 @@ export class Network extends Config {
   }
 
   /**
-   * Check if the network has any spatial nodes.
-   */
-  hasSpatialNodes(): boolean {
-    return (
-      this._nodes.filter((node: Node) => node.spatial.hasPositions()).length > 0
-    );
-  }
-
-  /**
    * Observer for network changes
    *
    * @remarks
@@ -132,7 +127,7 @@ export class Network extends Config {
   networkChanges(): void {
     this.clean();
 
-    this._project.code.generate();
+    this._project.simulation.code.generate();
     this._state.updateHash();
     this._project.updateHash();
 
@@ -382,15 +377,15 @@ export class Network extends Config {
     this.networkChanges();
   }
 
-  isEmpty(): boolean {
+  get isEmpty(): boolean {
     return this._nodes.length === 0 && this._connections.length === 0;
   }
 
   /**
    * Check if network has any spatial nodes.
    */
-  hasPositions(): boolean {
-    return this._nodes.some((node: Node) => node.spatial.hasPositions());
+  get hasPositions(): boolean {
+    return this._nodes.some((node: Node) => node.spatial.hasPositions);
   }
 
   /**

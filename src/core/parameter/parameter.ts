@@ -166,7 +166,7 @@ export class Parameter extends Config {
 
   get types(): any[] {
     const types: any[] = this.config.types;
-    return !this.isSpatial()
+    return !this.isSpatial
       ? types.filter((type: any) => !type.id.startsWith('spatial'))
       : types;
   }
@@ -187,6 +187,28 @@ export class Parameter extends Config {
     this._value = value;
   }
 
+  get valueFixed(): string {
+    if (Array.isArray(this._value)) {
+      return (
+        '[' +
+        this._value.map((value: number) => this.toFixed(value)).join(',') +
+        ']'
+      );
+    } else if (typeof this._value === 'number') {
+      return this.toFixed(this._value);
+    } else {
+      return this._value.toString();
+    }
+  }
+
+  get valueAsString(): string {
+    if (Array.isArray(this._value)) {
+      return JSON.stringify(this._value.map((value: number) => value));
+    } else {
+      return JSON.stringify(this._value);
+    }
+  }
+
   get visible(): boolean {
     return this._state.visible;
   }
@@ -194,7 +216,7 @@ export class Parameter extends Config {
   /**
    * Check if this parameter is constant.
    */
-  isConstant(): boolean {
+  get isConstant(): boolean {
     return this._type.id === 'constant';
   }
 
@@ -202,13 +224,13 @@ export class Parameter extends Config {
    * Check if this parameter can be spatial
    * when the connection is spatial.
    */
-  isSpatial(): boolean {
+  get isSpatial(): boolean {
     if (this._parent.name === 'Connection') {
       const connection = this._parent as Connection;
-      return connection.isBothSpatial();
+      return connection.isBothSpatial;
     } else if (this._parent.name === 'Synapse') {
       const synapse = this._parent as Synapse;
-      return synapse.connection.isBothSpatial();
+      return synapse.connection.isBothSpatial;
     } else {
       return false;
     }
@@ -265,11 +287,26 @@ export class Parameter extends Config {
   }
 
   /**
+   * Converts a number into a string, but keeping <= fraction digits
+   * (i.e.  1 => '1.0', 1.23456 => '1.23456').
+   * @param value number to be converted
+   * @returns converted number
+   */
+  toFixed(value: number): string {
+    const valueAsString = value.toString();
+    let fractionDigits = 1;
+    if (valueAsString.includes('.')) {
+      fractionDigits = valueAsString.split('.')[1].length;
+    }
+    return value.toFixed(fractionDigits);
+  }
+
+  /**
    * Write textual code.
    */
   toCode(): string {
     let value: string;
-    if (this.isConstant()) {
+    if (this.isConstant) {
       // Constant value.
       if (typeof this._value === 'boolean') {
         // Boolean value for Python.
@@ -328,7 +365,7 @@ export class Parameter extends Config {
     }
 
     // Add param type if not constant.
-    if (!this.isConstant()) {
+    if (!this.isConstant) {
       param.type = this._type;
     }
 

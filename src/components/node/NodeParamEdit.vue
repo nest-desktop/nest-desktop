@@ -1,6 +1,6 @@
 <template>
   <div class="nodeParamEdit" v-if="state.node">
-    <template v-if="state.node.model.isMultimeter()">
+    <template v-if="state.node.model.isMultimeter">
       <v-menu
         :close-on-content-click="false"
         :position-x="state.menu.position.x"

@@ -94,7 +94,7 @@ function nodePoints(node: Node, radius: number): string {
     case 'recorder':
       return getRectanglePoints(radius);
     case 'neuron':
-      if (node.isInhibitoryNeuron()) {
+      if (node.isInhibitoryNeuron) {
         return getSquarePoints(radius);
       } else {
         return getTrianglePoints(radius);
@@ -132,7 +132,7 @@ export class NodeGraphShape {
     const elem = selector.select('.core');
     elem.selectAll('*').remove();
 
-    if (node.isInhibitoryNeuron()) {
+    if (node.isInhibitoryNeuron) {
       elem.append('circle').attr('class', 'shape').attr('r', this.nodeRadius);
     } else {
       elem
@@ -214,11 +214,11 @@ export class NodeGraphShape {
           'stroke-width',
           (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
-        .style('stroke-dasharray', node.state.isSelected() ? '7.85' : '');
+        .style('stroke-dasharray', node.state.isSelected ? '7.85' : '');
 
       elem
         .select('text')
-        .attr('dy', node.isInhibitoryNeuron() ? '0.4em' : '0.7em')
+        .attr('dy', node.isInhibitoryNeuron ? '0.4em' : '0.7em')
         .style('fill', this.darkMode ? 'white' : '#121212')
         .text(node.view.label);
     });

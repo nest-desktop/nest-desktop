@@ -19,9 +19,9 @@
           View model documentation
         </v-tooltip>
 
-        <v-menu :disabled="!modelView.isNeuron()" offset-y open-on-hover>
+        <v-menu :disabled="!modelView.isNeuron" offset-y open-on-hover>
           <template #activator="{ on, attrs }">
-            <v-tab :disabled="!modelView.isNeuron()" v-bind="attrs" v-on="on">
+            <v-tab :disabled="!modelView.isNeuron" v-bind="attrs" v-on="on">
               <div class="tab-text" v-text="'Explorer'" />
               <v-icon v-text="'mdi-chart-scatter-plot'" />
             </v-tab>
@@ -67,7 +67,7 @@
 
       <div @click="modelView.modeIdx = 1" class="mx-1">
         <SimulationButton
-          :disabled="!modelView.isNeuron()"
+          :disabled="!modelView.isNeuron"
           :project="modelView.state.project"
         />
       </div>
@@ -175,7 +175,7 @@
           </v-card>
 
           <SimulationCodeEditor
-            :code="modelView.state.project.code"
+            :code="modelView.state.project.simulation.code"
             style="height: 100%"
             v-if="
               modelView.state.tool.name === 'modelSimulationCode' &&
@@ -213,7 +213,7 @@
     <v-overlay
       :value="
         modelView.state.project.simulation.running &&
-        !projectView.state.project.code.state.codeInsite
+        !projectView.state.project.simulation.code.state.codeInsite
       "
     >
       <v-progress-circular

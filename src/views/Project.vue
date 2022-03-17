@@ -231,7 +231,7 @@
           />
 
           <SimulationCodeEditor
-            :code="projectView.state.project.code"
+            :code="projectView.state.project.simulation.code"
             v-if="projectView.state.tool.name === 'codeEditor'"
           />
 
@@ -287,7 +287,7 @@
           :activitiesHash="
             projectView.state.project.activities.map(a => a.hash)
           "
-          :codeHash="projectView.state.project.code.hash"
+          :codeHash="projectView.state.project.simulation.code.hash"
           :graph="projectView.state.project.activityGraph"
           :graphCodeHash="projectView.state.project.activityGraph.codeHash"
           :view="projectView.state.activityGraph"
@@ -303,7 +303,7 @@
     <v-overlay
       :value="
         projectView.state.project.simulation.running &&
-        !projectView.state.project.code.state.codeInsite
+        !projectView.state.project.simulation.code.state.codeInsite
       "
       :z-index="10"
     >

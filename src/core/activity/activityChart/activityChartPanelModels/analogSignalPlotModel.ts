@@ -104,7 +104,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Update single line data for analog signal.
    */
   updateSingleLine(record: NodeRecord): void {
-    if (!record.hasEvent()) {
+    if (!record.hasEvent) {
       return;
     }
 
@@ -133,7 +133,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Update multiple lines data for analog signals.
    */
   updateMultipleLines(record: NodeRecord): void {
-    if (!record.hasEvent()) {
+    if (!record.hasEvent) {
       return;
     }
 
@@ -168,7 +168,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Update average line for analog signals.
    */
   updateAverageLine(record: NodeRecord): void {
-    if (!record.hasEvent()) {
+    if (!record.hasEvent) {
       return;
     }
 

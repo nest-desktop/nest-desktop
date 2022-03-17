@@ -149,7 +149,7 @@ export class ConnectionGraph {
         .style('stroke', connection.source.view.color)
         .style(
           'stroke-width',
-          this.strokeWidth * (connection.state.isFocused(false) ? 1.2 : 1)
+          this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
         )
         .attr('marker-end', connection.view.markerEnd())
         .style(

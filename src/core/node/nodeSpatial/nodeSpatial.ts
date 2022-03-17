@@ -16,6 +16,10 @@ export class NodeSpatial extends Config {
     this.init(spatial);
   }
 
+  get code(): string {
+    return this.positions ? this.positions.toCode() : '';
+  }
+
   get hash(): string {
     return this._hash;
   }
@@ -58,7 +62,7 @@ export class NodeSpatial extends Config {
   /**
    * Check if it has positions (free or grid) component.
    */
-  hasPositions(): boolean {
+  get hasPositions(): boolean {
     return this._positions != undefined;
   }
 

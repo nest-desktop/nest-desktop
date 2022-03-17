@@ -129,7 +129,7 @@ export default Vue.extend({
       }
       if (!state.graph.project.state.hasActivities) {
         showSnackbar('No simulation results found.', buttonProps);
-      } else if (state.graph.codeHash !== state.graph.project.code.hash) {
+      } else if (state.graph.codeHash !== state.graph.project.simulation.code.hash) {
         showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
           buttonProps
