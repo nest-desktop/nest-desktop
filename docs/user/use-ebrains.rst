@@ -38,5 +38,10 @@ Why cannot I find NEST Simulator?
   (:guilabel:`CTRL` + :guilabel:`SHIFT` + :guilabel:`R`) so that you can re-login.
 
   A persistent solution is to set the browser configuration so that it deletes cookies
-  and site data when the browser is closed (It works in Firefox),
-  but avoid to accidentally delete cookies you want to keep.
+  and site data when the browser is closed (It works in Firefox) -
+  but avoid to accidentally delete cookies you want to keep!
+
+.. warning::
+   Please avoid to accidentally delete cookies you want to keep!
+   Ensure to export your projects if you want to keep them -
+   the save button stores them only in the cookie!
