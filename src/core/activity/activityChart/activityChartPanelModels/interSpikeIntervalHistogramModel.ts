@@ -31,7 +31,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     if (activity.nodeIds.length === 0) return;
 
     const isi: number[][] = activity.ISI();
-    const x: number[] = [].concat.apply([], isi);
+    const x: number[] = isi.flat();
     const start: number = 0;
     const end: number = d3.max(x) + 1;
     const size: number = this.params[0].value;

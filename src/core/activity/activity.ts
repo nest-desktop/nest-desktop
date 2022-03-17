@@ -177,9 +177,8 @@ export class Activity {
     const events = activity.events;
     const eventKeys: string[] = Object.keys(events);
     eventKeys.forEach((eventKey: string) => {
-      const currEvents: number[] = this._events[eventKey];
       const newEvents: number[] = events[eventKey];
-      this._events[eventKey] = currEvents.concat(newEvents);
+      this._events[eventKey] = this._events[eventKey].concat(newEvents);
     });
     this.updateHash();
   }

@@ -266,9 +266,8 @@ export class Network extends Config {
       }
     });
 
-    // this.nodes = this.nodes.filter((n: Node) => n.idx !== node.idx);
-    const idx: number = node.idx;
-    this._nodes = this._nodes.slice(0, idx).concat(this.nodes.slice(idx + 1));
+    // Remove node from the node list.
+    this._nodes.splice(node.idx, 1);
 
     // Trigger network change.
     this.networkChanges();
@@ -287,11 +286,9 @@ export class Network extends Config {
     this.consoleLog('Delete connection');
 
     this._state.reset();
-    // this.connections = this.connections.filter((c: Connection) => c.idx !== connection.idx);
-    const idx: number = connection.idx;
-    this._connections = this._connections
-      .slice(0, idx)
-      .concat(this.connections.slice(idx + 1));
+
+    // Remove connection from the connection list.
+    this.connections.splice(connection.idx, 1);
 
     // Trigger network change.
     this.networkChanges();

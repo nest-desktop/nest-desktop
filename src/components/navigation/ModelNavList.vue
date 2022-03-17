@@ -233,27 +233,24 @@ export default Vue.extend({
         filterTags.includes('stimulator') ||
         filterTags.includes('synapse')
       ) {
-        let models = [];
+        let models: any[] = [];
         if (filterTags.includes('neuron')) {
-          models = models.concat(
-            state.models.filter((model: string) => isNeuron(model))
-          );
+          models.push(state.models.filter((model: string) => isNeuron(model)));
         }
         if (filterTags.includes('recorder')) {
-          models = models.concat(
+          models.push(
             state.models.filter((model: string) => isRecorder(model))
           );
         }
         if (filterTags.includes('stimulator')) {
-          models = models.concat(
+          models.push(
             state.models.filter((model: string) => isStimulator(model))
           );
         }
         if (filterTags.includes('synapse')) {
-          models = models.concat(
-            state.models.filter((model: string) => isSynapse(model))
-          );
+          models.push(state.models.filter((model: string) => isSynapse(model)));
         }
+        models = models.flat();
         models.sort();
         state.models = models;
       }
