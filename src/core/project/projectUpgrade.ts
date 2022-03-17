@@ -3,7 +3,7 @@ import { Model } from '../model/model';
 
 /**
  * Upgrades networks which were created with NEST Desktop v2.5 or older to be
- * compatible with v >= 3.0 (the data structure changed in v2.5).
+ * compatible with >= v3.0 (the data structure changed in v2.5).
  * @param app NEST Desktop app
  * @param project Project which should be transformed
  * @returns Network changed to new format
