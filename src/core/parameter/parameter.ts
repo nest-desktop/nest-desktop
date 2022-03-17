@@ -286,6 +286,12 @@ export class Parameter extends Config {
     }
   }
 
+  /**
+   * Converts a number into a string, but keeping <= fraction digits
+   * (i.e.  1 => '1.0', 1.23456 => '1.23456').
+   * @param value number to be converted
+   * @returns converted number
+   */
   toFixed(value: number): string {
     const valueAsString = value.toString();
     let fractionDigits = 1;

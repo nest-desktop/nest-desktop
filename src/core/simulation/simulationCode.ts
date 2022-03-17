@@ -8,7 +8,11 @@ export class SimulationCode {
   private _hash: string;
   private _script: string;
   private _simulation: Simulation; // parent
-  private _state: UnwrapRef<any>;
+  private _state: {
+    codeInsite: boolean;
+    blocks: String[];
+    version: string;
+  };
 
   constructor(simulation: Simulation, simulationCode: any = {}) {
     this._simulation = simulation;
@@ -92,7 +96,7 @@ export class SimulationCode {
   }
 
   /**
-   * Clean simulation code.
+   * Clean the simulation code.
    */
   clean(): void {
     if (!this.isInsiteReady) {
@@ -102,6 +106,9 @@ export class SimulationCode {
     }
   }
 
+  /**
+   * Renders the script and generates the hash.
+   */
   generate(): void {
     const template =
       require(`./simulationCodes/nest${this._state.version}.code`).default;
@@ -112,10 +119,10 @@ export class SimulationCode {
   }
 
   /**
-   * Export script to file.
+   * Export the script to file.
    */
   export(format: string = 'py'): void {
-    let data: any;
+    let data: string;
     if (format === 'py') {
       data = this._script;
     } else if (format === 'ipynb') {
