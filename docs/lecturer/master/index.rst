@@ -5,7 +5,8 @@ This section covers advanced topics for students with previous knowledge in neur
 Here, we cover the activity dynamics of single neurons and of neuronal networks.
 
 
-**Topics**
+Topics
+------
 
 .. toctree::
   :maxdepth: 1

@@ -1,7 +1,8 @@
 Abstract
 ========
 
-**NEST Desktop - An educational application for neuroscience**
+NEST Desktop - An educational application for neuroscience
+----------------------------------------------------------
 
 Simulation software for spiking neuronal network models matured in the past decades regarding performance and flexibility.
 Nevertheless, the entry barrier remains high for students and early career scientists in computational neuroscience
@@ -23,7 +24,8 @@ A paper for NEST Desktop is available on `eNeuro <https://www.eneuro.org/content
 
 |
 
-**Acknowledgements**
+Acknowledgements
+----------------
 
 This project has received funding from the European Union’s Horizon 2020 Framework Programme for Research
 and Innovation under Specific Grant Agreement No. 785907 (Human Brain Project SGA2) and No. 945539 (Human Brain Project SGA3).
@@ -32,7 +34,8 @@ This work was supported by the DFG Excellence Cluster BrainLinks-BrainTools (gra
 
 |
 
-**Cite NEST Desktop**
+Cite NEST Desktop
+-----------------
 
 In order to cite NEST Desktop in general, please use the DOI `10.5281/zenodo.5037050 <https://doi.org/10.5281/zenodo.5037050>`__ for all versions (always redirecting to the latest version).
 If you like to refer to a single version, you can find these also on Zenodo,
@@ -45,7 +48,8 @@ You will also find the exports for the citation managers on Zenodo and eNeuro.
 
 |
 
-**References**
+References
+----------
 
 .. [1] https://github.com/nest-desktop/nest-desktop
 .. [2] https://ebrains.eu/service/nest-desktop

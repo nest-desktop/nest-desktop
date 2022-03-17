@@ -58,7 +58,8 @@ You can also study, under which conditions synaptic input can trigger an output 
 
 |
 
-**Video tutorial**
+Video tutorial
+--------------
 
 .. raw:: html
 

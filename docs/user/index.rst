@@ -3,7 +3,8 @@
 
 .. _quick-start:
 
-**Quick start**
+Quick start
+-----------
 
 The video shows the few steps to construct a network and explore its activity.
 For more information, please read :doc:`detailed guides of usage <usage>`.
@@ -20,7 +21,8 @@ For more information, please read :doc:`detailed guides of usage <usage>`.
 
 .. _getting-started-in-terminal-with-docker-compose:
 
-**Getting started in Terminal with Docker-compose**
+Start from a terminal using Docker-compose
+------------------------------------------
 
 .. code-block:: bash
 

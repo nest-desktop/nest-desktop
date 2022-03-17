@@ -19,14 +19,16 @@ Docker Compose needs the configuration file (``docker-compose.yml``).
 
 Here, the guide shows you how to build containers with ``docker-compose``.
 
-Requirements
+Requirements:
   * `Docker Compose <https://docs.docker.com/compose/>`__
 
 |
 
 .. _preparation:
 
-**Preparation**
+Preparation
+-----------
+Prepare your local environment by installing Docker (if you have not installed it yet).
 
 .. code-block:: bash
 
@@ -36,7 +38,10 @@ Requirements
 
 .. _get-configuration-file:
 
-**Get the configuration file `docker-compose.yml` from GitHub**
+Get the configuration file 
+--------------------------
+The configuration file  `docker-compose.yml` contains all setup steps executed by Docker.
+Fetch this file from GitHub:
 
 .. code-block:: bash
 
@@ -51,7 +56,8 @@ and NEST Simulator can be started from within the official NEST image
 
 .. _getting-started:
 
-**Getting started**
+Getting started
+---------------
 
 Build and start the NEST Desktop and NEST Simulator containers.
 
@@ -87,7 +93,8 @@ For more information, visit the page https://github.com/nest-desktop/nest-deskto
 
 .. _upgrade-images:
 
-**Upgrade images**
+Upgrade images
+--------------
 
 First stop the containers and shut down services of nest-desktop and nest-server.
 
@@ -113,7 +120,10 @@ Afterwards, you can start the services and containers.
 
 .. _useful-commands:
 
-**Useful commands for docker-compose**
+Useful commands
+---------------
+
+In the following you can find some useful commands for docker-compose.
 
 List containers.
 
@@ -149,7 +159,8 @@ Shutdown the services ``nest-desktop`` and ``nest-server``.
 
 |
 
-**Acknowledgments**
+Acknowledgments
+---------------
 
 Thanks for the help:
 
