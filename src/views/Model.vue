@@ -142,7 +142,10 @@
                 modelView.state.params
               "
             >
-              <v-card-text class="pa-0">
+              <v-card-text
+                class="pa-0"
+                style="height: calc(100vh - 48px); overflow-y: auto"
+              >
                 <v-list dense>
                   <v-list-item
                     :key="param.id"
