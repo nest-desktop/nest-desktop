@@ -12,7 +12,8 @@ Below the icon for the project section, you can see the one of the model section
 
 |br|
 
-**Navigation list**
+Navigation list
+---------------
 
 .. image:: ../_static/img/screenshots/model-nav.png
   :align: left
@@ -29,7 +30,10 @@ Selected filter tags can be removed (click on close icon :guilabel:`x`).
 
 |br|
 
-**Filter tags for displaying models in the list**
+Setting filter tags in the model list
+-------------------------------------
+It is possible to select filter tags to display only models with certain properties.
+The following filter tags are available:
 
 .. image:: ../_static/img/screenshots/models-filter-tag.png
   :align: right
@@ -45,7 +49,8 @@ Neuron/stimulator/recorder/synapse:
 
 |br|
 
-**Model menu**
+Model menu
+----------
 
 .. image:: ../_static/img/screenshots/models-menu.png
   :align: left
@@ -55,7 +60,8 @@ where you can select actions for models.
 
 |br|
 
-**Import model(s)**
+Import model(s)
+---------------
 
 You can import models from various sources,
 e.g. a file you uploaded from you computer, a file from a GitHub repository or from a specified URL.
@@ -74,7 +80,8 @@ The table shows a list of models from which you can select which ones you want t
 
 ||||
 
-**Documentation**
+Documentation
+-------------
 
 .. image:: ../_static/img/screenshots/model-documentation.png
 
@@ -84,7 +91,8 @@ The button :guilabel:`MORE` directs to the official (and styled) documentation o
 
 |br|
 
-**Explore activity of a neuron model**
+Explore activity of a neuron model
+----------------------------------
 
 .. image:: ../_static/img/screenshots/model-activity-explorer.png
   :align: left
@@ -103,7 +111,8 @@ You can use the code editor to see changes in activity.
 
 |br|
 
-**Model editor**
+Model editor
+------------
 
 The model editor allows you to make changes in parameter specifications,
 e.g. default value, unit, label or inputs.

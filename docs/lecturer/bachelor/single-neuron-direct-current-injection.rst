@@ -35,7 +35,8 @@ that follows a threshold crossing.
 
 |
 
-**Video tutorial**
+Video tutorial
+--------------
 
 .. raw:: html
 

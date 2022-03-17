@@ -23,7 +23,8 @@ You can find the definition file in ``singularity/dev-node-16-alpine.def`` for b
 
 .. _build-an-environment-with-singularity:
 
-**Build an environment with Singularity**
+Build an environment with Singularity
+-------------------------------------
 
 The definition file ``singularity/dev-node-16-alpine.def``
 contains an adequate environment to develop and build NEST Desktop.
@@ -44,7 +45,8 @@ Go to the shell of singularity container:
 
 .. _commands:
 
-**Commands**
+Commands
+--------
 
 Install node modules for NEST Desktop:
 
@@ -84,7 +86,8 @@ Start a development server:
 
 .. _useful-commands:
 
-**Useful commands**
+Useful commands
+---------------
 
 Check if any node modules are outdated:
 

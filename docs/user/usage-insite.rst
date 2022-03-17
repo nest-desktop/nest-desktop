@@ -18,7 +18,8 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 .. _check-if-insite-is-running:
 
-**Check if Insite is running**
+Check if Insite is running
+--------------------------
 
 .. image:: ../_static/img/screenshots/settings-insite.png
   :align: left
@@ -30,7 +31,8 @@ In the settings page you can check whether the Insite backend is running.
 
 .. _enable-simulation-with-insite:
 
-**Enable simulation with Insite**
+Enable simulation with Insite
+-----------------------------
 
 .. image:: ../_static/img/screenshots/simulate-with-insite.png
   :align: right
@@ -44,7 +46,8 @@ the :guilabel:`Simulate` button (opens by clicking with the right mouse button).
 
 .. _script-code-for-simulation-with-insite:
 
-**Script code for simulation with Insite**
+Script code for simulation with Insite
+--------------------------------------
 
 The Insite module has to be loaded in the NEST kernel.
 Preferentially load the Insite module directly after importing NEST.
@@ -68,7 +71,8 @@ For more information about Insite, please visit the official
 
 |br|
 
-**Acknowledgements**
+Acknowledgements
+----------------
 
 Thanks for integrating Insite in NEST Simulator and NEST Desktop:
 

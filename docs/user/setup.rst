@@ -44,7 +44,8 @@ To get more information, see the `official page of Docker Compose <https://githu
 
 .. _windows-windows-and-macos-apple:
 
-**Windows** |windows| **and macOS** |apple|
+Windows |windows| and macOS |apple|
+-----------------------------------
 
 Docker Compose is included in Docker Desktop for Windows and macOS.
 For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
@@ -60,7 +61,8 @@ Detailed instructions on how to use Docker on WSL (version 2+) are provided by
 
 .. _quick-setup-in-linux-linux:
 
-**Quick setup in Linux** |linux|
+Quick setup in Linux |linux|
+----------------------------
 
 1. Install Docker and Docker Compose
 
