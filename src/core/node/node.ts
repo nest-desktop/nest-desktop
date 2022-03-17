@@ -433,7 +433,7 @@ export class Node extends Config {
           ...target.model.recordables,
         ]);
         if (recordablesNodes.length > 0) {
-          const recordablesPooled: any[] = [].concat(...recordablesNodes);
+          const recordablesPooled: any[] = recordablesNodes.flat();
           recordables = [...new Set(recordablesPooled)];
           recordables.sort((a: any, b: any) => a.id - b.id);
         }
