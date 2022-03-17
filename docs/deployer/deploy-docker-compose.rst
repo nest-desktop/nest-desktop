@@ -111,7 +111,7 @@ Afterwards, you can start the services and containers.
 
 |
 
-.. _usefull-commands:
+.. _useful-commands:
 
 **Useful commands for docker-compose**
 
