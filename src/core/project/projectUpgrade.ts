@@ -8,7 +8,7 @@ import { Model } from '../model/model';
  * @param project Project which should be transformed
  * @returns Network changed to new format
  */
-function upgradeNetwork(app: App, project: any): any {
+function upgradeNetwork_25_to_30(app: App, project: any): any {
   const network: any = {
     nodes: [],
     connections: [],
@@ -52,18 +52,6 @@ function upgradeNetwork(app: App, project: any): any {
     network.nodes.push(node);
   });
 
-  // Object.entries(project.simulation.models).map((item: any) => {
-  //   const model: any = this.copy(item[1]);
-  //   model['id'] = item[0];
-  //   model['params'] = Object.entries(model.params).map((p: any) => {
-  //     return {
-  //       id: p[0],
-  //       value: p[1],
-  //     }
-  //   })
-  //   network.models.push(model)
-  // })
-
   project.simulation.connectomes.forEach((simLink: any) => {
     const connection: any = {
       source: simLink.source != null ? simLink.source : simLink.pre,
@@ -95,17 +83,69 @@ function upgradeNetwork(app: App, project: any): any {
     connection.synapse = synapse;
     network.connections.push(connection);
   });
+
+  network.nodes
+    .filter((node: any) => node.model === 'spike_detector')
+    .forEach((node: any) => {
+      node.model = 'spike_recorder';
+    });
+  network.connections.forEach((connection: any) => {
+    connection.params.map((param: any) => {
+      param.visible = true;
+    });
+  });
+
   return network;
+}
+
+function upgradeProject_25_to_30(app: App, project: any): any {
+  if (!/^[0-2]\.\d+(.\d+)?$/.test(project.version)) {
+    return project;
+  }
+
+  return {
+    activityGraph: project.activityGraph || {},
+    network: upgradeNetwork_25_to_30(app, project),
+    simulation: project.simulation,
+    version: '3.0.0',
+  };
+}
+
+function upgradeProject_31_to_32(project: any): any {
+  if (!/^[0-3]\.[0-1]+(.\d+)?$/.test(project.version)) {
+    return project;
+  }
+
+  project.network.nodes.forEach((node: any) => {
+    if (node.params) {
+      node.params = node.params.filter((param: any) => param.visible);
+    }
+  });
+
+  project.network.connections.forEach((connection: any) => {
+    if (connection.params) {
+      connection.params = connection.params.filter(
+        (param: any) => param.visible
+      );
+    }
+    if (connection.synapse && connection.synapse.params) {
+      connection.synapse.params = connection.synapse.params.filter(
+        (param: any) => param.visible
+      );
+    }
+  });
+
+  project.version = '3.2.0';
+  return project;
 }
 
 /**
 
- * Upgrades networks which were created with NEST Desktop v2.5 or older to be
- * compatible with v >= 3.0 (the data structure changed in v2.5).
+ * Upgrades projects to be compatible with the latest release.
  * It also checks if projects with v3.0+ are valid and corrects some problems.
  * @param app NEST Desktop app
  * @param project Project which should be transformed
- * @returns Network changed to new format
+ * @returns project
  */
 export function upgradeProject(app: App, project: any): any {
   if (Object.keys(project).length === 0) {
@@ -115,34 +155,9 @@ export function upgradeProject(app: App, project: any): any {
   if (!project.hasOwnProperty('version')) {
     return project;
   }
-  const version: string[] = project.version.split('.');
 
-  // Checks if version is 2.5 or newer.
-  const valid_2_5: boolean =
-    (Number(version[0]) === 2 && Number(version[1]) >= 5) ||
-    Number(version[0]) > 2;
-  const network: any = valid_2_5
-    ? project.network
-    : upgradeNetwork(app, project);
+  project = upgradeProject_25_to_30(app, project);
+  project = upgradeProject_31_to_32(project);
 
-  // Checks if version is 3.0 or newer.
-  const valid_3: boolean = Number(version[0]) === 3;
-  if (!valid_3) {
-    network.nodes
-      .filter((node: any) => node.model === 'spike_detector')
-      .forEach((node: any) => {
-        node.model = 'spike_recorder';
-      });
-    network.connections.forEach((connection: any) => {
-      connection.params.map((param: any) => {
-        param.visible = true;
-      });
-    });
-  }
-
-  return {
-    activityGraph: project.activityGraph || {},
-    network,
-    simulation: project.simulation,
-  };
+  return project;
 }
