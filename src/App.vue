@@ -2,7 +2,6 @@
   <v-app>
     <transition name="fade">
       <div v-if="core.app.state.ready">
-        <iframe id="NESTSimulatorFrame" class="iframe" />
         <Navigation class="no-print" />
 
         <transition name="fade">
@@ -74,27 +73,6 @@ export default Vue.extend({
       window.location.reload();
     };
 
-    /**
-     * Keep connection to NEST Simulator alive.
-     * Ping every 5 min.
-     */
-    const keepConnectionToNESTSimulatorAlive = () => {
-      core.app.backends.nestSimulator
-        .check()
-        .then(() => {
-          const NESTSimulatorFrame = document.getElementById(
-            'NESTSimulatorFrame'
-          ) as HTMLIFrameElement;
-          setInterval(() => {
-            NESTSimulatorFrame.src = core.app.backends.nestSimulator.url;
-            // NESTFrame.contentDocument.location.reload(true);
-          }, 300000);
-        })
-        .catch(() => {
-          // Errors are already logged inside the httpClient
-        });
-    };
-
     onMounted(() => {
       // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
@@ -106,9 +84,6 @@ export default Vue.extend({
 
       // Initialize app with global config.
       core.app.init(Vue.prototype.$appConfig);
-
-      // Ping every 5 min to keep connection to NEST Simulator alive.
-      keepConnectionToNESTSimulatorAlive();
     });
 
     return { core, refreshApp, state };
