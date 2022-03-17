@@ -53,6 +53,7 @@ Contents
   developer/preparation
   developer/coding-conventions
   developer/development
+  developer/continuous-integration
   developer/production
   developer/command-API
   developer/user-doc

@@ -1,5 +1,5 @@
-|lecturer| Using NEST Desktop in a course
-=========================================
+|lecturer| Use NEST Desktop in a course
+=======================================
 
 This section gives directions for lecturers who want to teach computational neuroscience with NEST Desktop.
 Using computer simulations, students are able to explore models
