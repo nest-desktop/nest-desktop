@@ -71,7 +71,7 @@
 
                   <v-list-item-action class="my-1">
                     <v-checkbox
-                      :color="node.view.color"
+                      :color="state.node.view.color"
                       :input-value="param.visible"
                       :value="param.visible"
                       hide-details
