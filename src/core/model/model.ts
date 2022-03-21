@@ -12,7 +12,6 @@ export class Model extends Config {
   private _app: App; // parent
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
-  private _existing: string; // existing model in NEST
   private _id: string; // model id
   private _idx: number; // generative
   private _label: string; // model label for view
@@ -30,7 +29,6 @@ export class Model extends Config {
 
     this._elementType =
       model.elementType != null ? model.elementType : model.element_type;
-    this._existing = model.existing || model.id;
 
     this._label = model.label || '';
     this._abbreviation = model.abbreviation;
@@ -60,16 +58,68 @@ export class Model extends Config {
     return this._elementType;
   }
 
-  get existing(): string {
-    return this._existing;
-  }
-
   get id(): string {
     return this._id;
   }
 
   get idx(): number {
     return this._idx;
+  }
+
+  /**
+   * Check if the model is an analog recorder.
+   */
+  get isAnalogRecorder(): boolean {
+    return this.isRecorder && !this.isSpikeRecorder;
+  }
+
+  /**
+   * Check if the model is a multimeter.
+   */
+  get isMultimeter(): boolean {
+    return this._id === 'multimeter';
+  }
+
+  /**
+   * Check if the model is a neuron.
+   */
+  get isNeuron(): boolean {
+    return this._elementType === 'neuron';
+  }
+
+  /**
+   * Check if the model is a recorder.
+   */
+  get isRecorder(): boolean {
+    return this._elementType === 'recorder';
+  }
+
+  /**
+   * Check if the model is a spike recorder.
+   */
+  get isSpikeRecorder(): boolean {
+    return this._id === 'spike_recorder';
+  }
+
+  /**
+   * Check if the model is a stimulator.
+   */
+  get isStimulator(): boolean {
+    return this._elementType === 'stimulator';
+  }
+
+  /**
+   * Check if the model is a synapse.
+   */
+  get isSynapse(): boolean {
+    return this._elementType === 'synapse';
+  }
+
+  /**
+   * Check if the model is a weight recorder.
+   */
+  get isWeightRecorder(): boolean {
+    return this._id === 'weight_recorder';
   }
 
   get label(): string {
@@ -206,48 +256,6 @@ export class Model extends Config {
   }
 
   /**
-   * Check if the model is an analog recorder.
-   */
-  get isAnalogRecorder(): boolean {
-    return this._elementType === 'recorder' && this._existing.endsWith('meter');
-  }
-
-  /**
-   * Check if the model is a multimeter.
-   */
-  get isMultimeter(): boolean {
-    return this._existing === 'multimeter';
-  }
-
-  /**
-   * Check if the model is a neuron.
-   */
-  get isNeuron(): boolean {
-    return this._elementType === 'neuron';
-  }
-
-  /**
-   * Check if the model is a recorder.
-   */
-  get isRecorder(): boolean {
-    return this._elementType === 'recorder';
-  }
-
-  /**
-   * Check if the model is a spike recorder.
-   */
-  get isSpikeRecorder(): boolean {
-    return this._existing === 'spike_recorder';
-  }
-
-  /**
-   * Check if the model is a stimulator.
-   */
-  get isStimulator(): boolean {
-    return this._elementType === 'stimulator';
-  }
-
-  /**
    * Reset state of this model.
    */
   resetState(): void {
@@ -276,7 +284,6 @@ export class Model extends Config {
     const model: any = {
       abbreviation: this._abbreviation,
       elementType: this._elementType,
-      existing: this._existing,
       id: this._id,
       label: this._label,
       params: this._params.map((param: ModelParameter) => param.toJSON()),

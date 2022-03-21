@@ -1,4 +1,5 @@
 import { Connection } from '../connection/connection';
+import { CopyModel } from '../model/copyModel';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Node } from './node';
 
@@ -162,7 +163,22 @@ export class NodeView {
   /**
    * Clean node.
    */
-  clean(): void {}
+  clean(): void {
+    if (this.node.model.isWeightRecorder) {
+      const copiedSynapseModel = this._node.network.synapseModels.find(
+        (model: CopyModel) => model.isAssignedToWeightRecorder(this.node)
+      );
+      if (copiedSynapseModel) {
+        const connection = this._node.network.connections.find(
+          (connection: Connection) =>
+            connection.synapse.modelId === copiedSynapseModel.id
+        );
+        if (connection) {
+          this._position = connection.view.position;
+        }
+      }
+    }
+  }
 
   /**
    * Serialize for JSON.

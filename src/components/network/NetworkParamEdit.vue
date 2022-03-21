@@ -12,305 +12,211 @@
       v-if="state.connectionMenu.show"
     />
 
-    <v-banner
-      class="elementType"
-      height="28"
-      max-height="28"
-      single-line
-      sticky
-    >
-      <v-btn-toggle dense group mandatory tile v-model="state.elementType">
-        <v-btn
-          :key="elementType"
-          small
-          v-for="elementType in state.elementTypes"
-          v-text="elementType"
-        />
-        <v-menu :close-on-content-click="false" :max-height="600" offset-y>
-          <template #activator="{ on, attrs }">
-            <v-btn small v-bind="attrs" v-on="on" v-text="'custom'" />
-          </template>
+    <NetworkParamToolbar :network="state.network" />
 
-          <v-card :width="280">
-            <v-card-text class="pa-0">
-              <v-list class="no-highlight" dense>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="'nodes'" />
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-row>
-                      <span
-                        :key="'node-' + elementType"
-                        v-for="elementType in state.elementTypes"
-                      >
-                        <v-tooltip :open-delay="1000" top>
-                          <template #activator="{ on, attrs }">
-                            <v-btn
-                              @click="toggleNodes(elementType)"
-                              class="mx-0"
-                              icon
-                              v-bind="attrs"
-                              v-on="on"
-                            >
-                              <v-icon v-text="iconNodes(elementType)" />
-                            </v-btn>
-                          </template>
-                          <span v-text="elementType" />
-                        </v-tooltip>
-                      </span>
-                    </v-row>
-                  </v-list-item-action>
-                </v-list-item>
-
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="'connections'" />
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-row>
-                      <span
-                        :key="'connection-' + elementType"
-                        v-for="elementType in state.elementTypes"
-                      >
-                        <v-tooltip :open-delay="1000" bottom>
-                          <template #activator="{ on, attrs }">
-                            <v-btn
-                              @click="toggleConnections(elementType)"
-                              class="mx-0"
-                              icon
-                              v-bind="attrs"
-                              v-on="on"
-                            >
-                              <v-icon v-text="iconConnections(elementType)" />
-                            </v-btn>
-                          </template>
-                          <span v-text="elementType" />
-                        </v-tooltip>
-                      </span>
-                    </v-row>
-                  </v-list-item-action>
-                </v-list-item>
-
-                <v-divider />
-
-                <v-subheader v-text="'Nodes'" />
-                <v-list-item-group
-                  @change="nodeDisplayChange"
-                  multiple
-                  v-model="state.displayNodes"
-                >
-                  <draggable handle=".handle" v-model="state.network.nodes">
-                    <transition-group>
-                      <v-list-item
-                        :key="'node' + node.idx"
-                        v-for="node in state.network.nodes"
-                      >
-                        <template #default="{ active }">
-                          <v-icon
-                            :color="node.view.color"
-                            class="handle"
-                            title="Drag to change order in nodes."
-                            v-text="'mdi-drag-vertical'"
-                          />
-                          <v-list-item-content
-                            class="pa-1"
-                            v-text="node.view.label"
-                          />
-                          <v-list-item-action class="my-1">
-                            <v-checkbox
-                              :color="node.view.color"
-                              :input-value="active"
-                              hide-details
-                            />
-                          </v-list-item-action>
-                        </template>
-                      </v-list-item>
-                    </transition-group>
-                  </draggable>
-                </v-list-item-group>
-
-                <v-divider />
-                <v-subheader v-text="'Connections'" />
-                <v-list-item-group
-                  @change="connectionDisplayChange"
-                  multiple
-                  v-model="state.displayConnections"
-                >
-                  <draggable
-                    handle=".handle"
-                    v-model="state.network.connections"
-                  >
-                    <transition-group>
-                      <v-list-item
-                        :key="'connection' + connection.idx"
-                        v-for="connection in state.network.connections"
-                      >
-                        <template #default="{ active }">
-                          <v-icon
-                            :color="connection.source.view.color"
-                            class="handle"
-                            title="Drag to change order in connections."
-                            v-text="'mdi-drag-vertical'"
-                          />
-                          <v-list-item-content class="pa-1">
-                            <v-row no-gutters>
-                              {{ connection.source.view.label }}
-                              <v-icon small v-text="'mdi-arrow-right'" />
-                              {{ connection.target.view.label }}
-                            </v-row>
-                          </v-list-item-content>
-
-                          <v-list-item-action class="my-1">
-                            <v-checkbox
-                              :color="connection.source.view.color"
-                              :input-value="active"
-                              hide-details
-                            />
-                          </v-list-item-action>
-                        </template>
-                      </v-list-item>
-                    </transition-group>
-                  </draggable>
-                </v-list-item-group>
-              </v-list>
-            </v-card-text>
-          </v-card>
-        </v-menu>
-      </v-btn-toggle>
-    </v-banner>
-
-    <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 76px)">
+    <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 88px)">
       <v-col>
-        <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
-          <v-card class="ma-2px" outlined tile v-if="showNode(node)">
-            <v-sheet :color="node.view.color">
-              <v-card class="ml-1" flat tile>
-                <v-card-title
-                  @contextmenu="e => showNodeMenu(e, node)"
-                  class="pa-0"
-                >
-                  <v-row no-gutters style="width: 100%">
-                    <v-col cols="3">
-                      <v-btn
-                        :color="node.view.color"
-                        :dark="projectView.config.coloredToolbar"
-                        :text="!projectView.config.coloredToolbar"
-                        @click="() => node.state.select()"
-                        block
-                        depressed
-                        height="40"
-                        tile
-                        v-text="node.view.label"
-                      />
-                    </v-col>
-                    <v-col cols="9">
-                      <NodeModelSelect :node="node" :text="state.text" />
-                    </v-col>
-                  </v-row>
-
-                  <v-row no-gutters v-if="!node.model.isRecorder">
-                    <v-col>
-                      <NodePosition
-                        :node="node"
-                        v-if="node.spatial.hasPositions"
-                      />
-                      <ParameterEdit
-                        :color="node.view.color"
-                        :options="state.sizeOptions"
-                        :value.sync="node.size"
-                        @update:value="() => node.nodeChanges()"
-                        v-else
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card-title>
-
-                <v-card-text class="pa-0">
-                  <NodeParamEdit :node="node" />
-                </v-card-text>
-              </v-card>
-            </v-sheet>
-          </v-card>
+        <span v-if="state.network.state.elementTypeIdx === 4">
+          <v-row class="align-center d-flex" no-gutters>
+            <v-overflow-btn
+              :items="state.network.project.app.model.state.modelsNEST"
+              class="ma-0"
+              dense
+              editable
+              flat
+              hide-details
+              placeholder="Select an existing model"
+              v-model="state.model"
+            />
+            <v-btn
+              :dark="projectView.config.coloredToolbar"
+              :disabled="state.model.length === 0"
+              :text="!projectView.config.coloredToolbar"
+              @click="copyModel()"
+              class="ma-1"
+              color="project"
+              depressed
+              height="32"
+              v-text="'Copy'"
+            />
+          </v-row>
         </span>
-
-        <span
-          :key="'connection-' + connection.idx"
-          v-for="connection of state.network.connections"
-        >
-          <v-card
-            class="ma-2px"
-            outlined
-            tile
-            v-if="showConnection(connection)"
+        <span>
+          <span
+            :key="'model-' + model.idx"
+            v-for="model of state.network.models"
           >
-            <v-sheet :color="connection.source.view.color">
-              <v-card class="ml-1" flat tile>
-                <v-card-title class="pa-0 ma-0">
-                  <v-row
-                    @contextmenu="e => showConnectionMenu(e, connection)"
-                    no-gutters
-                  >
-                    <v-col class="py-0" cols="3" style="text-align: center">
-                      <v-btn
-                        :color="connection.source.view.color"
-                        :dark="projectView.config.coloredToolbar"
-                        :text="!projectView.config.coloredToolbar"
-                        @click="() => connection.source.state.select()"
-                        block
-                        depressed
-                        height="40"
-                        tile
-                        v-text="connection.source.view.label"
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <v-btn
-                        @click="() => connection.state.select()"
-                        block
-                        depressed
-                        height="40"
-                        text
-                        tile
-                      >
-                        <v-chip
-                          label
-                          outlined
+            <v-card class="ma-2px" outlined tile v-if="showModel(model)">
+              <v-sheet color="grey">
+                <v-card class="ml-1" flat tile>
+                  <v-card-title class="pa-0">
+                    <v-row no-gutters>
+                      <v-col cols="10">
+                        <CopyModelSelect :model="model" style="width: 100%" />
+                      </v-col>
+                      <v-col cols="2">
+                        <v-spacer />
+                        <v-btn
+                          :dark="projectView.config.coloredToolbar"
+                          :text="!projectView.config.coloredToolbar"
+                          @click="model.remove()"
+                          class="mx-1"
+                          depressed
+                          fab
                           small
-                          v-if="connection.network.project.app.config.devMode"
-                          v-text="connection.shortHash"
-                        />
-                        <v-icon v-text="'mdi-arrow-right-bold-outline'" />
-                      </v-btn>
-                    </v-col>
-                    <v-col class="py-0" cols="3" style="text-align: center">
-                      <v-btn
-                        :color="connection.target.view.color"
-                        :dark="projectView.config.coloredToolbar"
-                        :text="!projectView.config.coloredToolbar"
-                        @click="() => connection.target.state.select()"
-                        block
-                        depressed
-                        height="40"
-                        tile
-                        v-text="connection.target.view.label"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card-title>
+                        >
+                          <v-icon small v-text="'mdi-delete-outline'" />
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
 
-                <v-card-text class="pa-0">
-                  <ConnectionParamEdit
-                    :connection="connection"
-                    v-if="
-                      connection.source.size > 1 || connection.target.size > 1
-                    "
-                  />
-                  <SynapseParamEdit :synapse="connection.synapse" />
-                </v-card-text>
-              </v-card>
-            </v-sheet>
-          </v-card>
+                  <v-card-text class="mt-4 pa-0">
+                    <v-text-field
+                      class="ma-2"
+                      dense
+                      hide-details
+                      label="New label"
+                      v-model="model.new"
+                    />
+
+                    <ModelParamEdit :model="model" />
+                  </v-card-text>
+                </v-card>
+              </v-sheet>
+            </v-card>
+          </span>
+
+          <span :key="'node-' + node.idx" v-for="node of state.network.nodes">
+            <v-card class="ma-2px" outlined tile v-if="showNode(node)">
+              <v-sheet :color="node.view.color">
+                <v-card class="ml-1" flat tile>
+                  <v-card-title
+                    @contextmenu="e => showNodeMenu(e, node)"
+                    class="pa-0"
+                  >
+                    <v-row no-gutters style="width: 100%">
+                      <v-col cols="3">
+                        <v-btn
+                          :color="node.view.color"
+                          :dark="projectView.config.coloredToolbar"
+                          :text="!projectView.config.coloredToolbar"
+                          @click="() => node.state.select()"
+                          block
+                          depressed
+                          height="40"
+                          tile
+                          v-text="node.view.label"
+                        />
+                      </v-col>
+                      <v-col cols="9">
+                        <NodeModelSelect :node="node" />
+                      </v-col>
+                    </v-row>
+
+                    <v-row no-gutters v-if="!node.model.isRecorder">
+                      <v-col>
+                        <NodePosition
+                          :node="node"
+                          v-if="node.spatial.hasPositions"
+                        />
+                        <ParameterEdit
+                          :color="node.view.color"
+                          :options="state.sizeOptions"
+                          :value.sync="node.size"
+                          @update:value="() => node.nodeChanges()"
+                          v-else
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+
+                  <v-card-text class="pa-0">
+                    <NodeParamEdit :node="node" />
+                  </v-card-text>
+                </v-card>
+              </v-sheet>
+            </v-card>
+          </span>
+
+          <span
+            :key="'connection-' + connection.idx"
+            v-for="connection of state.network.connections"
+          >
+            <v-card
+              class="ma-2px"
+              outlined
+              tile
+              v-if="showConnection(connection)"
+            >
+              <v-sheet :color="connection.source.view.color">
+                <v-card class="ml-1" flat tile>
+                  <v-card-title class="pa-0 ma-0">
+                    <v-row
+                      @contextmenu="e => showConnectionMenu(e, connection)"
+                      no-gutters
+                    >
+                      <v-col class="py-0" cols="3" style="text-align: center">
+                        <v-btn
+                          :color="connection.source.view.color"
+                          :dark="projectView.config.coloredToolbar"
+                          :text="!projectView.config.coloredToolbar"
+                          @click="() => connection.source.state.select()"
+                          block
+                          depressed
+                          height="40"
+                          tile
+                          v-text="connection.source.view.label"
+                        />
+                      </v-col>
+                      <v-col cols="6">
+                        <v-btn
+                          @click="() => connection.state.select()"
+                          block
+                          depressed
+                          height="40"
+                          text
+                          tile
+                        >
+                          <v-chip
+                            label
+                            outlined
+                            small
+                            v-if="connection.network.project.app.config.devMode"
+                            v-text="connection.shortHash"
+                          />
+                          <v-icon v-text="'mdi-arrow-right-bold-outline'" />
+                        </v-btn>
+                      </v-col>
+                      <v-col class="py-0" cols="3" style="text-align: center">
+                        <v-btn
+                          :color="connection.target.view.color"
+                          :dark="projectView.config.coloredToolbar"
+                          :text="!projectView.config.coloredToolbar"
+                          @click="() => connection.target.state.select()"
+                          block
+                          depressed
+                          height="40"
+                          tile
+                          v-text="connection.target.view.label"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+
+                  <v-card-text class="pa-0">
+                    <ConnectionParamEdit
+                      :connection="connection"
+                      v-if="
+                        connection.source.size > 1 || connection.target.size > 1
+                      "
+                    />
+                    <SynapseParamEdit :synapse="connection.synapse" />
+                  </v-card-text>
+                </v-card>
+              </v-sheet>
+            </v-card>
+          </span>
         </span>
       </v-col>
     </v-row>
@@ -319,28 +225,35 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive, watch } from '@vue/composition-api';
+import { reactive, watch } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import { Connection } from '@/core/connection/connection';
+import { CopyModel } from '@/core/model/copyModel';
 import { Network } from '@/core/network/network';
 import { Node } from '@/core/node/node';
 import ConnectionMenu from '@/components/connection/ConnectionMenu.vue';
 import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import core from '@/core';
+import CopyModelSelect from '@/components/model/CopyModelSelect.vue';
+import ModelParamEdit from '@/components/model/ModelParamEdit.vue';
 import NodeMenu from '@/components/node/NodeMenu.vue';
 import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
 import NodePosition from '@/components/node/NodePosition.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 import SynapseParamEdit from '@/components/synapse/SynapseParamEdit.vue';
+import NetworkParamToolbar from '@/components/network/NetworkParamToolbar.vue';
 
 export default Vue.extend({
   name: 'NetworkParamsEdit',
   components: {
     ConnectionMenu,
     ConnectionParamEdit,
+    CopyModelSelect,
     draggable,
+    ModelParamEdit,
+    NetworkParamToolbar,
     NodeMenu,
     NodeModelSelect,
     NodeParamEdit,
@@ -354,8 +267,6 @@ export default Vue.extend({
   setup(props) {
     const projectView = core.app.project.view;
     const state = reactive({
-      displayNodes: [],
-      displayConnections: [],
       connectionMenu: {
         connection: undefined as Connection | undefined,
         position: {
@@ -364,20 +275,7 @@ export default Vue.extend({
         },
         show: false,
       },
-      elementType: 0,
-      elementTypes: ['all', 'neuron', 'stimulator', 'recorder'],
-      iconsOn: {
-        all: 'mdi-checkbox-marked-outline',
-        neuron: 'mdi-alpha-n-box',
-        recorder: 'mdi-alpha-r-box',
-        stimulator: 'mdi-alpha-s-box',
-      },
-      iconsOff: {
-        all: 'mdi-checkbox-blank-outline',
-        neuron: 'mdi-alpha-n-box-outline',
-        recorder: 'mdi-alpha-r-box-outline',
-        stimulator: 'mdi-alpha-s-box-outline',
-      },
+      model: '',
       network: projectView.state.project.network as Network,
       nodeMenu: {
         node: undefined as Node | undefined,
@@ -407,35 +305,55 @@ export default Vue.extend({
     });
 
     /**
+     * Copy model.
+     */
+    const copyModel = () => {
+      state.network.copyModel(state.model);
+      state.network.networkChanges();
+    };
+
+    /**
+     * Show model in list.
+     */
+    const showModel = (model: CopyModel) => {
+      const elementTypeIdx = state.network.state.elementTypeIdx;
+      const elementTypes = state.network.state.elementTypes;
+
+      if (elementTypeIdx === 0 || elementTypeIdx === 4) {
+        // all view
+        return true;
+      } else if (elementTypeIdx < elementTypes.length) {
+        // element type view
+        return elementTypes[elementTypeIdx] === model.elementType;
+      } else {
+        // custom view
+        return state.network.state.displayIdx.models.includes(model.idx);
+      }
+    };
+
+    /**
      * Show node in list.
      */
     const showNode = (node: Node) => {
+      const elementTypeIdx = state.network.state.elementTypeIdx;
+      const elementTypes = state.network.state.elementTypes;
+
       if (
         state.network.state.selectedConnection ||
         state.network.state.selectedNode
       ) {
         // selected view
         return state.network.state.isNodeSelected(node);
-      } else if (state.elementType === 0) {
+      } else if (elementTypeIdx === 0) {
         // all view
         return true;
-      } else if (state.elementType >= 4) {
-        // custom view
-        return state.displayNodes.includes(node.idx);
-      } else {
+      } else if (elementTypeIdx < elementTypes.length) {
         // element type view
-        return state.elementTypes[state.elementType] === node.model.elementType;
+        return elementTypes[elementTypeIdx] === node.model.elementType;
+      } else {
+        // custom view
+        return state.network.state.displayIdx.nodes.includes(node.idx);
       }
-    };
-
-    /**
-     * Update display for nodes.
-     */
-    const nodeDisplayChange = () => {
-      state.network.nodes.forEach(
-        (node: Node) =>
-          (node.view.visible = state.displayNodes.includes(node.idx))
-      );
     };
 
     /**
@@ -454,60 +372,30 @@ export default Vue.extend({
     };
 
     /**
-     * Toggle element type view of nodes.
-     */
-    const toggleNodes = (elementType: string = '') => {
-      const nodes = ['', 'all'].includes(elementType)
-        ? state.network.nodes
-        : (state.network.nodes.filter(
-            (node: Node) => node.model.elementType === elementType
-          ) as Node[]);
-      const visible: boolean =
-        nodes.filter((node: Node) => node.view.visible).length !== nodes.length;
-      nodes.forEach((node: Node) => (node.view.visible = visible));
-      update();
-    };
-
-    /**
-     * Checkbox icon for node element type.
-     */
-    const iconNodes = (elementType: string = '') => {
-      const nodes = ['', 'all'].includes(elementType)
-        ? state.network.nodes
-        : (state.network.nodes.filter(
-            (node: Node) => node.model.elementType === elementType
-          ) as Node[]);
-      const visibleNodes = nodes.filter(
-        (node: Node) => node.view.visible
-      ) as Node[];
-      if (visibleNodes.length === nodes.length && nodes.length !== 0)
-        return state.iconsOn[elementType];
-      if (visibleNodes.length > 0 || nodes.length === 0)
-        return 'mdi-minus-box-outline';
-      return state.iconsOff[elementType];
-    };
-
-    /**
      * Show connection in list.
      */
     const showConnection = (connection: Connection) => {
+      const elementTypeIdx = state.network.state.elementTypeIdx;
+      const elementTypes = state.network.state.elementTypes;
+
       if (
         state.network.state.selectedConnection ||
         state.network.state.selectedNode
       ) {
         // selected view
         return state.network.state.isConnectionSelected(connection);
-      } else if (state.elementType === 0) {
+      } else if (elementTypeIdx === 0) {
         // all views
         return true;
-      } else if (state.elementType >= 4) {
-        // custom view
-        return state.displayConnections.includes(connection.idx);
-      } else {
+      } else if (elementTypeIdx < elementTypes.length) {
         // elementType view
         return (
-          state.elementTypes[state.elementType] ===
-          connection.source.model.elementType
+          elementTypes[elementTypeIdx] === connection.source.model.elementType
+        );
+      } else {
+        // custom view
+        return state.network.state.displayIdx.connections.includes(
+          connection.idx
         );
       }
     };
@@ -530,127 +418,38 @@ export default Vue.extend({
       });
     };
 
-    /**
-     * Update display for connections.
-     */
-    const connectionDisplayChange = () => {
-      state.network.connections.forEach(
-        (connection: Connection) =>
-          (connection.view.visible = state.displayConnections.includes(
-            connection.idx
-          ))
-      );
-    };
-
-    /**
-     * Toggle element type view of connections.
-     */
-    const toggleConnections = (elementType: string = '') => {
-      const connections = ['', 'all'].includes(elementType)
-        ? state.network.connections
-        : (state.network.connections.filter(
-            (connection: Connection) =>
-              connection.source.model.elementType === elementType
-          ) as Connection[]);
-      const visible: boolean =
-        connections.filter((connection: Connection) => connection.view.visible)
-          .length !== connections.length;
-      connections.forEach(
-        (connection: Connection) => (connection.view.visible = visible)
-      );
-      update();
-    };
-
-    /**
-     * Checkbox icon for element type connection.
-     */
-    const iconConnections = (elementType: string = '') => {
-      const connections = ['', 'all'].includes(elementType)
-        ? state.network.connections
-        : (state.network.connections.filter(
-            (connection: Connection) =>
-              connection.source.model.elementType === elementType
-          ) as Connection[]);
-      const visibleConnections = connections.filter(
-        (connection: Connection) => connection.view.visible
-      ) as Connection[];
-      if (
-        visibleConnections.length === connections.length &&
-        connections.length !== 0
-      )
-        return state.iconsOn[elementType];
-      if (visibleConnections.length > 0 || connections.length === 0)
-        return 'mdi-minus-box-outline';
-      return state.iconsOff[elementType];
-    };
-
-    const update = () => {
-      state.displayNodes = state.network.nodes
-        .filter((node: Node) => node.view.visible)
-        .map((node: Node) => node.idx);
-      state.displayConnections = state.network.connections
-        .filter((connection: Connection) => connection.view.visible)
-        .map((connection: Connection) => connection.idx);
-    };
-
-    onMounted(() => {
-      update();
-    });
-
     watch(
       () => [props.projectId, projectView.state.project.network.state.hash],
       () => {
         state.network = projectView.state.project.network as Network;
-        update();
       }
     );
 
     return {
-      connectionDisplayChange,
-      iconConnections,
-      iconNodes,
-      nodeDisplayChange,
+      copyModel,
       projectView,
       showConnection,
       showConnectionMenu,
+      showModel,
       showNode,
       showNodeMenu,
       state,
-      toggleConnections,
-      toggleNodes,
     };
   },
 });
 </script>
 
 <style>
-.elementType .v-toolbar__content {
+.networkParamEdit .toolbar .v-toolbar__content {
   padding: 0;
 }
-.v-btn-toggle--group > .v-btn.v-btn {
+.networkParamEdit .v-btn-toggle--group > .v-btn.v-btn {
   margin: 0;
 }
-.v-overflow-btn .v-input__slot {
+.networkParamEdit .v-overflow-btn .v-input__slot {
   border-width: 0;
 }
-.v-overflow-btn.v-input--dense .v-select__slot {
+.networkParamEdit .v-overflow-btn.v-input--dense .v-select__slot {
   height: 40px;
-}
-.v-image__image--preload {
-  filter: none;
-  --webkit-filter: none;
-}
-.v-banner__wrapper {
-  padding: 0 !important;
-}
-.no-highlight .v-list-item--active::before {
-  opacity: 0 !important;
-}
-
-.v-list-item .handle {
-  opacity: 0;
-}
-.v-list-item:hover .handle {
-  opacity: 1;
 }
 </style>

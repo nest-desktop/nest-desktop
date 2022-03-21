@@ -42,7 +42,7 @@ export class NodeGraph {
       node.state.focus();
       // Draw line between selected node and focused node.
       if (node.state.isAnySelected && this.state.enableConnection) {
-        this._networkGraph.workspace.dragline.drawLineNodes(
+        this._networkGraph.workspace.dragline.drawLine(
           this.network.state.selectedNode,
           n
         );
@@ -103,6 +103,7 @@ export class NodeGraph {
     if (!this.state.enableConnection) {
       node.view.position.x = event.x;
       node.view.position.y = event.y;
+      this._networkGraph.network.cleanRecorders();
       this._networkGraph.render();
     }
   }

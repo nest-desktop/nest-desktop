@@ -178,5 +178,10 @@
     "id": "V_th",
     "label": "spike threshold",
     "unit": "mV"
+  },
+  {
+    "abbr": "w",
+    "id": "weights",
+    "label": "weights"
   }
 ]

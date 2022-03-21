@@ -26,7 +26,7 @@ nest.SetKernelStatus({
 {{ #simulation.code.createNodes }}
 # Create nodes
 {{ #network.nodes }}
-{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #someParams }}, params={
+{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ valueFixed }},
 {{ /filteredParams }}
@@ -38,22 +38,22 @@ nest.SetKernelStatus({
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}
 {{ /model.isRecorder }}
-}{{ /someParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
+}{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
 
 {{ #simulation.code.connectNodes }}
 # Connect nodes
 {{ #network.connections }}
-nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #someParams }}, conn_spec={
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasSomeVisibleParams }}, conn_spec={
 {{ #filteredParams }}
   "{{ id }}": {{ value }},
 {{ /filteredParams }}
-}{{ /someParams }}{{ #synapse.someParams }}, syn_spec={
+}{{ /hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}, syn_spec={
 {{ #synapse.filteredParams }}
   "{{ id }}": {{ valueFixed }},
 {{ /synapse.filteredParams }}
-}{{ /synapse.someParams }})
+}{{ /synapse.hasSomeVisibleParams }})
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
 

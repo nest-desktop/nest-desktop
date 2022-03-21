@@ -89,6 +89,30 @@
             v-show="modelStore.fileExistGithub(model)"
             v-text="'mdi-github'"
           />
+          <v-icon
+            right
+            small
+            v-show="isNeuron(model)"
+            v-text="filterTags[2].icon"
+          />
+          <v-icon
+            right
+            small
+            v-show="isStimulator(model)"
+            v-text="filterTags[3].icon"
+          />
+          <v-icon
+            right
+            small
+            v-show="isRecorder(model)"
+            v-text="filterTags[4].icon"
+          />
+          <v-icon
+            right
+            small
+            v-show="isSynapse(model)"
+            v-text="filterTags[5].icon"
+          />
         </v-list-item-icon>
       </v-list-item>
     </v-list>
@@ -117,21 +141,27 @@ export default Vue.extend({
         show: false,
       },
       models: [],
+      filterTagIdx: {
+        neuron: 2,
+        stimulator: 3,
+        recorder: 4,
+        synapse: 5,
+      },
     });
 
     const filterTags = [
       { icon: 'mdi-database-outline', text: 'Installed' },
       { icon: 'mdi-github', text: 'GitHub' },
-      { icon: 'mdi-alpha-n-circle-outline', text: 'Neuron' },
+      { icon: 'mdi-alpha-n-box-outline', text: 'Neuron' },
       {
-        icon: 'mdi-alpha-s-circle-outline',
+        icon: 'mdi-alpha-s-box-outline',
         text: 'Stimulator',
       },
       {
-        icon: 'mdi-alpha-r-circle-outline',
+        icon: 'mdi-alpha-r-box-outline',
         text: 'Recorder',
       },
-      { icon: 'mdi-alpha-s-circle', text: 'Synapse' },
+      { icon: 'mdi-alpha-s-circle-outline', text: 'Synapse' },
     ];
 
     /**
@@ -178,8 +208,8 @@ export default Vue.extend({
       model.startsWith('hh') ||
       model.startsWith('iaf') ||
       model.includes('izhikevich') ||
-      model.includes('_cond_') ||
-      model.includes('_psc_') ||
+      model.includes('_cond') ||
+      model.includes('_psc') ||
       model.includes('_neuron');
 
     /**
@@ -200,7 +230,7 @@ export default Vue.extend({
      * Check if model is a synapse.
      */
     const isSynapse = (model: string) =>
-      model.endsWith('gap_junction') || model.endsWith('_synapse');
+      model.endsWith('gap_junction') || model.includes('_synapse');
 
     /**
      * Update models.
@@ -261,9 +291,13 @@ export default Vue.extend({
     });
 
     return {
-      modelStore,
       addFilterTag,
       filterTags,
+      isNeuron,
+      isStimulator,
+      isRecorder,
+      isSynapse,
+      modelStore,
       removeFilterTag,
       showModelMenu,
       state,

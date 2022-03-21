@@ -1,12 +1,14 @@
 import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
 import { consoleLog } from '../common/logger';
+import { CopyModel } from '../model/copyModel';
 import { NetworkState } from './networkState';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
 export class Network extends Config {
   private _connections: Connection[] = []; // for nest.Connect
+  private _models: CopyModel[] = []; // for nest.CopyModel
   private _nodes: Node[] = []; // for nest.Create
   private _project: Project; // project
   private _state: NetworkState; // network state
@@ -46,14 +48,36 @@ export class Network extends Config {
   }
 
   /**
+   * Check if network has any node models.
+   */
+  get hasNodeModels(): boolean {
+    return this._models.some((model: CopyModel) => !model.model.isSynapse);
+  }
+
+  /**
+   * Check if network has any synapse models.
+   */
+  get hasSynapseModels(): boolean {
+    return this._models.some((model: CopyModel) => model.model.isSynapse);
+  }
+
+  /**
    * Check if the network has some spatial nodes.
    */
   get someSpatialNodes(): boolean {
     return this._nodes.some((node: Node) => node.spatial.hasPositions);
   }
 
+  get models(): CopyModel[] {
+    return this._models;
+  }
+
   get neurons(): Node[] {
     return this._nodes.filter((node: Node) => node.model.isNeuron);
+  }
+
+  get nodeModels(): CopyModel[] {
+    return this._models.filter((model: CopyModel) => !model.model.isSynapse);
   }
 
   get nodes(): Node[] {
@@ -102,6 +126,10 @@ export class Network extends Config {
     return this._nodes.filter((node: Node) => node.model.isStimulator);
   }
 
+  get synapseModels(): CopyModel[] {
+    return this._models.filter((model: CopyModel) => model.model.isSynapse);
+  }
+
   get visibleNodes(): Node[] {
     return this._nodes.filter((node: Node) => node.view.visible);
   }
@@ -112,8 +140,34 @@ export class Network extends Config {
     );
   }
 
+  get weightRecorders(): Node[] {
+    return this._nodes.filter((node: Node) => node.model.isWeightRecorder);
+  }
+
   consoleLog(text: string): void {
     consoleLog(this, text, 5);
+  }
+
+  /**
+   * Add model component to the network.
+   */
+  addModel(data: any): CopyModel {
+    this.consoleLog('Add model');
+    const model = new CopyModel(this, data);
+    this._models.push(model);
+    return model;
+  }
+
+  /**
+   * Add model component to the network.
+   */
+  copyModel(modelId: string): CopyModel {
+    this.consoleLog('Copy model');
+    const model: any = {
+      existing: modelId,
+      new: modelId + '_copied' + (this._models.length + 1),
+    };
+    return this.addModel(model);
   }
 
   /**
@@ -178,6 +232,26 @@ export class Network extends Config {
   addNode(data: any): void {
     this.consoleLog('Add node');
     this._nodes.push(new Node(this, data));
+  }
+
+  /**
+   * Add node model component to the network.
+   */
+  addNodeModel(data: any): void {
+    this.consoleLog('Add node model');
+    if (!data.existing.includes('synapse')) {
+      this._models.push(new CopyModel(this, data));
+    }
+  }
+
+  /**
+   * Add synapse model component to the network.
+   */
+  addSynapseModel(data: any): void {
+    this.consoleLog('Add synapse model');
+    if (data.existing.includes('synapse')) {
+      this._models.push(new CopyModel(this, data));
+    }
   }
 
   /**
@@ -293,6 +367,26 @@ export class Network extends Config {
   }
 
   /**
+   * Delete connection component from the network.
+   *
+   * @remarks
+   * It emits network changes.
+   */
+  deleteModel(model: CopyModel): void {
+    this.consoleLog('Delete model');
+
+    this._state.reset();
+    // Remove model from the model list.
+    this._models.splice(model.idx, 1);
+
+    // Trigger network change.
+    this.networkChanges();
+
+    // Initialize activity graph.
+    this._project.initActivityGraph();
+  }
+
+  /**
    * Clean nodes and connection components.
    */
   clean(): void {
@@ -305,6 +399,13 @@ export class Network extends Config {
     });
 
     this._state.updateHash();
+  }
+
+  /**
+   * Clean recorder components.
+   */
+  cleanRecorders(): void {
+    this.weightRecorders.forEach((node: Node) => node.clean());
   }
 
   /**
@@ -327,14 +428,26 @@ export class Network extends Config {
    * @param network - network object
    */
   update(network: any): void {
-    // Add nodes to network.
+    this._models = [];
     this._nodes = [];
+    this._connections = [];
+
+    // Add node models to network.
+    if (network.models) {
+      network.models.forEach((data: any) => this.addNodeModel(data));
+    }
+
+    // Add nodes to network.
     if (network.nodes) {
       network.nodes.forEach((data: any) => this.addNode(data));
     }
 
+    // Add synapse models to network.
+    if (network.models) {
+      network.models.forEach((data: any) => this.addSynapseModel(data));
+    }
+
     // Add connections to network.
-    this._connections = [];
     if (network.connections) {
       network.connections.forEach((data: any) => this.addConnection(data));
     }
@@ -370,8 +483,36 @@ export class Network extends Config {
     this._state.reset();
     this._connections = [];
     this._nodes = [];
+    this._models = [];
+
     this.clean();
     this.networkChanges();
+  }
+
+  /**
+   * Filter models by element type.
+   */
+  filterModels(elementType: string = null): CopyModel[] {
+    if (elementType == null) {
+      return this._models;
+    }
+    return this._models.filter(
+      (model: CopyModel) => model.model.elementType === elementType
+    );
+  }
+
+  /**
+   * Get model from the model list.
+   */
+  getModel(modelId: string): CopyModel {
+    return (
+      this.models.find((model: CopyModel) => model.id === modelId) ||
+      new CopyModel(this, {
+        existing: modelId,
+        new: modelId + '_copied' + (this._models.length + 1),
+        params: [],
+      })
+    );
   }
 
   get isEmpty(): boolean {
@@ -401,7 +542,10 @@ export class Network extends Config {
     const connections: any[] = this._connections.map((connection: Connection) =>
       connection.toJSON()
     );
+    const models: any[] = this._models.map((model: CopyModel) =>
+      model.toJSON()
+    );
     const nodes: any[] = this._nodes.map((node: Node) => node.toJSON());
-    return { connections, nodes };
+    return { connections, models, nodes };
   }
 }
