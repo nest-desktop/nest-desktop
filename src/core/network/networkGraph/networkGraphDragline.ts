@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 
+import { Connection } from '../../connection/connection';
 import { Network } from './../network';
 import { NetworkGraphWorkspace } from './networkGraphWorkspace';
 import { Node } from '../../node/node';
@@ -56,7 +57,7 @@ export class NetworkGraphDragline {
   /**
    * Draw drag line between nodes.
    */
-  drawLineNodes(source: Node, target: Node): void {
+  drawLine(source: Node, target: Node | Connection): void {
     this._workspace.selector
       .select('.dragline')
       .style('opacity', 1)

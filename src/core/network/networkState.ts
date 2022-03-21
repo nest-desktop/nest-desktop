@@ -5,16 +5,87 @@ import { Network } from './network';
 import { Node } from '../node/node';
 
 export class NetworkState {
+  private _displayIdx = {
+    connections: [],
+    models: [],
+    nodes: [],
+  };
+
+  private _elementTypes: string[] = [
+    'all',
+    'neuron',
+    'stimulator',
+    'recorder',
+    'model',
+  ];
+  private _elementTypeIdx: number = 0;
   private _focusedConnection: number | null = null;
   private _focusedNode: number | null = null;
+  private _hash: string; // network hash
+
+  private _icons: any = {
+    all: {
+      on: 'mdi-checkbox-marked-outline',
+      off: 'mdi-checkbox-blank-outline',
+      tab: 'mdi-all-inclusive',
+    },
+    model: { tab: '$copyModel' },
+    neuron: {
+      on: 'mdi-alpha-n-box',
+      off: 'mdi-alpha-n-box-outline',
+      tab: 'mdi-shape-outline',
+    },
+    recorder: {
+      on: 'mdi-alpha-r-box',
+      off: 'mdi-alpha-r-box-outline',
+      tab: '$recorder',
+    },
+    stimulator: {
+      on: 'mdi-alpha-s-box',
+      off: 'mdi-alpha-s-box-outline',
+      tab: '$stimulator',
+    },
+    synapse: { on: 'mdi-alpha-s-circle', off: 'mdi-alpha-s-circle-outline' },
+  };
+
   private _network: Network; // parent
   private _selectedConnection: number | null = null;
-  private _selectedElementType: string | null = null;
   private _selectedNode: number | null = null;
-  private _hash: string; // network hash
 
   constructor(network: Network) {
     this._network = network;
+  }
+
+  get displayIdx(): any {
+    return this._displayIdx;
+  }
+
+  get elementType(): string {
+    return this._elementTypes[this._elementTypeIdx];
+  }
+
+  get elementTypes(): string[] {
+    return this._elementTypes;
+  }
+
+  get elementTypeIdx(): number {
+    return this._elementTypeIdx;
+  }
+
+  set elementTypeIdx(value: number) {
+    this._elementTypeIdx = value;
+  }
+
+  get isNodeSourceSelected(): boolean {
+    return this._selectedNode != null
+      ? !this.selectedNode.model.isWeightRecorder
+      : false;
+  }
+
+  get isWeightRecorderSelected(): boolean {
+    return this._selectedNode != null
+      ? this.selectedNode.model.isWeightRecorder
+      : false;
   }
 
   get focusedConnection(): Connection | null {
@@ -39,25 +110,18 @@ export class NetworkState {
     return this._hash;
   }
 
+  get icons(): any {
+    return this._icons;
+  }
+
   get selectedConnection(): Connection | null {
     return this._network.connections[this._selectedConnection];
   }
 
   set selectedConnection(connection: Connection | null) {
-    this._selectedElementType = null;
     this._selectedNode = null;
     this._selectedConnection =
       this._selectedConnection === connection.idx ? null : connection.idx;
-  }
-
-  get selectedElementType(): string | null {
-    return this._selectedElementType;
-  }
-
-  set selectedElementType(value: string | null) {
-    this.resetSelection();
-    this._selectedElementType = value;
-    // this._selectedElementType = this._selectedElementType === elementType ? null : elementType;
   }
 
   get selectedNode(): Node | null {
@@ -65,7 +129,6 @@ export class NetworkState {
   }
 
   set selectedNode(node: Node | null) {
-    this._selectedElementType = null;
     this._selectedConnection = null;
     this._selectedNode = this._selectedNode === node.idx ? null : node.idx;
   }
@@ -92,16 +155,6 @@ export class NetworkState {
   resetSelection(): void {
     this._selectedNode = null;
     this._selectedConnection = null;
-  }
-
-  /**
-   * Check if an element type is selected.
-   */
-  isElementTypeSelected(elementType: string): boolean {
-    if (this._selectedElementType == null) {
-      return true;
-    }
-    return this._selectedElementType === elementType;
   }
 
   //

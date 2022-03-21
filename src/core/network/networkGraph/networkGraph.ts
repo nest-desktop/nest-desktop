@@ -71,6 +71,7 @@ export class NetworkGraph {
       );
       d3.select(event.sourceEvent.srcElement).style('cursor', 'pointer');
     }
+    this._network.clean();
     this._workspace.updateTransform();
   }
 

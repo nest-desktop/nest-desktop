@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 
 import { Connection } from '../connection';
 import { NetworkGraph } from '../../network/networkGraph/networkGraph';
+import { Parameter } from '../../parameter/parameter';
 import drawPath from './connectionGraphPath';
 
 export class ConnectionGraph {
@@ -46,8 +47,18 @@ export class ConnectionGraph {
       .style('pointer-events', 'none');
 
     elem
-      .on('mouseover', () => {
+      .on('mouseover', (_, c: Connection) => {
         connection.state.focus();
+        // Draw line between selected node and focused connection.
+        if (
+          c.network.state.isWeightRecorderSelected &&
+          this.state.enableConnection
+        ) {
+          this._networkGraph.workspace.dragline.drawLine(
+            c.network.state.selectedNode,
+            c
+          );
+        }
         this._networkGraph.update();
       })
       .on('mouseout', () => {
@@ -55,9 +66,46 @@ export class ConnectionGraph {
         this._networkGraph.update();
       })
       .on('click', () => {
+        const networkState = this._networkGraph.network.state;
+        const workspaceState = this._networkGraph.workspace.state;
         connection.state.focus();
-        this._networkGraph.network.state.selectedConnection = connection;
+
+        if (
+          networkState.isWeightRecorderSelected &&
+          workspaceState.enableConnection
+        ) {
+          // Set cursor position of the focused connection.
+          this._networkGraph.workspace.updateCursorPosition(
+            connection.view.position
+          );
+
+          this._networkGraph.workspace.animationOff();
+
+          const modelCopied = this._networkGraph.network.copyModel(
+            connection.synapse.modelId
+          );
+          const WeightRecorderParam = modelCopied.params.find(
+            (param: Parameter) => param.id === 'weight_recorder'
+          );
+          if (WeightRecorderParam) {
+            WeightRecorderParam.value = networkState.selectedNode.view.label;
+          }
+          connection.synapse.modelId = modelCopied.new;
+          connection.synapse.hideAllParams();
+          connection.synapse.synapseChanges();
+
+          networkState.selectedNode.view.color = connection.source.view.color;
+          networkState.selectedNode.updateRecordsColor();
+
+          this._networkGraph.workspace.reset();
+          networkState.resetSelection();
+          this._networkGraph.workspace.update();
+        } else {
+          connection.state.select();
+        }
+
         this._networkGraph.update();
+        this._networkGraph.workspace.updateTransform();
       });
   }
 
@@ -109,6 +157,7 @@ export class ConnectionGraph {
       const targetNode = connection.target;
       targetNode.view.position.x += event['dx'];
       targetNode.view.position.y += event['dy'];
+      this._networkGraph.network.cleanRecorders();
       this._networkGraph.render();
     }
   }
@@ -118,9 +167,11 @@ export class ConnectionGraph {
    */
   render(): void {
     const selector = d3.select('g#connections').selectAll('g.connection');
-
     selector.style('pointer-events', () =>
-      this._networkGraph.workspace.state.enableConnection ? 'none' : ''
+      this._networkGraph.network.state.isWeightRecorderSelected ||
+      !this._networkGraph.workspace.state.enableConnection
+        ? ''
+        : 'none'
     );
 
     const duration: number = this._networkGraph.workspace.state.dragging

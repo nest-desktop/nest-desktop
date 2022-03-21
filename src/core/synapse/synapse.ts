@@ -1,6 +1,8 @@
 import { Connection } from '../connection/connection';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
+import { Parameter } from '../parameter/parameter';
 
 export class Synapse {
   private readonly _name = 'Synapse';
@@ -8,24 +10,17 @@ export class Synapse {
   private _modelId: string;
   private _params: ModelParameter[] = [];
 
-  constructor(connection: any, synapse: any) {
+  constructor(connection: any, synapse: any = {}) {
     this._connection = connection;
 
-    if (synapse != null && synapse.params.length > 0) {
-      this._modelId = synapse.model || 'static_synapse';
-      this.initParameters(synapse);
-    } else {
-      this._modelId = 'static_synapse';
-      this.initParameters();
-    }
+    this._modelId = synapse && synapse.model ? synapse.model : 'static_synapse';
+    synapse && synapse.hasOwnProperty('params') && synapse.params.length > 0
+      ? this.initParameters(synapse)
+      : this.initParameters();
   }
 
   get connection(): Connection {
     return this._connection;
-  }
-
-  get model(): Model {
-    return this._connection.network.project.app.model.getModel(this._modelId);
   }
 
   /**
@@ -35,21 +30,47 @@ export class Synapse {
     return this._params.filter((param: ModelParameter) => param.visible);
   }
 
+  get hasSynSpec(): boolean {
+    return !this.isStatic || this.hasSomeVisibleParams;
+  }
+
+  get isStatic(): boolean {
+    return this.model.id === 'static_synapse';
+  }
+
+  get model(): CopyModel | Model {
+    if (
+      this._connection.network.synapseModels.some(
+        (model: CopyModel) => model.id === this.modelId
+      )
+    ) {
+      return this._connection.network.getModel(this._modelId);
+    } else {
+      return this._connection.network.project.app.model.getModel(this._modelId);
+    }
+  }
+
   /**
    * Set model.
    *
    * @remarks
    * Save model id, see modelId.
    *
-   * @param value - synapse model
+   * @param model - synapse model
    */
-  set model(model: Model) {
+  set model(model: CopyModel | Model) {
     this.modelId = model.id;
   }
 
-  get models(): Model[] {
+  get models(): (CopyModel | Model)[] {
     const elementType: string = this.model.elementType;
-    return this._connection.network.project.app.model.filterModels(elementType);
+    const models: Model[] =
+      this._connection.network.project.app.model.filterModels(elementType);
+    const modelsCopied: CopyModel[] =
+      this._connection.network.filterModels(elementType);
+    const filteredModels = [...models, ...modelsCopied];
+    filteredModels.sort();
+    return filteredModels;
   }
 
   get modelId(): string {
@@ -79,7 +100,7 @@ export class Synapse {
     return this._params;
   }
 
-  get someParams(): boolean {
+  get hasSomeVisibleParams(): boolean {
     return this._params.some((param: ModelParameter) => param.visible);
   }
 
@@ -132,24 +153,33 @@ export class Synapse {
         const synParam = synapse.params.find(
           (param: any) => param.id === modelParam.id
         );
-        this.addParameter(synParam || modelParam);
+        this.addModelParameter(synParam || modelParam);
       });
     } else if (this.model) {
-      this.model.params.forEach((param: ModelParameter) =>
-        this.addParameter(param)
-      );
-    } else if (synapse.hasOwnProperty('params')) {
-      synapse.params.forEach((param: ModelParameter) =>
-        this.addParameter(param)
-      );
+      this.model.params.forEach((param: ModelParameter) => {
+        const modelParam = param.toJSON();
+        modelParam.visible = false;
+        this.addModelParameter(modelParam);
+      });
+    } else if (synapse && synapse.hasOwnProperty('params')) {
+      synapse.params.forEach((param: any) => this.addParameter(param));
     }
   }
 
   /**
-   * Add synapse parameter.
+   * Add model parameter component.
+   * @param param - parameter object
+   */
+  addModelParameter(param: any): void {
+    this._params.push(new ModelParameter(this, param));
+  }
+
+  /**
+   * Add parameter component.
+   * @param param - parameter object
    */
   addParameter(param: any): void {
-    this._params.push(new ModelParameter(this, param));
+    this._params.push(new Parameter(this, param));
   }
 
   /**

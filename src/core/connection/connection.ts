@@ -4,6 +4,7 @@ import { Config } from '../common/config';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
@@ -79,7 +80,7 @@ export class Connection extends Config {
     return this._mask;
   }
 
-  get model(): Model {
+  get model(): CopyModel | Model {
     return this._synapse.model;
   }
 
@@ -116,7 +117,7 @@ export class Connection extends Config {
     return this._hash ? this._hash.slice(0, 6) : '';
   }
 
-  get someParams(): boolean {
+  get hasSomeVisibleParams(): boolean {
     return this._params.some((param: Parameter) => param.visible);
   }
 

@@ -55,7 +55,15 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   createGraphDataPoints(nodeIds: number[], record: NodeRecord): any[] {
     const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
-    record.activity.events.senders.forEach((sender: number, idx: number) => {
+
+    let senders: number[];
+    if (record.activity.events.hasOwnProperty('ports')) {
+      senders = record.activity.events.ports;
+    } else {
+      senders = record.activity.events.senders;
+    }
+
+    senders.forEach((sender: number, idx: number) => {
       const senderIdx: number = nodeIds.indexOf(sender);
       if (senderIdx === -1) {
         return;

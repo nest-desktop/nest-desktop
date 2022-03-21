@@ -10,6 +10,12 @@ export class ConnectionView {
     this._connection = connection;
   }
 
+  get position(): any {
+    const p0 = this._connection.source.view.position;
+    const p1 = this._connection.target.view.position;
+    return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
+  }
+
   get visible(): boolean {
     return this._visible;
   }
