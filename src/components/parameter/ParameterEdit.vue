@@ -551,7 +551,7 @@ export default Vue.extend({
       if (state.param) {
         return state.param.title;
       } else {
-        const text = state.options.label;
+        const text = state.options.label as string;
         return state.options.unit ? text + ` (${state.options.unit})` : text;
       }
     };
