@@ -16,7 +16,7 @@
         >
           <span v-text="state.model.existing" />
           <v-spacer />
-          <v-icon class="modelEdit" right v-text="'mdi-pencil'" />
+          <v-icon class="modelEdit mr-3" right small v-text="'mdi-pencil'" />
         </v-btn>
       </template>
 

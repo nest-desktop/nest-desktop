@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 
 import { Connection } from '../connection';
+import { CopyModel } from '../../model/copyModel';
 import { NetworkGraph } from '../../network/networkGraph/networkGraph';
 import { Parameter } from '../../parameter/parameter';
 import drawPath from './connectionGraphPath';
@@ -54,9 +55,10 @@ export class ConnectionGraph {
           c.network.state.isWeightRecorderSelected &&
           this.state.enableConnection
         ) {
-          this._networkGraph.workspace.dragline.drawLine(
-            c.network.state.selectedNode,
-            c
+          this._networkGraph.workspace.dragline.drawPath(
+            c.network.state.selectedNode.view.position,
+            c.view.targetPosition,
+            { isTargetMouse: true }
           );
         }
         this._networkGraph.update();
@@ -66,46 +68,60 @@ export class ConnectionGraph {
         this._networkGraph.update();
       })
       .on('click', () => {
-        const networkState = this._networkGraph.network.state;
-        const workspaceState = this._networkGraph.workspace.state;
+        const network = this._networkGraph.network;
+        const workspace = this._networkGraph.workspace;
         connection.state.focus();
 
         if (
-          networkState.isWeightRecorderSelected &&
-          workspaceState.enableConnection
+          network.state.isWeightRecorderSelected &&
+          workspace.state.enableConnection
         ) {
           // Set cursor position of the focused connection.
-          this._networkGraph.workspace.updateCursorPosition(
-            connection.view.position
+          workspace.updateCursorPosition(connection.view.position);
+
+          // Disable animation in network workspace.
+          workspace.animationOff();
+
+          // Get copied synapse model.
+          let modelCopied = network.models.find(
+            (model: CopyModel) => model.id === connection.synapse.modelId
           );
 
-          this._networkGraph.workspace.animationOff();
-
-          const modelCopied = this._networkGraph.network.copyModel(
-            connection.synapse.modelId
-          );
-          const WeightRecorderParam = modelCopied.params.find(
-            (param: Parameter) => param.id === 'weight_recorder'
-          );
-          if (WeightRecorderParam) {
-            WeightRecorderParam.value = networkState.selectedNode.view.label;
+          // Copy synapse model if not existed in the model list.
+          if (modelCopied === undefined) {
+            modelCopied = network.copyModel(connection.synapse.modelId);
           }
+
+          if (modelCopied.hasParameters && modelCopied.params.length > 0) {
+            // Assign weight recorder to copied synapse model.
+            const WeightRecorderParam = modelCopied.params.find(
+              (param: Parameter) => param.id === 'weight_recorder'
+            );
+            if (WeightRecorderParam) {
+              WeightRecorderParam.value = network.state.selectedNode.view.label;
+            }
+          }
+
+          // Set model id of the copied synapse.
           connection.synapse.modelId = modelCopied.new;
+
+          // Hide all synapse parameters.
           connection.synapse.hideAllParams();
           connection.synapse.synapseChanges();
 
-          networkState.selectedNode.view.color = connection.source.view.color;
-          networkState.selectedNode.updateRecordsColor();
+          // Update record colors of the weight recorder.
+          network.state.selectedNode.updateRecordsColor();
 
-          this._networkGraph.workspace.reset();
-          networkState.resetSelection();
-          this._networkGraph.workspace.update();
+          // Reset selection and focus.
+          workspace.reset();
+          network.state.resetSelection();
+          workspace.update();
         } else {
           connection.state.select();
         }
 
         this._networkGraph.update();
-        this._networkGraph.workspace.updateTransform();
+        workspace.updateTransform();
       });
   }
 

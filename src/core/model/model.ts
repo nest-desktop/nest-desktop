@@ -58,6 +58,14 @@ export class Model extends Config {
     return this._elementType;
   }
 
+  get existing(): string {
+    return this._id;
+  }
+
+  get hasWeightRecorderParam(): boolean {
+    return false;
+  }
+
   get id(): string {
     return this._id;
   }
@@ -150,6 +158,10 @@ export class Model extends Config {
     return this.id;
   }
 
+  get weightRecorder(): boolean {
+    return false;
+  }
+
   /**
    * Get parameter defaults of a model from NEST Simulator.
    */
@@ -173,8 +185,15 @@ export class Model extends Config {
   /**
    * Get parameter of the model.
    */
-  getParameter(id: string): ModelParameter {
-    return this._params.find((param: ModelParameter) => param.id === id);
+  getParameter(paramId: string): ModelParameter {
+    return this._params.find((param: ModelParameter) => param.id === paramId);
+  }
+
+  /**
+   * Check if the model has parameter.
+   */
+  hasParameter(paramId: string): boolean {
+    return this._params.some((param: ModelParameter) => param.id === paramId);
   }
 
   /**
@@ -221,11 +240,9 @@ export class Model extends Config {
     this._id = model.id;
     this.updateRecordables(model);
     model.params.forEach((param: any) => {
-      if (this.getParameter(param.id)) {
-        this.updateParameter(param);
-      } else {
-        this.addParameter(param);
-      }
+      this.hasParameter(param.id)
+        ? this.updateParameter(param)
+        : this.addParameter(param);
     });
   }
 

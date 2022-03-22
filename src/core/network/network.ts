@@ -47,6 +47,13 @@ export class Network extends Config {
     this.networkChanges();
   }
 
+  get connectionsRecordedByWeightRecorder(): Connection[] {
+    return this._connections.filter((connection: Connection) => {
+      const synapseModel = connection.synapse.model;
+      return synapseModel.hasWeightRecorderParam;
+    });
+  }
+
   /**
    * Check if network has any node models.
    */
@@ -70,6 +77,12 @@ export class Network extends Config {
 
   get models(): CopyModel[] {
     return this._models;
+  }
+
+  get modelsRecordedByWeightRecorder(): CopyModel[] {
+    return this._models.filter(
+      (model: CopyModel) => model.hasWeightRecorderParam
+    );
   }
 
   get neurons(): Node[] {
@@ -392,6 +405,7 @@ export class Network extends Config {
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
     this._connections.forEach((connection: Connection) => connection.clean());
+    this._models.forEach((model: CopyModel) => model.clean());
 
     this._connections.forEach((connection: Connection) => {
       connection.sourceSlice.update();
@@ -468,9 +482,15 @@ export class Network extends Config {
 
   /**
    * Update records color of recorders.
+   *
+   * @remarks
+   * It updates colors in activity chart graph.
    */
   updateRecordsColor(): void {
-    this.recorders.forEach((recorder: Node) => recorder.updateRecordsColor());
+    this.recorders.forEach((recorder: Node) => {
+      recorder.updateRecordsColor();
+    });
+    this._project.activityGraph.activityChartGraph.updateRecordsColor();
   }
 
   /**

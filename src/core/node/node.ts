@@ -34,7 +34,7 @@ export class Node extends Config {
   private _state: NodeState;
   private _view: NodeView;
 
-  constructor(network: any, node: any) {
+  constructor(network: any, node: any = {}) {
     super('Node');
     this._idx = network.nodes.length;
     this._modelId = node.model;
@@ -60,12 +60,36 @@ export class Node extends Config {
     this._activity = value;
   }
 
+  get assignedModels(): CopyModel[] {
+    if (this._modelId !== 'weight_recorder') {
+      return [];
+    }
+
+    return this._network.models.filter((model: CopyModel) =>
+      model.params.some((param: Parameter) => param.value === this.view.label)
+    );
+  }
+
   get filteredParams(): ModelParameter[] {
     return this._params.filter((param: ModelParameter) => param.visible);
   }
 
   get hash(): string {
     return this._hash;
+  }
+
+  /**
+   * Check if it is an excitatory neuron.
+   */
+  get isExcitatoryNeuron(): boolean {
+    return this.model.isNeuron && this._view.weight === 'excitatory';
+  }
+
+  /**
+   * Check if it is an inhibitory neuron.
+   */
+  get isInhibitoryNeuron(): boolean {
+    return this.model.isNeuron && this._view.weight === 'inhibitory';
   }
 
   get idx(): number {
@@ -250,20 +274,6 @@ export class Node extends Config {
   }
 
   /**
-   * Check if it is an excitatory neuron.
-   */
-  get isExcitatoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.weight === 'excitatory';
-  }
-
-  /**
-   * Check if it is an inhibitory neuron.
-   */
-  get isInhibitoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.weight === 'inhibitory';
-  }
-
-  /**
    * Observer for node changes.
    *
    * @remarks
@@ -342,10 +352,7 @@ export class Node extends Config {
    * @param paramId - parameter id
    */
   hasParameter(paramId: string): boolean {
-    return (
-      this._params.find((param: ModelParameter) => param.id === paramId) !==
-      undefined
-    );
+    return this._params.some((param: ModelParameter) => param.id === paramId);
   }
 
   /**
@@ -353,11 +360,8 @@ export class Node extends Config {
    * @param paramId - parameter id
    * @return parameter component
    */
-  getParameter(paramId: string): any {
-    if (this.hasParameter(paramId)) {
-      return this._params.find((param: ModelParameter) => param.id === paramId)
-        .value;
-    }
+  getParameter(paramId: string): ModelParameter {
+    return this._params.find((param: ModelParameter) => param.id === paramId);
   }
 
   /**
@@ -515,10 +519,10 @@ export class Node extends Config {
    * Update record colors.
    */
   updateRecordsColor(): void {
-    this._recordables.forEach(
-      (record: NodeRecord) => (record.color = this._view.color)
-    );
-    this._network.project.activityGraph.activityChartGraph.updateRecordsColor();
+    const color = this._view.color;
+    this._recordables.forEach((record: NodeRecord) => {
+      record.color = color;
+    });
   }
 
   /**

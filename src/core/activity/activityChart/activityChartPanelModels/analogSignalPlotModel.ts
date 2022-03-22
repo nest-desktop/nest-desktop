@@ -81,7 +81,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   updateSpikeThresholdLine(record: NodeRecord): void {
     const thresholds: number[] = record.node.nodes
       .filter((node: Node) => node.modelId.startsWith('iaf'))
-      .map((target: Node) => target.getParameter('V_th') || -55);
+      .map((target: Node) => target.getParameter('V_th').value || -55);
 
     if (thresholds.length > 0) {
       const line = {

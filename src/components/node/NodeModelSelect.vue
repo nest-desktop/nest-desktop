@@ -16,7 +16,6 @@
         >
           <span v-text="state.node.model.label" />
           <v-spacer />
-          <v-icon class="modelEdit" right v-text="'mdi-pencil'" />
           <v-chip
             label
             outlined
@@ -24,6 +23,7 @@
             v-if="state.node.network.project.app.config.devMode"
             v-text="state.node.shortHash"
           />
+          <v-icon class="modelEdit" right small v-text="'mdi-pencil'" />
         </v-btn>
       </template>
 

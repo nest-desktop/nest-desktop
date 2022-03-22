@@ -266,6 +266,9 @@ export class ActivityChartGraph {
 
   /**
    * Update records color.
+   *
+   * @remarks.
+   * It renders new updates in activity plots.
    */
   updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) =>
