@@ -17,7 +17,7 @@ For more information bwCloud, follow the link:  https://www.bw-cloud.org/.
 
 Deployers can build an OpenStack image via Packer and Ansible.
 
-Requirements
+Requirements:
   - `Packer <https://www.packer.io/downloads.html>`__
   - `Ansible (2.3.2.0 or newer) <https://releases.ansible.com/ansible/>`__
 
