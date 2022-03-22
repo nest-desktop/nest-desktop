@@ -274,6 +274,7 @@ export class ActivityChartGraph {
     this._panels.forEach((panel: ActivityChartPanel) =>
       panel.model.updateRecordsColor()
     );
+    this.react();
   }
 
   /**
