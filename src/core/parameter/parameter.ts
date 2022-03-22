@@ -87,6 +87,10 @@ export class Parameter extends Config {
     return this._items;
   }
 
+  set items(values: string[]) {
+    this._items = values;
+  }
+
   get factors(): string[] {
     return this._factors;
   }

@@ -41,9 +41,11 @@
             />
           </v-row>
         </span>
+
         <span>
           <span
             :key="'model-' + model.idx"
+            class="modelEdit"
             v-for="model of state.network.models"
           >
             <v-card class="ma-2px" outlined tile v-if="showModel(model)">
@@ -51,23 +53,17 @@
                 <v-card class="ml-1" flat tile>
                   <v-card-title class="pa-0">
                     <v-row no-gutters>
-                      <v-col cols="10">
-                        <CopyModelSelect :model="model" style="width: 100%" />
-                      </v-col>
-                      <v-col cols="2">
-                        <v-spacer />
-                        <v-btn
+                      <CopyModelSelect :model="model" style="width: 100%" />
+                      <span class="icons">
+                        <v-icon
                           :dark="projectView.config.coloredToolbar"
-                          :text="!projectView.config.coloredToolbar"
                           @click="model.remove()"
                           class="mx-1"
-                          depressed
-                          fab
+                          right
                           small
-                        >
-                          <v-icon small v-text="'mdi-delete-outline'" />
-                        </v-btn>
-                      </v-col>
+                          v-text="'mdi-trash-can-outline'"
+                        />
+                      </span>
                     </v-row>
                   </v-card-title>
 
@@ -319,7 +315,17 @@ export default Vue.extend({
       const elementTypeIdx = state.network.state.elementTypeIdx;
       const elementTypes = state.network.state.elementTypes;
 
-      if (elementTypeIdx === 0 || elementTypeIdx === 4) {
+      if (state.network.state.selectedNode) {
+        // selected node
+        return model.nodes.some((node: Node) =>
+          state.network.state.isNodeSelected(node)
+        );
+      } else if (state.network.state.selectedConnection) {
+        // selected connection
+        return model.connections.some((connection: Connection) =>
+          state.network.state.isConnectionSelected(connection)
+        );
+      } else if (elementTypeIdx === 0 || elementTypeIdx === 4) {
         // all view
         return true;
       } else if (elementTypeIdx < elementTypes.length) {
@@ -338,7 +344,9 @@ export default Vue.extend({
       const elementTypeIdx = state.network.state.elementTypeIdx;
       const elementTypes = state.network.state.elementTypes;
 
-      if (
+      if (elementTypeIdx === 4) {
+        return false;
+      } else if (
         state.network.state.selectedConnection ||
         state.network.state.selectedNode
       ) {
@@ -378,7 +386,9 @@ export default Vue.extend({
       const elementTypeIdx = state.network.state.elementTypeIdx;
       const elementTypes = state.network.state.elementTypes;
 
-      if (
+      if (elementTypeIdx === 4) {
+        return false;
+      } else if (
         state.network.state.selectedConnection ||
         state.network.state.selectedNode
       ) {
@@ -451,5 +461,15 @@ export default Vue.extend({
 }
 .networkParamEdit .v-overflow-btn.v-input--dense .v-select__slot {
   height: 40px;
+}
+
+.modelEdit .icons {
+  display: none;
+  line-height: 36px;
+  position: absolute;
+  right: 4px;
+}
+.modelEdit:hover .icons {
+  display: block;
 }
 </style>

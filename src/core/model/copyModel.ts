@@ -37,6 +37,12 @@ export class CopyModel {
     return this.model.config;
   }
 
+  get connections(): Connection[] {
+    return this._network.connections.filter(
+      (connection: Connection) => connection.synapse.modelId === this._new
+    );
+  }
+
   get elementType(): string {
     return this.model.elementType;
   }
@@ -53,6 +59,16 @@ export class CopyModel {
     }
     this.initParameters();
     this.modelChanges();
+  }
+
+  get hasSomeVisibleParams(): boolean {
+    return this._params.some((param: ModelParameter) => param.visible);
+  }
+
+  get hasWeightRecorderParam(): boolean {
+    return this._params.some(
+      (param: Parameter) => param.id === 'weight_recorder'
+    );
   }
 
   get id(): string {
@@ -149,9 +165,7 @@ export class CopyModel {
   }
 
   set new(value: string) {
-    const nodes = this._network.nodes.filter(
-      (node: Node) => node.modelId === this._new
-    );
+    const nodes = this.nodes;
     const connections = this._network.connections.filter(
       (connection: Connection) => connection.synapse.modelId === this._new
     );
@@ -159,6 +173,12 @@ export class CopyModel {
     nodes.forEach((node: Node) => (node.modelId = this._new));
     connections.forEach(
       (connection: Connection) => (connection.synapse.modelId = this._new)
+    );
+  }
+
+  get nodes(): Node[] {
+    return this._network.nodes.filter(
+      (node: Node) => node.modelId === this._new
     );
   }
 
@@ -178,8 +198,20 @@ export class CopyModel {
     return this._state;
   }
 
-  get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: ModelParameter) => param.visible);
+  get weightRecorder(): Node {
+    if (!this.hasWeightRecorderParam) {
+      return new Node(this._network);
+    }
+
+    // Get weight recorder parameter.
+    const weightRecorderParam = this._params.find(
+      (param: Parameter) => param.id === 'weight_recorder'
+    );
+
+    // Return weight recorder node.
+    return this._network.nodes.find(
+      (node: Node) => node.view.label === weightRecorderParam.value
+    );
   }
 
   /**
@@ -219,6 +251,17 @@ export class CopyModel {
 
   clean(): void {
     this._idx = this._network.models.indexOf(this);
+
+    const weightRecorderParam: any = this._params.find(
+      (param: Parameter) => param.id === 'weight_recorder'
+    );
+
+    // Update weight recorder list to select.
+    if (weightRecorderParam) {
+      weightRecorderParam.items = this._network.weightRecorders.map(
+        (recorder: Node) => recorder.view.label
+      );
+    }
   }
 
   /**

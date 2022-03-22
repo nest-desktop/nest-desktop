@@ -1,26 +1,29 @@
 import * as d3 from 'd3';
 
 import { ConnectionGraph } from '../../connection/connectionGraph/connectionGraph';
+import { ModelAssignGraph } from '../../model/modelGraph/modelAssignGraph';
 import { Network } from '../network';
 import { NetworkGraphWorkspace } from './networkGraphWorkspace';
-import { NodeGraph } from '../../node/nodeGraph/nodeGraph';
 import { Node } from '../../node/node';
+import { NodeGraph } from '../../node/nodeGraph/nodeGraph';
 
 export class NetworkGraph {
-  private _connectionGraph: ConnectionGraph;
-  private _network: Network;
-  private _workspace: NetworkGraphWorkspace;
-  private _nodeGraph: NodeGraph;
-  private _selector: d3.Selection<any, any, any, any>;
   private _config: any = {
     nodeRadius: 20,
     strokeWidth: 3,
   };
+  private _connectionGraph: ConnectionGraph;
+  private _modelAssignGraph: ModelAssignGraph;
+  private _network: Network;
+  private _nodeGraph: NodeGraph;
+  private _selector: d3.Selection<any, any, any, any>;
+  private _workspace: NetworkGraphWorkspace;
 
   constructor(selector: string) {
     this._selector = d3.select(selector);
 
     this._workspace = new NetworkGraphWorkspace(this);
+    this._modelAssignGraph = new ModelAssignGraph(this);
     this._connectionGraph = new ConnectionGraph(this);
     this._nodeGraph = new NodeGraph(this);
   }
@@ -82,6 +85,7 @@ export class NetworkGraph {
     this._network.consoleLog(
       'Render network graph of ' + this._network.project.shortId
     );
+    this._modelAssignGraph.render();
     this._connectionGraph.render();
     this._nodeGraph.render();
   }
@@ -97,6 +101,7 @@ export class NetworkGraph {
       'Update network graph of ' + this._network.project.shortId
     );
     this._workspace.update();
+    this._modelAssignGraph.update();
     this._connectionGraph.update();
     this._nodeGraph.update();
   }
