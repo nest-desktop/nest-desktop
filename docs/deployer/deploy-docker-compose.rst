@@ -28,6 +28,7 @@ Requirements:
 
 Preparation
 -----------
+
 Prepare your local environment by installing Docker (if you have not installed it yet).
 
 .. code-block:: bash
@@ -40,6 +41,7 @@ Prepare your local environment by installing Docker (if you have not installed i
 
 Get the configuration file 
 --------------------------
+
 The configuration file  `docker-compose.yml` contains all setup steps executed by Docker.
 Fetch this file from GitHub:
 
