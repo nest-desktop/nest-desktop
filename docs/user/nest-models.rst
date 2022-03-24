@@ -32,6 +32,7 @@ Selected filter tags can be removed (click on close icon :guilabel:`x`).
 
 Setting filter tags in the model list
 -------------------------------------
+
 It is possible to select filter tags to display only models with certain properties.
 The following filter tags are available:
 
