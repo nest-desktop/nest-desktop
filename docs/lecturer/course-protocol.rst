@@ -9,7 +9,8 @@ In addition, students will need to design meaningful illustrations and parameter
 
 |
 
-**How to achieve this?**
+How to achieve this?
+--------------------
 
 Simulations with NEST Desktop can be exported to *PDF*, *PNG* or *SVG* files.
 For PDF export, students can increase the zoom factor of the browser before printing the page.

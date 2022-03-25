@@ -7,7 +7,8 @@ In all assignments we use :code:`iaf_psc_alpha` as our neuron model.
 It is studied how a neuron responds to different types of input.
 
 
-**Topics**
+Topics
+------
 
 .. toctree::
 

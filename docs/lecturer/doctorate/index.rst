@@ -5,7 +5,8 @@ This section illustrates how NEST Desktop might be used for research in computat
 A typical example covers the activity dynamics of neuronal networks with multiple interacting populations.
 
 
-**Topics**
+Topics
+------
 
 .. toctree::
   :maxdepth: 1

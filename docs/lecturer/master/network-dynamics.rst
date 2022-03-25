@@ -171,7 +171,8 @@ compensated by an increased strength of inhibitory synapses.
    Describe how the balance is affected, and what the consequences of this for the recurrent network dynamics are.
 
 
-**Video tutorial**
+Video tutorial
+--------------
 
 .. raw:: html
 

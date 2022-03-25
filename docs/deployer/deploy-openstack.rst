@@ -22,7 +22,8 @@ Requirements:
   - `Ansible (2.3.2.0 or newer) <https://releases.ansible.com/ansible/>`__
 
 
-**Deploy NEST Desktop on bwCloud**
+Deploy NEST Desktop on bwCloud
+------------------------------
 
 .. image:: ../_static/img/logo/bwcloud-logo.svg
   :width: 240px
@@ -57,7 +58,8 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 
 |
 
-**Acknowledgements**
+Acknowledgements
+----------------
 
 Thanks for the help to integrate NEST Desktop on *bwCloud*:
 

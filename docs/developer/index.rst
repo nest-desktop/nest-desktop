@@ -5,7 +5,8 @@ This is the developer guide, providing more detail on how to develop NEST Deskto
 
 |
 
-**Get the source code**
+Get the source code
+-------------------
 
 The source code of NEST Desktop is hosted on `GitHub <https://github.com/nest-desktop/nest-desktop>`__.
 Clone NEST Desktop from the GitHub repository:

@@ -90,7 +90,8 @@ Select the level of the course that you plan to conduct with NEST Desktop:
 
 ||||
 
-**Acknowledgments**
+Acknowledgments
+---------------
 
 Thanks for the help:
 
