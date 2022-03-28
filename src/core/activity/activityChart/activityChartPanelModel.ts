@@ -29,6 +29,7 @@ export abstract class ActivityChartPanelModel {
         end: 0,
         start: 0,
       },
+      units: '',
       visible: true,
       visibleThreshold: 'legendonly',
     });
@@ -304,7 +305,7 @@ export abstract class ActivityChartPanelModel {
     this._state.time.start = 0;
     this._state.time.end = Math.max(
       this._state.time.end,
-      this._panel.graph.currenttime + 1
+      this._panel.graph.currenttime
     );
   }
 

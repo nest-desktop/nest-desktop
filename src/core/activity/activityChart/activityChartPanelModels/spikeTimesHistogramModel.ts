@@ -51,7 +51,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
       visible: this.state.visible,
       x,
       xbins: {
-        end,
+        end: end + 1,
         size,
         start,
       },

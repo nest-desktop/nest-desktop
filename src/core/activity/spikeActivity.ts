@@ -10,6 +10,13 @@ export class SpikeActivity extends Activity {
   }
 
   /**
+   * Get times of all nodes.
+   */
+  get times(): number[][] {
+    return this.nodeIds.map((id: number) => this._times[id]);
+  }
+
+  /**
    * Post-initialize spike activity.
    */
   override postInit(): void {

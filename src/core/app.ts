@@ -36,6 +36,11 @@ export class App extends Config {
     this._state.version = environment.VERSION;
 
     // Backends
+    this._backends.elephantAnalysis = new Backend('ElephantAnalysis', {
+      path: '/analysis',
+      port: 5001,
+      versionPath: '/',
+    });
     this._backends.insiteAccess = new Backend('InsiteAccess', {
       path: '/insite',
       port: 8080,
@@ -217,5 +222,6 @@ export class App extends Config {
   checkBackends(): void {
     this._backends.nestSimulator.check();
     this._backends.insiteAccess.check();
+    this._backends.elephantAnalysis.check();
   }
 }

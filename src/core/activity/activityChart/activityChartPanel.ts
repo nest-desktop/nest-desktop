@@ -6,10 +6,12 @@ import { ActivityChartGraph } from './activityChartGraph';
 import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
 import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
 import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
+import { InterSpikeIntervalHistogramElephantModel } from './activityChartPanelModels/interSpikeIntervalHistogramElephantModel';
 import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
 import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
 import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
 import { SenderSpikeCountPlotModel } from './activityChartPanelModels/senderSpikeCountPlotModel';
+import { SpikeTimesHistogramElephantModel } from './activityChartPanelModels/SpikeTimesHistogramElephantModel';
 import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
 import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
 
@@ -59,10 +61,24 @@ export class ActivityChartPanel {
     },
     {
       activityType: 'spike',
+      component: SpikeTimesHistogramElephantModel,
+      id: 'spikeTimesHistogramElephant',
+      icon: 'mdi-chart-bar',
+      label: 'Spike times (Elephant)',
+    },
+    {
+      activityType: 'spike',
       component: InterSpikeIntervalHistogramModel,
       id: 'interSpikeIntervalHistogram',
       icon: 'mdi-chart-bar',
       label: 'Inter-spike interval',
+    },
+    {
+      activityType: 'spike',
+      component: InterSpikeIntervalHistogramElephantModel,
+      id: 'interSpikeIntervalHistogramElephant',
+      icon: 'mdi-chart-bar',
+      label: 'Inter-spike interval (Elephant)',
     },
     {
       activityType: 'spike',
@@ -202,7 +218,9 @@ export class ActivityChartPanel {
         (model: any) => model.id === modelId
       );
       if (model) {
-        this._model = new model.component(this, modelSpec);
+        modelSpec.icon = model.icon;
+        modelSpec.label = model.label;
+        this._model = new model.component(this, modelSpec ? modelSpec : model);
         this._state.initialized = true;
       }
     }
