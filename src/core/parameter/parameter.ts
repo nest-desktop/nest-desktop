@@ -332,6 +332,8 @@ export class Parameter extends Config {
       } else if (typeof this._value === 'boolean') {
         // Boolean value for Python.
         value = this._value ? 'True' : 'False';
+      } else if (Array.isArray(this._value)) {
+        value = JSON.stringify(this._value.map((value: number) => value));
       } else {
         value = JSON.stringify(this._value);
       }

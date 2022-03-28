@@ -72,8 +72,16 @@ export class Connection extends Config {
     return this._hash;
   }
 
+  get hasSomeVisibleParams(): boolean {
+    return this._params.some((param: Parameter) => param.visible);
+  }
+
   get idx(): number {
     return this._idx;
+  }
+
+  get isRuleOneToOne(): boolean {
+    return this._rule === 'one_to_one';
   }
 
   get mask(): ConnectionMask {
@@ -115,10 +123,6 @@ export class Connection extends Config {
    */
   get shortHash(): string {
     return this._hash ? this._hash.slice(0, 6) : '';
-  }
-
-  get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: Parameter) => param.visible);
   }
 
   get source(): Node {
