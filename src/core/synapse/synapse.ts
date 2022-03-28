@@ -30,6 +30,10 @@ export class Synapse {
     return this._params.filter((param: ModelParameter) => param.visible);
   }
 
+  get hasSomeVisibleParams(): boolean {
+    return this._params.some((param: ModelParameter) => param.visible);
+  }
+
   get hasSynSpec(): boolean {
     return !this.isStatic || this.hasSomeVisibleParams;
   }
@@ -98,10 +102,6 @@ export class Synapse {
 
   get params(): ModelParameter[] {
     return this._params;
-  }
-
-  get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: ModelParameter) => param.visible);
   }
 
   get weight(): number {

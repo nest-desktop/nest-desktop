@@ -30,14 +30,12 @@ nest.set({
 {{ #filteredParams }}
   "{{ id }}": {{ valueAsString }},
 {{ /filteredParams }}
-{{ #model.isRecorder }}
 {{ #model.isMultimeter }}
   "record_from": {{ recordsFixed }},
 {{ /model.isMultimeter }}
 {{ #simulation.code.runSimulationInsite }}
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}
-{{ /model.isRecorder }}
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
@@ -45,7 +43,8 @@ nest.set({
 {{ #simulation.code.connectNodes }}
 # Connect nodes
 {{ #network.connections }}
-nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasSomeVisibleParams }}, conn_spec={
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #isRuleOneToOne }}, "{{ rule }}"{{ /isRuleOneToOne }}{{ #hasSomeVisibleParams }}, conn_spec={
+  "rule": "{{ rule }}",
 {{ #filteredParams }}
   "{{ id }}": {{ valueAsString }},
 {{ /filteredParams }}
