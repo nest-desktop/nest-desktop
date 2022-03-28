@@ -7,8 +7,6 @@ import { NodeRecord } from '../../../node/nodeRecord';
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bar';
-    this.id = 'analogSignalHistogram';
     this.panel.xaxis = 2;
     this.params = [
       {
@@ -27,20 +25,24 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * @remarks
    * It requires activity data.
    */
-  override updateData(): void {
-    this.data = [];
+  override async updateData(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.data = [];
 
-    if (this.state.recordsVisible.length === 0) {
-      return;
-    }
+      if (this.state.recordsVisible.length === 0) {
+        reject(true);
+      }
 
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
-      this.updateHistogramRange(record.values);
+      this.state.recordsVisible.forEach((record: NodeRecord) => {
+        this.updateHistogramRange(record.values);
+      });
+
+      this.state.recordsVisible.forEach((record: NodeRecord) =>
+        this.updateEventData(record)
+      );
+
+      resolve(true);
     });
-
-    this.state.recordsVisible.forEach((record: NodeRecord) =>
-      this.updateEventData(record)
-    );
   }
 
   /**

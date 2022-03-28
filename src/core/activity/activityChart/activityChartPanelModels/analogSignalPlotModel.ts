@@ -6,8 +6,6 @@ import { NodeRecord } from '../../../node/nodeRecord';
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'analogSignalPlot';
     this.panel.xaxis = 1;
   }
 
@@ -17,33 +15,36 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @remarks
    * It requires activity data.
    */
-  override update(): void {
-    this.data = [];
-    if (this.state.recordsVisible.length === 0) {
-      return;
-    }
-
-    this.updateAnalogRecords();
-    this.updateTime();
-
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === 'V_m') {
-        // Update spike threshold for membrane potential.
-        this.updateSpikeThresholdLine(record);
+  override async update(): Promise<any> {
+    return new Promise(resolve => {
+      this.data = [];
+      if (this.state.recordsVisible.length === 0) {
+        return;
       }
 
-      if (record.nodeSize === 1) {
-        // Update line for a single node.
-        this.updateSingleLine(record);
-      } else if (record.nodeSize > 1) {
-        // Update multiple lines for population.
-        this.updateMultipleLines(record);
-        // Update average line for population.
-        this.updateAverageLine(record);
-      }
+      this.updateAnalogRecords();
+      this.updateTime();
+
+      this.state.recordsVisible.forEach((record: NodeRecord) => {
+        if (record.id === 'V_m') {
+          // Update spike threshold for membrane potential.
+          this.updateSpikeThresholdLine(record);
+        }
+
+        if (record.nodeSize === 1) {
+          // Update line for a single node.
+          this.updateSingleLine(record);
+        } else if (record.nodeSize > 1) {
+          // Update multiple lines for population.
+          this.updateMultipleLines(record);
+          // Update average line for population.
+          this.updateAverageLine(record);
+        }
+      });
+
+      this.updateLayoutLabel();
+      resolve(true);
     });
-
-    this.updateLayoutLabel();
   }
 
   /**

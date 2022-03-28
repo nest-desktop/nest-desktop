@@ -15,24 +15,28 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   /**
    * Update data for FI curve.
    */
-  override updateData(activity: SpikeActivity): void {
-    if (activity.nodeIds.length === 0) return;
+  override async updateData(activity: SpikeActivity): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (activity.nodeIds.length === 0) reject(true);
 
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: 'none',
-      legendgroup: 'spikes' + activity.idx,
-      marker: {
-        size: 5,
-        color: activity.recorder.view.color,
-      },
-      mode: 'lines',
-      name: 'Spikes of ' + activity.recorder.view.label,
-      showlegend: true,
-      type: 'scattergl',
-      visible: this.state.visible,
-      x: activity.events.times,
-      y: activity.events.senders,
+      this.data.push({
+        activityIdx: activity.idx,
+        hoverinfo: 'none',
+        legendgroup: 'spikes' + activity.idx,
+        marker: {
+          size: 5,
+          color: activity.recorder.view.color,
+        },
+        mode: 'lines',
+        name: 'Spikes of ' + activity.recorder.view.label,
+        showlegend: true,
+        type: 'scattergl',
+        visible: this.state.visible,
+        x: activity.events.times,
+        y: activity.events.senders,
+      });
+
+      resolve(true);
     });
   }
 

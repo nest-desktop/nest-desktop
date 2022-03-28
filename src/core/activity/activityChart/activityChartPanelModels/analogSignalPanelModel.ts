@@ -6,8 +6,8 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel);
     this.activityType = 'analog';
-    this.id = 'analogSignalPanelModel';
-    this.label = 'analog signals';
+    this.id = model.id || 'analogSignalPanelModel';
+    this.label = model.label || 'analog signals';
 
     this.init(model);
   }

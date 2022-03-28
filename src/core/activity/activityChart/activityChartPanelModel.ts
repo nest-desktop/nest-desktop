@@ -29,6 +29,7 @@ export abstract class ActivityChartPanelModel {
         end: 0,
         start: 0,
       },
+      units: '',
       visible: true,
       visibleThreshold: 'legendonly',
     });
@@ -187,16 +188,21 @@ export abstract class ActivityChartPanelModel {
    * @remarks
    * It requires activity data.
    */
-  update(): void {
-    this.updateTime();
-    this.updateAnalogRecords();
+  async update(): Promise<any> {
+    return new Promise(resolve => {
+      this.updateTime();
+      this.updateAnalogRecords();
 
-    this.data = [];
-    this.activities.forEach((activity: Activity) => {
-      this.updateData(activity);
+      this.data = [];
+      const dataUpdates = this.activities.map((activity: Activity) =>
+        this.updateData(activity)
+      );
+
+      Promise.all(dataUpdates).then(() => {
+        this.updateLayoutLabel();
+        resolve(true);
+      });
     });
-
-    this.updateLayoutLabel();
   }
 
   /**
@@ -265,8 +271,11 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    * It is a replacement for abstract component.
    */
-  updateData(activity: Activity): void {
-    activity;
+  async updateData(activity: Activity): Promise<any> {
+    return new Promise(resolve => {
+      activity;
+      resolve(true);
+    });
   }
 
   /**
@@ -290,7 +299,7 @@ export abstract class ActivityChartPanelModel {
     this._state.time.start = 0;
     this._state.time.end = Math.max(
       this._state.time.end,
-      this._panel.graph.currenttime + 1
+      this._panel.graph.currenttime
     );
   }
 

@@ -7,9 +7,6 @@ import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bar';
-    this.id = 'interSpikeIntervalHistogram';
-    this.label = 'inter-spike interval';
     this.panel.xaxis = 2;
     this.params = [
       {
@@ -27,39 +24,43 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
   /**
    * Update data for ISI histogram.
    */
-  override updateData(activity: SpikeActivity): void {
-    if (activity.nodeIds.length === 0) return;
+  override async updateData(activity: SpikeActivity): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (activity.nodeIds.length === 0) reject(true);
 
-    const isi: number[][] = activity.ISI();
-    const x: number[] = [].concat.apply([], isi);
-    const start: number = 0;
-    const end: number = d3.max(x) + 1;
-    const size: number = this.params[0].value;
+      const isi: number[][] = activity.ISI();
+      const x: number[] = [].concat.apply([], isi);
+      const start: number = 0;
+      const end: number = d3.max(x);
+      const size: number = this.params[0].value;
 
-    this.data.push({
-      activityIdx: activity.idx,
-      histfunc: 'count',
-      hoverinfo: 'x-y',
-      legendgroup: 'spikes' + activity.idx,
-      marker: {
-        color: activity.recorder.view.color,
-        line: {
-          color: activity.project.app.darkMode ? '#121212' : 'white',
-          width: (end - start) / size > 100 ? 0 : 1,
+      this.data.push({
+        activityIdx: activity.idx,
+        histfunc: 'count',
+        hoverinfo: 'y',
+        legendgroup: 'spikes' + activity.idx,
+        marker: {
+          color: activity.recorder.view.color,
+          line: {
+            color: activity.project.app.darkMode ? '#121212' : 'white',
+            width: (end - start) / size > 100 ? 0 : 1,
+          },
         },
-      },
-      name: 'Histogram of ISI in' + activity.recorder.view.label,
-      opacity: 0.6,
-      showlegend: false,
-      source: 'x',
-      type: 'histogram',
-      visible: this.state.visible,
-      x,
-      xbins: {
-        end,
-        size,
-        start,
-      },
+        name: 'Histogram of ISI in' + activity.recorder.view.label,
+        opacity: 0.6,
+        showlegend: false,
+        source: 'x',
+        type: 'histogram',
+        visible: this.state.visible,
+        x,
+        xbins: {
+          end: end + 1,
+          size,
+          start,
+        },
+      });
+
+      resolve(true);
     });
   }
 
@@ -67,8 +68,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
    * Update layout label for ISI histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.type = this.state.xaxisType;
     this.panel.layout.xaxis.title = 'Inter-spike interval [ms]';
-    this.panel.layout.yaxis.title = 'Count';
+    this.panel.layout.yaxis.title = 'Counts';
   }
 }

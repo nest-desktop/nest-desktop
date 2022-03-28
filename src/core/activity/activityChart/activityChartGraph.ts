@@ -213,16 +213,20 @@ export class ActivityChartGraph {
     this.empty();
     this.resetLayout();
 
-    this.updateVisiblePanelsLayout();
-    this.updatePanelModels();
-    this.updateLayoutColor();
-
-    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      this.updateData(panel);
-      this.updateLayoutPanel(panel);
+    const panels = this._panels.map((panel: ActivityChartPanel) => {
+      panel.updatePanelLayout();
+      return panel.model.update();
     });
 
-    this.react();
+    Promise.all(panels).then(() => {
+      this.panelsVisible.forEach((panel: ActivityChartPanel) => {
+        this.updateData(panel);
+        this.updateLayoutPanel(panel);
+      });
+
+      this.updateLayoutColor();
+      this.react();
+    });
   }
 
   /**
