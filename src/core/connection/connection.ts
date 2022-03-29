@@ -72,6 +72,10 @@ export class Connection extends Config {
     return this._hash;
   }
 
+  get hasConnSpec(): boolean {
+    return !this.isRuleAllToAll;
+  }
+
   get hasSomeVisibleParams(): boolean {
     return this._params.some((param: Parameter) => param.visible);
   }
@@ -80,8 +84,8 @@ export class Connection extends Config {
     return this._idx;
   }
 
-  get isRuleOneToOne(): boolean {
-    return this._rule === 'one_to_one';
+  get isRuleAllToAll(): boolean {
+    return this._rule === 'all_to_all';
   }
 
   get mask(): ConnectionMask {
