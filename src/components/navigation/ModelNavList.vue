@@ -72,6 +72,33 @@
             : true
         "
       >
+        <v-list-item-icon class="mx-0">
+          <v-icon
+            left
+            small
+            v-show="isNeuron(model)"
+            v-text="filterTags[2].icon"
+          />
+          <v-icon
+            left
+            small
+            v-show="isStimulator(model)"
+            v-text="filterTags[3].icon"
+          />
+          <v-icon
+            left
+            small
+            v-show="isRecorder(model)"
+            v-text="filterTags[4].icon"
+          />
+          <v-icon
+            left
+            small
+            v-show="isSynapse(model)"
+            v-text="filterTags[5].icon"
+          />
+        </v-list-item-icon>
+
         <v-list-item-content>
           <v-list-item-title v-text="model" />
         </v-list-item-content>
@@ -88,30 +115,6 @@
             small
             v-show="modelStore.fileExistGithub(model)"
             v-text="'mdi-github'"
-          />
-          <v-icon
-            right
-            small
-            v-show="isNeuron(model)"
-            v-text="filterTags[2].icon"
-          />
-          <v-icon
-            right
-            small
-            v-show="isStimulator(model)"
-            v-text="filterTags[3].icon"
-          />
-          <v-icon
-            right
-            small
-            v-show="isRecorder(model)"
-            v-text="filterTags[4].icon"
-          />
-          <v-icon
-            right
-            small
-            v-show="isSynapse(model)"
-            v-text="filterTags[5].icon"
           />
         </v-list-item-icon>
       </v-list-item>
