@@ -63,12 +63,12 @@ nest.CopyModel("{{ existing }}", "{{ new }}", params={
 {{ /network.hasSynapseModels }}
 # Connect nodes
 {{ #network.connections }}
-nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #isRuleOneToOne }}, "{{ rule }}"{{ /isRuleOneToOne }}{{ #hasSomeVisibleParams }}, conn_spec={
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
   "rule": "{{ rule }}",
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
-}{{ /hasSomeVisibleParams }}{{ #synapse.hasSynSpec }}, syn_spec={{ ^synapse.hasSomeVisibleParams }}"{{ synapse.modelId }}"{{ /synapse.hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}{ {{ ^synapse.isStatic }}
+}{{ /hasSomeVisibleParams }}{{ /hasConnSpec }}{{ #synapse.hasSynSpec }}, syn_spec={{ ^synapse.hasSomeVisibleParams }}"{{ synapse.modelId }}"{{ /synapse.hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}{ {{ ^synapse.isStatic }}
   "synapse_model": "{{ synapse.modelId }}",{{ /synapse.isStatic }}
 {{ #synapse.filteredParams }}
   "{{ id }}": {{ code }},
