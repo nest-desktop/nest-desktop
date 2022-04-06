@@ -318,9 +318,8 @@ export class ProjectStore {
       .indexOf(projectId);
 
     if (idx !== -1) {
-      this._state.projects = this._state.projects
-        .slice(0, idx)
-        .concat(this._state.projects.slice(idx + 1));
+      // Remove project from the project list.
+      this._state.projects.splice(idx, 1);
     }
   }
 
