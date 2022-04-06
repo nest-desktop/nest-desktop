@@ -26,7 +26,7 @@
     "axios": "^0.26",
     "codemirror": "^5.65",
     "core-js": "^3.21",
-    "d3": "^7.3",
+    "d3": "^7.4",
     "debug": "^4.3",
     "detect-browser": "^5.3",
     "mathjs": "^10.3",
@@ -83,11 +83,11 @@
     "babel-loader": "^8.2",
     "chai": "^4.3",
     "chai-as-promised": "^7.1",
-    "electron": "^17.2.0",
+    "electron": "^18.0.2",
     "electron-devtools-installer": "^3.2",
     "eslint": "^8.11",
     "eslint-plugin-prettier": "^4.0",
-    "eslint-plugin-vue": "^8.5",
+    "eslint-plugin-vue": "^8.6",
     "prettier": "^2.6",
     "raw-loader": "^4.0.2",
     "sass": "^1.49",
@@ -98,7 +98,7 @@
     "vue-cli-plugin-vuetify": "^2.4",
     "vue-template-compiler": "^2.6",
     "vuetify-loader": "^1.7",
-    "webpack": "^5.70"
+    "webpack": "^5.71"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
