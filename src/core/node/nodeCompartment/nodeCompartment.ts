@@ -1,6 +1,6 @@
-import { consoleLog } from '../common/logger';
-import { ModelCompartmentParameter } from '../model/modelCompartmentParameter';
-import { Node } from './node';
+import { consoleLog } from '../../common/logger';
+import { ModelCompartmentParameter } from '../../model/modelCompartmentParameter';
+import { Node } from '../node';
 import { NodeCompartmentParameter } from './nodeCompartmentParameter';
 
 export class NodeCompartment {
@@ -9,11 +9,14 @@ export class NodeCompartment {
   private _idx: number; // generative
   private _hash: string;
   private _node: Node; // parent
-  private _params: NodeCompartmentParameter[];
+  private _params: NodeCompartmentParameter[] = [];
   private _parentIdx: number;
 
   constructor(node: any, nodeCompartment: any) {
     this._node = node;
+
+    this._parentIdx = nodeCompartment.parentIdx;
+
     this.initParameters(nodeCompartment);
   }
 
@@ -83,10 +86,10 @@ export class NodeCompartment {
 
   /**
    * Initialize parameter components.
-   * @param compartment - node object
+   * @param compartment - node compartment object
    */
   initParameters(compartment: any = null): void {
-    // Update parameters from model or node
+    // Update parameters from model or node compartment
     this._params = [];
     const model = this.node.model;
     if (model) {
@@ -116,14 +119,12 @@ export class NodeCompartment {
   }
 
   /**
-   * Check if node has parameter component.
+   * Check if node compartment has parameter component.
    * @param paramId - parameter id
    */
   hasParameter(paramId: string): boolean {
-    return (
-      this._params.find(
-        (param: NodeCompartmentParameter) => param.id === paramId
-      ) !== undefined
+    return this._params.some(
+      (param: NodeCompartmentParameter) => param.id === paramId
     );
   }
 
@@ -144,7 +145,7 @@ export class NodeCompartment {
    * Reset value in parameter components.
    *
    * @remarks
-   * It emits node changes.
+   * It emits node compartment changes.
    */
   resetParameters(): void {
     this._params.forEach((param: NodeCompartmentParameter) => param.reset());
@@ -197,6 +198,7 @@ export class NodeCompartment {
    */
   toJSON(): any {
     const compartment: any = {
+      parentIdx: this._parentIdx,
       params: this._params.map((param: NodeCompartmentParameter) =>
         param.toJSON()
       ),

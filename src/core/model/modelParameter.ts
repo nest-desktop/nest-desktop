@@ -1,8 +1,11 @@
 import { Model } from './model';
+import { ModelReceptor } from './modelReceptor/modelReceptor';
 import { Parameter } from '../parameter/parameter';
 
+type  modelTypes = Model | ModelReceptor;
+
 export class ModelParameter extends Parameter {
-  constructor(model: Model, param: any) {
+  constructor(model: modelTypes, param: any) {
     super(model, param);
   }
 

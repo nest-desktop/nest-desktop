@@ -4,8 +4,10 @@ import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
 import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
+import { ModelReceptor } from '../model/modelReceptor/modelReceptor';
 import { Node } from '../node/node';
 import { NodeCompartment } from '../node/nodeCompartment/nodeCompartment';
+import { NodeReceptor } from '../node/nodeReceptor/nodeReceptor';
 import { NodeSlice } from '../node/nodeSlice';
 import { Synapse } from '../synapse/synapse';
 
@@ -13,8 +15,10 @@ type parentTypes =
   | Connection
   | CopyModel
   | Model
+  | ModelReceptor
   | Node
   | NodeCompartment
+  | NodeReceptor
   | NodeSlice
   | Synapse;
 

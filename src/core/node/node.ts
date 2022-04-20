@@ -30,7 +30,7 @@ export class Node extends Config {
   private _hash: string;
   private _modelId: string;
   private _network: Network; // parent
-  private _params: NodeParameter[];
+  private _params: NodeParameter[] = [];
   private _positions: number[][] = [];
   private _receptors: NodeReceptor[] = [];
   private _recordables: NodeRecord[] = [];
@@ -53,6 +53,19 @@ export class Node extends Config {
     this._spatial = new NodeSpatial(this, node.spatial);
 
     this.initParameters(node);
+
+    if (node.hasOwnProperty('compartments')) {
+      this._compartments = node.compartments.forEach(
+        (compartment: any) => new NodeCompartment(this, compartment)
+      );
+    }
+
+    if (node.hasOwnProperty('receptors')) {
+      this._receptors = node.receptors.forEach(
+        (receptor: any) => new NodeReceptor(this, receptor)
+      );
+    }
+
     this.initActivity(node.activity);
 
     this.updateHash();
@@ -594,6 +607,18 @@ export class Node extends Config {
     // Add positions if this node is spatial.
     if (this._spatial.hasPositions) {
       node.spatial = this._spatial.toJSON();
+    }
+
+    if (this._compartments.length > 0) {
+      node.compartments = this._compartments.map(
+        (compartment: NodeCompartment) => compartment.toJSON()
+      );
+    }
+
+    if (this._receptors.length > 0) {
+      node.receptors = this._receptors.map((receptor: NodeReceptor) =>
+        receptor.toJSON()
+      );
     }
 
     return node;

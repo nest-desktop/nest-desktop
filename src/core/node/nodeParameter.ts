@@ -1,9 +1,13 @@
 import { ModelParameter } from '../model/modelParameter';
 import { Node } from './node';
+import { NodeCompartment } from './nodeCompartment/nodeCompartment';
+import { NodeReceptor } from './nodeReceptor/nodeReceptor';
 import { Parameter } from '../parameter/parameter';
 
+type nodeTypes = Node | NodeCompartment | NodeReceptor;
+
 export class NodeParameter extends Parameter {
-  constructor(node: Node, param: any) {
+  constructor(node: nodeTypes, param: any) {
     super(node, param);
   }
 

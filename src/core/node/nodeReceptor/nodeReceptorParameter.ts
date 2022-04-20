@@ -1,33 +1,32 @@
+import { ModelReceptorParameter } from '../../model/modelReceptor/modelReceptorParameter';
+import { NodeParameter } from '../nodeParameter';
 import { NodeReceptor } from './nodeReceptor';
-import { Parameter } from '../../parameter/parameter';
 
-export class NodeReceptorParameter extends Parameter {
+export class NodeReceptorParameter extends NodeParameter {
   constructor(nodeReceptor: NodeReceptor, param: any) {
     super(nodeReceptor, param);
   }
+
+  // override get node(): Node {
+  //   return this.nodeReceptor.node as Node;
+  // }
 
   get nodeReceptor(): NodeReceptor {
     return this.parent as NodeReceptor;
   }
 
-
   /**
    * TODO: Correct this options to get options for input
    * Get options from node compartment component.
    */
-  override get options(): NodeReceptorParameter {
-    const param: NodeReceptorParameter = this.nodeReceptor.params.find(
-      (p: NodeReceptorParameter) => p.id === this.id
-    );
+  override get options(): ModelReceptorParameter {
+    const modelReceptor = this.nodeReceptor.model;
+    const param: ModelReceptorParameter = modelReceptor
+      ? modelReceptor.params.find(
+          (p: ModelReceptorParameter) => p.id === this.id
+        )
+      : undefined;
     return param;
-  }
-
-  /**
-   * Reset constant value taken from model component.
-   */
-  override reset(): void {
-    this.type = 'constant';
-    this.value = this.options.value;
   }
 
   /**
@@ -35,35 +34,5 @@ export class NodeReceptorParameter extends Parameter {
    */
   override paramChanges(): void {
     this.nodeReceptor.nodeChanges();
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return model parameter object
-   */
-  override toJSON(): any {
-    const param: any = {
-      id: this.id,
-      value: this.value,
-    };
-
-    param.visible = this.visible;
-
-    // Add value factors if existed.
-    if (this.factors.length > 0) {
-      param.factors = this.factors;
-    }
-
-    // Add parameter type if not constant.
-    if (!this.isConstant) {
-      param.type = this.type;
-    }
-
-    // Add rules for validation if existed.
-    if (this.rules.length > 0) {
-      param.rules = this.rules;
-    }
-
-    return param;
   }
 }

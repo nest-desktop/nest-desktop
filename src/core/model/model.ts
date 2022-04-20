@@ -5,6 +5,7 @@ import { App } from '../app';
 import { Config } from '../common/config';
 import { ModelCompartmentParameter } from './modelCompartmentParameter';
 import { ModelParameter } from './modelParameter';
+import { ModelReceptor } from './modelReceptor/modelReceptor';
 
 export class Model extends Config {
   private readonly _name = 'Model';
@@ -18,6 +19,7 @@ export class Model extends Config {
   private _idx: number; // generative
   private _label: string; // model label for view
   private _params: ModelParameter[] = []; // model parameters
+  private _receptors: ModelReceptor[] = [];
   private _recordables: any[] = []; // recordables for multimeter
   private _state: UnwrapRef<any>;
 
@@ -154,6 +156,10 @@ export class Model extends Config {
     return this._params;
   }
 
+  get receptors(): ModelReceptor[] {
+    return this._receptors;
+  }
+
   get recordables(): any[] {
     return this._recordables;
   }
@@ -222,6 +228,13 @@ export class Model extends Config {
   }
 
   /**
+   * Add compartment parameter to the model specifications.
+   */
+  addCompartmentParameter(param: any): void {
+    this._compartmentParams.push(new ModelCompartmentParameter(this, param));
+  }
+
+  /**
    * Create new parameter.
    */
   newParameter(paramId: string, value: any): void {
@@ -266,6 +279,9 @@ export class Model extends Config {
 
     // Update model compartment parameters.
     this.updateCompartmentParameters(model);
+
+    // Update model receptors.
+    this.updateReceptors(model);
   }
 
   /**
@@ -289,10 +305,10 @@ export class Model extends Config {
   updateCompartmentParameters(model: any): void {
     if (model.hasOwnProperty('compartmentParams')) {
       model.compartmentParams.forEach((param: any) => {
-        if (this.getParameter(param.id)) {
-          this.updateParameter(param);
+        if (this.getCompartmentParameter(param.id)) {
+          this.updateCompartmentParameter(param);
         } else {
-          this.addParameter(param);
+          this.addCompartmentParameter(param);
         }
       });
     }
@@ -306,6 +322,27 @@ export class Model extends Config {
       .map((p: ModelParameter) => p.id)
       .indexOf(param.id);
     this._params[idx] = new ModelParameter(this, param);
+  }
+
+  /**
+   * Update compartment parameter.
+   */
+  updateCompartmentParameter(param: any): void {
+    const idx: number = this._compartmentParams
+      .map((p: ModelCompartmentParameter) => p.id)
+      .indexOf(param.id);
+    this._compartmentParams[idx] = new ModelCompartmentParameter(this, param);
+  }
+
+  /**
+   * Update model receptors.
+   */
+  updateReceptors(model: any): void {
+    if (model.hasOwnProperty('receptors')) {
+      this._receptors = model.receptors.map(
+        (receptor: any) => new ModelReceptor(this, receptor)
+      );
+    }
   }
 
   modelChanges(): void {}
@@ -365,6 +402,21 @@ export class Model extends Config {
         (recordable: any) => recordable.id
       );
     }
+
+    // Add comparment parameters if provided.
+    if (this._compartmentParams.length > 0) {
+      model.compartmentParams = this._compartmentParams.map(
+        (param: ModelParameter) => param.toJSON()
+      );
+    }
+
+    // Add receptors if provided.
+    if (this._receptors.length > 0) {
+      model.receptors = this._receptors.map((receptor: ModelReceptor) =>
+        receptor.toJSON()
+      );
+    }
+
     return model;
   }
 }
