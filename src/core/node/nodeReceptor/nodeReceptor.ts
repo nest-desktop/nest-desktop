@@ -1,33 +1,46 @@
-import { consoleLog } from '../common/logger';
-import { ModelCompartmentParameter } from '../model/modelCompartmentParameter';
-import { Node } from './node';
-import { NodeCompartmentParameter } from './nodeCompartmentParameter';
+import { consoleLog } from '../../common/logger';
+import { ModelReceptor } from '../../model/modelReceptor/modelReceptor';
+import { ModelReceptorParameter } from '../../model/modelReceptor/modelReceptorParameter';
+import { Node } from '../node';
+import { NodeReceptorParameter } from './nodeReceptorParameter';
 
 export class NodeReceptor {
   private readonly _name = 'NodeReceptor';
 
-  private _comp_idx: number; // generative
+  private _compIdx: number; // generative
   private _hash: string;
   private _node: Node; // parent
-  private _params: NodeReceptorParameter[];
+  private _params: NodeReceptorParameter[] = [];
+  private _receptorType: string;
 
-  constructor(node: any, nodeCompartment: any) {
+  constructor(node: any, nodeReceptor: any) {
     this._node = node;
-    this.initParameters(nodeCompartment);
+
+    this._compIdx = nodeReceptor.compIdx;
+    this._receptorType = nodeReceptor.receptorType;
+
+    this.initParameters(nodeReceptor);
+  }
+
+  get compIdx(): number {
+    return this._compIdx;
   }
 
   get filteredParams(): NodeReceptorParameter[] {
-    return this._params.filter(
-      (param: NodeReceptorParameter) => param.visible
-    );
+    return this._params.filter((param: NodeReceptorParameter) => param.visible);
   }
 
   get hash(): string {
     return this._hash;
   }
 
-  get comp_idx(): number {
-    return this._comp_idx;
+  get model(): ModelReceptor | undefined {
+    return this.node.model
+      ? this.node.model.receptors.find(
+          (modelReceptor: ModelReceptor) =>
+            modelReceptor.id === this.receptorType
+        )
+      : undefined;
   }
 
   get name(): string {
@@ -43,13 +56,11 @@ export class NodeReceptor {
   }
 
   set params(values: any[]) {
-    this._params = values.map(
-      value => new NodeReceptorParameter(this, value)
-    );
+    this._params = values.map(value => new NodeReceptorParameter(this, value));
   }
 
-  get parentIdx(): number {
-    return this._parentIdx;
+  get receptorType(): string {
+    return this._receptorType;
   }
 
   /**
@@ -65,12 +76,12 @@ export class NodeReceptor {
   }
 
   /**
-   * Clean node compartment.
+   * Clean node receptor.
    */
   clean(): void {}
 
   /**
-   * Observer for node compartment changes.
+   * Observer for node receptor changes.
    *
    * @remarks
    * It emits node changes.
@@ -82,27 +93,32 @@ export class NodeReceptor {
 
   /**
    * Initialize parameter components.
-   * @param compartment - node object
+   * @param receptor - node receptor object
    */
-  initParameters(compartment: any = null): void {
-    // Update parameters from model or node
+  initParameters(receptor: any = null): void {
+    // Update parameters from model or node receptor
     this._params = [];
     const model = this.node.model;
     if (model) {
-      model.compartmentParams.forEach(
-        (modelParam: ModelReceptorParameter) => {
-          if (compartment && compartment.hasOwnProperty('params')) {
-            const compartmentParam = compartment.params.find(
-              (p: any) => p.id === modelParam.id
-            );
-            this.addParameter(compartmentParam || modelParam.toJSON());
-          } else {
-            this.addParameter(modelParam.toJSON());
-          }
-        }
+      const modelReceptor = model.receptors.find(
+        (modelReceptor: any) => modelReceptor.id === receptor.id
       );
-    } else if (compartment.hasOwnProperty('params')) {
-      compartment.params.forEach((param: any) => this.addParameter(param));
+      if (modelReceptor) {
+        modelReceptor.params.forEach(
+          (modelReceptorParam: ModelReceptorParameter) => {
+            if (receptor && receptor.hasOwnProperty('params')) {
+              const receptorParam = receptor.params.find(
+                (p: any) => p.id === modelReceptorParam.id
+              );
+              this.addParameter(receptorParam || modelReceptorParam.toJSON());
+            } else {
+              this.addParameter(modelReceptorParam.toJSON());
+            }
+          }
+        );
+      }
+    } else if (receptor.hasOwnProperty('params')) {
+      receptor.params.forEach((param: any) => this.addParameter(param));
     }
   }
 
@@ -115,14 +131,12 @@ export class NodeReceptor {
   }
 
   /**
-   * Check if node has parameter component.
+   * Check if node receptor has parameter component.
    * @param paramId - parameter id
    */
   hasParameter(paramId: string): boolean {
-    return (
-      this._params.find(
-        (param: NodeReceptorParameter) => param.id === paramId
-      ) !== undefined
+    return this._params.some(
+      (param: NodeReceptorParameter) => param.id === paramId
     );
   }
 
@@ -169,10 +183,10 @@ export class NodeReceptor {
   }
 
   /**
-   * Delete node compartment.
+   * Delete node receptor.
    *
    * @remarks
-   * It removes compartment from the node.
+   * It removes receptor from the node.
    */
   remove(): void {
     // this._node.deleteCompartement(this);
@@ -195,12 +209,14 @@ export class NodeReceptor {
    * @return node object
    */
   toJSON(): any {
-    const compartment: any = {
+    const receptor: any = {
+      compIdx: this._compIdx,
+      receptorType: this.receptorType,
       params: this._params.map((param: NodeReceptorParameter) =>
         param.toJSON()
       ),
     };
 
-    return compartment;
+    return receptor;
   }
 }
