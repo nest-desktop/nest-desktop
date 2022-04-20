@@ -3,13 +3,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { App } from '../app';
 import { Config } from '../common/config';
-import { ModelParameter } from '../parameter/modelParameter';
+import { ModelCompartmentParameter } from './modelCompartmentParameter';
+import { ModelParameter } from './modelParameter';
 
 export class Model extends Config {
   private readonly _name = 'Model';
 
   private _abbreviation: string;
   private _app: App; // parent
+  private _compartmentParams: ModelCompartmentParameter[] = []; // model parameters
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
   private _id: string; // model id
@@ -32,7 +34,9 @@ export class Model extends Config {
 
     this._label = model.label || '';
     this._abbreviation = model.abbreviation;
+
     this.update(model);
+
     this._state = reactive({
       selected: false,
     });
@@ -44,6 +48,10 @@ export class Model extends Config {
 
   get app(): App {
     return this._app;
+  }
+
+  get compartmentParams(): ModelCompartmentParameter[] {
+    return this._compartmentParams;
   }
 
   get doc(): any {
@@ -198,6 +206,15 @@ export class Model extends Config {
   }
 
   /**
+   * Get parameter of the model.
+   */
+  getCompartmentParameter(id: string): ModelParameter {
+    return this._compartmentParams.find(
+      (param: ModelParameter) => param.id === id
+    );
+  }
+
+  /**
    * Add parameter to the model specifications.
    */
   addParameter(param: any): void {
@@ -238,13 +255,47 @@ export class Model extends Config {
    * Update parameter.
    */
   update(model: any): void {
+    // Update model id.
     this._id = model.id;
+
+    // Update model recordables.
     this.updateRecordables(model);
-    model.params.forEach((param: any) => {
-      this.hasParameter(param.id)
-        ? this.updateParameter(param)
-        : this.addParameter(param);
-    });
+
+    // Update model parameters.
+    this.updateParameters(model);
+
+    // Update model compartment parameters.
+    this.updateCompartmentParameters(model);
+  }
+
+  /**
+   * Update model parameters.
+   */
+  updateParameters(model: any): void {
+    if (model.hasOwnProperty('params')) {
+      model.params.forEach((param: any) => {
+        if (this.getParameter(param.id)) {
+          this.updateParameter(param);
+        } else {
+          this.addParameter(param);
+        }
+      });
+    }
+  }
+
+  /**
+   * Update model compartment parameters.
+   */
+  updateCompartmentParameters(model: any): void {
+    if (model.hasOwnProperty('compartmentParams')) {
+      model.compartmentParams.forEach((param: any) => {
+        if (this.getParameter(param.id)) {
+          this.updateParameter(param);
+        } else {
+          this.addParameter(param);
+        }
+      });
+    }
   }
 
   /**
