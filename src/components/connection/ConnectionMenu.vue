@@ -139,8 +139,8 @@ import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 
 import { Connection } from '@/core/connection/connection';
-import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import ConnectionParamSelect from '@/components/connection/ConnectionParamSelect.vue';
 import core from '@/core';
@@ -272,7 +272,7 @@ export default Vue.extend({
           (param.state.visible = state.connectionParamsIdx.includes(param.idx))
       );
       state.connection.synapse.params.forEach(
-        (param: ModelParameter) =>
+        (param: SynapseParameter) =>
           (param.state.visible = state.synapseParamsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
@@ -286,8 +286,8 @@ export default Vue.extend({
         .filter((param: Parameter) => param.visible)
         .map((param: Parameter) => param.idx);
       state.synapseParamsIdx = state.connection.synapse.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
+        .filter((param: SynapseParameter) => param.visible)
+        .map((param: SynapseParameter) => param.idx);
     };
 
     const showAllParams = () => {

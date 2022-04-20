@@ -120,7 +120,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { NodeParameter } from '@/core/node/nodeParameter';
 import core from '@/core';
 
 export default Vue.extend({
@@ -141,7 +141,7 @@ export default Vue.extend({
      */
     const paramSelectionChange = () => {
       state.node.params.forEach(
-        (param: ModelParameter) =>
+        (param: NodeParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
@@ -160,8 +160,8 @@ export default Vue.extend({
     const update = () => {
       state.node = props.node as Node;
       state.visibleParams = state.node.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
+        .filter((param: NodeParameter) => param.visible)
+        .map((param: NodeParameter) => param.idx);
     };
 
     /**

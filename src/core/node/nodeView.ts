@@ -1,7 +1,7 @@
 import { Connection } from '../connection/connection';
 import { CopyModel } from '../model/copyModel';
-import { ModelParameter } from '../parameter/modelParameter';
 import { Node } from './node';
+import { NodeParameter } from './nodeParameter';
 
 export class NodeView {
   private _color: any; // color of node
@@ -145,7 +145,7 @@ export class NodeView {
    */
   paramsVisible(): string[] {
     return this._node.params
-      .filter((param: ModelParameter) => param.visible)
+      .filter((param: NodeParameter) => param.visible)
       .map(param => param.id);
   }
 

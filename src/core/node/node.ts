@@ -7,26 +7,32 @@ import { Connection } from '../connection/connection';
 import { consoleLog } from '../common/logger';
 import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
-import { ModelParameter } from '../parameter/modelParameter';
+import { ModelParameter } from '../model/modelParameter';
 import { Network } from '../network/network';
+import { NodeCompartment } from './nodeCompartment/nodeCompartment';
+import { NodeParameter } from './nodeParameter';
+import { NodeReceptor } from './nodeReceptor/nodeReceptor';
 import { NodeRecord } from './nodeRecord';
 import { NodeSpatial } from './nodeSpatial/nodeSpatial';
 import { NodeState } from './nodeState';
 import { NodeView } from './nodeView';
 import { Parameter } from '../parameter/parameter';
 import { SpikeActivity } from '../activity/spikeActivity';
+import { SynapseParameter } from '../synapse/synapseParameter';
 
 export class Node extends Config {
   private readonly _name = 'Node';
 
   private _activity: SpikeActivity | AnalogSignalActivity | Activity;
+  private _compartments: NodeCompartment[] = [];
   private _doc: any = {};
   private _idx: number; // generative
   private _hash: string;
   private _modelId: string;
   private _network: Network; // parent
-  private _params: ModelParameter[];
+  private _params: NodeParameter[];
   private _positions: number[][] = [];
+  private _receptors: NodeReceptor[] = [];
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = []; // only for multimeter
   private _size: number;
@@ -70,8 +76,12 @@ export class Node extends Config {
     );
   }
 
-  get filteredParams(): ModelParameter[] {
-    return this._params.filter((param: ModelParameter) => param.visible);
+  get compartments(): NodeCompartment[] {
+    return this._compartments;
+  }
+
+  get filteredParams(): NodeParameter[] {
+    return this._params.filter((param: NodeParameter) => param.state.visible);
   }
 
   get hash(): string {
@@ -183,16 +193,20 @@ export class Node extends Config {
     return [];
   }
 
-  get params(): ModelParameter[] {
+  get params(): NodeParameter[] {
     return this._params;
   }
 
   set params(values: any[]) {
-    this._params = values.map(value => new ModelParameter(this, value));
+    this._params = values.map(value => new NodeParameter(this, value));
   }
 
   get positions(): number[][] {
     return this._positions;
+  }
+
+  get receptors(): NodeReceptor[] {
+    return this._receptors;
   }
 
   get recordables(): NodeRecord[] {
@@ -217,7 +231,7 @@ export class Node extends Config {
 
   get hasSomeVisibleParams(): boolean {
     return (
-      this._params.some((param: ModelParameter) => param.visible) ||
+      this._params.some((param: NodeParameter) => param.visible) ||
       this._modelId === 'multimeter' ||
       this._network.project.simulation.code.runSimulationInsite
     );
@@ -308,18 +322,18 @@ export class Node extends Config {
   initParameters(node: any = null): void {
     // Update parameters from model or node
     this._params = [];
-    if (this.model && node && this.hasParameters(node)) {
+    if (this.model) {
       this.model.params.forEach((modelParam: ModelParameter) => {
-        const nodeParam = node.params.find((p: any) => p.id === modelParam.id);
-        this.addModelParameter(nodeParam || modelParam.toJSON());
+        if (node && this.hasParameters(node)) {
+          const nodeParam = node.params.find(
+            (p: any) => p.id === modelParam.id
+          );
+          this.addParameter(nodeParam || modelParam.toJSON());
+        } else {
+          this.addParameter(modelParam.toJSON());
+        }
       });
-    } else if (this.model) {
-      this.model.params.forEach((param: ModelParameter) => {
-        const modelParam = param.toJSON();
-        modelParam.visible = false;
-        this.addModelParameter(modelParam);
-      });
-    } else if (node && this.hasParameters(node)) {
+    } else if (this.hasParameters(node)) {
       node.params.forEach((param: any) => this.addParameter(param));
     }
   }
@@ -332,19 +346,11 @@ export class Node extends Config {
   }
 
   /**
-   * Add modelparameter component.
-   * @param param - parameter object
-   */
-  addModelParameter(param: any): void {
-    this._params.push(new ModelParameter(this, param));
-  }
-
-  /**
    * Add parameter component.
    * @param param - parameter object
    */
   addParameter(param: any): void {
-    this._params.push(new Parameter(this, param));
+    this._params.push(new NodeParameter(this, param));
   }
 
   /**
@@ -352,7 +358,7 @@ export class Node extends Config {
    * @param paramId - parameter id
    */
   hasParameter(paramId: string): boolean {
-    return this._params.some((param: ModelParameter) => param.id === paramId);
+    return this._params.some((param: NodeParameter) => param.id === paramId);
   }
 
   /**
@@ -360,8 +366,8 @@ export class Node extends Config {
    * @param paramId - parameter id
    * @return parameter component
    */
-  getParameter(paramId: string): ModelParameter {
-    return this._params.find((param: ModelParameter) => param.id === paramId);
+  getParameter(paramId: string): NodeParameter {
+    return this._params.find((param: NodeParameter) => param.id === paramId);
   }
 
   /**
@@ -371,7 +377,7 @@ export class Node extends Config {
    * It emits node changes.
    */
   resetParameters(): void {
-    this._params.forEach((param: ModelParameter) => param.reset());
+    this._params.forEach((param: NodeParameter) => param.reset());
     this.nodeChanges();
   }
 
@@ -379,14 +385,14 @@ export class Node extends Config {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    this.params.map((param: ModelParameter) => (param.state.visible = false));
+    this.params.map((param: NodeParameter) => (param.state.visible = false));
   }
 
   /**
    * Sets all params to visible.
    */
   showAllParams(): void {
-    this.params.map((param: ModelParameter) => (param.state.visible = true));
+    this.params.map((param: NodeParameter) => (param.state.visible = true));
   }
 
   /**
@@ -405,7 +411,7 @@ export class Node extends Config {
     );
     connections.forEach((connection: Connection) => {
       const weight: any = connection.synapse.params.find(
-        (param: ModelParameter) => param.id === 'weight'
+        (param: SynapseParameter) => param.id === 'weight'
       );
       weight.value = (term === 'inhibitory' ? -1 : 1) * Math.abs(weight.value);
       weight.visible = true;
@@ -573,7 +579,7 @@ export class Node extends Config {
   toJSON(): any {
     const node: any = {
       model: this._modelId,
-      params: this._params.map((param: ModelParameter) => param.toJSON()),
+      params: this._params.map((param: NodeParameter) => param.toJSON()),
       size: this._size,
       view: this._view.toJSON(),
     };

@@ -6,7 +6,7 @@ import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
 import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
-import { ModelParameter } from '../parameter/modelParameter';
+import { SynapseParameter } from '../synapse/synapseParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { NodeSlice } from '../node/nodeSlice';
@@ -205,7 +205,7 @@ export class Connection extends Config {
       const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
       param.value = p.value;
     });
-    this.synapse.params.forEach((param: ModelParameter) => param.reset());
+    this.synapse.params.forEach((param: SynapseParameter) => param.reset());
   }
 
   /**

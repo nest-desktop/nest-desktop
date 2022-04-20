@@ -5,8 +5,18 @@ import { Connection } from '../connection/connection';
 import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
+import { NodeCompartment } from '../node/nodeCompartment/nodeCompartment';
 import { NodeSlice } from '../node/nodeSlice';
 import { Synapse } from '../synapse/synapse';
+
+type parentTypes =
+  | Connection
+  | CopyModel
+  | Model
+  | Node
+  | NodeCompartment
+  | NodeSlice
+  | Synapse;
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
@@ -17,7 +27,7 @@ export class Parameter extends Config {
   private _label: string;
   private _max: number;
   private _min: number;
-  private _parent: Connection | CopyModel | Model | Node | NodeSlice | Synapse; // parent
+  private _parent: parentTypes; // parent
   private _readonly: boolean;
   private _rules: string[][];
   private _state: UnwrapRef<any>;
@@ -27,10 +37,7 @@ export class Parameter extends Config {
   private _unit: string;
   private _value: boolean | number | number[]; // constant value;
 
-  constructor(
-    parent: Connection | CopyModel | Model | Node | NodeSlice | Synapse,
-    param: any
-  ) {
+  constructor(parent: parentTypes, param: any) {
     super('Parameter');
     this._parent = parent;
     this._idx = param.idx || parent.params.length;
@@ -123,7 +130,7 @@ export class Parameter extends Config {
     return this;
   }
 
-  get parent(): Connection | CopyModel | Model | Node | NodeSlice | Synapse {
+  get parent(): parentTypes {
     return this._parent;
   }
 
@@ -275,7 +282,7 @@ export class Parameter extends Config {
    * Updates when parameter is changed.
    */
   paramChanges(): void {
-    let parent: Connection | CopyModel | Model | Node | NodeSlice | Synapse;
+    let parent: parentTypes;
 
     switch (this.parent.name) {
       case 'Connection':
