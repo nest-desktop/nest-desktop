@@ -16,6 +16,19 @@
       @update:value="paramChange"
       v-for="param in state.synapse.filteredParams"
     />
+
+    <ParameterEdit
+      :color="state.synapse.connection.source.view.color"
+      :options="{
+        id: 'receptorIdx',
+        label: 'receptor index',
+        input: 'select',
+        items: state.synapse.receptorIndices,
+      }"
+      :value.sync="state.synapse.receptorIdx"
+      @update:value="paramChange"
+      v-if="state.synapse.receptorIndices.length > 1"
+    />
   </div>
 </template>
 

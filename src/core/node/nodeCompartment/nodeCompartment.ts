@@ -2,22 +2,27 @@ import { consoleLog } from '../../common/logger';
 import { ModelCompartmentParameter } from '../../model/modelCompartmentParameter';
 import { Node } from '../node';
 import { NodeCompartmentParameter } from './nodeCompartmentParameter';
+import { NodeReceptor } from '../nodeReceptor/nodeReceptor';
 
 export class NodeCompartment {
   private readonly _name = 'NodeCompartment';
 
-  private _idx: number; // generative
+  private _idx: number = 0; // generative
   private _hash: string;
+  private _label: string;
   private _node: Node; // parent
   private _params: NodeCompartmentParameter[] = [];
   private _parentIdx: number;
 
-  constructor(node: any, nodeCompartment: any) {
+  constructor(node: any, comp: any) {
     this._node = node;
+    this._parentIdx = comp.parentIdx;
+    this.initParameters(comp);
+    this._idx = this._node.compartments.length;
 
-    this._parentIdx = nodeCompartment.parentIdx;
-
-    this.initParameters(nodeCompartment);
+    if (!comp.hasOwnProperty('label')) {
+      this._label = this._parentIdx === -1 ? 'soma' : `dendrite ${this._idx}`;
+    }
   }
 
   get filteredParams(): NodeCompartmentParameter[] {
@@ -32,6 +37,14 @@ export class NodeCompartment {
 
   get idx(): number {
     return this._idx;
+  }
+
+  get label(): string {
+    return this._label;
+  }
+
+  set label(value: string) {
+    this._label = value;
   }
 
   get name(): string {
@@ -56,6 +69,24 @@ export class NodeCompartment {
     return this._parentIdx;
   }
 
+  get receptors(): NodeReceptor[] {
+    return this.node.receptors.filter(
+      (receptor: NodeReceptor) => receptor.compIdx === this._idx
+    );
+  }
+
+  get receptor(): NodeReceptor | undefined {
+    const receptors = this.receptors;
+    return receptors ? receptors[0] : undefined;
+  }
+
+  get recordable(): any {
+    return {
+      id: `v_comp${this._idx}`,
+      label: `Membrane potentials of ${this._label}`,
+    };
+  }
+
   /**
    * Returns the first six digits of the SHA-1 node hash.
    * @returns 6-digit hash value
@@ -71,7 +102,9 @@ export class NodeCompartment {
   /**
    * Clean node compartment.
    */
-  clean(): void {}
+  clean(): void {
+    this._idx = this._node.compartments.indexOf(this);
+  }
 
   /**
    * Observer for node compartment changes.
@@ -86,17 +119,17 @@ export class NodeCompartment {
 
   /**
    * Initialize parameter components.
-   * @param compartment - node compartment object
+   * @param comp - node compartment object
    */
-  initParameters(compartment: any = null): void {
+  initParameters(comp: any = null): void {
     // Update parameters from model or node compartment
     this._params = [];
     const model = this.node.model;
     if (model) {
       model.compartmentParams.forEach(
         (modelParam: ModelCompartmentParameter) => {
-          if (compartment && compartment.hasOwnProperty('params')) {
-            const compartmentParam = compartment.params.find(
+          if (comp && comp.hasOwnProperty('params')) {
+            const compartmentParam = comp.params.find(
               (p: any) => p.id === modelParam.id
             );
             this.addParameter(compartmentParam || modelParam.toJSON());
@@ -105,8 +138,8 @@ export class NodeCompartment {
           }
         }
       );
-    } else if (compartment.hasOwnProperty('params')) {
-      compartment.params.forEach((param: any) => this.addParameter(param));
+    } else if (comp.hasOwnProperty('params')) {
+      comp.params.forEach((param: any) => this.addParameter(param));
     }
   }
 
@@ -171,13 +204,13 @@ export class NodeCompartment {
   }
 
   /**
-   * Delete node compartment.
+   * Remove node compartment.
    *
    * @remarks
    * It removes compartment from the node.
    */
   remove(): void {
-    // this._node.deleteCompartement(this);
+    this._node.removeCompartment(this);
   }
 
   /**
@@ -197,13 +230,13 @@ export class NodeCompartment {
    * @return node object
    */
   toJSON(): any {
-    const compartment: any = {
+    const comp: any = {
       parentIdx: this._parentIdx,
       params: this._params.map((param: NodeCompartmentParameter) =>
         param.toJSON()
       ),
     };
 
-    return compartment;
+    return comp;
   }
 }

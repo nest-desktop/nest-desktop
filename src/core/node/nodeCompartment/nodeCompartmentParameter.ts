@@ -16,7 +16,9 @@ export class NodeCompartmentParameter extends NodeParameter {
    */
   override get options(): ModelCompartmentParameter {
     const param: ModelCompartmentParameter = this.nodeCompartment.node.model
-      ? this.nodeCompartment.node.model.params.find((p: ModelCompartmentParameter) => p.id === this.id)
+      ? this.nodeCompartment.node.model.compartmentParams.find(
+          (p: ModelCompartmentParameter) => p.id === this.id
+        )
       : undefined;
     return param;
   }
@@ -27,5 +29,4 @@ export class NodeCompartmentParameter extends NodeParameter {
   override paramChanges(): void {
     this.nodeCompartment.nodeChanges();
   }
-
 }

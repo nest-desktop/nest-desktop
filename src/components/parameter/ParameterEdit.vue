@@ -374,6 +374,13 @@ export default Vue.extend({
     options: Object,
   },
   setup(props, { emit }) {
+    type paramTypes =
+      | NodeParameter
+      | ModelParameter
+      | SynapseParameter
+      | Parameter
+      | undefined;
+
     const state = reactive({
       color: props.color,
       content: null,
@@ -448,7 +455,7 @@ export default Vue.extend({
       },
       message: '',
       options: props.param ? props.param['options'] : props.options,
-      param: props.param as NodeParameter | ModelParameter | SynapseParameter | Parameter | undefined,
+      param: props.param as paramTypes,
       showConfig: false,
       timeoutId: undefined,
       value: undefined,
@@ -615,14 +622,13 @@ export default Vue.extend({
       state.value = serialize(props.value);
       if (props.param) {
         state.options = props.param['options'];
-        state.param = props.param as NodeParameter  | ModelParameter | SynapseParameter | Parameter;
+        state.param = props.param as paramTypes;
         state.expertMode = !state.param.isConstant;
       } else {
         state.options = props.options;
       }
       state.options.errorMessages = [];
       showMenuItems();
-      console.log(state.options)
     };
 
     /**

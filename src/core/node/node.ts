@@ -53,19 +53,8 @@ export class Node extends Config {
     this._spatial = new NodeSpatial(this, node.spatial);
 
     this.initParameters(node);
-
-    if (node.hasOwnProperty('compartments')) {
-      this._compartments = node.compartments.forEach(
-        (compartment: any) => new NodeCompartment(this, compartment)
-      );
-    }
-
-    if (node.hasOwnProperty('receptors')) {
-      this._receptors = node.receptors.forEach(
-        (receptor: any) => new NodeReceptor(this, receptor)
-      );
-    }
-
+    this.initCompartments(node);
+    this.initReceptors(node);
     this.initActivity(node.activity);
 
     this.updateHash();
@@ -93,8 +82,20 @@ export class Node extends Config {
     return this._compartments;
   }
 
+  get compartmentRecordables(): any[] {
+    return this._compartments.map((comp: NodeCompartment) => comp.recordable);
+  }
+
   get filteredParams(): NodeParameter[] {
     return this._params.filter((param: NodeParameter) => param.state.visible);
+  }
+
+  get hasCompartments(): boolean {
+    return this._compartments.length > 0;
+  }
+
+  get hasReceptors(): boolean {
+    return this._receptors.length > 0;
   }
 
   get hash(): string {
@@ -170,6 +171,9 @@ export class Node extends Config {
     this._modelId = value;
 
     this.initParameters();
+    this.initCompartments();
+    this.initReceptors();
+
     this.initActivity();
 
     this.updateRecords();
@@ -301,6 +305,25 @@ export class Node extends Config {
   }
 
   /**
+   * Add compartment component.
+   * @param comp - compartment object
+   */
+  addCompartment(comp: any = {}): void {
+    comp.parentIdx = this._compartments.length === 0 ? -1 : 0;
+    const compartment = new NodeCompartment(this, comp);
+    this._compartments.push(compartment);
+    compartment.clean();
+  }
+
+  /**
+   * Add receptor component.
+   * @param receptor - receptor object
+   */
+  addReceptor(receptor: any): void {
+    this._receptors.push(new NodeReceptor(this, receptor));
+  }
+
+  /**
    * Observer for node changes.
    *
    * @remarks
@@ -325,6 +348,22 @@ export class Node extends Config {
       this._activity = new AnalogSignalActivity(this, data);
     } else {
       this._activity = new Activity(this, data);
+    }
+  }
+
+  initCompartments(node: any = null): void {
+    this._compartments = [];
+    if (node && node.hasOwnProperty('compartments')) {
+      node.compartments.forEach((compartment: any) =>
+        this.addCompartment(compartment)
+      );
+    }
+  }
+
+  initReceptors(node: any = null): void {
+    this._receptors = [];
+    if (node && node.hasOwnProperty('receptors')) {
+      node.receptors.forEach((receptor: any) => this.addReceptor(receptor));
     }
   }
 
@@ -381,6 +420,11 @@ export class Node extends Config {
    */
   getParameter(paramId: string): NodeParameter {
     return this._params.find((param: NodeParameter) => param.id === paramId);
+  }
+
+  reset(): void {
+    this._compartments = [];
+    this._receptors = [];
   }
 
   /**
@@ -455,6 +499,22 @@ export class Node extends Config {
   }
 
   /**
+   * Remove compartment from the node.
+   */
+  removeCompartment(compartment: NodeCompartment): void {
+    this._compartments.splice(this._compartments.indexOf(compartment), 1);
+    this._compartments = [...this._compartments];
+  }
+
+  /**
+   * Remove receptor from the node.
+   */
+  removeReceptor(receptor: NodeReceptor): void {
+    this._receptors.splice(this._receptors.indexOf(receptor), 1);
+    this._receptors = [...this._receptors];
+  }
+
+  /**
    * Remove record from the state.
    */
   removeRecord(record: any): void {
@@ -475,6 +535,7 @@ export class Node extends Config {
       if (this._modelId === 'multimeter') {
         const recordablesNodes = this.targets.map((target: Node) => [
           ...target.model.recordables,
+          ...target.compartmentRecordables,
         ]);
         if (recordablesNodes.length > 0) {
           const recordablesPooled: any[] = recordablesNodes.flat();

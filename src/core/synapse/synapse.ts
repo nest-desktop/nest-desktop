@@ -9,18 +9,27 @@ export class Synapse {
   private _connection: Connection; // parent
   private _modelId: string;
   private _params: SynapseParameter[] = [];
+  private _receptorIdx: number = 0;
 
   constructor(connection: any, synapse: any = {}) {
     this._connection = connection;
 
-    this._modelId = synapse && synapse.model ? synapse.model : 'static_synapse';
-    synapse && synapse.hasOwnProperty('params') && synapse.params.length > 0
-      ? this.initParameters(synapse)
-      : this.initParameters();
+    if (synapse != null && synapse.params.length > 0) {
+      this._modelId = synapse.model || 'static_synapse';
+      this._receptorIdx = synapse.receptorIdx || 0;
+      this.initParameters(synapse);
+    } else {
+      this._modelId = 'static_synapse';
+      this.initParameters();
+    }
   }
 
   get connection(): Connection {
     return this._connection;
+  }
+
+  get hasReceptorIndices(): boolean {
+    return this.receptorIndices.length > 0;
   }
 
   /**
@@ -98,6 +107,18 @@ export class Synapse {
 
   get name(): string {
     return this._name;
+  }
+
+  get receptorIdx(): number {
+    return this._receptorIdx;
+  }
+
+  set receptorIdx(value: number) {
+    this._receptorIdx = value;
+  }
+
+  get receptorIndices(): number[] {
+    return this.connection.target.receptors.map((_, idx: number) => idx);
   }
 
   get params(): SynapseParameter[] {
@@ -215,6 +236,9 @@ export class Synapse {
       model: this._modelId,
       params: this._params.map((param: SynapseParameter) => param.toJSON()),
     };
+    if (this._receptorIdx !== 0) {
+      synapse.receptorIdx = this._receptorIdx;
+    }
     return synapse;
   }
 }

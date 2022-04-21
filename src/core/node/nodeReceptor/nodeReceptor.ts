@@ -2,6 +2,7 @@ import { consoleLog } from '../../common/logger';
 import { ModelReceptor } from '../../model/modelReceptor/modelReceptor';
 import { ModelReceptorParameter } from '../../model/modelReceptor/modelReceptorParameter';
 import { Node } from '../node';
+import { NodeCompartment } from '../nodeCompartment/nodeCompartment';
 import { NodeReceptorParameter } from './nodeReceptorParameter';
 
 export class NodeReceptor {
@@ -11,19 +12,25 @@ export class NodeReceptor {
   private _hash: string;
   private _node: Node; // parent
   private _params: NodeReceptorParameter[] = [];
-  private _receptorType: string;
+  private _id: string;
 
   constructor(node: any, nodeReceptor: any) {
     this._node = node;
 
     this._compIdx = nodeReceptor.compIdx;
-    this._receptorType = nodeReceptor.receptorType;
+    this._id = nodeReceptor.id || nodeReceptor.type;
 
     this.initParameters(nodeReceptor);
   }
 
   get compIdx(): number {
     return this._compIdx;
+  }
+
+  get compartment(): NodeCompartment | undefined {
+    return this.node.compartments.find(
+      (comp: NodeCompartment) => comp.idx === this._compIdx
+    );
   }
 
   get filteredParams(): NodeReceptorParameter[] {
@@ -34,11 +41,14 @@ export class NodeReceptor {
     return this._hash;
   }
 
+  get id(): string {
+    return this._id;
+  }
+
   get model(): ModelReceptor | undefined {
     return this.node.model
       ? this.node.model.receptors.find(
-          (modelReceptor: ModelReceptor) =>
-            modelReceptor.id === this.receptorType
+          (modelReceptor: ModelReceptor) => modelReceptor.id === this.id
         )
       : undefined;
   }
@@ -57,10 +67,6 @@ export class NodeReceptor {
 
   set params(values: any[]) {
     this._params = values.map(value => new NodeReceptorParameter(this, value));
-  }
-
-  get receptorType(): string {
-    return this._receptorType;
   }
 
   /**
@@ -189,7 +195,7 @@ export class NodeReceptor {
    * It removes receptor from the node.
    */
   remove(): void {
-    // this._node.deleteCompartement(this);
+    this._node.removeReceptor(this);
   }
 
   /**
@@ -211,7 +217,7 @@ export class NodeReceptor {
   toJSON(): any {
     const receptor: any = {
       compIdx: this._compIdx,
-      receptorType: this.receptorType,
+      id: this.id,
       params: this._params.map((param: NodeReceptorParameter) =>
         param.toJSON()
       ),
