@@ -45,7 +45,10 @@ nest.rng_seed = {{ simulation.kernel.rngSeed }}
 {{ #hasCompartments }}
 {{ view.label }}.compartments = [
 {{ #compartments }}
-  {"parent_idx": {{ parentIdx }}},
+  {"parent_idx": {{ parentIdx }}{{ #hasSomeParams }}, "params": {
+    {{ #filteredParams }}"{{ id }}": {{ valueAsString }},
+    {{ /filteredParams }}}
+  {{ /hasSomeParams }}},
 {{ /compartments }}
 ]
 {{ /hasCompartments }}
@@ -58,7 +61,10 @@ nest.rng_seed = {{ simulation.kernel.rngSeed }}
 {{ #hasReceptors }}
 {{ view.label }}.receptors = [
 {{ #receptors }}
-  {"comp_idx": {{ compIdx }}, "receptor_type": "{{ id }}"},
+  {"comp_idx": {{ compartment.idx }}, "receptor_type": "{{ id }}"{{ #hasSomeParams }}, "params": {
+    {{ #filteredParams }}"{{ id }}": {{ valueAsString }},
+    {{ /filteredParams }}}
+  {{ /hasSomeParams }}},
 {{ /receptors }}
 ]
 {{ /hasReceptors }}

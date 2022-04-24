@@ -14,15 +14,14 @@ export class NodeCompartment {
   private _params: NodeCompartmentParameter[] = [];
   private _parentIdx: number;
 
-  constructor(node: any, comp: any) {
+  constructor(node: any, comp: any = {}) {
     this._node = node;
-    this._parentIdx = comp.parentIdx;
-    this.initParameters(comp);
-    this._idx = this._node.compartments.length;
 
-    if (!comp.hasOwnProperty('label')) {
-      this._label = this._parentIdx === -1 ? 'soma' : `dendrite ${this._idx}`;
-    }
+    this._idx = this._node.compartments.length;
+    this._parentIdx = comp.parentIdx;
+    this._label = comp.label;
+
+    this.initParameters(comp);
   }
 
   get filteredParams(): NodeCompartmentParameter[] {
@@ -35,12 +34,44 @@ export class NodeCompartment {
     return this._hash;
   }
 
+  get hasSomeParams(): boolean {
+    return this._params.some(
+      (param: NodeCompartmentParameter) => param.visible
+    );
+  }
+
   get idx(): number {
     return this._idx;
   }
 
   get label(): string {
-    return this._label;
+    if (this._label) {
+      return this._label;
+    } else {
+      const label = this._parentIdx === -1 ? 'soma' : 'dendrite';
+      const idx = this._node.compartments
+        .filter((comp: NodeCompartment) => comp.parentIdx === this._parentIdx)
+        .indexOf(this);
+      return `${label} ${idx + 1}`;
+    }
+  }
+
+  get labelFull(): string {
+    if (this._label) {
+      return this._label;
+    } else {
+      return (
+        `${this.label}` +
+        (this._parentIdx != -1 ? ` of ${this.parent.label}` : '')
+      );
+    }
+  }
+
+  get labelShort(): string {
+    return this.label
+      .split(' ')
+      .map((v: string) => v[0])
+      .join('');
   }
 
   set label(value: string) {
@@ -65,19 +96,25 @@ export class NodeCompartment {
     );
   }
 
+  get parent(): NodeCompartment {
+    return this._parentIdx === -1
+      ? this
+      : this._node.compartments[this._parentIdx];
+  }
+
   get parentIdx(): number {
     return this._parentIdx;
   }
 
-  get receptors(): NodeReceptor[] {
-    return this.node.receptors.filter(
-      (receptor: NodeReceptor) => receptor.compIdx === this._idx
-    );
+  set parentIdx(value: number) {
+    this._parentIdx = value === this._idx ? -1 : value;
+    this.nodeChanges();
   }
 
-  get receptor(): NodeReceptor | undefined {
-    const receptors = this.receptors;
-    return receptors ? receptors[0] : undefined;
+  get receptors(): NodeReceptor[] {
+    return this.node.receptors.filter(
+      (receptor: NodeReceptor) => receptor.compartment === this
+    );
   }
 
   get recordable(): any {
@@ -93,6 +130,11 @@ export class NodeCompartment {
    */
   get shortHash(): string {
     return this._hash ? this._hash.slice(0, 6) : '';
+  }
+
+  addReceptor(receptor: any): void {
+    receptor.compIdx = this._idx;
+    this._node.addReceptor(receptor);
   }
 
   consoleLog(text: string): void {
@@ -207,10 +249,12 @@ export class NodeCompartment {
    * Remove node compartment.
    *
    * @remarks
-   * It removes compartment from the node.
+   * It removes compartment from the list.
    */
   remove(): void {
     this._node.removeCompartment(this);
+    this._node.compartments.forEach((comp: NodeCompartment) => comp.clean());
+    this._node.nodeChanges();
   }
 
   /**
@@ -236,6 +280,10 @@ export class NodeCompartment {
         param.toJSON()
       ),
     };
+
+    if (this._label) {
+      comp.label = this._label;
+    }
 
     return comp;
   }

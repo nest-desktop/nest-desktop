@@ -17,17 +17,17 @@
       v-for="param in state.synapse.filteredParams"
     />
 
-    <ParameterEdit
+    <v-select
       :color="state.synapse.connection.source.view.color"
-      :options="{
-        id: 'receptorIdx',
-        label: 'receptor index',
-        input: 'select',
-        items: state.synapse.receptorIndices,
-      }"
-      :value.sync="state.synapse.receptorIdx"
+      :items="state.synapse.connection.target.receptors"
       @update:value="paramChange"
-      v-if="state.synapse.receptorIndices.length > 1"
+      class="ma-2"
+      item-text="label"
+      dense
+      hide-details
+      item-value="idx"
+      label="receptor type"
+      v-model="state.synapse.receptorIdx"
     />
   </div>
 </template>
@@ -51,6 +51,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
+      compIdx: -1,
       synapse: props.synapse as Synapse,
     });
 

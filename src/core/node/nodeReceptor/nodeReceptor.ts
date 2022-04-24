@@ -8,29 +8,25 @@ import { NodeReceptorParameter } from './nodeReceptorParameter';
 export class NodeReceptor {
   private readonly _name = 'NodeReceptor';
 
-  private _compIdx: number; // generative
+  private _compartment: NodeCompartment;
   private _hash: string;
+  private _id: string;
+  private _idx: number; // generative
   private _node: Node; // parent
   private _params: NodeReceptorParameter[] = [];
-  private _id: string;
 
   constructor(node: any, nodeReceptor: any) {
     this._node = node;
 
-    this._compIdx = nodeReceptor.compIdx;
     this._id = nodeReceptor.id || nodeReceptor.type;
+    this._idx = this._node.receptors.length;
 
+    this.initCompartment(nodeReceptor.compIdx);
     this.initParameters(nodeReceptor);
   }
 
-  get compIdx(): number {
-    return this._compIdx;
-  }
-
-  get compartment(): NodeCompartment | undefined {
-    return this.node.compartments.find(
-      (comp: NodeCompartment) => comp.idx === this._compIdx
-    );
+  get compartment(): NodeCompartment {
+    return this._compartment;
   }
 
   get filteredParams(): NodeReceptorParameter[] {
@@ -41,8 +37,20 @@ export class NodeReceptor {
     return this._hash;
   }
 
+  get hasSomeParams(): boolean {
+    return this._params.some((param: NodeReceptorParameter) => param.visible);
+  }
+
   get id(): string {
     return this._id;
+  }
+
+  get idx(): number {
+    return this._idx;
+  }
+
+  get label(): string {
+    return `${this.id} (${this.compartment.label})`;
   }
 
   get model(): ModelReceptor | undefined {
@@ -84,7 +92,9 @@ export class NodeReceptor {
   /**
    * Clean node receptor.
    */
-  clean(): void {}
+  clean(): void {
+    this._idx = this._node.receptors.indexOf(this);
+  }
 
   /**
    * Observer for node receptor changes.
@@ -95,6 +105,16 @@ export class NodeReceptor {
   nodeChanges(): void {
     this.clean();
     this._node.nodeChanges();
+  }
+
+  /**
+   * Initialize compartment component.
+   * @param compIdx - compartment index
+   */
+  initCompartment(compIdx: number): void {
+    if (compIdx < this._node.compartments.length) {
+      this._compartment = this._node.compartments[compIdx];
+    }
   }
 
   /**
@@ -196,6 +216,7 @@ export class NodeReceptor {
    */
   remove(): void {
     this._node.removeReceptor(this);
+    this._node.nodeChanges();
   }
 
   /**
@@ -216,7 +237,7 @@ export class NodeReceptor {
    */
   toJSON(): any {
     const receptor: any = {
-      compIdx: this._compIdx,
+      compIdx: this._compartment.idx,
       id: this.id,
       params: this._params.map((param: NodeReceptorParameter) =>
         param.toJSON()

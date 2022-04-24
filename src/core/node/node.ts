@@ -82,6 +82,12 @@ export class Node extends Config {
     return this._compartments;
   }
 
+  get compartmentIndices(): number[] {
+    return this._compartments.map(
+      (compartment: NodeCompartment) => compartment.idx
+    );
+  }
+
   get compartmentRecordables(): any[] {
     return this._compartments.map((comp: NodeCompartment) => comp.recordable);
   }
@@ -309,7 +315,6 @@ export class Node extends Config {
    * @param comp - compartment object
    */
   addCompartment(comp: any = {}): void {
-    comp.parentIdx = this._compartments.length === 0 ? -1 : 0;
     const compartment = new NodeCompartment(this, comp);
     this._compartments.push(compartment);
     compartment.clean();
@@ -435,6 +440,16 @@ export class Node extends Config {
    */
   resetParameters(): void {
     this._params.forEach((param: NodeParameter) => param.reset());
+
+    if (this._modelId === 'cm_default') {
+      this.compartments.forEach((comp: NodeCompartment) =>
+        comp.resetParameters()
+      );
+      this.receptors.forEach((receptor: NodeReceptor) =>
+        receptor.resetParameters()
+      );
+    }
+
     this.nodeChanges();
   }
 
@@ -443,6 +458,15 @@ export class Node extends Config {
    */
   hideAllParams(): void {
     this.params.map((param: NodeParameter) => (param.state.visible = false));
+
+    if (this._modelId === 'cm_default') {
+      this.compartments.forEach((comp: NodeCompartment) =>
+        comp.hideAllParams()
+      );
+      this.receptors.forEach((receptor: NodeReceptor) =>
+        receptor.hideAllParams()
+      );
+    }
   }
 
   /**
@@ -450,6 +474,15 @@ export class Node extends Config {
    */
   showAllParams(): void {
     this.params.map((param: NodeParameter) => (param.state.visible = true));
+
+    if (this._modelId === 'cm_default') {
+      this.compartments.forEach((comp: NodeCompartment) =>
+        comp.showAllParams()
+      );
+      this.receptors.forEach((receptor: NodeReceptor) =>
+        receptor.showAllParams()
+      );
+    }
   }
 
   /**
@@ -502,6 +535,12 @@ export class Node extends Config {
    * Remove compartment from the node.
    */
   removeCompartment(compartment: NodeCompartment): void {
+    // Remove all receptors linking to this compartment.
+    compartment.receptors.forEach((receptor: NodeReceptor) =>
+      receptor.remove()
+    );
+
+    // Remove compartment from the list.
     this._compartments.splice(this._compartments.indexOf(compartment), 1);
     this._compartments = [...this._compartments];
   }
@@ -594,6 +633,18 @@ export class Node extends Config {
       this._records = [...this._recordables];
     }
   }
+
+  // /**
+  //  * Update receptor component.
+  //  * @param receptorOld - node receptor object
+  //  * @param receptorNew - receptor object
+  //  */
+  // updateReceptor(receptorOld: NodeReceptor, receptorNew: any): void {
+  //   receptorNew.compIdx = receptorOld.compartment.idx;
+  //   const receptorIdx = this._receptors.indexOf(receptorOld);
+  //   this._receptors[receptorIdx] = new NodeReceptor(this, receptorNew);
+  //   this._receptors = [...this._receptors];
+  // }
 
   /**
    * Update record colors.
