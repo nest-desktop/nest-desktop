@@ -77,6 +77,14 @@ export class NodeReceptor {
     this._params = values.map(value => new NodeReceptorParameter(this, value));
   }
 
+  get recordables(): any[] {
+    const recordables = this.model.recordables.map((recordable: any) => ({
+      ...recordable,
+    }));
+    recordables.forEach((recordable: any) => (recordable.id += this._idx));
+    return recordables;
+  }
+
   /**
    * Returns the first six digits of the SHA-1 node hash.
    * @returns 6-digit hash value

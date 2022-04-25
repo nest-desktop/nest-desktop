@@ -10,6 +10,7 @@ export class ModelReceptor {
   private _label: string;
   private _model: Model; // parent
   private _params: ModelReceptorParameter[] = [];
+  private _recordables: any[] = []; // recordables for multimeter
 
   constructor(model: any, modelReceptor: any) {
     this._model = model;
@@ -18,6 +19,7 @@ export class ModelReceptor {
     this._label = modelReceptor.label;
 
     this.updateParameters(modelReceptor);
+    this.updateRecordables(modelReceptor);
   }
 
   get filteredParams(): ModelReceptorParameter[] {
@@ -52,6 +54,10 @@ export class ModelReceptor {
 
   set params(values: any[]) {
     this._params = values.map(value => new ModelReceptorParameter(this, value));
+  }
+
+  get recordables(): any[] {
+    return this._recordables;
   }
 
   /**
@@ -105,6 +111,17 @@ export class ModelReceptor {
       .map((p: ModelReceptorParameter) => p.id)
       .indexOf(param.id);
     this._params[idx] = new ModelReceptorParameter(this, param);
+  }
+
+  /**
+   * Update recordables from the config.
+   */
+  updateRecordables(model: any): void {
+    if ('recordables' in model) {
+      this._recordables = this._model.config.recordables.filter(
+        (recordable: any) => model.recordables.includes(recordable.id)
+      );
+    }
   }
 
   /**
@@ -201,6 +218,13 @@ export class ModelReceptor {
         param.toJSON()
       ),
     };
+
+    // Add recordables if provided.
+    if (this._recordables.length > 0) {
+      receptor.recordables = this._recordables.map(
+        (recordable: any) => recordable.id
+      );
+    }
 
     return receptor;
   }

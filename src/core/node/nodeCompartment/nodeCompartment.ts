@@ -117,11 +117,12 @@ export class NodeCompartment {
     );
   }
 
-  get recordable(): any {
-    return {
-      id: `v_comp${this._idx}`,
-      label: `Membrane potentials of ${this._label}`,
-    };
+  get recordables(): any[] {
+    const recordables = this._node.model.recordables.map((recordable: any) => ({
+      ...recordable,
+    }));
+    recordables.forEach((recordable: any) => (recordable.id += this._idx));
+    return recordables;
   }
 
   /**

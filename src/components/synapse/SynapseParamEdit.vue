@@ -28,6 +28,7 @@
       item-value="idx"
       label="receptor type"
       v-model="state.synapse.receptorIdx"
+      v-show="!state.synapse.connection.source.model.isRecorder"
     />
   </div>
 </template>

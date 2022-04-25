@@ -89,7 +89,9 @@ export class Node extends Config {
   }
 
   get compartmentRecordables(): any[] {
-    return this._compartments.map((comp: NodeCompartment) => comp.recordable);
+    return [
+      ...this._compartments.map((comp: NodeCompartment) => comp.recordables),
+    ];
   }
 
   get filteredParams(): NodeParameter[] {
@@ -230,6 +232,12 @@ export class Node extends Config {
 
   get receptors(): NodeReceptor[] {
     return this._receptors;
+  }
+
+  get receptorRecordables(): any[] {
+    return [
+      ...this._receptors.map((receptor: NodeReceptor) => receptor.recordables),
+    ];
   }
 
   get recordables(): NodeRecord[] {
@@ -571,11 +579,15 @@ export class Node extends Config {
     let recordables: any[] = [];
     // Initialize recordables.
     if (this.targets.length > 0) {
-      if (this._modelId === 'multimeter') {
-        const recordablesNodes = this.targets.map((target: Node) => [
-          ...target.model.recordables,
-          ...target.compartmentRecordables,
-        ]);
+      if (this.model.isMultimeter) {
+        const recordablesNodes = this.targets.map((target: Node) => {
+          return target.modelId === 'cm_default'
+            ? [
+                ...target.compartmentRecordables,
+                ...target.receptorRecordables,
+              ].flat()
+            : [...target.model.recordables];
+        });
         if (recordablesNodes.length > 0) {
           const recordablesPooled: any[] = recordablesNodes.flat();
           recordables = [...new Set(recordablesPooled)];
