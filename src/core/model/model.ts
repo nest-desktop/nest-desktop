@@ -187,6 +187,7 @@ export class Model extends Config {
 
   /**
    * Update recordables from the config.
+   * @param model model object
    */
   updateRecordables(model: any): void {
     if ('recordables' in model) {
@@ -197,7 +198,18 @@ export class Model extends Config {
   }
 
   /**
+   * Get parameter of the model compartment.
+   * @param paramId ID of the searched parameter
+   */
+  getCompartmentParameter(paramId: string): ModelParameter {
+    return this._compartmentParams.find(
+      (param: ModelParameter) => param.id === paramId
+    );
+  }
+
+  /**
    * Get parameter of the model.
+   * @param paramId ID of the searched parameter
    */
   getParameter(paramId: string): ModelParameter {
     return this._params.find((param: ModelParameter) => param.id === paramId);
@@ -212,16 +224,8 @@ export class Model extends Config {
   }
 
   /**
-   * Get parameter of the model.
-   */
-  getCompartmentParameter(id: string): ModelParameter {
-    return this._compartmentParams.find(
-      (param: ModelParameter) => param.id === id
-    );
-  }
-
-  /**
    * Add parameter to the model specifications.
+   * @param param parameter object
    */
   addParameter(param: any): void {
     this._params.push(new ModelParameter(this, param));
@@ -229,6 +233,7 @@ export class Model extends Config {
 
   /**
    * Add compartment parameter to the model specifications.
+   * @param param parameter object
    */
   addCompartmentParameter(param: any): void {
     this._compartmentParams.push(new ModelCompartmentParameter(this, param));
@@ -236,6 +241,8 @@ export class Model extends Config {
 
   /**
    * Create new parameter.
+   * @param paramId ID of the parameter
+   * @param value parameter value
    */
   newParameter(paramId: string, value: any): void {
     const param: any = {
@@ -257,6 +264,7 @@ export class Model extends Config {
 
   /**
    * Remove parameter.
+   * @param paramId ID of the parameter
    */
   removeParameter(paramId: string): void {
     this._params = this.params.filter(
@@ -266,6 +274,7 @@ export class Model extends Config {
 
   /**
    * Update parameter.
+   * @param model model object
    */
   update(model: any): void {
     // Update model id.
@@ -286,6 +295,7 @@ export class Model extends Config {
 
   /**
    * Update model parameters.
+   * @param model model object
    */
   updateParameters(model: any): void {
     if (model.hasOwnProperty('params')) {
@@ -301,6 +311,7 @@ export class Model extends Config {
 
   /**
    * Update model compartment parameters.
+   * @param model model object
    */
   updateCompartmentParameters(model: any): void {
     if (model.hasOwnProperty('compartmentParams')) {
@@ -316,6 +327,7 @@ export class Model extends Config {
 
   /**
    * Update parameter.
+   * @param param parameter object
    */
   updateParameter(param: any): void {
     const idx: number = this._params
@@ -326,6 +338,7 @@ export class Model extends Config {
 
   /**
    * Update compartment parameter.
+   * @param param parameter object
    */
   updateCompartmentParameter(param: any): void {
     const idx: number = this._compartmentParams
@@ -336,6 +349,7 @@ export class Model extends Config {
 
   /**
    * Update model receptors.
+   * @param model model object
    */
   updateReceptors(model: any): void {
     if (model.hasOwnProperty('receptors')) {

@@ -67,7 +67,7 @@ export class Synapse {
    * Set model.
    *
    * @remarks
-   * Save model id, see modelId.
+   * Save model ID, see modelId.
    *
    * @param model - synapse model
    */
@@ -91,12 +91,12 @@ export class Synapse {
   }
 
   /**
-   * Set model id.
+   * Set model ID.
    *
    * @remarks
    * It initializes parameters.
    *
-   * @param value - id of the model
+   * @param value - ID of the model
    */
   set modelId(value: string) {
     this._modelId = value;

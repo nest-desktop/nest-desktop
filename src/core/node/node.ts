@@ -144,7 +144,7 @@ export class Node extends Config {
    * Set model.
    *
    * @remarks
-   * Save model id, see modelId.
+   * Save model ID, see modelId.
    *
    * @param model - node model
    */
@@ -167,7 +167,7 @@ export class Node extends Config {
   }
 
   /**
-   * Set model id.
+   * Set model ID.
    *
    * @remarks
    * It initializes parameters and activity components.
@@ -420,7 +420,7 @@ export class Node extends Config {
 
   /**
    * Check if node has parameter component.
-   * @param paramId - parameter id
+   * @param paramId - parameter ID
    */
   hasParameter(paramId: string): boolean {
     return this._params.some((param: NodeParameter) => param.id === paramId);
@@ -428,7 +428,7 @@ export class Node extends Config {
 
   /**
    * Get parameter component.
-   * @param paramId - parameter id
+   * @param paramId - parameter ID
    * @return parameter component
    */
   getParameter(paramId: string): NodeParameter {
