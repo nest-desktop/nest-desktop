@@ -5,6 +5,12 @@ import { Node } from '../node/node';
 import { Network } from '../network/network';
 import { Parameter } from '../parameter/parameter';
 
+export interface modelProps {
+  existing: string;
+  new: string;
+  params: string[];
+}
+
 export class CopyModel {
   private readonly _name = 'CopyModel';
 
@@ -17,7 +23,10 @@ export class CopyModel {
     visible: boolean;
   };
 
-  constructor(network: Network, model: any = {}) {
+  constructor(
+    network: Network,
+    model: modelProps = { existing: '', new: '', params: [] }
+  ) {
     this._network = network;
     this._existingModelId = model.existing;
     this._newModelId = model.new;

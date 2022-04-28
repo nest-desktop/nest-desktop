@@ -6,6 +6,12 @@ import { NetworkState } from './networkState';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
+export interface modelProps {
+  existing: string;
+  new: string;
+  params: string[];
+}
+
 export class Network extends Config {
   private _connections: Connection[] = []; // for nest.Connect
   private _models: CopyModel[] = []; // for nest.CopyModel
@@ -164,7 +170,7 @@ export class Network extends Config {
   /**
    * Add model component to the network.
    */
-  addModel(data: any): CopyModel {
+  addModel(data: modelProps): CopyModel {
     this.consoleLog('Add model');
     const model = new CopyModel(this, data);
     this._models.push(model);
@@ -250,7 +256,7 @@ export class Network extends Config {
   /**
    * Add node model component to the network.
    */
-  addNodeModel(data: any): void {
+  addNodeModel(data: modelProps): void {
     this.consoleLog('Add node model');
     if (!data.existing.includes('synapse')) {
       this._models.push(new CopyModel(this, data));
@@ -260,7 +266,7 @@ export class Network extends Config {
   /**
    * Add synapse model component to the network.
    */
-  addSynapseModel(data: any): void {
+  addSynapseModel(data: modelProps): void {
     this.consoleLog('Add synapse model');
     if (data.existing.includes('synapse')) {
       this._models.push(new CopyModel(this, data));
