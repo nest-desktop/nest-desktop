@@ -190,7 +190,7 @@ export class Model extends Config {
   }
 
   /**
-   * Check if the model has parameter.
+   * Check if the model has parameters.
    */
   hasParameter(paramId: string): boolean {
     return this._params.some((param: ModelParameter) => param.id === paramId);
