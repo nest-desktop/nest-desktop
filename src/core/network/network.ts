@@ -61,14 +61,14 @@ export class Network extends Config {
   }
 
   /**
-   * Check if network has any node models.
+   * Check if the network has any node models.
    */
   get hasNodeModels(): boolean {
     return this._models.some((model: CopyModel) => !model.model.isSynapse);
   }
 
   /**
-   * Check if network has any synapse models.
+   * Check if the network has any synapse models.
    */
   get hasSynapseModels(): boolean {
     return this._models.some((model: CopyModel) => model.model.isSynapse);
@@ -168,7 +168,8 @@ export class Network extends Config {
   }
 
   /**
-   * Add model component to the network.
+   * Copy and add a model component to the network based on given model data.
+   * @data Data of the model which should be copied and added
    */
   addModel(data: modelProps): CopyModel {
     this.consoleLog('Add model');
@@ -178,7 +179,8 @@ export class Network extends Config {
   }
 
   /**
-   * Add model component to the network.
+   * Copy and add a model component to the network based on a given model ID.
+   * @param modelID ID of the model which should be copied adn added
    */
   copyModel(modelId: string): CopyModel {
     this.consoleLog('Copy model');
@@ -254,7 +256,9 @@ export class Network extends Config {
   }
 
   /**
-   * Add node model component to the network.
+   * Copy and add a node model component to the network based on given model
+   * data.
+   * @data Data of the model which should be copied and added
    */
   addNodeModel(data: modelProps): void {
     this.consoleLog('Add node model');
@@ -264,7 +268,9 @@ export class Network extends Config {
   }
 
   /**
-   * Add synapse model component to the network.
+   * Copy and add a synapse model component to the network based on given model
+   * data.
+   * @data Data of the model which should be copied and added
    */
   addSynapseModel(data: modelProps): void {
     this.consoleLog('Add synapse model');
@@ -452,22 +458,22 @@ export class Network extends Config {
     this._nodes = [];
     this._connections = [];
 
-    // Add node models to network.
+    // Add node models to the network.
     if (network.models) {
       network.models.forEach((data: any) => this.addNodeModel(data));
     }
 
-    // Add nodes to network.
+    // Add nodes to the network.
     if (network.nodes) {
       network.nodes.forEach((data: any) => this.addNode(data));
     }
 
-    // Add synapse models to network.
+    // Add synapse models to the network.
     if (network.models) {
       network.models.forEach((data: any) => this.addSynapseModel(data));
     }
 
-    // Add connections to network.
+    // Add connections to the network.
     if (network.connections) {
       network.connections.forEach((data: any) => this.addConnection(data));
     }
@@ -528,7 +534,8 @@ export class Network extends Config {
   }
 
   /**
-   * Get model from the model list.
+   * Get a model from the model list by ID.
+   * @param modelID ID of the model
    */
   getModel(modelId: string): CopyModel {
     return (
