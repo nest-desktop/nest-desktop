@@ -103,7 +103,7 @@ export class ConnectionGraph {
           }
 
           // Set model id of the copied synapse.
-          connection.synapse.modelId = modelCopied.new;
+          connection.synapse.modelId = modelCopied.newModelId;
 
           // Hide all synapse parameters.
           connection.synapse.hideAllParams();
