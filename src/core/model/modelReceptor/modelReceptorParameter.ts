@@ -11,8 +11,10 @@ export class ModelReceptorParameter extends ModelParameter {
   }
 
   /**
-   * TODO: Correct this options to get options for input
    * Get options from model receptor component.
+   *
+   * @remarks
+   * TODO: Validate this options to get options for input.
    */
   override get options(): ModelReceptorParameter {
     const param: ModelReceptorParameter = this.modelReceptor.params.find(

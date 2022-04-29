@@ -133,6 +133,9 @@ export class NodeCompartment {
     return this._hash ? this._hash.slice(0, 6) : '';
   }
 
+  /**
+   * Add receptor to the node compartment.
+   */
   addReceptor(receptor: any): void {
     receptor.compIdx = this._idx;
     this._node.addReceptor(receptor);

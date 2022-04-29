@@ -494,6 +494,9 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Generate values for an array.
+     */
     const generateValues = () => {
       state.valueGenerator.sort =
         state.param.id.includes('time') || state.param.id.includes('Time');

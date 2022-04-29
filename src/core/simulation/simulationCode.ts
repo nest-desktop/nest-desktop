@@ -166,6 +166,10 @@ export class SimulationCode {
     this._simulation.project.app.download(data, 'script', format);
   }
 
+  /**
+   * Serialize for JSON.
+   * @return simulation code object
+   */
   toJSON(): any {
     return { blocks: this._state.blocks };
   }

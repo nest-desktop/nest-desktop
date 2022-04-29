@@ -10,7 +10,7 @@ import { SynapseParameter } from '../synapse/synapseParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { NodeSlice } from '../node/nodeSlice';
-import { Parameter } from '../parameter/parameter';
+import { ConnectionParameter } from './connectionParameter';
 import { Synapse } from '../synapse/synapse';
 
 enum Rule {
@@ -29,7 +29,7 @@ export class Connection extends Config {
   private _idx: number; // generative
   private _mask: ConnectionMask;
   private _network: Network; // parent
-  private _params: Parameter[];
+  private _params: ConnectionParameter[];
   private _rule: string;
   private _sourceIdx: number; // Node index
   private _sourceSlice: NodeSlice;
@@ -64,8 +64,8 @@ export class Connection extends Config {
   /**
    * Returns all visible parameters.
    */
-  get filteredParams(): Parameter[] {
-    return this._params.filter((param: Parameter) => param.visible);
+  get filteredParams(): ConnectionParameter[] {
+    return this._params.filter((param: ConnectionParameter) => param.visible);
   }
 
   get hash(): string {
@@ -77,7 +77,7 @@ export class Connection extends Config {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: Parameter) => param.visible);
+    return this._params.some((param: ConnectionParameter) => param.visible);
   }
 
   get idx(): number {
@@ -185,14 +185,18 @@ export class Connection extends Config {
    * Sets all params to visible.
    */
   public showAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.state.visible = true));
+    this.params.forEach(
+      (param: ConnectionParameter) => (param.state.visible = true)
+    );
   }
 
   /**
    * Sets all params to invisible.
    */
   public hideAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.state.visible = false));
+    this.params.forEach(
+      (param: ConnectionParameter) => (param.state.visible = false)
+    );
   }
 
   /**
@@ -200,7 +204,7 @@ export class Connection extends Config {
    */
   public resetAllParams(): void {
     const ruleConfig: any = this.getRuleConfig();
-    this.params.forEach((param: Parameter) => {
+    this.params.forEach((param: ConnectionParameter) => {
       param.reset();
       const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
       param.value = p.value;
@@ -240,7 +244,7 @@ export class Connection extends Config {
    * Add connection parameter.
    */
   addParameter(param: any): void {
-    this._params.push(new Parameter(this, param));
+    this._params.push(new ConnectionParameter(this, param));
   }
 
   /**
@@ -321,7 +325,7 @@ export class Connection extends Config {
    */
   toJSON(): any {
     const connection: any = {
-      params: this._params.map((param: Parameter) => param.toJSON()),
+      params: this._params.map((param: ConnectionParameter) => param.toJSON()),
       rule: this._rule,
       source: this._sourceIdx,
       synapse: this._synapse.toJSON(),

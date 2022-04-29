@@ -149,6 +149,10 @@ export class NodeView {
       .map(param => param.id);
   }
 
+  /**
+   * Get record label.
+   * @param recordId - id of the record
+   */
   recordLabel(recordId: string): string {
     const recordables = this._node.recordables;
     const recordable = recordables.find(

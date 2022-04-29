@@ -89,7 +89,8 @@ export default Vue.extend({
     param: [NodeParameter, ModelParameter, Parameter, SynapseParameter],
   },
   setup(props, { emit }) {
-    type parameterTypes = NodeParameter
+    type parameterTypes =
+      | NodeParameter
       | ModelParameter
       | Parameter
       | SynapseParameter
@@ -111,6 +112,12 @@ export default Vue.extend({
       return label;
     };
 
+    /**
+     * Update parameters.
+     *
+     * @remarks
+     * It emits update:params event.
+     */
     const updateParam = () => {
       if (!state.param.isConstant) {
         state.param.specs.forEach((p: any) => (p.value = parseFloat(p.value)));

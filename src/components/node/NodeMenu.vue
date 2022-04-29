@@ -353,16 +353,6 @@ export default Vue.extend({
         .map((param: NodeParameter) => param.idx);
     };
 
-    const showAllParams = () => {
-      state.node.showAllParams();
-      setVisibleParams();
-    };
-
-    const hideAllParams = () => {
-      state.node.hideAllParams();
-      setVisibleParams();
-    };
-
     /**
      * Reset states.
      */
@@ -415,13 +405,11 @@ export default Vue.extend({
       backMenu,
       deleteNode,
       exportEvents,
-      hideAllParams,
       nodeColorChange,
       paramChange,
       resetColor,
       selectionChange,
       setWeights,
-      showAllParams,
       state,
     };
   },

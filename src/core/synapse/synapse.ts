@@ -200,7 +200,7 @@ export class Synapse {
   /**
    * Sets all params to visible.
    */
-  public showAllParams(): void {
+  showAllParams(): void {
     this.params.forEach(
       (param: SynapseParameter) => (param.state.visible = true)
     );
@@ -209,7 +209,7 @@ export class Synapse {
   /**
    * Sets all params to invisible.
    */
-  public hideAllParams(): void {
+  hideAllParams(): void {
     this.params.forEach(
       (param: SynapseParameter) => (param.state.visible = false)
     );

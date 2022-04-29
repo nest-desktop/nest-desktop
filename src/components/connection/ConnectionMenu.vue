@@ -109,7 +109,7 @@
             </v-btn>
             <v-spacer />
             <v-btn
-              @click="resetAllParams"
+              @click="state.connection.resetAllParams()"
               outlined
               small
               text
@@ -290,20 +290,24 @@ export default Vue.extend({
         .map((param: SynapseParameter) => param.idx);
     };
 
+    /**
+     * Show all parameters.
+     */
     const showAllParams = () => {
       state.connection.showAllParams();
       state.connection.synapse.showAllParams();
+      state.connection.connectionChanges();
       setVisibleParams();
     };
 
+    /**
+     * Hide all parameters.
+     */
     const hideAllParams = () => {
       state.connection.hideAllParams();
       state.connection.synapse.hideAllParams();
+      state.connection.connectionChanges();
       setVisibleParams();
-    };
-
-    const resetAllParams = () => {
-      state.connection.resetAllParams();
     };
 
     /**
@@ -354,7 +358,6 @@ export default Vue.extend({
       hideAllParams,
       paramChange,
       projectView,
-      resetAllParams,
       selectionChange,
       showAllParams,
       state,

@@ -7,10 +7,6 @@ export class NodeReceptorParameter extends NodeParameter {
     super(nodeReceptor, param);
   }
 
-  // override get node(): Node {
-  //   return this.nodeReceptor.node as Node;
-  // }
-
   get nodeReceptor(): NodeReceptor {
     return this.parent as NodeReceptor;
   }
