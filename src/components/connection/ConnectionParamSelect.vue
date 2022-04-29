@@ -59,13 +59,6 @@ export default Vue.extend({
     /**
      * Triggers when parameter is changed.
      */
-    const paramChange = () => {
-      state.connection.connectionChanges();
-    };
-
-    /**
-     * Triggers when parameter is changed.
-     */
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
@@ -83,16 +76,6 @@ export default Vue.extend({
         .map((param: Parameter) => param.idx);
     };
 
-    const showAllParams = () => {
-      state.connection.showAllParams();
-      update();
-    };
-
-    const hideAllParams = () => {
-      state.connection.hideAllParams();
-      update();
-    };
-
     onMounted(() => {
       update();
     });
@@ -105,10 +88,7 @@ export default Vue.extend({
     );
 
     return {
-      hideAllParams,
-      paramChange,
       selectionChange,
-      showAllParams,
       state,
     };
   },

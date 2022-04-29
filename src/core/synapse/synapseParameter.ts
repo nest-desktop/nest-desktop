@@ -38,7 +38,7 @@ export class SynapseParameter extends Parameter {
 
   /**
    * Serialize for JSON.
-   * @return model parameter object
+   * @return synapse parameter object
    */
   override toJSON(): any {
     const param: any = {

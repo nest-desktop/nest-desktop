@@ -60,13 +60,6 @@ export default Vue.extend({
     /**
      * Triggers when parameter is changed.
      */
-    const paramChange = () => {
-      state.synapse.synapseChanges();
-    };
-
-    /**
-     * Triggers when parameter is changed.
-     */
     const selectionChange = () => {
       state.synapse.params.forEach(
         (param: SynapseParameter) =>
@@ -84,16 +77,6 @@ export default Vue.extend({
         .map((param: SynapseParameter) => param.idx);
     };
 
-    const showAllParams = () => {
-      state.synapse.showAllParams();
-      update();
-    };
-
-    const hideAllParams = () => {
-      state.synapse.hideAllParams();
-      update();
-    };
-
     onMounted(() => {
       update();
     });
@@ -106,10 +89,7 @@ export default Vue.extend({
     );
 
     return {
-      hideAllParams,
-      paramChange,
       selectionChange,
-      showAllParams,
       state,
     };
   },

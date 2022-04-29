@@ -364,6 +364,10 @@ export class Node extends Config {
     }
   }
 
+  /**
+   * Initialize compartments for the node.
+   * @param node - node object
+   */
   initCompartments(node: any = null): void {
     this._compartments = [];
     if (node && node.hasOwnProperty('compartments')) {
@@ -373,6 +377,10 @@ export class Node extends Config {
     }
   }
 
+  /**
+   * Initialize receptors for the node.
+   * @param node - node object
+   */
   initReceptors(node: any = null): void {
     this._receptors = [];
     if (node && node.hasOwnProperty('receptors')) {

@@ -42,7 +42,7 @@ export class NodeParameter extends Parameter {
 
   /**
    * Serialize for JSON.
-   * @return model parameter object
+   * @return node parameter object
    */
   override toJSON(): any {
     const param: any = {
