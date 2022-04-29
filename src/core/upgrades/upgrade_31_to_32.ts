@@ -3,14 +3,14 @@ export function upgradeProject_31_to_32(project: any): any {
     return project;
   }
 
-  // // Stores params only if visible.
+  // // Stores node params only if visible.
   // project.network.nodes.forEach((node: any) => {
   //   if (node.params) {
   //     node.params = node.params.filter((param: any) => param.visible);
   //   }
   // });
   //
-  // // Stores params only if visible.
+  // // Stores connection params only if visible.
   // project.network.connections.forEach((connection: any) => {
   //   if (connection.params) {
   //     connection.params = connection.params.filter(
