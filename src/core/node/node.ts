@@ -5,6 +5,7 @@ import { AnalogSignalActivity } from '../activity/analogSignalActivity';
 import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
 import { consoleLog } from '../common/logger';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
@@ -12,6 +13,7 @@ import { NodeRecord } from './nodeRecord';
 import { NodeSpatial } from './nodeSpatial/nodeSpatial';
 import { NodeState } from './nodeState';
 import { NodeView } from './nodeView';
+import { Parameter } from '../parameter/parameter';
 import { SpikeActivity } from '../activity/spikeActivity';
 
 export class Node extends Config {
@@ -32,7 +34,7 @@ export class Node extends Config {
   private _state: NodeState;
   private _view: NodeView;
 
-  constructor(network: any, node: any) {
+  constructor(network: any, node: any = {}) {
     super('Node');
     this._idx = network.nodes.length;
     this._modelId = node.model;
@@ -58,6 +60,16 @@ export class Node extends Config {
     this._activity = value;
   }
 
+  get assignedModels(): CopyModel[] {
+    if (this._modelId !== 'weight_recorder') {
+      return [];
+    }
+
+    return this._network.models.filter((model: CopyModel) =>
+      model.params.some((param: Parameter) => param.value === this.view.label)
+    );
+  }
+
   get filteredParams(): ModelParameter[] {
     return this._params.filter((param: ModelParameter) => param.visible);
   }
@@ -66,12 +78,34 @@ export class Node extends Config {
     return this._hash;
   }
 
+  /**
+   * Check if it is an excitatory neuron.
+   */
+  get isExcitatoryNeuron(): boolean {
+    return this.model.isNeuron && this._view.weight === 'excitatory';
+  }
+
+  /**
+   * Check if it is an inhibitory neuron.
+   */
+  get isInhibitoryNeuron(): boolean {
+    return this.model.isNeuron && this._view.weight === 'inhibitory';
+  }
+
   get idx(): number {
     return this._idx;
   }
 
-  get model(): Model {
-    return this._network.project.app.model.getModel(this._modelId);
+  get model(): CopyModel | Model {
+    if (
+      this._network.nodeModels.some(
+        (model: CopyModel) => model.id === this.modelId
+      )
+    ) {
+      return this._network.getModel(this._modelId);
+    } else {
+      return this._network.project.app.model.getModel(this._modelId);
+    }
   }
 
   /**
@@ -82,13 +116,18 @@ export class Node extends Config {
    *
    * @param model - node model
    */
-  set model(model: Model) {
+  set model(model: CopyModel | Model) {
     this.modelId = model.id;
   }
 
-  get models(): Model[] {
+  get models(): (CopyModel | Model)[] {
     const elementType: string = this.model.elementType;
-    return this._network.project.app.model.filterModels(elementType);
+    const models: Model[] =
+      this._network.project.app.model.filterModels(elementType);
+    const modelsCopied: CopyModel[] = this._network.filterModels(elementType);
+    const filteredModels = [...models, ...modelsCopied];
+    filteredModels.sort();
+    return filteredModels;
   }
 
   get modelId(): string {
@@ -176,7 +215,7 @@ export class Node extends Config {
     );
   }
 
-  get someParams(): boolean {
+  get hasSomeVisibleParams(): boolean {
     return (
       this._params.some((param: ModelParameter) => param.visible) ||
       this._modelId === 'multimeter' ||
@@ -235,20 +274,6 @@ export class Node extends Config {
   }
 
   /**
-   * Check if it is an excitatory neuron.
-   */
-  get isExcitatoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.weight === 'excitatory';
-  }
-
-  /**
-   * Check if it is an inhibitory neuron.
-   */
-  get isInhibitoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.weight === 'inhibitory';
-  }
-
-  /**
    * Observer for node changes.
    *
    * @remarks
@@ -286,13 +311,15 @@ export class Node extends Config {
     if (this.model && node && this.hasParameters(node)) {
       this.model.params.forEach((modelParam: ModelParameter) => {
         const nodeParam = node.params.find((p: any) => p.id === modelParam.id);
-        this.addParameter(nodeParam || modelParam.toJSON());
+        this.addModelParameter(nodeParam || modelParam.toJSON());
       });
     } else if (this.model) {
-      this.model.params.forEach((param: ModelParameter) =>
-        this.addParameter(param.toJSON())
-      );
-    } else if (this.hasParameters(node)) {
+      this.model.params.forEach((param: ModelParameter) => {
+        const modelParam = param.toJSON();
+        modelParam.visible = false;
+        this.addModelParameter(modelParam);
+      });
+    } else if (node && this.hasParameters(node)) {
       node.params.forEach((param: any) => this.addParameter(param));
     }
   }
@@ -305,11 +332,19 @@ export class Node extends Config {
   }
 
   /**
+   * Add modelparameter component.
+   * @param param - parameter object
+   */
+  addModelParameter(param: any): void {
+    this._params.push(new ModelParameter(this, param));
+  }
+
+  /**
    * Add parameter component.
    * @param param - parameter object
    */
   addParameter(param: any): void {
-    this._params.push(new ModelParameter(this, param));
+    this._params.push(new Parameter(this, param));
   }
 
   /**
@@ -317,10 +352,7 @@ export class Node extends Config {
    * @param paramId - parameter id
    */
   hasParameter(paramId: string): boolean {
-    return (
-      this._params.find((param: ModelParameter) => param.id === paramId) !==
-      undefined
-    );
+    return this._params.some((param: ModelParameter) => param.id === paramId);
   }
 
   /**
@@ -328,11 +360,8 @@ export class Node extends Config {
    * @param paramId - parameter id
    * @return parameter component
    */
-  getParameter(paramId: string): any {
-    if (this.hasParameter(paramId)) {
-      return this._params.find((param: ModelParameter) => param.id === paramId)
-        .value;
-    }
+  getParameter(paramId: string): ModelParameter {
+    return this._params.find((param: ModelParameter) => param.id === paramId);
   }
 
   /**
@@ -421,14 +450,10 @@ export class Node extends Config {
    * It should be called after connections are created.
    */
   updateRecords(): void {
-    if (this.targets.length === 0) {
-      return;
-    }
-
     let recordables: any[] = [];
     // Initialize recordables.
     if (this.targets.length > 0) {
-      if (this.model.isMultimeter) {
+      if (this._modelId === 'multimeter') {
         const recordablesNodes = this.targets.map((target: Node) => [
           ...target.model.recordables,
         ]);
@@ -437,13 +462,19 @@ export class Node extends Config {
           recordables = [...new Set(recordablesPooled)];
           recordables.sort((a: any, b: any) => a.id - b.id);
         }
-      } else {
+      } else if (this._modelId === 'voltmeter') {
         recordables.push(
           this.model.config.recordables.find(
             (record: any) => record.id === 'V_m'
           )
         );
       }
+    } else if (this._modelId === 'weight_recorder') {
+      recordables.push(
+        this.model.config.recordables.find(
+          (record: any) => record.id === 'weights'
+        )
+      );
     }
 
     let recordableIds: string[];
@@ -488,10 +519,10 @@ export class Node extends Config {
    * Update record colors.
    */
   updateRecordsColor(): void {
-    this._recordables.forEach(
-      (record: NodeRecord) => (record.color = this._view.color)
-    );
-    this._network.project.activityGraph.activityChartGraph.updateRecordsColor();
+    const color = this._view.color;
+    this._recordables.forEach((record: NodeRecord) => {
+      record.color = color;
+    });
   }
 
   /**

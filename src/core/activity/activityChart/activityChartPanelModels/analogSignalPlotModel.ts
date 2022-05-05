@@ -55,7 +55,15 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   createGraphDataPoints(nodeIds: number[], record: NodeRecord): any[] {
     const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: '' }));
-    record.activity.events.senders.forEach((sender: number, idx: number) => {
+
+    let senders: number[];
+    if (record.activity.events.hasOwnProperty('ports')) {
+      senders = record.activity.events.ports;
+    } else {
+      senders = record.activity.events.senders;
+    }
+
+    senders.forEach((sender: number, idx: number) => {
       const senderIdx: number = nodeIds.indexOf(sender);
       if (senderIdx === -1) {
         return;
@@ -73,7 +81,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   updateSpikeThresholdLine(record: NodeRecord): void {
     const thresholds: number[] = record.node.nodes
       .filter((node: Node) => node.modelId.startsWith('iaf'))
-      .map((target: Node) => target.getParameter('V_th') || -55);
+      .map((target: Node) => target.getParameter('V_th').value || -55);
 
     if (thresholds.length > 0) {
       const line = {

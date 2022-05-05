@@ -482,30 +482,18 @@ export class Project {
           case 200:
             if (response.data.data != null) {
               data = response.data.data;
-              // get biological time
+
+              // Get biological time
               this._simulation.state.biologicalTime =
-                data.kernel != null
-                  ? data.kernel.biological_time
+                data.biological_time != null
+                  ? data.biological_time
                   : this._simulation.time;
 
-              // get activities
-              if (data.activities != null) {
-                // get positions
-                if (data.positions != null) {
-                  data.activities.forEach((activity: any) => {
-                    const positions = activity.nodeIds.map(
-                      (nodeId: number) => data.positions[nodeId]
-                    );
-                    activity.nodePositions = positions;
-                  });
-                }
-
-                // initialize activities
-                this.initActivities(data.activities);
-              }
+              // Initialize activities
+              this.initActivities(data);
             }
 
-            // commit network for history
+            // Commit network for history
             this.commitNetwork(this._network);
             break;
           default:
@@ -847,10 +835,47 @@ export class Project {
   /**
    * Initialize activities in recorder nodes after simulation.
    */
-  initActivities(data: any[]): void {
+  initActivities(data: any): void {
+    let activities: any[];
+    if (data.hasOwnProperty('activities')) {
+      activities = data.activities;
+    } else if (data.hasOwnProperty('events')) {
+      activities = data.events.map((events: any) => {
+        return {
+          events,
+        };
+      });
+    }
+
+    activities.forEach((activity: any) => {
+      if (!activity.hasOwnProperty('nodeIds')) {
+        if (activity.events.hasOwnProperty('ports')) {
+          activity.nodeIds = activity.events.ports.filter(
+            (value: number, index: number, self: number[]) =>
+              self.indexOf(value) === index
+          );
+        } else {
+          activity.nodeIds = activity.events.senders.filter(
+            (value: number, index: number, self: number[]) =>
+              self.indexOf(value) === index
+          );
+        }
+      }
+      activity.nodeIds.sort((a: number, b: number) => a - b);
+    });
+
+    // Get node positions.
+    if (data.hasOwnProperty('positions')) {
+      activities.forEach((activity: any) => {
+        activity.nodePositions = activity.nodeIds.map(
+          (nodeId: number) => data.positions[nodeId]
+        );
+      });
+    }
+
     // Initialize recorded activities.
     this.activities.forEach((activity: Activity, idx: number) => {
-      activity.init(data[idx]);
+      activity.init(activities[idx]);
     });
 
     // Check if project has activities.

@@ -1,10 +1,11 @@
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
 import { Parameter } from './parameter';
 import { Synapse } from '../synapse/synapse';
 
 export class ModelParameter extends Parameter {
-  constructor(parent: Model | Node | Synapse, param: any) {
+  constructor(parent: CopyModel | Model | Node | Synapse, param: any) {
     super(parent, param);
   }
 
@@ -37,7 +38,10 @@ export class ModelParameter extends Parameter {
    * Trigger changes when parameter is changed.
    */
   override paramChanges(): void {
-    if (this.parent.name === 'Node') {
+    if (this.parent.name === 'CopyModel') {
+      const model = this.parent as CopyModel;
+      model.modelChanges();
+    } else if (this.parent.name === 'Node') {
       const node = this.parent as Node;
       node.nodeChanges();
     } else if (this.parent.name === 'Synapse') {
