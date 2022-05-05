@@ -267,7 +267,7 @@ export class ActivityChartGraph {
   /**
    * Update records color.
    *
-   * @remarks.
+   * @remarks
    * It renders new updates in activity plots.
    */
   updateRecordsColor(): void {

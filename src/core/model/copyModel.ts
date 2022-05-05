@@ -5,22 +5,32 @@ import { Node } from '../node/node';
 import { Network } from '../network/network';
 import { Parameter } from '../parameter/parameter';
 
+export interface modelProps {
+  existing: string;
+  new: string;
+  params: string[];
+}
+
 export class CopyModel {
   private readonly _name = 'CopyModel';
 
-  private _network: Network;
-  private _existing: string;
+  private _existingModelId: string;
   private _idx: number;
-  private _new: string;
+  private _network: Network;
+  private _newModelId: string;
   private _params: ModelParameter[];
   private _state: {
     visible: boolean;
   };
 
-  constructor(network: Network, model: any = {}) {
+  constructor(
+    network: Network,
+    model: modelProps = { existing: '', new: '', params: [] }
+  ) {
     this._network = network;
-    this._existing = model.existing;
-    this._new = model.new;
+    this._existingModelId = model.existing;
+    this._newModelId = model.new;
+
     this._idx = this.network.models.length;
     this._state = {
       visible: true,
@@ -39,7 +49,8 @@ export class CopyModel {
 
   get connections(): Connection[] {
     return this._network.connections.filter(
-      (connection: Connection) => connection.synapse.modelId === this._new
+      (connection: Connection) =>
+        connection.synapse.modelId === this._newModelId
     );
   }
 
@@ -47,15 +58,20 @@ export class CopyModel {
     return this.model.elementType;
   }
 
-  get existing(): string {
-    return this._existing;
+  get existingModelId(): string {
+    return this._existingModelId;
   }
 
-  set existing(value: string) {
-    const renameNew = this.new.includes(this._existing);
-    this._existing = value;
+  /**
+   * This method sets the model ID to <ID of parent model> + '_copied' to avoid
+   * naming collisions.
+   * @param value New model ID
+   */
+  set existingModelId(value: string) {
+    const renameNew = this.newModelId.includes(this._existingModelId);
+    this._existingModelId = value;
     if (renameNew) {
-      this.new = value + '_copied' + (this._idx + 1);
+      this.newModelId = value + '_copied' + (this._idx + 1);
     }
     this.initParameters();
     this.modelChanges();
@@ -72,7 +88,7 @@ export class CopyModel {
   }
 
   get id(): string {
-    return this._new;
+    return this._newModelId;
   }
 
   /**
@@ -86,7 +102,7 @@ export class CopyModel {
    * Check if the model is a multimeter.
    */
   get isMultimeter(): boolean {
-    return this._existing === 'multimeter';
+    return this._existingModelId === 'multimeter';
   }
 
   /**
@@ -107,7 +123,7 @@ export class CopyModel {
    * Check if the model is a spike recorder.
    */
   get isSpikeRecorder(): boolean {
-    return this._existing === 'spike_recorder';
+    return this._existingModelId === 'spike_recorder';
   }
 
   /**
@@ -128,7 +144,7 @@ export class CopyModel {
    * Check if the model is a weight recorder.
    */
   get isWeightRecorder(): boolean {
-    return this._existing === 'weight_recorder';
+    return this._existingModelId === 'weight_recorder';
   }
 
   get idx(): number {
@@ -140,11 +156,11 @@ export class CopyModel {
   }
 
   get label(): string {
-    return this._new;
+    return this._newModelId;
   }
 
   get model(): Model {
-    return this._network.project.app.model.getModel(this._existing);
+    return this._network.project.app.model.getModel(this._existingModelId);
   }
 
   get models(): Model[] {
@@ -160,25 +176,31 @@ export class CopyModel {
     return this._network;
   }
 
-  get new(): string {
-    return this._new;
+  get newModelId(): string {
+    return this._newModelId;
   }
 
-  set new(value: string) {
+  /**
+   * Sets the new model ID to `value` and updates all nodes and connections.
+   * @param value New model ID
+   */
+  set newModelId(value: string) {
     const nodes = this.nodes;
     const connections = this._network.connections.filter(
-      (connection: Connection) => connection.synapse.modelId === this._new
+      (connection: Connection) =>
+        connection.synapse.modelId === this._newModelId
     );
-    this._new = value;
-    nodes.forEach((node: Node) => (node.modelId = this._new));
+    this._newModelId = value;
+    nodes.forEach((node: Node) => (node.modelId = this._newModelId));
     connections.forEach(
-      (connection: Connection) => (connection.synapse.modelId = this._new)
+      (connection: Connection) =>
+        (connection.synapse.modelId = this._newModelId)
     );
   }
 
   get nodes(): Node[] {
     return this._network.nodes.filter(
-      (node: Node) => node.modelId === this._new
+      (node: Node) => node.modelId === this._newModelId
     );
   }
 
@@ -348,14 +370,16 @@ export class CopyModel {
    */
   remove(): void {
     this._network.nodes
-      .filter((node: Node) => node.modelId === this.new)
-      .forEach((node: Node) => (node.modelId = this.existing));
+      .filter((node: Node) => node.modelId === this.newModelId)
+      .forEach((node: Node) => (node.modelId = this._existingModelId));
     this._network.connections
       .filter(
-        (connection: Connection) => connection.synapse.modelId === this.new
+        (connection: Connection) =>
+          connection.synapse.modelId === this.newModelId
       )
       .forEach(
-        (connection: Connection) => (connection.synapse.modelId = this.existing)
+        (connection: Connection) =>
+          (connection.synapse.modelId = this._existingModelId)
       );
     this._network.deleteModel(this);
     this.clean();
@@ -374,8 +398,8 @@ export class CopyModel {
    */
   toJSON(): any {
     const model: any = {
-      existing: this._existing,
-      new: this._new,
+      existing: this._existingModelId,
+      new: this._newModelId,
       params: this.filteredParams.map((param: ModelParameter) =>
         param.toJSON()
       ),

@@ -25,27 +25,27 @@ export class NetworkState {
 
   private _icons: any = {
     all: {
-      on: 'mdi-checkbox-marked-outline',
       off: 'mdi-checkbox-blank-outline',
+      on: 'mdi-checkbox-marked-outline',
       tab: 'mdi-all-inclusive',
     },
     model: { tab: '$copyModel' },
     neuron: {
-      on: 'mdi-alpha-n-box',
       off: 'mdi-alpha-n-box-outline',
+      on: 'mdi-alpha-n-box',
       tab: 'mdi-shape-outline',
     },
     recorder: {
-      on: 'mdi-alpha-r-box',
       off: 'mdi-alpha-r-box-outline',
+      on: 'mdi-alpha-r-box',
       tab: '$recorder',
     },
     stimulator: {
-      on: 'mdi-alpha-s-box',
       off: 'mdi-alpha-s-box-outline',
+      on: 'mdi-alpha-s-box',
       tab: '$stimulator',
     },
-    synapse: { on: 'mdi-alpha-s-circle', off: 'mdi-alpha-s-circle-outline' },
+    synapse: { off: 'mdi-alpha-s-circle-outline', on: 'mdi-alpha-s-circle' },
   };
 
   private _network: Network; // parent

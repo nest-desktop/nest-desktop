@@ -25,7 +25,7 @@ nest.rng_seed = {{ simulation.kernel.rngSeed }}
 {{ #network.hasNodeModels }}
 # Copy node models
 {{ #network.nodeModels }}
-nest.CopyModel("{{ existing }}", "{{ new }}", params={
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}", params={
 {{ #filteredParams }}
   "{{ id }}": {{ valueAsString }},
 {{ /filteredParams }}
@@ -53,7 +53,7 @@ nest.CopyModel("{{ existing }}", "{{ new }}", params={
 {{ #network.hasSynapseModels }}
 # Copy synapse models
 {{ #network.synapseModels }}
-nest.CopyModel("{{ existing }}", "{{ new }}", params={
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}", params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}

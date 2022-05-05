@@ -194,7 +194,7 @@
                             <template #default="{ active }">
                               <v-icon
                                 class="handle"
-                                title="Drag to change order in models."
+                                title="Drag to change order of models"
                                 v-text="'mdi-drag-vertical'"
                               />
                               <v-list-item-content
@@ -232,7 +232,7 @@
                               <v-icon
                                 :color="node.view.color"
                                 class="handle"
-                                title="Drag to change order in nodes."
+                                title="Drag to change order of nodes"
                                 v-text="'mdi-drag-vertical'"
                               />
                               <v-list-item-content
@@ -274,7 +274,7 @@
                               <v-icon
                                 :color="connection.source.view.color"
                                 class="handle"
-                                title="Drag to change order in connections."
+                                title="Drag to change order of connections"
                                 v-text="'mdi-drag-vertical'"
                               />
                               <v-list-item-content class="pa-1">
@@ -358,7 +358,7 @@ export default Vue.extend({
     };
 
     /**
-     * Update display for connections.
+     * Update the visibility state of the connections.
      */
     const connectionDisplayChange = () => {
       state.network.connections.forEach(
@@ -369,7 +369,7 @@ export default Vue.extend({
     };
 
     /**
-     * Update display for model.
+     * Update the visibility state of the models.
      */
     const modelDisplayChange = () => {
       state.network.models.forEach(
@@ -401,7 +401,7 @@ export default Vue.extend({
     };
 
     /**
-     * Update display for nodes.
+     * Update the visibility state of the nodes.
      */
     const nodeDisplayChange = () => {
       state.network.nodes.forEach(
@@ -433,7 +433,8 @@ export default Vue.extend({
     };
 
     /**
-     * Toggle element type view of connections.
+     * Update the visibility state of connections with type 'elementType'.
+     * @param elementType Type of the connections
      */
     const toggleConnections = (elementType: string = '') => {
       const connections = ['', 'all'].includes(elementType)
@@ -452,7 +453,8 @@ export default Vue.extend({
     };
 
     /**
-     * Toggle element type view of models.
+     * Update the visibility state of models with type 'elementType'.
+     * @param elementType Type of the models
      */
     const toggleModels = (elementType: string = '') => {
       const models = ['', 'all'].includes(elementType)
@@ -468,7 +470,8 @@ export default Vue.extend({
     };
 
     /**
-     * Toggle element type view of nodes.
+     * Update the visibility state of nodes with type 'elementType'.
+     * @param elementType Type of the nodes
      */
     const toggleNodes = (elementType: string = '') => {
       const nodes = ['', 'all'].includes(elementType)
