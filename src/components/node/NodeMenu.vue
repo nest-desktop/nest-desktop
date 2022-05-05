@@ -324,7 +324,7 @@ export default Vue.extend({
      * Reset node color.
      */
     const resetColor = () => {
-      state.node.view.color = 'none';
+      state.node.view.color = undefined;
       nodeColorChange();
     };
 
