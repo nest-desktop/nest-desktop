@@ -22,7 +22,7 @@
           hide-details
           item-value="id"
           return-object
-          v-model="state.selectedRecords"
+          v-model="state.selectedRecord"
         >
           <template v-slot:selection="{ item }">
             <v-chip
@@ -55,6 +55,7 @@
           </template>
         </v-select>
       </v-card-title>
+
       <v-data-table
         :headers="state.headers"
         :items-per-page="15"
@@ -65,14 +66,33 @@
         loading-text="Loading... Please wait"
         sort-by="id"
       >
+        <template #body="{ items }">
+          <tbody>
+            <tr
+              :class="{
+                active: isActive(item.id),
+              }"
+              :key="item.id"
+              @click="activeLineGraph(item.id)"
+              style="cursor: pointer"
+              v-for="item in items"
+            >
+              <td>{{ item.id }}</td>
+              <td>{{ item.mean }}</td>
+              <td>{{ item.std }}</td>
+            </tr>
+          </tbody>
+        </template>
+
         <template v-if="state.items.length > 1" #[`body.append`]="{ headers }">
           <tr>
             <td :key="idx" v-for="(header, idx) in headers">
               <div v-if="header.value === 'id'" v-text="'All'" />
-              <div v-else>
+              <div v-else-if="['mean', 'std'].includes(header.value)">
                 <span>&#956;</span>
                 = {{ mean(header.value).toFixed(2) }}
               </div>
+              <div v-else />
             </td>
           </tr>
         </template>
@@ -109,8 +129,21 @@ export default Vue.extend({
       items: [],
       loading: false,
       search: '',
-      selectedRecords: null,
+      selectedRecord: null,
     });
+
+    const activeLineGraph = (nodeId: number) => {
+      state.activity.state.activeNodeId =
+        state.activity.state.activeNodeId == nodeId ? null : nodeId;
+      state.activity.chartGraph.panels.forEach(panel =>
+        panel.model.updateActive(state.selectedRecord)
+      );
+      state.activity.chartGraph.react();
+    };
+
+    const isActive = (nodeId: number) => {
+      return state.activity.state.activeNodeId === nodeId;
+    };
 
     /**
      * Update stats of analog activity.
@@ -118,15 +151,15 @@ export default Vue.extend({
     const update = () => {
       state.items = [];
       if (
-        state.selectedRecords == null &&
+        state.selectedRecord == null &&
         state.activity.state.records.length > 0
       ) {
-        state.selectedRecords = state.activity.state.records[0];
+        state.selectedRecord = state.activity.state.records[0];
       }
       if (state.activity != undefined) {
         state.loading = true;
         const activityData: any[] =
-          state.activity.events[state.selectedRecords.id];
+          state.activity.events[state.selectedRecord.id];
         const data: any[] = Object.create(null);
         state.activity.nodeIds.forEach(id => (data[id] = []));
         state.activity.events.senders.forEach((sender: number, idx: number) => {
@@ -137,7 +170,7 @@ export default Vue.extend({
           return {
             id,
             mean: d.length > 0 ? d3.mean(d).toFixed(2) : NaN,
-            std: d.length > 0 ? d3.deviation(d).toFixed(2): NaN,
+            std: d.length > 0 ? d3.deviation(d).toFixed(2) : NaN,
           };
         });
         state.activityHash = state.activity.hash;
@@ -163,7 +196,14 @@ export default Vue.extend({
       () => update()
     );
 
-    return { mean, state, sum, update };
+    return {
+      activeLineGraph,
+      isActive,
+      mean,
+      state,
+      sum,
+      update,
+    };
   },
 });
 </script>

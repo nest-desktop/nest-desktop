@@ -1,6 +1,7 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
 
+import { ActivityChartGraph } from '../activity/activityChart/activityChartGraph';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
@@ -17,10 +18,15 @@ export class Activity {
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
     this._state = reactive({
+      activeNodeId: null,
       fromTime: 0,
       records: [],
     });
     this.init(activity);
+  }
+
+  get chartGraph(): ActivityChartGraph {
+    return this.project.activityGraph.activityChartGraph;
   }
 
   get currenttime(): number {

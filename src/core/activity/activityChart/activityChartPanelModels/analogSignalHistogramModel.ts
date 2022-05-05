@@ -22,12 +22,12 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update histogram panel for analog signal.
+   * Add data of analog signal for histogram panel.
    *
    * @remarks
    * It requires activity data.
    */
-  override updateData(): void {
+  override addData(): void {
     this.data = [];
 
     if (this.state.recordsVisible.length === 0) {

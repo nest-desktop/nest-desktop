@@ -218,7 +218,7 @@ export class ActivityChartGraph {
     this.updateLayoutColor();
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      this.updateData(panel);
+      this.gatherData(panel);
       this.updateLayoutPanel(panel);
     });
 
@@ -226,9 +226,9 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update data of the chart graph
+   * Gather data for the chart graph
    */
-  updateData(panel: ActivityChartPanel): void {
+  gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: any) => {
       data.panelIdx = panel.idx;
       data.xaxis = 'x' + panel.xaxis;
@@ -251,9 +251,9 @@ export class ActivityChartGraph {
    * Update the layout of the chart graph from each panel.
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
-    this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
+    this._layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
       panel.layout.yaxis;
-    this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
+    this._layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
       panel.layout.xaxis;
   }
 
