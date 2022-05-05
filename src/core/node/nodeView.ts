@@ -49,7 +49,10 @@ export class NodeView {
   }
 
   set color(value: string) {
-    this._color = value === 'none' ? undefined : value;
+    this._color =
+      value === 'none' || value === '' || value == undefined
+        ? undefined
+        : value;
     this._node.network.clean();
   }
 
