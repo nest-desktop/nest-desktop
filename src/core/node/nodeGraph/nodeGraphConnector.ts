@@ -126,6 +126,18 @@ export class NodeGraphConnector {
       .style('pointer-events', 'none');
   }
 
+  drag(e: MouseEvent, node: Node): void {
+    node.state.select(true);
+    this._networkGraph.workspace.reset();
+    this._networkGraph.workspace.dragline.init(e);
+  }
+
+  dragEnd(e: MouseEvent): void {
+    // this._networkGraph.workspace.dragline.hide();
+    // this._networkGraph.workspace.state.enableConnection = false;
+    this._networkGraph.dragEnd(e);
+  }
+
   /**
    * Call on drag start.
    */
