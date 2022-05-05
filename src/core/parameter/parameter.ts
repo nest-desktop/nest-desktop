@@ -84,6 +84,30 @@ export class Parameter extends Config {
     return this._label;
   }
 
+  get labelInput(): string {
+    let label: string = '';
+    label += this.config.rawLabel
+      ? this.id
+      : this.options['label'] || this.options.id;
+
+    if (this.options.unit) {
+      label += ` (${this.options['unit']})`;
+    }
+    return label;
+  }
+
+  get labelRow(): string {
+    let label: string = '';
+    label += `<span>${
+      this.config.rawLabel ? this.id : this.options['label'] || this.options.id
+    }</span>`;
+
+    if (this.options.unit) {
+      label += `<span>${this.value} ${this.options['unit']}</span>`;
+    }
+    return label;
+  }
+
   set label(value: string) {
     this._label = value;
   }
@@ -146,14 +170,6 @@ export class Parameter extends Config {
 
   set ticks(value: number[]) {
     this._ticks = value;
-  }
-
-  get title(): string {
-    let label: string = `${this.options['label']}` || this.options.id;
-    if (this.options.unit) {
-      label += ` (${this.options['unit']})`;
-    }
-    return label;
   }
 
   get type(): string {

@@ -59,10 +59,10 @@
                 <template #default="">
                   <v-list-item-content class="pa-1">
                     <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
+                      <v-col
+                        class="d-flex justify-space-between"
+                        v-html="param.labelRow"
+                      />
                     </v-row>
                   </v-list-item-content>
 
