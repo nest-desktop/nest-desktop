@@ -9,7 +9,7 @@
       transition="slide-y-transition"
     >
       <v-card :min-width="300" flat tile>
-        <v-card-subtitle class="pb-0" v-text="state.options.label" />
+        <v-card-subtitle class="pb-0" v-text="label()" />
 
         <span v-if="state.content == null">
           <v-list dense>
@@ -163,13 +163,13 @@
                 :label="label()"
                 :row-height="12"
                 :rows="1"
-                @change="paramChange()"
+                :value="state.value"
+                @change="value => paramChange(value)"
                 auto-grow
                 class="my-1"
                 hide-details
                 outlined
                 small
-                v-model="state.value"
               />
             </template>
 
@@ -178,12 +178,40 @@
                 :color="state.color"
                 :label="label()"
                 :readonly="state.options.readonly"
-                @change="paramChange()"
+                :value="state.value"
+                @change="value => paramChange(value)"
                 class="ma-1"
                 dense
                 hide-details
-                v-model="state.value"
               />
+            </template>
+
+            <template v-if="state.options.input === 'checkbox+valueInput'">
+              <span class="d-flex">
+                <v-checkbox
+                  :color="state.color"
+                  :label="label()"
+                  :readonly="state.options.readonly"
+                  class="ma-1"
+                  dense
+                  hide-details
+                  v-model="state.visible"
+                />
+                <v-spacer />
+                <v-text-field
+                  :disabled="!state.visible"
+                  :label="label()"
+                  :value="state.value"
+                  @blur="e => paramChange(e.target.value)"
+                  @change="paramChange"
+                  class="mt-0 ml-2 pt-0"
+                  height="32"
+                  hide-details
+                  single-line
+                  style="width: 60px; font-size: 12px"
+                  type="number"
+                />
+              </span>
             </template>
 
             <template v-if="state.options.input === 'select'">
@@ -192,12 +220,61 @@
                 :items="state.options.items"
                 :label="label()"
                 :readonly="state.options.readonly"
-                @change="paramChange()"
+                @change="paramChange(state.value)"
                 class="ma-1 mt-3"
                 dense
                 hide-details
                 v-model="state.value"
               />
+            </template>
+
+            <template
+              v-if="
+                state.options.input === 'rangeSlider' &&
+                Array.isArray(state.value)
+              "
+            >
+              <v-subheader class="paramLabel" v-text="label()" />
+              <v-range-slider
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
+                :max="state.options.max"
+                :min="state.options.min"
+                :persistent-hint="state.message.length > 0"
+                :rules="rules"
+                :thumb-color="state.color"
+                :value="state.value"
+                @change="value => paramChange(value)"
+                class="align-center"
+                dense
+                height="40"
+                thumb-label
+              >
+                <template #prepend>
+                  <v-text-field
+                    :value="state.value[0]"
+                    @change="$set(state.value, 0, $event)"
+                    class="mt-0 ml-2 pt-0"
+                    height="32"
+                    hide-details
+                    single-line
+                    style="width: 60px; font-size: 12px"
+                    type="number"
+                  />
+                </template>
+                <template #append>
+                  <v-text-field
+                    :value="state.value[1]"
+                    @change="$set(state.value, 1, $event)"
+                    class="mt-0 ml-2 pt-0"
+                    height="32"
+                    hide-details
+                    single-line
+                    style="width: 60px; font-size: 12px"
+                    type="number"
+                  />
+                </template>
+              </v-range-slider>
             </template>
 
             <template v-if="state.options.input === 'tickSlider'">
@@ -211,7 +288,7 @@
                 :thumb-color="state.color"
                 :tick-labels="state.options.ticks"
                 :value="state.value"
-                @change="paramChange"
+                @change="value => paramChange(value)"
                 class="mb-2"
                 dense
                 height="40"
@@ -238,13 +315,12 @@
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
-                :value="state.value"
                 @blur="e => paramChange(e.target.value)"
-                @change="paramChange"
                 auto-grow
                 hide-details
                 outlined
                 small
+                v-model="state.value"
               />
             </template>
 
@@ -261,7 +337,7 @@
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
                 :value="state.value"
-                @change="paramChange"
+                @change="value => paramChange(value)"
                 dense
                 height="40"
                 thumb-label
@@ -331,15 +407,14 @@
                   <v-text-field
                     :readonly="state.options.readonly"
                     :step="state.options.step || 1"
-                    :value="state.value"
                     @blur="e => paramChange(e.target.value)"
-                    @change="paramChange"
                     class="mt-0 ml-2 pt-0"
                     height="32"
                     hide-details
                     single-line
                     style="width: 60px; font-size: 12px"
                     type="number"
+                    v-model="state.value"
                   />
                 </template>
               </v-slider>
@@ -420,7 +495,6 @@ export default Vue.extend({
             state.param.value = state.value;
             state.param.type = 'constant';
             state.expertMode = !state.expertMode;
-            // paramChange();
           },
           visible: true,
         },
@@ -501,13 +575,13 @@ export default Vue.extend({
       state.valueGenerator.sort =
         state.param.id.includes('time') || state.param.id.includes('Time');
       state.value = state.valueGenerator.generate();
-      paramChange();
+      paramChange(state.value);
     };
 
     /**
      * Triggers when parameter is changed.
      */
-    const paramChange = (value: any = undefined) => {
+    const paramChange = (value: boolean | number | string) => {
       // if (state.value < state.options.min) {
       //   state.options.min = state.value;
       // }
@@ -516,15 +590,18 @@ export default Vue.extend({
       // }
 
       let changed: boolean = true;
-      if (typeof value === 'number') {
-        // slider
-        changed = state.value !== value;
-        state.value = value;
-      } else if (typeof value === 'string') {
-        // text field
-        changed = state.value !== Number(value);
-        state.value = Number(value);
+      switch (typeof value) {
+        case 'string': // text field
+          changed = Number(value) !== state.value;
+          state.value = Number(value);
+          break;
+        default:
+          changed = value !== state.value;
+          state.value = value;
+          break;
       }
+
+      // Prevent auto simulation when the value is actually not changed.
       if (changed) {
         emit('update:value', deserialize(state.value));
       }
@@ -560,10 +637,10 @@ export default Vue.extend({
      */
     const label = () => {
       if (state.param) {
-        return state.param.title;
+        return state.param.labelInput;
       } else {
-        const text = state.options.label as string;
-        return state.options.unit ? text + ` (${state.options.unit})` : text;
+        const label = state.options.label as string;
+        return state.options.unit ? label + ` (${state.options.unit})` : label;
       }
     };
 
@@ -571,24 +648,26 @@ export default Vue.extend({
      * Increment value
      */
     const increment = (e: any) => {
+      let value = state.value;
       if (e.ctrlKey) {
-        state.value += parseFloat(state.options.step) * 10 || 10;
+        value += parseFloat(state.options.step) * 10 || 10;
       } else {
-        state.value += parseFloat(state.options.step) || 1;
+        value += parseFloat(state.options.step) || 1;
       }
-      paramChange();
+      paramChange(value);
     };
 
     /**
      * Increment value
      */
     const decrement = (e: any) => {
+      let value = state.value;
       if (e.ctrlKey) {
-        state.value += parseFloat(state.options.step) * 10 || 10;
+        value += parseFloat(state.options.step) * 10 || 10;
       } else {
-        state.value -= parseFloat(state.options.step) || 1;
+        value -= parseFloat(state.options.step) || 1;
       }
-      paramChange();
+      paramChange(value);
     };
 
     /**
