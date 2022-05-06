@@ -4,6 +4,7 @@ import { Config } from '../common/config';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
 import { ModelParameter } from '../parameter/modelParameter';
 import { Network } from '../network/network';
@@ -71,15 +72,27 @@ export class Connection extends Config {
     return this._hash;
   }
 
+  get hasConnSpec(): boolean {
+    return !this.isRuleAllToAll;
+  }
+
+  get hasSomeVisibleParams(): boolean {
+    return this._params.some((param: Parameter) => param.visible);
+  }
+
   get idx(): number {
     return this._idx;
+  }
+
+  get isRuleAllToAll(): boolean {
+    return this._rule === 'all_to_all';
   }
 
   get mask(): ConnectionMask {
     return this._mask;
   }
 
-  get model(): Model {
+  get model(): CopyModel | Model {
     return this._synapse.model;
   }
 
@@ -114,10 +127,6 @@ export class Connection extends Config {
    */
   get shortHash(): string {
     return this._hash ? this._hash.slice(0, 6) : '';
-  }
-
-  get someParams(): boolean {
-    return this._params.some((param: Parameter) => param.visible);
   }
 
   get source(): Node {

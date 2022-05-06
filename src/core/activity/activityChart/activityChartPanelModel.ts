@@ -235,6 +235,13 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
+   * Get activity from the project.
+   */
+  getActivity(idx: number): Activity {
+    return this._panel.graph.project.activities[idx];
+  }
+
+  /**
    * Update color for records.
    */
   updateRecordsColor(): void {
@@ -243,16 +250,16 @@ export abstract class ActivityChartPanelModel {
         return;
       }
 
+      const activity = this.getActivity(data.activityIdx);
       const record = this._state.recordsVisible.find(
         (record: NodeRecord) =>
           record.id === data.recordId &&
           record.activity.idx === data.activityIdx
       );
 
-      const activity = this._activities[data.activityIdx];
       const color = record
         ? record.color
-        : activity.recorder.view.color || 'black';
+        : activity.recorder.view.color || 'grey';
 
       if (data.marker) {
         data.marker.color = color;
