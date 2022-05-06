@@ -27,7 +27,7 @@ nest.rng_seed = {{ simulation.kernel.rngSeed }}
 {{ #network.nodeModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}", params={
 {{ #filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ code }},
 {{ /filteredParams }}
 })
 {{ /network.nodeModels }}

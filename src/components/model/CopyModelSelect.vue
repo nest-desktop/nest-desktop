@@ -14,7 +14,7 @@
           v-bind="attrs"
           v-on="on"
         >
-          <span v-text="state.model.existing" />
+          <span v-text="state.model.existingModelId" />
           <v-spacer />
           <v-icon class="modelEdit mr-3" right small v-text="'mdi-pencil'" />
         </v-btn>
@@ -34,7 +34,7 @@
             item-value="id"
             style="font-weight: 700"
             tile
-            v-model="state.model.existing"
+            v-model="state.model.existingModelId"
           />
         </v-card-title>
 
@@ -112,7 +112,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { CopyModel } from '@/core/model/copyModel';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { ModelParameter } from '@/core/model/modelParameter';
 import core from '@/core';
 
 export default Vue.extend({

@@ -43,15 +43,15 @@ nest.set({
 {{ #simulation.code.connectNodes }}
 # Connect nodes
 {{ #network.connections }}
-nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams}}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
   "rule": "{{ rule }}",
 {{ #filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ code }},
 {{ /filteredParams }}
-}{{ /hasSomeVisibleParams }}{{ #hasConnSpec }}{{ #synapse.hasSynSpec }, syn_spec={{ ^synapse.hasSomeVisibleParams }}"{{ synapse.modelId }}"{{ /synapse.hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}{ {{ ^synapse.isStatic }}
+}{{ /hasSomeVisibleParams }}{{ /hasConnSpec }}{{ #synapse.hasSynSpec }}, syn_spec={{ ^synapse.hasSomeVisibleParams }}"{{ synapse.modelId }}"{{ /synapse.hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}{ {{ ^synapse.isStatic }}
   "synapse_model": "{{ synapse.modelId }}",{{ /synapse.isStatic }}
 {{ #synapse.filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ code }},
 {{ /synapse.filteredParams }}
 }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
 {{ /network.connections }}
