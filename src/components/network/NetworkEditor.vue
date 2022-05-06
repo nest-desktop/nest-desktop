@@ -58,11 +58,11 @@
 
           <marker
             :id="'inh' + connection.idx"
-            markerHeight="8"
-            markerWidth="8"
+            markerHeight="6"
+            markerWidth="6"
             orient="auto"
-            refX="6"
-            refY="4"
+            refX="5"
+            refY="3"
           >
             <circle
               :style="{
@@ -70,7 +70,26 @@
                 stroke: connection.source.view.color,
               }"
               r="2"
-              transform="translate(4,4)"
+              transform="translate(3,3)"
+            />
+          </marker>
+
+          <marker
+            :id="'assigned' + connection.idx"
+            markerHeight="10"
+            markerWidth="10"
+            orient="auto"
+            refX="5"
+            refY="5"
+          >
+            <circle
+              :style="{
+                fill: 'none',
+                stroke: connection.source.view.color,
+                opacity: 0.5,
+              }"
+              r="4"
+              transform="translate(5,5)"
             />
           </marker>
         </defs>
