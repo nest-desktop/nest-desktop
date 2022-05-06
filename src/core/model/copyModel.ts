@@ -1,8 +1,10 @@
 import { Connection } from '../connection/connection';
 import { Model } from '../model/model';
-import { ModelParameter } from '../parameter/modelParameter';
-import { Node } from '../node/node';
+import { ModelCompartmentParameter } from './modelCompartmentParameter';
+import { ModelParameter } from './modelParameter';
+import { ModelReceptor } from './modelReceptor/modelReceptor';
 import { Network } from '../network/network';
+import { Node } from '../node/node';
 import { Parameter } from '../parameter/parameter';
 
 export interface modelProps {
@@ -45,6 +47,10 @@ export class CopyModel {
 
   get config(): any {
     return this.model.config;
+  }
+
+  get compartmentParams(): ModelCompartmentParameter[] {
+    return this.model.compartmentParams;
   }
 
   get connections(): Connection[] {
@@ -212,6 +218,10 @@ export class CopyModel {
     this._params = values.map(value => new ModelParameter(this.model, value));
   }
 
+  get receptors(): ModelReceptor[] {
+    return this.model.receptors;
+  }
+
   get recordables(): any[] {
     return this.model.recordables;
   }
@@ -240,20 +250,19 @@ export class CopyModel {
    * Add model parameter component.
    * @param param - parameter object
    */
-  addModelParameter(param: any): void {
-    const parameter = new ModelParameter(this, param);
-    this._params.push(parameter);
+  addParameter(param: any): void {
+    this._params.push(new ModelParameter(this, param));
   }
 
-  /**
-   * Add parameter component.
-   * @param param - parameter object
-   */
-  addParameter(param: any): void {
-    const parameter = new Parameter(this, param);
-    parameter.state.visible = true;
-    this._params.push(parameter);
-  }
+  // /**
+  //  * Add parameter component.
+  //  * @param param - parameter object
+  //  */
+  // addParameter(param: any): void {
+  //   const parameter = new Parameter(this, param);
+  //   parameter.state.visible = true;
+  //   this._params.push(parameter);
+  // }
 
   /**
    * Add parameter component.
@@ -268,6 +277,7 @@ export class CopyModel {
         (recorder: Node) => recorder.view.label
       ),
       value: param.value,
+      visible: true,
     });
   }
 
@@ -310,11 +320,11 @@ export class CopyModel {
     if (this.model && model && this.hasParameters(model)) {
       this.model.params.forEach((modelParam: ModelParameter) => {
         const param = model.params.find((p: any) => p.id === modelParam.id);
-        this.addModelParameter(param || modelParam.toJSON());
+        this.addParameter(param || modelParam.toJSON());
       });
     } else if (this.model) {
       this.model.params.forEach((param: ModelParameter) =>
-        this.addModelParameter(param.toJSON())
+        this.addParameter(param.toJSON())
       );
     } else if (this.hasParameters(model)) {
       model.params.forEach((param: any) => this.addParameter(param));

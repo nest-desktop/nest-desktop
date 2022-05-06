@@ -73,7 +73,7 @@
                       dense
                       hide-details
                       label="New label"
-                      v-model="model.new"
+                      v-model="model.newModelId"
                     />
 
                     <ModelParamEdit :model="model" />

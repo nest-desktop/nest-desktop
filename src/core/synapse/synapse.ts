@@ -14,7 +14,11 @@ export class Synapse {
   constructor(connection: any, synapse: any = {}) {
     this._connection = connection;
 
-    if (synapse != null && synapse.params.length > 0) {
+    if (
+      synapse != null &&
+      synapse.hasOwnProperty('params') &&
+      synapse.params.length > 0
+    ) {
       this._modelId = synapse.model || 'static_synapse';
       this._receptorIdx = synapse.receptorIdx || 0;
       this.initParameters(synapse);
@@ -28,15 +32,15 @@ export class Synapse {
     return this._connection;
   }
 
-  get hasReceptorIndices(): boolean {
-    return this.receptorIndices.length > 0;
-  }
-
   /**
    * Returns all visible parameters.
    */
   get filteredParams(): SynapseParameter[] {
     return this._params.filter((param: SynapseParameter) => param.visible);
+  }
+
+  get hasReceptorIndices(): boolean {
+    return this.receptorIndices.length > 0;
   }
 
   get hasSomeVisibleParams(): boolean {

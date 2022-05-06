@@ -1,8 +1,9 @@
+import { CopyModel } from './copyModel';
 import { Model } from './model';
 import { ModelReceptor } from './modelReceptor/modelReceptor';
 import { Parameter } from '../parameter/parameter';
 
-type  modelTypes = Model | ModelReceptor;
+type modelTypes = CopyModel | Model | ModelReceptor;
 
 export class ModelParameter extends Parameter {
   constructor(model: modelTypes, param: any) {
