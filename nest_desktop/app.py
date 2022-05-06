@@ -5,14 +5,17 @@ import sys
 
 __all__ = ['run']
 
+NEST_DESKTOP_HOST = os.environ.get('NEST_DESKTOP_HOST', '127.0.0.1')
+NEST_DESKTOP_PORT = os.environ.get('NEST_DESKTOP_PORT', 5000)
 
-def run(host="127.0.0.1", port=8000):
+
+def run(host=NEST_DESKTOP_HOST, port=NEST_DESKTOP_PORT):
 
     web_dir = os.path.join(os.path.dirname(__file__), "app")
     os.chdir(web_dir)
 
     Handler = http.server.SimpleHTTPRequestHandler
-    with socketserver.TCPServer(("", port), Handler) as httpd:
+    with socketserver.TCPServer((host, port), Handler) as httpd:
         httpd.serve_forever()
 
 if __name__ == "__main__":
