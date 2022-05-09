@@ -92,6 +92,7 @@
           />
         </g>
 
+        <g id="modelAssigned" />
         <g id="connections" />
         <g id="nodes" />
 

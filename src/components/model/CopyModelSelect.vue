@@ -1,36 +1,29 @@
 <template>
-  <div class="nodeModelSelect">
+  <div class="copyModelSelect" style="width: 100%">
     <v-menu :close-on-content-click="false" tile v-model="state.opened">
       <template #activator="{ on, attrs }">
         <v-btn
-          :color="state.node.view.color"
           :dark="projectView.config.coloredToolbar"
           :height="40"
           :text="!projectView.config.coloredToolbar"
+          :title="model.model.label"
           block
-          class="nodeModel"
+          class="modelHandler"
           depressed
           tile
           v-bind="attrs"
           v-on="on"
         >
-          <span v-text="state.node.model.label" />
+          <span v-text="state.model.existing" />
           <v-spacer />
-          <v-chip
-            label
-            outlined
-            small
-            v-if="state.node.network.project.app.config.devMode"
-            v-text="state.node.shortHash"
-          />
-          <v-icon class="modelEdit" right small v-text="'mdi-pencil'" />
+          <v-icon class="modelEdit mr-3" right small v-text="'mdi-pencil'" />
         </v-btn>
       </template>
 
       <v-card style="min-width: 300px" tile>
         <v-card-title class="pa-0" style="height: 40px">
           <v-overflow-btn
-            :items="state.node.models"
+            :items="state.model.models"
             @change="updateOnModelChange()"
             class="ma-0"
             dense
@@ -41,7 +34,7 @@
             item-value="id"
             style="font-weight: 700"
             tile
-            v-model="state.node.modelId"
+            v-model="state.model.existing"
           />
         </v-card-title>
 
@@ -57,7 +50,7 @@
                 :key="param.idx"
                 class="mx-0"
                 style="font-size: 12px"
-                v-for="param of state.node.params"
+                v-for="param of state.model.params"
               >
                 <template #default="">
                   <v-list-item-content class="pa-1">
@@ -71,7 +64,6 @@
 
                   <v-list-item-action class="my-1">
                     <v-checkbox
-                      :color="state.node.view.color"
                       :input-value="param.visible"
                       :value="param.visible"
                       hide-details
@@ -119,19 +111,19 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
-import { Node } from '@/core/node/node';
+import { CopyModel } from '@/core/model/copyModel';
 import { ModelParameter } from '@/core/parameter/modelParameter';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'NodeModelSelect',
+  name: 'CopyModelSelect',
   props: {
-    node: Node,
+    model: CopyModel,
   },
   setup(props) {
     const projectView = core.app.project.view;
     const state = reactive({
-      node: props.node as Node,
+      model: props.model as CopyModel,
       opened: false,
       visibleParams: [],
     });
@@ -140,15 +132,15 @@ export default Vue.extend({
      * Triggers when parameter selection is changed.
      */
     const paramSelectionChange = () => {
-      state.node.params.forEach(
+      state.model.params.forEach(
         (param: ModelParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
-      state.node.nodeChanges();
+      state.model.modelChanges();
     };
 
     /**
-     * Update when node model is changed.
+     * Update when model is changed.
      */
     const updateOnModelChange = () => {
       update();
@@ -158,8 +150,8 @@ export default Vue.extend({
      * Update states.
      */
     const update = () => {
-      state.node = props.node as Node;
-      state.visibleParams = state.node.params
+      state.model = props.model as CopyModel;
+      state.visibleParams = state.model.params
         .filter((param: ModelParameter) => param.visible)
         .map((param: ModelParameter) => param.idx);
     };
@@ -168,8 +160,8 @@ export default Vue.extend({
      * Hide all parameters.
      */
     const hideAllParams = () => {
-      state.node.hideAllParams();
-      state.node.nodeChanges();
+      state.model.hideAllParams();
+      state.model.modelChanges();
       update();
     };
 
@@ -177,8 +169,8 @@ export default Vue.extend({
      * Show all parameters.
      */
     const showAllParams = () => {
-      state.node.showAllParams();
-      state.node.nodeChanges();
+      state.model.showAllParams();
+      state.model.modelChanges();
       update();
     };
 
@@ -187,7 +179,7 @@ export default Vue.extend({
     });
 
     watch(
-      () => props.node,
+      () => props.model,
       () => update()
     );
 
@@ -205,11 +197,11 @@ export default Vue.extend({
 </script>
 
 <style>
-.nodeModel .modelEdit {
+.copyModelSelect .modelHandler .modelEdit {
   display: none;
 }
 
-.nodeModel:hover .modelEdit {
+.copyModelSelect .modelHandler:hover .modelEdit {
   display: block;
 }
 

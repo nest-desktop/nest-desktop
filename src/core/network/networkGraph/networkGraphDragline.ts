@@ -54,13 +54,13 @@ export class NetworkGraphDragline {
   }
 
   /**
-   * Draw drag line between nodes.
+   * Draw path of the drag line.
    */
-  drawLineNodes(source: Node, target: Node): void {
+  drawPath(sourcePos: any, targetPos: any, options: any = {}): void {
     this._workspace.selector
       .select('.dragline')
       .style('opacity', 1)
-      .attr('d', drawPath(source.view.position, target.view.position));
+      .attr('d', drawPath(sourcePos, targetPos, options));
   }
 
   /**

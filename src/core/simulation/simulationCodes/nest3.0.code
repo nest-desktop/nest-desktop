@@ -26,34 +26,34 @@ nest.SetKernelStatus({
 {{ #simulation.code.createNodes }}
 # Create nodes
 {{ #network.nodes }}
-{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #someParams }}, params={
+{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ valueFixed }},
 {{ /filteredParams }}
-{{ #model.isRecorder }}
 {{ #model.isMultimeter }}
   "record_from": {{ recordsFixed }},
 {{ /model.isMultimeter }}
 {{ #simulation.code.runSimulationInsite }}
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}
-{{ /model.isRecorder }}
-}{{ /someParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
+}{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
 
 {{ #simulation.code.connectNodes }}
 # Connect nodes
 {{ #network.connections }}
-nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #someParams }}, conn_spec={
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
+  "rule": "{{ rule }}",
 {{ #filteredParams }}
   "{{ id }}": {{ value }},
 {{ /filteredParams }}
-}{{ /someParams }}{{ #synapse.someParams }}, syn_spec={
+}{{ /hasSomeVisibleParams }}{{ /hasConnSpec }}{{ #synapse.hasSynSpec }}, syn_spec={{ ^synapse.hasSomeVisibleParams }}"{{ synapse.modelId }}"{{ /synapse.hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}{ {{ ^synapse.isStatic }}
+  "synapse_model": "{{ synapse.modelId }}",{{ /synapse.isStatic }}
 {{ #synapse.filteredParams }}
   "{{ id }}": {{ valueFixed }},
 {{ /synapse.filteredParams }}
-}{{ /synapse.someParams }})
+}{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
 
