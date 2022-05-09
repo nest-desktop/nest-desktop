@@ -291,15 +291,23 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return;
     }
 
-    const nodeIds = [record.activity.state.activeNodeId];
-    const data: any = this.createGraphDataPoints(nodeIds, record)[0];
+    const nodeIds = this.state.recordsVisible
+      .map((record: NodeRecord) => record.activity.nodeIds)
+      .flat();
 
-    plotData.x = data.x;
-    plotData.y = data.y;
-    plotData.line.color = record.activity.project.app.darkMode
-      ? 'white'
-      : '#121212';
-    plotData.visible = true;
+    if (nodeIds.includes(record.activity.state.activeNodeId)) {
+      const data: any = this.createGraphDataPoints(
+        [record.activity.state.activeNodeId],
+        record
+      )[0];
+
+      plotData.x = data.x;
+      plotData.y = data.y;
+      plotData.line.color = record.activity.project.app.darkMode
+        ? 'white'
+        : '#121212';
+      plotData.visible = true;
+    }
   }
 
   /**
