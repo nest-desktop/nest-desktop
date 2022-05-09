@@ -73,7 +73,8 @@
                 active: isActive(item.id),
               }"
               :key="item.id"
-              @click="activeLineGraph(item.id)"
+              @mouseover="activeLineGraph(item.id)"
+              @mouseout="activeLineGraph()"
               style="cursor: pointer"
               v-for="item in items"
             >
@@ -132,7 +133,7 @@ export default Vue.extend({
       selectedRecord: null,
     });
 
-    const activeLineGraph = (nodeId: number) => {
+    const activeLineGraph = (nodeId: number = null) => {
       state.activity.state.activeNodeId =
         state.activity.state.activeNodeId == nodeId ? null : nodeId;
       state.activity.chartGraph.panels.forEach(panel =>
