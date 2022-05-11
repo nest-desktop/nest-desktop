@@ -88,7 +88,7 @@ export class Backend extends Config {
         const host: string[] = paths[0].split(':');
 
         hostname = host[0];
-        path = paths.length > 1 ? paths[1] : '/';
+        path = paths.length > 1 ? paths.slice(1).join('/') : '/';
         port = host.length > 1 ? host[1] : '';
         protocol = values[0];
       }
