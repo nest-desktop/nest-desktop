@@ -75,6 +75,16 @@ export default Vue.extend({
       if (ref) {
         state.graph.newPlot(ref);
       }
+
+      // On zoom behavior
+      ref.on('plotly_relayout', e => {
+        state.graph.restyle();
+      });
+
+      // On resize behavior
+      ref.on('plotly_resize', e => {
+        state.graph.restyle();
+      });
     };
 
     /**

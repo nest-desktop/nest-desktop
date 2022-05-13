@@ -9,6 +9,18 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     this.id = 'spikeTimesRasterPlot';
     this.panel.height = 30;
     this.panel.xaxis = 1;
+    this.state.height = 5; // = panelHeight / range / 2
+  }
+
+  get markerSize(): number {
+    const ref = this.panel.graph.state.ref;
+    const domain = ref.layout.yaxis.domain;
+    const d = domain[1] - domain[0];
+    const height = ref._fullLayout.height;
+    const range = ref.layout.yaxis.range;
+    const r = range[1] - range[0];
+    const h = (height * d) / r / 2;
+    return Math.min(Math.max(2, h), 100);
   }
 
   /**
@@ -22,10 +34,15 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       hoverinfo: 'x',
       legendgroup: 'spikes' + activity.idx,
       marker: {
-        color: activity.recorder.view.color,
+        line: {
+          color: activity.recorder.view.color,
+          width: 2,
+        },
         size: 5,
+        symbol: 'line-ns',
       },
       mode: 'markers',
+      modelId: this.id,
       name: 'Spikes of ' + activity.recorder.view.label,
       showlegend: true,
       type: 'scattergl',
