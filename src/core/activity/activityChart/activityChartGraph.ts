@@ -223,6 +223,7 @@ export class ActivityChartGraph {
     });
 
     this.react();
+    this.restyle();
   }
 
   /**
@@ -230,6 +231,7 @@ export class ActivityChartGraph {
    */
   gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: any) => {
+      data.dataIdx = this._data.length;
       data.panelIdx = panel.idx;
       data.xaxis = 'x' + panel.xaxis;
       data.yaxis = 'y' + panel.yaxis;
@@ -307,6 +309,36 @@ export class ActivityChartGraph {
   react(): void {
     if (this._state.ref == null) return;
     Plotly.react(this._state.ref, this._data, this._layout);
+  }
+
+  /**
+   * Restyle plots with new updates.
+   */
+  restyle(): void {
+    if (this._state.ref == null) return;
+    if (this.project.state.activities.hasSomeSpikeRecorders) {
+      this.restyleMarkerHeightSpikeTimesRasterPlot();
+    }
+  }
+
+  /**
+   * Restyle marker height of spike times raster plot
+   */
+  restyleMarkerHeightSpikeTimesRasterPlot() {
+    const dataSpikeTimeRasterPlot = this._data.filter(
+      (d: any) => d.modelId === 'spikeTimesRasterPlot'
+    );
+
+    const markerSizes = dataSpikeTimeRasterPlot.map(
+      (d: any) => this._panels[d.panelIdx].model['markerSize']
+    );
+    const update = {
+      'marker.size': markerSizes,
+    };
+
+    const dataIndices = dataSpikeTimeRasterPlot.map((d: any) => d.dataIdx);
+
+    Plotly.restyle(this._state.ref, update, dataIndices);
   }
 
   /**
