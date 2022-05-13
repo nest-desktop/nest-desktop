@@ -30,12 +30,14 @@ nest.SetKernelStatus({
 {{ #filteredParams }}
   "{{ id }}": {{ valueFixed }},
 {{ /filteredParams }}
+{{ #model.isRecorder }}
 {{ #model.isMultimeter }}
   "record_from": {{ recordsFixed }},
 {{ /model.isMultimeter }}
 {{ #simulation.code.runSimulationInsite }}
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}
+{{ /model.isRecorder }}
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
