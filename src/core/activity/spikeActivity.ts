@@ -10,35 +10,18 @@ export class SpikeActivity extends Activity {
   }
 
   /**
-   * Initialize spike activity.
-   *
-   * Overwrites events.
+   * Post-initialize spike activity.
    */
-  override init(activity: any): void {
-    this.initEvents(activity);
-    this.initTimes();
-  }
-
-  /**
-   * Init times for ISI or CV(ISI).
-   */
-  initTimes(): void {
+  override postInit(): void {
     this._times = Object.create(null);
     this.nodeIds.forEach((id: number) => (this._times[id] = []));
     this.updateTimes(this.events);
   }
 
   /**
-   * Update spike activity.
-   *
-   * Extends events.
+   * Post-update spike activity.
    */
-  override update(activity: any): void {
-    if (activity.events == undefined) {
-      return;
-    }
-
-    this.updateEvents(activity);
+  override postUpdate(activity: any): void {
     this.updateTimes(activity.events);
   }
 
@@ -113,7 +96,13 @@ export class SpikeActivity extends Activity {
    * Get activity from Insite.
    */
   override getActivityInsite(): void {
-    const path = `nest/spikerecorders/${this.nodeCollectionId}/spikes/?fromTime=${this.lastTime}`;
+    if (!this.project.insite.state.on) {
+      return;
+    }
+
+    const path = `nest/spikerecorders/${
+      this.nodeCollectionId
+    }/spikes/?fromTime=${this.lastTime + 0.1}`;
     this.project.app.backends.insiteAccess.instance
       .get(path)
       .then((response: any) => {
@@ -124,14 +113,10 @@ export class SpikeActivity extends Activity {
           },
         });
 
-        this.lastFrame = response.data.lastFrame;
-
         // Recursive call after 500ms.
-        if (!response.data.lastFrame) {
-          setTimeout(() => {
-            this.getActivityInsite();
-          }, 500);
-        }
+        setTimeout(() => {
+          this.getActivityInsite();
+        }, 500);
       });
   }
 }

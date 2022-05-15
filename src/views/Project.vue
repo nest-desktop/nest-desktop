@@ -34,7 +34,7 @@
               <div class="tab-text" v-text="'Explorer'" />
               <ActivityGraphIcon
                 :project="projectView.state.project"
-                v-if="projectView.state.project.state.hasActivities"
+                v-if="projectView.state.project.state.activities.hasSomeEvents"
               />
               <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
             </v-tab>
@@ -42,14 +42,18 @@
 
           <v-list dense>
             <v-list-item
-              :disabled="!projectView.state.project.state.hasActivities"
+              :disabled="
+                !projectView.state.project.state.activities.hasSomeEvents
+              "
               @click="projectView.selectActivityGraph('abstract')"
             >
               <v-list-item-icon>
                 <ActivityGraphIcon
                   :project="projectView.state.project"
                   fixed
-                  v-if="projectView.state.project.state.hasActivities"
+                  v-if="
+                    projectView.state.project.state.activities.hasSomeEvents
+                  "
                 />
                 <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
               </v-list-item-icon>
@@ -57,7 +61,10 @@
             </v-list-item>
 
             <v-list-item
-              :disabled="!projectView.state.project.state.hasSpatialActivities"
+              :disabled="
+                !projectView.state.project.state.activities
+                  .hasSomeSpatialActivities
+              "
               @click="projectView.selectActivityGraph('spatial')"
             >
               <v-list-item-icon>
@@ -202,7 +209,9 @@
                   <span v-else>
                     <ActivityGraphIcon
                       :project="projectView.state.project"
-                      v-if="projectView.state.project.state.hasActivities"
+                      v-if="
+                        projectView.state.project.state.activities.hasSomeEvents
+                      "
                     />
                     <v-icon
                       class="rotate-90"
@@ -302,7 +311,7 @@
 
     <v-overlay
       :value="
-        projectView.state.project.simulation.running &&
+        projectView.state.project.simulation.state.running &&
         !projectView.state.project.simulation.code.state.codeInsite
       "
       :z-index="10"

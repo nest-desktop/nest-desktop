@@ -49,7 +49,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
         mesh.position.setY(options.height * 0.01);
       }
     } else {
-      if (this.layer.activity.hasAnalogData) {
+      if (this.layer.activity.recorder.model.isAnalogRecorder) {
         mesh.scale.setY(options.height);
       }
       mesh.position.setY(mesh.userData.position.y + options.height / 200);

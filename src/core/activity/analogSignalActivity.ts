@@ -7,26 +7,16 @@ export class AnalogSignalActivity extends Activity {
   }
 
   /**
-   * Initialize activity of analog signals.
-   *
-   * Overwrites events.
+   * Post-initialize activity of analog signals.
    */
-  override init(activity: any): void {
-    this.initEvents(activity);
+  override postInit(): void {
     this.updateActivityRecords();
   }
 
   /**
-   * Update activity of analog signals.
-   *
-   * Extends events.
+   * Post-update activity of analog signals.
    */
-  override update(activity: any): void {
-    if (activity.events == null) {
-      return;
-    }
-
-    this.updateEvents(activity);
+  override postUpdate(): void {
     this.updateActivityRecords();
   }
 
@@ -59,6 +49,10 @@ export class AnalogSignalActivity extends Activity {
    * Get activity from Insite.
    */
   override getActivityInsite(): void {
+    if (!this.project.insite.state.on) {
+      return;
+    }
+
     const attribute: string = 'V_m';
     const path = `nest/multimeters/${this.nodeCollectionId}/attributes/${attribute}/?fromTime=${this.lastTime}`;
     this.project.app.backends.insiteAccess.instance
@@ -77,13 +71,9 @@ export class AnalogSignalActivity extends Activity {
         activity.events[attribute] = response.data.values;
         this.update(activity);
 
-        this.lastFrame = this.lastTime + 1 >= this.endtime;
-
         // Recursive call after 100ms.
         setTimeout(() => {
-          if (!this.lastFrame) {
-            this.getActivityInsite();
-          }
+          this.getActivityInsite();
         }, 100);
       });
   }
