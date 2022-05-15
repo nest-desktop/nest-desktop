@@ -316,9 +316,9 @@ export class ActivityChartGraph {
    */
   restyle(): void {
     if (this._state.ref == null) return;
-    if (this.project.state.activities.hasSomeSpikeRecorders) {
-      this.restyleMarkerHeightSpikeTimesRasterPlot();
-    }
+    // if (this.project.state.activities.hasSomeSpikeRecorders) {
+    this.restyleMarkerHeightSpikeTimesRasterPlot();
+    // }
   }
 
   /**
