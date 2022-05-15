@@ -77,12 +77,12 @@ export default Vue.extend({
       }
 
       // On zoom behavior
-      ref.on('plotly_relayout', e => {
+      ref.on('plotly_relayout', () => {
         state.graph.restyle();
       });
 
       // On resize behavior
-      ref.on('plotly_resize', e => {
+      ref.on('plotly_resize', () => {
         state.graph.restyle();
       });
     };
