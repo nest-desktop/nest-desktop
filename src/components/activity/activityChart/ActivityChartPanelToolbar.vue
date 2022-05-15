@@ -55,7 +55,9 @@
       <v-list dense>
         <v-subheader style="height: 28px" v-text="'Analog signals'" />
         <v-list-item
-          :disabled="!state.panel.graph.project.state.hasAnalogActivities"
+          :disabled="
+            !state.panel.graph.project.state.activities.hasSomeAnalogEvents
+          "
           :key="'analogPanel' + index"
           @click="selectModel(model.id)"
           v-for="(model, index) in state.panel.modelsAnalog"
@@ -66,7 +68,9 @@
 
         <v-subheader style="height: 28px" v-text="'Spikes'" />
         <v-list-item
-          :disabled="!state.panel.graph.project.state.hasSpikeActivities"
+          :disabled="
+            !state.panel.graph.project.state.activities.hasSomeSpikeEvents
+          "
           :key="'spikePanel' + index"
           @click="selectModel(model.id)"
           v-for="(model, index) in state.panel.modelsSpike"

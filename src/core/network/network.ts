@@ -212,7 +212,7 @@ export class Network extends Config {
 
     this._project.simulation.code.generate();
     this._state.updateHash();
-    this._project.updateHash();
+    this._project.state.updateHash();
 
     this._project.commitNetwork(this);
 
@@ -223,7 +223,7 @@ export class Network extends Config {
       projectView.config.simulateAfterChange &&
       projectView.state.modeIdx === 1
     ) {
-      setTimeout(() => this._project.runSimulation(), 1);
+      setTimeout(() => this._project.startSimulation(), 1);
     }
   }
 
@@ -586,7 +586,7 @@ export class Network extends Config {
     const models: any[] = this._models.map((model: CopyModel) =>
       model.toJSON()
     );
-    const nodes: any[] = this._nodes.map((node: Node) => node.toJSON());
+    const nodes: any[] = this.nodes.map((node: Node) => node.toJSON());
     return { connections, models, nodes };
   }
 }

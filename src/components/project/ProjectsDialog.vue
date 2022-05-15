@@ -48,7 +48,7 @@
                         </v-col>
                         <v-col cols="4">
                           <v-checkbox
-                            :disabled="!project.state.hasActivities"
+                            :disabled="!project.state.activities.hasSomeEvents"
                             class="ma-0"
                             color="project"
                             hide-details

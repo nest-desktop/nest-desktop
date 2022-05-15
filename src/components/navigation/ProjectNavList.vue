@@ -88,7 +88,7 @@
                 <ActivityGraphIcon
                   :project="project"
                   append
-                  v-if="project.state.hasActivities"
+                  v-if="project.state.activities.hasSomeEvents"
                 />
               </span>
             </v-list-item-icon>
