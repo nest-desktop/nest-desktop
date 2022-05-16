@@ -11,7 +11,7 @@ export class ModelReceptorParameter extends ModelParameter {
   }
 
   /**
-   * Get options from model receptor component.
+   * Get the options from the model receptor component.
    *
    * @remarks
    * TODO: Validate this options to get options for input.
@@ -24,7 +24,7 @@ export class ModelReceptorParameter extends ModelParameter {
   }
 
   /**
-   * Trigger changes when parameter is changed.
+   * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
     this.modelReceptor.modelChanges();

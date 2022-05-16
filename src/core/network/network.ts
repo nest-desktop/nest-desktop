@@ -187,8 +187,8 @@ export class Network extends Config {
   }
 
   /**
-   * Copy and add a model component to the network based on a given model Id.
-   * @param modelId Id of the model which should be copied adn added
+   * Copy and add a model component to the network based on a given model ID.
+   * @param modelId ID of the model which should be copied adn added
    */
   copyModel(modelId: string): CopyModel {
     this.consoleLog('Copy model');
@@ -542,8 +542,8 @@ export class Network extends Config {
   }
 
   /**
-   * Get a model from the model list by Id.
-   * @param modelId Id of the model
+   * Get a model from the model list by ID.
+   * @param modelId ID of the model
    */
   getModel(modelId: string): CopyModel {
     return (

@@ -7,7 +7,7 @@ export class ModelCompartmentParameter extends ModelParameter {
   }
 
   /**
-   * Get options from model compartment component.
+   * Get the options from the model compartment component.
    */
   override get options(): ModelCompartmentParameter {
     const param: ModelCompartmentParameter = this.model.compartmentParams.find(

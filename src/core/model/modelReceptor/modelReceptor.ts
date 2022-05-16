@@ -104,7 +104,7 @@ export class ModelReceptor {
   }
 
   /**
-   * Update parameter.
+   * Update a parameter.
    */
   updateParameter(param: any): void {
     const idx: number = this._params
@@ -114,7 +114,7 @@ export class ModelReceptor {
   }
 
   /**
-   * Update recordables from the config.
+   * Update the recordables from the config.
    */
   updateRecordables(model: any): void {
     if ('recordables' in model) {
@@ -125,7 +125,7 @@ export class ModelReceptor {
   }
 
   /**
-   * Add parameter component.
+   * Add a parameter component.
    * @param param - parameter object
    */
   addParameter(param: any): void {
@@ -133,8 +133,8 @@ export class ModelReceptor {
   }
 
   /**
-   * Check if model receptor has parameter component.
-   * @param paramId - parameter id
+   * Check if a model receptor has a parameter component.
+   * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
     return this._params.some(
@@ -144,7 +144,7 @@ export class ModelReceptor {
 
   /**
    * Get parameter component.
-   * @param paramId - parameter id
+   * @param paramId parameter ID
    * @return parameter component
    */
   getParameter(paramId: string): any {
@@ -185,20 +185,20 @@ export class ModelReceptor {
   }
 
   /**
-   * Delete model receptor.
+   * Delete the model receptor.
    *
    * @remarks
-   * It removes receptor from the model.
+   * It removes the receptor from the model.
    */
   remove(): void {
     // this._model.deleteReceptor(this);
   }
 
   /**
-   * Copy model object of this component.
+   * Copy the model object of this component.
    *
    * @remarks
-   * It uses JSON converting method.
+   * It uses the JSON converting method.
    *
    * @return copied model object
    */

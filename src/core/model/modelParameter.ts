@@ -15,7 +15,7 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Get options from model component.
+   * Get the options from the model component.
    */
   override get options(): ModelParameter {
     const param: ModelParameter = this.model
@@ -25,7 +25,7 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Reset constant value taken from model component.
+   * Reset the constant value taken from the model component.
    */
   override reset(): void {
     this.type = 'constant';
@@ -33,7 +33,7 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Trigger changes when parameter is changed.
+   * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
     this.model.modelChanges();
