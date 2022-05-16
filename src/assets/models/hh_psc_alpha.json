@@ -95,16 +95,6 @@
       "step": 100
     },
     {
-      "id": "t_ref",
-      "label": "duration of refractory period",
-      "unit": "ms",
-      "value": 2,
-      "input": "valueSlider",
-      "max": 5,
-      "min": 0.1,
-      "step": 0.1
-    },
-    {
       "id": "tau_syn_ex",
       "label": "time constant of the excitatory synapse",
       "unit": "ms",
