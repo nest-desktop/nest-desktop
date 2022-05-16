@@ -141,7 +141,7 @@ export class NodeView {
   }
 
   /**
-   * Get ids of visible parameter.
+   * Get the IDs of the visible parameters.
    */
   paramsVisible(): string[] {
     return this._node.params
@@ -150,8 +150,8 @@ export class NodeView {
   }
 
   /**
-   * Get record label.
-   * @param recordId - id of the record
+   * Get the record label.
+   * @param recordId ID of the record
    */
   recordLabel(recordId: string): string {
     const recordables = this._node.recordables;

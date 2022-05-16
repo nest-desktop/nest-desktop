@@ -373,7 +373,8 @@ export default Vue.extend({
     };
 
     /**
-     * Triggers when node parameter selection is changed.
+     * Updates the visibility status of every parameter of the current node.
+     * @param visibleParamIdx Array of all visible parameter indices
      */
     const paramChange = (visibleParamIdx: number[] = []) => {
       state.node.params.forEach(
@@ -384,7 +385,9 @@ export default Vue.extend({
     };
 
     /**
-     * Triggers when compartment parameter selection is changed.
+     * Updates the visibility status of every parameter of the currently
+     * selected compartment.
+     * @param visibleParamIdx Array of all visible parameter indices
      */
     const compartmentParamChange = (visibleParamIdx: number[] = []) => {
       state.node.compartments[state.compIdx].params.forEach(
@@ -395,7 +398,9 @@ export default Vue.extend({
     };
 
     /**
-     * Triggers when receptor parameter selection is changed.
+     * Updates the visibility status of every parameter of the currently
+     * selected receptor.
+     * @param visibleParamIdx Array of all visible parameter indices
      */
     const receptorParamChange = (visibleParamIdx: number[] = []) => {
       state.node.compartments[state.compIdx].receptors[

@@ -12,7 +12,7 @@ export class NodeCompartmentParameter extends NodeParameter {
   }
 
   /**
-   * Get options from model compartment component.
+   * Get options from the model compartment component.
    */
   override get options(): ModelCompartmentParameter {
     const param: ModelCompartmentParameter = this.nodeCompartment.node.model
@@ -24,7 +24,7 @@ export class NodeCompartmentParameter extends NodeParameter {
   }
 
   /**
-   * Trigger changes when parameter is changed.
+   * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
     this.nodeCompartment.nodeChanges();

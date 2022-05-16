@@ -134,7 +134,7 @@ export class NodeCompartment {
   }
 
   /**
-   * Add receptor to the node compartment.
+   * Add a receptor to the node compartment.
    */
   addReceptor(receptor: any): void {
     receptor.compIdx = this._idx;
@@ -146,7 +146,7 @@ export class NodeCompartment {
   }
 
   /**
-   * Clean node compartment.
+   * Clean the node compartment.
    */
   clean(): void {
     this._idx = this._node.compartments.indexOf(this);
@@ -164,7 +164,7 @@ export class NodeCompartment {
   }
 
   /**
-   * Initialize parameter components.
+   * Initialize the parameter components.
    * @param comp - node compartment object
    */
   initParameters(comp: any = null): void {
@@ -190,7 +190,7 @@ export class NodeCompartment {
   }
 
   /**
-   * Add parameter component.
+   * Add a parameter component.
    * @param param - parameter object
    */
   addParameter(param: any): void {
@@ -198,8 +198,8 @@ export class NodeCompartment {
   }
 
   /**
-   * Check if node compartment has parameter component.
-   * @param paramId - parameter id
+   * Check if the node compartment has a parameter component.
+   * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
     return this._params.some(
@@ -208,8 +208,8 @@ export class NodeCompartment {
   }
 
   /**
-   * Get parameter component.
-   * @param paramId - parameter id
+   * Get the parameter component.
+   * @param paramId - parameter ID
    * @return parameter component
    */
   getParameter(paramId: string): any {
@@ -221,7 +221,7 @@ export class NodeCompartment {
   }
 
   /**
-   * Reset value in parameter components.
+   * Reset the value in parameter components.
    *
    * @remarks
    * It emits node compartment changes.
@@ -250,7 +250,7 @@ export class NodeCompartment {
   }
 
   /**
-   * Remove node compartment.
+   * Remove the node compartment.
    *
    * @remarks
    * It removes compartment from the list.
@@ -262,10 +262,10 @@ export class NodeCompartment {
   }
 
   /**
-   * Copy node object of this component.
+   * Copy the node object of this component.
    *
    * @remarks
-   * It uses JSON converting method.
+   * It uses the JSON converting method.
    *
    * @return copied node object
    */

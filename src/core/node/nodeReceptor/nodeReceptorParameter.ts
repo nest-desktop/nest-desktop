@@ -13,7 +13,7 @@ export class NodeReceptorParameter extends NodeParameter {
 
   /**
    * TODO: Correct this options to get options for input
-   * Get options from node compartment component.
+   * Get the options from the node compartment component.
    */
   override get options(): ModelReceptorParameter {
     const modelReceptor = this.nodeReceptor.model;
@@ -26,7 +26,7 @@ export class NodeReceptorParameter extends NodeParameter {
   }
 
   /**
-   * Trigger changes when parameter is changed.
+   * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
     this.nodeReceptor.nodeChanges();
