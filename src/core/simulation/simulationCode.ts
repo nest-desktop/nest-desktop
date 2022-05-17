@@ -58,6 +58,10 @@ export class SimulationCode {
     return this._state.blocks.includes('resetKernel');
   }
 
+  get prepareSimulation(): boolean {
+    return !this._state.blocks.includes('runSimulation');
+  }
+
   get runSimulation(): boolean {
     return this._state.blocks.includes('runSimulation');
   }

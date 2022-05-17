@@ -57,6 +57,10 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
 
+{{ #simulation.code.prepareSimulation }}
+# Prepare simulation
+nest.Prepare()
+{{ /simulation.code.prepareSimulation }}
 {{ #simulation.code.runSimulation }}
 # Run simulation
 nest.Simulate({{ simulation.timeFixed }})
