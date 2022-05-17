@@ -23,6 +23,9 @@ It's so great that you want to use NEST Desktop!
 
 ||||
 
+Content structure
+.................
+
 The documentation is organized in four sections.
 Select the appropriate section that fits your needs.
 
@@ -114,7 +117,8 @@ Select the appropriate section that fits your needs.
 
 ||||
 
-**Version info**
+Version info
+............
 
 On Read the Docs, it is possible to select versions of this documentation.
 This can be done in the left side bar at the very bottom.

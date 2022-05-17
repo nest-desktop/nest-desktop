@@ -25,7 +25,8 @@ NEST Desktop is available as a prototype online.
 
 ||||
 
-**Trouble shootings**
+Troubleshootings
+----------------
 
 Why cannot I find NEST Simulator?
   Sometimes the issue is resolved when you check NEST Simulator.

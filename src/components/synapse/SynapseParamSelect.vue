@@ -43,7 +43,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Synapse } from '@/core/synapse/synapse';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 
 export default Vue.extend({
   name: 'SynapseParamSelect',
@@ -60,16 +60,9 @@ export default Vue.extend({
     /**
      * Triggers when parameter is changed.
      */
-    const paramChange = () => {
-      state.synapse.synapseChanges();
-    };
-
-    /**
-     * Triggers when parameter is changed.
-     */
     const selectionChange = () => {
       state.synapse.params.forEach(
-        (param: ModelParameter) =>
+        (param: SynapseParameter) =>
           (param.state.visible = state.paramsIdx.includes(param.idx))
       );
       state.synapse.synapseChanges();
@@ -80,18 +73,8 @@ export default Vue.extend({
      */
     const update = () => {
       state.paramsIdx = state.synapse.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
-    };
-
-    const showAllParams = () => {
-      state.synapse.showAllParams();
-      update();
-    };
-
-    const hideAllParams = () => {
-      state.synapse.hideAllParams();
-      update();
+        .filter((param: SynapseParameter) => param.visible)
+        .map((param: SynapseParameter) => param.idx);
     };
 
     onMounted(() => {
@@ -106,10 +89,7 @@ export default Vue.extend({
     );
 
     return {
-      hideAllParams,
-      paramChange,
       selectionChange,
-      showAllParams,
       state,
     };
   },

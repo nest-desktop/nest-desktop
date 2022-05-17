@@ -10,6 +10,32 @@ export class ConnectionView {
     this._connection = connection;
   }
 
+  get position(): any {
+    const p0 = this._connection.source.view.position;
+    const p1 = this._connection.target.view.position;
+    return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
+  }
+
+  get targetPosition(): any {
+    const source = this._connection.source.view.position;
+    const target = this._connection.target.view.position;
+
+    const r: number = 18;
+    const tr: number = r + 12;
+
+    const x1: number = source.x;
+    let y1: number = source.y;
+    const x2: number = target.x;
+    const y2: number = target.y;
+
+    const dx: number = x2 - x1;
+    const dy: number = y2 - y1;
+    const a: number = Math.atan2(dy, dx);
+    const mx2 = dx === 0 && dy === 0 ? x2 + 1 : x2 - Math.cos(a) * tr;
+    const my2 = dx === 0 && dy === 0 ? y2 - r - 4 : y2 - Math.sin(a) * tr;
+    return { x: mx2, y: my2 };
+  }
+
   get visible(): boolean {
     return this._visible;
   }

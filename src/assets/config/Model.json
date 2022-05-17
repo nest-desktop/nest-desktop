@@ -9,6 +9,31 @@
       "label": "potassium channel activation"
     },
     {
+      "id": "g_d_AMPA_",
+      "label": "conductance of the AMPA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_AN_AMPA_",
+      "label": "conductance of the AMPA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_AN_NMDA_",
+      "label": "conductance of the NMDA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_GABA_",
+      "label": "conductance of the GABA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_NMDA_",
+      "label": "conductance of the NMDA receptor",
+      "unit": "nS"
+    },
+    {
       "id": "g_ex",
       "label": "excitatory conductance",
       "unit": "nS"
@@ -55,6 +80,35 @@
       "unit": "nS"
     },
     {
+      "id": "g_r_AMPA_",
+      "label": "conductance of the AMPA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_AN_AMPA_",
+      "label": "conductance of the AMPA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_AN_NMDA_",
+      "label": "conductance of the NMDA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_GABA_",
+      "label": "conductance of the GABA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_NMDA_",
+      "label": "conductance of the NMDA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "h_Na_",
+      "label": "sodium channel inactivation"
+    },
+    {
       "id": "I_syn_ex",
       "label": "total excitatory synaptic current",
       "unit": "pA"
@@ -74,6 +128,14 @@
       "label": "sodium channel inactivation"
     },
     {
+      "id": "m_Na_",
+      "label": "sodium channel activation"
+    },
+    {
+      "id": "n_K_",
+      "label": "potassium channel activation"
+    },
+    {
       "id": "rate",
       "label": "firing rate",
       "unit": "spikes/s"
@@ -84,9 +146,8 @@
       "unit": "ms"
     },
     {
-      "abbr": "V_th",
-      "id": "V_th",
-      "label": "spike threshold",
+      "id": "v_comp",
+      "label": "membrane potential of the compartment",
       "unit": "mV"
     },
     {
@@ -113,10 +174,21 @@
       "unit": "mV"
     },
     {
+      "abbr": "V_th",
+      "id": "V_th",
+      "label": "spike threshold",
+      "unit": "mV"
+    },
+    {
       "abbr": "w",
       "id": "w",
       "label": "spike-adaptation current",
       "unit": "pA"
+    },
+    {
+      "abbr": "w",
+      "id": "weights",
+      "label": "weights"
     }
   ]
 }

@@ -3,7 +3,8 @@ Coding conventions
 
 .. _general-coding-conventions:
 
-**General coding conventions**
+General coding conventions
+--------------------------
 
 - The TypeScript and ESLint options can be inspected in their respective config files.
 - An `.editorconfig` for the basic settings is also available.
@@ -22,11 +23,10 @@ Coding conventions
 - We usually capitalize only the first letter of a title, \
   except programming expresssions like class names, etc.
 
-|
-
 .. _naming-conventions:
 
-**Naming conventions**
+Naming conventions
+------------------
 
 - Names should be self-explanatory.
 - We use camel case for custom .class names in `Vue` files.

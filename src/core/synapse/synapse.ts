@@ -1,18 +1,26 @@
 import { Connection } from '../connection/connection';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
-import { ModelParameter } from '../parameter/modelParameter';
+import { ModelParameter } from '../model/modelParameter';
+import { SynapseParameter } from './synapseParameter';
 
 export class Synapse {
   private readonly _name = 'Synapse';
   private _connection: Connection; // parent
   private _modelId: string;
-  private _params: ModelParameter[] = [];
+  private _params: SynapseParameter[] = [];
+  private _receptorIdx: number = 0;
 
-  constructor(connection: any, synapse: any) {
+  constructor(connection: any, synapse: any = {}) {
     this._connection = connection;
 
-    if (synapse != null && synapse.params.length > 0) {
+    if (
+      synapse != null &&
+      synapse.hasOwnProperty('params') &&
+      synapse.params.length > 0
+    ) {
       this._modelId = synapse.model || 'static_synapse';
+      this._receptorIdx = synapse.receptorIdx || 0;
       this.initParameters(synapse);
     } else {
       this._modelId = 'static_synapse';
@@ -24,32 +32,62 @@ export class Synapse {
     return this._connection;
   }
 
-  get model(): Model {
-    return this._connection.network.project.app.model.getModel(this._modelId);
-  }
-
   /**
    * Returns all visible parameters.
    */
-  get filteredParams(): ModelParameter[] {
-    return this._params.filter((param: ModelParameter) => param.visible);
+  get filteredParams(): SynapseParameter[] {
+    return this._params.filter((param: SynapseParameter) => param.visible);
+  }
+
+  get hasReceptorIndices(): boolean {
+    return this.receptorIndices.length > 0;
+  }
+
+  get hasSomeVisibleParams(): boolean {
+    return this._params.some((param: SynapseParameter) => param.visible);
+  }
+
+  get hasSynSpec(): boolean {
+    return !this.isStatic || this.hasSomeVisibleParams;
+  }
+
+  get isStatic(): boolean {
+    return this.model.id === 'static_synapse';
+  }
+
+  get model(): CopyModel | Model {
+    if (
+      this._connection.network.synapseModels.some(
+        (model: CopyModel) => model.id === this.modelId
+      )
+    ) {
+      return this._connection.network.getModel(this._modelId);
+    } else {
+      return this._connection.network.project.app.model.getModel(this._modelId);
+    }
   }
 
   /**
    * Set model.
    *
    * @remarks
-   * Save model id, see modelId.
+   * Save model ID, see modelId.
    *
-   * @param value - synapse model
+   * @param model - synapse model
    */
-  set model(model: Model) {
+  set model(model: CopyModel | Model) {
     this.modelId = model.id;
   }
 
-  get models(): Model[] {
+  get models(): (CopyModel | Model)[] {
     const elementType: string = this.model.elementType;
-    return this._connection.network.project.app.model.filterModels(elementType);
+    const models: Model[] =
+      this._connection.network.project.app.model.filterModels(elementType);
+    const modelsCopied: CopyModel[] =
+      this._connection.network.filterModels(elementType);
+    const filteredModels = [...models, ...modelsCopied];
+    filteredModels.sort();
+    return filteredModels;
   }
 
   get modelId(): string {
@@ -57,12 +95,12 @@ export class Synapse {
   }
 
   /**
-   * Set model id.
+   * Set model ID.
    *
    * @remarks
    * It initializes parameters.
    *
-   * @param value - id of the model
+   * @param value - ID of the model
    */
   set modelId(value: string) {
     this._modelId = value;
@@ -75,38 +113,50 @@ export class Synapse {
     return this._name;
   }
 
-  get params(): ModelParameter[] {
+  get receptorIdx(): number {
+    return this._receptorIdx;
+  }
+
+  set receptorIdx(value: number) {
+    this._receptorIdx = value;
+  }
+
+  get receptorIndices(): number[] {
+    return this.connection.target.receptors.map((_, idx: number) => idx);
+  }
+
+  get params(): SynapseParameter[] {
     return this._params;
   }
 
   get someParams(): boolean {
-    return this._params.some((param: ModelParameter) => param.visible);
+    return this._params.some((param: SynapseParameter) => param.visible);
   }
 
   get weight(): number {
     const weight: any = this._params.find(
-      (param: ModelParameter) => param.id === 'weight'
+      (param: SynapseParameter) => param.id === 'weight'
     );
     return weight ? weight.value : 1;
   }
 
   set weight(value: number) {
     const weight: any = this._params.find(
-      (param: ModelParameter) => param.id === 'weight'
+      (param: SynapseParameter) => param.id === 'weight'
     );
     weight.value = value;
   }
 
   get delay(): number {
     const delay: any = this._params.find(
-      (param: ModelParameter) => param.id === 'delay'
+      (param: SynapseParameter) => param.id === 'delay'
     );
     return delay ? delay.value : 1;
   }
 
   set delay(value: number) {
     const delay: any = this._params.find(
-      (param: ModelParameter) => param.id === 'delay'
+      (param: SynapseParameter) => param.id === 'delay'
     );
     delay.value = value;
   }
@@ -129,44 +179,43 @@ export class Synapse {
     this._params = [];
     if (this.model && synapse && synapse.hasOwnProperty('params')) {
       this.model.params.forEach((modelParam: ModelParameter) => {
-        const synParam = synapse.params.find(
+        const param = synapse.params.find(
           (param: any) => param.id === modelParam.id
         );
-        this.addParameter(synParam || modelParam);
+        this.addParameter(param || modelParam);
       });
     } else if (this.model) {
-      this.model.params.forEach((param: ModelParameter) =>
-        this.addParameter(param)
+      this.model.params.forEach((modelParam: ModelParameter) =>
+        this.addParameter(modelParam)
       );
     } else if (synapse.hasOwnProperty('params')) {
-      synapse.params.forEach((param: ModelParameter) =>
-        this.addParameter(param)
-      );
+      synapse.params.forEach((param: any) => this.addParameter(param));
     }
   }
 
   /**
-   * Add synapse parameter.
+   * Add model parameter component.
+   * @param param - parameter object
    */
   addParameter(param: any): void {
-    this._params.push(new ModelParameter(this, param));
+    this._params.push(new SynapseParameter(this, param));
   }
 
   /**
    * Sets all params to visible.
    */
-  public showAllParams(): void {
+  showAllParams(): void {
     this.params.forEach(
-      (param: ModelParameter) => (param.state.visible = true)
+      (param: SynapseParameter) => (param.state.visible = true)
     );
   }
 
   /**
    * Sets all params to invisible.
    */
-  public hideAllParams(): void {
+  hideAllParams(): void {
     this.params.forEach(
-      (param: ModelParameter) => (param.state.visible = false)
+      (param: SynapseParameter) => (param.state.visible = false)
     );
   }
 
@@ -174,8 +223,8 @@ export class Synapse {
    * Inverse synaptic weight.
    */
   inverseWeight(): void {
-    const weight: ModelParameter = this._params.find(
-      (param: ModelParameter) => param.id === 'weight'
+    const weight: SynapseParameter = this._params.find(
+      (param: SynapseParameter) => param.id === 'weight'
     );
     weight.state.visible = true;
     weight.value = -1 * weight.value;
@@ -189,8 +238,11 @@ export class Synapse {
   toJSON(): any {
     const synapse: any = {
       model: this._modelId,
-      params: this._params.map((param: ModelParameter) => param.toJSON()),
+      params: this._params.map((param: SynapseParameter) => param.toJSON()),
     };
+    if (this._receptorIdx !== 0) {
+      synapse.receptorIdx = this._receptorIdx;
+    }
     return synapse;
   }
 }

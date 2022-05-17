@@ -6,36 +6,48 @@
           <v-card-title v-text="'App'" />
           <v-card-text>
             <v-checkbox
-              @change="e => updateAppConfig({ autoUpdate: e || false })"
+              @change="
+                e => state.appConfig.updateConfig({ autoUpdate: e || false })
+              "
               color="accent"
               label="Auto update"
-              v-model="state.appConfig.autoUpdate"
-            />
-            <v-checkbox
-              @change="e => updateAppConfig({ devMode: e || false })"
-              color="accent"
-              label="Development mode *"
-              v-model="state.appConfig.devMode"
-            />
-            <v-checkbox
-              @change="e => updateAppConfig({ pinNav: e || false })"
-              color="accent"
-              label="Pin navigation *"
-              v-model="state.appConfig.pinNav"
-            />
-            <v-checkbox
-              @change="e => updateProjectViewConfig({ showHelp: e || false })"
-              color="accent"
-              label="Show help"
-              v-model="state.projectViewConfig.showHelp"
+              v-model="state.appConfig.config.autoUpdate"
             />
             <v-checkbox
               @change="
-                e => updateProjectViewConfig({ coloredToolbar: e || false })
+                e => state.appConfig.updateConfig({ devMode: e || false })
+              "
+              color="accent"
+              label="Development mode *"
+              v-model="state.appConfig.config.devMode"
+            />
+            <v-checkbox
+              @change="
+                e => state.appConfig.updateConfig({ pinNav: e || false })
+              "
+              color="accent"
+              label="Pin navigation *"
+              v-model="state.appConfig.config.pinNav"
+            />
+            <v-checkbox
+              @change="
+                e =>
+                  state.projectViewConfig.updateConfig({ showHelp: e || false })
+              "
+              color="accent"
+              label="Show help"
+              v-model="state.projectViewConfig.config.showHelp"
+            />
+            <v-checkbox
+              @change="
+                e =>
+                  state.projectViewConfig.updateConfig({
+                    coloredToolbar: e || false,
+                  })
               "
               color="accent"
               label="Colored toolbar"
-              v-model="state.projectViewConfig.coloredToolbar"
+              v-model="state.projectViewConfig.config.coloredToolbar"
             />
             <span>* Page restart required</span>
           </v-card-text>
@@ -66,6 +78,24 @@
                 <InsiteAccessConfig />
               </v-col>
             </v-row>
+            <v-row>
+              <v-col>
+                <ParameterEdit
+                  :options="{
+                    label: 'Interval to check backends (s) *',
+                    input: 'tickSlider',
+                    ticks: [-1, 1, 2, 6, 10, 20, 60],
+                  }"
+                  :value="state.appConfig.config.intervalCheckBackends"
+                  @update:value="
+                    e =>
+                      state.appConfig.updateConfig({
+                        intervalCheckBackends: e || 0,
+                      })
+                  "
+                />
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
 
@@ -76,7 +106,7 @@
               <v-card-subtitle v-text="'Accepted recordables'" />
               <span
                 :key="recordable.id"
-                v-for="recordable in state.model.config.recordables"
+                v-for="recordable in state.modelConfig.config.recordables"
               >
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
@@ -91,7 +121,10 @@
                     />
                   </template>
                   <span v-text="recordable.label" />
-                  <span v-if="recordable.unit" v-text="` (${recordable.unit})`" />
+                  <span
+                    v-if="recordable.unit"
+                    v-text="` (${recordable.unit})`"
+                  />
                 </v-tooltip>
               </span>
             </v-card>
@@ -104,7 +137,7 @@
             <v-card flat tile>
               <v-select
                 :items="state.colorSchemes"
-                :value="state.network.config.color.scheme"
+                :value="state.networkConfig.config.color.scheme"
                 @change="updateNetworkColorScheme"
                 label="Color cycle of nodes"
               >
@@ -147,6 +180,22 @@
             </v-card>
           </v-card-text>
         </v-card>
+
+        <v-card class="my-1" flat tile>
+          <v-card-title v-text="'Parameter'" />
+
+          <v-card-text>
+            <v-checkbox
+              @change="
+                e =>
+                  state.parameterConfig.updateConfig({ rawLabel: e || false })
+              "
+              color="accent"
+              label="Show NEST-alike parameter labels (for experts)"
+              v-model="state.parameterConfig.config.rawLabel"
+            />
+          </v-card-text>
+        </v-card>
       </v-container>
     </v-main>
   </div>
@@ -160,6 +209,7 @@ import { Config } from '@/core/common/config';
 import core from '@/core';
 import InsiteAccessConfig from '@/components/setting/InsiteAccessConfig.vue';
 import NESTSimulatorConfig from '@/components/setting/NESTSimulatorConfig.vue';
+import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 
 import colorSchemes from '@/assets/config/ColorSchemes.json';
 
@@ -168,30 +218,18 @@ export default Vue.extend({
   components: {
     InsiteAccessConfig,
     NESTSimulatorConfig,
+    ParameterEdit,
   },
   setup() {
-    const projectView = core.app.project.view;
     const state = reactive({
       app: core.app,
-      appConfig: core.app.config,
+      appConfig: new Config('App'),
       colorSchemes: colorSchemes,
-      model: new Config('Model'),
-      network: new Config('Network'),
-      projectViewConfig: projectView.config,
+      modelConfig: new Config('Model'),
+      networkConfig: new Config('Network'),
+      parameterConfig: new Config('Parameter'),
+      projectViewConfig: new Config('ProjectView'),
     });
-    /**
-     * Update app configuration.
-     */
-    const updateAppConfig = (d: any) => {
-      core.app.updateConfig(d);
-    };
-
-    /**
-     * Update project configuration.
-     */
-    const updateProjectViewConfig = (d: any) => {
-      core.app.project.view.updateConfig(d);
-    };
 
     /**
      * Update color cycle of nodes.
@@ -206,15 +244,12 @@ export default Vue.extend({
           cycle: colorScheme.colors,
         },
       };
-      state.network.updateConfig(networkConfig);
+      state.networkConfig.updateConfig(networkConfig);
     };
 
     return {
-      projectView,
       state,
-      updateAppConfig,
       updateNetworkColorScheme,
-      updateProjectViewConfig,
     };
   },
 });

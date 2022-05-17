@@ -112,9 +112,11 @@ export class App extends Config {
     // Check if backends is running.
     this.checkBackends();
 
-    // setInterval(() => {
-    //   this.checkBackends();
-    // }, 2000);
+    if (this.config.intervalCheckBackends > 0) {
+      setInterval(() => {
+        this.checkBackends();
+      }, this.config.intervalCheckBackends * 1000);
+    }
 
     // Fetch models from NEST Simulator.
     this._model.fetchModelsNEST();

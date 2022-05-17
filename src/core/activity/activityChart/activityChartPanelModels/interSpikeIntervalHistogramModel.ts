@@ -28,11 +28,11 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     return new Promise((resolve, reject) => {
       if (activity.nodeIds.length === 0) reject(true);
 
-      const isi: number[][] = activity.ISI();
-      const x: number[] = [].concat.apply([], isi);
-      const start: number = 0;
-      const end: number = d3.max(x);
-      const size: number = this.params[0].value;
+    const isi: number[][] = activity.ISI();
+    const x: number[] = isi.flat();
+    const start: number = 0;
+    const end: number = d3.max(x) + 1;
+    const size: number = this.params[0].value;
 
       this.data.push({
         activityIdx: activity.idx,

@@ -16,6 +16,20 @@
       @update:value="paramChange"
       v-for="param in state.synapse.filteredParams"
     />
+
+    <v-select
+      :color="state.synapse.connection.source.view.color"
+      :items="state.synapse.connection.target.receptors"
+      @update:value="paramChange"
+      class="ma-2"
+      dense
+      hide-details
+      item-text="label"
+      item-value="idx"
+      label="receptor type"
+      v-model="state.synapse.receptorIdx"
+      v-show="!state.synapse.connection.source.model.isRecorder"
+    />
   </div>
 </template>
 
@@ -38,6 +52,7 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
+      compIdx: -1,
       synapse: props.synapse as Synapse,
     });
 

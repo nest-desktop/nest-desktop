@@ -132,8 +132,9 @@ export default Vue.extend({
 <style>
 .activityChartPanelToolbar .icons {
   display: none;
+  line-height: 36px;
   position: absolute;
-  right: 0;
+  right: 4px;
   top: 0;
 }
 .activityChartPanelToolbar:hover .icons {

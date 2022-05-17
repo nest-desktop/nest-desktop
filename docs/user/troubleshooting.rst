@@ -10,7 +10,8 @@ Error messages
 
 .. _server-not-found:
 
-**Server not found**
+Server not found
+................
 
 NEST Desktop cannot find the NEST Simulator.
 It has two possible reasons:
@@ -28,14 +29,16 @@ It has two possible reasons:
 
 .. _internal-server-error:
 
-**Internal server error**
+Internal server error
+.....................
 
   It says that the back end (i.e, ``nest-server``) ended with an internal error.
   In this case, you have to monitor or debug the back end.
 
 .. _nest-error:
 
-**NEST error**
+NEST error
+..........
 
   NEST Simulator produces a value error, e.g. ``The value cannot be negative.``.
   Please have a look at the official :doc:`NEST documentation <nest-simulator:index>`
@@ -49,7 +52,8 @@ Frequently asked questions (FAQ)
 
 .. _nest-simulator:
 
-**NEST Simulator**
+NEST Simulator
+..............
 
 How can I change the URL of the NEST Simulator?
   On the settings page you can find the URL of the NEST Simulator.
@@ -62,7 +66,8 @@ How can I check NEST Simulator?
 
 .. _project:
 
-**Project**
+Project
+.......
 
 How can I make a new project?
   In the navigation sidebar you will find a list item :guilabel:`+ New project` to create a new project.
@@ -109,7 +114,8 @@ Where can I find the data for the project in JSON format?
 
 .. _network:
 
-**Network**
+Network
+.......
 
 Where can I find the network controller?
   You will find the network controller by clicking on the icon (:guilabel:`Network`) in the right controller.
@@ -197,7 +203,8 @@ How can I generate an array?
 
 .. _simulation:
 
-**Simulation**
+Simulation
+..........
 
 How can I start a simulation?
   Click on the :guilabel:`SIMULATE` button in top right of the page to start the simulation.
@@ -244,7 +251,8 @@ How can I find the Python script code of the simulation?
 
 .. _activity:
 
-**Activity**
+Activity
+........
 
 How can I download the activity data of a single recorder?
   In the context menu of the recorder you will find a menu option to download events of this recorder.
@@ -256,7 +264,8 @@ How can I download activity data of all recorders?
 
 .. _activity-chart-graph:
 
-**Activity chart graph**
+Activity chart graph
+....................
 
 How can I drag/zoom the chart?
   You will find those modes in the mode bar (top) in the activity graph.
@@ -314,7 +323,8 @@ How can I add a "trailing" effect for dots?
 
 .. _model:
 
-**Model**
+Model
+.....
 
 What is the terminology of this model?
   This model includes neuron, synapse and device (stimulus / recorder) models.
@@ -326,7 +336,8 @@ How can I read the documentation of a model?
 
 .. _settings:
 
-**Settings**
+Settings
+........
 
 Where can I find the settings?
   You will find settings by clicking on the cog icon on the left in the navigation side bar.

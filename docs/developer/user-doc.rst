@@ -19,7 +19,8 @@ To install Sphinx and the Read the Docs theme via ``pip``:
 
 .. _development-build-html-locally:
 
-**Development: Build HTML locally**
+Development: Build HTML locally
+-------------------------------
 
 Build the documentation which your created with Sphinx in the ``docs`` folder offline:
 
@@ -39,7 +40,8 @@ Then open the URL `http://localhost:8002` with your browser.
 
 .. _publicartion-push-to-readthedocs:
 
-**Publication: Push to ReadTheDocs**
+Publication: Push to ReadTheDocs
+--------------------------------
 
 The documentation files for the dev branch are automatically rebuilt (and updated)
 each time a push is made to the repository.

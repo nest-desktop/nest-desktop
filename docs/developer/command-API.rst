@@ -21,7 +21,8 @@ Options for :code:`nest-desktop`:
 
 .. _commands:
 
-**Commands**
+Commands
+--------
 
 :status: display the status of NEST Desktop
 :start: start a new server instance for NEST Desktop
@@ -30,7 +31,8 @@ Options for :code:`nest-desktop`:
 
 .. _arguments:
 
-**Arguments**
+Arguments
+---------
 
 :-h <HOST>: use hostname/IP address <HOST> for the server [default: 127.0.0.1]
 :-p <PORT>: use port <PORT> for opening the socket [default: 8000]
@@ -39,7 +41,8 @@ Options for :code:`nest-desktop`:
 
 .. _environment-variables:
 
-**Environment variables**
+Environment variables
+---------------------
 
 You can set environment variables for host and port before you start NEST Desktop.
 

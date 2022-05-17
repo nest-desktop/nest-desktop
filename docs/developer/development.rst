@@ -17,7 +17,8 @@ The Live Development Server is now serving at ``http://localhost:8080``.
 
 .. _setup:
 
-**Setup**
+Setup
+-----
 
 It is possible to install NEST Desktop from source code on a local machine using ``pip`` (where it finds ``setup.py``).
 The recommended method is to install it in the user's home directory using the command argument ``--user``.
@@ -34,7 +35,8 @@ The recommended method is to install it in the user's home directory using the c
 
 .. _commit-changes:
 
-**Commit changes**
+Commit changes
+--------------
 
 Go to the `dev` branch for the development.
 
@@ -73,7 +75,8 @@ If your changes are ready to be commited, stage and commit them:
 
 .. _push-changes-to-github:
 
-**Push changes to GitHub**
+Push changes to GitHub
+----------------------
 
 Finally, push all of them to repository on the internet (and create a merge request afterwards).
 
