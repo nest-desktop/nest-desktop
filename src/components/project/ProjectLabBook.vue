@@ -57,15 +57,9 @@
                         v-for="param of node.filteredParams"
                       >
                         <v-row no-gutters>
-                          <span v-text="param.options.label" />
-                          <v-spacer />
-                          <span
-                            class="mx-1 font-weight-bold text-right"
-                            v-text="param.toCode()"
-                          />
-                          <span
-                            style="min-width: 24px"
-                            v-text="param.options.unit"
+                          <v-col
+                            class="d-flex justify-space-between"
+                            v-html="param.labelRow"
                           />
                         </v-row>
                       </v-list-item>
