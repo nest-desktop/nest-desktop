@@ -105,6 +105,7 @@
     "@vue/cli: >= 5.0 produces error in electron:build",
     "electron: version should contain all numbers.",
     "sass-loader: >= 11.0 doesn't work with vue@2 because of vuetify@2 (https://stackoverflow.com/questions/66082397/typeerror-this-getoptions-is-not-a-function).",
+    "vue-codemirror: >= 5.0 produces error. It works only with Vue3",
     "vue-toast-notification: >= 2.0 doesn't work with vue@2 (https://github.com/ankurk91/vue-toast-notification).",
     "webpack: >= 5.0 produces invalid configuration object in unit test because of mochapack -> wait for @vue/cli@5."
   ],
