@@ -3,19 +3,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { App } from '../app';
 import { Config } from '../common/config';
-import { ModelParameter } from '../parameter/modelParameter';
+import { ModelCompartmentParameter } from './modelCompartmentParameter';
+import { ModelParameter } from './modelParameter';
+import { ModelReceptor } from './modelReceptor/modelReceptor';
 
 export class Model extends Config {
   private readonly _name = 'Model';
 
   private _abbreviation: string;
   private _app: App; // parent
+  private _compartmentParams: ModelCompartmentParameter[] = []; // model parameters
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
   private _id: string; // model id
   private _idx: number; // generative
   private _label: string; // model label for view
   private _params: ModelParameter[] = []; // model parameters
+  private _receptors: ModelReceptor[] = [];
   private _recordables: any[] = []; // recordables for multimeter
   private _state: UnwrapRef<any>;
 
@@ -32,7 +36,9 @@ export class Model extends Config {
 
     this._label = model.label || '';
     this._abbreviation = model.abbreviation;
+
     this.update(model);
+
     this._state = reactive({
       selected: false,
     });
@@ -44,6 +50,10 @@ export class Model extends Config {
 
   get app(): App {
     return this._app;
+  }
+
+  get compartmentParams(): ModelCompartmentParameter[] {
+    return this._compartmentParams;
   }
 
   get doc(): any {
@@ -146,6 +156,10 @@ export class Model extends Config {
     return this._params;
   }
 
+  get receptors(): ModelReceptor[] {
+    return this._receptors;
+  }
+
   get recordables(): any[] {
     return this._recordables;
   }
@@ -173,6 +187,7 @@ export class Model extends Config {
 
   /**
    * Update recordables from the config.
+   * @param model model object
    */
   updateRecordables(model: any): void {
     if ('recordables' in model) {
@@ -183,7 +198,18 @@ export class Model extends Config {
   }
 
   /**
-   * Get parameter of the model.
+   * Get the parameter of the model compartment.
+   * @param paramId ID of the searched parameter
+   */
+  getCompartmentParameter(paramId: string): ModelParameter {
+    return this._compartmentParams.find(
+      (param: ModelParameter) => param.id === paramId
+    );
+  }
+
+  /**
+   * Get the parameter of the model.
+   * @param paramId ID of the searched parameter
    */
   getParameter(paramId: string): ModelParameter {
     return this._params.find((param: ModelParameter) => param.id === paramId);
@@ -198,14 +224,25 @@ export class Model extends Config {
   }
 
   /**
-   * Add parameter to the model specifications.
+   * Add a parameter to the model specifications.
+   * @param param parameter object
    */
   addParameter(param: any): void {
     this._params.push(new ModelParameter(this, param));
   }
 
   /**
+   * Add a compartment parameter to the model specifications.
+   * @param param parameter object
+   */
+  addCompartmentParameter(param: any): void {
+    this._compartmentParams.push(new ModelCompartmentParameter(this, param));
+  }
+
+  /**
    * Create new parameter.
+   * @param paramId ID of the parameter
+   * @param value parameter value
    */
   newParameter(paramId: string, value: any): void {
     const param: any = {
@@ -226,7 +263,8 @@ export class Model extends Config {
   }
 
   /**
-   * Remove parameter.
+   * Remove a parameter.
+   * @param paramId ID of the parameter
    */
   removeParameter(paramId: string): void {
     this._params = this.params.filter(
@@ -235,20 +273,61 @@ export class Model extends Config {
   }
 
   /**
-   * Update parameter.
+   * Update  a parameter.
+   * @param model model object
    */
   update(model: any): void {
+    // Update the model ID.
     this._id = model.id;
+
+    // Update the model recordables.
     this.updateRecordables(model);
-    model.params.forEach((param: any) => {
-      this.hasParameter(param.id)
-        ? this.updateParameter(param)
-        : this.addParameter(param);
-    });
+
+    // Update the model parameters.
+    this.updateParameters(model);
+
+    // Update the model compartment parameters.
+    this.updateCompartmentParameters(model);
+
+    // Update the model receptors.
+    this.updateReceptors(model);
   }
 
   /**
-   * Update parameter.
+   * Update the model parameters.
+   * @param model model object
+   */
+  updateParameters(model: any): void {
+    if (model.hasOwnProperty('params')) {
+      model.params.forEach((param: any) => {
+        if (this.getParameter(param.id)) {
+          this.updateParameter(param);
+        } else {
+          this.addParameter(param);
+        }
+      });
+    }
+  }
+
+  /**
+   * Update model compartment parameters.
+   * @param model model object
+   */
+  updateCompartmentParameters(model: any): void {
+    if (model.hasOwnProperty('compartmentParams')) {
+      model.compartmentParams.forEach((param: any) => {
+        if (this.getCompartmentParameter(param.id)) {
+          this.updateCompartmentParameter(param);
+        } else {
+          this.addCompartmentParameter(param);
+        }
+      });
+    }
+  }
+
+  /**
+   * Update the parameter.
+   * @param param parameter object
    */
   updateParameter(param: any): void {
     const idx: number = this._params
@@ -257,38 +336,61 @@ export class Model extends Config {
     this._params[idx] = new ModelParameter(this, param);
   }
 
+  /**
+   * Update the compartment parameter.
+   * @param param parameter object
+   */
+  updateCompartmentParameter(param: any): void {
+    const idx: number = this._compartmentParams
+      .map((p: ModelCompartmentParameter) => p.id)
+      .indexOf(param.id);
+    this._compartmentParams[idx] = new ModelCompartmentParameter(this, param);
+  }
+
+  /**
+   * Update the model receptors.
+   * @param model model object
+   */
+  updateReceptors(model: any): void {
+    if (model.hasOwnProperty('receptors')) {
+      this._receptors = model.receptors.map(
+        (receptor: any) => new ModelReceptor(this, receptor)
+      );
+    }
+  }
+
   modelChanges(): void {}
 
   /**
-   * Clean model index.
+   * Clean the model index.
    */
   clean(): void {
     this._idx = this._app.model.state.models.indexOf(this);
   }
 
   /**
-   * Clone model object.
+   * Clone this model object.
    */
   clone(): Model {
     return new Model(this._app, this);
   }
 
   /**
-   * Reset state of this model.
+   * Reset the state of this model.
    */
   resetState(): void {
     this._state.selected = false;
   }
 
   /**
-   * Delete model object from model list in app.
+   * Delete the model object from model list in app.
    */
   async delete(): Promise<any> {
     return this._app.model.deleteModel(this.docId);
   }
 
   /**
-   * Save model object to the database.
+   * Save the model object to the database.
    */
   async save(): Promise<any> {
     return this._app.model.saveModel(this);
@@ -308,12 +410,27 @@ export class Model extends Config {
       version: this._app.state.version,
     };
 
-    // Add recordables if provided.
+    // Add the recordables if provided.
     if (this._recordables.length > 0) {
       model.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );
     }
+
+    // Add the compartment parameters if provided.
+    if (this._compartmentParams.length > 0) {
+      model.compartmentParams = this._compartmentParams.map(
+        (param: ModelParameter) => param.toJSON()
+      );
+    }
+
+    // Add the receptors if provided.
+    if (this._receptors.length > 0) {
+      model.receptors = this._receptors.map((receptor: ModelReceptor) =>
+        receptor.toJSON()
+      );
+    }
+
     return model;
   }
 }

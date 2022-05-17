@@ -16,19 +16,28 @@ except:
 
 {{ #simulation.code.setKernelStatus }}
 # Set simulation kernel
-nest.set({
-  "local_num_threads": {{ simulation.kernel.localNumThreads }},
-  "resolution": {{ simulation.kernel.resolution }}
-  "rng_seed": {{ simulation.kernel.rngSeed }}
-})
+nest.local_num_threads = {{ simulation.kernel.localNumThreads }}
+nest.resolution = {{ simulation.kernel.resolution }}
+nest.rng_seed = {{ simulation.kernel.rngSeed }}
 {{ /simulation.code.setKernelStatus }}
 
 {{ #simulation.code.createNodes }}
+{{ #network.hasNodeModels }}
+# Copy node models
+{{ #network.nodeModels }}
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.nodeModels }}
+
+{{ /network.hasNodeModels }}
 # Create nodes
 {{ #network.nodes }}
-{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
+{{ view.label }} = nest.Create("{{ modelId }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ code }},
 {{ /filteredParams }}
 {{ #model.isMultimeter }}
   "record_from": {{ recordsFixed }},
@@ -38,9 +47,52 @@ nest.set({
 {{ /simulation.code.runSimulationInsite }}
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
+{{ #network.hasSomeNodeCompartments }}
+
+# Create node compartments
+{{ #network.nodes }}
+{{ #hasCompartments }}
+{{ view.label }}.compartments = [
+{{ #compartments }}
+  {"parent_idx": {{ parentIdx }}{{ #hasSomeParams }}, "params": {
+    {{ #filteredParams }}"{{ id }}": {{ code }},
+    {{ /filteredParams }}}
+  {{ /hasSomeParams }}},
+{{ /compartments }}
+]
+{{ /hasCompartments }}
+{{ /network.nodes }}
+{{ /network.hasSomeNodeCompartments }}
+{{ #network.hasSomeNodeReceptors }}
+
+# Create node receptors
+{{ #network.nodes }}
+{{ #hasReceptors }}
+{{ view.label }}.receptors = [
+{{ #receptors }}
+  {"comp_idx": {{ compartment.idx }}, "receptor_type": "{{ id }}"{{ #hasSomeParams }}, "params": {
+    {{ #filteredParams }}"{{ id }}": {{ code }},
+    {{ /filteredParams }}}
+  {{ /hasSomeParams }}},
+{{ /receptors }}
+]
+{{ /hasReceptors }}
+{{ /network.nodes }}
+{{ /network.hasSomeNodeReceptors }}
 {{ /simulation.code.createNodes }}
 
 {{ #simulation.code.connectNodes }}
+{{ #network.hasSynapseModels }}
+# Copy synapse models
+{{ #network.synapseModels }}
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.synapseModels }}
+
+{{ /network.hasSynapseModels }}
 # Connect nodes
 {{ #network.connections }}
 nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
@@ -53,6 +105,9 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 {{ #synapse.filteredParams }}
   "{{ id }}": {{ code }},
 {{ /synapse.filteredParams }}
+{{ #synapse.hasReceptorIndices }}
+  "receptor_type": {{ synapse.receptorIdx }},
+{{ /synapse.hasReceptorIndices }}
 }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
@@ -62,28 +117,16 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 nest.Simulate({{ simulation.time }})
 
 {{ ^simulation.code.runSimulationInsite }}
-# Get activities
-def getNodeIds(node):
-  if node.model == "spike_recorder":
-    return list(nest.GetConnections(None, node).sources())
-  else:
-    return list(nest.GetConnections(node).targets())
 {{ #network.someSpatialNodes }}
-
 def getPosition(node):
   return list(zip(node.tolist(), nest.GetPosition(node)))
-{{ /network.someSpatialNodes }}
 
+{{ /network.someSpatialNodes }}
 response = {
-  "kernel": {
-    "biological_time": nest.get("biological_time"),
-  },
-  "activities": [{{ #network.recorders }}
-    {"events": {{ view.label }}.get("events"), "nodeIds": getNodeIds({{ view.label }})},
-  {{ /network.recorders }}]{{ #network.someSpatialNodes }},
+  "events": [{{ #network.recorders }}{{ view.label }}.events, {{ /network.recorders }}]{{ #network.someSpatialNodes }},
   "positions": dict(numpy.concatenate([{{ #network.spatial }}
-    getPosition({{ view.label }}),
-  {{ /network.spatial }}])){{ /network.someSpatialNodes }}
+    getPosition({{ view.label }}),{{ /network.spatial }}
+  ])){{ /network.someSpatialNodes }}
 }
 {{ /simulation.code.runSimulationInsite }}
 {{ /simulation.code.runSimulation }}

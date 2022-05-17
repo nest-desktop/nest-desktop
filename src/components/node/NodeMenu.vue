@@ -165,7 +165,7 @@ import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { NodeParameter } from '@/core/node/nodeParameter';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
@@ -306,7 +306,7 @@ export default Vue.extend({
      */
     const selectionChange = () => {
       state.node.params.forEach(
-        (param: ModelParameter) =>
+        (param: NodeParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
@@ -349,18 +349,8 @@ export default Vue.extend({
      */
     const setVisibleParams = () => {
       state.visibleParams = state.node.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
-    };
-
-    const showAllParams = () => {
-      state.node.showAllParams();
-      setVisibleParams();
-    };
-
-    const hideAllParams = () => {
-      state.node.hideAllParams();
-      setVisibleParams();
+        .filter((param: NodeParameter) => param.visible)
+        .map((param: NodeParameter) => param.idx);
     };
 
     /**
@@ -415,13 +405,11 @@ export default Vue.extend({
       backMenu,
       deleteNode,
       exportEvents,
-      hideAllParams,
       nodeColorChange,
       paramChange,
       resetColor,
       selectionChange,
       setWeights,
-      showAllParams,
       state,
     };
   },

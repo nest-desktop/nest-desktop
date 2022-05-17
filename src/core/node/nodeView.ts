@@ -1,7 +1,7 @@
 import { Connection } from '../connection/connection';
 import { CopyModel } from '../model/copyModel';
-import { ModelParameter } from '../parameter/modelParameter';
 import { Node } from './node';
+import { NodeParameter } from './nodeParameter';
 
 export class NodeView {
   private _color: any; // color of node
@@ -141,14 +141,18 @@ export class NodeView {
   }
 
   /**
-   * Get ids of visible parameter.
+   * Get the IDs of the visible parameters.
    */
   paramsVisible(): string[] {
     return this._node.params
-      .filter((param: ModelParameter) => param.visible)
+      .filter((param: NodeParameter) => param.visible)
       .map(param => param.id);
   }
 
+  /**
+   * Get the record label.
+   * @param recordId ID of the record
+   */
   recordLabel(recordId: string): string {
     const recordables = this._node.recordables;
     const recordable = recordables.find(

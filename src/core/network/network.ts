@@ -67,6 +67,14 @@ export class Network extends Config {
     return this._models.some((model: CopyModel) => !model.model.isSynapse);
   }
 
+  get hasSomeNodeCompartments(): boolean {
+    return this._nodes.some((node: Node) => node.compartments.length > 0);
+  }
+
+  get hasSomeNodeReceptors(): boolean {
+    return this._nodes.some((node: Node) => node.receptors.length > 0);
+  }
+
   /**
    * Check if the network has any synapse models.
    */
@@ -180,7 +188,7 @@ export class Network extends Config {
 
   /**
    * Copy and add a model component to the network based on a given model ID.
-   * @param modelID ID of the model which should be copied adn added
+   * @param modelId ID of the model which should be copied adn added
    */
   copyModel(modelId: string): CopyModel {
     this.consoleLog('Copy model');
@@ -535,7 +543,7 @@ export class Network extends Config {
 
   /**
    * Get a model from the model list by ID.
-   * @param modelID ID of the model
+   * @param modelId ID of the model
    */
   getModel(modelId: string): CopyModel {
     return (
