@@ -198,7 +198,7 @@ export class Model extends Config {
   }
 
   /**
-   * Get parameter of the model compartment.
+   * Get the parameter of the model compartment.
    * @param paramId ID of the searched parameter
    */
   getCompartmentParameter(paramId: string): ModelParameter {
@@ -208,7 +208,7 @@ export class Model extends Config {
   }
 
   /**
-   * Get parameter of the model.
+   * Get the parameter of the model.
    * @param paramId ID of the searched parameter
    */
   getParameter(paramId: string): ModelParameter {
@@ -224,7 +224,7 @@ export class Model extends Config {
   }
 
   /**
-   * Add parameter to the model specifications.
+   * Add a parameter to the model specifications.
    * @param param parameter object
    */
   addParameter(param: any): void {
@@ -232,7 +232,7 @@ export class Model extends Config {
   }
 
   /**
-   * Add compartment parameter to the model specifications.
+   * Add a compartment parameter to the model specifications.
    * @param param parameter object
    */
   addCompartmentParameter(param: any): void {
@@ -263,7 +263,7 @@ export class Model extends Config {
   }
 
   /**
-   * Remove parameter.
+   * Remove a parameter.
    * @param paramId ID of the parameter
    */
   removeParameter(paramId: string): void {
@@ -273,28 +273,28 @@ export class Model extends Config {
   }
 
   /**
-   * Update parameter.
+   * Update  a parameter.
    * @param model model object
    */
   update(model: any): void {
-    // Update model id.
+    // Update the model ID.
     this._id = model.id;
 
-    // Update model recordables.
+    // Update the model recordables.
     this.updateRecordables(model);
 
-    // Update model parameters.
+    // Update the model parameters.
     this.updateParameters(model);
 
-    // Update model compartment parameters.
+    // Update the model compartment parameters.
     this.updateCompartmentParameters(model);
 
-    // Update model receptors.
+    // Update the model receptors.
     this.updateReceptors(model);
   }
 
   /**
-   * Update model parameters.
+   * Update the model parameters.
    * @param model model object
    */
   updateParameters(model: any): void {
@@ -326,7 +326,7 @@ export class Model extends Config {
   }
 
   /**
-   * Update parameter.
+   * Update the parameter.
    * @param param parameter object
    */
   updateParameter(param: any): void {
@@ -337,7 +337,7 @@ export class Model extends Config {
   }
 
   /**
-   * Update compartment parameter.
+   * Update the compartment parameter.
    * @param param parameter object
    */
   updateCompartmentParameter(param: any): void {
@@ -348,7 +348,7 @@ export class Model extends Config {
   }
 
   /**
-   * Update model receptors.
+   * Update the model receptors.
    * @param model model object
    */
   updateReceptors(model: any): void {
@@ -362,35 +362,35 @@ export class Model extends Config {
   modelChanges(): void {}
 
   /**
-   * Clean model index.
+   * Clean the model index.
    */
   clean(): void {
     this._idx = this._app.model.state.models.indexOf(this);
   }
 
   /**
-   * Clone model object.
+   * Clone this model object.
    */
   clone(): Model {
     return new Model(this._app, this);
   }
 
   /**
-   * Reset state of this model.
+   * Reset the state of this model.
    */
   resetState(): void {
     this._state.selected = false;
   }
 
   /**
-   * Delete model object from model list in app.
+   * Delete the model object from model list in app.
    */
   async delete(): Promise<any> {
     return this._app.model.deleteModel(this.docId);
   }
 
   /**
-   * Save model object to the database.
+   * Save the model object to the database.
    */
   async save(): Promise<any> {
     return this._app.model.saveModel(this);
@@ -410,21 +410,21 @@ export class Model extends Config {
       version: this._app.state.version,
     };
 
-    // Add recordables if provided.
+    // Add the recordables if provided.
     if (this._recordables.length > 0) {
       model.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );
     }
 
-    // Add comparment parameters if provided.
+    // Add the compartment parameters if provided.
     if (this._compartmentParams.length > 0) {
       model.compartmentParams = this._compartmentParams.map(
         (param: ModelParameter) => param.toJSON()
       );
     }
 
-    // Add receptors if provided.
+    // Add the receptors if provided.
     if (this._receptors.length > 0) {
       model.receptors = this._receptors.map((receptor: ModelReceptor) =>
         receptor.toJSON()

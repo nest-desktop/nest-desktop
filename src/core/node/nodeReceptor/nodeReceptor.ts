@@ -98,7 +98,7 @@ export class NodeReceptor {
   }
 
   /**
-   * Clean node receptor.
+   * Clean the node receptor.
    */
   clean(): void {
     this._idx = this._node.receptors.indexOf(this);
@@ -116,8 +116,8 @@ export class NodeReceptor {
   }
 
   /**
-   * Initialize compartment component.
-   * @param compIdx - compartment index
+   * Initialize the compartment component.
+   * @param compIdx compartment index
    */
   initCompartment(compIdx: number): void {
     if (compIdx < this._node.compartments.length) {
@@ -126,8 +126,8 @@ export class NodeReceptor {
   }
 
   /**
-   * Initialize parameter components.
-   * @param receptor - node receptor object
+   * Initialize the parameter components.
+   * @param receptor node receptor object
    */
   initParameters(receptor: any = null): void {
     // Update parameters from model or node receptor
@@ -157,16 +157,16 @@ export class NodeReceptor {
   }
 
   /**
-   * Add parameter component.
-   * @param param - parameter object
+   * Add a parameter component.
+   * @param param parameter object
    */
   addParameter(param: any): void {
     this._params.push(new NodeReceptorParameter(this, param));
   }
 
   /**
-   * Check if node receptor has parameter component.
-   * @param paramId - parameter id
+   * Check if the node receptor has a parameter component.
+   * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
     return this._params.some(
@@ -175,8 +175,8 @@ export class NodeReceptor {
   }
 
   /**
-   * Get parameter component.
-   * @param paramId - parameter id
+   * Get the parameter component.
+   * @param paramId parameter ID
    * @return parameter component
    */
   getParameter(paramId: string): any {
@@ -188,7 +188,7 @@ export class NodeReceptor {
   }
 
   /**
-   * Reset value in parameter components.
+   * Reset the value in the parameter components.
    *
    * @remarks
    * It emits node changes.
@@ -228,7 +228,7 @@ export class NodeReceptor {
   }
 
   /**
-   * Copy node object of this component.
+   * Copy the node object of this component.
    *
    * @remarks
    * It uses JSON converting method.

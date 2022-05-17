@@ -16,7 +16,7 @@ export class NodeParameter extends Parameter {
   }
 
   /**
-   * Get options from model component.
+   * Get options from the model component.
    */
   override get options(): ModelParameter {
     const param: ModelParameter = this.node.model
@@ -26,7 +26,7 @@ export class NodeParameter extends Parameter {
   }
 
   /**
-   * Reset constant value taken from node component.
+   * Reset the constant value taken from the node component.
    */
   override reset(): void {
     this.type = 'constant';
@@ -34,7 +34,7 @@ export class NodeParameter extends Parameter {
   }
 
   /**
-   * Trigger changes when parameter is changed.
+   * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
     this.node.nodeChanges();
@@ -52,17 +52,17 @@ export class NodeParameter extends Parameter {
 
     param.visible = this.visible;
 
-    // Add value factors if existed.
+    // Add the value factors if existed.
     if (this.factors.length > 0) {
       param.factors = this.factors;
     }
 
-    // Add parameter type if not constant.
+    // Add the parameter type if not constant.
     if (!this.isConstant) {
       param.type = this.type;
     }
 
-    // Add rules for validation if existed.
+    // Add the rules for validation if existed.
     if (this.rules.length > 0) {
       param.rules = this.rules;
     }

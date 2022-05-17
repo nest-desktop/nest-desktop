@@ -22,9 +22,9 @@
       :items="state.synapse.connection.target.receptors"
       @update:value="paramChange"
       class="ma-2"
-      item-text="label"
       dense
       hide-details
+      item-text="label"
       item-value="idx"
       label="receptor type"
       v-model="state.synapse.receptorIdx"

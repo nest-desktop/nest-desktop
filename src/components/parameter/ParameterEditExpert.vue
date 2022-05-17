@@ -116,7 +116,7 @@ export default Vue.extend({
      * Update parameters.
      *
      * @remarks
-     * It emits update:params event.
+     * It emits the update:params event.
      */
     const updateParam = () => {
       if (!state.param.isConstant) {
