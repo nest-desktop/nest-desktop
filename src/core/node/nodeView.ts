@@ -1,6 +1,7 @@
 import { Connection } from '../connection/connection';
-import { ModelParameter } from '../parameter/modelParameter';
+import { CopyModel } from '../model/copyModel';
 import { Node } from './node';
+import { NodeParameter } from './nodeParameter';
 
 export class NodeView {
   private _color: any; // color of node
@@ -10,16 +11,22 @@ export class NodeView {
   private _positions: number[][] = [];
   private _visible: boolean = true;
 
-  constructor(node: Node, view: any) {
+  constructor(node: Node, view: any = {}) {
     this._node = node;
-    this._color = view.color;
-    this._position = view.position;
+    this._color = view.color || null;
+    this._position = view.position || { x: 0, y: 0 };
     this._visible = view.visible || true;
   }
 
   get color(): string {
     if (typeof this._color === 'string') {
       return this._color;
+    } else if (this._node.model.isWeightRecorder) {
+      const models = this._node.assignedModels;
+      if (models.length === 1) {
+        const connection = models[0].connections[0];
+        return connection.source.view.color;
+      }
     } else if (this._node.model.isRecorder) {
       const connections: Connection[] = this._node.network.connections.filter(
         (connection: Connection) =>
@@ -42,7 +49,7 @@ export class NodeView {
   }
 
   set color(value: string) {
-    this._color = value === 'none' ? undefined : value;
+    this._color = value === 'none' || value === '' ? undefined : value;
     this._node.network.clean();
   }
 
@@ -134,14 +141,18 @@ export class NodeView {
   }
 
   /**
-   * Get ids of visible parameter.
+   * Get the IDs of the visible parameters.
    */
   paramsVisible(): string[] {
     return this._node.params
-      .filter((param: ModelParameter) => param.visible)
+      .filter((param: NodeParameter) => param.visible)
       .map(param => param.id);
   }
 
+  /**
+   * Get the record label.
+   * @param recordId ID of the record
+   */
   recordLabel(recordId: string): string {
     const recordables = this._node.recordables;
     const recordable = recordables.find(
@@ -162,7 +173,24 @@ export class NodeView {
   /**
    * Clean node.
    */
-  clean(): void {}
+  clean(): void {
+    const cleanWeightRecorder = false;
+    if (this.node.model.isWeightRecorder && cleanWeightRecorder) {
+      const copiedSynapseModels = this._node.network.synapseModels.filter(
+        (model: CopyModel) => model.isAssignedToWeightRecorder(this.node)
+      );
+      if (copiedSynapseModels.length === 1) {
+        const copiedSynapseModel = copiedSynapseModels[0];
+        const connection = this._node.network.connections.find(
+          (connection: Connection) =>
+            connection.synapse.modelId === copiedSynapseModel.id
+        );
+        if (connection) {
+          this._position = connection.view.position;
+        }
+      }
+    }
+  }
 
   /**
    * Serialize for JSON.

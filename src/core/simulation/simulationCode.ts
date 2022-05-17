@@ -28,7 +28,7 @@ export class SimulationCode {
             'connectNodes',
             'runSimulation',
           ],
-      version: '3.2',
+      version: '3.3',
     });
 
     this.clean();
@@ -166,6 +166,10 @@ export class SimulationCode {
     this._simulation.project.app.download(data, 'script', format);
   }
 
+  /**
+   * Serialize for JSON.
+   * @return simulation code object
+   */
   toJSON(): any {
     return { blocks: this._state.blocks };
   }

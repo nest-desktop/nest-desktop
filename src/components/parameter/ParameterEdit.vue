@@ -430,8 +430,10 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { ModelParameter } from '@/core/model/modelParameter';
+import { NodeParameter } from '@/core/node/nodeParameter';
 import { Parameter } from '@/core/parameter/parameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 import { ValueGenerator } from '@/core/parameter/valueGenerator';
 import ParameterEditExpert from '@/components/parameter/ParameterEditExpert.vue';
 
@@ -443,10 +445,17 @@ export default Vue.extend({
   props: {
     color: String,
     value: [Object, Array, Number, String, Boolean],
-    param: [ModelParameter, Parameter],
+    param: [NodeParameter, ModelParameter, SynapseParameter, Parameter],
     options: Object,
   },
   setup(props, { emit }) {
+    type paramTypes =
+      | NodeParameter
+      | ModelParameter
+      | SynapseParameter
+      | Parameter
+      | undefined;
+
     const state = reactive({
       color: props.color,
       content: null,
@@ -520,7 +529,7 @@ export default Vue.extend({
       },
       message: '',
       options: props.param ? props.param['options'] : props.options,
-      param: props.param as ModelParameter | Parameter | undefined,
+      param: props.param as paramTypes,
       showConfig: false,
       timeoutId: undefined,
       value: undefined,
@@ -559,6 +568,9 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Generate values for an array.
+     */
     const generateValues = () => {
       state.valueGenerator.sort =
         state.param.id.includes('time') || state.param.id.includes('Time');
@@ -692,7 +704,7 @@ export default Vue.extend({
       state.value = serialize(props.value);
       if (props.param) {
         state.options = props.param['options'];
-        state.param = props.param as ModelParameter | Parameter;
+        state.param = props.param as paramTypes;
         state.expertMode = !state.param.isConstant;
       } else {
         state.options = props.options;

@@ -117,7 +117,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Synapse } from '@/core/synapse/synapse';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 
 export default Vue.extend({
   name: 'SynapseModelSelect',
@@ -136,7 +136,7 @@ export default Vue.extend({
      */
     const selectionChange = () => {
       state.synapse.params.forEach(
-        (param: ModelParameter) =>
+        (param: SynapseParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.synapse.synapseChanges();
@@ -148,8 +148,8 @@ export default Vue.extend({
     const update = () => {
       state.synapse = props.synapse as Synapse;
       state.visibleParams = state.synapse.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
+        .filter((param: SynapseParameter) => param.visible)
+        .map((param: SynapseParameter) => param.idx);
     };
 
     /**

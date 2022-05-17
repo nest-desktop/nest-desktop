@@ -78,17 +78,26 @@
 import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
 
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { ModelParameter } from '@/core/model/modelParameter';
+import { NodeParameter } from '@/core/node/nodeParameter';
 import { Parameter } from '@/core/parameter/parameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 
 export default Vue.extend({
   name: 'RandomParameterEdit',
   props: {
-    param: [ModelParameter, Parameter],
+    param: [NodeParameter, ModelParameter, Parameter, SynapseParameter],
   },
   setup(props, { emit }) {
+    type parameterTypes =
+      | NodeParameter
+      | ModelParameter
+      | Parameter
+      | SynapseParameter
+      | undefined;
+
     const state = reactive({
-      param: props.param as ModelParameter | Parameter,
+      param: props.param as parameterTypes,
     });
 
     /**
@@ -103,6 +112,12 @@ export default Vue.extend({
       return label;
     };
 
+    /**
+     * Update parameters.
+     *
+     * @remarks
+     * It emits the update:params event.
+     */
     const updateParam = () => {
       if (!state.param.isConstant) {
         state.param.specs.forEach((p: any) => (p.value = parseFloat(p.value)));

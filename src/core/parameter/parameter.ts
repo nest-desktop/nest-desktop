@@ -2,20 +2,36 @@ import { reactive, UnwrapRef } from '@vue/composition-api';
 
 import { Config } from '../common/config';
 import { Connection } from '../connection/connection';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
+import { ModelReceptor } from '../model/modelReceptor/modelReceptor';
 import { Node } from '../node/node';
+import { NodeCompartment } from '../node/nodeCompartment/nodeCompartment';
+import { NodeReceptor } from '../node/nodeReceptor/nodeReceptor';
 import { NodeSlice } from '../node/nodeSlice';
 import { Synapse } from '../synapse/synapse';
+
+type parentTypes =
+  | Connection
+  | CopyModel
+  | Model
+  | ModelReceptor
+  | Node
+  | NodeCompartment
+  | NodeReceptor
+  | NodeSlice
+  | Synapse;
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
   private _id: string;
   private _idx: number; // generative
   private _input: string;
+  private _items: string[];
   private _label: string;
   private _max: number;
   private _min: number;
-  private _parent: Connection | Model | Node | NodeSlice | Synapse; // parent
+  private _parent: parentTypes; // parent
   private _readonly: boolean;
   private _rules: string[][];
   private _state: UnwrapRef<any>;
@@ -25,10 +41,7 @@ export class Parameter extends Config {
   private _unit: string;
   private _value: boolean | number | number[]; // constant value;
 
-  constructor(
-    parent: Connection | Model | Node | NodeSlice | Synapse,
-    param: any
-  ) {
+  constructor(parent: parentTypes, param: any) {
     super('Parameter');
     this._parent = parent;
     this._idx = param.idx || parent.params.length;
@@ -47,6 +60,7 @@ export class Parameter extends Config {
     this._type = param.type || { id: 'constant' };
 
     this._input = param.input;
+    this._items = param.items || [];
     this._label = param.label || param.id;
     this._max = param.max;
     this._min = param.min;
@@ -54,6 +68,10 @@ export class Parameter extends Config {
     this._step = param.step;
     this._ticks = param.ticks;
     this._unit = param.unit || '';
+  }
+
+  get code(): string {
+    return this.toCode();
   }
 
   get disabled(): boolean {
@@ -74,6 +92,14 @@ export class Parameter extends Config {
 
   set input(value: string) {
     this._input = value;
+  }
+
+  get items(): string[] {
+    return this._items;
+  }
+
+  set items(values: string[]) {
+    this._items = values;
   }
 
   get factors(): string[] {
@@ -132,7 +158,7 @@ export class Parameter extends Config {
     return this;
   }
 
-  get parent(): Connection | Model | Node | NodeSlice | Synapse {
+  get parent(): parentTypes {
     return this._parent;
   }
 
@@ -276,12 +302,16 @@ export class Parameter extends Config {
    * Updates when parameter is changed.
    */
   paramChanges(): void {
-    let parent: Connection | Model | Node | NodeSlice | Synapse;
+    let parent: parentTypes;
 
     switch (this.parent.name) {
       case 'Connection':
         parent = this.parent as Connection;
         parent.connectionChanges();
+        break;
+      case 'CopyModel':
+        parent = this.parent as CopyModel;
+        parent.modelChanges();
         break;
       case 'Model':
         parent = this.parent as Model;
@@ -324,9 +354,13 @@ export class Parameter extends Config {
     let value: string;
     if (this.isConstant) {
       // Constant value.
-      if (typeof this._value === 'boolean') {
+      if (typeof this._value === 'string') {
+        value = this._value as string;
+      } else if (typeof this._value === 'boolean') {
         // Boolean value for Python.
         value = this._value ? 'True' : 'False';
+      } else if (Array.isArray(this._value)) {
+        value = JSON.stringify(this._value.map((value: number) => value));
       } else {
         value = JSON.stringify(this._value);
       }
