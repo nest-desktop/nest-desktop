@@ -91,6 +91,11 @@ export default Vue.extend({
 </script>
 
 <style>
+.activityStats {
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
 .activityStats .v-expansion-panel {
   border-width: 1px 1px 1px 0;
   border: 1px solid rgba(0, 0, 0, 0.12);
