@@ -35,7 +35,7 @@ export class NodeGraph {
     const elem: d3.Selection<any, any, any, any> = d3.select(elements[idx]);
     elem.selectAll('*').remove();
 
-    this._nodeGraphConnector.init(elem, node);
+    this._nodeGraphConnector.init(elem);
     this._nodeGraphShape.init(elem, node);
 
     elem.on('mouseover', (_, n: Node) => {

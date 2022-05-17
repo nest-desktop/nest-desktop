@@ -37,7 +37,7 @@ export class NodeGraphConnector {
   /**
    * Initialize a node connector.
    */
-  init(selector: d3.Selection<any, any, any, any>, node: Node): void {
+  init(selector: d3.Selection<any, any, any, any>): void {
     const connector: d3.Selection<any, any, any, any> = selector
       .append('g')
       .attr('class', 'connector')
@@ -66,11 +66,16 @@ export class NodeGraphConnector {
       .attr('fill', this.color)
       .attr('r', '6px')
       .attr('stroke-width', this.strokeWidth)
-      .on('click', (e: MouseEvent) => {
-        node.state.select(true);
-        this._networkGraph.workspace.reset();
-        this._networkGraph.workspace.dragline.init(e);
-      });
+      .on('click', (e: MouseEvent, n: Node) => {
+        this.drag(e, n);
+      })
+      .call(
+        d3
+          .drag()
+          .on('start', (e: MouseEvent) => this._networkGraph.dragStart(e))
+          .on('drag', (e: MouseEvent, n: Node) => this.drag(e, n))
+          .on('end', (e: MouseEvent) => this.dragEnd(e))
+      );
 
     // Connector plus symbol made of lines (white lines for spacing):
     // hline white
@@ -119,6 +124,18 @@ export class NodeGraphConnector {
       .attr('y1', -(5 / 3) * this._connectorRadius)
       .attr('y2', -(5 / 12) * this._connectorRadius)
       .style('pointer-events', 'none');
+  }
+
+  drag(e: MouseEvent, node: Node): void {
+    node.state.select(true);
+    this._networkGraph.workspace.reset();
+    this._networkGraph.workspace.dragline.init(e);
+  }
+
+  dragEnd(e: MouseEvent): void {
+    // this._networkGraph.workspace.dragline.hide();
+    // this._networkGraph.workspace.state.enableConnection = false;
+    this._networkGraph.dragEnd(e);
   }
 
   /**
