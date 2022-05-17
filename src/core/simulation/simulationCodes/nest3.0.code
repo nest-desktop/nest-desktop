@@ -24,6 +24,16 @@ nest.SetKernelStatus({
 {{ /simulation.code.setKernelStatus }}
 
 {{ #simulation.code.createNodes }}
+{{ #network.hasNodeModels }}
+# Copy node models
+{{ #network.nodeModels }}
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ valueAsString }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.nodeModels }}
+
 # Create nodes
 {{ #network.nodes }}
 {{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
@@ -41,6 +51,16 @@ nest.SetKernelStatus({
 {{ /simulation.code.createNodes }}
 
 {{ #simulation.code.connectNodes }}
+{{ #network.hasSynapseModels }}
+# Copy synapse models
+{{ #network.synapseModels }}
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ valueAsString }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.synapseModels }}
+
 # Connect nodes
 {{ #network.connections }}
 nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
