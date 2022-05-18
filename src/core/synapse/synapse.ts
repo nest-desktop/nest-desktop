@@ -129,6 +129,13 @@ export class Synapse {
     return this._params;
   }
 
+  get showReceptorType(): boolean {
+    return (
+      !this._connection.source.model.isRecorder &&
+      this._connection.target.receptors.length > 0
+    );
+  }
+
   get someParams(): boolean {
     return this._params.some((param: SynapseParameter) => param.visible);
   }
