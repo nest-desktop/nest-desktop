@@ -686,7 +686,7 @@ export default Vue.extend({
     };
 
     /**
-     * show menu items.
+     * Show menu items.
      */
     const showMenuItems = () => {
       state.items[1].visible = state.options.input === 'arrayInput';
