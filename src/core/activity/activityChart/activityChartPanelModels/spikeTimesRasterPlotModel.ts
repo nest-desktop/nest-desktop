@@ -9,18 +9,23 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     this.id = 'spikeTimesRasterPlot';
     this.panel.height = 30;
     this.panel.xaxis = 1;
-    this.state.height = 5; // = panelHeight / range / 2
+    this.state.height = 5;
   }
 
+  /**
+   * Get responsive height for marker in raster plot.
+   *
+   * @return height
+   */
   get markerSize(): number {
     const ref = this.panel.graph.state.ref;
-    const domain = ref.layout.yaxis.domain;
-    const d = domain[1] - domain[0];
-    const height = ref._fullLayout.height;
-    const range = ref.layout.yaxis.range;
-    const r = range[1] - range[0];
-    const h = (height * d) / r / 2;
-    return Math.min(Math.max(2, h), 100);
+    const d = ref.layout.yaxis.domain;
+    const domain = d[1] - d[0];
+    const layoutHeight = ref._fullLayout.height;
+    const r = ref.layout.yaxis.range;
+    const range = r[1] - r[0];
+    const height = (layoutHeight * domain) / range / 2;
+    return Math.min(Math.max(2, height), 100);
   }
 
   /**
