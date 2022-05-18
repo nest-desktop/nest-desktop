@@ -25,21 +25,21 @@
                 <ParameterEdit
                   :options="options.threadSettings"
                   :value.sync="simulation.kernel.localNumThreads"
-                  @update:value="paramChange"
+                  @update:value="paramChange()"
                   class="mx-1 py-2"
                 />
 
                 <ParameterEdit
                   :options="options.resolutionSettings"
                   :value.sync="simulation.kernel.resolution"
-                  @update:value="paramChange"
+                  @update:value="paramChange()"
                   class="mx-1 py-2"
                 />
 
                 <ParameterEdit
                   :options="options.rngSeedSettings"
                   :value.sync="simulation.kernel.rngSeed"
-                  @update:value="paramChange"
+                  @update:value="paramChange()"
                   class="mx-1 py-1"
                 />
 
@@ -77,7 +77,7 @@
                 <ParameterEdit
                   :options="options.simulationTimeSettings"
                   :value.sync="simulation.time"
-                  @update:value="paramChange"
+                  @update:value="paramChange()"
                   class="mx-1 py-2"
                 />
               </v-card-text>

@@ -21,7 +21,7 @@
                 <v-text-field
                   :disabled="param.state.disabled"
                   :label="param.label"
-                  @change="paramChange"
+                  @change="paramChange()"
                   dense
                   hide-details
                   type="number"
@@ -45,7 +45,7 @@
                 <v-text-field
                   :disabled="param.state.disabled"
                   :label="param.label"
-                  @change="paramChange"
+                  @change="paramChange()"
                   dense
                   hide-details
                   type="number"
@@ -79,7 +79,7 @@
       :key="'conn' + state.connection.idx + '-' + param.id"
       :param="param"
       :value.sync="param.value"
-      @update:value="paramChange"
+      @update:value="paramChange()"
       v-for="param in state.connection.filteredParams"
     />
   </div>
