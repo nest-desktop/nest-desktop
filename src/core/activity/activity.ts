@@ -19,7 +19,7 @@ export class Activity {
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
     this._state = reactive({
-      activeNodeId: null,
+      activeNodeId: undefined,
       records: [],
     });
     this.init(activity);
