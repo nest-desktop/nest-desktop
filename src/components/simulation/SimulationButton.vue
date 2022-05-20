@@ -10,7 +10,11 @@
           outlined
         >
           <v-icon left>mdi-play</v-icon>
-          Simulate
+          <span
+            v-if="state.project.simulation.code.runSimulation"
+            v-text="'Simulate'"
+          />
+          <span v-else v-text="'Prepare'" />
         </v-btn>
       </template>
       <v-list dense>
