@@ -135,7 +135,10 @@ export abstract class ActivityChartPanelModel {
    */
   abstract initActivities(): void;
 
-  updateActive(record: NodeRecord = undefined): void {
+  /**
+   * Update active marker.
+   **/
+  updateActiveMarker(record: NodeRecord = undefined): void {
     record;
   }
 

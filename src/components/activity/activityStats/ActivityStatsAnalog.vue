@@ -137,7 +137,7 @@ export default Vue.extend({
       state.activity.state.activeNodeId =
         state.activity.state.activeNodeId == nodeId ? undefined : nodeId;
       state.activity.chartGraph.panels.forEach(panel =>
-        panel.model.updateActive(state.selectedRecord)
+        panel.model.updateActiveMarker(state.selectedRecord)
       );
       state.activity.chartGraph.react();
     };
