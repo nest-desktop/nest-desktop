@@ -15,7 +15,12 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   /**
    * Get responsive height for marker in raster plot.
    *
-   * @return height
+   * @remarks It is formulated by:
+   *    - the height of the panel in pixels
+   *    - the domain as the ratio of the panel to the whole chart
+   *    - the range of the viewed y-values
+   *
+   * @return height (fixed value between 2 and 100)
    */
   get markerSize(): number {
     const ref = this.panel.graph.state.ref;
