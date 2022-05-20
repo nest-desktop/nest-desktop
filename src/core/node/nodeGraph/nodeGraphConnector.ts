@@ -135,6 +135,26 @@ export class NodeGraphConnector {
   dragEnd(e: MouseEvent): void {
     // this._networkGraph.workspace.dragline.hide();
     // this._networkGraph.workspace.state.enableConnection = false;
+
+    const network = this._networkGraph.network;
+    const workspace = this._networkGraph.workspace;
+
+    if (
+      network.state.selectedNode &&
+      network.state.focusedNode &&
+      workspace.state.enableConnection
+    ) {
+      network.connectNodes(
+        network.state.selectedNode,
+        network.state.focusedNode
+      );
+    }
+
+    if (!workspace.altPressed) {
+      workspace.reset();
+      network.state.reset();
+    }
+
     this._networkGraph.dragEnd(e);
   }
 
