@@ -69,7 +69,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         }
       }
 
-      // Add active line when select on neuron unit id.
+      // Add active line.
       this.addActiveLine(record);
     });
 
@@ -270,6 +270,8 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add active line for analog signals.
+   *
+   * @remarks will be updated in `updateActiveMarker`.
    */
   addActiveLine(record: NodeRecord): void {
     // active line
@@ -292,7 +294,10 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     });
   }
 
-  override updateActive(record: NodeRecord = undefined): void {
+  /**
+   * Update active marker for analog signals.
+   **/
+  override updateActiveMarker(record: NodeRecord = undefined): void {
     const plotData = this.data[this.data.length - 1];
     plotData.visible = false;
     if (record == null || record.activity.state.activeNodeId == null) {
