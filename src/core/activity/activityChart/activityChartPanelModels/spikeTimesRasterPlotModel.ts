@@ -12,9 +12,9 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update data for raster plot.
+   * Add data of spike times for raster plot.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     this.data.push({

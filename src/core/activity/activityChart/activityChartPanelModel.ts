@@ -136,6 +136,13 @@ export abstract class ActivityChartPanelModel {
   abstract initActivities(): void;
 
   /**
+   * Update active marker.
+   **/
+  updateActiveMarker(record: NodeRecord = undefined): void {
+    record;
+  }
+
+  /**
    * Initialize records from analog activities.
    */
   initAnalogRecords(): void {
@@ -193,7 +200,7 @@ export abstract class ActivityChartPanelModel {
 
     this.data = [];
     this.activities.forEach((activity: Activity) => {
-      this.updateData(activity);
+      this.addData(activity);
     });
 
     this.updateLayoutLabel();
@@ -266,13 +273,13 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update activity graph panel.
+   * Add data of this activity graph panel.
    *
    * @remarks
    * It requires activity data.
    * It is a replacement for abstract component.
    */
-  updateData(activity: Activity): void {
+  addData(activity: Activity): void {
     activity;
   }
 

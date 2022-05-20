@@ -25,9 +25,9 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update data for ISI histogram.
+   * Add data of ISI for histogram panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const isi: number[][] = activity.ISI();
