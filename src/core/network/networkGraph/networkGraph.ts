@@ -52,6 +52,9 @@ export class NetworkGraph {
     return this._workspace;
   }
 
+  /**
+   * Call on drag start.
+   */
   dragStart(event: any): void {
     this._workspace.state.dragging = true;
     if (event.sourceEvent.srcElement.parentNode instanceof Node) {
@@ -63,6 +66,9 @@ export class NetworkGraph {
     }
   }
 
+  /**
+   * Call on drag end.
+   */
   dragEnd(event: any): void {
     this._workspace.state.dragging = false;
     // If-clause to prevent the error message
