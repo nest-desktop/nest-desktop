@@ -77,7 +77,7 @@
     <ParameterEdit
       :color="state.connection.source.view.color"
       :key="'conn' + state.connection.idx + '-' + param.id"
-      :options="param"
+      :param="param"
       :value.sync="param.value"
       @update:value="paramChange"
       v-for="param in state.connection.filteredParams"
