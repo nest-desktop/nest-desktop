@@ -9,10 +9,34 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.icon = 'mdi-chart-bell-curve-cumulative';
     this.id = 'analogSignalPlot';
     this.panel.xaxis = 1;
+
+    this.params = [
+      {
+        id: 'displayedLines',
+        input: 'rangeSlider',
+        label: 'displayed lines',
+        value: [0, 10],
+        min: 0,
+        max: 100,
+      },
+      {
+        id: 'averageLine',
+        input: 'checkbox',
+        label: 'average line',
+        value: false,
+      },
+      {
+        id: 'spikeThreshold',
+        input: 'checkbox+valueInput',
+        label: 'spike threshold',
+        value: -55,
+        visible: false,
+      },
+    ];
   }
 
   /**
-   * Update trace panel for analog signals.
+   * Update panel model for analog signals.
    *
    * @remarks
    * It requires activity data.
@@ -27,20 +51,26 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.state.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === 'V_m') {
-        // Update spike threshold for membrane potential.
-        this.updateSpikeThresholdLine(record);
+      if (record.id === 'V_m' && this.params[2].visible) {
+        // Add spike threshold for membrane potential.
+        this.addSpikeThresholdLine(record);
       }
 
       if (record.nodeSize === 1) {
-        // Update line for a single node.
-        this.updateSingleLine(record);
+        // Add line for a single node.
+        this.addSingleLine(record);
       } else if (record.nodeSize > 1) {
-        // Update multiple lines for population.
-        this.updateMultipleLines(record);
-        // Update average line for population.
-        this.updateAverageLine(record);
+        // Add multiple lines for the population.
+        this.addMultipleLines(record);
+
+        // Add average line for the population.
+        if (this.params[1].value) {
+          this.addAverageLine(record);
+        }
       }
+
+      // Add active line.
+      this.addActiveLine(record);
     });
 
     this.updateLayoutLabel();
@@ -76,9 +106,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update spike threshold data for membrane potential.
+   * Add spike threshold data for membrane potential.
    */
-  updateSpikeThresholdLine(record: NodeRecord): void {
+  addSpikeThresholdLine(record: NodeRecord): void {
     const thresholds: number[] = record.node.nodes
       .filter((node: Node) => node.modelId.startsWith('iaf'))
       .map((target: Node) => target.getParameter('V_th').value || -55);
@@ -93,15 +123,14 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       this.data.push({
         activityIdx: record.activity.idx,
         hoverinfo: 'none',
-        id: 'threshold',
+        legendgroup: record.groupId,
         line,
         mode: 'lines',
-        name: 'Spike threshold',
         opacity: 0.5,
         recordId: record.id,
-        showlegend: true,
+        showlegend: false,
         type: 'scattergl',
-        visible: this.state.visibleThreshold,
+        visible: this.state.visible,
         x: [0.1, record.activity.currenttime],
         y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
       });
@@ -109,9 +138,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update single line data for analog signal.
+   * Add single line data for analog signal.
    */
-  updateSingleLine(record: NodeRecord): void {
+  addSingleLine(record: NodeRecord): void {
     if (!record.hasEvent) {
       return;
     }
@@ -138,20 +167,22 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update multiple lines data for analog signals.
+   * Add multiple lines data for analog signals.
    */
-  updateMultipleLines(record: NodeRecord): void {
+  addMultipleLines(record: NodeRecord): void {
     if (!record.hasEvent) {
       return;
     }
 
-    const nodeIds: number[] = record.activity.nodeIds.slice(0, 10);
+    const nodeIds: number[] = record.activity.nodeIds.slice(
+      ...this.params[0].value
+    );
     const data: any[] = this.createGraphDataPoints(nodeIds, record);
 
     data.forEach((d: any, idx: number) => {
       const line = {
         color: record.color,
-        width: 1,
+        width: 1.5,
       };
 
       this.data.push({
@@ -161,6 +192,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         line,
         mode: 'lines',
         name: d.name,
+        nodeId: nodeIds[idx],
         opacity: idx === 0 ? 0.5 : 0.3,
         recordId: record.id,
         showlegend: idx === 0,
@@ -173,14 +205,16 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update average line for analog signals.
+   * Add average line for analog signals.
    */
-  updateAverageLine(record: NodeRecord): void {
+  addAverageLine(record: NodeRecord): void {
     if (!record.hasEvent) {
       return;
     }
 
-    const nodeIds: number[] = record.activity.nodeIds;
+    const nodeIds: number[] = record.activity.nodeIds.slice(
+      ...this.params[0].value
+    );
     const data: any[] = this.createGraphDataPoints(nodeIds, record);
 
     const x: any[] = data[0].x;
@@ -204,6 +238,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       legendgroup: record.groupId,
       line: bgLine,
       mode: 'lines',
+      opacity: 0.7,
       recordId: record.id,
       showlegend: false,
       type: 'scattergl',
@@ -224,7 +259,6 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       legendgroup: record.groupId,
       line,
       mode: 'lines',
-      name: record.groupId + ' average',
       recordId: record.id,
       showlegend: false,
       type: 'scattergl',
@@ -232,6 +266,61 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       x,
       y,
     });
+  }
+
+  /**
+   * Add active line for analog signals.
+   *
+   * @remarks will be updated in `updateActiveMarker`.
+   */
+  addActiveLine(record: NodeRecord): void {
+    // active line
+    this.data.push({
+      activityIdx: record.activity.idx,
+      hoverinfo: 'x+y',
+      legendgroup: record.groupId,
+      line: {
+        color: record.activity.project.app.darkMode ? 'white' : '#121212',
+        width: 1.5,
+      },
+      mode: 'lines',
+      opacity: 0.5,
+      recordId: record.id,
+      showlegend: false,
+      type: 'scattergl',
+      visible: false,
+      x: [],
+      y: [],
+    });
+  }
+
+  /**
+   * Update active marker for analog signals.
+   **/
+  override updateActiveMarker(record: NodeRecord = undefined): void {
+    const plotData = this.data[this.data.length - 1];
+    plotData.visible = false;
+    if (record == null || record.activity.state.activeNodeId == null) {
+      return;
+    }
+
+    const nodeIds = this.state.recordsVisible
+      .map((record: NodeRecord) => record.activity.nodeIds)
+      .flat();
+
+    if (nodeIds.includes(record.activity.state.activeNodeId)) {
+      const data: any = this.createGraphDataPoints(
+        [record.activity.state.activeNodeId],
+        record
+      )[0];
+
+      plotData.x = data.x;
+      plotData.y = data.y;
+      plotData.line.color = record.activity.project.app.darkMode
+        ? 'white'
+        : '#121212';
+      plotData.visible = true;
+    }
   }
 
   /**

@@ -218,18 +218,20 @@ export class ActivityChartGraph {
     this.updateLayoutColor();
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      this.updateData(panel);
+      this.gatherData(panel);
       this.updateLayoutPanel(panel);
     });
 
     this.react();
+    this.restyle();
   }
 
   /**
-   * Update data of the chart graph
+   * Gather data for the chart graph
    */
-  updateData(panel: ActivityChartPanel): void {
+  gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: any) => {
+      data.dataIdx = this._data.length;
       data.panelIdx = panel.idx;
       data.xaxis = 'x' + panel.xaxis;
       data.yaxis = 'y' + panel.yaxis;
@@ -251,9 +253,9 @@ export class ActivityChartGraph {
    * Update the layout of the chart graph from each panel.
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
-    this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
+    this._layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
       panel.layout.yaxis;
-    this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
+    this._layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
       panel.layout.xaxis;
   }
 
@@ -307,6 +309,36 @@ export class ActivityChartGraph {
   react(): void {
     if (this._state.ref == null) return;
     Plotly.react(this._state.ref, this._data, this._layout);
+  }
+
+  /**
+   * Restyle plots with new updates.
+   */
+  restyle(): void {
+    if (this._state.ref == null) return;
+    // if (this.project.state.activities.hasSomeSpikeRecorders) {
+    this.restyleMarkerHeightSpikeTimesRasterPlot();
+    // }
+  }
+
+  /**
+   * Restyle marker height of spike times raster plot
+   */
+  restyleMarkerHeightSpikeTimesRasterPlot() {
+    const dataSpikeTimeRasterPlot = this._data.filter(
+      (d: any) => d.modelId === 'spikeTimesRasterPlot'
+    );
+
+    const markerSizes = dataSpikeTimeRasterPlot.map(
+      (d: any) => this._panels[d.panelIdx].model['markerSize']
+    );
+    const update = {
+      'marker.size': markerSizes,
+    };
+
+    const dataIndices = dataSpikeTimeRasterPlot.map((d: any) => d.dataIdx);
+
+    Plotly.restyle(this._state.ref, update, dataIndices);
   }
 
   /**

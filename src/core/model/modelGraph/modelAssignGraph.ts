@@ -43,9 +43,10 @@ export class ModelAssignGraph {
     elem
       .append('path')
       .attr('class', 'color')
+      .attr('marker-end', `url(#assigned${connection.idx})`)
       .style('fill', 'none')
-      .style('stroke-width', this.strokeWidth)
-      .style('pointer-events', 'none');
+      .style('pointer-events', 'none')
+      .style('stroke-width', this.strokeWidth);
 
     elem
       .on('mouseover', () => {

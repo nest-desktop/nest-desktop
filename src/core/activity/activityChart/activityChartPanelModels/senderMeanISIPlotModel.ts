@@ -48,9 +48,9 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update data for mean ISI histogram.
+   * Add data of mean ISI in each sender for histogram panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const x: number[] = activity.nodeIds;

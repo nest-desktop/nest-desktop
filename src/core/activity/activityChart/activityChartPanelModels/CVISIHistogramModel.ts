@@ -20,9 +20,9 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update data for CV of ISI histogram.
+   * Add data of CV of ISI for histogram panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const start = 0;

@@ -13,9 +13,9 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update data for FI curve.
+   * Add data of FI curve for trace panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     this.data.push({
