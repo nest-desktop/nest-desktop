@@ -15,8 +15,8 @@ type nodeDataType = {
   model: string;
   nodeCollectionId: number;
   nodeId: number;
-  nodeStatus: object;
-  position: object | null;
+  nodeStatus: Object;
+  position: Object | null;
   simulationNodeId: number;
 };
 
@@ -35,8 +35,8 @@ export class Insite {
 
     this._state = {
       fromTime: 0,
-      on: false,
       intervalId: null,
+      on: false,
     };
   }
 
@@ -59,8 +59,8 @@ export class Insite {
   /**
    * Get activities from Insite.
    *
-   * First it checks the simulation has started,
-   * then it updates activity graph frequently.
+   * First it checks if the simulation has started,
+   * then it updates the activity graph frequently.
    * Afterwards it gets activities from Insite.
    */
   getActivities(): void {
@@ -174,7 +174,7 @@ export class Insite {
    * @remarks
    * It initializes getting spike activities from Insite.
    *
-   * @param positions object
+   * @param positions Object
    */
   getSpikeActivities(positions: any | null): void {
     if (!this.state.on) {

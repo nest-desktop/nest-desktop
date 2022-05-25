@@ -117,7 +117,7 @@ export class Simulation extends Config {
    * Run simulation.
    *
    * @remarks
-   * After the simulation it updates activities and commits network.
+   * After the simulation it updates the activities and commits the network.
    */
   private async runSimulation(): Promise<any> {
     this.consoleLog('Run simulation');
@@ -152,7 +152,7 @@ export class Simulation extends Config {
       })
       .catch((error: any) => {
         if (error.response) {
-          // Request made and server responded.
+          // The request made and the server responded.
           this.openToast(error.response.data, 'error');
         } else if (error.request) {
           // The request was made but no response was received.

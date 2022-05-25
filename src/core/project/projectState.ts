@@ -4,8 +4,8 @@ import { Activity } from '../activity/activity';
 import { Project } from './project';
 
 type actionType = {
-  text: string;
   onClick: object;
+  text: string;
 };
 
 type activitiesType = {
