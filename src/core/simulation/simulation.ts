@@ -25,7 +25,7 @@ export class Simulation extends Config {
     // Initialize code, kernel and time.
     this._code = new SimulationCode(this, simulation.code);
     this._kernel = new SimulationKernel(this, simulation.kernel);
-    this._time = parseFloat(simulation.time) || 1000;
+    this._time = simulation.time != null ? parseFloat(simulation.time) : 1000;
 
     // Initialize simulation state.
     this._state = reactive({
