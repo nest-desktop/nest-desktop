@@ -215,7 +215,7 @@
 
     <v-overlay
       :value="
-        modelView.state.project.simulation.running &&
+        modelView.state.project.simulation.state.running &&
         !projectView.state.project.simulation.code.state.codeInsite
       "
     >

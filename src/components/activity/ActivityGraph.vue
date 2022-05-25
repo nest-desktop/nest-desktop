@@ -28,20 +28,20 @@
       </div>
     </transition>
 
-    <v-snackbar :timeout="-1" v-model="state.snackbar.show">
-      {{ state.snackbar.text }}
+    <v-snackbar :timeout="-1" v-model="state.graph.project.state.snackbar.show">
+      {{ state.graph.project.state.snackbar.text }}
 
       <template #action="{ attrs }">
         <v-btn
-          @click="state.snackbar.show = false"
+          @click="state.graph.project.state.closeSnackbar()"
           outlined
           small
           v-bind="attrs"
-          v-if="state.snackbar.actions.length === 0"
+          v-if="state.graph.project.state.snackbar.actions.length === 0"
         >
           Close
         </v-btn>
-        <template v-if="state.snackbar.actions.length > 0">
+        <template v-if="state.graph.project.state.snackbar.actions.length > 0">
           <v-btn
             :disabled="action.disabled"
             :key="actionIdx"
@@ -49,7 +49,8 @@
             outlined
             small
             v-bind="attrs"
-            v-for="(action, actionIdx) in state.snackbar.actions"
+            v-for="(action, actionIdx) in state.graph.project.state.snackbar
+              .actions"
             v-text="action.text"
           />
         </template>
@@ -86,11 +87,6 @@ export default Vue.extend({
       dialog: false,
       graph: props.graph as ActivityGraph,
       loading: false,
-      snackbar: {
-        actions: [],
-        show: false,
-        text: '',
-      },
       view: props.view || 'abstract',
     });
 
@@ -119,31 +115,30 @@ export default Vue.extend({
         {
           text: 'Simulate',
           onClick: () => state.graph.project.startSimulation(),
-          disabled: state.graph.project.simulation.running,
+          disabled: state.graph.project.simulation.state.running,
         },
       ];
 
-      state.snackbar.show = false;
+      if (state.graph.project.state.snackbar.important) {
+        return;
+      }
+      state.graph.project.state.closeSnackbar();
       if (!projectView.config.showHelp) {
         return;
       }
-      if (!state.graph.project.state.hasActivities) {
-        showSnackbar('No simulation results found.', buttonProps);
-      } else if (state.graph.codeHash !== state.graph.project.simulation.code.hash) {
-        showSnackbar(
+      if (!state.graph.project.state.activities.hasSomeEvents) {
+        state.graph.project.state.showSnackbar(
+          'No simulation results found.',
+          buttonProps
+        );
+      } else if (
+        state.graph.codeHash !== state.graph.project.simulation.code.hash
+      ) {
+        state.graph.project.state.showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
           buttonProps
         );
       }
-    };
-
-    /**
-     * Show snackbar.
-     */
-    const showSnackbar = (text: string, actions: any[] = []) => {
-      state.snackbar.text = text;
-      state.snackbar.actions = actions;
-      state.snackbar.show = true;
     };
 
     onMounted(() => {

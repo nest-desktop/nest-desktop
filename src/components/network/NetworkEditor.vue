@@ -119,27 +119,33 @@
       </g>
     </svg>
 
-    <v-snackbar :timeout="-1" v-model="state.snackbar.show">
-      {{ state.snackbar.text }}
+    <v-snackbar
+      :timeout="-1"
+      v-model="state.network.project.state.snackbar.show"
+    >
+      {{ state.network.project.state.snackbar.text }}
 
       <template #action="{ attrs }">
         <v-btn
-          @click="state.snackbar.show = false"
+          @click="state.network.project.state.closeSnackbar()"
           outlined
           small
           v-bind="attrs"
-          v-if="state.snackbar.actions.length === 0"
+          v-if="state.network.project.state.snackbar.actions.length === 0"
         >
           Close
         </v-btn>
-        <template v-if="state.snackbar.actions.length > 0">
+        <template
+          v-if="state.network.project.state.snackbar.actions.length > 0"
+        >
           <v-btn
             :key="actionIdx"
             @click="action.onClick"
             outlined
             small
             v-bind="attrs"
-            v-for="(action, actionIdx) in state.snackbar.actions"
+            v-for="(action, actionIdx) in state.network.project.state.snackbar
+              .actions"
             v-text="action.text"
           />
         </template>
@@ -196,11 +202,6 @@ export default Vue.extend({
         position: { x: 0, y: 0 },
         show: false,
       },
-      snackbar: {
-        actions: [],
-        show: false,
-        text: '',
-      },
     });
 
     /**
@@ -253,15 +254,6 @@ export default Vue.extend({
     };
 
     /**
-     * Show snackbar.
-     */
-    const showSnackbar = (text: string, actions: any[] = []) => {
-      state.snackbar.text = text;
-      state.snackbar.actions = actions;
-      state.snackbar.show = true;
-    };
-
-    /**
      * Check if nodes with all types are created.
      */
     const hasAllNodeTypes = () => {
@@ -279,16 +271,25 @@ export default Vue.extend({
      * Show help in snackbar.
      */
     const showHelp = () => {
-      state.snackbar.show = false;
+      if (state.network.project.state.snackbar.important) {
+        return;
+      }
+      state.network.project.state.closeSnackbar();
       if (!projectView.config.showHelp) {
         return;
       }
       if (state.network.nodes.length === 0) {
-        showSnackbar('Create nodes (use right mouse button).');
+        state.network.project.state.showSnackbar(
+          'Create nodes (use right mouse button).'
+        );
       } else if (!hasAllNodeTypes()) {
-        showSnackbar('Add at least a stimulator, a neuron and a recorder.');
+        state.network.project.state.showSnackbar(
+          'Add at least a stimulator, a neuron and a recorder.'
+        );
       } else if (state.network.connections.length < 2) {
-        showSnackbar('Connect I/O-devices to neurons.');
+        state.network.project.state.showSnackbar(
+          'Connect I/O-devices to neurons.'
+        );
       }
     };
 

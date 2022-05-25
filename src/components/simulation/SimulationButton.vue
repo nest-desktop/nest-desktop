@@ -4,7 +4,7 @@
       <template #activator="{}">
         <v-btn
           :disabled="state.disabled"
-          :loading="state.project.simulation.running"
+          :loading="state.project.simulation.state.running"
           @click="state.project.startSimulation()"
           @contextmenu="showMenu"
           outlined

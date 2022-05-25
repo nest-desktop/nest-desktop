@@ -141,7 +141,7 @@ export class ProjectStore {
    */
   resetProjectStates(): void {
     this.consoleLog('Reset states of projects');
-    this._state.projects.forEach((project: Project) => project.resetState());
+    this._state.projects.forEach((project: Project) => project.state.reset());
   }
 
   /**

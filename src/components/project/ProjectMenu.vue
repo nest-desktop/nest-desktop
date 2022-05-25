@@ -114,7 +114,7 @@ export default Vue.extend({
     };
 
     const openDialog = (action: string = 'export') => {
-      state.project.resetState();
+      state.project.state.reset();
       core.app.openDialog('project', action, [state.project]);
       state.show = false;
     };

@@ -25,11 +25,11 @@ nest.rng_seed = {{ simulation.kernel.rngSeed }}
 {{ #network.hasNodeModels }}
 # Copy node models
 {{ #network.nodeModels }}
-nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}", params={
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
-})
+}{{ /hasSomeVisibleParams }})
 {{ /network.nodeModels }}
 
 {{ /network.hasNodeModels }}
@@ -77,6 +77,10 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
 
+{{ #simulation.code.prepareSimulation }}
+# Prepare simulation
+nest.Prepare()
+{{ /simulation.code.prepareSimulation }}
 {{ #simulation.code.runSimulation }}
 # Run simulation
 nest.Simulate({{ simulation.time }})
