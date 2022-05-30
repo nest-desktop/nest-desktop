@@ -13,22 +13,22 @@
       :key="'syn' + state.synapse.connection.idx + '-' + param.id"
       :param="param"
       :value.sync="param.value"
-      @update:value="paramChange"
+      @update:value="paramChange()"
       v-for="param in state.synapse.filteredParams"
     />
 
     <v-select
       :color="state.synapse.connection.source.view.color"
       :items="state.synapse.connection.target.receptors"
-      @update:value="paramChange"
+      @update:value="paramChange()"
       class="ma-2"
       dense
       hide-details
       item-text="label"
       item-value="idx"
       label="receptor type"
+      v-if="state.synapse.showReceptorType"
       v-model="state.synapse.receptorIdx"
-      v-show="!state.synapse.connection.source.model.isRecorder"
     />
   </div>
 </template>
