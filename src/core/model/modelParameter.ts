@@ -52,6 +52,8 @@ export class ModelParameter extends Parameter {
     param.input = this.input;
     param.label = this.label;
     param.unit = this.unit;
+    param.visible = this.visible;
+
     if (this.input === 'valueSlider') {
       param.min = this.min;
       param.max = this.max;
