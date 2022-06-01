@@ -2,7 +2,7 @@ name: Mirror repository to EBRAINS GitLab
 
 on:
   push:
-    branches: [ main, dev, gitlab-ci ]
+    branches: [main, dev]
 
 jobs:
   sync_to_ebrains:
@@ -12,28 +12,21 @@ jobs:
       - name: syncmain
         uses: wei/git-sync@v3
         with:
-          source_repo: "nest-desktop/nest-desktop"
-          source_branch: "main"
-          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
-          destination_branch: "main"
+          source_repo: 'nest-desktop/nest-desktop'
+          source_branch: 'main'
+          destination_repo: 'https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git'
+          destination_branch: 'main'
       - name: syncdev
         uses: wei/git-sync@v3
         with:
-          source_repo: "nest-desktop/nest-desktop"
-          source_branch: "dev"
-          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
-          destination_branch: "dev"
-      - name: syncgitlabci
-        uses: wei/git-sync@v3
-        with:
-          source_repo: "nest-desktop/nest-desktop"
-          source_branch: "gitlab-ci"
-          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
-          destination_branch: "gitlab-ci"
+          source_repo: 'nest-desktop/nest-desktop'
+          source_branch: 'dev'
+          destination_repo: 'https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git'
+          destination_branch: 'dev'
       - name: synctags
         uses: wei/git-sync@v3
         with:
-          source_repo: "nest-desktop/nest-desktop"
-          source_branch: "refs/tags/*"
-          destination_repo: "https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git"
-          destination_branch: "refs/tags/*"
+          source_repo: 'nest-desktop/nest-desktop'
+          source_branch: 'refs/tags/*'
+          destination_repo: 'https://ghpusher:${{ secrets.EBRAINS_GITLAB_ACCESS_TOKEN }}@gitlab.ebrains.eu/nest/nest-desktop.git'
+          destination_branch: 'refs/tags/*'
