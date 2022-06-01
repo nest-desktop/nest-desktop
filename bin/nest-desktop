@@ -1,13 +1,14 @@
 #!/bin/bash
 
+DAEMON="${NEST_DESKTOP_DAEMON:-0}"
 HOST="${NEST_DESKTOP_HOST:-127.0.0.1}"
 PORT="${NEST_DESKTOP_PORT:-8000}"
 
-# Returns a short overview of the available command options. 
+# Returns a short overview of the available command options.
 usage() {
-  echo "NEST Desktop $(version)"
-  echo "------------------"
-  echo "Usage: nest-desktop status|start|stop|restart [-h <HOST>] [-p <PORT>]"
+  echo "NEST Desktop"
+  echo "------------"
+  echo "Usage: nest-desktop status|start|stop|restart [-d] [-h <HOST>] [-p <PORT>]"
   echo ""
   echo "Commands:"
   echo "  status      display the status of NEST Desktop"
@@ -16,6 +17,7 @@ usage() {
   echo "  restart     restart (i.e. stop and start) a server on <HOST>:<PORT>"
   echo
   echo "Options:"
+  echo "  -d          daemonize the server process"
   echo "  -h <HOST>   use hostname/IP address <HOST> for the server [default: 127.0.0.1]"
   echo "  -p <PORT>   use port <PORT> for opening the socket [default: 8000]" >&2; exit 1
 }
@@ -28,15 +30,17 @@ pid() {
 
 # Starts NEST Desktop (if no instance is already running).
 start() {
-  echo "NEST Desktop $(version)"
-  echo "------------------"
-
   if pid > /dev/null; then
     echo "NEST Desktop is already running at http://${HOST}:${PORT}."
   else
-    echo "NEST Desktop is now running at http://${HOST}:${PORT}."
-    echo "Use Control-C to stop this service."
-    python3 -m nest_desktop.app ${HOST} ${PORT}
+    if [ "${DAEMON}" -eq 1 ]; then
+      setsid python3 -m nest_desktop.app ${HOST} ${PORT} >/dev/null 2>&1 < /dev/null &
+      echo "NEST Desktop is now running at http://${HOST}:${PORT}."
+    else
+      echo "NEST Desktop is now running at http://${HOST}:${PORT}."
+      echo "Use CTRL + C to stop this service."
+      python3 -m nest_desktop.app ${HOST} ${PORT}
+    fi
   fi
 }
 
@@ -50,7 +54,7 @@ status() {
     echo "[no running instance found]"
   else
     echo "${PS_CMD}" | awk '{ for(i=1;i<=NF;i++) {if ( i == 4 || i == 5 ) printf $i" "}; printf "\n" }'
-  fi;
+  fi
 }
 
 # Tries to stop a running NEST Desktop instance.
@@ -71,8 +75,9 @@ version() {
 
 
 CMD=$1; shift
-while getopts "h:p:" flag; do
+while getopts "dh:p:" flag; do
   case ${flag} in
+    d) DAEMON=1 ;;
     h) HOST=$OPTARG ;;
     p) PORT=$OPTARG ;;
   esac
