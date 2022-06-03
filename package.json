@@ -67,7 +67,7 @@
     "@types/pouchdb": "^6.4",
     "@types/pouchdb-upsert": "^2.2",
     "@types/stats.js": "^0.17",
-    "@types/three": "^0.140",
+    "@types/three": "^0.141",
     "@types/uuid": "^8.3",
     "@vue/babel-preset-app": "^4.5",
     "@vue/cli": "^4.5",
@@ -98,7 +98,7 @@
     "vue-cli-plugin-vuetify": "^2.4",
     "vue-template-compiler": "^2.6",
     "vuetify-loader": "^1.7",
-    "webpack": "^5.71"
+    "webpack": "^5.73"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
