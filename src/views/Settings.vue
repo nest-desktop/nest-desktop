@@ -82,7 +82,8 @@
               <v-col>
                 <ParameterEdit
                   :options="{
-                    label: 'Interval to check backends (s) *',
+                    label:
+                      'Interval to check backends (s) * (Page reload required)',
                     input: 'tickSlider',
                     ticks: [-1, 1, 2, 6, 10, 20, 60],
                   }"
