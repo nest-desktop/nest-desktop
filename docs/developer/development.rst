@@ -50,7 +50,8 @@ Fetch the data from GitHub (download it to your local directory):
 
   git fetch
 
-This command can be varied with options to e.g. fetch all branches (`git fetch --all`) or to discard unreachable content (`git fetch --prune`),
+This command can be varied with options to e.g. fetch all branches (``git fetch --all``)
+or to discard unreachable content (``git fetch --prune``),
 even with multiple of them.
 If required, intergrate the changes from GitHub into your local repository:
 
