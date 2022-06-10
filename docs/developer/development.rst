@@ -84,3 +84,9 @@ Finally, push all of them to repository on the internet (and create a merge requ
 .. code-block:: bash
 
   git push --set-upstream origin newBranch
+
+A merge request will then be handled by the team:
+It will be reviewed and if it provides some nice additions, it will be merged.
+Please note:
+It is likely that the review contains some change requests which have to be
+addressed and committed by you before the merge can be made.
