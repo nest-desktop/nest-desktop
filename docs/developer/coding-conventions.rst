@@ -4,7 +4,7 @@ Coding conventions
 Coding conventions help to generate good code.
 Therefore, we use some recommendations regarding the coding style.
 Most of them follow the conventions used by Git, Linux
-and `other projects <https://namingconvention.org/git/>__`.
+and `other projects <https://namingconvention.org/git/>`__.
 Some more central ones will be mentioned in the following.
 
 .. _general-coding-conventions:
