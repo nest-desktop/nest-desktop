@@ -4,6 +4,7 @@ User documentation
 We use reStructuredText for `Sphinx <https://www.sphinx-doc.org/en/master/>`__
 to generate the documentation locally and online on `Read the Docs <https://readthedocs.org/>`__.
 To learn more about the syntax, check out this quick reference.
+Please have a look at the `coding conventions <coding-conventions.html>`__, too.
 
 Requirements
   * `Sphinx <https://www.sphinx-doc.org/en/master/>`__

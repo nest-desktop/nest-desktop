@@ -24,11 +24,10 @@ General coding conventions
   the latter with the possibility to use backslashes, which is sometimes quite cumbersome).
 - The general coding conventions for Vue, TypeScript \
   and for Python (see `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`__) should be followed.
-- Variables should have a type.
 - For ``.ts`` files, the type ``any`` should be used as rarely as possible \
   (and might be removed in the future).
-- We usually capitalize only the first letter of a title, \
-  except programming expressions like class names, etc.
+- The general recommendations for good (Vue) code should be applied, e.g. \
+  that Variables should be typed whenever possible.
 - Coding and naming styles which are not explicitly mentioned here should be \
   kept similar to the already existing code parts in that language.
 
@@ -63,3 +62,11 @@ Naming conventions
 - We use camel case for custom .class names in `Vue` files.
 - Kebab case is used for standard .class names in `Vue` files.
 - The coding style overrides other capitalization rules (e.g. ``ID`` can become ``Id``).
+
+Sphinx conventions
+------------------
+
+- For headings, we use the following items: \
+  First-level: ``=``, second level: ``-``, third level: ``.``.
+- We usually capitalize only the first letter of a title (or heading), \
+  except programming expressions like class names, proper names, etc.
