@@ -69,8 +69,8 @@
                   <v-list-item-action class="my-1">
                     <v-checkbox
                       :color="synapse.connection.source.view.color"
-                      :input-value="param.visible"
-                      :value="param.visible"
+                      :input-value="param.state.visible"
+                      :value="param.state.visible"
                       hide-details
                     />
                   </v-list-item-action>
@@ -148,7 +148,7 @@ export default Vue.extend({
     const update = () => {
       state.synapse = props.synapse as Synapse;
       state.visibleParams = state.synapse.params
-        .filter((param: SynapseParameter) => param.visible)
+        .filter((param: SynapseParameter) => param.state.visible)
         .map((param: SynapseParameter) => param.idx);
     };
 

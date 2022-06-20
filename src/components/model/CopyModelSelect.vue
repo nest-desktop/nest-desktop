@@ -64,8 +64,8 @@
 
                   <v-list-item-action class="my-1">
                     <v-checkbox
-                      :input-value="param.visible"
-                      :value="param.visible"
+                      :input-value="param.state.visible"
+                      :value="param.state.visible"
                       hide-details
                     />
                   </v-list-item-action>
@@ -152,7 +152,7 @@ export default Vue.extend({
     const update = () => {
       state.model = props.model as CopyModel;
       state.visibleParams = state.model.params
-        .filter((param: ModelParameter) => param.visible)
+        .filter((param: ModelParameter) => param.state.visible)
         .map((param: ModelParameter) => param.idx);
     };
 

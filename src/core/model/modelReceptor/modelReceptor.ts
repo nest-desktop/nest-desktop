@@ -24,7 +24,7 @@ export class ModelReceptor {
 
   get filteredParams(): ModelReceptorParameter[] {
     return this._params.filter(
-      (param: ModelReceptorParameter) => param.visible
+      (param: ModelReceptorParameter) => param.state.visible
     );
   }
 

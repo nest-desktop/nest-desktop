@@ -262,7 +262,7 @@ export class Node extends Config {
 
   get hasSomeVisibleParams(): boolean {
     return (
-      this._params.some((param: NodeParameter) => param.visible) ||
+      this._params.some((param: NodeParameter) => param.state.visible) ||
       this._modelId === 'multimeter' ||
       this._network.project.simulation.code.runSimulationInsite
     );

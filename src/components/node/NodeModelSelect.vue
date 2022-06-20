@@ -72,8 +72,8 @@
                   <v-list-item-action class="my-1">
                     <v-checkbox
                       :color="state.node.view.color"
-                      :input-value="param.visible"
-                      :value="param.visible"
+                      :input-value="param.state.visible"
+                      :value="param.state.visible"
                       hide-details
                     />
                   </v-list-item-action>
@@ -174,8 +174,8 @@
                             <v-list-item-action class="my-1">
                               <v-checkbox
                                 :color="state.node.view.color"
-                                :input-value="param.visible"
-                                :value="param.visible"
+                                :input-value="param.state.visible"
+                                :value="param.state.visible"
                                 hide-details
                               />
                             </v-list-item-action>
@@ -276,8 +276,8 @@
                                   <v-list-item-action class="my-1">
                                     <v-checkbox
                                       :color="state.node.view.color"
-                                      :input-value="param.visible"
-                                      :value="param.visible"
+                                      :input-value="param.state.visible"
+                                      :value="param.state.visible"
                                       hide-details
                                     />
                                   </v-list-item-action>

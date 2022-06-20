@@ -46,13 +46,12 @@ export class ModelParameter extends Parameter {
   override toJSON(): any {
     const param: any = {
       id: this.id,
+      input: this.input,
+      label: this.label,
+      unit: this.unit,
       value: this.value,
+      visible: this.state.visible,
     };
-
-    param.input = this.input;
-    param.label = this.label;
-    param.unit = this.unit;
-    param.visible = this.visible;
 
     if (this.input === 'valueSlider') {
       param.min = this.min;

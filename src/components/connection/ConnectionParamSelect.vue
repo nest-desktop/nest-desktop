@@ -72,7 +72,7 @@ export default Vue.extend({
      */
     const update = () => {
       state.paramsIdx = state.connection.params
-        .filter((param: Parameter) => param.visible)
+        .filter((param: Parameter) => param.state.visible)
         .map((param: Parameter) => param.idx);
     };
 

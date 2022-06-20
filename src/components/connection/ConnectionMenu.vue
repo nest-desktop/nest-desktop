@@ -283,10 +283,10 @@ export default Vue.extend({
      */
     const setVisibleParams = () => {
       state.connectionParamsIdx = state.connection.params
-        .filter((param: Parameter) => param.visible)
+        .filter((param: Parameter) => param.state.visible)
         .map((param: Parameter) => param.idx);
       state.synapseParamsIdx = state.connection.synapse.params
-        .filter((param: SynapseParameter) => param.visible)
+        .filter((param: SynapseParameter) => param.state.visible)
         .map((param: SynapseParameter) => param.idx);
     };
 

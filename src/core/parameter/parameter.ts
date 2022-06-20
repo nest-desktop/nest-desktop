@@ -251,10 +251,6 @@ export class Parameter extends Config {
     }
   }
 
-  get visible(): boolean {
-    return this._state.visible;
-  }
-
   /**
    * Check if this parameter is constant.
    */

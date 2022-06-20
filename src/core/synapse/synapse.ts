@@ -36,7 +36,7 @@ export class Synapse {
    * Returns all visible parameters.
    */
   get filteredParams(): SynapseParameter[] {
-    return this._params.filter((param: SynapseParameter) => param.visible);
+    return this._params.filter((param: SynapseParameter) => param.state.visible);
   }
 
   get hasReceptorIndices(): boolean {
@@ -44,7 +44,7 @@ export class Synapse {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: SynapseParameter) => param.visible);
+    return this._params.some((param: SynapseParameter) => param.state.visible);
   }
 
   get hasSynSpec(): boolean {
@@ -137,7 +137,7 @@ export class Synapse {
   }
 
   get someParams(): boolean {
-    return this._params.some((param: SynapseParameter) => param.visible);
+    return this._params.some((param: SynapseParameter) => param.state.visible);
   }
 
   get weight(): number {
