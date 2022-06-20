@@ -520,7 +520,7 @@ export class Node extends Config {
         (param: SynapseParameter) => param.id === 'weight'
       );
       weight.value = (term === 'inhibitory' ? -1 : 1) * Math.abs(weight.value);
-      weight.visible = true;
+      weight.state.visible = true;
     });
     this.nodeChanges();
   }
