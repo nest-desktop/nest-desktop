@@ -50,7 +50,7 @@ export class ModelParameter extends Parameter {
       label: this.label,
       unit: this.unit,
       value: this.value,
-      visible: this.state.visible,
+      visible: this.state.visible as boolean,
     };
 
     if (this.input === 'valueSlider') {
