@@ -30,7 +30,7 @@ export class NodeReceptor {
   }
 
   get filteredParams(): NodeReceptorParameter[] {
-    return this._params.filter((param: NodeReceptorParameter) => param.visible);
+    return this._params.filter((param: NodeReceptorParameter) => param.state.visible);
   }
 
   get hash(): string {
@@ -38,7 +38,7 @@ export class NodeReceptor {
   }
 
   get hasSomeParams(): boolean {
-    return this._params.some((param: NodeReceptorParameter) => param.visible);
+    return this._params.some((param: NodeReceptorParameter) => param.state.visible);
   }
 
   get id(): string {

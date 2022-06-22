@@ -67,15 +67,15 @@ export class ValueGenerator {
   }
 
   resetParamDefaults(): void {
-    this._options.forEach((param: any) => {
-      this.params[param.id] = param.value;
+    this._options.forEach((option: any) => {
+      this._params[option.id] = option.value;
     });
   }
 
   updateParamViews(): void {
     const params: string[] = this._inputs[this._type];
     this._options.forEach(
-      (param: any) => (param.visible = params.includes(param.id))
+      (option: any) => (option.visible = params.includes(option.id))
     );
   }
 

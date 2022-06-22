@@ -84,7 +84,7 @@ export class CopyModel {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: ModelParameter) => param.visible);
+    return this._params.some((param: ModelParameter) => param.state.visible);
   }
 
   get hasWeightRecorderParam(): boolean {
@@ -158,7 +158,7 @@ export class CopyModel {
   }
 
   get filteredParams(): ModelParameter[] {
-    return this._params.filter((param: ModelParameter) => param.visible);
+    return this._params.filter((param: ModelParameter) => param.state.visible);
   }
 
   get label(): string {
@@ -355,7 +355,7 @@ export class CopyModel {
 
   isAssignedToWeightRecorder(node: Node): boolean {
     const weightRecorderParam: Parameter = this._params.find(
-      (param: Parameter) => param.visible && param.id === 'weight_recorder'
+      (param: Parameter) => param.state.visible && param.id === 'weight_recorder'
     );
     return weightRecorderParam
       ? weightRecorderParam.value === node.view.label

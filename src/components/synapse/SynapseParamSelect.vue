@@ -73,7 +73,7 @@ export default Vue.extend({
      */
     const update = () => {
       state.paramsIdx = state.synapse.params
-        .filter((param: SynapseParameter) => param.visible)
+        .filter((param: SynapseParameter) => param.state.visible)
         .map((param: SynapseParameter) => param.idx);
     };
 

@@ -48,9 +48,8 @@ export class NodeParameter extends Parameter {
     const param: any = {
       id: this.id,
       value: this.value,
+      visible: this.state.visible,
     };
-
-    param.visible = this.visible;
 
     // Add the value factors if existed.
     if (this.factors.length > 0) {

@@ -262,7 +262,7 @@ export class Node extends Config {
 
   get hasSomeVisibleParams(): boolean {
     return (
-      this._params.some((param: NodeParameter) => param.visible) ||
+      this._params.some((param: NodeParameter) => param.state.visible) ||
       this._modelId === 'multimeter' ||
       this._network.project.simulation.code.runSimulationInsite
     );
@@ -520,7 +520,7 @@ export class Node extends Config {
         (param: SynapseParameter) => param.id === 'weight'
       );
       weight.value = (term === 'inhibitory' ? -1 : 1) * Math.abs(weight.value);
-      weight.visible = true;
+      weight.state.visible = true;
     });
     this.nodeChanges();
   }

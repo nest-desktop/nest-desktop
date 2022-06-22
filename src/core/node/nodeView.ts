@@ -145,7 +145,7 @@ export class NodeView {
    */
   paramsVisible(): string[] {
     return this._node.params
-      .filter((param: NodeParameter) => param.visible)
+      .filter((param: NodeParameter) => param.state.visible)
       .map(param => param.id);
   }
 

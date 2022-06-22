@@ -26,7 +26,7 @@ export class NodeCompartment {
 
   get filteredParams(): NodeCompartmentParameter[] {
     return this._params.filter(
-      (param: NodeCompartmentParameter) => param.visible
+      (param: NodeCompartmentParameter) => param.state.visible
     );
   }
 
@@ -36,7 +36,7 @@ export class NodeCompartment {
 
   get hasSomeParams(): boolean {
     return this._params.some(
-      (param: NodeCompartmentParameter) => param.visible
+      (param: NodeCompartmentParameter) => param.state.visible
     );
   }
 

@@ -349,7 +349,7 @@ export default Vue.extend({
      */
     const setVisibleParams = () => {
       state.visibleParams = state.node.params
-        .filter((param: NodeParameter) => param.visible)
+        .filter((param: NodeParameter) => param.state.visible)
         .map((param: NodeParameter) => param.idx);
     };
 
