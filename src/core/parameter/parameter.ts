@@ -57,7 +57,13 @@ export class Parameter extends Config {
     // optional param specifications
     this._rules = param.rules || [];
     this._factors = param.factors || [];
-    this._type = param.type || { id: 'constant' };
+
+    if (param.type != null) {
+      const type = this.config.types.find((t: any) => t.id === param.type.id);
+      if (type != null) {
+        this._type = { ...type, ...param.type };
+      }
+    }
 
     this._input = param.input;
     this._items = param.items || [];
@@ -198,11 +204,15 @@ export class Parameter extends Config {
     this._ticks = value;
   }
 
-  get type(): string {
+  get type(): any {
     return this._type;
   }
 
-  set type(value: string) {
+  get typeId(): string {
+    return this._type.id;
+  }
+
+  set typeId(value: string) {
     this._type = this.config.types.find((type: any) => type.id === value);
   }
 
@@ -290,8 +300,10 @@ export class Parameter extends Config {
    * Reset value taken from options.
    */
   reset(): void {
-    this.type = 'constant';
-    // this._value = this.options.value;
+    this.typeId = 'constant';
+    if (this.options) {
+      this._value = this.options.value;
+    }
   }
 
   /**
@@ -365,7 +377,7 @@ export class Parameter extends Config {
         .filter((spec: any) => !(spec.optional && spec.value === spec.default))
         .map((spec: any) => spec.value)
         .join(', ');
-      value = `list(${this._type.id}(${specs}))`;
+      value = `${this._type.id}(${specs})`;
     } else if (this._type.id === 'spatial.distance') {
       // Distance-dependent linear function.
       const specs: any[] = this.specs;
@@ -387,6 +399,22 @@ export class Parameter extends Config {
       value = `nest.${this._type.id}(${specs})`;
     }
     return value;
+  }
+
+  /**
+   * Serialize parameter type for JSON.
+   * @return parameter type object
+   */
+  typeToJSON(): any {
+    const specs = this._type.specs.map((spec: any) => ({
+      id: spec.id,
+      value: Number(spec.value),
+    }));
+
+    return {
+      id: this._type.id,
+      specs,
+    };
   }
 
   /**
@@ -412,7 +440,7 @@ export class Parameter extends Config {
 
     // Add param type if not constant.
     if (!this.isConstant) {
-      param.type = this._type;
+      param.type = this.typeToJSON();
     }
 
     return param;

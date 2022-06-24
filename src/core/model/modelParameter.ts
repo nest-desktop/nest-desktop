@@ -25,14 +25,6 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Reset the constant value taken from the model component.
-   */
-  override reset(): void {
-    this.type = 'constant';
-    this.value = this.options.value;
-  }
-
-  /**
    * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
