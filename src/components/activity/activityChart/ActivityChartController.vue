@@ -35,7 +35,7 @@
           <v-subheader style="height: 28px" v-text="'Analog signals'" />
           <v-list-item
             :disabled="
-              !state.graph.project.state.activities.hasSomeAnalogEvents
+              !state.graph.project.state.activities.hasSomeAnalogRecorders
             "
             :key="'analogPanel' + index"
             @click="addPanel(model.id)"
@@ -47,7 +47,7 @@
 
           <v-subheader style="height: 28px" v-text="'Spikes'" />
           <v-list-item
-            :disabled="!state.graph.project.state.activities.hasSomeSpikeEvents"
+            :disabled="!state.graph.project.state.activities.hasSomeSpikeRecorders"
             :key="'spikePanel' + index"
             @click="addPanel(model.id)"
             v-for="(model, index) in state.graph.panel.modelsSpike"
