@@ -20,6 +20,7 @@ enum Rule {
   FixedTotalNumber = 'fixed_total_number',
   OneToOne = 'one_to_one',
   PairwiseBernoulli = 'pairwise_bernoulli',
+  symmetricPairwiseBernoulli = 'symmetric_pairwise_bernoulli',
 }
 
 export class Connection extends Config {

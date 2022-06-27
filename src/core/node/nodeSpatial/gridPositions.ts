@@ -108,9 +108,9 @@ export class GridPositions {
   }
 
   /**
-   * Write code for grid positons.
+   * Write code for grid positons for Python.
    */
-  toCode(): string {
+  toPythonCode(): string {
     return `nest.spatial.grid(${JSON.stringify(this._shape)})`;
   }
 

@@ -138,7 +138,7 @@
                         <v-spacer />
                         <span
                           class="mx-1 font-weight-bold"
-                          v-text="param.toCode()"
+                          v-text="param.code"
                         />
                         <span
                           style="min-width: 24px"

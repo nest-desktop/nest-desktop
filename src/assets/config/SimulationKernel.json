@@ -9,6 +9,7 @@
       "value": 1
     },
     {
+      "format": "integer",
       "id": "rngSeed",
       "input": "valueSlider",
       "label": "seed of random number generator",

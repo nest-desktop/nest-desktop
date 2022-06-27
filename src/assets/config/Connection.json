@@ -52,6 +52,7 @@
       "label": "fixed indegree",
       "params": [
         {
+          "format": "integer",
           "id": "indegree",
           "input": "valueSlider",
           "label": "indegree",
@@ -60,16 +61,6 @@
           "step": 1,
           "value": 1,
           "visible": true
-        },
-        {
-          "id": "p",
-          "input": "valueSlider",
-          "label": "p",
-          "max": 1.0,
-          "min": 0.01,
-          "step": 0.01,
-          "value": 0.1,
-          "visible": false
         },
         {
           "id": "allow_autapses",
@@ -92,6 +83,7 @@
       "label": "fixed outdegree",
       "params": [
         {
+          "format": "integer",
           "id": "outdegree",
           "input": "valueSlider",
           "label": "outdegree",
@@ -100,16 +92,6 @@
           "step": 1,
           "value": 1,
           "visible": true
-        },
-        {
-          "id": "p",
-          "input": "valueSlider",
-          "label": "p",
-          "max": 1.0,
-          "min": 0.01,
-          "step": 0.01,
-          "value": 0.1,
-          "visible": false
         },
         {
           "id": "allow_autapses",
@@ -132,6 +114,7 @@
       "label": "fixed total number",
       "params": [
         {
+          "format": "integer",
           "id": "N",
           "input": "valueSlider",
           "label": "N",
@@ -167,6 +150,7 @@
       "label": "pairwise Bernoulli",
       "params": [
         {
+          "format": "float",
           "id": "p",
           "input": "valueSlider",
           "label": "p",

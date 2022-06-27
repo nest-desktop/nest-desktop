@@ -114,9 +114,9 @@ export class FreePositions {
   }
 
   /**
-   * Write code for free positons.
+   * Write code for free positons for Python.
    */
-  toCode(): string {
+  toPythonCode(): string {
     const template = require(`./freePositions.code`).default;
     const rendered = Mustache.render(template, this);
     return rendered;

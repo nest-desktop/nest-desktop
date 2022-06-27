@@ -17,7 +17,7 @@ export class NodeSpatial extends Config {
   }
 
   get code(): string {
-    return this.positions ? this.positions.toCode() : '';
+    return this.positions ? this.positions.toPythonCode() : '';
   }
 
   get hash(): string {
