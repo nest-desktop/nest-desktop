@@ -335,9 +335,10 @@ export class Parameter extends Config {
   }
 
   /**
-   * Converts a number into a string, but keeping <= fraction digits
-   * (i.e.  1 => '1.0', 1.23456 => '1.23456').
+   * Converts a number into a string, but keeps up to `fractionDigits` many
+   * fraction digits of that number , i.e.  1 => '1.0', 1.23456 => '1.23456'.
    * @param value number to be converted
+   * @param fractionDigits required fraction digits for the output string
    * @returns converted number
    */
   toFixed(value: number, fractionDigits: number = 1): string {
@@ -349,7 +350,8 @@ export class Parameter extends Config {
   }
 
   /**
-   * Write textual code for Python.
+   * Generate the Python code for this parameter.
+   * @returns parameter as Python code
    */
   toPythonCode(): string {
     let value: string;
