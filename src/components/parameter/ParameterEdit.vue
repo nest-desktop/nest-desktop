@@ -151,7 +151,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="backMenu" small outlined text>
+            <v-btn @click="backMenu" outlined small text>
               <v-icon left v-text="'mdi-menu-left'" /> back
             </v-btn>
             <v-spacer />
