@@ -22,14 +22,6 @@ export class SynapseParameter extends Parameter {
   }
 
   /**
-   * Reset the constant value taken from the synapse component.
-   */
-  override reset(): void {
-    this.type = 'constant';
-    this.value = this.options.value;
-  }
-
-  /**
    * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
@@ -52,14 +44,14 @@ export class SynapseParameter extends Parameter {
       param.factors = this.factors;
     }
 
-    // Add the parameter type if not constant.
-    if (!this.isConstant) {
-      param.type = this.type;
-    }
-
     // Add the rules for validation if existed.
     if (this.rules.length > 0) {
       param.rules = this.rules;
+    }
+
+    // Add param type if not constant.
+    if (!this.isConstant) {
+      param.type = this.typeToJSON();
     }
 
     return param;

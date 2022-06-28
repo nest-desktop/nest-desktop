@@ -11,14 +11,6 @@ export class ConnectionParameter extends Parameter {
   }
 
   /**
-   * Reset constant value taken from component.
-   */
-  override reset(): void {
-    this.type = 'constant';
-    this.value = this.options.value;
-  }
-
-  /**
    * Trigger changes when parameter is changed.
    */
   override paramChanges(): void {

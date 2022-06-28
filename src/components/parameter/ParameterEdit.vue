@@ -144,17 +144,33 @@
             <v-btn @click="generateValues" outlined small v-text="'generate'" />
           </v-card-actions>
         </span>
+
+        <span v-if="state.content === 'nonConstantParameter' && state.param">
+          <v-card-text>
+            <NonConstantParameterEdit :param="state.param" />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              @click="state.param.paramChanges()"
+              outlined
+              small
+              v-text="'Update parameter'"
+            />
+          </v-card-actions>
+        </span>
       </v-card>
     </v-menu>
 
     <v-card @contextmenu="e => showMenu(e)" flat tile>
       <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
-          <template v-if="state.expertMode">
-            <ParameterEditExpert
-              :param="state.param"
-              @update:param="paramExpertChange"
-            />
+          <template v-if="state.param && !state.param.isConstant">
+            <RandomParameterEditButton :param="state.param" />
           </template>
 
           <template v-else>
@@ -435,12 +451,14 @@ import { NodeParameter } from '@/core/node/nodeParameter';
 import { Parameter } from '@/core/parameter/parameter';
 import { SynapseParameter } from '@/core/synapse/synapseParameter';
 import { ValueGenerator } from '@/core/parameter/valueGenerator';
-import ParameterEditExpert from '@/components/parameter/ParameterEditExpert.vue';
+import NonConstantParameterEdit from '@/components/parameter/NonConstantParameterEdit.vue';
+import RandomParameterEditButton from '@/components/parameter/RandomParameterEditButton.vue';
 
 export default Vue.extend({
   name: 'ParameterEdit',
   components: {
-    ParameterEditExpert,
+    NonConstantParameterEdit,
+    RandomParameterEditButton,
   },
   props: {
     color: String,
@@ -459,7 +477,6 @@ export default Vue.extend({
     const state = reactive({
       color: props.color,
       content: null,
-      expertMode: false,
       items: [
         {
           actions: [],
@@ -483,18 +500,12 @@ export default Vue.extend({
           visible: true,
         },
         {
-          actions: [
-            {
-              id: 'switch',
-              value: () => state.expertMode,
-            },
-          ],
+          actions: [],
+          append: true,
           icon: '$diceMultipleOutline',
-          title: 'Expert mode',
+          title: 'Set up as a non-constant parameter',
           onClick: () => {
-            state.param.value = state.value;
-            state.param.type = 'constant';
-            state.expertMode = !state.expertMode;
+            state.content = 'nonConstantParameter';
           },
           visible: true,
         },
@@ -608,14 +619,6 @@ export default Vue.extend({
     };
 
     /**
-     * Triggers when parameter in expert mode is changed.
-     */
-    const paramExpertChange = () => {
-      state.expertMode = !state.param.isConstant;
-      state.param.paramChanges();
-    };
-
-    /**
      * Show parameter menu.
      */
     const showMenu = function (e: MouseEvent) {
@@ -705,7 +708,6 @@ export default Vue.extend({
       if (props.param) {
         state.options = props.param['options'];
         state.param = props.param as paramTypes;
-        state.expertMode = !state.param.isConstant;
       } else {
         state.options = props.options;
       }
@@ -769,7 +771,6 @@ export default Vue.extend({
       increment,
       label,
       paramChange,
-      paramExpertChange,
       rules,
       showMenu,
       state,
