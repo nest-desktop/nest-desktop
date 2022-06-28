@@ -503,7 +503,7 @@ export default Vue.extend({
           actions: [],
           append: true,
           icon: '$diceMultipleOutline',
-          title: 'Non-constant parameter',
+          title: 'Set up as a non-constant parameter',
           onClick: () => {
             state.content = 'nonConstantParameter';
           },
