@@ -2,6 +2,7 @@
   "autoRNGSeed": false,
   "params": [
     {
+      "format": "integer",
       "id": "localNumThreads",
       "input": "tickSlider",
       "label": "local number of threads",
