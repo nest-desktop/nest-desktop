@@ -1,3 +1,4 @@
+=======================================
 |lecturer| Use NEST Desktop in a course
 =======================================
 
@@ -9,17 +10,17 @@ and what the features of their dynamic behavior are.
 
 .. note::
    This section assumes that you have prior knowledge of how to use NEST Desktop.
-   If you have not used NEST Desktop before, please read the User Documentation first (:doc:`/user/index`).
+   If you have not used NEST Desktop before, please read the User Documentation first (:doc:`/user/quickstart`).
 
 To support the organization of a course, we provide some hints for course instructors:
 
-- :doc:`course-design`
-- :doc:`didactic-concept`
+- :doc:`/lecturer/course-design`
+- :doc:`/lecturer/didactic-concept`
 
 Additionally, we provide course materials to be handed out to participants:
 
-- :doc:`first-steps`
-- :doc:`course-protocol`
+- :doc:`/lecturer/first-steps`
+- :doc:`/lecturer/course-protocol`
 
 |
 
@@ -28,70 +29,46 @@ and large networks of the brain to students using NEST Desktop.
 Video tutorials illustrate important aspects of the course work.
 The provided material could be used to prepare handouts for students.
 
-Select the level of the course that you plan to conduct with NEST Desktop:
 
-.. raw:: html
+Topics
+======
 
-  <div class="container-fluid">
-    <div class="row" style="height:250px">
+Bachelor students
+-----------------
 
-      <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Bachelor students</h5>
-            <p class="card-text">
-              ... learn basic computational neuroscience with little prior knowledge.
-            </p>
-          </div>
-          <div class="card-footer">
-            <a class="btn btn-primary btn-sm stretched-link" href="bachelor/index.html" role="button">
-              For bachelor students
-            </a>
-          </div>
-        </div>
-      </div>
+This section provides sample assignments for students with little prior knowledge.
+The focus lies on the activity dynamics of single neurons.
+In all assignments we use :code:`iaf_psc_alpha` as our neuron model.
+It is studied how a neuron responds to different types of input.
 
-      <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Master students</h5>
-            <p class="card-text">
-              ... explore core concepts of computational neuroscience arising in the literature.
-            </p>
-          </div>
-          <div class="card-footer">
-            <a class="btn btn-primary btn-sm stretched-link" href="master/index.html" role="button">
-              For master students
-            </a>
-          </div>
-        </div>
-      </div>
+- :doc:`/lecturer/bachelor/single-neuron-direct-current-injection`
+- :doc:`/lecturer/bachelor/single-neuron-noise-current-injection`
+- :doc:`/lecturer/bachelor/single-neuron-synaptic-input`
+- :doc:`/lecturer/bachelor/single-neuron-poisson-input`
 
-      <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Doctoral students</h5>
-            <p class="card-text">
-              ... deal with advanced concepts of computational neuroscience arising in research.
-            </p>
-          </div>
-          <div class="card-footer">
-            <a class="btn btn-primary btn-sm stretched-link" href="doctoral/index.html" role="button">
-              For doctoral students
-            </a>
-          </div>
-        </div>
-      </div>
 
-    </div>
-  </div>
+Master students
+---------------
 
-|
+This section covers advanced topics for students with previous knowledge in neurobiology.
+Here, we cover the activity dynamics of single neurons and of neuronal networks.
 
-||||
+- :doc:`/lecturer/master/hodgkin-huxley-action-potential`
+- :doc:`/lecturer/master/point-neuron-conductance`
+- :doc:`/lecturer/master/network-dynamics`
+
+
+Doctoral students
+-----------------
+
+This section illustrates how NEST Desktop might be used for research in computational neuroscience.
+A typical example covers the activity dynamics of neuronal networks with multiple interacting populations.
+
+- :doc:`/lecturer/doctorate/networks-decision-making`
+
 
 Acknowledgments
----------------
+===============
 
 Thanks for the help:
 
@@ -105,3 +82,18 @@ Thanks for the help:
   :alt: Lecturer
   :align: top
   :target: #
+
+
+.. toctree::
+   :hidden:
+
+   bachelor/single-neuron-direct-current-injection
+   bachelor/single-neuron-noise-current-injection
+   bachelor/single-neuron-synaptic-input
+   bachelor/single-neuron-poisson-input
+
+   master/hodgkin-huxley-action-potential
+   master/point-neuron-conductance
+   master/network-dynamics
+
+   doctorate/networks-decision-making

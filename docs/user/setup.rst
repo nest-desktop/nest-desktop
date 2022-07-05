@@ -87,7 +87,7 @@ Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! <usage>`
+:doc:`Now we can start constructing networks for the simulation! </user/usage>`
 
 .. note::
    For more information (like running the containers without root password, etc.),
@@ -146,7 +146,7 @@ Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:8000.
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! <usage>`
+:doc:`Now we can start constructing networks for the simulation! </user/usage>`
 
 For more information read the full documentation of `NEST Desktop Singularity <https://github.com/nest-desktop/nest-desktop-singularity>`__.
 
@@ -196,7 +196,7 @@ NEST Desktop is available on PyPI and can be installed with the ``pip`` command:
 
   pip3 install nest-desktop [--user] [--upgrade]
 
-For more information read the complete installing guide :doc:`here <setup>`.
+For more information read the complete installing guide :doc:`here </user/setup>`.
 
 5. Start NEST Desktop (in another terminal session):
 
@@ -210,7 +210,7 @@ You can use NEST Desktop in the web browser at http://localhost:8000.
 |
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! <usage>`
+:doc:`Now we can start constructing networks for the simulation! </user/usage>`
 
 For more information read the full documentation of the command API :doc:`here </developer/command-API>`.
 
