@@ -67,7 +67,6 @@ extensions.append("sphinx_material")
 html_context = sphinx_material.get_html_context()
 
 html_css_files = [
-    # 'css/bootstrap.min.css',
     'css/styles.css'
 ]
 
@@ -75,9 +74,7 @@ html_logo = '_static/img/logo/nest-desktop-logo.png'
 html_favicon = '_static/favicon.ico'
 
 
-html_js_files = [
-    # 'js/bootstrap.min.js',
-]
+html_js_files = []
 
 html_show_sourcelink = False
 
