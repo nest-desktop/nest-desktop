@@ -1,5 +1,5 @@
 # File: docs/requirements.txt
 
 pip==22.1.2
-sphinx_material==0.0.35
+sphinx-material==0.0.35
 Sphinx==5.0.*
