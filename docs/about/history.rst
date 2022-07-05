@@ -1,6 +1,15 @@
 History
 =======
 
+2022
+----
+
+:31 Jun: Satellite tutorial at `CNS <https://hackmd.io/W09z_RysTUWuwpHtgphdxQ?view>`__, online.
+:23 - 24 Jun: Workshop and Poster "NEST Desktop at `NEST Conference <https://events.hifis.net/event/305/>`__, online.
+:13 - 15 Jun: Workshop at `EBRAINS BASSES <https://www.humanbrainproject.eu/en/education/ebrains-workshops/basses/>`__, presented by Johanna Senk, Rome, Italy.
+:26 - 28 Apr: MSc course "Biophysics of Neurons and Networks" at [BCF]_, Freiburg, Germany.
+:07 - 18 Feb: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
+
 2021
 ----
 
@@ -62,7 +71,7 @@ History
 2016
 ----
 
-:Dec: - The start of the development of NEST Desktop.
+:Dec: The development start of NEST Desktop.
 
 
 ||||

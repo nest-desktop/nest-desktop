@@ -20,7 +20,7 @@ First get the configuration file for Docker Compose.
 
   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop-docker/main/docker-compose-insite.yml
 
-For more information about Docker Compose, please read the :doc:`documentation <deploy-docker-compose>`.
+For more information about Docker Compose, please read the :doc:`documentation </deployer/deploy-docker-compose>`.
 
 |
 
