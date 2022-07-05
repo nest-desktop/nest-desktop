@@ -1,5 +1,5 @@
 # File: docs/requirements.txt
 
-pip
-sphinx_rtd_theme==1.0.0
-Sphinx==4.4.*
+pip==22.1.2
+sphinx_material==0.0.35
+Sphinx==5.0.*
