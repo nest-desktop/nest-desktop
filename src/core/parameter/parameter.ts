@@ -24,6 +24,7 @@ type parentTypes =
 
 export class Parameter extends Config {
   private _factors: string[]; // not functional yet
+  private _format: string;
   private _id: string;
   private _idx: number; // generative
   private _input: string;
@@ -65,6 +66,7 @@ export class Parameter extends Config {
       }
     }
 
+    this._format = param.format || '';
     this._input = param.input;
     this._items = param.items || [];
     this._label = param.label || param.id;
@@ -77,11 +79,15 @@ export class Parameter extends Config {
   }
 
   get code(): string {
-    return this.toCode();
+    return this.toPythonCode();
   }
 
   get disabled(): boolean {
     return this._state.disabled;
+  }
+
+  get format(): string {
+    return this._format;
   }
 
   get id(): string {
@@ -341,31 +347,40 @@ export class Parameter extends Config {
   }
 
   /**
-   * Converts a number into a string, but keeping <= fraction digits
-   * (i.e.  1 => '1.0', 1.23456 => '1.23456').
+   * Converts a number into a string, but keeps up to `fractionDigits` many
+   * fraction digits of that number , i.e.  1 => '1.0', 1.23456 => '1.23456'.
    * @param value number to be converted
+   * @param fractionDigits required fraction digits for the output string
    * @returns converted number
    */
-  toFixed(value: number): string {
+  toFixed(value: number, fractionDigits: number = 1): string {
     const valueAsString = value.toString();
-    let fractionDigits = 1;
-    if (valueAsString.includes('.')) {
+    if (valueAsString.includes('.') && fractionDigits > 0) {
       fractionDigits = valueAsString.split('.')[1].length;
     }
     return value.toFixed(fractionDigits);
   }
 
   /**
-   * Write textual code.
+   * Generate the Python code for this parameter.
+   * @returns parameter as Python code
    */
-  toCode(): string {
+  toPythonCode(): string {
     let value: string;
     if (this.isConstant) {
       // Constant value.
-      if (typeof this._value === 'string') {
+      if (this._format === 'integer') {
+        // Integer value
+        value = this.toFixed(this._value as number, 0);
+      } else if (this._format === 'float') {
+        // Float value
+        value = this.toFixed(this._value as number);
+      } else if (typeof this._value === 'string') {
+      // TODO: this condition should be checked if it is really possible 
+        // String value
         value = this._value as string;
       } else if (typeof this._value === 'boolean') {
-        // Boolean value for Python.
+        // Boolean value
         value = this._value ? 'True' : 'False';
       } else if (Array.isArray(this._value)) {
         value = JSON.stringify(this._value.map((value: number) => value));
