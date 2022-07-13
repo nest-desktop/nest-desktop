@@ -10,7 +10,7 @@ Analog signals contain continuous quantities from the recording devices (``voltm
 .. _chart-graph-of-analog-signals:
 
 Chart graph of analog signals
-.............................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the chart graph area, it is possible to visualize analog signals statically.
 Every chart panel has an own controller card fur individual customization.
@@ -31,7 +31,7 @@ Node records appear as chips in the cards, which allow you to change the colors 
 .. _animation-graph-of-analog-signals:
 
 Animation graph of analog signals
-.................................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible to display an animated 3D graph for the spatial network forming layers in topology
 whose neurons have geographical positions.
@@ -60,7 +60,7 @@ Spike events contain times and ids of the senders collected by the ``spike recor
 .. _chart-graph-of-spike-activity:
 
 Chart graph of spike activity
-.............................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^..
 
 .. image:: ../_static/img/screenshots/activity-chart-graph-spike.png
   :target: #chart-graph-of-spike-activity
@@ -78,7 +78,7 @@ Further panel models are:
 .. _animation-graph-of-spike-activity:
 
 Animation graph of spike activity
-.................................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/activity-anim-graph-spike.png
   :target: #animation-graph-of-spike-activity

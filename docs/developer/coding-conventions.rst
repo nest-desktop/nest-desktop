@@ -67,6 +67,11 @@ Sphinx conventions
 ------------------
 
 - For headings, we use the following items: \
-  First-level: ``=``, second level: ``-``, third level: ``.``.
+  ``=`` (with overline!) for parts and ``*`` (also with overline!) for \
+  chapters and for sections:
+  
+    - First-level: ``=``, second level: ``-``, third level: ``^``.
 - We usually capitalize only the first letter of a title (or heading), \
-  except programming expressions like class names, proper names, etc.
+  except programming expressions like class names, proper names, etc. \
+  We also recommend the Python documentation conventions, as suggested in `the official documentation
+  <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#sections>`__ .

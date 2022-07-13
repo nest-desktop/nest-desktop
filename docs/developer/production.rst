@@ -31,7 +31,7 @@ The Python Package Index **nest-desktop** includes an executive command ``nest-d
 |
 
 Build
-.....
+^^^^^
 
 The current working directory is ``nest-desktop``.
 
@@ -64,7 +64,7 @@ Then generate the distribution packages of `nest-desktop` for PyPI:
 |
 
 Upload
-......
+^^^^^^
 
 Finally, the package is ready for the the publication.
 You can upload the pip-package of ``nest-desktop`` to PyPI:

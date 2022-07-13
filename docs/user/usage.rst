@@ -50,7 +50,7 @@ Here, we explain steps to create and connect nodes.
 .. _create-nodes:
 
 Create nodes
-............
+^^^^^^^^^^^^
 
 .. image:: ../_static/img/gif/create-nodes.gif
   :align: left
@@ -67,7 +67,7 @@ Then it creates a node of the selected element type.
 .. _node-labels:
 
 Node labels
-...........
+^^^^^^^^^^^
 
 Each node graph is labeled to identify the model of the node.
 By default, it creates direct current generator (:guilabel:`dc`) for a stimulus
@@ -80,7 +80,7 @@ You can find the full label of the node model in the network controller.
 .. _node-colors:
 
 Node colors
-...........
+^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/node-shapes.png
   :align: right
@@ -95,7 +95,7 @@ The color of lines is defined by the source node.
 |br|
 
 Node shapes
-...........
+^^^^^^^^^^^
 
 The specific shape defines an element type of a node:
 
@@ -111,7 +111,7 @@ The specific shape defines an element type of a node:
 .. _neuron-shapes:
 
 Neuron shapes
-.............
+^^^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/neuron-shapes.png
   :align: right
@@ -128,7 +128,7 @@ The shape of neurons is represented differently by the set of synaptic weights o
 .. _connect-nodes:
 
 Connect nodes
-.............
+^^^^^^^^^^^^^
 
 .. image:: ../_static/img/gif/connect-nodes.gif
   :align: left
@@ -149,7 +149,7 @@ It creates a connection between source and target nodes.
 .. _select-model-and-parameters:
 
 Select model and parameters
-...........................
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/gif/edit-node.gif
   :align: right
@@ -166,7 +166,7 @@ Finally, you are able to change the values of visible parameters.
 .. _network-history:
 
 Network history
-...............
+^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/gif/network-history.gif
   :align: right
@@ -197,7 +197,7 @@ In the code editor you can have an insight into the generated script code
 .. _kernel-settings:
 
 Kernel settings
-...............
+^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/kernel-settings.png
   :align: right
@@ -230,7 +230,7 @@ The simulation time can be set as well (in Milliseconds).
 .. _code-editor:
 
 Code editor
-...........
+^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/code-editor.png
   :align: right
@@ -271,7 +271,7 @@ Network activity can be explored in a graph or table.
 .. _activity-graph:
 
 Activity graph
-..............
+^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/activity-graph.png
   :align: left
@@ -291,7 +291,7 @@ it shows a histogram graph of spike times or of inter-spike intervals.
 .. _activity-table:
 
 Activity table
-..............
+^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/activity-table.png
   :align: right
