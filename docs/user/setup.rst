@@ -4,7 +4,7 @@ Setup Guide
 This guide provides a detailed documentation on how to install NEST Desktop with NEST Simulator.
 The front end NEST Desktop requires NEST Simulator as the back end for the simulation.
 NEST Simulator has an API Server which can forward requests to the simulation engine.
-For more information, please have a look :doc:`here <nest-simulator:nest_server>`.
+For more information, please have a look :doc:`here <nest-simulator:connect_nest/nest_server>`.
 
 .. image:: ../_static/img/installation-guide.png
   :width: 100%
@@ -186,7 +186,7 @@ The API Server for NEST Simulator is referred to as **NEST Server**.
 
 NEST Server is now running at http://localhost:5000.
 
-You can find the detailed information on NEST Server :doc:`here <nest-simulator:nest_server>`.
+You can find the detailed information on NEST Server :doc:`here <nest-simulator:connect_nest/nest_server>`.
 
 4. Install NEST Desktop
 
