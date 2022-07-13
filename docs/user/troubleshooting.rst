@@ -11,7 +11,7 @@ Error messages
 .. _server-not-found:
 
 Server not found
-^^^^^^^^^^^^^^^.
+^^^^^^^^^^^^^^^^
 
 NEST Desktop cannot find the NEST Simulator.
 It has two possible reasons:
@@ -38,7 +38,7 @@ Internal server error
 .. _nest-error:
 
 NEST error
-^^^^^^^^^.
+^^^^^^^^^^
 
   NEST Simulator produces a value error, e.g. ``The value cannot be negative.``.
   Please have a look at the official :doc:`NEST documentation <nest-simulator:index>`
@@ -53,7 +53,7 @@ Frequently asked questions (FAQ)
 .. _nest-simulator:
 
 NEST Simulator
-^^^^^^^^^^^^..
+^^^^^^^^^^^^^^
 
 How can I change the URL of the NEST Simulator?
   On the settings page you can find the URL of the NEST Simulator.
@@ -67,7 +67,7 @@ How can I check NEST Simulator?
 .. _project:
 
 Project
-^^^^^^.
+^^^^^^^
 
 How can I make a new project?
   In the navigation sidebar you will find a list item :guilabel:`+ New project` to create a new project.
