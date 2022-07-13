@@ -35,7 +35,8 @@ build_app:
     - cat nest_desktop/__init__.py
     - cat .env
   tags:
-    - docker-runner read-only
+    - docker-runner
+    - read-only
 
 #
 # BUILD ELECTRON
@@ -65,7 +66,8 @@ build_electron:
     - yarn electron:build
     - cat nest_desktop/__init__.py
   tags:
-    - docker-runner read-only
+    - docker-runner
+    - read-only
 
 #
 # DEPLOY PYTHON PACKAGE
@@ -92,7 +94,8 @@ deploy_pypi:
         TWINE_PASSWORD=${PYPI_ACCESS_TOKEN} TWINE_USERNAME=__token__ python -m twine upload dist/*
       fi
   tags:
-    - docker-runner read-only
+    - docker-runner
+    - read-only
 
 #
 # DEPLOY DOCKER IMAGE ON EBRAINS
@@ -124,7 +127,8 @@ deploy_ebrains_docker:
   after_script:
     - docker logout docker-registry.ebrains.eu
   tags:
-    - shell-runner read-only
+    - shell-runner
+    - read-only
 
 #
 # DEPLOY DOCKER IMAGE ON DOCKER HUB in nestsim organisation
@@ -156,7 +160,8 @@ deploy_docker_hub_nestsim:
   after_script:
     - docker logout
   tags:
-    - shell-runner read-only
+    - shell-runner
+    - read-only
 
 #
 # DEPLOY DOCKER IMAGE ON DOCKER HUB in nestdesktop organisation
@@ -188,7 +193,8 @@ deploy_docker_hub_nestdesktop:
   after_script:
     - docker logout
   tags:
-    - shell-runner read-only
+    - shell-runner
+    - read-only
 
 #
 # DEPLOY SNAP ON SNAPCRAFT
@@ -211,4 +217,5 @@ deploy_snap:
   after_script:
     - snapcraft logout
   tags:
-    - docker-runner read-only
+    - docker-runner
+    - read-only
