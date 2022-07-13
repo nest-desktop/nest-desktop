@@ -114,7 +114,7 @@ export class FreePositions {
   }
 
   /**
-   * Write code for free positons for Python.
+   * Generate the Python code for free (i.e. non-grid) positions.
    */
   toPythonCode(): string {
     const template = require(`./freePositions.code`).default;
