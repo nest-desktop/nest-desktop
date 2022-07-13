@@ -60,7 +60,7 @@ Spike events contain times and ids of the senders collected by the ``spike recor
 .. _chart-graph-of-spike-activity:
 
 Chart graph of spike activity
-^^^^^^^^^^^^^^^^^^^^^^^^^^^..
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/screenshots/activity-chart-graph-spike.png
   :target: #chart-graph-of-spike-activity
