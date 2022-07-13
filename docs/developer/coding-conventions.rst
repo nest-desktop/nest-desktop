@@ -40,7 +40,7 @@ Git conventions
     - Commits should have a title containing not more than 72 characters.
     - The subject line of commit messages should be a short and informative \
       summary of the pull request in the imperative (e.g. 'Fix bug' instead of \
-      'Fixed Bug') and should not end with a full stop.
+      'Fixed bug') and should not end with a full stop.
     - The body should focus on the `What` (the changes in comparison to the \
       original version) and `Why`, very detailed explanations on the `How` \
       should be included in the source code as comments.
