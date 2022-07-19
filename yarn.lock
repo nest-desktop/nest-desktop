@@ -2012,10 +2012,17 @@
   dependencies:
     "@types/plotly.js" "*"
 
-"@types/plotly.js@*", "@types/plotly.js@^1.54":
+"@types/plotly.js@*":
   version "1.54.22"
   resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-1.54.22.tgz#001b9cfafc5e0bdf133bc6ab6e30ff0af39e584d"
   integrity sha512-/xL9++eA7VnIIZqNQOw6sZ7DtEmfoHj5rAD2CjU2LCOqem/BxTA1KlpdUWEHOiou6za4HKnM+Nvho3jTBPYJ/w==
+  dependencies:
+    "@types/d3" "^3"
+
+"@types/plotly.js@^2.12.1":
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-2.12.1.tgz#112a0b322e19de3d61c4fe0213bccc57e6292022"
+  integrity sha512-Nn8tr4TDYYNaTzX+fA8b2V+OHk1cGPoMpiVFRQmlH3ICcwZOlQCCVogHkfRdYaG5/Rqg8B1Wnr+r6GyaSKlC+Q==
   dependencies:
     "@types/d3" "^3"
 

@@ -62,7 +62,7 @@
     "@types/mustache": "^4.2.1",
     "@types/node": "^18.0.6",
     "@types/object-hash": "^2.2",
-    "@types/plotly.js": "^1.54",
+    "@types/plotly.js": "^2.12.1",
     "@types/plotly.js-dist-min": "^2.3",
     "@types/pouchdb": "^6.4",
     "@types/pouchdb-upsert": "^2.2",
