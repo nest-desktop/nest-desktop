@@ -45,7 +45,7 @@
     "vue-codemirror": "^4.0",
     "vue-property-decorator": "9.1",
     "vue-router": "^3.5",
-    "vue-toast-notification": "^0.6",
+    "vue-toast-notification": "0.6.2",
     "vuedraggable": "^2.24",
     "vuetify": "^2.6.7"
   },
@@ -108,6 +108,7 @@
     "sass-loader: >= 11.0 doesn't work with vue@2 because of vuetify@2 (https://stackoverflow.com/questions/66082397/typeerror-this-getoptions-is-not-a-function).",
     "typescript: >= 4.7 produces error (See https://github.com/microsoft/TypeScript/issues/49257)",
     "vue-codemirror: >= 5.0 produces error. It works only with Vue3",
+    "vue-toast-notification: >= 0.6.3 error: Generic type 'ExtendedVue' requires 5 type argument(s).",
     "vue-toast-notification: >= 2.0 doesn't work with vue@2 (https://github.com/ankurk91/vue-toast-notification).",
     "vuetify-loader >= 2.8 produces error [Vue warn]: Failed to resolve directive: click-outside",
     "webpack: >= 5.0 produces invalid configuration object in unit test because of mochapack -> wait for @vue/cli@5."
