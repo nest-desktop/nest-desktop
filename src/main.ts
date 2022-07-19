@@ -24,10 +24,6 @@ Vue.use(VueToast);
 // Production
 Vue.config.productionTip = false;
 
-// Mustache
-import Mustache from 'mustache';
-Mustache.escape = text => text;
-
 /**
  * Mount application.
  */

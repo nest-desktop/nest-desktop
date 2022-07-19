@@ -59,7 +59,7 @@
     "@types/d3": "^7.4",
     "@types/electron-devtools-installer": "^2.2",
     "@types/mocha": "^9.1",
-    "@types/mustache": "^4.1",
+    "@types/mustache": "^4.2.1",
     "@types/node": "^18.0.6",
     "@types/object-hash": "^2.2",
     "@types/plotly.js": "^1.54",
