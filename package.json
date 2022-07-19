@@ -109,6 +109,7 @@
     "typescript: >= 4.7 produces error (See https://github.com/microsoft/TypeScript/issues/49257)",
     "vue-codemirror: >= 5.0 produces error. It works only with Vue3",
     "vue-toast-notification: >= 2.0 doesn't work with vue@2 (https://github.com/ankurk91/vue-toast-notification).",
+    "vuetify-loader >= 2.8 produces error [Vue warn]: Failed to resolve directive: click-outside",
     "webpack: >= 5.0 produces invalid configuration object in unit test because of mochapack -> wait for @vue/cli@5."
   ],
   "bugs": {
