@@ -54,7 +54,7 @@ export class AnalogSignalActivity extends Activity {
     }
 
     const attribute: string = 'V_m';
-    const path = `nest/multimeters/${this.nodeCollectionId}/attributes/${attribute}/?fromTime=${this.lastTime}`;
+    const path = `nest/multimeters/${this.recorderUnitId}/attributes/${attribute}/?fromTime=${this.lastTime}`;
     this.project.app.backends.insiteAccess.instance
       .get(path)
       .then((response: any) => {

@@ -100,9 +100,9 @@ export class SpikeActivity extends Activity {
       return;
     }
 
-    const path = `nest/spikerecorders/${
-      this.nodeCollectionId
-    }/spikes/?fromTime=${this.lastTime + 0.1}`;
+    const path = `nest/spikerecorders/${this.recorderUnitId}/spikes/?fromTime=${
+      this.lastTime + 0.1
+    }`;
     this.project.app.backends.insiteAccess.instance
       .get(path)
       .then((response: any) => {

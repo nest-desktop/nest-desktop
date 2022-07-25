@@ -6,17 +6,17 @@ import { SpikeActivity } from '../../activity/spikeActivity';
 
 type activityType = {
   events: any;
-  nodeCollectionId: number;
   nodeIds: number[];
   nodePositions: number[][];
+  recorderUnitId: number;
 };
 
 type nodeDataType = {
   model: string;
-  nodeCollectionId: number;
   nodeId: number;
   nodeStatus: Object;
   position: Object | null;
+  recorderUnitId: number;
   simulationNodeId: number;
 };
 
@@ -196,11 +196,16 @@ export class Insite {
           }
           return {
             events: { senders: [], times: [] },
-            nodeCollectionId: data.spikerecorderId,
+            recorderUnitId: data.spikerecorderId,
             nodeIds: data.nodeIds,
             nodePositions,
           };
         });
+
+        // Sort activities by recorder unit ids.
+        activities.sort(
+          (a: any, b: any) => a.recorderUnitId - b.recorderUnitId
+        );
 
         // Initialize activities.
         this._project.initActivities(activities);
@@ -246,11 +251,16 @@ export class Insite {
 
           return {
             events,
-            nodeCollectionId: data.multimeterId,
+            recorderUnitId: data.multimeterId,
             nodeIds: data.nodeIds,
             nodePositions,
           };
         });
+
+        // Sort activities by recorder unit ids.
+        activities.sort(
+          (a: any, b: any) => a.recorderUnitId - b.recorderUnitId
+        );
 
         // Initialize activities.
         this._project.initActivities(activities);
