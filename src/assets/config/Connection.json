@@ -1,46 +1,4 @@
 {
-  "graph": {
-    "width": {
-      "label": "line width",
-      "max": 5,
-      "min": 0,
-      "step": 0.1,
-      "value": 2.5
-    },
-    "maxDistance": {
-      "label": "max distance",
-      "max": 400,
-      "min": 0,
-      "value": 200
-    },
-    "opacity": {
-      "label": "line opacity (beyond max distance)",
-      "max": 1,
-      "min": 0,
-      "step": 0.01,
-      "value": 0.5
-    },
-    "terminusOpacity": {
-      "label": "terminus opacity (beyond max distance)",
-      "max": 1,
-      "min": 0,
-      "step": 0.01,
-      "value": 0.5
-    },
-    "ellipticalArc": {
-      "label": "line elliptical arc",
-      "max": 5,
-      "min": 0,
-      "step": 0.1,
-      "value": 2.5
-    },
-    "xAxisRotation": {
-      "label": "line x axis rotation (deg)",
-      "max": 360,
-      "min": 0,
-      "value": 0
-    }
-  },
   "rules": [
     {
       "value": "all_to_all",
