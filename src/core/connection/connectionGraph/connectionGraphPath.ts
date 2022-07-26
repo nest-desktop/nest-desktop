@@ -6,7 +6,7 @@ export default function drawPath(
   target: any,
   config: any = {}
 ): string {
-  const r: number = config.radius || 18;
+  const r: number = config.radius || 24;
 
   const x1: number = source.x;
   let y1: number = source.y;
