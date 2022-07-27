@@ -165,7 +165,7 @@ export class App extends Config {
   /**
    * Open dialog.
    */
-  openDialog(source: string, action: string, content: any[]): void {
+  openDialog(source: string, action: string, content: any[] = []): void {
     consoleLog(this, 'Open dialog');
     this._state.dialog.source = source;
     this._state.dialog.action = action;

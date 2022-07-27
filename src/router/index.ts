@@ -9,7 +9,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: () => import('@/views/AppInfo.vue'),
       props: {
         includeProjectButtons: true,
@@ -17,34 +17,34 @@ export default new Router({
     },
     {
       path: '/project',
-      name: 'Project',
+      name: 'project',
       component: () => import('@/views/Project.vue'),
     },
     {
       path: '/project/:id',
-      name: 'ProjectId',
+      name: 'projectId',
       component: () => import('@/views/Project.vue'),
       props: true,
     },
     {
       path: '/model',
-      name: 'Model',
+      name: 'model',
       component: () => import('@/views/Model.vue'),
     },
     {
       path: '/model/:id',
-      name: 'ModelId',
+      name: 'modelId',
       component: () => import('@/views/Model.vue'),
       props: true,
     },
     {
       path: '/settings',
-      name: 'Settings',
-      component: () => import('@/views/Settings.vue'),
+      name: 'appSettings',
+      component: () => import('@/views/AppSettings.vue'),
     },
     {
       path: '/about',
-      name: 'About',
+      name: 'about',
       component: () => import('@/views/AppInfo.vue'),
       props: {
         includeProjectButtons: false,

@@ -1,19 +1,18 @@
 <template>
   <div class="networkParamToolbar" v-if="state.network">
-    <v-banner class="toolbar" height="40" max-height="40" single-line sticky>
+    <v-toolbar class="toolbar" dense flat height="40" max-height="40">
       <span class="d-flex">
         <v-btn-toggle
-          class="ma-2px"
           dense
           group
           mandatory
-          style="width: 100%"
           tile
           v-model="state.network.state.elementTypeIdx"
         >
           <v-btn
             :key="'elementType-' + item"
-            class="flex-grow-1"
+            class="flex-grow-1 ma-0"
+            height="40"
             v-for="item in state.network.state.elementTypes.slice(0, 4)"
           >
             <span class="d-flex flex-column">
@@ -30,7 +29,8 @@
 
           <v-btn
             :key="'elementType-' + item"
-            class="flex-grow-1"
+            class="flex-grow-1 ma-0"
+            height="40"
             v-for="item in state.network.state.elementTypes.slice(4, 5)"
           >
             <span class="d-flex flex-column">
@@ -47,7 +47,12 @@
 
           <v-menu :close-on-content-click="false" :max-height="600" offset-y>
             <template #activator="{ on, attrs }">
-              <v-btn class="flex-grow-1" v-bind="attrs" v-on="on">
+              <v-btn
+                class="flex-grow-1 ma-0"
+                height="40"
+                v-bind="attrs"
+                v-on="on"
+              >
                 <span class="d-flex flex-column">
                   <v-icon
                     small
@@ -304,7 +309,7 @@
           </v-menu>
         </v-btn-toggle>
       </span>
-    </v-banner>
+    </v-toolbar>
   </div>
 </template>
 
@@ -527,6 +532,12 @@ export default Vue.extend({
 </script>
 
 <style>
+.networkParamToolbar .toolbar {
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+}
+
 .v-image__image--preload {
   filter: none;
   --webkit-filter: none;

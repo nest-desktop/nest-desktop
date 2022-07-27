@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh; overflow-y: auto">
+  <div class="appSettings">
     <v-main>
       <v-container>
         <v-card class="my-1" flat tile>
@@ -215,7 +215,7 @@ import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 import colorSchemes from '@/assets/config/ColorSchemes.json';
 
 export default Vue.extend({
-  name: 'Settings',
+  name: 'AppSettings',
   components: {
     InsiteAccessConfig,
     NESTSimulatorConfig,
@@ -255,3 +255,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.appSettings {
+  height: 100vh;
+  overflow-y: auto;
+}
+</style>

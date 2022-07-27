@@ -30,10 +30,7 @@
       </v-card>
     </v-dialog>
 
-    <div
-      ref="activityChartGraph"
-      style="height: calc(100vh - 48px); width: 100%"
-    />
+    <div class="activityChartGraphContent" ref="activityChartGraph" />
   </div>
 </template>
 
@@ -134,3 +131,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.activityChartGraph .activityChartGraphContent {
+  height: calc(100vh - 48px - 24px);
+  width: 100%;
+}
+</style>

@@ -2,6 +2,9 @@
   <v-app>
     <transition name="fade">
       <div v-if="core.app.state.ready">
+        <AppDialog />
+
+        <SystemBar class="no-print" />
         <Navigation class="no-print" />
 
         <transition name="fade">
@@ -31,12 +34,17 @@ import Vue from 'vue';
 import { reactive, onMounted } from '@vue/composition-api';
 
 import core from '@/core';
+
+import AppDialog from '@/components/dialog/AppDialog.vue';
 import Navigation from '@/components/navigation/Navigation.vue';
+import SystemBar from '@/components/systembar/SystemBar.vue';
 
 export default Vue.extend({
   name: 'App',
   components: {
+    AppDialog,
     Navigation,
+    SystemBar,
   },
   setup(_, { root }) {
     // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
@@ -108,13 +116,6 @@ export default Vue.extend({
   @page {
     size: landscape;
   }
-}
-
-.iframe {
-  background-color: white;
-  display: none;
-  position: absolute;
-  z-index: 1000;
 }
 
 .v-toast__text h1 {

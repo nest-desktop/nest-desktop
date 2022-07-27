@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="projectLabBook"
-    style="height: calc(70vh - 48px); overflow-y: auto"
-    v-if="projectView.state.project"
-  >
+  <div class="projectLabBook" v-if="projectView.state.project">
     <v-container>
       <span class="d-flex flex-md-row">
         <div
@@ -175,6 +171,11 @@ export default Vue.extend({
 </script>
 
 <style>
+.projectLabBook {
+  height: calc(100vh - 48px - 24px);
+  overflow-y: auto;
+}
+
 .projectLabBook .v-card {
   border-width: 0;
 }

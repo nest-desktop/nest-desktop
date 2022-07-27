@@ -33,7 +33,7 @@
       </v-btn>
     </v-toolbar>
 
-    <v-card flat style="max-height: calc(100vh - 96px); overflow-y: auto" tile>
+    <v-card class="modelDocumentationContent" flat tile>
       <v-card-subtitle
         v-if="modelView.state.doc.subtitle"
         v-text="modelView.state.doc.subtitle"
@@ -94,3 +94,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.modelDocumentation {
+  height: calc(100vh - 48px - 24px);
+  overflow-y: auto;
+}
+</style>

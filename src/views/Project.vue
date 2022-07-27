@@ -151,16 +151,9 @@
         </v-row>
       </v-card>
 
-      <div @click="projectView.state.modeIdx = 1" class="mx-1">
+      <div @click="projectView.state.modeIdx = 1">
         <SimulationButton :project="projectView.state.project" />
       </div>
-
-      <v-card color="project" flat to="/settings">
-        <div class="d-flex flex-column">
-          <BackendStatus :backend="{ id: 'nestSimulator', text: 'NEST' }" />
-          <BackendStatus :backend="{ id: 'insiteAccess', text: 'Insite' }" />
-        </div>
-      </v-card>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -168,7 +161,7 @@
       :style="{ transition: state.resizing ? 'initial' : '' }"
       :width="projectView.state.tool != null ? projectView.state.tool.width : 0"
       app
-      class="no-print"
+      class="no-print nav-controller"
       clipped
       mobile-breakpoint="64"
       mini-variant-width="64"
@@ -241,6 +234,7 @@
 
           <SimulationCodeEditor
             :code="projectView.state.project.simulation.code"
+            color="project"
             v-if="projectView.state.tool.name === 'codeEditor'"
           />
 
@@ -337,7 +331,6 @@ import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import ActivityChartController from '@/components/activity/activityChart/ActivityChartController.vue';
 import ActivityAnimationController from '@/components/activity/activityAnimation/ActivityAnimationController.vue';
 import ActivityStats from '@/components/activity/activityStats/ActivityStats.vue';
-import BackendStatus from '@/components/BackendStatus.vue';
 import CodeMirror from '@/components/CodeMirror.vue';
 import core from '@/core';
 import NetworkEditor from '@/components/network/NetworkEditor.vue';
@@ -355,7 +348,6 @@ export default Vue.extend({
     ActivityGraph,
     ActivityGraphIcon,
     ActivityStats,
-    BackendStatus,
     CodeMirror,
     NetworkEditor,
     NetworkParamEdit,
@@ -466,10 +458,16 @@ export default Vue.extend({
 </script>
 
 <style>
-.projectView .controller {
-  height: calc(100vh - 48px);
+.projectView {
+  height: 100vh;
   overflow-y: hidden;
-  padding-right: 64px;
+}
+
+.projectView .nav-controller > .v-navigation-drawer__content {
+  margin-right: 64px;
+}
+
+.projectView .nav-controller .controller {
   width: 100%;
 }
 
@@ -481,7 +479,7 @@ export default Vue.extend({
 
 .projectView .resize-handle {
   cursor: ew-resize;
-  height: 100vh;
+  height: 100%;
   left: 0;
   position: fixed;
   width: 4px;

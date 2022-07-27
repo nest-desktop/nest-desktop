@@ -14,7 +14,7 @@
 
     <NetworkParamToolbar :network="state.network" />
 
-    <v-row no-gutters style="overflow-y: auto; height: calc(100vh - 88px)">
+    <v-row class="networParamEditContent" no-gutters>
       <v-col>
         <span v-if="state.network.state.elementTypeIdx === 4">
           <v-row class="align-center d-flex" no-gutters>
@@ -450,6 +450,11 @@ export default Vue.extend({
 </script>
 
 <style>
+.networkParamEdit .networParamEditContent {
+  margin-top: 40px;
+  overflow-x: hidden;
+}
+
 .networkParamEdit .toolbar .v-toolbar__content {
   padding: 0;
 }
