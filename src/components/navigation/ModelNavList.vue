@@ -201,6 +201,7 @@ export default Vue.extend({
       model.includes('transformer') ||
       model.startsWith('aiaf') ||
       model.startsWith('cm') ||
+      model.startsWith('gauss') ||
       model.startsWith('gif') ||
       model.startsWith('hh') ||
       model.startsWith('iaf') ||
