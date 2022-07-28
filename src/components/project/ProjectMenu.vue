@@ -1,15 +1,13 @@
 <template>
-  <div class="projectMenu" v-if="state.project">
-    <v-menu
-      :close-on-content-click="false"
-      :position-x="state.position.x"
-      :position-y="state.position.y"
-      :value="state.show"
-      transition="slide-y-transition"
-    >
-      <v-card>
-        <!-- <v-card-title class="py-1" height="40" v-text="state.project.name" /> -->
+  <div class="projectMenu">
+    <v-menu transition="slide-y-transition">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn @click.prevent icon v-bind="attrs" v-on="on">
+          <v-icon class="px-1" small v-text="'mdi-dots-vertical'" />
+        </v-btn>
+      </template>
 
+      <v-card>
         <span v-if="state.content == null">
           <v-list dense>
             <v-list-item
@@ -18,12 +16,9 @@
               v-for="(item, index) in state.items"
             >
               <v-list-item-icon>
-                <v-icon v-text="item.icon" />
+                <v-icon right small v-text="item.icon" />
               </v-list-item-icon>
               <v-list-item-title v-text="item.title" />
-              <v-list-item-action v-show="item.append">
-                <v-icon small v-text="'mdi-menu-right'" />
-              </v-list-item-action>
             </v-list-item>
           </v-list>
         </span>
@@ -54,15 +49,11 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ProjectMenu',
   props: {
-    project: Project,
-    position: Object,
+    projectId: String,
   },
   setup(props, { root }) {
+    const projectStore = core.app.project;
     const state = reactive({
-      content: null,
-      project: props.project as Project,
-      position: props.position,
-      show: true,
       items: [
         {
           id: 'projectReload',
@@ -70,7 +61,6 @@ export default Vue.extend({
           title: 'Reload project',
           onClick: () => {
             state.project.reload();
-            state.show = false;
           },
         },
         {
@@ -81,10 +71,10 @@ export default Vue.extend({
             const project: Project = state.project.duplicate();
             if (!root.$route.path.endsWith(project.id)) {
               root.$router.push({
-                path: `/project/${project.id}`,
+                name: 'projectId',
+                params: { id: project.id },
               });
             }
-            state.show = false;
           },
         },
         {
@@ -97,12 +87,10 @@ export default Vue.extend({
           id: 'projectDelete',
           icon: 'mdi-delete',
           title: 'Delete project',
-          onClick: () => {
-            state.content = 'projectDelete';
-          },
-          append: true,
+          onClick: () => {},
         },
       ],
+      project: projectStore.getProject(props.projectId) as Project,
     });
 
     /**
@@ -110,22 +98,17 @@ export default Vue.extend({
      */
     const deleteProject = () => {
       state.project.delete();
-      state.show = false;
     };
 
     const openDialog = (action: string = 'export') => {
       state.project.state.reset();
       core.app.openDialog('project', action, [state.project]);
-      state.show = false;
     };
 
     watch(
-      () => props.project,
+      () => props.projectId,
       () => {
-        state.content = null;
-        state.show = true;
-        state.project = props.project as Project;
-        state.position = props.position;
+        state.project = projectStore.getProject(props.projectId) as Project;
       }
     );
 

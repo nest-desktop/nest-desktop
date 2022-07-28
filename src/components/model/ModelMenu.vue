@@ -1,33 +1,26 @@
 <template>
   <div class="modelMenu" v-if="state.model">
-    <v-menu
-      :close-on-content-click="false"
-      :position-x="state.position.x"
-      :position-y="state.position.y"
-      :value="state.show"
-      transition="slide-y-transition"
-    >
-      <v-card>
-        <!-- <v-card-title class="py-1" height="40" v-text="state.model.name" /> -->
+    <v-menu transition="slide-y-transition">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn @click.prevent icon v-bind="attrs" v-on="on" v-show="state.show">
+          <v-icon class="px-1" small v-text="'mdi-dots-vertical'" />
+        </v-btn>
+      </template>
 
-        <span v-if="state.content == null">
-          <v-list dense>
-            <v-list-item
-              :key="index"
-              @click="item.onClick"
-              v-for="(item, index) in state.items"
-              v-show="item.show"
-            >
-              <v-list-item-icon>
-                <v-icon v-text="item.icon" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="item.title" />
-              <v-list-item-action v-show="item.append">
-                <v-icon small v-text="'mdi-menu-right'" />
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </span>
+      <v-card>
+        <v-list dense>
+          <v-list-item
+            :key="index"
+            @click="item.onClick"
+            v-for="(item, index) in state.items"
+            v-show="item.show"
+          >
+            <v-list-item-icon>
+              <v-icon small right v-text="item.icon" />
+            </v-list-item-icon>
+            <v-list-item-title v-text="item.title" />
+          </v-list-item>
+        </v-list>
 
         <span v-if="state.content === 'modelDelete'">
           <v-card-title v-text="'Are you sure to delete this model?'" />
@@ -55,16 +48,10 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ModelMenu',
   props: {
-    model: Model,
-    position: Object,
+    modelId: String,
   },
   setup(props) {
     const state = reactive({
-      content: null,
-      model: props.model as Model,
-      openModelDialog: false,
-      position: props.position,
-      show: true,
       items: [
         {
           id: 'modelReload',
@@ -72,7 +59,7 @@ export default Vue.extend({
           title: 'Reload model',
           onClick: () => {
             // state.model.reload();
-            state.show = false;
+            // state.show = false;
           },
           show: false,
         },
@@ -82,7 +69,7 @@ export default Vue.extend({
           title: 'Copy model',
           onClick: () => {
             // state.model.copy();
-            state.show = false;
+            // state.show = false;
           },
           show: false,
         },
@@ -104,41 +91,38 @@ export default Vue.extend({
           id: 'modelDelete',
           icon: 'mdi-delete',
           title: 'Delete model',
-          onClick: () => {
-            state.content = 'modelDelete';
-          },
+          onClick: () => {},
           show: false,
-          append: true,
         },
       ],
+      model: core.app.model.getModel(props.modelId) as Model,
+      show: false,
     });
 
     /**
      * Delete model.
      */
     const deleteModel = () => {
-      state.model.delete().then(() => {
-        state.show = false;
-      });
+      state.model.delete();
     };
 
     /**
      * Update show state of items.
      */
     const updateItemShow = () => {
-      state.items[0].show = core.app.model.hasModel(state.model.id);
-      state.items[1].show = core.app.model.hasModel(state.model.id);
-      state.items[2].show = core.app.model.fileExistGithub(state.model.id);
-      state.items[3].show = core.app.model.hasModel(state.model.id);
-      state.items[4].show = core.app.model.hasModel(state.model.id);
+      const hasModel = core.app.model.hasModel(state.model.id);
+      const fileExistGithub = core.app.model.fileExistGithub(state.model.id);
+      state.items[0].show = hasModel;
+      state.items[1].show = hasModel;
+      state.items[2].show = !hasModel && fileExistGithub;
+      state.items[3].show = hasModel;
+      state.items[4].show = hasModel;
+
+      state.show = hasModel || fileExistGithub;
     };
 
     const update = () => {
-      state.content = null;
-      state.show = true;
-      state.model = props.model as Model;
-      state.position = props.position;
-
+      state.model = core.app.model.getModel(props.modelId) as Model;
       updateItemShow();
     };
 
@@ -149,13 +133,12 @@ export default Vue.extend({
     const openDialog = (action: string = 'export') => {
       state.model.resetState();
       core.app.openDialog('model', action, [state.model]);
-      state.show = false;
     };
 
     onMounted(() => update());
 
     watch(
-      () => props.model,
+      () => props.modelId,
       () => update()
     );
 

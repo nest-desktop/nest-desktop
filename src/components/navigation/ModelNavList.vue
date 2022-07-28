@@ -1,5 +1,5 @@
 <template>
-  <div class="models">
+  <div class="modelNavList">
     <ModelMenu
       :model="state.modelMenu.model"
       :position="state.modelMenu.position"
@@ -64,7 +64,8 @@
         :key="model"
         :title="model"
         :to="'/model/' + model"
-        @contextmenu="e => showModelMenu(e, model)"
+        class="modelItem"
+        two-line
         v-for="model in state.models"
         v-show="
           modelStore.state.searchTerm
@@ -72,51 +73,53 @@
             : true
         "
       >
-        <v-list-item-icon class="mx-0">
-          <v-icon
-            left
-            small
-            v-show="isNeuron(model)"
-            v-text="filterTags[2].icon"
-          />
-          <v-icon
-            left
-            small
-            v-show="isStimulator(model)"
-            v-text="filterTags[3].icon"
-          />
-          <v-icon
-            left
-            small
-            v-show="isRecorder(model)"
-            v-text="filterTags[4].icon"
-          />
-          <v-icon
-            left
-            small
-            v-show="isSynapse(model)"
-            v-text="filterTags[5].icon"
-          />
-        </v-list-item-icon>
-
         <v-list-item-content>
           <v-list-item-title v-text="model" />
+          <v-list-item-subtitle>
+            <v-icon
+              left
+              small
+              v-show="isNeuron(model)"
+              v-text="filterTags[2].icon"
+            />
+            <v-icon
+              left
+              small
+              v-show="isStimulator(model)"
+              v-text="filterTags[3].icon"
+            />
+            <v-icon
+              left
+              small
+              v-show="isRecorder(model)"
+              v-text="filterTags[4].icon"
+            />
+            <v-icon
+              left
+              small
+              v-show="isSynapse(model)"
+              v-text="filterTags[5].icon"
+            />
+            {{ elementType(model) }}
+          </v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-list-item-icon>
+        <v-list-item-icon class="icon">
           <v-icon
-            right
             small
             v-show="modelStore.hasModel(model)"
             v-text="'mdi-database-outline'"
           />
           <v-icon
-            right
             small
             v-show="modelStore.fileExistGithub(model)"
             v-text="'mdi-github'"
           />
         </v-list-item-icon>
+
+        <v-list-item-action class="action">
+          <ModelMenu :modelId="model" />
+        </v-list-item-action>
       </v-list-item>
     </v-list>
   </div>
@@ -168,21 +171,6 @@ export default Vue.extend({
     ];
 
     /**
-     * Show model menu.
-     */
-    const showModelMenu = function (e: MouseEvent, model: string) {
-      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-      e.preventDefault();
-      state.modelMenu.show = false;
-      state.modelMenu.model = core.app.model.getModel(model);
-      state.modelMenu.position.x = e.clientX;
-      state.modelMenu.position.y = e.clientY;
-      this.$nextTick(() => {
-        state.modelMenu.show = true;
-      });
-    };
-
-    /**
      * Add filter tag.
      */
     const addFilterTag = (tag: string) => {
@@ -206,34 +194,59 @@ export default Vue.extend({
      * Check if model is a neuron.
      */
     const isNeuron = (model: string) =>
+      model.includes('cond') ||
+      model.includes('neuron') ||
+      model.includes('psc') ||
+      model.includes('izhikevich') ||
+      model.includes('transformer') ||
       model.startsWith('aiaf') ||
+      model.startsWith('cm') ||
       model.startsWith('gif') ||
       model.startsWith('hh') ||
       model.startsWith('iaf') ||
-      model.includes('izhikevich') ||
-      model.includes('_cond') ||
-      model.includes('_psc') ||
-      model.includes('_neuron');
+      model.startsWith('lin') ||
+      model.startsWith('sigmoid') ||
+      model.startsWith('tanh') ||
+      model.startsWith('threshold');
 
     /**
      * Check if model is a recorder.
      */
     const isRecorder = (model: string) =>
-      model.endsWith('_detector') ||
-      model.endsWith('_recorder') ||
+      model.endsWith('detector') ||
+      model.endsWith('recorder') ||
       model.endsWith('meter');
 
     /**
      * Check if model is a stimulator.
      */
     const isStimulator = (model: string) =>
-      model.endsWith('_dilutor') || model.includes('_generator');
+      model.includes('dilutor') || model.includes('generator');
 
     /**
      * Check if model is a synapse.
      */
     const isSynapse = (model: string) =>
-      model.endsWith('gap_junction') || model.includes('_synapse');
+      model.includes('gap_junction') ||
+      model.includes('_synapse') ||
+      model.includes('_connection');
+
+    /**
+     * Get element type based on model name.
+     */
+    const elementType = (model: string) => {
+      let typeName = 'other';
+      if (isNeuron(model)) {
+        typeName = 'neuron';
+      } else if (isStimulator(model)) {
+        typeName = 'stimulator';
+      } else if (isRecorder(model)) {
+        typeName = 'recorder';
+      } else if (isSynapse(model)) {
+        typeName = 'synapse';
+      }
+      return typeName;
+    };
 
     /**
      * Update models.
@@ -295,6 +308,7 @@ export default Vue.extend({
 
     return {
       addFilterTag,
+      elementType,
       filterTags,
       isNeuron,
       isStimulator,
@@ -302,9 +316,27 @@ export default Vue.extend({
       isSynapse,
       modelStore,
       removeFilterTag,
-      showModelMenu,
       state,
     };
   },
 });
 </script>
+
+<style>
+.modelNavList .modelItem .action {
+  display: none;
+}
+
+.modelNavList .modelItem:hover .action {
+  display: block;
+}
+
+.modelNavList .modelItem .icon {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.modelNavList .modelItem:hover .icon {
+  display: none;
+}
+</style>

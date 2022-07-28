@@ -1,11 +1,5 @@
 <template>
-  <div class="projects">
-    <ProjectMenu
-      :position="state.projectMenu.position"
-      :project="state.projectMenu.project"
-      v-if="state.projectMenu.show"
-    />
-
+  <div class="projectNavList">
     <v-list dense>
       <v-list-item exact to="/project/">
         <v-list-item-icon>
@@ -16,7 +10,7 @@
     </v-list>
 
     <v-container
-      :key="state.projectId"
+      :key="projectStore.view.state.project.id"
       class="py-0"
       v-if="projectStore.view.state.project"
     >
@@ -62,8 +56,8 @@
           <v-list-item
             :key="project.id"
             :to="'/project/' + project.id"
-            @click="state.projectId = project.id"
-            @contextmenu="e => showProjectMenu(e, project.id)"
+            class="projectItem"
+            two-line
             v-for="project in projectStore.filteredProjects"
           >
             <v-list-item-content>
@@ -74,7 +68,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-list-item-icon>
+            <v-list-item-icon class="icon">
               <span v-if="project.doc">
                 <v-icon
                   class="px-1"
@@ -88,10 +82,14 @@
                 <ActivityGraphIcon
                   :project="project"
                   append
-                  v-if="project.state.activities.hasSomeEvents"
+                  v-else-if="project.state.activities.hasSomeEvents"
                 />
               </span>
             </v-list-item-icon>
+
+            <v-list-item-action class="action">
+              <ProjectMenu :projectId="project.id" />
+            </v-list-item-action>
           </v-list-item>
         </transition-group>
       </draggable>
@@ -101,7 +99,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
@@ -117,37 +114,14 @@ export default Vue.extend({
   },
   setup(_, { root }) {
     const projectStore = core.app.project;
-    const state = reactive({
-      app: core.app,
-      projectId: '',
-      projectMenu: {
-        position: { x: 0, y: 0 },
-        project: undefined,
-        show: false,
-      },
-    });
-
-    /**
-     * Show project menu.
-     */
-    const showProjectMenu = function (e: MouseEvent, projectId: string) {
-      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-      e.preventDefault();
-      state.projectMenu.show = false;
-      state.projectMenu.project = projectStore.getProject(projectId);
-      state.projectMenu.position.x = e.clientX;
-      state.projectMenu.position.y = e.clientY;
-      this.$nextTick(() => {
-        state.projectMenu.show = true;
-      });
-    };
 
     const saveProject = () => {
       const project = projectStore.view.state.project;
       project.save().then(() => {
         if (!root.$route.path.endsWith(project.id)) {
           root.$router.push({
-            path: `/project/${project.id}`,
+            name: 'projectId',
+            params: { id: project.id },
           });
         }
       });
@@ -156,9 +130,26 @@ export default Vue.extend({
     return {
       projectStore,
       saveProject,
-      showProjectMenu,
-      state,
     };
   },
 });
 </script>
+
+<style>
+.projectNavList .projectItem .action {
+  display: none;
+}
+
+.projectNavList .projectItem:hover .action {
+  display: block;
+}
+
+.projectNavList .projectItem .icon {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.projectNavList .projectItem:hover .icon {
+  display: none;
+}
+</style>
