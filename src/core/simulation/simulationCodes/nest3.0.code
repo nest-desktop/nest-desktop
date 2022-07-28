@@ -34,6 +34,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 }{{ /hasSomeVisibleParams }})
 {{ /network.nodeModels }}
 
+{{ /network.hasNodeModels }}
 # Create nodes
 {{ #network.nodes }}
 {{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
@@ -63,6 +64,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 }{{ /hasSomeVisibleParams }})
 {{ /network.synapseModels }}
 
+{{ /network.hasSynapseModels }}
 # Connect nodes
 {{ #network.connections }}
 nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
