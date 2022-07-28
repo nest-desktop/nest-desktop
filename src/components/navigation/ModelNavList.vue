@@ -104,7 +104,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-list-item-icon class="icon">
+        <v-list-item-icon class="icon my-4">
           <v-icon
             small
             v-show="modelStore.hasModel(model)"

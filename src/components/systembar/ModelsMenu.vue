@@ -84,12 +84,10 @@ export default Vue.extend({
       // Reset states for model list.
       core.app.model.resetModelStates();
 
-      // Open dialog.
-      core.app.openDialog(
-        'model',
-        action,
-        action === 'reset' ? [] : core.app.model.state.models
-      );
+      const models = action === 'reset' ? [] : core.app.model.state.models;
+
+      // Open dialog for models.
+      core.app.openDialog('models', action, { models });
     };
 
     return {

@@ -36,12 +36,12 @@
     <v-dialog max-width="1024" v-else v-model="dialogState.open">
       <v-card>
         <v-card-title
-          v-if="dialogState.content.length !== 0"
+          v-if="dialogState.data.projects.length !== 0"
           v-text="`Select projects to ${dialogState.action}.`"
         />
 
         <v-card-text>
-          <v-simple-table v-if="dialogState.content.length !== 0">
+          <v-simple-table v-if="dialogState.data.projects.length !== 0">
             <template #default>
               <thead>
                 <tr>
@@ -58,7 +58,7 @@
               <tbody>
                 <tr
                   :key="index"
-                  v-for="(project, index) in dialogState.content"
+                  v-for="(project, index) in dialogState.data.projects"
                 >
                   <td v-text="project.name" />
                   <td v-text="new Date(project.createdAt).toLocaleString()" />
@@ -96,7 +96,7 @@
           <v-spacer />
           <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
           <v-btn
-            :disabled="!dialogState.content.some(p => p.state.selected)"
+            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="exportProjects"
             outlined
             small
@@ -106,7 +106,7 @@
             Export
           </v-btn>
           <v-btn
-            :disabled="!dialogState.content.some(p => p.state.selected)"
+            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="deleteProjects"
             outlined
             small
@@ -142,7 +142,7 @@ export default Vue.extend({
      * Export selected projects.
      */
     const exportProjects = () => {
-      const selectedProjects: Project[] = dialogState.content.filter(
+      const selectedProjects: Project[] = dialogState.data.projects.filter(
         (project: Project) => project.state.selected
       );
       if (selectedProjects.length > 0) {
@@ -155,7 +155,7 @@ export default Vue.extend({
      * Delete selected projects.
      */
     const deleteProjects = () => {
-      const selectedProjects: Project[] = dialogState.content.filter(
+      const selectedProjects: Project[] = dialogState.data.projects.filter(
         (project: Project) => project.state.selected
       );
       if (selectedProjects.length > 0) {

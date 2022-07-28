@@ -1,8 +1,8 @@
 <template>
   <div class="AppDialog">
     <span v-if="dialogState.open">
-      <ModelsDialog v-if="dialogState.source === 'model'" />
-      <ProjectsDialog v-if="dialogState.source === 'project'" />
+      <ModelsDialog v-if="dialogState.source === 'models'" />
+      <ProjectsDialog v-if="dialogState.source === 'projects'" />
       <SettingsDialog v-if="dialogState.source === 'settings'" />
     </span>
   </div>

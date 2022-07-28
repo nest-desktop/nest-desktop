@@ -55,6 +55,7 @@
         <transition-group>
           <v-list-item
             :key="project.id"
+            :title="project.name"
             :to="'/project/' + project.id"
             class="projectItem"
             two-line
@@ -68,7 +69,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-list-item-icon class="icon">
+            <v-list-item-icon class="icon mx-1 my-4">
               <span v-if="project.doc">
                 <v-icon
                   class="px-1"

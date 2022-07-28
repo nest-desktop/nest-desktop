@@ -83,12 +83,11 @@ export default Vue.extend({
       // Reset states for project list.
       core.app.project.resetProjectStates();
 
-      // Open dialog.
-      core.app.openDialog(
-        'project',
-        action,
-        action === 'reset' ? [] : core.app.project.state.projects
-      );
+      const projects =
+        action === 'reset' ? [] : core.app.project.state.projects;
+
+      // Open dialog for projects.
+      core.app.openDialog('projects', action, { projects });
     };
 
     return {

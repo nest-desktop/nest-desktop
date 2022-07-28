@@ -36,12 +36,12 @@
     <v-dialog max-width="1024" v-else v-model="dialogState.open">
       <v-card>
         <v-card-title
-          v-if="dialogState.content.length !== 0"
+          v-if="dialogState.data.models.length !== 0"
           v-text="`Select models to ${dialogState.action}.`"
         />
 
         <v-card-text>
-          <v-simple-table v-if="dialogState.content.length !== 0">
+          <v-simple-table v-if="dialogState.data.models.length !== 0">
             <template #default>
               <thead>
                 <tr>
@@ -51,7 +51,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr :key="index" v-for="(model, index) in dialogState.content">
+                <tr
+                  :key="index"
+                  v-for="(model, index) in dialogState.data.models"
+                >
                   <td v-text="model.label" />
                   <td v-text="model.elementType" />
                   <td class="text-center">
@@ -78,7 +81,7 @@
             v-text="'cancel'"
           />
           <v-btn
-            :disabled="!dialogState.content.some(p => p.state.selected)"
+            :disabled="!dialogState.data.models.some(p => p.state.selected)"
             @click="exportModels"
             outlined
             small
@@ -88,7 +91,7 @@
             Export
           </v-btn>
           <v-btn
-            :disabled="!dialogState.content.some(p => p.state.selected)"
+            :disabled="!dialogState.data.models.some(p => p.state.selected)"
             @click="deleteModels"
             outlined
             small
@@ -122,7 +125,7 @@ export default Vue.extend({
      * Export selected models.
      */
     const exportModels = () => {
-      const selectedModels: Model[] = dialogState.content.filter(
+      const selectedModels: Model[] = dialogState.data.models.filter(
         (model: Model) => model.state.selected
       );
       if (selectedModels.length > 0) {
@@ -135,7 +138,7 @@ export default Vue.extend({
      * Delete selected models.
      */
     const deleteModels = () => {
-      const selectedModels: Model[] = dialogState.content.filter(
+      const selectedModels: Model[] = dialogState.data.models.filter(
         (model: Model) => model.state.selected
       );
       if (selectedModels.length > 0) {

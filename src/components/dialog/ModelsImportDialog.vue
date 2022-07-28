@@ -301,9 +301,9 @@ export default Vue.extend({
      * Update model import dialog.
      */
     const update = () => {
-      if (dialogState != null && dialogState.content.length === 1) {
+      if (dialogState != null && dialogState.data.models.length === 1) {
         state.source = 'github';
-        state.modelId = dialogState.content[0].id;
+        state.modelId = dialogState.data.models[0].id;
         state.GitHubFile = core.app.model.state.filesGithub.find(
           (filename: string) =>
             state.modelId.startsWith(filename.split('.')[0].split('/')[1])
