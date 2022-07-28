@@ -416,6 +416,8 @@ export default Vue.extend({
      * Update when node model is changed.
      */
     const updateOnModelChange = () => {
+      state.node.hideAllParams();
+      state.node.nodeChanges();
       update();
     };
 
