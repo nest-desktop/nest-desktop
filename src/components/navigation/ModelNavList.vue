@@ -129,9 +129,10 @@
 import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 
-import core from '@/core';
-import ModelMenu from '@/components/model/ModelMenu.vue';
 import { Model } from '@/core/model/model';
+import core from '@/core';
+
+import ModelMenu from '@/components/navigation/ModelMenu.vue';
 
 export default Vue.extend({
   name: 'Models',

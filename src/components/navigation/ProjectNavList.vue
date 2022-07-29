@@ -102,9 +102,10 @@
 import Vue from 'vue';
 import draggable from 'vuedraggable';
 
-import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import core from '@/core';
-import ProjectMenu from '@/components/project/ProjectMenu.vue';
+
+import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
+import ProjectMenu from '@/components/navigation/ProjectMenu.vue';
 
 export default Vue.extend({
   name: 'ProjectNavList',

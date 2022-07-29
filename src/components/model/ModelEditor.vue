@@ -1,10 +1,6 @@
 <template>
   <div class="modelEditor" v-if="modelView.state.model">
-    <v-card
-      flat
-      style="height: calc(100vh - 48px); overflow-y: auto"
-      v-if="modelView.hasModel"
-    >
+    <v-card flat v-if="modelView.hasModel">
       <v-card-title>
         <v-text-field
           hide-details
@@ -183,3 +179,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.modelEditor {
+  height: calc(100vh - 48px - 24px);
+  overflow-y: auto;
+}
+</style>
