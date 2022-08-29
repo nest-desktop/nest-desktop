@@ -25,14 +25,14 @@
   "dependencies": {
     "axios": "^0.27",
     "codemirror": "^5.65",
-    "core-js": "^3.24",
+    "core-js": "^3.25",
     "d3": "^7.6",
     "debug": "^4.3",
     "detect-browser": "^5.3",
     "mathjs": "^10.6",
     "mustache": "^4.2",
     "object-hash": "^3.0",
-    "plotly.js-dist-min": "^2.13",
+    "plotly.js-dist-min": "^2.14",
     "pouchdb": "^7.3",
     "pouchdb-upsert": "^2.2",
     "register-service-worker": "^1.7",
@@ -85,7 +85,7 @@
     "chai-as-promised": "^7.1",
     "electron": "19.0.9",
     "electron-devtools-installer": "^3.2",
-    "eslint": "^8.20",
+    "eslint": "^8.22",
     "eslint-plugin-prettier": "^4.2",
     "eslint-plugin-vue": "^8.7",
     "prettier": "^2.7",
@@ -98,7 +98,7 @@
     "vue-cli-plugin-vuetify": "^2.5",
     "vue-template-compiler": "2.6.14",
     "vuetify-loader": "1.7.3",
-    "webpack": "^5.73"
+    "webpack": "^5.74"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
