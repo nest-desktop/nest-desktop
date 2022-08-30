@@ -17,3 +17,8 @@ html {
   top: 0;
   width: 100%;
 }
+
+.toctree-l1 > .reference {
+  font-weight: bold;
+  font-size: 20px;
+}

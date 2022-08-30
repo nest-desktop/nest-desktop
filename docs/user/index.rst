@@ -9,6 +9,7 @@ Guides for NEST Desktop
 =======================
 
 .. toctree::
+   :maxdepth: 2
 
    /user/setup
    /user/usage
