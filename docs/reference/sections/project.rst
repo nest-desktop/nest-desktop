@@ -13,8 +13,8 @@ In that list, you can manage your projects,
 e.g create, rename, arrange or delete them.
 More details can be found in the :ref:`usage guide <user/usage:manage projects>`.
 
-Main content
-------------
+Main content of the page
+------------------------
 
 In the project area, the main content consists of an area,
 where you can switch between the network graph of the project,
