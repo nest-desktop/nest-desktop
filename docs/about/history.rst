@@ -4,8 +4,9 @@ History
 2022
 ----
 
+: 16 Jul: NEST Desktop is part of the onsite tutorial "T1: From single-cell modeling to large-scale network dynamics with NEST Simulator." of `CNS 2022 <https://www.cnsorg.org/cns-2022-tutorials>`__, presented by Jasper Albers, Pooja Babu and Charl Linssen, Melbourne, Australia.
 :31 Jun: Satellite tutorial at `CNS <https://hackmd.io/W09z_RysTUWuwpHtgphdxQ?view>`__, online.
-:23 - 24 Jun: Workshop and Poster "NEST Desktop at `NEST Conference <https://events.hifis.net/event/305/>`__, online.
+:23 - 24 Jun: Workshop "NEST Desktop: A “Let’s Play Together” for neuroscience" and Poster "NEST Desktop: Explore new frontiers" at `NEST Conference <https://events.hifis.net/event/305/>`__, online.
 :13 - 15 Jun: Workshop at `EBRAINS BASSES <https://www.humanbrainproject.eu/en/education/ebrains-workshops/basses/>`__, presented by Johanna Senk, Rome, Italy.
 :26 - 28 Apr: MSc course "Biophysics of Neurons and Networks" at [BCF]_, Freiburg, Germany.
 :07 - 18 Feb: BSc course "Simple Neuron Models" at [BCF]_, online, (Freiburg, Germany).
