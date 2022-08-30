@@ -9,10 +9,10 @@ export class Activity {
   private _events: any = {};
   private _hash: string;
   private _idx: number; // generative
-  private _nodeCollectionId: number;
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
+  private _recorderUnitId: number;
   private _state: UnwrapRef<any>;
 
   constructor(recorder: Node, activity: any = {}) {
@@ -74,14 +74,6 @@ export class Activity {
     return this._events.hasOwnProperty('times') ? this._events.times.length : 0;
   }
 
-  get nodeCollectionId(): number {
-    return this._nodeCollectionId;
-  }
-
-  set nodeCollectionId(value: number) {
-    this._nodeCollectionId = value;
-  }
-
   get nodeIds(): number[] {
     return this._nodeIds;
   }
@@ -104,6 +96,14 @@ export class Activity {
 
   get recorder(): Node {
     return this._recorder;
+  }
+
+  get recorderUnitId(): number {
+    return this._recorderUnitId;
+  }
+
+  set recorderUnitId(value: number) {
+    this._recorderUnitId = value;
   }
 
   get state(): UnwrapRef<any> {
@@ -141,7 +141,7 @@ export class Activity {
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
-    this.nodeCollectionId = activity.nodeCollectionId;
+    this.recorderUnitId = activity.recorderUnitId || -1;
     this.updateHash();
     this.postInit();
   }
