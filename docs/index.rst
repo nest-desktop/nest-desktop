@@ -24,7 +24,7 @@ It's so great that you want to use NEST Desktop!
 ||||
 
 
-.. _first steps:
+.. _first-steps:
 
 First steps
 -----------

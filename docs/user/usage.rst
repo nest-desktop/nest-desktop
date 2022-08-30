@@ -4,7 +4,7 @@ Usage Guide
 This guides provides detailed documentation for the Graphical User Interface (GUI) of NEST Desktop.
 
 .. note::
-   If you want to see a quick start guide for in NEST Desktop, we have prepared a :doc:`video </user/index>`
+   If you want to see a quick start guide for in NEST Desktop, we have prepared a :ref:`video <first-steps>`
    showing the steps how to construct networks and explore activity.
 
 |br|
