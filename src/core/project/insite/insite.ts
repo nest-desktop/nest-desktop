@@ -202,7 +202,7 @@ export class Insite {
           };
         });
 
-        // Sort activities by recorder unit ids.
+        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
         activities.sort(
           (a: any, b: any) => a.recorderUnitId - b.recorderUnitId
         );
@@ -257,7 +257,7 @@ export class Insite {
           };
         });
 
-        // Sort activities by recorder unit ids.
+        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
         activities.sort(
           (a: any, b: any) => a.recorderUnitId - b.recorderUnitId
         );
