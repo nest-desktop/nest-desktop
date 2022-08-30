@@ -29,7 +29,7 @@ It's so great that you want to use NEST Desktop!
 First steps
 -----------
 
-The video shows few steps to construct a network and explore its activity.
+The video shows the few steps to construct a network and explore its activity.
 For more information, please read :doc:`detailed guides of usage </user/usage>`.
 
 .. raw:: html
@@ -70,7 +70,7 @@ Select the appropriate section that fits your needs.
 
 :The lecturer: ... learns how to teach computational neuroscience using NEST Desktop.
 
-:The deployer: ... learns how to set up NEST Desktop on a machine via the Python Package,
+:The deployer: ... learns how to set up NEST Desktop on a machine via Python Package,
   Docker or Singularity installation.
 
 :The developer: ... learns the source code architecture of NEST Desktop and

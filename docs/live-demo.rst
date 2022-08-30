@@ -1,9 +1,9 @@
 Live demo
 =========
 
-We provides a live demo of NEST Desktop.
-However, you are only able to construct network.
-Without the backend you cannot perform the simulation.
+We provide a live demo of NEST Desktop.
+However, you are only able to construct network, as it does not contain a NEST Server/NEST Simulator instance.
+Without the backend, you cannot perform the simulation.
 
 
 .. raw:: html
