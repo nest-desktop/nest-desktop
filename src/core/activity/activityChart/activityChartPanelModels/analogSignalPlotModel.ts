@@ -301,12 +301,12 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     const plotData = this.data[this.data.length - 1];
     plotData.visible = false;
 
-    // Check if record is null.
+    // Check if the record is null.
     if (record == null) {
       return;
     }
 
-    // Check if activity state contains the active node.
+    // Check if the activity state contains the active node.
     if (record.activity.state.activeNodeId == null) {
       return;
     }
