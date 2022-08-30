@@ -257,7 +257,7 @@ export class Insite {
           };
         });
 
-        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
+        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
         activities.sort(
           (a: any, b: any) => a.recorderUnitId - b.recorderUnitId
         );
