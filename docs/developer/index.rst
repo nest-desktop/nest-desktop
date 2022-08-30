@@ -23,6 +23,7 @@ Guides for the development
 ==========================
 
 .. toctree::
+   :maxdepth: 2
 
    /developer/preparation
    /developer/development

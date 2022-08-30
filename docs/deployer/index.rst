@@ -8,6 +8,7 @@ You can read the deployment instructions by clicking one of these images below:
 Guides to deploy NEST Desktop
 
 .. toctree::
+   :maxdepth: 2
 
    /deployer/deploy-docker-compose
    /deployer/deploy-openshift
