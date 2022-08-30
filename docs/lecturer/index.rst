@@ -10,7 +10,7 @@ and what the features of their dynamic behavior are.
 
 .. note::
    This section assumes that you have prior knowledge of how to use NEST Desktop.
-   If you have not used NEST Desktop before, please read the User Documentation first (:doc:`/user/quickstart`).
+   If you have not used NEST Desktop before, please read the User Documentation first (:doc:`/user/index`).
 
 To support the organization of a course, we provide some hints for course instructors:
 
