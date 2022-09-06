@@ -82,7 +82,14 @@
       </v-tabs>
 
       <v-spacer />
-      <v-toolbar-title class="mx-2" v-text="projectView.state.project.name" />
+      <v-toolbar-title class="mx-2">
+        <v-text-field
+          @change="projectView.state.project.clean()"
+          append-icon="mdi-pencil-outline"
+          hide-details
+          v-model="projectView.state.project.name"
+        />
+      </v-toolbar-title>
       <v-spacer />
 
       <v-card class="mx-4" color="project" flat style="width: 144px" text tile>
@@ -362,6 +369,7 @@ export default Vue.extend({
   setup(props, { root }) {
     const projectView = core.app.project.view;
     const state = reactive({
+      editing: false,
       error: false,
       resizing: false,
       simulationMenu: {
@@ -374,6 +382,8 @@ export default Vue.extend({
      * Load project using query or projectId
      */
     const loadProject = () => {
+      state.editing = false;
+
       if (root.$route.query.from) {
         // URL contains a from-query, like in http://localhost:8080/#/project/?from=https://raw.githubusercontent.com/babsey/nest-desktop/master/src/assets/projects/neuron-spike-response.json
         const url: string = root.$route.query.from as string;
@@ -461,6 +471,19 @@ export default Vue.extend({
 .projectView {
   height: 100vh;
   overflow-y: hidden;
+}
+
+.projectView .v-toolbar .v-toolbar__title input {
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.projectView .v-toolbar .v-toolbar__title .v-input__icon--append {
+  opacity: 0;
+}
+
+.projectView .v-toolbar .v-toolbar__title:hover .v-input__icon--append {
+  opacity: 1;
 }
 
 .projectView .nav-controller > .v-navigation-drawer__content {

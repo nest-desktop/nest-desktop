@@ -1,104 +1,158 @@
 <template>
-  <div class="modelNavList">
-    <ModelMenu
-      :model="state.modelMenu.model"
-      :position="state.modelMenu.position"
-      v-if="state.modelMenu.show"
-    />
+  <div class="modelNavList" v-if="state.models.length > 0">
+    <v-toolbar
+      absolute
+      extended
+      extension-height="96"
+      flat
+      height="48"
+      width="296"
+      style="width: calc(100% - 64px - 1px)"
+    >
+      <v-row style="padding-top: 6px">
+        <v-btn
+          :key="index"
+          :title="item.title"
+          :to="item.to"
+          @click="item.onClick"
+          class="flex-grow-1 ma-0 pa-0"
+          exact
+          style="min-width: auto"
+          text
+          tile
+          v-for="(item, index) in state.items"
+        >
+          <v-icon v-text="item.icon" />
+        </v-btn>
+      </v-row>
+    </v-toolbar>
 
-    <v-container class="py-0">
-      <v-text-field
-        @click:append="modelStore.clearSearch"
-        clearable
-        hide-details
-        label="Search model"
-        prepend-inner-icon="mdi-magnify"
-        v-model="modelStore.state.searchTerm"
-      >
-        <template #prepend>
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn depressed fab v-bind="attrs" v-on="on" x-small>
-                <v-icon v-text="'mdi-filter-outline'" />
-              </v-btn>
-            </template>
-            <v-list dense>
-              <v-list-item
-                :key="index"
-                @click="addFilterTag(tag.text.toLowerCase())"
-                v-for="(tag, index) in filterTags"
-              >
-                <v-list-item-title>
-                  <v-icon left v-text="tag.icon" />
+    <v-toolbar
+      absolute
+      flat
+      height="96"
+      style="margin-top: 52px; width: calc(100% - 64px - 1px)"
+    >
+      <div style="width: 100%">
+        <v-row class="ma-0" style="height: 96px">
+          <v-text-field
+            @click:append="modelStore.clearSearch"
+            clearable
+            hide-details
+            label="Search model"
+            append-icon="mdi-magnify"
+            v-model="modelStore.state.searchTerm"
+          />
+          <div style="width: 100%">
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  depressed
+                  icon
+                  small
+                  title="Filter models by tags"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon v-text="'mdi-filter-variant'" />
+                </v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item
+                  :disabled="modelStore.state.filterTags.includes(tag.text)"
+                  :key="'menuItem-' + tag.text"
+                  @click="addFilterTag(tag.text.toLowerCase())"
+                  v-for="tag in filterTags"
+                >
+                  <v-list-item-title>
+                    <v-icon left v-text="tag.icon" />
+                    {{ tag.text }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <span v-if="modelStore.state.filterTags.length > 0">
+              <span :key="'chip-' + tag.text" v-for="tag of filterTags">
+                <v-chip
+                  @click:close="removeFilterTag(tag.text.toLowerCase())"
+                  class="ma-1 mb-0"
+                  close
+                  outlined
+                  small
+                  v-if="
+                    modelStore.state.filterTags.includes(tag.text.toLowerCase())
+                  "
+                >
+                  <v-icon left small v-text="tag.icon" />
                   {{ tag.text }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </template>
-      </v-text-field>
-    </v-container>
+                </v-chip>
+              </span>
+            </span>
+            <span class="text-caption" v-else> No filter tag </span>
+          </div>
+        </v-row>
+      </div>
+    </v-toolbar>
 
-    <span :key="index" v-for="(tag, index) of filterTags">
-      <v-chip
-        @click:close="removeFilterTag(tag.text.toLowerCase())"
-        class="ma-1 mb-0"
-        close
-        outlined
-        small
-        v-if="modelStore.state.filterTags.includes(tag.text.toLowerCase())"
-      >
-        <v-icon left small v-text="tag.icon" />
-        {{ tag.text }}
-      </v-chip>
-    </span>
-
-    <v-subheader
-      class="my-0 py-0"
-      style="font-size: 12px; height: 16px"
-      v-text="state.models.length + ' models'"
-    />
-
-    <v-list class="pt-0" dense style="fontsize: 14px">
-      <v-list-item
-        :key="model"
-        :title="model"
-        :to="'/model/' + model"
-        class="modelItem"
-        two-line
-        v-for="model in state.models"
-        v-show="
-          modelStore.state.searchTerm
-            ? model.includes(modelStore.state.searchTerm)
-            : true
-        "
-      >
-        <v-list-item-content>
-          <v-list-item-title v-text="model" />
-          <v-list-item-subtitle>
-            <v-icon left small v-text="getIcon(model)" />
-            {{ elementType(model) }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-
-        <v-list-item-icon class="icon my-4">
-          <v-icon
-            small
-            v-show="modelStore.hasModel(model)"
-            v-text="'mdi-database-outline'"
+    <div
+      style="
+        height: calc(100vh - 148px - 24px);
+        margin-top: 148px;
+        overflow-y: auto;
+      "
+    >
+      <v-card flat tile>
+        <v-list class="pt-0" dense style="fontsize: 14px">
+          <v-subheader
+            class="my-0 py-0"
+            style="font-size: 12px; height: 16px"
+            v-text="
+              state.models.length +
+              ' model' +
+              (state.models.length > 1 ? 's' : '')
+            "
           />
-          <v-icon
-            small
-            v-show="modelStore.fileExistGithub(model)"
-            v-text="'mdi-github'"
-          />
-        </v-list-item-icon>
+          <v-list-item
+            :key="model"
+            :title="model"
+            :to="'/model/' + model"
+            class="modelItem"
+            two-line
+            v-for="model in state.models"
+            v-show="
+              modelStore.state.searchTerm
+                ? model.includes(modelStore.state.searchTerm)
+                : true
+            "
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="model" />
+              <v-list-item-subtitle>
+                <v-icon left small v-text="getIcon(model)" />
+                {{ elementType(model) }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
 
-        <v-list-item-action class="action">
-          <ModelMenu :modelId="model" />
-        </v-list-item-action>
-      </v-list-item>
-    </v-list>
+            <v-list-item-icon class="icon my-4">
+              <v-icon
+                small
+                v-show="modelStore.hasModel(model)"
+                v-text="'mdi-database-outline'"
+              />
+              <v-icon
+                small
+                v-show="modelStore.fileExistGithub(model)"
+                v-text="'mdi-github'"
+              />
+            </v-list-item-icon>
+
+            <v-list-item-action class="action">
+              <ModelMenu :modelId="model" />
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </div>
   </div>
 </template>
 
@@ -119,11 +173,46 @@ export default Vue.extend({
   setup() {
     const modelStore = core.app.model;
     const state = reactive({
-      modelMenu: {
-        model: undefined,
-        position: { x: 0, y: 0 },
-        show: false,
+      filterTagIdx: {
+        neuron: 2,
+        stimulator: 3,
+        recorder: 4,
+        synapse: 5,
       },
+      items: [
+        {
+          id: 'modelsReload',
+          icon: 'mdi-reload',
+          title: 'Reload models',
+          onClick: () => {
+            modelStore.initModelList();
+          },
+        },
+        {
+          id: 'modelsExport',
+          icon: 'mdi-export',
+          title: 'Export models',
+          onClick: () => openDialog('export'),
+        },
+        {
+          id: 'modelsImport',
+          icon: 'mdi-import',
+          title: 'Import models',
+          onClick: () => openDialog('import'),
+        },
+        {
+          id: 'modelsDelete',
+          icon: 'mdi-trash-can-outline',
+          title: 'Delete models',
+          onClick: () => openDialog('delete'),
+        },
+        {
+          id: 'modelsReset',
+          icon: '$mdiDatabaseRefreshOutline',
+          title: 'Reset all models',
+          onClick: () => openDialog('reset'),
+        },
+      ],
       models: [],
     });
 
@@ -146,6 +235,9 @@ export default Vue.extend({
      * Add filter tag.
      */
     const addFilterTag = (tag: string) => {
+      if (modelStore.state.filterTags.includes(tag)) {
+        return;
+      }
       modelStore.state.filterTags.push(tag);
       update();
     };
@@ -287,6 +379,20 @@ export default Vue.extend({
         models.sort();
         state.models = models;
       }
+    };
+
+    /**
+     * Open a dialog for models to export, import or delete.
+     * @param action Dialog to open
+     */
+    const openDialog = (action: string = 'export') => {
+      // Reset states for model list.
+      core.app.model.resetModelStates();
+
+      const models = action === 'reset' ? [] : core.app.model.state.models;
+
+      // Open dialog for models.
+      core.app.openDialog('models', action, { models });
     };
 
     onMounted(() => {

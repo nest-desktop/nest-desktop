@@ -1,6 +1,6 @@
 <template>
   <div class="simulationCodeEditor" ref="simulationCodeEditor">
-    <v-toolbar dense flat height="40">
+    <v-toolbar dense flat height="40" style="width: 100%">
       <v-row>
         <v-btn-toggle
           :color="state.color"
@@ -8,6 +8,7 @@
           dense
           group
           multiple
+          style="width: calc(100% - 160px)"
           v-model="state.code.state.blocks"
         >
           <v-tooltip :key="item.value" bottom v-for="item of state.blockItems">
@@ -15,7 +16,7 @@
               <v-btn
                 :disabled="item.disabled"
                 :value="item.value"
-                class="ma-0"
+                class="flex-grow-1 ma-0"
                 height="40"
                 text
                 v-bind="attrs"

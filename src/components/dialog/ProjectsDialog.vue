@@ -41,12 +41,18 @@
         />
 
         <v-card-text>
-          <v-simple-table v-if="dialogState.data.projects.length !== 0">
+          <v-simple-table v-if="dialogState.data.projects.length > 0">
             <template #default>
               <thead>
                 <tr>
                   <th v-text="'Project name'" />
                   <th v-text="'Created at'" />
+                  <th v-text="'Updated at'" />
+                  <th
+                    class="text-center"
+                    v-if="dialogState.action === 'export'"
+                    v-text="'Loaded'"
+                  />
                   <th class="text-center" v-text="'Selected'" />
                   <th
                     class="text-center"
@@ -55,37 +61,77 @@
                   />
                 </tr>
               </thead>
-              <tbody>
+              <tbody :key="projectStore.state.numLoaded">
                 <tr
                   :key="index"
                   v-for="(project, index) in dialogState.data.projects"
                 >
                   <td v-text="project.name" />
                   <td v-text="new Date(project.createdAt).toLocaleString()" />
-                  <td class="text-center">
-                    <v-checkbox
-                      class="my-0 mx-auto"
-                      color="project"
-                      hide-details
-                      v-model="project.state.selected"
-                    />
-                  </td>
-                  <td v-if="dialogState.action === 'export'">
-                    <v-row>
-                      <v-col class="py-4" cols="4">
+                  <td
+                    v-text="
+                      new Date(
+                        project.updatedAt
+                          ? project.updatedAt
+                          : project.createdAt
+                      ).toLocaleString()
+                    "
+                  />
+                  <template v-if="dialogState.action === 'delete'">
+                    <td class="text-center">
+                      <v-checkbox
+                        class="my-0 mx-auto"
+                        color="project"
+                        hide-details
+                        v-model="project.selected"
+                      />
+                    </td>
+                  </template>
+
+                  <template v-else-if="dialogState.action === 'export'">
+                    <td class="text-center">
+                      <div v-if="project.doc">
+                        <v-btn @click="project.unload()" icon>
+                          <v-icon v-text="'mdi-check'" />
+                        </v-btn>
+                      </div>
+                      <v-btn
+                        @click="projectStore.loadProject(project)"
+                        icon
+                        v-else
+                      >
+                        <v-icon v-text="'mdi-checkbox-blank-outline'" />
+                      </v-btn>
+                    </td>
+                    <td class="text-center">
+                      <div v-if="project.doc">
+                        <v-checkbox
+                          class="my-0 mx-auto"
+                          color="project"
+                          hide-details
+                          v-model="project.state.selected"
+                        />
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div v-if="project.doc">
+                        <!-- <v-row> -->
+                        <!-- <v-col class="py-4" cols="4">
                         <ActivityGraphIcon :project="project" small />
-                      </v-col>
-                      <v-col cols="4">
+                      </v-col> -->
+                        <!-- <v-col cols="4"> -->
                         <v-checkbox
                           :disabled="!project.state.activities.hasSomeEvents"
-                          class="ma-0"
+                          class="my-0 mx-auto"
                           color="project"
                           hide-details
                           v-model="project.state.withActivities"
                         />
-                      </v-col>
-                    </v-row>
-                  </td>
+                        <!-- </v-col>
+                    </v-row> -->
+                      </div>
+                    </td>
+                  </template>
                 </tr>
               </tbody>
             </template>
@@ -95,8 +141,8 @@
         <v-card-actions>
           <v-spacer />
           <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <!-- :disabled="!dialogState.data.projects.some(p => p.state.selected)" -->
           <v-btn
-            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="exportProjects"
             outlined
             small
@@ -105,8 +151,8 @@
             <v-icon left v-text="'mdi-export'" />
             Export
           </v-btn>
+          <!-- :disabled="!dialogState.data.projects.some(p => p.state.selected)" -->
           <v-btn
-            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="deleteProjects"
             outlined
             small
@@ -125,8 +171,8 @@
 import Vue from 'vue';
 
 import { Project } from '@/core/project/project';
-import core from '@/core';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
+import core from '@/core';
 import ProjectsImportDialog from '@/components/dialog/ProjectsImportDialog.vue';
 
 export default Vue.extend({
@@ -135,7 +181,7 @@ export default Vue.extend({
     ActivityGraphIcon,
     ProjectsImportDialog,
   },
-  setup() {
+  setup(_, { root }) {
     const dialogState = core.app.state.dialog;
 
     /**
@@ -143,7 +189,7 @@ export default Vue.extend({
      */
     const exportProjects = () => {
       const selectedProjects: Project[] = dialogState.data.projects.filter(
-        (project: Project) => project.state.selected
+        (project: Project) => project.doc && project.state.selected
       );
       if (selectedProjects.length > 0) {
         core.app.project.exportProjects(selectedProjects);
@@ -155,8 +201,8 @@ export default Vue.extend({
      * Delete selected projects.
      */
     const deleteProjects = () => {
-      const selectedProjects: Project[] = dialogState.data.projects.filter(
-        (project: Project) => project.state.selected
+      const selectedProjects: any[] = dialogState.data.projects.filter(
+        (project: any) => project.selected
       );
       if (selectedProjects.length > 0) {
         core.app.project.deleteProjects(selectedProjects);
@@ -168,7 +214,10 @@ export default Vue.extend({
      * Reset project database.
      */
     const resetProjects = () => {
-      core.app.project.resetDatabase();
+      core.app.project.resetDatabase().then(() => {
+        core.app.project.view.redirect();
+      });
+      core.app.closeDialog();
     };
 
     return {
@@ -177,6 +226,7 @@ export default Vue.extend({
       dialogState,
       exportProjects,
       resetProjects,
+      projectStore: core.app.project,
     };
   },
 });

@@ -1,6 +1,6 @@
 <template>
   <div class="projectMenu" v-if="state.projectId">
-    <v-dialog max-width="480" v-model="state.dialog">
+    <v-dialog max-width="480" v-model="state.dialog.delete">
       <v-card>
         <v-card-title v-text="'Are you sure to delete it?'" />
 
@@ -19,14 +19,28 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn
-            @click="state.dialog = false"
-            outlined
-            small
-            text
-            v-text="'cancel'"
+          <v-btn @click="closeDialog()" outlined small text v-text="'close'" />
+          <v-btn @click="deleteProject" outlined small v-text="'delete'" />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog max-width="480" v-model="state.dialog.rename">
+      <v-card>
+        <v-card-title v-text="'Rename this project'" />
+
+        <v-card-text v-if="state.project">
+          <v-text-field
+            label="Project name"
+            append-icon="mdi-pencil-outline"
+            v-model="state.projectName"
           />
-          <v-btn @click="deleteProject" outlined small v-text="'Delete'" />
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="closeDialog()" outlined small text v-text="'close'" />
+          <v-btn @click="saveProject" outlined small v-text="'save'" />
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -71,8 +85,26 @@ export default Vue.extend({
   setup(props, { root }) {
     const projectStore = core.app.project;
     const state = reactive({
-      dialog: false,
+      dialog: {
+        delete: false,
+        rename: false,
+      },
       items: [
+        {
+          id: 'projectRename',
+          icon: 'mdi-pencil-outline',
+          title: 'Rename project',
+          onClick: () => openDialog('rename'),
+        },
+        {
+          id: 'projectUnload',
+          icon: 'mdi-power',
+          title: 'Unload project',
+          onClick: () => {
+            const project = projectStore.getProject(state.projectId) as Project;
+            project.unload();
+          },
+        },
         {
           id: 'projectReload',
           icon: 'mdi-reload',
@@ -112,19 +144,39 @@ export default Vue.extend({
       ],
       project: null as Project,
       projectId: props.projectId,
+      projectName: '',
     });
+
+    /**
+     * Close dialog.
+     */
+    const closeDialog = () => {
+      state.dialog.delete = false;
+      state.dialog.rename = false;
+    };
+
+    /**
+     * Close project.
+     */
+    const saveProject = () => {
+      state.project.name = state.projectName;
+      state.project.save();
+      closeDialog();
+    };
 
     /**
      * Delete project.
      */
     const deleteProject = () => {
       state.project.delete();
+      closeDialog();
     };
 
     const openDialog = (action: string = 'export') => {
-      if (action === 'delete') {
+      if (['delete', 'rename'].includes(action)) {
         state.project = projectStore.getProject(props.projectId) as Project;
-        state.dialog = true;
+        state.projectName = state.project.name;
+        state.dialog[action] = true;
       } else {
         const project = projectStore.getProject(props.projectId) as Project;
         project.state.reset();
@@ -139,7 +191,7 @@ export default Vue.extend({
       }
     );
 
-    return { deleteProject, state };
+    return { closeDialog, deleteProject, saveProject, state };
   },
 });
 </script>

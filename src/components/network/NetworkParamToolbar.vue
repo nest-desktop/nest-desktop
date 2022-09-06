@@ -1,11 +1,12 @@
 <template>
   <div class="networkParamToolbar" v-if="state.network">
-    <v-toolbar class="toolbar" dense flat height="40" max-height="40">
-      <span class="d-flex">
+    <v-toolbar absolute class="toolbar" dense flat height="40" max-height="40" style="width: calc(100% - 64px)">
+      <span class="d-flex" style="width:100%">
         <v-btn-toggle
           dense
           group
           mandatory
+          style="width:100%"
           tile
           v-model="state.network.state.elementTypeIdx"
         >
@@ -532,12 +533,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.networkParamToolbar .toolbar {
-  position: absolute;
-  top: 0px;
-  z-index: 1;
-}
-
 .v-image__image--preload {
   filter: none;
   --webkit-filter: none;
