@@ -160,7 +160,7 @@ export class Project {
    * Save the current project.
    */
   save(): void {
-    this._app.project.importProject(this);
+    this._app.project.importProject(this).then(() => this.clean());
   }
 
   /**

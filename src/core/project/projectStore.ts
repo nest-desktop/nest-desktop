@@ -317,15 +317,11 @@ export class ProjectStore {
   /**
    * Import the project in the database and then update the list.
    */
-  importProject(project: Project): void {
+  async importProject(project: Project): Promise<any> {
     this.consoleLog('Import project: ' + project.name);
     project.clean();
 
-    const promise: Promise<any> = project.docId
-      ? this._db.update(project)
-      : this._db.create(project);
-
-    promise.then(() => project.clean());
+    return project.docId ? this._db.update(project) : this._db.create(project);
   }
 
   /**
