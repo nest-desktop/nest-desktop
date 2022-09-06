@@ -1,4 +1,5 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
+import VueRouter from 'vue-router';
 
 import { consoleLog } from '../common/logger';
 
@@ -238,6 +239,43 @@ export class ProjectView extends Config {
         this._state.project.activityGraph.codeHash
     ) {
       this._state.project.runSimulation();
+    }
+  }
+
+  /**
+   * Redirects the page content to the project. If
+   * no one was chosen before, the first one is selected.
+   * Please beware: The route IDs used in this class are the ones in the
+   * array, which might not contain every route from the Vue router!
+   */
+  redirect(projectId: string = ''): void {
+    if (projectId == undefined || projectId.length === 0) {
+      if (
+        this._state.projectId != null &&
+        this._app.project.state.projects.find(
+          (project: Project) => project.id === this._state.projectId
+        )
+      ) {
+        projectId = this._state.projectId;
+      } else {
+        projectId = this._app.project.recentProjectId;
+      }
+    } else if (
+      !this._app.project.state.projects.find(
+        (project: Project) => project.id === projectId
+      )
+    ) {
+      projectId = this._app.project.recentProjectId;
+    }
+
+    // Check if the page is already loaded to avoid "Avoided redundant
+    // navigation" error.
+    const router: VueRouter = this._app.vueSetupContext.root.$router;
+    if (router.currentRoute.params.id !== projectId) {
+      router.push({
+        name: 'projectId',
+        params: { id: projectId },
+      });
     }
   }
 }

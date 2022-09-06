@@ -20,12 +20,13 @@ export class ProjectStore {
       searchTerm: '',
       projects: [],
       projectRevisions: [],
+      numLoaded: 0,
     });
     this._view = new ProjectView(this._app);
   }
 
   get filteredProjects(): Project[] {
-    if (this._state.searchTerm === '') {
+    if (this._state.searchTerm === '' || this._state.searchTerm == null) {
       return this._state.projects;
     } else {
       return this._state.projects.filter(
@@ -84,6 +85,7 @@ export class ProjectStore {
    */
   async resetDatabase(): Promise<any> {
     this.consoleLog('Reset project database');
+
     await this._db.reset().then(() => this.init());
   }
 
@@ -92,13 +94,19 @@ export class ProjectStore {
    */
   async initProjectList(): Promise<any> {
     this.consoleLog('Initialize project list');
+    this._state.numLoaded = 0;
     this._state.projects = [];
     this._state.projectRevisions = [];
     await this._db.list('createdAt', true).then((projects: any[]) => {
       this._state.projects = projects;
-      if (this._view.state.projectId != null) {
+
+      // Redirect if project id from the current route is provided in the list.
+      const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
+      if (currentRoute.name === 'projectId') {
         this.project =
-          this.getProject(this._view.state.projectId) || new Project(this._app);
+          this.getProject(currentRoute.params.id) ||
+          this.getProject(this.recentProjectId);
+        this.view.redirect(this.view.state.projectId);
       }
     });
   }
@@ -131,7 +139,7 @@ export class ProjectStore {
   /**
    * Delete projects and then update the list.
    */
-  async deleteProjects(projects: Project[]): Promise<any> {
+  async deleteProjects(projects: any[]): Promise<any> {
     this.consoleLog('Delete projects');
     return this._db.deleteProjects(projects).then(() => this.initProjectList());
   }
@@ -167,9 +175,40 @@ export class ProjectStore {
   }
 
   /**
-   * Fetch a project from the list if if exists, otherwise a new project.
+   * Load a project in the list.
+   * @param project  project object
+   */
+  loadProject(project: any): void {
+    this.consoleLog('Load project');
+    const projectIds = this._state.projects.map((project: any) => project.id);
+    const projectIdx = projectIds.indexOf(project.id);
+    if (project.doc == undefined) {
+      project = new Project(this._app, project);
+      project.init();
+      this._state.projects[projectIdx] = project;
+      this._state.numLoaded += 1;
+    }
+  }
+
+  /**
+   * Unload the project in the list.
+   */
+  unloadProject(project: Project): void {
+    this.consoleLog('Unload project');
+    const idx: number = this._state.projects
+      .map((p: Project) => p.id)
+      .indexOf(project.id);
+
+    this._state.projects[idx] = project.doc;
+    this._state.numLoaded -= 1;
+
+    this._view.redirect();
+  }
+
+  /**
+   * Get a project from the list if it exists.
    * @param projectId ID of the project
-   * @returns searched project resp. new project
+   * @returns project component
    */
   getProject(projectId: string): Project {
     this.consoleLog('Get project');
@@ -178,12 +217,14 @@ export class ProjectStore {
       return;
     }
 
+    // Get project object.
     const projectIdx = projectIds.indexOf(projectId);
     let project = this._state.projects[projectIdx];
+
+    // Load project component.
     if (project.doc == undefined) {
-      project = new Project(this._app, project);
-      project.init();
-      this._state.projects[projectIdx] = project;
+      this.loadProject(project);
+      project = this._state.projects[projectIdx];
     }
 
     return project;
@@ -196,6 +237,18 @@ export class ProjectStore {
     this.consoleLog('Get project from file');
     const data: any = require(`../../assets/projects/${filename}.json`);
     return new Project(this._app, data);
+  }
+
+  /**
+   * Reload the project in the list.
+   */
+  reloadProject(project: Project): void {
+    this.consoleLog('Reload project');
+
+    this.unloadProject(project);
+    this.project = this.getProject(project.id);
+
+    this._view.redirect(project.id);
   }
 
   /**
@@ -212,7 +265,7 @@ export class ProjectStore {
         } else if (id) {
           this.project = this.getProject(id);
         } else {
-          const name = 'Project ' + (this._state.projects.length + 1);
+          const name = 'Untitled project ' + (this._state.projects.length + 1);
           this.createNewProject({ name });
         }
         resolve(true);
@@ -226,10 +279,14 @@ export class ProjectStore {
   /**
    * Delete project in database and then update the list.
    */
-  async deleteProject(project: Project): Promise<any> {
+  deleteProject(project: any): void {
     this.consoleLog('Delete project');
     if (project.docId) {
-      return this._db.delete(project.docId).finally(() => {
+      this._db.delete(project.docId).finally(() => {
+        this.removeFromList(project.id);
+      });
+    } else if (project._id) {
+      this._db.delete(project._id).finally(() => {
         this.removeFromList(project.id);
       });
     } else {
@@ -242,28 +299,9 @@ export class ProjectStore {
    */
   createNewProject(data: any = {}): void {
     this.consoleLog('Create new project');
-    this.project = new Project(this._app, data);
-    this.project.init();
-    this.addToList(this.project);
-  }
-
-  /**
-   * Reload the current project in the list from the database.
-   */
-  async reloadProject(project: Project): Promise<any> {
-    this.consoleLog('Reload project');
-    return this._db.read(project.id).then((doc: any) => {
-      const idx: number = this._state.projects
-        .map((p: Project) => p.id)
-        .indexOf(project.id);
-
-      const newProject = new Project(this._app, doc);
-      this._state.projects[idx] = project;
-
-      if (this._view.state.projectId === project.id) {
-        this.project = newProject;
-      }
-    });
+    this._state.projects.unshift(data);
+    this.loadProject(data);
+    this.view.redirect();
   }
 
   /**
@@ -279,7 +317,7 @@ export class ProjectStore {
   /**
    * Import the project in the database and then update the list.
    */
-  async importProject(project: Project): Promise<any> {
+  importProject(project: Project): void {
     this.consoleLog('Import project: ' + project.name);
     project.clean();
 
@@ -287,7 +325,7 @@ export class ProjectStore {
       ? this._db.update(project)
       : this._db.create(project);
 
-    return promise.then(() => this.addToList(project));
+    promise.then(() => project.state.checkChanges());
   }
 
   /**
@@ -321,14 +359,5 @@ export class ProjectStore {
       // Remove project from the project list.
       this._state.projects.splice(idx, 1);
     }
-  }
-
-  /**
-   * Add or move project to the top of the list.
-   */
-  addToList(project: Project): void {
-    this.consoleLog('Add project to the list: ' + project.id);
-    this.removeFromList(project.id);
-    this._state.projects.unshift(project);
   }
 }

@@ -225,6 +225,8 @@ export class Network extends Config {
     ) {
       setTimeout(() => this._project.startSimulation(), 1);
     }
+
+    this._project.state.checkChanges();
   }
 
   /**

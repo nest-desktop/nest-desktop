@@ -1,4 +1,5 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
+import VueRouter from 'vue-router';
 
 import { consoleLog } from '../common/logger';
 
@@ -76,7 +77,7 @@ export class ModelView {
       fileExistedGithub: false,
       modeIdx: 0,
       model: undefined as Model | undefined,
-      modelId: '',
+      modelId: 'ac_generator',
       projectFilename: 'current-input',
       project: new Project(this._app),
       tool: undefined,
@@ -358,5 +359,36 @@ export class ModelView {
   update(): void {
     this._state.project.network.networkChanges();
     this._state.project.activityGraph.update();
+  }
+
+      /**
+     * Redirects the page content to the model. If
+     * no one was chosen before, the first one is selected.
+     * Please beware: The route IDs used in this class are the ones in the
+     * array, which might not contain every route from the Vue router!
+     */
+    redirect(): void {
+      let modelId: string;
+      if (
+        this._app.model.state.models.find(
+          (model: Model) => model.id === this._state.modelId
+        )
+      ) {
+        modelId = this._state.modelId;
+      }
+
+      if (modelId == undefined || modelId.length <= 0) {
+        modelId = this._app.model.recentModelId;
+      }
+
+    // Check if the page is already loaded to avoid "Avoided redundant
+    // navigation" error.
+    const router: VueRouter = this._app.vueSetupContext.root.$router;
+    if (router.currentRoute.params.id !== modelId) {
+      router.push({
+        name: 'modelId',
+        params: { id: modelId },
+      });
+    }
   }
 }

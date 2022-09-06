@@ -1,4 +1,5 @@
 import { consoleLog } from './common/logger';
+import { SetupContext } from '@vue/composition-api';
 
 import { Backend } from './common/backend';
 import { Config } from './common/config';
@@ -30,6 +31,7 @@ export class App extends Config {
     theme: { dark: false },
     version: '',
   };
+  private _vueSetupContext: SetupContext;
 
   constructor() {
     super('App');
@@ -95,11 +97,18 @@ export class App extends Config {
     return this._state;
   }
 
+  get vueSetupContext(): SetupContext {
+    return this._vueSetupContext;
+  }
+
   /**
    * Initialize application.
    */
-  init(config: any): void {
+  init(context: SetupContext, config: any): void {
     consoleLog(this, 'Initialize app');
+
+    // Add setup context of Vue.
+    this._vueSetupContext = context;
 
     // Update configs from global config.
     this.updateConfigs(config);

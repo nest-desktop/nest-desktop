@@ -1,3 +1,4 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
 
 import { Activity } from '../activity/activity';
@@ -25,6 +26,7 @@ type snackbarType = {
 export class ProjectState {
   private _activities: activitiesType;
   private _activityStatsPanelId: number = 0;
+  private _state: UnwrapRef<any>;
   private _hash: string;
   private _project: Project;
   private _selected: boolean = false;
@@ -34,6 +36,10 @@ export class ProjectState {
 
   constructor(project: Project) {
     this._project = project;
+
+    this._state = reactive({
+      changes: false,
+    });
 
     this._activities = {
       hasSomeAnalogRecorders: false,
@@ -60,6 +66,10 @@ export class ProjectState {
 
   set activityStatsPanelId(value: number) {
     this._activityStatsPanelId = value;
+  }
+
+  get changes(): boolean {
+    return this._state.changes;
   }
 
   get hash(): string {
@@ -121,6 +131,15 @@ export class ProjectState {
             activity.hasEvents && activity.nodePositions.length > 0
         )
       : false;
+  }
+
+  /**
+   * Check the changes in project.
+   */
+  checkChanges(): void {
+    this._state.changes =
+      this._project.id !== this._project.doc.id ||
+      this._hash !== this._project.doc.hash;
   }
 
   /**
