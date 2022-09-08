@@ -193,7 +193,7 @@ export default Vue.extend({
         project.valid =
           project.network.nodes.length > 0 &&
           project.network.connections.length > 0;
-      } catch (e) {
+      } catch {
         project.valid = false;
       }
     };

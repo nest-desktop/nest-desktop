@@ -185,7 +185,7 @@ export default Vue.extend({
       try {
         new Model(app, model);
         model.valid = true;
-      } catch (e) {
+      } catch {
         model.valid = false;
       }
     };
