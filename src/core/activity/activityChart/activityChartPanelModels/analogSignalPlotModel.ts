@@ -300,7 +300,14 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   override updateActiveMarker(record: NodeRecord = undefined): void {
     const plotData = this.data[this.data.length - 1];
     plotData.visible = false;
-    if (record == null || record.activity.state.activeNodeId == null) {
+
+    // Check if the record is null.
+    if (record == null) {
+      return;
+    }
+
+    // Check if the activity state contains the active node.
+    if (record.activity.state.activeNodeId == null) {
       return;
     }
 
@@ -308,19 +315,31 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       .map((record: NodeRecord) => record.activity.nodeIds)
       .flat();
 
-    if (nodeIds.includes(record.activity.state.activeNodeId)) {
-      const data: any = this.createGraphDataPoints(
-        [record.activity.state.activeNodeId],
-        record
-      )[0];
-
-      plotData.x = data.x;
-      plotData.y = data.y;
-      plotData.line.color = record.activity.project.app.darkMode
-        ? 'white'
-        : '#121212';
-      plotData.visible = true;
+    // Check if the panel displays activity of the active node.
+    if (!nodeIds.includes(record.activity.state.activeNodeId)) {
+      return;
     }
+
+    const recordIds = this.state.recordsVisible.map(
+      (record: NodeRecord) => record.id
+    );
+
+    // Check if the record is displayed in the panel.
+    if (!recordIds.includes(record.id)) {
+      return;
+    }
+
+    const data: any = this.createGraphDataPoints(
+      [record.activity.state.activeNodeId],
+      record
+    )[0];
+
+    plotData.x = data.x;
+    plotData.y = data.y;
+    plotData.line.color = record.activity.project.app.darkMode
+      ? 'white'
+      : '#121212';
+    plotData.visible = true;
   }
 
   /**
