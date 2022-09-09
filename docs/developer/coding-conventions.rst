@@ -66,11 +66,9 @@ Naming conventions
 Sphinx conventions
 ------------------
 
-- For headings, we use the following items: \
-  ``=`` (with overline!) for parts and ``*`` (also with overline!) for \
-  chapters and for sections:
-  
-    - First-level: ``=``, second level: ``-``, third level: ``^``.
+- For headings, we use the following items: ``=`` (with overline!) for parts and for sections: \
+    - First-level: ``=``, second level: ``-``, third level: ``^``. \
+      Please note that all section headings should not have an overline!
 - We usually capitalize only the first letter of a title (or heading), \
   except programming expressions like class names, proper names, etc. \
   We also recommend the Python documentation conventions, as suggested in `the official documentation

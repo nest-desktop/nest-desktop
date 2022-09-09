@@ -11,7 +11,7 @@ The Live Development Server is now serving at ``http://localhost:8080``.
 
 .. note::
    For more information on how to prepare the environment for the development,
-   please check the :doc:`guide <preparation>`.
+   please check the :doc:`guide </developer/preparation>`.
 
 |
 

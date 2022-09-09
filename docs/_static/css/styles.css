@@ -2,17 +2,6 @@ html {
   scroll-behavior: auto !important;
 }
 
-a {
-  color: #0a58ca;
-  text-decoration: none;
-}
-a:not(.btn):hover {
-  text-decoration: underline;
-}
-a:not(.btn):visited {
-  color: #0a58ca;
-}
-
 .iframe-container {
   height: 0;
   height: auto;
@@ -29,27 +18,7 @@ a:not(.btn):visited {
   width: 100%;
 }
 
-/* Sidebar header (and topbar for mobile) */
-.wy-nav-side {
-  background: #fff !important;
-  border-right: 1px rgba(0, 0, 0, 0.12) solid;
-}
-
-.wy-menu ul {
-  padding-left: 0;
-}
-.wy-menu a {
-  color: rgba(0, 0, 0, 0.87);
-  text-decoration: none !important;
-}
-.wy-menu a:visited {
-  color: rgba(0, 0, 0, 0.87);
-}
-.wy-menu .toctree-l1:not(.current):hover a {
-  color: white;
-}
-
-/* Date width in history page */
-#history dt {
-  width: 134px;
+.toctree-l1 > .reference {
+  font-weight: bold;
+  font-size: 20px;
 }
