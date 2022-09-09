@@ -6,7 +6,7 @@
           <v-card-title v-text="'Are you sure to reset all databases?'" />
 
           <v-card-text>
-            Your modified models and projects will be lost.
+            Your modified models and projects will be lost!
           </v-card-text>
 
           <v-card-actions>
@@ -20,7 +20,7 @@
           <v-card-title v-text="'Are you sure to reset all configurations?'" />
 
           <v-card-text>
-            All configurations for the app will be lost. The app will be
+            All configurations for the app will be lost! The app will be
             reloaded afterwards.
           </v-card-text>
 

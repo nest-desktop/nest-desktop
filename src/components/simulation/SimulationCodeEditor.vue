@@ -1,5 +1,5 @@
 <template>
-  <div class="simulationCodeEditor" ref="simulationCodeEditor" style="">
+  <div class="simulationCodeEditor" ref="simulationCodeEditor">
     <v-toolbar dense flat height="40">
       <v-row>
         <v-btn-toggle

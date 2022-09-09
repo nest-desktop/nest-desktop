@@ -77,7 +77,7 @@ export default Vue.extend({
     });
 
     /**
-     * Open a dialog for models to export, import or delete.
+     * Open a dialog to export, import or delete models..
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {

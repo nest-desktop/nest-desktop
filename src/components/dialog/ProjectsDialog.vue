@@ -11,7 +11,7 @@
         <v-card-text>
           The database for projects will be deleted and then reset.
           <br />
-          Your modified projects will be lost.
+          Your modified projects will be lost!
         </v-card-text>
 
         <v-card-actions>
