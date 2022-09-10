@@ -306,7 +306,7 @@
     <v-overlay
       :value="
         projectView.state.project.simulation.state.running &&
-        !projectView.state.project.simulation.code.state.codeInsite
+        !projectView.state.project.simulation.code.runSimulationInsite
       "
       :z-index="10"
     >

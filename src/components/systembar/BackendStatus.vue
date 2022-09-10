@@ -2,22 +2,25 @@
   <div class="backendStatus">
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
-        <v-chip label outlined x-small class="pr-0" v-bind="attrs" v-on="on">
+        <v-chip
+          @click="check()"
+          class="pr-0"
+          label
+          outlined
+          v-bind="attrs"
+          v-on="on"
+          x-small
+        >
           {{ state.backend.text }}
           <v-icon
-            :color="
-              core.app.backends[state.backend.id].state.ready ? 'green' : 'red'
-            "
+            :color="isReady() ? 'green' : 'red'"
             v-text="'mdi-circle-medium'"
           />
         </v-chip>
       </template>
       <div class="text-no-wrap">
         The backend {{ state.backend.text }} is
-        <span
-          v-if="!core.app.backends[state.backend.id].state.ready"
-          v-text="'not'"
-        />
+        <span v-if="!isReady()" v-text="'not'" />
         running.
       </div>
     </v-tooltip>
@@ -40,7 +43,13 @@ export default Vue.extend({
       backend: props.backend,
     });
 
-    return { core, state };
+    const check = () => {
+      core.app.backends[state.backend['id']].check();
+    };
+
+    const isReady = () => core.app.backends[state.backend['id']].state.ready;
+
+    return { check, core, isReady, state };
   },
 });
 </script>
