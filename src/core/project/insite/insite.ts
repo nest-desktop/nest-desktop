@@ -91,7 +91,7 @@ export class Insite {
    * Get simulation time info from Insite.
    */
   getSimulationTimeInfo(): void {
-    if (!this.state.on) {
+    if (!this._state.on) {
       return;
     }
     this.consoleLog('Get simulation time info from Insite');
@@ -122,15 +122,15 @@ export class Insite {
   continuouslyUpdateActivityGraph(): void {
     this.consoleLog('Update activity graph continuously');
 
-    this.state.intervalId = window.setInterval(() => {
+    this._state.intervalId = window.setInterval(() => {
       // Check if project has activities.
       this._project.state.checkActivities();
 
       // Update activity graph.
       this._project.activityGraph.update();
 
-      if (!this.state.on) {
-        clearInterval(this.state.intervalId);
+      if (!this._state.on) {
+        clearInterval(this._state.intervalId);
       }
     }, 1000);
   }
@@ -142,7 +142,7 @@ export class Insite {
    * It gets node positions from Insite.
    */
   getNodesIds(): void {
-    if (!this.state.on) {
+    if (!this._state.on) {
       return;
     }
     this.consoleLog('Get node IDs from Insite');
@@ -177,7 +177,7 @@ export class Insite {
    * @param positions Object
    */
   getSpikeActivities(positions: any | null): void {
-    if (!this.state.on) {
+    if (!this._state.on) {
       return;
     }
     this.consoleLog('Get spike activities from Insite');
@@ -226,7 +226,7 @@ export class Insite {
    * @param positions object
    */
   getAnalogSignalActivities(positions: any): void {
-    if (!this.state.on) {
+    if (!this._state.on) {
       return;
     }
     this.consoleLog('Get analog signal activities from Insite');
