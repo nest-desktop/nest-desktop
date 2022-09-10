@@ -66,7 +66,9 @@ export class Connection extends Config {
    * Returns all visible parameters.
    */
   get filteredParams(): ConnectionParameter[] {
-    return this._params.filter((param: ConnectionParameter) => param.state.visible);
+    return this._params.filter(
+      (param: ConnectionParameter) => param.state.visible
+    );
   }
 
   get hash(): string {
@@ -78,7 +80,9 @@ export class Connection extends Config {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._params.some((param: ConnectionParameter) => param.state.visible);
+    return this._params.some(
+      (param: ConnectionParameter) => param.state.visible
+    );
   }
 
   get idx(): number {
