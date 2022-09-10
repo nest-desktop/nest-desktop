@@ -325,7 +325,7 @@ export class ProjectStore {
       ? this._db.update(project)
       : this._db.create(project);
 
-    promise.then(() => project.state.checkChanges());
+    promise.then(() => project.clean());
   }
 
   /**
