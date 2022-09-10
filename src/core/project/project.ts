@@ -433,23 +433,26 @@ export class Project {
     this.resetActivities();
 
     this._simulation.start().then((response: any) => {
-      if (response == null || response.status != 200 || response.data == null) {
+      if (
+        response == null ||
+        response.status != 200 ||
+        response.data == null ||
+        response.data.hasOwnProperty('data')
+      ) {
         return;
       }
 
-      if (this._simulation.code.runSimulationInsite) {
-        // Get activities from Insite Access Node.
-        this.insite.getActivities();
-      } else if (response.data.hasOwnProperty('data')) {
-        const data = response.data.data;
+      // Initialize activities
+      this.initActivities(response.data.data);
 
-        // Initialize activities
-        this.initActivities(data);
-
-        // Commit network for the history.
-        this.commitNetwork(this.network);
-      }
+      // Commit network for the history.
+      this.commitNetwork(this.network);
     });
+
+    if (this._simulation.code.runSimulationInsite) {
+      // Get activities from Insite Access Node.
+      this.insite.getActivities();
+    }
   }
 
   /*
