@@ -361,25 +361,25 @@ export class ModelView {
     this._state.project.activityGraph.update();
   }
 
-      /**
-     * Redirects the page content to the model. If
-     * no one was chosen before, the first one is selected.
-     * Please beware: The route IDs used in this class are the ones in the
-     * array, which might not contain every route from the Vue router!
-     */
-    redirect(): void {
-      let modelId: string;
-      if (
-        this._app.model.state.models.find(
-          (model: Model) => model.id === this._state.modelId
-        )
-      ) {
-        modelId = this._state.modelId;
-      }
+  /**
+   * Redirects the page content to the model. If
+   * no one was chosen before, the first one is selected.
+   * Please beware: The route IDs used in this class are the ones in the
+   * array, which might not contain every route from the Vue router!
+   */
+  redirect(): void {
+    let modelId: string;
+    if (
+      this._app.model.state.models.find(
+        (model: Model) => model.id === this._state.modelId
+      )
+    ) {
+      modelId = this._state.modelId;
+    }
 
-      if (modelId == undefined || modelId.length <= 0) {
-        modelId = this._app.model.recentModelId;
-      }
+    if (modelId == undefined || modelId.length <= 0) {
+      modelId = this._app.model.recentModelId;
+    }
 
     // Check if the page is already loaded to avoid "Avoided redundant
     // navigation" error.
