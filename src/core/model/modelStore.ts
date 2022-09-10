@@ -171,6 +171,10 @@ export class ModelStore {
    * Fetch models from NEST Simulator.
    */
   fetchModelsNEST(): void {
+    if (!this._app.backends.nestSimulator.state.ready) {
+      return;
+    }
+
     this._app.backends.nestSimulator.instance
       .get('api/Models')
       .then((response: any) => {
