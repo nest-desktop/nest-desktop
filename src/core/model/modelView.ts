@@ -134,11 +134,20 @@ export class ModelView {
     this._state.modelId = id || this._state.modelId;
     this._state.model = this._app.model.getModel(this._state.modelId);
     this.checkFileExistedGithub();
-    this.getParamDefaults().then(() => {
-      this.initProject();
-      this._state.project.activityGraph.emptyActivityGraph();
+
+    // Returns if the NEST backend is not ready.
+    if (!this._app.backends.nestSimulator.state.ready) {
       this.updateToolView();
-      this.modeIdx = this.modeIdx;
+      return;
+    }
+
+    this.getDefaultParams().then(() => {
+      if (this._state.defaults['element_type'] === 'neuron') {
+        this.initProject();
+        this._state.project.activityGraph.emptyActivityGraph();
+        this.modeIdx = this.modeIdx;
+      }
+      this.updateToolView();
     });
   }
 
@@ -150,9 +159,11 @@ export class ModelView {
     this._state.model = undefined;
     setTimeout(() => {
       this._state.model = this._app.model.getModel(this._state.modelId);
-      this.initProject();
+      if (this._state.defaults['element_type'] === 'neuron') {
+        this.initProject();
+        this.modeIdx = this.modeIdx;
+      }
       this.updateToolView();
-      this.modeIdx = this.modeIdx;
     }, 100);
   }
 
@@ -204,14 +215,17 @@ export class ModelView {
    */
   selectProject(id: string): void {
     this._state.projectFilename = id;
-    this.initProject();
-    this.modeIdx = 1;
+    const elementType: string = this._state.defaults['element_type'];
+    if (elementType === 'neuron') {
+      this.initProject();
+      this.modeIdx = 1;
+    }
   }
 
   /**
-   * Get paramter defaults from NEST Simulator.
+   * Get default parameters from NEST Simulator.
    */
-  async getParamDefaults(): Promise<any> {
+  async getDefaultParams(): Promise<any> {
     return this._state.model
       .fetchDefaults()
       .then((resp: any) => {
@@ -219,7 +233,7 @@ export class ModelView {
           const data = resp.data.replace(/(NaN|-?Infinity)/g, '"$1"');
           this._state.defaults = JSON.parse(data);
         } else {
-          this._state.defaults = resp.data;
+          this._state.defaults = resp.data || {};
         }
         this._state.params = Object.keys(this._state.defaults).map(
           (key: string) => {
@@ -298,6 +312,16 @@ export class ModelView {
     if (!this._state.modelId) {
       return;
     }
+
+    if (!this._app.backends.nestSimulator.state.ready) {
+      this._state.doc.blocks = [
+        {
+          content: `Sorry, there is no help for '${this._state.modelId}'.`,
+        },
+      ];
+      return;
+    }
+
     const path = 'api/help?return_text=true&obj=' + this._state.modelId;
     this._app.backends.nestSimulator.instance
       .get(path)
