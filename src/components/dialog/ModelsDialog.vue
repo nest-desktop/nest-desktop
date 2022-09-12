@@ -11,7 +11,7 @@
         <v-card-text>
           The database for models will be deleted and then reset.
           <br />
-          Your personal model changes and imported models will be removed.
+          Your personal model changes and imported models will be removed!
         </v-card-text>
 
         <v-card-actions>
