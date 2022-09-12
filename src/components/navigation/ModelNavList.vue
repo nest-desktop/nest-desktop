@@ -76,30 +76,7 @@
         <v-list-item-content>
           <v-list-item-title v-text="model" />
           <v-list-item-subtitle>
-            <v-icon
-              left
-              small
-              v-show="isNeuron(model)"
-              v-text="filterTags[2].icon"
-            />
-            <v-icon
-              left
-              small
-              v-show="isStimulator(model)"
-              v-text="filterTags[3].icon"
-            />
-            <v-icon
-              left
-              small
-              v-show="isRecorder(model)"
-              v-text="filterTags[4].icon"
-            />
-            <v-icon
-              left
-              small
-              v-show="isSynapse(model)"
-              v-text="filterTags[5].icon"
-            />
+            <v-icon left small v-text="getIcon(model)" />
             {{ elementType(model) }}
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -148,12 +125,6 @@ export default Vue.extend({
         show: false,
       },
       models: [],
-      filterTagIdx: {
-        neuron: 2,
-        stimulator: 3,
-        recorder: 4,
-        synapse: 5,
-      },
     });
 
     const filterTags = [
@@ -161,12 +132,12 @@ export default Vue.extend({
       { icon: 'mdi-github', text: 'GitHub' },
       { icon: 'mdi-alpha-n-box-outline', text: 'Neuron' },
       {
-        icon: 'mdi-alpha-s-box-outline',
-        text: 'Stimulator',
-      },
-      {
         icon: 'mdi-alpha-r-box-outline',
         text: 'Recorder',
+      },
+      {
+        icon: 'mdi-alpha-s-box-outline',
+        text: 'Stimulator',
       },
       { icon: 'mdi-alpha-s-circle-outline', text: 'Synapse' },
     ];
@@ -240,14 +211,28 @@ export default Vue.extend({
       let typeName = 'other';
       if (isNeuron(model)) {
         typeName = 'neuron';
-      } else if (isStimulator(model)) {
-        typeName = 'stimulator';
       } else if (isRecorder(model)) {
         typeName = 'recorder';
+      } else if (isStimulator(model)) {
+        typeName = 'stimulator';
       } else if (isSynapse(model)) {
         typeName = 'synapse';
       }
       return typeName;
+    };
+
+    /**
+     * Get icon.
+     */
+    const getIcon = (model: string) => {
+      const filterTagIdx = {
+        neuron: 2,
+        recorder: 3,
+        stimulator: 4,
+        synapse: 5,
+      };
+
+      return filterTags[filterTagIdx[elementType(model)]].icon;
     };
 
     /**
@@ -312,10 +297,7 @@ export default Vue.extend({
       addFilterTag,
       elementType,
       filterTags,
-      isNeuron,
-      isStimulator,
-      isRecorder,
-      isSynapse,
+      getIcon,
       modelStore,
       removeFilterTag,
       state,
