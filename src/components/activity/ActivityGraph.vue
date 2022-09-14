@@ -1,7 +1,7 @@
 <template>
   <div class="activityGraph">
     <div
-      style="position: absolute; left: 0; top: 0; z-index: 1000"
+      class="activityGraphHeader"
       v-if="state.graph.project.app.config.devMode"
     >
       <v-chip
@@ -172,3 +172,12 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.activityGraph .activityGraphHeader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+</style>

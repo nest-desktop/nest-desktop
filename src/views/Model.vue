@@ -65,18 +65,12 @@
 
       <div class="mx-4" style="width: 144px" />
 
-      <div @click="modelView.modeIdx = 1" class="mx-1">
+      <div @click="modelView.modeIdx = 1">
         <SimulationButton
           :disabled="!modelView.isNeuron"
           :project="modelView.state.project"
         />
       </div>
-
-      <v-card color="model" flat to="/settings">
-        <div class="d-flex flex-column">
-          <BackendStatus :backend="{ id: 'nestSimulator', text: 'NEST' }" />
-        </div>
-      </v-card>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -84,7 +78,7 @@
       :style="{ transition: state.resizing ? 'initial' : '' }"
       :width="modelView.state.tool ? modelView.state.tool.width : 0"
       app
-      class="no-print"
+      class="no-print nav-controller"
       clipped
       mobile-breakpoint="64"
       mini-variant-width="64"
@@ -130,7 +124,6 @@
 
         <div
           class="controller"
-          style="padding-right: 64px; width: 100%"
           v-if="modelView.state.tool && modelView.state.toolOpened"
         >
           <transition name="fade">
@@ -142,10 +135,7 @@
                 modelView.state.params
               "
             >
-              <v-card-text
-                class="pa-0"
-                style="height: calc(100vh - 48px); overflow-y: auto"
-              >
+              <v-card-text class="pa-0">
                 <v-list dense>
                   <v-list-item
                     :key="param.id"
@@ -179,7 +169,7 @@
 
           <SimulationCodeEditor
             :code="modelView.state.project.simulation.code"
-            style="height: 100%"
+            color="model"
             v-if="
               modelView.state.tool.name === 'modelSimulationCode' &&
               modelView.state.project
@@ -234,7 +224,6 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
-import BackendStatus from '@/components/BackendStatus.vue';
 import core from '@/core';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 import ModelEditor from '@/components/model/ModelEditor.vue';
@@ -246,7 +235,6 @@ import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.v
 export default Vue.extend({
   name: 'Model',
   components: {
-    BackendStatus,
     ModelDocumentation,
     ModelEditor,
     ModelExplorer,
@@ -361,10 +349,16 @@ export default Vue.extend({
 </script>
 
 <style>
-.modelView .controller {
-  height: calc(100vh - 48px);
+.modelView {
+  height: 100vh;
   overflow-y: hidden;
-  padding-right: 64px;
+}
+
+.modelView .nav-controller > .v-navigation-drawer__content {
+  margin-right: 64px;
+}
+
+.modelView .controller {
   width: 100%;
 }
 
@@ -376,7 +370,7 @@ export default Vue.extend({
 
 .modelView .resize-handle {
   cursor: ew-resize;
-  height: 100vh;
+  height: 100%;
   left: 0;
   position: fixed;
   width: 4px;

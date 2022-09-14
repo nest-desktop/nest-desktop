@@ -57,6 +57,7 @@ export default new Vuetify({
         project: {
           base: '#1281B3',
         },
+        systemBar: colors.grey.darken3,
       },
       dark: {
         primary: colors.grey.base,
@@ -68,6 +69,7 @@ export default new Vuetify({
         project: {
           base: '#1281B3',
         },
+        systemBar: colors.grey.darken3,
       },
     },
   },

@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="activityAnimationGraph"
-    ref="activityAnimationGraph"
-    style="height: calc(100vh - 48px); width: 100%"
-  />
+  <div class="activityAnimationGraph" ref="activityAnimationGraph" />
 </template>
 
 <script lang="ts">
@@ -38,3 +34,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.activityAnimationGraph {
+  height: calc(100vh - 48px - 24px);
+  width: 100%;
+}
+</style>

@@ -20,15 +20,15 @@ export class App extends Config {
   private _model: ModelStore;
   private _project: ProjectStore;
   private _state: any = {
+    dialog: {
+      action: '',
+      data: {},
+      open: false,
+      source: '',
+    },
     ready: false,
     theme: { dark: false },
     version: '',
-    dialog: {
-      open: false,
-      source: 'project',
-      action: 'export',
-      content: [],
-    },
   };
 
   constructor() {
@@ -165,11 +165,11 @@ export class App extends Config {
   /**
    * Open dialog.
    */
-  openDialog(source: string, action: string, content: any[]): void {
+  openDialog(source: string, action: string, data: any = {}): void {
     consoleLog(this, 'Open dialog');
     this._state.dialog.source = source;
     this._state.dialog.action = action;
-    this._state.dialog.content = content;
+    this._state.dialog.data = data;
     this._state.dialog.open = true;
   }
 

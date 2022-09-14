@@ -1,5 +1,5 @@
 <template>
-  <div class="models">
+  <div class="modelNavList">
     <ModelMenu
       :model="state.modelMenu.model"
       :position="state.modelMenu.position"
@@ -64,7 +64,8 @@
         :key="model"
         :title="model"
         :to="'/model/' + model"
-        @contextmenu="e => showModelMenu(e, model)"
+        class="modelItem"
+        two-line
         v-for="model in state.models"
         v-show="
           modelStore.state.searchTerm
@@ -72,51 +73,30 @@
             : true
         "
       >
-        <v-list-item-icon class="mx-0">
-          <v-icon
-            left
-            small
-            v-show="isNeuron(model)"
-            v-text="filterTags[2].icon"
-          />
-          <v-icon
-            left
-            small
-            v-show="isStimulator(model)"
-            v-text="filterTags[3].icon"
-          />
-          <v-icon
-            left
-            small
-            v-show="isRecorder(model)"
-            v-text="filterTags[4].icon"
-          />
-          <v-icon
-            left
-            small
-            v-show="isSynapse(model)"
-            v-text="filterTags[5].icon"
-          />
-        </v-list-item-icon>
-
         <v-list-item-content>
           <v-list-item-title v-text="model" />
+          <v-list-item-subtitle>
+            <v-icon left small v-text="getIcon(model)" />
+            {{ elementType(model) }}
+          </v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-list-item-icon>
+        <v-list-item-icon class="icon my-4">
           <v-icon
-            right
             small
             v-show="modelStore.hasModel(model)"
             v-text="'mdi-database-outline'"
           />
           <v-icon
-            right
             small
             v-show="modelStore.fileExistGithub(model)"
             v-text="'mdi-github'"
           />
         </v-list-item-icon>
+
+        <v-list-item-action class="action">
+          <ModelMenu :modelId="model" />
+        </v-list-item-action>
       </v-list-item>
     </v-list>
   </div>
@@ -126,9 +106,10 @@
 import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 
-import core from '@/core';
-import ModelMenu from '@/components/model/ModelMenu.vue';
 import { Model } from '@/core/model/model';
+import core from '@/core';
+
+import ModelMenu from '@/components/navigation/ModelMenu.vue';
 
 export default Vue.extend({
   name: 'Models',
@@ -144,12 +125,6 @@ export default Vue.extend({
         show: false,
       },
       models: [],
-      filterTagIdx: {
-        neuron: 2,
-        stimulator: 3,
-        recorder: 4,
-        synapse: 5,
-      },
     });
 
     const filterTags = [
@@ -157,30 +132,15 @@ export default Vue.extend({
       { icon: 'mdi-github', text: 'GitHub' },
       { icon: 'mdi-alpha-n-box-outline', text: 'Neuron' },
       {
-        icon: 'mdi-alpha-s-box-outline',
-        text: 'Stimulator',
-      },
-      {
         icon: 'mdi-alpha-r-box-outline',
         text: 'Recorder',
       },
+      {
+        icon: 'mdi-alpha-s-box-outline',
+        text: 'Stimulator',
+      },
       { icon: 'mdi-alpha-s-circle-outline', text: 'Synapse' },
     ];
-
-    /**
-     * Show model menu.
-     */
-    const showModelMenu = function (e: MouseEvent, model: string) {
-      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-      e.preventDefault();
-      state.modelMenu.show = false;
-      state.modelMenu.model = core.app.model.getModel(model);
-      state.modelMenu.position.x = e.clientX;
-      state.modelMenu.position.y = e.clientY;
-      this.$nextTick(() => {
-        state.modelMenu.show = true;
-      });
-    };
 
     /**
      * Add filter tag.
@@ -206,34 +166,74 @@ export default Vue.extend({
      * Check if model is a neuron.
      */
     const isNeuron = (model: string) =>
+      model.includes('cond') ||
+      model.includes('neuron') ||
+      model.includes('psc') ||
+      model.includes('izhikevich') ||
+      model.includes('transformer') ||
       model.startsWith('aiaf') ||
+      model.startsWith('cm') ||
+      model.startsWith('gauss') ||
       model.startsWith('gif') ||
       model.startsWith('hh') ||
       model.startsWith('iaf') ||
-      model.includes('izhikevich') ||
-      model.includes('_cond') ||
-      model.includes('_psc') ||
-      model.includes('_neuron');
+      model.startsWith('lin') ||
+      model.startsWith('sigmoid') ||
+      model.startsWith('tanh') ||
+      model.startsWith('threshold');
 
     /**
      * Check if model is a recorder.
      */
     const isRecorder = (model: string) =>
-      model.endsWith('_detector') ||
-      model.endsWith('_recorder') ||
+      model.endsWith('detector') ||
+      model.endsWith('recorder') ||
       model.endsWith('meter');
 
     /**
      * Check if model is a stimulator.
      */
     const isStimulator = (model: string) =>
-      model.endsWith('_dilutor') || model.includes('_generator');
+      model.includes('dilutor') || model.includes('generator');
 
     /**
      * Check if model is a synapse.
      */
     const isSynapse = (model: string) =>
-      model.endsWith('gap_junction') || model.includes('_synapse');
+      model.includes('gap_junction') ||
+      model.includes('_synapse') ||
+      model.includes('_connection');
+
+    /**
+     * Get element type based on model name.
+     */
+    const elementType = (model: string) => {
+      let typeName = 'other';
+      if (isNeuron(model)) {
+        typeName = 'neuron';
+      } else if (isRecorder(model)) {
+        typeName = 'recorder';
+      } else if (isStimulator(model)) {
+        typeName = 'stimulator';
+      } else if (isSynapse(model)) {
+        typeName = 'synapse';
+      }
+      return typeName;
+    };
+
+    /**
+     * Get icon.
+     */
+    const getIcon = (model: string) => {
+      const filterTagIdx = {
+        neuron: 2,
+        recorder: 3,
+        stimulator: 4,
+        synapse: 5,
+      };
+
+      return filterTags[filterTagIdx[elementType(model)]].icon;
+    };
 
     /**
      * Update models.
@@ -295,16 +295,32 @@ export default Vue.extend({
 
     return {
       addFilterTag,
+      elementType,
       filterTags,
-      isNeuron,
-      isStimulator,
-      isRecorder,
-      isSynapse,
+      getIcon,
       modelStore,
       removeFilterTag,
-      showModelMenu,
       state,
     };
   },
 });
 </script>
+
+<style>
+.modelNavList .modelItem .action {
+  display: none;
+}
+
+.modelNavList .modelItem:hover .action {
+  display: block;
+}
+
+.modelNavList .modelItem .icon {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.modelNavList .modelItem:hover .icon {
+  display: none;
+}
+</style>

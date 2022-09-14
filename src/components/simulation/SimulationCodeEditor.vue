@@ -1,15 +1,10 @@
 <template>
-  <div
-    class="simulationCodeEditor"
-    ref="simulationCodeEditor"
-    style="height: calc(100vh - 48px)"
-  >
-    <v-toolbar dense flat height="42">
+  <div class="simulationCodeEditor" ref="simulationCodeEditor">
+    <v-toolbar dense flat height="40">
       <v-row>
         <v-btn-toggle
+          :color="state.color"
           @change="state.code.generate()"
-          class="ma-2px"
-          color="light"
           dense
           group
           multiple
@@ -20,7 +15,8 @@
               <v-btn
                 :disabled="item.disabled"
                 :value="item.value"
-                dense
+                class="ma-0"
+                height="40"
                 text
                 v-bind="attrs"
                 v-on="on"
@@ -40,17 +36,16 @@
         <v-select
           :items="state.nestVersions"
           @change="state.code.generate()"
+          class="mt-2"
           dense
-          height="40"
           hide-details
-          small
-          style="width: 64px"
+          style="max-width: 102px"
           v-model="state.code.state.version"
         />
 
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn fab small text v-bind="attrs" v-on="on">
+            <v-btn small text tile height="40" v-bind="attrs" v-on="on">
               <v-icon small v-text="'mdi-download'" />
             </v-btn>
           </template>
@@ -72,7 +67,7 @@
 
     <v-card flat tile>
       <span
-        style="position: absolute; right: 18px; top: 0; z-index: 1000"
+        style="position: absolute; right: 18px; top: 0; z-index: 1"
         v-if="state.code.simulation.project.app.config.devMode"
       >
         <v-chip
@@ -124,13 +119,13 @@ export default Vue.extend({
   },
   props: {
     code: SimulationCode,
+    color: String,
   },
   setup(props, { root }) {
     const simulationCodeEditor = ref(null);
     const codeMirror = ref(null);
 
     const state = reactive({
-      code: props.code as SimulationCode,
       blockItems: [
         {
           disabled: false,
@@ -175,6 +170,8 @@ export default Vue.extend({
           value: 'runSimulation',
         },
       ],
+      code: props.code as SimulationCode,
+      color: props.color,
       fileFormatItems: [
         {
           icon: pythonIcon,
@@ -257,13 +254,14 @@ export default Vue.extend({
      * Resize CodeMirror.
      */
     const resizeCodeMirror = () => {
-      const height = simulationCodeEditor.value.clientHeight - 43;
+      const height = simulationCodeEditor.value.clientHeight - 40;
       const width = simulationCodeEditor.value.clientWidth;
       codeMirror.value.cminstance.setSize(width, height);
       updateTheme();
     };
 
     onMounted(() => {
+      state.color = props.color;
       checkInsite();
       window.addEventListener('resize', resizeCodeMirror);
       setTimeout(resizeCodeMirror, 1);
@@ -291,7 +289,11 @@ export default Vue.extend({
 </script>
 
 <style>
-.CodeMirror {
+.simulationCodeEditor {
+  height: calc(100vh - 48px - 24px);
+}
+
+.simulationCodeEditor .CodeMirror {
   border: 1px solid rgba(0, 0, 0, 0.12);
   font-family: monospace;
   font-size: 12px;

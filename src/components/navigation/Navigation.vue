@@ -1,25 +1,5 @@
 <template>
   <div class="navigation">
-    <span v-if="dialogState.open">
-      <ProjectsDialog v-if="dialogState.source === 'project'" />
-      <ModelsDialog v-else-if="dialogState.source === 'model'" />
-    </span>
-
-    <span v-if="state.menu.show">
-      <ProjectsMenu
-        :position="state.menu.position"
-        v-if="state.menu.content === 'project'"
-      />
-      <ModelsMenu
-        :position="state.menu.position"
-        v-else-if="state.menu.content === 'model'"
-      />
-      <SettingsMenu
-        :position="state.menu.position"
-        v-else-if="state.menu.content === 'settings'"
-      />
-    </span>
-
     <v-navigation-drawer
       :miniVariant="state.miniVariant"
       :style="{ transition: state.resizing ? 'initial' : '' }"
@@ -32,8 +12,7 @@
       v-click-outside="
         () => {
           if (!state.pinNav) {
-            state.miniVariant = true;
-            state.navList = '';
+            reset();
           }
         }
       "
@@ -46,7 +25,6 @@
       <v-row class="fill-height" no-gutters>
         <v-col>
           <v-navigation-drawer
-            :dark="state.darkNav"
             absolute
             mini-variant
             mini-variant-width="64"
@@ -56,11 +34,12 @@
             <div class="flex">
               <v-list nav>
                 <v-list-item
-                  :class="{ 'v-list-item--active': state.navList === route.id }"
+                  :class="{
+                    'v-list-item--active': isRoute(route.id),
+                  }"
                   :key="route.id"
                   :title="route.title"
-                  @click="() => updatePageContent(route.id)"
-                  @contextmenu="e => route.contextmenu(e)"
+                  @click="updatePageContent(route.id)"
                   v-for="route in routes"
                 >
                   <v-list-item-icon>
@@ -111,12 +90,7 @@
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item
-                  @click="reset"
-                  @contextmenu="e => showMenu(e, 'settings')"
-                  title="Settings"
-                  to="/settings"
-                >
+                <v-list-item @click="reset" title="Settings" to="/settings">
                   <v-list-item-icon>
                     <v-list-item-group class="nav-item">
                       <v-icon v-text="'mdi-cogs'" />
@@ -160,8 +134,8 @@
           </v-navigation-drawer>
 
           <div style="padding-left: 64px; width: 100%">
-            <ProjectNavList v-if="state.navList === 'project'" />
-            <ModelNavList v-if="state.navList === 'model'" />
+            <ProjectNavList v-if="isRoute('project')" />
+            <ModelNavList v-if="isRoute('model')" />
           </div>
         </v-col>
       </v-row>
@@ -176,35 +150,19 @@ import VueRouter, { Route } from 'vue-router';
 import core from '@/core';
 
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
-import ModelsDialog from '@/components/model/ModelsDialog.vue';
-import ModelsMenu from '@/components/model/ModelsMenu.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
-import ProjectsDialog from '@/components/project/ProjectsDialog.vue';
-import ProjectsMenu from '@/components/project/ProjectsMenu.vue';
-import SettingsMenu from '@/components/setting/SettingsMenu.vue';
 
 export default {
   name: 'Navigation',
   components: {
     ModelNavList,
-    ModelsDialog,
-    ModelsMenu,
     ProjectNavList,
-    ProjectsDialog,
-    ProjectsMenu,
-    SettingsMenu,
   },
-  setup() {
+  setup(_, { root }) {
     const state = reactive({
-      dialog: false,
+      activeRouteId: '',
       miniVariant: true,
-      navList: '',
       pinNav: core.app.config.pinNav,
-      menu: {
-        content: '',
-        position: { x: 0, y: 0 },
-        show: false,
-      },
       resizing: false,
       width: 320,
     });
@@ -214,16 +172,16 @@ export default {
     /**
      * Toggle navigation drawer.
      */
-    const toggle = (navList: string) => {
-      state.miniVariant = state.navList === navList;
-      state.navList = state.navList === navList ? '' : navList;
+    const toggleNav = (routeId: string) => {
+      state.miniVariant =
+        state.activeRouteId === routeId ? !state.miniVariant : false;
+      state.activeRouteId = routeId;
     };
 
     /**
      * Reset navigation drawer.
      */
     const reset = () => {
-      state.navList = '';
       state.miniVariant = true;
     };
 
@@ -235,7 +193,7 @@ export default {
      * @param targetRouteId ID of the route to navigate to
      * @param router Vue router (this.$router)
      */
-    function redirect(targetRouteId: string, router: VueRouter) {
+    const redirect = (targetRouteId: string, router: VueRouter) => {
       if (targetRouteId === 'project') {
         // check if project ID is undefined or project does not exist anymore
         if (
@@ -248,16 +206,16 @@ export default {
           recentProjectId = core.app.project.recentProjectId;
         }
         router.push({
-          name: 'ProjectId',
+          name: 'projectId',
           params: { id: recentProjectId },
         });
       } else {
         if (recentModelId == undefined || recentModelId.length <= 0) {
           recentModelId = 'ac_generator';
         }
-        router.push({ name: 'ModelId', params: { id: recentModelId } });
+        router.push({ name: 'modelId', params: { id: recentModelId } });
       }
-    }
+    };
 
     /**
      * Stores the most recently used model or project, respectively.
@@ -266,7 +224,7 @@ export default {
      * @param currentTargetId ID of the route to navigate to
      * @param sourceRroute Vue route of the page to leave (this.$route)
      */
-    function saveRecentId(targetRouteId: string, sourceRoute: Route) {
+    const saveRecentId = (targetRouteId: string, sourceRoute: Route) => {
       switch (targetRouteId) {
         case 'model':
           recentProjectId = sourceRoute.params.id;
@@ -277,21 +235,6 @@ export default {
         default:
           break;
       }
-    }
-
-    /**
-     * Show menu.
-     */
-    const showMenu = (e: MouseEvent, content: string = 'project') => {
-      // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-      e.preventDefault();
-      state.menu.show = false;
-      state.menu.position.x = e.clientX;
-      state.menu.position.y = e.clientY;
-      state.menu.content = content;
-      setTimeout(() => {
-        state.menu.show = true;
-      }, 1);
     };
 
     /**
@@ -300,34 +243,32 @@ export default {
      * array, which might not contain every route from the Vue router!
      * @param routeId ID of the route to navigate to
      */
-    function updatePageContent(routeId: string) {
-      toggle(routeId);
+    const updatePageContent = (routeId: string) => {
+      toggleNav(routeId);
 
       // Check if the page is already loaded to avoid "Avoided redundant
       // navigation" error
-      let pathstring: string = this.$route.path;
-      if (pathstring.indexOf(routeId) < 0) {
-        saveRecentId(routeId, this.$route);
-        redirect(routeId, this.$router);
+      let pathstring: string = root.$route.path;
+      if (!pathstring.includes(routeId)) {
+        saveRecentId(routeId, root.$route);
+        redirect(routeId, root.$router);
       }
-    }
+    };
 
     /**
      * List of routes in navigation.
      */
     const routes: any[] = [
       {
-        id: 'project',
         color: 'project',
-        contextmenu: (e: MouseEvent) => showMenu(e, 'project'),
         icon: '$network',
+        id: 'project',
         title: 'Project',
       },
       {
-        id: 'model',
         color: 'model',
-        contextmenu: (e: MouseEvent) => showMenu(e, 'model'),
         icon: '$nest',
+        id: 'model',
         title: 'Model',
       },
     ];
@@ -357,6 +298,11 @@ export default {
     };
 
     /**
+     * Check if the current route is active.
+     */
+    const isRoute = (routeId: string) => root.$route.name.startsWith(routeId);
+
+    /**
      * Resize sidebar.
      */
     const resizeSidebar = () => {
@@ -368,13 +314,11 @@ export default {
     return {
       app: core.app,
       appConfig: core.app.config,
-      dialogState: core.app.state.dialog,
+      isRoute,
       reset,
       resizeSidebar,
       routes,
-      showMenu,
       state,
-      toggle,
       updatePageContent,
     };
   },
@@ -396,7 +340,7 @@ export default {
 
 .navigation .resize-handle {
   cursor: ew-resize;
-  height: 100vh;
+  height: 100%;
   position: fixed;
   right: 0;
   width: 4px;

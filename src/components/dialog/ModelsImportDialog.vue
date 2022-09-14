@@ -1,11 +1,11 @@
 <template>
-  <div class="ProjectsImport">
+  <div class="ModelsImportDialog">
     <v-card>
-      <v-card-title v-text="'Import projects'" />
+      <v-card-title v-text="'Import models'" />
 
       <v-card-text>
         <v-row class="mb-1">
-          <v-col cols="3">
+          <v-col cols="4">
             <v-select
               :items="state.items"
               dense
@@ -22,24 +22,24 @@
               </template>
             </v-select>
           </v-col>
-          <v-col class="pa-3" cols="9">
+          <v-col class="pa-3" cols="8">
             <v-row v-show="state.source === 'github'">
-              <v-col cols="6">
+              <v-col cols="4">
                 <v-select
                   :disabled="state.trees.length === 0"
                   :items="state.trees"
                   @change="getFilesFromGithub"
                   dense
-                  label="Select path"
+                  label="Select element type"
                   prepend-icon="mdi-github"
                   v-model="state.selectedTree"
                 />
               </v-col>
-              <v-col cols="6">
+              <v-col cols="8">
                 <v-select
                   :disabled="state.files.length === 0"
                   :items="state.files"
-                  @change="getProjectsFromGithub"
+                  @change="getModelFromGithub"
                   dense
                   label="Select file"
                   v-model="state.selectedFile"
@@ -47,14 +47,14 @@
               </v-col>
             </v-row>
             <v-file-input
-              @change="getProjectsFromFile"
+              @change="getModelFromFile"
               dense
               label="File input"
               truncate-length="100"
               v-show="state.source === 'file'"
             />
             <v-text-field
-              @change="getProjectsFromUrl"
+              @change="getModelFromUrl"
               class="ma-0 pa-0"
               clearable
               dense
@@ -67,56 +67,49 @@
           </v-col>
         </v-row>
 
-        <span v-if="state.projects.length !== 0">
+        <span v-if="state.models.length !== 0">
           <span
             v-text="
-              `${state.projects.length} project${
-                state.projects.length > 1 ? 's' : ''
-              } found. Select projects to import.`
+              `${state.models.length} model${
+                state.models.length > 1 ? 's' : ''
+              } found. Select models to import.`
             "
           />
 
           <v-simple-table>
             <thead>
               <tr>
-                <th v-text="'Project name'" />
-                <th v-text="'Created at'" />
+                <th v-text="'Model'" />
+                <th v-text="'Label'" />
                 <th v-text="'Version'" />
                 <th class="text-center" v-text="'Valid'" />
                 <th class="text-center" v-text="'Selected'" />
               </tr>
             </thead>
             <tbody>
-              <tr :key="index" v-for="(project, index) in state.projects">
-                <td v-text="project.name" />
-                <td>
-                  <span
-                    v-if="project.createdAt"
-                    v-text="new Date(project.createdAt).toLocaleString()"
-                  />
-                  <span v-else v-text="'undefined'" />
-                </td>
-                <td v-text="project.version" />
+              <tr :key="index" v-for="(model, index) in state.models">
+                <td v-text="model.id" />
+                <td v-text="model.label" />
+                <td v-text="model.version" />
                 <td class="text-center">
                   <v-icon
-                    :color="project.valid ? 'green' : 'red'"
-                    v-text="project.valid ? 'mdi-check' : 'mdi-cancel'"
+                    :color="model.valid ? 'green' : 'red'"
+                    v-text="model.valid ? 'mdi-check' : 'mdi-cancel'"
                   />
                 </td>
                 <td class="text-center">
                   <v-checkbox
                     class="ma-0"
-                    color="project"
+                    color="model"
                     hide-details
-                    v-model="project.selected"
+                    v-model="model.selected"
                   />
                 </td>
               </tr>
             </tbody>
           </v-simple-table>
         </span>
-
-        <span v-else v-text="'No projects found'" />
+        <span v-else v-text="'No models found'" />
       </v-card-text>
 
       <v-card-actions>
@@ -129,8 +122,8 @@
           v-text="'Cancel'"
         />
         <v-btn
-          :disabled="!state.projects.some(p => p.selected)"
-          @click="importProjects"
+          :disabled="!state.models.some(p => p.selected)"
+          @click="importModels"
           outlined
           small
         >
@@ -148,14 +141,14 @@ import { onMounted, reactive } from '@vue/composition-api';
 import axios from 'axios';
 
 import { App } from '@/core/app';
-import { Project } from '@/core/project/project';
+import { Model } from '@/core/model/model';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'ProjectsImport',
+  name: 'ModelsImportDialog',
   setup() {
+    const dialogState = core.app.state.dialog;
     const state = reactive({
-      dialog: false,
       items: [
         {
           icon: 'mdi-paperclip',
@@ -174,9 +167,10 @@ export default Vue.extend({
         },
       ],
       files: [],
-      projects: [],
+      GitHubFile: '',
+      modelId: '',
+      models: [],
       selectedFile: {},
-      selectedProjects: [],
       selectedTree: {},
       source: '',
       trees: [],
@@ -185,41 +179,40 @@ export default Vue.extend({
     const app = new App();
 
     /**
-     * Validate projects.
+     * Validate model.
      */
-    const validateProject = (project: any) => {
+    const validateModel = (model: any) => {
       try {
-        new Project(app, project);
-        project.valid =
-          project.network.nodes.length > 0 &&
-          project.network.connections.length > 0;
+        new Model(app, model);
+        model.valid = true;
       } catch (e) {
-        project.valid = false;
+        model.valid = false;
       }
     };
 
     /**
-     * Fetch projects and validate them.
+     * Fetch models and validate them.
      */
-    const fetchProjects = (data: any) => {
-      const projects: any[] = Array.isArray(data) ? data : [data];
-      state.projects = [];
-      projects.forEach((project: any) => {
-        if (project.name) {
-          state.projects.push(project);
-          validateProject(project);
+    const fetchModels = (data: any) => {
+      const models: any[] = Array.isArray(data) ? data : [data];
+      state.models = [];
+      models.forEach((model: any) => {
+        if (model.id) {
+          model.selected = model.id === state.modelId;
+          state.models.push(model);
+          validateModel(model);
         }
       });
     };
 
     /**
-     * Get projects from file.
+     * Get model from file.
      */
-    const getProjectsFromFile = (file: any) => {
+    const getModelFromFile = (file: any) => {
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.addEventListener('load', (event: any) =>
-        fetchProjects(JSON.parse(event.target.result as string))
+        fetchModels(JSON.parse(event.target.result as string))
       );
     };
 
@@ -230,7 +223,7 @@ export default Vue.extend({
       state.selectedFile = {};
       state.trees = [];
       const url =
-        'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/main?recursive=true';
+        'https://api.github.com/repos/nest-desktop/nest-desktop-models/git/trees/main?recursive=true';
       axios.get(url).then((response: any) => {
         state.trees = response.data.tree
           .filter((d: any) => d.type === 'tree')
@@ -240,16 +233,23 @@ export default Vue.extend({
               value: d,
             };
           });
+
+        if (state.GitHubFile) {
+          state.selectedTree = state.trees.find((tree: any) =>
+            state.GitHubFile.startsWith(tree.text)
+          ).value;
+          getFilesFromGithub(state.selectedTree);
+        }
       });
     };
 
     /**
-     * Get files from github.
+     * Get files from GitHub.
      */
     const getFilesFromGithub = (tree: any) => {
       state.files = [];
       const url =
-        'https://api.github.com/repos/nest-desktop/nest-desktop-projects/git/trees/' +
+        'https://api.github.com/repos/nest-desktop/nest-desktop-models/git/trees/' +
         tree.sha;
       axios.get(url).then((response: any) => {
         state.files = response.data.tree
@@ -260,47 +260,68 @@ export default Vue.extend({
               value: d,
             };
           });
+
+        if (state.GitHubFile) {
+          state.selectedFile = state.files.find((file: any) =>
+            state.GitHubFile.endsWith(file.value.path)
+          ).value;
+          getModelFromGithub();
+        }
       });
     };
 
     /**
-     * Get projects from URL.
+     * Get model from URL.
      */
-    const getProjectsFromUrl = (url: string) => {
-      axios.get(url).then((response: any) => fetchProjects(response.data));
+    const getModelFromUrl = (url: string) => {
+      axios.get(url).then((response: any) => fetchModels(response.data));
     };
 
     /**
-     * Get projects from github.
+     * Get model from GitHub.
      */
-    const getProjectsFromGithub = () => {
+    const getModelFromGithub = () => {
       if (!Object.keys(state.selectedTree).includes('path')) {
         return;
       }
-      const url = `https://raw.githubusercontent.com/nest-desktop/nest-desktop-projects/main/${state.selectedTree['path']}/${state.selectedFile['path']}`;
-      getProjectsFromUrl(url);
+      const url = `https://raw.githubusercontent.com/nest-desktop/nest-desktop-models/main/${state.selectedTree['path']}/${state.selectedFile['path']}`;
+      getModelFromUrl(url);
     };
 
     /**
-     * Import selected projects.
+     * Import selected models.
      */
-    const importProjects = () => {
-      const projects: any[] = state.projects.filter(
-        (project: any) => project.selected
-      );
-      core.app.project.importProjects(projects);
+    const importModels = () => {
+      const models: any[] = state.models.filter((model: any) => model.selected);
+      core.app.model.importModels(models);
       core.app.closeDialog();
     };
 
-    onMounted(() => getTreesFromGithub());
+    /**
+     * Update model import dialog.
+     */
+    const update = () => {
+      if (dialogState != null && dialogState.data.models.length === 1) {
+        state.source = 'github';
+        state.modelId = dialogState.data.models[0].id;
+        state.GitHubFile = core.app.model.state.filesGithub.find(
+          (filename: string) =>
+            state.modelId.startsWith(filename.split('.')[0].split('/')[1])
+        );
+      }
+
+      getTreesFromGithub();
+    };
+
+    onMounted(() => update());
 
     return {
       closeDialog: () => core.app.closeDialog(),
       getFilesFromGithub,
-      getProjectsFromGithub,
-      getProjectsFromFile,
-      getProjectsFromUrl,
-      importProjects,
+      getModelFromGithub,
+      getModelFromFile,
+      getModelFromUrl,
+      importModels,
       state,
     };
   },

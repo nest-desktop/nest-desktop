@@ -166,7 +166,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
-import AppDetails from '@/components/AppDetails.vue';
+import AppDetails from '@/components/app/AppDetails.vue';
 
 export default Vue.extend({
   name: 'AppInfo',
