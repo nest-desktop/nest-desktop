@@ -49,7 +49,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}
 {{ /model.isRecorder }}
-}{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
+}{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ &spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
 
