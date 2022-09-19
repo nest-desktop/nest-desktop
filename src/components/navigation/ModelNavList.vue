@@ -129,7 +129,7 @@
               <v-list-item-title v-text="model" />
               <v-list-item-subtitle>
                 <v-icon left small v-text="getIcon(model)" />
-                {{ elementType(model) }}
+                {{ getElementType(model) }}
               </v-list-item-subtitle>
             </v-list-item-content>
 
@@ -299,7 +299,7 @@ export default Vue.extend({
     /**
      * Get element type based on model name.
      */
-    const elementType = (model: string) => {
+    const getElementType = (model: string) => {
       let typeName = 'other';
       if (isNeuron(model)) {
         typeName = 'neuron';
@@ -324,7 +324,8 @@ export default Vue.extend({
         synapse: 5,
       };
 
-      return filterTags[filterTagIdx[elementType(model)]].icon;
+      const elementType = filterTagIdx[getElementType(model)];
+      return elementType ? filterTags[elementType].icon : '';
     };
 
     /**
@@ -401,8 +402,8 @@ export default Vue.extend({
 
     return {
       addFilterTag,
-      elementType,
       filterTags,
+      getElementType,
       getIcon,
       modelStore,
       removeFilterTag,
