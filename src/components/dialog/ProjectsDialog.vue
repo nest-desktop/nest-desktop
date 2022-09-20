@@ -41,7 +41,7 @@
         />
 
         <v-card-text>
-          <v-simple-table v-if="dialogState.data.projects.length > 0">
+          <v-simple-table>
             <template #default>
               <thead>
                 <tr>
@@ -61,7 +61,10 @@
                   />
                 </tr>
               </thead>
-              <tbody :key="projectStore.state.numLoaded">
+              <tbody
+                :key="projectStore.state.numLoaded"
+                v-if="dialogState.data.projects.length > 0"
+              >
                 <tr
                   :key="index"
                   v-for="(project, index) in dialogState.data.projects"
@@ -133,6 +136,9 @@
                     </td>
                   </template>
                 </tr>
+              </tbody>
+              <tbody v-else>
+                No projects found
               </tbody>
             </template>
           </v-simple-table>
