@@ -1,8 +1,33 @@
 <template>
   <div class="ProjectsDialog">
     <v-dialog
+      max-width="420"
+      v-if="dialogState.action === 'reload'"
+      v-model="dialogState.open"
+    >
+      <v-card>
+        <v-card-title v-text="'Are you sure to reload all projects?'" />
+
+        <v-card-text>
+          The projects will be reloaded from the database.
+          <br />
+          Any unsaved content in projects will be deleted!
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <v-btn @click="reloadProjects" outlined small>
+            <v-icon left v-text="'mdi-reload'" />
+            reload
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
       max-width="480"
-      v-if="dialogState.action === 'reset'"
+      v-else-if="dialogState.action === 'reset'"
       v-model="dialogState.open"
     >
       <v-card>
@@ -11,7 +36,7 @@
         <v-card-text>
           The database for projects will be deleted and then reset.
           <br />
-          Your modified projects will be lost!
+          Your modified projects will be lost! Please export them first!
         </v-card-text>
 
         <v-card-actions>
@@ -217,6 +242,16 @@ export default Vue.extend({
     };
 
     /**
+     * Reload the projects from the database.
+     */
+    const reloadProjects = () => {
+      core.app.project.initProjectList().then(() => {
+        core.app.project.view.redirect();
+      });
+      core.app.closeDialog();
+    };
+
+    /**
      * Reset project database.
      */
     const resetProjects = () => {
@@ -231,6 +266,7 @@ export default Vue.extend({
       deleteProjects,
       dialogState,
       exportProjects,
+      reloadProjects,
       resetProjects,
       projectStore: core.app.project,
     };

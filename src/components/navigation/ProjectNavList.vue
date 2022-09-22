@@ -154,10 +154,8 @@ export default Vue.extend({
         {
           id: 'projectsReload',
           icon: 'mdi-reload',
-          title: 'Reload projects',
-          onClick: () => {
-            core.app.project.initProjectList();
-          },
+          title: 'Reload all projects from the database',
+          onClick: () => openDialog('reload'),
         },
         {
           id: 'projectsExport',
@@ -196,7 +194,9 @@ export default Vue.extend({
       core.app.project.resetProjectStates();
 
       const projects: (Project | any)[] =
-        action === 'reset' ? [] : core.app.project.state.projects;
+        action === 'reset' || action === 'reload'
+          ? []
+          : core.app.project.state.projects;
 
       // Open dialog for projects.
       core.app.openDialog('projects', action, { projects });
