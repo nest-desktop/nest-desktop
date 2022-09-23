@@ -94,6 +94,16 @@ export class Simulation extends Config {
     stateToast.message = message;
     stateToast.type = type;
 
+    // Add click event handler to redirect user to the documentation.
+    if (type === 'error') {
+      stateToast.message += ' -- Click me for more details.';
+      stateToast.onClick = () =>
+        window.open(
+          'https://nest-desktop.readthedocs.io/en/latest/user/troubleshooting.html#error-messages',
+          '_blank'
+        );
+    }
+
     // Show NEST or Python error message via toast notification.
     if (stateToast.message) {
       Vue.$toast.open(stateToast);
@@ -151,16 +161,21 @@ export class Simulation extends Config {
         return response;
       })
       .catch((error: any) => {
-        if (error.response) {
+        if ('response' in error && error.response.data != undefined) {
           // The request made and the server responded.
           this.openToast(error.response.data, 'error');
-        } else if (error.request) {
+        } else if ('request' in error) {
           // The request was made but no response was received.
-          this.openToast('Failed to find NEST Simulator.', 'error');
-        } else {
+          this.openToast(
+            'Failed to perform simulation (NEST Simulator is missing).',
+            'error'
+          );
+        } else if ('message' in error && error.message != undefined) {
           // Something happened in setting up the request
           // that triggered an error.
           this.openToast(error.message, 'error');
+        } else {
+          this.openToast(error, 'error');
         }
       })
       .finally(() => {
@@ -182,21 +197,24 @@ export class Simulation extends Config {
       .then((response: any) => {
         switch (response.status) {
           case 0:
-            this.openToast('Failed to find NEST Simulator.', 'error');
+            this.openToast(
+              'Failed to perform simulation (NEST Simulator is missing).',
+              'error'
+            );
             this._project.insite.cancelGettingActivity();
             break;
           case 200:
-            // TODO: Find better solution for get activities from Insite Access Node.
-            // this._project.getActivitiesInsite();
-
-            // this.backends.insiteAccess.instance
-            //   .get('nest/simulationTimeInfo/')
-            //   .then((response: any) => {
-            //     this.openToast('Simulation is finished.', 'success');
-            //     this._state.running =
-            //       response.data.end >
-            //       response.data.current + response.data.stepSize;
-            //   });
+            if (this._code.runSimulation) {
+              this.backends.insiteAccess.instance
+                .get('nest/simulationTimeInfo/')
+                .then((response: any) => {
+                  // Notify user when the simulation is finished.
+                  this.openToast('Simulation is finished.', 'success');
+                  this._state.running =
+                    response.data.end >
+                    response.data.current + response.data.stepSize;
+                });
+            }
             break;
           default:
             this.openToast(response.responseText, 'error');
@@ -207,7 +225,9 @@ export class Simulation extends Config {
       })
       .catch((error: any) => {
         this._project.insite.cancelGettingActivity();
-        this.openToast(error.response.data, 'error');
+        if ('response' in error && error.response.data != undefined) {
+          this.openToast(error.response.data, 'error');
+        }
         return error;
       })
       .finally(() => {
