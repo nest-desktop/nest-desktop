@@ -104,6 +104,19 @@
           <v-card-title v-text="'Model'" />
           <v-card-text>
             <v-card flat tile>
+              <v-switch
+                @change="
+                  e =>
+                    state.modelViewConfig.updateConfig({
+                      getDocFromBackend: e || false,
+                    })
+                "
+                color="accent"
+                label="Get documentation from the backend (plain text)"
+                v-model="state.modelViewConfig.config.getDocFromBackend"
+              />
+            </v-card>
+            <v-card flat tile>
               <v-card-subtitle v-text="'Accepted recordables'" />
               <span
                 :key="recordable.id"
@@ -227,6 +240,7 @@ export default Vue.extend({
       appConfig: new Config('App'),
       colorSchemes: colorSchemes,
       modelConfig: new Config('Model'),
+      modelViewConfig: new Config('ModelView'),
       networkConfig: new Config('Network'),
       parameterConfig: new Config('Parameter'),
       projectViewConfig: new Config('ProjectView'),
