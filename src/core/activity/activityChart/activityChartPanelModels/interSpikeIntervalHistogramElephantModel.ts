@@ -9,7 +9,7 @@ export class InterSpikeIntervalHistogramElephantModel extends SpikeTimesPanelMod
     super(panel, model);
     this.icon = 'mdi-chart-bar';
     this.id = 'interSpikeIntervalHistogramElephant';
-    this.label = 'Inter-Spike Interval (elephant)';
+    this.label = 'inter-spike interval (Elephant)';
     this.panel.xaxis = 2;
     this.params = [
       {
@@ -59,7 +59,7 @@ export class InterSpikeIntervalHistogramElephantModel extends SpikeTimesPanelMod
         this.data.push({
           activityIdx: activity.idx,
           histfunc: 'count',
-          hoverinfo: 'y',
+          hoverinfo: 'x-y',
           legendgroup: 'spikes' + activity.idx,
           marker: {
             color: activity.recorder.view.color,
@@ -88,7 +88,8 @@ export class InterSpikeIntervalHistogramElephantModel extends SpikeTimesPanelMod
    * Update layout label for spike time histogram.
    */
   override updateLayoutLabel(): void {
+    this.panel.layout.xaxis.type = this.state.xaxisType;
     this.panel.layout.xaxis.title = 'Inter-spike interval [ms]';
-    this.panel.layout.yaxis.title = 'Counts';
+    this.panel.layout.yaxis.title = 'Count';
   }
 }

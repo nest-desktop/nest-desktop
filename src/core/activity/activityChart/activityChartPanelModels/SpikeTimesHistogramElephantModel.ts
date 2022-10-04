@@ -7,6 +7,7 @@ export class SpikeTimesHistogramElephantModel extends SpikeTimesPanelModel {
     super(panel, model);
     this.icon = 'mdi-chart-bar';
     this.id = 'spikeTimesHistogramElephant';
+    this.label = 'spike times (Elephant)';
     this.panel.xaxis = 1;
     this.params = [
       {
