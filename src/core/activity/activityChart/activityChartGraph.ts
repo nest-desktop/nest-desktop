@@ -133,7 +133,7 @@ export class ActivityChartGraph {
   /**
    * Empty graph data.
    */
-  empty(): void {
+  emptyData(): void {
     this._data = [];
   }
 
@@ -210,20 +210,30 @@ export class ActivityChartGraph {
    * It required network activities.
    */
   update(): void {
-    this.empty();
+    //Empty data.
+    this.emptyData();
+
+    // ResetLayout.
     this.resetLayout();
 
+    // Update layout of visible panels.
     this.updateVisiblePanelsLayout();
-    this.updatePanelModels();
-    this.updateLayoutColor();
 
-    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      this.gatherData(panel);
-      this.updateLayoutPanel(panel);
+    // Update panel models
+    this.updatePanelModels().then(() => {
+      this.updateLayoutColor();
+
+      this.panelsVisible.forEach((panel: ActivityChartPanel) => {
+        this.gatherData(panel);
+        this.updateLayoutPanel(panel);
+      });
+
+      // React plot.
+      this.react();
+
+      // Restyle plot.
+      this.restyle();
     });
-
-    this.react();
-    this.restyle();
   }
 
   /**
@@ -262,8 +272,11 @@ export class ActivityChartGraph {
   /**
    * Update panel models.
    */
-  updatePanelModels(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
+  async updatePanelModels(): Promise<any> {
+    const panels = this.panelsVisible.map((panel: ActivityChartPanel) =>
+      panel.model.update()
+    );
+    return Promise.all(panels);
   }
 
   /**

@@ -1,12 +1,10 @@
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
 
-export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
+export class SpikeTimesRasterPlot extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-scatter-plot';
-    this.id = 'spikeTimesRasterPlot';
     this.panel.height = 30;
     this.panel.xaxis = 1;
     this.state.height = 5;
@@ -36,29 +34,31 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   /**
    * Add data of spike times for raster plot.
    */
-  override addData(activity: SpikeActivity): void {
-    if (activity.nodeIds.length === 0) return;
-
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: 'x',
-      legendgroup: 'spikes' + activity.idx,
-      marker: {
-        line: {
-          color: activity.recorder.view.color,
-          width: 2,
+  override async addData(activity: SpikeActivity): Promise<boolean> {
+    return new Promise(resolve => {
+      this.data.push({
+        activityIdx: activity.idx,
+        hoverinfo: 'x',
+        legendgroup: 'spikes' + activity.idx,
+        marker: {
+          line: {
+            color: activity.recorder.view.color,
+            width: 2,
+          },
+          size: 5,
+          symbol: 'line-ns',
         },
-        size: 5,
-        symbol: 'line-ns',
-      },
-      mode: 'markers',
-      modelId: this.id,
-      name: 'Spikes of ' + activity.recorder.view.label,
-      showlegend: true,
-      type: 'scattergl',
-      visible: this.state.visible,
-      x: activity.events.times,
-      y: activity.events.senders,
+        mode: 'line+markers',
+        modelId: this.id,
+        name: 'Spikes of ' + activity.recorder.view.label,
+        showlegend: true,
+        type: 'scattergl',
+        visible: this.state.visible,
+        x: activity.events.times,
+        y: activity.events.senders,
+      });
+
+      resolve(true);
     });
   }
 

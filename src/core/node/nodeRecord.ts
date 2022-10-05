@@ -81,6 +81,10 @@ export class NodeRecord {
     return this._nodeSize;
   }
 
+  get senders(): number[] {
+    return this._activity.events.senders;
+  }
+
   get times(): number[] {
     return this._activity.events.times;
   }

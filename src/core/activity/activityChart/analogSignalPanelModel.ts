@@ -1,6 +1,6 @@
-import { ActivityChartPanelModel } from '../activityChartPanelModel';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { NodeRecord } from '../../../node/nodeRecord';
+import { ActivityChartPanelModel } from './activityChartPanelModel';
+import { ActivityChartPanel } from './activityChartPanel';
+import { NodeRecord } from '../../node/nodeRecord';
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
@@ -8,6 +8,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
     this.activityType = 'analog';
     this.id = model.id || 'analogSignalPanelModel';
     this.label = model.label || 'analog signals';
+    this.icon = model.icon || 'mdi-chart-bell-curve-cumulative';
 
     this.init(model);
   }

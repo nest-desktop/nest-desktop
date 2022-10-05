@@ -532,10 +532,10 @@ export class Project {
     });
 
     // Check if project has activities.
-    this._state.checkActivities();
+    // this._state.checkActivities();
 
     // Update activity graph.
-    this._activityGraph.update();
+    // this._activityGraph.update();
   }
 
   /**

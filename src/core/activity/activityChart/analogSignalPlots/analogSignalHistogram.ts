@@ -1,14 +1,12 @@
 import * as d3 from 'd3';
 
 import { ActivityChartPanel } from '../activityChartPanel';
-import { AnalogSignalPanelModel } from './analogSignalPanelModel';
+import { AnalogSignalPanelModel } from '../analogSignalPanelModel';
 import { NodeRecord } from '../../../node/nodeRecord';
 
-export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
+export class AnalogSignalHistogram extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bar';
-    this.id = 'analogSignalHistogram';
     this.panel.xaxis = 2;
     this.params = [
       {
@@ -27,34 +25,37 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * @remarks
    * It requires activity data.
    */
-  override addData(): void {
-    this.data = [];
+  override async addData(): Promise<boolean> {
+    return new Promise(resolve => {
+      if (this.state.recordsVisible.length === 0) {
+        resolve(false);
+        return;
+      }
 
-    if (this.state.recordsVisible.length === 0) {
-      return;
-    }
+      const records = this.state.recordsVisible.filter(
+        (record: NodeRecord) =>
+          record.values != null && record.values.length > 0
+      );
 
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
-      this.updateHistogramRange(record.values);
+      // Update value range for histogram.
+      records.forEach((record: NodeRecord) => {
+        this.updateHistogramRange(record.values);
+      });
+
+      // Add record data for histogram.
+      records.forEach((record: NodeRecord) => this.addRecordData(record));
+
+      resolve(true);
     });
-
-    this.state.recordsVisible.forEach((record: NodeRecord) =>
-      this.updateEventData(record)
-    );
   }
 
   /**
-   * Update range for histogram.
+   * Update value range for histogram.
    *
    * @remarks
-   * It needs activity data.
+   * It requires activity data.
    */
   updateHistogramRange(values: number[] = []): void {
-    // Update time.
-    if (values.length === 0) {
-      return;
-    }
-
     this.state.histogram.start = Math.min(
       this.state.histogram.start,
       d3.min(values)
@@ -66,16 +67,17 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update data for analog signal histogram.
+   * Add record data for histogram.
+   *
+   * @remarks
+   * It requires record data.
    */
-  updateEventData(record: NodeRecord): void {
-    if (record.values == null || record.values.length === 0) {
-      return;
-    }
-
-    const start: number = this.state.histogram.start;
-    const end: number = this.state.histogram.end + 1;
-    const size: number = (end - start) / this.params[0].value;
+  addRecordData(record: NodeRecord): void {
+    const xbins: any = {
+      start: this.state.histogram.start,
+      end: this.state.histogram.end,
+    };
+    xbins.size = (xbins.end - xbins.start) / this.params[0].value;
 
     this.data.push({
       activityIdx: record.activity.idx,
@@ -98,11 +100,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       visible: this.state.visible,
       x: record.values,
       xaxis: 'x' + this.panel.xaxis,
-      xbins: {
-        end,
-        size,
-        start,
-      },
+      xbins,
     });
   }
 

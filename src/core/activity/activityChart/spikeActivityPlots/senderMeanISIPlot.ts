@@ -1,19 +1,16 @@
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
 
-export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
+export class SenderMeanISIPlot extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'senderMeanISIPlot';
-    this.label = 'mean ISI in each sender';
     this.panel.xaxis = 4;
     this.params = [
       {
         id: 'plotMode',
         input: 'select',
-        items: ['lines', 'lines+markers', 'markers', 'bar'],
+        items: ['bar', 'lines', 'lines+markers', 'markers'],
         label: 'Plot mode',
         value: 'lines',
       },
@@ -50,37 +47,39 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   /**
    * Add data of mean ISI in each sender for histogram panel.
    */
-  override addData(activity: SpikeActivity): void {
-    if (activity.nodeIds.length === 0) return;
+  override async addData(activity: SpikeActivity): Promise<boolean> {
+    return new Promise(resolve => {
+      const x: number[] = activity.nodeIds;
+      const isi: number[][] = activity.ISI();
+      const y: number[] = isi.map((ii: number[]) =>
+        ii.length > 0 ? activity.getAverage(ii) : 0
+      );
 
-    const x: number[] = activity.nodeIds;
-    const isi: number[][] = activity.ISI();
-    const y: number[] = isi.map((ii: number[]) =>
-      ii.length > 0 ? activity.getAverage(ii) : 0
-    );
-
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: 'x+y',
-      legendgroup: 'spikes' + activity.idx,
-      line: {
-        shape: this.lineShape,
-      },
-      marker: {
-        color: activity.recorder.view.color,
+      this.data.push({
+        activityIdx: activity.idx,
+        hoverinfo: 'x+y',
+        legendgroup: 'spikes' + activity.idx,
         line: {
-          color: activity.project.app.darkMode ? '#121212' : 'white',
-          width: x.length > 100 ? 0 : 1,
+          shape: this.lineShape,
         },
-      },
-      mode: this.plotMode,
-      name: 'Mean ISI in each sender in' + activity.recorder.view.label,
-      opacity: 0.6,
-      showlegend: false,
-      type: this.plotType,
-      visible: this.state.visible,
-      x,
-      y,
+        marker: {
+          color: activity.recorder.view.color,
+          line: {
+            color: activity.project.app.darkMode ? '#121212' : 'white',
+            width: x.length > 100 ? 0 : 1,
+          },
+        },
+        mode: this.plotMode,
+        name: 'Mean ISI in each sender in' + activity.recorder.view.label,
+        opacity: 0.6,
+        showlegend: false,
+        type: this.plotType,
+        visible: this.state.visible,
+        x,
+        y,
+      });
+
+      resolve(true);
     });
   }
 

@@ -195,16 +195,29 @@ export abstract class ActivityChartPanelModel {
    * @remarks
    * It requires activity data.
    */
-  update(): void {
+  async update(): Promise<boolean> {
+    // Update time.
     this.updateTime();
+
+    // Update analog records.
     this.updateAnalogRecords();
 
     this.data = [];
-    this.activities.forEach((activity: Activity) => {
-      this.addData(activity);
-    });
+    return new Promise(resolve => {
+      const dataUpdates = this.activities
+        .filter(
+          (activity: Activity) =>
+            activity.nEvents > 0 && activity.nodeIds.length > 0
+        )
+        .map((activity: Activity) => this.addData(activity));
 
-    this.updateLayoutLabel();
+      Promise.all(dataUpdates).then(() => {
+        // Update layout labels
+        this.updateLayoutLabel();
+
+        resolve(true);
+      });
+    });
   }
 
   /**
@@ -280,8 +293,11 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    * It is a replacement for abstract component.
    */
-  addData(activity: Activity): void {
-    activity;
+  async addData(data: Activity | NodeRecord): Promise<boolean> {
+    return new Promise(resolve => {
+      data;
+      resolve(true);
+    });
   }
 
   /**
@@ -298,7 +314,7 @@ export abstract class ActivityChartPanelModel {
    * Update time of the panel model.
    *
    * @remarks
-   * It needs activity data.
+   * It needs time data.
    */
   updateTime(): void {
     // Update time

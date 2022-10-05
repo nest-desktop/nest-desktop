@@ -1,12 +1,9 @@
 import { ActivityChartPanel } from '../activityChartPanel';
-import { AnalogSignalPlotModel } from './analogSignalPlotModel';
+import { AnalogSignalPlot } from './analogSignalPlot';
 
-export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
+export class NeuronAnalogSignalPlot extends AnalogSignalPlot {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'neuronAnalogSignalPlot';
-    this.label = 'neuron analog signals';
     this.panel.height = 20;
     this.panel.xaxis = 1;
 

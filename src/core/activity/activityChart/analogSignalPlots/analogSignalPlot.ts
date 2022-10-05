@@ -1,13 +1,11 @@
 import { ActivityChartPanel } from '../activityChartPanel';
-import { AnalogSignalPanelModel } from './analogSignalPanelModel';
+import { AnalogSignalPanelModel } from '../analogSignalPanelModel';
 import { Node } from '../../../node/node';
 import { NodeRecord } from '../../../node/nodeRecord';
 
-export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
+export class AnalogSignalPlot extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'analogSignalPlot';
     this.panel.xaxis = 1;
 
     this.params = [
@@ -39,18 +37,38 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Update panel model for analog signals.
    *
    * @remarks
-   * It requires activity data.
+   * It requires record data.
    */
-  override update(): void {
+  override async update(): Promise<boolean> {
     this.data = [];
-    if (this.state.recordsVisible.length === 0) {
-      return;
-    }
+    return new Promise(resolve => {
+      if (this.state.recordsVisible.length === 0) {
+        resolve(false);
+        return;
+      }
 
-    this.updateAnalogRecords();
-    this.updateTime();
+      this.updateAnalogRecords();
+      this.updateTime();
 
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
+      const dataAddings = this.state.recordsVisible.map((record: NodeRecord) =>
+        this.addData(record)
+      );
+
+      Promise.all(dataAddings).then(() => {
+        this.updateLayoutLabel();
+        resolve(true);
+      });
+    });
+  }
+
+  /**
+   * Add data of analog signal for line panel.
+   *
+   * @remarks
+   * It requires record data.
+   */
+  override async addData(record: NodeRecord): Promise<boolean> {
+    return new Promise(resolve => {
       if (record.id === 'V_m' && this.params[2].visible) {
         // Add spike threshold for membrane potential.
         this.addSpikeThresholdLine(record);
@@ -71,9 +89,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
       // Add active line.
       this.addActiveLine(record);
-    });
 
-    this.updateLayoutLabel();
+      resolve(true);
+    });
   }
 
   /**

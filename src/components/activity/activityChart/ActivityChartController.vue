@@ -47,7 +47,9 @@
 
           <v-subheader style="height: 28px" v-text="'Spikes'" />
           <v-list-item
-            :disabled="!state.graph.project.state.activities.hasSomeSpikeRecorders"
+            :disabled="
+              !state.graph.project.state.activities.hasSomeSpikeRecorders
+            "
             :key="'spikePanel' + index"
             @click="addPanel(model.id)"
             v-for="(model, index) in state.graph.panel.modelsSpike"

@@ -79,7 +79,7 @@ export class ActivityGraph {
    * Empty activity graph.
    */
   emptyActivityGraph(): void {
-    this._activityChartGraph.empty();
+    this._activityChartGraph.emptyData();
   }
 
   /**

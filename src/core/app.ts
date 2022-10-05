@@ -37,7 +37,7 @@ export class App extends Config {
 
     // Backends
     this._backends.elephantAnalysis = new Backend('ElephantAnalysis', {
-      path: '/analysis',
+      path: '/elephant',
       port: 5001,
       versionPath: '/',
     });

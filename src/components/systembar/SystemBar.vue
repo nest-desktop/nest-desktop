@@ -9,6 +9,10 @@
 
       <BackendStatus
         class="mx-1"
+        :backend="{ id: 'elephantAnalysis', text: 'Elephant' }"
+      />
+      <BackendStatus
+        class="mx-1"
         :backend="{ id: 'insiteAccess', text: 'Insite' }"
       />
       <BackendStatus

@@ -71,11 +71,14 @@
           <v-card-title v-text="'Backends'" />
           <v-card-text>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="4">
                 <NESTSimulatorConfig />
               </v-col>
-              <v-col cols="6">
+              <v-col cols="4">
                 <InsiteAccessConfig />
+              </v-col>
+              <v-col cols="4">
+                <ElephantAnalysisToolkitConfig />
               </v-col>
             </v-row>
             <v-row>
@@ -208,6 +211,7 @@ import { reactive } from '@vue/composition-api';
 
 import { Config } from '@/core/common/config';
 import core from '@/core';
+import ElephantAnalysisToolkitConfig from '@/components/setting/ElephantAnalysisToolkitConfig.vue';
 import InsiteAccessConfig from '@/components/setting/InsiteAccessConfig.vue';
 import NESTSimulatorConfig from '@/components/setting/NESTSimulatorConfig.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
@@ -217,6 +221,7 @@ import colorSchemes from '@/assets/config/ColorSchemes.json';
 export default Vue.extend({
   name: 'AppSettings',
   components: {
+    ElephantAnalysisToolkitConfig,
     InsiteAccessConfig,
     NESTSimulatorConfig,
     ParameterEdit,

@@ -236,11 +236,11 @@
                 :items="state.options.items"
                 :label="label()"
                 :readonly="state.options.readonly"
-                @change="paramChange(state.value)"
+                :value="state.value"
+                @change="value => paramChange(value)"
                 class="ma-1 mt-3"
                 dense
                 hide-details
-                v-model="state.value"
               />
             </template>
 
@@ -331,12 +331,12 @@
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
+                :value="state.value"
                 @blur="e => paramChange(e.target.value)"
                 auto-grow
                 hide-details
                 outlined
                 small
-                v-model="state.value"
               />
             </template>
 
@@ -423,6 +423,7 @@
                   <v-text-field
                     :readonly="state.options.readonly"
                     :step="state.options.step || 1"
+                    :value="state.value"
                     @blur="e => paramChange(e.target.value)"
                     class="mt-0 ml-2 pt-0"
                     height="32"
@@ -430,7 +431,6 @@
                     single-line
                     style="width: 60px; font-size: 12px"
                     type="number"
-                    v-model="state.value"
                   />
                 </template>
               </v-slider>
@@ -601,16 +601,24 @@ export default Vue.extend({
       // }
 
       let changed: boolean = true;
-      switch (typeof value) {
-        case 'string': // text field
-          changed = Number(value) !== state.value;
-          state.value = Number(value);
-          break;
-        default:
-          changed = value !== state.value;
-          state.value = value;
-          break;
+      if (state.options.input === 'valueSlider') {
+        changed = Number(value) !== state.value;
+        state.value = Number(value);
+      } else {
+        changed = value !== state.value;
+        state.value = value;
       }
+
+      // switch (typeof value) {
+      //   case 'string': // text field
+      //     changed = Number(value) !== state.value;
+      //     state.value = Number(value);
+      //     break;
+      //   default:
+      //     changed = value !== state.value;
+      //     state.value = value;
+      //     break;
+      // }
 
       // Prevent auto simulation when the value is actually not changed.
       if (changed) {

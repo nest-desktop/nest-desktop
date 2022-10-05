@@ -1,19 +1,16 @@
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
 
-export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
+export class SenderSpikeCountPlot extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'senderSpikeCountPlot';
-    this.label = 'spike count in each sender';
     this.panel.xaxis = 4;
     this.params = [
       {
         id: 'plotMode',
         input: 'select',
-        items: ['lines', 'lines+markers', 'markers', 'bar'],
+        items: ['bar', 'lines', 'lines+markers', 'markers'],
         label: 'Plot mode',
         value: 'lines',
       },
@@ -59,45 +56,47 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   /**
    * Add data of spike count in each sender for histogram panel.
    */
-  override addData(activity: SpikeActivity): void {
-    if (activity.nodeIds.length === 0) return;
+  override async addData(activity: SpikeActivity): Promise<boolean> {
+    return new Promise(resolve => {
+      const x: number[] = activity.nodeIds;
+      const senders: number[] = activity.events.senders;
 
-    const x: number[] = activity.nodeIds;
-    const senders: number[] = activity.events.senders;
+      const counts = {};
+      for (const sender of senders) {
+        counts[sender] = counts[sender] ? counts[sender] + 1 : 1;
+      }
 
-    const counts = {};
-    for (const sender of senders) {
-      counts[sender] = counts[sender] ? counts[sender] + 1 : 1;
-    }
+      const time = this.spikeRate ? activity.endtime / 1000 : 1;
+      const y: number[] = x.map((nodeId: number) =>
+        counts[nodeId] ? counts[nodeId] / time : 0
+      );
+      const size = x.length;
 
-    const time = this.spikeRate ? activity.endtime / 1000 : 1;
-    const y: number[] = x.map((nodeId: number) =>
-      counts[nodeId] ? counts[nodeId] / time : 0
-    );
-    const size = x.length;
-
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: 'x+y',
-      legendgroup: 'spikes' + activity.idx,
-      line: {
-        shape: this.lineShape,
-      },
-      marker: {
-        color: activity.recorder.view.color,
+      this.data.push({
+        activityIdx: activity.idx,
+        hoverinfo: 'x+y',
+        legendgroup: 'spikes' + activity.idx,
         line: {
-          color: activity.project.app.darkMode ? '#121212' : 'white',
-          width: size > 100 ? 0 : 1,
+          shape: this.lineShape,
         },
-      },
-      mode: this.plotMode,
-      name: 'Spike count in each sender in' + activity.recorder.view.label,
-      opacity: 0.6,
-      showlegend: false,
-      type: this.plotType,
-      visible: this.state.visible,
-      x,
-      y,
+        marker: {
+          color: activity.recorder.view.color,
+          line: {
+            color: activity.project.app.darkMode ? '#121212' : 'white',
+            width: size > 100 ? 0 : 1,
+          },
+        },
+        mode: this.plotMode,
+        name: 'Spike count in each sender in' + activity.recorder.view.label,
+        opacity: 0.6,
+        showlegend: false,
+        type: this.plotType,
+        visible: this.state.visible,
+        x,
+        y,
+      });
+
+      resolve(true);
     });
   }
 

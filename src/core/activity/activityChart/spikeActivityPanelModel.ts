@@ -1,12 +1,13 @@
-import { ActivityChartPanelModel } from '../activityChartPanelModel';
-import { ActivityChartPanel } from '../activityChartPanel';
+import { ActivityChartPanelModel } from './activityChartPanelModel';
+import { ActivityChartPanel } from './activityChartPanel';
 
-export class SpikeTimesPanelModel extends ActivityChartPanelModel {
+export class SpikeActivityPanelModel extends ActivityChartPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel);
     this.activityType = 'spike';
     this.id = model.id || 'spikeTimesPanelModel';
     this.label = model.label || 'spike times';
+    this.icon = model.icon || 'mdi-chart-scatter-plot';
 
     this.init();
   }

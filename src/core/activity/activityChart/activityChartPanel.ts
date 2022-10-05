@@ -3,17 +3,19 @@ import * as math from 'mathjs';
 import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { ActivityChartGraph } from './activityChartGraph';
 
-import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
-import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
-import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
-import { InterSpikeIntervalHistogramElephantModel } from './activityChartPanelModels/interSpikeIntervalHistogramElephantModel';
-import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
-import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
-import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
-import { SenderSpikeCountPlotModel } from './activityChartPanelModels/senderSpikeCountPlotModel';
-import { SpikeTimesHistogramElephantModel } from './activityChartPanelModels/SpikeTimesHistogramElephantModel';
-import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
-import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
+import { AnalogSignalHistogram } from './analogSignalPlots/analogSignalHistogram';
+import { AnalogSignalHeatmap } from './analogSignalPlots/analogSignalHeatmap';
+import { AnalogSignalHistogram2d } from './analogSignalPlots/analogSignalHistogram2d';
+import { AnalogSignalPlot } from './analogSignalPlots/analogSignalPlot';
+import { CVISIHistogram } from './spikeActivityPlots/CVISIHistogram';
+import { InterSpikeIntervalHistogramElephant } from './spikeActivityPlotsElephant/interSpikeIntervalHistogramElephant';
+import { InterSpikeIntervalHistogram } from './spikeActivityPlots/interSpikeIntervalHistogram';
+import { SenderCVISIPlot } from './spikeActivityPlots/senderCVISIPlot';
+import { SenderMeanISIPlot } from './spikeActivityPlots/senderMeanISIPlot';
+import { SenderSpikeCountPlot } from './spikeActivityPlots/senderSpikeCountPlot';
+import { SpikeTimesHistogramElephant } from './spikeActivityPlotsElephant/SpikeTimesHistogramElephant';
+import { SpikeTimesHistogram } from './spikeActivityPlots/spikeTimesHistogram';
+import { SpikeTimesRasterPlot } from './spikeActivityPlots/spikeTimesRasterPlot';
 
 export class ActivityChartPanel {
   // private static readonly _name = 'ActivityGraphPanel';
@@ -33,77 +35,91 @@ export class ActivityChartPanel {
   private _models: any[] = [
     {
       activityType: 'analog',
-      component: AnalogSignalPlotModel,
+      component: AnalogSignalPlot,
       id: 'analogSignalPlot',
       icon: 'mdi-chart-bell-curve-cumulative',
       label: 'Analog signals',
     },
     {
       activityType: 'analog',
-      component: AnalogSignalHistogramModel,
+      component: AnalogSignalHistogram,
       id: 'analogSignalHistogram',
       icon: 'mdi-chart-bar',
       label: 'analog signals',
     },
     {
+      activityType: 'analog',
+      component: AnalogSignalHistogram2d,
+      id: 'analogSignalHistogram2d',
+      icon: 'mdi-map-outline',
+      label: '2d histogram of analog signals',
+    },
+    {
+      activityType: 'analog',
+      component: AnalogSignalHeatmap,
+      id: 'analogSignalHeatmap',
+      icon: 'mdi-map-outline',
+      label: 'heatmap of analog signals',
+    },
+    {
       activityType: 'spike',
-      component: SpikeTimesRasterPlotModel,
+      component: SpikeTimesRasterPlot,
       id: 'spikeTimesRasterPlot',
       icon: 'mdi-chart-scatter-plot',
       label: 'Spike times',
     },
     {
       activityType: 'spike',
-      component: SpikeTimesHistogramModel,
+      component: SpikeTimesHistogram,
       id: 'spikeTimesHistogram',
       icon: 'mdi-chart-bar',
       label: 'Spike times',
     },
     {
       activityType: 'spike',
-      component: SpikeTimesHistogramElephantModel,
+      component: SpikeTimesHistogramElephant,
       id: 'spikeTimesHistogramElephant',
       icon: 'mdi-chart-bar',
       label: 'Spike times (Elephant)',
     },
     {
       activityType: 'spike',
-      component: InterSpikeIntervalHistogramModel,
+      component: InterSpikeIntervalHistogram,
       id: 'interSpikeIntervalHistogram',
       icon: 'mdi-chart-bar',
       label: 'Inter-spike interval',
     },
     {
       activityType: 'spike',
-      component: InterSpikeIntervalHistogramElephantModel,
+      component: InterSpikeIntervalHistogramElephant,
       id: 'interSpikeIntervalHistogramElephant',
       icon: 'mdi-chart-bar',
       label: 'Inter-spike interval (Elephant)',
     },
     {
       activityType: 'spike',
-      component: CVISIHistogramModel,
+      component: CVISIHistogram,
       id: 'CVISIHistogram',
       icon: 'mdi-chart-bar',
       label: 'CV of ISI',
     },
     {
       activityType: 'spike',
-      component: SenderSpikeCountPlotModel,
+      component: SenderSpikeCountPlot,
       id: 'senderSpikeCountPlot',
       icon: 'mdi-chart-bell-curve-cumulative',
       label: 'Spike count in each sender',
     },
     {
       activityType: 'spike',
-      component: SenderMeanISIPlotModel,
+      component: SenderMeanISIPlot,
       id: 'senderMeanISIPlot',
       icon: 'mdi-chart-bell-curve-cumulative',
       label: 'Mean ISI in each sender',
     },
     {
       activityType: 'spike',
-      component: SenderCVISIPlotModel,
+      component: SenderCVISIPlot,
       id: 'senderCVISIPlot',
       icon: 'mdi-chart-bell-curve-cumulative',
       label: 'CV ISI in each sender',
@@ -226,7 +242,7 @@ export class ActivityChartPanel {
     }
 
     if (!this._state.initialized) {
-      this._model = new SpikeTimesRasterPlotModel(this, modelSpec);
+      this._model = new SpikeTimesRasterPlot(this, modelSpec);
       this._state.initialized = true;
     }
   }
@@ -250,7 +266,19 @@ export class ActivityChartPanel {
     const steps = heightCumsum.map((h: number) => h / heightTotal);
     steps.unshift(0);
     steps.reverse();
-    const margin: number = this.xaxis === 1 ? 0.02 : 0.07;
+
+    const panelIdx = panels.indexOf(this);
+    let margin = 0.005;
+
+    // Set margin for panels with same xaxis.
+    if (panelIdx > 0 && panelIdx < panels.length - 1) {
+      const nextPanel = panels[panelIdx + 1];
+      if (this.xaxis === nextPanel.xaxis) {
+        margin = 0.1;
+      }
+    }
+
+    // Domain for panel height.
     const domain: number[] = [
       steps[this.yaxis],
       steps[this.yaxis - 1] - margin,
