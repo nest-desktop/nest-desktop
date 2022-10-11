@@ -2,56 +2,32 @@ import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
 import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
 
-export class SenderSpikeCountPlot extends SpikeActivityPanelModel {
+export class SenderActivityHistogram extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.panel.xaxis = 4;
+    this.panel.xaxis = 2;
     this.params = [
-      {
-        id: 'plotMode',
-        input: 'select',
-        items: ['bar', 'lines', 'lines+markers', 'markers'],
-        label: 'Plot mode',
-        value: 'lines',
-      },
-      {
-        id: 'lineShape',
-        input: 'select',
-        items: [
-          { text: 'linear', value: 'linear' },
-          { text: 'spline', value: 'spline' },
-          { text: 'steps', value: 'hvh' },
-          // { text: 'vertical-horizontal-vertical steps', value: 'vhv' },
-          // { text: 'horizontal-vertical-horizontal steps', value: 'hvh' },
-          // { text: 'vertical-horizontal steps', value: 'vh' },
-          // { text: 'horizontal-vertical steps', value: 'hv' },
-        ],
-        label: 'Line shape',
-        value: 'hvh',
-      },
       {
         id: 'spikeRate',
         input: 'checkbox',
         label: 'Spikes per seconds (spikes/s)',
         value: false,
       },
+      {
+        id: 'histNorm',
+        input: 'checkbox',
+        label: 'Normed values',
+        value: false,
+      },
     ];
   }
 
-  get lineShape(): string {
+  get histNormed(): boolean {
     return this.params[1].value;
   }
 
-  get plotMode(): string {
-    return this.params[0].value;
-  }
-
-  get plotType(): string {
-    return this.plotMode === 'bar' ? this.plotMode : 'scatter';
-  }
-
   get spikeRate(): boolean {
-    return this.params[2].value;
+    return this.params[0].value;
   }
 
   /**
@@ -59,7 +35,6 @@ export class SenderSpikeCountPlot extends SpikeActivityPanelModel {
    */
   override async addData(activity: SpikeActivity): Promise<boolean> {
     return new Promise(resolve => {
-      const x: number[] = activity.nodeIds;
       const senders: number[] = activity.events.senders;
 
       const counts = {};
@@ -69,33 +44,32 @@ export class SenderSpikeCountPlot extends SpikeActivityPanelModel {
 
       const recordTime = activity.recordTime;
       const time = this.spikeRate ? (recordTime[1] - recordTime[0]) / 1000 : 1;
-      const y: number[] = x.map((nodeId: number) =>
+
+      // Calc spike rate if desired.
+      const x: number[] = activity.nodeIds.map((nodeId: number) =>
         counts[nodeId] ? counts[nodeId] / time : 0
       );
-      const size = x.length;
 
       this.data.push({
         activityIdx: activity.idx,
-        hoverinfo: 'x+y',
+        hoverinfo: 'y',
         legendgroup: 'spikes' + activity.idx,
-        line: {
-          shape: this.lineShape,
-        },
         marker: {
           color: activity.recorder.view.color,
           line: {
             color: activity.project.app.darkMode ? '#121212' : 'white',
-            width: size > 100 ? 0 : 1,
+            width: 1,
           },
         },
-        mode: this.plotMode,
-        name: 'Spike count in each sender in' + activity.recorder.view.label,
+        name:
+          'Histogram of spikes in each sender in' +
+          activity.recorder.view.label,
         opacity: 0.6,
         showlegend: false,
-        type: this.plotType,
+        type: 'histogram',
         visible: this.state.visible,
+        histnorm: this.histNormed ? 'probability' : 'count',
         x,
-        y,
       });
 
       resolve(true);
@@ -106,7 +80,7 @@ export class SenderSpikeCountPlot extends SpikeActivityPanelModel {
    * Update layout label for spike sender histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = 'Neuron ID';
-    this.panel.layout.yaxis.title = this.spikeRate ? 'Spikes/s' : 'Spike count';
+    this.panel.layout.xaxis.title = this.spikeRate ? 'Spikes/s' : 'Spike count';
+    this.panel.layout.yaxis.title = this.histNormed ? 'Normed' : 'Count';
   }
 }

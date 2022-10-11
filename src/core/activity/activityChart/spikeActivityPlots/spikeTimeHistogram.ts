@@ -2,7 +2,7 @@ import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
 import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
 
-export class SpikeTimesHistogram extends SpikeActivityPanelModel {
+export class SpikeTimeHistogram extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.panel.xaxis = 1;
@@ -24,9 +24,10 @@ export class SpikeTimesHistogram extends SpikeActivityPanelModel {
   override async addData(activity: SpikeActivity): Promise<boolean> {
     return new Promise(resolve => {
       const x: number[] = activity.events.times;
+      const recordTime = activity.recordTime;
       const xbins: any = {
-        start: this.state.time.start,
-        end: this.state.time.end + 1,
+        start: recordTime[0],
+        end: recordTime[1] + 1,
         size: this.params[0].value,
       };
 
@@ -42,7 +43,7 @@ export class SpikeTimesHistogram extends SpikeActivityPanelModel {
             width: (xbins.end - xbins.start) / xbins.size > 100 ? 0 : 1,
           },
         },
-        name: 'Histogram of spike times in' + activity.recorder.view.label,
+        name: 'Time histogram of spikes in' + activity.recorder.view.label,
         opacity: 0.6,
         showlegend: false,
         source: 'x+y',

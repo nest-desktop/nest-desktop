@@ -1,7 +1,7 @@
 import { ActivityChartPanel } from '../activityChartPanel';
-import { AnalogSignalPlot } from './analogSignalPlot';
+import { AnalogSignalTimeSeries } from './analogSignalTimeSeries';
 
-export class NeuronAnalogSignalPlot extends AnalogSignalPlot {
+export class NeuronAnalogSignalTimeSeries extends AnalogSignalTimeSeries {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.panel.height = 20;

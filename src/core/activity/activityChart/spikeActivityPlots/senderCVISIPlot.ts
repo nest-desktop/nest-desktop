@@ -20,13 +20,14 @@ export class SenderCVISIPlot extends SpikeActivityPanelModel {
         items: [
           { text: 'linear', value: 'linear' },
           { text: 'spline', value: 'spline' },
-          { text: 'vertical-horizontal-vertical steps', value: 'vhv' },
-          { text: 'horizontal-vertical-horizontal steps', value: 'hvh' },
-          { text: 'vertical-horizontal steps', value: 'vh' },
-          { text: 'horizontal-vertical steps', value: 'hv' },
+          { text: 'steps', value: 'hvh' },
+          // { text: 'vertical-horizontal-vertical steps', value: 'vhv' },
+          // { text: 'horizontal-vertical-horizontal steps', value: 'hvh' },
+          // { text: 'vertical-horizontal steps', value: 'vh' },
+          // { text: 'horizontal-vertical steps', value: 'hv' },
         ],
         label: 'Line shape',
-        value: 'linear',
+        value: 'hvh',
       },
     ];
   }

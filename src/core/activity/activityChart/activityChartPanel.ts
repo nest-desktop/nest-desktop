@@ -2,19 +2,6 @@ import * as math from 'mathjs';
 
 import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { ActivityChartGraph } from './activityChartGraph';
-
-import { AnalogSignalHistogram } from './analogSignalPlots/analogSignalHistogram';
-import { AnalogSignalHeatmap } from './analogSignalPlots/analogSignalHeatmap';
-import { AnalogSignalHistogram2d } from './analogSignalPlots/analogSignalHistogram2d';
-import { AnalogSignalPlot } from './analogSignalPlots/analogSignalPlot';
-import { CVISIHistogram } from './spikeActivityPlots/CVISIHistogram';
-import { InterSpikeIntervalHistogramElephant } from './spikeActivityPlotsElephant/interSpikeIntervalHistogramElephant';
-import { InterSpikeIntervalHistogram } from './spikeActivityPlots/interSpikeIntervalHistogram';
-import { SenderCVISIPlot } from './spikeActivityPlots/senderCVISIPlot';
-import { SenderMeanISIPlot } from './spikeActivityPlots/senderMeanISIPlot';
-import { SenderSpikeCountPlot } from './spikeActivityPlots/senderSpikeCountPlot';
-import { SpikeTimesHistogramElephant } from './spikeActivityPlotsElephant/SpikeTimesHistogramElephant';
-import { SpikeTimesHistogram } from './spikeActivityPlots/spikeTimesHistogram';
 import { SpikeTimesRasterPlot } from './spikeActivityPlots/spikeTimesRasterPlot';
 
 export class ActivityChartPanel {
@@ -32,99 +19,6 @@ export class ActivityChartPanel {
       title: '',
     },
   };
-  private _models: any[] = [
-    {
-      activityType: 'analog',
-      component: AnalogSignalPlot,
-      id: 'analogSignalPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Analog signals',
-    },
-    {
-      activityType: 'analog',
-      component: AnalogSignalHistogram,
-      id: 'analogSignalHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'analog signals',
-    },
-    {
-      activityType: 'analog',
-      component: AnalogSignalHistogram2d,
-      id: 'analogSignalHistogram2d',
-      icon: 'mdi-map-outline',
-      label: '2d histogram of analog signals',
-    },
-    {
-      activityType: 'analog',
-      component: AnalogSignalHeatmap,
-      id: 'analogSignalHeatmap',
-      icon: 'mdi-map-outline',
-      label: 'heatmap of analog signals',
-    },
-    {
-      activityType: 'spike',
-      component: SpikeTimesRasterPlot,
-      id: 'spikeTimesRasterPlot',
-      icon: 'mdi-chart-scatter-plot',
-      label: 'Spike times',
-    },
-    {
-      activityType: 'spike',
-      component: SpikeTimesHistogram,
-      id: 'spikeTimesHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'Spike times',
-    },
-    {
-      activityType: 'spike',
-      component: SpikeTimesHistogramElephant,
-      id: 'spikeTimesHistogramElephant',
-      icon: 'mdi-chart-bar',
-      label: 'Spike times (Elephant)',
-    },
-    {
-      activityType: 'spike',
-      component: InterSpikeIntervalHistogram,
-      id: 'interSpikeIntervalHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'Inter-spike interval',
-    },
-    {
-      activityType: 'spike',
-      component: InterSpikeIntervalHistogramElephant,
-      id: 'interSpikeIntervalHistogramElephant',
-      icon: 'mdi-chart-bar',
-      label: 'Inter-spike interval (Elephant)',
-    },
-    {
-      activityType: 'spike',
-      component: CVISIHistogram,
-      id: 'CVISIHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'CV of ISI',
-    },
-    {
-      activityType: 'spike',
-      component: SenderSpikeCountPlot,
-      id: 'senderSpikeCountPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Spike count in each sender',
-    },
-    {
-      activityType: 'spike',
-      component: SenderMeanISIPlot,
-      id: 'senderMeanISIPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Mean ISI in each sender',
-    },
-    {
-      activityType: 'spike',
-      component: SenderCVISIPlot,
-      id: 'senderCVISIPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'CV ISI in each sender',
-    },
-  ];
   private _model: ActivityChartPanelModel;
   private _state = {
     initialized: false,
@@ -134,6 +28,7 @@ export class ActivityChartPanel {
 
   constructor(graph: ActivityChartGraph, panel: any = {}) {
     this._graph = graph;
+
     this.selectModel(
       panel.model ? panel.model.id : 'spikeTimesRasterPlot',
       panel.model
@@ -162,22 +57,6 @@ export class ActivityChartPanel {
 
   get model(): ActivityChartPanelModel {
     return this._model;
-  }
-
-  get models(): ActivityChartPanelModel[] {
-    return this._models;
-  }
-
-  get modelsAnalog(): ActivityChartPanelModel[] {
-    return this._models.filter(
-      (model: ActivityChartPanelModel) => model.activityType === 'analog'
-    );
-  }
-
-  get modelsSpike(): ActivityChartPanelModel[] {
-    return this._models.filter(
-      (model: ActivityChartPanelModel) => model.activityType === 'spike'
-    );
   }
 
   get params(): any[] {
@@ -230,7 +109,7 @@ export class ActivityChartPanel {
     modelSpec: any = {}
   ): void {
     if (modelId) {
-      const model: any = this._models.find(
+      const model: any = this._graph.models.find(
         (model: any) => model.id === modelId
       );
       if (model) {
@@ -270,10 +149,10 @@ export class ActivityChartPanel {
     const panelIdx = panels.indexOf(this);
     let margin = 0.005;
 
-    // Set margin for panels with same xaxis.
-    if (panelIdx > 0 && panelIdx < panels.length - 1) {
-      const nextPanel = panels[panelIdx + 1];
-      if (this.xaxis === nextPanel.xaxis) {
+    // Set larger margin for panels with different xaxis to previous one.
+    if (panelIdx > 0) {
+      const prevPanel = panels[panelIdx - 1];
+      if (this.xaxis != prevPanel.xaxis) {
         margin = 0.1;
       }
     }

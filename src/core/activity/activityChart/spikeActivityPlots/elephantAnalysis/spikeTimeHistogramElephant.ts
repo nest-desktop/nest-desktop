@@ -1,8 +1,8 @@
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeActivity } from '../../spikeActivity';
-import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
+import { ActivityChartPanel } from '../../activityChartPanel';
+import { SpikeActivity } from '../../../spikeActivity';
+import { SpikeActivityPanelModel } from '../../spikeActivityPanelModel';
 
-export class SpikeTimesHistogramElephant extends SpikeActivityPanelModel {
+export class SpikeTimeHistogramElephant extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.panel.xaxis = 1;
@@ -42,7 +42,7 @@ export class SpikeTimesHistogramElephant extends SpikeActivityPanelModel {
           // { text: 'horizontal-vertical steps', value: 'hv' },
         ],
         label: 'Line shape',
-        value: 'linear',
+        value: 'hvh',
         show: () => this.plotMode.includes('lines'),
       },
       {
@@ -110,47 +110,49 @@ export class SpikeTimesHistogramElephant extends SpikeActivityPanelModel {
    */
   override async addData(activity: SpikeActivity): Promise<boolean> {
     return new Promise(resolve => {
-      this.requestAnalysis(activity).then((response: any) => {
-        const signal = response.data.signal;
-        this.state.units = signal.units;
-        const x = signal.times.map(
-          (time: number) => time * 1000 + this.xbins.size / 2
-        );
-        const y = signal.values[0];
+      this.requestAnalysis(activity)
+        .then((response: any) => {
+          const signal = response.data.signal;
+          this.state.units = signal.units;
+          const x = signal.times.map(
+            (time: number) => time * 1000 + this.xbins.size / 2
+          );
+          const y = signal.values[0];
 
-        this.data.push({
-          activityIdx: activity.idx,
-          hoverinfo: 'y',
-          fill: this.fillArea,
-          legendgroup: 'spikes' + activity.idx,
-          line: {
-            shape: this.lineShape,
-          },
-          marker: {
-            color: activity.recorder.view.color,
+          this.data.push({
+            activityIdx: activity.idx,
+            hoverinfo: 'y',
+            fill: this.fillArea,
+            legendgroup: 'spikes' + activity.idx,
             line: {
-              color: activity.project.app.darkMode ? '#121212' : 'white',
-              width:
-                (this.xbins.end - this.xbins.start) / this.xbins.size > 100
-                  ? 0
-                  : 1,
+              shape: this.lineShape,
             },
-          },
-          mode: this.plotMode,
-          name: 'Histogram of spike times in' + activity.recorder.view.label,
-          opacity: 0.6,
-          showlegend: false,
-          text: y.map(String),
-          textposition: 'auto',
-          type: this.plotType,
-          visible: this.state.visible,
-          width: this.xbins.size,
-          x,
-          y,
-        });
+            marker: {
+              color: activity.recorder.view.color,
+              line: {
+                color: activity.project.app.darkMode ? '#121212' : 'white',
+                width:
+                  (this.xbins.end - this.xbins.start) / this.xbins.size > 100
+                    ? 0
+                    : 1,
+              },
+            },
+            mode: this.plotMode,
+            name: 'Histogram of spike times in' + activity.recorder.view.label,
+            opacity: 0.6,
+            showlegend: false,
+            text: y.map(String),
+            textposition: 'auto',
+            type: this.plotType,
+            visible: this.state.visible,
+            width: this.xbins.size,
+            x,
+            y,
+          });
 
-        resolve(true);
-      });
+          resolve(true);
+        })
+        .catch(() => resolve(false));
     });
   }
 

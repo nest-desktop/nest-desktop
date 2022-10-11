@@ -33,7 +33,8 @@ export class ActivityGraph {
    * Initialize activity graph.
    */
   init(activityGraph: any = {}): void {
-    this.initActivityChartGraph(activityGraph.panels || []);
+    const panels = activityGraph.chart ? activityGraph.chart.panels : [];
+    this.initActivityChartGraph(panels);
     this.initActivityAnimationGraph();
   }
 
@@ -87,6 +88,8 @@ export class ActivityGraph {
    * @return activity graph object
    */
   toJSON(): any {
-    return this._activityChartGraph.toJSON();
+    return {
+      chart: this._activityChartGraph.toJSON(),
+    };
   }
 }

@@ -22,6 +22,7 @@ export class Activity {
       fromTime: 0,
       records: [],
     });
+
     this.init(activity);
   }
 
@@ -42,6 +43,16 @@ export class Activity {
 
   get endtime(): number {
     return this._recorder.network.project.simulation.state.biologicalTime;
+  }
+
+  get recordTime(): number[] {
+    const paramStart = this._recorder.getParameter('start');
+    const starttime =
+      paramStart && paramStart.state.visible ? paramStart.value : 0;
+    const paramEnd = this._recorder.getParameter('end');
+    const endtime =
+      paramEnd && paramEnd.state.visible ? paramStart.value : this.endtime;
+    return [starttime, endtime];
   }
 
   get events(): any {

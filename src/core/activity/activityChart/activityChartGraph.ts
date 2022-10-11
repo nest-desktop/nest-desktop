@@ -1,13 +1,22 @@
 import * as Plotly from 'plotly.js-dist-min';
 
 import { ActivityChartPanel } from './activityChartPanel';
+import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { Project } from '../../project/project';
+import { analogSignalPlots } from './analogSignalPlots/analogSignalPlots';
+import { spikeActivityPlots } from './spikeActivityPlots/spikeActivityPlots';
+import { spikeActivityPlotsElephant } from './spikeActivityPlots/elephantAnalysis/spikeActivityPlotsElephant';
 
 export class ActivityChartGraph {
   private _config: any = {};
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
+  private _models: any[] = [
+    ...analogSignalPlots,
+    ...spikeActivityPlots,
+    ...spikeActivityPlotsElephant,
+  ];
   private _options: any = {};
   private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
@@ -92,6 +101,30 @@ export class ActivityChartGraph {
     return this._layout;
   }
 
+  get models(): ActivityChartPanelModel[] {
+    return this._models;
+  }
+
+  get modelsAnalog(): ActivityChartPanelModel[] {
+    return this._models.filter(
+      (model: ActivityChartPanelModel) => model.activityType === 'analog'
+    );
+  }
+
+  get modelsSpike(): ActivityChartPanelModel[] {
+    return this._models.filter(
+      (model: ActivityChartPanelModel) =>
+        model.activityType === 'spike' && model['source'] != 'elephant'
+    );
+  }
+
+  get modelsSpikeElephant(): ActivityChartPanelModel[] {
+    return this._models.filter(
+      (model: ActivityChartPanelModel) =>
+        model.activityType === 'spike' && model['source'] === 'elephant'
+    );
+  }
+
   get options(): any {
     return this._options;
   }
@@ -148,11 +181,11 @@ export class ActivityChartGraph {
       panels.forEach((panel: any) => this.addPanel(panel));
     } else {
       if (this._project.state.activities.hasSomeAnalogRecorders) {
-        this.addPanel({ model: { id: 'analogSignalPlot' } });
+        this.addPanel({ model: { id: 'analogSignalTimeSeries' } });
       }
       if (this._project.state.activities.hasSomeSpikeRecorders) {
         this.addPanel({ model: { id: 'spikeTimesRasterPlot' } });
-        this.addPanel({ model: { id: 'spikeTimesHistogram' } });
+        this.addPanel({ model: { id: 'spikeTimeHistogram' } });
       }
     }
 

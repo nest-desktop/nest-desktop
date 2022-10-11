@@ -3,7 +3,7 @@ import { AnalogSignalPanelModel } from '../analogSignalPanelModel';
 import { Node } from '../../../node/node';
 import { NodeRecord } from '../../../node/nodeRecord';
 
-export class AnalogSignalPlot extends AnalogSignalPanelModel {
+export class AnalogSignalTimeSeries extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.panel.xaxis = 1;

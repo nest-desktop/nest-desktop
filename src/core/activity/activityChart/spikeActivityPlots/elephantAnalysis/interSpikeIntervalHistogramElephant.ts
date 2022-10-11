@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeActivity } from '../../spikeActivity';
-import { SpikeActivityPanelModel } from '../spikeActivityPanelModel';
+import { ActivityChartPanel } from '../../activityChartPanel';
+import { SpikeActivity } from '../../../spikeActivity';
+import { SpikeActivityPanelModel } from '../../spikeActivityPanelModel';
 
 export class InterSpikeIntervalHistogramElephant extends SpikeActivityPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
@@ -21,6 +21,29 @@ export class InterSpikeIntervalHistogramElephant extends SpikeActivityPanelModel
     this.state.xaxisType = 'linear';
   }
 
+  async requestAnalysis(activity: SpikeActivity): Promise<any> {
+    const units: any = { time: 'ms' };
+    const spiketrains: any[] = activity.times.map((times: number[]) => ({
+      times,
+      t_stop: this.state.time.end + 1,
+      units: 'ms',
+    }));
+    const data = {
+      data: {
+        spiketrains,
+      },
+      units,
+    };
+    const config = {
+      headers: { 'Content-type': 'application/json', Accept: 'text/plain' },
+    };
+
+    return this.panel.graph.project.app.backends.elephantAnalysis.instance.post(
+      'api/statistics/isi',
+      data,
+      config
+    );
+  }
   /**
    * Add data for spike time histogram.
    */
@@ -30,24 +53,7 @@ export class InterSpikeIntervalHistogramElephant extends SpikeActivityPanelModel
         start: this.state.time.start,
         size: this.params[0].value,
       };
-      const units: any = { time: 'ms' };
-      const spiketrains: any[] = activity.times.map((times: number[]) => ({
-        times,
-        t_stop: this.state.time.end + 1,
-        units: 'ms',
-      }));
-      const data = {
-        data: {
-          spiketrains,
-        },
-        units,
-      };
-      const config = {
-        headers: { 'Content-type': 'application/json', Accept: 'text/plain' },
-      };
-
-      this.panel.graph.project.app.backends.elephantAnalysis.instance
-        .post('api/statistics/isi', data, config)
+      this.requestAnalysis(activity)
         .then((response: any) => {
           const data = response.data;
           const x = data.flat();
@@ -76,7 +82,8 @@ export class InterSpikeIntervalHistogramElephant extends SpikeActivityPanelModel
           });
 
           resolve(true);
-        });
+        })
+        .catch(() => resolve(false));
     });
   }
 
