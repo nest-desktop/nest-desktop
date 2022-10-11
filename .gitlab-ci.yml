@@ -20,7 +20,7 @@ build_app:
     - when: always
   before_script:
     - touch .env
-    - VERSION=`node -p "require('./package.json').version"`
+    - VERSION="$(node -p "require('./package.json').version")"
     - |-
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
         echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
@@ -54,7 +54,7 @@ build_electron:
       when: never
     - when: always
   before_script:
-    - VERSION=`node -p "require('./package.json').version"`
+    - VERSION="$(node -p "require('./package.json').version")"
     - |-
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
         echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
