@@ -11,6 +11,7 @@ export class NetworkGraph {
   private _config: any = {
     nodeRadius: 20,
     strokeWidth: 3,
+    transparentWorkspace: true,
   };
   private _connectionGraph: ConnectionGraph;
   private _modelAssignGraph: ModelAssignGraph;
@@ -117,5 +118,49 @@ export class NetworkGraph {
    */
   resize(width: number, height: number): void {
     this._selector.attr('width', width).attr('height', height);
+  }
+
+  /**
+   * Download network graph as svg image.
+   */
+  downloadImage(): void {
+    // Get svg element.
+    var svg = this._selector.node();
+
+    // Get svg source.
+    var serializer = new XMLSerializer();
+    var source = serializer.serializeToString(svg);
+
+    //  Add name spaces.
+    if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+      source = source.replace(
+        /^<svg/,
+        '<svg xmlns="http://www.w3.org/2000/svg"'
+      );
+    }
+    if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
+      source = source.replace(
+        /^<svg/,
+        '<svg xmlns:xlink="http://www.w3.org/1999/xlink"'
+      );
+    }
+
+    // Add xml declaration.
+    source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+    // Convert svg source to URI data scheme.
+    var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
+
+    // Create download link.
+    var downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = `nest_desktop-${this._network.project.name}-${this._network.project.app.datetime}.svg`;
+    document.body.appendChild(downloadLink);
+
+    // Apply download.
+    downloadLink.click();
+
+    // Remove download link.
+    document.body.removeChild(downloadLink);
   }
 }

@@ -5,6 +5,7 @@
       absolute
       dense
       flat
+      height="32"
       style="width: 100%; background-color: transparent"
     >
       <div v-if="state.network">
@@ -68,7 +69,48 @@
         </span>
 
         <span>
-          <v-dialog max-width="450" v-model="state.dialog">
+          <v-dialog max-width="450" v-model="state.dialogDownload">
+            <template #activator="{ on, attrs }">
+              <v-btn
+                icon
+                small
+                title="Download network graph"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon small v-text="'mdi-camera'" />
+              </v-btn>
+            </template>
+
+            <v-card>
+              <v-card-title v-text="'Download network graph as image'" />
+              <v-card-text>
+                <v-checkbox
+                  label="Transparent background"
+                  v-model="state.graph.config.transparentWorkspace"
+                />
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  @click="state.dialogDownload = false"
+                  outlined
+                  small
+                  text
+                  v-text="'close'"
+                />
+                <v-btn
+                  @click="DownloadNetworkGraph"
+                  outlined
+                  small
+                  v-text="'save'"
+                />
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <v-dialog max-width="450" v-model="state.dialogDelete">
             <template #activator="{ on, attrs }">
               <v-btn
                 :disabled="state.network.isEmpty"
@@ -81,12 +123,13 @@
                 <v-icon small v-text="'mdi-trash-can-outline'" />
               </v-btn>
             </template>
+
             <v-card>
               <v-card-title v-text="'Are you sure to delete this network?'" />
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-                  @click="state.dialog = false"
+                  @click="state.dialogDelete = false"
                   outlined
                   small
                   text
@@ -174,7 +217,8 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
-      dialog: false,
+      dialogDelete: false,
+      dialogDownload: false,
       graph: props.graph as NetworkGraph,
       network: props.network as Network,
     });
@@ -184,11 +228,19 @@ export default Vue.extend({
      */
     const deleteNetwork = () => {
       state.network.empty();
-      state.dialog = false;
+      state.dialogDelete = false;
+    };
+
+    /**
+     * Download network graph as svg.
+     */
+    const DownloadNetworkGraph = () => {
+      state.graph.downloadImage();
+      state.dialogDownload = false;
     };
 
     watch(
-      () => [props.graph, props.network],
+      () => [props.graph, props.network, props.transparentWorkspace],
       () => {
         state.graph = props.graph as NetworkGraph;
         state.network = props.network as Network;
@@ -197,6 +249,7 @@ export default Vue.extend({
 
     return {
       deleteNetwork,
+      DownloadNetworkGraph,
       state,
     };
   },
