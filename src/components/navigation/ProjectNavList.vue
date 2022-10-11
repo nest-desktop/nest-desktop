@@ -74,7 +74,15 @@
                 v-for="project in projectStore.filteredProjects"
               >
                 <v-list-item-content>
-                  <v-list-item-title v-text="project.name" />
+                  <v-list-item-title>
+                    {{ project.name }}
+                    <span
+                      style="font-size: 9px"
+                      v-if="appConfig.devMode && project.version"
+                    >
+                      ({{ project.version }})
+                    </span>
+                  </v-list-item-title>
 
                   <v-list-item-subtitle>
                     {{ project.network.nodes.length }} nodes,
@@ -213,6 +221,7 @@ export default Vue.extend({
     };
 
     return {
+      appConfig: core.app.config,
       projectStore,
       saveProject,
       state,
