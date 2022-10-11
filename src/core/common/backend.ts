@@ -1,22 +1,19 @@
 import axios from 'axios';
 import combineURLs from 'axios/lib/helpers/combineURLs';
+import { reactive, UnwrapRef } from '@vue/composition-api';
 
 import { Config } from './config';
 
 export class Backend extends Config {
-  private _state: any = {
-    ready: false,
-    version: {},
-    seek: {
-      path: '/',
-      port: 5000,
-      versionPath: '',
-    },
-  };
+  private _state: UnwrapRef<any>;
 
   constructor(name: string, seek = { path: '', port: 5000, versionPath: '' }) {
     super(name);
-    this._state.seek = seek;
+    this._state = reactive({
+      ready: false,
+      seek,
+      version: {},
+    });
   }
 
   get host(): string {
