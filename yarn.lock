@@ -10307,7 +10307,7 @@ matcher@^3.0.0:
   dependencies:
     escape-string-regexp "^4.0.0"
 
-mathjs@^11.1:
+mathjs@^11.3:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-11.3.0.tgz#17d7504ab27445b3c7e847f6de4cef26e16381e6"
   integrity sha512-HAUFLxyH8WMSDisNljQFIKjp//d1iL0C36nhGEJFwzdMb46gACMG1E8Ze06sES4hJ5jHDv5ieq7r3mDDcU/d4g==
@@ -11690,7 +11690,7 @@ plist@^3.0.1, plist@^3.0.4:
     base64-js "^1.5.1"
     xmlbuilder "^15.1.1"
 
-plotly.js-dist-min@^2.14:
+plotly.js-dist-min@^2.15:
   version "2.15.1"
   resolved "https://registry.yarnpkg.com/plotly.js-dist-min/-/plotly.js-dist-min-2.15.1.tgz#d91bdc40302e85a085b6cfa9722685079a00cfc2"
   integrity sha512-g0s/HKdvygTpc1FCmZPNdooNcD+p0GGAwWmXYGGlB+pBsdWfztH/bTuhuFvcQhSDouaNjHXF16grIsQIlubcEQ==
