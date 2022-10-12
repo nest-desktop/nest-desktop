@@ -31,31 +31,10 @@
             Add panel
           </v-btn>
         </template>
-        <v-list dense>
-          <v-subheader style="height: 28px" v-text="'Analog signals'" />
-          <v-list-item
-            :disabled="
-              !state.graph.project.state.activities.hasSomeAnalogRecorders
-            "
-            :key="'analogPanel' + index"
-            @click="addPanel(model.id)"
-            v-for="(model, index) in state.graph.panel.modelsAnalog"
-          >
-            <v-icon left small v-text="model.icon" />
-            <v-list-item-title v-text="model.label" />
-          </v-list-item>
-
-          <v-subheader style="height: 28px" v-text="'Spikes'" />
-          <v-list-item
-            :disabled="!state.graph.project.state.activities.hasSomeSpikeRecorders"
-            :key="'spikePanel' + index"
-            @click="addPanel(model.id)"
-            v-for="(model, index) in state.graph.panel.modelsSpike"
-          >
-            <v-icon class="mr-2" small v-text="model.icon" />
-            <v-list-item-title v-text="model.label" />
-          </v-list-item>
-        </v-list>
+        <ActivityChartPanelMenuPopover
+          :graph="state.graph"
+          @changed="addPanel"
+        />
       </v-menu>
     </v-toolbar>
 
@@ -181,6 +160,7 @@ import draggable from 'vuedraggable';
 
 import { ActivityChartGraph } from '@/core/activity/activityChart/activityChartGraph';
 import { NodeRecord } from '@/core/node/nodeRecord';
+import ActivityChartPanelMenuPopover from '@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue';
 import ActivityChartPanelToolbar from '@/components/activity/activityChart/ActivityChartPanelToolbar.vue';
 import core from '@/core';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
@@ -188,6 +168,7 @@ import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 export default Vue.extend({
   name: 'ActivityChartController',
   components: {
+    ActivityChartPanelMenuPopover,
     ActivityChartPanelToolbar,
     draggable,
     ParameterEdit,
