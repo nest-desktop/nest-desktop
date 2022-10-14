@@ -2,6 +2,7 @@
   <div class="ProjectsImportDialog">
     <v-card>
       <v-card-title v-text="'Import projects'" />
+      <v-card-subtitle v-text="'Select source and file'" />
 
       <v-card-text>
         <v-row class="mb-1">
@@ -9,7 +10,7 @@
             <v-select
               :items="state.items"
               dense
-              label="Select a source"
+              label="Source"
               v-model="state.source"
             >
               <template slot="selection" slot-scope="data">
@@ -30,7 +31,7 @@
                   :items="state.trees"
                   @change="getFilesFromGithub"
                   dense
-                  label="Select path"
+                  label="Path"
                   prepend-icon="mdi-github"
                   v-model="state.selectedTree"
                 />
@@ -41,17 +42,18 @@
                   :items="state.files"
                   @change="getProjectsFromGithub"
                   dense
-                  label="Select file"
+                  label="File"
                   v-model="state.selectedFile"
                 />
               </v-col>
             </v-row>
             <v-file-input
-              @change="getProjectsFromFile"
+              @change="getProjectsFromDrive"
               dense
-              label="File input"
+              label="File"
+              title="Click to select a file"
               truncate-length="100"
-              v-show="state.source === 'file'"
+              v-show="state.source === 'drive'"
             />
             <v-text-field
               @change="getProjectsFromUrl"
@@ -60,8 +62,9 @@
               dense
               flat
               full-width
-              label="Enter URL"
+              label="URL"
               prepend-icon="mdi-web"
+              title="Please enter the project's URL"
               v-show="state.source === 'url'"
             />
           </v-col>
@@ -72,7 +75,7 @@
             v-text="
               `${state.projects.length} project${
                 state.projects.length > 1 ? 's' : ''
-              } found. Select projects to import.`
+              } found. Select projects to import:`
             "
           />
 
@@ -159,8 +162,8 @@ export default Vue.extend({
       items: [
         {
           icon: 'mdi-paperclip',
-          text: 'file',
-          value: 'file',
+          text: 'drive',
+          value: 'drive',
         },
         {
           icon: 'mdi-github',
@@ -213,9 +216,9 @@ export default Vue.extend({
     };
 
     /**
-     * Get projects from file.
+     * Get projects from drive.
      */
-    const getProjectsFromFile = (file: any) => {
+    const getProjectsFromDrive = (file: any) => {
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.addEventListener('load', (event: any) =>
@@ -298,7 +301,7 @@ export default Vue.extend({
       closeDialog: () => core.app.closeDialog(),
       getFilesFromGithub,
       getProjectsFromGithub,
-      getProjectsFromFile,
+      getProjectsFromDrive,
       getProjectsFromUrl,
       importProjects,
       state,
