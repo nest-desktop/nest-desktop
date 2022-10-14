@@ -1,8 +1,33 @@
 <template>
   <div class="ModelsDialog">
     <v-dialog
+      max-width="420"
+      v-if="dialogState.action === 'reload'"
+      v-model="dialogState.open"
+    >
+      <v-card>
+        <v-card-title v-text="'Are you sure to reload all models?'" />
+
+        <v-card-text>
+          The models will be reloaded from the database.
+          <br />
+          Any unsaved content in models will be deleted!
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <v-btn @click="reloadModels" outlined small>
+            <v-icon left v-text="'mdi-reload'" />
+            reload
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
       max-width="480"
-      v-if="appState.dialog.action === 'reset'"
+      v-else-if="appState.dialog.action === 'reset'"
       v-model="appState.dialog.open"
     >
       <v-card>
@@ -154,11 +179,22 @@ export default Vue.extend({
     };
 
     /**
+     * Reload the models from the database.
+     */
+    const reloadModels = () => {
+      core.app.model.initModelList().then(() => {
+        core.app.model.view.redirect();
+      });
+      core.app.closeDialog();
+    };
+
+    /**
      * Reset model database.
      */
     const resetModels = () => {
       core.app.model.resetDatabase();
       core.app.closeDialog();
+      reloadModels();
     };
 
     return {
@@ -166,6 +202,7 @@ export default Vue.extend({
       closeDialog: () => core.app.closeDialog(),
       deleteModels,
       exportModels,
+      reloadModels,
       resetModels,
     };
   },
