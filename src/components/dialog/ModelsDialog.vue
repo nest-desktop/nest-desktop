@@ -66,10 +66,14 @@
 
     <v-dialog max-width="1024" v-else v-model="appState.dialog.open">
       <v-card>
-        <v-card-title
-          v-if="appState.dialog.data.models.length !== 0"
-          v-text="`Select models to ${appState.dialog.action}.`"
-        />
+        <v-card-title>
+          {{
+            appState.dialog.action.charAt(0).toUpperCase() +
+            appState.dialog.action.slice(1)
+          }}
+        </v-card-title>
+        <v-card-subtitle v-text="`Select projects to ${dialogState.action}`">
+        </v-card-subtitle>
 
         <v-card-text>
           <v-simple-table v-if="appState.dialog.data.models.length !== 0">
