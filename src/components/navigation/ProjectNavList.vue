@@ -188,7 +188,7 @@ export default Vue.extend({
     });
 
     /**
-     * Open a dialog for projects. to export, import or delete
+     * Open a dialog to export, import or delete projects. 
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {

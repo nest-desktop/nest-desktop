@@ -37,10 +37,10 @@
         <v-row class="ma-0" style="height: 96px">
           <v-text-field
             @click:append="modelStore.clearSearch"
+            append-icon="mdi-magnify"
             clearable
             hide-details
             label="Search model"
-            append-icon="mdi-magnify"
             v-model="modelStore.state.searchTerm"
           />
           <div style="width: 100%">
@@ -383,7 +383,7 @@ export default Vue.extend({
     };
 
     /**
-     * Open a dialog for models to export, import or delete.
+     * Open a dialog to export, import or delete models
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {
