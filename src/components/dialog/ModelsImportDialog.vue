@@ -2,6 +2,7 @@
   <div class="ModelsImportDialog">
     <v-card>
       <v-card-title v-text="'Import models'" />
+      <v-card-subtitle v-text="'Select source and file'" />
 
       <v-card-text>
         <v-row class="mb-1">
@@ -9,7 +10,7 @@
             <v-select
               :items="state.items"
               dense
-              label="Select a source"
+              label="Source"
               v-model="state.source"
             >
               <template slot="selection" slot-scope="data">
@@ -30,7 +31,7 @@
                   :items="state.trees"
                   @change="getFilesFromGithub"
                   dense
-                  label="Select element type"
+                  label="Element type"
                   prepend-icon="mdi-github"
                   v-model="state.selectedTree"
                 />
@@ -41,17 +42,18 @@
                   :items="state.files"
                   @change="getModelFromGithub"
                   dense
-                  label="Select file"
+                  label="File"
                   v-model="state.selectedFile"
                 />
               </v-col>
             </v-row>
             <v-file-input
-              @change="getModelFromFile"
+              @change="getModelsFromDrive"
               dense
-              label="File input"
+              label="File"
+              title="Click to select a file"
               truncate-length="100"
-              v-show="state.source === 'file'"
+              v-show="state.source === 'drive'"
             />
             <v-text-field
               @change="getModelFromUrl"
@@ -60,8 +62,9 @@
               dense
               flat
               full-width
-              label="Enter URL"
+              label="URL"
               prepend-icon="mdi-web"
+              title="Please enter the model's URL"
               v-show="state.source === 'url'"
             />
           </v-col>
@@ -72,7 +75,7 @@
             v-text="
               `${state.models.length} model${
                 state.models.length > 1 ? 's' : ''
-              } found. Select models to import.`
+              } found. Select models to import:`
             "
           />
 
@@ -152,8 +155,8 @@ export default Vue.extend({
       items: [
         {
           icon: 'mdi-paperclip',
-          text: 'file',
-          value: 'file',
+          text: 'drive',
+          value: 'drive',
         },
         {
           icon: 'mdi-github',
@@ -206,9 +209,9 @@ export default Vue.extend({
     };
 
     /**
-     * Get model from file.
+     * Get model from drive.
      */
-    const getModelFromFile = (file: any) => {
+    const getModelsFromDrive = (file: any) => {
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.addEventListener('load', (event: any) =>
@@ -217,7 +220,7 @@ export default Vue.extend({
     };
 
     /**
-     * Get trees from github.
+     * Get trees from GitHub.
      */
     const getTreesFromGithub = () => {
       state.selectedFile = {};
@@ -320,7 +323,7 @@ export default Vue.extend({
       closeDialog: () => core.app.closeDialog(),
       getFilesFromGithub,
       getModelFromGithub,
-      getModelFromFile,
+      getModelsFromDrive,
       getModelFromUrl,
       importModels,
       state,

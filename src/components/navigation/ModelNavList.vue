@@ -185,7 +185,7 @@ export default Vue.extend({
           icon: 'mdi-reload',
           title: 'Reload models',
           onClick: () => {
-            modelStore.initModelList();
+            openDialog('reload');
           },
         },
         {
@@ -390,7 +390,10 @@ export default Vue.extend({
       // Reset states for model list.
       core.app.model.resetModelStates();
 
-      const models = action === 'reset' ? [] : core.app.model.state.models;
+      const models =
+        action === 'reset' || action === 'reload'
+          ? []
+          : core.app.model.state.models;
 
       // Open dialog for models.
       core.app.openDialog('models', action, { models });

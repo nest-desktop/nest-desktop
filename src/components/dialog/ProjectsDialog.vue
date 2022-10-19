@@ -1,8 +1,33 @@
 <template>
   <div class="ProjectsDialog">
     <v-dialog
+      max-width="420"
+      v-if="dialogState.action === 'reload'"
+      v-model="dialogState.open"
+    >
+      <v-card>
+        <v-card-title v-text="'Are you sure to reload all projects?'" />
+
+        <v-card-text>
+          The projects will be reloaded from the database.
+          <br />
+          Any unsaved content in projects will be deleted!
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <v-btn @click="reloadProjects" outlined small>
+            <v-icon left v-text="'mdi-reload'" />
+            reload
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
       max-width="480"
-      v-if="dialogState.action === 'reset'"
+      v-else-if="dialogState.action === 'reset'"
       v-model="dialogState.open"
     >
       <v-card>
@@ -11,7 +36,7 @@
         <v-card-text>
           The database for projects will be deleted and then reset.
           <br />
-          Your modified projects will be lost!
+          Your modified projects will be lost! Please export them first!
         </v-card-text>
 
         <v-card-actions>
@@ -35,13 +60,17 @@
 
     <v-dialog max-width="1024" v-else v-model="dialogState.open">
       <v-card>
-        <v-card-title
-          v-if="dialogState.data.projects.length !== 0"
-          v-text="`Select projects to ${dialogState.action}.`"
-        />
+        <v-card-title>
+          {{
+            dialogState.action.charAt(0).toUpperCase() +
+            dialogState.action.slice(1)
+          }}
+        </v-card-title>
+        <v-card-subtitle v-text="`Select projects to ${dialogState.action}`">
+        </v-card-subtitle>
 
         <v-card-text>
-          <v-simple-table v-if="dialogState.data.projects.length > 0">
+          <v-simple-table>
             <template #default>
               <thead>
                 <tr>
@@ -61,7 +90,10 @@
                   />
                 </tr>
               </thead>
-              <tbody :key="projectStore.state.numLoaded">
+              <tbody
+                :key="projectStore.state.numLoaded"
+                v-if="dialogState.data.projects.length > 0"
+              >
                 <tr
                   :key="index"
                   v-for="(project, index) in dialogState.data.projects"
@@ -133,6 +165,9 @@
                     </td>
                   </template>
                 </tr>
+              </tbody>
+              <tbody v-else>
+                No projects found
               </tbody>
             </template>
           </v-simple-table>
@@ -211,6 +246,16 @@ export default Vue.extend({
     };
 
     /**
+     * Reload the projects from the database.
+     */
+    const reloadProjects = () => {
+      core.app.project.initProjectList().then(() => {
+        core.app.project.view.redirect();
+      });
+      core.app.closeDialog();
+    };
+
+    /**
      * Reset project database.
      */
     const resetProjects = () => {
@@ -225,6 +270,7 @@ export default Vue.extend({
       deleteProjects,
       dialogState,
       exportProjects,
+      reloadProjects,
       resetProjects,
       projectStore: core.app.project,
     };

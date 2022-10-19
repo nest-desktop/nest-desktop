@@ -1,8 +1,33 @@
 <template>
   <div class="ModelsDialog">
     <v-dialog
+      max-width="420"
+      v-if="appState.dialog.action === 'reload'"
+      v-model="appState.dialog.open"
+    >
+      <v-card>
+        <v-card-title v-text="'Are you sure to reload all models?'" />
+
+        <v-card-text>
+          The models will be reloaded from the database.
+          <br />
+          Any unsaved content in models will be deleted!
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <v-btn @click="reloadModels" outlined small>
+            <v-icon left v-text="'mdi-reload'" />
+            reload
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
       max-width="480"
-      v-if="appState.dialog.action === 'reset'"
+      v-else-if="appState.dialog.action === 'reset'"
       v-model="appState.dialog.open"
     >
       <v-card>
@@ -41,10 +66,16 @@
 
     <v-dialog max-width="1024" v-else v-model="appState.dialog.open">
       <v-card>
-        <v-card-title
-          v-if="appState.dialog.data.models.length !== 0"
-          v-text="`Select models to ${appState.dialog.action}.`"
-        />
+        <v-card-title>
+          {{
+            appState.dialog.action.charAt(0).toUpperCase() +
+            appState.dialog.action.slice(1)
+          }}
+        </v-card-title>
+        <v-card-subtitle
+          v-text="`Select projects to ${appState.dialog.action}`"
+        >
+        </v-card-subtitle>
 
         <v-card-text>
           <v-simple-table v-if="appState.dialog.data.models.length !== 0">
@@ -154,11 +185,22 @@ export default Vue.extend({
     };
 
     /**
+     * Reload the models from the database.
+     */
+    const reloadModels = () => {
+      core.app.model.initModelList().then(() => {
+        core.app.model.view.redirect();
+      });
+      core.app.closeDialog();
+    };
+
+    /**
      * Reset model database.
      */
     const resetModels = () => {
       core.app.model.resetDatabase();
       core.app.closeDialog();
+      reloadModels();
     };
 
     return {
@@ -166,6 +208,7 @@ export default Vue.extend({
       closeDialog: () => core.app.closeDialog(),
       deleteModels,
       exportModels,
+      reloadModels,
       resetModels,
     };
   },
