@@ -88,18 +88,8 @@ export class ModelStore {
           (this._state.models = models.map(
             (model: any) => new Model(this._app, model)
           ))
-      )
-      // reload the view
-      .then(() => {
-        const currentRoute =
-          this._app.vueSetupContext.root.$router.currentRoute;
-        if (currentRoute.name === 'modelId') {
-          this.model =
-            this.getModel(currentRoute.params.id) ||
-            this.getModel(this.recentModelId);
-          this.view.redirect();
-        }
-      });
+      );
+    // TODO: Refresh the view
   }
 
   /**
