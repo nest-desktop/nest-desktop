@@ -188,20 +188,25 @@ export default Vue.extend({
     });
 
     /**
-     * Open a dialog to export, import or delete projects. 
+     * Open a dialog to export, import or delete projects.
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {
       // Reset states for project list.
-      // core.app.project.resetProjectStates();
+      core.app.project.resetProjectStates();
 
-      const projects =
+      const projects: (Project | any)[] =
         action === 'reset' ? [] : core.app.project.state.projects;
 
       // Open dialog for projects.
       core.app.openDialog('projects', action, { projects });
     };
 
+    /**
+     * Save project.
+     * @param e Mouse event to prevent defaults
+     * @param project Project object
+     */
     const saveProject = (e: MouseEvent, project: Project) => {
       e.preventDefault();
       project.save();

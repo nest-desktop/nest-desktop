@@ -77,7 +77,7 @@ export default Vue.extend({
     const openDialog = (action: string = 'export') => {
 
       // Reset states for project list.
-      // core.app.project.resetProjectStates();
+      core.app.project.resetProjectStates();
 
       const projects =
         action === 'reset' ? [] : core.app.project.state.projects;
