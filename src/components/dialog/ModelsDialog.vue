@@ -2,8 +2,8 @@
   <div class="ModelsDialog">
     <v-dialog
       max-width="420"
-      v-if="dialogState.action === 'reload'"
-      v-model="dialogState.open"
+      v-if="appState.dialog.action === 'reload'"
+      v-model="appState.dialog.open"
     >
       <v-card>
         <v-card-title v-text="'Are you sure to reload all models?'" />
@@ -72,7 +72,9 @@
             appState.dialog.action.slice(1)
           }}
         </v-card-title>
-        <v-card-subtitle v-text="`Select projects to ${dialogState.action}`">
+        <v-card-subtitle
+          v-text="`Select projects to ${appState.dialog.action}`"
+        >
         </v-card-subtitle>
 
         <v-card-text>
