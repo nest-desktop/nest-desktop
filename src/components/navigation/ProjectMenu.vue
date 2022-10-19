@@ -11,8 +11,8 @@
               :key="connection.idx"
               v-for="connection in state.project.network.connections"
             >
-              {{ connection.source.model.label }} ->
-              {{ connection.target.model.label }}
+              {{ connection.source.view.label }} ->
+              {{ connection.target.view.label }}
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -180,6 +180,7 @@ export default Vue.extend({
       } else {
         const project = projectStore.getProject(props.projectId) as Project;
         project.state.reset();
+        project.state.selected = true;
         core.app.openDialog('projects', action, { projects: [project] });
       }
     };
