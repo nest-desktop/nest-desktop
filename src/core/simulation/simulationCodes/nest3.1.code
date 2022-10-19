@@ -18,7 +18,7 @@ except:
 # Set simulation kernel
 nest.set({
   "local_num_threads": {{ simulation.kernel.localNumThreads }},
-  "resolution": {{ simulation.kernel.resolution }}
+  "resolution": {{ simulation.kernel.resolution }},
   "rng_seed": {{ simulation.kernel.rngSeed }}
 })
 {{ /simulation.code.setKernelStatus }}
