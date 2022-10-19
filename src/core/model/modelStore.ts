@@ -156,8 +156,8 @@ export class ModelStore {
    * Delete models.
    */
   deleteModels(models: Model[]): void {
-    const modelIds: string[] = models.map((model: Model) => model.id);
-    this._db.deleteModels(modelIds).then(() => this.initModelList());
+    const modelDocIds: string[] = models.map((model: Model) => model.doc._id);
+    this._db.deleteModels(modelDocIds).then(() => this.initModelList());
   }
 
   /**
