@@ -1,6 +1,7 @@
-import { consoleLog } from './common/logger';
+import { reactive, UnwrapRef } from '@vue/composition-api';
 import { SetupContext } from '@vue/composition-api';
 
+import { consoleLog } from './common/logger';
 import { Backend } from './common/backend';
 import { Config } from './common/config';
 import { ModelStore } from './model/modelStore';
@@ -20,22 +21,22 @@ export class App extends Config {
   private _backends: any = {};
   private _model: ModelStore;
   private _project: ProjectStore;
-  private _state: any = {
-    dialog: {
-      action: '',
-      data: {},
-      open: false,
-      source: '',
-    },
-    ready: false,
-    theme: { dark: false },
-    version: '',
-  };
+  private _state: UnwrapRef<any>;
   private _vueSetupContext: SetupContext;
 
   constructor() {
     super('App');
-    this._state.version = environment.VERSION;
+    this._state = reactive({
+      dialog: {
+        action: '',
+        data: {},
+        open: false,
+        source: '',
+      },
+      ready: false,
+      theme: { dark: false },
+      version: environment.VERSION,
+    })
 
     // Backends
     this._backends.insiteAccess = new Backend('InsiteAccess', {
