@@ -17,7 +17,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
-            @click="state.dialog = false"
+            @click="() => closeDialog()"
             outlined
             small
             text
@@ -121,6 +121,7 @@ export default Vue.extend({
      */
     const deleteModel = () => {
       state.model.delete();
+      closeDialog();
     };
 
     /**
@@ -154,6 +155,13 @@ export default Vue.extend({
       }
     };
 
+    /**
+     * Close dialog.
+     */
+    const closeDialog = () => {
+      state.dialog = false;
+    };
+
     onMounted(() => update());
 
     watch(
@@ -161,7 +169,7 @@ export default Vue.extend({
       () => update()
     );
 
-    return { deleteModel, state };
+    return { closeDialog, deleteModel, state };
   },
 });
 </script>

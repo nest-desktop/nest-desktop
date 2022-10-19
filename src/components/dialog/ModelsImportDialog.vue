@@ -147,7 +147,7 @@ import core from '@/core';
 export default Vue.extend({
   name: 'ModelsImportDialog',
   setup() {
-    const dialogState = core.app.state.dialog;
+    const appState = core.app.state;
     const state = reactive({
       items: [
         {
@@ -301,9 +301,9 @@ export default Vue.extend({
      * Update model import dialog.
      */
     const update = () => {
-      if (dialogState != null && dialogState.data.models.length === 1) {
+      if (appState.dialog != null && appState.dialog.data.models.length === 1) {
         state.source = 'github';
-        state.modelId = dialogState.data.models[0].id;
+        state.modelId = appState.dialog.data.models[0].id;
         state.GitHubFile = core.app.model.state.filesGithub.find(
           (filename: string) =>
             state.modelId.startsWith(filename.split('.')[0].split('/')[1])
@@ -312,6 +312,7 @@ export default Vue.extend({
 
       getTreesFromGithub();
     };
+
 
     onMounted(() => update());
 
