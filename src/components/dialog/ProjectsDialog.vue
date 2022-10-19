@@ -51,7 +51,7 @@
                   <th
                     class="text-center"
                     v-if="dialogState.action === 'export'"
-                    v-text="'Loaded'"
+                    v-text="'Validate'"
                   />
                   <th class="text-center" v-text="'Selected'" />
                   <th
@@ -83,7 +83,7 @@
                         class="my-0 mx-auto"
                         color="project"
                         hide-details
-                        v-model="project.selected"
+                        v-model="project.state.selected"
                       />
                     </td>
                   </template>
@@ -141,8 +141,8 @@
         <v-card-actions>
           <v-spacer />
           <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
-          <!-- :disabled="!dialogState.data.projects.some(p => p.state.selected)" -->
           <v-btn
+            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="exportProjects"
             outlined
             small
@@ -151,8 +151,8 @@
             <v-icon left v-text="'mdi-export'" />
             Export
           </v-btn>
-          <!-- :disabled="!dialogState.data.projects.some(p => p.state.selected)" -->
           <v-btn
+            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="deleteProjects"
             outlined
             small
