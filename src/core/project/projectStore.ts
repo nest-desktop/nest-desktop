@@ -100,6 +100,12 @@ export class ProjectStore {
     await this._db.list('createdAt', true).then((projects: any[]) => {
       this._state.projects = projects;
 
+      this._state.projects.forEach((project: any) => {
+        project.state = {
+          selected: false,
+        }
+      })
+
       // Redirect if project id from the current route is provided in the list.
       const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
       if (currentRoute.name === 'projectId') {
@@ -149,7 +155,17 @@ export class ProjectStore {
    */
   resetProjectStates(): void {
     this.consoleLog('Reset states of projects');
-    this._state.projects.forEach((project: Project) => project.state.reset());
+
+    this._state.projects.forEach((project: Project | any) => {
+      // Unselect projects.
+      if (project instanceof Project) {
+        project.state.reset();
+      } else if (typeof project === 'object') {
+        project.state = {
+          selected: false,
+        };
+      }
+    });
   }
 
   /**
