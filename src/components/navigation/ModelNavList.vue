@@ -158,7 +158,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
 import core from '@/core';
@@ -399,6 +399,11 @@ export default Vue.extend({
     onMounted(() => {
       update();
     });
+
+    watch(
+      () => modelStore.state.models,
+      () => update()
+    );
 
     return {
       addFilterTag,
