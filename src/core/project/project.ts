@@ -159,8 +159,8 @@ export class Project {
   /**
    * Save the current project.
    */
-  async save(): Promise<any> {
-    return this._app.project.importProject(this);
+  save(): void {
+    this._app.project.importProject(this).then(() => this.clean());
   }
 
   /**
@@ -231,6 +231,13 @@ export class Project {
    */
   async reload(): Promise<any> {
     return this._app.project.reloadProject(this);
+  }
+
+  /**
+   * Unload this project.
+   */
+  async unload(): Promise<any> {
+    return this._app.project.unloadProject(this);
   }
 
   /*
@@ -380,6 +387,8 @@ export class Project {
       );
       this.initActivities(activities);
     }
+
+    this.clean();
   }
 
   /**
@@ -606,6 +615,7 @@ export class Project {
   clean(): void {
     this._simulation.code.clean();
     this._state.updateHash();
+    this._state.checkChanges();
   }
 
   /**

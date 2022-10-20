@@ -144,15 +144,15 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import { reactive } from '@vue/composition-api';
-import VueRouter, { Route } from 'vue-router';
 
 import core from '@/core';
 
 import ModelNavList from '@/components/navigation/ModelNavList.vue';
 import ProjectNavList from '@/components/navigation/ProjectNavList.vue';
 
-export default {
+export default Vue.extend({
   name: 'Navigation',
   components: {
     ModelNavList,
@@ -164,10 +164,9 @@ export default {
       miniVariant: true,
       pinNav: core.app.config.pinNav,
       resizing: false,
-      width: 320,
+      width: 376,
+      minWidth: 376,
     });
-    let recentProjectId = '';
-    let recentModelId = 'ac_generator';
 
     /**
      * Toggle navigation drawer.
@@ -186,58 +185,6 @@ export default {
     };
 
     /**
-     * Redirects the page content to the most recent chosen project/model. If
-     * no one was chosen before, the first one is selected.
-     * Please beware: The route IDs used in this class are the ones in the
-     * array, which might not contain every route from the Vue router!
-     * @param targetRouteId ID of the route to navigate to
-     * @param router Vue router (this.$router)
-     */
-    const redirect = (targetRouteId: string, router: VueRouter) => {
-      if (targetRouteId === 'project') {
-        // check if project ID is undefined or project does not exist anymore
-        if (
-          recentProjectId == undefined ||
-          recentProjectId.length <= 0
-          // core.app.project.filteredProjects.filter(
-          //   (project: Project) => project.id === recentProjectId
-          // ).length <= 0
-        ) {
-          recentProjectId = core.app.project.recentProjectId;
-        }
-        router.push({
-          name: 'projectId',
-          params: { id: recentProjectId },
-        });
-      } else {
-        if (recentModelId == undefined || recentModelId.length <= 0) {
-          recentModelId = 'ac_generator';
-        }
-        router.push({ name: 'modelId', params: { id: recentModelId } });
-      }
-    };
-
-    /**
-     * Stores the most recently used model or project, respectively.
-     * Please beware: The route IDs used in this class are the ones in the
-     * array, which might not contain every route from the Vue router!
-     * @param currentTargetId ID of the route to navigate to
-     * @param sourceRroute Vue route of the page to leave (this.$route)
-     */
-    const saveRecentId = (targetRouteId: string, sourceRoute: Route) => {
-      switch (targetRouteId) {
-        case 'model':
-          recentProjectId = sourceRoute.params.id;
-          break;
-        case 'project':
-          recentModelId = sourceRoute.params.id;
-          break;
-        default:
-          break;
-      }
-    };
-
-    /**
      * Updates the page content according to the route ID to navigate to.
      * Please beware: The route IDs used in this class are the ones in the
      * array, which might not contain every route from the Vue router!
@@ -247,11 +194,16 @@ export default {
       toggleNav(routeId);
 
       // Check if the page is already loaded to avoid "Avoided redundant
-      // navigation" error
-      let pathstring: string = root.$route.path;
-      if (!pathstring.includes(routeId)) {
-        saveRecentId(routeId, root.$route);
-        redirect(routeId, root.$router);
+      // navigation" error.
+      if (!root.$route.path.includes(routeId)) {
+        switch (routeId) {
+          case 'project':
+            core.app.project.view.redirect();
+            break;
+          case 'model':
+            core.app.model.view.redirect();
+            break;
+        }
       }
     };
 
@@ -281,7 +233,7 @@ export default {
     const handleMouseMove = (e: MouseEvent) => {
       window.getSelection().removeAllRanges();
       const width = e.clientX + 2;
-      if (width < 320) {
+      if (width < state.minWidth) {
         return;
       }
       state.width = width;
@@ -322,7 +274,7 @@ export default {
       updatePageContent,
     };
   },
-};
+});
 </script>
 
 <style>

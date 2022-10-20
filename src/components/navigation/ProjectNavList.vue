@@ -1,111 +1,136 @@
 <template>
   <div class="projectNavList">
-    <v-list dense>
-      <v-list-item exact to="/project/">
-        <v-list-item-icon>
-          <v-icon left v-text="'mdi-plus'" />
-        </v-list-item-icon>
-        <v-list-item-title v-text="'New project'" />
-      </v-list-item>
-    </v-list>
-
-    <v-container
-      :key="projectStore.view.state.project.id"
-      class="py-0"
-      v-if="projectStore.view.state.project"
+    <v-toolbar
+      absolute
+      extended
+      flat
+      height="48"
+      width="296"
+      style="width: calc(100% - 64px - 1px)"
     >
-      <v-text-field
-        @change="() => projectStore.view.state.project.clean()"
-        clearable
-        dense
-        hide-details
-        placeholder="Project name"
-        title="Rename the current project"
-        v-model="projectStore.view.state.project.name"
-      >
-        <template #append-outer>
-          <v-row>
-            <v-btn
-              @click="saveProject"
-              class="mx-2"
-              depressed
-              fab
-              small
-              title="Save the current project"
-            >
-              <v-icon v-text="'mdi-content-save-outline'" />
-            </v-btn>
-          </v-row>
-        </template>
-      </v-text-field>
-    </v-container>
+      <v-row style="padding-top: 6px">
+        <v-btn
+          :key="index"
+          :title="item.title"
+          :to="item.to"
+          @click="item.onClick"
+          class="flex-grow-1 ma-0 pa-0"
+          exact
+          style="min-width: auto"
+          text
+          tile
+          v-for="(item, index) in state.items"
+        >
+          <v-icon v-text="item.icon" />
+        </v-btn>
+      </v-row>
+    </v-toolbar>
 
-    <v-container class="py-0">
-      <v-text-field
-        clearable
-        hide-details
-        placeholder="Search project"
-        prepend-inner-icon="mdi-magnify"
-        v-model="projectStore.state.searchTerm"
-      />
-    </v-container>
+    <v-toolbar
+      absolute
+      flat
+      height="48"
+      style="margin-top: 52px; width: calc(100% - 64px - 1px)"
+    >
+      <div style="width: 100%">
+        <v-row class="ma-0">
+          <v-text-field
+            clearable
+            hide-details
+            label="Search project"
+            append-icon="mdi-magnify"
+            v-model="projectStore.state.searchTerm"
+          />
+        </v-row>
+      </div>
+    </v-toolbar>
 
-    <v-list :key="projectStore.state.projects.length" dense two-line>
-      <draggable v-model="projectStore.state.projects">
-        <transition-group>
-          <v-list-item
-            :key="project.id"
-            :title="project.name"
-            :to="'/project/' + project.id"
-            class="projectItem"
-            two-line
-            v-for="project in projectStore.filteredProjects"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="project.name" />
-              <v-list-item-subtitle>
-                {{ project.network.nodes.length }} nodes,
-                {{ project.network.connections.length }} connections
-              </v-list-item-subtitle>
-            </v-list-item-content>
+    <div
+      flat
+      style="
+        height: calc(100vh - 100px - 24px);
+        margin-top: 100px;
+        overflow-y: auto;
+      "
+    >
+      <v-card flat tile>
+        <v-list :key="projectStore.state.numLoaded" class="pt-0" dense two-line>
+          <v-subheader
+            class="my-0 py-0"
+            style="font-size: 12px; height: 16px"
+            v-text="
+              projectStore.filteredProjects.length +
+              ' project' +
+              (projectStore.filteredProjects.length > 1 ? 's' : '')
+            "
+          />
+          <draggable v-model="projectStore.state.projects">
+            <transition-group>
+              <v-list-item
+                :key="project.id"
+                :title="project.name"
+                :to="'/project/' + project.id"
+                class="projectItem"
+                v-for="project in projectStore.filteredProjects"
+              >
+                <v-list-item-content>
+                  <v-list-item-title v-text="project.name" />
 
-            <v-list-item-icon class="icon mx-1 my-4">
-              <span v-if="project.doc">
-                <v-icon
-                  class="px-1"
-                  small
-                  v-if="
-                    project.id !== project.doc.id ||
-                    project.state.hash !== project.doc.hash
-                  "
-                  v-text="'mdi-alert-circle-outline'"
-                />
-                <ActivityGraphIcon
-                  :project="project"
-                  append
-                  v-else-if="project.state.activities.hasSomeEvents"
-                />
-              </span>
-            </v-list-item-icon>
+                  <v-list-item-subtitle>
+                    {{ project.network.nodes.length }} nodes,
+                    {{ project.network.connections.length }} connections
+                  </v-list-item-subtitle>
 
-            <v-list-item-action class="action">
-              <ProjectMenu :projectId="project.id" />
-            </v-list-item-action>
-          </v-list-item>
-        </transition-group>
-      </draggable>
-    </v-list>
+                  <v-list-item-subtitle
+                    v-if="project.doc && project.state.activities.hasSomeEvents"
+                  >
+                    <ActivityGraphIcon :project="project" append />
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action class="mx-1">
+                  <div v-if="project.doc">
+                    <v-row no-gutters>
+                      <div style="width: 36px">
+                        <ProjectMenu :projectId="project.id" class="action" />
+                      </div>
+
+                      <v-btn
+                        @click="e => saveProject(e, project)"
+                        :disabled="!project.state.changes"
+                        icon
+                      >
+                        <v-icon
+                          v-if="project.state.changes"
+                          v-text="'mdi-content-save-alert-outline'"
+                        />
+                        <v-icon
+                          v-else
+                          v-text="'mdi-content-save-check-outline'"
+                        />
+                      </v-btn>
+                    </v-row>
+                  </div>
+                </v-list-item-action>
+              </v-list-item>
+            </transition-group>
+          </draggable>
+        </v-list>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { reactive } from '@vue/composition-api';
 import draggable from 'vuedraggable';
 
 import core from '@/core';
-
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
 import ProjectMenu from '@/components/navigation/ProjectMenu.vue';
+
+import { Project } from '@/core/project/project';
 
 export default Vue.extend({
   name: 'ProjectNavList',
@@ -117,21 +142,80 @@ export default Vue.extend({
   setup(_, { root }) {
     const projectStore = core.app.project;
 
-    const saveProject = () => {
-      const project = projectStore.view.state.project;
-      project.save().then(() => {
-        if (!root.$route.path.endsWith(project.id)) {
-          root.$router.push({
-            name: 'projectId',
-            params: { id: project.id },
-          });
-        }
-      });
+    const state = reactive({
+      items: [
+        {
+          id: 'newProject',
+          icon: 'mdi-plus',
+          title: 'New projects',
+          to: '/project/',
+          onClick: () => {},
+        },
+        {
+          id: 'projectsReload',
+          icon: 'mdi-reload',
+          title: 'Reload all projects from the database',
+          onClick: () => openDialog('reload'),
+        },
+        {
+          id: 'projectsExport',
+          icon: 'mdi-export',
+          title: 'Export projects',
+          onClick: () => openDialog('export'),
+        },
+        {
+          id: 'projectsImport',
+          icon: 'mdi-import',
+          title: 'Import projects',
+          onClick: () => openDialog('import'),
+        },
+        {
+          id: 'projectsDelete',
+          icon: 'mdi-trash-can-outline',
+          title: 'Delete projects',
+          onClick: () => openDialog('delete'),
+        },
+        {
+          id: 'projectsReset',
+          icon: '$mdiDatabaseRefreshOutline',
+          title: 'Reset all projects in the database',
+          onClick: () => openDialog('reset'),
+        },
+      ],
+      project: null,
+    });
+
+    /**
+     * Open a dialog to export, import or delete projects.
+     * @param action Dialog to open
+     */
+    const openDialog = (action: string = 'export') => {
+      // Reset states for project list.
+      core.app.project.resetProjectStates();
+
+      const projects: (Project | any)[] =
+        action === 'reset' || action === 'reload'
+          ? []
+          : core.app.project.state.projects;
+
+      // Open dialog for projects.
+      core.app.openDialog('projects', action, { projects });
+    };
+
+    /**
+     * Save project.
+     * @param e Mouse event to prevent defaults
+     * @param project Project object
+     */
+    const saveProject = (e: MouseEvent, project: Project) => {
+      e.preventDefault();
+      project.save();
     };
 
     return {
       projectStore,
       saveProject,
+      state,
     };
   },
 });
@@ -144,14 +228,5 @@ export default Vue.extend({
 
 .projectNavList .projectItem:hover .action {
   display: block;
-}
-
-.projectNavList .projectItem .icon {
-  display: flex;
-  margin-bottom: 0;
-}
-
-.projectNavList .projectItem:hover .icon {
-  display: none;
 }
 </style>

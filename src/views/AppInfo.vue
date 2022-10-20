@@ -144,18 +144,6 @@
             </v-row>
           </v-col>
         </v-row>
-
-        <!-- <v-row>
-          <v-col>
-            <v-footer padless>
-              <v-card flat tile class="flex text-center">
-                <v-card-text class="py-1">
-                  {{ state.year }} — <strong>NEST Desktop</strong>
-                </v-card-text>
-              </v-card>
-            </v-footer>
-          </v-col>
-        </v-row> -->
       </v-container>
     </v-main>
   </div>
@@ -210,7 +198,6 @@ export default Vue.extend({
     const state = reactive({
       includeProjectButtons: props.includeProjectButtons,
       projects: [],
-      year: 2021,
     });
 
     onMounted(() => {

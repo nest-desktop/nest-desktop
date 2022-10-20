@@ -1,5 +1,7 @@
-import { consoleLog } from './common/logger';
+import { reactive, UnwrapRef } from '@vue/composition-api';
+import { SetupContext } from '@vue/composition-api';
 
+import { consoleLog } from './common/logger';
 import { Backend } from './common/backend';
 import { Config } from './common/config';
 import { ModelStore } from './model/modelStore';
@@ -19,21 +21,22 @@ export class App extends Config {
   private _backends: any = {};
   private _model: ModelStore;
   private _project: ProjectStore;
-  private _state: any = {
-    dialog: {
-      action: '',
-      data: {},
-      open: false,
-      source: '',
-    },
-    ready: false,
-    theme: { dark: false },
-    version: '',
-  };
+  private _state: UnwrapRef<any>;
+  private _vueSetupContext: SetupContext;
 
   constructor() {
     super('App');
-    this._state.version = environment.VERSION;
+    this._state = reactive({
+      dialog: {
+        action: '',
+        data: {},
+        open: false,
+        source: '',
+      },
+      ready: false,
+      theme: { dark: false },
+      version: environment.VERSION,
+    })
 
     // Backends
     this._backends.insiteAccess = new Backend('InsiteAccess', {
@@ -95,11 +98,18 @@ export class App extends Config {
     return this._state;
   }
 
+  get vueSetupContext(): SetupContext {
+    return this._vueSetupContext;
+  }
+
   /**
    * Initialize application.
    */
-  init(config: any): void {
+  init(context: SetupContext, config: any): void {
     consoleLog(this, 'Initialize app');
+
+    // Add setup context of Vue.
+    this._vueSetupContext = context;
 
     // Update configs from global config.
     this.updateConfigs(config);

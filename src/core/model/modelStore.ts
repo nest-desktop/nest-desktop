@@ -89,6 +89,7 @@ export class ModelStore {
             (model: any) => new Model(this._app, model)
           ))
       );
+    // TODO: Refresh the view
   }
 
   /**
@@ -156,8 +157,8 @@ export class ModelStore {
    * Delete models.
    */
   deleteModels(models: Model[]): void {
-    const modelIds: string[] = models.map((model: Model) => model.id);
-    this._db.deleteModels(modelIds).then(() => this.initModelList());
+    const modelDocIds: string[] = models.map((model: Model) => model.doc._id);
+    this._db.deleteModels(modelDocIds).then(() => this.initModelList());
   }
 
   /**
@@ -210,6 +211,10 @@ export class ModelStore {
       this._state.models.find((model: Model) => model.id === modelId) ||
       new Model(this._app, { id: modelId, params: [] })
     );
+  }
+
+  get recentModelId(): string {
+    return this._state.models[0].id || undefined;
   }
 
   /**

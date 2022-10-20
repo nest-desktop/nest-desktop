@@ -32,7 +32,7 @@ import core from '@/core';
 
 export default Vue.extend({
   name: 'ProjectsMenuContent',
-  setup() {
+  setup(_, { root }) {
     const state = reactive({
       items: [
         {
@@ -75,10 +75,6 @@ export default Vue.extend({
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {
-      // Load all projects.
-      core.app.project.state.projects.forEach((project: any) =>
-        core.app.project.getProject(project.id)
-      );
 
       // Reset states for project list.
       core.app.project.resetProjectStates();

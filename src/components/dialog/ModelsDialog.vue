@@ -1,9 +1,34 @@
 <template>
   <div class="ModelsDialog">
     <v-dialog
+      max-width="420"
+      v-if="appState.dialog.action === 'reload'"
+      v-model="appState.dialog.open"
+    >
+      <v-card>
+        <v-card-title v-text="'Are you sure to reload all models?'" />
+
+        <v-card-text>
+          The models will be reloaded from the database.
+          <br />
+          Any unsaved content in models will be deleted!
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <v-btn @click="reloadModels" outlined small>
+            <v-icon left v-text="'mdi-reload'" />
+            reload
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
       max-width="480"
-      v-if="dialogState.action === 'reset'"
-      v-model="dialogState.open"
+      v-else-if="appState.dialog.action === 'reset'"
+      v-model="appState.dialog.open"
     >
       <v-card>
         <v-card-title v-text="'Are you sure to reset all models?'" />
@@ -16,8 +41,14 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
-          <v-btn @click="resetModels" outlined small>
+          <v-btn
+            @click="() => closeDialog()"
+            outlined
+            small
+            text
+            v-text="'cancel'"
+          />
+          <v-btn @click="resetModels()" outlined small>
             <v-icon left v-text="'$mdiDatabaseRefreshOutline'" />
             reset
           </v-btn>
@@ -27,21 +58,27 @@
 
     <v-dialog
       max-width="1024"
-      v-else-if="dialogState.action === 'import'"
-      v-model="dialogState.open"
+      v-else-if="appState.dialog.action === 'import'"
+      v-model="appState.dialog.open"
     >
       <ModelsImportDialog />
     </v-dialog>
 
-    <v-dialog max-width="1024" v-else v-model="dialogState.open">
+    <v-dialog max-width="1024" v-else v-model="appState.dialog.open">
       <v-card>
-        <v-card-title
-          v-if="dialogState.data.models.length !== 0"
-          v-text="`Select models to ${dialogState.action}.`"
-        />
+        <v-card-title>
+          {{
+            appState.dialog.action.charAt(0).toUpperCase() +
+            appState.dialog.action.slice(1)
+          }}
+        </v-card-title>
+        <v-card-subtitle
+          v-text="`Select projects to ${appState.dialog.action}`"
+        >
+        </v-card-subtitle>
 
         <v-card-text>
-          <v-simple-table v-if="dialogState.data.models.length !== 0">
+          <v-simple-table v-if="appState.dialog.data.models.length !== 0">
             <template #default>
               <thead>
                 <tr>
@@ -53,7 +90,7 @@
               <tbody>
                 <tr
                   :key="index"
-                  v-for="(model, index) in dialogState.data.models"
+                  v-for="(model, index) in appState.dialog.data.models"
                 >
                   <td v-text="model.label" />
                   <td v-text="model.elementType" />
@@ -81,21 +118,21 @@
             v-text="'cancel'"
           />
           <v-btn
-            :disabled="!dialogState.data.models.some(p => p.state.selected)"
-            @click="exportModels"
+            :disabled="!appState.dialog.data.models.some(p => p.state.selected)"
+            @click="exportModels()"
             outlined
             small
-            v-if="dialogState.action === 'export'"
+            v-if="appState.dialog.action === 'export'"
           >
             <v-icon left v-text="'mdi-export'" />
             Export
           </v-btn>
           <v-btn
-            :disabled="!dialogState.data.models.some(p => p.state.selected)"
-            @click="deleteModels"
+            :disabled="!appState.dialog.data.models.some(p => p.state.selected)"
+            @click="deleteModels()"
             outlined
             small
-            v-if="dialogState.action === 'delete'"
+            v-if="appState.dialog.action === 'delete'"
           >
             <v-icon left v-text="'mdi-trash-can-outline'" />
             Delete
@@ -119,13 +156,13 @@ export default Vue.extend({
     ModelsImportDialog,
   },
   setup() {
-    const dialogState = core.app.state.dialog;
+    const appState = core.app.state;
 
     /**
      * Export selected models.
      */
     const exportModels = () => {
-      const selectedModels: Model[] = dialogState.data.models.filter(
+      const selectedModels: Model[] = appState.dialog.data.models.filter(
         (model: Model) => model.state.selected
       );
       if (selectedModels.length > 0) {
@@ -138,7 +175,7 @@ export default Vue.extend({
      * Delete selected models.
      */
     const deleteModels = () => {
-      const selectedModels: Model[] = dialogState.data.models.filter(
+      const selectedModels: Model[] = appState.dialog.data.models.filter(
         (model: Model) => model.state.selected
       );
       if (selectedModels.length > 0) {
@@ -148,17 +185,30 @@ export default Vue.extend({
     };
 
     /**
+     * Reload the models from the database.
+     */
+    const reloadModels = () => {
+      core.app.model.initModelList().then(() => {
+        core.app.model.view.redirect();
+      });
+      core.app.closeDialog();
+    };
+
+    /**
      * Reset model database.
      */
     const resetModels = () => {
       core.app.model.resetDatabase();
+      core.app.closeDialog();
+      reloadModels();
     };
 
     return {
+      appState,
       closeDialog: () => core.app.closeDialog(),
       deleteModels,
-      dialogState,
       exportModels,
+      reloadModels,
       resetModels,
     };
   },

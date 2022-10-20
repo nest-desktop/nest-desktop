@@ -46,7 +46,7 @@ export default Vue.extend({
     Navigation,
     SystemBar,
   },
-  setup(_, { root }) {
+  setup(_, context) {
     // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
     const state = reactive({
       refreshing: false,
@@ -88,10 +88,10 @@ export default Vue.extend({
       });
 
       // Initialize Vuetify theme (light / dark).
-      core.app.initTheme(root.$vuetify.theme);
+      core.app.initTheme(context.root.$vuetify.theme);
 
       // Initialize app with global config.
-      core.app.init(Vue.prototype.$appConfig);
+      core.app.init(context, Vue.prototype.$appConfig);
     });
 
     return { core, refreshApp, state };
