@@ -101,9 +101,9 @@ deploy_pypi:
 # DEPLOY DOCKER IMAGE ON EBRAINS
 #
 
-deploy_ebrains_docker:
+deploy_docker_ebrains:
   stage: deploy
-  image: ubuntu:20.04
+  image: ubuntu:22.04
   needs:
     - build_app
   rules:
@@ -136,7 +136,7 @@ deploy_ebrains_docker:
 
 deploy_docker_hub_nestsim:
   stage: deploy
-  image: ubuntu:20.04
+  image: ubuntu:22.04
   needs:
     - build_app
   rules:
@@ -169,7 +169,7 @@ deploy_docker_hub_nestsim:
 
 deploy_docker_hub_nestdesktop:
   stage: deploy
-  image: ubuntu:20.04
+  image: ubuntu:22.04
   needs:
     - build_app
   rules:
