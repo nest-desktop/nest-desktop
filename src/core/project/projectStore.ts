@@ -103,8 +103,8 @@ export class ProjectStore {
       this._state.projects.forEach((project: any) => {
         project.state = {
           selected: false,
-        }
-      })
+        };
+      });
 
       // Redirect if project id from the current route is provided in the list.
       const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
@@ -144,10 +144,17 @@ export class ProjectStore {
 
   /**
    * Delete projects and then update the list.
+   * @param projects List of project objects.
    */
-  async deleteProjects(projects: any[]): Promise<any> {
+  deleteProjects(projects: any[]): void {
     this.consoleLog('Delete projects');
-    return this._db.deleteProjects(projects).then(() => this.initProjectList());
+    if (projects.length === 0) return
+    const projectDocIds: string[] = projects.map(
+      (project: any) => project.docId || project._id || project.id
+    );
+    this._db
+      .deleteBulk(projectDocIds)
+      .then(() => this.initProjectList());
   }
 
   /**

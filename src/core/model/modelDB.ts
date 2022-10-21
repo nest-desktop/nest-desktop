@@ -43,15 +43,8 @@ export class ModelDB extends DatabaseService {
   }
 
   /**
-   * Delete models from database.
+   *  Model
    */
-  async deleteModels(modelDocIds: string[]): Promise<any> {
-    return this.deleteBulk(modelDocIds);
-  }
-
-  /*
-    Model
-    */
 
   /**
    * Add a model to the database.
