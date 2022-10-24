@@ -96,7 +96,7 @@ export class Simulation extends Config {
 
     // Add click event handler to redirect user to the documentation.
     if (type === 'error') {
-      stateToast.message += ' -- Click me for more details.';
+      stateToast.message += ' -- Click for details...';
       stateToast.onClick = () =>
         window.open(
           'https://nest-desktop.readthedocs.io/en/latest/user/troubleshooting.html#error-messages',
@@ -167,7 +167,7 @@ export class Simulation extends Config {
         } else if ('request' in error) {
           // The request was made but no response was received.
           this.openToast(
-            'Failed to perform simulation (NEST Simulator is missing).',
+            'Failed to perform simulation (NEST Simulator is not running).',
             'error'
           );
         } else if ('message' in error && error.message != undefined) {
@@ -198,7 +198,7 @@ export class Simulation extends Config {
         switch (response.status) {
           case 0:
             this.openToast(
-              'Failed to perform simulation (NEST Simulator is missing).',
+              'Failed to perform simulation (NEST Simulator is not running).',
               'error'
             );
             this._project.insite.cancelGettingActivity();
