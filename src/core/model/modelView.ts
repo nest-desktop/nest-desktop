@@ -4,11 +4,12 @@ import VueRouter from 'vue-router';
 import { consoleLog } from '../common/logger';
 
 import { App } from '../app';
+import { Config } from '../common/config';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
-export class ModelView {
+export class ModelView extends Config {
   private _app: App;
   // Keywords taken from https://github.com/nest/nest-simulator/blob/master/extras/help_generator/generate_help.py#L73
   private _docKeywords = [
@@ -65,6 +66,7 @@ export class ModelView {
   ];
 
   constructor(app: App) {
+    super('ModelView');
     this._app = app;
     this._state = reactive({
       defaults: {},

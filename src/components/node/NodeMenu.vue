@@ -115,7 +115,10 @@
         </span>
 
         <span v-if="state.content === 'modelDocumentation'">
-          <ModelDocumentation :id="state.node.modelId" />
+          <ModelDocumentation
+            :id="state.node.modelId"
+            style="overflow-y: hidden; width: 959px"
+          />
         </span>
 
         <span v-if="state.content === 'eventsExport'">
