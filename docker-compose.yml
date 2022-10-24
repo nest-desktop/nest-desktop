@@ -7,13 +7,8 @@ services:
       - '8000:8000'
 
   nest-simulator:
-    image: docker-registry.ebrains.eu/nest/nest-simulator:3.2
+    image: docker-registry.ebrains.eu/nest/nest-simulator:3.3
     environment:
       NEST_CONTAINER_MODE: 'nest-server'
-      NEST_SERVER_BUFFER_SIZE: 65535
-      NEST_SERVER_HOST: '0.0.0.0'
-      NEST_SERVER_MODULES: 'nest,numpy'
-      NEST_SERVER_PORT: 5000
-      NEST_SERVER_RESTRICTION_OFF: 1
     ports:
       - '5000:5000'
