@@ -437,7 +437,7 @@ export class Project {
         response == null ||
         response.status != 200 ||
         response.data == null ||
-        response.data.hasOwnProperty('data')
+        !response.data.hasOwnProperty('data')
       ) {
         return;
       }
@@ -450,7 +450,7 @@ export class Project {
     });
 
     if (this._simulation.code.runSimulationInsite) {
-      // Get activities from Insite Access Node.
+      // Get activities from the Insite Access Node.
       this.insite.getActivities();
     }
   }
