@@ -112,7 +112,7 @@
                     })
                 "
                 color="accent"
-                label="Get documentation from the backend (plain text)"
+                label="Fetch the documentation from the back-end (plain text) instead of using formatted HTML from ReadTheDocs"
                 v-model="state.modelViewConfig.config.getDocFromBackend"
               />
             </v-card>

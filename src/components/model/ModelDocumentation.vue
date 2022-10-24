@@ -59,7 +59,7 @@
     <iframe
       :src="`https://nest-simulator.readthedocs.io/en/latest/models/${
         modelView.state.modelId
-      }.html#models-${parseCebabCase(modelView.state.modelId)}--page-root`"
+      }.html#models-${parseKebabCase(modelView.state.modelId)}--page-root`"
       frameborder="0"
       height="100%"
       v-else
@@ -92,7 +92,7 @@ export default Vue.extend({
       return `https://nest-simulator.readthedocs.io/en/${RTDVersion}/models/${modelView.state.modelId}.html`;
     };
 
-    const parseCebabCase = (text: string) => {
+    const parseKebabCase = (text: string) => {
       return text.replaceAll('_', '-');
     };
 
@@ -109,7 +109,7 @@ export default Vue.extend({
       }
     );
 
-    return { NESTDocURL, modelView, parseCebabCase };
+    return { NESTDocURL, modelView, parseKebabCase };
   },
 });
 </script>
