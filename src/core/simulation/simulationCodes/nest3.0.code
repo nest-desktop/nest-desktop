@@ -18,7 +18,7 @@ except:
 # Set simulation kernel
 nest.SetKernelStatus({
   "local_num_threads": {{ simulation.kernel.localNumThreads }},
-  "resolution": {{ simulation.kernel.resolution }}
+  "resolution": {{ simulation.kernel.resolution }},
   "rng_seed": {{ simulation.kernel.rngSeed }}
 })
 {{ /simulation.code.setKernelStatus }}
@@ -49,7 +49,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}
 {{ /model.isRecorder }}
-}{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ spatial.code }}{{ /spatial.positions }})
+}{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ &spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
 
