@@ -159,7 +159,10 @@
       </v-card>
 
       <div @click="projectView.state.modeIdx = 1">
-        <SimulationButton :project="projectView.state.project" />
+        <SimulationButton
+          :disabled="!nestSimulatorState.ready"
+          :project="projectView.state.project"
+        />
       </div>
     </v-app-bar>
 
@@ -459,6 +462,7 @@ export default Vue.extend({
 
     return {
       appConfig: core.app.config,
+      nestSimulatorState: core.app.backends.nestSimulator.state,
       projectView,
       resizeSidebar,
       state,
