@@ -1,20 +1,27 @@
 {
   "abbreviation": "sg",
-  "id": "spike_generator",
   "elementType": "stimulator",
+  "id": "spike_generator",
   "label": "spike generator",
   "params": [
     {
       "id": "spike_times",
+      "input": "arrayInput",
       "label": "spike times",
-      "unit": "ms",
-      "input": "arrayInput"
+      "rules": [
+        [
+          "value.slice(1).every((item, idx) => value[idx] < item)",
+          "The values must be sorted ascending.",
+          "error"
+        ]
+      ],
+      "unit": "ms"
     },
     {
       "id": "spike_weights",
+      "input": "arrayInput",
       "label": "weights of spike",
-      "unit": "pA",
-      "input": "arrayInput"
+      "unit": "pA"
     }
   ]
 }
