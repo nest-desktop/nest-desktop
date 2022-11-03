@@ -5,6 +5,7 @@ import { consoleLog } from './common/logger';
 import { Backend } from './common/backend';
 import { Config } from './common/config';
 import { ModelStore } from './model/modelStore';
+import { Project } from './project/project';
 import { ProjectStore } from './project/projectStore';
 
 import { environment } from '../environments/environment';
@@ -56,6 +57,10 @@ export class App extends Config {
 
   get backends(): any {
     return this._backends;
+  }
+
+  get currentProject(): Project {
+    return this._project.project;
   }
 
   get datetime(): string {

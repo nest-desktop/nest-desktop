@@ -16,6 +16,7 @@
           "label": "indegree",
           "max": 100,
           "min": 1,
+          "rules": [["value > 0", "The indegree musst be positive.", "error"]],
           "step": 1,
           "value": 1,
           "visible": true
@@ -47,6 +48,7 @@
           "label": "outdegree",
           "max": 100,
           "min": 1,
+          "rules": [["value > 0", "The outdegree musst be positive.", "error"]],
           "step": 1,
           "value": 1,
           "visible": true
@@ -78,6 +80,7 @@
           "label": "N",
           "max": 1000,
           "min": 1,
+          "rules": [["value > 0", "The value musst be positive.", "error"]],
           "step": 1,
           "value": 1,
           "visible": true
@@ -114,6 +117,13 @@
           "label": "p",
           "max": 1.0,
           "min": 0.01,
+          "rules": [
+            [
+              "value > 0 && value <= 1",
+              "The value must be between 0.01 and 1.0.",
+              "error"
+            ]
+          ],
           "step": 0.01,
           "value": 0.1,
           "visible": true
@@ -144,6 +154,13 @@
           "label": "p",
           "max": 1.0,
           "min": 0.01,
+          "rules": [
+            [
+              "value > 0 && value <= 1",
+              "The value must be between 0.01 and 1.0.",
+              "error"
+            ]
+          ],
           "step": 0.01,
           "value": 0.1,
           "visible": true

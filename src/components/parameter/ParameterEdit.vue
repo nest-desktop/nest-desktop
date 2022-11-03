@@ -174,34 +174,96 @@
           </template>
 
           <template v-else>
+            <!--
+              Array input
+            -->
             <template v-if="state.options.input === 'arrayInput'">
               <v-textarea
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :label="label()"
+                :persistent-hint="state.message.length > 0"
                 :row-height="12"
                 :rows="1"
+                :rules="rules"
                 :value="state.value"
                 @change="value => paramChange(value)"
                 auto-grow
                 class="my-1"
-                hide-details
+                dense
                 outlined
                 small
-              />
+              >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message"
+                    style="margin-left: -12px; margin-right: -12px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
+                </template>
+              </v-textarea>
             </template>
 
+            <!--
+              Checkbox
+            -->
             <template v-if="state.options.input === 'checkbox'">
               <v-checkbox
                 :color="state.color"
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :label="label()"
+                :persistent-hint="state.message.length > 0"
                 :readonly="state.options.readonly"
+                :rules="rules"
                 :value="state.value"
                 @change="value => paramChange(value)"
                 class="ma-1"
                 dense
-                hide-details
-              />
+              >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message"
+                    style="margin-left: -4px; margin-right: -4px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
+                </template>
+              </v-checkbox>
             </template>
 
+            <!--
+              Checkbox and value input
+            -->
             <template v-if="state.options.input === 'checkbox+valueInput'">
               <span class="d-flex">
                 <v-checkbox
@@ -230,6 +292,9 @@
               </span>
             </template>
 
+            <!--
+              Select
+            -->
             <template v-if="state.options.input === 'select'">
               <v-select
                 :color="state.color"
@@ -269,6 +334,7 @@
                 <template #prepend>
                   <v-text-field
                     :value="state.value[0]"
+                    :rules="rules"
                     @change="$set(state.value, 0, $event)"
                     class="mt-0 ml-2 pt-0"
                     height="32"
@@ -280,6 +346,7 @@
                 </template>
                 <template #append>
                   <v-text-field
+                    :rules="rules"
                     :value="state.value[1]"
                     @change="$set(state.value, 1, $event)"
                     class="mt-0 ml-2 pt-0"
@@ -290,9 +357,34 @@
                     type="number"
                   />
                 </template>
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message"
+                    style="margin-left: -70px; margin-right: -70px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
+                </template>
               </v-range-slider>
             </template>
 
+            <!--
+              Tick slider
+            -->
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
@@ -312,22 +404,28 @@
                 ticks="always"
               >
                 <template #message>
-                  <div @click="closeMessage" class="mb-1 message mt-2">
-                    <v-divider />
-                    <v-row class="mx-0 py-1">
-                      <v-col class="text-center" cols="2">
-                        <v-icon large right v-text="'mdi-alert-outline'" />
-                      </v-col>
-                      <v-col cols="10" style="margin: auto">
-                        <div v-text="state.message" />
-                      </v-col>
-                    </v-row>
-                    <v-divider />
+                  <div @click="closeMessage" class="message my-1" title="Close">
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
                   </div>
                 </template>
               </v-slider>
             </template>
 
+            <!--
+              Value input
+            -->
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
@@ -340,6 +438,9 @@
               />
             </template>
 
+            <!--
+              Value slider
+            -->
             <template v-if="state.options.input === 'valueSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
@@ -355,36 +456,8 @@
                 :value="state.value"
                 @change="value => paramChange(value)"
                 dense
-                height="40"
                 thumb-label
               >
-                <template #message>
-                  <div
-                    @click="closeMessage"
-                    class="mb-1 message"
-                    style="margin-left: -37px; margin-right: -105px"
-                  >
-                    <v-divider />
-                    <v-row class="mx-0 py-1">
-                      <v-col class="text-center" cols="2">
-                        <v-icon
-                          :large="state.options.iconSize === 'large'"
-                          :small="state.options.iconSize === 'small'"
-                          right
-                          v-text="
-                            state.options.rules[0].includes('info')
-                              ? 'mdi-information-outline'
-                              : 'mdi-alert-outline'
-                          "
-                        />
-                      </v-col>
-                      <v-col cols="10">
-                        <div v-text="state.message" />
-                      </v-col>
-                    </v-row>
-                    <v-divider />
-                  </div>
-                </template>
                 <template #prepend>
                   <v-btn
                     :disabled="
@@ -422,7 +495,9 @@
                   </v-btn>
                   <v-text-field
                     :readonly="state.options.readonly"
+                    :rules="rules"
                     :step="state.options.step || 1"
+                    :value="state.value"
                     @blur="e => paramChange(e.target.value)"
                     class="mt-0 ml-2 pt-0"
                     height="32"
@@ -430,8 +505,30 @@
                     single-line
                     style="width: 60px; font-size: 12px"
                     type="number"
-                    v-model="state.value"
-                  />
+                  >
+                  </v-text-field>
+                </template>
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message my-1"
+                    style="margin-left: -37px; margin-right: -105px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
                 </template>
               </v-slider>
             </template>
@@ -453,6 +550,8 @@ import { SynapseParameter } from '@/core/synapse/synapseParameter';
 import { ValueGenerator } from '@/core/parameter/valueGenerator';
 import NonConstantParameterEdit from '@/components/parameter/NonConstantParameterEdit.vue';
 import RandomParameterEditButton from '@/components/parameter/RandomParameterEditButton.vue';
+
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ParameterEdit',
@@ -477,6 +576,7 @@ export default Vue.extend({
     const state = reactive({
       color: props.color,
       content: null,
+      isValid: true,
       items: [
         {
           actions: [],
@@ -564,16 +664,21 @@ export default Vue.extend({
      */
     const deserialize = (value: any) => {
       switch (state.options.input) {
+        case 'arrayInput':
+          switch (typeof value) {
+            case 'number':
+              return [value];
+            case 'string':
+              return value.startsWith('[') && value.endsWith(']')
+                ? JSON.parse(value)
+                : JSON.parse(`[${value}]`); // returns array
+            default:
+              return value;
+          }
+        case 'checkbox':
+          return value === true;
         case 'tickSlider':
           return state.options.ticks[value]; // returns tick values
-        case 'arrayInput':
-          if (typeof value === 'string') {
-            return value.startsWith('[') && value.endsWith(']')
-              ? JSON.parse(value)
-              : JSON.parse(`[${value}]`); // returns array
-          } else {
-            return value;
-          }
         default:
           return value;
       }
@@ -590,6 +695,11 @@ export default Vue.extend({
     };
 
     /**
+     * Check if the string contains only number.
+     */
+    const containsOnlyNumber = (value: string) => /^\d.?\d?$/.test(value);
+
+    /**
      * Triggers when parameter is changed.
      */
     const paramChange = (value: boolean | number | string) => {
@@ -600,20 +710,17 @@ export default Vue.extend({
       //   state.options.max = state.value;
       // }
 
-      let changed: boolean = true;
-      switch (typeof value) {
-        case 'string': // text field
-          changed = Number(value) !== state.value;
-          state.value = Number(value);
-          break;
-        default:
-          changed = value !== state.value;
-          state.value = value;
-          break;
+      let isChanged: boolean;
+      if (typeof value === 'string' && containsOnlyNumber(value)) {
+        isChanged = Number(value) !== state.value;
+        state.value = Number(value);
+      } else {
+        isChanged = value !== state.value;
+        state.value = value;
       }
 
-      // Prevent auto simulation when the value is actually not changed.
-      if (changed) {
+      // Emit when the value is changed.
+      if (isChanged) {
         emit('update:value', deserialize(state.value));
       }
     };
@@ -648,7 +755,7 @@ export default Vue.extend({
     };
 
     /**
-     * Increment value
+     * Increment value.
      */
     const increment = (e: any) => {
       let value = state.value;
@@ -661,7 +768,7 @@ export default Vue.extend({
     };
 
     /**
-     * Increment value
+     * Increment value.
      */
     const decrement = (e: any) => {
       let value = state.value;
@@ -719,36 +826,50 @@ export default Vue.extend({
      * Close message text.
      */
     const closeMessage = () => {
-      if (state.timeoutId) {
-        clearTimeout(state.timeoutId);
-      }
+      state.isValid = true;
       state.message = '';
     };
+
+    const simulationResolution = () =>
+      core.app.currentProject.simulation.kernel.resolution;
 
     /**
      * Rules for value validation.
      */
     const rules = [
-      (value: number) => {
-        if (state.timeoutId) {
-          clearTimeout(state.timeoutId);
+      (val: number | string) => {
+        closeMessage();
+        try {
+          const value = deserialize(val);
+          if (
+            state.options.unit &&
+            ['ms', 'Hz'].includes(state.options.unit) &&
+            typeof value === 'number' &&
+            value <= 0
+          ) {
+            state.message = `The ${state.options.label} must be positive.`;
+            state.isValid = false;
+          } else if (
+            state.options.id === 'interval' &&
+            value < simulationResolution()
+          ) {
+            state.message = `The ${state.options.label} must be at least as long as the simulation resolution.`;
+            state.isValid = false;
+          } else if (state.options.rules != null) {
+            state.options.rules.forEach((rule: string[]) => {
+              if (state.isValid) {
+                const validated = eval(rule[0]);
+                state.message = validated ? '' : rule[1];
+                state.isValid = validated || rule[2] != 'error';
+              }
+            });
+          }
+        } catch {
+          state.message =
+            'The value is invalid. Please correct it. The scripted code might be not generated. ';
+          state.isValid = false;
         }
-        let messageType: string = '';
-        if (state.options.unit && state.options.unit === 'ms' && value < 0) {
-          messageType = 'error';
-          state.message = `The ${state.options.label} cannot be negative.`;
-        } else if (state.options.rules != null) {
-          state.options.rules.forEach((rule: string[]) => {
-            state.message = eval(rule[0]) ? rule[1] : '';
-            messageType = eval(rule[0]) ? rule[2] : '';
-          });
-        }
-        // if (state.message.length > 0) {
-        //   state.timeoutId = setTimeout(() => {
-        //     state.message = '';
-        //   }, 7500);
-        // }
-        return messageType === 'error' ? state.message : true;
+        return true;
       },
     ];
 
@@ -767,6 +888,7 @@ export default Vue.extend({
       closeMessage,
       backMenu,
       decrement,
+      deserialize,
       generateValues,
       increment,
       label,
@@ -800,8 +922,28 @@ export default Vue.extend({
   display: block;
 }
 
+.parameterEdit .v-text-field__details {
+  margin-bottom: 0 !important;
+}
+
 .parameterEdit .message {
-  background-color: rgba(0, 0, 0, 0.12);
   cursor: pointer;
+}
+
+.parameterEdit .message .v-alert {
+  border-left: none !important;
+  border-radius: 0;
+  border-right: none !important;
+  margin-bottom: 0;
+}
+
+.parameterEdit .message .v-alert__content {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.parameterEdit .message .v-alert__icon {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 </style>
