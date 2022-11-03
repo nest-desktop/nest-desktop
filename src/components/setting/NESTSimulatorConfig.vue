@@ -9,7 +9,7 @@
               @change="updateNESTSimulatorConfig"
               hide-details
               label="URL of NEST Simulator"
-              placeholder="http://127.0.0.1:5000"
+              placeholder="http://127.0.0.1:52425"
               v-bind="attrs"
               v-model="state.app.backends.nestSimulator.url"
               v-on="on"

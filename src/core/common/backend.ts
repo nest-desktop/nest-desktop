@@ -7,7 +7,7 @@ import { Config } from './config';
 export class Backend extends Config {
   private _state: UnwrapRef<any>;
 
-  constructor(name: string, seek = { path: '', port: 5000, versionPath: '' }) {
+  constructor(name: string, seek = { path: '', port: 0, versionPath: '' }) {
     super(name);
     this._state = reactive({
       ready: false,

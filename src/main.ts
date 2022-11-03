@@ -38,7 +38,7 @@ const mountApp = () => {
 if (process.env.IS_ELECTRON) {
   Vue.prototype.$appConfig = {
     insiteAccess: { url: 'http://localhost:8080' },
-    nestSimulator: { url: 'http://localhost:5000' },
+    nestSimulator: { url: 'http://localhost:52425' },
   };
   mountApp();
 } else {
