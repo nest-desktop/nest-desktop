@@ -1,29 +1,21 @@
-export function upgradeProject_31_to_32(project: any): any {
-  if (!/^[0-3]\.[0-1]+(.\d+)?$/.test(project.version)) {
+import { App } from '../app';
+
+const validateVersion = (version: string) =>
+  /^3\.1(\.\d+)?(\w+)?$/.test(version);
+
+export function upgradeProject_31_to_32(app: App, project: any): any {
+  if (!validateVersion(project.version)) {
     return project;
   }
 
-  // // Stores node params only if visible.
-  // project.network.nodes.forEach((node: any) => {
-  //   if (node.params) {
-  //     node.params = node.params.filter((param: any) => param.visible);
-  //   }
-  // });
-  //
-  // // Stores connection params only if visible.
-  // project.network.connections.forEach((connection: any) => {
-  //   if (connection.params) {
-  //     connection.params = connection.params.filter(
-  //       (param: any) => param.visible
-  //     );
-  //   }
-  //   if (connection.synapse && connection.synapse.params) {
-  //     connection.synapse.params = connection.synapse.params.filter(
-  //       (param: any) => param.visible
-  //     );
-  //   }
-  // });
+  if (project.activityGraph) {
+    project.activityGraph = {
+      chart: {
+        panels: project.activityGraph.panels,
+      },
+    };
+  }
 
-  project.version = '3.2.0';
+  project.version = '3.2';
   return project;
 }

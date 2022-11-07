@@ -1,6 +1,9 @@
 import { App } from '../app';
 import { Model } from '../model/model';
 
+const validateVersion = (version: string) =>
+  /^2\.\d+(\.\d+)?(\w+)?$/.test(version);
+
 /**
  * Upgrades networks which were created with NEST Desktop v2.5 or older to be
  * compatible with >= v3.0 (the data structure changed in v2.5).
@@ -8,7 +11,7 @@ import { Model } from '../model/model';
  * @param project Project which should be transformed
  * @returns Network changed to new format
  */
-function upgradeNetwork_25_to_30(app: App, project: any): any {
+function upgradeNetwork_2x_to_30(app: App, project: any): any {
   const network: any = {
     nodes: [],
     connections: [],
@@ -98,15 +101,15 @@ function upgradeNetwork_25_to_30(app: App, project: any): any {
   return network;
 }
 
-export function upgradeProject_25_to_30(app: App, project: any): any {
-  if (!/^[0-2]\.\d+(.\d+)?$/.test(project.version)) {
+export function upgradeProject_2x_to_30(app: App, project: any): any {
+  if (!validateVersion(project.version)) {
     return project;
   }
 
   return {
     activityGraph: project.activityGraph || {},
-    network: upgradeNetwork_25_to_30(app, project),
+    network: upgradeNetwork_2x_to_30(app, project),
     simulation: project.simulation,
-    version: '3.0.0',
+    version: '3.0',
   };
 }

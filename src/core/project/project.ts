@@ -11,7 +11,7 @@ import { Node } from '../node/node';
 import { ProjectState } from './projectState';
 import { Simulation } from '../simulation/simulation';
 import { SpikeActivity } from '../activity/spikeActivity';
-import { upgradeProject } from './projectUpgrade';
+import { upgradeProject } from '../upgrades/upgrades';
 
 export class Project {
   private _activityGraph: ActivityGraph;
