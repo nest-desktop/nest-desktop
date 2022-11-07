@@ -281,16 +281,24 @@ export class Model extends Config {
     this._id = model.id;
 
     // Update the model recordables.
-    this.updateRecordables(model);
+    if ('recordables' in model) {
+      this.updateRecordables(model);
+    }
 
     // Update the model parameters.
-    this.updateParameters(model);
+    if ('params' in model) {
+      this.updateParameters(model);
+    }
 
     // Update the model compartment parameters.
-    this.updateCompartmentParameters(model);
+    if ('compartmentParams' in model) {
+      this.updateCompartmentParameters(model);
+    }
 
     // Update the model receptors.
-    this.updateReceptors(model);
+    if ('receptors' in model) {
+      this.updateReceptors(model);
+    }
   }
 
   /**

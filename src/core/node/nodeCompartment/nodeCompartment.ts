@@ -170,7 +170,7 @@ export class NodeCompartment {
   initParameters(comp: any = null): void {
     // Update parameters from model or node compartment
     this._params = [];
-    const model = this.node.model;
+    const model = this._node.model;
     if (model) {
       model.compartmentParams.forEach(
         (modelParam: ModelCompartmentParameter) => {
