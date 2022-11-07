@@ -2,48 +2,48 @@
 import nest
 import numpy
 {{ /simulation.code.importModules }}
-
 {{ #simulation.code.resetKernel }}
+
 nest.ResetKernel()
 {{ /simulation.code.resetKernel }}
-
 {{ #simulation.code.runSimulationInsite }}
+
 try:
   nest.Install('insitemodule')
 except:
   pass
 {{ /simulation.code.runSimulationInsite }}
-
 {{ #simulation.code.setKernelStatus }}
+
 # Set simulation kernel
-nest.set({
+nest.SetKernelStatus({
   "local_num_threads": {{ simulation.kernel.localNumThreads }},
   "resolution": {{ simulation.kernel.resolution }},
   "rng_seed": {{ simulation.kernel.rngSeed }}
 })
 {{ /simulation.code.setKernelStatus }}
-
 {{ #simulation.code.createNodes }}
 {{ #network.hasNodeModels }}
+
 # Copy node models
 {{ #network.nodeModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ &valueAsString }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
 {{ /network.nodeModels }}
-
 {{ /network.hasNodeModels }}
+
 # Create nodes
 {{ #network.nodes }}
-{{ view.label }} = nest.Create("{{ model.id }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
+{{ view.label }} = nest.Create("{{ modelId }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ &valueAsString }},
 {{ /filteredParams }}
 {{ #model.isRecorder }}
 {{ #model.isMultimeter }}
-  "record_from": {{ recordsFixed }},
+  "record_from": {{ &recordsFixed }},
 {{ /model.isMultimeter }}
 {{ #simulation.code.runSimulationInsite }}
   "record_to": "insite",
@@ -52,19 +52,19 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ &spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
 {{ /simulation.code.createNodes }}
-
 {{ #simulation.code.connectNodes }}
 {{ #network.hasSynapseModels }}
+
 # Copy synapse models
 {{ #network.synapseModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
-  "{{ id }}": {{ valueAsString }},
+  "{{ id }}": {{ &valueAsString }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
 {{ /network.synapseModels }}
-
 {{ /network.hasSynapseModels }}
+
 # Connect nodes
 {{ #network.connections }}
 nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
@@ -90,23 +90,20 @@ nest.Prepare()
 nest.Simulate({{ simulation.time }})
 
 {{ ^simulation.code.runSimulationInsite }}
-# Get activities
-def getNodeIds(node):
-  if node.model == "spike_recorder":
-    return list(nest.GetConnections(None, node).sources())
-  else:
-    return list(nest.GetConnections(node).targets())
 {{ #network.someSpatialNodes }}
+# Get positions
+def getPositions(nodes):
+    positions = {}
+    for node in nodes:
+        position = nest.GetPosition(node)
+        for idx in range(len(node)):
+            positions[node[idx].global_id] = position[idx]
+    return positions
 
-def getPosition(node):
-  return list(zip(node.tolist(), nest.GetPosition(node)))
 {{ /network.someSpatialNodes }}
-
 response = {
   "events": [{{ #network.recorders }}{{ view.label }}.events, {{ /network.recorders }}]{{ #network.someSpatialNodes }},
-  "positions": dict(numpy.concatenate([{{ #network.spatial }}
-    getPosition({{ view.label }}),{{ /network.spatial }}
-  ])){{ /network.someSpatialNodes }}
+  "positions": getPositions([{{ #network.spatial }}{{ view.label }},{{ /network.spatial }}]){{ /network.someSpatialNodes }}
 }
 {{ /simulation.code.runSimulationInsite }}
 {{ /simulation.code.runSimulation }}

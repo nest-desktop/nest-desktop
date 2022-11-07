@@ -34,19 +34,9 @@
 
         <v-spacer />
 
-        <v-select
-          :items="state.nestVersions"
-          @change="state.code.generate()"
-          class="mt-2"
-          dense
-          hide-details
-          style="max-width: 102px"
-          v-model="state.code.state.version"
-        />
-
         <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn small text tile height="40" v-bind="attrs" v-on="on">
+          <template #activator="{ on, attrs }">
+            <v-btn height="40" small text tile v-bind="attrs" v-on="on">
               <v-icon small v-text="'mdi-download'" />
             </v-btn>
           </template>
@@ -60,6 +50,34 @@
                 <Icon :icon="item.icon" />
               </v-list-item-icon>
               <v-list-item-title v-text="item.title" />
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <v-menu :close-on-content-click="false" offset-y>
+          <template #activator="{ on, attrs }">
+            <v-btn height="40" small text tile v-bind="attrs" v-on="on">
+              <v-icon small v-text="'mdi-dots-vertical'" />
+            </v-btn>
+          </template>
+
+          <v-list dense>
+            <v-list-item>
+              <v-radio-group
+                @change="state.code.generate()"
+                class="ma-0"
+                label="NEST version"
+                v-model="state.code.state.version"
+              >
+                <v-radio
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value"
+                  class="text-no-wrap"
+                  hide-details
+                  v-for="item in state.nestVersions"
+                />
+              </v-radio-group>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -205,10 +223,10 @@ export default Vue.extend({
         theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
       },
       nestVersions: [
-        { text: 'NEST 3.3', value: '3.3' },
-        { text: 'NEST 3.2', value: '3.2' },
-        { text: 'NEST 3.1', value: '3.1' },
-        { text: 'NEST 3.0', value: '3.0' },
+        { text: 'v3.3', value: '3.3' },
+        { text: 'v3.2', value: '3.2' },
+        { text: 'v3.1', value: '3.1' },
+        { text: 'v3.0', value: '3.0' },
       ],
       style: {
         width: 300,
