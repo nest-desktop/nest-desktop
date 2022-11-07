@@ -178,9 +178,7 @@ export default Vue.extend({
       const selectedModels: Model[] = appState.dialog.data.models.filter(
         (model: Model) => model.state.selected
       );
-      if (selectedModels.length > 0) {
-        core.app.model.deleteModels(selectedModels);
-      }
+      core.app.model.deleteModels(selectedModels);
       core.app.closeDialog();
     };
 

@@ -236,12 +236,10 @@ export default Vue.extend({
      * Delete selected projects.
      */
     const deleteProjects = () => {
-      const selectedProjects: any[] = dialogState.data.projects.filter(
-        (project: any) => project.selected
+      const selectedProjects: string[] = dialogState.data.projects.filter(
+        (project: any) => project.state.selected
       );
-      if (selectedProjects.length > 0) {
-        core.app.project.deleteProjects(selectedProjects);
-      }
+      core.app.project.deleteProjects(selectedProjects);
       core.app.closeDialog();
     };
 

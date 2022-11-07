@@ -30,17 +30,6 @@ export class ProjectDB extends DatabaseService {
   }
 
   /**
-   * Delete projects.
-   */
-  async deleteProjects(projects: any[]): Promise<any> {
-    this.consoleLog('Delete projects');
-    const projectIds: string[] = projects.map(
-      (project: any) => project.docId || project._id || project.id
-    );
-    return this.deleteBulk(projectIds);
-  }
-
-  /**
    * Import projects from assets to the database.
    */
   async importProjectsFromAssets(): Promise<any> {

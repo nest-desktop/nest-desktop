@@ -40,11 +40,14 @@ export function upgradeProject(app: App, project: any): any {
   }
 
   if (oldVersion != project.version) {
-    console.log(
-      `Upgrade project (${project.id.slice(0, 6)}): ${oldVersion} -> ${
-        project.version
-      }`
-    );
+    const projectId = project.id;
+    if (projectId) {
+      console.log(
+        `Upgrade project (${project.id.slice(0, 6)}): ${oldVersion} -> ${
+          project.version
+        }`
+      );
+    }
   }
 
   return project;
