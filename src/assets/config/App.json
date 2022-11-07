@@ -14,7 +14,7 @@
   },
   "darkMode": false,
   "devMode": false,
-  "intervalCheckBackends": 2,
+  "intervalCheckBackends": -1,
   "log": false,
   "models": [
     "ac_generator",
