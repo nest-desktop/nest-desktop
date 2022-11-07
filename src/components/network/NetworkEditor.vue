@@ -96,9 +96,16 @@
       </g>
 
       <rect
-        :fill="$vuetify.theme.dark ? '#121212' : 'white'"
+        :fill="
+          state.graph && state.graph.config.transparentWorkspace
+            ? 'transparent'
+            : $vuetify.theme.dark
+            ? '#121212'
+            : 'white'
+        "
         id="workspaceHandler"
       />
+
       <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">
@@ -190,15 +197,15 @@ export default Vue.extend({
     const networkEditor = ref(null);
     const networkGraph = ref(null);
     const state = reactive({
-      network: projectView.state.project.network,
-      graph: undefined,
-      nodeMenu: {
-        node: undefined,
+      connectionMenu: {
+        connection: undefined,
         position: { x: 0, y: 0 },
         show: false,
       },
-      connectionMenu: {
-        connection: undefined,
+      graph: undefined,
+      network: projectView.state.project.network,
+      nodeMenu: {
+        node: undefined,
         position: { x: 0, y: 0 },
         show: false,
       },
@@ -371,7 +378,6 @@ export default Vue.extend({
 .node text {
   font-size: 12px;
   pointer-events: none;
-  text-anchor: middle;
 }
 
 .dragline {
