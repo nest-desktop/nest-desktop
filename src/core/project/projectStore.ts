@@ -99,12 +99,7 @@ export class ProjectStore {
     this._state.projectRevisions = [];
     await this._db.list('createdAt', true).then((projects: any[]) => {
       this._state.projects = projects;
-
-      this._state.projects.forEach((project: any) => {
-        project.state = {
-          selected: false,
-        };
-      });
+      this.resetProjectStates()
 
       // Redirect if project id from the current route is provided in the list.
       const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
@@ -148,13 +143,11 @@ export class ProjectStore {
    */
   deleteProjects(projects: any[]): void {
     this.consoleLog('Delete projects');
-    if (projects.length === 0) return
+    if (projects.length === 0) return;
     const projectDocIds: string[] = projects.map(
       (project: any) => project.docId || project._id || project.id
     );
-    this._db
-      .deleteBulk(projectDocIds)
-      .then(() => this.initProjectList());
+    this._db.deleteBulk(projectDocIds).then(() => this.initProjectList());
   }
 
   /**
@@ -168,9 +161,9 @@ export class ProjectStore {
       if (project instanceof Project) {
         project.state.reset();
       } else if (typeof project === 'object') {
-        project.state = {
+        project.state = reactive({
           selected: false,
-        };
+        });
       }
     });
   }
