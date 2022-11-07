@@ -58,7 +58,7 @@ export class ValueGenerator {
 
   set type(value: string) {
     this._type = value;
-    this.resetParamDefaults();
+    this.resetToParamDefaults();
     this.updateParamViews();
   }
 
@@ -66,12 +66,18 @@ export class ValueGenerator {
     return this._types;
   }
 
-  resetParamDefaults(): void {
+  /**
+  * Reset values to parameter defaults.
+  */
+  resetToParamDefaults(): void {
     this._options.forEach((option: any) => {
       this._params[option.id] = option.value;
     });
   }
 
+  /**
+  * Update parameter views.
+  */
   updateParamViews(): void {
     const params: string[] = this._inputs[this._type];
     this._options.forEach(
@@ -79,6 +85,9 @@ export class ValueGenerator {
     );
   }
 
+  /**
+  * Generate values in an array.
+  */
   generate(d: any = undefined): number[] {
     const p: any = d || this._params;
     let array: number[];

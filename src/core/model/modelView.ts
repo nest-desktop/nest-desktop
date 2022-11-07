@@ -141,7 +141,7 @@ export class ModelView {
       return;
     }
 
-    this.getDefaultParams().then(() => {
+    this.getParamDefaults().then(() => {
       if (this._state.defaults['element_type'] === 'neuron') {
         this.initProject();
         this._state.project.activityGraph.emptyActivityGraph();
@@ -223,9 +223,9 @@ export class ModelView {
   }
 
   /**
-   * Get default parameters from NEST Simulator.
+   * Get default values of parameters from NEST Simulator.
    */
-  async getDefaultParams(): Promise<any> {
+  async getParamDefaults(): Promise<any> {
     return this._state.model
       .fetchDefaults()
       .then((resp: any) => {
