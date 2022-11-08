@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted, watch } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { ActivityGraph } from '@/core/activity/activityGraph';
 import ActivityChartGraph from '@/components/activity/activityChart/ActivityChartGraph.vue';

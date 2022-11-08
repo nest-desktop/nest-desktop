@@ -295,7 +295,7 @@ export default Vue.extend({
       core.app.closeDialog();
     };
 
-    onMounted(() => getTreesFromGithub());
+    onMounted(getTreesFromGithub);
 
     return {
       closeDialog: () => core.app.closeDialog(),
