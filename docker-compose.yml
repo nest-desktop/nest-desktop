@@ -3,6 +3,8 @@ version: '3'
 services:
   nest-desktop:
     image: docker-registry.ebrains.eu/nest/nest-desktop:3.1
+    environment:
+      NEST_SIMULATOR_PORT: 52425
     ports:
       - '8000:8000'
 

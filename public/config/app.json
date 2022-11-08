@@ -1,10 +1,12 @@
 {
   "insiteAccess": {
+    "enabled": false,
     "path": "",
     "port": "",
     "url": ""
   },
   "nestSimulator": {
+    "enabled": true,
     "path": "",
     "port": "",
     "url": ""
