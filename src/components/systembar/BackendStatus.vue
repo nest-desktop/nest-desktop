@@ -1,35 +1,26 @@
 <template>
   <div class="backendStatus">
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on, attrs }">
-        <v-chip
-          @click="check()"
-          class="pr-0"
-          label
-          outlined
-          v-bind="attrs"
-          v-on="on"
-          x-small
-        >
-          {{ state.backend.text }}
-          <v-icon
-            :color="isReady() ? 'green' : 'red'"
-            v-text="'mdi-circle-medium'"
-          />
-        </v-chip>
-      </template>
-      <div class="text-no-wrap">
-        The backend {{ state.backend.text }} is
-        <span v-if="!isReady()" v-text="'not'" />
-        running.
-      </div>
-    </v-tooltip>
+    <v-chip
+      :disabled="!state.enabled"
+      :title="state.title"
+      @click="check()"
+      class="pr-0"
+      label
+      outlined
+      x-small
+    >
+      {{ state.backend.text }}
+      <v-icon
+        :color="state.enabled ? (state.ready ? 'green' : 'red') : 'grey'"
+        v-text="'mdi-circle-medium'"
+      />
+    </v-chip>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import core from '@/core';
 
@@ -40,16 +31,46 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
+      enabled: false,
       backend: props.backend,
+      ready: false,
+      title: '',
     });
 
+    const getBackend = () => core.app.backends[state.backend['id']];
+
     const check = () => {
-      core.app.backends[state.backend['id']].check();
+      getBackend()
+        .check()
+        .finally(() => {
+          update();
+        });
     };
 
-    const isReady = () => core.app.backends[state.backend['id']].state.ready;
+    const updateTitle = () => {
+      state.title = `The backend ${state.backend['text']} is `;
+      state.title += !state.enabled
+        ? 'disabled.'
+        : !state.ready
+        ? 'not running.'
+        : 'running.';
+    };
 
-    return { check, core, isReady, state };
+    const update = () => {
+      const backend = getBackend();
+      state.enabled = backend.enabled;
+      state.ready = backend.state.ready;
+      updateTitle();
+    };
+
+    watch(() => {
+      const backendState = getBackend().state;
+      return [backendState.enabled, backendState.ready];
+    }, update);
+
+    onMounted(update);
+
+    return { check, core, state };
   },
 });
 </script>
