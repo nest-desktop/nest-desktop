@@ -7,13 +7,31 @@ import { Config } from './config';
 export class Backend extends Config {
   private _state: UnwrapRef<any>;
 
-  constructor(name: string, seek = { path: '', port: 5000, versionPath: '' }) {
+  constructor(
+    name: string,
+    seek = {
+      path: '',
+      port: 5000,
+      versionPath: '',
+    }
+  ) {
     super(name);
     this._state = reactive({
+      enabled: false,
       ready: false,
       seek,
       version: {},
     });
+  }
+
+  get enabled(): boolean {
+    this._state.enabled = this.config.enabled;
+    return this._state.enabled;
+  }
+
+  set enabled(value: boolean) {
+    this._state.enabled = value;
+    this.updateConfig({ enabled: value });
   }
 
   get host(): string {
@@ -98,6 +116,7 @@ export class Backend extends Config {
    * Reset state of the backend.
    */
   resetState(): void {
+    this.state.ready = false;
     this.state.version = {};
   }
 
@@ -106,6 +125,7 @@ export class Backend extends Config {
    */
   async check(): Promise<void> {
     this.resetState();
+    if (this.config.enabled === false) return;
 
     // Check if the hostname does not already exist in the config.
     if (this.config.hostname) {
