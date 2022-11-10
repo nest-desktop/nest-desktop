@@ -46,7 +46,7 @@ export class App extends Config {
     });
     this._backends.nestSimulator = new Backend('NESTSimulator', {
       path: '/nest',
-      port: 5000,
+      port: 52425,
       versionPath: '/',
     });
 
