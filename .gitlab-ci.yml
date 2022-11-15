@@ -8,7 +8,7 @@ stages:
 
 build_app:
   stage: build
-  image: node:lts-alpine
+  image: node:16-alpine
   artifacts:
     paths:
       - .env
@@ -20,12 +20,13 @@ build_app:
     - when: always
   before_script:
     - touch .env
-    - VERSION="$(node -p "require('./package.json').version")"
     - |-
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
+        VERSION="$(node -p "require('./package.json').version")"
         echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
         echo "DOCKER_TAG='${VERSION}'" >> .env
       else
+        VERSION="$(node -p "var sem = {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}; var v = require('./package.json').version.split('-'); [v[0], sem[v[1]]].join('')")"
         echo "__version__ = '${VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
         echo "DOCKER_TAG='${VERSION}${CI_PIPELINE_IID}'" >> .env
       fi
