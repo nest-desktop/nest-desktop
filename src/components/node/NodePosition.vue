@@ -51,7 +51,7 @@
                 input: 'valueSlider',
                 label: 'population size',
                 max: 1000,
-                rules: [['value > 0', 'Population size must be positive', 'error']],
+                rules: [['value > 0', 'The population size must be positive', 'error']],
                 value: 1,
               }"
               :value.sync="state.node.size"

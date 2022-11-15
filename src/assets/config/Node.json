@@ -6,7 +6,7 @@
     "label": "population size",
     "max": 1000,
     "min": 1,
-    "rules": [["value > 0", "The population size musst be positive.", "error"]],
+    "rules": [["value > 0", "The population size must be positive.", "error"]],
     "step": 1,
     "value": 1
   }

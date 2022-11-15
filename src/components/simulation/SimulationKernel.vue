@@ -127,7 +127,7 @@ export default Vue.extend({
         rules: [
           [
             'value >= 0.1',
-            'Use recording interval of analog signals with caution! Large data points could cause a high system load and thus freezes and lags!',
+            'Use the recording interval of analog signals with caution! Large data points could cause a high system load and thus freezes and lags!',
             'warning',
           ],
         ],
@@ -151,7 +151,7 @@ export default Vue.extend({
         rules: [
           [
             'value < 2000',
-            'Large simulation time could impact a system performance!',
+            'Large simulation time may affect system performance if the simulator is also running locally!',
             'warning',
           ],
         ],
