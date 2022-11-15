@@ -695,7 +695,7 @@ export default Vue.extend({
     };
 
     /**
-     * Check if the string contains only number.
+     * Check if the string contains only a number.
      */
     const containsOnlyNumber = (value: string) => /^\d.?\d?$/.test(value);
 
