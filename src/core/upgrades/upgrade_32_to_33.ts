@@ -8,7 +8,12 @@ export function upgradeProject_32_to_33(app: App, project: any): any {
     return project;
   }
 
-  if (project.activityGraph) {
+  if (
+    project.activityGraph &&
+    project.activityGraph.chart &&
+    project.activityGraph.chart.panels &&
+    project.activityGraph.chart.panels.length > 0
+  ) {
     // Rename model ids of activity chart panels.
     const activityChartPanelModels = {
       analogSignalPlot: 'analogSignalTimeSeries',

@@ -8,7 +8,7 @@ export function upgradeProject_31_to_32(app: App, project: any): any {
     return project;
   }
 
-  if (project.activityGraph) {
+  if (project.activityGraph && project.activityGraph.panels) {
     project.activityGraph = {
       chart: {
         panels: project.activityGraph.panels,
