@@ -11,7 +11,7 @@
       "rules": [
         [
           "value.slice(1).every((item, idx) => value[idx] < item)",
-          "The values must be sorted  in ascending order.",
+          "The values must be sorted in ascending order.",
           "error"
         ]
       ],

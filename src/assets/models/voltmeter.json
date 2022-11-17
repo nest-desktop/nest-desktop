@@ -11,7 +11,7 @@
       "rules": [
         [
           "value >= 0.1",
-          "A small recording interval produces many data points which could cause a high system load and thus freezes and lags!",
+          "Small values generate many data points and can put quite a load on your browser.",
           "warning"
         ]
       ],

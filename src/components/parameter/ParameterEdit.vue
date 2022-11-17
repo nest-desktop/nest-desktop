@@ -843,17 +843,17 @@ export default Vue.extend({
           const value = deserialize(val);
           if (
             state.options.unit &&
-            ['ms', 'Hz'].includes(state.options.unit) &&
+            ['Hz', 'ms', 'nS', 'pF'].includes(state.options.unit) &&
             typeof value === 'number' &&
             value <= 0
           ) {
-            state.message = `The ${state.options.label} must be positive.`;
+            state.message = `The value must be strictly positive.`;
             state.isValid = false;
           } else if (
             state.options.id === 'interval' &&
             value < simulationResolution()
           ) {
-            state.message = `The ${state.options.label} must be at least as long as the simulation resolution.`;
+            state.message = `The value must be at least as long as the simulation resolution.`;
             state.isValid = false;
           } else if (state.options.rules != null) {
             state.options.rules.forEach((rule: string[]) => {

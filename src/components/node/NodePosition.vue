@@ -47,13 +47,7 @@
           <span v-if="state.node.spatial.positions.name === 'free'">
             <ParameterEdit
               :color="state.node.view.color"
-              :options="{
-                input: 'valueSlider',
-                label: 'population size',
-                max: 1000,
-                rules: [['value > 0', 'The population size must be positive', 'error']],
-                value: 1,
-              }"
+              :options="state.sizeOptions"
               :value.sync="state.node.size"
             />
           </span>
@@ -193,6 +187,20 @@ export default Vue.extend({
         { id: 'grid', name: 'Grid positions' },
       ],
       selectedPositions: 'free',
+      sizeOptions: {
+        input: 'valueSlider',
+        label: 'population size',
+        max: 1000,
+        rules: [
+          ['value > 0', 'The value must be strictly positive.', 'error'],
+          [
+            'value < 1000',
+            'Large values generate many data points and can put quite a load on your browser.',
+            'warning',
+          ],
+        ],
+        value: 1,
+      },
     });
 
     const initPositions = () => {
