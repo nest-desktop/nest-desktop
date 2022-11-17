@@ -1,43 +1,43 @@
 {
   "abbreviation": "mm",
-  "id": "multimeter",
   "elementType": "recorder",
+  "id": "multimeter",
   "label": "multimeter",
   "params": [
     {
       "id": "interval",
-      "label": "time interval of recording",
-      "unit": "ms",
-      "value": 1,
       "input": "tickSlider",
-      "ticks": [0.01, 0.1, 1, 10],
+      "label": "time interval of recording",
       "rules": [
         [
-          "value < 1",
-          "A small recording interval produces many data points which could cause a high system load and thus freezes and lags!",
+          "value >= 0.1",
+          "Small values generate many data points and can put quite a load on your browser.",
           "warning"
         ]
-      ]
+      ],
+      "ticks": [0.01, 0.1, 1, 10],
+      "unit": "ms",
+      "value": 1
     },
     {
       "id": "start",
-      "label": "start time",
-      "unit": "ms",
-      "value": 0,
       "input": "valueSlider",
+      "label": "start time",
       "max": 10000,
       "min": 0,
-      "step": 10
+      "step": 10,
+      "unit": "ms",
+      "value": 0
     },
     {
       "id": "stop",
-      "label": "stop time",
-      "unit": "ms",
-      "value": 10000,
       "input": "valueSlider",
+      "label": "stop time",
       "max": 10000,
       "min": 0,
-      "step": 10
+      "step": 10,
+      "unit": "ms",
+      "value": 10000
     }
   ]
 }

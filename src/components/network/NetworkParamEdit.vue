@@ -288,10 +288,14 @@ export default Vue.extend({
         max: 1000,
         min: 1,
         value: 1,
-        iconSize: 'large',
         rules: [
           [
-            'value >= 1000',
+            'value > 0',
+            'The population size must be positive.',
+            'error',
+          ],
+          [
+            'value < 1000',
             'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
             'warning',
           ],

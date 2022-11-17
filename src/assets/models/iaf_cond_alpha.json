@@ -1,128 +1,128 @@
 {
-  "id": "iaf_cond_alpha",
   "elementType": "neuron",
+  "id": "iaf_cond_alpha",
   "label": "IAF cond alpha",
   "recordables": ["g_ex", "g_in", "t_ref_remaining", "V_m"],
   "params": [
     {
       "id": "C_m",
-      "label": "capacity of the membrane",
-      "unit": "pF",
-      "value": 250,
       "input": "valueSlider",
+      "label": "capacity of the membrane",
       "max": 500,
       "min": 0,
-      "step": 1
+      "step": 1,
+      "unit": "pF",
+      "value": 250
     },
     {
       "id": "E_L",
-      "label": "leak reversal potential",
-      "unit": "mV",
-      "value": -70,
       "input": "valueSlider",
+      "label": "leak reversal potential",
       "max": 100,
       "min": -100,
-      "step": 1
+      "step": 1,
+      "unit": "mV",
+      "value": -70
     },
     {
       "id": "E_ex",
-      "label": "excitatory reversal potential",
-      "unit": "mV",
-      "value": 0,
       "input": "valueSlider",
+      "label": "excitatory reversal potential",
       "max": 100,
       "min": 0,
-      "step": 1
+      "step": 1,
+      "unit": "mV",
+      "value": 0
     },
     {
       "id": "E_in",
-      "label": "inhibitory reversal potential",
-      "unit": "mV",
-      "value": -85,
       "input": "valueSlider",
+      "label": "inhibitory reversal potential",
       "max": 0,
       "min": -100,
-      "step": 1
+      "step": 1,
+      "unit": "mV",
+      "value": -85
     },
     {
       "id": "I_e",
-      "label": "constant external input current",
-      "unit": "pA",
-      "value": 0,
       "input": "valueSlider",
+      "label": "constant external input current",
       "max": 100,
       "min": -100,
-      "step": 1
+      "step": 1,
+      "unit": "pA",
+      "value": 0
     },
     {
       "id": "V_m",
-      "label": "initial membrane potential",
-      "unit": "mV",
-      "value": -70,
       "input": "valueSlider",
+      "label": "initial membrane potential",
       "max": 100,
       "min": -100,
-      "step": 1
+      "step": 1,
+      "unit": "mV",
+      "value": -70
     },
     {
       "id": "V_reset",
-      "label": "reset potential of the membrane",
-      "unit": "mV",
-      "value": -60,
       "input": "valueSlider",
+      "label": "reset potential of the membrane",
       "max": 100,
       "min": -100,
-      "step": 1
+      "step": 1,
+      "unit": "mV",
+      "value": -60
     },
     {
       "id": "V_th",
-      "label": "spike threshold",
-      "unit": "mV",
-      "value": -55,
       "input": "valueSlider",
+      "label": "spike threshold",
       "max": 100,
       "min": -100,
-      "step": 1
+      "step": 1,
+      "unit": "mV",
+      "value": -55
     },
     {
       "id": "g_L",
-      "label": "leak conductance",
-      "unit": "nS",
-      "value": 16.6667,
       "input": "valueSlider",
+      "label": "leak conductance",
       "max": 30,
       "min": 1,
-      "step": 1
+      "step": 1,
+      "unit": "nS",
+      "value": 16.6667
     },
     {
       "id": "t_ref",
-      "label": "duration of refractory period",
-      "unit": "ms",
-      "value": 2,
       "input": "valueSlider",
+      "label": "duration of refractory period",
       "max": 5,
       "min": 0.1,
-      "step": 0.1
+      "step": 0.1,
+      "unit": "ms",
+      "value": 2
     },
     {
       "id": "tau_syn_ex",
-      "label": "time constant of the excitatory synapse",
-      "unit": "ms",
-      "value": 0.2,
       "input": "valueSlider",
+      "label": "time constant of the excitatory synapse",
       "max": 4,
       "min": 0.1,
-      "step": 0.1
+      "step": 0.1,
+      "unit": "ms",
+      "value": 0.2
     },
     {
       "id": "tau_syn_in",
-      "label": "time constant of the inhibitory synapse",
-      "unit": "ms",
-      "value": 2,
       "input": "valueSlider",
+      "label": "time constant of the inhibitory synapse",
       "max": 4,
       "min": 0.1,
-      "step": 0.1
+      "step": 0.1,
+      "unit": "ms",
+      "value": 2
     }
   ]
 }
