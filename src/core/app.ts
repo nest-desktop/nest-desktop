@@ -36,7 +36,7 @@ export class App extends Config {
       ready: false,
       theme: { dark: false },
       version: environment.VERSION,
-    })
+    });
 
     // Backends
     this._backends.insiteAccess = new Backend('InsiteAccess', {
@@ -117,7 +117,10 @@ export class App extends Config {
     // Check if backends is running.
     this.checkBackends();
 
-    if (this.config.intervalCheckBackends > 0) {
+    if (
+      this.config.intervalCheckBackends > 0 &&
+      process.env.VUE_APP_INTERVAL_CHECK_BACKENDS != '0'
+    ) {
       setInterval(() => {
         this.checkBackends();
       }, this.config.intervalCheckBackends * 1000);
