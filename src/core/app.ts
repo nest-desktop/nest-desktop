@@ -8,8 +8,6 @@ import { ModelStore } from './model/modelStore';
 import { Project } from './project/project';
 import { ProjectStore } from './project/projectStore';
 
-import { environment } from '../environments/environment';
-
 const pad = (num: number, size: number = 2): string => {
   let s: string = num + '';
   while (s.length < size) {
@@ -36,7 +34,7 @@ export class App extends Config {
       },
       ready: false,
       theme: { dark: false },
-      version: environment.VERSION,
+      version: process.env.VUE_APP_VERSION,
     });
 
     // Backends
