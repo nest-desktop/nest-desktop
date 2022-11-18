@@ -44,7 +44,11 @@ export default Vue.extend({
     });
 
     const check = () => {
-      core.app.backends[state.backend['id']].check();
+      core.app.backends[state.backend['id']].check().then(() => {
+        if (state.backend['id'] === 'nestSimulator') {
+          core.app.model.fetchModelsNEST();
+        }
+      });
     };
 
     const isReady = () => core.app.backends[state.backend['id']].state.ready;
