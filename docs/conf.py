@@ -51,14 +51,14 @@ templates_path = ['_templates']
 # Include text at the beginning of every file.
 if os.environ.get('READTHEDOCS') == 'True':
   READTHEDOCS_VERSION = os.environ.get('READTHEDOCS_VERSION')
-  if READTHEDOCS_VERSION == 'dev':
+  if READTHEDOCS_VERSION in ['dev', 'doc']:
     rst_prolog = """
         .. warning:: This version of the documentation is NOT an official release. \
         You are reading the documentation version which is in active and ongoing development.
         """
   elif READTHEDOCS_VERSION not in ['latest', version]:
     rst_prolog = """
-        .. warning:: You are reading the documentation of the older release of NEST Desktop. \
+        .. warning:: You are not reading the documentation of the latest release of NEST Desktop. \
         Some guide might be outdated.
         """
 
