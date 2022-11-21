@@ -1,47 +1,45 @@
-================================
-|developer| Develop NEST Desktop
-================================
+===========================
+|developer| Developer guide
+===========================
 
-This is the developer guide, providing more detail on how to develop NEST Desktop.
+The developer guide provides more detail on how to develop NEST Desktop.
 
 Get the source code
 ===================
 
 The source code of NEST Desktop is hosted on `GitHub <https://github.com/nest-desktop/nest-desktop>`__.
-Clone NEST Desktop from the GitHub repository:
+You can clone NEST Desktop from the GitHub repository:
 
 .. code-block:: bash
 
   git clone https://github.com/nest-desktop/nest-desktop
   cd nest-desktop
 
-|
-
-||||
-
-Guides for the development
-==========================
+Development guideline
+=====================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   /developer/preparation
-   /developer/development
-   /developer/production
-   /developer/user-doc
+   coding-conventions
+   semantic-version
+   interface-concept
 
 
-Guides for the developers
-=========================
+Development stages
+==================
 
 .. toctree::
+   :maxdepth: 1
 
-   /developer/command-API
-   /developer/semantic-version
-   /developer/interface-concept
+   stages/preparation
+   stages/development
+   stages/production
+   stages/documentation
+   stages/continuous-integration
 
 
-.. |developer| image:: ../_static/img/icons/user-pen.svg
-  :width: 120px
-  :alt:
-  :align: top
+.. |developer| image:: /_static/img/icons/user-pen.svg
+   :alt: Developer
+   :height: 80px
+   :target: #

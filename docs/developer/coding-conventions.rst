@@ -36,7 +36,7 @@ General coding conventions
 Git conventions
 ---------------
 
-- Commits
+Commits
     - Commits should have a title containing not more than 72 characters.
     - The subject line of commit messages should be a short and informative \
       summary of the pull request in the imperative (e.g. 'Fix bug' instead of \
@@ -48,10 +48,11 @@ Git conventions
       issue ID should be mentioned in the commit body (or even in the name).
     - This helps to generate release notes and to maintain a Git history where a \
       ``git log`` produces helpful output.
-- Pull requests
+
+Pull requests
     - The rules for commits also apply here.
     - Please have a look at the `GitHub keywords in issues and pull requests
-      <https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests>`__ . 
+      <https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests>`__ .
 
 .. _naming-conventions:
 
@@ -63,12 +64,14 @@ Naming conventions
 - Kebab case is used for standard .class names in `Vue` files.
 - The coding style overrides other capitalization rules (e.g. ``ID`` can become ``Id``).
 
+.. _sphinx-conventions:
+
 Sphinx conventions
 ------------------
 
 - For headings, we use the following items: ``=`` (with overline!) for parts and for sections: \
-    - First-level: ``=``, second level: ``-``, third level: ``^``. \
-      Please note that all section headings should not have an overline!
+  First-level: ``=``, second level: ``-``, third level: ``^``. \
+  Please note that all section headings should not have an overline!
 - We usually capitalize only the first letter of a title (or heading), \
   except programming expressions like class names, proper names, etc. \
   We also recommend the Python documentation conventions, as suggested in `the official documentation

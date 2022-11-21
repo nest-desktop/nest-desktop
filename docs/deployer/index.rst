@@ -1,22 +1,41 @@
-=====================================
-|deployer| How to deploy NEST Desktop
-=====================================
+=========================
+|deployer| Deployer guide
+=========================
 
 This guide provides detailed documentation on how to deploy NEST Desktop.
-You can read the deployment instructions by clicking one of these images below:
+You can read the deployment instructions by clicking one of these images below.
 
-Guides to deploy NEST Desktop
+
+Deploy NEST Desktop
+===================
+
+.. raw:: html
+   :file: ./templates/deploy-nest-desktop.html
 
 .. toctree::
-   :maxdepth: 2
+   :hidden:
+   :maxdepth: 1
 
-   /deployer/deploy-docker-compose
-   /deployer/deploy-openshift
-   /deployer/deploy-openstack
-   /deployer/deploy-insite
+   deploy-docker-compose
+   deploy-openshift
+   deploy-openstack
 
 
-.. |deployer| image:: ../_static/img/icons/user-gear.svg
-  :width: 120px
-  :alt:
-  :align: top
+Deploy with external software
+=============================
+
+.. raw:: html
+   :file: ./templates/deploy-external-software.html
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   deploy-docker-compose-insite
+   deploy-docker-compose-nrp
+
+
+.. |deployer| image:: /_static/img/icons/user-gear.svg
+   :alt: Deployer
+   :height: 80px
+   :target: #

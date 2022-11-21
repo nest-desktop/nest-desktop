@@ -1,34 +1,55 @@
-==============================
-|user| How to use NEST Desktop
-==============================
+=================
+|user| User guide
+=================
 
-This is the user guide which provides detailed documentation for the GUI of NEST Desktop.
+The user guide provides detailed documentation for the GUI of NEST Desktop.
 
 
-Guides for NEST Desktop
+How to use NEST Desktop
 =======================
 
+.. raw:: html
+   :file: ./templates/index.html
+
 .. toctree::
-   :maxdepth: 2
+   :hidden:
 
-   /user/setup
-   /user/usage
-   /user/activity-graph
-   /user/nest-models
-   /user/usage-insite
-   /user/troubleshooting
+   setup/index
+   usage-basic/index
 
 
-Guides for the infrastructure
+Advance guide
+=============
+
+.. raw:: html
+   :file: ./templates/usage-advance.html
+
+.. toctree::
+   :hidden:
+
+   usage-advance/project-view
+   usage-advance/model-view
+   usage-advance/network-graph
+   usage-advance/activity-chart-graph
+   usage-advance/activity-animation-graph
+   usage-advance/synapse-model
+
+
+Guides with external software
 =============================
 
+.. raw:: html
+   :file: ./templates/usage-external.html
+
 .. toctree::
+   :hidden:
 
-   /user/use-ebrains
+   usage-external/usage-with-insite
+   usage-external/usage-with-nrp
+   usage-external/usage-with-visimpl
 
 
-.. |user| image:: ../_static/img/icons/user.svg
-   :align: top
-   :alt:
+.. |user| image:: /_static/img/icons/user.svg
+   :alt: User
+   :height: 80px
    :target: #
-   :width: 85px

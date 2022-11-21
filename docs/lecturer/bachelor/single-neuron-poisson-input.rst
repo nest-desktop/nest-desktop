@@ -34,7 +34,7 @@ You can now employ the Poisson generator functionality of NEST to explore the re
    the other one consisting of inhibitory neurons.
 
    .. note::
-      The presynaptic population of a cortical nerve cell can be quite large, comprising up to 10 000 neurons, say.
+      The presynaptic population of a cortical nerve cell can be quite large, comprising up to 10,000 neurons, say.
 
    What matters for the postsynaptic neuron is the accumulated spike rate for each type of input,
    so these input rates will also be large.

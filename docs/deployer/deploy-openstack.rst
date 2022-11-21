@@ -2,11 +2,10 @@ Deploy on OpenStack
 ===================
 
 
-.. image:: ../_static/img/logo/openstack-logo.svg
-  :width: 240px
-  :alt: OpenStack
-
-|
+.. image:: /_static/img/logo/openstack-logo.svg
+   :align: right
+   :alt: OpenStack
+   :width: 240px
 
 The guide provides a step-by-step documentation on how to deploy NEST Desktop on OpenStack resources.
 For more information on OpenStack, please follow this link: https://www.redhat.com/en/topics/openstack.
@@ -18,16 +17,16 @@ For more information bwCloud, follow the link:  https://www.bw-cloud.org/.
 Deployers can build an OpenStack image via Packer and Ansible.
 
 Requirements:
-  - `Packer <https://www.packer.io/downloads.html>`__
-  - `Ansible (2.3.2.0 or newer) <https://releases.ansible.com/ansible/>`__
+   - `Packer <https://www.packer.io/downloads.html>`__
+   - `Ansible (2.3.2.0 or newer) <https://releases.ansible.com/ansible/>`__
 
 
 Deploy NEST Desktop on bwCloud
 ------------------------------
 
-.. image:: ../_static/img/logo/bwcloud-logo.svg
-  :width: 240px
-  :alt: OpenStack
+.. image:: /_static/img/logo/bwcloud-logo.svg
+   :alt: OpenStack
+   :width: 240px
 
 |
 
@@ -42,7 +41,7 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 
 .. code-block:: bash
 
-  source Project_<userID>-openrc.sh
+   source Project_<userID>-openrc.sh
 
 3. Modify the Ansible configurations in ``infrastructure/bwCloud/nest-desktop.json``.
 

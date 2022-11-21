@@ -1,6 +1,6 @@
-=======================================
-|lecturer| Use NEST Desktop in a course
-=======================================
+=========================
+|lecturer| Lecturer guide
+=========================
 
 This section gives directions for lecturers who want to teach computational neuroscience with NEST Desktop.
 Using computer simulations, students are able to explore models
@@ -12,6 +12,10 @@ and what the features of their dynamic behavior are.
    This section assumes that you have prior knowledge of how to use NEST Desktop.
    If you have not used NEST Desktop before, please read the User Documentation first (:doc:`/user/index`).
 
+
+Course organisation
+===================
+
 To support the organization of a course, we provide some hints for course instructors:
 
 - :doc:`/lecturer/course-design`
@@ -22,16 +26,23 @@ Additionally, we provide course materials to be handed out to participants:
 - :doc:`/lecturer/first-steps`
 - :doc:`/lecturer/course-protocol`
 
-|
+.. toctree::
+   :hidden:
+
+   course-design
+   didactic-concept
+   first-steps
+   course-protocol
+
+
+Course topics
+=============
 
 This guide shows how you can teach the biophysics of neurons, synapses
 and large networks of the brain to students using NEST Desktop.
 Video tutorials illustrate important aspects of the course work.
 The provided material could be used to prepare handouts for students.
 
-
-Topics
-======
 
 Bachelor students
 -----------------
@@ -66,34 +77,9 @@ A typical example covers the activity dynamics of neuronal networks with multipl
 
 - :doc:`/lecturer/doctorate/networks-decision-making`
 
+|
 
-Acknowledgments
-===============
-
-Thanks for the help:
-
-- Stefan Rotter (course instructor)
-- Jeanine Laturner (tutor)
-
-
-
-.. |lecturer| image:: ../_static/img/icons/user-graduate.svg
-  :width: 85px
-  :alt: Lecturer
-  :align: top
-  :target: #
-
-
-.. toctree::
-   :hidden:
-
-   bachelor/single-neuron-direct-current-injection
-   bachelor/single-neuron-noise-current-injection
-   bachelor/single-neuron-synaptic-input
-   bachelor/single-neuron-poisson-input
-
-   master/hodgkin-huxley-action-potential
-   master/point-neuron-conductance
-   master/network-dynamics
-
-   doctorate/networks-decision-making
+.. |lecturer| image:: /_static/img/icons/user-graduate.svg
+   :alt: Lecturer
+   :height: 80px
+   :target: #
