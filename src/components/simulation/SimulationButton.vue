@@ -112,7 +112,7 @@ export default Vue.extend({
       state.projectConfig = projectView.config;
     };
 
-    onMounted(() => update());
+    onMounted(update);
 
     watch(
       () => [props.disabled, props.project],

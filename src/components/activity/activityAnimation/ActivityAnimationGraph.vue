@@ -22,7 +22,7 @@ export default Vue.extend({
       graph.initScene(activityAnimationGraph.value);
     };
 
-    onMounted(() => init());
+    onMounted(init);
 
     onBeforeUnmount(() => {
       graph.destroyScene();
