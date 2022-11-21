@@ -2,15 +2,22 @@
   <div class="NESTSimulatorConfig">
     <v-card outlined>
       <v-card-title class="d-flex">
-        NEST Simulator
+        NEST
         <v-spacer />
-        <v-checkbox
+        <v-switch
+          :title="
+            `${
+              state.app.backends.nestSimulator.enabled ? 'Ignore' : 'Search for'
+            }` + ' this backend'
+          "
           dense
           hide-details
-          label="enabled"
           v-model="state.app.backends.nestSimulator.enabled"
         />
       </v-card-title>
+      <v-card-subtitle>
+        Simulator for spiking neural network models
+      </v-card-subtitle>
 
       <v-card-text v-if="state.app.backends.nestSimulator.state.enabled">
         <v-text-field
