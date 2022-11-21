@@ -1,12 +1,10 @@
 Deploy with Docker Compose
 ==========================
 
-
-.. image:: ../_static/img/logo/docker-compose-logo.png
-  :width: 240px
-  :alt: Docker Compose
-
-|
+.. image:: /_static/img/logo/docker-compose-logo.png
+   :align: right
+   :alt: Docker Compose
+   :width: 240px
 
 Docker is a virtualization software packaging applications and its dependencies in a virtual container
 that can run on any Linux server.
@@ -20,11 +18,11 @@ Docker Compose needs the configuration file (``docker-compose.yml``).
 Here, the guide shows you how to build containers with ``docker-compose``.
 
 Requirements:
-  * `Docker Compose <https://docs.docker.com/compose/>`__
+   - `Docker Compose <https://docs.docker.com/compose/>`__
 
 |
 
-.. _preparation:
+.. _deploy-docker-compose_preparation:
 
 Preparation
 -----------
@@ -33,13 +31,13 @@ Prepare your local environment by installing Docker (if you have not installed i
 
 .. code-block:: bash
 
-  apt install docker-compose
+   apt install docker-compose
 
 |
 
-.. _get-configuration-file:
+.. _deploy-docker-compose_get-configuration-file:
 
-Get the configuration file 
+Get the configuration file
 --------------------------
 
 The configuration file  `docker-compose.yml` contains all setup steps executed by Docker.
@@ -47,7 +45,7 @@ Fetch this file from GitHub:
 
 .. code-block:: bash
 
-  wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
+   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 
 It will pull images of NEST Desktop from
 https://docker-registry.ebrains.eu/harbor/projects/6/repositories/nest-desktop
@@ -56,7 +54,7 @@ and NEST Simulator can be started from within the official NEST image
 
 |
 
-.. _getting-started:
+.. _deploy-docker-compose_getting-started:
 
 Getting started
 ---------------
@@ -65,9 +63,9 @@ Build and start the NEST Desktop and NEST Simulator containers.
 
 .. code-block:: bash
 
-  docker-compose up --build
+   docker-compose up --build
 
-NEST Desktop and NEST Simulator are now serving at ``http://localhost:8000`` and ``http://localhost:5000``, respectively.
+NEST Desktop and NEST Simulator are now serving at ``http://localhost:8000`` and ``http://localhost:52425``, respectively.
 With :guilabel:`CTRL` + :guilabel:`C` you can shutdown these services.
 
 .. rubric:: Configurations in :code:`docker-compose.yml`
@@ -93,34 +91,34 @@ For more information, visit the page https://github.com/nest-desktop/nest-deskto
 
 |
 
-.. _upgrade-images:
+.. _deploy-docker-compose_upgrade-images:
 
 Upgrade images
 --------------
 
-First stop the containers and shut down services of nest-desktop and nest-server.
+First stop the containers and shut down all services "nest-desktop" and "nest-simulator".
 
 .. code-block:: bash
 
-  docker-compose stop
-  docker-compose down
+   docker-compose stop
+   docker-compose down
 
 Then pull images from docker hub.
 
 .. code-block:: bash
 
-  docker-compose pull
+   docker-compose pull
 
 Afterwards, you can start the services and containers.
 
 .. code-block:: bash
 
-  docker-compose up --no-start
-  docker-compose start
+   docker-compose up --no-start
+   docker-compose start
 
 |
 
-.. _useful-commands:
+.. _deploy-docker-compose_useful-commands:
 
 Useful commands
 ---------------
@@ -131,33 +129,74 @@ List containers.
 
 .. code-block:: bash
 
-  docker-compose ps
+   docker-compose ps
 
-If there are no services (``nest-desktop`` and ``nest-server``) in the displayed list,
+If there are no services (``nest-desktop`` and ``nest-simulator``) in the displayed list,
 it means that no containers can be started.
 You can attach a container for services without starting it using ``--no-start``.
 
 .. code-block:: bash
 
-  docker-compose up --no-start
+   docker-compose up --no-start
 
-Then start the services ``nest-desktop`` and ``nest-server`` as daemon.
-
-.. code-block:: bash
-
-  docker-compose start
-
-Stop the services ``nest-desktop`` and ``nest-server``.
+Then start all services ``nest-desktop`` and ``nest-simulator`` as daemon.
 
 .. code-block:: bash
 
-  docker-compose stop
+   docker-compose start
 
-Shutdown the services ``nest-desktop`` and ``nest-server``.
+Stop all services, here ``nest-desktop`` and ``nest-simulator``.
 
 .. code-block:: bash
 
-  docker-compose down
+   docker-compose stop
+
+Shutdown all services, here ``nest-desktop`` and ``nest-simulator``.
+
+.. code-block:: bash
+
+   docker-compose down
+
+
+.. _deploy-docker-compose_set-environments:
+
+Set environments
+----------------
+
+**Custom port of NEST Simulator**
+
+For some reason the port 52425 is already occupied and
+thus starting the server instance of NEST Simulator might cause conflicts.
+To resolve this issue, you can change the port to 7000 for NEST Simulator server.
+
+You have to change three lines:
+
+- Set the environment ``NEST_SIMULATOR_PORT: 55555`` in ``nest-desktop`` service.
+- Set the environment ``NEST_SERVER_PORT: 55555`` in ``nest-simulator`` service.
+- Change the port binding to ``"55555:55555"`` in ``nest-simulator`` service.
+
+
+An example configuration for docker-compose would be:
+
+.. code-block::
+
+   version: "3"
+
+   services:
+     nest-desktop:
+       image: docker-registry.ebrains.eu/nest/nest-desktop:3.1
+       environment:
+         NEST_SIMULATOR_PORT: 55555
+       ports:
+         - "8000:8000"
+
+     nest-simulator:
+       image: docker-registry.ebrains.eu/nest/nest-simulator:3.3
+       environment:
+         NEST_CONTAINER_MODE: "nest-server"
+         NEST_SERVER_PORT: 55555
+       ports:
+         - "55555:55555"
 
 |
 

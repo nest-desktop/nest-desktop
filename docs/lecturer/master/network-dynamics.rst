@@ -175,7 +175,4 @@ Video tutorial
 --------------
 
 .. raw:: html
-
-  <div class="iframe-container">
-    <iframe src="https://drive.ebrains.eu/f/dd51fc9aed2345ed861f/?raw=1" frameborder="0" allowfullscreen></iframe>
-  </div>
+   :file: ../templates/iframe-network-dynamics.html

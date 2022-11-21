@@ -21,6 +21,7 @@ import sphinx_material
 project = 'NEST Desktop'
 author = 'Sebastian Spreizer'
 copyright = '2016-2022, Sebastian Spreizer'
+version = '3.2'
 
 
 # -- General configuration ---------------------------------------------------
@@ -49,11 +50,23 @@ templates_path = ['_templates']
 
 # Include text at the beginning of every file.
 if os.environ.get('READTHEDOCS') == 'True':
-    version = os.environ.get('READTHEDOCS_VERSION')
-    if version == 'dev':
-        rst_prolog = '.. warning:: \n   This version of the documentation is NOT an official release. \
-                     You are reading the documentation version which is in active and ongoing development. \
-                     You can change versions on the bottom left of the screen.'
+  READTHEDOCS_VERSION = os.environ.get('READTHEDOCS_VERSION')
+  if READTHEDOCS_VERSION == 'dev':
+    rst_prolog = """
+        .. warning:: This version of the documentation is NOT an official release. \
+        You are reading the documentation version which is in active and ongoing development.
+        """
+  elif READTHEDOCS_VERSION not in ['latest', version]:
+    rst_prolog = """
+        .. warning:: You are reading the documentation of the older release of NEST Desktop. \
+        Some guide might be outdated.
+        """
+
+rst_epilog = '\n'.join([
+    '.. |br| raw:: html',
+    '',
+    '   <div style="display: inline-block; width: 100%" />',
+])
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -64,65 +77,55 @@ if os.environ.get('READTHEDOCS') == 'True':
 
 extensions.append("sphinx_material")
 
+# html_additional_pages = {'index': 'index.html'}
 html_context = sphinx_material.get_html_context()
 
 html_css_files = [
+    'css/bootstrap.min.css',
     'css/styles.css'
 ]
 
 html_logo = '_static/img/logo/nest-desktop-logo.png'
 html_favicon = '_static/favicon.ico'
 
-
 html_js_files = []
 
 html_show_sourcelink = False
 
 html_sidebars = {
-    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+    "**": ["globaltoc.html", "localtoc.html", "searchbox.html"]
+    # "logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
 html_theme = 'sphinx_material'
 
 html_theme_options = {
     'base_url': 'https://nest-desktop.readthedocs.io/en/latest/',
     'color_primary': 'deep-orange',
     'color_accent': 'white',
-    'css_minify': False,
+    'css_minify': True,
+    'heroes': {},
     'globaltoc_collapse': True,
-    'globaltoc_depth': 1,
+    'globaltoc_depth': 3,
     'globaltoc_includehidden': True,
     'html_minify': False,
-    'html_prettify': True,
+    'html_prettify': False,
     "master_doc": False,
     "nav_links": [
         {
-            "href": "user/index",
-            "internal": True,
-            "title": "User",
+            "href": "https://nest-desktop.github.io/",
+            "internal": False,
+            "title": "Offical page",
         },
         {
-            "href": "lecturer/index",
-            "internal": True,
-            "title": "Lecturer",
+            "href": "https://ebrains.eu/service/nest-desktop/",
+            "internal": False,
+            "title": "NEST Desktop on EBRAINS",
         },
-        {
-            "href": "deployer/index",
-            "internal": True,
-            "title": "Deployer",
-        },
-        {
-            "href": "developer/index",
-            "internal": True,
-            "title": "Developer",
-        },
-        {},
-        {},
         {
             "href": "https://nest-simulator.readthedocs.io/",
             "internal": False,
@@ -136,9 +139,13 @@ html_theme_options = {
     "version_dropdown": True,
 }
 
+html_show_sphinx = False
+html_show_copyright = False
+
 html_theme_path = sphinx_material.html_theme_path()
 
 # add links to modules and objects.
 intersphinx_mapping = {
     'nest-simulator': ('https://nest-simulator.readthedocs.io/en/latest/', None),
+    'nestml': ('https://nestml.readthedocs.io/en/latest/', None),
 }
