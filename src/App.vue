@@ -92,6 +92,10 @@ export default Vue.extend({
 
       // Initialize app with global config.
       core.app.init(context, Vue.prototype.$appConfig);
+
+      // Ask user before leave when some project is changed.
+      window.onbeforeunload = () =>
+        core.app.project.checkSomeProjectChanges() ? '' : null;
     });
 
     return { core, refreshApp, state };
