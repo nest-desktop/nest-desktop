@@ -9,7 +9,7 @@ How to use NEST Desktop
 =======================
 
 .. raw:: html
-   :file: ./templates/index.html
+   :file: ./templates/usage-basic.html
 
 .. toctree::
    :hidden:

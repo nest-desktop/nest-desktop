@@ -15,7 +15,7 @@ This guide provides a detailed documentation on how to install NEST Desktop and 
    :doc:`here <nest-simulator:connect_nest/nest_server>`.
 
 .. raw:: html
-   :file: ../templates/setup.html
+   :file: ./templates/setup.html
 
 |br|
 

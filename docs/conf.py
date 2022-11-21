@@ -104,7 +104,7 @@ html_static_path = ['_static']
 html_theme = 'sphinx_material'
 
 html_theme_options = {
-    'base_url': 'https://nest-desktop.readthedocs.io/en/doc/',
+    'base_url': 'https://nest-desktop.readthedocs.io/en/latest/',
     'color_primary': 'deep-orange',
     'color_accent': 'white',
     'css_minify': True,
