@@ -5,13 +5,13 @@
         Insite
         <v-spacer />
         <v-switch
+          :title="
+            (state.app.backends.insiteAccess.enabled
+              ? 'Ignore'
+              : 'Search for') + ' this backend'
+          "
           dense
           hide-details
-          :title="
-            `${
-              state.app.backends.insiteAccess.enabled ? 'Ignore' : 'Search for'
-            }` + ' this backend'
-          "
           v-model="state.app.backends.insiteAccess.enabled"
         />
       </v-card-title>

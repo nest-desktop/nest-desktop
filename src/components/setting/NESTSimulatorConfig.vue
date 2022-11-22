@@ -6,9 +6,9 @@
         <v-spacer />
         <v-switch
           :title="
-            `${
-              state.app.backends.nestSimulator.enabled ? 'Ignore' : 'Search for'
-            }` + ' this backend'
+            (state.app.backends.nestSimulator.enabled
+              ? 'Ignore'
+              : 'Search for') + ' this backend'
           "
           dense
           hide-details
