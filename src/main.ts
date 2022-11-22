@@ -43,7 +43,7 @@ if (process.env.IS_ELECTRON) {
   mountApp();
 } else {
   // Load the data from config.json for the global config and mount the app.
-  fetch(combineURLs(process.env.BASE_URL, 'config.json'))
+  fetch(combineURLs(process.env.BASE_URL, 'config/app.json'))
     .then(response => response.json())
     .then(appConfig => (Vue.prototype.$appConfig = appConfig))
     .finally(mountApp);
