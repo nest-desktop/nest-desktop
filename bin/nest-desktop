@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOST="${NEST_DESKTOP_HOST:-127.0.0.1}"
-PORT="${NEST_DESKTOP_PORT:-8000}"
+PORT="${NEST_DESKTOP_PORT:-54286}"
 
 # Returns a short overview of the available command options.
 usage() {
@@ -17,7 +17,7 @@ usage() {
   echo
   echo "Options:"
   echo "  -h <HOST>   use hostname/IP address <HOST> for the server [default: 127.0.0.1]"
-  echo "  -p <PORT>   use port <PORT> for opening the socket [default: 8000]" >&2; exit 1
+  echo "  -p <PORT>   use port <PORT> for opening the socket [default: 54286]" >&2; exit 1
 }
 
 # Returns the process ID of a running NEST Desktop instance or null if none is
