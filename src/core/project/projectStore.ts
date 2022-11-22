@@ -38,6 +38,10 @@ export class ProjectStore {
     }
   }
 
+  get loadedProjects(): Project[] {
+    return this._state.projects.filter((project: Project) => project.doc) || [];
+  }
+
   get project(): Project {
     return this._view.state.project;
   }
@@ -99,7 +103,7 @@ export class ProjectStore {
     this._state.projectRevisions = [];
     await this._db.list('createdAt', true).then((projects: any[]) => {
       this._state.projects = projects;
-      this.resetProjectStates()
+      this.resetProjectStates();
 
       // Redirect if project id from the current route is provided in the list.
       const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
@@ -356,6 +360,15 @@ export class ProjectStore {
       );
     }
     this._app.download(JSON.stringify(projectData), 'project');
+  }
+
+  /**
+   * Check if some project is changed.
+   */
+  checkSomeProjectChanges(): boolean {
+    const loadedProjects = this.loadedProjects;
+    if (loadedProjects.length === 0) return;
+    return loadedProjects.some((project: Project) => project.state.changes);
   }
 
   /**
