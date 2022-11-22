@@ -2,15 +2,20 @@
   <div class="InsiteAccessConfig">
     <v-card outlined>
       <v-card-title class="d-flex">
-        Insite Access
+        Insite
         <v-spacer />
-        <v-checkbox
+        <v-switch
           dense
           hide-details
-          label="enabled"
+          :title="
+            `${
+              state.app.backends.insiteAccess.enabled ? 'Ignore' : 'Search for'
+            }` + ' this backend'
+          "
           v-model="state.app.backends.insiteAccess.enabled"
         />
       </v-card-title>
+      <v-card-subtitle>In-situ recording backend</v-card-subtitle>
 
       <v-card-text v-if="state.app.backends.insiteAccess.state.enabled">
         <v-text-field
