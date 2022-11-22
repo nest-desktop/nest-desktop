@@ -34,7 +34,7 @@ RUN chmod -R 777 /var/cache/nginx
 RUN touch /var/run/nginx.pid && \
     chmod -R 777 /var/run/nginx.pid
 
-EXPOSE 8000
+EXPOSE 54286
 
 # Copy entrypoint.sh and make it executable
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
