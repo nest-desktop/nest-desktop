@@ -40,15 +40,15 @@ export class App extends Config {
     });
 
     // Backends
-    this._backends.insiteAccess = new Backend('InsiteAccess', {
-      path: '/insite',
-      port: 8080,
-      versionPath: '/version/',
-    });
     this._backends.nestSimulator = new Backend('NESTSimulator', {
       path: '/nest',
       port: 52425,
       versionPath: '/',
+    });
+    this._backends.insiteAccess = new Backend('InsiteAccess', {
+      path: '/insite',
+      port: 8080,
+      versionPath: '/version/',
     });
 
     this._model = new ModelStore(this);
