@@ -8,7 +8,7 @@
     "email": "spreizer@web.de"
   },
   "scripts": {
-    "serve": "vue-cli-service serve --port 8001",
+    "serve": "vue-cli-service serve --port 54286",
     "build": "vue-cli-service build --prod",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e --env firefox --headless",
