@@ -59,7 +59,7 @@ Start with Conda
 
       nest-desktop start
 
-   NEST Desktop is now started and available in the web browser at http://localhost:8000.
+   NEST Desktop is now started and available in the web browser at http://localhost:54286.
 
 |
 

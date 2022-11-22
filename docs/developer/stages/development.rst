@@ -7,7 +7,7 @@ First, prepare the development environment with the required packages.
 
   yarn serve
 
-The Live Development Server is now serving at ``http://localhost:8080``.
+The Live Development Server is now serving at ``http://localhost:54286``.
 
 .. note::
    For more information on how to prepare the environment for the development,

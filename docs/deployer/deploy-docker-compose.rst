@@ -65,7 +65,7 @@ Build and start the NEST Desktop and NEST Simulator containers.
 
    docker-compose up --build
 
-NEST Desktop and NEST Simulator are now serving at ``http://localhost:8000`` and ``http://localhost:52425``, respectively.
+NEST Desktop and NEST Simulator are now serving at ``http://localhost:54286`` and ``http://localhost:52425``, respectively.
 With :guilabel:`CTRL` + :guilabel:`C` you can shutdown these services.
 
 .. rubric:: Configurations in :code:`docker-compose.yml`
@@ -167,13 +167,13 @@ Set environments
 
 For some reason the port 52425 is already occupied and
 thus starting the server instance of NEST Simulator might cause conflicts.
-To resolve this issue, you can change the port to 7000 for NEST Simulator server.
+To resolve this issue, you can change the port to 54321 for NEST Simulator server instance.
 
 You have to change three lines:
 
-- Set the environment ``NEST_SIMULATOR_PORT: 55555`` in ``nest-desktop`` service.
-- Set the environment ``NEST_SERVER_PORT: 55555`` in ``nest-simulator`` service.
-- Change the port binding to ``"55555:55555"`` in ``nest-simulator`` service.
+- Set the environment ``NEST_SIMULATOR_PORT: 54321`` in ``nest-desktop`` service.
+- Set the environment ``NEST_SERVER_PORT: 54321`` in ``nest-simulator`` service.
+- Change the port binding to ``"54321:54321"`` in ``nest-simulator`` service.
 
 
 An example configuration for docker-compose would be:
@@ -184,19 +184,19 @@ An example configuration for docker-compose would be:
 
    services:
      nest-desktop:
-       image: docker-registry.ebrains.eu/nest/nest-desktop:3.1
+       image: docker-registry.ebrains.eu/nest/nest-desktop:3.2
        environment:
-         NEST_SIMULATOR_PORT: 55555
+         NEST_SIMULATOR_PORT: 54321
        ports:
-         - "8000:8000"
+         - "54286:54286"
 
      nest-simulator:
-       image: docker-registry.ebrains.eu/nest/nest-simulator:3.3
+       image: docker-registry.ebrains.eu/nest/nest-simulator:3.4
        environment:
          NEST_CONTAINER_MODE: "nest-server"
-         NEST_SERVER_PORT: 55555
+         NEST_SERVER_PORT: 54321
        ports:
-         - "55555:55555"
+         - "54321:54321"
 
 |
 

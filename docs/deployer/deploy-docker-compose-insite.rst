@@ -26,6 +26,6 @@ Next, start all services of the Docker Compose file.
 
    docker-compose up
 
-NEST Desktop is now serving at ``http://localhost:8000``
+NEST Desktop is now serving at ``http://localhost:54286``
 whereas Insite NEST Module and Insite Access Node are serving
 at ``http://localhost:5000`` and ``http://localhost:8080``, respectively.

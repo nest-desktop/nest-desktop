@@ -30,7 +30,7 @@ Usage options
 
   Options:
     -h <HOST>   use hostname/IP address <HOST> for the server [default: 127.0.0.1]
-    -p <PORT>   use port <PORT> for opening the socket [default: 8000]
+    -p <PORT>   use port <PORT> for opening the socket [default: 54286]
 
 
 .. _command-api_environment-variables:
@@ -43,6 +43,6 @@ You can set environment variables for host and port before you start NEST Deskto
 .. code-block:: bash
 
   export NEST_DESKTOP_HOST="0.0.0.0"
-  export NEST_DESKTOP_PORT=8000
+  export NEST_DESKTOP_PORT=54286
 
   nest-desktop start

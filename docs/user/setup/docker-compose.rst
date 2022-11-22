@@ -50,7 +50,7 @@ Quick setup in Linux |linux|
    sudo docker-compose up --build
 
 Now NEST Desktop is started.
-You can use NEST Desktop in the web browser at http://localhost:8000.
+You can use NEST Desktop in the web browser at http://localhost:54286.
 
 **The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! </user/usage-basic/index>`

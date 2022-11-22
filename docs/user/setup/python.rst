@@ -53,4 +53,4 @@ NEST Desktop
       nest-desktop start
 
 Now NEST Desktop is started.
-You can use NEST Desktop in the web browser at http://localhost:8000.
+You can use NEST Desktop in the web browser at http://localhost:54286.
