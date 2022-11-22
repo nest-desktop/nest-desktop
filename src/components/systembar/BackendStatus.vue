@@ -42,6 +42,11 @@ export default Vue.extend({
     const check = () => {
       getBackend()
         .check()
+        .then(() => {
+          if (state.backend['id'] === 'nestSimulator') {
+            core.app.model.fetchModelsNEST();
+          }
+        })
         .finally(() => {
           update();
         });
