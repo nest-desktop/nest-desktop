@@ -21,7 +21,7 @@
           v-for="recordable in modelView.state.model.recordables"
         >
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-chip
                 class="ma-1"
                 outlined

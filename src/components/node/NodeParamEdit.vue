@@ -38,7 +38,7 @@
             small
             v-model="state.node.records"
           >
-            <template v-slot:selection="{ item }">
+            <template #selection="{ item }">
               <v-tooltip bottom>
                 <template #activator="{ on, attrs }">
                   <v-chip
@@ -69,7 +69,7 @@
               </v-tooltip>
             </template>
 
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <v-chip
                 :color="item.color"
                 class="mx-2"

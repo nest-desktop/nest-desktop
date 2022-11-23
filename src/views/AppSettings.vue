@@ -123,7 +123,7 @@
                 v-for="recordable in state.modelConfig.config.recordables"
               >
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <v-chip
                       class="ma-1"
                       label

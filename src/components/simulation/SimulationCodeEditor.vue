@@ -12,7 +12,7 @@
           v-model="state.code.state.blocks"
         >
           <v-tooltip :key="item.value" bottom v-for="item of state.blockItems">
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 :disabled="item.disabled"
                 :value="item.value"

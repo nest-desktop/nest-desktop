@@ -29,7 +29,7 @@
     </v-dialog>
 
     <v-menu transition="slide-y-transition">
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn @click.prevent icon v-bind="attrs" v-on="on" v-show="state.show">
           <v-icon class="px-1" small v-text="'mdi-dots-vertical'" />
         </v-btn>
