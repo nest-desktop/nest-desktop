@@ -1,5 +1,5 @@
 <template>
-  <div class="modelNavList" v-if="state.models.length > 0">
+  <div class="modelNavList">
     <v-toolbar
       absolute
       extended
@@ -36,7 +36,8 @@
       <div style="width: 100%">
         <v-row class="ma-0" style="height: 96px">
           <v-text-field
-            @click:append="modelStore.clearSearch"
+            @change="update"
+            @click:append="clearSearch"
             append-icon="mdi-magnify"
             clearable
             hide-details
@@ -45,7 +46,7 @@
           />
           <div style="width: 100%">
             <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   depressed
                   icon
@@ -98,7 +99,7 @@
       style="
         height: calc(100vh - 148px - 24px);
         margin-top: 148px;
-        overflow-y: auto;
+        overflow-y: hidden;
       "
     >
       <v-card flat tile>
@@ -112,44 +113,47 @@
               (state.models.length > 1 ? 's' : '')
             "
           />
-          <v-list-item
-            :key="model"
-            :title="model"
-            :to="'/model/' + model"
-            class="modelItem"
-            two-line
-            v-for="model in state.models"
-            v-show="
-              modelStore.state.searchTerm
-                ? model.includes(modelStore.state.searchTerm)
-                : true
-            "
+          <v-virtual-scroll
+            :height="state.height"
+            :items="state.models"
+            bench="1"
+            item-height="60"
           >
-            <v-list-item-content>
-              <v-list-item-title v-text="model" />
-              <v-list-item-subtitle>
-                <v-icon left small v-text="getIcon(model)" />
-                {{ getElementType(model) }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
+            <template #default="{ item }">
+              <v-list-item
+                :key="item"
+                :title="item"
+                :to="'/model/' + item"
+                class="modelItem"
+                two-line
+              >
+                <v-list-item-content>
+                  <v-list-item-title v-text="item" />
+                  <v-list-item-subtitle>
+                    <v-icon left small v-text="getIcon(item)" />
+                    {{ getElementType(item) }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
 
-            <v-list-item-icon class="icon my-4">
-              <v-icon
-                small
-                v-show="modelStore.hasModel(model)"
-                v-text="'mdi-database-outline'"
-              />
-              <v-icon
-                small
-                v-show="modelStore.fileExistGithub(model)"
-                v-text="'mdi-github'"
-              />
-            </v-list-item-icon>
+                <v-list-item-icon class="icon my-4">
+                  <v-icon
+                    small
+                    v-show="modelStore.hasModel(item)"
+                    v-text="'mdi-database-outline'"
+                  />
+                  <v-icon
+                    small
+                    v-show="modelStore.fileExistGithub(item)"
+                    v-text="'mdi-github'"
+                  />
+                </v-list-item-icon>
 
-            <v-list-item-action class="action">
-              <ModelMenu :modelId="model" />
-            </v-list-item-action>
-          </v-list-item>
+                <v-list-item-action class="action">
+                  <ModelMenu :modelId="item" />
+                </v-list-item-action>
+              </v-list-item>
+            </template>
+          </v-virtual-scroll>
         </v-list>
       </v-card>
     </div>
@@ -158,7 +162,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive, watch } from '@vue/composition-api';
+import {
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  watch,
+} from '@vue/composition-api';
 
 import { Model } from '@/core/model/model';
 import core from '@/core';
@@ -179,6 +188,7 @@ export default Vue.extend({
         recorder: 4,
         synapse: 5,
       },
+      height: 0,
       items: [
         {
           id: 'modelsReload',
@@ -329,15 +339,31 @@ export default Vue.extend({
     };
 
     /**
+     * Clear search.
+     */
+    const clearSearch = () => {
+      modelStore.clearSearch();
+      update();
+    };
+
+    /**
+     * Set height on resize.
+     */
+    const onResize = () => {
+      state.height = window.innerHeight - 148 - 24 - 16;
+    };
+
+    /**
      * Update models.
      */
     const update = () => {
-      const filterTags: string[] = modelStore.state.filterTags;
-      state.models =
-        modelStore.state.modelsNEST.length > 0
+      state.models = [
+        ...(modelStore.state.modelsNEST.length > 0
           ? modelStore.state.modelsNEST
-          : modelStore.state.models.map((model: any) => model.id);
+          : modelStore.state.models.map((model: any) => model.id)),
+      ];
 
+      const filterTags: string[] = modelStore.state.filterTags;
       if (filterTags.includes('installed')) {
         let models = modelStore.state.models.map((model: Model) => model.id);
         state.models = state.models.filter((model: string) =>
@@ -380,6 +406,12 @@ export default Vue.extend({
         models.sort();
         state.models = models;
       }
+
+      if (modelStore.state.searchTerm) {
+        state.models = state.models.filter((model: string) =>
+          model.includes(modelStore.state.searchTerm)
+        );
+      }
     };
 
     /**
@@ -400,22 +432,27 @@ export default Vue.extend({
     };
 
     onMounted(() => {
+      onResize();
+      window.addEventListener('resize', onResize);
       update();
     });
 
-    watch(
-      () => modelStore.state.models,
-      () => update()
-    );
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', onResize);
+    });
+
+    watch(() => modelStore.state.models, update);
 
     return {
       addFilterTag,
+      clearSearch,
       filterTags,
       getElementType,
       getIcon,
       modelStore,
       removeFilterTag,
       state,
+      update,
     };
   },
 });

@@ -48,9 +48,9 @@
     <div
       flat
       style="
-        height: calc(100vh - 100px - 24px);
+        height: calc(100vh - 24px - 96px - 4px);
         margin-top: 100px;
-        overflow-y: auto;
+        overflow-y: hidden;
       "
     >
       <v-card flat tile>
@@ -64,52 +64,56 @@
               (projectStore.filteredProjects.length > 1 ? 's' : '')
             "
           />
-          <draggable v-model="projectStore.state.projects">
-            <transition-group>
+          <v-virtual-scroll
+            :height="state.height"
+            :items="projectStore.filteredProjects"
+            bench="1"
+            item-height="64"
+          >
+            <template #default="{ item }">
               <v-list-item
-                :key="project.id"
-                :title="project.name"
-                :to="'/project/' + project.id"
+                :key="item.id"
+                :title="item.name"
+                :to="'/project/' + item.id"
                 class="projectItem"
-                v-for="project in projectStore.filteredProjects"
               >
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ project.name }}
+                    {{ item.name }}
                     <span
                       style="font-size: 9px"
-                      v-if="appConfig.devMode && project.version"
+                      v-if="appConfig.devMode && item.version"
                     >
-                      ({{ project.version }})
+                      ({{ item.version }})
                     </span>
                   </v-list-item-title>
 
                   <v-list-item-subtitle>
-                    {{ project.network.nodes.length }} nodes,
-                    {{ project.network.connections.length }} connections
+                    {{ item.network.nodes.length }} nodes,
+                    {{ item.network.connections.length }} connections
                   </v-list-item-subtitle>
 
                   <v-list-item-subtitle
-                    v-if="project.doc && project.state.activities.hasSomeEvents"
+                    v-if="item.doc && item.state.activities.hasSomeEvents"
                   >
-                    <ActivityGraphIcon :project="project" append />
+                    <ActivityGraphIcon :project="item" append />
                   </v-list-item-subtitle>
                 </v-list-item-content>
 
                 <v-list-item-action class="mx-1">
-                  <div v-if="project.doc">
+                  <div v-if="item.doc">
                     <v-row no-gutters>
                       <div style="width: 36px">
-                        <ProjectMenu :projectId="project.id" class="action" />
+                        <ProjectMenu :projectId="item.id" class="action" />
                       </div>
 
                       <v-btn
-                        @click="e => saveProject(e, project)"
-                        :disabled="!project.state.changes"
+                        @click="e => saveProject(e, item)"
+                        :disabled="!item.state.changes"
                         icon
                       >
                         <v-icon
-                          v-if="project.state.changes"
+                          v-if="item.state.changes"
                           v-text="'mdi-content-save-alert-outline'"
                         />
                         <v-icon
@@ -121,8 +125,8 @@
                   </div>
                 </v-list-item-action>
               </v-list-item>
-            </transition-group>
-          </draggable>
+            </template>
+          </v-virtual-scroll>
         </v-list>
       </v-card>
     </div>
@@ -131,8 +135,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive } from '@vue/composition-api';
-import draggable from 'vuedraggable';
+import { onBeforeUnmount, onMounted, reactive } from '@vue/composition-api';
 
 import core from '@/core';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
@@ -144,13 +147,13 @@ export default Vue.extend({
   name: 'ProjectNavList',
   components: {
     ActivityGraphIcon,
-    draggable,
     ProjectMenu,
   },
   setup(_, { root }) {
     const projectStore = core.app.project;
 
     const state = reactive({
+      height: 0,
       items: [
         {
           id: 'newProject',
@@ -219,6 +222,22 @@ export default Vue.extend({
       e.preventDefault();
       project.save();
     };
+
+    /**
+     * Set height on resize.
+     */
+    const onResize = () => {
+      state.height = window.innerHeight - 24 - 96 - 4 - 16;
+    };
+
+    onMounted(() => {
+      onResize();
+      window.addEventListener('resize', onResize);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', onResize);
+    });
 
     return {
       appConfig: core.app.config,
