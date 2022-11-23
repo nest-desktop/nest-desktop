@@ -845,9 +845,9 @@ export default Vue.extend({
             state.options.unit &&
             ['Hz', 'ms', 'nS', 'pF'].includes(state.options.unit) &&
             typeof value === 'number' &&
-            value <= 0
+            value < 0
           ) {
-            state.message = `The value must be strictly positive.`;
+            state.message = `The value must be positive.`;
             state.isValid = false;
           } else if (
             state.options.id === 'interval' &&

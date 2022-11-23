@@ -8,7 +8,7 @@
     {
       "id": "amplitude",
       "input": "valueSlider",
-      "label": "Amplitude of sine current",
+      "label": "amplitude of sine current",
       "max": 1000,
       "min": -1000,
       "step": 1,
