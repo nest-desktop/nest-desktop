@@ -110,6 +110,7 @@ export class App extends Config {
    */
   init(context: SetupContext, config: any): void {
     consoleLog(this, 'Initialize app');
+    this._state.ready = false;
 
     // Add setup context of Vue.
     this._vueSetupContext = context;
@@ -118,7 +119,13 @@ export class App extends Config {
     this.updateConfigs(config);
 
     // Check if backends is running.
-    this.checkBackends();
+    this.checkBackends().then(() => {
+      // Fetch models from NEST Simulator.
+      this._model.fetchModelsNEST();
+
+      // Fetch model files from Github.
+      this._model.fetchModelFilesGithub();
+    });
 
     if (
       this.config.intervalCheckBackends > 0 &&
@@ -129,13 +136,6 @@ export class App extends Config {
       }, this.config.intervalCheckBackends * 1000);
     }
 
-    // Fetch models from NEST Simulator.
-    this._model.fetchModelsNEST();
-
-    // Fetch model files from Github.
-    this._model.fetchModelFilesGithub();
-
-    this._state.ready = false;
     let promise: Promise<void> = Promise.resolve();
     promise = promise.then(() => this._model.init());
     promise = promise.then(() => this._project.init());
@@ -230,8 +230,13 @@ export class App extends Config {
    * @remarks
    * Global config is loaded in main.ts.
    */
-  checkBackends(): void {
-    this._backends.nestSimulator.check();
-    this._backends.insiteAccess.check();
+  checkBackends(): Promise<void> {
+    return new Promise(resolve => {
+      const nestSimulatorStatus = this._backends.nestSimulator.check();
+      const insiteAccessStatus = this._backends.insiteAccess.check();
+      Promise.all([nestSimulatorStatus, insiteAccessStatus]).then(values => {
+        resolve();
+      });
+    });
   }
 }
