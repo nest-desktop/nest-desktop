@@ -24,7 +24,7 @@
           return-object
           v-model="state.selectedRecord"
         >
-          <template v-slot:selection="{ item }">
+          <template #selection="{ item }">
             <v-chip
               :color="item.color"
               class="mx-2"
@@ -39,7 +39,7 @@
             </div>
           </template>
 
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-chip
               :color="item.color"
               class="mx-2"

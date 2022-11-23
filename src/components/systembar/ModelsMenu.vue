@@ -1,7 +1,7 @@
 <template>
   <div class="modelsMenu">
     <v-menu offset-y transition="slide-y-transition">
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn small text v-bind="attrs" v-on="on">
           Models
           <v-icon right v-text="'mdi-menu-down'" />

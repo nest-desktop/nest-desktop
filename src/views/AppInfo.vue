@@ -112,7 +112,7 @@
                 v-for="reference in references"
               >
                 <v-tooltip :open-delay="200" top>
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <v-btn
                       :color="$vuetify.theme.dark ? 'none' : reference.color"
                       :href="reference.url"

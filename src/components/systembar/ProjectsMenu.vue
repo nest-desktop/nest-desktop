@@ -1,7 +1,7 @@
 <template>
   <div class="projectsMenuContent">
     <v-menu offset-y transition="slide-y-transition">
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn small text v-bind="attrs" v-on="on">
           Projects
           <v-icon right v-text="'mdi-menu-down'" />
@@ -75,7 +75,6 @@ export default Vue.extend({
      * @param action Dialog to open
      */
     const openDialog = (action: string = 'export') => {
-
       // Reset states for project list.
       core.app.project.resetProjectStates();
 

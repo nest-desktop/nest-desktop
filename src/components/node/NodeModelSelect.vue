@@ -114,7 +114,7 @@
 
               <span>
                 <v-menu offset-y>
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <v-btn
                       icon
                       small
@@ -217,7 +217,7 @@
 
                         <span>
                           <v-menu offset-y>
-                            <template v-slot:activator="{ on, attrs }">
+                            <template #activator="{ on, attrs }">
                               <v-btn
                                 icon
                                 small
