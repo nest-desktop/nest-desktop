@@ -11,25 +11,21 @@
           style="width: calc(100% - 160px)"
           v-model="state.code.state.blocks"
         >
-          <v-tooltip :key="item.value" bottom v-for="item of state.blockItems">
-            <template #activator="{ on, attrs }">
-              <v-btn
-                :disabled="item.disabled"
-                :value="item.value"
-                class="flex-grow-1 ma-0"
-                height="40"
-                text
-                v-bind="attrs"
-                v-on="on"
-              >
-                <span class="d-flex flex-column">
-                  <v-icon small style="width: auto" v-text="item.icon" />
-                  <span style="font-size: 7px" v-text="item.icontext" />
-                </span>
-              </v-btn>
-            </template>
-            <span v-text="item.text" />
-          </v-tooltip>
+          <v-btn
+            :disabled="item.disabled"
+            :key="item.value"
+            :title="item.text"
+            :value="item.value"
+            class="flex-grow-1 ma-0"
+            height="40"
+            text
+            v-for="item of state.blockItems"
+          >
+            <span class="d-flex flex-column">
+              <v-icon small style="width: auto" v-text="item.icon" />
+              <span style="font-size: 7px" v-text="item.icontext" />
+            </span>
+          </v-btn>
         </v-btn-toggle>
 
         <v-spacer />

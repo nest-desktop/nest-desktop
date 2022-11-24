@@ -9,19 +9,19 @@
         style="flex: 0 1 auto; width: 278px"
         v-model="modelView.modeIdx"
       >
-        <v-tooltip :open-delay="1000" bottom>
-          <template #activator="{ on, attrs }">
-            <v-tab class="ma-0" v-bind="attrs" v-on="on">
-              <div class="tab-text" v-text="'Doc'" />
-              <v-icon v-text="'mdi-text-box-outline'" />
-            </v-tab>
-          </template>
-          View model documentation
-        </v-tooltip>
+        <v-tab class="ma-0" title="View model documentation">
+          <div class="tab-text" v-text="'Doc'" />
+          <v-icon v-text="'mdi-text-box-outline'" />
+        </v-tab>
 
         <v-menu :disabled="!modelView.isNeuron" offset-y open-on-hover>
           <template #activator="{ on, attrs }">
-            <v-tab :disabled="!modelView.isNeuron" v-bind="attrs" v-on="on">
+            <v-tab
+              :disabled="!modelView.isNeuron"
+              title="Explore model"
+              v-bind="attrs"
+              v-on="on"
+            >
               <div class="tab-text" v-text="'Explorer'" />
               <v-icon v-text="'mdi-chart-scatter-plot'" />
             </v-tab>
@@ -43,15 +43,10 @@
           </v-list>
         </v-menu>
 
-        <v-tooltip :open-delay="1000" bottom>
-          <template #activator="{ on, attrs }">
-            <v-tab v-bind="attrs" v-on="on">
-              <div class="tab-text" v-text="'Editor'" />
-              <v-icon v-text="'mdi-pencil'" />
-            </v-tab>
-          </template>
-          Edit model
-        </v-tooltip>
+        <v-tab title="Edit model">
+          <div class="tab-text" v-text="'Editor'" />
+          <v-icon v-text="'mdi-pencil'" />
+        </v-tab>
       </v-tabs>
 
       <v-spacer />

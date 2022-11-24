@@ -80,40 +80,34 @@
                       v-model="panel.model.state.recordsVisible"
                     >
                       <template #selection="{ item }">
-                        <v-tooltip bottom>
-                          <template #activator="{ on, attrs }">
-                            <v-chip
-                              :color="item.color"
-                              @click="e => showColorPopup(e, item)"
-                              @click:close="
-                                () => {
-                                  panel.model.removeRecord(item);
-                                  state.graph.update();
-                                }
-                              "
-                              close
-                              disable-lookup
-                              label
-                              outlined
-                              small
-                              style="margin: 1px 2px"
-                              v-bind="attrs"
-                              v-on="on"
-                            >
-                              <span
-                                v-text="
-                                  projectView.app.config.devMode
-                                    ? item.groupId
-                                    : item.id
-                                "
-                              />
-                            </v-chip>
-                          </template>
-                          <div style="font-size: 12px">
-                            <span v-text="item.labelCapitalize" />
-                            <span v-if="item.unit" v-text="` (${item.unit})`" />
-                          </div>
-                        </v-tooltip>
+                        <v-chip
+                          :color="item.color"
+                          :title="
+                            item.labelCapitalize +
+                            (item.unit ? ` (${item.unit})` : '')
+                          "
+                          @click="e => showColorPopup(e, item)"
+                          @click:close="
+                            () => {
+                              panel.model.removeRecord(item);
+                              state.graph.update();
+                            }
+                          "
+                          close
+                          disable-lookup
+                          label
+                          outlined
+                          small
+                          style="margin: 1px 2px"
+                        >
+                          <span
+                            v-text="
+                              projectView.app.config.devMode
+                                ? item.groupId
+                                : item.id
+                            "
+                          />
+                        </v-chip>
                       </template>
 
                       <template #item="{ item }">

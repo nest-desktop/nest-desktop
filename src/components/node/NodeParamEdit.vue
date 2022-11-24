@@ -39,34 +39,27 @@
             v-model="state.node.records"
           >
             <template #selection="{ item }">
-              <v-tooltip bottom>
-                <template #activator="{ on, attrs }">
-                  <v-chip
-                    :color="item.color"
-                    @click="e => showColorPopup(e, item)"
-                    @click:close="
-                      () => {
-                        state.node.removeRecord(item);
-                        state.node.nodeChanges();
-                      }
-                    "
-                    close
-                    disable-lookup
-                    label
-                    outlined
-                    small
-                    style="margin: 1px 2px"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    {{ item.id }}
-                  </v-chip>
-                </template>
-                <div style="font-size: 12px">
-                  <span v-text="item.labelCapitalize" />
-                  <span v-if="item.unit" v-text="` (${item.unit})`" />
-                </div>
-              </v-tooltip>
+              <v-chip
+                :color="item.color"
+                :title="
+                  item.labelCapitalize + (item.unit ? ` (${item.unit})` : '')
+                "
+                @click="e => showColorPopup(e, item)"
+                @click:close="
+                  () => {
+                    state.node.removeRecord(item);
+                    state.node.nodeChanges();
+                  }
+                "
+                close
+                disable-lookup
+                label
+                outlined
+                small
+                style="margin: 1px 2px"
+              >
+                {{ item.id }}
+              </v-chip>
             </template>
 
             <template #item="{ item }">

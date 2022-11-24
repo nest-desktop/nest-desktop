@@ -1,12 +1,20 @@
 <template>
   <div class="networkParamToolbar" v-if="state.network">
-    <v-toolbar absolute class="toolbar" dense flat height="40" max-height="40" style="width: calc(100% - 64px)">
-      <span class="d-flex" style="width:100%">
+    <v-toolbar
+      absolute
+      class="toolbar"
+      dense
+      flat
+      height="40"
+      max-height="40"
+      style="width: calc(100% - 64px)"
+    >
+      <span class="d-flex" style="width: 100%">
         <v-btn-toggle
           dense
           group
           mandatory
-          style="width:100%"
+          style="width: 100%"
           tile
           v-model="state.network.state.elementTypeIdx"
         >
@@ -81,36 +89,24 @@
                             4
                           )"
                         >
-                          <v-tooltip :open-delay="1000" top>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                @click="toggleModels(elementType)"
-                                class="mx-0"
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                              >
-                                <v-icon v-text="modelIcon(elementType)" />
-                              </v-btn>
-                            </template>
-                            <span v-text="elementType" />
-                          </v-tooltip>
+                          <v-btn
+                            :title="elementType"
+                            @click="toggleModels(elementType)"
+                            class="mx-0"
+                            icon
+                          >
+                            <v-icon v-text="modelIcon(elementType)" />
+                          </v-btn>
                         </span>
                         <span :key="'model-synapse'">
-                          <v-tooltip :open-delay="1000" top>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                @click="toggleModels('synapse')"
-                                class="mx-0"
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                              >
-                                <v-icon v-text="modelIcon('synapse')" />
-                              </v-btn>
-                            </template>
-                            <span v-text="'synapse'" />
-                          </v-tooltip>
+                          <v-btn
+                            @click="toggleModels('synapse')"
+                            class="mx-0"
+                            icon
+                            title="synapse"
+                          >
+                            <v-icon v-text="modelIcon('synapse')" />
+                          </v-btn>
                         </span>
                       </v-row>
                     </v-list-item-action>
@@ -129,20 +125,14 @@
                             4
                           )"
                         >
-                          <v-tooltip :open-delay="1000" top>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                @click="toggleNodes(elementType)"
-                                class="mx-0"
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                              >
-                                <v-icon v-text="nodeIcon(elementType)" />
-                              </v-btn>
-                            </template>
-                            <span v-text="elementType" />
-                          </v-tooltip>
+                          <v-btn
+                            :title="elementType"
+                            @click="toggleNodes(elementType)"
+                            class="mx-0"
+                            icon
+                          >
+                            <v-icon v-text="nodeIcon(elementType)" />
+                          </v-btn>
                         </span>
                       </v-row>
                     </v-list-item-action>
@@ -161,20 +151,14 @@
                             4
                           )"
                         >
-                          <v-tooltip :open-delay="1000" bottom>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                @click="toggleConnections(elementType)"
-                                class="mx-0"
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                              >
-                                <v-icon v-text="connectionIcon(elementType)" />
-                              </v-btn>
-                            </template>
-                            <span v-text="elementType" />
-                          </v-tooltip>
+                          <v-btn
+                            :title="elementType"
+                            @click="toggleConnections(elementType)"
+                            class="mx-0"
+                            icon
+                          >
+                            <v-icon v-text="connectionIcon(elementType)" />
+                          </v-btn>
                         </span>
                       </v-row>
                     </v-list-item-action>

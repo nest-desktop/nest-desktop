@@ -18,19 +18,14 @@
         style="flex: 0 1 auto; width: 278px"
         v-model="projectView.state.modeIdx"
       >
-        <v-tooltip :open-delay="1000" bottom>
-          <template #activator="{ on, attrs }">
-            <v-tab class="ma-0" v-bind="attrs" v-on="on">
-              <div class="tab-text" v-text="'Editor'" />
-              <v-icon v-text="'$network'" />
-            </v-tab>
-          </template>
-          Construct network
-        </v-tooltip>
+        <v-tab class="ma-0" title="Edit network">
+          <div class="tab-text" v-text="'Editor'" />
+          <v-icon v-text="'$network'" />
+        </v-tab>
 
         <v-menu offset-y open-on-hover>
           <template #activator="{ on, attrs }">
-            <v-tab v-bind="attrs" v-on="on">
+            <v-tab title="Explore activity" v-bind="attrs" v-on="on">
               <div class="tab-text" v-text="'Explorer'" />
               <ActivityGraphIcon
                 :project="projectView.state.project"
@@ -75,7 +70,7 @@
           </v-list>
         </v-menu>
 
-        <v-tab>
+        <v-tab title="Lab book">
           <div class="tab-text" v-text="'Lab book'" />
           <v-icon v-text="'mdi-book-open-outline'" />
         </v-tab>

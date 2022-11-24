@@ -122,24 +122,17 @@
                 :key="recordable.id"
                 v-for="recordable in state.modelConfig.config.recordables"
               >
-                <v-tooltip bottom>
-                  <template #activator="{ on, attrs }">
-                    <v-chip
-                      class="ma-1"
-                      label
-                      outlined
-                      small
-                      v-bind="attrs"
-                      v-on="on"
-                      v-text="recordable.id"
-                    />
-                  </template>
-                  <span v-text="recordable.label" />
-                  <span
-                    v-if="recordable.unit"
-                    v-text="` (${recordable.unit})`"
-                  />
-                </v-tooltip>
+                <v-chip
+                  :title="
+                    recordable.label +
+                    (recordable.unit ? ` (${recordable.unit})` : '')
+                  "
+                  class="ma-1"
+                  label
+                  outlined
+                  small
+                  v-text="recordable.id"
+                />
               </span>
             </v-card>
           </v-card-text>
