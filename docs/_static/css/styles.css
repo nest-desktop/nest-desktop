@@ -63,3 +63,7 @@ a:hover {
 .md-main__inner {
   padding-top: 0 !important;
 }
+
+section {
+  scroll-margin-top: 48px;
+}
