@@ -158,7 +158,7 @@ export default Vue.extend({
         {
           id: 'newProject',
           icon: 'mdi-plus',
-          title: 'New projects',
+          title: 'New project',
           to: '/project/',
           onClick: () => {},
         },
