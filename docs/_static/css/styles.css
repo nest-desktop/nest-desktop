@@ -64,7 +64,7 @@ a:hover {
   padding-top: 0 !important;
 }
 
-.md-typeset section[id]:target:before {
-  ￼margin-top: -3.45rem;
-  ￼padding-top: 3.45rem;
+.md-typeset section[id] {
+  ￼margin-top: -2rem;
+  ￼padding-top: 2rem;
 }
