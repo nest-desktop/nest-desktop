@@ -10,8 +10,8 @@ Apptainer, former Singularity, is an application container for **Linux** systems
 For more information read the full documentation of Apptainer
 `here <https://apptainer.org/>`__.
 
-Get recipe
-----------
+Get recipes
+-----------
 
 1. Clone a working copy from the repository and go to the folder:
 
@@ -29,7 +29,7 @@ Get recipe
 .. note::
    You will have to repeat this every time you end a terminal session.
    If you like to register this command permanently,
-   please proceed according to the `full documentation <https://github.com/nest-desktop/nest-desktop-singularity>`__.
+   please proceed according to the `full documentation <https://github.com/nest-desktop/nest-desktop-apptainer>`__.
 
 Build image
 -----------

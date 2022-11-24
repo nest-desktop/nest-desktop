@@ -16,7 +16,7 @@ This implies, that the signal strength controls the rotation speed of the wheel.
 
 |br|
 
-.. image:: /_static/img/screenshots/nest-desktop-nrp.png
+.. image:: /_static/img/screenshots/external/nest-desktop-nrp.png
    :alt: Neuro Robotics Plattform
    :target: #
 

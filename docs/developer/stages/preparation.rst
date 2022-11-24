@@ -15,31 +15,35 @@ Requirements
 
 You can install these requirements in the host system.
 
-However, we prefer to use a Singularity container and leave the host system unchanged.
-For this, we prepared a Singularity recipe that build a container with the required packages for the development.
-You can find the definition file in ``singularity/dev-node-16-alpine.def`` for building this Singularity container.
+However, we prefer to use a Apptainer container and leave the host system unchanged.
+For this, we prepared a Apptainer recipe that build a container with the required packages for the development.
 
 |
 
-.. _preparation_build-an-environment-with-singularity:
+.. _preparation_build-an-environment-with-apptainer:
 
-Build an environment with Singularity
--------------------------------------
+Build an environment with Apptainer
+-----------------------------------
 
-The definition file ``singularity/dev-node-16-alpine.def``
-contains an adequate environment to develop and build NEST Desktop.
-
-Build a singularity image:
+Get an Apptainer recipe:
 
 .. code-block:: bash
 
-   singularity build dev-node-16-alpine.sif singularity/dev-node-16-alpine.def
+   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop-apptainer/master/recipes/development/dev-node-16-alpine.def
 
-Go to the shell of singularity container:
+The definition file ``dev-node-16-alpine.def`` contains an adequate environment to develop and build NEST Desktop.
+
+Build an Apptainer image:
 
 .. code-block:: bash
 
-   singularity shell dev-node-16-alpine.sif
+   apptainer build dev-node-16-alpine.sif dev-node-16-alpine.def
+
+Go to the shell inside of Apptainer container:
+
+.. code-block:: bash
+
+   apptainer shell dev-node-16-alpine.sif
 
 |
 

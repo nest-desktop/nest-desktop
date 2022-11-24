@@ -20,7 +20,7 @@ You can find the full label of the node model in the network controller.
 Node colors
 -----------
 
-.. image:: /_static/img/screenshots/node-shapes.png
+.. image:: /_static/img/screenshots/network/node-shapes.png
    :align: right
    :target: #node-colors
 
@@ -53,7 +53,7 @@ The specific shape defines an element type of a node:
 Neuron shapes
 -------------
 
-.. image:: /_static/img/screenshots/neuron-shapes.png
+.. image:: /_static/img/screenshots/network/neuron-shapes.png
    :align: right
    :target: #neuron-shapes
 

@@ -14,7 +14,7 @@ Analog signals contain continuous quantities from the recording devices (``voltm
 It is possible to display an animated 3D graph for the spatial network forming layers in topology
 whose neurons have geographical positions.
 
-.. image:: /_static/img/screenshots/activity-anim-graph-analog.png
+.. image:: /_static/img/screenshots/activity/activity-anim-graph-analog.png
    :target: #analog-signals
 
 |br|
@@ -39,7 +39,7 @@ Spike activity
 
 Spike events contain times and ids of the senders collected by the ``spike recorder``.
 
-.. image:: /_static/img/screenshots/activity-anim-graph-spike.png
+.. image:: /_static/img/screenshots/activity/activity-anim-graph-spike.png
    :target: #spike-activity
 
 |br|

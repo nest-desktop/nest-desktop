@@ -1,7 +1,7 @@
 Explore activity
 ================
 
-.. image:: /_static/img/screenshots/activity-explorer.png
+.. image:: /_static/img/screenshots/activity/activity-explorer.png
    :target: #explore-activity
    :width: 100%
 

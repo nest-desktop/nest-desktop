@@ -2,7 +2,7 @@ Deploy NEST Desktop with NRP
 ============================
 
 
-.. image:: /_static/img/screenshots/nest-desktop-nrp.png
+.. image:: /_static/img/screenshots/external/nest-desktop-nrp.png
    :alt: Neuro Robotics Plattform
    :target: #deploy-nest-desktop-with-nrp
 

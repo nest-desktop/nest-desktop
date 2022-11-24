@@ -37,5 +37,5 @@ so that the job scripts in both cases seem to be identical,
 but they only differ in the version variable for the Python package and the Docker image.
 
 .. note::
-   You can check these scripts also for commands if you want to execute single build steps
-   manually on your machine.
+   You can check these scripts also for commands if you want
+   to execute single build steps manually on your machine.

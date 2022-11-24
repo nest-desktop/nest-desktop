@@ -20,7 +20,7 @@ For more information to import models, please read the guide :ref:`import-models
 Connect neurons with non-static synapse
 ---------------------------------------
 
-.. image:: /_static/img/screenshots/tsodyks-synapse-controller.png
+.. image:: /_static/img/screenshots/synapse/tsodyks-synapse-controller.png
    :align: right
    :target: #connect-neurons-with-non-static-synapse
 
@@ -34,7 +34,7 @@ Configure the parameters for facilatating or depressing synapse.
 Observe effects of short-term synapses
 --------------------------------------
 
-.. image:: /_static/img/screenshots/neuronal-activity-tsodyks.png
+.. image:: /_static/img/screenshots/synapse/neuronal-activity-tsodyks.png
    :align: left
    :height: 450px
    :target: #observe-effects-of-short-term-synapses
@@ -48,7 +48,7 @@ After the simulation you might register changes of PSP of neurons receiving spik
 Measure synaptic weights
 ------------------------
 
-.. image:: /_static/img/screenshots/copied-synapse-model.png
+.. image:: /_static/img/screenshots/synapse/copied-synapse-model.png
    :align: right
    :target: #measure-synaptic-weights
 
@@ -62,11 +62,11 @@ Select copied synapse model for a connection between neurons.
 Create a node for weight recorder and connect to a connection.
 You can see in the copied synapse model that it is assigned to weight recorder.
 
-.. image:: /_static/img/screenshots/weight-recorder-graph.png
+.. image:: /_static/img/screenshots/synapse/weight-recorder-graph.png
    :align: left
 
 |br|
 
 After the simulation, add a new panel showing only weights.
 
-.. image:: /_static/img/screenshots/weight-recorder.png
+.. image:: /_static/img/screenshots/synapse/weight-recorder.png

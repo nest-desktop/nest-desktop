@@ -53,17 +53,18 @@ The latest tags refers to the latest release version.
 
 |
 
-Optional: Use Singularity
--------------------------
+Optional: Use Apptainer
+-----------------------
 
-Build a singularity image:
-
-.. code-block:: bash
-
-  singularity build doc-sphinx.sif singularity/doc-sphinx.def
-
-Start the Singularity container:
+Build a Apptainer image:
 
 .. code-block:: bash
 
-  singularity shell doc-sphinx.sif
+   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop-apptainer/master/recipes/development/doc-sphinx.def
+   apptainer build doc-sphinx.sif doc-sphinx.def
+
+Start the Apptainer container:
+
+.. code-block:: bash
+
+   apptainer shell doc-sphinx.sif

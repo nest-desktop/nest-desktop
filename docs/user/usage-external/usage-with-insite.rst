@@ -19,7 +19,7 @@ Basically, with Insite neuronal or network activity can be observed during the s
 Check if Insite is running
 --------------------------
 
-.. image:: /_static/img/screenshots/settings-insite.png
+.. image:: /_static/img/screenshots/external/settings-insite.png
    :align: left
    :target: #check-if-insite-is-running
 
@@ -32,7 +32,7 @@ In the settings page you can check whether the Insite backend is running.
 Enable simulation with Insite
 -----------------------------
 
-.. image:: /_static/img/screenshots/code-editor-toolbar-insite.png
+.. image:: /_static/img/screenshots/external/code-editor-toolbar-insite.png
    :align: right
    :target: #enable-simulation-with-insite
 

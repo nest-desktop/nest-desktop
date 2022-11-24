@@ -11,8 +11,8 @@ This guide provides a detailed documentation on how to install NEST Desktop and 
    which can forward requests to the simulation engine.
    In summary, you have to start NEST Server too.
 
-   You can find the detailed information on NEST Server
-   :doc:`here <nest-simulator:connect_nest/nest_server>`.
+   You can find the detailed information on NEST Server in
+   :doc:`NEST simulator user documentation <nest-simulator:connect_nest/nest_server>`.
 
 .. raw:: html
    :file: ./templates/setup.html

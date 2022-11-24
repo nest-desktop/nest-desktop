@@ -13,7 +13,7 @@ where you can :ref:`read the model description <model-view_model-documentation>`
 Model menu
 ----------
 
-.. image:: /_static/img/screenshots/models-menu.png
+.. image:: /_static/img/screenshots/model/models-menu.png
    :align: left
 
 By clicking the right mouse button on the model icon, a menu appears
@@ -37,14 +37,14 @@ and then a JSON file of your desired model group which includes all functions of
 
 The table shows a list of models from which you can select which ones you want to import.
 
-.. image:: /_static/img/screenshots/models-import.png
+.. image:: /_static/img/screenshots/model/models-import.png
 
 |br|
 
 Model list
 ----------
 
-.. image:: /_static/img/screenshots/model-nav.png
+.. image:: /_static/img/screenshots/model/model-nav.png
    :align: left
 
 Models are enlisted in the right side navigation bar.
@@ -67,7 +67,7 @@ Filter models
 It is possible to select filter tags to display only models with certain properties.
 The following filter tags are available:
 
-.. image:: /_static/img/screenshots/models-filter-tag.png
+.. image:: /_static/img/screenshots/model/models-filter-tag.png
    :align: right
 
 Installed:
@@ -91,7 +91,7 @@ Model subpages
 Model documentation
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: /_static/img/screenshots/model-documentation.png
+.. image:: /_static/img/screenshots/model/model-documentation.png
 
 The model documentation shows a help text of a model fetched from the NEST Simulator directly.
 It contains only raw text and thus, no formatted equations, tables and links.
@@ -104,7 +104,7 @@ The button :guilabel:`MORE` directs to the official (and styled) documentation o
 Model explorer
 ^^^^^^^^^^^^^^
 
-.. image:: /_static/img/screenshots/model-activity-explorer.png
+.. image:: /_static/img/screenshots/model/model-activity-explorer.png
    :align: left
 
 You can explore the activity dynamics of neuron models.
@@ -117,7 +117,7 @@ You can use the code editor to see changes in activity.
 .. note::
    It is important to disable the simulation with Insite.
 
-.. image:: /_static/img/screenshots/model-activity.png
+.. image:: /_static/img/screenshots/model/model-activity.png
 
 |br|
 
@@ -129,4 +129,4 @@ Model editor
 The model editor allows you to make changes in parameter specifications,
 e.g. default value, unit, label or inputs.
 
-.. image:: /_static/img/screenshots/model-editor.png
+.. image:: /_static/img/screenshots/model/model-editor.png

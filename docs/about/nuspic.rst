@@ -2,6 +2,9 @@
 Predecessor software
 ====================
 
+nuSPIC
+------
+
 .. image:: /_static/img/screenshots/nuspic.png
 
 nuSPIC is also a web interface working with NEST Simulator.

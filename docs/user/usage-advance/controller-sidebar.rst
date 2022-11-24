@@ -8,7 +8,7 @@ Network controller
 Kernel settings
 ---------------
 
-.. image:: /_static/img/screenshots/kernel-settings.png
+.. image:: /_static/img/screenshots/controller/kernel-settings.png
    :align: right
    :target: #kernel-settings
    :width: 360px
@@ -42,7 +42,7 @@ The simulation time can be set as well (in Milliseconds).
 Code editor
 -----------
 
-.. image:: /_static/img/screenshots/code-editor.png
+.. image:: /_static/img/screenshots/controller/code-editor.png
    :align: right
    :target: #code-editor
    :width: 360px
@@ -71,7 +71,7 @@ Activity controller
 Activity table
 --------------
 
-.. image:: /_static/img/screenshots/activity-table.png
+.. image:: /_static/img/screenshots/controller/activity-table.png
    :align: right
    :target: #activity-table
    :width: 320px

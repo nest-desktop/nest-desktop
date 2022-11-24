@@ -1,7 +1,7 @@
 Activity chart graph
 ====================
 
-.. image:: /_static/img/screenshots/activity-graph.png
+.. image:: /_static/img/screenshots/activity/activity-graph.png
    :align: left
    :target: #activity-graph
    :width: 360px
@@ -26,7 +26,7 @@ Every chart panel has an own controller card fur individual customization.
 Other chart models can be chosen individually for each panel
 by clicking on the card toolbar in the activity controller (on the right side).
 
-.. image:: /_static/img/screenshots/activity-chart-graph-analog.png
+.. image:: /_static/img/screenshots/activity/activity-chart-graph-analog.png
    :target: #analog-signals
 
 By default it shows traces of the analog signals as a function of time.
@@ -45,7 +45,7 @@ Spike activity
 
 Spike events contain times and ids of the senders collected by the ``spike recorder``.
 
-.. image:: /_static/img/screenshots/activity-chart-graph-spike.png
+.. image:: /_static/img/screenshots/activity/activity-chart-graph-spike.png
    :target: #spike-activity
 
 By default, a raster plot of the spike times as well as a histogram for spike times is shown.
