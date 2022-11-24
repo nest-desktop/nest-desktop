@@ -1,5 +1,6 @@
 # File: docs/requirements.txt
 
 pip==22.1.2
+sphinx-copybutton
 sphinx-material==0.0.35
 Sphinx==5.1.*
