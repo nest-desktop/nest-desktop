@@ -56,23 +56,17 @@
 
               <v-list nav>
                 <template v-if="appConfig.devMode">
-                  <v-tooltip right>
-                    <template #activator="{ on, attrs }">
-                      <v-list-item
-                        @click="app.updateConfig({ devMode: false })"
-                        dense
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        <v-list-item-icon v-bind="attrs" v-on="on">
-                          <v-list-item-group class="nav-item">
-                            <v-icon dense v-text="'mdi-dev-to'" />
-                          </v-list-item-group>
-                        </v-list-item-icon>
-                      </v-list-item>
-                    </template>
-                    <span v-text="'Dev mode is on.'" />
-                  </v-tooltip>
+                  <v-list-item
+                    @click="app.updateConfig({ devMode: false })"
+                    dense
+                    title="Dev mode is on."
+                  >
+                    <v-list-item-icon v-bind="attrs" v-on="on">
+                      <v-list-item-group class="nav-item">
+                        <v-icon dense v-text="'mdi-dev-to'" />
+                      </v-list-item-group>
+                    </v-list-item-icon>
+                  </v-list-item>
                 </template>
 
                 <v-list-item

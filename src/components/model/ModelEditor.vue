@@ -20,20 +20,16 @@
           :key="recordable.id"
           v-for="recordable in modelView.state.model.recordables"
         >
-          <v-tooltip bottom>
-            <template #activator="{ on, attrs }">
-              <v-chip
-                class="ma-1"
-                outlined
-                small
-                v-bind="attrs"
-                v-on="on"
-                v-text="recordable.id"
-              />
-            </template>
-            {{ recordable.label }}
-            <span v-if="recordable.unit"> ({{ recordable.unit }})</span>
-          </v-tooltip>
+          <v-chip
+            :title="
+              recordable.label +
+              (recordable.unit ? ` (${recordable.unit})` : '')
+            "
+            class="ma-1"
+            outlined
+            small
+            v-text="recordable.id"
+          />
         </span>
       </v-card-subtitle>
 
