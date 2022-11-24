@@ -17,8 +17,8 @@ For more information bwCloud, follow the link:  https://www.bw-cloud.org/.
 Deployers can build an OpenStack image via Packer and Ansible.
 
 Requirements:
-   - `Packer <https://www.packer.io/downloads.html>`__
-   - `Ansible (2.3.2.0 or newer) <https://releases.ansible.com/ansible/>`__
+  - `Packer <https://www.packer.io/downloads.html>`__
+  - `Ansible (2.3.2.0 or newer) <https://releases.ansible.com/ansible/>`__
 
 
 Deploy NEST Desktop on bwCloud
@@ -35,23 +35,23 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 1. Download the OpenStack RC File from
    `bwCloud dashboard <https://portal.bw-cloud.org/project/api_access/>`__:
 
-  :guilabel:`Project` -> :guilabel:`API Access` -> :guilabel:`Download OpenStack RC File`
+   :guilabel:`Project` -> :guilabel:`API Access` -> :guilabel:`Download OpenStack RC File`
 
 2. Source the RC file to login:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   source Project_<userID>-openrc.sh
+      source Project_<userID>-openrc.sh
 
 3. Modify the Ansible configurations in ``infrastructure/bwCloud/nest-desktop.json``.
 
-  Set ``image_name``. Values for ``source_image`` and ``networks`` are taken from bwCloud dashboard.
+   Set ``image_name``. Values for ``source_image`` and ``networks`` are taken from bwCloud dashboard.
 
 4. Build an image on bwCloud:
 
 .. code-block:: bash
 
-  packer build nest-desktop.json
+   packer build nest-desktop.json
 
 5. Start an instance on the bwCloud dashboard and it will have a public IP of the virtual machine.
 

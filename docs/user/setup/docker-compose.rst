@@ -2,9 +2,9 @@ Docker Compose |linux| |windows| |apple|
 ========================================
 
 .. image:: /_static/img/logo/docker-compose-logo.png
-   :align: right
+   :align: left
    :target: #docker-compose-linux-windows-apple
-   :width: 240px
+   :width: 120px
 
 Docker is a virtualization software packaging applications and its dependencies.
 Docker Compose is a tool for running multi-container applications on Docker defined using the Compose file format.

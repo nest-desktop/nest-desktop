@@ -2,9 +2,9 @@ Snap |linux|
 ============
 
 .. image:: /_static/img/logo/snapcraft-logo.png
-   :align: right
+   :align: left
    :target: #snap-linux
-   :width: 240px
+   :width: 120px
 
 You can download NEST Desktop via snap.
 

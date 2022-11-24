@@ -37,22 +37,22 @@ Git conventions
 ---------------
 
 Commits
-    - Commits should have a title containing not more than 72 characters.
-    - The subject line of commit messages should be a short and informative \
-      summary of the pull request in the imperative (e.g. 'Fix bug' instead of \
-      'Fixed bug') and should not end with a full stop.
-    - The body should focus on the `What` (the changes in comparison to the \
-      original version) and `Why`, very detailed explanations on the `How` \
-      should be included in the source code as comments.
-    - If the commit addresses an issue from the issue tracker, at least the \
-      issue ID should be mentioned in the commit body (or even in the name).
-    - This helps to generate release notes and to maintain a Git history where a \
-      ``git log`` produces helpful output.
+  - Commits should have a title containing not more than 72 characters.
+  - The subject line of commit messages should be a short and informative \
+    summary of the pull request in the imperative (e.g. 'Fix bug' instead of \
+    'Fixed bug') and should not end with a full stop.
+  - The body should focus on the `What` (the changes in comparison to the \
+    original version) and `Why`, very detailed explanations on the `How` \
+    should be included in the source code as comments.
+  - If the commit addresses an issue from the issue tracker, at least the \
+    issue ID should be mentioned in the commit body (or even in the name).
+  - This helps to generate release notes and to maintain a Git history where a \
+    ``git log`` produces helpful output.
 
 Pull requests
-    - The rules for commits also apply here.
-    - Please have a look at the `GitHub keywords in issues and pull requests
-      <https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests>`__ .
+  - The rules for commits also apply here.
+  - Please have a look at the `GitHub keywords in issues and pull requests
+    <https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests>`__ .
 
 .. _naming-conventions:
 

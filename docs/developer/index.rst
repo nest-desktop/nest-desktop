@@ -12,8 +12,8 @@ You can clone NEST Desktop from the GitHub repository:
 
 .. code-block:: bash
 
-  git clone https://github.com/nest-desktop/nest-desktop
-  cd nest-desktop
+   git clone https://github.com/nest-desktop/nest-desktop
+   cd nest-desktop
 
 Development guideline
 =====================

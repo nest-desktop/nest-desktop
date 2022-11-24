@@ -15,7 +15,8 @@ To install Sphinx and the Read the Docs theme via ``pip``:
 
 .. code-block:: bash
 
-  python3 -m pip install sphinx sphinx-material
+   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docs/requirements.txt
+   python3 -m pip install -r requirements.txt
 
 |
 
@@ -28,14 +29,14 @@ Build the documentation which your created with Sphinx in the ``docs`` folder of
 
 .. code-block:: bash
 
-  rm -r ./_build; make html
+   make clean; make html
 
 Start the python server to serve the documentation locally,
 i.e. available only on your personal machine.
 
 .. code-block:: bash
 
-  python3 -m http.server --directory ./_build/html 8002
+   python3 -m http.server --directory ./_build/html 8002
 
 Then open the URL `http://localhost:8002` with your browser.
 
@@ -48,15 +49,15 @@ Publication: Push to ReadTheDocs
 
 The documentation files for the dev branch are automatically rebuilt (and updated)
 each time a push is made to the repository.
-The docs for other versions depend on the GitHub tags.
-The latest tags refers to the latest release version.
+The docs for other versions refers to the GitHub tags or branches.
+The latest tags is assigned to the latest release version.
 
 |
 
 Optional: Use Apptainer
 -----------------------
 
-Build a Apptainer image:
+Build an Apptainer image file:
 
 .. code-block:: bash
 
@@ -68,3 +69,5 @@ Start the Apptainer container:
 .. code-block:: bash
 
    apptainer shell doc-sphinx.sif
+
+Now you are in an Apptainer virtualization in which you can execute ``sphinx`` command.

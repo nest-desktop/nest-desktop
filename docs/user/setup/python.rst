@@ -2,9 +2,15 @@ Python |linux| |windows| |apple|
 ================================
 
 .. image:: /_static/img/logo/python-logo.png
-   :align: right
+   :align: left
    :target: #python-linux-windows-apple
-   :width: 240px
+   :width: 120px
+
+PyPI contains packages of NEST Desktop and NEST Simulator.
+We recommend to install both packages.
+
+
+|br|
 
 NEST Simulator
 --------------

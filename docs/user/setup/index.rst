@@ -2,14 +2,14 @@
 Setup Guide
 ===========
 
-This guide provides a detailed documentation on how to install NEST Desktop and if provided NEST Simulator.
+This guide provides a detailed documentation on how to install and start both instances: NEST Desktop and NEST Simulator.
 
 .. note::
    To enable the full functionality of NEST Desktop,
    you also need to install NEST Simulator on your computer.
    NEST Simulator provides an API Server
    which can forward requests to the simulation engine.
-   In summary, you have to start NEST Server too.
+   In summary, you have to start NEST Server as well.
 
    You can find the detailed information on NEST Server in
    :doc:`NEST simulator user documentation <nest-simulator:connect_nest/nest_server>`.
@@ -22,7 +22,7 @@ This guide provides a detailed documentation on how to install NEST Desktop and 
 Docker (or Docker Compose) and Apptainer provide both NEST Desktop and NEST Simulator,
 so you have everything you need to run NEST Desktop and NEST Simulator.
 
-Alternatively, you can install NEST Desktop with the conda or pip command.
+Alternatively, you can install NEST Desktop with the ``conda`` or ``pip`` command.
 
 You are able to download and start the NEST Desktop application,
 e.g. AppImage or Snap in Linux.

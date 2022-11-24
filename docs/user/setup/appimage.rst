@@ -2,9 +2,11 @@ AppImage |linux|
 ================
 
 .. image:: /_static/img/logo/App-image-logo.svg
-   :align: right
+   :align: left
    :target: #appimage-linux
-   :width: 240px
+   :width: 120px
+
+
 
 You can download an AppImage from the `releases page <https://github.com/nest-desktop/nest-desktop-AppImage/releases>`__.
 

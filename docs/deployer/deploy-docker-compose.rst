@@ -18,7 +18,7 @@ Docker Compose needs the configuration file (``docker-compose.yml``).
 Here, the guide shows you how to build containers with ``docker-compose``.
 
 Requirements:
-   - `Docker Compose <https://docs.docker.com/compose/>`__
+  - `Docker Compose <https://docs.docker.com/compose/>`__
 
 |
 

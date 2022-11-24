@@ -5,7 +5,7 @@ First, prepare the development environment with the required packages.
 
 .. code-block:: bash
 
-  yarn serve
+   yarn serve
 
 The Live Development Server is now serving at ``http://localhost:54286``.
 
@@ -20,8 +20,10 @@ The Live Development Server is now serving at ``http://localhost:54286``.
 Setup
 -----
 
-It is possible to install NEST Desktop from source code on a local machine using ``pip`` (where it finds ``setup.py``).
-The recommended method is to install it in the user's home directory using the command argument ``--user``.
+It is possible to install NEST Desktop from source code on a local machine using ``pip``
+(where it finds ``setup.py``).
+The recommended method is to install it in the user's home directory using the
+command argument ``--user``.
 
 .. code-block:: bash
 

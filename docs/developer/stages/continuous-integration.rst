@@ -1,8 +1,8 @@
 Continuous integration (CI)
 ===========================
 
-GitHub
-------
+Mirror Action on GitHub
+-----------------------
 
 Since the NEST Desktop team has only restricted access to the CI resources of GitHub,
 the source code of NEST Desktop is mirrored (``.github/workflows/ebrains-push.yml``)
@@ -11,8 +11,8 @@ where we are able to use automated CI systems for the compilation and the deploy
 We use only a small GitHub CI setup to transfer the code to the EBRAINS GitLab
 and execute the compute-intensive workloads there.
 
-GitLab
-------
+Jobs on GitLab
+--------------
 
 You can find the configuration in ``.gitlab-ci.yml``.
 It consists of two stages, `build` and `deploy`.

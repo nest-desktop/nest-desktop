@@ -14,11 +14,11 @@ It has two possible reasons:
 - The user authorization to the backend is not granted.
 
 .. hint::
-   Check NEST Simulator is running (if the URL is ``localhost:5000``):
+   Check NEST Simulator is running (if the URL is ``localhost:52425``):
 
-   - in URL of Browser: ``http://localhost:5000``
-   - in Terminal: ``curl http://localhost:5000``
-   - in Python: ``import requests; requests.get('http://localhost:5000')``
+   - in URL of Browser: ``http://localhost:52425``
+   - in Terminal: ``curl http://localhost:52425``
+   - in Python: ``import requests; requests.get('http://localhost:52425')``
 
 .. _error_internal-server-error:
 

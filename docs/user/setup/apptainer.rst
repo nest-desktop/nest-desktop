@@ -2,13 +2,15 @@ Apptainer |linux|
 =================
 
 .. image:: /_static/img/logo/apptainer-logo.png
-   :align: right
+   :align: left
    :target: #apptainer-linux
-   :width: 240px
+   :width: 120px
 
 Apptainer, former Singularity, is an application container for **Linux** systems.
 For more information read the full documentation of Apptainer
 `here <https://apptainer.org/>`__.
+
+|br|
 
 Get recipes
 -----------
@@ -42,7 +44,7 @@ Build image
 
 .. note::
    This command (and the following ones) need to be executed inside the folder
-   where the container files are located, i.e. the `nest-desktop-apptainer` folder.
+   where the container files are located, i.e. the ``nest-desktop-apptainer`` folder.
 
 Start container
 ---------------
@@ -60,3 +62,6 @@ You can use NEST Desktop in the web browser at http://localhost:54286.
 :doc:`Now we can start constructing networks for the simulation! </user/usage-basic/index>`
 
 For more information read the full documentation of `NEST Desktop Apptainer <https://github.com/nest-desktop/nest-desktop-apptainer>`__.
+
+.. warning::
+   If the apptainer (esp. NEST Simulator) is running, your system is exposed for unauthorized access.

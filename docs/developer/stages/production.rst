@@ -27,7 +27,7 @@ Building and pushing NEST Desktop on `PyPI <https://pypi.org/project/nest-deskto
 After that, Docker Hub can upgrade NEST Desktop in the provided Docker image.
 
 Requirements
-   - setuptools, wheel, twine
+  - setuptools, wheel, twine
 
 
 The Python Package Index **nest-desktop** includes an executive command ``nest-desktop`` and a Python library ``nest_desktop``.
@@ -89,7 +89,18 @@ Do not forget to commit the changes you made and set a new version tag in git.
 Conda
 -----
 
+We have a conda-smithy `repository for nest-desktop <https://github.com/conda-forge/nest-desktop-feedstock>`__.
+When a new Python package is released, we can change the version in ``meta.yaml``
+(See the meta content `online <https://github.com/conda-forge/nest-desktop-feedstock/blob/main/recipe/meta.yaml>`__):
 
+.. code-block::
+
+   {% set version = "3.1.4" %}
+
+.. note::
+   It is also important to change ``sha256`` of the source of ``tar.gz`` file.
+
+Then make a pull request on the base branch of this repository.
 
 |br|
 

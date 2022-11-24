@@ -10,8 +10,8 @@ you will need to `install Node.js <https://nodejs.org/en/download/package-manage
 which gives you also the possibility to install `Yarn`.
 
 Requirements
-   - Node.js, Yarn
-   - NEST Simulator 3.0 or higher
+  - Node.js, Yarn
+  - NEST Simulator 3.0 or higher
 
 You can install these requirements in the host system.
 
@@ -78,7 +78,7 @@ Start a development server:
 
    .. code-block:: bash
 
-     nice -n 20 bash
+      nice -n 20 bash
 
    This will spawn a new console inside your current console, but with the lowest processing priority possible,
    i.e. this console and its tasks do not block other tasks (like video conferences, etc.) significantly.
