@@ -9,6 +9,25 @@ a:hover {
   text-decoration: none;
 }
 
+[data-md-color-primary='deep-orange'] .md-header {
+  background-color: #ff6633;
+  box-shadow: none;
+}
+
+[data-md-color-primary='deep-orange'] .md-tabs {
+  display: none;
+}
+
+.guilabel {
+  border: 1px solid #7fbbe3;
+  background: #e7f2fa;
+  font-size: 80%;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2.4px 6px;
+  margin: auto 4px auto 2px;
+}
+
 .iframe-container {
   height: 0;
   height: auto;
@@ -41,30 +60,11 @@ a:hover {
   padding-left: 0;
 }
 
-.guilabel {
-  border: 1px solid #7fbbe3;
-  background: #e7f2fa;
-  font-size: 80%;
-  font-weight: 700;
-  border-radius: 4px;
-  padding: 2.4px 6px;
-  margin: auto 4px auto 2px;
-}
-
-[data-md-color-primary='deep-orange'] .md-header {
-  background-color: #ff6633;
-  box-shadow: none;
-}
-
-[data-md-color-primary='deep-orange'] .md-tabs {
-  display: none;
+.md-typeset section[id] {
+  margin-top: -2rem;
+  padding-top: 2rem;
 }
 
 .md-main__inner {
   padding-top: 0 !important;
-}
-
-.md-typeset section[id] {
-  ￼margin-top: -2rem;
-  ￼padding-top: 2rem;
 }
