@@ -36,6 +36,13 @@ export default Vue.extend({
     const state = reactive({
       items: [
         {
+          id: 'projectNew',
+          icon: 'mdi-plus',
+          title: 'New project',
+          to: '/project/',
+          onClick: () => {},
+        },
+        {
           id: 'projectsReload',
           icon: 'mdi-reload',
           title: 'Reload projects',
