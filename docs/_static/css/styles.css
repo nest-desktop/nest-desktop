@@ -60,7 +60,9 @@ a:hover {
   padding-left: 0;
 }
 
-.md-typeset section[id]:target:before {
+.md-typeset h2[id]:before,
+.md-typeset h3[id]:before,
+.md-typeset h4[id]:before {
   margin-top: -3.45rem;
   padding-top: 3.45rem;
 }
