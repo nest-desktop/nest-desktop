@@ -60,9 +60,9 @@ a:hover {
   padding-left: 0;
 }
 
-.md-typeset section[id] {
-  margin-top: -2rem;
-  padding-top: 2rem;
+.md-typeset section[id]:target:before {
+  margin-top: -3.45rem;
+  padding-top: 3.45rem;
 }
 
 .md-main__inner {
