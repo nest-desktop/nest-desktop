@@ -130,7 +130,7 @@
                 v-text="'Are you sure to delete all elements of this network?'"
               />
               <v-card-actions>
-                this network-spacer />
+                <v-spacer />
                 <v-btn
                   @click="state.dialogDelete = false"
                   outlined
