@@ -72,9 +72,7 @@
             appState.dialog.action.slice(1)
           }}
         </v-card-title>
-        <v-card-subtitle
-          v-text="`Select projects to ${appState.dialog.action}`"
-        >
+        <v-card-subtitle v-text="`Select models to ${appState.dialog.action}`">
         </v-card-subtitle>
 
         <v-card-text>
