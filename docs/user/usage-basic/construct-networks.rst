@@ -10,6 +10,8 @@ The network editor shows the network graph composing of nodes (shapes) and conne
 
 |br|
 
+.. _usage-basic_create-nodes:
+
 Create nodes
 ------------
 
@@ -20,10 +22,12 @@ Create nodes
 In order to create a new node, you can click with the right mouse button in the network editor
 and a `pie` panel with three letters appears to select an element type.
 A node is divided into three element types:
-stimulus (:guilabel:`S`), recording (:guilabel:`R`) device and neuron (:guilabel:`N`).
+stimulus (:bdg:`S`), recording (:bdg:`R`) device and neuron (:bdg:`N`).
 Then it creates a node of the selected element type.
 
 |br|
+
+.. _usage-basic_connect-nodes:
 
 Connect nodes
 -------------
@@ -39,10 +43,12 @@ then move the mouse towards anther node and finally click on a target node.
 It creates a connection between source and target nodes.
 
 .. hint::
-   By pressing the hotkey ``ALT`` and clicking a node at the same time,
+   By pressing the hotkey :bdg:`ALT` and clicking a node at the same time,
    you enable the connecting mode or continue connecting other nodes.
 
 |br|
+
+.. _usage-basic_select-model-and-parameters:
 
 Select model and parameters
 ---------------------------
@@ -51,7 +57,6 @@ Select model and parameters
    :align: right
    :target: #select-model-and-parameters
    :width: 320px
-
 
 You are able to select the model of a node in the network controller.
 Then it shows a list of parameters which you might want to work on.

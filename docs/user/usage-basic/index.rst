@@ -7,7 +7,7 @@ It is a basic usage guides for the Graphical User Interface (GUI) of NEST Deskto
 .. note::
    If you want to see a quick start guide for in NEST Desktop,
    we have prepared a :ref:`video <first-steps>`
-   showing the steps how to construct networks and explore activity.
+   showing the steps how to :ref:`usage-basic_construct-networks` and :ref:`usage-basic_explore-activity`.
 
 Once you start NEST Desktop, you can see the start page
 containing an image of a laptop with the NEST logo on its screen.

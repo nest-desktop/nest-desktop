@@ -17,13 +17,13 @@ With NEST 3, the API server (i.e., NEST Server) is already implemented.
 Install with Conda
 ------------------
 
-1. Create Conda environment and install NEST Simulator:
+1. Create Conda environment called :bdg:`nest3` and install NEST Simulator:
 
    .. code-block:: bash
 
       conda create -n nest3 nest-simulator
 
-2. Activate ``nest3`` conda:
+2. Activate the Conda environment :bdg:`nest3`:
 
    .. code-block:: bash
 
@@ -53,7 +53,7 @@ Start with Conda
 
       nest-server start
 
-   NEST Server is now running at ``http://localhost:52425``.
+   NEST Server is now running at http://localhost:52425.
 
 2. Start NEST Desktop (in another terminal session):
 

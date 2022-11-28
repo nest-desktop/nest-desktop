@@ -31,6 +31,7 @@ version = '3.2'
 # ones.
 extensions = [
     'sphinx_copybutton',
+    'sphinx_design',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosectionlabel',
     'sphinx.ext.intersphinx',
@@ -72,8 +73,8 @@ rst_epilog = '\n'.join([
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
+# The theme to use for HTML and HTML Help pages.
+# See the documentation for a list of builtin themes.
 #
 
 extensions.append("sphinx_material")

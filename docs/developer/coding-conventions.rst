@@ -23,7 +23,7 @@ General coding conventions
   (e.g when they contain very long URLs or within bullet points, \
   the latter with the possibility to use backslashes, which is sometimes quite cumbersome).
 - The general coding conventions for Vue, TypeScript \
-  and for Python (see `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`__) should be followed.
+  and for Python (|see| `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`__) should be followed.
 - For ``.ts`` files, the type ``any`` should be used as rarely as possible \
   (and might be removed in the future).
 - The general recommendations for good (Vue) code should be applied, e.g. \

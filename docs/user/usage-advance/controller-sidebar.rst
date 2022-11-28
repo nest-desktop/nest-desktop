@@ -1,9 +1,22 @@
 Controller sidebar
 ==================
 
+.. _controller-sidebar_network-controller:
+
 Network controller
 ------------------
 
+.. image:: /_static/img/screenshots/controller/network-controller.png
+   :align: right
+   :target: #network-controller
+
+The network controller displays cards of models, nodes and connections
+
+
+
+|br|
+
+.. _controller-sidebar_kernel-settings:
 
 Kernel settings
 ---------------
@@ -11,29 +24,28 @@ Kernel settings
 .. image:: /_static/img/screenshots/controller/kernel-settings.png
    :align: right
    :target: #kernel-settings
-   :width: 360px
 
 The simulation parameters can be adjusted in the right sidebar.
 They are contained in the NEST Simulator code (more information below),
-so they will be passed to the NEST Simulator
-whenever a simulation is started.
-In the Kernel settings, the slider 'local number of threads' allows to set
+so they will be passed to the NEST Simulator whenever a simulation is started.
+
+In the Kernel settings, the slider :bdg:`local number of threads` allows to set
 the number of processes used by the NEST Simulator.
-Please be aware that the shown number of threads does not match the number
-of processors used by the NEST Simulator machine.
-Therefore, selecting a number that is too large could lead to freezes on
-the NEST Simulator machine.
 
-It is possible to select the simulation resolution.
-Here, you should be aware of the created load on the NEST Simulator as well:
-small values for the resolution size create many calculations and data points.
-Therefore, selecting small values for the simulation resolution can lead to
-freezes and lags, so please be patient when you choose a small number. :)
+It is possible to edit the :bdg:`simulation resolution`.
 
-The seed of the random number generator can also be chosen.
-It is possible to choose a randomized seed.
+.. note::
+   Here, you should be aware of the created load on the NEST Simulator as well:
+   Small values for the resolution size create many calculations and data points.
+   Therefore, selecting small values for the simulation resolution can lead to
+   freezes and lags, so please be patient when you choose a small number.
 
-The simulation time can be set as well (in Milliseconds).
+The :bdg:`seed of the random number generator` can also be modified.
+The same seed produces same simulation output.
+
+It is possible to activate randomized seed that it generates new seed before each simulation.
+
+The :bdg:`simulation time` can be set as well (in Milliseconds).
 
 |br|
 
@@ -45,15 +57,22 @@ Code editor
 .. image:: /_static/img/screenshots/controller/code-editor.png
    :align: right
    :target: #code-editor
-   :width: 360px
 
 NEST Desktop generates textual code from the constructed network.
 The generated code can be executed in any Python interpreter.
 This way, the code semantics of the NEST Simulator is understandable and easily to learn.
 
-The graphical representatives of the nodes deliver arguments to the block of the ``nest.Create(*)`` function.
-Next, connections supply a specification for the block of the ``nest.Connect(*)`` function.
-The function ``nest.Simulate(*)`` triggers the simulation of your constructed network.
+The scripted code starts with importing required modules :bdg:`import ...` and reset the simulation kernel :bdg:`nest.ResetKernel()`.
+It is necessary, because it removes old set of previous simulation.).
+
+The simulation kernel can be configured by :bdg:`nestSetKernelStatus(...)`.
+
+The graphical representatives of the nodes deliver arguments to the block of the :bdg:`nest.Create(...)` function.
+
+Next, connections supply a specification for the block of the :bdg:`nest.Connect(...)` function.
+
+The function :bdg:`nest.Simulate(...)` triggers the simulation of your constructed network.
+
 All recording nodes fill a block to collect activities containing neuronal properties,
 e.g. node ids and positions, and activity events.
 
@@ -64,22 +83,76 @@ e.g. node ids and positions, and activity events.
 Activity controller
 -------------------
 
+.. image:: /_static/img/screenshots/activity/activity-graph-mode.png
+   :align: left
+   :target: #activity-controller
+
+The activity controller displays different content depending on the visualization mode (:bdg:`abstract` or :bdg:`spatial`) of the activity graph.
+
+
 |br|
 
-.. _controller-sidebar_activity-table:
+.. _controller-sidebar_activity-chart-controller:
 
-Activity table
---------------
+Activity chart controller
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: /_static/img/screenshots/controller/activity-table.png
+Every chart panel has an own controller card fur individual customization.
+Other chart models can be chosen individually for each panel
+by clicking on the card toolbar in the activity controller.
+
+.. image:: /_static/img/screenshots/controller/activity-graph-panels-analog.png
    :align: right
-   :target: #activity-table
-   :width: 320px
+   :target: #activity-controller
 
-You can go to the table by clicking on the :guilabel:`Stats` button.
+By default it shows traces of the analog signals as a function of time. A panel with a histogram of values can be added when you select it in the :bdg-dark-line:`+ ADD PANEL` dropdown menu.
+
+When something doesn't work properly, you can reset the panels to default by clicking on :bdg-dark-line:`RESET`.
+
+You can add more recorded signals to the panel when it comes from multimeter. Node records appear as chips in the cards, which allow you to change the colors of the corresponding traces and bars.
+
+|br|
+
+.. image:: /_static/img/screenshots/controller/activity-graph-panels-spike.png
+   :align: right
+   :target: #activity-controller
+
+By default, a raster plot of the spike times as well as a histogram for spike times is shown.
+
+|br|
+
+.. _controller-sidebar_activity-animation-controller:
+
+Activity animation controller
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /_static/img/screenshots/controller/activity-anim-controller-analog.png
+   :align: right
+   :target: #activity-controller
+
+Animated graph displays activity (analog signals or spikes) for the spatial network forming layers in topology whose neurons have geographical positions.
+
+Values of the analog signals can be visualized using the colors of recorded targets. Here, it shows the color map :bdg:`spectral` for the value scales (from :bdg:`min` to :bdg:`max`). You can change the color map in the dropdown menu between the input fields of the min and max values.
+
+Additionally, an other geometry model (:bdg:`box` or :bdg:`sphere`) can be chosen.
+
+We recommend trying out many different options for the animation graph to find the best representation, as the optimal ones depend heavily on the simulation data and the intended use of the visualization.
+
+|br|
+
+.. _controller-sidebar_activity-statistics:
+
+Activity statistics
+-------------------
+
+.. image:: /_static/img/screenshots/controller/activity-stats.png
+   :align: right
+   :target: #activity-statistics
+
+You can go to the table by clicking on the :bdg:`Stats` button.
 
 It displays multiple panels for each recording device.
-In each panel a table shows activity statistics of recorded elements (rows) of a node (population)..
+In each panel a table shows activity statistics of recorded elements (rows) of a node (population).
 
 In spike events, the columns show the spike counts, mean and
 standard deviation of :math:`ISI` (inter-spike interval)

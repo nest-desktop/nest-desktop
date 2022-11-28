@@ -91,7 +91,7 @@ Conda
 
 We have a conda-smithy `repository for nest-desktop <https://github.com/conda-forge/nest-desktop-feedstock>`__.
 When a new Python package is released, we can change the version in ``meta.yaml``
-(See the meta content `online <https://github.com/conda-forge/nest-desktop-feedstock/blob/main/recipe/meta.yaml>`__):
+(|see| the meta content `online <https://github.com/conda-forge/nest-desktop-feedstock/blob/main/recipe/meta.yaml>`__):
 
 .. code-block::
 

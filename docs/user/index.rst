@@ -32,6 +32,7 @@ Advance guide
    usage-advance/network-graph
    usage-advance/activity-chart-graph
    usage-advance/activity-animation-graph
+   usage-advance/controller-sidebar
    usage-advance/synapse-model
 
 

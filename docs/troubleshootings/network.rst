@@ -2,28 +2,38 @@ Network
 =======
 
 Where can I find the network controller?
-   You will find the network controller by clicking on the icon (:guilabel:`Network`) in the right controller.
-   Nodes and connections are stacked as card panels in the network controller.
+   You will find the network controller by clicking on the network icon (|network|) in the right controller.
+   Models, nodes and connections are stacked as card panels in the network controller.
+
+   .. seeAlso::
+      - :ref:`controller-sidebar_network-controller`
 
 How can I empty a network?
    In the network graph you will find top right a trash button that empties the network.
 
+   .. seeAlso::
+      - :doc:`/user/usage-advance/network-graph`
+
+
 How can I create nodes?
    In the network graph you can click with the right mouse button,
-   then a selector panel appears to select the element type of the new node.
-   Please see section `'Create nodes' in the usage guide <usage.html#create-nodes>`__.
+   then a selector panel appears to select an element type of the new node.
+
+   .. seeAlso::
+      - :ref:`Create nodes in the usage guide <usage-basic_create-nodes>`
 
 How can I connect nodes?
    In the network graph you can click on the connector of a source node,
    then move the mouse towards the target node and click on the target node.
-   Please see section `'Connect nodes' in the usage guide <usage.html#connect-nodes>`__.
+
+   .. seeAlso::
+      - :ref:`Connect nodes in the usage guide <usage-basic_connect-nodes>`
 
 How can I connect a node with multiple nodes?
-   Hold down the :guilabel:`ALT` key when clicking on the target nodes.
-   Please see `the note in 'Connect nodes' in the usage guide <usage.html#connect-nodes>`__.
+   Hold down the :bdg:`ALT` key when clicking on the target nodes.
 
 How can I (un)select a node / a connection?
-   When a node or connection is selected you can press :guilabel:`ESC` to unselect it
+   When a node or connection is selected you can press :bdg:`ESC` to unselect it
    or in network graph you can click on another node
    or connection to select it (and to remove the selection of the former one).
 
@@ -46,13 +56,17 @@ How can I delete node / connection?
    or on the colored toolbar in the network controller.
 
 How can I change the node model?
-   You can click on model name twice and it opens a dropdown of models.
-   Please see `'Select model and parameters' in the usage guide <usage.html#select-model-and-parameters>`__.
+   You can click on model name twice and it opens a dropdown displaying models.
+
+   .. seeAlso::
+      - :ref:`Change node model in network controller <usage-basic_select-model-and-parameters>`.
 
 How can I modify parameters?
    You will find a list of parameters in the network controller.
    If they are not visible, click on the model selection to check the visibility of the parameters.
-   Please see `'Select model and parameters' in the usage guide <usage.html#select-model-and-parameters>`__.
+
+   .. seeAlso::
+      - :ref:`Modify parameters in the controller <usage-basic_select-model-and-parameters>`.
 
 How can I reset all parameter values?
    In the context menu of a node or connection you will find the method
@@ -81,3 +95,8 @@ How can I generate grid/free positions?
 How can I generate an array?
    In the context menu of the array parameters (e.g. the spike times of a spike generator)
    you will find a method to generate an array.
+
+.. |network| image:: /_static/img/icons/network.svg
+   :alt: network
+   :height: 17.6px
+   :target: #

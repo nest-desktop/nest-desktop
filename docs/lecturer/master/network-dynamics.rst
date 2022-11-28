@@ -51,7 +51,7 @@ A typical value for the connection probability in local cortical networks is 10%
 
    .. note::
       There are several different options to wire up a network randomly
-      (see https://www.nest-simulator.org/connection-management).
+      (|see| https://www.nest-simulator.org/connection-management).
 
    Find a meaningful way to monitor neuronal activity in the network, both on the level of individual neurons (membrane potentials and spike trains), and on the level of the whole population (PSTH, as a proxy for the EEG).
    Characterize the type of activity that you observe.

@@ -8,7 +8,7 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 .. note::
    Simulation with Insite needs to be run with Insite docker images
-   ``nest-module`` and ``access-node``.
+   :bdg:`nest-module` and :bdg:`access-node`.
    The best method is to use Docker Compose, which also deploys NEST Desktop and Insite.
    For more information, please read the :doc:`deployment guide of Insite </deployer/deploy-docker-compose-insite>`.
 
@@ -37,7 +37,7 @@ Enable simulation with Insite
    :target: #enable-simulation-with-insite
 
 After successfully receiving a ping from the Insite Access node of the backend,
-you can activate the button :guilabel:`Insite` in the toolbar of the code editor
+you can activate the button :bdg:`Insite` in the toolbar of the code editor
 (second from left).
 
 |br|
@@ -48,7 +48,11 @@ Script code for simulation with Insite
 --------------------------------------
 
 The Insite module has to be loaded in the NEST kernel.
-Preferentially load the Insite module directly after importing NEST (``nest.Install('insitemodule')``).
+Preferentially load the Insite module directly after importing NEST:
+
+.. code-block:: python
+
+   nest.Install('insitemodule')
 
 
 Next, the parameter ``record_to`` of any recording device
@@ -65,7 +69,7 @@ Now, the Insite recording module collects activity events from the modified reco
 The client receives activity from the Insite ``Access Node`` on another port (default: ``8080``).
 
 For more information about Insite, please visit the official
-`documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group at RWTH Aachen.
+`documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group of RWTH Aachen.
 
 |br|
 

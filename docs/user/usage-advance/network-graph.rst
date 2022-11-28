@@ -1,6 +1,8 @@
 Network graph
 =============
 
+.. image:: /_static/img/screenshots/network/network-graph.png
+   :target: #
 
 .. _network-graph_node-labels:
 
@@ -8,9 +10,9 @@ Node labels
 -----------
 
 Each node graph is labeled to identify the model of the node.
-By default, it creates direct current generator (:guilabel:`dc`) for a stimulus
-and a voltmeter (:guilabel:`vm`) for a recording device.
-Neurons are just labeled with :guilabel:`n`.
+By default, it creates direct current generator (:bdg:`dc`) for a stimulus
+and a voltmeter (:bdg:`vm`) for a recording device.
+Neurons are just labeled with :bdg:`n`.
 You can find the full label of the node model in the network controller.
 
 |br|

@@ -1,46 +1,90 @@
 Project view
 ============
 
-.. _project-view_manage-projects:
-
-Manage projects
----------------
-
-.. image:: /_static/img/screenshots/project/project-nav.png
-   :align: left
-   :target: #manage-projects
-
 NEST Desktop has a project management helping you to organize your networks and network activity.
+
+It contains :ref:`project-view_projects-menu` in the system bar to manage multiple projects, :ref:`project-view_project-nav-sidebar`, :ref:`project-view_project-bar` and content for :ref:`project-view_project-subpages`.
+
 If you want to explore the network activity of the project,
-you will have to start the simulation (see :ref:`usage-basic_simulate-networks`).
-
-Top of navigation sidebar, you see a toolbar containing buttons
-to create a new project (|new|) as well as to reload (|reload|), export (|export|), import (|import|), delete (|delete-projects|) or reset (|reset|) multiple projects.
-
-.. warning::
-   You should export projects that you want to keep: If you refresh your browser
-   or delete the web page cookie, the project will be lost!
-
-Creating a new project is defined where you can construct a network from the scratch
-(see :ref:`usage-basic_construct-networks`).
+you have to start the simulation before (|see| :ref:`usage-basic_simulate-networks`).
 
 |br|
 
-.. _project-view_project-menu:
+.. _project-view_projects-menu:
 
 Projects menu
-^^^^^^^^^^^^^
+-------------
 
 .. image:: /_static/img/screenshots/project/projects-menu.png
    :align: left
    :target: #projects-menu
 
 
-The projects menu will be displayed when the user clicks the :guilabel:`PROJECTS` in the system bar (top black bar).
+The projects menu will be displayed when the user clicks the :bdg-primary-line:`PROJECTS` in the system bar (top black bar).
 An opened project menu shows the same options which are displayed as buttons in the toolbar.
 
 In the menu you find options to create a new project (|new|) as well as to reload (|reload|), export (|export|), import (|import|), delete (|delete-projects|) or reset (|reset|) multiple projects.
 
+|br|
+
+.. _project-view_project-dialog:
+
+Project dialog
+--------------
+
+It is possible to import projects from different sources:
+You can choose between :bdg:`drive` (local storage), :bdg:`GitHub` and
+:bdg:`URL` (other one than GitHub URLs).
+
+
+.. image:: /_static/img/screenshots/project/projects-import.png
+   :target: #project-dialog
+
+||||
+
+Also you are able to export multiple projects.
+The selection checkbox appears when the project is loaded (Click on validate box).
+
+.. image:: /_static/img/screenshots/project/projects-export.png
+   :target: #project-dialog
+
+||||
+
+|br|
+
+.. _project-view_project-nav-sidebar:
+
+Project navigation sidebar
+--------------------------
+
+.. image:: /_static/img/screenshots/project/project-nav.png
+   :align: left
+   :target: #project-navigation-sidebar
+
+In the navigation sidebar you find a :ref:`project-view_project-toolbar` and then :ref:`project-view_project-list`.
+
+
+|br|
+
+.. _project-view_project-toolbar:
+
+Project toolbar
+^^^^^^^^^^^^^^^
+
+.. image:: /_static/img/screenshots/project/project-toolbar.png
+   :target: #project-toolbar
+
+Top of navigation sidebar, you see a toolbar containing buttons
+to create a new project (|new|) as well as to reload (|reload|), export (|export|), import (|import|), delete (|delete-projects|) or reset (|reset|) multiple projects.
+
+Clicking on exporting, importing or deleting projects opens a dialog showing a list of project (|see| :ref:`project-view_project-dialog`).
+
+.. warning::
+   You should export projects that you want to keep: If you refresh your browser
+   or delete the web page cookie, the project will be lost!
+
+Creating a new project is defined where you can construct a network from the scratch
+(|see| :ref:`usage-basic_construct-networks`).
 
 |br|
 
@@ -67,27 +111,9 @@ for a menu with options to rename (|rename|), unload (|unload|), reload (|reload
    with neuronal networks in the cookie database,
    but all activity will be lost after page reload!
 
-.. _project-view_project-bar:
-
-Project dialog
-^^^^^^^^^^^^^^
-
-It is possible to import projects from different sources: You can choose between :guilabel:`drive` (local storage), :guilabel:`GitHub` and
-:guilabel:`URL` (other one than GitHub URLs).
-
-.. image:: /_static/img/screenshots/project/projects-import.png
-   :target: #project-dialog
-
-||||
-
-Also you are able to export multiple projects. The selection checkbox appears when the project is loaded (Click on validate box).
-
-.. image:: /_static/img/screenshots/project/projects-export.png
-   :target: #project-dialog
-
-||||
-
 |br|
+
+.. _project-view_project-bar:
 
 Project bar
 -----------
@@ -95,9 +121,11 @@ Project bar
 .. image:: /_static/img/screenshots/project/project-bar.png
    :target: #project-bar
 
-The project bar contains content tabs (network editor, activity explorer and lab book), the project name, the network history and the simulation button.
+The project bar contains tabs for :ref:`project-view_project-subpages`, the project name, :ref:`project-view_network-history` and the :ref:`project-view_simulation-button`.
 
 .. tip:: It is useful to give project a proper name so that you can recognize your projects.
+
+|br|
 
 .. _project-view_network-history:
 
@@ -112,6 +140,55 @@ After every network changes, it pushed a snapshot of the current network to the 
 With the network history you can undo or redo the network changes.
 Loading a snapshot from this history is called `checkout network`.
 
+|br|
+
+.. _project-view_simulation-button:
+
+Simulation button
+^^^^^^^^^^^^^^^^^
+
+.. image:: /_static/img/gif/simulation-button.gif
+   :align: right
+   :target: #simulation-button
+
+You can click on the :bdg:`SIMULATE` button to start the simulation.
+
+|br|
+
+.. _project-view_project-subpages:
+
+Project subpages
+----------------
+
+.. _project-view_network-editor:
+
+Network editor
+^^^^^^^^^^^^^^
+
+.. image:: /_static/img/screenshots/network/network-editor.png
+   :target: #network-editor
+
+
+.. _project-view_activity-explorer:
+
+Activity explorer
+^^^^^^^^^^^^^^^^^
+
+.. image:: /_static/img/screenshots/activity/activity-explorer.png
+   :target: #activity-explorer
+
+.. _project-view_lab-book:
+
+Lab book
+^^^^^^^^
+
+.. image:: /_static/img/screenshots/project/project-lab-book.png
+   :target: #lab-book
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
+   :height: 17.6px
+   :target: #
 
 .. |delete-projects| image:: /_static/img/icons/trash-can-outline.svg
    :alt: delete projects

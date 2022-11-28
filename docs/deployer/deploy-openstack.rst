@@ -35,7 +35,7 @@ You can find the source code on https://github.com/nest-desktop/nest-desktop-bwC
 1. Download the OpenStack RC File from
    `bwCloud dashboard <https://portal.bw-cloud.org/project/api_access/>`__:
 
-   :guilabel:`Project` -> :guilabel:`API Access` -> :guilabel:`Download OpenStack RC File`
+   :bdg:`Project` -> :bdg:`API Access` -> :bdg:`Download OpenStack RC File`
 
 2. Source the RC file to login:
 
