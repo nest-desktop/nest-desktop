@@ -79,9 +79,9 @@
                   <th v-text="'Updated at'" />
                   <th
                     class="text-center"
+                    title="Validation is required to export a project"
                     v-if="dialogState.action === 'export'"
                     v-text="'Validate ⓘ'"
-                    title="Validation is required to export a project"
                   />
                   <th class="text-center" v-text="'Export'" />
                   <th
