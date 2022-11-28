@@ -9,7 +9,7 @@ Spike events contain times and sender ids whereas analog signals contain continu
 
 |br|
 
-.. _activity-chart-graph_analog-signals:
+.. _activity-chart-graph-analog-signals:
 
 Analog signals
 --------------
@@ -20,11 +20,11 @@ Analog signals
 By default, a line trace of membrane potential is displays.
 
 .. seeAlso::
-   - :ref:`Use controller for activity graph<controller-sidebar_activity-chart-controller>`
+   - :ref:`Use controller for activity graph<controller-sidebar-activity-chart-controller>`
 
 |br|
 
-.. _activity-chart-graph_spike-activity:
+.. _activity-chart-graph-spike-activity:
 
 Spike activity
 --------------
@@ -35,4 +35,4 @@ Spike activity
 By default, a raster plot of the spike times as well as a time histogram of spikes is displayed.
 
 .. seeAlso::
-   - :ref:`Use controller for activity graph<controller-sidebar_activity-chart-controller>`
+   - :ref:`Use controller for activity graph<controller-sidebar-activity-chart-controller>`

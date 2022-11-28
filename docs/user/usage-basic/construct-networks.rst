@@ -10,7 +10,7 @@ The network editor shows the network graph composing of nodes (shapes) and conne
 
 |br|
 
-.. _usage-basic_create-nodes:
+.. _usage-basic-create-nodes:
 
 Create nodes
 ------------
@@ -27,7 +27,7 @@ Then it creates a node of the selected element type.
 
 |br|
 
-.. _usage-basic_connect-nodes:
+.. _usage-basic-connect-nodes:
 
 Connect nodes
 -------------
@@ -48,7 +48,7 @@ It creates a connection between source and target nodes.
 
 |br|
 
-.. _usage-basic_select-model-and-parameters:
+.. _usage-basic-select-model-and-parameters:
 
 Select model and parameters
 ---------------------------

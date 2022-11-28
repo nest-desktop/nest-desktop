@@ -4,7 +4,7 @@ Activity animation graph
 It displays animated 3D graph for the spatial network
 forming layers in topology whose neurons have geographical positions.
 
-.. _activity-animation-graph_analog-signals:
+.. _activity-animation-graph-analog-signals:
 
 Analog signals
 --------------
@@ -32,7 +32,7 @@ and the intended use of the visualization.
 
 |br|
 
-.. _activity-animation-graph_spike-activity:
+.. _activity-animation-graph-spike-activity:
 
 Spike activity
 --------------

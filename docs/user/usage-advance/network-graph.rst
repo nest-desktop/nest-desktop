@@ -4,7 +4,7 @@ Network graph
 .. image:: /_static/img/screenshots/network/network-graph.png
    :target: #
 
-.. _network-graph_node-labels:
+.. _network-graph-node-labels:
 
 Node labels
 -----------
@@ -17,7 +17,7 @@ You can find the full label of the node model in the network controller.
 
 |br|
 
-.. _network-graph_node-colors:
+.. _network-graph-node-colors:
 
 Node colors
 -----------
@@ -34,7 +34,7 @@ The color of lines is defined by the source node.
 
 |br|
 
-.. _network-graph_node-shapes:
+.. _network-graph-node-shapes:
 
 Node shapes
 -----------
@@ -50,7 +50,7 @@ The specific shape defines an element type of a node:
 
 |br|
 
-.. _network-graph_neuron-shapes:
+.. _network-graph-neuron-shapes:
 
 Neuron shapes
 -------------

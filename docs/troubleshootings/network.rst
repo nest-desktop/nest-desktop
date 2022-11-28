@@ -1,3 +1,5 @@
+.. faq-network:
+
 Network
 =======
 
@@ -6,7 +8,7 @@ Where can I find the network controller?
    Models, nodes and connections are stacked as card panels in the network controller.
 
    .. seeAlso::
-      - :ref:`controller-sidebar_network-controller`
+      - :ref:`controller-sidebar-network-controller`
 
 How can I empty a network?
    In the network graph you will find top right a trash button that empties the network.
@@ -20,14 +22,14 @@ How can I create nodes?
    then a selector panel appears to select an element type of the new node.
 
    .. seeAlso::
-      - :ref:`Create nodes in the usage guide <usage-basic_create-nodes>`
+      - :ref:`Create nodes in the usage guide <usage-basic-create-nodes>`
 
 How can I connect nodes?
    In the network graph you can click on the connector of a source node,
    then move the mouse towards the target node and click on the target node.
 
    .. seeAlso::
-      - :ref:`Connect nodes in the usage guide <usage-basic_connect-nodes>`
+      - :ref:`Connect nodes in the usage guide <usage-basic-connect-nodes>`
 
 How can I connect a node with multiple nodes?
    Hold down the :bdg:`ALT` key when clicking on the target nodes.
@@ -59,14 +61,14 @@ How can I change the node model?
    You can click on model name twice and it opens a dropdown displaying models.
 
    .. seeAlso::
-      - :ref:`Change node model in network controller <usage-basic_select-model-and-parameters>`.
+      - :ref:`Change node model in network controller <usage-basic-select-model-and-parameters>`.
 
 How can I modify parameters?
    You will find a list of parameters in the network controller.
    If they are not visible, click on the model selection to check the visibility of the parameters.
 
    .. seeAlso::
-      - :ref:`Modify parameters in the controller <usage-basic_select-model-and-parameters>`.
+      - :ref:`Modify parameters in the controller <usage-basic-select-model-and-parameters>`.
 
 How can I reset all parameter values?
    In the context menu of a node or connection you will find the method

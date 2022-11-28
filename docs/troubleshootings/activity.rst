@@ -7,7 +7,7 @@ How can I download the activity data of a single recorder?
 How can I download activity data of all recorders?
    In the projects dialog to download projects you can find options to download network activities of projects.
 
-.. _faq_activity-chart-graph:
+.. _faq-activity-chart-graph:
 
 Activity chart graph
 --------------------
@@ -36,7 +36,7 @@ How can I hide/show dots/lines?
    Click on the legend to alter the visibility of the dots/lines.
 
 
-.. _faq_activity-animation-graph:
+.. _faq-activity-animation-graph:
 
 Activity animation graph
 ------------------------

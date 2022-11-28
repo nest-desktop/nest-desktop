@@ -14,7 +14,7 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 |br|
 
-.. _usage-with-insite_check-if-insite-is-running:
+.. _usage-with-insite-check-if-insite-is-running:
 
 Check if Insite is running
 --------------------------
@@ -27,7 +27,7 @@ In the settings page you can check whether the Insite backend is running.
 
 |br|
 
-.. _usage-with-insite_enable-simulation-with-insite:
+.. _usage-with-insite-enable-simulation-with-insite:
 
 Enable simulation with Insite
 -----------------------------
@@ -42,21 +42,21 @@ you can activate the button :bdg:`Insite` in the toolbar of the code editor
 
 |br|
 
-.. _usage-with-insite_script-code-for-simulation-with-insite:
+.. _usage-with-insite-script-code-for-simulation-with-insite:
 
 Script code for simulation with Insite
 --------------------------------------
 
 The Insite module has to be loaded in the NEST kernel.
-Preferentially load the Insite module directly after importing NEST:
+Preferentially load the :bdg:`Insite module` directly after importing NEST:
 
 .. code-block:: python
 
    nest.Install('insitemodule')
 
 
-Next, the parameter ``record_to`` of any recording device
-(e.g. spike recorder, multimeter or voltmeter) has to been modified:
+Next, the parameter :bdg:`record_to` of any recording device
+(e.g. :bdg:`spike recorder`, :bdg:`multimeter` or :bdg:`voltmeter`) has to been modified:
 
 .. code-block:: python
 
@@ -66,7 +66,7 @@ Next, the parameter ``record_to`` of any recording device
 
 
 Now, the Insite recording module collects activity events from the modified recording devices.
-The client receives activity from the Insite ``Access Node`` on another port (default: ``8080``).
+The client receives activity from the Insite :bdg:`Access Node` on another port (default: ``8080``).
 
 For more information about Insite, please visit the official
 `documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group of RWTH Aachen.

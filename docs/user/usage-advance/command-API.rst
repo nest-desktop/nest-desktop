@@ -11,7 +11,7 @@ Show the usage of the :code:`nest-desktop` command:
    nest-desktop
 
 
-.. _command-api_usage-options:
+.. _command-api-usage-options:
 
 Usage options
 -------------
@@ -33,7 +33,7 @@ Usage options
      -p <PORT>   use port <PORT> for opening the socket [default: 54286]
 
 
-.. _command-api_environment-variables:
+.. _command-api-environment-variables:
 
 Environment variables
 ---------------------

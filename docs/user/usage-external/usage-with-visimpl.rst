@@ -10,7 +10,7 @@ When you want to learn how to use NEST Desktop with Insite, please read :doc:`/u
 
 |br|
 
-.. _usage-with-visimpl_how-to-setup-visimpl:
+.. _usage-with-visimpl-how-to-setup-visimpl:
 
 How to setup ViSimpl
 --------------------
@@ -19,7 +19,7 @@ First, download the software from the `ViSimpl page <https://vg-lab.es/visimpl/#
 
 |br|
 
-.. _usage-with-visimpl_how-to-use-nest-desktop-with-visimpl:
+.. _usage-with-visimpl-how-to-use-nest-desktop-with-visimpl:
 
 How to use NEST Desktop with ViSimpl
 ------------------------------------

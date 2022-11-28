@@ -1,4 +1,4 @@
-.. _error_server-not-found:
+.. _error-server-not-found:
 
 Server not found
 ----------------
@@ -20,7 +20,7 @@ It has two possible reasons:
    - in Terminal: ``curl http://localhost:52425``
    - in Python: ``import requests; requests.get('http://localhost:52425')``
 
-.. _error_internal-server-error:
+.. _error-internal-server-error:
 
 Internal server error
 ---------------------
@@ -28,7 +28,7 @@ Internal server error
 It says that the back end (i.e, ``nest-server``) ended with an internal error.
 In this case, you have to review the log of the back end.
 
-.. _error_nest-error:
+.. _error-nest-error:
 
 NEST error
 ----------

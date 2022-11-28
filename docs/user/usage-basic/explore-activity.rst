@@ -13,4 +13,4 @@ which can be considered as collectors (:bdg:`spike recorder`).
 Analog signals contain continuous quantities from the recording devices
 aka samplers (:bdg:`voltmeter` or :bdg:`multimeter`)
 which query their targets at given time intervals.
-Network activity can be explored in a :doc:`Activity graph </user/usage-advance/activity-chart-graph>` or :ref:`controller-sidebar_activity-table`.
+Network activity can be explored in a :doc:`Activity graph </user/usage-advance/activity-chart-graph>` or :ref:`controller-sidebar-activity-statistics`.

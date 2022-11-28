@@ -39,7 +39,7 @@ In NEST Desktop we can observe the spike activities of the "Husky brain".
 
 |br|
 
-.. _usage-with-nrp_how-to-perform-simulation-with-nrp-and-nest-desktop:
+.. _usage-with-nrp-how-to-perform-simulation-with-nrp-and-nest-desktop:
 
 How to perform simulation with NRP and NEST Desktop
 ---------------------------------------------------

@@ -4,7 +4,7 @@ Troubleshootings
 Having trouble getting something working? Got a question that the rest of our docs can’t answer?
 Maybe we can help with some answers to commonly asked questions and troublesome spots.
 
-.. _error-messages_frequently-asked-questions:
+.. _error-messages-frequently-asked-questions:
 
 Error messages
 --------------
@@ -14,7 +14,7 @@ Error messages
    error
 
 
-.. _troubleshootings_frequently-asked-questions:
+.. _troubleshootings-frequently-asked-questions:
 
 Frequently Asked Questions
 --------------------------
@@ -28,6 +28,8 @@ Frequently Asked Questions
    activity
    model
 
+
+.. _troubleshootings-services:
 
 Services
 --------

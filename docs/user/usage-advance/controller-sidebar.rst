@@ -1,7 +1,7 @@
 Controller sidebar
 ==================
 
-.. _controller-sidebar_network-controller:
+.. _controller-sidebar-network-controller:
 
 Network controller
 ------------------
@@ -12,11 +12,9 @@ Network controller
 
 The network controller displays cards of models, nodes and connections
 
-
-
 |br|
 
-.. _controller-sidebar_kernel-settings:
+.. _controller-sidebar-kernel-settings:
 
 Kernel settings
 ---------------
@@ -49,7 +47,7 @@ The :bdg:`simulation time` can be set as well (in Milliseconds).
 
 |br|
 
-.. _controller-sidebar_code-editor:
+.. _controller-sidebar-code-editor:
 
 Code editor
 -----------
@@ -78,7 +76,7 @@ e.g. node ids and positions, and activity events.
 
 |br|
 
-.. _controller-sidebar_activity-controller:
+.. _controller-sidebar-activity-controller:
 
 Activity controller
 -------------------
@@ -92,7 +90,7 @@ The activity controller displays different content depending on the visualizatio
 
 |br|
 
-.. _controller-sidebar_activity-chart-controller:
+.. _controller-sidebar-activity-chart-controller:
 
 Activity chart controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -121,7 +119,7 @@ By default, a raster plot of the spike times as well as a histogram for spike ti
 
 |br|
 
-.. _controller-sidebar_activity-animation-controller:
+.. _controller-sidebar-activity-animation-controller:
 
 Activity animation controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -140,7 +138,7 @@ We recommend trying out many different options for the animation graph to find t
 
 |br|
 
-.. _controller-sidebar_activity-statistics:
+.. _controller-sidebar-activity-statistics:
 
 Activity statistics
 -------------------

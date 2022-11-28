@@ -3,14 +3,18 @@ Project view
 
 NEST Desktop has a project management helping you to organize your networks and network activity.
 
-It contains :ref:`project-view_projects-menu` in the system bar to manage multiple projects, :ref:`project-view_project-nav-sidebar`, :ref:`project-view_project-bar` and content for :ref:`project-view_project-subpages`.
+.. image:: /_static/img/thumbnails/project-view.png
+   :align: left
+   :target: #
+
+It contains :ref:`project-view-projects-menu` in the system bar to manage multiple projects, :ref:`project-view-project-navigation-sidebar`, :ref:`project-view-project-bar` and content for :ref:`project-view-project-subpages`.
 
 If you want to explore the network activity of the project,
-you have to start the simulation before (|see| :ref:`usage-basic_simulate-networks`).
+you have to start the simulation before (|see| :ref:`usage-basic-simulate-networks`).
 
 |br|
 
-.. _project-view_projects-menu:
+.. _project-view-projects-menu:
 
 Projects menu
 -------------
@@ -20,14 +24,14 @@ Projects menu
    :target: #projects-menu
 
 
-The projects menu will be displayed when the user clicks the :bdg-primary-line:`PROJECTS` in the system bar (top black bar).
+The projects menu will be displayed when the user clicks the :bdg:`PROJECTS` in the system bar (top black bar).
 An opened project menu shows the same options which are displayed as buttons in the toolbar.
 
 In the menu you find options to create a new project (|new|) as well as to reload (|reload|), export (|export|), import (|import|), delete (|delete-projects|) or reset (|reset|) multiple projects.
 
 |br|
 
-.. _project-view_project-dialog:
+.. _project-view-project-dialog:
 
 Project dialog
 --------------
@@ -52,7 +56,7 @@ The selection checkbox appears when the project is loaded (Click on validate box
 
 |br|
 
-.. _project-view_project-nav-sidebar:
+.. _project-view-project-navigation-sidebar:
 
 Project navigation sidebar
 --------------------------
@@ -61,12 +65,11 @@ Project navigation sidebar
    :align: left
    :target: #project-navigation-sidebar
 
-In the navigation sidebar you find a :ref:`project-view_project-toolbar` and then :ref:`project-view_project-list`.
-
+In the navigation sidebar you find a :ref:`project-view-project-toolbar` and then :ref:`project-view-project-list`.
 
 |br|
 
-.. _project-view_project-toolbar:
+.. _project-view-project-toolbar:
 
 Project toolbar
 ^^^^^^^^^^^^^^^
@@ -77,18 +80,18 @@ Project toolbar
 Top of navigation sidebar, you see a toolbar containing buttons
 to create a new project (|new|) as well as to reload (|reload|), export (|export|), import (|import|), delete (|delete-projects|) or reset (|reset|) multiple projects.
 
-Clicking on exporting, importing or deleting projects opens a dialog showing a list of project (|see| :ref:`project-view_project-dialog`).
+Clicking on exporting, importing or deleting projects opens a dialog showing a list of project (|see| :ref:`project-view-project-dialog`).
 
 .. warning::
    You should export projects that you want to keep: If you refresh your browser
    or delete the web page cookie, the project will be lost!
 
 Creating a new project is defined where you can construct a network from the scratch
-(|see| :ref:`usage-basic_construct-networks`).
+(|see| :ref:`usage-basic-construct-networks`).
 
 |br|
 
-.. _project-view_project-list:
+.. _project-view-project-list:
 
 Project list
 ^^^^^^^^^^^^
@@ -113,7 +116,7 @@ for a menu with options to rename (|rename|), unload (|unload|), reload (|reload
 
 |br|
 
-.. _project-view_project-bar:
+.. _project-view-project-bar:
 
 Project bar
 -----------
@@ -121,13 +124,13 @@ Project bar
 .. image:: /_static/img/screenshots/project/project-bar.png
    :target: #project-bar
 
-The project bar contains tabs for :ref:`project-view_project-subpages`, the project name, :ref:`project-view_network-history` and the :ref:`project-view_simulation-button`.
+The project bar contains tabs for :ref:`project-view-project-subpages`, the project name, :ref:`project-view-network-history` and the :ref:`project-view-simulation-button`.
 
 .. tip:: It is useful to give project a proper name so that you can recognize your projects.
 
 |br|
 
-.. _project-view_network-history:
+.. _project-view-network-history:
 
 Network history
 ^^^^^^^^^^^^^^^
@@ -142,7 +145,7 @@ Loading a snapshot from this history is called `checkout network`.
 
 |br|
 
-.. _project-view_simulation-button:
+.. _project-view-simulation-button:
 
 Simulation button
 ^^^^^^^^^^^^^^^^^
@@ -155,12 +158,12 @@ You can click on the :bdg:`SIMULATE` button to start the simulation.
 
 |br|
 
-.. _project-view_project-subpages:
+.. _project-view-project-subpages:
 
 Project subpages
 ----------------
 
-.. _project-view_network-editor:
+.. _project-view-network-editor:
 
 Network editor
 ^^^^^^^^^^^^^^
@@ -169,7 +172,7 @@ Network editor
    :target: #network-editor
 
 
-.. _project-view_activity-explorer:
+.. _project-view-activity-explorer:
 
 Activity explorer
 ^^^^^^^^^^^^^^^^^
@@ -177,18 +180,13 @@ Activity explorer
 .. image:: /_static/img/screenshots/activity/activity-explorer.png
    :target: #activity-explorer
 
-.. _project-view_lab-book:
+.. _project-view-lab-book:
 
 Lab book
 ^^^^^^^^
 
 .. image:: /_static/img/screenshots/project/project-lab-book.png
    :target: #lab-book
-
-.. |see| image:: /_static/img/icons/arrow-right.svg
-   :alt: See
-   :height: 17.6px
-   :target: #
 
 .. |delete-projects| image:: /_static/img/icons/trash-can-outline.svg
    :alt: delete projects
@@ -237,6 +235,11 @@ Lab book
 
 .. |save-ok| image:: /_static/img/icons/content-save-check-outline.svg
    :alt: save-ok
+   :height: 17.6px
+   :target: #
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
    :height: 17.6px
    :target: #
 

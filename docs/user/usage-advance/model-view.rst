@@ -1,31 +1,21 @@
 Model view
 ==========
 
-.. _model-view_manage-models:
-
-Manage models
--------------
-
-.. image:: /_static/img/screenshots/model/model-nav.png
-   :align: left
-   :target: #filter-models
-
 This is the guide for the model view in NEST Desktop.
 
+.. image:: /_static/img/thumbnails/model-view.png
+   :align: left
+   :target: #
+
 Below the icon for the project view, you can see the one of the model view,
-where you can :ref:`read the model description <model-view_model-documentation>`,
-:ref:`explore model activities <model-view_model-explorer>` or
-:ref:`edit model configurations <model-view_model-editor>`.
-
-
-Top of navigation sidebar, you see a toolbar containing buttons
-to reload (|reload|), export (|export|), import (|import|), delete (|delete-models|) or reset (|reset|) multiple models.
-
+where you can :ref:`read the model description <model-view-model-documentation>`,
+:ref:`explore model activities <model-view-model-explorer>` or
+:ref:`edit model configurations <model-view-model-editor>`.
 
 |br|
 
 Models menu
-^^^^^^^^^^^
+-----------
 
 .. image:: /_static/img/screenshots/model/models-menu.png
    :align: left
@@ -35,10 +25,10 @@ where you can select actions for models.
 
 |br|
 
-.. _model-view_models-dialog:
+.. _model-view-model-dialog:
 
-Models dialog
-^^^^^^^^^^^^^
+Model dialog
+------------
 
 You can import models from various sources,
 e.g. a file you uploaded from you computer, a file from a GitHub repository or from a specified URL.
@@ -56,17 +46,39 @@ The table shows a list of models from which you can select which ones you want t
 
 |br|
 
-.. _model-view_model-list:
+.. _model-view-model-navigation-sidebar:
 
-Model list
-^^^^^^^^^^
+Model navigation sidebar
+------------------------
 
 .. image:: /_static/img/screenshots/model/model-nav.png
    :align: left
+   :target: #model-navigation-sidebar
 
-Models are enlisted in the right side navigation bar.
+In the navigation sidebar you find a :ref:`model-view-model-toolbar` and then :ref:`model-view-model-list`.
+
 You can select a model to read its documentation,
 its activity or to edit its configuration.
+
+|br|
+
+.. _model-view-model-toolbar:
+
+Model toolbar
+^^^^^^^^^^^^^
+
+.. image:: /_static/img/screenshots/model/model-toolbar.png
+   :target: #model-toolbar
+
+Top of navigation sidebar, you see a toolbar containing buttons
+to reload (|reload|), export (|export|), import (|import|), delete (|delete-models|) or reset (|reset|) multiple models.
+
+|br|
+
+.. _model-view-model-list:
+
+Model List
+^^^^^^^^^^
 
 Above the model list you will find a search field and tags
 which you can use to filter models in the list.
@@ -77,6 +89,18 @@ Multiple filter tags can be applied.
 Selected filter tags can be removed (click on |close|).
 
 |br|
+
+.. _model-view-import-models:
+
+Import models
+*************
+
+Go to the model view and find your desired synapse model.
+Next, click on icon |vertical-dots|, then select a menu item |import| :bdg:`import` to import it from GitHub.
+
+|br|
+
+.. _model-view-filter-models:
 
 Filter models
 *************
@@ -92,19 +116,23 @@ Installed:
    Show models which are installed in NEST Desktop
 
 GitHub:
-   Show models which are provided in `an own GitHub repository <https://github.com/nest-desktop/nest-desktop-models>`__
+   Show models which are provided in `an own GitHub repository <https://github.com/nest-desktop/nest-desktop-models>`__.
 
 Neuron/stimulator/recorder/synapse:
    Show models of the selected element type
 
 |br|
 
+.. _model-view-model-subpages:
+
 Model subpages
 --------------
 
+
+
 |
 
-.. _model-view_model-documentation:
+.. _model-view-model-documentation:
 
 Model documentation
 ^^^^^^^^^^^^^^^^^^^
@@ -116,7 +144,7 @@ It shows official user documentation of a selected model which also can be found
 
 |
 
-.. _model-view_model-explorer:
+.. _model-view-model-explorer:
 
 Model explorer
 ^^^^^^^^^^^^^^
@@ -132,7 +160,7 @@ You can explore the activity dynamics of only **neuron** models.
 
 First, choose a simulation to see the neuronal response to a specific stimulus device.
 
-Then start the simulation by clicking on the :bdg-primary-line:`SIMULATE` button.
+Then start the simulation by clicking on the :bdg:`SIMULATE` button.
 
 You can use the code editor to see changes in activity.
 
@@ -142,7 +170,7 @@ You can use the code editor to see changes in activity.
 
 |br|
 
-.. _model-view_model-editor:
+.. _model-view-model-editor:
 
 Model editor
 ^^^^^^^^^^^^

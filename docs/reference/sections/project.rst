@@ -7,11 +7,11 @@ Sidebar
 -------
 
 A click on the project switches to the project area.
-If you are already in that area, this button toggles the list of projects,
-a second sidebar.
-In that list, you can manage your projects,
-e.g create, rename, arrange or delete them.
-More details can be found in the :ref:`usage guide <project-view_manage-projects>`.
+If you are already in that area, this button toggles the list of projects, a second sidebar.
+In that list, you can manage your projects, e.g create, rename, arrange or delete them.
+
+.. seeAlso::
+   - :doc:'/user/usage-advance/project-view'
 
 Main content of the page
 ------------------------
