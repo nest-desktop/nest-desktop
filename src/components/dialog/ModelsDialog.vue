@@ -82,7 +82,7 @@
                 <tr>
                   <th v-text="'Model name'" />
                   <th v-text="'Element type'" />
-                  <th class="text-center" v-text="'Selected'" />
+                  <th class="text-center" v-text="'Export'" />
                 </tr>
               </thead>
               <tbody>

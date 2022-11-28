@@ -80,13 +80,14 @@
                   <th
                     class="text-center"
                     v-if="dialogState.action === 'export'"
-                    v-text="'Validate'"
+                    v-text="'Validate ⓘ'"
+                    title="Validation is required to export a project"
                   />
-                  <th class="text-center" v-text="'Selected'" />
+                  <th class="text-center" v-text="'Export'" />
                   <th
                     class="text-center"
                     v-if="dialogState.action === 'export'"
-                    v-text="'Activities'"
+                    v-text="'Include activities'"
                   />
                 </tr>
               </thead>
