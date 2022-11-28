@@ -61,7 +61,7 @@
             v-text="
               projectStore.filteredProjects.length +
               ' project' +
-              (projectStore.filteredProjects.length > 1 ? 's' : '')
+              (projectStore.filteredProjects.length != 1 ? 's' : '')
             "
           />
           <v-virtual-scroll

@@ -110,7 +110,7 @@
             v-text="
               state.models.length +
               ' model' +
-              (state.models.length > 1 ? 's' : '')
+              (state.models.length != 1 ? 's' : '')
             "
           />
           <v-virtual-scroll
