@@ -74,7 +74,7 @@
               <v-btn
                 icon
                 small
-                title="Download network graph"
+                title="Export network graph"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -83,7 +83,8 @@
             </template>
 
             <v-card>
-              <v-card-title v-text="'Download network graph as image'" />
+              <v-card-title v-text="'Export network graph'" />
+              <v-card-subtitle v-text="'Please select the export options'" />
               <v-card-text>
                 <v-checkbox
                   label="Transparent background"
@@ -116,7 +117,7 @@
                 :disabled="state.network.isEmpty"
                 icon
                 small
-                title="Delete network"
+                title="Delete all network elements"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -125,7 +126,9 @@
             </template>
 
             <v-card>
-              <v-card-title v-text="'Are you sure to delete this network?'" />
+              <v-card-title
+                v-text="'Are you sure to delete all elements of this network?'"
+              />
               <v-card-actions>
                 <v-spacer />
                 <v-btn
@@ -152,7 +155,7 @@
             @click="() => state.graph.workspace.toggleCenterSelected()"
             icon
             small
-            title="Auto-centering selected"
+            title="Auto-center currently selected element"
           >
             <v-icon
               small
@@ -171,7 +174,7 @@
             @click="() => state.graph.workspace.toggleCenterNetwork()"
             icon
             small
-            title="Auto-centering network graph"
+            title="Auto-center whole network graph"
           >
             <v-icon small v-text="'mdi-focus-field'" />
           </v-btn>
@@ -181,7 +184,7 @@
             @click="() => state.graph.workspace.toggleGrid()"
             icon
             small
-            title="Show grid"
+            title="Show background grid"
           >
             <v-icon
               small
