@@ -30,11 +30,12 @@ module.exports = {
     config.plugins.push(
       new ForkTsCheckerWebpackPlugin(newForkTsCheckerOptions)
     );
+
+    // add code files to rules
     config.module.rules.push({
       test: /\.code/i,
       use: 'raw-loader',
     });
-    console.log(config.module);
   },
   chainWebpack: config => {
     config.plugin('html').tap(args => {
