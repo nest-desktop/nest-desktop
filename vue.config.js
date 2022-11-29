@@ -21,7 +21,6 @@ module.exports = {
     config.plugins = config.plugins.filter(
       plugin => !(plugin instanceof ForkTsCheckerWebpackPlugin)
     );
-    
 
     // copy the options from the original ones, but modify memory and CPUs
     const newForkTsCheckerOptions = existingForkTsChecker.options;
@@ -45,6 +44,7 @@ module.exports = {
   },
   pwa: {
     workboxOptions: {
+      exclude: ['index.html'],
       skipWaiting: true,
     },
   },
