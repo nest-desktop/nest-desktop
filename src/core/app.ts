@@ -48,6 +48,11 @@ export class App extends Config {
       port: 52056,
       versionPath: '/',
     });
+    this._backends.coSimAccess = new Backend('CoSimAccess', {
+      path: '/coSim',
+      port: 52426,
+      versionPath: '/version',
+    });
 
     this._model = new ModelStore(this);
     this._project = new ProjectStore(this);

@@ -79,6 +79,11 @@
               </v-col>
             </v-row>
             <v-row>
+              <v-col cols="6">
+                <CoSimConfig />
+              </v-col>
+            </v-row>
+            <v-row>
               <v-col>
                 <ParameterEdit
                   :options="{
@@ -214,6 +219,7 @@ import { reactive } from '@vue/composition-api';
 
 import { Config } from '@/core/common/config';
 import core from '@/core';
+import CoSimConfig from '@/components/setting/CoSimConfig.vue';
 import InsiteAccessConfig from '@/components/setting/InsiteAccessConfig.vue';
 import NESTSimulatorConfig from '@/components/setting/NESTSimulatorConfig.vue';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
@@ -223,6 +229,7 @@ import colorSchemes from '@/assets/config/ColorSchemes.json';
 export default Vue.extend({
   name: 'AppSettings',
   components: {
+    CoSimConfig,
     InsiteAccessConfig,
     NESTSimulatorConfig,
     ParameterEdit,
