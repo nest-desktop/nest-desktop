@@ -1,7 +1,6 @@
 process.env.VUE_APP_VERSION = require('./package.json').version;
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-
 module.exports = {
   publicPath: process.env.BASE_URL, // '.',
   outputDir: './nest_desktop/app',
@@ -43,6 +42,8 @@ module.exports = {
     });
   },
   pwa: {
+    name: 'NEST Desktop',
+    themeColor: '#424242',
     workboxOptions: {
       exclude: ['index.html'],
       skipWaiting: true,
