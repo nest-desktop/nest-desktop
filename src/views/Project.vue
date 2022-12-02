@@ -1,165 +1,6 @@
 <template>
   <div class="projectView" v-if="projectView.state.project">
-    <v-app-bar
-      app
-      class="no-print"
-      clipped-right
-      color="project"
-      dark
-      dense
-      flat
-    >
-      <v-tabs
-        :show-arrows="false"
-        @change="() => projectView.updateProjectMode()"
-        align-with-title
-        color="secondary"
-        icons-and-text
-        style="flex: 0 1 auto; width: 278px"
-        v-model="projectView.state.modeIdx"
-      >
-        <v-tab class="ma-0" title="Edit network">
-          <div class="tab-text" v-text="'Editor'" />
-          <v-icon v-text="'$network'" />
-        </v-tab>
-
-        <v-menu offset-y open-on-hover>
-          <template #activator="{ on, attrs }">
-            <v-tab title="Explore activity" v-bind="attrs" v-on="on">
-              <div class="tab-text" v-text="'Explorer'" />
-              <ActivityGraphIcon
-                :project="projectView.state.project"
-                v-if="projectView.state.project.state.activities.hasSomeEvents"
-              />
-              <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
-            </v-tab>
-          </template>
-
-          <v-list dense>
-            <v-list-item
-              :disabled="
-                !projectView.state.project.state.activities.hasSomeEvents
-              "
-              @click="projectView.selectActivityGraph('abstract')"
-            >
-              <v-list-item-icon>
-                <ActivityGraphIcon
-                  :project="projectView.state.project"
-                  fixed
-                  v-if="
-                    projectView.state.project.state.activities.hasSomeEvents
-                  "
-                />
-                <v-icon class="rotate-90" v-else v-text="'mdi-border-style'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'abstract'" />
-            </v-list-item>
-
-            <v-list-item
-              :disabled="
-                !projectView.state.project.state.activities
-                  .hasSomeSpatialActivities
-              "
-              @click="projectView.selectActivityGraph('spatial')"
-            >
-              <v-list-item-icon>
-                <v-icon v-text="'mdi-axis-arrow'" />
-              </v-list-item-icon>
-              <v-list-item-title v-text="'spatial'" />
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
-        <v-tab title="Lab book">
-          <div class="tab-text" v-text="'Lab book'" />
-          <v-icon v-text="'mdi-book-open-outline'" />
-        </v-tab>
-      </v-tabs>
-
-      <v-spacer />
-      <v-toolbar-title class="mx-2">
-        <v-text-field
-          @change="projectView.state.project.clean()"
-          append-icon="mdi-pencil-outline"
-          hide-details
-          v-model="projectView.state.project.name"
-        />
-      </v-toolbar-title>
-      <v-spacer />
-
-      <v-card class="mx-4" color="project" flat style="width: 144px" text tile>
-        <v-row no-gutters>
-          <v-col col="3">
-            <v-btn
-              :disabled="projectView.countBefore() <= 0"
-              @click="projectView.state.project.network.oldest()"
-              dark
-              icon
-              small
-            >
-              <v-icon v-text="'mdi-page-first'" />
-            </v-btn>
-          </v-col>
-
-          <v-col col="3">
-            <v-btn
-              :disabled="projectView.countBefore() <= 0"
-              @click="projectView.state.project.network.older()"
-              dark
-              icon
-              small
-            >
-              <v-badge
-                :content="projectView.countBefore()"
-                :value="projectView.countBefore()"
-                color="project darken-1"
-                offset-y="8"
-              >
-                <v-icon v-text="'mdi-undo-variant'" />
-              </v-badge>
-            </v-btn>
-          </v-col>
-
-          <v-col col="3">
-            <v-btn
-              :disabled="projectView.countAfter() <= 0"
-              @click="projectView.state.project.network.newer()"
-              dark
-              icon
-              small
-            >
-              <v-badge
-                :content="projectView.countAfter()"
-                :value="projectView.countAfter()"
-                color="project darken-1"
-                offset-y="8"
-              >
-                <v-icon v-text="'mdi-redo-variant'" />
-              </v-badge>
-            </v-btn>
-          </v-col>
-
-          <v-col col="3">
-            <v-btn
-              :disabled="projectView.countAfter() <= 0"
-              @click="projectView.state.project.network.newest()"
-              dark
-              icon
-              small
-            >
-              <v-icon v-text="'mdi-page-last'" />
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card>
-
-      <div @click="projectView.state.modeIdx = 1">
-        <SimulationButton
-          :disabled="!nestSimulatorState.ready"
-          :project="projectView.state.project"
-        />
-      </div>
-    </v-app-bar>
+    <ProjectBar />
 
     <v-navigation-drawer
       :mini-variant="!projectView.state.toolOpened"
@@ -340,13 +181,14 @@ import CodeMirror from '@/components/CodeMirror.vue';
 import core from '@/core';
 import NetworkEditor from '@/components/network/NetworkEditor.vue';
 import NetworkParamEdit from '@/components/network/NetworkParamEdit.vue';
+import ProjectBar from '@/components/project/ProjectBar.vue';
 import ProjectLabBook from '@/components/project/ProjectLabBook.vue';
 import SimulationButton from '@/components/simulation/SimulationButton.vue';
 import SimulationCodeEditor from '@/components/simulation/SimulationCodeEditor.vue';
 import SimulationKernel from '@/components/simulation/SimulationKernel.vue';
 
 export default Vue.extend({
-  name: 'Project',
+  name: 'ProjectView',
   components: {
     ActivityAnimationController,
     ActivityChartController,
@@ -356,6 +198,7 @@ export default Vue.extend({
     CodeMirror,
     NetworkEditor,
     NetworkParamEdit,
+    ProjectBar,
     ProjectLabBook,
     SimulationButton,
     SimulationCodeEditor,
@@ -506,14 +349,5 @@ export default Vue.extend({
   position: fixed;
   width: 4px;
   z-index: 10;
-}
-
-.projectView .tab-text {
-  font-size: 10px;
-  margin-bottom: 2px !important;
-}
-
-.rotate-90 {
-  transform: rotate(-90deg);
 }
 </style>
