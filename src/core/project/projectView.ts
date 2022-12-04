@@ -250,17 +250,16 @@ export class ProjectView extends Config {
    */
   redirect(projectId: string = ''): void {
     if (projectId == undefined || projectId.length === 0) {
-      if (
+      // Get stated project ID when it is not defined.
+      projectId =
         this._state.projectId != null &&
         this._app.project.state.projects.find(
           (project: Project) => project.id === this._state.projectId
         )
-      ) {
-        projectId = this._state.projectId;
-      } else {
-        projectId = this._app.project.recentProjectId;
-      }
+          ? this._state.projectId
+          : this._app.project.recentProjectId;
     } else if (
+      // Get recent project ID when defined project ID is not found.
       !this._app.project.state.projects.find(
         (project: Project) => project.id === projectId
       )
@@ -268,10 +267,14 @@ export class ProjectView extends Config {
       projectId = this._app.project.recentProjectId;
     }
 
-    // Check if the page is already loaded to avoid "Avoided redundant
-    // navigation" error.
     const router: VueRouter = this._app.vueSetupContext.root.$router;
-    if (router.currentRoute.params.id !== projectId) {
+    if (projectId == undefined) {
+      router.push({
+        name: 'project',
+      });
+    } else if (router.currentRoute.params.id !== projectId) {
+      // Check if the page is already loaded to avoid "Avoided redundant
+      // navigation" error.
       router.push({
         name: 'projectId',
         params: { id: projectId },

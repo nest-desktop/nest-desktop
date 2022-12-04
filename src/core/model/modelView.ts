@@ -407,10 +407,14 @@ export class ModelView extends Config {
       modelId = this._app.model.recentModelId;
     }
 
-    // Check if the page is already loaded to avoid "Avoided redundant
-    // navigation" error.
     const router: VueRouter = this._app.vueSetupContext.root.$router;
-    if (router.currentRoute.params.id !== modelId) {
+    if (modelId == undefined) {
+      router.push({
+        name: 'model',
+      });
+    } else if (router.currentRoute.params.id !== modelId) {
+      // Check if the page is already loaded to avoid "Avoided redundant
+      // navigation" error.
       router.push({
         name: 'modelId',
         params: { id: modelId },

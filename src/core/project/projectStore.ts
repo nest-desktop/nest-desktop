@@ -52,7 +52,9 @@ export class ProjectStore {
   }
 
   get recentProjectId(): string {
-    return this._state.projects[0].id || undefined;
+    return this._state.projects.length > 0
+      ? this._state.projects[0].id
+      : undefined;
   }
 
   get state(): UnwrapRef<any> {
