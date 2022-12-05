@@ -268,11 +268,7 @@ export class ProjectView extends Config {
     }
 
     const router: VueRouter = this._app.vueSetupContext.root.$router;
-    if (projectId == undefined) {
-      router.push({
-        name: 'project',
-      });
-    } else if (router.currentRoute.params.id !== projectId) {
+    if (router.currentRoute.params.id !== projectId) {
       // Check if the page is already loaded to avoid "Avoided redundant
       // navigation" error.
       router.push({

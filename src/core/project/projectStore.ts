@@ -47,8 +47,13 @@ export class ProjectStore {
   }
 
   set project(value: Project) {
-    this._view.state.projectId = value.id;
-    this._view.state.project = value;
+    if (value) {
+      this._view.state.projectId = value.id;
+      this._view.state.project = value;
+    } else {
+      this._view.state.project = new Project(this._app);
+      this._view.state.projectId = this._view.state.project.id;
+    }
   }
 
   get recentProjectId(): string {
@@ -107,13 +112,17 @@ export class ProjectStore {
       this._state.projects = projects;
       this.resetProjectStates();
 
+      if (this._state.projects.length === 0) {
+        this._view.redirect();
+      }
+
       // Redirect if project id from the current route is provided in the list.
       const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
       if (currentRoute.name === 'projectId') {
         this.project =
           this.getProject(currentRoute.params.id) ||
           this.getProject(this.recentProjectId);
-        this.view.redirect(this.view.state.projectId);
+        this._view.redirect(this._view.state.projectId);
       }
     });
   }
@@ -161,6 +170,7 @@ export class ProjectStore {
    */
   resetProjectStates(): void {
     this.consoleLog('Reset states of projects');
+    if (this._state.projects.length === 0) return;
 
     this._state.projects.forEach((project: Project | any) => {
       // Unselect projects.
@@ -232,8 +242,10 @@ export class ProjectStore {
    * @param projectId ID of the project
    * @returns project component
    */
-  getProject(projectId: string): Project {
+  getProject(projectId: string): Project | undefined {
     this.consoleLog('Get project');
+    if (this._state.projects.length === 0) return;
+
     const projectIds = this._state.projects.map((project: any) => project.id);
     if (!projectIds.includes(projectId)) {
       return;
