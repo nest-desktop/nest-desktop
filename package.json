@@ -29,7 +29,7 @@
     "d3": "^7.7",
     "debug": "^4.3",
     "detect-browser": "^5.3",
-    "mathjs": "^11.4",
+    "mathjs": "^11.5",
     "mustache": "^4.2",
     "object-hash": "^3.0",
     "plotly.js-dist-min": "^2.15",
