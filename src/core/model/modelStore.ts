@@ -180,9 +180,11 @@ export class ModelStore {
     }
 
     this._app.backends.nestSimulator.instance
-      .get('api/Models')
+      .post('api/GetKernelStatus', { keys: ['node_models', 'synapse_models'] })
       .then((response: any) => {
-        this._state.modelsNEST = response.data;
+        const models = [...response.data[0], ...response.data[1]];
+        models.sort();
+        this._state.modelsNEST = models;
       });
   }
 
