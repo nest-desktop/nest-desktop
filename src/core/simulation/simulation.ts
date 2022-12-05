@@ -99,7 +99,7 @@ export class Simulation extends Config {
       stateToast.message += ' -- Click for details...';
       stateToast.onClick = () =>
         window.open(
-          'https://nest-desktop.readthedocs.io/en/latest/user/troubleshooting.html#error-messages',
+          'https://nest-desktop.readthedocs.io/en/latest/troubleshootings/index.html#error-messages',
           '_blank'
         );
     }
