@@ -140,8 +140,8 @@ import Vue from 'vue';
 
 import ActivityGraph from '@/components/activity/ActivityGraph.vue';
 import ActivityGraphIcon from '@/components/activity/ActivityGraphIcon.vue';
-import NetworkHistory from '@/components/network/NetworkHistory.vue';
 import core from '@/core';
+import NetworkHistory from '@/components/network/NetworkHistory.vue';
 import SimulationButton from '@/components/simulation/SimulationButton.vue';
 
 export default Vue.extend({

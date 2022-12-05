@@ -11,7 +11,7 @@
             outlined
             title="Simulate"
           >
-            <v-icon left>mdi-play</v-icon>
+            <v-icon center>mdi-play</v-icon>
             <span class="d-none d-lg-flex">
               <span
                 v-if="state.project.simulation.code.runSimulation"
