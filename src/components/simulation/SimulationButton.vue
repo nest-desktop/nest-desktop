@@ -2,22 +2,26 @@
   <div class="simulationButton">
     <v-menu :close-on-content-click="false" offset-y>
       <template #activator="{ on }">
-        <div class="split-btn">
+        <div class="btn-split text-no-wrap">
           <v-btn
             :disabled="state.disabled"
             :loading="state.project.simulation.state.running"
             @click="state.project.startSimulation()"
-            class="main-btn"
+            class="btn-main"
             outlined
+            title="Simulate"
           >
-            <v-icon left>mdi-play</v-icon>
-            <span
-              v-if="state.project.simulation.code.runSimulation"
-              v-text="'Simulate'"
-            />
-            <span v-else v-text="'Prepare'" />
+            <v-icon class="d-flex d-lg-none" v-text="'mdi-play'" />
+            <span class="d-none d-lg-flex">
+              <v-icon left v-text="'mdi-play'" />
+              <span
+                v-if="state.project.simulation.code.runSimulation"
+                v-text="'Simulate'"
+              />
+              <span v-else v-text="'Prepare'" />
+            </span>
           </v-btn>
-          <v-btn class="actions-btn" outlined v-on="on">
+          <v-btn class="btn-append" outlined v-on="on">
             <v-icon>mdi-menu-down</v-icon>
           </v-btn>
         </div>
@@ -125,15 +129,22 @@ export default Vue.extend({
 </script>
 
 <style>
-.simulationButton .split-btn {
+.simulationButton .btn-split {
   display: inline-block;
 }
-.simulationButton .split-btn .main-btn {
-  border-bottom-right-radius: 0;
+.simulationButton .btn-split .btn-main {
   border-right: none;
   border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
-.simulationButton .split-btn .actions-btn {
+.simulationButton .btn-split .btn-prepend {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  min-width: 35px !important;
+  padding: 0 !important;
+}
+
+.simulationButton .btn-split .btn-append {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
   min-width: 35px !important;
