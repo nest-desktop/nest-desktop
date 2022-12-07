@@ -59,6 +59,7 @@ export default Vue.extend({
         : !state.ready
         ? 'not running.'
         : 'running.';
+      state.title += ' Click to re-check!';
     };
 
     const update = () => {

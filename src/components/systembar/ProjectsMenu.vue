@@ -45,7 +45,7 @@ export default Vue.extend({
         {
           id: 'projectsReload',
           icon: 'mdi-reload',
-          title: 'Reload projects',
+          title: 'Reload all projects',
           onClick: () => {
             core.app.project.initProjectList();
           },
