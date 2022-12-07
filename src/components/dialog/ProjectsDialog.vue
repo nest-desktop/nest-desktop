@@ -168,7 +168,7 @@
                 </tr>
               </tbody>
               <tbody v-else>
-                No projects found
+                No projects saved in this browser session were found.
               </tbody>
             </template>
           </v-simple-table>
@@ -177,6 +177,22 @@
         <v-card-actions>
           <v-spacer />
           <v-btn @click="closeDialog" outlined small text v-text="'cancel'" />
+          <v-btn
+            :disabled="dialogState.data.projects.every(p => p.state.selected)"
+            @click="selectAll"
+            outlined
+            small
+            text
+            v-text="'select all'"
+          />
+          <v-btn
+            :disabled="!dialogState.data.projects.some(p => p.state.selected)"
+            @click="unselectAll"
+            outlined
+            small
+            text
+            v-text="'unselect all'"
+          />
           <v-btn
             :disabled="!dialogState.data.projects.some(p => p.state.selected)"
             @click="exportProjects"
@@ -264,6 +280,26 @@ export default Vue.extend({
       core.app.closeDialog();
     };
 
+    /**
+     * Selects all projects in the list.
+     */
+    function selectAll() {
+      dialogState.data.projects.forEach((project: Project) => {
+        project.state.selected = true;
+        console.log('Selected ' + project);
+      });
+    }
+
+    /**
+     * Unselects all projects in the list.
+     */
+    function unselectAll() {
+      dialogState.data.projects.forEach((project: Project) => {
+        project.state.selected = false;
+        console.log('Unselected ' + project);
+      });
+    }
+
     return {
       closeDialog: () => core.app.closeDialog(),
       deleteProjects,
@@ -271,6 +307,8 @@ export default Vue.extend({
       exportProjects,
       reloadProjects,
       resetProjects,
+      selectAll,
+      unselectAll,
       projectStore: core.app.project,
     };
   },
