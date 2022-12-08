@@ -76,7 +76,7 @@
         </v-card-subtitle>
 
         <v-card-text>
-          <v-simple-table v-if="appState.dialog.data.models.length !== 0">
+          <v-simple-table>
             <template #default>
               <thead>
                 <tr>
@@ -85,7 +85,7 @@
                   <th class="text-center" v-text="'Export'" />
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="appState.dialog.data.models.length > 0">
                 <tr
                   :key="index"
                   v-for="(model, index) in appState.dialog.data.models"
@@ -102,6 +102,9 @@
                   </td>
                 </tr>
               </tbody>
+              <tbody v-else>
+                No files saved in this browser session were found.
+              </tbody>
             </template>
           </v-simple-table>
         </v-card-text>
@@ -116,7 +119,23 @@
             v-text="'cancel'"
           />
           <v-btn
-            :disabled="!appState.dialog.data.models.some(p => p.state.selected)"
+            :disabled="appState.dialog.data.models.every(m => m.state.selected)"
+            @click="selectAll"
+            outlined
+            small
+            text
+            v-text="'select all'"
+          />
+          <v-btn
+            :disabled="!appState.dialog.data.models.some(m => m.state.selected)"
+            @click="unselectAll"
+            outlined
+            small
+            text
+            v-text="'unselect all'"
+          />
+          <v-btn
+            :disabled="!appState.dialog.data.models.some(m => m.state.selected)"
             @click="exportModels()"
             outlined
             small
@@ -126,7 +145,7 @@
             Export
           </v-btn>
           <v-btn
-            :disabled="!appState.dialog.data.models.some(p => p.state.selected)"
+            :disabled="!appState.dialog.data.models.some(m => m.state.selected)"
             @click="deleteModels()"
             outlined
             small
@@ -199,6 +218,26 @@ export default Vue.extend({
       reloadModels();
     };
 
+    /**
+     * Selects all models in the list.
+     */
+    function selectAll() {
+      appState.dialog.data.models.forEach((model: Model) => {
+        model.state.selected = true;
+        console.log('Selected');
+      });
+    }
+
+    /**
+     * Unselects all models in the list.
+     */
+    function unselectAll() {
+      appState.dialog.data.models.forEach((model: Model) => {
+        model.state.selected = false;
+        console.log('Unselected');
+      });
+    }
+
     return {
       appState,
       closeDialog: () => core.app.closeDialog(),
@@ -206,6 +245,8 @@ export default Vue.extend({
       exportModels,
       reloadModels,
       resetModels,
+      selectAll,
+      unselectAll,
     };
   },
 });
