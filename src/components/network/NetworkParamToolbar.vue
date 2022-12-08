@@ -1,6 +1,7 @@
 <template>
   <div class="networkParamToolbar" v-if="state.network">
     <v-toolbar
+      @click="state.network.state.reset()"
       absolute
       class="toolbar"
       dense
@@ -19,8 +20,11 @@
           v-model="state.network.state.elementTypeIdx"
         >
           <v-btn
+            :disabled="
+              state.network.state.selectedNode != null ||
+              state.network.state.selectedConnection != null
+            "
             :key="'elementType-' + item"
-            @click="state.network.state.reset()"
             class="flex-grow-1 ma-0"
             height="40"
             v-for="item in state.network.state.elementTypes.slice(0, 4)"
@@ -38,6 +42,10 @@
           <v-divider class="mx-1" vertical />
 
           <v-btn
+            :disabled="
+              state.network.state.selectedNode != null ||
+              state.network.state.selectedConnection != null
+            "
             :key="'elementType-' + item"
             @click="state.network.state.reset()"
             class="flex-grow-1 ma-0"
@@ -59,7 +67,10 @@
           <v-menu :close-on-content-click="false" :max-height="600" offset-y>
             <template #activator="{ on, attrs }">
               <v-btn
-                @click="state.network.state.reset()"
+                :disabled="
+                  state.network.state.selectedNode != null ||
+                  state.network.state.selectedConnection != null
+                "
                 class="flex-grow-1 ma-0"
                 height="40"
                 v-bind="attrs"
