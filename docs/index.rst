@@ -12,12 +12,7 @@ Hello there! :-)
 NEST Desktop is a web-based GUI application for NEST Simulator,
 an advanced simulation tool for the computational neuroscience.
 
-The app enables the rapid construction, parametrization,
-and instrumentation of neuronal network models.
-
 It's so great that you want to use NEST Desktop!
-
-You can tryout NEST Desktop as a restricted `live demo <https://nest-desktop.github.io/app>`__ without the simulation backend.
 
 |br|
 
@@ -26,9 +21,15 @@ You can tryout NEST Desktop as a restricted `live demo <https://nest-desktop.git
 Conceptual approach
 -------------------
 
+NEST Desktop enables to graphically construct a neuronal network model and the simulation experiment to be performed.
+Thus, no programming skills are required.
+
 .. image:: /_static/img/edited/conceptual-approach.png
    :target: #conceptual-approach
    :width: 100%
+
+
+You can tryout NEST Desktop as a restricted `live demo <https://nest-desktop.github.io/app>`__ without the simulation backend.
 
 
 |
