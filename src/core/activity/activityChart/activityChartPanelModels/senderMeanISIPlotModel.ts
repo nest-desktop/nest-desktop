@@ -15,7 +15,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
         input: 'select',
         items: ['lines', 'lines+markers', 'markers', 'bar'],
         label: 'Plot mode',
-        value: 'lines',
+        value: 'bar',
       },
       {
         id: 'lineShape',
@@ -29,8 +29,8 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
           { text: 'horizontal-vertical steps', value: 'hv' },
         ],
         label: 'Line shape',
-        value: 'linear',
         show: () => this.plotMode.includes('lines'),
+        value: 'linear',
       },
     ];
   }
