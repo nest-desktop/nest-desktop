@@ -111,3 +111,9 @@ Electron and Snap
 
 In ``package.json``, there are also yarn commands configured to build an Electron app.
 If you want to build a Snap package, please have a look into ``.gitlab-ci.yml``.
+
+To try snap on local machine, you can use this command:
+
+.. code-block:: bash
+
+   snap install ./dist_electron/nest-desktop_x.y.z.snap --dangerous

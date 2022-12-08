@@ -23,14 +23,17 @@ and some useful links and the current version (right).
 .. note::
    You can reload the page if NEST Desktop has somehow crashed.
 
-.. _usage-basic-getting-started:
 
-Getting Started
-===============
+.. _first-steps:
 
-.. image:: /_static/img/edited/conceptual-approach.png
-   :target: #getting-started
-   :width: 100%
+First steps
+===========
+
+The video shows the first steps to construct a network and explore its activity.
+
+.. raw:: html
+   :file: ../templates/iframe-first-steps.html
+
 
 |br|
 

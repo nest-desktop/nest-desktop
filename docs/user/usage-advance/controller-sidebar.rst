@@ -99,6 +99,11 @@ Every chart panel has an own controller card fur individual customization.
 Other chart models can be chosen individually for each panel
 by clicking on the card toolbar in the activity controller.
 
+|br|
+
+Analog signals
+**************
+
 .. image:: /_static/img/screenshots/controller/activity-graph-panels-analog.png
    :align: right
    :target: #activity-controller
@@ -110,6 +115,9 @@ When something doesn't work properly, you can reset the panels to default by cli
 You can add more recorded signals to the panel when it comes from multimeter. Node records appear as chips in the cards, which allow you to change the colors of the corresponding traces and bars.
 
 |br|
+
+Spike activity
+**************
 
 .. image:: /_static/img/screenshots/controller/activity-graph-panels-spike.png
    :align: right
@@ -146,8 +154,6 @@ Activity statistics
 .. image:: /_static/img/screenshots/controller/activity-stats.png
    :align: right
    :target: #activity-statistics
-
-You can go to the table by clicking on the :bdg:`Stats` button.
 
 It displays multiple panels for each recording device.
 In each panel a table shows activity statistics of recorded elements (rows) of a node (population).

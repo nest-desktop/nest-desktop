@@ -37,8 +37,8 @@ Project dialog
 --------------
 
 It is possible to import projects from different sources:
-You can choose between :bdg:`drive` (local storage), :bdg:`GitHub` and
-:bdg:`URL` (other one than GitHub URLs).
+You can choose between drive (local storage), GitHub and
+URL (other one than GitHub URLs).
 
 
 .. image:: /_static/img/screenshots/project/projects-import.png

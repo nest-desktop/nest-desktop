@@ -19,16 +19,17 @@ It's so great that you want to use NEST Desktop!
 
 You can tryout NEST Desktop as a restricted `live demo <https://nest-desktop.github.io/app>`__ without the simulation backend.
 
+|br|
 
-.. _first-steps:
+.. _conceptual-approach:
 
-First steps
------------
+Conceptual approach
+-------------------
 
-The video shows the first steps to construct a network and explore its activity.
+.. image:: /_static/img/edited/conceptual-approach.png
+   :target: #conceptual-approach
+   :width: 100%
 
-.. raw:: html
-   :file: ./templates/iframe-first-steps.html
 
 |
 
@@ -41,8 +42,8 @@ Select the appropriate section that fits your needs:
 .. raw:: html
    :file: ./templates/content-structure.html
 
-|
-|
+
+|br|
 
 Version info
 ------------
