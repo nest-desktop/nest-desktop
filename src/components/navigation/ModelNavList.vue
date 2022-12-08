@@ -193,7 +193,7 @@ export default Vue.extend({
         {
           id: 'modelsReload',
           icon: 'mdi-reload',
-          title: 'Reload models',
+          title: 'Reload all models',
           onClick: () => {
             openDialog('reload');
           },
