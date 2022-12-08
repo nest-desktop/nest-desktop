@@ -20,6 +20,7 @@
         >
           <v-btn
             :key="'elementType-' + item"
+            @click="state.network.state.reset()"
             class="flex-grow-1 ma-0"
             height="40"
             v-for="item in state.network.state.elementTypes.slice(0, 4)"
@@ -38,6 +39,7 @@
 
           <v-btn
             :key="'elementType-' + item"
+            @click="state.network.state.reset()"
             class="flex-grow-1 ma-0"
             height="40"
             v-for="item in state.network.state.elementTypes.slice(4, 5)"
@@ -57,6 +59,7 @@
           <v-menu :close-on-content-click="false" :max-height="600" offset-y>
             <template #activator="{ on, attrs }">
               <v-btn
+                @click="state.network.state.reset()"
                 class="flex-grow-1 ma-0"
                 height="40"
                 v-bind="attrs"
