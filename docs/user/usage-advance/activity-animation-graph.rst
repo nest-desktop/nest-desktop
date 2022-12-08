@@ -44,7 +44,9 @@ To follow spike activity better, the trail length can be increased.
 Optionally, trails can be faded after the spike time,
 and a growing or shrinking mode can also be applied.
 
+|br|
+
 .. |axis-arrow| image:: /_static/img/icons/axis-arrow.svg
    :alt: axis-arrow
-   :height: 60px
+   :height: 40px
    :target: #
