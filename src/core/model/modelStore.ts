@@ -223,7 +223,7 @@ export class ModelStore {
   }
 
   get recentModelId(): string {
-    return this._state.models[0].id || undefined;
+    return this._state.models.length > 0 ? this._state.models[0].id : undefined;
   }
 
   /**
