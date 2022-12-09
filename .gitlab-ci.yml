@@ -26,7 +26,7 @@ build_app:
         echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
         echo "DOCKER_TAG='${VERSION}'" >> .env
       else
-        PYTHON_VERSION="$(node -p "var v = require('./package.json').version.split('-'); [v[0], {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}[v[1]]].join('')")"
+        PYTHON_VERSION="$(node -p "var v = require('./package.json').version.split('-'); [v[0], {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}[v[1]]].join('.')")"
         echo "__version__ = '${PYTHON_VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
         echo "DOCKER_TAG='${VERSION}.${CI_PIPELINE_IID}'" >> .env
       fi
@@ -60,7 +60,7 @@ build_electron:
         VERSION="$(node -p "require('./package.json').version")"
         echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
       else
-        VERSION="$(node -p "var v = require('./package.json').version.split('-'); [v[0], {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}[v[1]]].join('')")"
+        VERSION="$(node -p "var v = require('./package.json').version.split('-'); [v[0], {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}[v[1]]].join('.')")"
         echo "__version__ = '${VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
       fi
     - yarn
