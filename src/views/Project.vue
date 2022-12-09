@@ -350,4 +350,8 @@ export default Vue.extend({
   width: 4px;
   z-index: 10;
 }
+
+.projectView .rotate-90 {
+  transform: rotate(-90deg);
+}
 </style>
