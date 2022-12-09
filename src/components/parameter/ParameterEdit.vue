@@ -187,7 +187,7 @@
                 :rows="1"
                 :rules="rules"
                 :value="state.value"
-                @change="value => paramChange(value)"
+                @change="paramChange"
                 auto-grow
                 class="my-1"
                 dense
@@ -232,7 +232,7 @@
                 :readonly="state.options.readonly"
                 :rules="rules"
                 :value="state.value"
-                @change="value => paramChange(value)"
+                @change="paramChange"
                 class="ma-1"
                 dense
               >
@@ -301,11 +301,14 @@
                 :items="state.options.items"
                 :label="label()"
                 :readonly="state.options.readonly"
-                @change="paramChange(state.value)"
+                :value="state.value"
+                @change="paramChange"
                 class="ma-1 mt-3"
                 dense
                 hide-details
-                v-model="state.value"
+                v-show="
+                  !state.options.hasOwnProperty('show') || state.options.show()
+                "
               />
             </template>
 
@@ -325,7 +328,7 @@
                 :rules="rules"
                 :thumb-color="state.color"
                 :value="state.value"
-                @change="value => paramChange(value)"
+                @change="paramChange"
                 class="align-center"
                 dense
                 height="40"
@@ -396,7 +399,7 @@
                 :thumb-color="state.color"
                 :tick-labels="state.options.ticks"
                 :value="state.value"
-                @change="value => paramChange(value)"
+                @change="paramChange"
                 class="mb-2"
                 dense
                 height="40"
@@ -429,12 +432,12 @@
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
+                :value="state.value"
                 @blur="e => paramChange(e.target.value)"
                 auto-grow
                 hide-details
                 outlined
                 small
-                v-model="state.value"
               />
             </template>
 
@@ -454,7 +457,7 @@
                 :step="state.options.step || 1"
                 :thumb-color="state.color"
                 :value="state.value"
-                @change="value => paramChange(value)"
+                @change="paramChange"
                 dense
                 thumb-label
               >
