@@ -1,6 +1,11 @@
 Usage Guide with NRP
 ====================
 
+.. image:: /_static/img/gif/external-nrp.gif
+   :align: left
+   :alt: NRP
+   :target: #
+
 This is a guide to show how to use NEST Desktop with NRP (Neuro-Robotic Plattform).
 
 NRP provides users to perform virtual experiments on virtual objects (e.g. robots, robotic arm)
@@ -60,3 +65,16 @@ Now, switch the screen color of a monitor to red.
 Watch until the Husky moves toward the red screen.
 
 Observe the spike activity in NEST Desktop.
+
+
+
+Acknowledgements
+----------------
+
+Thanks for collaboration of NRP and NEST Desktop:
+
+- Viktor Vorobev (Collaboration of NRP and NEST Desktop)
+- Marcel Krüger (Insite as recording backend)
+- Fabrice Morin (Contact person of NRP)
+- Benedict Feldotto (Implementation of NEST Server in NRP)
+- Jochen M. Eppler (NEST Server MPI)

@@ -1,10 +1,18 @@
 Usage Guide with Insite
 =======================
 
+
+.. image:: /_static/img/gif/external-insite.gif
+   :align: left
+   :alt: Insite
+   :target: #
+
 This is a guide to show how to use NEST Desktop with Insite.
 
 Insite is a recording backend module which is also integrated in NEST Simulator.
 Basically, with Insite neuronal or network activity can be observed during the simulation.
+
+|br|
 
 .. note::
    Simulation with Insite needs to be run with Insite docker images
@@ -48,7 +56,7 @@ Script code for simulation with Insite
 --------------------------------------
 
 The Insite module has to be loaded in the NEST kernel.
-Preferentially load the :bdg:`Insite module` directly after importing NEST:
+Preferentially load the :bdg:`insitemodule` directly after importing NEST:
 
 .. code-block:: python
 
@@ -66,10 +74,11 @@ Next, the parameter :bdg:`record_to` of any recording device
 
 
 Now, the Insite recording module collects activity events from the modified recording devices.
-The client receives activity from the Insite :bdg:`Access Node` on another port (default: ``8080``).
+The client receives activity from the Insite Access Node on another port (default: ``8080``).
 
-For more information about Insite, please visit the official
-`documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group of RWTH Aachen.
+.. seeAlso::
+   For more information about Insite, please visit the official
+   `documentation of Insite <https://vrgrouprwth.github.io/insite/>`__ from the VR Group of RWTH Aachen.
 
 |br|
 
