@@ -12,7 +12,7 @@ forming layers in topology whose neurons have geographical positions.
 Analog signals
 --------------
 
-.. image:: /_static/img/screenshots/activity/activity-anim-graph-analog.png
+.. image:: /_static/img/gif/anim-analog-signals.gif
    :align: left
    :target: #analog-signals
 
@@ -32,7 +32,7 @@ Values of the analog signals can be visualized using the colors of recorded even
 Spike activity
 --------------
 
-.. image:: /_static/img/screenshots/activity/activity-anim-graph-spike.png
+.. image:: /_static/img/gif/anim-spike-activity.gif
    :align: left
    :target: #spike-activity
 

@@ -10,7 +10,13 @@ Network controller
    :align: right
    :target: #network-controller
 
-The network controller displays cards of models, nodes and connections
+The network controller displays cards of models, nodes and connections.
+
+.. seeAlso::
+   - :doc:`/user/usage-advance/copy-model`
+   - :doc:`/user/usage-advance/compartmental-neuron`
+   - :doc:`/user/usage-advance/synapse-model`
+
 
 |br|
 

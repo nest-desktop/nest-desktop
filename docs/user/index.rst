@@ -33,6 +33,8 @@ Advance guide
    usage-advance/activity-chart-graph
    usage-advance/activity-animation-graph
    usage-advance/controller-sidebar
+   usage-advance/copy-model
+   usage-advance/compartmental-neuron
    usage-advance/synapse-model
 
 
