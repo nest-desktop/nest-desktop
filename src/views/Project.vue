@@ -140,6 +140,7 @@
           :graph="projectView.state.project.activityGraph"
           :graphCodeHash="projectView.state.project.activityGraph.codeHash"
           :view="projectView.state.activityGraph"
+          showHelp
           v-if="projectView.state.modeIdx === 1"
         />
       </transition>

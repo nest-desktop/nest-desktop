@@ -79,6 +79,7 @@ export default Vue.extend({
     codeHash: String,
     graph: ActivityGraph,
     graphCodeHash: String,
+    showHelp: Boolean,
     view: String,
   },
   setup(props) {
@@ -87,6 +88,7 @@ export default Vue.extend({
       dialog: false,
       graph: props.graph as ActivityGraph,
       loading: false,
+      showHelp: props.showHelp,
       view: props.view || 'abstract',
     });
 
@@ -123,7 +125,7 @@ export default Vue.extend({
         return;
       }
       state.graph.project.state.closeSnackbar();
-      if (!projectView.config.showHelp) {
+      if (!projectView.config.showHelp || !state.showHelp) {
         return;
       }
       if (!state.graph.project.state.activities.hasSomeEvents) {
