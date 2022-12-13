@@ -39,6 +39,8 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         value: false,
       },
     ];
+
+    this.initParams(model.params);
   }
 
   get lineShape(): string {

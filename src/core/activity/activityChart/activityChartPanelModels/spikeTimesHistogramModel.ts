@@ -18,6 +18,8 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         value: 20,
       },
     ];
+
+    this.initParams(model.params);
   }
 
   /**

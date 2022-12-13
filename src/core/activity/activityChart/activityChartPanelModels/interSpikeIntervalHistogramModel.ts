@@ -22,6 +22,8 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
       },
     ];
     this.state.xaxisType = 'linear';
+
+    this.initParams(model.params);
   }
 
   /**

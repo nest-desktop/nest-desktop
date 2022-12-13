@@ -17,6 +17,8 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
         value: 0.05,
       },
     ];
+
+    this.initParams(model.params);
   }
 
   /**

@@ -41,6 +41,6 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Neuron ID';
-    this.panel.layout.yaxis.title = 'Spike count d3';
+    this.panel.layout.yaxis.title = 'Spike count';
   }
 }
