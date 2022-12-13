@@ -1,5 +1,5 @@
-Usage Guide with Insite
-=======================
+Simulate with Insite
+====================
 
 
 .. image:: /_static/img/gif/external-insite.gif

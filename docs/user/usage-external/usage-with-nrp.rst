@@ -1,5 +1,5 @@
-Usage Guide with NRP
-====================
+Use with NRP
+============
 
 .. image:: /_static/img/gif/external-nrp.gif
    :align: left
@@ -76,5 +76,5 @@ Thanks for collaboration of NRP and NEST Desktop:
 - Viktor Vorobev (Collaboration of NRP and NEST Desktop)
 - Marcel Krüger (Insite as recording backend)
 - Fabrice Morin (Contact person of NRP)
-- Benedict Feldotto (Implementation of NEST Server in NRP)
 - Jochen M. Eppler (NEST Server MPI)
+- Benedict Feldotto (Implementation of NEST Server in NRP)

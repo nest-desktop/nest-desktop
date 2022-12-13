@@ -1,26 +1,60 @@
-Usage guide with ViSimpl
-========================
+Use with ViSimpl
+================
 
 .. image:: /_static/img/gif/external-visimpl.gif
    :align: left
    :alt: ViSimpl
    :target: #
 
-ViSimpl visualizes neural activity from brain simulation data,
-i.e. it displays spike activity in space.
-But it has better navigation interface and can be co-used with NEST Desktop.
+ViSimpl visualizes neural activity from brain simulation data.
+It displays spike activity in space and can be co-used with NEST Desktop.
 
-For this approach, we need to simulate with Insite.
-When you want to learn how to use NEST Desktop with Insite, please read :doc:`/user/usage-external/usage-with-insite`.
+.. seeAlso::
+   For this approach, we need to run the simulation with Insite as recording backend.
+
+   When you want to learn how to use NEST Desktop with Insite,
+   please read :doc:`/user/usage-external/usage-with-insite`.
 
 |br|
 
-.. _usage-with-visimpl-how-to-setup-visimpl:
+.. _usage-with-visimpl-preparation:
 
-How to setup ViSimpl
---------------------
+Preparation
+-----------
 
-First, download the software from the `ViSimpl page <https://vg-lab.es/visimpl/#downloads>`__.
+First, download configuration file of Docker Compose for NEST Desktop and Insite.
+
+.. code-block:: bash
+
+   wget https://raw.githubusercontent.com/nest-desktop/nest-desktop-docker/main/examples/insite/docker-compose.yml
+
+Then, pull docker images using Docker Compose.
+
+.. code-block:: bash
+
+   docker-compose pull
+
+Afterwards, you can start NEST Desktop (with Insite).
+
+.. code-block:: bash
+
+   docker-compose up
+
+||||
+
+For ViSimpl, download the (binary) AppImage from the `page <https://vg-lab.es/visimpl/#downloads>`__,
+make it executable and then open it.
+
+.. code-block:: bash
+
+   VERSION=1.8.3
+   wget https://vg-lab.es/apps/visimpl/latest-release/visimpl-$VERSION-x86_64.AppImage
+   chmod +x visimpl-$VERSION-x86_64.AppImage
+   ./visimpl-$VERSION-x86_64.AppImage
+
+.. hint::
+   You can place NEST Desktop and ViSimpl side by side to see them both.
+
 
 |br|
 
@@ -29,7 +63,17 @@ First, download the software from the `ViSimpl page <https://vg-lab.es/visimpl/#
 How to use NEST Desktop with ViSimpl
 ------------------------------------
 
-You can start NEST Desktop and Visimpl and place them side-by-side to see both.
+.. image:: /_static/img/screenshots/external/nest-desktop-visimpl.png
+   :alt: ViSimpl
+   :target: #
+
+- In NEST Desktop, make sure that both backends (NEST Simulator and Insite) are running.
+- Run simulation of the network with Insite as recording backend.
+- In ViSimpl, click on :bdg:`REST` button to get data from the Insite (Check the correct URL).
+- It shows spatial dots representing neurons and spikes are displayed in glowing mode.
+
+
+
 
 
 Acknowledgements
@@ -39,4 +83,4 @@ Thanks for collaboration of ViSimpl and NEST Desktop:
 
 - Félix De Las Pozas Álvarez (Collaboration of ViSimpl and NEST Desktop)
 - Marcel Krüger (Insite as recording backend)
-- Óscar David Robles Sánchez (Contact person of ViSimpl)
+- Óscar David Robles Sánchez (Lead developer of ViSimpl)

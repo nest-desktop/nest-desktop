@@ -38,8 +38,8 @@ Advance guide
    usage-advance/synapse-model
 
 
-Guides with external software
-=============================
+External software
+=================
 
 .. raw:: html
    :file: ./templates/usage-external.html
