@@ -239,6 +239,9 @@ export class Connection extends Config {
         if (p != null) {
           param.value = p.value;
           param.visible = p.visible;
+          if (p.type != null) {
+            param.type = p.type;
+          }
         }
       }
       this.addParameter(param);
