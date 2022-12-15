@@ -36,7 +36,9 @@ export class Synapse {
    * Returns all visible parameters.
    */
   get filteredParams(): SynapseParameter[] {
-    return this._params.filter((param: SynapseParameter) => param.state.visible);
+    return this._params.filter(
+      (param: SynapseParameter) => param.state.visible
+    );
   }
 
   get hasReceptorIndices(): boolean {
@@ -141,9 +143,14 @@ export class Synapse {
   }
 
   get weight(): number {
-    const weight: any = this._params.find(
+    let weight: any = this._params.find(
       (param: SynapseParameter) => param.id === 'weight'
     );
+    if (!weight.visible) {
+      weight = this.model.params.find(
+        (param: ModelParameter) => param.id === 'weight'
+      );
+    }
     return weight ? weight.value : 1;
   }
 
