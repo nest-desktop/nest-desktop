@@ -376,7 +376,7 @@ export class Parameter extends Config {
         // Float value
         value = this.toFixed(this._value as number);
       } else if (typeof this._value === 'string') {
-      // TODO: this condition should be checked if it is really possible 
+        // TODO: this condition should be checked if it is really possible.
         // String value
         value = this._value as string;
       } else if (typeof this._value === 'boolean') {
