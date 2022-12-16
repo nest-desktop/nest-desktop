@@ -33,6 +33,8 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         visible: false,
       },
     ];
+
+    this.initParams(model.params);
   }
 
   /**

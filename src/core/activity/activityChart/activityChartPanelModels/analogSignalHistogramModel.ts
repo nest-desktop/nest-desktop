@@ -19,6 +19,8 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
         value: 50,
       },
     ];
+
+    this.initParams(model.params);
   }
 
   /**

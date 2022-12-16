@@ -33,6 +33,8 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
         value: 'linear',
       },
     ];
+
+    this.initParams(model.params);
   }
 
   get plotMode(): string {

@@ -33,6 +33,8 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
         value: 'linear',
       },
     ];
+
+    this.initParams(model.params);
   }
 
   get lineShape(): string {

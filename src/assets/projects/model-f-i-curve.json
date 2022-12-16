@@ -1,17 +1,79 @@
 {
   "activityGraph": {
     "panels": [
-      { "model": { "id": "senderSpikeCountPlot" } },
-      { "model": { "id": "senderMeanISIPlot" } }
+      {
+        "model": {
+          "id": "senderSpikeCountPlot",
+          "params": {
+            "plotMode": "lines",
+            "lineShape": "linear",
+            "spikeRate": true
+          }
+        }
+      },
+      {
+        "model": {
+          "id": "senderMeanISIPlot",
+          "params": { "plotMode": "lines", "lineShape": "linear" }
+        }
+      }
     ]
   },
-  "name": "spike activity",
+  "createdAt": "2022-12-13T11:30:49.642Z",
+  "description": "",
+  "id": "8e5deed5-3c66-43c2-bb86-f387d88fc628",
+  "name": "F-I Curve",
   "network": {
+    "connections": [
+      {
+        "params": [],
+        "rule": "one_to_one",
+        "source": 1,
+        "synapse": {
+          "model": "static_synapse",
+          "params": [
+            { "id": "weight", "value": 1, "visible": false },
+            { "id": "delay", "value": 1, "visible": false }
+          ]
+        },
+        "target": 0
+      },
+      {
+        "params": [],
+        "rule": "all_to_all",
+        "source": 0,
+        "synapse": {
+          "model": "static_synapse",
+          "params": [
+            { "id": "weight", "value": 1, "visible": false },
+            { "id": "delay", "value": 1, "visible": false }
+          ]
+        },
+        "target": 2
+      }
+    ],
+    "models": [],
     "nodes": [
       {
         "model": "iaf_psc_alpha",
-        "size": 1000,
-        "view": { "position": { "x": 0, "y": 25 } }
+        "params": [
+          { "id": "C_m", "value": 250, "visible": false },
+          { "id": "E_L", "value": -70, "visible": false },
+          { "id": "I_e", "value": 0, "visible": false },
+          { "id": "V_m", "value": -70, "visible": false },
+          { "id": "V_reset", "value": -70, "visible": false },
+          { "id": "V_th", "value": -55, "visible": false },
+          { "id": "t_ref", "value": 2, "visible": false },
+          { "id": "tau_m", "value": 10, "visible": false },
+          { "id": "tau_syn_ex", "value": 2, "visible": false },
+          { "id": "tau_syn_in", "value": 2, "visible": false }
+        ],
+        "size": "1000",
+        "view": {
+          "color": null,
+          "position": { "x": -253, "y": -226 },
+          "visible": true
+        }
       },
       {
         "model": "dc_generator",
@@ -21,33 +83,23 @@
             "value": 0,
             "visible": true,
             "type": {
-              "icon": "mdi-code-brackets",
               "id": "numpy.arange",
-              "label": "ranged array",
               "specs": [
-                {
-                  "default": 0,
-                  "id": "start",
-                  "optional": true,
-                  "label": "start",
-                  "value": 1
-                },
-                { "id": "stop", "label": "stop", "value": 1002 },
-                {
-                  "default": 1,
-                  "id": "step",
-                  "optional": true,
-                  "label": "step",
-                  "value": 1
-                }
+                { "id": "start", "value": 1 },
+                { "id": "stop", "value": 1001 },
+                { "id": "step", "value": 1 }
               ]
             }
           },
           { "id": "start", "value": 0, "visible": false },
           { "id": "stop", "value": 1000, "visible": false }
         ],
-        "size": 1000,
-        "view": { "position": { "x": -150, "y": -25 } }
+        "size": "1000",
+        "view": {
+          "color": null,
+          "position": { "x": -374, "y": -273 },
+          "visible": true
+        }
       },
       {
         "model": "spike_recorder",
@@ -56,24 +108,28 @@
           { "id": "stop", "value": 10000, "visible": false }
         ],
         "size": 1,
-        "view": { "position": { "x": 150, "y": -25 } }
-      }
-    ],
-    "connections": [
-      {
-        "rule": "one_to_one",
-        "source": 1,
-        "target": 0
-      },
-      {
-        "source": 0,
-        "target": 2
+        "view": {
+          "color": null,
+          "position": { "x": -125, "y": -269 },
+          "visible": true
+        }
       }
     ]
   },
   "simulation": {
+    "code": {
+      "blocks": [
+        "importModules",
+        "resetKernel",
+        "setKernel",
+        "createNodes",
+        "connectNodes",
+        "runSimulation"
+      ]
+    },
     "kernel": { "localNumThreads": 1, "resolution": 0.1, "rngSeed": 1 },
     "time": 1000
   },
-  "version": "3.1.0"
+  "updatedAt": "2022-12-13T12:26:59.345Z",
+  "version": "3.2.0"
 }
