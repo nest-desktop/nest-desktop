@@ -761,7 +761,7 @@ export default Vue.extend({
      * Increment value.
      */
     const increment = (e: any) => {
-      let value = state.value;
+      let value = parseFloat(state.value);
       if (e.ctrlKey) {
         value += parseFloat(state.options.step) * 10 || 10;
       } else {
@@ -774,7 +774,7 @@ export default Vue.extend({
      * Increment value.
      */
     const decrement = (e: any) => {
-      let value = state.value;
+      let value = parseFloat(state.value);
       if (e.ctrlKey) {
         value += parseFloat(state.options.step) * 10 || 10;
       } else {
