@@ -7,7 +7,7 @@ The simulation produces two different types of data sets.
 Spike events (recorded by :bdg:`spike recorder`) contain times and sender ids whereas analog signals contain continuous quantities from the recording devices (:bdg:`voltmeter` or :bdg:`multimeter`).
 
 .. seeAlso::
-   - :ref:`Use controller for activity graph<controller-sidebar-activity-chart-controller>`
+   :ref:`Use controller for activity graph<controller-sidebar-activity-chart-controller>`
 
 |br|
 

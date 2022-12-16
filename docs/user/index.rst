@@ -47,7 +47,7 @@ External software
 .. toctree::
    :hidden:
 
-   usage-external/usage-with-insite
+   usage-external/simulate-with-insite
    usage-external/usage-with-nrp
    usage-external/usage-with-visimpl
 

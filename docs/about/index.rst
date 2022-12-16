@@ -1,12 +1,15 @@
+=====
 About
 =====
 
 .. toctree::
    :maxdepth: 1
 
-   abstract
-   funding
-   citation
    events
    releases
    nuspic
+
+
+.. include:: abstract.rst
+.. include:: funding.rst
+.. include:: citation.rst

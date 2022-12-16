@@ -30,8 +30,7 @@ Then start all services (`nest-desktop`, `insite-nest-module`, `insite-access-mo
 
 It takes few minutes to pull all five docker images and start all containers.
 
-.. note::
-   Be sure that NEST Desktop runs two backends: NEST Simulator and Insite Access Node.
-   For more information, please read :doc:`/user/usage-external/usage-with-insite`.
-
-For the usage, please read :doc:`/user/usage-external/usage-with-nrp`.
+.. seeAlso::
+   - Be sure that NEST Desktop runs two backends: NEST Simulator and Insite Access Node.
+     For more information, please read :doc:`/user/usage-external/simulate-with-insite`.
+   - For the usage, please read :doc:`/user/usage-external/usage-with-nrp`.

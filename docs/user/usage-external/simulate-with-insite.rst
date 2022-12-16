@@ -22,48 +22,49 @@ Basically, with Insite neuronal or network activity can be observed during the s
 
 |br|
 
-.. _usage-with-insite-check-if-insite-is-running:
+.. _simulate-with-insite-check-if-insite-is-running:
 
 Check if Insite is running
 --------------------------
 
 .. image:: /_static/img/screenshots/external/settings-insite.png
    :align: left
-   :target: #check-if-insite-is-running
+   :target: #simulate-with-insite-check-if-insite-is-running
 
 In the settings page you can check whether the Insite backend is running.
+When it is disabled, you can toggle the slide to enable it.
 
 |br|
 
-.. _usage-with-insite-enable-simulation-with-insite:
+.. _simulate-with-insite-enable-simulation-with-insite:
 
 Enable simulation with Insite
 -----------------------------
 
 .. image:: /_static/img/screenshots/external/code-editor-toolbar-insite.png
    :align: right
-   :target: #enable-simulation-with-insite
+   :target: #simulate-with-insite-enable-simulation-with-insite
 
 After successfully receiving a ping from the Insite Access node of the backend,
-you can activate the button :bdg:`Insite` in the toolbar of the code editor
-(second from left).
+you can activate the button :bdg:`Insite` (second from left) in the toolbar of the code editor.
+It generates code with Insite implementation.
 
 |br|
 
-.. _usage-with-insite-script-code-for-simulation-with-insite:
+.. _simulate-with-insite-script-code-for-simulation-with-insite:
 
 Script code for simulation with Insite
 --------------------------------------
 
 The Insite module has to be loaded in the NEST kernel.
-Preferentially load the :bdg:`insitemodule` directly after importing NEST:
+Preferentially load the :bdg:`insitemodule` after importing NEST:
 
 .. code-block:: python
 
    nest.Install('insitemodule')
 
 
-Next, the parameter :bdg:`record_to` of any recording device
+Next, check wether the parameter :bdg:`record_to` of any recording device
 (e.g. :bdg:`spike recorder`, :bdg:`multimeter` or :bdg:`voltmeter`) has to been modified:
 
 .. code-block:: python
@@ -73,8 +74,8 @@ Next, the parameter :bdg:`record_to` of any recording device
    ...
 
 
-Now, the Insite recording module collects activity events from the modified recording devices.
-The client receives activity from the Insite Access Node on another port (default: ``8080``).
+Now, the Insite recording module collects activity events from the recording devices.
+The client receives activity from the Insite Access Node on another port (default: ``52056``).
 
 .. seeAlso::
    For more information about Insite, please visit the official

@@ -8,8 +8,8 @@ Use with NRP
 
 This is a guide to show how to use NEST Desktop with NRP (Neuro-Robotic Plattform).
 
-NRP provides users to perform virtual experiments on virtual objects (e.g. robots, robotic arm)
-or on virtual animals (e.g. rats).
+NRP provides users to perform virtual experiments on virtual objects
+(e.g. robots, robotic arm) or on virtual animals (e.g. rats).
 
 In our case we use NRP to learn neuronal activity dynamics of the "robot brain"
 according to a thought experiment by the cyberneticist
@@ -64,8 +64,13 @@ Here, you can see the Husky is rotating itself.
 Now, switch the screen color of a monitor to red.
 Watch until the Husky moves toward the red screen.
 
-Observe the spike activity in NEST Desktop.
+Observe the spike activity in NEST Desktop which are recorded to Insite.
 
+.. seeAlso::
+   For this approach, we need to run the simulation with Insite as recording backend.
+
+   When you want to learn how to use NEST Desktop with Insite,
+   please read :doc:`/user/usage-external/simulate-with-insite`.
 
 
 Acknowledgements

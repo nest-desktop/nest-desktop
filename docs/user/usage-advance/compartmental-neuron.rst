@@ -31,7 +31,7 @@ You can modify values in each compartment and and its receptors.
 |br|
 
 .. note::
-   Use multimeter to record events from various compartments.
+   Use :bdg:`multimeter` to record events from various compartments.
 
 .. |new| image:: /_static/img/icons/plus.svg
    :alt: plus

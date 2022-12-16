@@ -13,7 +13,7 @@ It displays spike activity in space and can be co-used with NEST Desktop.
    For this approach, we need to run the simulation with Insite as recording backend.
 
    When you want to learn how to use NEST Desktop with Insite,
-   please read :doc:`/user/usage-external/usage-with-insite`.
+   please read :doc:`/user/usage-external/simulate-with-insite`.
 
 |br|
 
@@ -65,14 +65,22 @@ How to use NEST Desktop with ViSimpl
 
 .. image:: /_static/img/screenshots/external/nest-desktop-visimpl.png
    :alt: ViSimpl
-   :target: #
+   :target: #usage-with-visimpl-how-to-use-nest-desktop-with-visimpl
+
+**Steps**
 
 - In NEST Desktop, make sure that both backends (NEST Simulator and Insite) are running.
 - Run simulation of the network with Insite as recording backend.
 - In ViSimpl, click on :bdg:`REST` button to get data from the Insite (Check the correct URL).
+
+.. hint::
+   - Increase the :bdg:`Request size` to 10000 spikes in REST dialog that it collects spikes faster.
+
 - It shows spatial dots representing neurons and spikes are displayed in glowing mode.
 
-
+.. hint::
+   - Increase the :bdg:`Simulation timestep` to 1ms in :bdg:`Simulation Playback Configuration`.
+   - Increase the :bdg:`Delay` to 5ms in :bdg:`Visual Configuration`.
 
 
 
