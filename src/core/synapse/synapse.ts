@@ -146,7 +146,8 @@ export class Synapse {
     let weight: any = this._params.find(
       (param: SynapseParameter) => param.id === 'weight'
     );
-    if (!weight.visible) {
+    console.log(weight);
+    if (!weight.state.visible) {
       weight = this.model.params.find(
         (param: ModelParameter) => param.id === 'weight'
       );
