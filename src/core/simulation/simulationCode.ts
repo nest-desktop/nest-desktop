@@ -28,7 +28,7 @@ export class SimulationCode {
             'connectNodes',
             'runSimulation',
           ],
-      version: '3.3',
+      version: 'v3.3',
     });
 
     this.clean();
@@ -115,7 +115,7 @@ export class SimulationCode {
    */
   generate(): void {
     const template =
-      require(`./simulationCodes/nest${this._state.version}.code`).default;
+      require(`./simulationCodes/nest-${this._state.version}.code`).default;
 
     const data = this._simulation.project;
     this._script = Mustache.render(template, data);

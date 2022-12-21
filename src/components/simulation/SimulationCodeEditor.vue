@@ -219,10 +219,12 @@ export default Vue.extend({
         theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
       },
       nestVersions: [
-        { text: 'v3.3', value: '3.3' },
-        { text: 'v3.2', value: '3.2' },
-        { text: 'v3.1', value: '3.1' },
-        { text: 'v3.0', value: '3.0' },
+        { text: 'dev', value: 'master' },
+        { text: 'v3.4', value: 'v3.4' },
+        { text: 'v3.3', value: 'v3.3' },
+        { text: 'v3.2', value: 'v3.2' },
+        { text: 'v3.1', value: 'v3.1' },
+        { text: 'v3.0', value: 'v3.0' },
       ],
       style: {
         width: 300,
