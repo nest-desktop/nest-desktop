@@ -7,7 +7,7 @@ publish them on various platforms.
 .. note::
    Please be aware that a lot of steps are already covered by our `GitLab CI process <continuous-integration.html#gitlab>`__.
    Therefore, we recommend to inspect the ``.gitlab-ci.yml`` file together with this chapter.
-   It might also be helpful to have a look at the commands defined in ``project.json``.
+   It might also be helpful to have a look at the commands defined in ``package.json``.
 
 |br|
 
@@ -45,7 +45,7 @@ Initially, you have to upgrade the version of nest-desktop in:
 - ``packages.json``
 - ``nest_desktop/__init__.py``
 
-Then generate the app package using `yarn`. It builds the folder ``nest_desktop/app``:
+Then generate the app package using ``yarn``. It builds the folder ``nest_desktop/app``:
 
 .. code-block:: bash
 

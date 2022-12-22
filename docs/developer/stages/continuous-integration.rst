@@ -20,11 +20,12 @@ It consists of two stages, `build` and `deploy`.
 In each stage, we prepared two parallel pipelines in which jobs will be executed
 when a specific branch is pushed:
 
-- the development pipeline for the `dev` branch to check the functional operation of the CI (in the future with testing) and
+- the development pipeline for the `dev` branch to check the functional operation of the CI
+  (in the future with testing) and
 - the production pipeline for the `main` branch when NEST Desktop is released.
 
 In the build stage, the CI pipeline uses `Node.js` to produce NEST Desktop
-and to store it in the `nest_desktop/app` folder.
+and to store it in the ``nest_desktop/app`` folder.
 
 In the deploy stage, the CI deploys NEST Desktop as a Python package
 and as Docker images for `EBRAINS Harbor <https://docker-registry.ebrains.eu>`__

@@ -36,9 +36,9 @@ i.e. available only on your personal machine.
 
 .. code-block:: bash
 
-   python3 -m http.server --directory ./_build/html 8002
+   python3 -m http.server --directory ./_build/html 8000
 
-Then open the URL `http://localhost:8002` with your browser.
+Then open the URL ``http://localhost:8000`` with your browser.
 
 |
 
