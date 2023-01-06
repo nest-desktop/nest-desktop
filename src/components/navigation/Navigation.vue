@@ -61,7 +61,7 @@
                     dense
                     title="Dev mode is on."
                   >
-                    <v-list-item-icon v-bind="attrs" v-on="on">
+                    <v-list-item-icon>
                       <v-list-item-group class="nav-item">
                         <v-icon dense v-text="'mdi-dev-to'" />
                       </v-list-item-group>
