@@ -2,6 +2,11 @@ process.env.VUE_APP_VERSION = require('./package.json').version;
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
+  // Uncomment this to activate HTTPS and (partly) HTTP/2 for the dev server
+  //devServer: {
+  //  https: true,
+  //  http2: true,
+  //},
   publicPath: process.env.BASE_URL, // '.',
   outputDir: './nest_desktop/app',
   transpileDependencies: ['vuetify'],

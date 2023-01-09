@@ -422,5 +422,6 @@ export default Vue.extend({
 <style>
 .synWeightButton {
   border: 1px solid rgba(0, 0, 0, 0.12);
+  margin-left: 0.75em;
 }
 </style>
