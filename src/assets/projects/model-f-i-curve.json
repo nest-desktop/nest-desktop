@@ -1,4 +1,5 @@
 {
+  "name": "F-I Curve",
   "activityGraph": {
     "panels": [
       {
@@ -19,10 +20,6 @@
       }
     ]
   },
-  "createdAt": "2022-12-13T11:30:49.642Z",
-  "description": "",
-  "id": "8e5deed5-3c66-43c2-bb86-f387d88fc628",
-  "name": "F-I Curve",
   "network": {
     "connections": [
       {
@@ -52,7 +49,6 @@
         "target": 2
       }
     ],
-    "models": [],
     "nodes": [
       {
         "model": "iaf_psc_alpha",
@@ -117,19 +113,8 @@
     ]
   },
   "simulation": {
-    "code": {
-      "blocks": [
-        "importModules",
-        "resetKernel",
-        "setKernel",
-        "createNodes",
-        "connectNodes",
-        "runSimulation"
-      ]
-    },
     "kernel": { "localNumThreads": 1, "resolution": 0.1, "rngSeed": 1 },
     "time": 1000
   },
-  "updatedAt": "2022-12-13T12:26:59.345Z",
   "version": "3.2.0"
 }
