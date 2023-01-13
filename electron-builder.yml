@@ -1,4 +1,4 @@
-appId: 'com.electron.nest.desktop'
+appId: 'com.electron.nest-desktop'
 icon: 'icons/icon.png'
 productName: 'NEST Desktop'
 linux:
