@@ -280,7 +280,7 @@
                   :disabled="!state.visible"
                   :label="label()"
                   :value="state.value"
-                  @blur="e => paramChange(e.target.value)"
+                  @blur="e => paramChange(Number(e.target.value))"
                   @change="paramChange"
                   class="mt-0 ml-2 pt-0"
                   height="32"
@@ -501,7 +501,7 @@
                     :rules="rules"
                     :step="state.options.step || 1"
                     :value="state.value"
-                    @blur="e => paramChange(e.target.value)"
+                    @blur="e => paramChange(Number(e.target.value))"
                     class="mt-0 ml-2 pt-0"
                     height="32"
                     hide-details
@@ -724,6 +724,7 @@ export default Vue.extend({
 
       // Emit when the value is changed.
       if (isChanged) {
+        console.log(state.value, typeof state.value)
         emit('update:value', deserialize(state.value));
       }
     };
