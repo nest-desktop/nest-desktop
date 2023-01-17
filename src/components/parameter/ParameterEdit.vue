@@ -724,7 +724,6 @@ export default Vue.extend({
 
       // Emit when the value is changed.
       if (isChanged) {
-        console.log(state.value, typeof state.value)
         emit('update:value', deserialize(state.value));
       }
     };
