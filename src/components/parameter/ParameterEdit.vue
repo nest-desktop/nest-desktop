@@ -166,7 +166,12 @@
       </v-card>
     </v-menu>
 
-    <v-card @contextmenu="e => showMenu(e)" flat tile>
+    <v-card
+      @contextmenu="showMenu"
+      flat
+      tile
+      v-show="!state.options.hasOwnProperty('show') || state.options.show"
+    >
       <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
           <template v-if="state.param && !state.param.isConstant">
@@ -306,9 +311,6 @@
                 class="ma-1 mt-3"
                 dense
                 hide-details
-                v-show="
-                  !state.options.hasOwnProperty('show') || state.options.show()
-                "
               />
             </template>
 

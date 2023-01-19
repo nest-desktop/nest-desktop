@@ -23,26 +23,34 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         value: 1,
       },
       {
+        _parent: this,
+        _value: 'off',
         id: 'normalizedValue',
         input: 'select',
         items: [
-          'off', 
-          'firing rate [spikes/s]', 
-          'min-max scale', 
-          'lower-upper averages scale', 
-          'standard score'
+          'off',
+          'firing rate [spikes/s]',
+          'min-max scale',
+          'lower-upper averages scale',
+          'standard score',
         ],
         label: 'Normalization',
-        value: 'off',
+        get value(): string {
+          return this._value;
+        },
+        set value(value: string) {
+          this._value = value;
+          this._parent.params[2].show = value.startsWith('lower-upper');
+        },
       },
       {
         id: 'lowerUpperBinSize',
         input: 'tickSlider',
         label: 'Bin size for lower-upper averages',
+        show: false,
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
         unit: 'ms',
         value: 1,
-        show: () => this.normalization.startsWith('lower-upper'),
       },
     ];
 
@@ -55,50 +63,54 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
 
   get normalization(): string {
     return this.params[1].value;
-  }  
-  
+  }
+
   get lowerUpperBinSize(): number {
     return this.params[2].value;
   }
 
-
   /**
    * Calculate simple histogram
-   * 
-   * @param data 
-   * @param min 
-   * @param max 
-   * @param size 
+   *
+   * @param data
+   * @param min
+   * @param max
+   * @param size
    * @returns histogram
-   * 
+   *
    * See https://stackoverflow.com/questions/36266895/simple-histogram-algorithm-in-javascript
    */
-  histogram(data: number[], min: number = -Infinity, max: number = Infinity, size: number = 1): number[] {
+  histogram(
+    data: number[],
+    min: number = -Infinity,
+    max: number = Infinity,
+    size: number = 1
+  ): number[] {
     for (const item of data) {
-        if (item < min) min = item;
-        else if (item > max) max = item;
+      if (item < min) min = item;
+      else if (item > max) max = item;
     }
 
     const bins = Math.ceil((max - min + 1) / size);
     const histogram = new Array(bins).fill(0);
     for (const item of data) {
-        histogram[Math.floor((item - min) / size )]++;
+      histogram[Math.floor((item - min) / size)]++;
     }
 
     return histogram;
-}
+  }
 
-/**
- * Calculate range
- * @param size number
- * @param startAt number
- * @returns number Array
- */
-range(start: number=0, stop:number, step:number = 1): number[] {
-  return Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
-}
-
-
+  /**
+   * Calculate range
+   * @param size number
+   * @param startAt number
+   * @returns number Array
+   */
+  range(start: number = 0, stop: number, step: number = 1): number[] {
+    return Array(Math.ceil((stop - start) / step))
+      .fill(start)
+      .map((x, y) => x + y * step);
+  }
 
   /**
    * Add data of spike times for histogram panel.
@@ -106,7 +118,9 @@ range(start: number=0, stop:number, step:number = 1): number[] {
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const nodesLength = sum(activity.recorder.nodes.map((node: Node) => node.size));
+    const nodesLength = sum(
+      activity.recorder.nodes.map((node: Node) => node.size)
+    );
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
@@ -121,7 +135,12 @@ range(start: number=0, stop:number, step:number = 1): number[] {
       const maxVal = d3.max(h);
       y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
     } else if (this.normalization.startsWith('lower-upper')) {
-      const hh: number[] = this.histogram(times, start, end, this.lowerUpperBinSize);
+      const hh: number[] = this.histogram(
+        times,
+        start,
+        end,
+        this.lowerUpperBinSize
+      );
       const ratio = size / this.lowerUpperBinSize;
       const minVal = d3.min(hh) * ratio;
       const maxVal = d3.max(hh) * ratio;
@@ -131,7 +150,7 @@ range(start: number=0, stop:number, step:number = 1): number[] {
       const std = d3.deviation(h);
       y = h.map((val: number) => (val - mean) / std);
     } else if (this.normalization.startsWith('firing rate')) {
-      y = h.map((val: number) => val / nodesLength / size * 1000);
+      y = h.map((val: number) => (val / nodesLength / size) * 1000);
     } else {
       y = h;
     }
@@ -159,8 +178,9 @@ range(start: number=0, stop:number, step:number = 1): number[] {
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Time [ms]';
     const ytitle = this.params[1].value;
-    this.panel.layout.yaxis.title = ytitle == 'off' 
-      ? 'Spike count' 
-      : ytitle.slice(0,1).toUpperCase() + ytitle.slice(1);
+    this.panel.layout.yaxis.title =
+      ytitle == 'off'
+        ? 'Spike count'
+        : ytitle.slice(0, 1).toUpperCase() + ytitle.slice(1);
   }
 }
