@@ -6,12 +6,12 @@ import { Node } from '@/core/node/node';
 import { sum } from 'mathjs';
 import * as d3 from 'd3';
 
-export class FiringRatePlotModel extends SpikeTimesPanelModel {
+export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
     this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'firingRatePlot';
-    this.label = 'Firing rate';
+    this.id = 'spikeCountPlot';
+    this.label = 'Spike count';
     this.panel.xaxis = 1;
     this.params = [
       {
@@ -23,10 +23,26 @@ export class FiringRatePlotModel extends SpikeTimesPanelModel {
         value: 1,
       },
       {
-        id: 'normedValue',
-        input: 'checkbox',
-        label: 'normed value',
-        value: false,
+        id: 'normalizedValue',
+        input: 'select',
+        items: [
+          'off', 
+          'firing rate [spikes/s]', 
+          'min-max scale', 
+          'lower-upper averages scale', 
+          'standard score'
+        ],
+        label: 'normalization',
+        value: 'off',
+      },
+      {
+        id: 'lowerUpperBinSize',
+        input: 'tickSlider',
+        label: 'bin size for lower-upper averages',
+        ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
+        unit: 'ms',
+        value: 1,
+        show: () => this.normalization.startsWith('lower-upper'),
       },
     ];
 
@@ -37,9 +53,14 @@ export class FiringRatePlotModel extends SpikeTimesPanelModel {
     return this.params[0].value;
   }
 
-  get normedValue(): boolean {
+  get normalization(): string {
     return this.params[1].value;
+  }  
+  
+  get lowerUpperBinSize(): number {
+    return this.params[2].value;
   }
+
 
   /**
    * Calculate simple histogram
@@ -95,11 +116,24 @@ range(start: number=0, stop:number, step:number = 1): number[] {
     const h: number[] = this.histogram(times, start, end, size);
 
     let y: number[];
-    if (this.normedValue) {
-      const hExtent = d3.extent(h);
-      y = h.map((val: number) => (val - hExtent[0]) / hExtent[1]);
-    } else {
+    if (this.normalization === 'min-max scale') {
+      const minVal = d3.min(h);
+      const maxVal = d3.max(h);
+      y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
+    } else if (this.normalization.startsWith('lower-upper')) {
+      const hh: number[] = this.histogram(times, start, end, this.lowerUpperBinSize);
+      const ratio = size / this.lowerUpperBinSize;
+      const minVal = d3.min(hh) * ratio;
+      const maxVal = d3.max(hh) * ratio;
+      y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
+    } else if (this.normalization === 'standard score') {
+      const mean = d3.mean(h);
+      const std = d3.deviation(h);
+      y = h.map((val: number) => (val - mean) / std);
+    } else if (this.normalization.startsWith('firing rate')) {
       y = h.map((val: number) => val / nodesLength / size * 1000);
+    } else {
+      y = h;
     }
 
     this.data.push({
@@ -124,6 +158,9 @@ range(start: number=0, stop:number, step:number = 1): number[] {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = 'Time [ms]';
-    this.panel.layout.yaxis.title = this.normedValue ? 'Normed' : 'Firing rate [spikes/s]';
+    const ytitle = this.params[1].value;
+    this.panel.layout.yaxis.title = ytitle == 'off' 
+      ? 'Spike count' 
+      : ytitle.slice(0,1).toUpperCase() + ytitle.slice(1);
   }
 }

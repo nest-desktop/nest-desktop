@@ -6,7 +6,7 @@ import { Project } from '../../project/project';
 import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
 import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
 import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
-import { FiringRatePlotModel } from './activityChartPanelModels/firingRatePlotModel';
+import { SpikeCountPlotModel } from './activityChartPanelModels/spikeCountPlotModel';
 import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
 import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
 import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
@@ -50,10 +50,10 @@ export class ActivityChartGraph {
     },
     {
       activityType: 'spike',
-      component: FiringRatePlotModel,
-      id: 'firingRatePlot',
+      component: SpikeCountPlotModel,
+      id: 'spikeCountPlot',
       icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Firing rate',
+      label: 'Spike count',
     },
     {
       activityType: 'spike',
