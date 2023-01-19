@@ -17,7 +17,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       {
         id: 'binSize',
         input: 'tickSlider',
-        label: 'bin size',
+        label: 'Bin size',
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
         unit: 'ms',
         value: 1,
@@ -32,13 +32,13 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
           'lower-upper averages scale', 
           'standard score'
         ],
-        label: 'normalization',
+        label: 'Normalization',
         value: 'off',
       },
       {
         id: 'lowerUpperBinSize',
         input: 'tickSlider',
-        label: 'bin size for lower-upper averages',
+        label: 'Bin size for lower-upper averages',
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
         unit: 'ms',
         value: 1,
