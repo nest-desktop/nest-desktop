@@ -1,10 +1,10 @@
+import * as d3 from 'd3';
 import { ActivityChartPanel } from '../activityChartPanel';
+import { Node } from '@/core/node/node';
+import { Source } from 'three';
 import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
-import { Source } from 'three';
-import { Node } from '@/core/node/node';
 import { sum } from 'mathjs';
-import * as d3 from 'd3';
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
@@ -41,6 +41,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         set value(value: string) {
           this._value = value;
           this._parent.params[2].show = value.startsWith('lower-upper');
+          this._parent.params[3].show = value.startsWith('lower-upper');
         },
       },
       {
@@ -52,6 +53,13 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         unit: 'ms',
         value: 1,
       },
+      {
+        id: 'horizontalLine',
+        input: 'checkbox',
+        label: 'Horizontal line for time constant (63%)',
+        show: false,
+        value: false,
+      }
     ];
 
     this.initParams(model.params);
@@ -59,14 +67,18 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
 
   get binSize(): number {
     return this.params[0].value;
-  }
-
-  get normalization(): string {
-    return this.params[1].value;
+  }  
+  
+  get horizontalLine(): string {
+    return this.params[3].value;
   }
 
   get lowerUpperBinSize(): number {
     return this.params[2].value;
+  }
+
+  get normalization(): string {
+    return this.params[1].value;
   }
 
   /**
@@ -170,6 +182,25 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       x,
       y,
     });
+
+    if (this.horizontalLine) {
+      this.data.push({
+        activityIdx: activity.idx,
+        hoverinfo: 'none',
+        legendgroup: 'spikes' + activity.idx,
+        line: {
+          color: 'red',
+          dash: 'dot',
+          width: 1,
+        },
+        mode: 'lines',
+        showlegend: false,
+        type: 'scattergl',
+        visible: this.state.visible,
+        x: [start, end],
+        y: [0.63, 0.63],
+      });
+    }
   }
 
   /**
