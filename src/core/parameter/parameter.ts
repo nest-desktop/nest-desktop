@@ -358,7 +358,7 @@ export class Parameter extends Config {
     if (valueAsString.includes('.') && fractionDigits > 0) {
       fractionDigits = valueAsString.split('.')[1].length;
     }
-    return value.toFixed(fractionDigits);
+    return Number(value).toFixed(fractionDigits);
   }
 
   /**
