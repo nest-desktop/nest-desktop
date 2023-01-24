@@ -6,6 +6,7 @@ import { Project } from '../../project/project';
 import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
 import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
 import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
+import { SpikeCountPlotModel } from './activityChartPanelModels/spikeCountPlotModel';
 import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
 import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
 import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
@@ -46,6 +47,13 @@ export class ActivityChartGraph {
       id: 'spikeTimesHistogram',
       icon: 'mdi-chart-bar',
       label: 'Spike times',
+    },
+    {
+      activityType: 'spike',
+      component: SpikeCountPlotModel,
+      id: 'spikeCountPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Spike count',
     },
     {
       activityType: 'spike',
@@ -116,7 +124,7 @@ export class ActivityChartGraph {
         ],
         ['zoom2d', 'pan2d'],
         ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
-        ['hoverClosestCartesian', 'hoverCompareCartesian'],
+        ['hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
       ],
       scrollZoom: true,
     };

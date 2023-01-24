@@ -11,11 +11,18 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
     this.panel.xaxis = 4;
     this.params = [
       {
+        _parent: this,
+        _value: 'bar',
         id: 'plotMode',
         input: 'select',
         items: ['lines', 'lines+markers', 'markers', 'bar'],
         label: 'Plot mode',
-        value: 'bar',
+        parent: this,
+        get value(): string { return this._value },
+        set value(value: string) {
+          this._value = value;
+          this._parent.params[1].show = value.includes('lines')
+        }
       },
       {
         id: 'lineShape',
@@ -29,7 +36,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
           { text: 'horizontal-vertical steps', value: 'hv' },
         ],
         label: 'Line shape',
-        show: () => this.plotMode.includes('lines'),
+        show: false,
         value: 'linear',
       },
     ];
