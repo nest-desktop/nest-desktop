@@ -126,6 +126,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
 
   /**
    * Add data of spike times for histogram panel.
+   * TODO: Improve checks (div-0-error, ...).
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
