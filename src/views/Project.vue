@@ -240,12 +240,15 @@ export default Vue.extend({
         });
       } else {
         projectView.init().then(() => {
-          const project = projectView.state.project;
-          if (!root.$route.path.endsWith(project.id)) {
-            root.$router.push({
-              path: `/project/${project.id}`,
-            });
-          }
+          setTimeout(() => {
+            const project = projectView.state.project;
+            // Create a new project when route path doesn't match with valid project id.
+            if (!root.$route.path.endsWith(project.id)) {
+              root.$router.push({
+                path: `/project`,
+              });
+            }
+          })
         });
       }
     };
