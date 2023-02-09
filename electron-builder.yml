@@ -2,11 +2,9 @@ appId: 'com.electron.nest.desktop'
 icon: 'icons/icon.png'
 productName: 'NEST Desktop'
 linux:
-  category: 'Education,Science'
+  category: 'Science'
   target:
-    - AppImage
-    # - deb
+    # - AppImage
+    - deb
     # - rpm
-    - snap
-snap:
-  confinement: 'strict'
+    # - snap
