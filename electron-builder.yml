@@ -2,9 +2,14 @@ appId: 'com.electron.nest.desktop'
 icon: 'icons/icon.png'
 productName: 'nest-desktop'
 linux:
-  category: 'Science'
+  category: 'Education;Science'
   target:
-    # - AppImage
     - deb
-    # - rpm
-    # - snap
+deb:
+  depends:
+    - gconf2
+    - gconf-service
+    - libnotify4
+    - libxtst6
+    - libnss3
+  synopsis: 'NEST Desktop'
