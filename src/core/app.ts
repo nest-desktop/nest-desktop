@@ -45,8 +45,8 @@ export class App extends Config {
     });
     this._backends.insiteAccess = new Backend('InsiteAccess', {
       path: '/insite',
-      port: 8080,
-      versionPath: '/version/',
+      port: 52056,
+      versionPath: '/',
     });
 
     this._model = new ModelStore(this);
