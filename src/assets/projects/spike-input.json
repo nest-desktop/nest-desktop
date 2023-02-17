@@ -59,11 +59,8 @@
     ]
   },
   "simulation": {
-    "kernel": {
-      "resolution": 0.1
-    },
-    "time": 1000,
-    "randomSeed": 1
+    "kernel": { "localNumThreads": 1, "resolution": 0.1, "rngSeed": 1 },
+    "time": 1000
   },
-  "version": "3.1.0"
+  "version": "3.2.0"
 }
