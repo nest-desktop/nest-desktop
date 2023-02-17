@@ -14,15 +14,15 @@ function execute(command: string, callback = null) {
   }
 }
 
-function start(): void {
-  execute('nest-server start -d -h 0.0.0.0"');
+async function start(): Promise<any> {
+  execute('nest-server start -d');
 }
 
 async function stop(): Promise<any> {
-  execute('nest-server stop -h 0.0.0.0');
+  execute('nest-server stop');
 }
 
-export const nest = {
+export const nestServer = {
   start,
   stop,
 };
