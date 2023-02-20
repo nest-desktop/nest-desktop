@@ -702,7 +702,7 @@ export default Vue.extend({
     /**
      * Check if the string contains only a number.
      */
-    const containsOnlyNumber = (value: string) => /^\d.?\d?$/.test(value);
+    const containsOnlyNumber = (value: string) => /^([0-9]+[.])?[0-9]*$/.test(value);
 
     /**
      * Triggers when parameter is changed.
