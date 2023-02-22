@@ -1,29 +1,25 @@
-# NEST Desktop
+<h1 align="center">
+  <img src="./icons/icon.png" width="256" alt="NEST Desktop">
+  <br />
+  NEST Desktop
+</h1>
 
-<p>
-  <img src="https://raw.githubusercontent.com/nest-desktop/nest-desktop/latest/docs/_static/img/screenshots/start-page.png" />
+<p align="center">
+  A web-based application for spiking neuronal simulation.
 </p>
 
-**General:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-[![docs](https://img.shields.io/readthedocs/nest-desktop)](https://nest-desktop.readthedocs.io)
-[![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE)
-[![DOI](https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue)](https://doi.org/10.1523/eneuro.0274-21.2021)
+| | |
+| - | - |
+| General | [![docs](https://img.shields.io/readthedocs/nest-desktop?label=Documentation&logo=readthedocs&logoColor=white)](https://nest-desktop.readthedocs.io) [![license](https://img.shields.io/github/license/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE) [![DOI](https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue)](https://doi.org/10.1523/eneuro.0274-21.2021) |
+| GitHub | [![Latest release](https://img.shields.io/github/release/nest-desktop/nest-desktop.svg?color=brightgreen&label=latest%20release&logo=github&logoColor=white)](https://github.com/nest-desktop/nest-desktop/releases) [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/nest-desktop/nest-desktop?color=%23ff6633)](https://github.com/nest-desktop/nest-desktop/commits/main) [![GitHub forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members) [![GitHub stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers) |
+| Docker | [![Docker image version](https://img.shields.io/docker/v/nestsim/nest-desktop/latest?label=Docker&logo=docker&logoColor=white)](https://hub.docker.com/r/nestsim/nest-desktop) [![Docker image size](https://img.shields.io/docker/image-size/nestsim/nest-desktop/latest)](https://hub.docker.com/r/nestsim/nest-desktop) [![Docker image pulls](https://img.shields.io/docker/pulls/nestsim/nest-desktop)](https://hub.docker.com/r/nestsim/nest-desktop) |
+| Python | [![Python version](https://img.shields.io/pypi/v/nest-desktop?label=Python&logo=python&logoColor=white)](https://pypi.org/project/nest-desktop/) [![Python downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/) |
+| Conda | [![Conda version](https://img.shields.io/conda/vn/conda-forge/nest-desktop?logo=conda-forge&logoColor=white)](https://anaconda.org/conda-forge/nest-desktop) [![Conda downloads total](https://img.shields.io/conda/dn/conda-forge/nest-desktop)](https://anaconda.org/conda-forge/nest-desktop) |
+| AppImage | [![Latest release](https://img.shields.io/github/release/nest-desktop/nest-desktop-appImage.svg?color=brightgreen&label=AppImage&logo=linux&logoColor=white)](https://github.com/nest-desktop/nest-desktop-appImage/releases) [![AppImage downloads total](https://img.shields.io/github/downloads/nest-desktop/nest-desktop-appImage/total)](https://anaconda.org/conda-forge/nest-desktop)
+| Snap | [![Snap version](https://snapcraft.io/nest-desktop/badge.svg)](https://snapcraft.io/nest-desktop) [![Snap trending](https://snapcraft.io/nest-desktop/trending.svg?name=0)](https://snapcraft.io/nest-desktop) |
 
-**Docker Hub:** &nbsp; &nbsp;
-[![docker version](https://img.shields.io/docker/v/nestsim/nest-desktop/latest)](https://hub.docker.com/r/nestsim/nest-desktop)
-[![image size](https://img.shields.io/docker/image-size/nestsim/nest-desktop/latest)](https://hub.docker.com/r/nestsim/nest-desktop)
-[![docker pulls](https://img.shields.io/docker/pulls/nestsim/nest-desktop)](https://hub.docker.com/r/nestsim/nest-desktop)
 
-**GitHub:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-[![commit activity](https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop)](https://github.com/nest-desktop/nest-desktop/commits/main)
-[![stars](https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/stargazers)
-[![forks](https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social)](https://github.com/nest-desktop/nest-desktop/network/members)
-
-**PyPI:** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-[![pypi](https://img.shields.io/pypi/v/nest-desktop?label=version)](https://pypi.org/project/nest-desktop/)
-[![downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/)
-
----
+### Synopsis
 
 NEST Desktop is a web-based application which provides a graphical user interface for [NEST Simulator](https://nest-simulator.org). With this easy-to-use tool, users can interactively construct neuronal networks and explore network dynamics.
 
