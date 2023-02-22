@@ -1,8 +1,7 @@
 Build and publish
 =================
 
-Currently, we build NEST Desktop for multiple targets and
-publish them on various platforms.
+Currently, we build NEST Desktop for multiple targets and publish them on various platforms.
 
 .. note::
    Please be aware that a lot of steps are already covered by our `GitLab CI process <continuous-integration.html#gitlab>`__.
@@ -23,14 +22,16 @@ Python Package Index (PyPI)
 
 |br|
 
-Building and pushing NEST Desktop on `PyPI <https://pypi.org/project/nest-desktop/>`__ is a required step for the production.
+Building and pushing NEST Desktop on `PyPI <https://pypi.org/project/nest-desktop/>`__ is a required step for the
+production.
 After that, Docker Hub can upgrade NEST Desktop in the provided Docker image.
 
 Requirements
   - setuptools, wheel, twine
 
 
-The Python Package Index **nest-desktop** includes an executive command ``nest-desktop`` and a Python library ``nest_desktop``.
+The Python Package Index **nest-desktop** includes an executive command ``nest-desktop`` and a Python library
+``nest_desktop``.
 
 Build
 ^^^^^
@@ -89,9 +90,9 @@ Do not forget to commit the changes you made and set a new version tag in git.
 Conda
 -----
 
-We have a conda-smithy `repository for nest-desktop <https://github.com/conda-forge/nest-desktop-feedstock>`__.
-When a new Python package is released, we can change the version in ``meta.yaml``
-(|see| the meta content `online <https://github.com/conda-forge/nest-desktop-feedstock/blob/main/recipe/meta.yaml>`__):
+We have a conda-smithy `repository for nest-desktop <https://github.com/nest-desktop/nest-desktop-conda>`__.
+When a new Python package is released, we can change the version in ``meta.yaml`` (|see| the meta content `online
+<https://github.com/nest-desktop/nest-desktop-conda/blob/main/recipe/meta.yaml>`__):
 
 .. code-block::
 
@@ -117,3 +118,9 @@ To try Snap on a local machine, you can use this command:
 .. code-block:: bash
 
    snap install ./dist_electron/nest-desktop_x.y.z.snap --dangerous
+
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
+   :height: 17.6px
+   :target: #

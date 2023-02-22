@@ -60,5 +60,5 @@ How can I change the colorscale of dots?
 How can I change the size of dots?
    In the animation controller you can find a slider to adjust the dot size.
 
-I cannot find  the "trailing" effect box for dots in the activity controller?
+I cannot find the "trailing" effect box for dots in the activity controller?
    It only works with the animation of the spikes.

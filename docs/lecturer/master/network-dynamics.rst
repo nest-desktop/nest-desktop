@@ -176,3 +176,9 @@ Video tutorial
 
 .. raw:: html
    :file: ../templates/iframe-network-dynamics.html
+
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
+   :height: 17.6px
+   :target: #

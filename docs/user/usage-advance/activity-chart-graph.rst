@@ -4,7 +4,8 @@ Activity chart graph
 The chart graph contains graphical panels organized in vertical stacks.
 Chart panels are introduced specifically to explore the network activity by mouse interaction.
 The simulation produces two different types of data sets:
-Spike events (recorded by :bdg:`spike recorder`) contain times and sender ids whereas analog signals contain continuous quantities from the recording devices (:bdg:`voltmeter` or :bdg:`multimeter`).
+Spike events (recorded by :bdg:`spike recorder`) contain times and sender ids whereas analog signals contain continuous
+quantities from the recording devices (:bdg:`voltmeter` or :bdg:`multimeter`).
 
 .. seeAlso::
    :ref:`Use controller for activity graph<controller-sidebar-activity-chart-controller>`
@@ -28,7 +29,8 @@ By default, it displays a line trace of the membrane potential.
    :align: left
    :target: #chart-line-analog-signals
 
-With noise input (:bdg:`noise generator`), it shows noise behavior (fluctuation) of membrane potentials and histogram of distributed values.
+With noise input (:bdg:`noise generator`), it shows noise behavior (fluctuation) of the membrane potentials and
+histogram of distributed values.
 
 |br|
 
@@ -49,7 +51,8 @@ By default, it displays a raster plot of the spike times as well as a time histo
    :align: left
    :target: #chart-scatter-plot-spike-activity
 
-It displays a value histogram of the inter-spike intervals (ISI) as well as of the coefficients of variation  of the ISI (CV of ISI) for the population.
+It displays a value histogram of the inter-spike intervals (ISI) as well as of the coefficients of variation of the ISI
+(CV of ISI) for the population.
 
 |br|
 
@@ -57,7 +60,8 @@ It displays a value histogram of the inter-spike intervals (ISI) as well as of t
    :align: left
    :target: #chart-scatter-plot-spike-activity
 
-It displays spike count, average Inter-spike interval (ISI) and coefficient of variation (CV of ISI) for each sender, e.g. neuron.
+It displays spike count, average Inter-spike interval (ISI) and coefficient of variation (CV of ISI) for each sender,
+e.g. neuron.
 
 
 .. |chart-line| image:: /_static/img/icons/chart-bell-curve-cumulative.svg

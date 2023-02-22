@@ -36,3 +36,9 @@ NEST error
 NEST Simulator produces a value error, e.g. ``The value must be strictly negative.``.
 Please have a look at the official :doc:`NEST documentation <nest-simulator:index>`
 to obtain the correct syntax for the commands.
+
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
+   :height: 17.6px
+   :target: #

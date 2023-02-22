@@ -3,8 +3,7 @@ Coding conventions
 
 Coding conventions help to generate good code.
 Therefore, we use some recommendations regarding the coding style.
-Most of them follow the conventions used by Git, Linux
-and `other projects <https://namingconvention.org/git/>`__.
+Most of them follow the conventions used by Git, Linux and `other projects <https://namingconvention.org/git/>`__.
 Some more central ones will be mentioned in the following.
 
 .. _general-coding-conventions:
@@ -76,3 +75,9 @@ Sphinx conventions
   except programming expressions like class names, proper names, etc. \
   We also recommend the Python documentation conventions, as suggested in `the official documentation
   <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#sections>`__ .
+
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
+   :height: 17.6px
+   :target: #
