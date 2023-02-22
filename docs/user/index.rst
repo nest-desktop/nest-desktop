@@ -2,7 +2,7 @@
 |user| User guide
 =================
 
-The user guide provides detailed documentation for the GUI of NEST Desktop.
+The user guide provides detailed documentation of the GUI of NEST Desktop.
 
 
 How to use NEST Desktop

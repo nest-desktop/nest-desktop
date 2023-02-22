@@ -9,4 +9,4 @@ AppImage |linux|
 You can download an AppImage from the `releases page <https://github.com/nest-desktop/nest-desktop-AppImage/releases>`__.
 
 .. note::
-   Start API Server of NEST Simulator manually before you open NEST Desktop.
+   Start the API Server of NEST Simulator manually before you open NEST Desktop.

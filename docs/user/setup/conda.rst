@@ -9,15 +9,15 @@ Conda |linux| |windows| |apple|
 Anaconda provides packages for `NEST Desktop <https://anaconda.org/conda-forge/nest-desktop>`__.
 and `NEST Simulator <https://anaconda.org/conda-forge/nest-simulator>`__.
 These packages can be installed with Conda.
-We highly recommend installing NEST 3.
-With NEST 3, the API server (i.e., NEST Server) is already implemented.
+We highly recommend installing at least version 3 of NEST.
+Since NEST 3, the API server (i.e., NEST Server) is already implemented.
 
 |br|
 
 Install with Conda
 ------------------
 
-1. Create Conda environment called :bdg:`nest3` and install NEST Simulator:
+1. Create a Conda environment called :bdg:`nest3` and install NEST Simulator:
 
    .. code-block:: bash
 

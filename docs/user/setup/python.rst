@@ -50,7 +50,7 @@ NEST Desktop
 
       pip3 install nest-desktop [--user] [--upgrade]
 
-   For more information read the complete installing guide :doc:`here </user/setup/index>`.
+   For more information, please read the complete installing guide :doc:`here </user/setup/index>`.
 
 2. Start NEST Desktop (in another terminal session):
 

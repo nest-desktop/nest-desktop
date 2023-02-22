@@ -45,7 +45,7 @@ It is possible to edit the :bdg:`simulation resolution`.
    freezes and lags, so please be patient when you choose a small number.
 
 The :bdg:`seed of the random number generator` can also be modified.
-The same seed produces same simulation output.
+The same seed produces the same simulation output.
 
 It is possible to activate randomized seed that it generates new seed before each simulation.
 
@@ -64,18 +64,20 @@ Code editor
 
 NEST Desktop generates textual code from the constructed network.
 The generated code can be executed in any Python interpreter.
-This way, the code semantics of the NEST Simulator is understandable and easily to learn.
+This way, the code semantics of the NEST Simulator is understandable and easy to learn.
 
-The scripted code starts with importing required modules :bdg:`import ...` and reset the simulation kernel :bdg:`nest.ResetKernel()`.
-It is necessary, because it removes old set of previous simulation.).
+The script code starts with importing required modules (``import ...``) and resetting the simulation kernel (``nest.ResetKernel()``).
+It is necessary, because the old settings/imports of previous simulations have to be removed.
+Otherwise, errors may occur, e.g. with duplicate imports.
 
-The simulation kernel can be configured by :bdg:`nestSetKernelStatus(...)`.
+The simulation kernel can be configured by ``nestSetKernelStatus(...)``.
 
-The graphical representatives of the nodes deliver arguments to the block of the :bdg:`nest.Create(...)` function.
+The graphical representatives of the nodes deliver arguments to the block of the ``nest.Create(...)`` function.
 
-Next, connections supply a specification for the block of the :bdg:`nest.Connect(...)` function.
+Furthermore, the properties of connections are integrated
+in the block of the ``nest.Connect(...)`` function.
 
-The function :bdg:`nest.Simulate(...)` triggers the simulation of your constructed network.
+The function ``nest.Simulate(...)`` triggers the simulation of your constructed network.
 
 All recording nodes fill a block to collect activities containing neuronal properties,
 e.g. node ids and positions, and activity events.
@@ -91,7 +93,8 @@ Activity controller
    :align: left
    :target: #activity-controller
 
-The activity controller displays different content depending on the visualization mode (:bdg:`abstract` or :bdg:`spatial`) of the activity graph.
+The activity controller displays different content depending on the visualization mode
+(:bdg:`abstract` or :bdg:`spatial`) of the activity graph.
 
 
 |br|
@@ -114,11 +117,13 @@ Analog signals
    :align: right
    :target: #activity-controller
 
-By default it shows traces of the analog signals as a function of time. A panel with a histogram of values can be added when you select it in the :bdg-dark-line:`+ ADD PANEL` dropdown menu.
+By default, NEST Desktop shows traces of the analog signals as a function of time.
+A panel with a histogram of values can be added when you select it in the :bdg-dark-line:`+ ADD PANEL` dropdown menu.
 
 When something doesn't work properly, you can reset the panels to default by clicking on :bdg-dark-line:`RESET`.
 
-You can add more recorded signals to the panel when it comes from multimeter. Node records appear as chips in the cards, which allow you to change the colors of the corresponding traces and bars.
+You can add more recorded signals to the panel when it comes from multimeter.
+Node records appear as chips in the cards, which allow you to change the colors of the corresponding traces and bars.
 
 |br|
 
@@ -142,13 +147,19 @@ Activity animation controller
    :align: right
    :target: #activity-controller
 
-Animated graph displays activity (analog signals or spikes) for the spatial network forming layers in topology whose neurons have geographical positions.
+The animated graph displays activity (analog signals or spikes) for the spatial network
+forming layers in topology whose neurons have geographical positions.
 
-Values of the analog signals can be visualized using the colors of recorded targets. Here, it shows the color map :bdg:`spectral` for the value scales (from :bdg:`min` to :bdg:`max`). You can change the color map in the dropdown menu between the input fields of the min and max values.
+Values of the analog signals can be visualized using the colors of recorded targets.
+Here, it shows the color map :bdg:`spectral` for the value scales (from :bdg:`min` to :bdg:`max`).
+You can change the color map in the dropdown menu between the input fields
+of the :bdg:`min` and :bdg:`max` values.
 
 Additionally, an other geometry model (:bdg:`box` or :bdg:`sphere`) can be chosen.
 
-We recommend trying out many different options for the animation graph to find the best representation, as the optimal ones depend heavily on the simulation data and the intended use of the visualization.
+We recommend to try out many different options for the animation graph
+to find the best representation, as the optimal ones depend heavily
+on the simulation data and the intended use of the visualization.
 
 |br|
 
@@ -162,11 +173,12 @@ Activity statistics
    :target: #activity-statistics
 
 It displays multiple panels for each recording device.
-In each panel a table shows activity statistics of recorded elements (rows) of a node (population).
+In each panel a table shows the activity statistics of recorded elements (rows)
+of a node (population).
 
 In spike events, the columns show the spike counts, mean and
 standard deviation of :math:`ISI` (inter-spike interval)
-as well as :math:`CV_{ISI}` (Coefficient of variation in inter-spike interval).
+as well as :math:`CV_{ISI}` (coefficient of variation in inter-spike intervals).
 
 In analog signals (e.g. membrane potentials), the columns show the mean
 and standard deviation of the values.

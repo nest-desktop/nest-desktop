@@ -19,15 +19,15 @@ How can I drag/zoom the chart?
 How can I reset the view to the default one?
    Click on the house icon in the mode bar (top) to reset the view to the default one.
 
-How can I download plot of the chart?
+How can I download a plot of the chart?
    Click on the photo icon (top) to download the plot of the chart.
    You can choose which format will be used.
 
-Where can I find activity controller?
+Where can I find the activity controller?
    You can find the activity controller by clicking on the `chart` icon on the right side.
 
 How can I modify the bin size of the PSTH?
-   In the chart controller you will find tick slider to modify the bin size.
+   In the chart controller you will find a tick slider to modify the bin size.
 
 How can I change the labeling of axes or the title?
    Click on the label of the axe or the title to change it.
@@ -41,10 +41,10 @@ How can I hide/show dots/lines?
 Activity animation graph
 ------------------------
 
-How can I rotate camera?
+How can I rotate the camera?
    Click and hold the (left) mouse button on the animation area and then move it around to rotate the camera.
 
-Where can I find activity controller?
+Where can I find the activity controller?
    You can find the activity controller by clicking on the `axes` icon on the right side.
 
 How can I stop an animation?
@@ -60,5 +60,5 @@ How can I change the colorscale of dots?
 How can I change the size of dots?
    In the animation controller you can find a slider to adjust the dot size.
 
-How can I add a "trailing" effect for dots?
+I cannot find  the "trailing" effect box for dots in the activity controller?
    It only works with the animation of the spikes.

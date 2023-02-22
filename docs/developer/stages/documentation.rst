@@ -3,14 +3,14 @@ User documentation
 
 We use reStructuredText for `Sphinx <https://www.sphinx-doc.org/en/master/>`__
 to generate the documentation locally and online on `Read the Docs <https://readthedocs.org/>`__.
-To learn more about the syntax, check out this quick reference.
+To learn more about the syntax, check out `this quick reference <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`__.
 Please have a look at the `coding conventions <coding-conventions.html>`__, too.
 
 Requirements
    - `Sphinx <https://www.sphinx-doc.org/en/master/>`__
    - `Material Design Theme for Sphinx <https://bashtage.github.io/sphinx-material/>`__
 
-Current working directory: ``nest-desktop/docs``.
+Use the working directory: ``nest-desktop/docs``.
 To install Sphinx and the Read the Docs theme via ``pip``:
 
 .. code-block:: bash
@@ -31,7 +31,7 @@ Build the documentation which your created with Sphinx in the ``docs`` folder of
 
    make clean; make html
 
-Start the python server to serve the documentation locally,
+Start the Python server to serve the documentation locally,
 i.e. available only on your personal machine.
 
 .. code-block:: bash
@@ -49,8 +49,8 @@ Publication: Push to ReadTheDocs
 
 The documentation files for the dev branch are automatically rebuilt (and updated)
 each time a push is made to the repository.
-The docs for other versions refers to the GitHub tags or branches.
-The latest tags is assigned to the latest release version.
+The docs for other versions refer to the GitHub tags or branches.
+The ``latest`` tag is assigned to the latest release version.
 
 |
 
@@ -70,4 +70,4 @@ Start the Apptainer container:
 
    apptainer shell doc-sphinx.sif
 
-Now you are in an Apptainer virtualization in which you can execute ``sphinx`` command.
+Now you are in an Apptainer virtualization in which you can execute the ``sphinx`` command.

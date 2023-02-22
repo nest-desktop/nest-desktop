@@ -4,14 +4,15 @@ Project
 =======
 
 How can I create a new project?
-   You find a button |new| in the project toolbar an item :bdg:`+ New Project` in the projects menu .
+   There are two ways: You find a button |new| in the project toolbar and
+   an item :bdg:`+ New Project` in the projects menu .
 
    .. seeAlso::
       - :ref:`Create new project in project toolbar <project-view-project-toolbar>`
       - :ref:`Create new project in projects menu <project-view-projects-menu>`
 
 How can I duplicate a project?
-   In the project menu you will find a button |duplicate| to clone project.
+   In the project menu you will find a button |duplicate| to clone a project.
 
    .. seeAlso::
       - :ref:`Duplicate project in the project list <project-view-project-list>`
@@ -31,14 +32,16 @@ How can I save projects?
       - :ref:`Save a project in the project list <project-view-project-list>`
 
 How can I delete projects?
-   You find a button |delete| in the project toolbar or a menu item |delete| in project menu to delete multiple projects.
+   You find a button |delete| in the project toolbar or
+   a menu item |delete| in the project menu to delete multiple projects.
 
    .. seeAlso::
       - :ref:`Delete multiple projects in the project toolbar <project-view-project-toolbar>`
       - :ref:`Delete a project in the project list <project-view-project-list>`
 
 How can I export projects?
-   You find a button |export| in the project toolbar or a menu item |export| in project menu to export projects to a file.
+   You find a button |export| in the project toolbar or
+   a menu item |export| in the project menu to export projects to a file.
 
    .. seeAlso::
       - :ref:`Export multiple projects in the project list <project-view-project-toolbar>`

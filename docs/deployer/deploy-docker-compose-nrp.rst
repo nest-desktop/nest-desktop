@@ -16,7 +16,7 @@ It allows to visualize activity of the live simulation.
 How to setup NEST Desktop and NRP
 ---------------------------------
 
-First download the configuration file of Docker Compose from Github:
+First, download the configuration file of Docker Compose from GitHub:
 
 .. code-block:: bash
 
@@ -28,7 +28,7 @@ Then start all services (`nest-desktop`, `insite-nest-module`, `insite-access-mo
 
    docker-compose up
 
-It takes few minutes to pull all five docker images and start all containers.
+It takes a few minutes to pull all five docker images and start all containers.
 
 .. seeAlso::
    - Be sure that NEST Desktop runs two backends: NEST Simulator and Insite Access Node.

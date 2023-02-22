@@ -13,7 +13,7 @@ in the web browser, which is distinct from the simulation engine running anywher
 on the student’s laptop or on a supercomputer.
 
 This architecture provides robustness against technological changes in the software stack
-and simplifies the deployment for process for students/autodidacts and for teachers.
+and simplifies the deployment process for students/autodidacts and for teachers.
 Our new open source tool, NEST Desktop [#f1]_, comprises graphical elements for creating
 and configuring network models, running simulations, as well as for visualizing and analyzing the results.
 NEST Desktop allows students to explore important concepts in computational neuroscience

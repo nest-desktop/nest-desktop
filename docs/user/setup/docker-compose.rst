@@ -53,7 +53,7 @@ Now NEST Desktop is started.
 You can use NEST Desktop in the web browser at http://localhost:54286.
 
 **The installation is now complete!**
-:doc:`Now we can start constructing networks for the simulation! </user/usage-basic/index>`
+:doc:`Now you can start constructing networks for the simulation! </user/usage-basic/index>`
 
 .. seeAlso::
    For more information (like running the containers without root password, etc.),

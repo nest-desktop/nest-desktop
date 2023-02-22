@@ -7,19 +7,20 @@ How can I start a simulation?
    Click on the :bdg:`SIMULATE` button in top right of the page to start the simulation.
 
 How can I stop a simulation?
-   Unfortunately, the option to stop simulation is not implemented.
+   Unfortunately, the option to stop/cancel a simulation is not implemented in NEST Simulator
+   and therefore not supported by NEST Desktop.
 
 How can I activate "simulation after change"?
-   In the menu of the :bdg:`SIMULATE` button (by clicking it on caret at the right side)
+   In the menu of the :bdg:`SIMULATE` button (by clicking on its caret at the right side)
    you will find an option to activate :bdg:`simulation after change`.
 
 How can I activate "simulation after load"?
-   In the menu of the :bdg:`SIMULATE` button (by clicking it on caret at the right side)
+   In the menu of the :bdg:`SIMULATE` button (by clicking on its caret at the right side)
    you will find an option to activate :bdg:`simulation after load`.
 
 How can I activate "simulation after checkout"?
    When you go to another network version of the history, it automatically starts the simulation.
-   In the menu of the :bdg:`SIMULATE` button (by clicking it on caret at the right side)
+   In the menu of the :bdg:`SIMULATE` button (by clicking on its caret at the right side)
    you will find an option to activate :bdg:`simulation after checkout`.
 
 Where can I find the kernel controller of the simulation?

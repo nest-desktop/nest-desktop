@@ -1,11 +1,11 @@
-Copy model
-==========
+Copy models
+===========
 
 
-NEST Simulator provides a function to copy model with a set of parameters.
-The :bdg:`nest.CopyModel()` function is useful when multiple population
-or synapses are created with same set of parameters.
-See the code comparison with and without this function:
+NEST Simulator provides a function to copy a model together with its set of parameters.
+The ``nest.CopyModel()`` function is useful when multiple populations
+or synapses should be created with the same set of parameters.
+This simplifies the work a lot, as you can see in the example below:
 
 .. list-table::
    :widths: 50 50
@@ -69,14 +69,15 @@ See the code comparison with and without this function:
 
 .. _copy-model-steps-how-to-copy-model:
 
-Steps how to copy model
------------------------
+How to copy models - step by step
+---------------------------------
 
 .. image:: /_static/img/screenshots/controller/copy-model-step1.png
    :align: right
    :target: #
 
-Click on :bdg:`MODEL` tab in the network controller and then select a model to copy.
+Click on the :bdg:`MODEL` tab in the network controller and then select a model to copy.
+Then confirm with a click on :bdg:`COPY`.
 
 |br|
 
@@ -84,7 +85,9 @@ Click on :bdg:`MODEL` tab in the network controller and then select a model to c
    :align: right
    :target: #
 
-Enter name of the new model and modified selected parameters.
+Enter the name of the new model. If you like to have other model parameters than
+the default one, just click on the model title and select the parameters you want to change.
+This opens the sliders and fields to edit their values.
 
 |br|
 
@@ -92,9 +95,9 @@ Enter name of the new model and modified selected parameters.
    :align: right
    :target: #
 
-Choose copied node model in nodes.
+Choose the copied node model for your node (e.g. in the nodes list).
 
 |br|
 
 .. note::
-   Copied synapse models can also be applied for synapses.
+   Copied synapse models can also be applied for synapses (analogously as above).

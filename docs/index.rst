@@ -21,7 +21,7 @@ It's so great that you want to use NEST Desktop!
 Conceptual approach
 -------------------
 
-NEST Desktop enables to graphically construct a neuronal network model and the simulation experiment to be performed.
+NEST Desktop enables to construct a neuronal network model graphically and to perform a simulation experiment.
 Thus, no programming skills are required.
 
 .. image:: /_static/img/edited/conceptual-approach.png
@@ -67,7 +67,7 @@ Please keep this in mind when searching for information on a specific version of
 :Anaconda: |anaconda-version| |anaconda-downloads|
 
 .. |docs| image:: https://img.shields.io/readthedocs/nest-desktop
-   :alt: Documentation Status
+   :alt: Documentation status
    :target: https://nest-desktop.readthedocs.io
 
 .. |license| image:: https://img.shields.io/github/license/nest-desktop/nest-desktop

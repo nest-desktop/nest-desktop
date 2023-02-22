@@ -64,4 +64,4 @@ You can use NEST Desktop in the web browser at http://localhost:54286.
 For more information read the full documentation of `NEST Desktop Apptainer <https://github.com/nest-desktop/nest-desktop-apptainer>`__.
 
 .. warning::
-   If the apptainer (esp. NEST Simulator) is running, your system is exposed for unauthorized access.
+   If the apptainer (esp. NEST Simulator) is running, your system is exposed for unauthorized access!

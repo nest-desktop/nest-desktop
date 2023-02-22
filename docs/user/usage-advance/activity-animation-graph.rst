@@ -1,7 +1,7 @@
 |axis-arrow| Activity animation graph
 =====================================
 
-It displays animated 3D graph for the spatial network
+It displays an animated 3D graph for the spatial network
 forming layers in topology whose neurons have geographical positions.
 
 .. seeAlso::
@@ -23,7 +23,7 @@ whose neurons have geographical positions.
 
 Each box represents a neuron in its geographical position.
 Values of the analog signals can be visualized using the colors of recorded event
-(Here, it shows the color map :bdg:`spectral`).
+(here, it shows the color map :bdg:`spectral`).
 
 |br|
 
@@ -38,8 +38,8 @@ Spike activity
 
 Spike events contain times and ids of the senders collected by the :bdg:`spike recorder`.
 
-Spikes can be visualized as transient blobs appearing in the 3D animated graph.
-To follow spike activity better, the trail length can be increased.
+Spikes can be visualized as transient blobs appearing in the animated 3D graph.
+To follow the spike activity better, the trail length can be increased.
 
 Optionally, trails can be faded after the spike time,
 and a growing or shrinking mode can also be applied.

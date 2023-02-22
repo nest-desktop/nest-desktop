@@ -98,7 +98,7 @@ When a new Python package is released, we can change the version in ``meta.yaml`
    {% set version = "3.1.4" %}
 
 .. note::
-   It is also important to change ``sha256`` of the source of ``tar.gz`` file.
+   It is also important to change the ``sha256`` checksum of the source of ``tar.gz`` file.
 
 Then make a pull request on the base branch of this repository.
 
@@ -112,7 +112,7 @@ Electron and Snap
 In ``package.json``, there are also yarn commands configured to build an Electron app.
 If you want to build a Snap package, please have a look into ``.gitlab-ci.yml``.
 
-To try snap on local machine, you can use this command:
+To try Snap on a local machine, you can use this command:
 
 .. code-block:: bash
 
