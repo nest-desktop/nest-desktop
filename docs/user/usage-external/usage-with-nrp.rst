@@ -1,22 +1,22 @@
-Use with NRP
-============
+Use NESET Destkop with NRP
+==========================
 
 .. image:: /_static/img/gif/external-nrp.gif
    :align: left
    :alt: NRP
    :target: #
 
-This is a guide to show how to use NEST Desktop with NRP (Neuro-Robotic Plattform).
+This is a guide to show how to use NEST Desktop with NRP (Neuro-Robotic Platform).
 
-NRP provides users to perform virtual experiments on virtual objects
-(e.g. robots, robotic arm) or on virtual animals (e.g. rats).
+The NRP enables users to perform virtual experiments on virtual objects
+(e.g. robots, robotic arms) or on virtual animals (e.g. rats).
 
 In our case we use NRP to learn neuronal activity dynamics of the "robot brain"
 according to a thought experiment by the cyberneticist
-`Valentino Braitenberg <https://en.wikipedia.org/wiki/Braitenberg_vehicle>`__.
+`Valentino Braitenberg <https://en.wikipedia.org/wiki/Valentino_Braitenberg>`__.
 
-His thought experiment demonstrated a simple concept of the brain interacting with the environment.
-The simplest concept of the Braitenberg vehicle shows direct connections of two sensors to two individual wheels.
+His thought experiment demonstrated a simple concept of the brain interacting with the environment with a simple machine.
+The simplest concept of this so-called `Braitenberg vehicle <https://en.wikipedia.org/wiki/Braitenberg_vehicle>` shows direct connections from two sensors to two individual wheels.
 This implies, that the signal strength controls the rotation speed of the wheel.
 
 |br|
@@ -28,17 +28,18 @@ This implies, that the signal strength controls the rotation speed of the wheel.
 |
 
 In our experiment, our robot ("Husky") acts similar to the Braitenberg vehicle.
-Additionally to the basic setup in "Husky", we implanted a 'robot brain'
+Additionally to the basic setup in "Husky", we implanted a "robot brain"
 receiving electrical signals from the sensors, processing them
-and transferring signals to motors/engine.
+and transferring signals to motors/engines.
 In summary, the robot brain controls the movement and thus our robot "Husky" is able to react to the environment.
 
-In NRP experiment, we see our robot "Husky" and two monitors showing a screen color,
+In the NRP experiment, we see our robot "Husky" and two monitors showing a screen color,
 e.g. blue, red, green.
 The user can change the screen color.
-During the live experiment, the Husky rotates itself in a non-attractive situation
+During the live experiment, the Husky rotates itself during a non-attractive situation
 (blue and green screen).
-When one of these monitors is red, the Husky moves towards to it.
+However, when one of these monitors shows an attracting color (red)
+and the camera sees it, the Husky moves towards to it.
 
 In NEST Desktop we can observe the spike activities of the "Husky brain".
 
@@ -46,25 +47,25 @@ In NEST Desktop we can observe the spike activities of the "Husky brain".
 
 .. _usage-with-nrp-how-to-perform-simulation-with-nrp-and-nest-desktop:
 
-How to perform simulation with NRP and NEST Desktop
----------------------------------------------------
+How to perform a simulation with NRP and NEST Desktop
+-----------------------------------------------------
 
 .. seeAlso::
    - :doc:`/deployer/deploy-docker-compose-nrp`.
 
-First, open two Browser windows/tabs, one for NEST Desktop and another for NRP.
-You can place two windows side-by-side to see both.
+First, open two browser windows/tabs, one for NEST Desktop and another for the NRP page.
+You can place two windows side-by-side to see both at the same time.
 
-In NEST Desktop import project 'Husky experiment' (from GitHub).
+In NEST Desktop import the project "Husky experiment" (from GitHub).
 Investigate the network and prepare the simulation.
 
-In NRP you have to clone and launch Husky experiment.
-Then in virtual environment you can start the experiment.
-Here, you can see the Husky is rotating itself.
+In the NRP you have to clone and launch the Husky experiment.
+Then, you can start the experiment in the virtual environment .
+Here, you can see that the robot with the "Husky" network (the "Husky") is rotating.
 Now, switch the screen color of a monitor to red.
-Watch until the Husky moves toward the red screen.
+Watch until the "Husky" moves toward the red screen.
 
-Observe the spike activity in NEST Desktop which are recorded to Insite.
+Observe the spike activity in NEST Desktop (recorded by Insite).
 
 .. seeAlso::
    For this approach, we need to run the simulation with Insite as recording backend.
@@ -76,9 +77,9 @@ Observe the spike activity in NEST Desktop which are recorded to Insite.
 Acknowledgements
 ----------------
 
-Thanks for collaboration of NRP and NEST Desktop:
+Thanks for the collaboration on NRP and NEST Desktop:
 
-- Viktor Vorobev (Collaboration of NRP and NEST Desktop)
+- Viktor Vorobev (Collaboration on NRP and NEST Desktop)
 - Marcel Krüger (Insite as recording backend)
 - Fabrice Morin (Contact person of NRP)
 - Jochen M. Eppler (NEST Server MPI)

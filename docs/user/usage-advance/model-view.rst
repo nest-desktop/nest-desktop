@@ -70,7 +70,7 @@ Model toolbar
 .. image:: /_static/img/screenshots/model/model-toolbar.png
    :target: #model-toolbar
 
-Top of navigation sidebar, you see a toolbar containing buttons
+At the top of the navigation sidebar, you see a toolbar containing buttons
 to reload (|reload|), export (|export|), import (|import|), delete (|delete-models|) or reset (|reset|) multiple models.
 
 |br|
@@ -81,7 +81,7 @@ Model List
 ^^^^^^^^^^
 
 Above the model list you will find a search field and tags
-which you can use to filter models in the list.
+which you can use to filter the models in the list.
 Selected filter tags appear as chips under the search field.
 
 In order to select a tag you need to click on the `filter` icon left to the search field.
@@ -96,7 +96,7 @@ Import models
 *************
 
 Go to the model view and find your desired synapse model.
-Next, click on icon |vertical-dots|, then select a menu item |import| :bdg:`import` to import it from GitHub.
+Next, click on the icon |vertical-dots|, then select a menu item |import| :bdg:`import` to import it from GitHub.
 
 |br|
 
@@ -116,7 +116,7 @@ Installed:
    Show models which are installed in NEST Desktop
 
 GitHub:
-   Show models which are provided in `an own GitHub repository <https://github.com/nest-desktop/nest-desktop-models>`__.
+   Show models which are provided in `an own GitHub repository <https://github.com/nest-desktop/nest-desktop-models>`__
 
 Neuron/stimulator/recorder/synapse:
    Show models of the selected element type
@@ -140,7 +140,7 @@ Model documentation
 .. image:: /_static/img/screenshots/model/model-doc.png
    :target: #model-documentation
 
-It shows official user documentation of a selected model which also can be found on http://nest-simulator.readthedocs.io/en/latest/models/.
+It shows the official user documentation of a selected model which also can be found on http://nest-simulator.readthedocs.io/en/latest/models/.
 
 |
 
@@ -152,7 +152,7 @@ Model explorer
 .. image:: /_static/img/screenshots/model/model-explorer.png
    :target: #model-explorer
 
-You can explore the activity dynamics of only **neuron** models.
+You can explore the activity dynamics of **neuron** models only.
 
 .. image:: /_static/img/screenshots/model/model-explorer-projects.png
    :target: #model-explorer
@@ -165,7 +165,7 @@ Then start the simulation by clicking on the :bdg:`SIMULATE` button.
 You can use the code editor to see changes in activity.
 
 .. note::
-   It is important to disable the Insite for the simulation.
+   It is important to disable the Insite pipeline for the simulation (in the settings).
 
 
 |br|

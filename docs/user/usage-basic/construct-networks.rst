@@ -2,7 +2,7 @@ Construct networks
 ==================
 
 If you want to construct a network, you will have to open the network editor.
-The network editor shows the network graph composing of nodes (shapes) and connections (lines).
+The network editor shows the network graph composed of nodes (shapes) and connections (lines).
 
 .. image:: /_static/img/screenshots/network/network-editor.png
    :target: #construct-networks

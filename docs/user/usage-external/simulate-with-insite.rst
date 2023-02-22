@@ -9,13 +9,13 @@ Simulate with Insite
 
 This is a guide to show how to use NEST Desktop with Insite.
 
-Insite is a recording backend module which is also integrated in NEST Simulator.
-Basically, with Insite neuronal or network activity can be observed during the simulation.
+Insite is a recording backend module which is also usable with NEST Simulator.
+Basically, with Insite, neuronal or network activity can be observed during the simulation.
 
 |br|
 
 .. note::
-   Simulation with Insite needs to be run with Insite docker images
+   Simulations  with Insite need to be run with the Insite docker images
    :bdg:`nest-module` and :bdg:`access-node`.
    The best method is to use Docker Compose, which also deploys NEST Desktop and Insite.
    For more information, please read the :doc:`deployment guide of Insite </deployer/deploy-docker-compose-insite>`.
@@ -45,9 +45,9 @@ Enable simulation with Insite
    :align: right
    :target: #simulate-with-insite-enable-simulation-with-insite
 
-After successfully receiving a ping from the Insite Access node of the backend,
+After successfully receiving a ping from the Insite access node of the backend,
 you can activate the button :bdg:`Insite` (second from left) in the toolbar of the code editor.
-It generates code with Insite implementation.
+Then, NEST Desktop generates the script such that Insite is used during the simulation.
 
 |br|
 
@@ -56,8 +56,8 @@ It generates code with Insite implementation.
 Script code for simulation with Insite
 --------------------------------------
 
-The Insite module has to be loaded in the NEST kernel.
-Preferentially load the :bdg:`insitemodule` after importing NEST:
+The Insite module has to be loaded into the NEST kernel.
+Preferentially load the ``insitemodule`` after importing NEST:
 
 .. code-block:: python
 
@@ -65,7 +65,7 @@ Preferentially load the :bdg:`insitemodule` after importing NEST:
 
 
 Next, check wether the parameter :bdg:`record_to` of any recording device
-(e.g. :bdg:`spike recorder`, :bdg:`multimeter` or :bdg:`voltmeter`) has to been modified:
+(e.g. ``spike recorder``, ``multimeter`` or ``voltmeter``) has to be modified:
 
 .. code-block:: python
 
@@ -74,8 +74,8 @@ Next, check wether the parameter :bdg:`record_to` of any recording device
    ...
 
 
-Now, the Insite recording module collects activity events from the recording devices.
-The client receives activity from the Insite Access Node on another port (default: ``52056``).
+Now, the Insite recording module collects activity events from the recording devices in the NEST Simulator.
+NEST Desktop receives activity from the Insite access node on another port (default: ``52056``).
 
 .. seeAlso::
    For more information about Insite, please visit the official
@@ -89,4 +89,4 @@ Acknowledgements
 Thanks for integrating Insite in NEST Simulator and NEST Desktop:
 
 - Simon Oehrl (Conceptual design for Insitufication in NEST Desktop)
-- Marcel Krüger (Collaboration of Insitufication in NEST Desktop)
+- Marcel Krüger (Collaboration on Insitufication in NEST Desktop)

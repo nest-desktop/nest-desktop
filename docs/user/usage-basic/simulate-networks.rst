@@ -6,4 +6,4 @@ Simulate networks
    :target: #simulate-networks
 
 You can click on the :bdg:`SIMULATE` button to start the simulation of your network.
-In the code editor you can have an insight into the generated script code.
+In the code editor you can inspect the generated script code.

@@ -2,7 +2,7 @@
 Basic Usage Guide
 =================
 
-It is a basic usage guides for the Graphical User Interface (GUI) of NEST Desktop.
+This is a basic usage guide for the Graphical User Interface (GUI) of NEST Desktop.
 
 .. note::
    If you want to see a quick start guide for in NEST Desktop,

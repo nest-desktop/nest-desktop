@@ -1,8 +1,8 @@
 Synapse model
 =============
 
-NEST Desktop is able to apply synapse models in the connections between neurons.
-Here, we show steps how to observe neuronal activity in aspect of short-term plasticity and how to measure synaptic weights.
+NEST Desktop is able to apply synapse models to the connections between neurons.
+Here, we show the steps how to observe neuronal activity in aspect of short-term plasticity and how to measure synaptic weights.
 
 .. _synapse-model-import-synapse-model:
 
@@ -25,8 +25,8 @@ Connect neurons with non-static synapse
    :align: right
    :target: #connect-neurons-with-non-static-synapse
 
-After you initially build the neurons with their connections, you can select another synapse model (Here: :bdg:`Tsodyks synapse`).
-Configure the parameter values for facilitating or depressing synapse.
+After you have initially built the neurons with their connections, you can select another synapse model (Here: :bdg:`Tsodyks synapse`).
+Configure the parameter values for facilitating or depressing the synapse.
 
 |br|
 
@@ -40,7 +40,7 @@ Observe effects of short-term synapses
    :height: 450px
    :target: #observe-effects-of-short-term-synapses
 
-After the simulation you might register changes of PSP of neurons receiving spike inputs from other neuron via non-static synapses.
+After the simulation you might register changes of PSP of neurons receiving spike inputs from other neurons via non-static synapses.
 
 |br|
 
@@ -53,15 +53,15 @@ Measure synaptic weights
    :align: right
    :target: #measure-synaptic-weights
 
-Weight recorder is not a typical recorder like others.
-It can only assigned to a synapse model to measure its weight.
+A weight recorder is not a typical recorder like others.
+It can only be assigned to a synapse model to measure its weight.
 
 First, import :bdg:`WEIGHT RECORDER` from GitHub.
-You need to copy synapse model whose weight should be recorded.
-Select copied synapse model for a connection between neurons.
+You need to copy the synapse model whose weight should be recorded.
+Select the copied synapse model for an existing connection between neurons.
 
-Create a node with :bdg:`WEIGHT RECORDER` and connect to a connection
-(Use target connection instead of target node).
+Create a node with :bdg:`WEIGHT RECORDER` and connect it to a connection
+(use the connection as the target instead of a node).
 You can see in the copied synapse model that it is assigned to :bdg:`WEIGHT RECORDER`.
 
 .. image:: /_static/img/screenshots/synapse/weight-recorder-graph.png

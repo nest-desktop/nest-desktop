@@ -1,5 +1,5 @@
-Use with ViSimpl
-================
+Use NEST Desktop with ViSimpl
+=============================
 
 .. image:: /_static/img/gif/external-visimpl.gif
    :align: left
@@ -22,13 +22,13 @@ It displays spike activity in space and can be co-used with NEST Desktop.
 Preparation
 -----------
 
-First, download configuration file of Docker Compose for NEST Desktop and Insite.
+First, download the Docker Compose configuration file for NEST Desktop and Insite.
 
 .. code-block:: bash
 
    wget https://raw.githubusercontent.com/nest-desktop/nest-desktop-docker/main/examples/insite/docker-compose.yml
 
-Then, pull docker images using Docker Compose.
+Then, pull the docker images using Docker Compose.
 
 .. code-block:: bash
 
@@ -70,11 +70,11 @@ How to use NEST Desktop with ViSimpl
 **Steps**
 
 - In NEST Desktop, make sure that both backends (NEST Simulator and Insite) are running.
-- Run simulation of the network with Insite as recording backend.
-- In ViSimpl, click on :bdg:`REST` button to get data from the Insite (Check the correct URL).
+- Run the simulation of the network with Insite as recording backend.
+- In ViSimpl, click on the :bdg:`REST` button to get data from Insite (check that you use the correct URL).
 
 .. hint::
-   - Increase the :bdg:`Request size` to 10000 spikes in REST dialog that it collects spikes faster.
+   - Increase the :bdg:`Request size` to 10 000 spikes in the REST dialog that it collects spikes faster.
 
 - It shows spatial dots representing neurons and spikes are displayed in glowing mode.
 
@@ -87,8 +87,8 @@ How to use NEST Desktop with ViSimpl
 Acknowledgements
 ----------------
 
-Thanks for collaboration of ViSimpl and NEST Desktop:
+Thanks for the collaboration on ViSimpl and NEST Desktop:
 
-- Félix De Las Pozas Álvarez (Collaboration of ViSimpl and NEST Desktop)
+- Félix De Las Pozas Álvarez (Collaboration on ViSimpl and NEST Desktop)
 - Marcel Krüger (Insite as recording backend)
 - Óscar David Robles Sánchez (Lead developer of ViSimpl)
