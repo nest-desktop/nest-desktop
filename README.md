@@ -16,7 +16,7 @@
 | Python | [![Python version](https://img.shields.io/pypi/v/nest-desktop?label=Python&logo=python&logoColor=white)](https://pypi.org/project/nest-desktop/) [![Python downloads](https://img.shields.io/pypi/dm/nest-desktop)](https://pypi.org/project/nest-desktop/) |
 | Conda | [![Conda version](https://img.shields.io/conda/vn/conda-forge/nest-desktop?logo=conda-forge&logoColor=white)](https://anaconda.org/conda-forge/nest-desktop) [![Conda downloads total](https://img.shields.io/conda/dn/conda-forge/nest-desktop)](https://anaconda.org/conda-forge/nest-desktop) |
 | AppImage | [![Latest release](https://img.shields.io/github/release/nest-desktop/nest-desktop-appImage.svg?color=brightgreen&label=AppImage&logo=linux&logoColor=white)](https://github.com/nest-desktop/nest-desktop-appImage/releases) [![AppImage downloads total](https://img.shields.io/github/downloads/nest-desktop/nest-desktop-appImage/total)](https://anaconda.org/conda-forge/nest-desktop)
-| Snap | [![Snap version](https://snapcraft.io/nest-desktop/badge.svg)](https://snapcraft.io/nest-desktop) [![Snap trending](https://snapcraft.io/nest-desktop/trending.svg)](https://snapcraft.io/nest-desktop) |
+| Snap | [![Snap version](https://snapcraft.io/nest-desktop/badge.svg)](https://snapcraft.io/nest-desktop) [![Snap trending](https://snapcraft.io/nest-desktop/trending.svg?name=0)](https://snapcraft.io/nest-desktop) |
 
 
 ### Synopsis
