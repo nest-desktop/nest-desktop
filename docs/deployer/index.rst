@@ -1,65 +1,41 @@
-|deployer| How to deploy NEST Desktop
-=====================================
+=========================
+|deployer| Deployer guide
+=========================
 
 This guide provides detailed documentation on how to deploy NEST Desktop.
-You can read the deployment instructions by clicking one of these images below:
+You can read the deployment instructions by clicking one of these images below.
+
+
+Deploy NEST Desktop
+===================
 
 .. raw:: html
+   :file: ./templates/deploy-nest-desktop.html
 
-    <div class="container-fluid">
-      <div class="row" style="height:210px">
+.. toctree::
+   :hidden:
+   :maxdepth: 1
 
-        <div class="col">
-          <div class="card">
-            <img class="mx-auto py-3" src="../_static/img/logo/docker-compose-logo.png" style="height:135px">
-            <div class="card-body">
-              <a class="btn btn-primary btn-sm stretched-link" href="./deploy-docker-compose.html">
-                Docker Compose
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <img class="mx-auto py-3" src="../_static/img/logo/openshift-logo.png" style="height:135px">
-            <div class="card-body">
-              <p class="card-text">
-                <a class="btn btn-primary btn-sm stretched-link" href="./deploy-openshift.html">
-                  OpenShift
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <img class="mx-auto py-3" src="../_static/img/logo/openstack-logo.svg" style="height:135px">
-            <div class="card-body">
-              <a class="btn btn-primary btn-sm stretched-link" href="./deploy-openstack.html">
-                OpenStack
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-|
-
-||||
-
-Guides to deploy NEST Desktop
-  - :doc:`deploy-docker-compose`
-  - :doc:`deploy-insite`
-  - :doc:`deploy-openshift`
-  - :doc:`deploy-openstack`
+   deploy-docker-compose
+   deploy-openshift
+   deploy-openstack
 
 
+Deploy with external software
+=============================
 
-.. |deployer| image:: ../_static/img/icons/user-gear.svg
-  :width: 120px
-  :alt:
-  :align: top
+.. raw:: html
+   :file: ./templates/deploy-external-software.html
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   deploy-docker-compose-insite
+   deploy-docker-compose-nrp
+
+
+.. |deployer| image:: /_static/img/icons/user-gear.svg
+   :alt: Deployer
+   :height: 80px
+   :target: #

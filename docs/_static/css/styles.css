@@ -2,15 +2,20 @@ html {
   scroll-behavior: auto !important;
 }
 
-a {
-  color: #0a58ca;
+/* Undo bootstrap styles  */
+a,
+a:hover {
+  color: inherit;
   text-decoration: none;
 }
-a:not(.btn):hover {
-  text-decoration: underline;
+
+[data-md-color-primary='deep-orange'] .md-header {
+  background-color: #ff6633;
+  box-shadow: none;
 }
-a:not(.btn):visited {
-  color: #0a58ca;
+
+[data-md-color-primary='deep-orange'] .md-tabs {
+  display: none;
 }
 
 .iframe-container {
@@ -29,27 +34,33 @@ a:not(.btn):visited {
   width: 100%;
 }
 
-/* Sidebar header (and topbar for mobile) */
-.wy-nav-side {
-  background: #fff !important;
-  border-right: 1px rgba(0, 0, 0, 0.12) solid;
+.md-typeset table {
+  box-shadow: none !important;
 }
 
-.wy-menu ul {
+.md-typeset img.align-left {
+  clear: left;
+  float: left;
+  margin-right: 1em;
+}
+
+.md-typeset blockquote {
+  border-left: 0;
+  color: inherit;
   padding-left: 0;
 }
-.wy-menu a {
-  color: rgba(0, 0, 0, 0.87);
-  text-decoration: none !important;
-}
-.wy-menu a:visited {
-  color: rgba(0, 0, 0, 0.87);
-}
-.wy-menu .toctree-l1:not(.current):hover a {
-  color: white;
+
+.md-typeset h2[id]:before {
+  margin-top: -3.4rem;
+  padding-top: 3.4rem;
 }
 
-/* Date width in history page */
-#history dt {
-  width: 134px;
+.md-typeset h3[id]:before,
+.md-typeset h4[id]:before {
+  margin-top: -3.45rem;
+  padding-top: 3.45rem;
+}
+
+.md-main__inner {
+  padding-top: 0 !important;
 }
