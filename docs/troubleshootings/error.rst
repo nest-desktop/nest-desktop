@@ -11,7 +11,8 @@ It has two possible reasons:
 
 - NEST Server is not running. Try to (re-)start NEST Server.
 
-- Use simulation service (e.g. on EBRAINS): The user authorization to the backend might be not granted.
+- Use simulation service (e.g. on EBRAINS):
+  The user authorization to the backend might be not granted.
 
 .. hint::
    Check NEST Server is running (if the URL is ``localhost:52425``):
