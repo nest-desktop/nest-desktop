@@ -7,14 +7,14 @@ NEST Desktop cannot find the NEST Simulator.
 It has two possible reasons:
 
 - NEST Desktop has a wrong URL under which it tries to contact the server.
-  |see| the :doc:`FAQ for NEST Simulator </troubleshootings/nest-simulator>`.
+  (|see| the :doc:`FAQ for NEST Simulator </troubleshootings/nest-simulator>`.)
 
-- NEST Server is not running. Try to start NEST Server.
+- NEST Server is not running. Try to (re-)start NEST Server.
 
-- The user authorization to the backend is not granted.
+- Use simulation service (e.g. on EBRAINS): The user authorization to the backend might be not granted.
 
 .. hint::
-   Check NEST Simulator is running (if the URL is ``localhost:52425``):
+   Check NEST Server is running (if the URL is ``localhost:52425``):
 
    - in URL of Browser: ``http://localhost:52425``
    - in Terminal: ``curl http://localhost:52425``
