@@ -5,7 +5,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 // import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-import { nest } from './nest';
+import { nestServer } from './nest-server';
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -49,8 +49,8 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 
-  // Stop NEST Simulator after closing NEST Desktop.
-  nest.stop();
+  // Stop NEST Server after closing NEST Desktop.
+  nestServer.stop();
 });
 
 app.on('activate', () => {
@@ -63,8 +63,8 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  // Start NEST Simulator before NEST Desktop.
-  nest.start();
+  // Start NEST Server before NEST Desktop.
+  nestServer.start();
 
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
@@ -74,6 +74,7 @@ app.on('ready', async () => {
     //   console.error('Vue Devtools failed to install:', e.toString());
     // }
   }
+  
   createWindow();
 });
 

@@ -84,7 +84,7 @@ export class ActivityAnimationScene {
 
     this._renderer.setPixelRatio(window.devicePixelRatio);
     this.resize();
-    window.addEventListener('resize', this.resize);
+    window.addEventListener('resize', () => this.resize());
 
     // Append dom element in container.
     this._ref.appendChild(this._renderer.domElement);

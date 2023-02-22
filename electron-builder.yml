@@ -1,4 +1,4 @@
-appId: 'com.electron.nest.desktop'
+appId: 'com.electron.nest-desktop'
 deb:
   depends:
     - gconf2
