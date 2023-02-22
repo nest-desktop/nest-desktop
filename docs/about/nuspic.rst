@@ -7,6 +7,8 @@ nuSPIC
 
 Before NEST Desktop, there existed a soctware called nuSPIC, which targeted a similar goal as NEST Desktop:
 
+Before NEST Desktop, there existed a soctware called nuSPIC, which targeted a similar goal as NEST Desktop:
+
 .. image:: /_static/img/screenshots/nuspic.png
 
 nuSPIC is also a web interface working with NEST Simulator.
