@@ -116,7 +116,7 @@ export default Vue.extend({
           /(https?:\/\/\b)(www\.)?([-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b)(:\d{5,6}\b)?(\/[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?/;
         return (
           pattern.test(value) ||
-          'Invalid pattern. Please enter the correct URL (http://localhost:52056).'
+          'Invalid pattern. Please enter the correct URL (e.g.: http://localhost:52056).'
         );
       },
     ];
