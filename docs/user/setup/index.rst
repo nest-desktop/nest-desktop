@@ -17,16 +17,16 @@ This guide provides a detailed documentation on how to install and start both in
 
 |br|
 
-Docker (or Docker Compose) and Apptainer provide both NEST Desktop and NEST Simulator,
-so you have everything you need to run NEST Desktop and NEST Simulator.
+Docker (or Docker Compose) and Apptainer provide both NEST Desktop and NEST Simulator, so you have everything you need
+to run NEST Desktop and NEST Simulator.
 
 Alternatively, you can install NEST Desktop with the ``conda`` or ``pip`` command.
 
-You are able to download and start the NEST Desktop application,
-e.g. AppImage (without NEST Simulator) or Snap (with NEST Simulator) in Linux.
+You are able to download and start the NEST Desktop application, e.g. AppImage (without NEST Simulator) or Snap (with
+NEST Simulator) in Linux.
 
-If you only have NEST Desktop (i.e., NEST Simulator is not running as back-end),
-you can create networks but cannot run simulations within the application.
+If you only have NEST Desktop (i.e., NEST Simulator is not running as back-end), you can create networks but cannot run
+simulations within the application.
 In this case, you have to start NEST Server in terminal or with docker.
 
 .. seeAlso::
