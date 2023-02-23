@@ -2,7 +2,8 @@
 Setup Guide
 ===========
 
-This guide provides a detailed documentation on how to install and start both instances: NEST Desktop and NEST Simulator.
+This guide provides a detailed documentation on how to install and start both instances: NEST Desktop and NEST
+Simulator.
 
 .. note::
    To enable the full functionality of NEST Desktop, you also need to install NEST Simulator on your computer.
