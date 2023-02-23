@@ -61,7 +61,7 @@ Please keep this in mind when searching for information on a specific version of
 ||||
 
 :General: |docs| |license| |paper|
-:GitHub: |github-release| |github-commit-activitiy| |github-stars| |github-forks|
+:GitHub: |github-release| |github-commit-activitiy| |github-forks| |github-stars|
 :Docker: |docker-version| |docker-image-size| |docker-pulls|
 :Python: |python-version| |python-downloads|
 :Anaconda: |anaconda-version| |anaconda-downloads|
@@ -88,13 +88,13 @@ Please keep this in mind when searching for information on a specific version of
    :alt: GitHub repository commit activity
    :target: https://github.com/nest-desktop/nest-desktop/commits/main
 
-.. |github-stars| image:: https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social
-   :alt: GitHub repository stars
-   :target: https://github.com/nest-desktop/nest-desktop/stargazers
-
 .. |github-forks| image:: https://img.shields.io/github/forks/nest-desktop/nest-desktop?style=social
    :alt: GitHub repository forks
    :target: https://github.com/nest-desktop/nest-desktop/network/members
+
+.. |github-stars| image:: https://img.shields.io/github/stars/nest-desktop/nest-desktop?style=social
+   :alt: GitHub repository stars
+   :target: https://github.com/nest-desktop/nest-desktop/stargazers
 
 .. |docker-version| image:: https://img.shields.io/docker/v/nestsim/nest-desktop/latest?logo=docker&logoColor=white
    :alt: Docker version
