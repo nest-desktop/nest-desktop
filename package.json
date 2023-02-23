@@ -9,7 +9,7 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve --port 54286",
-    "build": "vue-cli-service build --mode development",
+    "build": "vue-cli-service build --mode production",
     "build:dev": "vue-cli-service build --mode development",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e --env firefox --headless",
