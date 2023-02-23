@@ -68,5 +68,6 @@ Start with Conda
 **The installation is now complete!**
 :doc:`Now you can start constructing networks for the simulation! </user/usage-basic/index>`
 
-For more information read the full documentation of the command API
-:doc:`here </user/usage-advance/command-API>`.
+.. seeAlso::
+   For more information read the full documentation of the command API
+   :doc:`here </user/usage-advance/command-API>`.
