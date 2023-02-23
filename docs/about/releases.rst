@@ -1,6 +1,16 @@
 Releases
 ========
 
+v3.2.x
+------
+
+Introduce copy models, compartmental neurons, synapse weight recordings, 
+code templates and backend status.
+
+==========  =======
+xx Jan 23   v3.2.0
+==========  =======
+
 v3.1.x
 ------
 
