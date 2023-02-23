@@ -60,37 +60,31 @@ Please keep this in mind when searching for information on a specific version of
 
 ||||
 
-:General: |docs| |license| |doi|
-:GitHub: |github-commit-activitiy| |github-stars| |github-forks|
-:DockerHub: |dockerhub-version| |dockerhub-image-size| |dockerhub-pulls|
-:PyPI: |pypi-version| |pypi-dm|
+:General: |docs| |license| |paper|
+:GitHub: |github-release| |github-commit-activitiy| |github-stars| |github-forks|
+:Docker: |docker-version| |docker-image-size| |docker-pulls|
+:Python: |python-version| |python-downloads|
 :Anaconda: |anaconda-version| |anaconda-downloads|
+:AppImage: |appImage-release| |appImage-downloads|
+:Snap: |snap-version|
 
-.. |docs| image:: https://img.shields.io/readthedocs/nest-desktop
+.. |docs| image:: https://img.shields.io/readthedocs/nest-desktop?label=Documentation
    :alt: Documentation status
    :target: https://nest-desktop.readthedocs.io
 
 .. |license| image:: https://img.shields.io/github/license/nest-desktop/nest-desktop
-   :alt: License
+   :alt: MIT License
    :target: https://github.com/nest-desktop/nest-desktop/blob/main/LICENSE
 
-.. |doi| image:: https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue
-   :alt: DOI
+.. |paper| image:: https://img.shields.io/badge/DOI-10.1523%2Feneuro.0274--21.2021-blue
+   :alt: Paper
    :target: https://doi.org/10.1523/eneuro.0274-21.2021
 
-.. |dockerhub-version| image:: https://img.shields.io/docker/v/nestsim/nest-desktop/latest
-   :target: https://hub.docker.com/r/nestsim/nest-desktop
+.. |github-release| image:: https://img.shields.io/github/release/nest-desktop/nest-desktop?logo=github&logoColor=white
    :alt: Latest version
+   :target: https://github.com/nest-desktop/nest-desktop
 
-.. |dockerhub-image-size| image:: https://img.shields.io/docker/image-size/nestsim/nest-desktop/latest
-   :alt: Image size
-   :target: https://hub.docker.com/r/nestsim/nest-desktop
-
-.. |dockerhub-pulls| image:: https://img.shields.io/docker/pulls/nestsim/nest-desktop
-   :alt: Docker pulls
-   :target: https://hub.docker.com/r/nestsim/nest-desktop
-
-.. |github-commit-activitiy| image:: https://img.shields.io/github/commit-activity/m/nest-desktop/nest-desktop
+.. |github-commit-activitiy| image:: https://img.shields.io/github/commit-activity/y/nest-desktop/nest-desktop
    :alt: GitHub repository commit activity
    :target: https://github.com/nest-desktop/nest-desktop/commits/main
 
@@ -102,20 +96,44 @@ Please keep this in mind when searching for information on a specific version of
    :alt: GitHub repository forks
    :target: https://github.com/nest-desktop/nest-desktop/network/members
 
-.. |pypi-version| image:: https://img.shields.io/pypi/v/nest-desktop.svg?label=version
-   :alt: Latest version on PyPI
+.. |docker-version| image:: https://img.shields.io/docker/v/nestsim/nest-desktop/latest?logo=docker&logoColor=white
+   :alt: Docker version
+   :target: https://hub.docker.com/r/nestsim/nest-desktop
+
+.. |docker-image-size| image:: https://img.shields.io/docker/image-size/nestsim/nest-desktop/latest
+   :alt: Docker image size
+   :target: https://hub.docker.com/r/nestsim/nest-desktop
+
+.. |docker-pulls| image:: https://img.shields.io/docker/pulls/nestsim/nest-desktop
+   :alt: Docker pulls total
+   :target: https://hub.docker.com/r/nestsim/nest-desktop
+
+.. |python-version| image:: https://img.shields.io/pypi/v/nest-desktop.svg?label=Python&logo=python&logoColor=white
+   :alt: Python version
    :target: https://pypi.org/project/nest-desktop/
 
-.. |pypi-dm| image:: https://img.shields.io/pypi/dm/nest-desktop.svg
-   :alt: Downloads per month
+.. |python-downloads| image:: https://img.shields.io/pypi/dm/nest-desktop.svg
+   :alt: Python downloads per month
    :target: https://pypi.org/project/nest-desktop/
 
-.. |anaconda-version| image:: https://anaconda.org/conda-forge/nest-desktop/badges/version.svg
-   :alt: Latest version on Anaconda
+.. |conda-version| image:: https://img.shields.io/conda/v/conda-forge/nest-desktop.svg&logo=conda-forge&logoColor=white
+   :alt: Conda version
    :target: https://anaconda.org/conda-forge/nest-desktop
 
-.. |anaconda-downloads| image:: https://anaconda.org/conda-forge/nest-desktop/badges/downloads.svg
-   :alt: Downloads total
+.. |conda-downloads| image:: https://img.shields.io/conda/dn/conda-forge/nest-desktop.svg
+   :alt: AConda downloads total
    :target: https://anaconda.org/conda-forge/nest-desktop
+
+.. |appImage-release| image:: https://img.shields.io/github/release/nest-desktop/nest-desktop-appImage.svg?color=brightgreen&label=AppImage&logo=linux&logoColor=white
+   :alt: AppImage version
+   :target: https://github.com/nest-desktop/nest-desktop-appImage/releases
+
+.. |appImage-downloads| image:: https://img.shields.io/github/downloads/nest-desktop/nest-desktop-appImage/total
+   :alt: AppImage downloads
+   :target: https://github.com/nest-desktop/nest-desktop-appImage
+
+.. |snap-version| image:: https://snapcraft.io/nest-desktop/badge.svg
+   :alt: Snap version
+   :target: https://snapcraft.io/nest-desktop
 
 .. include:: contents.rst
