@@ -36,7 +36,6 @@ NEST Simulator
       nest-server start
 
 NEST Server is now running at http://localhost:52425.
-
 You can find the detailed information on NEST Server :doc:`here <nest-simulator:connect_nest/nest_server>`.
 
 NEST Desktop
