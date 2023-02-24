@@ -24,7 +24,7 @@
           hint="Please enter the URL where the server of Insite can be found at (including protocol!)."
           label="URL of Insite access"
           persistent-hint
-          placeholder="http://127.0.0.1:8080"
+          placeholder="http://127.0.0.1:52056"
           v-model="state.app.backends.insiteAccess.url"
         />
       </v-card-text>
@@ -116,7 +116,7 @@ export default Vue.extend({
           /(https?:\/\/\b)(www\.)?([-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b)(:\d{5,6}\b)?(\/[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?/;
         return (
           pattern.test(value) ||
-          'Invalid pattern. Please enter the correct URL (http://localhost:8080).'
+          'Invalid pattern. Please enter the correct URL (e.g.: http://localhost:52056).'
         );
       },
     ];
