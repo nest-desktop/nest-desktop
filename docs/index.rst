@@ -116,11 +116,11 @@ Please keep this in mind when searching for information on a specific version of
    :alt: Python downloads per month
    :target: https://pypi.org/project/nest-desktop/
 
-.. |conda-version| image:: https://img.shields.io/conda/vn/conda-forge/nest-desktop.svg&logo=conda-forge&logoColor=white
+.. |anaconda-version| image:: https://img.shields.io/conda/vn/conda-forge/nest-desktop?logo=conda-forge&logoColor=white
    :alt: Conda version
    :target: https://anaconda.org/conda-forge/nest-desktop
 
-.. |conda-downloads| image:: https://img.shields.io/conda/dn/conda-forge/nest-desktop.svg
+.. |anaconda-downloads| image:: https://img.shields.io/conda/dn/conda-forge/nest-desktop.svg
    :alt: AConda downloads total
    :target: https://anaconda.org/conda-forge/nest-desktop
 
