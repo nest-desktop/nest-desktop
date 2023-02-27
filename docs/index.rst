@@ -64,7 +64,7 @@ Please keep this in mind when searching for information on a specific version of
 :GitHub: |github-release| |github-commit-activitiy| |github-forks| |github-stars|
 :Docker: |docker-version| |docker-image-size| |docker-pulls|
 :Python: |python-version| |python-downloads|
-:Anaconda: |anaconda-version| |anaconda-downloads|
+:Conda: |conda-version| |conda-downloads|
 :AppImage: |appImage-release| |appImage-downloads|
 :Snap: |snap-version|
 
@@ -116,11 +116,11 @@ Please keep this in mind when searching for information on a specific version of
    :alt: Python downloads per month
    :target: https://pypi.org/project/nest-desktop/
 
-.. |anaconda-version| image:: https://img.shields.io/conda/vn/conda-forge/nest-desktop?logo=conda-forge&logoColor=white
+.. |conda-version| image:: https://img.shields.io/conda/vn/conda-forge/nest-desktop?logo=conda-forge&logoColor=white
    :alt: Conda version
    :target: https://anaconda.org/conda-forge/nest-desktop
 
-.. |anaconda-downloads| image:: https://img.shields.io/conda/dn/conda-forge/nest-desktop.svg
+.. |conda-downloads| image:: https://img.shields.io/conda/dn/conda-forge/nest-desktop.svg
    :alt: AConda downloads total
    :target: https://anaconda.org/conda-forge/nest-desktop
 
