@@ -28,10 +28,10 @@ NEST Simulator) in Linux.
 
 If you only have NEST Desktop (i.e., NEST Simulator is not running as back-end), you can create networks but cannot run
 simulations within the application.
-In this case, you have to start NEST Server in terminal or with docker.
+In this case, you have to start NEST Server in a terminal or with Docker.
 
 .. seeAlso::
-   :doc:`NEST Server user documentation <nest-simulator:connect_nest/nest_server>`.
+   :doc:`NEST Server user documentation <nest-simulator:connect_nest/nest_server>`
 
 
 |br|

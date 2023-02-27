@@ -10,7 +10,7 @@ Docker is a virtualization software packaging applications and its dependencies.
 Docker Compose is a tool for running multi-container applications on Docker which uses the Compose file format.
 
 .. seeAlso::
-   To get more information, see the `official page of Docker Compose <https://github.com/docker/compose>`__.
+  For further information, please see the `official page of Docker Compose <https://github.com/docker/compose>`__.
 
 |br|
 
@@ -34,14 +34,14 @@ Windows |windows| and macOS |apple|
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Docker Compose is included in Docker Desktop for Windows and macOS.
-For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
+For more information, take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
 
 |br|
 
 Pull and start Docker containers
 --------------------------------
 
-1. Get configuration file for Docker-compose
+1. Get the configuration file for Docker Compose
 (`docker-compose.yml <https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml>`__)
 
 .. code-block:: bash
