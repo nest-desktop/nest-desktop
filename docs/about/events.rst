@@ -6,7 +6,7 @@ Events
 
 :13 - 24 Feb: BSc course "Simple Neuron Models" at BCF [#f1]_, Freiburg, Germany.
 :18 Jan: Part of the talk at CENIA, presented by Markus Diesmann, Santiago, Chile.
-:18 - 20 Jan: Poster at `7th HBP Student Conference <https://www.humanbrainproject.eu/en/education-training-career/HBPSC2023/>`, Madrid, Spain (cancelled).
+:18 - 20 Jan: Poster at `7th HBP Student Conference <https://www.humanbrainproject.eu/en/education-training-career/HBPSC2023/>`__, Madrid, Spain.
 
 2022
 ----
@@ -15,7 +15,7 @@ Events
 :13 - 16 Sep: Poster "NEST Desktop: Explore new frontiers" at `Bernstein Conference 2021 <https://abstracts.g-node.org/conference/BC22/abstracts#/uuid/b205c368-bbfa-473f-a249-eb866c9fdffc>`__, Berlin, Germany.
 :20 - 21 Jul: Talk "NEST Desktop" at HCI Summer Colloquium, Trier, Germany.
 :16 Jul: NEST Desktop is part of the onsite tutorial "T1: From single-cell modeling to large-scale network dynamics with NEST Simulator." of `CNS 2022 <https://www.cnsorg.org/cns-2022-tutorials>`__, presented by Jasper Albers, Pooja Babu and Charl Linssen, Melbourne, Australia.
-:03 - 09 Jul: Part of the workshop "NEST Workshop: network and plasticity" at `9th BNNI <http://bionn.matinf.uj.edu.pl/events/bnni2022/#program>`, presented by Jasper Albers, Krakau, Poland.
+:03 - 09 Jul: Part of the workshop "NEST Workshop: network and plasticity" at `9th BNNI <http://bionn.matinf.uj.edu.pl/events/bnni2022/#program>`__, presented by Jasper Albers, Krakau, Poland.
 :31 Jun: Satellite tutorial at `CNS <https://ocns.github.io/SoftwareWG/pages/software-wg-satellite-tutorials-at-cns-2022.html>`__, online.
 :23 - 24 Jun: Workshop "NEST Desktop: A “Let’s Play Together” for neuroscience" and Poster "NEST Desktop: Explore new frontiers" at `NEST Conference <https://events.hifis.net/event/305/>`__, online.
 :13 - 15 Jun: Workshop at `EBRAINS BASSES <https://www.humanbrainproject.eu/en/education/ebrains-workshops/basses/>`__, presented by Johanna Senk, Rome, Italy.
