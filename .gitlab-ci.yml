@@ -40,38 +40,6 @@ build_app:
     - read-only
 
 #
-# BUILD ELECTRON
-#
-
-build_electron:
-  stage: build
-  image: electronuserland/builder:wine
-  artifacts:
-    paths:
-      - dist_electron
-    expire_in: 1 day
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: always
-  before_script:
-    - |-
-      if [[ $CI_COMMIT_BRANCH == "main" ]]; then
-        VERSION="$(node -p "require('./package.json').version")"
-        echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
-      else
-        VERSION="$(node -p "var v = require('./package.json').version.split('-'); [v[0], {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}[v[1]]].join('.')")"
-        echo "__version__ = '${VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
-      fi
-    - yarn
-  script:
-    - yarn electron:build
-    - cat nest_desktop/__init__.py
-  tags:
-    - docker-runner
-    - read-only
-
-#
 # DEPLOY PYTHON PACKAGE
 #
 
@@ -133,7 +101,7 @@ deploy_docker_ebrains:
     - read-only
 
 #
-# DEPLOY DOCKER IMAGE ON DOCKER HUB in nestsim organisation
+# DEPLOY DOCKER IMAGE ON DOCKER HUB
 #
 
 deploy_docker_hub_nestsim:
@@ -163,28 +131,4 @@ deploy_docker_hub_nestsim:
     - docker logout
   tags:
     - shell-runner
-    - read-only
-
-#
-# DEPLOY SNAP ON SNAPCRAFT
-#
-
-deploy_snap:
-  stage: deploy
-  image: snapcore/snapcraft:latest
-  needs:
-    - build_electron
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push"'
-      when: manual
-  before_script:
-    - echo "${SNAP_ACCESS_TOKEN}" | snapcraft login --with -
-  script:
-    - snapcraft upload --release="${SNAP_RELEASE}" dist_electron/nest-desktop*.snap
-  after_script:
-    - snapcraft logout
-  tags:
-    - docker-runner
     - read-only
