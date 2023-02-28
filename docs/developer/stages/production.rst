@@ -15,7 +15,7 @@ Currently, we build NEST Desktop for multiple targets and publish them on variou
 Python
 ------
 
-.. image:: /_static/img/logo/python-logo.svg
+.. image:: /_static/img/logo/python-logo.png
    :alt: Python
    :width: 240px
    :target: #production-python
@@ -89,7 +89,7 @@ Do not forget to commit the changes you made and set a new version tag in git.
 Conda
 -----
 
-.. image:: /_static/img/logo/conda-logo.svg
+.. image:: /_static/img/logo/conda-logo.png
    :alt: Conda
    :width: 240px
    :target: #production-conda
