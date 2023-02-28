@@ -61,7 +61,9 @@ You can use NEST Desktop in the web browser at http://localhost:54286.
 **The installation is now complete!**
 :doc:`Now we can start constructing networks for the simulation! </user/usage-basic/index>`
 
-For more information read the full documentation of `NEST Desktop Apptainer <https://github.com/nest-desktop/nest-desktop-apptainer>`__.
+For more information read the full documentation of `NEST Desktop Apptainer
+<https://github.com/nest-desktop/nest-desktop-apptainer>`__.
+
 
 .. warning::
    If the apptainer (esp. NEST Simulator) is running, your system is exposed for unauthorized access!

@@ -7,49 +7,54 @@ Docker Compose |linux| |windows| |apple|
    :width: 120px
 
 Docker is a virtualization software packaging applications and its dependencies.
-Docker Compose is a tool for running multi-container applications on Docker defined using the Compose file format.
-To get more information, see the `official page of Docker Compose <https://github.com/docker/compose>`__.
+Docker Compose is a tool for running multi-container applications on Docker which uses the Compose file format.
+
+.. seeAlso::
+  For further information, please see the `official page of Docker Compose <https://github.com/docker/compose>`__.
 
 |br|
 
-Windows |windows| and macOS |apple|
------------------------------------
+Installation
+------------
 
-Docker Compose is included in Docker Desktop for Windows and macOS.
-For more information take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
+Docker Compose is available on multiple platforms.
+This guide demonstrates some of the ways to install it on Linux, Windows and Mac.
 
-Please keep in mind that on Windows you can also use the Windows Subsystem for Linux (WSL) version 2 or higher,
-which allows you to run Docker without emulation.
-This offers performance advantages and more features.
-Detailed instructions on how to use Docker on WSL (version 2+) are provided by
-`Docker <https://docs.docker.com/desktop/windows/wsl/>`__ and
-`Microsoft <https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers>`__.
+Linux |linux|
+^^^^^^^^^^^^^
 
-|br|
-
-Quick setup in Linux |linux|
-----------------------------
-
-1. Install Docker and Docker Compose
+Install Docker and Docker Compose in Terminal
 
 .. code-block:: bash
 
    apt install docker.io docker-compose
 
-2. Get configuration file for Docker-compose
+
+Windows |windows| and macOS |apple|
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Docker Compose is included in Docker Desktop for Windows and macOS.
+For more information, take a look at the `installation guide of Docker Desktop <https://www.docker.com/get-started>`__.
+
+|br|
+
+Pull and start Docker containers
+--------------------------------
+
+1. Get the configuration file for Docker Compose
 (`docker-compose.yml <https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml>`__)
 
 .. code-block:: bash
 
    wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
 
-3. Build and start NEST Desktop and NEST Simulator with a single command:
+2. Start NEST Desktop and NEST Simulator in a single command:
 
 .. code-block:: bash
 
-   sudo docker-compose up --build
+   docker-compose up
 
-Now NEST Desktop is started.
+Now, the service starts the containers for NEST Desktop and NEST Simulator.
 You can use NEST Desktop in the web browser at http://localhost:54286.
 
 **The installation is now complete!**
