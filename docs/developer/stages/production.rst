@@ -111,7 +111,7 @@ Then make a pull request on the base branch of this repository.
 
 .. _production_electron:
 
-Electron (deb)
+Electron (`.deb` package)
 --------------
 
 In ``package.json``, there are also yarn commands configured to build an Electron app.
@@ -120,12 +120,12 @@ In ``package.json``, there are also yarn commands configured to build an Electro
 
    yarn electron:build
 
-Then install the ``deb`` file on your linux system.
+Then install the ``.deb`` file on your Linux system.
 
 .. seeAlso::
-   If you want to build another Electron packages, please have a look into ``electron-builder.yml`` file.
+   If you want to build other Electron packages, please have a look into ``electron-builder.yml`` file.
 
-   For snap you can find more information on `snap repository for nest-desktop <https://github.com/nest-desktop/nest-desktop-snap>`__.
+   For Snap packages, you can find more information in the `Snap repository for nest-desktop <https://github.com/nest-desktop/nest-desktop-snap>`__.
 
 
 .. |see| image:: /_static/img/icons/arrow-right.svg
