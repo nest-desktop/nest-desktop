@@ -10,15 +10,15 @@ Currently, we build NEST Desktop for multiple targets and publish them on variou
 
 |br|
 
-.. _production_python-package-index-pypi:
+.. _production_python:
 
-Python Package Index (PyPI)
----------------------------
+Python
+------
 
-.. image:: /_static/img/logo/pypi-logo-large.svg
-   :alt: PyPI
+.. image:: /_static/img/logo/python-logo.png
+   :alt: Python
    :width: 240px
-   :target: #python-package-index-pypi
+   :target: #production-python
 
 |br|
 
@@ -28,7 +28,6 @@ After that, Docker Hub can upgrade NEST Desktop in the provided Docker image.
 
 Requirements
   - setuptools, wheel, twine
-
 
 The Python Package Index **nest-desktop** includes an executive command ``nest-desktop`` and a Python library
 ``nest_desktop``.
@@ -90,13 +89,18 @@ Do not forget to commit the changes you made and set a new version tag in git.
 Conda
 -----
 
+.. image:: /_static/img/logo/conda-logo.png
+   :alt: Conda
+   :width: 240px
+   :target: #production-conda
+
 We have a conda-smithy `repository for nest-desktop <https://github.com/nest-desktop/nest-desktop-conda>`__.
 When a new Python package is released, we can change the version in ``meta.yaml`` (|see| the meta content `online
 <https://github.com/nest-desktop/nest-desktop-conda/blob/main/recipe/meta.yaml>`__):
 
 .. code-block::
 
-   {% set version = "3.1.4" %}
+   {% set version = "3.x.y" %}
 
 .. note::
    It is also important to change the ``sha256`` checksum of the source of ``tar.gz`` file.
@@ -105,19 +109,23 @@ Then make a pull request on the base branch of this repository.
 
 |br|
 
-.. _production_electron-and-snap:
+.. _production_electron:
 
-Electron and Snap
------------------
+Electron (``.deb`` package)
+---------------------------
 
 In ``package.json``, there are also yarn commands configured to build an Electron app.
-If you want to build a Snap package, please have a look into ``.gitlab-ci.yml``.
-
-To try Snap on a local machine, you can use this command:
 
 .. code-block:: bash
 
-   snap install ./dist_electron/nest-desktop_x.y.z.snap --dangerous
+   yarn electron:build
+
+Then install the ``.deb`` file on your Linux system.
+
+.. seeAlso::
+   If you want to build other Electron packages, please have a look into ``electron-builder.yml`` file.
+
+   For Snap packages, you can find more information in the `Snap repository for nest-desktop <https://github.com/nest-desktop/nest-desktop-snap>`__.
 
 
 .. |see| image:: /_static/img/icons/arrow-right.svg
