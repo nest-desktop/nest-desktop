@@ -1,4 +1,3 @@
-import { Activity } from './activity';
 import { ActivityChartGraph } from './activityChart/activityChartGraph';
 import { ActivityAnimationGraph } from './activityAnimation/activityAnimationGraph';
 import { Project } from '../project/project';
@@ -51,7 +50,7 @@ export class ActivityGraph {
    * Update code hash for activity graph.
    */
   updateHash(): void {
-    this._codeHash = this._project.code.hash;
+    this._codeHash = this._project.simulation.code.hash;
   }
 
   /**
@@ -81,24 +80,6 @@ export class ActivityGraph {
    */
   emptyActivityGraph(): void {
     this._activityChartGraph.empty();
-  }
-
-  /**
-   * Check if it has any analog data.
-   */
-  hasAnyAnalogData(): boolean {
-    return this._project.activities.some((activity: Activity) =>
-      activity.hasAnalogData()
-    );
-  }
-
-  /**
-   * Check if it has any spike data.
-   */
-  hasAnySpikeData(): boolean {
-    return this._project.activities.some((activity: Activity) =>
-      activity.hasSpikeData()
-    );
   }
 
   /**

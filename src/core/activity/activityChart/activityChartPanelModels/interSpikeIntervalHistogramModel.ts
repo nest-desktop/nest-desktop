@@ -22,16 +22,18 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
       },
     ];
     this.state.xaxisType = 'linear';
+
+    this.initParams(model.params);
   }
 
   /**
-   * Update data for ISI histogram.
+   * Add data of ISI for histogram panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const isi: number[][] = activity.ISI();
-    const x: number[] = [].concat.apply([], isi);
+    const x: number[] = isi.flat();
     const start: number = 0;
     const end: number = d3.max(x) + 1;
     const size: number = this.params[0].value;

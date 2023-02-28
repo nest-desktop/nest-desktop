@@ -28,13 +28,14 @@ function getHexagonPoints(radius: number): string {
 }
 
 function getRectanglePoints(radius: number): string {
-  const a: number = radius * Math.sqrt(Math.PI / 2);
-  const b = 8;
-  const p0: number[] = anglePoint(45 - b, a, 4);
-  const p1: number[] = anglePoint(135 + b, a, 4);
-  const p2: number[] = anglePoint(225 - b, a, 4);
-  const p3: number[] = anglePoint(315 + b, a, 4);
-  // const points: string = [[-x,y].join(','),[2*x,0].join(','),[-x,-y].join(',')].join(',');
+  const r: number = radius * Math.sqrt(Math.PI / 2);
+  const deg = 8;
+  const b = 10;
+  const y0 = Math.PI;
+  const p0: number[] = anglePoint(45 - deg, r, y0);
+  const p1: number[] = anglePoint(135 + deg, r, y0);
+  const p2: number[] = anglePoint(225 - deg, r, y0);
+  const p3: number[] = anglePoint(315 + deg, r, y0);
   const points: string = [
     [p0[0] + b, p0[1]].join(','),
     [p1[0] + b, p1[1]].join(','),
@@ -43,24 +44,6 @@ function getRectanglePoints(radius: number): string {
   ].join(',');
   return points;
 }
-
-// function getRhombusPoints(radius: number): string {
-//   const a: number = radius + 4;
-//   const b: number = radius - 4;
-//   const points: string = [
-//     [a, 0].join(','),
-//     [0, b].join(','),
-//     [-a, 0].join(','),
-//     [0, -b].join(','),
-//   ].join(' ');
-//   return points;
-// }
-
-// function getSquarePoints(radius: number): string {
-//   const a: number = radius / 2. * Math.sqrt(Math.PI);
-//   const points: string = [[-a, -a].join(','), [a, -a].join(','), [a, a].join(','), [-a, a].join(',')].join(' ');
-//   return points;
-// }
 
 function getSquarePoints(radius: number): string {
   const a: number = radius * Math.sqrt(Math.PI / 2);
@@ -88,19 +71,14 @@ function getTrianglePoints(radius: number): string {
 }
 
 function nodePoints(node: Node, radius: number): string {
-  switch (node.model.elementType) {
-    case 'stimulator':
-      return getHexagonPoints(radius);
-    case 'recorder':
-      return getRectanglePoints(radius);
-    case 'neuron':
-      if (node.isInhibitoryNeuron()) {
-        return getSquarePoints(radius);
-      } else {
-        return getTrianglePoints(radius);
-      }
-    default:
-      return getSquarePoints(radius);
+  if (node.model.isStimulator) {
+    return getHexagonPoints(radius);
+  } else if (node.model.isRecorder) {
+    return getRectanglePoints(radius);
+  } else if (node.isExcitatoryNeuron) {
+    return getTrianglePoints(radius);
+  } else {
+    return getSquarePoints(radius);
   }
 }
 
@@ -132,7 +110,7 @@ export class NodeGraphShape {
     const elem = selector.select('.core');
     elem.selectAll('*').remove();
 
-    if (node.isInhibitoryNeuron()) {
+    if (node.isInhibitoryNeuron) {
       elem.append('circle').attr('class', 'shape').attr('r', this.nodeRadius);
     } else {
       elem
@@ -160,7 +138,7 @@ export class NodeGraphShape {
       node.state.focus();
 
       if (networkState.selectedNode && workspaceState.enableConnection) {
-        // Set cursor position of the clicked node.
+        // Set cursor position of the focused node.
         this._networkGraph.workspace.updateCursorPosition(node.view.position);
 
         this._networkGraph.workspace.animationOff();
@@ -194,6 +172,12 @@ export class NodeGraphShape {
    */
   render(): void {
     const nodes = d3.select('g#nodes').selectAll('g.node');
+    nodes.style('pointer-events', () =>
+      this._networkGraph.network.state.isNodeSourceSelected ||
+      !this._networkGraph.workspace.state.enableConnection
+        ? ''
+        : 'none'
+    );
 
     // Check if neuron has to change its shape.
     nodes.each((node: Node, idx: number, elements: any[]) => {
@@ -214,12 +198,14 @@ export class NodeGraphShape {
           'stroke-width',
           (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
-        .style('stroke-dasharray', node.state.isSelected() ? '7.85' : '');
+        .style('stroke-dasharray', node.state.isSelected ? '7.85' : '');
 
       elem
         .select('text')
-        .attr('dy', node.isInhibitoryNeuron() ? '0.4em' : '0.7em')
+        .attr('dy', node.isInhibitoryNeuron ? '0.4em' : '0.7em')
         .style('fill', this.darkMode ? 'white' : '#121212')
+        .style('font-family', 'Roboto')
+        .style('text-anchor', 'middle')
         .text(node.view.label);
     });
   }

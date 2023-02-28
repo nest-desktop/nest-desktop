@@ -1,7 +1,7 @@
 <template>
   <div class="activityGraph">
     <div
-      style="position: absolute; left: 0; top: 0; z-index: 1000"
+      class="activityGraphHeader"
       v-if="state.graph.project.app.config.devMode"
     >
       <v-chip
@@ -28,20 +28,20 @@
       </div>
     </transition>
 
-    <v-snackbar :timeout="-1" v-model="state.snackbar.show">
-      {{ state.snackbar.text }}
+    <v-snackbar :timeout="-1" v-model="state.graph.project.state.snackbar.show">
+      {{ state.graph.project.state.snackbar.text }}
 
       <template #action="{ attrs }">
         <v-btn
-          @click="state.snackbar.show = false"
+          @click="state.graph.project.state.closeSnackbar()"
           outlined
           small
           v-bind="attrs"
-          v-if="state.snackbar.actions.length === 0"
+          v-if="state.graph.project.state.snackbar.actions.length === 0"
         >
           Close
         </v-btn>
-        <template v-if="state.snackbar.actions.length > 0">
+        <template v-if="state.graph.project.state.snackbar.actions.length > 0">
           <v-btn
             :disabled="action.disabled"
             :key="actionIdx"
@@ -49,7 +49,8 @@
             outlined
             small
             v-bind="attrs"
-            v-for="(action, actionIdx) in state.snackbar.actions"
+            v-for="(action, actionIdx) in state.graph.project.state.snackbar
+              .actions"
             v-text="action.text"
           />
         </template>
@@ -60,7 +61,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted, watch } from '@vue/composition-api';
+import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { ActivityGraph } from '@/core/activity/activityGraph';
 import ActivityChartGraph from '@/components/activity/activityChart/ActivityChartGraph.vue';
@@ -78,6 +79,7 @@ export default Vue.extend({
     codeHash: String,
     graph: ActivityGraph,
     graphCodeHash: String,
+    showHelp: Boolean,
     view: String,
   },
   setup(props) {
@@ -86,11 +88,7 @@ export default Vue.extend({
       dialog: false,
       graph: props.graph as ActivityGraph,
       loading: false,
-      snackbar: {
-        actions: [],
-        show: false,
-        text: '',
-      },
+      showHelp: props.showHelp,
       view: props.view || 'abstract',
     });
 
@@ -111,17 +109,6 @@ export default Vue.extend({
     };
 
     /**
-     * Start simulation.
-     */
-    const simulate = () => {
-      if (projectView.config.simulateWithInsite) {
-        state.graph.project.runSimulationInsite();
-      } else {
-        state.graph.project.runSimulation();
-      }
-    };
-
-    /**
      * Check if there are any activities or changes to the network
      * which should be displayed via snackbar message.
      */
@@ -129,32 +116,31 @@ export default Vue.extend({
       const buttonProps = [
         {
           text: 'Simulate',
-          onClick: () => simulate(),
-          disabled: state.graph.project.simulation.running,
+          onClick: () => state.graph.project.startSimulation(),
+          disabled: state.graph.project.simulation.state.running,
         },
       ];
 
-      state.snackbar.show = false;
-      if (!projectView.config.showHelp) {
+      if (state.graph.project.state.snackbar.important) {
         return;
       }
-      if (!state.graph.project.state.hasActivities) {
-        showSnackbar('No simulation results found.', buttonProps);
-      } else if (state.graph.codeHash !== state.graph.project.code.hash) {
-        showSnackbar(
+      state.graph.project.state.closeSnackbar();
+      if (!projectView.config.showHelp || !state.showHelp) {
+        return;
+      }
+      if (!state.graph.project.state.activities.hasSomeEvents) {
+        state.graph.project.state.showSnackbar(
+          'No simulation results found.',
+          buttonProps
+        );
+      } else if (
+        state.graph.codeHash !== state.graph.project.simulation.code.hash
+      ) {
+        state.graph.project.state.showSnackbar(
           'Code changes detected. Activity might be not correctly displayed.',
           buttonProps
         );
       }
-    };
-
-    /**
-     * Show snackbar.
-     */
-    const showSnackbar = (text: string, actions: any[] = []) => {
-      state.snackbar.text = text;
-      state.snackbar.actions = actions;
-      state.snackbar.show = true;
     };
 
     onMounted(() => {
@@ -188,3 +174,12 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.activityGraph .activityGraphHeader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+</style>

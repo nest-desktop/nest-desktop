@@ -25,21 +25,21 @@
                 <ParameterEdit
                   :options="options.threadSettings"
                   :value.sync="simulation.kernel.localNumThreads"
-                  @update:value="paramChange"
-                  class="mx-1 py-2"
+                  @update:value="paramChange()"
+                  class="mx-1 py-1"
                 />
 
                 <ParameterEdit
                   :options="options.resolutionSettings"
                   :value.sync="simulation.kernel.resolution"
-                  @update:value="paramChange"
-                  class="mx-1 py-2"
+                  @update:value="paramChange()"
+                  class="mx-1 py-1"
                 />
 
                 <ParameterEdit
                   :options="options.rngSeedSettings"
                   :value.sync="simulation.kernel.rngSeed"
-                  @update:value="paramChange"
+                  @update:value="paramChange()"
                   class="mx-1 py-1"
                 />
 
@@ -77,7 +77,7 @@
                 <ParameterEdit
                   :options="options.simulationTimeSettings"
                   :value.sync="simulation.time"
-                  @update:value="paramChange"
+                  @update:value="paramChange()"
                   class="mx-1 py-2"
                 />
               </v-card-text>
@@ -110,6 +110,13 @@ export default Vue.extend({
       autoRNGSeedSettings: {
         input: 'checkbox',
         label: 'randomize seed',
+        rules: [
+          [
+            'value === false',
+            'It always generates new script code. Uncheck if you want to modify the script.',
+            'warning',
+          ],
+        ],
       },
       resolutionSettings: {
         id: 'simulationResolution',
@@ -117,11 +124,10 @@ export default Vue.extend({
         label: 'simulation resolution',
         ticks: [0.01, 0.1, 1, 10],
         unit: 'ms',
-        iconSize: 'large',
         rules: [
           [
-            'value < 1',
-            'Small simulation resolution produces many data points which could cause a high system load and thus freezes and lags!',
+            'value >= 0.1',
+            'Small values generate many data points and can put quite a load on your browser.',
             'warning',
           ],
         ],
@@ -131,6 +137,7 @@ export default Vue.extend({
         label: 'seed of the random number generator',
         max: 1000,
         min: 1,
+        rules: [['value > 0', 'The value must be strictly positive.', 'error']],
         value: 1,
       },
       simulationTimeSettings: {
@@ -141,11 +148,10 @@ export default Vue.extend({
         min: 0,
         unit: 'ms',
         value: 1000,
-        iconSize: 'large',
         rules: [
           [
-            'value >= 2000',
-            'Large simulation time produces many data points which could cause a high system load and thus freezes and lags!',
+            'value < 2000',
+            'Large values generate many data points and can put quite a load on your browser.',
             'warning',
           ],
         ],
@@ -166,7 +172,7 @@ export default Vue.extend({
      * Triggers when parameter is changed.
      */
     const paramChange = () => {
-      state.simulation.project.code.generate();
+      state.simulation.project.simulation.code.generate();
     };
 
     /**

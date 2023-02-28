@@ -5,10 +5,13 @@ import Vuetify from 'vuetify/lib';
 import colors from 'vuetify/lib/util/colors';
 
 import { mdiDatabaseRefreshOutline } from '@mdi/js';
+import CopyModelIcon from '@/components/icons/CopyModelIcon.vue';
 import DiceMultipleOutlineIcon from '@/components/icons/DiceMultipleOutlineIcon.vue';
 import DotsGridIcon from '@/components/icons/DotsGridIcon.vue';
 import NESTIcon from '@/components/icons/NESTIcon.vue';
 import NetworkIcon from '@/components/icons/NetworkIcon.vue';
+import RecorderIcon from '@/components/icons/RecorderIcon.vue';
+import StimulatorIcon from '@/components/icons/StimulatorIcon.vue';
 
 Vue.use(Vuetify);
 
@@ -19,6 +22,9 @@ export default new Vuetify({
   icons: {
     values: {
       mdiDatabaseRefreshOutline,
+      copyModel: {
+        component: CopyModelIcon,
+      },
       diceMultipleOutline: {
         component: DiceMultipleOutlineIcon,
       },
@@ -30,6 +36,12 @@ export default new Vuetify({
       },
       network: {
         component: NetworkIcon,
+      },
+      recorder: {
+        component: RecorderIcon,
+      },
+      stimulator: {
+        component: StimulatorIcon,
       },
     },
   },
@@ -45,6 +57,7 @@ export default new Vuetify({
         project: {
           base: '#1281B3',
         },
+        systemBar: colors.grey.darken3,
       },
       dark: {
         primary: colors.grey.base,
@@ -56,6 +69,7 @@ export default new Vuetify({
         project: {
           base: '#1281B3',
         },
+        systemBar: colors.grey.darken3,
       },
     },
   },

@@ -1,13 +1,96 @@
 import * as Plotly from 'plotly.js-dist-min';
 
 import { ActivityChartPanel } from './activityChartPanel';
+import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { Project } from '../../project/project';
+import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
+import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
+import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
+import { SpikeCountPlotModel } from './activityChartPanelModels/spikeCountPlotModel';
+import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
+import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
+import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
+import { SenderSpikeCountPlotModel } from './activityChartPanelModels/senderSpikeCountPlotModel';
+import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
+import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
 
 export class ActivityChartGraph {
   private _config: any = {};
   private _data: any[] = [];
   private _imageButtonOptions: any;
   private _layout: any = {};
+  private _models: any[] = [
+    {
+      activityType: 'analog',
+      component: AnalogSignalPlotModel,
+      id: 'analogSignalPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Analog signals',
+    },
+    {
+      activityType: 'analog',
+      component: AnalogSignalHistogramModel,
+      id: 'analogSignalHistogram',
+      icon: 'mdi-chart-bar',
+      label: 'analog signals',
+    },
+    {
+      activityType: 'spike',
+      component: SpikeTimesRasterPlotModel,
+      id: 'spikeTimesRasterPlot',
+      icon: 'mdi-chart-scatter-plot',
+      label: 'Spike times',
+    },
+    {
+      activityType: 'spike',
+      component: SpikeTimesHistogramModel,
+      id: 'spikeTimesHistogram',
+      icon: 'mdi-chart-bar',
+      label: 'Spike times',
+    },
+    {
+      activityType: 'spike',
+      component: SpikeCountPlotModel,
+      id: 'spikeCountPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Spike count',
+    },
+    {
+      activityType: 'spike',
+      component: InterSpikeIntervalHistogramModel,
+      id: 'interSpikeIntervalHistogram',
+      icon: 'mdi-chart-bar',
+      label: 'Inter-spike interval',
+    },
+    {
+      activityType: 'spike',
+      component: CVISIHistogramModel,
+      id: 'CVISIHistogram',
+      icon: 'mdi-chart-bar',
+      label: 'CV of ISI',
+    },
+    {
+      activityType: 'spike',
+      component: SenderSpikeCountPlotModel,
+      id: 'senderSpikeCountPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Spike count in each sender',
+    },
+    {
+      activityType: 'spike',
+      component: SenderMeanISIPlotModel,
+      id: 'senderMeanISIPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'Mean ISI in each sender',
+    },
+    {
+      activityType: 'spike',
+      component: SenderCVISIPlotModel,
+      id: 'senderCVISIPlot',
+      icon: 'mdi-chart-bell-curve-cumulative',
+      label: 'CV ISI in each sender',
+    },
+  ];
   private _options: any = {};
   private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
@@ -41,7 +124,7 @@ export class ActivityChartGraph {
         ],
         ['zoom2d', 'pan2d'],
         ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
-        ['hoverClosestCartesian', 'hoverCompareCartesian'],
+        ['hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
       ],
       scrollZoom: true,
     };
@@ -90,6 +173,23 @@ export class ActivityChartGraph {
 
   get layout(): any {
     return this._layout;
+  }
+
+  get models(): ActivityChartPanelModel[] {
+    return this._models;
+  }
+
+  get modelsAnalog(): ActivityChartPanelModel[] {
+    return this._models.filter(
+      (model: ActivityChartPanelModel) => model.activityType === 'analog'
+    );
+  }
+
+  get modelsSpike(): ActivityChartPanelModel[] {
+    return this._models.filter(
+      (model: ActivityChartPanelModel) =>
+        model.activityType === 'spike' && model['source'] != 'elephant'
+    );
   }
 
   get options(): any {
@@ -141,16 +241,16 @@ export class ActivityChartGraph {
    * Initialize network chart graph.
    */
   init(panels: any[] = []): void {
-    this._project.checkActivities();
+    this._project.state.checkActivities();
 
     this._panels = [];
     if (panels.length > 0) {
       panels.forEach((panel: any) => this.addPanel(panel));
     } else {
-      if (this._project.state.hasAnalogActivities) {
+      if (this._project.state.activities.hasSomeAnalogRecorders) {
         this.addPanel({ model: { id: 'analogSignalPlot' } });
       }
-      if (this._project.state.hasSpikeActivities) {
+      if (this._project.state.activities.hasSomeSpikeRecorders) {
         this.addPanel({ model: { id: 'spikeTimesRasterPlot' } });
         this.addPanel({ model: { id: 'spikeTimesHistogram' } });
       }
@@ -218,18 +318,20 @@ export class ActivityChartGraph {
     this.updateLayoutColor();
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      this.updateData(panel);
+      this.gatherData(panel);
       this.updateLayoutPanel(panel);
     });
 
     this.react();
+    this.restyle();
   }
 
   /**
-   * Update data of the chart graph
+   * Gather data for the chart graph
    */
-  updateData(panel: ActivityChartPanel): void {
+  gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: any) => {
+      data.dataIdx = this._data.length;
       data.panelIdx = panel.idx;
       data.xaxis = 'x' + panel.xaxis;
       data.yaxis = 'y' + panel.yaxis;
@@ -251,9 +353,9 @@ export class ActivityChartGraph {
    * Update the layout of the chart graph from each panel.
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
-    this.layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
+    this._layout['yaxis' + (panel.yaxis > 1 ? panel.yaxis : '')] =
       panel.layout.yaxis;
-    this.layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
+    this._layout['xaxis' + (panel.xaxis > 1 ? panel.xaxis : '')] =
       panel.layout.xaxis;
   }
 
@@ -266,11 +368,15 @@ export class ActivityChartGraph {
 
   /**
    * Update records color.
+   *
+   * @remarks
+   * It renders new updates in activity plots.
    */
   updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) =>
       panel.model.updateRecordsColor()
     );
+    this.react();
   }
 
   /**
@@ -303,6 +409,36 @@ export class ActivityChartGraph {
   react(): void {
     if (this._state.ref == null) return;
     Plotly.react(this._state.ref, this._data, this._layout);
+  }
+
+  /**
+   * Restyle plots with new updates.
+   */
+  restyle(): void {
+    if (this._state.ref == null) return;
+    // if (this.project.state.activities.hasSomeSpikeRecorders) {
+    this.restyleMarkerHeightSpikeTimesRasterPlot();
+    // }
+  }
+
+  /**
+   * Restyle marker height of spike times raster plot
+   */
+  restyleMarkerHeightSpikeTimesRasterPlot() {
+    const dataSpikeTimeRasterPlot = this._data.filter(
+      (d: any) => d.modelId === 'spikeTimesRasterPlot'
+    );
+
+    const markerSizes = dataSpikeTimeRasterPlot.map(
+      (d: any) => this._panels[d.panelIdx].model['markerSize']
+    );
+    const update = {
+      'marker.size': markerSizes,
+    };
+
+    const dataIndices = dataSpikeTimeRasterPlot.map((d: any) => d.dataIdx);
+
+    Plotly.restyle(this._state.ref, update, dataIndices);
   }
 
   /**

@@ -59,18 +59,18 @@
                 <template #default="">
                   <v-list-item-content class="pa-1">
                     <v-row no-gutters>
-                      {{ param.options.label }}
-                      <v-spacer />
-                      {{ param.toJSON().value }}
-                      {{ param.options.unit }}
+                      <v-col
+                        class="d-flex justify-space-between"
+                        v-html="param.labelRow"
+                      />
                     </v-row>
                   </v-list-item-content>
 
                   <v-list-item-action class="my-1">
                     <v-checkbox
                       :color="synapse.connection.source.view.color"
-                      :input-value="param.visible"
-                      :value="param.visible"
+                      :input-value="param.state.visible"
+                      :value="param.state.visible"
                       hide-details
                     />
                   </v-list-item-action>
@@ -117,7 +117,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { Synapse } from '@/core/synapse/synapse';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 
 export default Vue.extend({
   name: 'SynapseModelSelect',
@@ -136,7 +136,7 @@ export default Vue.extend({
      */
     const selectionChange = () => {
       state.synapse.params.forEach(
-        (param: ModelParameter) =>
+        (param: SynapseParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.synapse.synapseChanges();
@@ -148,8 +148,8 @@ export default Vue.extend({
     const update = () => {
       state.synapse = props.synapse as Synapse;
       state.visibleParams = state.synapse.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
+        .filter((param: SynapseParameter) => param.state.visible)
+        .map((param: SynapseParameter) => param.idx);
     };
 
     /**

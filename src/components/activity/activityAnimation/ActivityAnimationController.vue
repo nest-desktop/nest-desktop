@@ -210,7 +210,11 @@
               />
             </v-card>
 
-            <v-card flat tile v-if="layer.activity.hasAnalogData()">
+            <v-card
+              flat
+              tile
+              v-if="layer.activity.recorder.model.isAnalogRecorder"
+            >
               <span v-if="layer.state.records.length > 0">
                 <v-select
                   :items="layer.state.records"
@@ -233,7 +237,7 @@
                   small
                   v-model="layer.state.record"
                 >
-                  <template v-slot:selection="{ item }">
+                  <template #selection="{ item }">
                     <v-chip
                       :color="item.color"
                       class="mx-2"
@@ -250,7 +254,7 @@
                     </div>
                   </template>
 
-                  <template v-slot:item="{ item }">
+                  <template #item="{ item }">
                     <v-chip
                       :color="item.color"
                       class="mx-2"
@@ -371,7 +375,11 @@
               </v-card-text>
             </v-card>
 
-            <v-card flat tile v-if="layer.activity.hasSpikeData()">
+            <v-card
+              flat
+              tile
+              v-if="layer.activity.recorder.model.isSpikeRecorder"
+            >
               <v-subheader v-text="'Trail'" />
               <v-card-text>
                 <v-row>
@@ -390,14 +398,12 @@
                 </v-row>
 
                 <v-checkbox
-                  :disabled="layer.activity.hasAnalogData()"
                   hide-details
                   label="Trail fading"
                   v-model="layer.config.trail.fading"
                 />
 
                 <v-select
-                  :disabled="layer.activity.hasAnalogData()"
                   :items="['off', 'growing', 'shrinking']"
                   hide-details
                   label="Trail mode"

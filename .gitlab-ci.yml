@@ -8,7 +8,7 @@ stages:
 
 build_app:
   stage: build
-  image: node:lts-alpine
+  image: node:16-alpine
   artifacts:
     paths:
       - .env
@@ -20,49 +20,24 @@ build_app:
     - when: always
   before_script:
     - touch .env
-    - VERSION=`node -p "require('./package.json').version"`
+    - VERSION="$(node -p "require('./package.json').version")"
     - |-
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
         echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
         echo "DOCKER_TAG='${VERSION}'" >> .env
       else
-        echo "__version__ = '${VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
-        echo "DOCKER_TAG='${VERSION}${CI_PIPELINE_IID}'" >> .env
+        PYTHON_VERSION="$(node -p "var v = require('./package.json').version.split('-'); [v[0], {alpha: 'a', beta: 'b', dev: 'dev', rc: 'rc'}[v[1]]].join('.')")"
+        echo "__version__ = '${PYTHON_VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
+        echo "DOCKER_TAG='${VERSION}.${CI_PIPELINE_IID}'" >> .env
       fi
     - yarn install
   script:
     - yarn build
+    - cat nest_desktop/__init__.py
+    - cat .env
   tags:
     - docker-runner
-
-#
-# BUILD ELECTRON
-#
-
-build_electron:
-  stage: build
-  image: electronuserland/builder:wine
-  artifacts:
-    paths:
-      - dist_electron
-    expire_in: 1 day
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: always
-  before_script:
-    - VERSION=`node -p "require('./package.json').version"`
-    - |-
-      if [[ $CI_COMMIT_BRANCH == "main" ]]; then
-        echo "__version__ = '${VERSION}'" >> nest_desktop/__init__.py
-      else
-        echo "__version__ = '${VERSION}${CI_PIPELINE_IID}'" >> nest_desktop/__init__.py
-      fi
-    - yarn
-  script:
-    - yarn electron:build
-  tags:
-    - docker-runner
+    - read-only
 
 #
 # DEPLOY PYTHON PACKAGE
@@ -90,14 +65,15 @@ deploy_pypi:
       fi
   tags:
     - docker-runner
+    - read-only
 
 #
 # DEPLOY DOCKER IMAGE ON EBRAINS
 #
 
-deploy_ebrains_docker:
+deploy_docker_ebrains:
   stage: deploy
-  image: ubuntu:20.04
+  image: ubuntu:22.04
   needs:
     - build_app
   rules:
@@ -122,14 +98,15 @@ deploy_ebrains_docker:
     - docker logout docker-registry.ebrains.eu
   tags:
     - shell-runner
+    - read-only
 
 #
-# DEPLOY DOCKER IMAGE ON DOCKER HUB in nestsim organisation
+# DEPLOY DOCKER IMAGE ON DOCKER HUB
 #
 
 deploy_docker_hub_nestsim:
   stage: deploy
-  image: ubuntu:20.04
+  image: ubuntu:22.04
   needs:
     - build_app
   rules:
@@ -154,58 +131,4 @@ deploy_docker_hub_nestsim:
     - docker logout
   tags:
     - shell-runner
-
-#
-# DEPLOY DOCKER IMAGE ON DOCKER HUB in nestdesktop organisation
-#
-
-deploy_docker_hub_nestdesktop:
-  stage: deploy
-  image: ubuntu:20.04
-  needs:
-    - build_app
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push"'
-      when: manual
-  before_script:
-    - source .env
-    - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
-  script:
-    - docker build -f docker/Dockerfile -t nestdesktop/app:${DOCKER_TAG} .
-    - |-
-      if [[ $CI_COMMIT_BRANCH == "main" ]]; then
-        docker tag nestdesktop/app:${DOCKER_TAG} nestdesktop/app:${DOCKER_TAG%.*}
-        docker tag nestdesktop/app:${DOCKER_TAG} nestdesktop/app:latest
-      else
-        docker tag nestdesktop/app:${DOCKER_TAG} nestdesktop/app:dev
-      fi
-    - docker push nestdesktop/app --all-tags
-  after_script:
-    - docker logout
-  tags:
-    - shell-runner
-
-#
-# DEPLOY SNAP ON SNAPCRAFT
-#
-
-deploy_snap:
-  stage: deploy
-  image: snapcore/snapcraft:latest
-  needs:
-    - build_electron
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push"'
-      when: manual
-  before_script:
-    - echo "${SNAP_ACCESS_TOKEN}" | snapcraft login --with -
-  script:
-    - snapcraft upload --release="${SNAP_RELEASE}" dist_electron/nest-desktop*.snap
-  after_script:
-    - snapcraft logout
-  tags:
-    - docker-runner
+    - read-only

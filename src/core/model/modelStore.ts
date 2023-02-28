@@ -89,6 +89,7 @@ export class ModelStore {
             (model: any) => new Model(this._app, model)
           ))
       );
+    // TODO: Refresh the view
   }
 
   /**
@@ -154,10 +155,13 @@ export class ModelStore {
 
   /**
    * Delete models.
+   * @param models List of model objects.
    */
   deleteModels(models: Model[]): void {
-    const modelIds: string[] = models.map((model: Model) => model.id);
-    this._db.deleteModels(modelIds).then(() => this.initModelList());
+    this.consoleLog('Delete models');
+    if (models.length === 0) return;
+    const modelDocIds: string[] = models.map((model: Model) => model.doc._id);
+    this._db.deleteBulk(modelDocIds).then(() => this.initModelList());
   }
 
   /**
@@ -171,10 +175,16 @@ export class ModelStore {
    * Fetch models from NEST Simulator.
    */
   fetchModelsNEST(): void {
+    if (!this._app.backends.nestSimulator.state.ready) {
+      return;
+    }
+
     this._app.backends.nestSimulator.instance
-      .get('api/Models')
+      .post('api/GetKernelStatus', { keys: ['node_models', 'synapse_models'] })
       .then((response: any) => {
-        this._state.modelsNEST = response.data;
+        const models = [...response.data[0], ...response.data[1]];
+        models.sort();
+        this._state.modelsNEST = models;
       });
   }
 
@@ -210,6 +220,10 @@ export class ModelStore {
       this._state.models.find((model: Model) => model.id === modelId) ||
       new Model(this._app, { id: modelId, params: [] })
     );
+  }
+
+  get recentModelId(): string {
+    return this._state.models.length > 0 ? this._state.models[0].id : undefined;
   }
 
   /**

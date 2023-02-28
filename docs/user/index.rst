@@ -1,52 +1,58 @@
-|user| How to use NEST Desktop
-==============================
+=================
+|user| User guide
+=================
 
-.. _quick-start:
+The user guide provides detailed documentation of the GUI of NEST Desktop.
 
-**Quick start**
 
-The video shows the few steps to construct a network and explore its activity.
-For more information, please read :doc:`detailed guides of usage <usage>`.
+How to use NEST Desktop
+=======================
 
 .. raw:: html
+   :file: ./templates/usage-basic.html
 
-  <div class="iframe-container">
-    <iframe src="https://drive.ebrains.eu/f/157fc20ea0734e21aa2e/?raw=1" frameborder="0" allowfullscreen></iframe>
-  </div>
+.. toctree::
+   :hidden:
 
-||||
-
-|
-
-.. _getting-started-in-terminal-with-docker-compose:
-
-**Getting started in Terminal with Docker-compose**
-
-.. code-block:: bash
-
-  wget https://raw.githubusercontent.com/nest-desktop/nest-desktop/main/docker-compose.yml
-  docker-compose up --build
-
-For more information, please read the :doc:`detailed setup guides <setup>`.
-
-|
-
-||||
-
-Guides for NEST Desktop
-  - :doc:`How to setup NEST Desktop <setup>`
-  - :doc:`How to use NEST Desktop <usage>`
-  - :doc:`How to explore the activity graph <activity-graph>`
-  - :doc:`How to manage NEST models <nest-models>`
-  - :doc:`How to use NEST Desktop with Insite <usage-insite>`
-  - :doc:`Troubleshooting <troubleshooting>`
-
-Guides for the infrastructure
-  - :doc:`Use NEST Desktop on EBRAINS <use-ebrains>`
+   setup/index
+   usage-basic/index
 
 
-.. |user| image:: ../_static/img/icons/user.svg
-  :width: 85px
-  :alt:
-  :align: top
-  :target: #
+Advance guide
+=============
+
+.. raw:: html
+   :file: ./templates/usage-advance.html
+
+.. toctree::
+   :hidden:
+
+   usage-advance/project-view
+   usage-advance/model-view
+   usage-advance/network-graph
+   usage-advance/activity-chart-graph
+   usage-advance/activity-animation-graph
+   usage-advance/controller-sidebar
+   usage-advance/copy-model
+   usage-advance/compartmental-neuron
+   usage-advance/synapse-model
+
+
+External software
+=================
+
+.. raw:: html
+   :file: ./templates/usage-external.html
+
+.. toctree::
+   :hidden:
+
+   usage-external/simulate-with-insite
+   usage-external/usage-with-nrp
+   usage-external/usage-with-visimpl
+
+
+.. |user| image:: /_static/img/icons/user.svg
+   :alt: User
+   :height: 80px
+   :target: #

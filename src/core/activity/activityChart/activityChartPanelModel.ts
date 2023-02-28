@@ -108,15 +108,8 @@ export abstract class ActivityChartPanelModel {
   /**
    * Check if it has any activities.
    */
-  hasActivities(): boolean {
+  get hasActivities(): boolean {
     return this.activities.length > 0;
-  }
-
-  /**
-   * Check if record is selected.
-   */
-  isRecordSelected(record: NodeRecord): boolean {
-    return this._state.recordsVisible.some((rec: NodeRecord) => rec === record);
   }
 
   /**
@@ -143,14 +136,19 @@ export abstract class ActivityChartPanelModel {
   abstract initActivities(): void;
 
   /**
+   * Update active marker.
+   **/
+  updateActiveMarker(record: NodeRecord = undefined): void {
+    record;
+  }
+
+  /**
    * Initialize records from analog activities.
    */
   initAnalogRecords(): void {
     this._state.records = [];
     this.activities
-      .filter((activity: Activity) =>
-        activity.recorder.model.isAnalogRecorder()
-      )
+      .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
       .forEach((activity: Activity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
@@ -191,6 +189,19 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
+   * Initialize params for controller.
+   */
+  initParams(params: any = {}): void {
+    this._params
+      .filter((param: any) => param.id in params)
+      .forEach((param: any) => {
+        if (params[param.id] != undefined) {
+          param.value = params[param.id];
+        }
+      });
+  }
+
+  /**
    * Update panel model.
    *
    * @remarks
@@ -202,7 +213,7 @@ export abstract class ActivityChartPanelModel {
 
     this.data = [];
     this.activities.forEach((activity: Activity) => {
-      this.updateData(activity);
+      this.addData(activity);
     });
 
     this.updateLayoutLabel();
@@ -223,9 +234,7 @@ export abstract class ActivityChartPanelModel {
 
     // Add new records from current recorder.
     this._activities
-      .filter((activity: Activity) =>
-        activity.recorder.model.isAnalogRecorder()
-      )
+      .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
       .forEach((activity: Activity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
@@ -242,6 +251,13 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
+   * Get activity from the project.
+   */
+  getActivity(idx: number): Activity {
+    return this._panel.graph.project.activities[idx];
+  }
+
+  /**
    * Update color for records.
    */
   updateRecordsColor(): void {
@@ -250,16 +266,16 @@ export abstract class ActivityChartPanelModel {
         return;
       }
 
+      const activity = this.getActivity(data.activityIdx);
       const record = this._state.recordsVisible.find(
         (record: NodeRecord) =>
           record.id === data.recordId &&
           record.activity.idx === data.activityIdx
       );
 
-      const activity = this._activities[data.activityIdx];
       const color = record
         ? record.color
-        : activity.recorder.view.color || 'black';
+        : activity.recorder.view.color || 'grey';
 
       if (data.marker) {
         data.marker.color = color;
@@ -270,13 +286,13 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update activity graph panel.
+   * Add data of this activity graph panel.
    *
    * @remarks
    * It requires activity data.
    * It is a replacement for abstract component.
    */
-  updateData(activity: Activity): void {
+  addData(activity: Activity): void {
     activity;
   }
 
@@ -322,7 +338,15 @@ export abstract class ActivityChartPanelModel {
   toJSON(): any {
     const model: any = {
       id: this._id,
+      params: {},
     };
+
+    if (this._params.length > 0) {
+      this._params.forEach((param: any) => {
+        model.params[param.id] = param.value;
+      });
+    }
+
     if (this._state.recordsVisible.length > 0) {
       model.records = this._state.recordsVisible.map((record: NodeRecord) =>
         record.toJSON()

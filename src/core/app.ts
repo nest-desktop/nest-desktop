@@ -1,11 +1,12 @@
-import { consoleLog } from './common/logger';
+import { reactive, UnwrapRef } from '@vue/composition-api';
+import { SetupContext } from '@vue/composition-api';
 
+import { consoleLog } from './common/logger';
 import { Backend } from './common/backend';
 import { Config } from './common/config';
 import { ModelStore } from './model/modelStore';
+import { Project } from './project/project';
 import { ProjectStore } from './project/projectStore';
-
-import { environment } from '../environments/environment';
 
 const pad = (num: number, size: number = 2): string => {
   let s: string = num + '';
@@ -19,31 +20,32 @@ export class App extends Config {
   private _backends: any = {};
   private _model: ModelStore;
   private _project: ProjectStore;
-  private _state: any = {
-    ready: false,
-    theme: { dark: false },
-    version: '',
-    dialog: {
-      open: false,
-      source: 'project',
-      action: 'export',
-      content: [],
-    },
-  };
+  private _state: UnwrapRef<any>;
+  private _vueSetupContext: SetupContext;
 
   constructor() {
     super('App');
-    this._state.version = environment.VERSION;
+    this._state = reactive({
+      dialog: {
+        action: '',
+        data: {},
+        open: false,
+        source: '',
+      },
+      ready: false,
+      theme: { dark: false },
+      version: process.env.VUE_APP_VERSION,
+    });
 
     // Backends
-    this._backends.insiteAccess = new Backend('InsiteAccess', {
-      path: '/insite',
-      port: 8080,
-      versionPath: '/version/',
-    });
     this._backends.nestSimulator = new Backend('NESTSimulator', {
       path: '/nest',
-      port: 5000,
+      port: 52425,
+      versionPath: '/',
+    });
+    this._backends.insiteAccess = new Backend('InsiteAccess', {
+      path: '/insite',
+      port: 52056,
       versionPath: '/',
     });
 
@@ -53,6 +55,10 @@ export class App extends Config {
 
   get backends(): any {
     return this._backends;
+  }
+
+  get currentProject(): Project {
+    return this._project.project;
   }
 
   get datetime(): string {
@@ -95,25 +101,41 @@ export class App extends Config {
     return this._state;
   }
 
+  get vueSetupContext(): SetupContext {
+    return this._vueSetupContext;
+  }
+
   /**
    * Initialize application.
    */
-  init(config: any): void {
+  init(context: SetupContext, config: any): void {
     consoleLog(this, 'Initialize app');
+    this._state.ready = false;
+
+    // Add setup context of Vue.
+    this._vueSetupContext = context;
 
     // Update configs from global config.
     this.updateConfigs(config);
 
     // Check if backends is running.
-    this.checkBackends();
+    this.checkBackends().then(() => {
+      // Fetch models from NEST Simulator.
+      this._model.fetchModelsNEST();
 
-    // Fetch models from NEST Simulator.
-    this._model.fetchModelsNEST();
+      // Fetch model files from Github.
+      this._model.fetchModelFilesGithub();
+    });
 
-    // Fetch model files from Github.
-    this._model.fetchModelFilesGithub();
+    if (
+      this.config.intervalCheckBackends > 0 &&
+      process.env.VUE_APP_INTERVAL_CHECK_BACKENDS != '0'
+    ) {
+      setInterval(() => {
+        this.checkBackends();
+      }, this.config.intervalCheckBackends * 1000);
+    }
 
-    this._state.ready = false;
     let promise: Promise<void> = Promise.resolve();
     promise = promise.then(() => this._model.init());
     promise = promise.then(() => this._project.init());
@@ -159,11 +181,11 @@ export class App extends Config {
   /**
    * Open dialog.
    */
-  openDialog(source: string, action: string, content: any[]): void {
+  openDialog(source: string, action: string, data: any = {}): void {
     consoleLog(this, 'Open dialog');
     this._state.dialog.source = source;
     this._state.dialog.action = action;
-    this._state.dialog.content = content;
+    this._state.dialog.data = data;
     this._state.dialog.open = true;
   }
 
@@ -208,8 +230,13 @@ export class App extends Config {
    * @remarks
    * Global config is loaded in main.ts.
    */
-  checkBackends(): void {
-    this._backends.nestSimulator.check();
-    this._backends.insiteAccess.check();
+  checkBackends(): Promise<void> {
+    return new Promise(resolve => {
+      const nestSimulatorStatus = this._backends.nestSimulator.check();
+      const insiteAccessStatus = this._backends.insiteAccess.check();
+      Promise.all([nestSimulatorStatus, insiteAccessStatus]).then(values => {
+        resolve();
+      });
+    });
   }
 }

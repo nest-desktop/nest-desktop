@@ -3,14 +3,6 @@ import * as math from 'mathjs';
 import { ActivityChartPanelModel } from './activityChartPanelModel';
 import { ActivityChartGraph } from './activityChartGraph';
 
-import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
-import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
-import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
-import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
-import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
-import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
-import { SenderSpikeCountPlotModel } from './activityChartPanelModels/senderSpikeCountPlotModel';
-import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
 import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
 
 export class ActivityChartPanel {
@@ -28,71 +20,6 @@ export class ActivityChartPanel {
       title: '',
     },
   };
-  private _models: any[] = [
-    {
-      activityType: 'analog',
-      component: AnalogSignalPlotModel,
-      id: 'analogSignalPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Analog signals',
-    },
-    {
-      activityType: 'analog',
-      component: AnalogSignalHistogramModel,
-      id: 'analogSignalHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'analog signals',
-    },
-    {
-      activityType: 'spike',
-      component: SpikeTimesRasterPlotModel,
-      id: 'spikeTimesRasterPlot',
-      icon: 'mdi-chart-scatter-plot',
-      label: 'Spike times',
-    },
-    {
-      activityType: 'spike',
-      component: SpikeTimesHistogramModel,
-      id: 'spikeTimesHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'Spike times',
-    },
-    {
-      activityType: 'spike',
-      component: InterSpikeIntervalHistogramModel,
-      id: 'interSpikeIntervalHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'Inter-spike interval',
-    },
-    {
-      activityType: 'spike',
-      component: CVISIHistogramModel,
-      id: 'CVISIHistogram',
-      icon: 'mdi-chart-bar',
-      label: 'CV of ISI',
-    },
-    {
-      activityType: 'spike',
-      component: SenderSpikeCountPlotModel,
-      id: 'senderSpikeCountPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Spike count in each sender',
-    },
-    {
-      activityType: 'spike',
-      component: SenderMeanISIPlotModel,
-      id: 'senderMeanISIPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'Mean ISI in each sender',
-    },
-    {
-      activityType: 'spike',
-      component: SenderCVISIPlotModel,
-      id: 'senderCVISIPlot',
-      icon: 'mdi-chart-bell-curve-cumulative',
-      label: 'CV ISI in each sender',
-    },
-  ];
   private _model: ActivityChartPanelModel;
   private _state = {
     initialized: false,
@@ -130,22 +57,6 @@ export class ActivityChartPanel {
 
   get model(): ActivityChartPanelModel {
     return this._model;
-  }
-
-  get models(): ActivityChartPanelModel[] {
-    return this._models;
-  }
-
-  get modelsAnalog(): ActivityChartPanelModel[] {
-    return this._models.filter(
-      (model: ActivityChartPanelModel) => model.activityType === 'analog'
-    );
-  }
-
-  get modelsSpike(): ActivityChartPanelModel[] {
-    return this._models.filter(
-      (model: ActivityChartPanelModel) => model.activityType === 'spike'
-    );
   }
 
   get params(): any[] {
@@ -198,7 +109,7 @@ export class ActivityChartPanel {
     modelSpec: any = {}
   ): void {
     if (modelId) {
-      const model: any = this._models.find(
+      const model: any = this._graph.models.find(
         (model: any) => model.id === modelId
       );
       if (model) {

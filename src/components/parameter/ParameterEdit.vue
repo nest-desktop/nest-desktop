@@ -9,7 +9,7 @@
       transition="slide-y-transition"
     >
       <v-card :min-width="300" flat tile>
-        <v-card-subtitle class="pb-0" v-text="state.options.label" />
+        <v-card-subtitle class="pb-0" v-text="label()" />
 
         <span v-if="state.content == null">
           <v-list dense>
@@ -144,62 +144,252 @@
             <v-btn @click="generateValues" outlined small v-text="'generate'" />
           </v-card-actions>
         </span>
+
+        <span v-if="state.content === 'nonConstantParameter' && state.param">
+          <v-card-text>
+            <NonConstantParameterEdit :param="state.param" />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="backMenu" outlined small text>
+              <v-icon left v-text="'mdi-menu-left'" /> back
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              @click="state.param.paramChanges()"
+              outlined
+              small
+              v-text="'Update parameter'"
+            />
+          </v-card-actions>
+        </span>
       </v-card>
     </v-menu>
 
-    <v-card @contextmenu="e => showMenu(e)" flat tile>
+    <v-card
+      @contextmenu="showMenu"
+      flat
+      tile
+      v-show="!state.options.hasOwnProperty('show') || state.options.show"
+    >
       <v-row class="px-1 my-0" no-gutters>
         <v-col cols="12">
-          <template v-if="state.expertMode">
-            <ParameterEditExpert
-              :param="state.param"
-              @update:param="paramExpertChange"
-            />
+          <template v-if="state.param && !state.param.isConstant">
+            <RandomParameterEditButton :param="state.param" />
           </template>
 
           <template v-else>
+            <!--
+              Array input
+            -->
             <template v-if="state.options.input === 'arrayInput'">
               <v-textarea
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :label="label()"
+                :persistent-hint="state.message.length > 0"
                 :row-height="12"
                 :rows="1"
-                @change="paramChange()"
+                :rules="rules"
+                :value="state.value"
+                @change="paramChange"
                 auto-grow
                 class="my-1"
-                hide-details
+                dense
                 outlined
                 small
-                v-model="state.value"
-              />
+              >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message"
+                    style="margin-left: -12px; margin-right: -12px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
+                </template>
+              </v-textarea>
             </template>
 
+            <!--
+              Checkbox
+            -->
             <template v-if="state.options.input === 'checkbox'">
               <v-checkbox
                 :color="state.color"
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
                 :label="label()"
+                :persistent-hint="state.message.length > 0"
                 :readonly="state.options.readonly"
-                @change="paramChange()"
+                :rules="rules"
+                :value="state.value"
+                @change="paramChange"
                 class="ma-1"
                 dense
-                hide-details
-                v-model="state.value"
-              />
+              >
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message"
+                    style="margin-left: -4px; margin-right: -4px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
+                </template>
+              </v-checkbox>
             </template>
 
+            <!--
+              Checkbox and value input
+            -->
+            <template v-if="state.options.input === 'checkbox+valueInput'">
+              <span class="d-flex">
+                <v-checkbox
+                  :color="state.color"
+                  :label="label()"
+                  :readonly="state.options.readonly"
+                  class="ma-1"
+                  dense
+                  hide-details
+                  v-model="state.visible"
+                />
+                <v-spacer />
+                <v-text-field
+                  :disabled="!state.visible"
+                  :label="label()"
+                  :value="state.value"
+                  @blur="e => paramChange(Number(e.target.value))"
+                  @change="paramChange"
+                  class="mt-0 ml-2 pt-0"
+                  height="32"
+                  hide-details
+                  single-line
+                  style="width: 60px; font-size: 12px"
+                  type="number"
+                />
+              </span>
+            </template>
+
+            <!--
+              Select
+            -->
             <template v-if="state.options.input === 'select'">
               <v-select
                 :color="state.color"
                 :items="state.options.items"
                 :label="label()"
                 :readonly="state.options.readonly"
-                @change="paramChange()"
+                :value="state.value"
+                @change="paramChange"
                 class="ma-1 mt-3"
                 dense
                 hide-details
-                v-model="state.value"
               />
             </template>
 
+            <template
+              v-if="
+                state.options.input === 'rangeSlider' &&
+                Array.isArray(state.value)
+              "
+            >
+              <v-subheader class="paramLabel" v-text="label()" />
+              <v-range-slider
+                :hide-details="state.message.length === 0"
+                :hint="state.message"
+                :max="state.options.max"
+                :min="state.options.min"
+                :persistent-hint="state.message.length > 0"
+                :rules="rules"
+                :thumb-color="state.color"
+                :value="state.value"
+                @change="paramChange"
+                class="align-center"
+                dense
+                height="40"
+                thumb-label
+              >
+                <template #prepend>
+                  <v-text-field
+                    :value="state.value[0]"
+                    :rules="rules"
+                    @change="$set(state.value, 0, $event)"
+                    class="mt-0 ml-2 pt-0"
+                    height="32"
+                    hide-details
+                    single-line
+                    style="width: 60px; font-size: 12px"
+                    type="number"
+                  />
+                </template>
+                <template #append>
+                  <v-text-field
+                    :rules="rules"
+                    :value="state.value[1]"
+                    @change="$set(state.value, 1, $event)"
+                    class="mt-0 ml-2 pt-0"
+                    height="32"
+                    hide-details
+                    single-line
+                    style="width: 60px; font-size: 12px"
+                    type="number"
+                  />
+                </template>
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message"
+                    style="margin-left: -70px; margin-right: -70px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
+                </template>
+              </v-range-slider>
+            </template>
+
+            <!--
+              Tick slider
+            -->
             <template v-if="state.options.input === 'tickSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
@@ -219,28 +409,33 @@
                 ticks="always"
               >
                 <template #message>
-                  <div @click="closeMessage" class="mb-1 message mt-2">
-                    <v-divider />
-                    <v-row class="mx-0 py-1">
-                      <v-col class="text-center" cols="2">
-                        <v-icon large right v-text="'mdi-alert-outline'" />
-                      </v-col>
-                      <v-col cols="10" style="margin: auto">
-                        <div v-text="state.message" />
-                      </v-col>
-                    </v-row>
-                    <v-divider />
+                  <div @click="closeMessage" class="message my-1" title="Close">
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
                   </div>
                 </template>
               </v-slider>
             </template>
 
+            <!--
+              Value input
+            -->
             <template v-if="state.options.input === 'valueInput'">
               <v-text-field
                 :label="label()"
                 :value="state.value"
                 @blur="e => paramChange(e.target.value)"
-                @change="paramChange"
                 auto-grow
                 hide-details
                 outlined
@@ -248,6 +443,9 @@
               />
             </template>
 
+            <!--
+              Value slider
+            -->
             <template v-if="state.options.input === 'valueSlider'">
               <v-subheader class="paramLabel" v-text="label()" />
               <v-slider
@@ -263,36 +461,8 @@
                 :value="state.value"
                 @change="paramChange"
                 dense
-                height="40"
                 thumb-label
               >
-                <template #message>
-                  <div
-                    @click="closeMessage"
-                    class="mb-1 message"
-                    style="margin-left: -37px; margin-right: -105px"
-                  >
-                    <v-divider />
-                    <v-row class="mx-0 py-1">
-                      <v-col class="text-center" cols="2">
-                        <v-icon
-                          :large="state.options.iconSize === 'large'"
-                          :small="state.options.iconSize === 'small'"
-                          right
-                          v-text="
-                            state.options.rules[0].includes('info')
-                              ? 'mdi-information-outline'
-                              : 'mdi-alert-outline'
-                          "
-                        />
-                      </v-col>
-                      <v-col cols="10">
-                        <div v-text="state.message" />
-                      </v-col>
-                    </v-row>
-                    <v-divider />
-                  </div>
-                </template>
                 <template #prepend>
                   <v-btn
                     :disabled="
@@ -330,17 +500,40 @@
                   </v-btn>
                   <v-text-field
                     :readonly="state.options.readonly"
+                    :rules="rules"
                     :step="state.options.step || 1"
                     :value="state.value"
-                    @blur="e => paramChange(e.target.value)"
-                    @change="paramChange"
+                    @blur="e => paramChange(Number(e.target.value))"
                     class="mt-0 ml-2 pt-0"
                     height="32"
                     hide-details
                     single-line
                     style="width: 60px; font-size: 12px"
                     type="number"
-                  />
+                  >
+                  </v-text-field>
+                </template>
+                <template #message>
+                  <div
+                    @click="closeMessage"
+                    class="message my-1"
+                    style="margin-left: -37px; margin-right: -105px"
+                    title="Close"
+                  >
+                    <v-alert
+                      :icon="
+                        state.isValid
+                          ? 'mdi-alert-outline'
+                          : 'mdi-close-octagon-outline'
+                      "
+                      :type="state.isValid ? 'warning' : 'error'"
+                      dense
+                      text
+                      outlined
+                    >
+                      {{ state.message }}
+                    </v-alert>
+                  </div>
                 </template>
               </v-slider>
             </template>
@@ -355,28 +548,40 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
-import { ValueGenerator } from '@/core/parameter/valueGenerator';
-
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { ModelParameter } from '@/core/model/modelParameter';
+import { NodeParameter } from '@/core/node/nodeParameter';
 import { Parameter } from '@/core/parameter/parameter';
-import ParameterEditExpert from '@/components/parameter/ParameterEditExpert.vue';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
+import { ValueGenerator } from '@/core/parameter/valueGenerator';
+import NonConstantParameterEdit from '@/components/parameter/NonConstantParameterEdit.vue';
+import RandomParameterEditButton from '@/components/parameter/RandomParameterEditButton.vue';
+
+import core from '@/core';
 
 export default Vue.extend({
   name: 'ParameterEdit',
   components: {
-    ParameterEditExpert,
+    NonConstantParameterEdit,
+    RandomParameterEditButton,
   },
   props: {
     color: String,
     value: [Object, Array, Number, String, Boolean],
-    param: [ModelParameter, Parameter],
+    param: [NodeParameter, ModelParameter, SynapseParameter, Parameter],
     options: Object,
   },
   setup(props, { emit }) {
+    type paramTypes =
+      | NodeParameter
+      | ModelParameter
+      | SynapseParameter
+      | Parameter
+      | undefined;
+
     const state = reactive({
       color: props.color,
       content: null,
-      expertMode: false,
+      isValid: true,
       items: [
         {
           actions: [],
@@ -400,19 +605,12 @@ export default Vue.extend({
           visible: true,
         },
         {
-          actions: [
-            {
-              id: 'switch',
-              value: () => state.expertMode,
-            },
-          ],
+          actions: [],
+          append: true,
           icon: '$diceMultipleOutline',
-          title: 'Expert mode',
+          title: 'Set up as a non-constant parameter',
           onClick: () => {
-            state.param.value = state.value;
-            state.param.type = 'constant';
-            state.expertMode = !state.expertMode;
-            // paramChange();
+            state.content = 'nonConstantParameter';
           },
           visible: true,
         },
@@ -447,7 +645,7 @@ export default Vue.extend({
       },
       message: '',
       options: props.param ? props.param['options'] : props.options,
-      param: props.param as ModelParameter | Parameter | undefined,
+      param: props.param as paramTypes,
       showConfig: false,
       timeoutId: undefined,
       value: undefined,
@@ -471,32 +669,45 @@ export default Vue.extend({
      */
     const deserialize = (value: any) => {
       switch (state.options.input) {
+        case 'arrayInput':
+          switch (typeof value) {
+            case 'number':
+              return [value];
+            case 'string':
+              return value.startsWith('[') && value.endsWith(']')
+                ? JSON.parse(value)
+                : JSON.parse(`[${value}]`); // returns array
+            default:
+              return value;
+          }
+        case 'checkbox':
+          return value === true;
         case 'tickSlider':
           return state.options.ticks[value]; // returns tick values
-        case 'arrayInput':
-          if (typeof value === 'string') {
-            return value.startsWith('[') && value.endsWith(']')
-              ? JSON.parse(value)
-              : JSON.parse(`[${value}]`); // returns array
-          } else {
-            return value;
-          }
         default:
           return value;
       }
     };
 
+    /**
+     * Generate values for an array.
+     */
     const generateValues = () => {
       state.valueGenerator.sort =
         state.param.id.includes('time') || state.param.id.includes('Time');
       state.value = state.valueGenerator.generate();
-      paramChange();
+      paramChange(state.value);
     };
+
+    /**
+     * Check if the string contains only a number.
+     */
+    const containsOnlyNumber = (value: string) => /^[0-9]+([.][0-9]*)?$/.test(value);
 
     /**
      * Triggers when parameter is changed.
      */
-    const paramChange = (value: any = undefined) => {
+    const paramChange = (value: boolean | number | string) => {
       // if (state.value < state.options.min) {
       //   state.options.min = state.value;
       // }
@@ -504,27 +715,19 @@ export default Vue.extend({
       //   state.options.max = state.value;
       // }
 
-      let changed: boolean = true;
-      if (typeof value === 'number') {
-        // slider
-        changed = state.value !== value;
-        state.value = value;
-      } else if (typeof value === 'string') {
-        // text field
-        changed = state.value !== Number(value);
+      let isChanged: boolean;
+      if (typeof value === 'string' && containsOnlyNumber(value)) {
+        isChanged = Number(value) !== state.value;
         state.value = Number(value);
+      } else {
+        isChanged = value !== state.value;
+        state.value = value;
       }
-      if (changed) {
+
+      // Emit when the value is changed.
+      if (isChanged) {
         emit('update:value', deserialize(state.value));
       }
-    };
-
-    /**
-     * Triggers when parameter in expert mode is changed.
-     */
-    const paramExpertChange = () => {
-      state.expertMode = !state.param.isConstant();
-      state.param.paramChanges();
     };
 
     /**
@@ -549,35 +752,37 @@ export default Vue.extend({
      */
     const label = () => {
       if (state.param) {
-        return state.param.title;
+        return state.param.labelInput;
       } else {
-        let text = state.options.label;
-        return state.options.unit ? text + ` (${state.options.unit})` : text;
+        const label = state.options.label as string;
+        return state.options.unit ? label + ` (${state.options.unit})` : label;
       }
     };
 
     /**
-     * Increment value
+     * Increment value.
      */
     const increment = (e: any) => {
+      let value = parseFloat(state.value);
       if (e.ctrlKey) {
-        state.value += parseFloat(state.options.step) * 10 || 10;
+        value += parseFloat(state.options.step) * 10 || 10;
       } else {
-        state.value += parseFloat(state.options.step) || 1;
+        value += parseFloat(state.options.step) || 1;
       }
-      paramChange();
+      paramChange(value);
     };
 
     /**
-     * Increment value
+     * Increment value.
      */
     const decrement = (e: any) => {
+      let value = parseFloat(state.value);
       if (e.ctrlKey) {
-        state.value += parseFloat(state.options.step) * 10 || 10;
+        value += parseFloat(state.options.step) * 10 || 10;
       } else {
-        state.value -= parseFloat(state.options.step) || 1;
+        value -= parseFloat(state.options.step) || 1;
       }
-      paramChange();
+      paramChange(value);
     };
 
     /**
@@ -596,7 +801,7 @@ export default Vue.extend({
     };
 
     /**
-     * show menu items.
+     * Show menu items.
      */
     const showMenuItems = () => {
       state.items[1].visible = state.options.input === 'arrayInput';
@@ -614,8 +819,7 @@ export default Vue.extend({
       state.value = serialize(props.value);
       if (props.param) {
         state.options = props.param['options'];
-        state.param = props.param as ModelParameter | Parameter;
-        state.expertMode = !state.param.isConstant();
+        state.param = props.param as paramTypes;
       } else {
         state.options = props.options;
       }
@@ -627,36 +831,50 @@ export default Vue.extend({
      * Close message text.
      */
     const closeMessage = () => {
-      if (state.timeoutId) {
-        clearTimeout(state.timeoutId);
-      }
+      state.isValid = true;
       state.message = '';
     };
+
+    const simulationResolution = () =>
+      core.app.currentProject.simulation.kernel.resolution;
 
     /**
      * Rules for value validation.
      */
     const rules = [
-      (value: number) => {
-        if (state.timeoutId) {
-          clearTimeout(state.timeoutId);
+      (val: number | string) => {
+        closeMessage();
+        try {
+          const value = deserialize(val);
+          if (
+            state.options.unit &&
+            ['Hz', 'ms', 'nS', 'pF'].includes(state.options.unit) &&
+            typeof value === 'number' &&
+            value < 0
+          ) {
+            state.message = `The value must be positive.`;
+            state.isValid = false;
+          } else if (
+            state.options.id === 'interval' &&
+            value < simulationResolution()
+          ) {
+            state.message = `The value must be at least as long as the simulation resolution.`;
+            state.isValid = false;
+          } else if (state.options.rules != null) {
+            state.options.rules.forEach((rule: string[]) => {
+              if (state.isValid) {
+                const validated = eval(rule[0]);
+                state.message = validated ? '' : rule[1];
+                state.isValid = validated || rule[2] != 'error';
+              }
+            });
+          }
+        } catch {
+          state.message =
+            'The value is invalid. Please correct it. The scripted code might be not generated. ';
+          state.isValid = false;
         }
-        let messageType: string = '';
-        if (state.options.unit && state.options.unit === 'ms' && value < 0) {
-          messageType = 'error';
-          state.message = `The ${state.options.label} cannot be negative.`;
-        } else if (state.options.rules != null) {
-          state.options.rules.forEach((rule: string[]) => {
-            state.message = eval(rule[0]) ? rule[1] : '';
-            messageType = eval(rule[0]) ? rule[2] : '';
-          });
-        }
-        // if (state.message.length > 0) {
-        //   state.timeoutId = setTimeout(() => {
-        //     state.message = '';
-        //   }, 7500);
-        // }
-        return messageType === 'error' ? state.message : true;
+        return true;
       },
     ];
 
@@ -675,11 +893,11 @@ export default Vue.extend({
       closeMessage,
       backMenu,
       decrement,
+      deserialize,
       generateValues,
       increment,
       label,
       paramChange,
-      paramExpertChange,
       rules,
       showMenu,
       state,
@@ -709,8 +927,28 @@ export default Vue.extend({
   display: block;
 }
 
+.parameterEdit .v-text-field__details {
+  margin-bottom: 0 !important;
+}
+
 .parameterEdit .message {
-  background-color: rgba(0, 0, 0, 0.12);
   cursor: pointer;
+}
+
+.parameterEdit .message .v-alert {
+  border-left: none !important;
+  border-radius: 0;
+  border-right: none !important;
+  margin-bottom: 0;
+}
+
+.parameterEdit .message .v-alert__content {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.parameterEdit .message .v-alert__icon {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 </style>

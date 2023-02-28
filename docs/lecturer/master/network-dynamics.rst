@@ -51,7 +51,7 @@ A typical value for the connection probability in local cortical networks is 10%
 
    .. note::
       There are several different options to wire up a network randomly
-      (see https://www.nest-simulator.org/connection-management).
+      (|see| https://www.nest-simulator.org/connection-management).
 
    Find a meaningful way to monitor neuronal activity in the network, both on the level of individual neurons (membrane potentials and spike trains), and on the level of the whole population (PSTH, as a proxy for the EEG).
    Characterize the type of activity that you observe.
@@ -171,10 +171,14 @@ compensated by an increased strength of inhibitory synapses.
    Describe how the balance is affected, and what the consequences of this for the recurrent network dynamics are.
 
 
-**Video tutorial**
+Video tutorial
+--------------
 
 .. raw:: html
+   :file: ../templates/iframe-network-dynamics.html
 
-  <div class="iframe-container">
-    <iframe src="https://drive.ebrains.eu/f/dd51fc9aed2345ed861f/?raw=1" frameborder="0" allowfullscreen></iframe>
-  </div>
+
+.. |see| image:: /_static/img/icons/arrow-right.svg
+   :alt: See
+   :height: 17.6px
+   :target: #

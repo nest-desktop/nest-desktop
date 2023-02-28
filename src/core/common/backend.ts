@@ -1,22 +1,30 @@
 import axios from 'axios';
 import combineURLs from 'axios/lib/helpers/combineURLs';
+import { reactive, UnwrapRef } from '@vue/composition-api';
 
 import { Config } from './config';
 
 export class Backend extends Config {
-  private _state: any = {
-    ready: false,
-    version: {},
-    seek: {
-      path: '/',
-      port: 5000,
-      versionPath: '',
-    },
-  };
+  private _state: UnwrapRef<any>;
 
-  constructor(name: string, seek = { path: '', port: 5000, versionPath: '' }) {
+  constructor(name: string, seek = { path: '', port: 0, versionPath: '' }) {
     super(name);
-    this._state.seek = seek;
+    this._state = reactive({
+      enabled: false,
+      ready: false,
+      seek,
+      version: {},
+    });
+  }
+
+  get enabled(): boolean {
+    this._state.enabled = this.config.enabled;
+    return this._state.enabled;
+  }
+
+  set enabled(value: boolean) {
+    this._state.enabled = value;
+    this.updateConfig({ enabled: value });
   }
 
   get host(): string {
@@ -88,7 +96,7 @@ export class Backend extends Config {
         const host: string[] = paths[0].split(':');
 
         hostname = host[0];
-        path = paths.length > 1 ? paths[1] : '/';
+        path = paths.length > 1 ? paths.slice(1).join('/') : '/';
         port = host.length > 1 ? host[1] : '';
         protocol = values[0];
       }
@@ -110,6 +118,7 @@ export class Backend extends Config {
    */
   async check(): Promise<void> {
     this.resetState();
+    if (this.config.enabled === false) return;
 
     // Check if the hostname does not already exist in the config.
     if (this.config.hostname) {
@@ -152,10 +161,13 @@ export class Backend extends Config {
             this.state.ready = true;
             this.state.version = response.data;
             break;
-          case 502:
-            console.log(response.data);
+          default:
+            this.state.ready = false;
             break;
         }
+      })
+      .catch(() => {
+        this.state.ready = false;
       });
   }
 

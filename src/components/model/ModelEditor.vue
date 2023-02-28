@@ -1,10 +1,6 @@
 <template>
   <div class="modelEditor" v-if="modelView.state.model">
-    <v-card
-      flat
-      style="height: calc(100vh - 48px); overflow-y: auto"
-      v-if="modelView.hasModel()"
-    >
+    <v-card flat v-if="modelView.hasModel">
       <v-card-title>
         <v-text-field
           hide-details
@@ -24,20 +20,16 @@
           :key="recordable.id"
           v-for="recordable in modelView.state.model.recordables"
         >
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                class="ma-1"
-                outlined
-                small
-                v-bind="attrs"
-                v-on="on"
-                v-text="recordable.id"
-              />
-            </template>
-            {{ recordable.label }}
-            <span v-if="recordable.unit"> ({{ recordable.unit }})</span>
-          </v-tooltip>
+          <v-chip
+            :title="
+              recordable.label +
+              (recordable.unit ? ` (${recordable.unit})` : '')
+            "
+            class="ma-1"
+            outlined
+            small
+            v-text="recordable.id"
+          />
         </span>
       </v-card-subtitle>
 
@@ -183,3 +175,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.modelEditor {
+  height: calc(100vh - 48px - 24px);
+  overflow-y: auto;
+}
+</style>

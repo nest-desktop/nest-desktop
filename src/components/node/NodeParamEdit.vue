@@ -1,6 +1,6 @@
 <template>
   <div class="nodeParamEdit" v-if="state.node">
-    <template v-if="state.node.model.isMultimeter()">
+    <template v-if="state.node.model.isMultimeter">
       <v-menu
         :close-on-content-click="false"
         :position-x="state.menu.position.x"
@@ -38,38 +38,31 @@
             small
             v-model="state.node.records"
           >
-            <template v-slot:selection="{ item }">
-              <v-tooltip bottom>
-                <template #activator="{ on, attrs }">
-                  <v-chip
-                    :color="item.color"
-                    @click="e => showColorPopup(e, item)"
-                    @click:close="
-                      () => {
-                        state.node.removeRecord(item);
-                        state.node.nodeChanges();
-                      }
-                    "
-                    close
-                    disable-lookup
-                    label
-                    outlined
-                    small
-                    style="margin: 1px 2px"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    {{ item.id }}
-                  </v-chip>
-                </template>
-                <div style="font-size: 12px">
-                  <span v-text="item.labelCapitalize" />
-                  <span v-if="item.unit" v-text="` (${item.unit})`" />
-                </div>
-              </v-tooltip>
+            <template #selection="{ item }">
+              <v-chip
+                :color="item.color"
+                :title="
+                  item.labelCapitalize + (item.unit ? ` (${item.unit})` : '')
+                "
+                @click="e => showColorPopup(e, item)"
+                @click:close="
+                  () => {
+                    state.node.removeRecord(item);
+                    state.node.nodeChanges();
+                  }
+                "
+                close
+                disable-lookup
+                label
+                outlined
+                small
+                style="margin: 1px 2px"
+              >
+                {{ item.id }}
+              </v-chip>
             </template>
 
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <v-chip
                 :color="item.color"
                 class="mx-2"
@@ -96,6 +89,105 @@
       @update:value="state.node.nodeChanges()"
       v-for="param of state.node.filteredParams"
     />
+
+    <v-card flat tile v-if="state.node.modelId === 'cm_default'">
+      <span class="mx-2"> Compartments </span>
+      <v-card-actions class="justify-space-between">
+        <v-item-group class="text-center" mandatory v-model="state.compIdx">
+          <v-item
+            :key="'comp-' + compartment.idx"
+            v-for="compartment of state.node.compartments"
+            v-slot="{ active, toggle }"
+          >
+            <v-chip
+              :color="state.node.view.color"
+              :input-value="active"
+              :label="compartment.parentIdx !== -1"
+              :title="compartment.labelFull"
+              @click="toggle"
+              @click:close="compartment.remove()"
+              class="ma-1px"
+              close
+              outlined
+              small
+            >
+              {{ compartment.label }}
+            </v-chip>
+          </v-item>
+        </v-item-group>
+      </v-card-actions>
+
+      <v-card flat tile>
+        <v-window v-model="state.compIdx">
+          <v-window-item
+            :key="compartment.idx"
+            v-for="compartment of state.node.compartments"
+          >
+            <v-card flat tile>
+              <ParameterEdit
+                :color="state.node.view.color"
+                :key="param.id"
+                :param="param"
+                :value.sync="param.value"
+                @update:value="state.node.nodeChanges()"
+                v-for="param of compartment.filteredParams"
+              />
+
+              <v-card flat tile>
+                <span class="mx-2"> Receptors in {{ compartment.label }} </span>
+                <v-card-actions class="justify-space-between">
+                  <v-item-group
+                    class="text-center"
+                    mandatory
+                    v-model="state.receptorIdx"
+                  >
+                    <v-item
+                      :key="'compartmentReceptor-' + receptor.idx"
+                      v-for="receptor of compartment.receptors"
+                      v-slot="{ active, toggle }"
+                    >
+                      <v-chip
+                        :color="state.node.view.color"
+                        :input-value="active"
+                        @click:close="receptor.remove()"
+                        @click="toggle"
+                        class="ma-1px"
+                        close
+                        label
+                        outlined
+                        small
+                      >
+                        {{ receptor.id }}
+                      </v-chip>
+                    </v-item>
+                  </v-item-group>
+                </v-card-actions>
+              </v-card>
+            </v-card>
+
+            <v-card flat tile>
+              <v-window v-model="state.receptorIdx">
+                <v-window-item
+                  :key="'nodeReceptor' + receptor.idx"
+                  v-for="receptor of compartment.receptors"
+                >
+                  <v-card flat tile>
+                    <ParameterEdit
+                      :color="state.node.view.color"
+                      :key="param.id"
+                      :param="param"
+                      :value.sync="param.value"
+                      @update:value="state.node.nodeChanges()"
+                      v-for="param of receptor.filteredParams"
+                    />
+                  </v-card>
+                </v-window-item>
+              </v-window>
+            </v-card>
+          </v-window-item>
+        </v-window>
+      </v-card>
+    </v-card>
   </div>
 </template>
 
@@ -117,6 +209,8 @@ export default Vue.extend({
   },
   setup(props) {
     const state = reactive({
+      compartments: [{ id: 'soma' }, { id: 'dendrite' }],
+      compIdx: 0,
       node: props.node as Node,
       menu: {
         position: {
@@ -126,6 +220,7 @@ export default Vue.extend({
         record: null,
         show: false,
       },
+      receptorIdx: 0,
     });
 
     /**
@@ -185,3 +280,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.nodeParamEdit .v-slide-group__next--disabled,
+.nodeParamEdit .v-slide-group__prev--disabled {
+  display: none;
+}
+</style>

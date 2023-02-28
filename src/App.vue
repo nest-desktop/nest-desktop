@@ -2,7 +2,9 @@
   <v-app>
     <transition name="fade">
       <div v-if="core.app.state.ready">
-        <iframe id="NESTSimulatorFrame" class="iframe" />
+        <AppDialog />
+
+        <SystemBar class="no-print" />
         <Navigation class="no-print" />
 
         <transition name="fade">
@@ -29,17 +31,22 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { reactive, onMounted } from '@vue/composition-api';
+import { onMounted, reactive } from '@vue/composition-api';
 
 import core from '@/core';
+
+import AppDialog from '@/components/dialog/AppDialog.vue';
 import Navigation from '@/components/navigation/Navigation.vue';
+import SystemBar from '@/components/systembar/SystemBar.vue';
 
 export default Vue.extend({
   name: 'App',
   components: {
+    AppDialog,
     Navigation,
+    SystemBar,
   },
-  setup(_, { root }) {
+  setup(_, context) {
     // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
     const state = reactive({
       refreshing: false,
@@ -74,27 +81,6 @@ export default Vue.extend({
       window.location.reload();
     };
 
-    /**
-     * Keep connection to NEST Simulator alive.
-     * Ping every 5 min.
-     */
-    const keepConnectionToNESTSimulatorAlive = () => {
-      core.app.backends.nestSimulator
-        .check()
-        .then(() => {
-          const NESTSimulatorFrame = document.getElementById(
-            'NESTSimulatorFrame'
-          ) as HTMLIFrameElement;
-          setInterval(() => {
-            NESTSimulatorFrame.src = core.app.backends.nestSimulator.url;
-            // NESTFrame.contentDocument.location.reload(true);
-          }, 300000);
-        })
-        .catch(() => {
-          // Errors are already logged inside the httpClient
-        });
-    };
-
     onMounted(() => {
       // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
@@ -102,13 +88,17 @@ export default Vue.extend({
       });
 
       // Initialize Vuetify theme (light / dark).
-      core.app.initTheme(root.$vuetify.theme);
+      core.app.initTheme(context.root.$vuetify.theme);
 
       // Initialize app with global config.
-      core.app.init(Vue.prototype.$appConfig);
+      core.app.init(context, Vue.prototype.$appConfig);
 
-      // Ping every 5 min to keep connection to NEST Simulator alive.
-      keepConnectionToNESTSimulatorAlive();
+      // It doesn't work in Electron.
+      if (!process.env.IS_ELECTRON) {
+        // Ask user before leave when some project is changed.
+        window.onbeforeunload = () =>
+          core.app.project.checkSomeProjectChanges() ? '' : null;
+      }
     });
 
     return { core, refreshApp, state };
@@ -135,13 +125,6 @@ export default Vue.extend({
   }
 }
 
-.iframe {
-  background-color: white;
-  display: none;
-  position: absolute;
-  z-index: 1000;
-}
-
 .v-toast__text h1 {
   font-size: 20px;
 }
@@ -158,6 +141,10 @@ export default Vue.extend({
 }
 .fade-enter {
   opacity: 0;
+}
+
+.ma-1px {
+  margin: 1px !important;
 }
 
 .ma-2px {

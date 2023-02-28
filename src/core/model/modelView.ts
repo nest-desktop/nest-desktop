@@ -1,13 +1,15 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
+import VueRouter from 'vue-router';
 
 import { consoleLog } from '../common/logger';
 
 import { App } from '../app';
+import { Config } from '../common/config';
 import { Model } from '../model/model';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
-export class ModelView {
+export class ModelView extends Config {
   private _app: App;
   // Keywords taken from https://github.com/nest/nest-simulator/blob/master/extras/help_generator/generate_help.py#L73
   private _docKeywords = [
@@ -64,6 +66,7 @@ export class ModelView {
   ];
 
   constructor(app: App) {
+    super('ModelView');
     this._app = app;
     this._state = reactive({
       defaults: {},
@@ -76,7 +79,7 @@ export class ModelView {
       fileExistedGithub: false,
       modeIdx: 0,
       model: undefined as Model | undefined,
-      modelId: '',
+      modelId: 'ac_generator',
       projectFilename: 'current-input',
       project: new Project(this._app),
       tool: undefined,
@@ -96,12 +99,12 @@ export class ModelView {
     if (this._state.model == undefined) {
       this._state.modeIdx = value;
     } else {
-      this._state.modeIdx = !this.isNeuron() && value === 1 ? 0 : value;
+      this._state.modeIdx = !this.isNeuron && value === 1 ? 0 : value;
       if (
-        this.isNeuron() &&
+        this.isNeuron &&
         this._state.modeIdx === 1 &&
         this._state.project &&
-        this._state.project.code.hash !==
+        this._state.project.simulation.code.hash !==
           this._state.project.activityGraph.codeHash &&
         this._app.project.view.config.simulateAfterLoad
       ) {
@@ -134,11 +137,20 @@ export class ModelView {
     this._state.modelId = id || this._state.modelId;
     this._state.model = this._app.model.getModel(this._state.modelId);
     this.checkFileExistedGithub();
-    this.getParamDefaults().then(() => {
-      this.initProject();
-      this._state.project.activityGraph.emptyActivityGraph();
+
+    // Returns if the NEST backend is not ready.
+    if (!this._app.backends.nestSimulator.state.ready) {
       this.updateToolView();
-      this.modeIdx = this.modeIdx;
+      return;
+    }
+
+    this.getParamDefaults().then(() => {
+      if (this._state.defaults['element_type'] === 'neuron') {
+        this.initProject();
+        this._state.project.activityGraph.emptyActivityGraph();
+        this.modeIdx = this.modeIdx;
+      }
+      this.updateToolView();
     });
   }
 
@@ -150,9 +162,11 @@ export class ModelView {
     this._state.model = undefined;
     setTimeout(() => {
       this._state.model = this._app.model.getModel(this._state.modelId);
-      this.initProject();
+      if (this._state.defaults['element_type'] === 'neuron') {
+        this.initProject();
+        this.modeIdx = this.modeIdx;
+      }
       this.updateToolView();
-      this.modeIdx = this.modeIdx;
     }, 100);
   }
 
@@ -167,7 +181,7 @@ export class ModelView {
   /**
    * Check if the model is implemented.
    */
-  hasModel(): boolean {
+  get hasModel(): boolean {
     return this._app.model.hasModel(this._state.modelId);
   }
 
@@ -195,7 +209,7 @@ export class ModelView {
       neuron.params = this._state.model.params;
       neuron.params.forEach((param: any) => (param.state.visible = true));
     });
-    this._state.project.code.generate();
+    this._state.project.simulation.code.generate();
   }
 
   /**
@@ -204,12 +218,15 @@ export class ModelView {
    */
   selectProject(id: string): void {
     this._state.projectFilename = id;
-    this.initProject();
-    this.modeIdx = 1;
+    const elementType: string = this._state.defaults['element_type'];
+    if (elementType === 'neuron') {
+      this.initProject();
+      this.modeIdx = 1;
+    }
   }
 
   /**
-   * Get paramter defaults from NEST Simulator.
+   * Get default values of parameters from NEST Simulator.
    */
   async getParamDefaults(): Promise<any> {
     return this._state.model
@@ -219,7 +236,7 @@ export class ModelView {
           const data = resp.data.replace(/(NaN|-?Infinity)/g, '"$1"');
           this._state.defaults = JSON.parse(data);
         } else {
-          this._state.defaults = resp.data;
+          this._state.defaults = resp.data || {};
         }
         this._state.params = Object.keys(this._state.defaults).map(
           (key: string) => {
@@ -247,14 +264,14 @@ export class ModelView {
    */
   updateToolView(): void {
     if (
-      (!this.isNeuron() && this._state.tool.title === 'code') ||
+      (!this.isNeuron && this._state.tool.title === 'code') ||
       (this._state.model.params.length === 0 &&
         this._state.tool.title === 'input')
     ) {
       this.selectTool(this._tools[0]);
     }
     this._tools[1].disabled = this._state.model.params.length === 0;
-    this._tools[2].disabled = !this.isNeuron();
+    this._tools[2].disabled = !this.isNeuron;
   }
 
   /**
@@ -277,9 +294,9 @@ export class ModelView {
     };
   }
 
-  isNeuron(): boolean {
+  get isNeuron(): boolean {
     if (this._state.model && this._state.model.elementType != null) {
-      return this._state.model.isNeuron();
+      return this._state.model.isNeuron;
     } else if (
       this._state.defaults &&
       this._state.defaults.element_type != null
@@ -298,6 +315,16 @@ export class ModelView {
     if (!this._state.modelId) {
       return;
     }
+
+    if (!this._app.backends.nestSimulator.state.ready) {
+      this._state.doc.blocks = [
+        {
+          content: `Sorry, there is no help for '${this._state.modelId}'.`,
+        },
+      ];
+      return;
+    }
+
     const path = 'api/help?return_text=true&obj=' + this._state.modelId;
     this._app.backends.nestSimulator.instance
       .get(path)
@@ -358,5 +385,40 @@ export class ModelView {
   update(): void {
     this._state.project.network.networkChanges();
     this._state.project.activityGraph.update();
+  }
+
+  /**
+   * Redirects the page content to the model. If
+   * no one was chosen before, the first one is selected.
+   * Please beware: The route IDs used in this class are the ones in the
+   * array, which might not contain every route from the Vue router!
+   */
+  redirect(): void {
+    let modelId: string;
+    if (
+      this._app.model.state.models.find(
+        (model: Model) => model.id === this._state.modelId
+      )
+    ) {
+      modelId = this._state.modelId;
+    }
+
+    if (modelId == undefined || modelId.length <= 0) {
+      modelId = this._app.model.recentModelId;
+    }
+
+    const router: VueRouter = this._app.vueSetupContext.root.$router;
+    if (modelId == undefined) {
+      router.push({
+        name: 'model',
+      });
+    } else if (router.currentRoute.params.id !== modelId) {
+      // Check if the page is already loaded to avoid "Avoided redundant
+      // navigation" error.
+      router.push({
+        name: 'modelId',
+        params: { id: modelId },
+      });
+    }
   }
 }

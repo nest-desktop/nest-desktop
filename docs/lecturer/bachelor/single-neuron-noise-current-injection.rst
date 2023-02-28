@@ -42,7 +42,7 @@ to approximate a particular type of white noise, Gaussian White Noise (GWN).
    To judge the effect of random fluctuations,
    it is important to look at multiple repetitions of the same experiment.
 
-   What happens to the frequency of spikes and the irregularity of spike trains 
+   What happens to the frequency of spikes and the irregularity of spike trains
    as mean and/or variance of the noise is increased?
    The irregularity of neuronal spiking can be assessed, for example,
    by the coefficient of variation (CV) of the interspike intervals.

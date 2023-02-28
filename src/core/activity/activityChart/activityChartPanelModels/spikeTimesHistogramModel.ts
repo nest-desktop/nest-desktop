@@ -18,12 +18,14 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         value: 20,
       },
     ];
+
+    this.initParams(model.params);
   }
 
   /**
-   * Update data for spike time histogram.
+   * Add data of spike times for histogram panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const x: number[] = activity.events.times;

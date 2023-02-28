@@ -13,7 +13,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive, ref, watch } from '@vue/composition-api';
+import {
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from '@vue/composition-api';
 import { codemirror } from 'vue-codemirror';
 
 export default Vue.extend({
@@ -67,6 +73,11 @@ export default Vue.extend({
     onMounted(() => {
       state.data = JSON.stringify(props.data, null, '\t');
       window.addEventListener('resize', resizeCodeMirror);
+      setTimeout(resizeCodeMirror, 1);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', resizeCodeMirror);
     });
 
     watch(
@@ -83,14 +94,12 @@ export default Vue.extend({
 
 <style>
 .codeMirror {
-  overflow: hidden;
+  height: calc(100vh - 48px - 24px);
 }
 
-.CodeMirror {
-  border: 1px solid #eee;
+.codeMirror .CodeMirror {
+  border: 1px solid rgba(0, 0, 0, 0.12);
   font-family: monospace;
   font-size: 12px;
-  width: 512px;
-  height: calc(100vh - 48px);
 }
 </style>

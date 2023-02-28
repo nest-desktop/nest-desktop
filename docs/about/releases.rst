@@ -1,115 +1,314 @@
 Releases
 ========
 
-:Jun 01, 2022: v3.1.4
-:May 20, 2022: v3.1.3
-:Feb 25, 2022: v3.1.2
-:Feb 22, 2022: v3.1.1
-:Feb 18, 2022: v3.1.0
+v3.2.x
+------
 
-||||
+Introduce copy models, compartmental neurons, synapse weight recordings,
+code templates and backend status.
 
-:Jul 19, 2021: v3.0.3
-:Jul 13, 2021: v3.0.2
-:Jul 09, 2021: v3.0.1
-:Jun 23, 2021: v3.0.0
-:Mar 04, 2021: v2.5.1
+==========  =======
+28 Feb 23   v3.2.0
+==========  =======
 
-||||
+v3.1.x
+------
 
-:Oct 23, 2020: v2.5.0
-:Jul 15, 2020: v2.4.1
-:Jun 28, 2020: v2.4.0
-:May 23, 2020: v2.3.2
-:May 22, 2020: v2.3.1
-:May 22, 2020: v2.3.0
-:Jan 27, 2020: v2.2.15
-:Jan 27, 2020: v2.2.14
-:Jan 20, 2020: v2.2.13
-:Jan 16, 2020: v2.2.12
+Introduce model management, simulation option with Insite.
 
-||||
+.. image:: /_static/img/screenshots/releases/v3.1-lab_book.png
+   :align: right
+   :class: border mb-3
+   :width: 480
 
-:Dec 30, 2019: v2.2.11
-:Dec 04, 2019: v2.2.10
-:Dec 04, 2019: v2.2.9
-:Dec 03, 2019: v2.2.8
-:Nov 27, 2019: v2.2.7
-:Nov 27, 2019: v2.2.6
-:Nov 27, 2019: v2.2.5
-:Nov 24, 2019: v2.2.4
-:Nov 24, 2019: v2.2.3
-:Nov 24, 2019: v2.2.2
-:Nov 21, 2019: v2.2.1
-:Nov 08, 2019: v2.2.0
-:Nov 05, 2019: v2.1.3
-:Nov 05, 2019: v2.1.2
-:Nov 04, 2019: v2.1.1
-:Oct 29, 2019: v2.1.0
-:Oct 02, 2019: v2.0.7
-:Sep 30, 2019: v2.0.6
-:Sep 25, 2019: v2.0.5
-:Sep 25, 2019: v2.0.4
-:Sep 23, 2019: v2.0.3
-:Sep 16, 2019: v2.0.2
-:Sep 15, 2019: v2.0.1
-:Sep 13, 2019: v2.0.0
-:Sep 13, 2019: v2.0.0
-:Jul 23, 2019: v1.5
-:May 31, 2019: v1.4
-:Apr 19, 2019: v1.3
-:Mar 18, 2019: v1.2
+.. image:: /_static/img/screenshots/releases/v3.1-spike_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
 
-||||
+.. image:: /_static/img/screenshots/releases/v3.1-model_view.png
+   :align: right
+   :class: border mb-3
+   :width: 480
 
-:Dec 18, 2018: v1.0
-:Apr 22, 2018: v0.15.3
-:Apr 17, 2018: v0.15.1
-:Feb 28, 2018: v0.15.0
-:Feb 28, 2018: v0.14.0
-:Feb 07, 2018: v0.13.0
-:Jan 29, 2018: v0.12.0
+==========  =======
+01 Jun 22   v3.1.4
+20 May 22   v3.1.3
+25 Feb 22   v3.1.2
+22 Feb 22   v3.1.1
+18 Feb 22   v3.1.0
+==========  =======
 
-||||
+|br|
 
-:Nov 22, 2017: v0.11.0
-:Oct 06, 2017: v0.10.0
-:Jun 20, 2017: v0.9.3
-:Jun 20, 2017: v0.9.2
-:Apr 29, 2017: v0.9.1
-:Apr 28, 2017: v0.9.0
-:Apr 18, 2017: v0.8.2
-:Apr 12, 2017: v0.8.1
-:Apr 10, 2017: v0.8.0
-:Mar 23, 2017: v0.7.2
-:Mar 15, 2017: v0.7.1
-:Mar 15, 2017: v0.7.0
-:Mar 04, 2017: v0.6.3
-:Feb 28, 2017: v0.6.2
-:Feb 27, 2017: v0.6.1
-:Feb 24, 2017: v0.6.0
-:Feb 09, 2017: v0.5.5
-:Feb 09, 2017: v0.5.4
-:Feb 07, 2017: v0.5.3
-:Feb 06, 2017: v0.5.2
-:Jan 23, 2017: v0.5.1
-:Jan 20, 2017: v0.5.0
-:Jan 09, 2017: v0.4.0
-:Jan 09, 2017: v0.3.12
-:Jan 05, 2017: v0.3.11
-:Jan 04, 2017: v0.3.10
-:Jan 04, 2017: v0.3.9
-:Jan 03, 2017: v0.3.8
+v3.0.x
+------
 
-||||
+.. image:: /_static/img/screenshots/releases/v3.0-lab_book.png
+   :align: right
+   :class: border mb-3
+   :width: 480
 
-:Dec 29, 2016: v0.3.7
-:Dec 21, 2016: v0.3.6
-:Dec 21, 2016: v0.3.5
-:Dec 21, 2016: v0.3.4
-:Dec 20, 2016: v0.3.3
-:Dec 19, 2016: v0.3.1
-:Dec 19, 2016: v0.3.0
-:Dec 14, 2016: v0.2.1
-:Dec 14, 2016: v0.2.0
-:Dec 08, 2016: v0.1.0
+.. image:: /_static/img/screenshots/releases/v3.0-spike_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v3.0-model_view.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+Use Vue.js for web framework.
+
+==========  =======
+19 Jul 21   v3.0.3
+13 Jul 21   v3.0.2
+09 Jul 21   v3.0.1
+23 Jun 21   v3.0.0
+==========  =======
+
+|br|
+
+v2.5.x
+------
+
+.. image:: /_static/img/screenshots/releases/v2.5-network_editor.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v2.5-spike_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+Define node shapes according to graphical notation of neuronal networks.
+Introduce network history to undo changes.
+
+==========  =======
+04 Mar 21   v2.5.1
+23 Oct 20   v2.5.0
+==========  =======
+
+|br|
+
+v2.4.x
+------
+
+.. image:: /_static/img/screenshots/releases/v2.4-lab_book.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v2.4-code-editor.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+Introduce code editor for simulation script.
+
+==========  =======
+15 Jul 20   v2.4.1
+28 Jun 20   v2.4.0
+==========  =======
+
+|br|
+
+v2.3.x
+------
+
+Deploy NEST Desktop on HBP service with OIDC and on bwCloud with ansible.
+Use yarn instead of npm.
+
+==========  =======
+23 May 20   v2.3.2
+22 May 20   v2.3.1
+22 May 20   v2.3.0
+==========  =======
+
+|br|
+
+v2.2.x
+------
+
+.. image:: /_static/img/screenshots/releases/v2.2-lab_book.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v2.2-network_editor.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v2.2-spike_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+Introduce tabs for project views as well as side bars for navigation and controller.
+
+==========  ========
+27 Jan 20   v2.2.15
+27 Jan 20   v2.2.14
+20 Jan 20   v2.2.13
+16 Jan 20   v2.2.12
+30 Dec 19   v2.2.11
+04 Dec 19   v2.2.10
+04 Dec 19   v2.2.9
+03 Dec 19   v2.2.8
+27 Nov 19   v2.2.7
+27 Nov 19   v2.2.6
+27 Nov 19   v2.2.5
+24 Nov 19   v2.2.4
+24 Nov 19   v2.2.3
+24 Nov 19   v2.2.2
+21 Nov 19   v2.2.1
+08 Nov 19   v2.2.0
+==========  ========
+
+v2.1.x
+------
+
+.. image:: /_static/img/screenshots/releases/v2.1-spatial_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+Introduce Three.js for animated activity graph of spatial network.
+
+==========  =======
+05 Nov 19   v2.1.3
+05 Nov 19   v2.1.2
+04 Nov 19   v2.1.1
+29 Oct 19   v2.1.0
+==========  =======
+
+|br|
+
+v2.0.x
+------
+
+.. image:: /_static/img/screenshots/releases/v2.0-lab_book.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v2.0-network_editor.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v2.0-spike_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+Introduce Plotly.js for interactive activity graph.
+
+==========  =======
+02 Oct 19   v2.0.7
+30 Sep 19   v2.0.6
+25 Sep 19   v2.0.5
+25 Sep 19   v2.0.4
+23 Sep 19   v2.0.3
+16 Sep 19   v2.0.2
+15 Sep 19   v2.0.1
+13 Sep 19   v2.0.0
+==========  =======
+
+|br|
+
+v1.x
+----
+
+.. image:: /_static/img/screenshots/releases/v1.5-lab_book.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v1.5-neuronal_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v1.5-spike_activity.png
+   :align: right
+   :class: border mb-3
+   :width: 480
+
+NEST Desktop runs in nginx and requires the backend `NEST Server <https://github.com/babsey/nest-server>`__.
+
+==========  =====
+23 Jul 19   v1.5
+31 May 19   v1.4
+19 Apr 19   v1.3
+18 Mar 19   v1.2
+18 Dec 18   v1.0
+==========  =====
+
+|br|
+
+v0.x
+----
+
+.. image:: /_static/img/screenshots/releases/v0.15.3-spike_activity.png
+   :align: right
+   :class: mb-3
+   :width: 480
+
+.. image:: /_static/img/screenshots/releases/v0.15.3-neuronal_activity.png
+   :align: right
+   :class: mb-3
+   :width: 480
+
+NEST Desktop runs in Electron and requires the backend `NEST Server Simulation <https://github.com/babsey/nest-server-simulation>`__.
+The app uses Angular as web framework and D3.js for network and activity graphs.
+
+==========  ========
+22 Apr 18   v0.15.3
+17 Apr 18   v0.15.1
+28 Feb 18   v0.15.0
+28 Feb 18   v0.14.0
+07 Feb 18   v0.13.0
+29 Jan 18   v0.12.0
+22 Nov 17   v0.11.0
+06 Oct 17   v0.10.0
+20 Jun 17   v0.9.3
+20 Jun 17   v0.9.2
+29 Apr 17   v0.9.1
+28 Apr 17   v0.9.0
+18 Apr 17   v0.8.2
+12 Apr 17   v0.8.1
+10 Apr 17   v0.8.0
+23 Mar 17   v0.7.2
+15 Mar 17   v0.7.1
+15 Mar 17   v0.7.0
+04 Mar 17   v0.6.3
+28 Feb 17   v0.6.2
+27 Feb 17   v0.6.1
+24 Feb 17   v0.6.0
+09 Feb 17   v0.5.5
+09 Feb 17   v0.5.4
+07 Feb 17   v0.5.3
+06 Feb 17   v0.5.2
+23 Jan 17   v0.5.1
+20 Jan 17   v0.5.0
+09 Jan 17   v0.4.0
+09 Jan 17   v0.3.12
+05 Jan 17   v0.3.11
+04 Jan 17   v0.3.10
+04 Jan 17   v0.3.9
+03 Jan 17   v0.3.8
+29 Dec 16   v0.3.7
+21 Dec 16   v0.3.6
+21 Dec 16   v0.3.5
+21 Dec 16   v0.3.4
+20 Dec 16   v0.3.3
+19 Dec 16   v0.3.1
+19 Dec 16   v0.3.0
+14 Dec 16   v0.2.1
+14 Dec 16   v0.2.0
+08 Dec 16   v0.1.0
+==========  ========

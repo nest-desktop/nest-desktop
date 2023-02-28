@@ -1,16 +1,16 @@
 import { sha1 } from 'object-hash';
 
 import { Config } from '../common/config';
-import { ConnectionCode } from './connectionCode';
 import { ConnectionMask } from './connectionMask';
 import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
+import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
-import { ModelParameter } from '../parameter/modelParameter';
+import { SynapseParameter } from '../synapse/synapseParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { NodeSlice } from '../node/nodeSlice';
-import { Parameter } from '../parameter/parameter';
+import { ConnectionParameter } from './connectionParameter';
 import { Synapse } from '../synapse/synapse';
 
 enum Rule {
@@ -20,17 +20,17 @@ enum Rule {
   FixedTotalNumber = 'fixed_total_number',
   OneToOne = 'one_to_one',
   PairwiseBernoulli = 'pairwise_bernoulli',
+  symmetricPairwiseBernoulli = 'symmetric_pairwise_bernoulli',
 }
 
 export class Connection extends Config {
   private readonly _name = 'Connection';
 
-  private _code: ConnectionCode;
   private _hash: string;
   private _idx: number; // generative
   private _mask: ConnectionMask;
   private _network: Network; // parent
-  private _params: Parameter[];
+  private _params: ConnectionParameter[];
   private _rule: string;
   private _sourceIdx: number; // Node index
   private _sourceSlice: NodeSlice;
@@ -45,7 +45,6 @@ export class Connection extends Config {
     this._network = network;
     this._idx = network.connections.length;
 
-    this._code = new ConnectionCode(this);
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
 
@@ -63,30 +62,42 @@ export class Connection extends Config {
     this.updateHash();
   }
 
-  get code(): ConnectionCode {
-    return this._code;
-  }
-
   /**
    * Returns all visible parameters.
    */
-  get filteredParams(): Parameter[] {
-    return this._params.filter((param: Parameter) => param.visible);
+  get filteredParams(): ConnectionParameter[] {
+    return this._params.filter(
+      (param: ConnectionParameter) => param.state.visible
+    );
   }
 
   get hash(): string {
     return this._hash;
   }
 
+  get hasConnSpec(): boolean {
+    return !this.isRuleAllToAll;
+  }
+
+  get hasSomeVisibleParams(): boolean {
+    return this._params.some(
+      (param: ConnectionParameter) => param.state.visible
+    );
+  }
+
   get idx(): number {
     return this._idx;
+  }
+
+  get isRuleAllToAll(): boolean {
+    return this._rule === 'all_to_all';
   }
 
   get mask(): ConnectionMask {
     return this._mask;
   }
 
-  get model(): Model {
+  get model(): CopyModel | Model {
     return this._synapse.model;
   }
 
@@ -103,7 +114,7 @@ export class Connection extends Config {
   }
 
   get recorder(): Node {
-    return this.source.model.isRecorder() ? this.source : this.target;
+    return this.source.model.isRecorder ? this.source : this.target;
   }
 
   get rule(): string {
@@ -179,14 +190,18 @@ export class Connection extends Config {
    * Sets all params to visible.
    */
   public showAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.state.visible = true));
+    this.params.forEach(
+      (param: ConnectionParameter) => (param.state.visible = true)
+    );
   }
 
   /**
    * Sets all params to invisible.
    */
   public hideAllParams(): void {
-    this.params.forEach((param: Parameter) => (param.state.visible = false));
+    this.params.forEach(
+      (param: ConnectionParameter) => (param.state.visible = false)
+    );
   }
 
   /**
@@ -194,12 +209,12 @@ export class Connection extends Config {
    */
   public resetAllParams(): void {
     const ruleConfig: any = this.getRuleConfig();
-    this.params.forEach((param: Parameter) => {
+    this.params.forEach((param: ConnectionParameter) => {
       param.reset();
       const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
       param.value = p.value;
     });
-    this.synapse.params.forEach((param: ModelParameter) => param.reset());
+    this.synapse.params.forEach((param: SynapseParameter) => param.reset());
   }
 
   /**
@@ -224,6 +239,9 @@ export class Connection extends Config {
         if (p != null) {
           param.value = p.value;
           param.visible = p.visible;
+          if (p.type != null) {
+            param.type = p.type;
+          }
         }
       }
       this.addParameter(param);
@@ -234,7 +252,7 @@ export class Connection extends Config {
    * Add connection parameter.
    */
   addParameter(param: any): void {
-    this._params.push(new Parameter(this, param));
+    this._params.push(new ConnectionParameter(this, param));
   }
 
   /**
@@ -284,10 +302,8 @@ export class Connection extends Config {
   /**
    * Check if source and target nodes has positions.
    */
-  isBothSpatial(): boolean {
-    return (
-      this.source.spatial.hasPositions() && this.target.spatial.hasPositions()
-    );
+  get isBothSpatial(): boolean {
+    return this.source.spatial.hasPositions && this.target.spatial.hasPositions;
   }
 
   /**
@@ -317,7 +333,7 @@ export class Connection extends Config {
    */
   toJSON(): any {
     const connection: any = {
-      params: this._params.map((param: Parameter) => param.toJSON()),
+      params: this._params.map((param: ConnectionParameter) => param.toJSON()),
       rule: this._rule,
       source: this._sourceIdx,
       synapse: this._synapse.toJSON(),
@@ -332,7 +348,7 @@ export class Connection extends Config {
       connection.targetSlice = this._targetSlice.toJSON();
     }
 
-    if (this._mask.hasMask()) {
+    if (this._mask.hasMask) {
       connection.mask = this._mask.toJSON();
     }
 

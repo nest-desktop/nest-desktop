@@ -1,6 +1,7 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
 import { sha1 } from 'object-hash';
 
+import { ActivityChartGraph } from '../activity/activityChart/activityChartGraph';
 import { Node } from '../node/node';
 import { Project } from '../project/project';
 
@@ -8,19 +9,24 @@ export class Activity {
   private _events: any = {};
   private _hash: string;
   private _idx: number; // generative
-  private _lastFrame: boolean = false;
-  private _nodeCollectionId: number;
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
+  private _recorderUnitId: number;
   private _state: UnwrapRef<any>;
 
   constructor(recorder: Node, activity: any = {}) {
     this._recorder = recorder;
     this._state = reactive({
+      activeNodeId: undefined,
+      fromTime: 0,
       records: [],
     });
     this.init(activity);
+  }
+
+  get chartGraph(): ActivityChartGraph {
+    return this.project.activityGraph.activityChartGraph;
   }
 
   get currenttime(): number {
@@ -58,14 +64,6 @@ export class Activity {
     this._idx = value;
   }
 
-  get lastFrame(): boolean {
-    return this._lastFrame;
-  }
-
-  set lastFrame(value: boolean) {
-    this._lastFrame = value;
-  }
-
   get lastTime(): number {
     return this._events.times && this._events.times.length > 0
       ? this.events.times[this.events.times.length - 1]
@@ -74,14 +72,6 @@ export class Activity {
 
   get nEvents(): number {
     return this._events.hasOwnProperty('times') ? this._events.times.length : 0;
-  }
-
-  get nodeCollectionId(): number {
-    return this._nodeCollectionId;
-  }
-
-  set nodeCollectionId(value: number) {
-    this._nodeCollectionId = value;
   }
 
   get nodeIds(): number[] {
@@ -108,6 +98,14 @@ export class Activity {
     return this._recorder;
   }
 
+  get recorderUnitId(): number {
+    return this._recorderUnitId;
+  }
+
+  set recorderUnitId(value: number) {
+    this._recorderUnitId = value;
+  }
+
   get state(): UnwrapRef<any> {
     return this._state;
   }
@@ -119,7 +117,7 @@ export class Activity {
   /**
    * Check if activity has events.
    */
-  hasEvents(): boolean {
+  get hasEvents(): boolean {
     return this.nEvents > 0;
   }
 
@@ -128,7 +126,6 @@ export class Activity {
    */
   reset(): void {
     this._events = {};
-    this._lastFrame = false;
     this._nodeIds = [];
     this._nodePositions = [];
     this._state.records = [];
@@ -139,23 +136,17 @@ export class Activity {
    *
    * Overwrites events.
    */
-  init(activity: any): void {
-    this.initEvents(activity);
-  }
-
-  /**
-   * Initialize events.
-   *
-   * Overwrites events.
-   */
-  initEvents(activity: any): void {
+  init(activity: any = {}): void {
     this.reset();
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
     this.nodePositions = activity.nodePositions || [];
-    this.nodeCollectionId = activity.nodeCollectionId;
+    this.recorderUnitId = activity.recorderUnitId || -1;
     this.updateHash();
+    this.postInit();
   }
+
+  postInit(): void {}
 
   /**
    * Update activity.
@@ -167,19 +158,22 @@ export class Activity {
       return;
     }
 
-    this.updateEvents(activity);
+    this.updateEvents(activity.events);
+    this.postUpdate(activity);
+  }
+
+  postUpdate(activity: any): void {
+    activity;
   }
 
   /**
    * Update events.
    */
-  updateEvents(activity: any): void {
-    const events = activity.events;
+  updateEvents(events: any): void {
     const eventKeys: string[] = Object.keys(events);
     eventKeys.forEach((eventKey: string) => {
-      const currEvents: number[] = this._events[eventKey];
       const newEvents: number[] = events[eventKey];
-      this._events[eventKey] = currEvents.concat(newEvents);
+      this._events[eventKey] = this._events[eventKey].concat(newEvents);
     });
     this.updateHash();
   }
@@ -197,31 +191,23 @@ export class Activity {
   getActivityInsite(): void {}
 
   /**
-   * Check if activity contains analog signal data.
-   */
-  hasAnalogData(): boolean {
-    return this._recorder.model.isAnalogRecorder();
-  }
-
-  /**
    * Check if activity contains analog signal data from input devices.
    */
-  hasInputAnalogData(): boolean {
-    return this.hasAnalogData() && this.elementTypes.includes('stimulator');
+  get hasInputAnalogData(): boolean {
+    return (
+      this._recorder.model.isAnalogRecorder &&
+      this.elementTypes.includes('stimulator')
+    );
   }
 
   /**
    * Check if activity contains analog signal data from neurons.
    */
-  hasNeuronAnalogData(): boolean {
-    return this.hasAnalogData() && this.elementTypes.includes('neuron');
-  }
-
-  /**
-   * Check if activity contains spike data.
-   */
-  hasSpikeData(): boolean {
-    return this._recorder.model.isSpikeRecorder();
+  get hasNeuronAnalogData(): boolean {
+    return (
+      this._recorder.model.isAnalogRecorder &&
+      this.elementTypes.includes('neuron')
+    );
   }
 
   /**

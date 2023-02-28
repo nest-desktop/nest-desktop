@@ -11,11 +11,18 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
     this.panel.xaxis = 4;
     this.params = [
       {
+        _parent: this,
+        _value: 'bar',
         id: 'plotMode',
         input: 'select',
         items: ['lines', 'lines+markers', 'markers', 'bar'],
         label: 'Plot mode',
-        value: 'lines',
+        parent: this,
+        get value(): string { return this._value },
+        set value(value: string) {
+          this._value = value;
+          this._parent.params[1].show = value.includes('lines')
+        }
       },
       {
         id: 'lineShape',
@@ -29,10 +36,12 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
           { text: 'horizontal-vertical steps', value: 'hv' },
         ],
         label: 'Line shape',
+        show: false,
         value: 'linear',
-        show: () => this.plotMode.includes('lines'),
       },
     ];
+
+    this.initParams(model.params);
   }
 
   get lineShape(): string {
@@ -48,9 +57,9 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update data for mean ISI histogram.
+   * Add data of mean ISI in each sender for histogram panel.
    */
-  override updateData(activity: SpikeActivity): void {
+  override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const x: number[] = activity.nodeIds;

@@ -58,10 +58,8 @@ You can also study, under which conditions synaptic input can trigger an output 
 
 |
 
-**Video tutorial**
+Video tutorial
+--------------
 
 .. raw:: html
-
-  <div class="iframe-container">
-    <iframe src="https://drive.ebrains.eu/f/44ee7c0983d942f78111/?raw=1" frameborder="0" allowfullscreen></iframe>
-  </div>
+   :file: ../templates/iframe-single-neuron-synaptic-input.html

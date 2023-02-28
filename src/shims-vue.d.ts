@@ -28,3 +28,9 @@ declare module 'vue-plotly';
 
 // Codemirror
 declare module 'vue-codemirror';
+
+// Code templates for Mustache
+declare module '*.code' {
+  const value: string;
+  export default value;
+}

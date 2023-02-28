@@ -9,19 +9,19 @@
         style="flex: 0 1 auto; width: 278px"
         v-model="modelView.modeIdx"
       >
-        <v-tooltip :open-delay="1000" bottom>
-          <template #activator="{ on, attrs }">
-            <v-tab class="ma-0" v-bind="attrs" v-on="on">
-              <div class="tab-text" v-text="'Doc'" />
-              <v-icon v-text="'mdi-text-box-outline'" />
-            </v-tab>
-          </template>
-          View model documentation
-        </v-tooltip>
+        <v-tab class="ma-0" title="View model documentation">
+          <div class="tab-text" v-text="'Doc'" />
+          <v-icon v-text="'mdi-text-box-outline'" />
+        </v-tab>
 
-        <v-menu :disabled="!modelView.isNeuron()" offset-y open-on-hover>
+        <v-menu :disabled="!modelView.isNeuron" offset-y open-on-hover>
           <template #activator="{ on, attrs }">
-            <v-tab :disabled="!modelView.isNeuron()" v-bind="attrs" v-on="on">
+            <v-tab
+              :disabled="!modelView.isNeuron"
+              title="Explore model"
+              v-bind="attrs"
+              v-on="on"
+            >
               <div class="tab-text" v-text="'Explorer'" />
               <v-icon v-text="'mdi-chart-scatter-plot'" />
             </v-tab>
@@ -43,15 +43,10 @@
           </v-list>
         </v-menu>
 
-        <v-tooltip :open-delay="1000" bottom>
-          <template #activator="{ on, attrs }">
-            <v-tab v-bind="attrs" v-on="on">
-              <div class="tab-text" v-text="'Editor'" />
-              <v-icon v-text="'mdi-pencil'" />
-            </v-tab>
-          </template>
-          Edit model
-        </v-tooltip>
+        <v-tab title="Edit model">
+          <div class="tab-text" v-text="'Editor'" />
+          <v-icon v-text="'mdi-pencil'" />
+        </v-tab>
       </v-tabs>
 
       <v-spacer />
@@ -67,7 +62,7 @@
 
       <div @click="modelView.modeIdx = 1">
         <SimulationButton
-          :disabled="!modelView.isNeuron()"
+          :disabled="!modelView.isNeuron"
           :project="modelView.state.project"
         />
       </div>
@@ -78,7 +73,7 @@
       :style="{ transition: state.resizing ? 'initial' : '' }"
       :width="modelView.state.tool ? modelView.state.tool.width : 0"
       app
-      class="no-print"
+      class="no-print nav-controller"
       clipped
       mobile-breakpoint="64"
       mini-variant-width="64"
@@ -123,7 +118,7 @@
         </v-navigation-drawer>
 
         <div
-          style="padding-right: 64px; width: 100%"
+          class="controller"
           v-if="modelView.state.tool && modelView.state.toolOpened"
         >
           <transition name="fade">
@@ -168,8 +163,8 @@
           </v-card>
 
           <SimulationCodeEditor
-            :code="modelView.state.project.code"
-            style="height: 100%"
+            :code="modelView.state.project.simulation.code"
+            color="model"
             v-if="
               modelView.state.tool.name === 'modelSimulationCode' &&
               modelView.state.project
@@ -205,8 +200,8 @@
 
     <v-overlay
       :value="
-        modelView.state.project.simulation.running &&
-        !projectView.config.simulateWithInsite
+        modelView.state.project.simulation.state.running &&
+        !projectView.state.project.simulation.code.state.codeInsite
       "
     >
       <v-progress-circular
@@ -349,6 +344,19 @@ export default Vue.extend({
 </script>
 
 <style>
+.modelView {
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+.modelView .nav-controller > .v-navigation-drawer__content {
+  margin-right: 64px;
+}
+
+.modelView .controller {
+  width: 100%;
+}
+
 .modelView .nav-item-right {
   font-size: 9px;
   text-align: center;
@@ -357,7 +365,7 @@ export default Vue.extend({
 
 .modelView .resize-handle {
   cursor: ew-resize;
-  height: 100vh;
+  height: 100%;
   left: 0;
   position: fixed;
   width: 4px;

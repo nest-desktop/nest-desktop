@@ -1,4 +1,5 @@
 import { reactive, UnwrapRef } from '@vue/composition-api';
+import VueRouter from 'vue-router';
 
 import { consoleLog } from '../common/logger';
 
@@ -131,15 +132,11 @@ export class ProjectView extends Config {
       );
     }
 
-    if (this._app.backends.insiteAccess.state.version.insite == null) {
-      this.updateConfig({ simulateWithInsite: false });
-    }
-
     return this._app.project.initProject(this._state.projectId).then(() => {
       if (this._state.project) {
         const generateCode =
-          this.config.simulateWithInsite !==
-          this._state.project.code.state.codeInsite;
+          this._state.project.simulation.code.state.runSimulationInsite !==
+          this._state.project.simulation.code.state.codeInsite;
         this._state.project.init({
           generateCode,
         });
@@ -148,7 +145,7 @@ export class ProjectView extends Config {
         this.updateProjectMode();
 
         // Update activity graph view.
-        this._state.activityGraph = this._state.project.network.hasPositions()
+        this._state.activityGraph = this._state.project.network.hasPositions
           ? this._state.activityGraph
           : 'abstract';
 
@@ -158,7 +155,7 @@ export class ProjectView extends Config {
         if (
           this.config.simulateAfterLoad &&
           this._state.modeIdx === 1 &&
-          this._state.project.code.hash !==
+          this._state.project.simulation.code.hash !==
             this._state.project.activityGraph.codeHash
         ) {
           this._state.project.runSimulation();
@@ -238,10 +235,46 @@ export class ProjectView extends Config {
     if (
       this.config.simulateAfterLoad &&
       this._state.modeIdx === 1 &&
-      this._state.project.code.hash !==
+      this._state.project.simulation.code.hash !==
         this._state.project.activityGraph.codeHash
     ) {
       this._state.project.runSimulation();
+    }
+  }
+
+  /**
+   * Redirects the page content to the project. If
+   * no one was chosen before, the first one is selected.
+   * Please beware: The route IDs used in this class are the ones in the
+   * array, which might not contain every route from the Vue router!
+   */
+  redirect(projectId: string = ''): void {
+    if (projectId == undefined || projectId.length === 0) {
+      // Get stated project ID when it is not defined.
+      projectId =
+        this._state.projectId != null &&
+        this._app.project.state.projects.find(
+          (project: Project) => project.id === this._state.projectId
+        )
+          ? this._state.projectId
+          : this._app.project.recentProjectId;
+    } else if (
+      // Get recent project ID when defined project ID is not found.
+      !this._app.project.state.projects.find(
+        (project: Project) => project.id === projectId
+      )
+    ) {
+      projectId = this._app.project.recentProjectId;
+    }
+
+    const router: VueRouter = this._app.vueSetupContext.root.$router;
+    if (router.currentRoute.params.id !== projectId) {
+      // Check if the page is already loaded to avoid "Avoided redundant
+      // navigation" error.
+      router.push({
+        name: 'projectId',
+        params: { id: projectId },
+      });
     }
   }
 }

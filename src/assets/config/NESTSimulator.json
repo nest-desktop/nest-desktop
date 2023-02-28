@@ -1,7 +1,8 @@
 {
   "custom": false,
+  "enabled": true,
   "hostname": "",
   "path": "/",
-  "port": "",
+  "port": "52425",
   "protocol": ""
 }

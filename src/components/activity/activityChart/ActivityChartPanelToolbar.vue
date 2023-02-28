@@ -52,29 +52,10 @@
           />
         </span>
       </template>
-      <v-list dense>
-        <v-subheader style="height: 28px" v-text="'Analog signals'" />
-        <v-list-item
-          :disabled="!state.panel.graph.project.state.hasAnalogActivities"
-          :key="'analogPanel' + index"
-          @click="selectModel(model.id)"
-          v-for="(model, index) in state.panel.modelsAnalog"
-        >
-          <v-icon left small v-text="model.icon" />
-          <v-list-item-title v-text="model.label" />
-        </v-list-item>
-
-        <v-subheader style="height: 28px" v-text="'Spikes'" />
-        <v-list-item
-          :disabled="!state.panel.graph.project.state.hasSpikeActivities"
-          :key="'spikePanel' + index"
-          @click="selectModel(model.id)"
-          v-for="(model, index) in state.panel.modelsSpike"
-        >
-          <v-icon left small v-text="model.icon" />
-          <v-list-item-title v-text="model.label" />
-        </v-list-item>
-      </v-list>
+      <ActivityChartPanelMenuPopover
+        :graph="state.panel.graph"
+        @changed="selectModel"
+      />
     </v-menu>
   </div>
 </template>
@@ -85,9 +66,13 @@ import { onMounted, reactive, watch } from '@vue/composition-api';
 
 import { ActivityChartPanel } from '@/core/activity/activityChart/activityChartPanel';
 import core from '@/core';
+import ActivityChartPanelMenuPopover from '@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue';
 
 export default Vue.extend({
   name: 'ActivityChartPanelToolbar',
+  components: {
+    ActivityChartPanelMenuPopover,
+  },
   props: {
     panel: ActivityChartPanel,
   },
@@ -132,8 +117,9 @@ export default Vue.extend({
 <style>
 .activityChartPanelToolbar .icons {
   display: none;
+  line-height: 36px;
   position: absolute;
-  right: 0;
+  right: 4px;
   top: 0;
 }
 .activityChartPanelToolbar:hover .icons {

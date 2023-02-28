@@ -1,4 +1,5 @@
 import * as math from 'mathjs';
+import Mustache from 'mustache';
 
 import { NodeSpatial } from './nodeSpatial';
 
@@ -56,6 +57,21 @@ export class FreePositions {
     this._pos = value;
   }
 
+  get posAsString(): string {
+    return (
+      '[' +
+      this._pos.map(
+        (p: number[]) =>
+          '[' + p.map((pp: number) => pp.toFixed(2)).join(',') + ']'
+      ) +
+      ']'
+    );
+  }
+
+  get posExisted(): boolean {
+    return this._pos.length > 0;
+  }
+
   get spatial(): NodeSpatial {
     return this._spatial;
   }
@@ -91,31 +107,19 @@ export class FreePositions {
   }
 
   /**
-   * Write code for free positons.
+   * Indent code.
    */
-  toCode(): string {
-    let args: string[] = [];
-    if (this._pos.length > 0) {
-      args.push(
-        '[' +
-          this._pos
-            .map((p: number[]) => {
-              const plist: string[] = p.map((pp: number) => pp.toFixed(2));
-              return '[' + plist.join(',') + ']';
-            })
-            .join(',') +
-          ']'
-      );
-    } else {
-      args.push(`nest.random.uniform(-0.5, 0.5)`);
-      args.push(`num_dimensions=${this._numDimensions}`);
-    }
-    return (
-      'nest.spatial.free(' +
-      this.spatial.node.code._(2) +
-      args.join(',' + this.spatial.node.code._(2)) +
-      '\n)'
-    );
+  _(n: number = 1): string {
+    return '\n' + '  '.repeat(n);
+  }
+
+  /**
+   * Generate the Python code for free (i.e. non-grid) positions.
+   */
+  toPythonCode(): string {
+    const template = require(`./freePositions.code`).default;
+    const rendered = Mustache.render(template, this);
+    return rendered;
   }
 
   /**

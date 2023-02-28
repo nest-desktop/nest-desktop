@@ -1,46 +1,4 @@
 {
-  "graph": {
-    "width": {
-      "label": "line width",
-      "max": 5,
-      "min": 0,
-      "step": 0.1,
-      "value": 2.5
-    },
-    "maxDistance": {
-      "label": "max distance",
-      "max": 400,
-      "min": 0,
-      "value": 200
-    },
-    "opacity": {
-      "label": "line opacity (beyond max distance)",
-      "max": 1,
-      "min": 0,
-      "step": 0.01,
-      "value": 0.5
-    },
-    "terminusOpacity": {
-      "label": "terminus opacity (beyond max distance)",
-      "max": 1,
-      "min": 0,
-      "step": 0.01,
-      "value": 0.5
-    },
-    "ellipticalArc": {
-      "label": "line elliptical arc",
-      "max": 5,
-      "min": 0,
-      "step": 0.1,
-      "value": 2.5
-    },
-    "xAxisRotation": {
-      "label": "line x axis rotation (deg)",
-      "max": 360,
-      "min": 0,
-      "value": 0
-    }
-  },
   "rules": [
     {
       "value": "all_to_all",
@@ -52,24 +10,18 @@
       "label": "fixed indegree",
       "params": [
         {
+          "format": "integer",
           "id": "indegree",
           "input": "valueSlider",
           "label": "indegree",
           "max": 100,
           "min": 1,
+          "rules": [
+            ["value > 0", "The value must be strictly positive.", "error"]
+          ],
           "step": 1,
           "value": 1,
           "visible": true
-        },
-        {
-          "id": "p",
-          "input": "valueSlider",
-          "label": "p",
-          "max": 1.0,
-          "min": 0.01,
-          "step": 0.01,
-          "value": 0.1,
-          "visible": false
         },
         {
           "id": "allow_autapses",
@@ -92,24 +44,18 @@
       "label": "fixed outdegree",
       "params": [
         {
+          "format": "integer",
           "id": "outdegree",
           "input": "valueSlider",
           "label": "outdegree",
           "max": 100,
           "min": 1,
+          "rules": [
+            ["value > 0", "The value must be strictly positive.", "error"]
+          ],
           "step": 1,
           "value": 1,
           "visible": true
-        },
-        {
-          "id": "p",
-          "input": "valueSlider",
-          "label": "p",
-          "max": 1.0,
-          "min": 0.01,
-          "step": 0.01,
-          "value": 0.1,
-          "visible": false
         },
         {
           "id": "allow_autapses",
@@ -132,11 +78,15 @@
       "label": "fixed total number",
       "params": [
         {
+          "format": "integer",
           "id": "N",
           "input": "valueSlider",
           "label": "N",
           "max": 1000,
           "min": 1,
+          "rules": [
+            ["value > 0", "The value must be strictly positive.", "error"]
+          ],
           "step": 1,
           "value": 1,
           "visible": true
@@ -167,11 +117,19 @@
       "label": "pairwise Bernoulli",
       "params": [
         {
+          "format": "float",
           "id": "p",
           "input": "valueSlider",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
+          "rules": [
+            [
+              "0 < value && value <= 1",
+              "The value must be between 0.01 and 1.",
+              "error"
+            ]
+          ],
           "step": 0.01,
           "value": 0.1,
           "visible": true
@@ -202,6 +160,13 @@
           "label": "p",
           "max": 1.0,
           "min": 0.01,
+          "rules": [
+            [
+              "value > 0 && value <= 1",
+              "The value must be between 0.01 and 1.",
+              "error"
+            ]
+          ],
           "step": 0.01,
           "value": 0.1,
           "visible": true

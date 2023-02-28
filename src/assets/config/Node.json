@@ -1,25 +1,19 @@
 {
-  "graph": {
-    "radius": {
-      "label": "shape radius",
-      "max": 30,
-      "min": 1,
-      "value": 15
-    },
-    "strokeWidth": {
-      "label": "stroke width",
-      "max": 20,
-      "min": 1,
-      "step": 0.5,
-      "value": 2.5
-    }
-  },
   "size": {
+    "format": "integer",
     "id": "n",
     "input": "valueSlider",
     "label": "population size",
     "max": 1000,
     "min": 1,
+    "rules": [
+      ["value > 0", "The value must be strictly positive.", "error"],
+      [
+        "value < 1000",
+        "Large values generate many data points and can put quite a load on your browser.",
+        "warning"
+      ]
+    ],
     "step": 1,
     "value": 1
   }

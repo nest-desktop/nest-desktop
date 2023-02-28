@@ -35,10 +35,8 @@ that follows a threshold crossing.
 
 |
 
-**Video tutorial**
+Video tutorial
+--------------
 
 .. raw:: html
-
-  <div class="iframe-container">
-    <iframe src="https://drive.ebrains.eu/f/93a57a6caa2b49e2a829/?raw=1" frameborder="0" allowfullscreen></iframe>
-  </div>
+   :file: ../templates/iframe-single-neuron-direct-current-injection.html

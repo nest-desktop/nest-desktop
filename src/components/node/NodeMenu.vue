@@ -115,7 +115,10 @@
         </span>
 
         <span v-if="state.content === 'modelDocumentation'">
-          <ModelDocumentation :id="state.node.modelId" />
+          <ModelDocumentation
+            :id="state.node.modelId"
+            style="overflow-y: hidden; width: 959px"
+          />
         </span>
 
         <span v-if="state.content === 'eventsExport'">
@@ -165,7 +168,7 @@ import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 
 import { Node } from '@/core/node/node';
-import { ModelParameter } from '@/core/parameter/modelParameter';
+import { NodeParameter } from '@/core/node/nodeParameter';
 import ModelDocumentation from '@/components/model/ModelDocumentation.vue';
 import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
@@ -223,9 +226,9 @@ export default Vue.extend({
           input: 'switch',
           onClick: () => {
             state.node.toggleSpatial();
-            state.spatialNode = state.node.spatial.hasPositions();
+            state.spatialNode = state.node.spatial.hasPositions;
           },
-          show: () => !state.node.model.isRecorder(),
+          show: () => !state.node.model.isRecorder,
           title: 'Spatial node',
           value: 'spatialNode',
         },
@@ -276,8 +279,8 @@ export default Vue.extend({
           },
           show: () =>
             state.node.activity &&
-            state.node.activity.hasEvents() &&
-            state.node.model.isRecorder(),
+            state.node.activity.hasEvents &&
+            state.node.model.isRecorder,
           title: 'Export events',
           append: true,
         },
@@ -306,7 +309,7 @@ export default Vue.extend({
      */
     const selectionChange = () => {
       state.node.params.forEach(
-        (param: ModelParameter) =>
+        (param: NodeParameter) =>
           (param.state.visible = state.visibleParams.includes(param.idx))
       );
       state.node.nodeChanges();
@@ -324,7 +327,7 @@ export default Vue.extend({
      * Reset node color.
      */
     const resetColor = () => {
-      state.node.view.color = null;
+      state.node.view.color = undefined;
       nodeColorChange();
     };
 
@@ -349,18 +352,8 @@ export default Vue.extend({
      */
     const setVisibleParams = () => {
       state.visibleParams = state.node.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
-    };
-
-    const showAllParams = () => {
-      state.node.showAllParams();
-      setVisibleParams();
-    };
-
-    const hideAllParams = () => {
-      state.node.hideAllParams();
-      setVisibleParams();
+        .filter((param: NodeParameter) => param.state.visible)
+        .map((param: NodeParameter) => param.idx);
     };
 
     /**
@@ -387,7 +380,7 @@ export default Vue.extend({
      * Update states.
      */
     const updateStates = () => {
-      state.spatialNode = state.node.spatial.hasPositions();
+      state.spatialNode = state.node.spatial.hasPositions;
       setVisibleParams();
     };
 
@@ -415,13 +408,11 @@ export default Vue.extend({
       backMenu,
       deleteNode,
       exportEvents,
-      hideAllParams,
       nodeColorChange,
       paramChange,
       resetColor,
       selectionChange,
       setWeights,
-      showAllParams,
       state,
     };
   },
@@ -431,5 +422,6 @@ export default Vue.extend({
 <style>
 .synWeightButton {
   border: 1px solid rgba(0, 0, 0, 0.12);
+  margin-left: 0.75em;
 }
 </style>

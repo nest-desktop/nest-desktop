@@ -1,41 +1,43 @@
 Deploy on OpenShift
 ===================
 
-.. image:: ../_static/img/logo/openshift-logo.png
-  :width: 240px
-  :alt: OpenShift
-
-|
+.. image:: /_static/img/logo/openshift-logo.png
+   :align: right
+   :alt: OpenShift
+   :width: 240px
 
 This part of the documentation shows how to deploy NEST Desktop on OpenShift resources.
 In the following, we will use the deployment process of NEST Desktop on the OpenShift resources of EBRAINS as an example of practice.
 
-Requirements
-  * `OC Client Tools <https://www.okd.io/download.html#oc-platforms>`__
+Requirements:
+  - `OC Client Tools <https://www.okd.io/download.html#oc-platforms>`__
 
 
-.. _deploy-nest-desktop-on-ebrains:
+.. _deploy-openshift_deploy-nest-desktop-on-ebrains:
 
-**Deploy NEST Desktop on EBRAINS**
+Deploy NEST Desktop on EBRAINS
+------------------------------
 
-.. image:: ../_static/img/logo/ebrains-logo.svg
-  :width: 320px
-  :alt: EBRAINS
+.. image:: /_static/img/logo/ebrains-logo.svg
+   :alt: EBRAINS
+   :width: 320px
 
 |
 
-EBRAINS provides two OKD infrastructures
-  * https://okd-dev.hbp.eu for the development.
-  * https://okd.hbp.eu for the production.
+EBRAINS provides two OKD infrastructures:
+
+- https://okd-dev.hbp.eu for the development and
+- https://okd.hbp.eu for the production.
 
 .. note::
    I strongly recommend to use the development page for testing.
 
 |
 
-.. _register-client-for-authentication-on-ebrains:
+.. _deploy-openshift_register-client-for-authentication-on-ebrains:
 
-**Register client for authentication on EBRAINS**
+Register client for authentication on EBRAINS
+---------------------------------------------
 
 To access to NEST Desktop on EBRAINS infrastructure, an authentication is requested.
 You find the codes on https://github.com/nest-desktop/apache2-oidc.
@@ -56,21 +58,22 @@ Keep ``client_id`` and ``client_secret`` for the **okd** infrastructure.
 
 |
 
-.. _build-nest-desktop-on-ebrains:
+.. _deploy-openshift_build-nest-desktop-on-ebrains:
 
-**Build NEST Desktop on EBRAINS**
+Build NEST Desktop on EBRAINS
+-----------------------------
 
 First, copy the command line from the web console of ``https://okd-dev.hbp.eu`` and enter in terminal to login via ``oc``:
 
 .. code-block:: bash
 
-  oc login https://okd-dev.hbp.eu:443 --token=<TOKEN>
+   oc login https://okd-dev.hbp.eu:443 --token=<TOKEN>
 
 Get the status of the current project:
 
 .. code-block:: bash
 
-  oc status
+   oc status
 
 You can find the configurations on https://github.com/nest-desktop/nest-desktop-ebrains.
 Therein, you have to modify the environment for EBRAINS authentication,
@@ -81,23 +84,25 @@ Execute the bash script to deploy the ``nest-desktop``, ``nest-server`` and ``ap
 
 .. code-block:: bash
 
-  bash setup-nest-desktop.sh
+   bash setup-nest-desktop.sh
 
 |
 
-.. _further-usage:
+.. _deploy-openshift_further-usage:
 
-**Further usage**
+Further usage
+-------------
 
 Scaling up the replicas (pods or nodes):
 
 .. code-block:: bash
 
-  oc scale --replicas=2 dc nest-desktop
+   oc scale --replicas=2 dc nest-desktop
 
 |
 
-**Acknowledgements**
+Acknowledgements
+----------------
 
 Thanks for the help to integrate NEST Desktop on EBRAINS resources:
 

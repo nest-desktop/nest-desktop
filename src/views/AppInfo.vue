@@ -111,51 +111,33 @@
                 :sm="6"
                 v-for="reference in references"
               >
-                <v-tooltip :open-delay="200" top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      :color="$vuetify.theme.dark ? 'none' : reference.color"
-                      :href="reference.url"
-                      block
-                      class="logo"
-                      depressed
-                      ripple
-                      target="_blank"
-                      tile
-                      v-bind="attrs"
-                      v-on="on"
-                      x-large
-                    >
-                      <v-img
-                        :src="
-                          require(`@/assets/img/logo/` +
-                            ($vuetify.theme.dark
-                              ? reference.iconSrcDark
-                              : reference.iconSrc))
-                        "
-                        contain
-                        height="32px"
-                      />
-                    </v-btn>
-                  </template>
-                  <span v-text="reference.title" />
-                </v-tooltip>
+                <v-btn
+                  :color="$vuetify.theme.dark ? 'none' : reference.color"
+                  :href="reference.url"
+                  :title="reference.title"
+                  block
+                  class="logo"
+                  depressed
+                  ripple
+                  target="_blank"
+                  tile
+                  x-large
+                >
+                  <v-img
+                    :src="
+                      require(`@/assets/img/logo/` +
+                        ($vuetify.theme.dark
+                          ? reference.iconSrcDark
+                          : reference.iconSrc))
+                    "
+                    contain
+                    height="32px"
+                  />
+                </v-btn>
               </v-col>
             </v-row>
           </v-col>
         </v-row>
-
-        <!-- <v-row>
-          <v-col>
-            <v-footer padless>
-              <v-card flat tile class="flex text-center">
-                <v-card-text class="py-1">
-                  {{ state.year }} — <strong>NEST Desktop</strong>
-                </v-card-text>
-              </v-card>
-            </v-footer>
-          </v-col>
-        </v-row> -->
       </v-container>
     </v-main>
   </div>
@@ -166,7 +148,7 @@ import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 import core from '@/core';
 
-import AppDetails from '@/components/AppDetails.vue';
+import AppDetails from '@/components/app/AppDetails.vue';
 
 export default Vue.extend({
   name: 'AppInfo',
@@ -210,7 +192,6 @@ export default Vue.extend({
     const state = reactive({
       includeProjectButtons: props.includeProjectButtons,
       projects: [],
-      year: 2021,
     });
 
     onMounted(() => {

@@ -1,17 +1,30 @@
 <template>
   <div class="simulationButton">
-    <v-menu :close-on-content-click="false" offset-y v-model="state.showMenu">
-      <template #activator="{}">
-        <v-btn
-          :disabled="state.disabled"
-          :loading="state.project.simulation.running"
-          @click="simulate()"
-          @contextmenu="showMenu"
-          outlined
-        >
-          <v-icon left>mdi-play</v-icon>
-          Simulate
-        </v-btn>
+    <v-menu :close-on-content-click="false" offset-y>
+      <template #activator="{ on }">
+        <div class="btn-split text-no-wrap">
+          <v-btn
+            :disabled="state.disabled"
+            :loading="state.project.simulation.state.running"
+            @click="state.project.startSimulation()"
+            class="btn-main"
+            outlined
+            title="Simulate"
+          >
+            <v-icon class="d-flex d-lg-none" v-text="'mdi-play'" />
+            <span class="d-none d-lg-flex">
+              <v-icon left v-text="'mdi-play'" />
+              <span
+                v-if="state.project.simulation.code.runSimulation"
+                v-text="'Simulate'"
+              />
+              <span v-else v-text="'Prepare'" />
+            </span>
+          </v-btn>
+          <v-btn class="btn-append" outlined v-on="on">
+            <v-icon>mdi-menu-down</v-icon>
+          </v-btn>
+        </div>
       </template>
       <v-list dense>
         <v-list-item
@@ -42,8 +55,8 @@
 import Vue from 'vue';
 import { onMounted, reactive, watch } from '@vue/composition-api';
 
-import core from '@/core';
 import { Project } from '@/core/project/project';
+import core from '@/core';
 
 export default Vue.extend({
   name: 'SimulationButton',
@@ -92,47 +105,10 @@ export default Vue.extend({
             projectView.updateConfig(state.projectConfig);
           },
         },
-        {
-          id: 'simulateWithInsite',
-          input: 'checkbox',
-          title: 'Simulate with Insite',
-          value: 'simulateWithInsite',
-          show: () =>
-            core.app.backends.insiteAccess.state.version.insite != undefined,
-          onClick: () => {
-            state.projectConfig.simulateWithInsite =
-              !state.projectConfig.simulateWithInsite;
-            projectView.updateConfig(state.projectConfig);
-            state.project.code.generate();
-          },
-        },
       ],
       project: props.project as Project,
-      showMenu: false,
       projectConfig: projectView.config,
     });
-
-    /**
-     * Show simulation context menu.
-     */
-    const showMenu = (e: MouseEvent) => {
-      e.preventDefault();
-      state.showMenu = false;
-      setTimeout(() => {
-        state.showMenu = true;
-      });
-    };
-
-    /**
-     * Start simulation.
-     */
-    const simulate = () => {
-      if (projectView.config.simulateWithInsite) {
-        state.project.runSimulationInsite();
-      } else {
-        state.project.runSimulation();
-      }
-    };
 
     const update = () => {
       state.disabled = props.disabled;
@@ -140,14 +116,38 @@ export default Vue.extend({
       state.projectConfig = projectView.config;
     };
 
-    onMounted(() => update());
+    onMounted(update);
 
     watch(
       () => [props.disabled, props.project],
       () => update()
     );
 
-    return { showMenu, simulate, state };
+    return { state };
   },
 });
 </script>
+
+<style>
+.simulationButton .btn-split {
+  display: inline-block;
+}
+.simulationButton .btn-split .btn-main {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.simulationButton .btn-split .btn-prepend {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  min-width: 35px !important;
+  padding: 0 !important;
+}
+
+.simulationButton .btn-split .btn-append {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  min-width: 35px !important;
+  padding: 0 !important;
+}
+</style>

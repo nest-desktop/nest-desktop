@@ -7,14 +7,14 @@ Sidebar
 -------
 
 A click on the project switches to the project area.
-If you are already in that area, this button toggles the list of projects,
-a second sidebar.
-In that list, you can manage your projects,
-e.g create, rename, arrange or delete them.
-More details can be found in the :ref:`usage guide <user/usage:manage projects>`.
+If you are already in that area, this button toggles the list of projects, a second sidebar.
+In that list, you can manage your projects, e.g create, rename, arrange or delete them.
 
-Main content
-------------
+.. seeAlso::
+   - :doc:'/user/usage-advance/project-view'
+
+Main content of the page
+------------------------
 
 In the project area, the main content consists of an area,
 where you can switch between the network graph of the project,
@@ -25,4 +25,3 @@ For the simulation results, there is also the possibility to switch between
 
 The top bar contains the button to start the simulation.
 A right click offers further options.
-

@@ -31,29 +31,10 @@
             Add panel
           </v-btn>
         </template>
-        <v-list dense>
-          <v-subheader style="height: 28px" v-text="'Analog signals'" />
-          <v-list-item
-            :disabled="!state.graph.project.state.hasAnalogActivities"
-            :key="'analogPanel' + index"
-            @click="addPanel(model.id)"
-            v-for="(model, index) in state.graph.panel.modelsAnalog"
-          >
-            <v-icon left small v-text="model.icon" />
-            <v-list-item-title v-text="model.label" />
-          </v-list-item>
-
-          <v-subheader style="height: 28px" v-text="'Spikes'" />
-          <v-list-item
-            :disabled="!state.graph.project.state.hasSpikeActivities"
-            :key="'spikePanel' + index"
-            @click="addPanel(model.id)"
-            v-for="(model, index) in state.graph.panel.modelsSpike"
-          >
-            <v-icon class="mr-2" small v-text="model.icon" />
-            <v-list-item-title v-text="model.label" />
-          </v-list-item>
-        </v-list>
+        <ActivityChartPanelMenuPopover
+          :graph="state.graph"
+          @changed="addPanel"
+        />
       </v-menu>
     </v-toolbar>
 
@@ -98,44 +79,38 @@
                       small
                       v-model="panel.model.state.recordsVisible"
                     >
-                      <template v-slot:selection="{ item }">
-                        <v-tooltip bottom>
-                          <template #activator="{ on, attrs }">
-                            <v-chip
-                              :color="item.color"
-                              @click="e => showColorPopup(e, item)"
-                              @click:close="
-                                () => {
-                                  panel.model.removeRecord(item);
-                                  state.graph.update();
-                                }
-                              "
-                              close
-                              disable-lookup
-                              label
-                              outlined
-                              small
-                              style="margin: 1px 2px"
-                              v-bind="attrs"
-                              v-on="on"
-                            >
-                              <span
-                                v-text="
-                                  projectView.app.config.devMode
-                                    ? item.groupId
-                                    : item.id
-                                "
-                              />
-                            </v-chip>
-                          </template>
-                          <div style="font-size: 12px">
-                            <span v-text="item.labelCapitalize" />
-                            <span v-if="item.unit" v-text="` (${item.unit})`" />
-                          </div>
-                        </v-tooltip>
+                      <template #selection="{ item }">
+                        <v-chip
+                          :color="item.color"
+                          :title="
+                            item.labelCapitalize +
+                            (item.unit ? ` (${item.unit})` : '')
+                          "
+                          @click="e => showColorPopup(e, item)"
+                          @click:close="
+                            () => {
+                              panel.model.removeRecord(item);
+                              state.graph.update();
+                            }
+                          "
+                          close
+                          disable-lookup
+                          label
+                          outlined
+                          small
+                          style="margin: 1px 2px"
+                        >
+                          <span
+                            v-text="
+                              projectView.app.config.devMode
+                                ? item.groupId
+                                : item.id
+                            "
+                          />
+                        </v-chip>
                       </template>
 
-                      <template v-slot:item="{ item }">
+                      <template #item="{ item }">
                         <v-chip
                           :color="item.color"
                           class="mx-2"
@@ -179,6 +154,7 @@ import draggable from 'vuedraggable';
 
 import { ActivityChartGraph } from '@/core/activity/activityChart/activityChartGraph';
 import { NodeRecord } from '@/core/node/nodeRecord';
+import ActivityChartPanelMenuPopover from '@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue';
 import ActivityChartPanelToolbar from '@/components/activity/activityChart/ActivityChartPanelToolbar.vue';
 import core from '@/core';
 import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
@@ -186,6 +162,7 @@ import ParameterEdit from '@/components/parameter/ParameterEdit.vue';
 export default Vue.extend({
   name: 'ActivityChartController',
   components: {
+    ActivityChartPanelMenuPopover,
     ActivityChartPanelToolbar,
     draggable,
     ParameterEdit,

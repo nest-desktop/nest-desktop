@@ -109,7 +109,7 @@
             </v-btn>
             <v-spacer />
             <v-btn
-              @click="resetAllParams"
+              @click="state.connection.resetAllParams()"
               outlined
               small
               text
@@ -139,8 +139,8 @@ import Vue from 'vue';
 import { onMounted, reactive } from '@vue/composition-api';
 
 import { Connection } from '@/core/connection/connection';
-import { ModelParameter } from '@/core/parameter/modelParameter';
 import { Parameter } from '@/core/parameter/parameter';
+import { SynapseParameter } from '@/core/synapse/synapseParameter';
 import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue';
 import ConnectionParamSelect from '@/components/connection/ConnectionParamSelect.vue';
 import core from '@/core';
@@ -272,7 +272,7 @@ export default Vue.extend({
           (param.state.visible = state.connectionParamsIdx.includes(param.idx))
       );
       state.connection.synapse.params.forEach(
-        (param: ModelParameter) =>
+        (param: SynapseParameter) =>
           (param.state.visible = state.synapseParamsIdx.includes(param.idx))
       );
       state.connection.connectionChanges();
@@ -283,27 +283,31 @@ export default Vue.extend({
      */
     const setVisibleParams = () => {
       state.connectionParamsIdx = state.connection.params
-        .filter((param: Parameter) => param.visible)
+        .filter((param: Parameter) => param.state.visible)
         .map((param: Parameter) => param.idx);
       state.synapseParamsIdx = state.connection.synapse.params
-        .filter((param: ModelParameter) => param.visible)
-        .map((param: ModelParameter) => param.idx);
+        .filter((param: SynapseParameter) => param.state.visible)
+        .map((param: SynapseParameter) => param.idx);
     };
 
+    /**
+     * Show all parameters.
+     */
     const showAllParams = () => {
       state.connection.showAllParams();
       state.connection.synapse.showAllParams();
+      state.connection.connectionChanges();
       setVisibleParams();
     };
 
+    /**
+     * Hide all parameters.
+     */
     const hideAllParams = () => {
       state.connection.hideAllParams();
       state.connection.synapse.hideAllParams();
+      state.connection.connectionChanges();
       setVisibleParams();
-    };
-
-    const resetAllParams = () => {
-      state.connection.resetAllParams();
     };
 
     /**
@@ -354,7 +358,6 @@ export default Vue.extend({
       hideAllParams,
       paramChange,
       projectView,
-      resetAllParams,
       selectionChange,
       showAllParams,
       state,

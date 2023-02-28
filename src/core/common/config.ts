@@ -1,11 +1,9 @@
-import { environment } from '../../environments/environment';
-
 export class Config {
   private _configName: string;
 
   constructor(name: string) {
     this._configName = name;
-    if (!this.isConfigValid()) {
+    if (!this.isConfigValid) {
       this.upgradeConfig();
     }
   }
@@ -27,7 +25,7 @@ export class Config {
   }
 
   set config(value: any) {
-    value.version = environment.VERSION; // Update version of config in localstorage.
+    value.version = process.env.VUE_APP_VERSION; // Update version of config in localstorage.
     const dataJSON = JSON.stringify(value); // Convert object to string.
     localStorage.setItem(this.configItemName, dataJSON); // Save item in localstorage.
   }
@@ -40,12 +38,12 @@ export class Config {
     return Object.assign({}, item);
   }
 
-  isConfigReady(): boolean {
+  get isConfigReady(): boolean {
     return true;
   }
 
-  isConfigValid(): boolean {
-    const appVersion: string[] = environment.VERSION.split('.');
+  get isConfigValid(): boolean {
+    const appVersion: string[] = process.env.VUE_APP_VERSION.split('.');
     const configVersion: string[] = this.config.version.split('.');
     return (
       appVersion[0] === configVersion[0] && appVersion[1] === configVersion[1]

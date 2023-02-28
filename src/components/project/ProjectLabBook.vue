@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="projectLabBook"
-    style="height: calc(70vh - 48px); overflow-y: auto"
-    v-if="projectView.state.project"
-  >
+  <div class="projectLabBook" v-if="projectView.state.project">
     <v-container>
       <span class="d-flex flex-md-row">
         <div
@@ -57,15 +53,9 @@
                         v-for="param of node.filteredParams"
                       >
                         <v-row no-gutters>
-                          <span v-text="param.options.label" />
-                          <v-spacer />
-                          <span
-                            class="mx-1 font-weight-bold text-right"
-                            v-text="param.toCode()"
-                          />
-                          <span
-                            style="min-width: 24px"
-                            v-text="param.options.unit"
+                          <v-col
+                            class="d-flex justify-space-between"
+                            v-html="param.labelRow"
                           />
                         </v-row>
                       </v-list-item>
@@ -144,7 +134,7 @@
                         <v-spacer />
                         <span
                           class="mx-1 font-weight-bold"
-                          v-text="param.toCode()"
+                          v-text="param.code"
                         />
                         <span
                           style="min-width: 24px"
@@ -181,6 +171,11 @@ export default Vue.extend({
 </script>
 
 <style>
+.projectLabBook {
+  height: calc(100vh - 48px - 24px);
+  overflow-y: auto;
+}
+
 .projectLabBook .v-card {
   border-width: 0;
 }

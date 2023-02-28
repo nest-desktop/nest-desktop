@@ -58,11 +58,11 @@
 
           <marker
             :id="'inh' + connection.idx"
-            markerHeight="8"
-            markerWidth="8"
+            markerHeight="6"
+            markerWidth="6"
             orient="auto"
-            refX="6"
-            refY="4"
+            refX="5"
+            refY="3"
           >
             <circle
               :style="{
@@ -70,16 +70,42 @@
                 stroke: connection.source.view.color,
               }"
               r="2"
-              transform="translate(4,4)"
+              transform="translate(3,3)"
+            />
+          </marker>
+
+          <marker
+            :id="'assigned' + connection.idx"
+            markerHeight="10"
+            markerWidth="10"
+            orient="auto"
+            refX="5"
+            refY="5"
+          >
+            <circle
+              :style="{
+                fill: 'none',
+                stroke: connection.source.view.color,
+                opacity: 0.5,
+              }"
+              r="4"
+              transform="translate(5,5)"
             />
           </marker>
         </defs>
       </g>
 
       <rect
-        :fill="$vuetify.theme.dark ? '#121212' : 'white'"
+        :fill="
+          state.graph && state.graph.config.transparentWorkspace
+            ? 'transparent'
+            : $vuetify.theme.dark
+            ? '#121212'
+            : 'white'
+        "
         id="workspaceHandler"
       />
+
       <g id="networkWorkspace">
         <g class="grid no-print" />
         <g v-if="state.graph">
@@ -92,6 +118,7 @@
           />
         </g>
 
+        <g id="modelAssigned" />
         <g id="connections" />
         <g id="nodes" />
 
@@ -99,27 +126,33 @@
       </g>
     </svg>
 
-    <v-snackbar :timeout="-1" v-model="state.snackbar.show">
-      {{ state.snackbar.text }}
+    <v-snackbar
+      :timeout="-1"
+      v-model="state.network.project.state.snackbar.show"
+    >
+      {{ state.network.project.state.snackbar.text }}
 
       <template #action="{ attrs }">
         <v-btn
-          @click="state.snackbar.show = false"
+          @click="state.network.project.state.closeSnackbar()"
           outlined
           small
           v-bind="attrs"
-          v-if="state.snackbar.actions.length === 0"
+          v-if="state.network.project.state.snackbar.actions.length === 0"
         >
           Close
         </v-btn>
-        <template v-if="state.snackbar.actions.length > 0">
+        <template
+          v-if="state.network.project.state.snackbar.actions.length > 0"
+        >
           <v-btn
             :key="actionIdx"
             @click="action.onClick"
             outlined
             small
             v-bind="attrs"
-            v-for="(action, actionIdx) in state.snackbar.actions"
+            v-for="(action, actionIdx) in state.network.project.state.snackbar
+              .actions"
             v-text="action.text"
           />
         </template>
@@ -164,22 +197,17 @@ export default Vue.extend({
     const networkEditor = ref(null);
     const networkGraph = ref(null);
     const state = reactive({
-      network: projectView.state.project.network,
-      graph: undefined,
-      nodeMenu: {
-        node: undefined,
-        position: { x: 0, y: 0 },
-        show: false,
-      },
       connectionMenu: {
         connection: undefined,
         position: { x: 0, y: 0 },
         show: false,
       },
-      snackbar: {
-        actions: [],
+      graph: undefined,
+      network: projectView.state.project.network,
+      nodeMenu: {
+        node: undefined,
+        position: { x: 0, y: 0 },
         show: false,
-        text: '',
       },
     });
 
@@ -233,15 +261,6 @@ export default Vue.extend({
     };
 
     /**
-     * Show snackbar.
-     */
-    const showSnackbar = (text: string, actions: any[] = []) => {
-      state.snackbar.text = text;
-      state.snackbar.actions = actions;
-      state.snackbar.show = true;
-    };
-
-    /**
      * Check if nodes with all types are created.
      */
     const hasAllNodeTypes = () => {
@@ -259,16 +278,25 @@ export default Vue.extend({
      * Show help in snackbar.
      */
     const showHelp = () => {
-      state.snackbar.show = false;
+      if (state.network.project.state.snackbar.important) {
+        return;
+      }
+      state.network.project.state.closeSnackbar();
       if (!projectView.config.showHelp) {
         return;
       }
       if (state.network.nodes.length === 0) {
-        showSnackbar('Create nodes (use right mouse button).');
+        state.network.project.state.showSnackbar(
+          'Create nodes (use right mouse button).'
+        );
       } else if (!hasAllNodeTypes()) {
-        showSnackbar('Add at least a stimulator, a neuron and a recorder.');
+        state.network.project.state.showSnackbar(
+          'Add at least a stimulator, a neuron and a recorder.'
+        );
       } else if (state.network.connections.length < 2) {
-        showSnackbar('Connect I/O-devices to neurons.');
+        state.network.project.state.showSnackbar(
+          'Connect I/O-devices to neurons.'
+        );
       }
     };
 
@@ -350,7 +378,6 @@ export default Vue.extend({
 .node text {
   font-size: 12px;
   pointer-events: none;
-  text-anchor: middle;
 }
 
 .dragline {

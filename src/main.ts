@@ -4,7 +4,6 @@ import './registerServiceWorker';
 import combineURLs from 'axios/lib/helpers/combineURLs';
 
 import router from './router';
-import store from './store';
 import vuetify from './plugins/vuetify';
 import './plugins/codemirror';
 
@@ -31,7 +30,6 @@ Vue.config.productionTip = false;
 const mountApp = () => {
   new Vue({
     router,
-    store,
     vuetify,
     render: h => h(App),
   }).$mount('#app');
@@ -39,13 +37,13 @@ const mountApp = () => {
 
 if (process.env.IS_ELECTRON) {
   Vue.prototype.$appConfig = {
-    insiteAccess: { url: 'http://localhost:8080' },
-    nestSimulator: { url: 'http://localhost:5000' },
+    insiteAccess: { url: 'http://localhost:52056' },
+    nestSimulator: { url: 'http://localhost:52425' },
   };
   mountApp();
 } else {
   // Load the data from config.json for the global config and mount the app.
-  fetch(combineURLs(process.env.BASE_URL, 'config.json'))
+  fetch(combineURLs(process.env.BASE_URL, 'config/app.json'))
     .then(response => response.json())
     .then(appConfig => (Vue.prototype.$appConfig = appConfig))
     .finally(mountApp);

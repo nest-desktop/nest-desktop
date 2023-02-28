@@ -16,10 +16,10 @@
           <template #default="{ active }">
             <v-list-item-content class="pa-1">
               <v-row no-gutters>
-                {{ param.options.label }}
-                <v-spacer />
-                {{ param.toJSON().value }}
-                {{ param.options.unit }}
+                <v-col
+                  class="d-flex justify-space-between"
+                  v-html="param.labelRow"
+                />
               </v-row>
             </v-list-item-content>
 
@@ -59,13 +59,6 @@ export default Vue.extend({
     /**
      * Triggers when parameter is changed.
      */
-    const paramChange = () => {
-      state.connection.connectionChanges();
-    };
-
-    /**
-     * Triggers when parameter is changed.
-     */
     const selectionChange = () => {
       state.connection.params.forEach(
         (param: Parameter) =>
@@ -79,18 +72,8 @@ export default Vue.extend({
      */
     const update = () => {
       state.paramsIdx = state.connection.params
-        .filter((param: Parameter) => param.visible)
+        .filter((param: Parameter) => param.state.visible)
         .map((param: Parameter) => param.idx);
-    };
-
-    const showAllParams = () => {
-      state.connection.showAllParams();
-      update();
-    };
-
-    const hideAllParams = () => {
-      state.connection.hideAllParams();
-      update();
     };
 
     onMounted(() => {
@@ -105,10 +88,7 @@ export default Vue.extend({
     );
 
     return {
-      hideAllParams,
-      paramChange,
       selectionChange,
-      showAllParams,
       state,
     };
   },
