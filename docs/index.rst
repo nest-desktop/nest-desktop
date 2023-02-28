@@ -121,7 +121,7 @@ Please keep this in mind when searching for information on a specific version of
    :target: https://anaconda.org/conda-forge/nest-desktop
 
 .. |conda-downloads| image:: https://img.shields.io/conda/dn/conda-forge/nest-desktop.svg
-   :alt: AConda downloads total
+   :alt: Conda downloads total
    :target: https://anaconda.org/conda-forge/nest-desktop
 
 .. |appImage-release| image:: https://img.shields.io/github/release/nest-desktop/nest-desktop-appImage.svg?color=brightgreen&label=AppImage&logo=linux&logoColor=white
