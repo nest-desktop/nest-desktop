@@ -111,8 +111,8 @@ Then make a pull request on the base branch of this repository.
 
 .. _production_electron:
 
-Electron (`.deb` package)
--------------------------
+Electron (``.deb`` package)
+---------------------------
 
 In ``package.json``, there are also yarn commands configured to build an Electron app.
 
