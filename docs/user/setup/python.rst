@@ -65,4 +65,4 @@ You can use NEST Desktop in the web browser at http://localhost:54286.
 
 .. seeAlso::
    For more information read the full documentation of the command API
-   :doc:`here </user/usage-advance/command-API>`.
+   :doc:`here </user/usage-advanced/command-API>`.
