@@ -14,7 +14,7 @@ How can I empty a network?
    In the network graph you will find top right a trash button that empties the network.
 
    .. seeAlso::
-      - :doc:`/user/usage-advance/network-graph`
+      - :doc:`/user/usage-advanced/network-graph`
 
 
 How can I create nodes?

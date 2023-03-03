@@ -18,24 +18,24 @@ How to use NEST Desktop
    usage-basic/index
 
 
-Advance guide
-=============
+Advanced guide
+==============
 
 .. raw:: html
-   :file: ./templates/usage-advance.html
+   :file: ./templates/usage-advanced.html
 
 .. toctree::
    :hidden:
 
-   usage-advance/project-view
-   usage-advance/model-view
-   usage-advance/network-graph
-   usage-advance/activity-chart-graph
-   usage-advance/activity-animation-graph
-   usage-advance/controller-sidebar
-   usage-advance/copy-model
-   usage-advance/compartmental-neuron
-   usage-advance/synapse-model
+   usage-advanced/project-view
+   usage-advanced/model-view
+   usage-advanced/network-graph
+   usage-advanced/activity-chart-graph
+   usage-advanced/activity-animation-graph
+   usage-advanced/controller-sidebar
+   usage-advanced/copy-model
+   usage-advanced/compartmental-neuron
+   usage-advanced/synapse-model
 
 
 External software

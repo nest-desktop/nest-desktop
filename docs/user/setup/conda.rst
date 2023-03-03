@@ -70,4 +70,4 @@ Start with Conda
 
 .. seeAlso::
    For more information read the full documentation of the command API
-   :doc:`here </user/usage-advance/command-API>`.
+   :doc:`here </user/usage-advanced/command-API>`.

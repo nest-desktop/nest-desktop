@@ -11,7 +11,7 @@ If you are already in that area, this button toggles the list of projects, a sec
 In that list, you can manage your projects, e.g create, rename, arrange or delete them.
 
 .. seeAlso::
-   - :doc:'/user/usage-advance/project-view'
+   - :doc:'/user/usage-advanced/project-view'
 
 Main content of the page
 ------------------------
