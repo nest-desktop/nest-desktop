@@ -14,8 +14,6 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e --env firefox --headless",
     "lint": "vue-cli-service lint",
-    "docs:build": "cd docs; make clean; make html",
-    "docs:serve": "python3 -m http.server --directory ./docs/_build/html",
     "electron:build": "vue-cli-service electron:build --publish never",
     "electron:build:dev": "vue-cli-service electron:build --publish never --mode development",
     "electron:serve": "vue-cli-service electron:serve",
