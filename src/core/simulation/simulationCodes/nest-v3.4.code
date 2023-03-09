@@ -116,6 +116,10 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
 
+{{ #network.state.nodeAnnotations }}
+nest.userdict["{{ key }}"] = {{ &value }}
+{{ /network.state.nodeAnnotations }}
+
 {{ #simulation.code.prepareSimulation }}
 # Prepare simulation
 nest.Prepare()

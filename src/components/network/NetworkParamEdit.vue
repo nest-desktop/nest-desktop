@@ -130,6 +130,10 @@
                   <v-card-text class="pa-0">
                     <NodeParamEdit :node="node" />
                   </v-card-text>
+
+                  <v-row no-gutters style="width: 100%">
+                    <NodeAnnotations :node="node" />
+                  </v-row>
                 </v-card>
               </v-sheet>
             </v-card>
@@ -233,6 +237,7 @@ import ConnectionParamEdit from '@/components/connection/ConnectionParamEdit.vue
 import core from '@/core';
 import CopyModelSelect from '@/components/model/CopyModelSelect.vue';
 import ModelParamEdit from '@/components/model/ModelParamEdit.vue';
+import NodeAnnotations from '@/components/node/NodeAnnotations.vue';
 import NodeMenu from '@/components/node/NodeMenu.vue';
 import NodeModelSelect from '@/components/node/NodeModelSelect.vue';
 import NodeParamEdit from '@/components/node/NodeParamEdit.vue';
@@ -250,6 +255,7 @@ export default Vue.extend({
     draggable,
     ModelParamEdit,
     NetworkParamToolbar,
+    NodeAnnotations,
     NodeMenu,
     NodeModelSelect,
     NodeParamEdit,
@@ -289,11 +295,7 @@ export default Vue.extend({
         min: 1,
         value: 1,
         rules: [
-          [
-            'value > 0',
-            'The population size must be positive.',
-            'error',
-          ],
+          ['value > 0', 'The population size must be positive.', 'error'],
           [
             'value < 1000',
             'Large population size produces many data points which could cause a high system load and thus freezes and lags!',
