@@ -84,6 +84,13 @@ export class Node extends Config {
     );
   }
 
+  get connections(): Connection[] {
+    return this._network.connections.filter(
+      (connection: Connection) =>
+        connection.source === this || connection.target === this
+    );
+  }
+
   get compartments(): NodeCompartment[] {
     return this._compartments;
   }
@@ -263,6 +270,14 @@ export class Node extends Config {
       '[' +
       this._records.map((record: any) => '"' + record.id + '"').join(',') +
       ']'
+    );
+  }
+
+  get recordSpikes(): boolean {
+    return (
+      this.connections.filter((connection: Connection) =>
+        connection.view.connectSpikeRecorder()
+      ).length > 0
     );
   }
 

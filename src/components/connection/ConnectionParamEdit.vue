@@ -69,7 +69,7 @@
           item-text="label"
           item-value="value"
           label="connection rule"
-          v-model="state.connection.rule"
+          v-model="state.connection.rule.value"
         />
       </v-col>
     </v-row>

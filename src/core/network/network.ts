@@ -41,6 +41,12 @@ export class Network extends Config {
     return this._connections;
   }
 
+  get connectionsExcludeRecorders(): Connection[] {
+    return this._connections.filter(
+      (connection: Connection) => !connection.view.connectRecorder()
+    );
+  }
+
   set connections(values: Connection[]) {
     this._connections = values;
     this._connections.forEach((connection: Connection) => {

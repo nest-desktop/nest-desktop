@@ -10,6 +10,10 @@ export class ConnectionParameter extends Parameter {
     return this.parent as Connection;
   }
 
+  idPyNN(): string {
+    return 'test';
+  }
+
   /**
    * Trigger changes when parameter is changed.
    */

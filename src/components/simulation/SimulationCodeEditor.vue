@@ -62,7 +62,8 @@
               <v-radio-group
                 @change="state.code.generate()"
                 class="ma-0"
-                label="NEST version"
+                hide-details
+                label="Script language"
                 v-model="state.code.state.version"
               >
                 <v-radio
@@ -219,12 +220,13 @@ export default Vue.extend({
         theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
       },
       nestVersions: [
-        { text: 'dev', value: 'master' },
-        { text: 'v3.4', value: 'v3.4' },
-        { text: 'v3.3', value: 'v3.3' },
-        { text: 'v3.2', value: 'v3.2' },
-        { text: 'v3.1', value: 'v3.1' },
-        { text: 'v3.0', value: 'v3.0' },
+        // { text: 'NEST dev', value: 'nest-master' },
+        { text: 'NEST v3.4', value: 'nest-v3.4' },
+        { text: 'NEST v3.3', value: 'nest-v3.3' },
+        // { text: 'NEST v3.2', value: 'nest-v3.2' },
+        // { text: 'NEST v3.1', value: 'nest-v3.1' },
+        // { text: 'NEST v3.0', value: 'nest-v3.0' },
+        { text: 'PyNN v0.10', value: 'pyNN-v0.10' },
       ],
       style: {
         width: 300,
