@@ -61,7 +61,7 @@ export default Vue.extend({
      * Add text.
      */
     const addText = function () {
-      if (state.text.length == 0) return;
+      if (state.text.length === 0) return;
       state.node.addAnnotation(state.text);
       state.opened = false;
       state.text = '';

@@ -264,7 +264,7 @@ export class NetworkState {
       Object.keys(nodeAnnotationsDict).forEach((userDictKey: string) => {
         const nodes = nodeAnnotationsDict[userDictKey];
         const nodesStr =
-          nodes.length == 1 ? nodes[0] : '(' + nodes.join('+') + ')';
+          nodes.length === 1 ? nodes[0] : '(' + nodes.join('+') + ')';
         this._nodeAnnotations.push({
           key: userDictKey,
           value: nodesStr + '.tolist()',

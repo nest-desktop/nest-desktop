@@ -347,7 +347,7 @@ export class Node extends Config {
    * @param text - string
    */
   addAnnotation(text: string): void {
-    if (this._annotations.indexOf(text) != -1) return;
+    if (this._annotations.indexOf(text) !== -1) return;
     this._annotations.push(text);
     this.nodeChanges();
   }
