@@ -49,6 +49,7 @@ export class NetworkState {
   };
 
   private _network: Network; // parent
+  private _nodeAnnotations: any[] = [];
   private _selectedConnection: number | null = null;
   private _selectedNode: number | null = null;
 
@@ -112,6 +113,10 @@ export class NetworkState {
 
   get icons(): any {
     return this._icons;
+  }
+
+  get nodeAnnotations(): any {
+    return this._nodeAnnotations;
   }
 
   get selectedConnection(): Connection | null {
@@ -232,5 +237,39 @@ export class NetworkState {
       network: this._network.toJSON(),
       darkMode: this._network.project.app.darkMode,
     });
+  }
+
+  /**
+   * Update node annotations.
+   */
+  updateNodeAnnotations(): void {
+    this._nodeAnnotations = [];
+    if (this._network.nodes.length === 0) return;
+
+    const nodeAnnotationsDict = {};
+    this._network.nodes
+      .filter((node: Node) => node.annotations.length > 0)
+      .forEach((node: Node) => {
+        const nodeLabel = node.view.label;
+        node.annotations.forEach((annotation: string) => {
+          if (annotation in nodeAnnotationsDict) {
+            nodeAnnotationsDict[annotation].push(nodeLabel);
+          } else {
+            nodeAnnotationsDict[annotation] = [nodeLabel];
+          }
+        });
+      });
+
+    if (nodeAnnotationsDict) {
+      Object.keys(nodeAnnotationsDict).forEach((userDictKey: string) => {
+        const nodes = nodeAnnotationsDict[userDictKey];
+        const nodesStr =
+          nodes.length === 1 ? nodes[0] : '(' + nodes.join('+') + ')';
+        this._nodeAnnotations.push({
+          key: userDictKey,
+          value: nodesStr + '.tolist()',
+        });
+      });
+    }
   }
 }

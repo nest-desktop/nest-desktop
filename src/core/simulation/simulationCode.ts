@@ -28,7 +28,7 @@ export class SimulationCode {
             'connectNodes',
             'runSimulation',
           ],
-      version: 'v3.3',
+      version: 'v3.4',
     });
 
     this.clean();

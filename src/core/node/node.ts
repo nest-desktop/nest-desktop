@@ -24,6 +24,7 @@ export class Node extends Config {
   private readonly _name = 'Node';
 
   private _activity: SpikeActivity | AnalogSignalActivity | Activity;
+  private _annotations: string[] = [];
   private _compartments: NodeCompartment[] = [];
   private _doc: any = {};
   private _idx: number; // generative
@@ -46,6 +47,7 @@ export class Node extends Config {
     this._modelId = node.model;
     this._network = network;
     this._size = node.size || 1;
+    this._annotations = node.annotations || [];
     this._doc = node;
 
     this._view = new NodeView(this, node.view);
@@ -66,6 +68,10 @@ export class Node extends Config {
 
   set activity(value: SpikeActivity | AnalogSignalActivity | Activity) {
     this._activity = value;
+  }
+
+  get annotations(): string[] {
+    return this._annotations;
   }
 
   get assignedModels(): CopyModel[] {
@@ -334,6 +340,26 @@ export class Node extends Config {
    */
   addReceptor(receptor: any): void {
     this._receptors.push(new NodeReceptor(this, receptor));
+  }
+
+  /**
+   * Add annotation to the list.
+   * @param text - string
+   */
+  addAnnotation(text: string): void {
+    if (this._annotations.indexOf(text) !== -1) return;
+    this._annotations.push(text);
+    this.nodeChanges();
+  }
+
+  /**
+   * Remove annotation from the list.
+   * @param text - string
+   */
+  removeAnnotation(text: string): void {
+    if (this._annotations.indexOf(text) === -1) return;
+    this._annotations.splice(this._annotations.indexOf(text), 1);
+    this.nodeChanges();
   }
 
   /**
@@ -728,6 +754,11 @@ export class Node extends Config {
       size: this._size,
       view: this._view.toJSON(),
     };
+
+    // Add annotations if provided.
+    if (this._annotations.length > 0) {
+      node.annotations = this._annotations;
+    }
 
     // Add records if this model is multimeter.
     if (this.model.isMultimeter) {
