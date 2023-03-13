@@ -38,7 +38,7 @@ sim.setup(
 # Connect nodes
 {{ #network.connectionsExcludeRecorders }}
 conn_spec = sim.{{ rule.toPyNN }}Connector({{ #hasSomeVisibleParams }}{{ #filteredParams }}
-  {{ idPyNN }}={{ code }},
+  {{ PyNNParamId }}={{ code }},
 {{ /filteredParams }}{{ /hasSomeVisibleParams }})
 syn_spec = sim.StaticSynapse(weight={{ synapse.weight }})
 sim.Projection({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}, conn_spec, syn_spec)

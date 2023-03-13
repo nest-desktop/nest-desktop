@@ -1,6 +1,13 @@
 import { Connection } from './connection';
 import { Parameter } from '../parameter/parameter';
 
+const PyNNParamIds = {
+  N: 'n',
+  indegree: 'n',
+  outdegree: 'n',
+  p: 'p_connect',
+}
+
 export class ConnectionParameter extends Parameter {
   constructor(connection: Connection, param: any) {
     super(connection, param);
@@ -10,8 +17,8 @@ export class ConnectionParameter extends Parameter {
     return this.parent as Connection;
   }
 
-  idPyNN(): string {
-    return 'test';
+  PyNNParamId(): string {
+    return PyNNParamIds[this.id];
   }
 
   /**
