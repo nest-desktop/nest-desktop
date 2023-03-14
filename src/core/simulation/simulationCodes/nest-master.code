@@ -115,6 +115,14 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
 {{ /network.connections }}
 {{ /simulation.code.connectNodes }}
+{{ #simulation.code.tagAnnotations }}
+
+# Tag annotations
+nest.userdict.clear()
+{{ #network.state.nodeAnnotations }}
+nest.userdict["{{ key }}"] = {{ &value }}
+{{ /network.state.nodeAnnotations }}
+{{ /simulation.code.tagAnnotations }}
 
 {{ #simulation.code.prepareSimulation }}
 # Prepare simulation

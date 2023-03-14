@@ -267,7 +267,7 @@ export class NetworkState {
           nodes.length === 1 ? nodes[0] : '(' + nodes.join('+') + ')';
         this._nodeAnnotations.push({
           key: userDictKey,
-          value: nodesStr + '.tolist()',
+          value: nodesStr,
         });
       });
     }

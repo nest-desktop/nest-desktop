@@ -99,6 +99,10 @@ export class SimulationCode {
     return this._state;
   }
 
+  get tagAnnotations(): boolean {
+    return this._state.blocks.includes('tagAnnotations');
+  }
+
   /**
    * Clean the simulation code.
    */
