@@ -1,3 +1,7 @@
+import { reactive, UnwrapRef } from '@vue/composition-api';
+import { sha1 } from 'object-hash';
+
+import { Activity } from './activity';
 import { ActivityChartGraph } from './activityChart/activityChartGraph';
 import { ActivityAnimationGraph } from './activityAnimation/activityAnimationGraph';
 import { Project } from '../project/project';
@@ -5,11 +9,16 @@ import { Project } from '../project/project';
 export class ActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;
   private _activityChartGraph: ActivityChartGraph;
-  private _codeHash: string;
   private _project: Project;
+  private _state: UnwrapRef<any>;
+
 
   constructor(project: Project, activityGraph: any = {}) {
     this._project = project;
+    this._state = reactive({
+      codeHash: '',
+      dataHash: '',
+    });
     this.init(activityGraph);
   }
 
@@ -22,11 +31,15 @@ export class ActivityGraph {
   }
 
   get codeHash(): string {
-    return this._codeHash;
+    return this._state.codeHash;
   }
 
   get project(): Project {
     return this._project;
+  }
+
+  get state(): UnwrapRef<any> {
+    return this._state;
   }
 
   /**
@@ -35,22 +48,32 @@ export class ActivityGraph {
   init(activityGraph: any = {}): void {
     this.initActivityChartGraph(activityGraph.panels || []);
     this.initActivityAnimationGraph();
+    this.updateHash();
   }
 
   /**
    * Update activity graph.
    */
   update(): void {
+    const activitiesHash = this._project.activities.map(
+      (activity: Activity) => activity.hash
+    );
+    if (sha1({ activitiesHash }) === this._state.dataHash) return;
+
     this._activityChartGraph.update();
     this._activityAnimationGraph.update();
     this.updateHash();
   }
 
   /**
-   * Update code hash for activity graph.
+   * Update hash for activity graph.
    */
   updateHash(): void {
-    this._codeHash = this._project.simulation.code.hash;
+    this._state.codeHash = this._project.simulation.code.hash;
+    const activitiesHash = this._project.activities.map(
+      (activity: Activity) => activity.hash
+    );
+    this._state.dataHash = sha1({ activitiesHash });
   }
 
   /**

@@ -21,9 +21,12 @@ type nodeDataType = {
 };
 
 type stateType = {
-  fromTime: number;
-  intervalId: number | null;
+  activityGraphIntervalId: number | null;
   on: boolean;
+  simulationTimeIntervalId: number | null;
+  skip: number;
+  spikesRequestTimeout: number;
+  top: number;
 };
 
 export class Insite {
@@ -34,21 +37,40 @@ export class Insite {
     this._project = project;
 
     this._state = {
-      fromTime: 0,
-      intervalId: null,
+      activityGraphIntervalId: null,
       on: false,
+      simulationTimeIntervalId: null,
+      skip: 0,
+      spikesRequestTimeout: 250,
+      top: 2500,
     };
-  }
-
-  get state(): stateType {
-    return this._state;
   }
 
   get insiteAccess(): Backend {
     return this._project.app.backends.insiteAccess;
   }
 
-  cancelGettingActivity(): void {
+  set activityGraphIntervalId(value: number | null) {
+    clearInterval(this._state.activityGraphIntervalId);
+    this._state.activityGraphIntervalId = value;
+  }
+
+  set simulationTimeIntervalId(value: number) {
+    clearInterval(this._state.simulationTimeIntervalId);
+    this._state.simulationTimeIntervalId = value;
+  }
+
+  get simulationRunningState(): boolean {
+    return this._project.simulation.state.running;
+  }
+
+  get state(): stateType {
+    return this._state;
+  }
+
+  cancelAllIntervals(): void {
+    this.simulationTimeIntervalId = null;
+    this.activityGraphIntervalId = null;
     this._state.on = false;
   }
 
@@ -64,54 +86,98 @@ export class Insite {
    * Afterwards it gets activities from Insite.
    */
   getActivities(): void {
-    this.consoleLog('Get activites from Insite');
-    this._state.fromTime = 0;
     this._state.on = true;
 
     const buttonProps = [
       {
-        text: 'Cancel',
+        text: 'terminate', // cancel, stop, end, kill, disconnect, unplug
         onClick: () => {
-          this.cancelGettingActivity();
+          this.cancelAllIntervals();
           this._project.state.closeSnackbar();
         },
       },
     ];
 
     this._project.state.showSnackbar(
-      'The network is initialized. Getting activities from Insite regularly.',
+      'Getting activities from Insite regularly.',
       buttonProps,
       true
     );
 
-    this.getSimulationTimeInfo();
+    // Get node Ids from Insite.
+    this.getNodePositions().then((positions: any) => {
+      // Check if project has activities.
+      this._project.state.checkActivities();
+
+      // Get spike activities from Insite.
+      if (this._project.state.activities.hasSomeSpikeRecorders) {
+        this.getSpikeActivities(positions);
+      }
+
+      // Get analog signal activities from Insite.
+      if (this._project.state.activities.hasSomeAnalogRecorders) {
+        this.getAnalogSignalActivities(positions);
+      }
+    });
   }
 
   /**
-   * Get simulation time info from Insite.
+   * Notify whether the simulation is finished.
    */
-  getSimulationTimeInfo(): void {
-    if (!this._state.on) {
-      return;
-    }
-    this.consoleLog('Get simulation time info from Insite');
-
+  simulationEndNotification(): void {
     this.insiteAccess.instance
       .get('nest/simulationTimeInfo/')
-      .catch(() => {
-        setTimeout(() => this.getSimulationTimeInfo(), 100);
-      })
       .then((response: any) => {
-        if (response == null) {
-          return;
-        }
-        this._project.simulation.state.timeInfo = response.data;
+        const simulation = this._project.simulation;
 
-        // Update activity graph during the simulation.
-        this.continuouslyUpdateActivityGraph();
+        // Notify user when the simulation is finished.
+        simulation.openToast('Simulation is finished.', 'success');
 
-        this.getNodesIds();
+        // Set interval to 2000 ms for simulation time info.
+        // this.continuouslyUpdateSimulationTimeInfo(2000);
+
+        // // // Set interval to 2000 ms for activity graph.
+        // this.continuouslyUpdateActivityGraph(2000);
+
+        // Check if the simulation is still running.
+        simulation.state.running =
+          response.data.end > response.data.current + response.data.stepSize;
       });
+  }
+
+  /**
+   * Update simulation time info continuously.
+   *
+   * It calls `setInterval()` function.
+   */
+  continuouslyUpdateSimulationTimeInfo(milliseconds: number = 250): void {
+    this.consoleLog('Update simulation time info continuously');
+
+    this.simulationTimeIntervalId = window.setInterval(() => {
+      this.insiteAccess.instance
+        .get('nest/simulationTimeInfo/')
+        .then((response: any) => {
+          if (response === undefined) return;
+
+          const timeInfo = response.data || {
+            begin: 0,
+            current: 0,
+            end: 0,
+            stepSize: 1,
+          };
+
+          if (
+            timeInfo.current === this._project.simulation.state.timeInfo.current
+          ) {
+            return;
+          }
+
+          this._project.simulation.state.timeInfo = timeInfo;
+
+          this._project.state.snackbar.text = `Getting activities from Insite regularly. Current time:
+            ${this._project.simulation.state.timeInfo.current}ms.`;
+        });
+    }, milliseconds);
   }
 
   /**
@@ -119,20 +185,14 @@ export class Insite {
    *
    * It calls `setInterval()` function.
    */
-  continuouslyUpdateActivityGraph(): void {
-    this.consoleLog('Update activity graph continuously');
-
-    this._state.intervalId = window.setInterval(() => {
+  continuouslyUpdateActivityGraph(milliseconds: number = 1000): void {
+    this.activityGraphIntervalId = window.setInterval(() => {
       // Check if project has activities.
       this._project.state.checkActivities();
 
       // Update activity graph.
       this._project.activityGraph.update();
-
-      if (!this._state.on) {
-        clearInterval(this._state.intervalId);
-      }
-    }, 1000);
+    }, milliseconds);
   }
 
   /**
@@ -141,31 +201,28 @@ export class Insite {
    * @remarks
    * It gets node positions from Insite.
    */
-  getNodesIds(): void {
+  async getNodePositions(): Promise<any> {
     if (!this._state.on) {
       return;
     }
     this.consoleLog('Get node IDs from Insite');
 
     const positions: any = {};
-    this.insiteAccess.instance.get('nest/nodes/').then((response: any) => {
-      response.data.forEach((data: nodeDataType) => {
-        if (data.position != null) {
-          positions[data.nodeId] = data.position;
+    return this.insiteAccess.instance
+      .get('nest/nodes/')
+      .then((response: any) => {
+        if (response == null) {
+          return;
         }
+
+        response.data.forEach((data: nodeDataType) => {
+          if (data.position != null) {
+            positions[data.nodeId] = data.position;
+          }
+        });
+
+        return positions;
       });
-
-      // Check if project has activities.
-      this._project.state.checkActivities();
-
-      if (this._project.state.activities.hasSomeSpikeRecorders) {
-        this.getSpikeActivities(positions);
-      }
-
-      if (this._project.state.activities.hasSomeAnalogRecorders) {
-        this.getAnalogSignalActivities(positions);
-      }
-    });
   }
 
   /**
@@ -185,6 +242,15 @@ export class Insite {
     this.insiteAccess.instance
       .get('nest/spikerecorders/')
       .then((response: any) => {
+        if (response == null) {
+          return;
+        }
+
+        if (response.status === 202) {
+          setTimeout(() => this.getSpikeActivities(positions), 100);
+          return;
+        }
+
         const activities: activityType[] = response.data.map((data: any) => {
           const nodePositions: number[][] = [];
           if (Object.keys(positions).length > 0) {
@@ -210,11 +276,112 @@ export class Insite {
         // Initialize activities.
         this._project.initActivities(activities);
 
-        // Get spike activities from each spike recorder.
-        this._project.spikeActivities.forEach((activity: SpikeActivity) =>
-          activity.getActivityInsite()
-        );
+        // Get spike activities for each spike recorder.
+        // this._project.spikeActivities.forEach((activity: SpikeActivity) => {
+        //   this.getSpikeActivityFromEachRecorder(activity);
+        // });
+
+        // Get spikes from Insite.
+        this._state.skip = 0;
+        this.getAllFirstSpikeActivity();
       });
+  }
+
+  /**
+   * Get spikes for each recorder from Insite.
+   */
+  getSpikeActivityFromEachRecorder(activity: SpikeActivity): void {
+    if (!this._state.on) {
+      return;
+    }
+
+    const path = `nest/spikes/?fromTime=${
+      activity.lastTime + 0.1
+    }&spikedetectorId=${activity.recorderUnitId}`;
+    this.insiteAccess.instance.get(path).then((response: any) => {
+      if (response == null) {
+        return;
+      }
+
+      if (response.status === 202) {
+        setTimeout(() => this.getSpikeActivityFromEachRecorder(activity), 100);
+        return;
+      }
+
+      activity.update({
+        events: {
+          senders: response.data.nodeIds, // y
+          times: response.data.simulationTimes, // x
+        },
+      });
+
+      // Recursive call after 500ms.
+      setTimeout(() => {
+        this.getSpikeActivityFromEachRecorder(activity);
+      }, 500);
+    });
+  }
+
+  /**
+   * Get all first spike activity from Insite.
+   */
+  getAllFirstSpikeActivity(): void {
+    if (!this._state.on) {
+      return;
+    }
+    const path = `nest/spikes/?top=${this._state.top}&skip=${this._state.skip}`;
+    this.insiteAccess.instance.get(path).then((response: any) => {
+      if (response == null) {
+        return;
+      }
+
+      if (response.status === 202) {
+        setTimeout(() => this.getAllFirstSpikeActivity(), 100);
+        return;
+      }
+
+      const senders = response.data.nodeIds;
+      const times = response.data.simulationTimes;
+
+      this._state.spikesRequestTimeout =
+        senders.length > 0
+          ? 250
+          : this._state.spikesRequestTimeout >= 5000
+          ? 5000
+          : this._state.spikesRequestTimeout + 250;
+
+      if (senders == undefined || senders.length === 0) {
+        setTimeout(
+          () => this.getAllFirstSpikeActivity(),
+          this._state.spikesRequestTimeout
+        );
+        return;
+      }
+
+      // Get spike activities from each spike recorder.
+      this._project.spikeActivities.forEach((activity: SpikeActivity) => {
+        const events = {
+          senders: [],
+          times: [],
+        };
+
+        senders.forEach((senderId: number, idx: number) => {
+          if (activity.nodeIds.includes(senderId)) {
+            events.senders.push(senderId);
+            events.times.push(times[idx]);
+          }
+        });
+
+        activity.update({
+          events,
+        });
+      });
+
+      this._state.skip += Math.min(senders.length, this._state.top);
+
+      // Recursive call after timeout.
+      setTimeout(() => this.getAllFirstSpikeActivity(), 250);
+    });
   }
 
   /**
@@ -234,6 +401,15 @@ export class Insite {
     this.insiteAccess.instance
       .get('nest/multimeters/')
       .then((response: any) => {
+        if (response == null) {
+          return;
+        }
+
+        if (response.status === 202) {
+          setTimeout(() => this.getAnalogSignalActivities(positions), 100);
+          return;
+        }
+
         const activities: activityType[] = response.data.map((data: any) => {
           const events: any = { times: [], senders: [] };
           data.attributes.forEach((attribute: string) => {
@@ -267,8 +443,59 @@ export class Insite {
 
         // Get analog signal activities from each multimeter.
         this._project.analogSignalActivities.forEach(
-          (activity: AnalogSignalActivity) => activity.getActivityInsite()
+          (activity: AnalogSignalActivity) =>
+            this.getAnalogSignalsFromRecorder(activity)
         );
       });
+  }
+
+  /**
+   * Get activity from Insite.
+   */
+  getAnalogSignalsFromRecorder(activity: AnalogSignalActivity): void {
+    if (!this._state.on) {
+      return;
+    }
+
+    const attribute: string = 'V_m';
+    const path = `nest/multimeters/${activity.recorderUnitId}/attributes/${attribute}/?fromTime=${activity.lastTime}`;
+    this.insiteAccess.instance.get(path).then((response: any) => {
+      if (response == null) {
+        return;
+      }
+
+      if (response.status === 202) {
+        setTimeout(() => this.getAnalogSignalsFromRecorder(activity), 100);
+        return;
+      }
+
+      const times: number[] = this.repeat(response.data);
+      const senders: number[] = this.tile(response.data);
+      const activityData: any = {
+        events: {
+          times, // x
+          senders,
+        },
+        nodeIds: response.data.nodeIds, // from insite
+        times: response.data.simulationTimes, // from insite
+      };
+      activityData.events[attribute] = response.data.values;
+      activity.update(activityData);
+
+      // Recursive call after 250ms.
+      setTimeout(() => {
+        this.getAnalogSignalsFromRecorder(activity);
+      }, 250);
+    });
+  }
+
+  repeat(data: any): number[] {
+    return data.simulationTimes.flatMap((e: number) =>
+      Array(data.nodeIds.length).fill(e)
+    );
+  }
+
+  tile(data: any): number[] {
+    return data.simulationTimes.flatMap(() => data.nodeIds);
   }
 }

@@ -154,9 +154,7 @@ export class Activity {
    * Extends events.
    */
   update(activity: any): void {
-    if (activity.events == undefined) {
-      return;
-    }
+    if (activity.events == undefined) return;
 
     this.updateEvents(activity.events);
     this.postUpdate(activity);
@@ -170,19 +168,31 @@ export class Activity {
    * Update events.
    */
   updateEvents(events: any): void {
+    if (events === undefined) return;
+    let updated = false;
+
     const eventKeys: string[] = Object.keys(events);
+    if (eventKeys === undefined || eventKeys.length === 0) return;
+
     eventKeys.forEach((eventKey: string) => {
       const newEvents: number[] = events[eventKey];
-      this._events[eventKey] = this._events[eventKey].concat(newEvents);
+      if (newEvents !== undefined || newEvents.length > 0) {
+        this._events[eventKey] = this._events[eventKey].concat(newEvents);
+        updated = true;
+      }
     });
-    this.updateHash();
+
+    if (updated) {
+      this.updateHash();
+    }
   }
 
   /**
    * Update hash.
    */
   updateHash(): void {
-    this._hash = sha1(JSON.stringify(this._events));
+    // this._hash = sha1(JSON.stringify(this._events));
+    this._hash = sha1({ sendersLength: this._events.senders.length });
   }
 
   /**
