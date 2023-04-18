@@ -77,7 +77,7 @@ export class ConnectionView {
    * Check if the connection is probabilistic.
    */
   probabilistic(): boolean {
-    return !['all_to_all', 'one_to_one'].includes(this._connection.rule);
+    return !['all_to_all', 'one_to_one'].includes(this._connection.rule.value);
   }
 
   /**

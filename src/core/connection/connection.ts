@@ -2,26 +2,17 @@ import { sha1 } from 'object-hash';
 
 import { Config } from '../common/config';
 import { ConnectionMask } from './connectionMask';
+import { ConnectionParameter } from './connectionParameter';
+import { ConnectionRule } from './connectionRule';
 import { ConnectionState } from './connectionState';
 import { ConnectionView } from './connectionView';
 import { CopyModel } from '../model/copyModel';
 import { Model } from '../model/model';
-import { SynapseParameter } from '../synapse/synapseParameter';
 import { Network } from '../network/network';
 import { Node } from '../node/node';
 import { NodeSlice } from '../node/nodeSlice';
-import { ConnectionParameter } from './connectionParameter';
 import { Synapse } from '../synapse/synapse';
-
-enum Rule {
-  AllToAll = 'all_to_all',
-  FixedIndegree = 'fixed_indegree',
-  FixedOutdegree = 'fixed_outdegree',
-  FixedTotalNumber = 'fixed_total_number',
-  OneToOne = 'one_to_one',
-  PairwiseBernoulli = 'pairwise_bernoulli',
-  symmetricPairwiseBernoulli = 'symmetric_pairwise_bernoulli',
-}
+import { SynapseParameter } from '../synapse/synapseParameter';
 
 export class Connection extends Config {
   private readonly _name = 'Connection';
@@ -31,7 +22,7 @@ export class Connection extends Config {
   private _mask: ConnectionMask;
   private _network: Network; // parent
   private _params: ConnectionParameter[];
-  private _rule: string;
+  private _rule: ConnectionRule;
   private _sourceIdx: number; // Node index
   private _sourceSlice: NodeSlice;
   private _state: ConnectionState;
@@ -54,7 +45,7 @@ export class Connection extends Config {
     this._targetIdx = connection.target;
     this._targetSlice = new NodeSlice(this.target, connection.targetSlice);
 
-    this._rule = connection.rule || Rule.AllToAll;
+    this._rule = new ConnectionRule(this, connection.rule);
     this.initParameters(connection.params);
     this._mask = new ConnectionMask(this, connection.mask);
     this._synapse = new Synapse(this, connection.synapse);
@@ -76,7 +67,7 @@ export class Connection extends Config {
   }
 
   get hasConnSpec(): boolean {
-    return !this.isRuleAllToAll;
+    return this._rule.value != 'all_to_all';
   }
 
   get hasSomeVisibleParams(): boolean {
@@ -87,10 +78,6 @@ export class Connection extends Config {
 
   get idx(): number {
     return this._idx;
-  }
-
-  get isRuleAllToAll(): boolean {
-    return this._rule === 'all_to_all';
   }
 
   get mask(): ConnectionMask {
@@ -117,13 +104,8 @@ export class Connection extends Config {
     return this.source.model.isRecorder ? this.source : this.target;
   }
 
-  get rule(): string {
+  get rule(): ConnectionRule {
     return this._rule;
-  }
-
-  set rule(value: string) {
-    this._rule = value;
-    this.initParameters();
   }
 
   /**
@@ -259,7 +241,7 @@ export class Connection extends Config {
    * Get all parameter of the rule.
    */
   getRuleConfig(): any {
-    return this.config.rules.find((r: any) => r.value === this._rule);
+    return this.config.rules.find((r: any) => r.value === this._rule.value);
   }
 
   /**
@@ -313,7 +295,7 @@ export class Connection extends Config {
    * It emits connection changes.
    */
   reset(): void {
-    this.rule = Rule.AllToAll;
+    this._rule.reset();
     this.initParameters();
     this.synapse.modelId = 'static_synapse';
     this._mask.unmask();
@@ -334,7 +316,7 @@ export class Connection extends Config {
   toJSON(): any {
     const connection: any = {
       params: this._params.map((param: ConnectionParameter) => param.toJSON()),
-      rule: this._rule,
+      rule: this._rule.value,
       source: this._sourceIdx,
       synapse: this._synapse.toJSON(),
       target: this._targetIdx,
