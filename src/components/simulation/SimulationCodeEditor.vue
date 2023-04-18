@@ -180,6 +180,13 @@ export default Vue.extend({
         },
         {
           disabled: false,
+          icon: 'mdi-tag',
+          icontext: 'tag',
+          text: 'Tag annotations',
+          value: 'tagAnnotations',
+        },
+        {
+          disabled: false,
           icon: 'mdi-play',
           icontext: 'simulate',
           text: 'Run simulation',
