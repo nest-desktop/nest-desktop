@@ -9,8 +9,19 @@
         label
         outlined
         small
-        v-if="state.graph.codeHash"
-        v-text="state.graph.codeHash.slice(0, 6)"
+        title="Code hash"
+        v-if="state.graph.state.codeHash"
+        v-text="state.graph.state.codeHash.slice(0, 6)"
+      />
+      <v-chip
+        :key="state.graph.state.dataHash"
+        class="ma-1"
+        label
+        outlined
+        small
+        title="Data hash"
+        v-if="state.graph.state.dataHash"
+        v-text="state.graph.state.dataHash.slice(0, 6)"
       />
     </div>
 

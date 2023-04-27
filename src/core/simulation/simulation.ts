@@ -191,6 +191,12 @@ export class Simulation extends Config {
    */
   private async runWithInsite(): Promise<any> {
     this.consoleLog('Run simulation with Insite');
+    this._state.timeInfo = {
+      begin: 0,
+      current: 0,
+      end: 0,
+      stepSize: 1,
+    };
 
     return this.backends.nestSimulator.instance
       .post('exec', { source: this._code.script })
@@ -201,30 +207,22 @@ export class Simulation extends Config {
               'Failed to perform simulation (NEST Simulator is not running).',
               'error'
             );
-            this._project.insite.cancelGettingActivity();
+            this._project.insite.cancelAllIntervals();
             break;
           case 200:
             if (this._code.runSimulation) {
-              this.backends.insiteAccess.instance
-                .get('nest/simulationTimeInfo/')
-                .then((response: any) => {
-                  // Notify user when the simulation is finished.
-                  this.openToast('Simulation is finished.', 'success');
-                  this._state.running =
-                    response.data.end >
-                    response.data.current + response.data.stepSize;
-                });
+              this._project.insite.simulationEndNotification();
             }
             break;
           default:
             this.openToast(response.responseText, 'error');
-            this._project.insite.cancelGettingActivity();
+            this._project.insite.cancelAllIntervals();
             break;
         }
         return response;
       })
       .catch((error: any) => {
-        this._project.insite.cancelGettingActivity();
+        this._project.insite.cancelAllIntervals();
         if ('response' in error && error.response.data != undefined) {
           this.openToast(error.response.data, 'error');
         }
