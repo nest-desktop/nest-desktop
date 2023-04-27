@@ -24,7 +24,7 @@ export class SpikeActivity extends Activity {
    * Post-update spike activity.
    */
   override postUpdate(activity: any): void {
-    if (activity.events === undefined) return;
+    if (activity.events == undefined) return;
     this.updateTimes(activity.events);
   }
 
@@ -33,8 +33,8 @@ export class SpikeActivity extends Activity {
    */
   updateTimes(events: any): void {
     if (
-      events.senders === undefined ||
-      events.times === undefined ||
+      events.senders == undefined ||
+      events.times == undefined ||
       events.senders.length === 0 ||
       events.times.length === 0
     ) {

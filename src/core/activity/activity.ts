@@ -168,11 +168,11 @@ export class Activity {
    * Update events.
    */
   updateEvents(events: any): void {
-    if (events === undefined) return;
+    if (events == undefined) return;
     let updated = false;
 
     const eventKeys: string[] = Object.keys(events);
-    if (eventKeys === undefined || eventKeys.length === 0) return;
+    if (eventKeys == undefined || eventKeys.length === 0) return;
 
     eventKeys.forEach((eventKey: string) => {
       const newEvents: number[] = events[eventKey];
