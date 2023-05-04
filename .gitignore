@@ -133,4 +133,5 @@ __pycache__
 *.egg-info
 
 # Electron-builder output
-/dist_electron
+/release
+/dist-electron

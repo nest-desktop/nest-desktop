@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar color="white" density="compact">
+    <v-toolbar color="transparent" density="compact">
       <v-toolbar-title class="mx-1">
         <v-text-field
           clearable

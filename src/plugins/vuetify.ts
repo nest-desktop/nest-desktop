@@ -22,18 +22,43 @@ export default createVuetify({
     },
     VCard: {
       flat: true,
-      VCardActions: { VBtn: { size: "small", variant: "outlined", ripple: true } },
+      VCardActions: {
+        VBtn: { size: "small", variant: "outlined", ripple: true },
+      },
     },
   },
   theme: {
     themes: {
       light: {
         colors: {
+          "blue-darken-1": "#054766",
+          "blue-lighten-1": "#33BEFF",
+          "orange-darken-1": "#B33A12",
+          "orange-lighten-1": "#FF794D",
+          blue: "#1281b3",
+          green: "#36B34F",
+          orange: "#ff6633",
+          pink: "#A93EB3",
           primary: "#1867C0",
           secondary: "#5CBBF6",
-          project: "#1281b3",
-          model: "#ff6633",
           systembar: "#424242",
+          yellow: "#B3AE47",
+        },
+      },
+      dark: {
+        colors: {
+          "blue-darken-1": "#054766",
+          "blue-lighten-1": "#33BEFF",
+          "orange-darken-1": "#B33A12",
+          "orange-lighten-1": "#FF794D",
+          blue: "#1281b3",
+          green: "#36B34F",
+          orange: "#ff6633",
+          pink: "#A93EB3",
+          primary: "#1867C0",
+          secondary: "#5CBBF6",
+          systembar: "#424242",
+          yellow: "#B3AE47",
         },
       },
     },

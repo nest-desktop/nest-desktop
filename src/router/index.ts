@@ -5,14 +5,14 @@
  */
 
 // Composables
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 import modelRoutes from "./modelRoute";
 import projectRoutes from "./projectRoute";
 
 import { useNavStore } from "@/store/navStore";
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: () => import("@/layouts/app/AppLayout.vue"),
@@ -21,18 +21,26 @@ const routes = [
         path: "",
         name: "AppInfo",
         component: () => import("@/views/AppInfo.vue"),
-        beforeEntry: () => {
-          const navStore = useNavStore;
+        beforeEnter: () => {
+          const navStore = useNavStore();
           navStore.open = false;
-        }
+        },
       },
       {
         path: "vuetify",
         name: "Home",
         component: () => import("@/views/Home.vue"),
       },
-      ...modelRoutes,
-      ...projectRoutes,
+      {
+        path: "model/",
+        component: () => import("@/layouts/model/ModelLayout.vue"),
+        children: modelRoutes as RouteRecordRaw[],
+      },
+      {
+        path: "project/",
+        component: () => import("@/layouts/project/ProjectLayout.vue"),
+        children: projectRoutes as RouteRecordRaw[],
+      },
     ],
   },
 ];

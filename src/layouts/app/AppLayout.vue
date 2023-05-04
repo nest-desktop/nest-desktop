@@ -8,7 +8,27 @@
       <app-navigation />
 
       <template #append>
+        <v-row align="center" justify="center" no-gutters>
+          <v-btn
+            @click="toggleTheme"
+            icon="mdi-theme-light-dark"
+            size="small"
+            title="Toggle dark mode"
+            variant="plain"
+          />
+        </v-row>
+
         <div>
+          <v-btn
+            prepend-icon="mdi-cogs"
+            rounded="0"
+            size="x-small"
+            stacked
+            title="Settings"
+            variant="plain"
+          >
+            Settings
+          </v-btn>
           <v-btn
             href="https://nest-desktop.readthedocs.io"
             prepend-icon="mdi-help-circle-outline"
@@ -17,7 +37,7 @@
             stacked
             target="_blank"
             title="Help"
-            variant="text"
+            variant="plain"
           >
             Help
           </v-btn>
@@ -29,7 +49,7 @@
             stacked
             title="About"
             to="/"
-            variant="text"
+            variant="plain"
           >
             About
           </v-btn>
@@ -44,6 +64,14 @@
 </template>
 
 <script lang="ts" setup>
+import { useTheme } from "vuetify";
+const theme = useTheme();
+
 import AppBar from "./AppBar.vue";
 import AppNavigation from "./AppNavigation.vue";
+
+const toggleTheme = () =>
+  (theme.global.name.value = theme.global.current.value.dark
+    ? "light"
+    : "dark");
 </script>
