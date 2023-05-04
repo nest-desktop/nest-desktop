@@ -6,7 +6,7 @@ export const useNavStore = defineStore("nav", {
     resizing: false,
     open: false,
     width: 320,
-    view: "project",
+    view: "",
   }),
 
   actions: {
@@ -14,7 +14,7 @@ export const useNavStore = defineStore("nav", {
       if (!this.open || this.view === navItem.id) {
         this.open = !this.open;
       }
-      this.view = navItem.id;
+      this.view = this.open ? navItem.id : "";
     },
   },
 });

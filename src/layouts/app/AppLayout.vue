@@ -16,9 +16,6 @@
             title="Toggle dark mode"
             variant="plain"
           />
-        </v-row>
-
-        <div>
           <v-btn
             prepend-icon="mdi-cogs"
             rounded="0"
@@ -33,7 +30,7 @@
             href="https://nest-desktop.readthedocs.io"
             prepend-icon="mdi-help-circle-outline"
             rounded="0"
-            size="small"
+            size="x-small"
             stacked
             target="_blank"
             title="Help"
@@ -45,7 +42,7 @@
             :active="false"
             prepend-icon="mdi-information-variant"
             rounded="0"
-            size="small"
+            size="x-small"
             stacked
             title="About"
             to="/"
@@ -53,7 +50,7 @@
           >
             About
           </v-btn>
-        </div>
+        </v-row>
       </template>
     </v-navigation-drawer>
 
