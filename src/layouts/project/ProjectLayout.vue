@@ -5,12 +5,12 @@
     :width="navStore.width"
     permanent
   >
-    <div @mousedown="resizeSidebar" class="resize-handle" />
+    <div @mousedown="resizeSidebar" class="resize-handle"/>
 
     <project-nav />
   </v-navigation-drawer>
 
-  <v-app-bar color="project" height="48" flat>
+  <v-app-bar color="blue" height="48" flat>
     <project-bar />
   </v-app-bar>
 
@@ -68,12 +68,11 @@ const resizeSidebar = () => {
 
 <style scoped>
 .resize-handle {
-  background-color: steelblue;
   cursor: ew-resize;
   height: 100%;
   right: 0;
   position: fixed;
-  width: 4px;
+  width: 2px;
   z-index: 10;
 }
 </style>

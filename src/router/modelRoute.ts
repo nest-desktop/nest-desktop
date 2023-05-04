@@ -6,7 +6,7 @@
 
 import { useModelStore } from "@/store/modelStore";
 
-const beforeEnter = (to) => {
+const modelBeforeEnter = (to: any) => {
   const modelStore = useModelStore();
 
   modelStore.modelId = to.params.modelId || "dc_generator";
@@ -15,7 +15,7 @@ const beforeEnter = (to) => {
   modelStore.view = path[path.length - 1] || "doc";
 };
 
-const redirect = (to) => {
+const modelRedirect = (to: any) => {
   const modelStore = useModelStore();
 
   if (to.params.modelId) {
@@ -27,52 +27,46 @@ const redirect = (to) => {
 
 export default [
   {
-    path: "model/",
-    component: () => import("@/layouts/model/ModelLayout.vue"),
+    path: "",
+    name: "Model",
+    component: () => import("@/views/model/ModelView.vue"),
+    redirect: modelRedirect,
+  },
+  {
+    path: ":modelId/",
     children: [
       {
         path: "",
-        name: "Model",
-        component: () => import("@/views/model/ModelView.vue"),
-        redirect,
+        name: "ModelId",
+        props: true,
+        redirect: modelRedirect,
       },
       {
-        path: ":modelId/",
-        children: [
-          {
-            path: "",
-            name: "ModelId",
-            props: true,
-            redirect,
-          },
-          {
-            path: "doc",
-            name: "ModelDoc",
-            components: {
-              model: () => import("@/views/model/ModelDoc.vue"),
-            },
-            props: true,
-            beforeEnter,
-          },
-          {
-            path: "explore",
-            name: "ModelExplorer",
-            components: {
-              model: () => import("@/views/model/ModelExplorer.vue"),
-            },
-            props: true,
-            beforeEnter,
-          },
-          {
-            path: "edit",
-            name: "ModelEditor",
-            components: {
-              model: () => import("@/views/model/ModelEditor.vue"),
-            },
-            props: true,
-            beforeEnter,
-          },
-        ],
+        path: "doc",
+        name: "ModelDoc",
+        components: {
+          model: () => import("@/views/model/ModelDoc.vue"),
+        },
+        props: true,
+        beforeEnter: modelBeforeEnter,
+      },
+      {
+        path: "explore",
+        name: "ModelExplorer",
+        components: {
+          model: () => import("@/views/model/ModelExplorer.vue"),
+        },
+        props: true,
+        beforeEnter: modelBeforeEnter,
+      },
+      {
+        path: "edit",
+        name: "ModelEditor",
+        components: {
+          model: () => import("@/views/model/ModelEditor.vue"),
+        },
+        props: true,
+        beforeEnter: modelBeforeEnter,
       },
     ],
   },

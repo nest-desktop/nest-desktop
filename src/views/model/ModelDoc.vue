@@ -7,7 +7,7 @@
     <iframe
       :src="`https://nest-simulator.readthedocs.io/en/latest/models/${
         props.modelId
-      }.html#models-${parseKebabCase(props.modelId)}--page-root`"
+      }.html#models-${parseKebabCase(props.modelId as string)}--page-root`"
       frameborder="0"
       height="100%"
       width="100%"

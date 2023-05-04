@@ -9,7 +9,7 @@
     <model-nav />
   </v-navigation-drawer>
 
-  <v-app-bar color="model" height="48" flat>
+  <v-app-bar color="orange" height="48" flat>
     <model-bar />
   </v-app-bar>
 
@@ -66,12 +66,11 @@ const resizeSidebar = () => {
 
 <style scoped>
 .resize-handle {
-  background-color: orange;
   cursor: ew-resize;
   height: 100%;
   right: 0;
   position: fixed;
-  width: 4px;
+  width: 2px;
   z-index: 10;
 }
 </style>
