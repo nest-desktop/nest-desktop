@@ -1,8 +1,14 @@
 <template>
-  <v-tabs color="primary" direction="vertical" stacked width="64">
+  <v-tabs
+    :model-value="navStore.view"
+    :mandatory="false"
+    color="primary"
+    direction="vertical"
+    stacked
+    width="64"
+  >
     <v-tab
       :key="index"
-      :mandatory="false"
       :ripple="false"
       :title="item.title"
       :to="'/' + item.id"
@@ -19,7 +25,6 @@
 </template>
 
 <script lang="ts" setup>
-
 import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
 
@@ -36,7 +41,8 @@ const navItems = [
   },
 ];
 
-
-const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
-
+const toggleTheme = () =>
+  (theme.global.name.value = theme.global.current.value.dark
+    ? "light"
+    : "dark");
 </script>

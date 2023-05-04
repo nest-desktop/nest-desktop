@@ -13,14 +13,35 @@
     <model-bar />
   </v-app-bar>
 
-  <v-navigation-drawer rail permanent location="right">
-    <v-list nav>
-      <v-list-item prepend-icon="mdi-view-dashboard" value="dashboard" />
-      <v-list-item prepend-icon="mdi-forum" value="messages" />
-    </v-list>
+  <v-navigation-drawer location="right" permanent rail>
+    <v-tabs
+      :model-value="modelStore.controllerView"
+      :mandatory="false"
+      color="primary"
+      direction="vertical"
+      stacked
+      width="64"
+    >
+      <v-tab
+        :key="index"
+        :value="modelStore.controllerOpen ? item.id : null"
+        @click.stop="modelStore.toggle(item)"
+        class="justify-center"
+        height="72"
+        minWidth="0"
+        v-for="(item, index) in items"
+      >
+        <v-icon :icon="item.icon" class="ma-1" size="large" />
+        <span style="font-size: 9px"> {{ item.id }}</span>
+      </v-tab>
+    </v-tabs>
   </v-navigation-drawer>
 
-  <v-navigation-drawer permanent open location="right">
+  <v-navigation-drawer
+    :model-value="modelStore.controllerOpen"
+    permanent
+    location="right"
+  >
     <model-controller />
   </v-navigation-drawer>
 
@@ -33,7 +54,10 @@ import ModelBar from "@/layouts/model/ModelBar.vue";
 import ModelNav from "@/layouts/model/ModelNav.vue";
 
 import { useNavStore } from "@/store/navStore";
+import { useModelStore } from "@/store/modelStore";
+
 const navState = useNavStore();
+const modelStore = useModelStore();
 
 /**
  * Handle mouse move on resizing.
@@ -62,6 +86,14 @@ const resizeSidebar = () => {
   window.addEventListener("mousemove", handleMouseMove);
   window.addEventListener("mouseup", handleMouseUp);
 };
+
+const items = [
+  { id: "network", icon: "nest:networkIcon", title: "Edit network" },
+  { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
+  { id: "code", icon: "mdi-xml" },
+  { id: "activity", icon: "mdi-border-style" },
+  { id: "stats", icon: "mdi-table-large" },
+];
 </script>
 
 <style scoped>
