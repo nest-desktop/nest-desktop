@@ -7,6 +7,7 @@ export const useModelStore = defineStore("model", {
     view: "doc",
     controllerOpen: false,
     controllerView: "",
+    width: 320,
   }),
 
   actions: {
