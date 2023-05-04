@@ -1,54 +1,43 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+/**
+ * router/index.ts
+ *
+ * router documentation: https://router.vuejs.org/guide/
+ */
 
-Vue.use(Router);
+// Composables
+import { createRouter, createWebHashHistory } from "vue-router";
 
-export default new Router({
-  mode: 'hash',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/AppInfo.vue'),
-      props: {
-        includeProjectButtons: true,
+import modelRoutes from "./modelRoute";
+import projectRoutes from "./projectRoute";
+
+import { useNavStore } from "@/store/navStore";
+
+const routes = [
+  {
+    path: "/",
+    component: () => import("@/layouts/app/AppLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "AppInfo",
+        component: () => import("@/views/AppInfo.vue"),
+        beforeEntry: () => {
+          const navStore = useNavStore;
+          navStore.open = false;
+        }
       },
-    },
-    {
-      path: '/project',
-      name: 'project',
-      component: () => import('@/views/Project.vue'),
-    },
-    {
-      path: '/project/:id',
-      name: 'projectId',
-      component: () => import('@/views/Project.vue'),
-      props: true,
-    },
-    {
-      path: '/model',
-      name: 'model',
-      component: () => import('@/views/Model.vue'),
-    },
-    {
-      path: '/model/:id',
-      name: 'modelId',
-      component: () => import('@/views/Model.vue'),
-      props: true,
-    },
-    {
-      path: '/settings',
-      name: 'appSettings',
-      component: () => import('@/views/AppSettings.vue'),
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('@/views/AppInfo.vue'),
-      props: {
-        includeProjectButtons: false,
+      {
+        path: "vuetify",
+        name: "Home",
+        component: () => import("@/views/Home.vue"),
       },
-    },
-  ],
+      ...modelRoutes,
+      ...projectRoutes,
+    ],
+  },
+];
+
+export default createRouter({
+  history: createWebHashHistory(process.env.BASE_URL),
+  routes,
 });

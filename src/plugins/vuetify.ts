@@ -1,76 +1,48 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+/**
+ * plugins/vuetify.ts
+ *
+ * Framework documentation: https://vuetifyjs.com`
+ */
 
-// Colors
-import colors from 'vuetify/lib/util/colors';
+// Styles
+import "@mdi/font/css/materialdesignicons.css";
+import "vuetify/styles";
 
-import { mdiDatabaseRefreshOutline } from '@mdi/js';
-import CopyModelIcon from '@/components/icons/CopyModelIcon.vue';
-import DiceMultipleOutlineIcon from '@/components/icons/DiceMultipleOutlineIcon.vue';
-import DotsGridIcon from '@/components/icons/DotsGridIcon.vue';
-import NESTIcon from '@/components/icons/NESTIcon.vue';
-import NetworkIcon from '@/components/icons/NetworkIcon.vue';
-import RecorderIcon from '@/components/icons/RecorderIcon.vue';
-import StimulatorIcon from '@/components/icons/StimulatorIcon.vue';
+// Composables
+import { createVuetify } from "vuetify";
 
-Vue.use(Vuetify);
+import { mdi } from "vuetify/iconsets/mdi";
+import { nest } from "@/components/iconsets/nest";
 
-// Color code taken from
-// https://color.adobe.com/de/create/color-wheel
-
-export default new Vuetify({
-  icons: {
-    values: {
-      mdiDatabaseRefreshOutline,
-      copyModel: {
-        component: CopyModelIcon,
-      },
-      diceMultipleOutline: {
-        component: DiceMultipleOutlineIcon,
-      },
-      dotsGrid: {
-        component: DotsGridIcon,
-      },
-      nest: {
-        component: NESTIcon,
-      },
-      network: {
-        component: NetworkIcon,
-      },
-      recorder: {
-        component: RecorderIcon,
-      },
-      stimulator: {
-        component: StimulatorIcon,
-      },
+// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+export default createVuetify({
+  defaults: {
+    global: {
+      ripple: false,
+    },
+    VCard: {
+      flat: true,
+      VCardActions: { VBtn: { size: "small", variant: "outlined", ripple: true } },
     },
   },
   theme: {
     themes: {
       light: {
-        primary: colors.grey.base,
-        secondary: colors.shades.white,
-        accent: colors.grey.darken2,
-        model: {
-          base: '#FF6633',
+        colors: {
+          primary: "#1867C0",
+          secondary: "#5CBBF6",
+          project: "#1281b3",
+          model: "#ff6633",
+          systembar: "#424242",
         },
-        project: {
-          base: '#1281B3',
-        },
-        systemBar: colors.grey.darken3,
       },
-      dark: {
-        primary: colors.grey.base,
-        secondary: colors.grey.darken4,
-        accent: colors.grey.lighten4,
-        model: {
-          base: '#FF6633',
-        },
-        project: {
-          base: '#1281B3',
-        },
-        systemBar: colors.grey.darken3,
-      },
+    },
+  },
+  icons: {
+    defaultSet: "mdi",
+    sets: {
+      mdi,
+      nest,
     },
   },
 });
