@@ -14,7 +14,7 @@
     <project-bar />
   </v-app-bar>
 
-  <v-navigation-drawer location="right" permanent rail>
+  <v-navigation-drawer location="right" permanent rail rail-width="64">
     <v-tabs
       :mandatory="false"
       :model-value="projectStore.controllerView"

@@ -13,7 +13,7 @@
     <model-bar />
   </v-app-bar>
 
-  <v-navigation-drawer location="right" permanent rail>
+  <v-navigation-drawer location="right" permanent rail rail-width="64">
     <v-tabs
       :model-value="modelStore.controllerView"
       :mandatory="false"

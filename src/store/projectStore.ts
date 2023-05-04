@@ -7,6 +7,7 @@ export const useProjectStore = defineStore("project", {
     view: "edit",
     controllerOpen: false,
     controllerView: "",
+    width: 320,
   }),
 
   actions: {
