@@ -8,7 +8,10 @@
     color="transparent"
     elevation="0"
     width="100%"
+    v-model="state.color"
   />
+
+  {{ state.color }}
 </template>
 
 <script lang="ts" setup>
@@ -134,11 +137,12 @@ const colorSchemes = {
 };
 
 const state = reactive({
+  color: "",
   colorScheme: "category10",
-  hideSliders: true,
   hideCanvas: true,
-  showSwatches: true,
   hideInputs: true,
+  hideSliders: true,
+  showSwatches: true,
   swatches: [],
 });
 

@@ -1,17 +1,102 @@
 <template>
   <v-container>
     <v-row no-gutters>
+
       <v-col class="pa-1" cols="12" md="6">
         <v-card>
-          <v-card-title>Buttons</v-card-title>
+          <v-card-title>Card</v-card-title>
           <v-card-text>
-            <v-btn
-              :key="index"
-              :text="button.text"
-              :variant="button.variant"
-              v-for="(button, index) in buttons"
-              class="mx-1"
-            />
+            <card class="my-1" color="#1F77B4">
+              <v-card-title class="pa-0">
+                <v-row no-gutters>
+                  <v-col cols="2">
+                    <v-btn
+                      block
+                      flat
+                      class="text-white"
+                      color="#1F77B4"
+                      rounded="0"
+                    >
+                      n1
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="10">
+                    <v-btn block flat rounded="0"> iaf_psc_alpha </v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-title>
+              <v-card-text class="pa-0">
+                <v-list class="pa-0">
+                  <v-list-item class="pa-0">
+                    <slider
+                      class="ma-0 bg-primary"
+                      color="#1F77B4"
+                      label="Population"
+                    />
+                  </v-list-item>
+                  <v-list-item class="pa-0">
+                    <slider
+                      class="ma-0 bg-secondary"
+                      color="#1F77B4"
+                      label="Membrane capacitance"
+                    />
+                  </v-list-item>
+                  <v-list-item class="pa-0">
+                    <slider
+                      class="ma-0 bg-primary"
+                      color="#1F77B4"
+                      label="Spike threshold"
+                    />
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </card>
+
+            <card class="my-1" color="#FF7F0E">
+              <v-card-title class="pa-0">
+                <v-row no-gutters>
+                  <v-col cols="2">
+                    <v-btn
+                      block
+                      flat
+                      class="text-white"
+                      color="#FF7F0E"
+                      rounded="0"
+                    >
+                      n1
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="10">
+                    <v-btn block flat rounded="0"> iaf_psc_alpha </v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-title>
+              <v-card-text class="pa-0">
+                <v-list class="pa-0">
+                  <v-list-item class="pa-0">
+                    <slider
+                      class="ma-0 bg-primary"
+                      color="#FF7F0E"
+                      label="Population"
+                    />
+                  </v-list-item>
+                  <v-list-item class="pa-0">
+                    <slider
+                      class="ma-0 bg-secondary"
+                      color="#FF7F0E"
+                      label="Membrane capacitance"
+                    />
+                  </v-list-item>
+                  <v-list-item class="pa-0">
+                    <slider
+                      class="ma-0 bg-primary"
+                      color="#FF7F0E"
+                      label="Spike threshold"
+                    />
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </card>
           </v-card-text>
         </v-card>
       </v-col>
@@ -75,6 +160,26 @@
               label="range"
               class="bg-secondary"
             />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col class="pa-1" cols="12" md="6">
+        <v-card>
+          <v-card-title> Alerts </v-card-title>
+          <v-card-text>
+            <v-alert class="my-1" color="success" icon="$success">
+              The simulation was sucessfully finished.
+            </v-alert>
+            <v-alert class="my-1" color="info" icon="$info">
+              The updates are available.
+            </v-alert>
+            <v-alert class="my-1" color="warning" icon="$warning">
+              The simulation might impact the performance.
+            </v-alert>
+            <v-alert class="my-1" color="error" icon="$error">
+              The backend was not found.
+            </v-alert>
           </v-card-text>
         </v-card>
       </v-col>
@@ -164,6 +269,21 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <v-col class="pa-1" cols="12" md="6">
+        <v-card>
+          <v-card-title>Buttons</v-card-title>
+          <v-card-text>
+            <v-btn
+              :key="index"
+              :text="button.text"
+              :variant="button.variant"
+              v-for="(button, index) in buttons"
+              class="mx-1"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -175,6 +295,7 @@ import TickSlider from "@/components/common/TickSlider.vue";
 import RangeSlider from "@/components/common/RangeSlider.vue";
 import Slider from "@/components/common/Slider.vue";
 import ColorPicker from "@/components/common/ColorPicker.vue";
+import Card from "@/components/common/Card.vue";
 
 const buttons = [
   { text: "flat", variant: "flat" },
@@ -196,6 +317,13 @@ const colorSchemes = [
   { value: "tableau10", title: "tableau 10" },
   { value: "google10c", title: "google 10c" },
   { value: "google20c", title: "google 20c" },
+];
+
+const menuItems = [
+  { title: "Click Me" },
+  { title: "Click Me" },
+  { title: "Click Me" },
+  { title: "Click Me 2" },
 ];
 
 const state = reactive({
