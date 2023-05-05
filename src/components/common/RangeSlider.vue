@@ -1,27 +1,11 @@
 <template>
-  <v-slider
-    class="my-1 slider align-center"
+  <v-range-slider
+    class="my-1 range-slider align-center"
     hide-details
     style="position: relative"
     v-model="state.value"
   >
     <template #prepend>
-      <v-btn
-        @click="decrement"
-        flat
-        icon="mdi-minus"
-        size="small"
-        variant="text"
-      />
-    </template>
-    <template #append>
-      <v-btn
-        @click="increment"
-        flat
-        icon="mdi-plus"
-        size="small"
-        variant="text"
-      />
       <v-text-field
         :step="state.step"
         density="compact"
@@ -29,11 +13,23 @@
         single-line
         style="width: 80px"
         type="number"
-        v-model="value"
+        v-model="lower"
         variant="underlined"
       />
     </template>
-  </v-slider>
+    <template #append>
+      <v-text-field
+        :step="state.step"
+        density="compact"
+        hide-details
+        single-line
+        style="width: 80px"
+        type="number"
+        v-model="upper"
+        variant="underlined"
+      />
+    </template>
+  </v-range-slider>
 </template>
 
 <script lang="ts" setup>
@@ -43,23 +39,22 @@ const props = defineProps(["value", "step"]);
 
 const state = reactive({
   step: props.step || 1,
-  value: props.value || 0,
+  value: props.value || [0, 1],
 });
 
-const value = computed({
-  get: () => state.value,
+const lower = computed({
+  get: () => state.value[0],
   set: (val) => {
-    state.value = parseFloat(val);
+    state.value[0] = parseFloat(val);
   },
 });
 
-const decrement = () => {
-  state.value -= state.step;
-};
-
-const increment = () => {
-  state.value += state.step;
-};
+const upper = computed({
+  get: () => state.value[1],
+  set: (val) => {
+    state.value[1] = parseFloat(val);
+  },
+});
 
 watch(
   () => [props.value],
@@ -74,9 +69,9 @@ onMounted(() => {
 </script>
 
 <style>
-.slider .v-label {
+.range-slider .v-label {
   position: absolute;
   top: -4px;
-  left: 52px;
+  left: 92px;
 }
 </style>

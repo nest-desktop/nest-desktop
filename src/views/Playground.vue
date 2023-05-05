@@ -16,71 +16,43 @@
     <v-card class="my-1">
       <v-card-title>Slider</v-card-title>
       <v-card-text>
-        <slider :step="1" :value="2" label="membrane capacitance" />
         <slider
-          :max="1"
-          :min="0"
+          :step="1"
+          :value="2"
+          :max="10"
+          hide-details
+          label="membrane capacitance"
+          show-ticks="always"
+        />
+        <slider
+          :max="2"
+          :min="-2"
           :step="0.1"
           :value="0.5"
           color="blue"
+          hide-details
           label="blue"
+          show-ticks="always"
           thumb-label
         />
         <slider
           :max="4"
           :ticks="[0, 1, 2, 3, 4]"
+          :step="1"
           :value="3"
           color="orange"
+          hide-details
           label="ticks"
           show-ticks="always"
         />
-
-        <v-range-slider
+        <range-slider
           :max="10"
           :min="-10"
           :step="1"
-          class="align-center"
+          :value="[-5, 5]"
           hide-details
           label="Range"
-          v-model="state.rangeSlider.range"
-        >
-          <template #prepend>
-            <v-text-field
-              :model-value="state.rangeSlider.range[0]"
-              @change="$set(state.rangeSlider.range, 0, $event)"
-              density="compact"
-              hide-details
-              style="width: 80px"
-              type="number"
-              variant="underlined"
-            />
-            <v-btn
-              @click="decrement"
-              class="ml-1 mr-n3"
-              flat
-              icon="mdi-minus"
-              size="small"
-            />
-          </template>
-          <template #append>
-            <v-btn
-              @click="increment"
-              class="ml-n3 mr-1"
-              flat
-              icon="mdi-plus"
-              size="small"
-            />
-            <v-text-field
-              :model-value="state.rangeSlider.range[1]"
-              @change="$set(state.rangeSlider.range, 1, $event)"
-              density="compact"
-              hide-details
-              style="width: 80px"
-              type="number"
-              variant="underlined"
-            />
-          </template>
-        </v-range-slider>
+        />
       </v-card-text>
     </v-card>
 
@@ -190,6 +162,7 @@
 import { onMounted } from "vue";
 import { reactive } from "vue";
 
+import RangeSlider from "@/components/common/RangeSlider.vue";
 import Slider from "@/components/common/Slider.vue";
 
 const buttons = [
