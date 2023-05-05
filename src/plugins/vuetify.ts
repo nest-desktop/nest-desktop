@@ -17,15 +17,15 @@ import { nest } from "@/components/iconsets/nest";
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   defaults: {
-    global: {
-      ripple: false,
-    },
-    VCard: {
-      flat: true,
-      VCardActions: {
-        VBtn: { size: "small", variant: "outlined", ripple: true },
-      },
-    },
+    // global: {
+    //   ripple: false,
+    // },
+    // VCard: {
+    //   variant: "outlined",
+    //   VCardActions: {
+    //     VBtn: { size: "small", variant: "outlined", ripple: true },
+    //   },
+    // },
   },
   theme: {
     themes: {

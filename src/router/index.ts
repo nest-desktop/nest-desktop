@@ -21,15 +21,35 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "AppInfo",
         component: () => import("@/views/AppInfo.vue"),
+        props: {
+          includeProjectButtons: true,
+        },
         beforeEnter: () => {
           const navStore = useNavStore();
           navStore.open = false;
         },
       },
       {
-        path: "vuetify",
+        path: "about",
         name: "Home",
-        component: () => import("@/views/Home.vue"),
+        component: () => import("@/views/AppInfo.vue"),
+        props: {
+          includeProjectButtons: false,
+        },
+        beforeEnter: () => {
+          const navStore = useNavStore();
+          navStore.open = false;
+        },
+      },
+      {
+        path: "playground",
+        name: "playground",
+        component: () => import("@/views/Playground.vue"),
+      },
+      {
+        path: "vuetify",
+        name: "vuetify",
+        component: () => import("@/views/Vuetify.vue"),
       },
       {
         path: "model/",
