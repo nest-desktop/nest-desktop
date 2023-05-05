@@ -10,46 +10,21 @@
       <template #append>
         <v-row align="center" justify="center" no-gutters>
           <v-btn
-            @click="toggleTheme"
-            icon="mdi-theme-light-dark"
-            size="small"
-            title="Toggle dark mode"
+            :href="item.href"
+            :icon="item.text ? false : item.icon"
+            :key="index"
+            :prepend-icon="item.text ? item.icon : undefined"
+            :size="item.text ? 'x-small' : 'small'"
+            :stacked="'text' in item"
+            :target="item.href ? '_blank' : ''"
+            :text="item.text"
+            :title="item.title"
+            :to="item.to"
+            @click.stop="item.click ? item.click() : undefined"
+            rounded="0"
+            v-for="(item, index) in items"
             variant="plain"
           />
-          <v-btn
-            prepend-icon="mdi-cogs"
-            rounded="0"
-            size="x-small"
-            stacked
-            title="Settings"
-            variant="plain"
-          >
-            Settings
-          </v-btn>
-          <v-btn
-            href="https://nest-desktop.readthedocs.io"
-            prepend-icon="mdi-help-circle-outline"
-            rounded="0"
-            size="x-small"
-            stacked
-            target="_blank"
-            title="Help"
-            variant="plain"
-          >
-            Help
-          </v-btn>
-          <v-btn
-            :active="false"
-            prepend-icon="mdi-information-variant"
-            rounded="0"
-            size="x-small"
-            stacked
-            title="About"
-            to="/"
-            variant="plain"
-          >
-            About
-          </v-btn>
         </v-row>
       </template>
     </v-navigation-drawer>
@@ -71,4 +46,40 @@ const toggleTheme = () =>
   (theme.global.name.value = theme.global.current.value.dark
     ? "light"
     : "dark");
+
+const items = [
+  {
+    click: toggleTheme,
+    icon: "mdi-theme-light-dark",
+    id: "theme-light-dark",
+    title: "Toggle dark mode",
+  },
+  {
+    icon: "mdi-slide",
+    id: "playground",
+    title: "playground",
+    to: "/playground",
+  },
+  {
+    icon: "mdi-cogs",
+    id: "settings",
+    text: "settings",
+    title: "settings",
+    to: "/settings",
+  },
+  {
+    href: "https://nest-desktop.readthedocs.io",
+    icon: "mdi-help-circle-outline",
+    id: "help",
+    text: "help",
+    title: "help",
+  },
+  {
+    icon: "mdi-information-variant",
+    id: "about",
+    text: "about",
+    title: "about",
+    to: "/about",
+  },
+];
 </script>
