@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-row no-gutters>
-
       <v-col class="pa-1" cols="12" md="6">
         <v-card>
           <v-card-title>Card</v-card-title>
@@ -10,18 +9,20 @@
               <v-card-title class="pa-0">
                 <v-row no-gutters>
                   <v-col cols="2">
-                    <v-btn
-                      block
-                      flat
-                      class="text-white"
-                      color="#1F77B4"
-                      rounded="0"
-                    >
-                      n1
-                    </v-btn>
+                    <btn color="#1F77B4"> n1 </btn>
                   </v-col>
                   <v-col cols="10">
-                    <v-btn block flat rounded="0"> iaf_psc_alpha </v-btn>
+                    <v-menu :close-on-content-click="false" density="compact">
+                      <template #activator="{ props }">
+                        <btn color="#1F77B4" v-bind="props">
+                          iaf_psc_alpha
+                        </btn>
+                      </template>
+
+                      <v-card>
+                        <list :items="admins" />
+                      </v-card>
+                    </v-menu>
                   </v-col>
                 </v-row>
               </v-card-title>
@@ -56,18 +57,20 @@
               <v-card-title class="pa-0">
                 <v-row no-gutters>
                   <v-col cols="2">
-                    <v-btn
-                      block
-                      flat
-                      class="text-white"
-                      color="#FF7F0E"
-                      rounded="0"
-                    >
-                      n1
-                    </v-btn>
+                    <btn color="#FF7F0E"> n2 </btn>
                   </v-col>
                   <v-col cols="10">
-                    <v-btn block flat rounded="0"> iaf_psc_alpha </v-btn>
+                    <v-menu :close-on-content-click="false" density="compact">
+                      <template #activator="{ props }">
+                        <btn color="#FF7F0E" v-bind="props">
+                          iaf_psc_alpha
+                        </btn>
+                      </template>
+
+                      <v-card>
+                        <list :items="menuItems" />
+                      </v-card>
+                    </v-menu>
                   </v-col>
                 </v-row>
               </v-card-title>
@@ -296,6 +299,8 @@ import RangeSlider from "@/components/common/RangeSlider.vue";
 import Slider from "@/components/common/Slider.vue";
 import ColorPicker from "@/components/common/ColorPicker.vue";
 import Card from "@/components/common/Card.vue";
+import Btn from "@/components/common/Btn.vue";
+import List from "@/components/common/List.vue";
 
 const buttons = [
   { text: "flat", variant: "flat" },
@@ -319,11 +324,39 @@ const colorSchemes = [
   { value: "google20c", title: "google 20c" },
 ];
 
+const admins = [
+  {
+    title: "Management",
+    icon: "mdi-account-multiple-outline",
+    value: "management",
+  },
+  { title: "Settings", icon: "mdi-cog-outline", value: "settings" },
+];
+
+const cruds = [
+  { title: "Create", icon: "mdi-plus-outline", value: "create" },
+  { title: "Read", icon: "mdi-file-outline", value: "read" },
+  { title: "Update", icon: "mdi-update", value: "update" },
+  { title: "Delete", icon: "mdi-delete", value: "delete" },
+];
+
 const menuItems = [
-  { title: "Click Me" },
-  { title: "Click Me" },
-  { title: "Click Me" },
-  { title: "Click Me 2" },
+  {
+    value: "admins",
+    title: "admin",
+    icon: "mdi-account-circle",
+    items: admins,
+  },
+  {
+    value: "actions",
+    title: "actions",
+    icon: "mdi-database-cog-outline",
+    items: cruds,
+  },
+  { value: "1", title: "Click Me", icon: "mdi-numeric-1" },
+  { value: "2", title: "Click Me", icon: "mdi-numeric-2" },
+  { value: "3", title: "Click Me", icon: "mdi-numeric-3" },
+  { value: "4", title: "Click Me", icon: "mdi-numeric-4" },
 ];
 
 const state = reactive({
@@ -339,5 +372,12 @@ const state = reactive({
     range: [-5, 5],
   },
   colorScheme: "category10",
+  listOpen: [],
 });
 </script>
+
+<style>
+.no-transition {
+  transition: none;
+}
+</style>
