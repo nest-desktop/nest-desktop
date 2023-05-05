@@ -11,21 +11,24 @@ import "vuetify/styles";
 // Composables
 import { createVuetify } from "vuetify";
 
+import { md1, md2, md3 } from "vuetify/blueprints";
+
 import { mdi } from "vuetify/iconsets/mdi";
 import { nest } from "@/components/iconsets/nest";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  // blueprint: md3,
   defaults: {
     // global: {
     //   ripple: false,
     // },
-    // VCard: {
-    //   variant: "outlined",
-    //   VCardActions: {
-    //     VBtn: { size: "small", variant: "outlined", ripple: true },
-    //   },
-    // },
+    VCard: {
+      variant: "outlined",
+      //   VCardActions: {
+      //     VBtn: { size: "small", variant: "outlined", ripple: true },
+      //   },
+    },
   },
   theme: {
     themes: {
