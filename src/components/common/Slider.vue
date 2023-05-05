@@ -1,32 +1,21 @@
 <template>
   <v-slider
-    class="my-1 slider align-center"
+    @click:append="increment"
+    @click:prepend="decrement"
+    append-icon="mdi-plus"
+    class="py-2 slider"
     hide-details
+    prepend-icon="mdi-minus"
+    step="state.step"
     style="position: relative"
     v-model="state.value"
   >
-    <template #prepend>
-      <v-btn
-        @click="decrement"
-        flat
-        icon="mdi-minus"
-        size="small"
-        variant="text"
-      />
-    </template>
     <template #append>
-      <v-btn
-        @click="increment"
-        flat
-        icon="mdi-plus"
-        size="small"
-        variant="text"
-      />
       <v-text-field
-        :step="state.step"
         density="compact"
         hide-details
         single-line
+        step="state.step"
         style="width: 80px"
         type="number"
         v-model="value"
@@ -42,8 +31,8 @@ import { computed, reactive, onMounted, watch } from "vue";
 const props = defineProps(["value", "step"]);
 
 const state = reactive({
-  step: props.step || 1,
-  value: props.value || 0,
+  step: 1,
+  value: 0,
 });
 
 const value = computed({
@@ -61,22 +50,22 @@ const increment = () => {
   state.value += state.step;
 };
 
+const update = () => {
+  state.value = props.value || 0;
+}
+
 watch(
   () => [props.value],
-  () => {
-    state.value = props.value;
-  }
+  update
 );
 
-onMounted(() => {
-  state.value = props.value;
-});
+onMounted(update);
 </script>
 
 <style>
 .slider .v-label {
   position: absolute;
-  top: -4px;
-  left: 52px;
+  top: 0px;
+  left: 36px;
 }
 </style>

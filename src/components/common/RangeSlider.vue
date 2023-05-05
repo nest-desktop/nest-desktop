@@ -1,16 +1,17 @@
 <template>
   <v-range-slider
-    class="my-1 range-slider align-center"
+    :step="state.step"
+    class="py-2 range-slider align-center"
     hide-details
     style="position: relative"
     v-model="state.value"
   >
     <template #prepend>
       <v-text-field
-        :step="state.step"
         density="compact"
         hide-details
         single-line
+        step="state.step"
         style="width: 80px"
         type="number"
         v-model="lower"
@@ -19,10 +20,10 @@
     </template>
     <template #append>
       <v-text-field
-        :step="state.step"
         density="compact"
         hide-details
         single-line
+        step="state.step"
         style="width: 80px"
         type="number"
         v-model="upper"
@@ -38,8 +39,8 @@ import { computed, reactive, onMounted, watch } from "vue";
 const props = defineProps(["value", "step"]);
 
 const state = reactive({
-  step: props.step || 1,
-  value: props.value || [0, 1],
+  step: 1,
+  value: [0, 1],
 });
 
 const lower = computed({
@@ -71,7 +72,7 @@ onMounted(() => {
 <style>
 .range-slider .v-label {
   position: absolute;
-  top: -4px;
+  top: 0px;
   left: 92px;
 }
 </style>
