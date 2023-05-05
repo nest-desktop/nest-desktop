@@ -31,6 +31,7 @@
         type="number"
         v-model="state.value"
         variant="underlined"
+        @update:modelValue="onValueUpdate"
       />
     </template>
   </v-slider>
@@ -53,6 +54,10 @@ const decrement = () => {
 const increment = () => {
   state.value += state.step;
 };
+
+const onValueUpdate = (value: string) => {
+    state.value = parseFloat(value);
+}
 
 watch(
   () => [props.value],
