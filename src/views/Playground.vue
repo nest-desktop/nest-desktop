@@ -3,7 +3,9 @@
     <v-defaults-provider
       :defaults="{
         VCard: {
-          variant: 'outlined' },
+          variant: 'outlined',
+          style: 'border-color: #ccc',
+        },
       }"
     >
       <v-row no-gutters>
@@ -34,23 +36,19 @@
                 </v-card-title>
                 <v-card-text class="pa-0">
                   <v-list class="pa-0">
-                    <v-list-item class="pa-0">
-                      <slider
-                        class="ma-0 bg-primary"
-                        color="#1F77B4"
-                        label="Population"
-                      />
+                    <v-list-item class="pa-0 even">
+                      <slider class="ma-0" color="#1F77B4" label="Population" />
                     </v-list-item>
-                    <v-list-item class="pa-0">
+                    <v-list-item class="pa-0 odd">
                       <slider
-                        class="ma-0 bg-secondary"
+                        class="ma-0"
                         color="#1F77B4"
                         label="Membrane capacitance"
                       />
                     </v-list-item>
-                    <v-list-item class="pa-0">
+                    <v-list-item class="pa-0 even">
                       <slider
-                        class="ma-0 bg-primary"
+                        class="ma-0"
                         color="#1F77B4"
                         label="Spike threshold"
                       />
@@ -82,23 +80,19 @@
                 </v-card-title>
                 <v-card-text class="pa-0">
                   <v-list class="pa-0">
-                    <v-list-item class="pa-0">
-                      <slider
-                        class="ma-0 bg-primary"
-                        color="#FF7F0E"
-                        label="Population"
-                      />
+                    <v-list-item class="pa-0 even">
+                      <slider class="ma-0" color="#FF7F0E" label="Population" />
                     </v-list-item>
-                    <v-list-item class="pa-0">
+                    <v-list-item class="pa-0 odd">
                       <slider
-                        class="ma-0 bg-secondary"
+                        class="ma-0"
                         color="#FF7F0E"
                         label="Membrane capacitance"
                       />
                     </v-list-item>
-                    <v-list-item class="pa-0">
+                    <v-list-item class="pa-0 even">
                       <slider
-                        class="ma-0 bg-primary"
+                        class="ma-0"
                         color="#FF7F0E"
                         label="Spike threshold"
                       />
@@ -118,11 +112,12 @@
                 :max="10"
                 :step="1"
                 :value="2"
-                color="blue"
+                color="orange"
                 hide-details
                 label="membrane capacitance"
-                show-ticks="always"
-                class="bg-primary"
+                show-ticks="auto"
+                thumb-label="always"
+                class="even"
               />
               <slider
                 :max="2"
@@ -132,7 +127,7 @@
                 color="blue"
                 hide-details
                 label="blue"
-                class="bg-secondary"
+                class="odd"
               />
               <slider
                 :max="4"
@@ -142,7 +137,7 @@
                 hide-details
                 label="ticks"
                 show-ticks="always"
-                class="bg-primary"
+                class="even"
               />
               <tick-slider
                 :ticks="[1, 2, 3, 4]"
@@ -150,7 +145,7 @@
                 color="green"
                 hide-details
                 label="ticks"
-                class="bg-secondary"
+                class="odd"
               />
               <tick-slider
                 :ticks="[1, 10, 100]"
@@ -158,7 +153,7 @@
                 color="green"
                 hide-details
                 label="ticks"
-                class="bg-primary"
+                class="even"
               />
               <range-slider
                 :max="10"
@@ -167,7 +162,7 @@
                 :value="[-5, 5]"
                 hide-details
                 label="range"
-                class="bg-secondary"
+                class="odd"
               />
             </v-card-text>
           </v-card>
@@ -177,7 +172,12 @@
           <v-card>
             <v-card-title> Alerts </v-card-title>
             <v-card-text>
-              <v-alert class="my-1" color="success" icon="$success">
+              <v-alert
+                class="my-1"
+                color="success"
+                icon="$success"
+                variant="outlined"
+              >
                 The simulation was sucessfully finished.
               </v-alert>
               <v-alert class="my-1" color="info" icon="$info">
@@ -209,11 +209,9 @@
                           height="50"
                           @click="toggle"
                         >
-                          <v-scroll-y-transition>
-                            <div class="flex-grow-1 text-center">
-                              {{ isSelected ? "Selected" : "Click Me!" }}
-                            </div>
-                          </v-scroll-y-transition>
+                          <div class="flex-grow-1 text-center">
+                            {{ isSelected ? "Selected" : "Click Me!" }}
+                          </div>
                         </v-card>
                       </v-item>
                     </v-col>
@@ -233,11 +231,9 @@
                           height="50"
                           @click="toggle"
                         >
-                          <v-scroll-y-transition>
-                            <div class="flex-grow-1 text-center">
-                              {{ isSelected ? "Selected" : "Click Me!" }}
-                            </div>
-                          </v-scroll-y-transition>
+                          <div class="flex-grow-1 text-center">
+                            {{ isSelected ? "Selected" : "Click Me!" }}
+                          </div>
                         </v-card>
                       </v-item>
                     </v-col>
@@ -388,9 +384,16 @@ const cruds = [
   { title: "Delete", icon: "mdi-delete", value: "delete" },
 ];
 
+const clickMe = [
+  { value: "1", title: "Click Me", icon: "mdi-numeric-1" },
+  { value: "2", title: "Click Me", icon: "mdi-numeric-2" },
+  { value: "3", title: "Click Me", icon: "mdi-numeric-3" },
+  { value: "4", title: "Click Me", icon: "mdi-numeric-4" },
+];
+
 const menuItems = [
   {
-    value: "admins",
+    value: "admin",
     title: "admin",
     icon: "mdi-account-circle",
     items: admins,
@@ -401,10 +404,12 @@ const menuItems = [
     icon: "mdi-database-cog-outline",
     items: cruds,
   },
-  { value: "1", title: "Click Me", icon: "mdi-numeric-1" },
-  { value: "2", title: "Click Me", icon: "mdi-numeric-2" },
-  { value: "3", title: "Click Me", icon: "mdi-numeric-3" },
-  { value: "4", title: "Click Me", icon: "mdi-numeric-4" },
+  {
+    value: "clickMe",
+    title: "clickMe",
+    icon: "mdi-information",
+    items: clickMe,
+  },
 ];
 
 const state = reactive({
@@ -426,7 +431,11 @@ const state = reactive({
 </script>
 
 <style>
-.no-transition {
-  transition: none;
+.even {
+  background-color: #eee;
+}
+
+.odd {
+  background-color: #fff;
 }
 </style>
