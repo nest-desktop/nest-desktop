@@ -68,4 +68,9 @@ onMounted(update);
   top: 0px;
   left: 36px;
 }
+
+.slider .mdi-plus {
+  height: inherit;
+  margin-right: 2px;
+}
 </style>
