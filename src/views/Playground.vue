@@ -1,334 +1,341 @@
 <template>
   <v-container>
-    <v-row no-gutters>
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title>Card</v-card-title>
-          <v-card-text>
-            <card class="my-1" color="#1F77B4">
-              <v-card-title class="pa-0">
-                <v-row no-gutters>
-                  <v-col cols="2">
-                    <btn color="#1F77B4"> n1 </btn>
-                  </v-col>
-                  <v-col cols="10">
-                    <v-menu :close-on-content-click="false" density="compact">
-                      <template #activator="{ props }">
-                        <btn color="#1F77B4" v-bind="props">
-                          iaf_psc_alpha
-                        </btn>
-                      </template>
+    <v-defaults-provider
+      :defaults="{
+        VCard: {
+          variant: 'outlined' },
+      }"
+    >
+      <v-row no-gutters>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title>Card</v-card-title>
+            <v-card-text>
+              <card class="my-1" color="#1F77B4">
+                <v-card-title class="pa-0">
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      <btn color="#1F77B4"> n1 </btn>
+                    </v-col>
+                    <v-col cols="10">
+                      <v-menu :close-on-content-click="false" density="compact">
+                        <template #activator="{ props }">
+                          <btn color="#1F77B4" v-bind="props">
+                            iaf_psc_alpha
+                          </btn>
+                        </template>
 
-                      <v-card>
-                        <list :items="admins" />
-                      </v-card>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-              </v-card-title>
-              <v-card-text class="pa-0">
-                <v-list class="pa-0">
-                  <v-list-item class="pa-0">
-                    <slider
-                      class="ma-0 bg-primary"
-                      color="#1F77B4"
-                      label="Population"
-                    />
-                  </v-list-item>
-                  <v-list-item class="pa-0">
-                    <slider
-                      class="ma-0 bg-secondary"
-                      color="#1F77B4"
-                      label="Membrane capacitance"
-                    />
-                  </v-list-item>
-                  <v-list-item class="pa-0">
-                    <slider
-                      class="ma-0 bg-primary"
-                      color="#1F77B4"
-                      label="Spike threshold"
-                    />
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </card>
+                        <v-card>
+                          <list :items="admins" />
+                        </v-card>
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                </v-card-title>
+                <v-card-text class="pa-0">
+                  <v-list class="pa-0">
+                    <v-list-item class="pa-0">
+                      <slider
+                        class="ma-0 bg-primary"
+                        color="#1F77B4"
+                        label="Population"
+                      />
+                    </v-list-item>
+                    <v-list-item class="pa-0">
+                      <slider
+                        class="ma-0 bg-secondary"
+                        color="#1F77B4"
+                        label="Membrane capacitance"
+                      />
+                    </v-list-item>
+                    <v-list-item class="pa-0">
+                      <slider
+                        class="ma-0 bg-primary"
+                        color="#1F77B4"
+                        label="Spike threshold"
+                      />
+                    </v-list-item>
+                  </v-list>
+                </v-card-text>
+              </card>
 
-            <card class="my-1" color="#FF7F0E">
-              <v-card-title class="pa-0">
-                <v-row no-gutters>
-                  <v-col cols="2">
-                    <btn color="#FF7F0E"> n2 </btn>
-                  </v-col>
-                  <v-col cols="10">
-                    <v-menu :close-on-content-click="false" density="compact">
-                      <template #activator="{ props }">
-                        <btn color="#FF7F0E" v-bind="props">
-                          iaf_psc_alpha
-                        </btn>
-                      </template>
+              <card class="my-1" color="#FF7F0E">
+                <v-card-title class="pa-0">
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      <btn color="#FF7F0E"> n2 </btn>
+                    </v-col>
+                    <v-col cols="10">
+                      <v-menu :close-on-content-click="false" density="compact">
+                        <template #activator="{ props }">
+                          <btn color="#FF7F0E" v-bind="props">
+                            iaf_psc_alpha
+                          </btn>
+                        </template>
 
-                      <v-card>
-                        <list :items="menuItems" />
-                      </v-card>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-              </v-card-title>
-              <v-card-text class="pa-0">
-                <v-list class="pa-0">
-                  <v-list-item class="pa-0">
-                    <slider
-                      class="ma-0 bg-primary"
-                      color="#FF7F0E"
-                      label="Population"
-                    />
-                  </v-list-item>
-                  <v-list-item class="pa-0">
-                    <slider
-                      class="ma-0 bg-secondary"
-                      color="#FF7F0E"
-                      label="Membrane capacitance"
-                    />
-                  </v-list-item>
-                  <v-list-item class="pa-0">
-                    <slider
-                      class="ma-0 bg-primary"
-                      color="#FF7F0E"
-                      label="Spike threshold"
-                    />
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </card>
-          </v-card-text>
-        </v-card>
-      </v-col>
+                        <v-card>
+                          <list :items="menuItems" />
+                        </v-card>
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                </v-card-title>
+                <v-card-text class="pa-0">
+                  <v-list class="pa-0">
+                    <v-list-item class="pa-0">
+                      <slider
+                        class="ma-0 bg-primary"
+                        color="#FF7F0E"
+                        label="Population"
+                      />
+                    </v-list-item>
+                    <v-list-item class="pa-0">
+                      <slider
+                        class="ma-0 bg-secondary"
+                        color="#FF7F0E"
+                        label="Membrane capacitance"
+                      />
+                    </v-list-item>
+                    <v-list-item class="pa-0">
+                      <slider
+                        class="ma-0 bg-primary"
+                        color="#FF7F0E"
+                        label="Spike threshold"
+                      />
+                    </v-list-item>
+                  </v-list>
+                </v-card-text>
+              </card>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title>Slider</v-card-title>
-          <v-card-text>
-            <slider
-              :max="10"
-              :step="1"
-              :value="2"
-              color="blue"
-              hide-details
-              label="membrane capacitance"
-              show-ticks="always"
-              class="bg-primary"
-            />
-            <slider
-              :max="2"
-              :min="-2"
-              :step="0.1"
-              :value="0.5"
-              color="blue"
-              hide-details
-              label="blue"
-              class="bg-secondary"
-            />
-            <slider
-              :max="4"
-              :ticks="[0, 1, 2, 3, 4]"
-              :value="3"
-              color="orange"
-              hide-details
-              label="ticks"
-              show-ticks="always"
-              class="bg-primary"
-            />
-            <tick-slider
-              :ticks="[1, 2, 3, 4]"
-              :value="3"
-              color="green"
-              hide-details
-              label="ticks"
-              class="bg-secondary"
-            />
-            <tick-slider
-              :ticks="[1, 10, 100]"
-              :value="3"
-              color="green"
-              hide-details
-              label="ticks"
-              class="bg-primary"
-            />
-            <range-slider
-              :max="10"
-              :min="-10"
-              :step="1"
-              :value="[-5, 5]"
-              hide-details
-              label="range"
-              class="bg-secondary"
-            />
-          </v-card-text>
-        </v-card>
-      </v-col>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title>Slider</v-card-title>
+            <v-card-text>
+              <slider
+                :max="10"
+                :step="1"
+                :value="2"
+                color="blue"
+                hide-details
+                label="membrane capacitance"
+                show-ticks="always"
+                class="bg-primary"
+              />
+              <slider
+                :max="2"
+                :min="-2"
+                :step="0.1"
+                :value="0.5"
+                color="blue"
+                hide-details
+                label="blue"
+                class="bg-secondary"
+              />
+              <slider
+                :max="4"
+                :ticks="[0, 1, 2, 3, 4]"
+                :value="3"
+                color="orange"
+                hide-details
+                label="ticks"
+                show-ticks="always"
+                class="bg-primary"
+              />
+              <tick-slider
+                :ticks="[1, 2, 3, 4]"
+                :value="3"
+                color="green"
+                hide-details
+                label="ticks"
+                class="bg-secondary"
+              />
+              <tick-slider
+                :ticks="[1, 10, 100]"
+                :value="3"
+                color="green"
+                hide-details
+                label="ticks"
+                class="bg-primary"
+              />
+              <range-slider
+                :max="10"
+                :min="-10"
+                :step="1"
+                :value="[-5, 5]"
+                hide-details
+                label="range"
+                class="bg-secondary"
+              />
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title> Alerts </v-card-title>
-          <v-card-text>
-            <v-alert class="my-1" color="success" icon="$success">
-              The simulation was sucessfully finished.
-            </v-alert>
-            <v-alert class="my-1" color="info" icon="$info">
-              The updates are available.
-            </v-alert>
-            <v-alert class="my-1" color="warning" icon="$warning">
-              The simulation might impact the performance.
-            </v-alert>
-            <v-alert class="my-1" color="error" icon="$error">
-              The backend was not found.
-            </v-alert>
-          </v-card-text>
-        </v-card>
-      </v-col>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title> Alerts </v-card-title>
+            <v-card-text>
+              <v-alert class="my-1" color="success" icon="$success">
+                The simulation was sucessfully finished.
+              </v-alert>
+              <v-alert class="my-1" color="info" icon="$info">
+                The updates are available.
+              </v-alert>
+              <v-alert class="my-1" color="warning" icon="$warning">
+                The simulation might impact the performance.
+              </v-alert>
+              <v-alert class="my-1" color="error" icon="$error">
+                The backend was not found.
+              </v-alert>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title>Item groups</v-card-title>
-          <v-card-text>
-            <v-item-group mandatory>
-              <v-container>
-                <v-row>
-                  <v-col v-for="n in 6" :key="n" cols="12" md="2">
-                    <v-item v-slot="{ isSelected, toggle }">
-                      <v-card
-                        :color="isSelected ? 'primary' : ''"
-                        class="d-flex align-center"
-                        dark
-                        height="50"
-                        @click="toggle"
-                      >
-                        <v-scroll-y-transition>
-                          <div class="flex-grow-1 text-center">
-                            {{ isSelected ? "Selected" : "Click Me!" }}
-                          </div>
-                        </v-scroll-y-transition>
-                      </v-card>
-                    </v-item>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-item-group>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title>Item groups</v-card-title>
+            <v-card-text>
+              <v-item-group mandatory>
+                <v-container>
+                  <v-row>
+                    <v-col v-for="n in 6" :key="n" cols="12" md="2">
+                      <v-item v-slot="{ isSelected, toggle }">
+                        <v-card
+                          :color="isSelected ? 'primary' : ''"
+                          class="d-flex align-center"
+                          dark
+                          height="50"
+                          @click="toggle"
+                        >
+                          <v-scroll-y-transition>
+                            <div class="flex-grow-1 text-center">
+                              {{ isSelected ? "Selected" : "Click Me!" }}
+                            </div>
+                          </v-scroll-y-transition>
+                        </v-card>
+                      </v-item>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-item-group>
 
-            <v-item-group multiple>
-              <v-container>
-                <v-row>
-                  <v-col v-for="n in 6" :key="n" cols="12" md="2">
-                    <v-item v-slot="{ isSelected, toggle }">
-                      <v-card
-                        :color="isSelected ? 'primary' : ''"
-                        class="d-flex align-center"
-                        dark
-                        height="50"
-                        @click="toggle"
-                      >
-                        <v-scroll-y-transition>
-                          <div class="flex-grow-1 text-center">
-                            {{ isSelected ? "Selected" : "Click Me!" }}
-                          </div>
-                        </v-scroll-y-transition>
-                      </v-card>
-                    </v-item>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-item-group>
-          </v-card-text>
-        </v-card>
-      </v-col>
+              <v-item-group multiple>
+                <v-container>
+                  <v-row>
+                    <v-col v-for="n in 6" :key="n" cols="12" md="2">
+                      <v-item v-slot="{ isSelected, toggle }">
+                        <v-card
+                          :color="isSelected ? 'primary' : ''"
+                          class="d-flex align-center"
+                          dark
+                          height="50"
+                          @click="toggle"
+                        >
+                          <v-scroll-y-transition>
+                            <div class="flex-grow-1 text-center">
+                              {{ isSelected ? "Selected" : "Click Me!" }}
+                            </div>
+                          </v-scroll-y-transition>
+                        </v-card>
+                      </v-item>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-item-group>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title>Color picker</v-card-title>
-          <v-card-text>
-            <v-select
-              :items="colorSchemes"
-              label="Select a color scheme"
-              persistent-hint
-              density="compact"
-              variant="outlined"
-              v-model="state.colorScheme"
-            />
-            <color-picker :colorScheme="state.colorScheme" />
-          </v-card-text>
-        </v-card>
-      </v-col>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title>Color picker</v-card-title>
+            <v-card-text>
+              <v-select
+                :items="colorSchemes"
+                label="Select a color scheme"
+                persistent-hint
+                density="compact"
+                variant="outlined"
+                v-model="state.colorScheme"
+              />
+              <color-picker :colorScheme="state.colorScheme" />
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title> Tabs </v-card-title>
-          <v-card-text>
-            <v-card variant="text">
-              <v-tabs v-model="state.tab" grow>
-                <v-tab value="one">Item One</v-tab>
-                <v-tab value="two">Item Two</v-tab>
-                <v-tab value="three">Item Three</v-tab>
-              </v-tabs>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title> Tabs </v-card-title>
+            <v-card-text>
+              <v-card variant="text">
+                <v-tabs v-model="state.tab" grow>
+                  <v-tab value="one">Item One</v-tab>
+                  <v-tab value="two">Item Two</v-tab>
+                  <v-tab value="three">Item Three</v-tab>
+                </v-tabs>
 
-              <v-card-text>
-                <v-window v-model="state.tab">
-                  <v-window-item
-                    reverse-transition="no-transition"
-                    transition="no-transition"
-                    value="one"
-                  >
-                    One
-                  </v-window-item>
-                  <v-window-item
-                    reverse-transition="no-transition"
-                    transition="no-transition"
-                    value="two"
-                  >
-                    Two
-                  </v-window-item>
-                  <v-window-item
-                    reverse-transition="no-transition"
-                    transition="no-transition"
-                    value="three"
-                  >
-                    Three
-                  </v-window-item>
-                </v-window>
-              </v-card-text>
-            </v-card>
-          </v-card-text>
-        </v-card>
-      </v-col>
+                <v-card-text>
+                  <v-window v-model="state.tab">
+                    <v-window-item
+                      reverse-transition="no-transition"
+                      transition="no-transition"
+                      value="one"
+                    >
+                      One
+                    </v-window-item>
+                    <v-window-item
+                      reverse-transition="no-transition"
+                      transition="no-transition"
+                      value="two"
+                    >
+                      Two
+                    </v-window-item>
+                    <v-window-item
+                      reverse-transition="no-transition"
+                      transition="no-transition"
+                      value="three"
+                    >
+                      Three
+                    </v-window-item>
+                  </v-window>
+                </v-card-text>
+              </v-card>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title> Button toggle </v-card-title>
-          <v-card-text>
-            <v-btn-toggle v-model="state.buttonToggle.value" divided>
-              <v-btn icon="mdi-format-align-left"></v-btn>
-              <v-btn icon="mdi-format-align-center"></v-btn>
-              <v-btn icon="mdi-format-align-right"></v-btn>
-              <v-btn icon="mdi-format-align-justify"></v-btn>
-            </v-btn-toggle>
-          </v-card-text>
-        </v-card>
-      </v-col>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title> Button toggle </v-card-title>
+            <v-card-text>
+              <v-btn-toggle v-model="state.buttonToggle.value" divided>
+                <v-btn icon="mdi-format-align-left"></v-btn>
+                <v-btn icon="mdi-format-align-center"></v-btn>
+                <v-btn icon="mdi-format-align-right"></v-btn>
+                <v-btn icon="mdi-format-align-justify"></v-btn>
+              </v-btn-toggle>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title>Buttons</v-card-title>
-          <v-card-text>
-            <v-btn
-              :key="index"
-              :text="button.text"
-              :variant="button.variant"
-              v-for="(button, index) in buttons"
-              class="mx-1"
-            />
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        <v-col class="pa-1" cols="12" md="6">
+          <v-card>
+            <v-card-title>Buttons</v-card-title>
+            <v-card-text>
+              <v-btn
+                :key="index"
+                :text="button.text"
+                :variant="button.variant"
+                v-for="(button, index) in buttons"
+                class="mx-1"
+              />
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-defaults-provider>
   </v-container>
 </template>
 
