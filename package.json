@@ -86,7 +86,7 @@
     "chai-as-promised": "^7.1",
     "electron": "24.1.3",
     "electron-devtools-installer": "^3.2",
-    "eslint": "^8.39",
+    "eslint": "^8.40",
     "eslint-plugin-prettier": "^4.2",
     "eslint-plugin-vue": "^8.7",
     "prettier": "^2.8",
@@ -99,7 +99,7 @@
     "vue-cli-plugin-vuetify": "^2.5",
     "vue-template-compiler": "~2.6",
     "vuetify-loader": "~1.7",
-    "webpack": "^5.81"
+    "webpack": "^5.82"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
