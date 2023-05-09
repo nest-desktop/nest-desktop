@@ -23,12 +23,12 @@ export default createVuetify({
     // global: {
     //   ripple: false,
     // },
-    VCard: {
-      variant: "outlined",
+    // VCard: {
+      // variant: "outlined",
       //   VCardActions: {
       //     VBtn: { size: "small", variant: "outlined", ripple: true },
       //   },
-    },
+    // },
   },
   theme: {
     themes: {
