@@ -261,6 +261,47 @@
 
       <v-col class="pa-1" cols="12" md="6">
         <v-card>
+          <v-card-title> Tabs </v-card-title>
+          <v-card-text>
+            <v-card variant="text">
+              <v-tabs v-model="state.tab" grow>
+                <v-tab value="one">Item One</v-tab>
+                <v-tab value="two">Item Two</v-tab>
+                <v-tab value="three">Item Three</v-tab>
+              </v-tabs>
+
+              <v-card-text>
+                <v-window v-model="state.tab">
+                  <v-window-item
+                    reverse-transition="no-transition"
+                    transition="no-transition"
+                    value="one"
+                  >
+                    One
+                  </v-window-item>
+                  <v-window-item
+                    reverse-transition="no-transition"
+                    transition="no-transition"
+                    value="two"
+                  >
+                    Two
+                  </v-window-item>
+                  <v-window-item
+                    reverse-transition="no-transition"
+                    transition="no-transition"
+                    value="three"
+                  >
+                    Three
+                  </v-window-item>
+                </v-window>
+              </v-card-text>
+            </v-card>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col class="pa-1" cols="12" md="6">
+        <v-card>
           <v-card-title> Button toggle </v-card-title>
           <v-card-text>
             <v-btn-toggle v-model="state.buttonToggle.value" divided>
@@ -373,6 +414,7 @@ const state = reactive({
   },
   colorScheme: "category10",
   listOpen: [],
+  tab: null,
 });
 </script>
 

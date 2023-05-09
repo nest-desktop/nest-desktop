@@ -1,19 +1,20 @@
 <template>
-  <v-list v-model:opened="state.listOpen">
+  <v-list density="compact" v-model:opened="state.listOpen">
     <v-list-item
       @click="state.listOpen = []"
-      append-icon="mdi-chevron-left"
+      prepend-icon="mdi-chevron-left"
       v-if="state.listOpen.length > 0"
     >
       Back
     </v-list-item>
 
-    <div v-for="(item, index) in items" :key="index">
+    <template :key="index" v-for="(item, index) in items">
       <v-list-group
+        :value="item.value"
+        class="no-expand-transition"
         collapse-icon="mdi-chevron-left"
         expand-icon="mdi-chevron-right"
         fluid
-        :value="item.value"
         v-if="'items' in item"
       >
         <template #activator="{ props }">
@@ -27,10 +28,10 @@
 
         <v-list-item
           :key="'sub' + i"
+          v-for="(subitem, i) in item.items"
           :prepend-icon="subitem.icon"
           :title="subitem.title"
           :value="subitem.value"
-          v-for="(subitem, i) in item.items"
         />
       </v-list-group>
 
@@ -42,7 +43,7 @@
           v-if="state.listOpen.length == 0"
         />
       </div>
-    </div>
+    </template>
   </v-list>
 </template>
 
@@ -54,5 +55,11 @@ const props = defineProps(["items"]);
 const state = reactive({
   listOpen: [],
 });
-
 </script>
+
+<style>
+.no-expand-transition .expand-transition-enter-active ,
+.no-expand-transition .expand-transition-leave-active {
+  transition: none !important;
+}
+</style>
