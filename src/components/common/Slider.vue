@@ -1,21 +1,21 @@
 <template>
   <v-slider
+    :step="state.step"
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi-plus"
     class="py-2 slider"
     hide-details
     prepend-icon="mdi-minus"
-    step="state.step"
     style="position: relative"
     v-model="state.value"
   >
     <template #append>
       <v-text-field
+        :step="state.step"
         density="compact"
         hide-details
         single-line
-        step="state.step"
         style="width: 80px"
         type="number"
         v-model="value"
@@ -52,6 +52,7 @@ const increment = () => {
 
 const update = () => {
   state.value = props.value || 0;
+  state.step = props.step || 1;
 }
 
 watch(
@@ -63,14 +64,14 @@ onMounted(update);
 </script>
 
 <style>
+.slider .mdi-plus {
+  height: inherit;
+  margin-right: 2px;
+}
+
 .slider .v-label {
   position: absolute;
   top: 0px;
   left: 36px;
-}
-
-.slider .mdi-plus {
-  height: inherit;
-  margin-right: 2px;
 }
 </style>

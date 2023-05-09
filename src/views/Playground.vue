@@ -109,11 +109,11 @@
           <v-card-title>Slider</v-card-title>
           <v-card-text>
             <slider
+              :max="10"
               :step="1"
               :value="2"
-              :max="10"
-              hide-details
               color="blue"
+              hide-details
               label="membrane capacitance"
               show-ticks="always"
               class="bg-primary"
