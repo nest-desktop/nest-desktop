@@ -24,7 +24,7 @@ export default createVuetify({
     //   ripple: false,
     // },
     // VCard: {
-      // variant: "outlined",
+    //   variant: "outlined",
       //   VCardActions: {
       //     VBtn: { size: "small", variant: "outlined", ripple: true },
       //   },

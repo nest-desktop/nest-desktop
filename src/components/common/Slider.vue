@@ -56,7 +56,7 @@ const update = () => {
 }
 
 watch(
-  () => [props.value],
+  () => [props.value, props.step],
   update
 );
 

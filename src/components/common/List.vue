@@ -5,7 +5,7 @@
       prepend-icon="mdi-chevron-left"
       v-if="state.listOpen.length > 0"
     >
-      Back
+      {{ state.listOpen[0] }}
     </v-list-item>
 
     <template :key="index" v-for="(item, index) in items">
@@ -14,7 +14,6 @@
         class="no-expand-transition"
         collapse-icon="mdi-chevron-left"
         expand-icon="mdi-chevron-right"
-        fluid
         v-if="'items' in item"
       >
         <template #activator="{ props }">
@@ -32,6 +31,8 @@
           :prepend-icon="subitem.icon"
           :title="subitem.title"
           :value="subitem.value"
+          class="sublist"
+          style="padding-inline-start: 16px !important;"
         />
       </v-list-group>
 
@@ -58,8 +59,13 @@ const state = reactive({
 </script>
 
 <style>
-.no-expand-transition .expand-transition-enter-active ,
+.no-expand-transition .expand-transition-enter-active,
 .no-expand-transition .expand-transition-leave-active {
   transition: none !important;
+}
+
+.sublist {
+  border-left: 2px solid #ccc !important;
+  margin-inline-start: 28px !important;
 }
 </style>
