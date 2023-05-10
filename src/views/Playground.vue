@@ -26,52 +26,93 @@
                   :key="index"
                   v-for="(node, index) in state.card.nodes"
                 >
-                  <v-card-title class="pa-0">
-                    <v-row no-gutters>
-                      <v-col cols="2">
-                        <btn :color="node.color"> n1 </btn>
-                      </v-col>
-                      <v-col cols="10">
+                  <v-card-title class="py-0">
+                    <v-select
+                      :items="nodeModels"
+                      hide-details
+                      density="compact"
+                      v-model="node.model"
+                      variant="underlined"
+                    >
+                      <template #prepend>
+                        <v-btn :color="node.color" variant="text" size="small">
+                          n1
+                        </v-btn>
+                      </template>
+
+                      <template #append>
+                        <v-btn
+                          icon="mdi-order-bool-ascending-variant"
+                          size="x-small"
+                          @click="node.edit = !node.edit"
+                          variant="text"
+                        />
                         <v-menu
                           :close-on-content-click="false"
                           density="compact"
                         >
                           <template #activator="{ props }">
-                            <btn :color="node.color" v-bind="props">
-                              {{ node.model }}
-                            </btn>
+                            <v-btn
+                              icon="mdi-dots-vertical"
+                              size="x-small"
+                              v-bind="props"
+                              variant="text"
+                            />
                           </template>
 
                           <v-card>
                             <list :items="menuItems" />
                           </v-card>
                         </v-menu>
-                      </v-col>
-                    </v-row>
+                      </template>
+                    </v-select>
                   </v-card-title>
 
                   <v-card-text class="pa-0">
                     <v-list>
                       <v-list-item>
-                        <value-slider
+                        <slider
                           :color="node.color"
-                          id="n"
-                          label="Population"
+                          :options="{ id: 'n', label: 'Population' }"
                           v-model="node.size"
                         />
                       </v-list-item>
-                      <v-list-item
+                      <template
                         :key="index"
                         v-for="(param, index) in node.params"
                       >
-                        <slider
-                          :color="node.color"
-                          :options="param"
-                          v-model="param.value"
-                        />
-                      </v-list-item>
+                        <v-list-item
+                          v-if="
+                            node.edit || node.paramsVisible.includes(param.id)
+                          "
+                        >
+                        <v-checkbox
+                            v-if="node.edit"
+                            hide-details
+                            density="compact"
+                            v-model="node.paramsVisible"
+                            :value="param.id"
+                            :label="param.label"
+                          >
+                            <template #append>
+                              {{ param.value }} {{ param.unit }}
+                            </template>
+                          </v-checkbox>
+                          <slider
+                            :color="node.color"
+                            :options="param"
+                            v-model="param.value"
+                            v-else-if="node.paramsVisible.includes(param.id)"
+                          />
+
+                        </v-list-item>
+                      </template>
                     </v-list>
                   </v-card-text>
+                  <v-card-actions v-if="node.edit">
+                    <v-spacer />
+                    <v-btn @click="node.edit=false">save</v-btn>
+                  </v-card-actions>
                 </card>
               </v-window-item>
               <v-window-item
@@ -168,18 +209,22 @@
         </v-card>
       </v-col>
 
-
       <v-col class="pa-1" cols="12" md="6">
         <v-card>
           <v-card-title>Buttons</v-card-title>
           <v-card-text>
-            <v-row class="my-3" :key="index" v-for="(buttonGrp, index) in buttons">
+            <v-row
+              class="my-3"
+              :key="index"
+              v-for="(buttonGrp, index) in buttons"
+            >
               <v-btn
                 :key="index"
                 :text="button.text"
                 :variant="button.variant"
                 :size="button.size"
-                :color="button.color"
+                :color="button.color || state.buttons.color"
+                @click.stop="state.buttons.color = button.color"
                 v-for="(button, index) in buttonGrp"
                 class="mx-1"
               />
@@ -310,7 +355,6 @@
           </v-card-text>
         </v-card>
       </v-col>
-
     </v-row>
   </v-container>
 </template>
@@ -323,10 +367,41 @@ import Card from "@/components/common/Card.vue";
 import ColorPicker from "@/components/common/ColorPicker.vue";
 import List from "@/components/common/List.vue";
 import Slider from "@/components/common/Slider.vue";
-import ValueSlider from "@/components/common/ValueSlider.vue";
+
+const nodeModels = [
+  { value: "dc_generator", title: "DC generator" },
+  { value: "ac_generator", title: "AC generator" },
+  { value: "gauss_generator", title: "Noise generator" },
+  { value: "poisson_generator", title: "Poisson generator" },
+];
 
 const buttons = [
   [
+    { text: "blue", color: "blue", size: "x-small" },
+    { text: "orange", color: "orange", size: "x-small" },
+    { text: "green", color: "green", size: "x-small" },
+    { text: "red", color: "red", size: "x-small" },
+    { text: "purple", color: "purple", size: "x-small" },
+    { text: "brown", color: "brown", size: "x-small" },
+    { text: "rosa", color: "rosa", size: "x-small" },
+    { text: "grey", color: "grey", size: "x-small" },
+    { text: "yellow", color: "yellow", size: "x-small" },
+    { text: "cyan", color: "cyan", size: "x-small" },
+  ],
+  [
+    { text: "blue", color: "blue-lighten-1", size: "x-small" },
+    { text: "orange", color: "orange-lighten-1", size: "x-small" },
+    { text: "green", color: "green-lighten-1", size: "x-small" },
+    { text: "red", color: "red-lighten-1", size: "x-small" },
+    { text: "purple", color: "purple-lighten-1", size: "x-small" },
+    { text: "brown", color: "brown-lighten-1", size: "x-small" },
+    { text: "rosa", color: "rosa-lighten-1", size: "x-small" },
+    { text: "grey", color: "grey-lighten-1", size: "x-small" },
+    { text: "yellow", color: "yellow-lighten-1", size: "x-small" },
+    { text: "cyan", color: "cyan-lighten-1", size: "x-small" },
+  ],
+  [
+    { text: "elevated", variant: "elevated" },
     { text: "flat", variant: "flat" },
     { text: "text", variant: "text" },
     { text: "outlined", variant: "outlined" },
@@ -338,30 +413,6 @@ const buttons = [
     { text: "small", size: "small" },
     { text: "large", size: "large" },
     { text: "x-large", size: "x-large" },
-  ],
-  [
-    { text: "blue", color: "blue", size: "x-small" },
-    { text: "orange", color: "orange", size: "x-small" },
-    { text: "green", color: "green", size: "x-small" },
-    { text: "red", color: "red", size: "x-small" },
-    { text: "purple", color: "purple" , size: "x-small"},
-    { text: "brown", color: "brown" , size: "x-small"},
-    { text: "rosa", color: "rosa" , size: "x-small"},
-    { text: "grey", color: "grey" , size: "x-small"},
-    { text: "yellow", color: "yellow" , size: "x-small"},
-    { text: "cyan", color: "cyan" , size: "x-small"},
-  ],
-  [
-    { text: "blue", color: "blue-lighten-1" , size: "x-small"},
-    { text: "orange", color: "orange-lighten-1" , size: "x-small"},
-    { text: "green", color: "green-lighten-1", size: "x-small" },
-    { text: "red", color: "red-lighten-1" , size: "x-small"},
-    { text: "purple", color: "purple-lighten-1" , size: "x-small"},
-    { text: "brown", color: "brown-lighten-1" , size: "x-small"},
-    { text: "rosa", color: "rosa-lighten-1", size: "x-small" },
-    { text: "grey", color: "grey-lighten-1" , size: "x-small"},
-    { text: "yellow", color: "yellow-lighten-1" , size: "x-small"},
-    { text: "cyan", color: "cyan-lighten-1", size: "x-small" },
   ],
 ];
 
@@ -403,8 +454,8 @@ const clickMe = [
 
 const menuItems = [
   {
-    value: "admin",
-    title: "admin",
+    value: "parameter",
+    title: "parameter",
     icon: "mdi-account-circle",
     items: admins,
   },
@@ -426,6 +477,9 @@ const state = reactive({
   buttonToggle: {
     value: null,
   },
+  buttons: {
+    color: null,
+  },
   colorScheme: "category10",
   listOpen: [],
   tab: null,
@@ -436,33 +490,49 @@ const state = reactive({
         model: "dc_generator",
         color: "#1F77B4",
         size: 1,
-        params: [{ id: "amplitude", label: "amplitude (pA)", value: 10 }],
+        edit: false,
+        paramsVisible: ["amplitude"],
+        params: [
+          {
+            id: "amplitude",
+            label: "amplitude",
+            value: 10,
+            unit: "pA",
+          },
+          { id: "start", label: "start (ms)", value: 0 },
+          { id: "stop", label: "stop (ms)", value: 10 },
+        ],
       },
       {
         model: "iaf_psc_alpha",
         color: "#FF7F0E",
         size: 10,
+        edit: false,
+        paramsVisible: ["V_m"],
         params: [
           {
             id: "V_m",
-            label: "initial membrane potentials (mV)",
+            label: "initial membrane potentials",
             value: -70,
             min: -100,
             max: 0,
+            unit: "mV",
           },
           {
             id: "V_th",
-            label: "spike threshold (mV)",
+            label: "spike threshold",
             value: -55,
             min: -100,
             max: 0,
+            unit: "mV",
           },
           {
             id: "E_L",
-            label: "reversal potentials (mV)",
+            label: "reversal potentials",
             value: -70,
             min: -100,
             max: 0,
+            unit: "mV",
           },
         ],
       },
