@@ -7,6 +7,7 @@
 // Styles
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
+import "./main.scss";
 
 // Composables
 import { createVuetify } from "vuetify";
@@ -25,9 +26,9 @@ export default createVuetify({
     // },
     // VCard: {
     //   variant: "outlined",
-      //   VCardActions: {
-      //     VBtn: { size: "small", variant: "outlined", ripple: true },
-      //   },
+    //   VCardActions: {
+    //     VBtn: { size: "small", variant: "outlined", ripple: true },
+    //   },
     // },
   },
   theme: {
