@@ -38,12 +38,12 @@ const tickIdx = computed({
 });
 
 const decrement = () => {
-  state.tickIdx++;
+  state.tickIdx = state.tickIdx - 1;
   changes();
 };
 
 const increment = () => {
-  state.tickIdx--;
+  state.tickIdx = state.tickIdx + 1;
   changes();
 };
 
@@ -67,14 +67,28 @@ onMounted(update);
 </script>
 
 <style lang="scss">
-.tick-slider .v-label {
-  position: absolute;
-  top: 0px;
-  left: 36px;
+.tick-slider {
+  .mdi-minus,
+  .mdi-plus {
+    opacity: 0;
+  }
+  .v-slider__label {
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+  }
+
+  .v-slider-track__fill,
+  .v-slider-track__background {
+    background-color: rgb(var(--v-theme-secondary)) !important;
+  }
 }
 
-.tick-slider .v-slider-track__fill,
-.tick-slider .v-slider-track__background {
-  background-color: #ccc !important;
+.tick-slider:hover {
+  .mdi-minus,
+  .mdi-plus {
+    opacity: 0.6;
+  }
 }
 </style>

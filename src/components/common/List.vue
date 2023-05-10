@@ -1,5 +1,5 @@
 <template>
-  <v-list density="compact" v-model:opened="state.listOpen">
+  <v-list class="list" density="compact" v-model:opened="state.listOpen">
     <v-list-item
       @click="state.listOpen = []"
       prepend-icon="mdi-chevron-left"
@@ -32,7 +32,7 @@
           :title="subitem.title"
           :value="subitem.value"
           class="sublist"
-          style="padding-inline-start: 16px !important;"
+          style="padding-inline-start: 16px !important"
         />
       </v-list-group>
 
@@ -58,14 +58,16 @@ const state = reactive({
 });
 </script>
 
-<style>
-.no-expand-transition .expand-transition-enter-active,
-.no-expand-transition .expand-transition-leave-active {
-  transition: none !important;
-}
+<style lang="scss">
+.list {
+  .no-expand-transition .expand-transition-enter-active,
+  .no-expand-transition .expand-transition-leave-active {
+    transition: none !important;
+  }
 
-.sublist {
-  border-left: 2px solid #ccc !important;
-  margin-inline-start: 28px !important;
+  .sublist {
+    border-left: 2px solid rgb(var(--v-theme-primary), 0.6) !important;
+    margin-inline-start: 28px !important;
+  }
 }
 </style>

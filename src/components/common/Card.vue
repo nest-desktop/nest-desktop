@@ -25,9 +25,9 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style lang="scss">
 .card {
-  border-color: #ccc;
+  border-color: rgb(var(--v-theme-secondary));
   border-left-width: 4px !important;
 }
 </style>

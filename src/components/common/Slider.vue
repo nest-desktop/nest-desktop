@@ -2,28 +2,31 @@
   <span>
     <range-slider
       :color="state.color"
+      :id="state.id"
       :label="state.label"
       :max="state.max"
       :min="state.min"
       :step="state.step"
-      v-model="modelValue"
       v-if="state.variant === 'range'"
+      v-model="modelValue"
     />
     <tick-slider
-      v-model="modelValue"
       :color="state.color"
+      :id="state.id"
       :label="state.label"
       :ticks="state.ticks"
       v-else-if="state.variant === 'ticks'"
+      v-model="modelValue"
     />
     <value-slider
       :color="state.color"
+      :id="state.id"
       :label="state.label"
       :max="state.max"
       :min="state.min"
       :step="state.step"
-      v-model="modelValue"
       v-else
+      v-model="modelValue"
     />
   </span>
 </template>
@@ -39,6 +42,7 @@ const props = defineProps(["color", "options", "modelValue"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
+  id: "",
   color: "primary",
   label: "undefined",
   max: 100,
@@ -58,6 +62,7 @@ const modelValue = computed({
 });
 
 const update = () => {
+  state.id = props.options.id || "";
   state.color = props.color || "primary";
   state.label = props.options.label || "undefined";
   state.max = props.options.max || 100;
@@ -68,6 +73,6 @@ const update = () => {
   state.variant = props.options.variant || "value";
 };
 
-watch(() => [props.options], update);
+watch(() => [props.modelValue], update);
 onMounted(update);
 </script>
