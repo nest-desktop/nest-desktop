@@ -55,6 +55,7 @@
                       <v-list-item>
                         <value-slider
                           :color="node.color"
+                          id="n"
                           label="Population"
                           v-model="node.size"
                         />
@@ -163,6 +164,26 @@
             <v-alert class="my-1" color="error" icon="$error" variant="tonal">
               The backend was not found.
             </v-alert>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+
+      <v-col class="pa-1" cols="12" md="6">
+        <v-card>
+          <v-card-title>Buttons</v-card-title>
+          <v-card-text>
+            <v-row class="my-3" :key="index" v-for="(buttonGrp, index) in buttons">
+              <v-btn
+                :key="index"
+                :text="button.text"
+                :variant="button.variant"
+                :size="button.size"
+                :color="button.color"
+                v-for="(button, index) in buttonGrp"
+                class="mx-1"
+              />
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
@@ -290,20 +311,6 @@
         </v-card>
       </v-col>
 
-      <v-col class="pa-1" cols="12" md="6">
-        <v-card>
-          <v-card-title>Buttons</v-card-title>
-          <v-card-text>
-            <v-btn
-              :key="index"
-              :text="button.text"
-              :variant="button.variant"
-              v-for="(button, index) in buttons"
-              class="mx-1"
-            />
-          </v-card-text>
-        </v-card>
-      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -319,12 +326,43 @@ import Slider from "@/components/common/Slider.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
 
 const buttons = [
-  { text: "flat", variant: "flat" },
-  { text: "text", variant: "text" },
-  { text: "outlined", variant: "outlined" },
-  { text: "plain", variant: "plain" },
-  { text: "evelated", variant: "evelated" },
-  { text: "tonal", variant: "tonal" },
+  [
+    { text: "flat", variant: "flat" },
+    { text: "text", variant: "text" },
+    { text: "outlined", variant: "outlined" },
+    { text: "plain", variant: "plain" },
+    { text: "tonal", variant: "tonal" },
+  ],
+  [
+    { text: "x-small", size: "x-small" },
+    { text: "small", size: "small" },
+    { text: "large", size: "large" },
+    { text: "x-large", size: "x-large" },
+  ],
+  [
+    { text: "blue", color: "blue", size: "x-small" },
+    { text: "orange", color: "orange", size: "x-small" },
+    { text: "green", color: "green", size: "x-small" },
+    { text: "red", color: "red", size: "x-small" },
+    { text: "purple", color: "purple" , size: "x-small"},
+    { text: "brown", color: "brown" , size: "x-small"},
+    { text: "rosa", color: "rosa" , size: "x-small"},
+    { text: "grey", color: "grey" , size: "x-small"},
+    { text: "yellow", color: "yellow" , size: "x-small"},
+    { text: "cyan", color: "cyan" , size: "x-small"},
+  ],
+  [
+    { text: "blue", color: "blue-lighten-1" , size: "x-small"},
+    { text: "orange", color: "orange-lighten-1" , size: "x-small"},
+    { text: "green", color: "green-lighten-1", size: "x-small" },
+    { text: "red", color: "red-lighten-1" , size: "x-small"},
+    { text: "purple", color: "purple-lighten-1" , size: "x-small"},
+    { text: "brown", color: "brown-lighten-1" , size: "x-small"},
+    { text: "rosa", color: "rosa-lighten-1", size: "x-small" },
+    { text: "grey", color: "grey-lighten-1" , size: "x-small"},
+    { text: "yellow", color: "yellow-lighten-1" , size: "x-small"},
+    { text: "cyan", color: "cyan-lighten-1", size: "x-small" },
+  ],
 ];
 
 const colorSchemes = [
@@ -398,7 +436,7 @@ const state = reactive({
         model: "dc_generator",
         color: "#1F77B4",
         size: 1,
-        params: [{ label: "amplitude", value: 10 }],
+        params: [{ id: "amplitude", label: "amplitude (pA)", value: 10 }],
       },
       {
         model: "iaf_psc_alpha",
@@ -406,13 +444,26 @@ const state = reactive({
         size: 10,
         params: [
           {
-            label: "initial membrane potentials",
+            id: "V_m",
+            label: "initial membrane potentials (mV)",
             value: -70,
             min: -100,
             max: 0,
           },
-          { label: "spike threshold", value: -55, min: -100, max: 0 },
-          { label: "reversal potentials", value: -70, min: -100, max: 0 },
+          {
+            id: "V_th",
+            label: "spike threshold (mV)",
+            value: -55,
+            min: -100,
+            max: 0,
+          },
+          {
+            id: "E_L",
+            label: "reversal potentials (mV)",
+            value: -70,
+            min: -100,
+            max: 0,
+          },
         ],
       },
     ],
@@ -420,32 +471,50 @@ const state = reactive({
   slider: {
     tab: "components",
     items: [
-      { label: "default slider", value: 10, variant: "value" },
+      { id: "id1", label: "default slider", value: 10 },
       {
+        id: "id2",
         color: "blue",
         label: "custom slider",
         max: 10,
         min: -10,
         step: 0.1,
         value: 0,
-        variant: "value",
       },
       {
-        label: "default tickslider",
+        id: "id3",
+        color: "orange",
+        label: "default ticks",
         ticks: [1, 2, 3, 4],
         value: 2,
         variant: "ticks",
       },
       {
+        id: "id4",
         color: "green",
-        label: "custom tickslider",
+        label: "non-linear ticks",
         ticks: [1, 10, 100],
         value: 10,
         variant: "ticks",
       },
-      { label: "default rangeslider", value: [20, 50], variant: "range" },
       {
-        color: "orange",
+        id: "id4",
+        color: "red",
+        label: "string ticks",
+        ticks: ["bad", "okay", "superb"],
+        value: "okay",
+        variant: "ticks",
+      },
+      {
+        id: ["id5l", "id5u"],
+        color: "purple",
+        label: "default rangeslider",
+        value: [20, 50],
+        variant: "range",
+      },
+      {
+        id: ["id6l", "id6u"],
+        color: "brown",
         label: "custom rangeslider",
         max: 10,
         min: -10,
@@ -458,20 +527,18 @@ const state = reactive({
 });
 </script>
 
-<style>
-.playground .v-list {
-  overflow: visible;
-}
+<style lang="scss">
+.playground {
+  .v-list {
+    overflow: visible;
+  }
 
-.playground .v-list-item:nth-child(even) {
-  background: #eee;
-}
+  .v-list-item:nth-child(odd) {
+    background-color: rgba(var(--v-theme-primary), 0.2);
+  }
 
-.playground .v-list-item:nth-child(odd) {
-  background: #fff;
-}
-
-.playground .v-list-item__content {
-  overflow: visible;
+  v-list-item__content {
+    overflow: visible;
+  }
 }
 </style>

@@ -4,7 +4,7 @@
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi-plus"
-    class="py-2 valueslider"
+    class="py-2 value-slider"
     hide-details
     prepend-icon="mdi-minus"
     style="position: relative"
@@ -12,10 +12,10 @@
   >
     <template #append>
       <v-text-field
+        :label="state.id"
         :step="state.step"
         density="compact"
         hide-details
-        single-line
         style="width: 80px"
         type="number"
         v-model="modelValue"
@@ -28,10 +28,11 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
 
-const props = defineProps(["modelValue", "step"]);
+const props = defineProps(["id", "modelValue", "step"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
+  id: "",
   step: 1,
   modelValue: 0,
 });
@@ -46,7 +47,7 @@ const modelValue = computed({
 
 const numDecimals = () => {
   const stepStr = state.step.toString();
-  return stepStr.includes('.') ? stepStr.split('.')[1].length : 0
+  return stepStr.includes(".") ? stepStr.split(".")[1].length : 0;
 };
 
 const decrement = () => {
@@ -66,28 +67,44 @@ const changes = () => {
 };
 
 const update = () => {
+  state.id = props.id || "";
   state.modelValue = props.modelValue || 0;
   state.step = props.step || 1;
 };
 
-watch(() => [props.modelValue], update);
+watch(() => [props.id, props.modelValue], update);
 onMounted(update);
 </script>
 
-<style>
-.valueslider .mdi-plus {
-  height: inherit;
-  margin-right: 4px;
+<style lang="scss">
+.value-slider {
+  .mdi-minus,
+  .mdi-plus {
+    opacity: 0;
+  }
+
+  .mdi-plus {
+    height: inherit;
+    margin-right: 4px;
+  }
+
+  .v-slider__label {
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+  }
+
+  .v-slider-track__fill,
+  .v-slider-track__background {
+    background-color: rgb(var(--v-theme-secondary)) !important;
+  }
 }
 
-.valueslider .v-label {
-  position: absolute;
-  top: 0px;
-  left: 36px;
-}
-
-.valueslider .v-slider-track__fill,
-.valueslider .v-slider-track__background {
-  background-color: #ccc !important;
+.value-slider:hover {
+  .mdi-minus,
+  .mdi-plus {
+    opacity: 0.6;
+  }
 }
 </style>
