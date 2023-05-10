@@ -1,77 +1,73 @@
 <template>
-  <v-slider
-    :step="state.step"
-    @click:append="increment"
-    @click:prepend="decrement"
-    append-icon="mdi-plus"
-    class="py-2 slider"
-    hide-details
-    prepend-icon="mdi-minus"
-    style="position: relative"
-    v-model="state.value"
-  >
-    <template #append>
-      <v-text-field
-        :step="state.step"
-        density="compact"
-        hide-details
-        single-line
-        style="width: 80px"
-        type="number"
-        v-model="value"
-        variant="underlined"
-      />
-    </template>
-  </v-slider>
+  <span>
+    <range-slider
+      :color="state.color"
+      :label="state.label"
+      :max="state.max"
+      :min="state.min"
+      :step="state.step"
+      v-model="modelValue"
+      v-if="state.variant === 'range'"
+    />
+    <tick-slider
+      v-model="modelValue"
+      :color="state.color"
+      :label="state.label"
+      :ticks="state.ticks"
+      v-else-if="state.variant === 'ticks'"
+    />
+    <value-slider
+      :color="state.color"
+      :label="state.label"
+      :max="state.max"
+      :min="state.min"
+      :step="state.step"
+      v-model="modelValue"
+      v-else
+    />
+  </span>
 </template>
 
 <script lang="ts" setup>
 import { computed, reactive, onMounted, watch } from "vue";
 
-const props = defineProps(["value", "step"]);
+import RangeSlider from "@/components/common/RangeSlider.vue";
+import TickSlider from "@/components/common/TickSlider.vue";
+import ValueSlider from "@/components/common/ValueSlider.vue";
+
+const props = defineProps(["color", "options", "modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
+  color: "primary",
+  label: "undefined",
+  max: 100,
+  min: 0,
   step: 1,
-  value: 0,
+  ticks: [0, 100],
+  modelValue: 0,
+  variant: "value",
 });
 
-const value = computed({
-  get: () => state.value,
+const modelValue = computed({
+  get: () => state.modelValue,
   set: (val) => {
-    state.value = parseFloat(val);
+    state.modelValue = val;
+    emit("update:modelValue", state.modelValue);
   },
 });
 
-const decrement = () => {
-  state.value -= state.step;
-};
-
-const increment = () => {
-  state.value += state.step;
-};
-
 const update = () => {
-  state.value = props.value || 0;
-  state.step = props.step || 1;
-}
+  state.color = props.color || "primary";
+  state.label = props.options.label || "undefined";
+  state.max = props.options.max || 100;
+  state.min = props.options.min || 0;
+  state.step = props.options.step || 0;
+  state.ticks = props.options.ticks || [1, 100];
+  state.modelValue = props.modelValue || 0;
+  state.variant = props.options.variant || "value";
+};
 
-watch(
-  () => [props.value, props.step],
-  update
-);
-
+watch(() => [props.options], update);
 onMounted(update);
 </script>
-
-<style>
-.slider .mdi-plus {
-  height: inherit;
-  margin-right: 2px;
-}
-
-.slider .v-label {
-  position: absolute;
-  top: 0px;
-  left: 36px;
-}
-</style>

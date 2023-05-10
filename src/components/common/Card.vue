@@ -1,10 +1,10 @@
 <template>
   <v-card
+    :style="{ borderLeftColor: state.color }"
     class="card"
     color="primary"
-    variant="outlined"
     rounded="0"
-    :style="{ borderLeftColor: state.color }"
+    variant="outlined"
   >
     <slot />
   </v-card>
@@ -27,6 +27,7 @@ onMounted(() => {
 
 <style>
 .card {
+  border-color: #ccc;
   border-left-width: 4px !important;
 }
 </style>
