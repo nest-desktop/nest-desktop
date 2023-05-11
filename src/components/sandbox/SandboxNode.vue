@@ -47,7 +47,7 @@ const state = reactive({
       model: "dc_generator",
       color: "#1F77B4",
       size: 1,
-      paramsVisible: ["amplitude"],
+      paramsVisible: ["amplitude", "time"],
       params: [
         {
           id: "amplitude",
@@ -56,7 +56,8 @@ const state = reactive({
           unit: "pA",
         },
         { id: "start", label: "start", value: 0, unit: "ms" },
-        { id: "stop", label: "stop", value: 10, unit: "ms" },
+        { id: "stop", label: "stop", value: 100, unit: "ms" },
+        { id: "time", inputLabel: ["start", "stop"], label: "time", value: [0,100], unit: "ms", variant:"range"},
       ],
     },
     {

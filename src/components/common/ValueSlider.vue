@@ -12,7 +12,7 @@
   >
     <template #append>
       <v-text-field
-        :label="state.id"
+        :label="state.inputLabel"
         :step="state.step"
         density="compact"
         hide-details
@@ -29,11 +29,11 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
 
-const props = defineProps(["id", "modelValue", "step", "unit"]);
+const props = defineProps(["inputLabel", "modelValue", "step", "unit"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
-  id: "",
+  inputLabel: "",
   modelValue: 0,
   step: 1,
   unit: ""
@@ -69,7 +69,7 @@ const changes = () => {
 };
 
 const update = () => {
-  state.id = props.id || "";
+  state.inputLabel = props.inputLabel || "";
   state.modelValue = props.modelValue || 0;
   state.step = props.step || 1;
   state.unit = props.unit || "";

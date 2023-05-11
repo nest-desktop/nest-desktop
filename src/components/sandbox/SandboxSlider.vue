@@ -22,18 +22,16 @@
               :key="index"
               v-for="(sliderItem, index) in state.items"
             >
-              <v-row>
-                <v-col cols="10">
-                  <slider
-                    :color="sliderItem.color"
-                    :options="sliderItem"
-                    v-model="sliderItem.value"
-                  />
-                </v-col>
-                <v-col cols="2">
+              <v-row no-gutters>
+                <slider
+                  :color="sliderItem.color"
+                  :options="sliderItem"
+                  v-model="sliderItem.value"
+                />
+                <div style="width:100px">
                   {{ typeof sliderItem.value }}
                   {{ sliderItem.value }}
-                </v-col>
+                </div>
               </v-row>
             </v-list-item>
           </v-list>
@@ -58,10 +56,10 @@ import Slider from "@/components/common/Slider.vue";
 const state = reactive({
   tab: "components",
   items: [
-    { id: "id1", label: "default slider", value: 10 },
+    { inputLabel: "id1", label: "default slider", value: 10 },
     {
-      id: "id2",
       color: "blue",
+      inputLabel: "id2",
       label: "custom slider",
       max: 10,
       min: -10,
@@ -70,16 +68,16 @@ const state = reactive({
       value: 0,
     },
     {
-      id: "id3",
       color: "orange",
+      inputLabel: "id3",
       label: "default ticks",
       ticks: [1, 2, 3, 4],
       value: 2,
       variant: "ticks",
     },
     {
-      id: "id4",
       color: "green",
+      inputLabel: "id4",
       label: "non-linear ticks",
       ticks: [1, 10, 100],
       unit: "ms",
@@ -87,23 +85,23 @@ const state = reactive({
       variant: "ticks",
     },
     {
-      id: "id4",
       color: "red",
+      inputLabel: "id4",
       label: "string ticks",
       ticks: ["bad", "okay", "superb"],
       value: "okay",
       variant: "ticks",
     },
     {
-      id: ["id5l", "id5u"],
       color: "purple",
+      inputLabel: ["id5l", "id5u"],
       label: "default rangeslider",
       value: [20, 50],
       variant: "range",
     },
     {
-      id: ["id6l", "id6u"],
       color: "brown",
+      inputLabel: ["id6l", "id6u"],
       label: "custom rangeslider",
       max: 10,
       min: -10,
@@ -123,7 +121,7 @@ const state = reactive({
   }
 
   .v-list-item:nth-child(odd) {
-    background-color: rgba(var(--v-theme-primary), 0.1);
+    background-color: rgba(var(--v-theme-primary), 0.05);
   }
 
   v-list-item__content {

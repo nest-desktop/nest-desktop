@@ -1,6 +1,6 @@
 <template>
   <card :color="state.node.color" class="my-1" v-if="state.node">
-    <v-card-title class="py-0 pl-0">
+    <v-card-title class="py-0">
       <v-select
         :items="nodeModels"
         hide-details
@@ -10,7 +10,9 @@
         variant="underlined"
       >
         <template #prepend>
-          <v-btn :color="node.color" variant="text"> n1 </v-btn>
+          <v-btn :color="node.color" variant="text" icon size="small">
+            n1
+          </v-btn>
         </template>
 
         <template #append>
@@ -26,31 +28,34 @@
 
             <v-card>
               <v-card-text>
-              <v-checkbox
-                hide-details
-                density="compact"
-                v-model="state.node.paramsVisible"
-                value="size"
-                label="Population"
-              >
-                <template #append> n: {{ state.node.size }} </template>
-              </v-checkbox>
-              <template
-                :key="index"
-                v-for="(param, index) in state.node.params"
-              >
                 <v-checkbox
-                  hide-details
+                  :color="state.node.color"
                   density="compact"
+                  hide-details
+                  label="Population"
                   v-model="state.node.paramsVisible"
-                  :value="param.id"
-                  :label="param.label"
+                  value="size"
                 >
-                  <template #append>
-                    {{ param.id }}: {{ param.value }} {{ param.unit }}
-                  </template>
+                  <template #append> n: {{ state.node.size }} </template>
                 </v-checkbox>
-              </template>
+                <template
+                  :key="index"
+                  v-for="(param, index) in state.node.params"
+                >
+                  <v-checkbox
+                    :color="state.node.color"
+                    :label="param.label"
+                    :value="param.id"
+                    density="compact"
+                    hide-details
+                    v-model="state.node.paramsVisible"
+                  >
+                    <template #append>
+                      {{ param.inputLabel || param.id }}: {{ param.value }}
+                      {{ param.unit }}
+                    </template>
+                  </v-checkbox>
+                </template>
               </v-card-text>
             </v-card>
           </v-menu>
@@ -65,9 +70,7 @@
               />
             </template>
 
-            <v-card>
-              <list :items="menuItems" />
-            </v-card>
+            <list :items="items" />
           </v-menu>
         </template>
       </v-select>
@@ -75,22 +78,20 @@
 
     <v-card-text class="pa-0">
       <v-list>
-        <v-list-item v-if="state.node.paramsVisible.includes('size')">
-          <slider
-            :color="state.node.color"
-            :options="{ id: 'n', label: 'Population' }"
-            v-model="state.node.size"
-          />
-        </v-list-item>
+        <node-param
+          :color="state.node.color"
+          :options="{ id: 'n', label: 'Population' }"
+          :model-value="state.node.size"
+          v-if="state.node.paramsVisible.includes('size')"
+        />
 
         <template :key="index" v-for="(param, index) in state.node.params">
-          <v-list-item v-if="state.node.paramsVisible.includes(param.id)">
-            <slider
-              :color="state.node.color"
-              :options="param"
-              v-model="param.value"
-            />
-          </v-list-item>
+          <node-param
+            :color="state.node.color"
+            :options="param"
+            :model-value="param.value"
+            v-if="state.node.paramsVisible.includes(param.id)"
+          />
         </template>
       </v-list>
     </v-card-text>
@@ -101,7 +102,8 @@
 import { onMounted, reactive, watch } from "vue";
 
 import Card from "@/components/common/Card.vue";
-import Slider from "@/components/common/Slider.vue";
+import List from "@/components/common/List.vue";
+import NodeParam from "@/components/nest/NodeParam.vue";
 
 const props = defineProps(["node"]);
 
@@ -139,7 +141,7 @@ const clickMe = [
   { value: "4", title: "Click Me", icon: "mdi-numeric-4" },
 ];
 
-const menuItems = [
+const items = [
   {
     value: "parameter",
     title: "parameter",
@@ -167,3 +169,15 @@ const update = () => {
 watch(() => props.node, update);
 onMounted(update);
 </script>
+
+<style lang="scss">
+.node {
+  .v-list {
+    overflow: visible;
+
+    .v-list-item__content {
+      overflow: visible;
+    }
+  }
+}
+</style>

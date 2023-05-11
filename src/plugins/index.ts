@@ -19,5 +19,5 @@ import type { App } from "vue";
 export function registerPlugins(app: App) {
   loadFonts();
   app.use(vuetify).use(router).use(pinia).use(VueScrollTo, {
-    offset: -28,});
+    offset: -24,});
 }
