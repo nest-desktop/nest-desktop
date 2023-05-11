@@ -1,16 +1,16 @@
 <template>
-  <card :color="state.node.color" class="my-1" v-if="state.node">
-    <v-card-title class="py-0">
+  <card :color="state.node.color" class="node my-1" v-if="state.node">
+    <v-card-title class="mt-2">
       <v-select
         :items="nodeModels"
         hide-details
-        single-line
+        label="Model"
         density="compact"
         v-model="state.node.model"
-        variant="underlined"
+        variant="outlined"
       >
-        <template #prepend>
-          <v-btn :color="node.color" variant="text" icon size="small">
+        <template #prepend class="pt-0">
+          <v-btn :color="node.color" flat class="text-white" icon size="small">
             {{ node.label }}
           </v-btn>
         </template>
@@ -103,7 +103,7 @@
       v-if="'connections' in node && node.connections.length > 0"
       style="min-height: 40px"
     >
-      <v-expansion-panels variant="accordion" multiple>
+      <v-expansion-panels variant="accordion">
         <node-connection
           :connSpec="connection.connSpec"
           :key="index"
@@ -136,6 +136,7 @@ const nodeModels = [
   { value: "ac_generator", title: "AC generator" },
   { value: "gauss_generator", title: "Noise generator" },
   { value: "poisson_generator", title: "Poisson generator" },
+  { value: "iaf_psc_alpha", title: "IAF PSC alpha" },
 ];
 
 const admins = [
@@ -198,6 +199,10 @@ onMounted(update);
     .v-list-item__content {
       overflow: visible;
     }
+  }
+
+  .v-input__prepend, .v-input__append {
+    padding-top: 0 !important;
   }
 }
 </style>
