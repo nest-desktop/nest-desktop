@@ -1,9 +1,7 @@
 <template>
   <v-card
-    :style="{ borderLeftColor: state.color }"
-    class="card"
-    color="primary"
-    rounded="0"
+    :color="state.color"
+    class="card my-1"
     variant="outlined"
   >
     <slot />
@@ -11,8 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from "vue";
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 
 const props = defineProps(["color"]);
 
@@ -27,7 +24,13 @@ onMounted(() => {
 
 <style lang="scss">
 .card {
-  border-color: rgb(var(--v-theme-secondary));
+  // border-top-color: rgba(var(--v-theme-primary), 0.1)!important;
+  // border-bottom-color: rgba(var(--v-theme-primary), 0.1)!important;
+  // border-right-color: rgba(var(--v-theme-primary), 0.1)!important;
   border-left-width: 4px !important;
+
+  .v-card-text {
+    padding: 0
+  }
 }
 </style>

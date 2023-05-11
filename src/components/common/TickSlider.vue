@@ -14,19 +14,23 @@
     style="position: relative"
     v-model="tickIdx"
   >
+    <template #append>
+      <div class="unit">{{ state.unit }}</div>
+    </template>
   </v-slider>
 </template>
 
 <script lang="ts" setup>
 import { computed, reactive, onMounted, watch } from "vue";
 
-const props = defineProps(["modelValue", "ticks"]);
+const props = defineProps(["modelValue", "ticks", "unit"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
   tickIdx: 0,
   tickLabels: {},
   max: 0,
+  unit: "",
 });
 
 const tickIdx = computed({
@@ -56,6 +60,7 @@ const update = () => {
       state.tickIdx = index;
     }
   });
+  state.unit = props.unit || "";
 };
 
 const changes = () => {
@@ -72,6 +77,13 @@ onMounted(update);
   .mdi-plus {
     opacity: 0;
   }
+
+  .unit {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
   .v-slider__label {
     left: 0;
     pointer-events: none;
@@ -89,6 +101,10 @@ onMounted(update);
   .mdi-minus,
   .mdi-plus {
     opacity: 0.6;
+  }
+
+  .unit {
+    opacity: 0;
   }
 }
 </style>

@@ -15,8 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from "vue";
-import { reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 
 const props = defineProps(["colorScheme"]);
 
