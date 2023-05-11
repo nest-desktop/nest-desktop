@@ -19,6 +19,7 @@
         style="width: 80px"
         type="number"
         v-model="modelValue"
+        :suffix="state.unit"
         variant="underlined"
       />
     </template>
@@ -28,13 +29,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
 
-const props = defineProps(["id", "modelValue", "step"]);
+const props = defineProps(["id", "modelValue", "step", "unit"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
   id: "",
-  step: 1,
   modelValue: 0,
+  step: 1,
+  unit: ""
 });
 
 const modelValue = computed({
@@ -70,6 +72,7 @@ const update = () => {
   state.id = props.id || "";
   state.modelValue = props.modelValue || 0;
   state.step = props.step || 1;
+  state.unit = props.unit || "";
 };
 
 watch(() => [props.id, props.modelValue], update);

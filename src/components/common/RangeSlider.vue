@@ -13,6 +13,7 @@
         :step="state.step"
         density="compact"
         hide-details
+        :suffix="state.unit"
         style="width: 80px"
         type="number"
         v-model="lower"
@@ -25,6 +26,7 @@
         :step="state.step"
         density="compact"
         hide-details
+        :suffix="state.unit"
         style="width: 80px"
         type="number"
         v-model="upper"
@@ -37,13 +39,14 @@
 <script lang="ts" setup>
 import { computed, reactive, onMounted, watch } from "vue";
 
-const props = defineProps(["id", "modelValue", "step"]);
+const props = defineProps(["id", "modelValue", "step", "unit"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
   id: ["lower", "upper"],
-  step: 1,
   modelValue: [0, 100],
+  step: 1,
+  unit: "",
 });
 
 const modelValue = computed({
@@ -74,6 +77,7 @@ const update = () => {
   state.id = props.id || ["lower", "upper"];
   state.step = props.step || 1;
   state.modelValue = props.modelValue || [0, 100];
+  state.unit = props.unit || "";
 };
 
 watch(() => [props.modelValue], update);

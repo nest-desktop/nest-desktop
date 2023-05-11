@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <v-row no-gutters class="slider">
     <range-slider
       :color="state.color"
       :id="state.id"
@@ -7,6 +7,7 @@
       :max="state.max"
       :min="state.min"
       :step="state.step"
+      :unit="state.unit"
       v-if="state.variant === 'range'"
       v-model="modelValue"
     />
@@ -15,6 +16,7 @@
       :id="state.id"
       :label="state.label"
       :ticks="state.ticks"
+      :unit="state.unit"
       v-else-if="state.variant === 'ticks'"
       v-model="modelValue"
     />
@@ -25,6 +27,7 @@
       :max="state.max"
       :min="state.min"
       :step="state.step"
+      :unit="state.unit"
       v-else
       v-model="modelValue"
     />
@@ -32,7 +35,7 @@
     <v-menu :close-on-content-click="false" density="compact">
       <template v-slot:activator="{ props }">
         <v-btn
-          class="align-center justify-center my-auto"
+          class="menu align-center justify-center my-auto"
           icon="mdi-dots-vertical"
           size="small"
           v-bind="props"
@@ -62,8 +65,9 @@ const state = reactive({
   max: 100,
   min: 0,
   step: 1,
-  ticks: [0, 100],
   modelValue: 0,
+  ticks: [0, 100],
+  unit: "",
   variant: "value",
 });
 
@@ -115,9 +119,25 @@ const update = () => {
   state.step = props.options.step || 0;
   state.ticks = props.options.ticks || [1, 100];
   state.modelValue = props.modelValue || 0;
+  state.unit = props.options.unit || "";
   state.variant = props.options.variant || "value";
 };
 
 watch(() => [props.modelValue], update);
 onMounted(update);
 </script>
+
+<style lang="scss">
+.slider {
+  .menu {
+    opacity: 0
+  }
+}
+
+.slider:hover {
+  .menu {
+    opacity: 1
+  }
+}
+
+</style>

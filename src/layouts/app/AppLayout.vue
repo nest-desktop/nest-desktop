@@ -56,17 +56,17 @@ const items = [
   },
   {
     icon: "mdi-slide",
-    id: "playground",
-    title: "playground",
-    to: "/playground",
+    id: "sandbox",
+    title: "sandbox",
+    to: "/sandbox",
   },
-  {
-    icon: "mdi-cogs",
-    id: "settings",
-    text: "settings",
-    title: "settings",
-    to: "/settings",
-  },
+  // {
+  //   icon: "mdi-cogs",
+  //   id: "settings",
+  //   text: "settings",
+  //   title: "settings",
+  //   to: "/settings",
+  // },
   {
     href: "https://nest-desktop.readthedocs.io",
     icon: "mdi-help-circle-outline",

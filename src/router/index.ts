@@ -42,9 +42,9 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "playground",
-        name: "playground",
-        component: () => import("@/views/Playground.vue"),
+        path: "sandbox",
+        name: "sandbox",
+        component: () => import("@/views/Sandbox.vue"),
       },
       {
         path: "vuetify",
