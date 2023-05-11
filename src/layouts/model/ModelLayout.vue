@@ -89,7 +89,7 @@ const resizeSidebar = () => {
 
 const items = [
   { id: "defaults", icon: "mdi-format-list-numbered-rtl", title: "View defaults" },
-  { id: "model", icon: "mdi-pencil", title: "Edit model" },
+  { id: "model", icon: "mdi-tune-variant", title: "Edit model" },
   { id: "code", icon: "mdi-xml" },
 ];
 </script>

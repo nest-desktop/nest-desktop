@@ -11,7 +11,7 @@
       >
         <template #prepend>
           <v-btn :color="node.color" variant="text" icon size="small">
-            n1
+            {{ node.label }}
           </v-btn>
         </template>
 
@@ -85,16 +85,35 @@
           v-if="state.node.paramsVisible.includes('size')"
         />
 
-        <template :key="index" v-for="(param, index) in state.node.params">
-          <node-param
-            :color="state.node.color"
-            :options="param"
-            :model-value="param.value"
-            v-if="state.node.paramsVisible.includes(param.id)"
-          />
+        <template v-if="'params' in state.node && state.node.params.length > 0">
+          <template :key="index" v-for="(param, index) in state.node.params">
+            <node-param
+              :color="state.node.color"
+              :options="param"
+              :model-value="param.value"
+              v-if="state.node.paramsVisible.includes(param.id)"
+            />
+          </template>
         </template>
       </v-list>
     </v-card-text>
+
+    <v-card-actions
+      class="pa-0"
+      v-if="'connections' in node && node.connections.length > 0"
+      style="min-height: 40px"
+    >
+      <v-expansion-panels variant="accordion" multiple>
+        <node-connection
+          :connSpec="connection.connSpec"
+          :key="index"
+          :synSpec="connection.synSpec"
+          :targetNode="connection.post"
+          :sourceNode="node"
+          v-for="(connection, index) in node.connections"
+        />
+      </v-expansion-panels>
+    </v-card-actions>
   </card>
 </template>
 
@@ -104,6 +123,7 @@ import { onMounted, reactive, watch } from "vue";
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
 import NodeParam from "@/components/nest/NodeParam.vue";
+import NodeConnection from "@/components/nest/NodeConnection.vue";
 
 const props = defineProps(["node"]);
 
