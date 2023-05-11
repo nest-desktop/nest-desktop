@@ -60,7 +60,6 @@ const state = reactive({
 
 <style lang="scss">
 .list {
-  overflow: visible;
 
   .no-expand-transition .expand-transition-enter-active,
   .no-expand-transition .expand-transition-leave-active {
@@ -70,14 +69,6 @@ const state = reactive({
   .sublist {
     border-left: 2px solid rgb(var(--v-theme-primary), 0.6) !important;
     margin-inline-start: 28px !important;
-  }
-
-  // .v-list-item:nth-child(odd) {
-  //   background-color: rgba(var(--v-theme-primary), 0.2);
-  // }
-
-  v-list-item__content {
-    overflow: visible;
   }
 }
 </style>
