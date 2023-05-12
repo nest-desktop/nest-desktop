@@ -22,7 +22,6 @@ const props = defineProps({
 <style lang="scss">
 .neuron {
   .label {
-    color: white;
     font-weight: 900;
     font-size: 0.7em;
     z-index: 1;
