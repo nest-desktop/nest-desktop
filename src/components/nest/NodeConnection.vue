@@ -3,35 +3,19 @@
     <v-expansion-panel-title style="min-height: 52px; height: 52px">
       <v-row no-gutters>
         <div>
-          <v-btn
-            :color="state.sourceNode.color"
-            icon
-            size="small"
-            variant="tonal"
-          >
-            {{ state.sourceNode.label }}
+          <v-btn icon size="small">
+            <node-avatar v-bind="state.sourceNode" />
           </v-btn>
           <v-btn
-            color="blue"
-            icon="mdi-ray-start-arrow"
+            :color="state.synSpec.weight > 0 ? 'blue' : 'red'"
+            :icon="`nest:${
+              state.synSpec.weight > 0 ? 'excitatory' : 'inhibitory'
+            }-synapse`"
             size="small"
-            v-if="state.synSpec.weight > 0"
             variant="text"
           />
-          <v-btn
-            color="red"
-            icon="mdi-ray-end"
-            size="small"
-            v-else
-            variant="text"
-          />
-          <v-btn
-            :color="state.targetNode.color"
-            icon
-            size="small"
-            variant="tonal"
-          >
-            {{ state.targetNode.label }}
+          <v-btn icon size="small">
+          <node-avatar v-bind="state.targetNode" />
           </v-btn>
         </div>
         <v-spacer />
@@ -57,22 +41,23 @@
         <v-card-text>
           <v-list>
             <node-param
-              :model-value="state.connSpec.p"
+              :color="state.targetNode.color"
               :options="pOptions"
-              :color="state.targetNode.color"
               v-if="'p' in state.connSpec"
+              v-model="state.connSpec.p"
             />
             <node-param
-              :model-value="state.synSpec.weight"
+              :color="state.targetNode.color"
               :options="weightOptions"
-              :color="state.targetNode.color"
+              v-model="state.synSpec.weight"
             />
             <node-param
-              :model-value="state.synSpec.delay"
-              :options="delayOptions"
               :color="state.targetNode.color"
-            /> </v-list
-        ></v-card-text>
+              :options="delayOptions"
+              v-model="state.synSpec.delay"
+            />
+          </v-list>
+        </v-card-text>
       </v-card>
     </v-expansion-panel-text>
   </v-expansion-panel>
@@ -81,14 +66,14 @@
 <script lang="ts" setup>
 import { reactive, onMounted, watch } from "vue";
 
-import Slider from "@/components/common/Slider.vue";
+import NodeAvatar from "@/components/nest/avatar/NodeAvatar.vue";
 import NodeParam from "@/components/nest/NodeParam.vue";
 
 const props = defineProps(["sourceNode", "targetNode", "connSpec", "synSpec"]);
 
 const state = reactive({
-  sourceNode: { label: "", color: "" },
-  targetNode: { label: "", color: "" },
+  sourceNode: { label: "", color: "", type: "" },
+  targetNode: { label: "", color: "", type: "" },
   connSpec: { rule: "all_to_all" },
   synSpec: { model: "static_synapse", weight: 1, delay: 1 },
 });
@@ -137,6 +122,22 @@ onMounted(update);
 .node-connection {
   .v-expansion-panel-text__wrapper {
     padding: 0;
+  }
+
+  .icon-size-1x {
+    --v-icon-size-multiplier: 1;
+  }
+
+  .icon-size-1-8x {
+    --v-icon-size-multiplier: 1.8;
+  }
+
+  .icon-size-2x {
+    --v-icon-size-multiplier: 2;
+  }
+
+  .icon-size-3x {
+    --v-icon-size-multiplier: 3;
   }
 }
 </style>

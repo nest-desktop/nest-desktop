@@ -31,12 +31,12 @@ const navStore = useNavStore();
 const navItems = [
   {
     id: "project",
-    icon: "nest:networkIcon",
+    icon: "nest:network",
     title: "Project",
   },
   {
     id: "model",
-    icon: "nest:nestIcon",
+    icon: "nest:logo",
     title: "Model",
   },
 ];

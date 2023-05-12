@@ -20,7 +20,7 @@
     <sandbox-card id="card" />
     <sandbox-color-picker id="color-picker" />
     <sandbox-item-group id="item-group" />
-    <sandbox-node id="node" />
+    <sandbox-node-card id="node-card" />
     <sandbox-slider id="slider" />
     <sandbox-tabs id="tabs" />
   </v-container>
@@ -33,7 +33,7 @@ import SandboxButtonToggle from "@/components/sandbox/SandboxButtonToggle.vue";
 import SandboxCard from "@/components/sandbox/SandboxCard.vue";
 import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
-import SandboxNode from "@/components/sandbox/SandboxNode.vue";
+import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 
@@ -44,7 +44,7 @@ const components = [
   { title: "card" },
   { title: "color-picker" },
   { title: "item-group" },
-  { title: "node" },
+  { title: "node-card" },
   { title: "slider" },
   { title: "tabs" },
 ];

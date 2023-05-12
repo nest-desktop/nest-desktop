@@ -1,7 +1,7 @@
 <template>
   <v-slider
-    :max="state.max"
-    :ticks="state.tickLabels"
+    :max="max"
+    :ticks="state.ticks"
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi-plus"
@@ -15,7 +15,7 @@
     v-model="tickIdx"
   >
     <template #append>
-      <div class="unit">{{ state.unit }}</div>
+      <div class="unit">{{ props.unit }}</div>
     </template>
   </v-slider>
 </template>
@@ -23,52 +23,55 @@
 <script lang="ts" setup>
 import { computed, reactive, onMounted, watch } from "vue";
 
-const props = defineProps(["modelValue", "ticks", "unit"]);
+const props = defineProps({
+  modelValue: { default: 0, type: [Number, String] },
+  ticks: { default: [0, 100], type: [Array<Number>, Array<String>] },
+  unit: { default: "", type: String },
+});
 const emit = defineEmits(["update:modelValue"]);
 
 const state = reactive({
   tickIdx: 0,
-  tickLabels: {},
-  max: 0,
-  unit: "",
+  ticks: { 0: 0, 1: 100 },
 });
 
 const tickIdx = computed({
   get: () => state.tickIdx,
   set: (value: number) => {
     state.tickIdx = value;
-    changes();
+    emit("update:modelValue", state.ticks[state.tickIdx]);
   },
 });
 
+const max = computed(() => props.ticks.length - 1);
+
 const decrement = () => {
-  state.tickIdx = state.tickIdx - 1;
-  changes();
+  tickIdx.value -= 1;
 };
 
 const increment = () => {
-  state.tickIdx = state.tickIdx + 1;
-  changes();
+  tickIdx.value += 1;
+};
+
+const init = () => {
+  state.ticks = {};
+  props.ticks.forEach((value: any, index: number) => {
+    state.ticks[index] = value;
+  });
+  update();
 };
 
 const update = () => {
-  state.max = props.ticks.length - 1;
-  state.tickLabels = {};
+  state.tickIdx = 0;
   props.ticks.forEach((value: any, index: number) => {
-    state.tickLabels[index] = value;
     if (props.modelValue === value) {
       state.tickIdx = index;
     }
   });
-  state.unit = props.unit || "";
-};
-
-const changes = () => {
-  emit("update:modelValue", state.tickLabels[state.tickIdx]);
 };
 
 watch(() => [props.modelValue], update);
-onMounted(update);
+onMounted(init);
 </script>
 
 <style lang="scss">

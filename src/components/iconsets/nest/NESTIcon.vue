@@ -6,7 +6,7 @@
         style="
           fill-opacity: 1;
           fill-rule: nonzero;
-          fill: #ff6633; currentColor;
+          fill: #ff6633; /* currentColor; */
           stroke-width: 0.241823;
           stroke: none;
         "
