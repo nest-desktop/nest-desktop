@@ -30,6 +30,6 @@ const props = defineProps({
   label: { type: String, default: "" },
   type: { type: String, default: "" },
   size: { type: String, default: "40px" },
-  weight: {type: String, default: "excitatory"},
+  weight: {type: String, default: "default"},
 });
 </script>

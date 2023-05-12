@@ -145,7 +145,7 @@ const props = defineProps({
   paramsVisible: { default: [], required: false, type: Array<String> },
   size: { default: 1, required: false, type: Number },
   type: { type: String },
-  weight: { default: "excitatory", type: String}
+  weight: { default: "default", type: String}
 });
 
 const state = reactive({
@@ -157,7 +157,7 @@ const state = reactive({
   paramsVisible: [],
   size: 1,
   type: "",
-  weight: "excitatory"
+  weight: "default"
 });
 
 const nodeModels = [
