@@ -84,12 +84,22 @@ const state = reactive({
       ],
       connections: [
         {
-          targetNode: { label: "n1", color: "#FF7F0E", type: "neuron" },
+          targetNode: {
+            label: "n1",
+            color: "#FF7F0E",
+            type: "neuron",
+            weight: "excitatory",
+          },
           connSpec: { rule: "all_to_all" },
           synSpec: { model: "static_synapse", weight: 1, delay: 1 },
         },
         {
-          targetNode: { label: "n2", color: "#2CA02C", type: "neuron", weight: "inhibitory" },
+          targetNode: {
+            label: "n2",
+            color: "#2CA02C",
+            type: "neuron",
+            weight: "inhibitory",
+          },
           connSpec: { rule: "all_to_all" },
           synSpec: { model: "static_synapse", weight: 1, delay: 1 },
         },
@@ -131,12 +141,22 @@ const state = reactive({
       ],
       connections: [
         {
-          targetNode: { label: "n1", color: "#FF7F0E", type: "neuron" },
+          targetNode: {
+            label: "n1",
+            color: "#FF7F0E",
+            type: "neuron",
+            weight: "excitatory",
+          },
           connSpec: { rule: "pairwise_bernoulli", p: 0.1 },
           synSpec: { model: "static_synapse", weight: 1, delay: 1 },
         },
         {
-          targetNode: { label: "n2", color: "#2CA02C", type: "neuron", weight: "inhibitory" },
+          targetNode: {
+            label: "n2",
+            color: "#2CA02C",
+            type: "neuron",
+            weight: "inhibitory",
+          },
           connSpec: { rule: "pairwise_bernoulli", p: 0.1 },
           synSpec: { model: "static_synapse", weight: 1, delay: 1 },
         },
@@ -178,12 +198,22 @@ const state = reactive({
       ],
       connections: [
         {
-          targetNode: { label: "n1", color: "#FF7F0E", type: "neuron" },
+          targetNode: {
+            label: "n1",
+            color: "#FF7F0E",
+            type: "neuron",
+            weight: "excitatory",
+          },
           connSpec: { rule: "pairwise_bernoulli", p: 0.1 },
           synSpec: { model: "static_synapse", weight: -1, delay: 1 },
         },
         {
-          targetNode: { label: "n2", color: "#2CA02C", type: "neuron", weight: "inhibitory" },
+          targetNode: {
+            label: "n2",
+            color: "#2CA02C",
+            type: "neuron",
+            weight: "inhibitory",
+          },
           connSpec: { rule: "pairwise_bernoulli", p: 0.1 },
           synSpec: { model: "static_synapse", weight: -1, delay: 1 },
         },
@@ -194,14 +224,32 @@ const state = reactive({
       model: "voltmeter",
       type: "recorder",
       color: "#FF7F0E",
-      connections: [{ targetNode: { label: "n1", color: "#FF7F0E", type: "neuron" } }],
+      connections: [
+        {
+          targetNode: {
+            label: "n1",
+            color: "#FF7F0E",
+            type: "neuron",
+            weight: "excitatory",
+          },
+        },
+      ],
     },
     {
       label: "vm2",
       model: "voltmeter",
       type: "recorder",
       color: "#2CA02C",
-      connections: [{ targetNode: { label: "n2", color: "#2CA02C", type: "neuron", weight: "inhibitory" } }],
+      connections: [
+        {
+          targetNode: {
+            label: "n2",
+            color: "#2CA02C",
+            type: "neuron",
+            weight: "inhibitory",
+          },
+        },
+      ],
     },
   ],
 });

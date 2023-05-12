@@ -15,7 +15,7 @@
 const props = defineProps({
   color: { type: String, default: "primary" },
   label: { type: String, default: "" },
-  weight: { type: String, default: "excitatory" },
+  weight: { type: String, default: "default" },
 });
 </script>
 
