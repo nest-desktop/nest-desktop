@@ -8,9 +8,9 @@
           </v-btn>
           <v-btn
             :color="state.synSpec.weight > 0 ? 'blue' : 'red'"
-            :icon="`nest:${
+            :icon="`nest:synapse-${
               state.synSpec.weight > 0 ? 'excitatory' : 'inhibitory'
-            }-synapse`"
+            }`"
             size="small"
             variant="text"
           />
@@ -72,7 +72,7 @@ import NodeParam from "@/components/nest/NodeParam.vue";
 const props = defineProps(["sourceNode", "targetNode", "connSpec", "synSpec"]);
 
 const state = reactive({
-  sourceNode: { label: "", color: "", type: "" },
+  sourceNode: { label: "", color: "", type: "", weight: "" },
   targetNode: { label: "", color: "", type: "" },
   connSpec: { rule: "all_to_all" },
   synSpec: { model: "static_synapse", weight: 1, delay: 1 },
