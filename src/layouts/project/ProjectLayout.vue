@@ -99,7 +99,7 @@ const resizeSidebar = () => {
 };
 
 const items = [
-  { id: "network", icon: "nest:networkIcon", title: "Edit network" },
+  { id: "network", icon: "nest:network", title: "Edit network" },
   { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
   { id: "code", icon: "mdi-xml" },
   { id: "activity", icon: "mdi-border-style" },

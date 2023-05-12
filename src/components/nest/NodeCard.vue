@@ -1,17 +1,23 @@
 <template>
-  <card :color="state.node.color" class="node my-1" v-if="state.node">
+  <card :color="state.color" class="node my-1">
     <v-card-title class="mt-2">
       <v-select
         :items="nodeModels"
         hide-details
         label="Model"
         density="compact"
-        v-model="state.node.model"
+        v-model="state.model"
         variant="outlined"
       >
-        <template #prepend class="pt-0">
-          <v-btn :color="node.color" flat class="text-white" icon size="small">
-            {{ node.label }}
+        <template #prepend>
+          <v-btn flat icon size="small">
+            <node-avatar
+              v-bind="{
+                color: state.color,
+                label: state.label,
+                type: state.type,
+              }"
+            />
           </v-btn>
         </template>
 
@@ -29,32 +35,31 @@
             <v-card>
               <v-card-text>
                 <v-checkbox
-                  :color="state.node.color"
+                  :color="state.color"
                   density="compact"
                   hide-details
                   label="Population"
-                  v-model="state.node.paramsVisible"
+                  v-model="state.paramsVisible"
                   value="size"
                 >
-                  <template #append> n: {{ state.node.size }} </template>
+                  <template #append> n: {{ state.size }} </template>
                 </v-checkbox>
-                <template
-                  :key="index"
-                  v-for="(param, index) in state.node.params"
-                >
-                  <v-checkbox
-                    :color="state.node.color"
-                    :label="param.label"
-                    :value="param.id"
-                    density="compact"
-                    hide-details
-                    v-model="state.node.paramsVisible"
-                  >
-                    <template #append>
-                      {{ param.inputLabel || param.id }}: {{ param.value }}
-                      {{ param.unit }}
-                    </template>
-                  </v-checkbox>
+                <template v-if="state.params && state.params.length > 0">
+                  <template :key="index" v-for="(param, index) in state.params">
+                    <v-checkbox
+                      :color="state.color"
+                      :label="param.label"
+                      :value="param.id"
+                      density="compact"
+                      hide-details
+                      v-model="state.paramsVisible"
+                    >
+                      <template #append>
+                        {{ param.inputLabel || param.id }}: {{ param.value }}
+                        {{ param.unit }}
+                      </template>
+                    </v-checkbox>
+                  </template>
                 </template>
               </v-card-text>
             </v-card>
@@ -79,19 +84,19 @@
     <v-card-text class="pa-0">
       <v-list>
         <node-param
-          :color="state.node.color"
+          :color="state.color"
           :options="{ id: 'n', label: 'Population' }"
-          :model-value="state.node.size"
-          v-if="state.node.paramsVisible.includes('size')"
+          v-model="state.size"
+          v-if="state.paramsVisible.includes('size')"
         />
 
-        <template v-if="'params' in state.node && state.node.params.length > 0">
-          <template :key="index" v-for="(param, index) in state.node.params">
+        <template v-if="state.params && state.params.length > 0">
+          <template :key="index" v-for="(param, index) in state.params">
             <node-param
-              :color="state.node.color"
+              :color="state.color"
               :options="param"
-              :model-value="param.value"
-              v-if="state.node.paramsVisible.includes(param.id)"
+              v-model="param.value"
+              v-if="state.paramsVisible.includes(param.id)"
             />
           </template>
         </template>
@@ -100,17 +105,19 @@
 
     <v-card-actions
       class="pa-0"
-      v-if="'connections' in node && node.connections.length > 0"
+      v-if="state.connections && state.connections.length > 0"
       style="min-height: 40px"
     >
       <v-expansion-panels variant="accordion">
         <node-connection
-          :connSpec="connection.connSpec"
           :key="index"
-          :synSpec="connection.synSpec"
-          :targetNode="connection.post"
-          :sourceNode="node"
-          v-for="(connection, index) in node.connections"
+          :sourceNode="{
+            color: state.color,
+            label: state.label,
+            type: state.type,
+          }"
+          v-bind="connection"
+          v-for="(connection, index) in state.connections"
         />
       </v-expansion-panels>
     </v-card-actions>
@@ -118,17 +125,34 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from "vue";
+import { onMounted, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
-import NodeParam from "@/components/nest/NodeParam.vue";
+import NodeAvatar from "@/components/nest/avatar/NodeAvatar.vue";
 import NodeConnection from "@/components/nest/NodeConnection.vue";
+import NodeParam from "@/components/nest/NodeParam.vue";
 
-const props = defineProps(["node"]);
+const props = defineProps({
+  color: { default: "primary", required: false, type: String },
+  connections: { default: [], required: false, type: Array<Object> },
+  model: { type: String },
+  label: { default: "", required: false, type: String },
+  params: { default: [], required: false, type: Array<Object> },
+  paramsVisible: { default: [], required: false, type: Array<String> },
+  size: { default: 1, required: false, type: Number },
+  type: { type: String },
+});
 
 const state = reactive({
-  node: null,
+  color: "primary",
+  connections: [],
+  model: "",
+  label: "",
+  params: [],
+  paramsVisible: [],
+  size: 1,
+  type: "",
 });
 
 const nodeModels = [
@@ -184,10 +208,15 @@ const items = [
 ];
 
 const update = () => {
-  state.node = props.node;
+  state.color = props.color;
+  state.label = props.label;
+  state.params = props.params;
+  state.paramsVisible = props.paramsVisible;
+  state.connections = props.connections;
+  state.model = props.model;
+  state.type = props.type;
 };
 
-watch(() => props.node, update);
 onMounted(update);
 </script>
 
@@ -201,7 +230,8 @@ onMounted(update);
     }
   }
 
-  .v-input__prepend, .v-input__append {
+  .v-input__prepend,
+  .v-input__append {
     padding-top: 0 !important;
   }
 }

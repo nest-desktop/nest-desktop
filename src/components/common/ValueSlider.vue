@@ -1,6 +1,6 @@
 <template>
   <v-slider
-    :step="state.step"
+    :step="props.step"
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi-plus"
@@ -12,14 +12,14 @@
   >
     <template #append>
       <v-text-field
-        :label="state.inputLabel"
-        :step="state.step"
+        :label="props.inputLabel"
+        :step="props.step"
+        :suffix="props.unit"
         density="compact"
         hide-details
         style="width: 80px"
         type="number"
         v-model="modelValue"
-        :suffix="state.unit"
         variant="underlined"
       />
     </template>
@@ -27,56 +27,48 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
-const props = defineProps(["inputLabel", "modelValue", "step", "unit"]);
 const emit = defineEmits(["update:modelValue"]);
-
-const state = reactive({
-  inputLabel: "",
-  modelValue: 0,
-  step: 1,
-  unit: ""
+const props = defineProps({
+  inputLabel: { default: "", type: String },
+  modelValue: { default: 0, type: Number },
+  step: { default: 1, type: Number },
+  unit: { default: "", type: String },
 });
 
+const modelRef = ref(props.modelValue);
+
 const modelValue = computed({
-  get: () => state.modelValue,
-  set: (value: number | string) => {
-    state.modelValue = typeof value === "string" ? parseFloat(value) : value;
-    changes();
+  get: () => modelRef.value,
+  set: (value: Number | String) => {
+    const val = (
+      typeof value === "string" ? parseFloat(value) : value
+    ) as number;
+    modelRef.value = parseFloat(val.toFixed(numDecimals()));
+    emit("update:modelValue", modelRef.value);
   },
 });
 
 const numDecimals = () => {
-  const stepStr = state.step.toString();
+  const stepStr = props.step.toString();
   return stepStr.includes(".") ? stepStr.split(".")[1].length : 0;
 };
 
 const decrement = () => {
-  state.modelValue -= state.step;
-  state.modelValue = parseFloat(state.modelValue.toFixed(numDecimals()));
-  changes();
+  modelValue.value -= props.step;
 };
 
 const increment = () => {
-  state.modelValue += state.step;
-  state.modelValue = parseFloat(state.modelValue.toFixed(numDecimals()));
-  changes();
+  modelValue.value += props.step;
 };
 
-const changes = () => {
-  emit("update:modelValue", state.modelValue);
-};
-
-const update = () => {
-  state.inputLabel = props.inputLabel || "";
-  state.modelValue = props.modelValue || 0;
-  state.step = props.step || 1;
-  state.unit = props.unit || "";
-};
-
-watch(() => [props.id, props.modelValue], update);
-onMounted(update);
+watch(
+  () => props.modelValue,
+  () => {
+    modelRef.value = props.modelValue;
+  }
+);
 </script>
 
 <style lang="scss">
