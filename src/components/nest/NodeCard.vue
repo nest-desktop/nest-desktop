@@ -1,6 +1,6 @@
 <template>
   <card :color="state.color" class="node my-1">
-    <v-card-title class="mt-2">
+    <v-card-title class="mt-2 ml-10">
       <v-select
         :items="nodeModels"
         hide-details
@@ -10,12 +10,14 @@
         variant="outlined"
       >
         <template #prepend>
-          <v-btn flat icon size="small">
+          <v-btn class="position-absolute" flat icon size="large" style="left:8px; top:8px">
             <node-avatar
+              size="48px"
               v-bind="{
                 color: state.color,
                 label: state.label,
                 type: state.type,
+                weight: state.weight,
               }"
             />
           </v-btn>
@@ -115,6 +117,7 @@
             color: state.color,
             label: state.label,
             type: state.type,
+            weight: state.weight,
           }"
           v-bind="connection"
           v-for="(connection, index) in state.connections"
@@ -142,6 +145,7 @@ const props = defineProps({
   paramsVisible: { default: [], required: false, type: Array<String> },
   size: { default: 1, required: false, type: Number },
   type: { type: String },
+  weight: { default: "excitatory", type: String}
 });
 
 const state = reactive({
@@ -153,6 +157,7 @@ const state = reactive({
   paramsVisible: [],
   size: 1,
   type: "",
+  weight: "excitatory"
 });
 
 const nodeModels = [
@@ -215,6 +220,7 @@ const update = () => {
   state.connections = props.connections;
   state.model = props.model;
   state.type = props.type;
+  state.weight = props.weight;
 };
 
 onMounted(update);

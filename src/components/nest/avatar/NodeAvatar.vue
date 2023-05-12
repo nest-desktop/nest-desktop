@@ -15,6 +15,7 @@
     :color="props.color"
     :label="props.label"
     :size="props.size"
+    :weight="props.weight"
     v-else
   />
 </template>
@@ -29,5 +30,6 @@ const props = defineProps({
   label: { type: String, default: "" },
   type: { type: String, default: "" },
   size: { type: String, default: "40px" },
+  weight: {type: String, default: "excitatory"},
 });
 </script>

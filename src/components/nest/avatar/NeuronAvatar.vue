@@ -1,18 +1,22 @@
 <template>
   <v-avatar class="neuron" rounded="0">
-    <span class="label mt-2">
+    <span class="label" :class="{'mt-2': props.weight === 'excitatory'}">
       {{ props.label }}
     </span>
     <v-icon
       :color="props.color"
-      icon="nest:excitatory-neuron"
+      :icon="`nest:neuron-${props.weight}`"
       class="position-absolute icon-size"
     />
   </v-avatar>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(["color", "label"]);
+const props = defineProps({
+  color: { type: String, default: "primary" },
+  label: { type: String, default: "" },
+  weight: { type: String, default: "excitatory" },
+});
 </script>
 
 <style lang="scss">

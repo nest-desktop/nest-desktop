@@ -5,21 +5,21 @@ import { h } from "vue";
 import type { IconSet, IconProps } from "vuetify";
 
 import connectionIcon from "./connections/ConnectionIcon.vue";
-import excitatoryNeuronIcon from "./nodes/ExcitatoryNeuronIcon.vue"
-import excitatorySynapseIcon from "./connections/ExcitatorySynapseIcon.vue";
-import inhibitoryNeuronIcon from "./nodes/InhibitoryNeuronIcon.vue"
-import inhibitorySynapseIcon from "./connections/InhibitorySynapseIcon.vue";
 import nestIcon from "./NESTIcon.vue";
 import networkIcon from "./NetworkIcon.vue";
+import neuronExcitatoryIcon from "./nodes/NeuronExcitatoryIcon.vue"
+import neuronInhibitoryIcon from "./nodes/NeuronInhibitoryIcon.vue"
 import recorderIcon from "./nodes/RecorderIcon.vue";
 import stimulatorIcon from "./nodes/StimulatorIcon.vue";
+import synapseExcitatoryIcon from "./connections/SynapseExcitatoryIcon.vue";
+import synapseInhibitoryIcon from "./connections/SynapseInhibitoryIcon.vue";
 
 const customSvgNameToComponent: any = {
+  "neuron-excitatory": neuronExcitatoryIcon,
+  "neuron-inhibitory": neuronInhibitoryIcon,
+  "synapse-excitatory": synapseExcitatoryIcon,
+  "synapse-inhibitory": synapseInhibitoryIcon,
   connection: connectionIcon,
-  "excitatory-neuron": excitatoryNeuronIcon,
-  "excitatory-synapse": excitatorySynapseIcon,
-  "inhibitory-neuron": inhibitoryNeuronIcon,
-  "inhibitory-synapse": inhibitorySynapseIcon,
   logo: nestIcon,
   network: networkIcon,
   recorder: recorderIcon,
