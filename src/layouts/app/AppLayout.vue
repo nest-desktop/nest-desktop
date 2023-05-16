@@ -58,7 +58,7 @@ const items = [
     icon: "mdi-slide",
     id: "sandbox",
     title: "sandbox",
-    to: "/sandbox",
+    to: "/sandbox/",
   },
   // {
   //   icon: "mdi-cogs",

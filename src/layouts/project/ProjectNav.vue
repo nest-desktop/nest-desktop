@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="transparent" density="compact">
+  <v-toolbar class="project-nav" color="transparent" density="compact">
     <v-text-field
       class="mx-1"
       clearable
@@ -44,13 +44,43 @@
     </v-menu>
   </v-toolbar>
 
-  <v-list>
+  <v-list density="compact" lines="two" nav>
     <v-list-item
       :title="project.name"
+      :subtitle="project.id"
       :key="index"
       :to="'/project/' + project.id"
       v-for="(project, index) in projects"
-    />
+    >
+      <template #append>
+        <v-menu transition="slide-y-transition">
+          <template #activator="{ props }">
+            <v-btn
+              class="list-item-menu"
+              icon="mdi-dots-vertical"
+              size="x-small"
+              variant="text"
+              @click="(e) => e.preventDefault()"
+              v-bind="props"
+            />
+          </template>
+
+          <v-list density="compact">
+            <v-list-item
+              v-for="(item, index) in menuItems"
+              :key="index"
+              :value="index"
+            >
+              <template v-slot:prepend>
+                <v-icon :icon="item.icon"></v-icon>
+              </template>
+
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+    </v-list-item>
   </v-list>
 </template>
 

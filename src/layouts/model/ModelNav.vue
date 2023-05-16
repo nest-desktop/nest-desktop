@@ -33,14 +33,24 @@
     </v-menu>
   </v-toolbar>
 
-  <v-list>
+  <v-list density="compact" lines="two" nav>
     <v-list-item
       :title="model.label"
       :to="'/model/' + model.id"
       :subtitle="model.type"
       :key="index"
       v-for="(model, index) in models"
-    />
+    >
+      <template #append>
+        <v-btn
+          class="list-item-menu"
+          icon="mdi-dots-vertical"
+          size="x-small"
+          variant="text"
+          @click="(e) => e.preventDefault()"
+        />
+      </template>
+    </v-list-item>
   </v-list>
 </template>
 
