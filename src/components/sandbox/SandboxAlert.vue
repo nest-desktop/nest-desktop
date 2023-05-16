@@ -1,6 +1,6 @@
 <template>
   <v-card class="playground-alert">
-    <v-card-title> Alerts </v-card-title>
+    <v-card-title> Alert </v-card-title>
     <v-card-text>
       <v-alert class="my-1" color="success" icon="$success" variant="flat">
         The simulation was sucessfully finished.

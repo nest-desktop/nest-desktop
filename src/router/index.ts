@@ -42,9 +42,21 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "sandbox",
-        name: "sandbox",
-        component: () => import("@/views/Sandbox.vue"),
+        path: "sandbox/",
+        name: "sandboxParent",
+        children: [
+          {
+            path: "",
+            name: "Sandbox",
+            component: () => import("@/views/Sandbox.vue"),
+          },
+          {
+            path: ":tab",
+            name: "SandboxTab",
+            props: true,
+            component: () => import("@/views/Sandbox.vue"),
+          },
+        ],
       },
       {
         path: "vuetify",
@@ -53,11 +65,13 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "model/",
+        name: "modelParent",
         component: () => import("@/layouts/model/ModelLayout.vue"),
         children: modelRoutes as RouteRecordRaw[],
       },
       {
         path: "project/",
+        name: "projectParent",
         component: () => import("@/layouts/project/ProjectLayout.vue"),
         children: projectRoutes as RouteRecordRaw[],
       },

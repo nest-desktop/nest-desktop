@@ -1,32 +1,20 @@
 <template>
   <v-container class="sandbox">
     <v-navigation-drawer permanent>
-      <v-list density="compact">
-        <v-list-item
-          :key="index"
-          :to="'#' + component.title"
-          :active="false"
-          v-for="(component, index) in components"
-          v-scroll-to="'#' + component.title"
-        >
-          {{ component.title }}
-        </v-list-item>
-      </v-list>
+      <v-tabs direction="vertical">
+        <v-tab :key="tab" :to="`${tab}`" :value="tab" v-for="(_, tab) in tabs">
+          {{ tab }}
+        </v-tab>
+      </v-tabs>
     </v-navigation-drawer>
 
-    <sandbox-alert id="alert" />
-    <sandbox-button id="button" />
-    <sandbox-button-toggle id="button-toggle" />
-    <sandbox-card id="card" />
-    <sandbox-color-picker id="color-picker" />
-    <sandbox-item-group id="item-group" />
-    <sandbox-node-card id="node-card" />
-    <sandbox-slider id="slider" />
-    <sandbox-tabs id="tabs" />
+    <component :is="tabs[currentTab]" class="tab" />
   </v-container>
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from "vue";
+
 import SandboxAlert from "@/components/sandbox/SandboxAlert.vue";
 import SandboxButton from "@/components/sandbox/SandboxButton.vue";
 import SandboxButtonToggle from "@/components/sandbox/SandboxButtonToggle.vue";
@@ -37,17 +25,25 @@ import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 
-const components = [
-  { title: "alert", component: SandboxAlert },
-  { title: "button", component: SandboxButton },
-  { title: "button-toggle", component: SandboxButtonToggle },
-  { title: "card" },
-  { title: "color-picker" },
-  { title: "item-group" },
-  { title: "node-card" },
-  { title: "slider" },
-  { title: "tabs" },
-];
+const props = defineProps({
+  tab: {type: String, default: "alert"},
+});
+
+const currentTab = ref(props.tab);
+
+const tabs: any = {
+  alert: SandboxAlert,
+  button: SandboxButton,
+  buttonToggle: SandboxButtonToggle,
+  card: SandboxCard,
+  colorPicker: SandboxColorPicker,
+  itemGroup: SandboxItemGroup,
+  nodeCard: SandboxNodeCard,
+  slider: SandboxSlider,
+  tabs: SandboxTabs,
+};
+
+watch(() => props.tab, () => currentTab.value = props.tab)
 </script>
 
 <style lang="scss">
