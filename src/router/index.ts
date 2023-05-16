@@ -51,8 +51,8 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/views/Sandbox.vue"),
           },
           {
-            path: ":tab",
-            name: "SandboxTab",
+            path: ":component",
+            name: "SandboxComponent",
             props: true,
             component: () => import("@/views/Sandbox.vue"),
           },

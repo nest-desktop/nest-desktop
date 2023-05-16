@@ -1,14 +1,14 @@
 <template>
   <v-container class="sandbox">
     <v-navigation-drawer permanent>
-      <v-tabs direction="vertical">
-        <v-tab :key="tab" :to="`${tab}`" :value="tab" v-for="(_, tab) in tabs">
-          {{ tab }}
-        </v-tab>
-      </v-tabs>
+      <v-list nav density="compact">
+        <v-list-item :key="component" :to="`${component}`" :value="component" v-for="(_, component) in components">
+          {{ component }}
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
 
-    <component :is="tabs[currentTab]" class="tab" />
+    <component :is="components[currentComponent]" class="component" />
   </v-container>
 </template>
 
@@ -26,12 +26,12 @@ import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 
 const props = defineProps({
-  tab: {type: String, default: "alert"},
+  component: {type: String, default: "alert"},
 });
 
-const currentTab = ref(props.tab);
+const currentComponent = ref(props.component);
 
-const tabs: any = {
+const components: any = {
   alert: SandboxAlert,
   button: SandboxButton,
   buttonToggle: SandboxButtonToggle,
@@ -43,7 +43,7 @@ const tabs: any = {
   tabs: SandboxTabs,
 };
 
-watch(() => props.tab, () => currentTab.value = props.tab)
+watch(() => props.component, () => currentComponent.value = props.component)
 </script>
 
 <style lang="scss">
