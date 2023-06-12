@@ -2,13 +2,13 @@
 
 import { ModelCompartmentParameter } from "../../model/modelCompartmentParameter";
 import { Node } from "../node";
-import { nodeParamProps } from "../nodeParameter";
+import { NodeParamProps } from "../nodeParameter";
 import { NodeCompartmentParameter } from "./nodeCompartmentParameter";
 import { NodeReceptor } from "../nodeReceptor/nodeReceptor";
 
-export interface nodeCompartmentProps {
+export interface NodeCompartmentProps {
   parentIdx: number;
-  params?: nodeParamProps[];
+  params?: NodeParamProps[];
   label?: string;
 }
 
@@ -16,13 +16,13 @@ export class NodeCompartment {
   private readonly _name = "NodeCompartment";
 
   private _idx: number = 0; // generative
-  private _hash: string = '';
+  private _hash: string = "";
   private _label: string | undefined;
   private _node: Node; // parent
-  private _params: NodeCompartmentParameter[] = [];
+  private _params: { [key: string]: NodeCompartmentParameter } = {};
   private _parentIdx: number;
 
-  constructor(node: any, comp: nodeCompartmentProps = {}) {
+  constructor(node: any, comp: NodeCompartmentProps) {
     this._node = node;
     this._idx = this._node.compartments.length;
 
@@ -33,7 +33,7 @@ export class NodeCompartment {
   }
 
   get filteredParams(): NodeCompartmentParameter[] {
-    return this._params.filter(
+    return Object.values(this._params).filter(
       (param: NodeCompartmentParameter) => param.state.visible
     );
   }
@@ -43,7 +43,7 @@ export class NodeCompartment {
   }
 
   get hasSomeParams(): boolean {
-    return this._params.some(
+    return Object.values(this._params).some(
       (param: NodeCompartmentParameter) => param.state.visible
     );
   }
@@ -94,14 +94,12 @@ export class NodeCompartment {
     return this._node;
   }
 
-  get params(): NodeCompartmentParameter[] {
+  get params(): { [key: string]: NodeCompartmentParameter } {
     return this._params;
   }
 
-  set params(values: any[]) {
-    this._params = values.map(
-      (value) => new NodeCompartmentParameter(this, value)
-    );
+  set params(values: { [key: string]: NodeCompartmentParameter }) {
+    this._params = values;
   }
 
   get parent(): NodeCompartment {
@@ -150,6 +148,14 @@ export class NodeCompartment {
   }
 
   /**
+   * Add a parameter component.
+   * @param param - parameter object
+   */
+  addParameter(param: NodeParamProps): void {
+    this._params[param.id] = new NodeCompartmentParameter(this, param);
+  }
+
+  /**
    * Clean the node compartment.
    */
   clean(): void {
@@ -157,14 +163,33 @@ export class NodeCompartment {
   }
 
   /**
-   * Observer for node compartment changes.
-   *
-   * @remarks
-   * It emits node changes.
+   * Get the parameter component.
+   * @param paramId - parameter ID
+   * @return parameter component
    */
-  nodeChanges(): void {
-    this.clean();
-    this._node.nodeChanges();
+  getParameter(paramId: string): any {
+    if (this.hasParameter(paramId)) {
+      return this._params[paramId].value;
+    }
+  }
+
+  /**
+   * Check if the node compartment has a parameter component.
+   * @param paramId parameter ID
+   */
+  hasParameter(paramId: string): boolean {
+    return Object.keys(this._params).some(
+      (paramKey: string) => paramKey === paramId
+    );
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    Object.values(this._params).forEach(
+      (param: NodeCompartmentParameter) => (param.state.visible = false)
+    );
   }
 
   /**
@@ -173,7 +198,7 @@ export class NodeCompartment {
    */
   initParameters(comp: any = null): void {
     // Update parameters from model or node compartment
-    this._params = [];
+    this._params = {};
     const model = this._node.model;
     if (model) {
       Object.values(model.compartmentParams).forEach(
@@ -189,68 +214,19 @@ export class NodeCompartment {
         }
       );
     } else if ("params" in comp) {
-      comp.params.forEach((param: nodeParamProps) => this.addParameter(param));
+      comp.params.forEach((param: NodeParamProps) => this.addParameter(param));
     }
   }
 
   /**
-   * Add a parameter component.
-   * @param param - parameter object
-   */
-  addParameter(param: nodeParamProps): void {
-    this._params.push(new NodeCompartmentParameter(this, param));
-  }
-
-  /**
-   * Check if the node compartment has a parameter component.
-   * @param paramId parameter ID
-   */
-  hasParameter(paramId: string): boolean {
-    return this._params.some(
-      (param: NodeCompartmentParameter) => param.id === paramId
-    );
-  }
-
-  /**
-   * Get the parameter component.
-   * @param paramId - parameter ID
-   * @return parameter component
-   */
-  getParameter(paramId: string): any {
-    if (this.hasParameter(paramId)) {
-      return this._params.find(
-        (param: NodeCompartmentParameter) => param.id === paramId
-      ).value;
-    }
-  }
-
-  /**
-   * Reset the value in parameter components.
+   * Observer for node compartment changes.
    *
    * @remarks
-   * It emits node compartment changes.
+   * It emits node changes.
    */
-  resetParameters(): void {
-    this._params.forEach((param: NodeCompartmentParameter) => param.reset());
-    this.nodeChanges();
-  }
-
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    this.params.map(
-      (param: NodeCompartmentParameter) => (param.state.visible = false)
-    );
-  }
-
-  /**
-   * Sets all params to visible.
-   */
-  showAllParams(): void {
-    this.params.map(
-      (param: NodeCompartmentParameter) => (param.state.visible = true)
-    );
+  nodeChanges(): void {
+    this.clean();
+    this._node.nodeChanges();
   }
 
   /**
@@ -266,14 +242,36 @@ export class NodeCompartment {
   }
 
   /**
+   * Reset the value in parameter components.
+   *
+   * @remarks
+   * It emits node compartment changes.
+   */
+  resetParameters(): void {
+    Object.values(this._params).forEach((param: NodeCompartmentParameter) =>
+      param.reset()
+    );
+    this.nodeChanges();
+  }
+
+  /**
+   * Sets all params to visible.
+   */
+  showAllParams(): void {
+    Object.values(this._params).forEach(
+      (param: NodeCompartmentParameter) => (param.state.visible = true)
+    );
+  }
+
+  /**
    * Serialize for JSON.
    * @return node object
    */
-  toJSON(): nodeCompartmentProps {
-    const comp: nodeCompartmentProps = {
+  toJSON(): NodeCompartmentProps {
+    const comp: NodeCompartmentProps = {
       parentIdx: this._parentIdx,
-      params: this._params.map((param: NodeCompartmentParameter) =>
-        param.toJSON()
+      params: Object.values(this._params).map(
+        (param: NodeCompartmentParameter) => param.toJSON()
       ),
     };
 

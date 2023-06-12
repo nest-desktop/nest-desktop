@@ -11,7 +11,7 @@ import { Connections } from "../connection/connections";
 import { Network } from "../network/network";
 import { CopyModels } from "../model/copyModels";
 
-export interface nodeViewProps {
+export interface NodeViewProps {
   position: { [key: string]: number };
   color?: string;
   visible?: boolean;
@@ -32,7 +32,7 @@ export class NodeView {
 
   constructor(
     node: Node,
-    view: nodeViewProps = {
+    view: NodeViewProps = {
       position: { x: 0, y: 0 },
       visible: true,
     }
@@ -235,8 +235,8 @@ export class NodeView {
    * Serialize for JSON.
    * @return node view object
    */
-  toJSON(): nodeViewProps {
-    const nodeView: nodeViewProps = {
+  toJSON(): NodeViewProps {
+    const nodeView: NodeViewProps = {
       position: this._state.position,
     };
 

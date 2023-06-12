@@ -8,11 +8,11 @@ import { download } from "@/helpers/download";
 
 import { Simulation } from "./simulation";
 
-export interface simulationCodeProps {
+export interface SimulationCodeProps {
   blocks?: string[];
 }
 
-interface simulationCodeState {
+interface SimulationCodeState {
   codeInsite: boolean;
   blocks: string[];
   version: string;
@@ -32,11 +32,11 @@ const simulationCodeBlocks: string[] = [
 
 export class SimulationCode {
   private _simulation: Simulation; // parent
-  private _state: UnwrapRef<simulationCodeState>;
+  private _state: UnwrapRef<SimulationCodeState>;
 
   constructor(
     simulation: Simulation,
-    simulationCode: simulationCodeProps = {}
+    simulationCode: SimulationCodeProps = {}
   ) {
     this._simulation = simulation;
     this._state = reactive({
@@ -110,7 +110,7 @@ export class SimulationCode {
     return this._simulation;
   }
 
-  get state(): UnwrapRef<simulationCodeState> {
+  get state(): UnwrapRef<SimulationCodeState> {
     return this._state;
   }
 
@@ -126,23 +126,6 @@ export class SimulationCode {
       this._state.blocks = this._state.blocks.filter(
         (item: String) => item !== "runSimulationInsite"
       );
-    }
-  }
-
-  /**
-   * Renders the script and generates the hash.
-   */
-  generate(): void {
-    // console.log("Generate simulation code");
-    if (this._state.template) {
-      setTimeout(() => {
-        this.script = Mustache.render(
-          this._state.template || "",
-          this._simulation.project
-        );
-      });
-    } else {
-      this.loadTemplate().then(() => this.generate());
     }
   }
 
@@ -195,6 +178,23 @@ export class SimulationCode {
   }
 
   /**
+   * Renders the script and generates the hash.
+   */
+  generate(): void {
+    // console.log("Generate simulation code");
+    if (this._state.template) {
+      setTimeout(() => {
+        this.script = Mustache.render(
+          this._state.template || "",
+          this._simulation.project
+        );
+      });
+    } else {
+      this.loadTemplate().then(() => this.generate());
+    }
+  }
+
+  /**
    * Load template from json.
    * @return promise
    */
@@ -210,7 +210,7 @@ export class SimulationCode {
    * Serialize for JSON.
    * @return simulation code object
    */
-  toJSON(): simulationCodeProps {
+  toJSON(): SimulationCodeProps {
     return { blocks: this._state.blocks };
   }
 }

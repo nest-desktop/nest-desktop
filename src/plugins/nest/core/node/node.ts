@@ -2,7 +2,7 @@
 
 import { Config } from "@/helpers/config";
 
-import { Activity } from "../activity/activity";
+import { Activity, ActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { Connection } from "../connection/connection";
 import { CopyModel } from "../model/copyModel";
@@ -11,29 +11,29 @@ import { ModelParameter } from "../model/modelParameter";
 import { Network } from "../network/network";
 import {
   NodeCompartment,
-  nodeCompartmentProps,
+  NodeCompartmentProps,
 } from "./nodeCompartment/nodeCompartment";
-import { NodeParameter, nodeParamProps } from "./nodeParameter";
-import { NodeReceptor, nodeReceptorProps } from "./nodeReceptor/nodeReceptor";
-import { NodeRecord, recordProps } from "./nodeRecord";
-import { NodeSpatial, nodeSpatialProps } from "./nodeSpatial/nodeSpatial";
+import { NodeParameter, NodeParamProps } from "./nodeParameter";
+import { NodeReceptor, NodeReceptorProps } from "./nodeReceptor/nodeReceptor";
+import { NodeRecord, RecordProps } from "./nodeRecord";
+import { NodeSpatial, NodeSpatialProps } from "./nodeSpatial/nodeSpatial";
 import { NodeState } from "./nodeState";
-import { NodeView, nodeViewProps } from "./nodeView";
+import { NodeView, NodeViewProps } from "./nodeView";
 import { Nodes } from "./nodes";
 import { Parameter } from "../parameter";
 import { SpikeActivity } from "../activity/spikeActivity";
 
-export interface nodeProps {
+export interface NodeProps {
   model?: string;
   size?: number;
-  params?: nodeParamProps[];
-  view?: nodeViewProps;
+  params?: NodeParamProps[];
+  view?: NodeViewProps;
   annotations?: string[];
-  spatial?: nodeSpatialProps;
-  records?: recordProps[];
-  receptors?: nodeReceptorProps[];
-  compartments?: nodeCompartmentProps[];
-  activity?: any;
+  spatial?: NodeSpatialProps;
+  records?: RecordProps[];
+  receptors?: NodeReceptorProps[];
+  compartments?: NodeCompartmentProps[];
+  activity?: ActivityProps;
 }
 
 export class Node extends Config {
@@ -42,7 +42,7 @@ export class Node extends Config {
   private _activity: SpikeActivity | AnalogSignalActivity | Activity = new Activity(this);
   private _annotations: string[] = [];
   private _compartments: NodeCompartment[] = [];
-  private _doc: nodeProps;
+  private _doc: NodeProps;
   private _idx: number; // generative
   private _modelId: string;
   private _nodes: Nodes; // parent
@@ -57,7 +57,7 @@ export class Node extends Config {
   private _state: NodeState;
   private _view: NodeView;
 
-  constructor(nodes: Nodes, node: nodeProps = {}) {
+  constructor(nodes: Nodes, node: NodeProps = {}) {
     super("Node");
 
     this._nodes = nodes;
@@ -497,7 +497,7 @@ export class Node extends Config {
    * Initialize parameter components.
    * @param node - node object
    */
-  initParameters(node?: nodeProps): void {
+  initParameters(node?: NodeProps): void {
     // console.log("Update parameters from model or node", node);
     this._paramsVisible = [];
     this._params = {};
@@ -544,7 +544,7 @@ export class Node extends Config {
   /**
    * Check if node has params.
    */
-  hasParameters(node: nodeProps): boolean {
+  hasParameters(node: NodeProps): boolean {
     return "params" in node;
   }
 
@@ -717,8 +717,8 @@ export class Node extends Config {
    * Serialize for JSON.
    * @return node object
    */
-  toJSON(): nodeProps {
-    const node: nodeProps = {
+  toJSON(): NodeProps {
+    const node: NodeProps = {
       model: this._modelId,
       view: this._view.toJSON(),
     };

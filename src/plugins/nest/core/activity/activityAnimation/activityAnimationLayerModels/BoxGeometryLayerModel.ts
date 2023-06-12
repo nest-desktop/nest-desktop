@@ -29,7 +29,10 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);
       mesh.layers.set(this.layer.activity.idx + 1);
-      this.graphGroup.add(mesh);
+
+      if (this.graphGroup) {
+        this.graphGroup.add(mesh);
+      }
     });
   }
 

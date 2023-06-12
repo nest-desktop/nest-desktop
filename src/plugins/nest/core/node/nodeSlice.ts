@@ -2,7 +2,7 @@
 
 import { Config } from "@/helpers/config";
 import { Node } from "../node/node";
-import { Parameter, parameterProps } from "../parameter";
+import { Parameter, ParameterProps } from "../parameter";
 
 export class NodeSlice extends Config {
   private readonly _name = "NodeSlice";
@@ -10,50 +10,11 @@ export class NodeSlice extends Config {
   private _params: { [key: string]: Parameter } = {};
   private _visible: boolean = false;
 
-  constructor(node: Node, params: parameterProps[] = []) {
+  constructor(node: Node, params: ParameterProps[] = []) {
     super("NodeSlice");
     this._node = node;
     this.initParameters(params);
     this._visible = params.length > 0;
-  }
-
-  get node(): Node {
-    return this._node;
-  }
-
-  get visible(): boolean {
-    return this._visible;
-  }
-
-  get name(): string {
-    return this._name;
-  }
-
-  get params(): { [key: string]: Parameter } {
-    return this._params;
-  }
-
-  toggleVisible(): void {
-    this._visible = !this._visible;
-  }
-
-  /**
-   * Initialize parameters.
-   */
-  initParameters(params: parameterProps[] = []): void {
-    this._params = {};
-    this.config.params.forEach((param: parameterProps) => {
-      if (params.length > 0) {
-        const p: parameterProps | undefined = params.find(
-          (p: parameterProps) => p.id === param.id
-        );
-        if (p) {
-          param.value = p.value;
-          param.disabled = false;
-        }
-      }
-      this._params[param.id] = new Parameter(this, param);
-    });
   }
 
   /**
@@ -83,20 +44,50 @@ export class NodeSlice extends Config {
     return `[${indices.join(":")}]`;
   }
 
+  get node(): Node {
+    return this._node;
+  }
+
+  get visible(): boolean {
+    return this._visible;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get params(): { [key: string]: Parameter } {
+    return this._params;
+  }
+
   /**
-   * Update node slice.
+   * Initialize parameters.
    */
-  update(): void {
-    if (this._params.stop.disabled) {
-      this._params.stop.value = this._node.size;
-    }
+  initParameters(params: ParameterProps[] = []): void {
+    this._params = {};
+    this.config.params.forEach((param: ParameterProps) => {
+      if (params.length > 0) {
+        const p: ParameterProps | undefined = params.find(
+          (p: ParameterProps) => p.id === param.id
+        );
+        if (p) {
+          param.value = p.value;
+          param.disabled = false;
+        }
+      }
+      this._params[param.id] = new Parameter(this, param);
+    });
+  }
+
+  toggleVisible(): void {
+    this._visible = !this._visible;
   }
 
   /**
    * Serialize for JSON.
    * @return node slice object
    */
-  toJSON(): parameterProps[] {
+  toJSON(): ParameterProps[] {
     return Object.values(this._params)
       .filter((param: Parameter) => !param.disabled)
       .map((param: Parameter) => {
@@ -105,5 +96,14 @@ export class NodeSlice extends Config {
           value: param.value,
         };
       });
+  }
+
+  /**
+   * Update node slice.
+   */
+  update(): void {
+    if (this._params.stop.disabled) {
+      this._params.stop.value = this._node.size;
+    }
   }
 }

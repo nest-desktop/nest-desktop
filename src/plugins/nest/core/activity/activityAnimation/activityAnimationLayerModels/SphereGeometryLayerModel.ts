@@ -1,7 +1,7 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { ActivityAnimationLayer } from '../activityAnimationLayer';
-import { ActivityAnimationLayerModel } from '../activityAnimationLayerModel';
+import { ActivityAnimationLayer } from "../activityAnimationLayer";
+import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
 
 export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {
@@ -27,7 +27,9 @@ export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
       mesh.scale.set(scale, scale, scale);
       mesh.layers.set(this.layer.activity.idx + 1);
 
-      this.graphGroup.add(mesh);
+      if (this.graphGroup) {
+        this.graphGroup.add(mesh);
+      }
     });
   }
 }

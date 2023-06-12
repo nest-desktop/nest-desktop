@@ -1,3 +1,5 @@
+// FICurvePlotModel.ts
+
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
 import { SpikeTimesPanelModel } from './spikeTimesPanelModel';

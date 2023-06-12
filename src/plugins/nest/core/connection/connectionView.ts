@@ -1,13 +1,26 @@
-import { Connection } from './connection';
+// connectionView.ts
+
+import { Connection } from "./connection";
 
 export class ConnectionView {
-  private _colorExcitation = '#595289'; // '#467ab3';
-  private _colorInhibition = '#AF143C'; // '#b34846';
+  private _colorExcitation = "#595289"; // '#467ab3';
+  private _colorInhibition = "#AF143C"; // '#b34846';
   private _connection: Connection; // parent
   private _visible: boolean = true;
 
   constructor(connection: Connection) {
     this._connection = connection;
+  }
+
+  /**
+   * Get connection color based on synapse weight.
+   */
+  get colorWeight(): string {
+    const value: number = this._connection.synapse.weight;
+    if (value === 0) {
+      return "black";
+    }
+    return value > 0 ? this._colorExcitation : this._colorInhibition;
   }
 
   get position(): any {
@@ -45,14 +58,30 @@ export class ConnectionView {
   }
 
   /**
-   * Get connection color based on synapse weight.
+   * Check if it is connected by neurons only.
    */
-  get colorWeight(): string {
-    const value: number = this._connection.synapse.weight;
-    if (value === 0) {
-      return 'black';
-    }
-    return value > 0 ? this._colorExcitation : this._colorInhibition;
+  connectOnlyNeurons(): boolean {
+    return (
+      this._connection.source.model.isNeuron &&
+      this._connection.target.model.isNeuron
+    );
+  }
+
+  /**
+   * Check if it is connected to any recorder.
+   */
+  connectRecorder(): boolean {
+    return (
+      this._connection.source.model.isRecorder ||
+      this._connection.target.model.isRecorder
+    );
+  }
+
+  /**
+   * Check if it is connected to spike recorder.
+   */
+  connectSpikeRecorder(): boolean {
+    return this._connection.target.model.isSpikeRecorder;
   }
 
   /**
@@ -77,7 +106,7 @@ export class ConnectionView {
    * Check if the connection is probabilistic.
    */
   probabilistic(): boolean {
-    return !['all_to_all', 'one_to_one'].includes(this._connection.rule.value);
+    return !["all_to_all", "one_to_one"].includes(this._connection.rule.value);
   }
 
   /**
@@ -85,38 +114,11 @@ export class ConnectionView {
    */
   markerEnd(): string {
     if (this._connection.synapse.weight > 0 && !this.connectRecorder()) {
-      return 'url(#exc' + this._connection.idx + ')';
+      return "url(#exc" + this._connection.idx + ")";
     } else if (this._connection.synapse.weight < 0 && !this.connectRecorder()) {
-      return 'url(#inh' + this._connection.idx + ')';
+      return "url(#inh" + this._connection.idx + ")";
     } else {
-      return 'url(#generic' + this._connection.idx + ')';
+      return "url(#generic" + this._connection.idx + ")";
     }
-  }
-
-  /**
-   * Check if it is connected to any recorder.
-   */
-  connectRecorder(): boolean {
-    return (
-      this._connection.source.model.isRecorder ||
-      this._connection.target.model.isRecorder
-    );
-  }
-
-  /**
-   * Check if it is connected by neurons only.
-   */
-  connectOnlyNeurons(): boolean {
-    return (
-      this._connection.source.model.isNeuron &&
-      this._connection.target.model.isNeuron
-    );
-  }
-
-  /**
-   * Check if it is connected to spike recorder.
-   */
-  connectSpikeRecorder(): boolean {
-    return this._connection.target.model.isSpikeRecorder;
   }
 }

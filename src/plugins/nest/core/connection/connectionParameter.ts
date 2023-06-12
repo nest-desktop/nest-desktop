@@ -21,14 +21,14 @@ export class ConnectionParameter extends Parameter {
     return this.parent as Connection;
   }
 
-  PyNNParamId(): string {
-    return PyNNParamIds[this.id];
-  }
-
   /**
    * Trigger changes when parameter is changed.
    */
   override paramChanges(): void {
     this.connection.connectionChanges();
+  }
+
+  PyNNParamId(): string {
+    return PyNNParamIds[this.id];
   }
 }

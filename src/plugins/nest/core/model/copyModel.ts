@@ -1,9 +1,11 @@
 // copyModel.ts
 
+import { reactive, UnwrapRef } from "vue";
+
 import { Connection } from "../connection/connection";
 import { Model } from "../model/model";
 import { ModelCompartmentParameter } from "./modelCompartmentParameter";
-import { ModelParameter, modelParameterProps } from "./modelParameter";
+import { ModelParameter, ModelParameterProps } from "./modelParameter";
 import { ModelReceptor } from "./modelReceptor/modelReceptor";
 import { Network } from "../network/network";
 import { Node } from "../node/node";
@@ -12,7 +14,11 @@ import { Parameter } from "../parameter";
 export interface CopyModelProps {
   existing: string;
   new: string;
-  params?: modelParameterProps[];
+  params?: ModelParameterProps[];
+}
+
+interface CopyModelState {
+  visible: boolean;
 }
 
 export class CopyModel {
@@ -23,9 +29,7 @@ export class CopyModel {
   private _network: Network;
   private _newModelId: string;
   private _params: { [key: string]: ModelParameter } = {};
-  private _state: {
-    visible: boolean;
-  };
+  private _state: UnwrapRef<CopyModelState>;
 
   constructor(
     network: Network,
@@ -36,9 +40,9 @@ export class CopyModel {
     this._newModelId = model.new;
 
     this._idx = this.network.models.length;
-    this._state = {
+    this._state = reactive({
       visible: true,
-    };
+    });
 
     this.initParameters(model);
   }
@@ -237,11 +241,11 @@ export class CopyModel {
     return this.model.recordables;
   }
 
-  get state(): any {
+  get state(): UnwrapRef<CopyModelState> {
     return this._state;
   }
 
-  get weightRecorder(): Node {
+  get weightRecorder(): Node | undefined {
     if (!this.hasWeightRecorderParam) {
       return new Node(this._network.nodes);
     }

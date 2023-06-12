@@ -1,26 +1,25 @@
 // synapseParameters.ts
 
-import { ModelParameter } from '../model/modelParameter';
-import { Parameter } from '../parameter';
-import { Synapse } from './synapse';
+import { ModelParameter } from "../model/modelParameter";
+import { Parameter, ParameterProps } from "../parameter";
+import { Synapse } from "./synapse";
+
+export interface SynapseParameterProps extends ParameterProps {}
 
 export class SynapseParameter extends Parameter {
-  constructor(synapse: Synapse, param: any) {
+  constructor(synapse: Synapse, param: SynapseParameterProps) {
     super(synapse, param);
+  }
+
+  /**
+   * Get model parameter.
+   */
+  override get modelParam(): ModelParameter {
+    return this.synapse.model.params[this.id];
   }
 
   get synapse(): Synapse {
     return this.parent as Synapse;
-  }
-
-  /**
-   * Get the options from the model component.
-   */
-  override get options(): ModelParameter | undefined {
-    const param: ModelParameter | undefined = this.synapse.model
-      ? this.synapse.model.params[this.id]
-      : undefined;
-    return param;
   }
 
   /**

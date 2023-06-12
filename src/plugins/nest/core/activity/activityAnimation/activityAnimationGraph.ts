@@ -1,9 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { Activity } from '../activity';
-import { ActivityAnimationLayer } from './activityAnimationLayer';
-import { ActivityAnimationScene } from './activityAnimationScene';
-import { Project } from '../../project/project';
+import { Activity } from "../activity";
+import { ActivityAnimationLayer } from "./activityAnimationLayer";
+import { ActivityAnimationScene } from "./activityAnimationScene";
+import { Project } from "../../project/project";
 
 export class ActivityAnimationGraph {
   private _config: any = {
@@ -20,7 +20,7 @@ export class ActivityAnimationGraph {
 
   private _layers: ActivityAnimationLayer[] = [];
   private _project: Project;
-  private _scene: ActivityAnimationScene;
+  private _scene?: ActivityAnimationScene;
   private _state: any = {
     frameIdx: 0,
     nSamples: 0,
@@ -43,7 +43,7 @@ export class ActivityAnimationGraph {
     return this._project;
   }
 
-  get scene(): ActivityAnimationScene {
+  get scene(): ActivityAnimationScene | undefined {
     return this._scene;
   }
 
@@ -92,7 +92,9 @@ export class ActivityAnimationGraph {
    */
   addLayersToGroup(group: THREE.Group): void {
     this._layers.forEach((layer: ActivityAnimationLayer) => {
-      group.add(layer.graphGroup);
+      if (layer.graphGroup) {
+        group.add(layer.graphGroup);
+      }
     });
   }
 
@@ -197,14 +199,18 @@ export class ActivityAnimationGraph {
    * Update animation scene.
    */
   updateScene(): void {
-    if (this._scene) {
-      this._scene.update();
-
-      // Enable camera for all layers.
-      this._layers.forEach((layer: ActivityAnimationLayer) =>
-        this._scene.camera.layers.enable(layer.activity.idx + 1)
-      );
+    if (this._scene == undefined) {
+      return;
     }
+
+    this._scene.update();
+
+    // Enable camera for all layers.
+    this._layers.forEach((layer: ActivityAnimationLayer) => {
+      if (this._scene) {
+        this._scene.camera.layers.enable(layer.activity.idx + 1);
+      }
+    });
   }
 
   /**

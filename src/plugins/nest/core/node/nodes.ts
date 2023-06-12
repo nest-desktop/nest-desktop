@@ -3,7 +3,7 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { Node, nodeProps } from "./node";
+import { Node, NodeProps } from "./node";
 import { Network } from "../network/network";
 
 interface NodesState {
@@ -18,7 +18,7 @@ export class Nodes {
   private _nodes: Node[] = [];
   private _state: UnwrapRef<NodesState>; //reactive state
 
-  constructor(network: Network, nodes?: nodeProps[]) {
+  constructor(network: Network, nodes?: NodeProps[]) {
     this._network = network;
 
     this._state = reactive({
@@ -107,6 +107,27 @@ export class Nodes {
     return this._nodes.filter((node: Node) => node.model.isStimulator);
   }
 
+
+  /**
+   * Get user dict from node annotations.
+   */
+  get userDict(): { [key: string]: string[] } {
+    const userDict: { [key: string]: string[] } = {};
+    this._nodes
+      .filter((node: Node) => node.annotations.length > 0)
+      .forEach((node: Node) => {
+        const nodeLabel = node.view.label;
+        node.annotations.forEach((annotation: string) => {
+          if (annotation in userDict) {
+            userDict[annotation].push(nodeLabel);
+          } else {
+            userDict[annotation] = [nodeLabel];
+          }
+        });
+      });
+    return userDict;
+  }
+
   /**
    * Get visible nodes.
    */
@@ -126,7 +147,7 @@ export class Nodes {
    *
    * @param data node props
    */
-  add(data: nodeProps): Node {
+  add(data: NodeProps): Node {
     // console.log("Add node");
     const node = new Node(this, data);
     this._nodes.push(node);
@@ -167,7 +188,7 @@ export class Nodes {
   /**
    * Initialize nodes.
    */
-  init(nodes?: nodeProps[]): void {
+  init(nodes?: NodeProps[]): void {
     this.empty();
 
     if (nodes) {
@@ -200,7 +221,7 @@ export class Nodes {
    * Serialize for JSON.
    * @return network object
    */
-  toJSON(): nodeProps[] {
+  toJSON(): NodeProps[] {
     return this._nodes.map((node: Node) => node.toJSON());
   }
 
@@ -209,9 +230,9 @@ export class Nodes {
    *
    * @param network - network object
    */
-  update(nodes?: nodeProps[]): void {
+  update(nodes?: NodeProps[]): void {
     if (nodes) {
-      nodes.forEach((data: nodeProps) => this.add(data));
+      nodes.forEach((data: NodeProps) => this.add(data));
     }
     this.clean();
   }
@@ -281,26 +302,9 @@ export class Nodes {
     this.recorders.forEach((recorder: Node) => {
       recorder.updateRecordsColor();
     });
-    this._network.project.activityGraph.activityChartGraph.updateRecordsColor();
-  }
 
-  /**
-   * Get user dict from node annotations.
-   */
-  get userDict(): { [key: string]: string[] } {
-    const userDict: { [key: string]: string[] } = {};
-    this._nodes
-      .filter((node: Node) => node.annotations.length > 0)
-      .forEach((node: Node) => {
-        const nodeLabel = node.view.label;
-        node.annotations.forEach((annotation: string) => {
-          if (annotation in userDict) {
-            userDict[annotation].push(nodeLabel);
-          } else {
-            userDict[annotation] = [nodeLabel];
-          }
-        });
-      });
-    return userDict;
+    if (this._network.project.activityGraph.activityChartGraph) {
+      this._network.project.activityGraph.activityChartGraph.updateRecordsColor();
+    }
   }
 }

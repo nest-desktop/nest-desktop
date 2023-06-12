@@ -1,45 +1,49 @@
-import { darkMode } from '@/helpers/theme';
+//senderMeanISIPlotModel.ts
 
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { darkMode } from "@/helpers/theme";
+
+import { ActivityChartPanel } from "../activityChartPanel";
+import { SpikeActivity } from "../../spikeActivity";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'senderMeanISIPlot';
-    this.label = 'mean ISI in each sender';
+    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.id = "senderMeanISIPlot";
+    this.label = "mean ISI in each sender";
     this.panel.xaxis = 4;
     this.params = [
       {
         _parent: this,
-        _value: 'bar',
-        id: 'plotMode',
-        input: 'select',
-        items: ['lines', 'lines+markers', 'markers', 'bar'],
-        label: 'Plot mode',
+        _value: "bar",
+        id: "plotMode",
+        input: "select",
+        items: ["lines", "lines+markers", "markers", "bar"],
+        label: "Plot mode",
         parent: this,
-        get value(): string { return this._value },
+        get value(): string {
+          return this._value;
+        },
         set value(value: string) {
           this._value = value;
-          this._parent.params[1].show = value.includes('lines')
-        }
+          this._parent.params[1].show = value.includes("lines");
+        },
       },
       {
-        id: 'lineShape',
-        input: 'select',
+        id: "lineShape",
+        input: "select",
         items: [
-          { text: 'linear', value: 'linear' },
-          { text: 'spline', value: 'spline' },
-          { text: 'vertical-horizontal-vertical steps', value: 'vhv' },
-          { text: 'horizontal-vertical-horizontal steps', value: 'hvh' },
-          { text: 'vertical-horizontal steps', value: 'vh' },
-          { text: 'horizontal-vertical steps', value: 'hv' },
+          { text: "linear", value: "linear" },
+          { text: "spline", value: "spline" },
+          { text: "vertical-horizontal-vertical steps", value: "vhv" },
+          { text: "horizontal-vertical-horizontal steps", value: "hvh" },
+          { text: "vertical-horizontal steps", value: "vh" },
+          { text: "horizontal-vertical steps", value: "hv" },
         ],
-        label: 'Line shape',
+        label: "Line shape",
         show: false,
-        value: 'linear',
+        value: "linear",
       },
     ];
 
@@ -55,7 +59,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   }
 
   get plotType(): string {
-    return this.plotMode === 'bar' ? this.plotMode : 'scatter';
+    return this.plotMode === "bar" ? this.plotMode : "scatter";
   }
 
   /**
@@ -72,20 +76,20 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      hoverinfo: 'x+y',
-      legendgroup: 'spikes' + activity.idx,
+      hoverinfo: "x+y",
+      legendgroup: "spikes" + activity.idx,
       line: {
         shape: this.lineShape,
       },
       marker: {
         color: activity.recorder.view.color,
         line: {
-          color: darkMode() ? '#121212' : 'white',
+          color: darkMode() ? "#121212" : "white",
           width: x.length > 100 ? 0 : 1,
         },
       },
       mode: this.plotMode,
-      name: 'Mean ISI in each sender in' + activity.recorder.view.label,
+      name: "Mean ISI in each sender in" + activity.recorder.view.label,
       opacity: 0.6,
       showlegend: false,
       type: this.plotType,
@@ -100,7 +104,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.type = this.state.xaxisType;
-    this.panel.layout.xaxis.title = 'Senders';
-    this.panel.layout.yaxis.title = 'Mean ISI [ms]';
+    this.panel.layout.xaxis.title = "Senders";
+    this.panel.layout.yaxis.title = "Mean ISI [ms]";
   }
 }

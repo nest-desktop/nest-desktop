@@ -4,7 +4,13 @@ import { Connection } from "../connection/connection";
 import { CopyModel } from "../model/copyModel";
 import { Model } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
-import { SynapseParameter } from "./synapseParameter";
+import { SynapseParameter, SynapseParameterProps } from "./synapseParameter";
+
+export interface SynapseProps {
+  model?: string;
+  params?: SynapseParameterProps[];
+  receptorIdx?: number;
+}
 
 export class Synapse {
   private readonly _name = "Synapse";
@@ -13,10 +19,10 @@ export class Synapse {
   private _params: { [key: string]: SynapseParameter } = {};
   private _receptorIdx: number = 0;
 
-  constructor(connection: any, synapse: any = {}) {
+  constructor(connection: Connection, synapse: SynapseProps = {}) {
     this._connection = connection;
 
-    if (synapse != null && "params" in synapse && synapse.params.length > 0) {
+    if (synapse && synapse.params && synapse.params.length > 0) {
       this._modelId = synapse.model || "static_synapse";
       this._receptorIdx = synapse.receptorIdx || 0;
       this.initParameters(synapse);
@@ -44,7 +50,9 @@ export class Synapse {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return  Object.values(this._params).some((param: SynapseParameter) => param.state.visible);
+    return Object.values(this._params).some(
+      (param: SynapseParameter) => param.state.visible
+    );
   }
 
   get hasSynSpec(): boolean {
@@ -139,7 +147,9 @@ export class Synapse {
   }
 
   get someParams(): boolean {
-    return Object.values(this._params).some((param: SynapseParameter) => param.state.visible);
+    return Object.values(this._params).some(
+      (param: SynapseParameter) => param.state.visible
+    );
   }
 
   get weight(): number {
@@ -164,22 +174,29 @@ export class Synapse {
   }
 
   /**
-   * Observer for synapse changes.
-   *
-   * @remarks
-   * It emits connection changes.
+   * Add model parameter component.
+   * @param param - parameter object
    */
-  synapseChanges(): void {
-    this._connection.connectionChanges();
+  addParameter(param: any): void {
+    this._params[param.id] = new SynapseParameter(this, param);
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    Object.values(this.params).forEach(
+      (param: SynapseParameter) => (param.state.visible = false)
+    );
   }
 
   /**
    * Initialize synapse parameters.
    */
-  initParameters(synapse: any = null): void {
+  initParameters(synapse?: any): void {
     // Update parameters from model or node.
     this._params = {};
-    if (this.model && synapse && "params" in synapse) {
+    if (this.model && synapse && synapse.params) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
         const param = synapse.params.find(
           (param: any) => param.id === modelParam.id
@@ -190,35 +207,9 @@ export class Synapse {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) =>
         this.addParameter(modelParam)
       );
-    } else if ("params" in synapse) {
+    } else if (synapse.params) {
       synapse.params.forEach((param: any) => this.addParameter(param));
     }
-  }
-
-  /**
-   * Add model parameter component.
-   * @param param - parameter object
-   */
-  addParameter(param: any): void {
-    this._params[param.id] = new SynapseParameter(this, param);
-  }
-
-  /**
-   * Sets all params to visible.
-   */
-  showAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: SynapseParameter) => (param.state.visible = true)
-    );
-  }
-
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: SynapseParameter) => (param.state.visible = false)
-    );
   }
 
   /**
@@ -232,11 +223,30 @@ export class Synapse {
   }
 
   /**
+   * Sets all params to visible.
+   */
+  showAllParams(): void {
+    Object.values(this.params).forEach(
+      (param: SynapseParameter) => (param.state.visible = true)
+    );
+  }
+
+  /**
+   * Observer for synapse changes.
+   *
+   * @remarks
+   * It emits connection changes.
+   */
+  synapseChanges(): void {
+    this._connection.connectionChanges();
+  }
+
+  /**
    * Serialize for JSON.
    * @return synapse object
    */
-  toJSON(): any {
-    const synapse: any = {
+  toJSON(): SynapseProps {
+    const synapse: SynapseProps = {
       model: this._modelId,
       params: Object.values(this._params).map((param: SynapseParameter) =>
         param.toJSON()

@@ -1,9 +1,11 @@
+// spikeTimesRasterPlotModel.ts
+
 import { ActivityChartPanel } from '../activityChartPanel';
 import { SpikeActivity } from '../../spikeActivity';
-import { SpikeTimesPanelModel, spikeTimesPanelModelProps } from './spikeTimesPanelModel';
+import { SpikeTimesPanelModel, SpikeTimesPanelModelProps } from './spikeTimesPanelModel';
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: spikeTimesPanelModelProps = {}) {
+  constructor(panel: ActivityChartPanel, model: SpikeTimesPanelModelProps = {}) {
     super(panel, model);
     this.icon = 'mdi-chart-scatter-plot';
     this.id = 'spikeTimesRasterPlot';

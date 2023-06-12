@@ -1,14 +1,14 @@
 // connectionMask.ts
 
-import { Config } from '@/helpers/config';
-import { Connection } from './connection';
+import { Config } from "@/helpers/config";
+import { Connection } from "./connection";
 
 enum MaskType {
-  circular = 'circular',
-  doughnut = 'doughnut',
-  elliptical = 'elliptical',
-  none = 'none',
-  rectangular = 'rectangular',
+  circular = "circular",
+  doughnut = "doughnut",
+  elliptical = "elliptical",
+  none = "none",
+  rectangular = "rectangular",
 }
 
 export class ConnectionMask extends Config {
@@ -18,7 +18,7 @@ export class ConnectionMask extends Config {
   private _specs: any;
 
   constructor(connection: Connection, mask: any = {}) {
-    super('ConnectionMask');
+    super("ConnectionMask");
     this._connection = connection;
     this._graph = {
       data: [],
@@ -26,7 +26,7 @@ export class ConnectionMask extends Config {
         xaxis: { range: [-0.55, 0.55] },
         yaxis: { range: [-0.55, 0.55] },
       },
-      style: { position: 'relative', width: '100%', height: '100%' },
+      style: { position: "relative", width: "100%", height: "100%" },
     };
     this._masktype = mask.masktype || MaskType.none;
     this._specs = mask.specs || {};
@@ -40,6 +40,14 @@ export class ConnectionMask extends Config {
     return this._graph;
   }
 
+  get hasMask(): boolean {
+    return this._masktype !== "none";
+  }
+
+  get list(): string[] {
+    return Object.keys(this.config);
+  }
+
   get masktype(): MaskType {
     return this._masktype;
   }
@@ -48,49 +56,22 @@ export class ConnectionMask extends Config {
     return this._specs;
   }
 
-  list(): string[] {
-    return Object.keys(this.config);
-  }
-
-  get hasMask(): boolean {
-    return this._masktype !== 'none';
-  }
-
-  unmask(): void {
-    this._masktype = MaskType.none;
-  }
-
-  select(value: MaskType): void {
-    if (value === 'none') {
-      this.unmask();
-    } else {
-      this._masktype = value;
-      this._specs = {};
-      this.config.data[value].specs.forEach(
-        (spec: { id: string; value: any }) => {
-          this._specs[spec.id] = spec.value;
-        }
-      );
-    }
-    this.draw();
-  }
-
   draw(): void {
     this._graph.layout.shapes = [];
     if (this._masktype == undefined) {
       return;
     }
     switch (this._masktype) {
-      case 'rectangular':
+      case "rectangular":
         this.drawRect();
         break;
-      case 'circular':
+      case "circular":
         this.drawCircle();
         break;
-      case 'doughnut':
+      case "doughnut":
         this.drawDoughnut();
         break;
-      case 'elliptical':
+      case "elliptical":
         this.drawEllipsis();
         break;
     }
@@ -99,17 +80,17 @@ export class ConnectionMask extends Config {
   drawRect(): void {
     this._graph.layout.shapes = [
       {
-        type: 'rect',
-        xref: 'x',
-        yref: 'y',
+        type: "rect",
+        xref: "x",
+        yref: "y",
         x0: this._specs.lower_left[0],
         y0: this._specs.lower_left[1],
         x1: this._specs.upper_right[0],
         y1: this._specs.upper_right[1],
         opacity: 0.2,
-        fillcolor: 'blue',
+        fillcolor: "blue",
         line: {
-          color: 'blue',
+          color: "blue",
         },
       },
     ];
@@ -118,17 +99,17 @@ export class ConnectionMask extends Config {
   drawCircle(): void {
     this._graph.layout.shapes = [
       {
-        type: 'circle',
-        xref: 'x',
-        yref: 'y',
+        type: "circle",
+        xref: "x",
+        yref: "y",
         x0: -1 * this._specs.radius,
         y0: -1 * this._specs.radius,
         x1: this._specs.radius,
         y1: this._specs.radius,
         opacity: 0.2,
-        fillcolor: 'blue',
+        fillcolor: "blue",
         line: {
-          color: 'blue',
+          color: "blue",
         },
       },
     ];
@@ -137,31 +118,31 @@ export class ConnectionMask extends Config {
   drawDoughnut(): void {
     this._graph.layout.shapes = [
       {
-        type: 'circle',
-        xref: 'x',
-        yref: 'y',
+        type: "circle",
+        xref: "x",
+        yref: "y",
         x0: -1 * this._specs.outer_radius,
         y0: -1 * this._specs.outer_radius,
         x1: this._specs.outer_radius,
         y1: this._specs.outer_radius,
         opacity: 0.2,
-        fillcolor: 'blue',
+        fillcolor: "blue",
         line: {
-          color: 'blue',
+          color: "blue",
         },
       },
       {
-        type: 'circle',
-        xref: 'x',
-        yref: 'y',
+        type: "circle",
+        xref: "x",
+        yref: "y",
         x0: -1 * this._specs.inner_radius,
         y0: -1 * this._specs.inner_radius,
         x1: this._specs.inner_radius,
         y1: this._specs.inner_radius,
         opacity: 1,
-        fillcolor: 'white',
+        fillcolor: "white",
         line: {
-          color: 'white',
+          color: "white",
         },
         // }, {
         //   type: 'line',
@@ -194,20 +175,35 @@ export class ConnectionMask extends Config {
   drawEllipsis(): void {
     this._graph.layout.shapes = [
       {
-        type: 'circle',
-        xref: 'x',
-        yref: 'y',
+        type: "circle",
+        xref: "x",
+        yref: "y",
         x0: (-1 * this._specs.major_axis) / 2,
         y0: (-1 * this._specs.minor_axis) / 2,
         x1: this._specs.major_axis / 2,
         y1: this._specs.minor_axis / 2,
         opacity: 0.2,
-        fillcolor: 'blue',
+        fillcolor: "blue",
         line: {
-          color: 'blue',
+          color: "blue",
         },
       },
     ];
+  }
+
+  select(value: MaskType): void {
+    if (value === "none") {
+      this.unmask();
+    } else {
+      this._masktype = value;
+      this._specs = {};
+      this.config.data[value].specs.forEach(
+        (spec: { id: string; value: any }) => {
+          this._specs[spec.id] = spec.value;
+        }
+      );
+    }
+    this.draw();
   }
 
   toJSON(): any {
@@ -216,5 +212,9 @@ export class ConnectionMask extends Config {
       specs: this._specs,
     };
     return mask;
+  }
+
+  unmask(): void {
+    this._masktype = MaskType.none;
   }
 }

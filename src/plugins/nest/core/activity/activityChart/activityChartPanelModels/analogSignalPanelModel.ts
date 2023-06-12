@@ -2,20 +2,21 @@
 
 import {
   ActivityChartPanelModel,
-  activityChartPanelModelProps,
+  ActivityChartPanelModelProps,
 } from "../activityChartPanelModel";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { NodeRecord } from "../../../node/nodeRecord";
 
-export interface analogSignalPanelModelProps
-  extends activityChartPanelModelProps {
+export interface AnalogSignalPanelModelProps
+  extends ActivityChartPanelModelProps {
   records?: any;
+  params?: any[];
 }
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: analogSignalPanelModelProps = {}
+    model: AnalogSignalPanelModelProps = {}
   ) {
     super(panel);
     this.activityType = "analog";
@@ -31,7 +32,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
    * @remarks
    * It sets activities and gets records from recorders.
    */
-  override init(model: analogSignalPanelModelProps = {}): void {
+  override init(model: AnalogSignalPanelModelProps = {}): void {
     this.initActivities();
     this.initAnalogRecords();
     this.initAnalogRecordsVisible(model.records);

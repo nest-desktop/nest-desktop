@@ -36,7 +36,7 @@ export interface ParameterProps {
   step?: number;
   ticks?: (number | string)[];
   unit?: string;
-  value?: number;
+  value?: boolean | number | string | (number | string)[];
   visible?: boolean;
   factors?: any[];
   type?: any;
@@ -63,7 +63,7 @@ export class Parameter extends Config {
   private _ticks: (number | string)[] = [];
   private _type: { [key: string]: any } = { id: "constant" };
   private _unit: string = "";
-  private _value: boolean | number | number[] = 0; // constant value;
+  private _value: boolean | number | string | (number | string)[] = 0; // constant value;
 
   constructor(parent: ParentTypes, param: ParameterProps) {
     super("Parameter");
@@ -93,6 +93,29 @@ export class Parameter extends Config {
 
   set input(value: string) {
     this._input = value;
+  }
+
+  /**
+   * Check if this parameter is constant.
+   */
+  get isConstant(): boolean {
+    return this._type.id === "constant";
+  }
+
+  /**
+   * Check if this parameter can be spatial
+   * when the connection is spatial.
+   */
+  get isSpatial(): boolean {
+    if (this._parent.name === "Connection") {
+      const connection = this._parent as Connection;
+      return connection.isBothSpatial;
+    } else if (this._parent.name === "Synapse") {
+      const synapse = this._parent as Synapse;
+      return synapse.connection.isBothSpatial;
+    } else {
+      return false;
+    }
   }
 
   get items(): string[] {
@@ -155,15 +178,20 @@ export class Parameter extends Config {
     this._min = value;
   }
 
-  get options(): any {
+  get modelParam(): Parameter {
+    return this;
+  }
+
+  get options(): { [key: string]: boolean | number | string | (number | string)[] } {
+    const param = this.modelParam;
     return {
-      id: this._id,
-      label: this._label,
-      max: this._max,
-      min: this._min,
-      ticks: this._ticks,
-      step: this._step,
-      unit: this._unit,
+      id: param.id,
+      label: param.label,
+      max: param.max,
+      min: param.min,
+      step: param.step,
+      ticks: param.ticks,
+      unit: param.unit,
     };
   }
 
@@ -265,48 +293,10 @@ export class Parameter extends Config {
   }
 
   /**
-   * Check if this parameter is constant.
-   */
-  get isConstant(): boolean {
-    return this._type.id === "constant";
-  }
-
-  /**
-   * Check if this parameter can be spatial
-   * when the connection is spatial.
-   */
-  get isSpatial(): boolean {
-    if (this._parent.name === "Connection") {
-      const connection = this._parent as Connection;
-      return connection.isBothSpatial;
-    } else if (this._parent.name === "Synapse") {
-      const synapse = this._parent as Synapse;
-      return synapse.connection.isBothSpatial;
-    } else {
-      return false;
-    }
-  }
-
-  toggleDisabled(): void {
-    this._state.disabled = !this._state.disabled;
-    this.paramChanges();
-  }
-
-  /**
    * Copy paramter component
    */
   override copy(): any {
     return new Parameter(this._parent, this);
-  }
-
-  /**
-   * Reset value taken from options.
-   */
-  reset(): void {
-    this.typeId = "constant";
-    if (this.options) {
-      this._value = this.options.value;
-    }
   }
 
   /**
@@ -344,6 +334,16 @@ export class Parameter extends Config {
   }
 
   /**
+   * Reset value taken from options.
+   */
+  reset(): void {
+    this.typeId = "constant";
+    if (this.options) {
+      this._value = this.options.value;
+    }
+  }
+
+  /**
    * Converts a number into a string, but keeps up to `fractionDigits` many
    * fraction digits of that number , i.e.  1 => '1.0', 1.23456 => '1.23456'.
    * @param value number to be converted
@@ -356,6 +356,11 @@ export class Parameter extends Config {
       fractionDigits = valueAsString.split(".")[1].length;
     }
     return Number(value).toFixed(fractionDigits);
+  }
+
+  toggleDisabled(): void {
+    this._state.disabled = !this._state.disabled;
+    this.paramChanges();
   }
 
   /**

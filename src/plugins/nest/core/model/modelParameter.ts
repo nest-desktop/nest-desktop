@@ -1,14 +1,14 @@
-import { CopyModel } from "./copyModel";
-import { Model } from "./model";
-import { ModelReceptor } from "./modelReceptor/modelReceptor";
-import { Parameter, parameterProps } from "../parameter";
+import { CopyModel } from './copyModel';
+import { Model } from './model';
+import { ModelReceptor } from './modelReceptor/modelReceptor';
+import { Parameter, ParameterProps } from '../parameter';
 
 type modelTypes = CopyModel | Model | ModelReceptor;
 
-export interface modelParameterProps extends parameterProps {}
+export interface ModelParameterProps extends ParameterProps {}
 
 export class ModelParameter extends Parameter {
-  constructor(model: modelTypes, param: modelParameterProps) {
+  constructor(model: modelTypes, param: ModelParameterProps) {
     super(model, param);
   }
 
@@ -17,10 +17,10 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Get the options for vue component.
+   * Get model parameter.
    */
-  override get options(): modelParameterProps {
-    return this.model.params[this.id].toJSON();
+  override get modelParam(): ModelParameter {
+    return this.model.params[this.id];
   }
 
   /**
@@ -34,8 +34,8 @@ export class ModelParameter extends Parameter {
    * Serialize for JSON.
    * @return model parameter object
    */
-  override toJSON(): modelParameterProps {
-    const param: modelParameterProps = {
+  override toJSON(): ModelParameterProps {
+    const param: ModelParameterProps = {
       id: this.id,
       input: this.input,
       label: this.label,

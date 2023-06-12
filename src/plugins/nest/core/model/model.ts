@@ -13,7 +13,7 @@ import { useModelDBStore } from "../../store/modelDBStore";
 
 export interface ModelProps {
   abbreviation?: string;
-  compartmentalParams?: any[]
+  compartmentalParams?: any[];
   elementType?: string;
   id?: string;
   label?: string;
@@ -189,6 +189,39 @@ export class Model extends Config {
   }
 
   /**
+   * Add a parameter to the model specifications.
+   * @param param parameter object
+   */
+  addParameter(param: any): void {
+    this._params[param.id] = param;
+  }
+
+  /**
+   * Add a compartment parameter to the model specifications.
+   * @param param parameter object
+   */
+  addCompartmentParameter(param: any): void {
+    this._compartmentParams[param.id] = new ModelCompartmentParameter(
+      this,
+      param
+    );
+  }
+
+  /**
+   * Clean the model index.
+   */
+  clean(): void {
+    this._idx = this._modelDBStore.models.indexOf(this);
+  }
+
+  /**
+   * Clone this model object.
+   */
+  clone(): Model {
+    return new Model(this.toJSON());
+  }
+
+  /**
    * Get parameter defaults of a model from NEST Simulator.
    */
   // async fetchDefaults(): Promise<any> {
@@ -196,16 +229,6 @@ export class Model extends Config {
   //     model: this._id,
   //   });
   // }
-
-  /**
-   * Update recordables from the config.
-   * @param model model object
-   */
-  updateRecordables(model: any): void {
-    this._recordables = this.config.recordables.filter((recordable: any) =>
-      model.recordables.includes(recordable.id)
-    );
-  }
 
   /**
    * Get the parameter of the model compartment.
@@ -232,23 +255,13 @@ export class Model extends Config {
   }
 
   /**
-   * Add a parameter to the model specifications.
-   * @param param parameter object
+   * Delete the model object from model list.
    */
-  addParameter(param: any): void {
-    this._params[param.id] = param;
+  async delete(): Promise<any> {
+    return this._modelDBStore.deleteModel(this.docId);
   }
 
-  /**
-   * Add a compartment parameter to the model specifications.
-   * @param param parameter object
-   */
-  addCompartmentParameter(param: any): void {
-    this._compartmentParams[param.id] = new ModelCompartmentParameter(
-      this,
-      param
-    );
-  }
+  modelChanges(): void {}
 
   /**
    * Create new parameter.
@@ -279,6 +292,60 @@ export class Model extends Config {
    */
   removeParameter(paramId: string): void {
     delete this._params[paramId];
+  }
+
+  /**
+   * Reset the state of this model.
+   */
+  resetState(): void {
+    this._state.selected = false;
+  }
+
+  /**
+   * Save the model object to the database.
+   */
+  async save(): Promise<any> {
+    return this._modelDBStore.saveModel(this);
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return model object
+   */
+  toJSON(): ModelProps {
+    const model: any = {
+      abbreviation: this._abbreviation,
+      elementType: this._elementType,
+      id: this._id,
+      label: this._label,
+      params: Object.values(this._params).map((param: ModelParameter) =>
+        param.toJSON()
+      ),
+      version: process.env.APP_VERSION,
+    };
+
+    // Add the recordables if provided.
+    if (this._recordables.length > 0) {
+      model.recordables = this._recordables.map(
+        (recordable: any) => recordable.id
+      );
+    }
+
+    // Add the compartment parameters if provided.
+    if (this._compartmentParams) {
+      model.compartmentParams = Object.values(this._compartmentParams).map(
+        (param: ModelParameter) => param.toJSON()
+      );
+    }
+
+    // Add the receptors if provided.
+    if (this._receptors) {
+      model.receptors = Object.values(this._receptors).map(
+        (receptor: ModelReceptor) => receptor.toJSON()
+      );
+    }
+
+    return model;
   }
 
   /**
@@ -354,80 +421,13 @@ export class Model extends Config {
     });
   }
 
-  modelChanges(): void {}
-
   /**
-   * Clean the model index.
+   * Update recordables from the config.
+   * @param model model object
    */
-  clean(): void {
-    this._idx = this._modelDBStore.models.indexOf(this);
-  }
-
-  /**
-   * Clone this model object.
-   */
-  clone(): Model {
-    return new Model(this.toJSON());
-  }
-
-  /**
-   * Reset the state of this model.
-   */
-  resetState(): void {
-    this._state.selected = false;
-  }
-
-  /**
-   * Delete the model object from model list.
-   */
-  async delete(): Promise<any> {
-    return this._modelDBStore.deleteModel(this.docId);
-  }
-
-  /**
-   * Save the model object to the database.
-   */
-  async save(): Promise<any> {
-    return this._modelDBStore.saveModel(this);
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return model object
-   */
-  toJSON(): ModelProps {
-    const model: any = {
-      abbreviation: this._abbreviation,
-      elementType: this._elementType,
-      id: this._id,
-      label: this._label,
-      params: Object.values(this._params).map((param: ModelParameter) =>
-        param.toJSON()
-      ),
-      version: process.env.APP_VERSION,
-    };
-
-    // Add the recordables if provided.
-    if (this._recordables.length > 0) {
-      model.recordables = this._recordables.map(
-        (recordable: any) => recordable.id
-      );
-    }
-
-    // Add the compartment parameters if provided.
-    if (this._compartmentParams) {
-      model.compartmentParams = Object.values(this._compartmentParams).map(
-        (param: ModelParameter) => param.toJSON()
-      );
-    }
-
-    // Add the receptors if provided.
-    if (this._receptors) {
-      model.receptors = Object.values(this._receptors).map(
-        (receptor: ModelReceptor) => receptor.toJSON()
-      );
-    }
-
-    return model;
+  updateRecordables(model: any): void {
+    this._recordables = this.config.recordables.filter((recordable: any) =>
+      model.recordables.includes(recordable.id)
+    );
   }
 }

@@ -2,14 +2,14 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { CopyModel, ModelProps } from "./copyModel";
+import { CopyModel, CopyModelProps } from "./copyModel";
 import { Network } from "../network/network";
 
 interface CopyModelsState {
   hash: string;
 }
 
-export interface CopyModelProps extends ModelProps {};
+export interface CopyModelProps extends CopyModelProps {}
 
 export class CopyModels {
   private _models: CopyModel[] = [];
@@ -135,7 +135,7 @@ export class CopyModels {
    * Get a model from the model list by ID.
    * @param modelId ID of the model
    */
-  get(modelId: string): CopyModel {
+  getModelById(modelId: string): CopyModel {
     return (
       this._models.find((model: CopyModel) => model.id === modelId) ||
       new CopyModel(this._network, {
@@ -149,7 +149,7 @@ export class CopyModels {
   /**
    * Initialize
    */
-  init(models: ModelProps[] = []): void {
+  init(models: CopyModelProps[] = []): void {
     this.empty();
     this.update(models);
   }
@@ -188,7 +188,7 @@ export class CopyModels {
    * @param network - network object
    */
   update(models: CopyModelProps[] = []): void {
-    models.forEach((model: ModelProps) => this.add(model));
+    models.forEach((model: CopyModelProps) => this.add(model));
     this.clean();
   }
 

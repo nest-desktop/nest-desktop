@@ -1,14 +1,14 @@
 // spikeTimePanelModel.ts
 
-import { ActivityChartPanelModel, activityChartPanelModelProps } from "../activityChartPanelModel";
+import { ActivityChartPanelModel, ActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { ActivityChartPanel } from "../activityChartPanel";
 
-export interface spikeTimesPanelModelProps extends activityChartPanelModelProps {}
+export interface SpikeTimesPanelModelProps extends ActivityChartPanelModelProps {}
 
 export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: spikeTimesPanelModelProps = {}
+    model: SpikeTimesPanelModelProps = {}
   ) {
     super(panel);
     this.activityType = "spike";

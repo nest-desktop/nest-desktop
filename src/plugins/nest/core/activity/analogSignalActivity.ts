@@ -11,6 +11,14 @@ export class AnalogSignalActivity extends Activity {
   }
 
   /**
+   * Clone analog signal activity.
+   * It creates a new component with JSON data.
+   */
+  override clone(): AnalogSignalActivity {
+    return new AnalogSignalActivity(this.recorder, this.toJSON());
+  }
+
+  /**
    * Post-initialize activity of analog signals.
    */
   override postInit(): void {
@@ -31,13 +39,5 @@ export class AnalogSignalActivity extends Activity {
     if (this.recorder.records.length === 0) return;
 
     this.state.records = [...this.recorder.records];
-  }
-
-  /**
-   * Clone analog signal activity.
-   * It creates a new component with JSON data.
-   */
-  override clone(): AnalogSignalActivity {
-    return new AnalogSignalActivity(this.recorder, this.toJSON());
   }
 }

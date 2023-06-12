@@ -1,20 +1,19 @@
 // modelCompartmentalParameter.ts
 
 import { Model } from "./model";
-import { ModelParameter, modelParameterProps } from "./modelParameter";
+import { ModelParameter, ModelParameterProps } from "./modelParameter";
 
-export interface modelCompartmentalParameterProps extends modelParameterProps {
-}
+export interface ModelCompartmentalParameterProps extends ModelParameterProps {}
 
 export class ModelCompartmentParameter extends ModelParameter {
-  constructor(model: Model, param: modelCompartmentalParameterProps) {
+  constructor(model: Model, param: ModelCompartmentalParameterProps) {
     super(model, param);
   }
 
   /**
-   * Get the options from the model compartment component.
+   * Get model parameter.
    */
-  override get options(): modelCompartmentalParameterProps {
-    return this.model.compartmentParams[this.id].toJSON();
+  override get modelParam(): ModelCompartmentParameter {
+    return this.model.compartmentParams[this.id];
   }
 }

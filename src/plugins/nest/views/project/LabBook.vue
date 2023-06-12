@@ -13,7 +13,7 @@
             Network: {{ projectStore.project.network.state.hash }}
           </v-list-item>
           <v-list>
-          <v-list-item :key="index" v-for="node,index in projectStore.project.network.nodes">
+          <v-list-item :key="index" v-for="node,index in projectStore.project.network.nodes.all">
             Node {{ index }}: {{ node.state.hash }}
           </v-list-item>
           </v-list>

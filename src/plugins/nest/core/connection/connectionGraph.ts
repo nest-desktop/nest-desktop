@@ -23,6 +23,22 @@ export class ConnectionGraph {
   }
 
   /**
+   * Drag connection graph by moving its node graphs.
+   */
+  drag(event: MouseEvent, connection: Connection): void {
+    if (!this.state.enableConnection) {
+      const sourceNode = connection.source;
+      sourceNode.view.position.x += event["dx"];
+      sourceNode.view.position.y += event["dy"];
+      const targetNode = connection.target;
+      targetNode.view.position.x += event["dx"];
+      targetNode.view.position.y += event["dy"];
+      this._networkGraph.network.nodes.cleanWeightRecorders();
+      this._networkGraph.render();
+    }
+  }
+
+  /**
    * Initialize a connection graph.
    */
   init(
@@ -84,7 +100,9 @@ export class ConnectionGraph {
           workspace.animationOff();
 
           // Get copied synapse model.
-          let modelCopied = network?.models.findBySynapseModelId(connection.synapse.modelId);
+          let modelCopied = network?.models.findBySynapseModelId(
+            connection.synapse.modelId
+          );
 
           // Copy synapse model if not existed in the model list.
           if (modelCopied === undefined) {
@@ -122,57 +140,6 @@ export class ConnectionGraph {
         this._networkGraph.update();
         workspace.updateTransform();
       });
-  }
-
-  /**
-   * Update connections in network graph.
-   *
-   * @remarks
-   * This function should be called when connections in the network are changed.
-   */
-  update(): void {
-    const connections: d3.Selection<any, any, any, any> =
-      this._networkGraph.selector
-        .select("g#connections")
-        .selectAll("g.connection")
-        .data(this._networkGraph.network.connections.all);
-
-    connections
-      .enter()
-      .append("g")
-      .attr("class", "connection")
-      .attr("color", (c: Connection) => c.source.view.color)
-      .attr("idx", (c: Connection) => c.idx)
-      .attr("hash", (c: Connection) => c.shortHash)
-      .style("opacity", 0)
-      .call(
-        d3
-          .drag()
-          .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-          .on("drag", (e: MouseEvent, c: Connection) => this.drag(e, c))
-          .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e))
-      )
-      .each((c: Connection, i: number, e) => this.init(c, i, e));
-
-    connections.exit().remove();
-
-    this.render();
-  }
-
-  /**
-   * Drag connection graph by moving its node graphs.
-   */
-  drag(event: MouseEvent, connection: Connection): void {
-    if (!this.state.enableConnection) {
-      const sourceNode = connection.source;
-      sourceNode.view.position.x += event["dx"];
-      sourceNode.view.position.y += event["dy"];
-      const targetNode = connection.target;
-      targetNode.view.position.x += event["dx"];
-      targetNode.view.position.y += event["dy"];
-      this._networkGraph.network.nodes.cleanWeightRecorders();
-      this._networkGraph.render();
-    }
   }
 
   /**
@@ -223,5 +190,40 @@ export class ConnectionGraph {
 
       elem.transition(t).delay(duration).style("opacity", 1);
     });
+  }
+
+  /**
+   * Update connections in network graph.
+   *
+   * @remarks
+   * This function should be called when connections in the network are changed.
+   */
+  update(): void {
+    const connections: d3.Selection<any, any, any, any> =
+      this._networkGraph.selector
+        .select("g#connections")
+        .selectAll("g.connection")
+        .data(this._networkGraph.network.connections.all);
+
+    connections
+      .enter()
+      .append("g")
+      .attr("class", "connection")
+      .attr("color", (c: Connection) => c.source.view.color)
+      .attr("idx", (c: Connection) => c.idx)
+      .attr("hash", (c: Connection) => c.shortHash)
+      .style("opacity", 0)
+      .call(
+        d3
+          .drag()
+          .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
+          .on("drag", (e: MouseEvent, c: Connection) => this.drag(e, c))
+          .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e))
+      )
+      .each((c: Connection, i: number, e) => this.init(c, i, e));
+
+    connections.exit().remove();
+
+    this.render();
   }
 }

@@ -1,3 +1,5 @@
+// connectionRule.ts
+
 import { Connection } from "./connection";
 
 enum Rule {

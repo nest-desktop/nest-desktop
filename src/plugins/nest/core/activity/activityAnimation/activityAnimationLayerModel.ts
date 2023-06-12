@@ -1,9 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { ActivityAnimationLayer } from './activityAnimationLayer';
+import { ActivityAnimationLayer } from "./activityAnimationLayer";
 
 export class ActivityAnimationLayerModel {
-  private _graphGroup: THREE.Group;
+  private _graphGroup?: THREE.Group;
   private _layer: ActivityAnimationLayer;
 
   constructor(layer: ActivityAnimationLayer) {
@@ -11,7 +11,7 @@ export class ActivityAnimationLayerModel {
     this.initGraph();
   }
 
-  get graphGroup(): THREE.Group {
+  get graphGroup(): THREE.Group | undefined {
     return this._graphGroup;
   }
 
@@ -69,8 +69,12 @@ export class ActivityAnimationLayerModel {
    * Reset graph objects.
    */
   resetObjects(): void {
+    if (this._graphGroup == undefined) {
+      return
+    }
+
     const scale: number = this._layer.config.object.size;
-    this._graphGroup.children.forEach((mesh: THREE.Mesh) => {
+    this._graphGroup.children.forEach((mesh) => {
       // @ts-ignore
       mesh.material.opacity = 0;
       const position = mesh.userData.position;
@@ -83,7 +87,7 @@ export class ActivityAnimationLayerModel {
   /**
    * Update graph objects.
    */
-  updateObjects(frame: any, trailIdx: number = undefined): void {
+  updateObjects(frame: any, trailIdx?: number): void {
     this._layer.state.reset = false;
     const trail: any = this.layer.config.trail;
     const object: any = this.layer.config.object;
@@ -95,10 +99,10 @@ export class ActivityAnimationLayerModel {
     const size: number = object.size;
     let scale: number;
     switch (trail.mode) {
-      case 'growing':
+      case "growing":
         scale = (1 + ratio) * size;
         break;
-      case 'shrinking':
+      case "shrinking":
         scale = (1 - ratio) * size;
         break;
       default:
@@ -106,8 +110,7 @@ export class ActivityAnimationLayerModel {
     }
 
     const record = this.layer.state.record;
-    const values =
-      record != null && record.id in frame ? frame[record.id] : [];
+    const values = record != null && record.id in frame ? frame[record.id] : [];
     frame.senders.forEach((sender: number, senderIdx: number) => {
       let color: string;
       let height: number;

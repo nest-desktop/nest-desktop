@@ -1,9 +1,9 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Stats from 'stats.js';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import Stats from "stats.js";
 
-import { darkMode } from '@/helpers/theme';
-import { ActivityAnimationGraph } from './activityAnimationGraph';
+import { darkMode } from "@/helpers/theme";
+import { ActivityAnimationGraph } from "./activityAnimationGraph";
 
 export class ActivityAnimationScene {
   private _animationFrameIdx: number;
@@ -14,7 +14,7 @@ export class ActivityAnimationScene {
   private _controls: OrbitControls;
   private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
-  private _layerGraphGroup: THREE.Group;
+  private _layerGraphGroup?: THREE.Group;
   private _ref: any;
   private _renderer: THREE.WebGLRenderer;
   private _scene: THREE.Scene;
@@ -68,7 +68,7 @@ export class ActivityAnimationScene {
     return this._controls;
   }
 
-  get layerGraphGroup(): THREE.Group {
+  get layerGraphGroup(): THREE.Group | undefined {
     return this._layerGraphGroup;
   }
 
@@ -84,7 +84,7 @@ export class ActivityAnimationScene {
 
     this._renderer.setPixelRatio(window.devicePixelRatio);
     this.resize();
-    window.addEventListener('resize', () => this.resize());
+    window.addEventListener("resize", () => this.resize());
 
     // Append dom element in container.
     this._ref.appendChild(this._renderer.domElement);
@@ -149,7 +149,9 @@ export class ActivityAnimationScene {
    */
   update(): void {
     this.updateSceneBackground();
-    this._scene.remove(this._layerGraphGroup);
+    if (this._layerGraphGroup) {
+      this._scene.remove(this._layerGraphGroup);
+    }
     this._layerGraphGroup = new THREE.Group();
     this._graph.addLayersToGroup(this._layerGraphGroup);
     this._scene.add(this._layerGraphGroup);

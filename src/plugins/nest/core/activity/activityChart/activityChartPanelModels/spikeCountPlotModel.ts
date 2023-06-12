@@ -1,6 +1,7 @@
+// spikeCountPlotModel.ts
+
 import * as d3 from "d3";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { Source } from "three";
 import { SpikeActivity } from "../../spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { sum } from "mathjs";

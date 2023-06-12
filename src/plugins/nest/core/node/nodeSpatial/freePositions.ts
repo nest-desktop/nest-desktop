@@ -4,7 +4,7 @@ import * as math from "mathjs";
 
 import { NodeSpatial } from "./nodeSpatial";
 
-export interface freePositionsProps {
+export interface FreePositionsProps {
   edgeWrap?: boolean;
   extent?: number[];
   numDimensions: number;
@@ -19,7 +19,7 @@ export class FreePositions {
   private _pos: number[][] = [];
   private _spatial: NodeSpatial;
 
-  constructor(spatial: NodeSpatial, positions?: freePositionsProps) {
+  constructor(spatial: NodeSpatial, positions?: FreePositionsProps) {
     this._spatial = spatial;
 
     if (positions) {
@@ -141,7 +141,7 @@ export class FreePositions {
    * Serialize for JSON.
    * @return free positons object
    */
-  toJSON(): freePositionsProps {
+  toJSON(): FreePositionsProps {
     return {
       edgeWrap: this._edgeWrap,
       extent: this._extent,

@@ -1,6 +1,6 @@
 // nodeReceptor.ts
 
-import { nodeParamProps } from "../nodeParameter";
+import { NodeParamProps } from "../nodeParameter";
 import { ModelReceptor } from "../../model/modelReceptor/modelReceptor";
 import { ModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { Node } from "../node";
@@ -9,14 +9,15 @@ import { NodeReceptorParameter } from "./nodeReceptorParameter";
 
 export interface nodeReceptorProps {
   compIdx: number;
-  id: string;
-  params?: nodeParamProps[];
+  id?: string;
+  params?: NodeParamProps[];
   type?: string;
 }
 
 export class NodeReceptor {
   private readonly _name = "NodeReceptor";
 
+  // @ts-ignore
   private _compartment: NodeCompartment;
   private _hash: string = "";
   private _id: string = "";
@@ -39,7 +40,7 @@ export class NodeReceptor {
   }
 
   get filteredParams(): NodeReceptorParameter[] {
-    return this._params.filter(
+    return Object.values(this._params).filter(
       (param: NodeReceptorParameter) => param.state.visible
     );
   }
@@ -49,7 +50,7 @@ export class NodeReceptor {
   }
 
   get hasSomeParams(): boolean {
-    return this._params.some(
+    return Object.values(this._params).some(
       (param: NodeReceptorParameter) => param.state.visible
     );
   }
@@ -66,12 +67,8 @@ export class NodeReceptor {
     return `${this.id} (${this.compartment.label})`;
   }
 
-  get model(): ModelReceptor | undefined {
-    return this.node.model
-      ? this.node.model.receptors.find(
-          (modelReceptor: ModelReceptor) => modelReceptor.id === this.id
-        )
-      : undefined;
+  get model(): ModelReceptor {
+    return this.node.model.receptors[this.id];
   }
 
   get name(): string {
@@ -91,6 +88,9 @@ export class NodeReceptor {
   }
 
   get recordables(): any[] {
+    if (this.model == undefined) {
+      return [];
+    }
     const recordables = this.model.recordables.map((recordable: any) => ({
       ...recordable,
     }));
@@ -160,7 +160,7 @@ export class NodeReceptor {
     // Update parameters from model or node receptor
     this._params = {};
     const model = this.node.model;
-    if (model) {
+    if (model && receptor.id) {
       const modelReceptor = model.receptors[receptor.id];
       if (modelReceptor) {
         Object.values(modelReceptor.params).forEach(
