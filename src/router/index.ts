@@ -6,9 +6,7 @@
 
 // Composables
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-
-import modelRoutes from "./modelRoute";
-import projectRoutes from "./projectRoute";
+import nestRoutes from "@/plugins/nest/router";
 
 import { useNavStore } from "@/store/navStore";
 
@@ -64,16 +62,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/Vuetify.vue"),
       },
       {
-        path: "model/",
-        name: "modelParent",
-        component: () => import("@/layouts/model/ModelLayout.vue"),
-        children: modelRoutes as RouteRecordRaw[],
-      },
-      {
-        path: "project/",
-        name: "projectParent",
-        component: () => import("@/layouts/project/ProjectLayout.vue"),
-        children: projectRoutes as RouteRecordRaw[],
+        path: "nest/",
+        name: "nest",
+        children: nestRoutes as RouteRecordRaw[],
       },
     ],
   },

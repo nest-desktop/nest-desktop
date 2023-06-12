@@ -9,7 +9,7 @@
   >
     <template #prepend>
       <v-text-field
-        :label="props.inputLabel[0]"
+        :label="(props.inputLabel[0] as string)"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -22,7 +22,7 @@
     </template>
     <template #append>
       <v-text-field
-        :label="props.inputLabel[1]"
+        :label="(props.inputLabel[1] as string)"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -53,7 +53,7 @@ const modelRef = reactive({
 
 const modelValue = computed({
   get: () => [modelRef.lower, modelRef.upper],
-  set: (value) => {
+  set: (value: Array<Number>) => {
     modelRef.lower = value[0];
     modelRef.upper = value[1];
     emit("update:modelValue", [modelRef.lower, modelRef.upper]);

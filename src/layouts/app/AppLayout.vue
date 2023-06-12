@@ -8,7 +8,7 @@
       <app-navigation />
 
       <template #append>
-        <v-row align="center" justify="center" no-gutters>
+        <v-row align="center" class="my-1" justify="center" no-gutters>
           <v-btn
             :href="item.href"
             :icon="item.text ? false : item.icon"
@@ -21,7 +21,7 @@
             :title="item.title"
             :to="item.to"
             @click.stop="item.click ? item.click() : undefined"
-            rounded="0"
+            rounded="1"
             v-for="(item, index) in items"
             variant="plain"
           />
@@ -39,13 +39,18 @@
 import { useTheme } from "vuetify";
 const theme = useTheme();
 
+import { useAppStore } from "@/store/appStore";
+const appStore = useAppStore();
+
 import AppBar from "./AppBar.vue";
 import AppNavigation from "./AppNavigation.vue";
 
-const toggleTheme = () =>
-  (theme.global.name.value = theme.global.current.value.dark
-    ? "light"
-    : "dark");
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
+  appStore.darkMode = theme.global.current.value.dark;
+
+  window.dispatchEvent(new Event("darkmode"));
+};
 
 const items = [
   {

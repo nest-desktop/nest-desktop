@@ -52,7 +52,7 @@
             cols="4"
             v-text="'Current version'"
           />
-          <v-col class="text-right" cols="8" v-text="state.version" />
+          <v-col class="text-right" cols="8" v-html="state.version" />
         </v-row>
       </v-list-item>
       <v-list-item>
@@ -92,7 +92,7 @@
 
 <script lang="ts" setup>
 import { onBeforeMount, reactive } from "vue";
-// import core from '@/core';
+import core from '@/plugins/nest/core';
 
 // import { detect } from "detect-browser";
 const state = reactive({
@@ -101,15 +101,15 @@ const state = reactive({
   clientType: "",
   contactMailHeader:
     "mailto:spreizer@uni-trier.de?subject=[NEST Desktop "
-    // + core.app.state.version
+    + core.app.state.version
     + "]",
   contactName: "📧 Sebastian Spreizer",
   doc: "https://nest-desktop.readthedocs.io",
   license: "MIT License",
   osType: "",
   repo: "https://github.com/nest-desktop/nest-desktop",
-  simulatorVersion: 'v3.4', //core.app.backends.nestSimulator.state.version.nest,
-  version: 'dev', // core.app.state.version,
+  simulatorVersion: core.app.backends.nestSimulator.state.version.nest,
+  version: process.env.APP_VERSION,
 });
 const mailText = [
   "&body=%2D%2D%2D%2D %0D%0APlease do not delete the following lines! %0D%0AClient type: ",

@@ -12,7 +12,7 @@
   >
     <template #append>
       <v-text-field
-        :label="props.inputLabel"
+        :label="props.id"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -31,7 +31,7 @@ import { computed, ref, watch } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
-  inputLabel: { default: "", type: String },
+  id: { default: "", type: String },
   modelValue: { default: 0, type: Number },
   step: { default: 1, type: Number },
   unit: { default: "", type: String },
