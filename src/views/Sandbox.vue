@@ -2,9 +2,13 @@
   <v-container class="sandbox">
     <v-navigation-drawer permanent>
       <v-list nav density="compact">
-        <v-list-item :key="component" :to="`${component}`" :value="component" v-for="(_, component) in components">
-          {{ component }}
-        </v-list-item>
+        <v-list-item
+          :key="component"
+          :title="component"
+          :to="`${component}`"
+          :value="component"
+          v-for="(_, component) in components"
+        />
       </v-list>
     </v-navigation-drawer>
 
@@ -26,7 +30,7 @@ import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 
 const props = defineProps({
-  component: {type: String, default: "alert"},
+  component: { type: String, default: "alert" },
 });
 
 const currentComponent = ref(props.component);
@@ -43,7 +47,10 @@ const components: any = {
   tabs: SandboxTabs,
 };
 
-watch(() => props.component, () => currentComponent.value = props.component)
+watch(
+  () => props.component,
+  () => (currentComponent.value = props.component)
+);
 </script>
 
 <style lang="scss">

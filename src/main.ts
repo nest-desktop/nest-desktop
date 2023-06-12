@@ -4,6 +4,8 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
+import VueCodemirror from "vue-codemirror";
+
 // Components
 import App from "./App.vue";
 
