@@ -6,7 +6,7 @@ import { darkMode } from "@/helpers/theme";
 
 import {
   ActivityChartPanel,
-  activityChartPanelProps,
+  ActivityChartPanelProps,
 } from "./activityChartPanel";
 import { ActivityChartPanelModel } from "./activityChartPanelModel";
 import { Project } from "../../project/project";
@@ -108,7 +108,7 @@ export class ActivityChartGraph {
     ref: undefined,
   };
 
-  constructor(project: Project, panels: activityChartGraphPanelProps[] = []) {
+  constructor(project: Project, panels: ActivityChartPanelProps[] = []) {
     this._project = project;
     this._config = {
       autoResize: true,
@@ -239,10 +239,31 @@ export class ActivityChartGraph {
   }
 
   /**
+   * Download image of the activity chart graph.
+   */
+  downloadImage(options: any): void {
+    if (this._state.gd == null) return;
+    Plotly.downloadImage(this._state.gd, options);
+  }
+
+  /**
    * Empty graph data.
    */
   empty(): void {
     this._data = [];
+  }
+
+  /**
+   * Gather data for the chart graph
+   */
+  gatherData(panel: ActivityChartPanel): void {
+    panel.model.data.forEach((data: any) => {
+      data.dataIdx = this._data.length;
+      data.panelIdx = panel.idx;
+      data.xaxis = "x" + panel.xaxis;
+      data.yaxis = "y" + panel.yaxis;
+      this._data.push(data);
+    });
   }
 
   /**
@@ -297,6 +318,29 @@ export class ActivityChartGraph {
   }
 
   /**
+   * Create new Plot of the DOM reference.
+   */
+  newPlot(ref: string): void {
+    this._state.ref = ref;
+    Plotly.newPlot(
+      this._state.ref,
+      this._data,
+      this._layout,
+      this._config
+    ).then(() => {
+      this.initEvents();
+    });
+  }
+
+  /**
+   * React plots to new updates.
+   */
+  react(): void {
+    if (this._state.ref == null) return;
+    Plotly.react(this._state.ref, this._data, this._layout);
+  }
+
+  /**
    * Remove panel.
    */
   removePanel(panel: ActivityChartPanel): void {
@@ -309,6 +353,45 @@ export class ActivityChartGraph {
    */
   resetLayout(): void {
     this._layout = Object.assign({}, this._layout);
+  }
+
+  /**
+   * Restyle plots with new updates.
+   */
+  restyle(): void {
+    if (this._state.ref == null) return;
+    // if (this.project.state.activities.hasSomeSpikeRecorders) {
+    this.restyleMarkerHeightSpikeTimesRasterPlot();
+    // }
+  }
+
+  /**
+   * Restyle marker height of spike times raster plot
+   */
+  restyleMarkerHeightSpikeTimesRasterPlot() {
+    const dataSpikeTimeRasterPlot = this._data.filter(
+      (d: any) => d.modelId === "spikeTimesRasterPlot"
+    );
+
+    const markerSizes = dataSpikeTimeRasterPlot.map(
+      // @ts-ignore
+      (d: any) => this._panels[d.panelIdx].model.markerSize
+    );
+    const update = {
+      "marker.size": markerSizes,
+    };
+
+    const dataIndices = dataSpikeTimeRasterPlot.map((d: any) => d.dataIdx);
+
+    Plotly.restyle(this._state.ref, update, dataIndices);
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart graph object
+   */
+  toJSON(): ActivityChartPanelProps[] {
+    return this._panels.map((panel: ActivityChartPanel) => panel.toJSON());
   }
 
   /**
@@ -332,19 +415,6 @@ export class ActivityChartGraph {
 
     this.react();
     this.restyle();
-  }
-
-  /**
-   * Gather data for the chart graph
-   */
-  gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: any) => {
-      data.dataIdx = this._data.length;
-      data.panelIdx = panel.idx;
-      data.xaxis = "x" + panel.xaxis;
-      data.yaxis = "y" + panel.yaxis;
-      this._data.push(data);
-    });
   }
 
   /**
@@ -393,74 +463,5 @@ export class ActivityChartGraph {
     this.panelsVisible.forEach((panel: ActivityChartPanel) =>
       panel.updatePanelLayout()
     );
-  }
-
-  /**
-   * Create new Plot of the DOM reference.
-   */
-  newPlot(ref: string): void {
-    this._state.ref = ref;
-    Plotly.newPlot(
-      this._state.ref,
-      this._data,
-      this._layout,
-      this._config
-    ).then(() => {
-      this.initEvents();
-    });
-  }
-
-  /**
-   * React plots to new updates.
-   */
-  react(): void {
-    if (this._state.ref == null) return;
-    Plotly.react(this._state.ref, this._data, this._layout);
-  }
-
-  /**
-   * Restyle plots with new updates.
-   */
-  restyle(): void {
-    if (this._state.ref == null) return;
-    // if (this.project.state.activities.hasSomeSpikeRecorders) {
-    this.restyleMarkerHeightSpikeTimesRasterPlot();
-    // }
-  }
-
-  /**
-   * Restyle marker height of spike times raster plot
-   */
-  restyleMarkerHeightSpikeTimesRasterPlot() {
-    const dataSpikeTimeRasterPlot = this._data.filter(
-      (d: any) => d.modelId === "spikeTimesRasterPlot"
-    );
-
-    const markerSizes = dataSpikeTimeRasterPlot.map(
-      (d: any) => this._panels[d.panelIdx].model.markerSize
-    );
-    const update = {
-      "marker.size": markerSizes,
-    };
-
-    const dataIndices = dataSpikeTimeRasterPlot.map((d: any) => d.dataIdx);
-
-    Plotly.restyle(this._state.ref, update, dataIndices);
-  }
-
-  /**
-   * Download image of the activity chart graph.
-   */
-  downloadImage(options: any): void {
-    if (this._state.gd == null) return;
-    Plotly.downloadImage(this._state.gd, options);
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return activity chart graph object
-   */
-  toJSON(): activityChartPanelProps[] {
-    return this._panels.map((panel: ActivityChartPanel) => panel.toJSON());
   }
 }

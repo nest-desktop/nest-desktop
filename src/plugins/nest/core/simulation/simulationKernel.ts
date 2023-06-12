@@ -4,7 +4,7 @@ import { Config } from '@/helpers/config';
 
 import { Simulation } from './simulation';
 
-export interface simulationKernelProps {
+export interface SimulationKernelProps {
   resolution?: number;
   localNumThreads?: number;
   rngSeed?: number;
@@ -16,7 +16,7 @@ export class SimulationKernel extends Config {
   private _simulation: Simulation; // parent
   private _rngSeed: number; // seed for random renerator
 
-  constructor(simulation: Simulation, kernel: simulationKernelProps = {}) {
+  constructor(simulation: Simulation, kernel: SimulationKernelProps = {}) {
     super('SimulationKernel');
     this._simulation = simulation;
     this._resolution = kernel.resolution || 0.1;
@@ -56,8 +56,8 @@ export class SimulationKernel extends Config {
    * Serialize for JSON.
    * @return simulation kernel object
    */
-  toJSON(): simulationKernelProps {
-    const kernel: simulationKernelProps = {
+  toJSON(): SimulationKernelProps {
+    const kernel: SimulationKernelProps = {
       localNumThreads: this._localNumThreads,
       resolution: this._resolution,
       rngSeed: this._rngSeed,

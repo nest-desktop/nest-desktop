@@ -43,7 +43,7 @@
     >
       <template #append>
         <v-btn
-          @click="(e) => e.preventDefault()"
+          @click="(e: MouseEvent) => e.preventDefault()"
           class="list-item-menu"
           icon="mdi-dots-vertical"
           size="x-small"

@@ -8,13 +8,10 @@ import { download } from "@/helpers/download";
 import { ActivityChartGraph } from "../activity/activityChart/activityChartGraph";
 import { Node } from "../node/node";
 import { Project } from "../project/project";
-
-export interface EventProps {
-  [key: string]: number[]
-}
+import { NodeRecord } from "../node/nodeRecord";
 
 export interface ActivityProps {
-  events?: eventProps;
+  events?: EventProps;
   nodeIds?: number[];
   nodePositions?: number[][];
   recorderUnitId?: number;
@@ -23,11 +20,15 @@ export interface ActivityProps {
 interface activityState {
   activeNodeId: number | undefined;
   fromTime: number;
-  records: number[];
+  records: NodeRecord[];
+}
+
+export interface EventProps {
+  [key: string]: number[];
 }
 
 export class Activity {
-  private _events: eventProps = {};
+  private _events: EventProps = {};
   private _hash: string = "";
   private _idx: number = 0; // generative
   private _nodeIds: number[] = [];
@@ -46,7 +47,7 @@ export class Activity {
     this.init(activity);
   }
 
-  get chartGraph(): ActivityChartGraph {
+  get chartGraph(): ActivityChartGraph | undefined {
     return this.project.activityGraph.activityChartGraph;
   }
 
@@ -65,12 +66,32 @@ export class Activity {
     return this._recorder.network.project.simulation.state.biologicalTime;
   }
 
-  get events(): eventProps {
+  get events(): EventProps {
     return this._events;
   }
 
-  set events(value: eventProps) {
+  set events(value: EventProps) {
     this._events = value;
+  }
+
+  /**
+   * Check if activity contains analog signal data from input devices.
+   */
+  get hasInputAnalogData(): boolean {
+    return (
+      this._recorder.model.isAnalogRecorder &&
+      this.elementTypes.includes("stimulator")
+    );
+  }
+
+  /**
+   * Check if activity contains analog signal data from neurons.
+   */
+  get hasNeuronAnalogData(): boolean {
+    return (
+      this._recorder.model.isAnalogRecorder &&
+      this.elementTypes.includes("neuron")
+    );
   }
 
   get hash(): string {
@@ -132,7 +153,14 @@ export class Activity {
   }
 
   get simulationTimeInfo(): number {
-    return this._recorder.network.project.simulation.state.timeInfo;
+    return this._recorder.network.project.simulation.state.timeInfo.value;
+  }
+
+  /**
+   * Clone activity.
+   */
+  clone(): Activity {
+    return new Activity(this.recorder, this.toJSON());
   }
 
   /**
@@ -140,105 +168,6 @@ export class Activity {
    */
   get hasEvents(): boolean {
     return this.nEvents > 0;
-  }
-
-  /**
-   * Reset activity.
-   */
-  reset(): void {
-    this._events = {};
-    this._nodeIds = [];
-    this._nodePositions = [];
-    this._state.records = [];
-  }
-
-  /**
-   * Initialize activity.
-   *
-   * Overwrites events.
-   */
-  init(activity: activityProps = {}): void {
-    this.reset();
-    this.events = activity.events || { senders: [], times: [] };
-    this.nodeIds = activity.nodeIds || [];
-    this.nodePositions = activity.nodePositions || [];
-    this.recorderUnitId = activity.recorderUnitId || -1;
-    this.updateHash();
-    this.postInit();
-  }
-
-  postInit(): void {}
-
-  /**
-   * Update activity.
-   *
-   * Extends events.
-   */
-  update(activity: ActivityProps): void {
-    if (activity.events == undefined) return;
-
-    this.updateEvents(activity.events);
-    this.postUpdate(activity);
-  }
-
-  postUpdate(activity: ActivityProps): void {
-    activity;
-  }
-
-  /**
-   * Update events.
-   */
-  updateEvents(events: { [key: string]: number[] }): void {
-    if (events == undefined) return;
-    let updated = false;
-
-    const eventKeys: string[] = Object.keys(events);
-    if (eventKeys == undefined || eventKeys.length === 0) return;
-
-    eventKeys.forEach((eventKey: string) => {
-      const newEvents: number[] = events[eventKey];
-      if (newEvents) {
-        this._events[eventKey] = this._events[eventKey].concat(newEvents);
-        updated = true;
-      }
-    });
-
-    if (updated) {
-      this.updateHash();
-    }
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    // this._hash = sha1(JSON.stringify(this._events));
-    this._hash = sha1({ sendersLength: this._events.senders.length });
-  }
-
-  /**
-   * get activity from insite.
-   */
-  getActivityInsite(): void {}
-
-  /**
-   * Check if activity contains analog signal data from input devices.
-   */
-  get hasInputAnalogData(): boolean {
-    return (
-      this._recorder.model.isAnalogRecorder &&
-      this.elementTypes.includes("stimulator")
-    );
-  }
-
-  /**
-   * Check if activity contains analog signal data from neurons.
-   */
-  get hasNeuronAnalogData(): boolean {
-    return (
-      this._recorder.model.isAnalogRecorder &&
-      this.elementTypes.includes("neuron")
-    );
   }
 
   /**
@@ -273,10 +202,51 @@ export class Activity {
   }
 
   /**
-   * Clone activity.
+   * get activity from insite.
    */
-  clone(): Activity {
-    return new Activity(this.recorder, this.toJSON());
+  getActivityInsite(): void {}
+
+  /**
+   * Initialize activity.
+   *
+   * Overwrites events.
+   */
+  init(activity: ActivityProps = {}): void {
+    this.reset();
+    this.events = activity.events || { senders: [], times: [] };
+    this.nodeIds = activity.nodeIds || [];
+    this.nodePositions = activity.nodePositions || [];
+    this.recorderUnitId = activity.recorderUnitId || -1;
+    this.updateHash();
+    this.postInit();
+  }
+
+  postInit(): void {}
+
+  /**
+   * Update activity.
+   *
+   * Extends events.
+   */
+  update(activity: ActivityProps): void {
+    if (activity.events == undefined) return;
+
+    this.updateEvents(activity.events);
+    this.postUpdate(activity);
+  }
+
+  postUpdate(activity: ActivityProps): void {
+    activity;
+  }
+
+  /**
+   * Reset activity.
+   */
+  reset(): void {
+    this._events = {};
+    this._nodeIds = [];
+    this._nodePositions = [];
+    this._state.records = [];
   }
 
   /**
@@ -289,5 +259,36 @@ export class Activity {
       nodeIds: this._nodeIds,
       nodePositions: this._nodePositions,
     };
+  }
+
+  /**
+   * Update events.
+   */
+  updateEvents(events: { [key: string]: number[] }): void {
+    if (events == undefined) return;
+    let updated = false;
+
+    const eventKeys: string[] = Object.keys(events);
+    if (eventKeys == undefined || eventKeys.length === 0) return;
+
+    eventKeys.forEach((eventKey: string) => {
+      const newEvents: number[] = events[eventKey];
+      if (newEvents) {
+        this._events[eventKey] = this._events[eventKey].concat(newEvents);
+        updated = true;
+      }
+    });
+
+    if (updated) {
+      this.updateHash();
+    }
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    // this._hash = sha1(JSON.stringify(this._events));
+    this._hash = sha1({ sendersLength: this._events.senders.length });
   }
 }

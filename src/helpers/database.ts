@@ -1,9 +1,8 @@
 // database.ts
 
+// @ts-ignore
 import * as PouchDB from "pouchdb/dist/pouchdb";
-import * as PouchDBUpsert from "pouchdb-upsert/dist/pouchdb.upsert";
-
-import { sha1 } from 'object-hash';
+import * as semver from "semver";
 
 export class DatabaseService {
   private _db: PouchDB;
@@ -34,16 +33,6 @@ export class DatabaseService {
     return this._state;
   }
 
-  async destroy(): Promise<any> {
-    return this._db.destroy();
-  }
-
-  async reset(): Promise<any> {
-    return this.destroy().then(() => {
-      this._db = new PouchDB(this._url, this._options);
-    });
-  }
-
   get isReady(): boolean {
     return this._state.ready;
   }
@@ -57,6 +46,10 @@ export class DatabaseService {
       .allDocs()
       .then((result: any) => result.total_rows)
       .catch((err: any) => err);
+  }
+
+  async destroy(): Promise<any> {
+    return this._db.destroy();
   }
 
   list(sortedBy: string = "", reverse: boolean = false): any {
@@ -75,22 +68,30 @@ export class DatabaseService {
       .catch((err: any) => err);
   }
 
+  async reset(): Promise<any> {
+    return this.destroy().then(() => {
+      this._db = new PouchDB(this._url, this._options);
+    });
+  }
+
   // CRUD - Create, Read, Update, Delete
 
   create(data: any): any {
     data.version = process.env.APP_VERSION;
     data.createdAt = new Date();
-    return this._db
-      .post(data)
-      // .then((res: any) => {
-      //   data.doc._id = res.id;
-      //   data.doc.hash = data.hash;
-      //   if (!data.createdAt) {
-      //     data.createdAt = data.createdAt;
-      //   }
-      //   data.updatedAt = undefined;
-      // })
-      .catch((err: any) => console.log(err));
+    return (
+      this._db
+        .post(data)
+        // .then((res: any) => {
+        //   data.doc._id = res.id;
+        //   data.doc.hash = data.hash;
+        //   if (!data.createdAt) {
+        //     data.createdAt = data.createdAt;
+        //   }
+        //   data.updatedAt = undefined;
+        // })
+        .catch((err: any) => console.log(err))
+    );
   }
 
   read(id: string, rev: string = ""): any {
@@ -167,11 +168,11 @@ export class DatabaseService {
 
   checkVersion(): void {
     this.getVersion()
-      .then((version: string) => {
-        const dbVersion: string[] = version.split(".");
-        const appVersion: string[] = process.env.APP_VERSION.split(".");
+      .then((dbVersion: string) => {
+        const appVersion: string = process.env.APP_VERSION || "";
         this._state.valid =
-          appVersion[0] === dbVersion[0] && appVersion[1] === dbVersion[1];
+          semver.major(dbVersion) === semver.major(appVersion) &&
+          semver.minor(dbVersion) === semver.minor(appVersion);
       })
       .catch(() => {
         this.setVersion().then(() => this.checkVersion());

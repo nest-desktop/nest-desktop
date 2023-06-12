@@ -4,7 +4,7 @@ import * as math from "mathjs";
 
 import { NodeSpatial } from "./nodeSpatial";
 
-export interface gridPositionsProps {
+export interface GridPositionsProps {
   center?: number[];
   edgeWrap?: boolean;
   extent?: number[];
@@ -22,7 +22,7 @@ export class GridPositions {
   private _shape: number[] = [1, 1];
   private _spatial: NodeSpatial;
 
-  constructor(spatial: NodeSpatial, positions?: gridPositionsProps) {
+  constructor(spatial: NodeSpatial, positions?: GridPositionsProps) {
     this._spatial = spatial;
 
     if (positions) {
@@ -130,7 +130,7 @@ export class GridPositions {
    * Serialize for JSON.
    * @return grid positons object
    */
-  toJSON(): gridPositionsProps {
+  toJSON(): GridPositionsProps {
     return {
       center: this._center,
       edgeWrap: this._edgeWrap,

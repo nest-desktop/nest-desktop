@@ -7,10 +7,10 @@ import { Activity } from "./activity";
 import { ActivityChartGraph } from "./activityChart/activityChartGraph";
 import { ActivityAnimationGraph } from "./activityAnimation/activityAnimationGraph";
 import { Project } from "../project/project";
-import { activityChartPanelProps } from "./activityChart/activityChartPanel";
+import { ActivityChartPanelProps } from "./activityChart/activityChartPanel";
 
 export interface ActivityGraphProps {
-  panels?: activityChartPanelProps[];
+  panels?: ActivityChartPanelProps[];
 }
 
 interface ActivityGraphState {
@@ -19,8 +19,8 @@ interface ActivityGraphState {
 }
 
 export class ActivityGraph {
-  private _activityAnimationGraph: ActivityAnimationGraph;
-  private _activityChartGraph: ActivityChartGraph;
+  private _activityAnimationGraph?: ActivityAnimationGraph;
+  private _activityChartGraph?: ActivityChartGraph;
   private _project: Project;
   private _state: UnwrapRef<ActivityGraphState>;
 
@@ -33,11 +33,11 @@ export class ActivityGraph {
     this.init(activityGraph);
   }
 
-  get activityAnimationGraph(): ActivityAnimationGraph {
+  get activityAnimationGraph(): ActivityAnimationGraph | undefined {
     return this._activityAnimationGraph;
   }
 
-  get activityChartGraph(): ActivityChartGraph {
+  get activityChartGraph(): ActivityChartGraph | undefined {
     return this._activityChartGraph;
   }
 
@@ -54,37 +54,21 @@ export class ActivityGraph {
   }
 
   /**
+   * Empty activity graph.
+   */
+  emptyActivityGraph(): void {
+    if (this._activityChartGraph) {
+      this._activityChartGraph.empty();
+    }
+  }
+
+  /**
    * Initialize activity graph.
    */
   init(activityGraph: ActivityGraphProps = {}): void {
     this.initActivityChartGraph(activityGraph.panels);
     this.initActivityAnimationGraph();
     this.updateHash();
-  }
-
-  /**
-   * Update activity graph.
-   */
-  update(): void {
-    const activitiesHash = this._project.activities.map(
-      (activity: Activity) => activity.hash
-    );
-    if (sha1({ activitiesHash }) === this._state.dataHash) return;
-
-    this._activityChartGraph.update();
-    this._activityAnimationGraph.update();
-    this.updateHash();
-  }
-
-  /**
-   * Update hash for activity graph.
-   */
-  updateHash(): void {
-    this._state.codeHash = this._project.simulation.code.state.hash;
-    const activitiesHash = this._project.activities.map(
-      (activity: Activity) => activity.hash
-    );
-    this._state.dataHash = sha1({ activitiesHash });
   }
 
   /**
@@ -101,7 +85,7 @@ export class ActivityGraph {
   /**
    * Initialize activity chart graph (plotly).
    */
-  initActivityChartGraph(panels: activityChartPanelProps[] = []): void {
+  initActivityChartGraph(panels: ActivityChartPanelProps[] = []): void {
     if (this._activityChartGraph == undefined) {
       this._activityChartGraph = new ActivityChartGraph(this._project, panels);
     } else {
@@ -110,17 +94,41 @@ export class ActivityGraph {
   }
 
   /**
-   * Empty activity graph.
-   */
-  emptyActivityGraph(): void {
-    this._activityChartGraph.empty();
-  }
-
-  /**
    * Serialize for JSON.
    * @return activity graph object
    */
   toJSON(): ActivityGraphProps {
-    return { panels: this._activityChartGraph.toJSON() };
+    return {
+      panels: this._activityChartGraph ? this._activityChartGraph.toJSON() : [],
+    };
+  }
+
+  /**
+   * Update activity graph.
+   */
+  update(): void {
+    const activitiesHash = this._project.activities.map(
+      (activity: Activity) => activity.hash
+    );
+    if (sha1({ activitiesHash }) === this._state.dataHash) return;
+
+    if (this._activityChartGraph) {
+      this._activityChartGraph.update();
+    }
+    if (this._activityAnimationGraph) {
+      this._activityAnimationGraph.update();
+    }
+    this.updateHash();
+  }
+
+  /**
+   * Update hash for activity graph.
+   */
+  updateHash(): void {
+    this._state.codeHash = this._project.simulation.code.state.hash;
+    const activitiesHash = this._project.activities.map(
+      (activity: Activity) => activity.hash
+    );
+    this._state.dataHash = sha1({ activitiesHash });
   }
 }

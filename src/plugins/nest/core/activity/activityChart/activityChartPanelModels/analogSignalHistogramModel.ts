@@ -5,11 +5,17 @@ import * as d3 from "d3";
 import { darkMode } from "@/helpers/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import { AnalogSignalPanelModel, analogSignalPanelModelProps } from "./analogSignalPanelModel";
+import {
+  AnalogSignalPanelModel,
+  AnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 import { NodeRecord } from "../../../node/nodeRecord";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
-  constructor(panel: ActivityChartPanel, model: analogSignalPanelModelProps = {}) {
+  constructor(
+    panel: ActivityChartPanel,
+    model: AnalogSignalPanelModelProps = {}
+  ) {
     super(panel, model);
     this.icon = "mdi-chart-bar";
     this.id = "analogSignalHistogram";

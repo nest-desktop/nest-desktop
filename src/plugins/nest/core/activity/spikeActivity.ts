@@ -1,7 +1,7 @@
 // spikeActivity.ts
 
-import { Activity, ActivityProps, EventProps } from './activity';
-import { Node } from '../node/node';
+import { Activity, ActivityProps, EventProps } from "./activity";
+import { Node } from "../node/node";
 
 interface SpikeActivityProps extends ActivityProps {}
 
@@ -14,47 +14,10 @@ export class SpikeActivity extends Activity {
   }
 
   /**
-   * Post-initialize spike activity.
+   * Clone spike activity.
    */
-  override postInit(): void {
-    this._times = Object.create(null);
-    if (this.nodeIds.length === 0) return;
-
-    this.nodeIds.forEach((id: number) => (this._times[id] = []));
-    this.updateTimes(this.events);
-  }
-
-  /**
-   * Post-update spike activity.
-   */
-  override postUpdate(activity: ActivityProps): void {
-    if (activity.events == undefined) return;
-    this.updateTimes(activity.events);
-  }
-
-  /**
-   * Update times for ISI or CV(ISI).
-   */
-  updateTimes(events: EventProps = {}): void {
-    if (
-      events.senders == undefined ||
-      events.times == undefined ||
-      events.senders.length === 0 ||
-      events.times.length === 0
-    ) {
-      return;
-    }
-
-    events.senders.forEach((sender: number, idx: number) => {
-      this._times[sender].push(this.events.times[idx]);
-    });
-  }
-
-  /**
-   * Get ISI of all nodes.
-   */
-  ISI(): number[][] {
-    return this.nodeIds.map((id: number) => this.getISI(this._times[id]));
+  override clone(): SpikeActivity {
+    return new SpikeActivity(this.recorder, this.toJSON());
   }
 
   /**
@@ -102,9 +65,46 @@ export class SpikeActivity extends Activity {
   }
 
   /**
-   * Clone spike activity.
+   * Get ISI of all nodes.
    */
-  override clone(): SpikeActivity {
-    return new SpikeActivity(this.recorder, this.toJSON());
+  ISI(): number[][] {
+    return this.nodeIds.map((id: number) => this.getISI(this._times[id]));
+  }
+
+  /**
+   * Post-initialize spike activity.
+   */
+  override postInit(): void {
+    this._times = Object.create(null);
+    if (this.nodeIds.length === 0) return;
+
+    this.nodeIds.forEach((id: number) => (this._times[id] = []));
+    this.updateTimes(this.events);
+  }
+
+  /**
+   * Post-update spike activity.
+   */
+  override postUpdate(activity: ActivityProps): void {
+    if (activity.events == undefined) return;
+    this.updateTimes(activity.events);
+  }
+
+  /**
+   * Update times for ISI or CV(ISI).
+   */
+  updateTimes(events: EventProps = {}): void {
+    if (
+      events.senders == undefined ||
+      events.times == undefined ||
+      events.senders.length === 0 ||
+      events.times.length === 0
+    ) {
+      return;
+    }
+
+    events.senders.forEach((sender: number, idx: number) => {
+      this._times[sender].push(this.events.times[idx]);
+    });
   }
 }

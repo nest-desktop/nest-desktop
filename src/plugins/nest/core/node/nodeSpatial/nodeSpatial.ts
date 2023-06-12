@@ -3,13 +3,13 @@
 import { sha1 } from "object-hash";
 
 import { Config } from "@/helpers/config";
-import { FreePositions, freePositionsProps } from "./freePositions";
-import { GridPositions, gridPositionsProps } from "./gridPositions";
+import { FreePositions, FreePositionsProps } from "./freePositions";
+import { GridPositions, GridPositionsProps } from "./gridPositions";
 import { Node } from "../node";
 
-export interface nodeSpatialProps {
+export interface NodeSpatialProps {
   positions?: string;
-  specs?: freePositionsProps | gridPositionsProps;
+  specs?: FreePositionsProps | GridPositionsProps;
 }
 
 export class NodeSpatial extends Config {
@@ -17,7 +17,7 @@ export class NodeSpatial extends Config {
   private _node: Node;
   private _positions: FreePositions | GridPositions | undefined;
 
-  constructor(node: Node, spatial?: nodeSpatialProps) {
+  constructor(node: Node, spatial?: NodeSpatialProps) {
     super("NodeSpatial");
     this._node = node;
 
@@ -53,7 +53,7 @@ export class NodeSpatial extends Config {
   /**
    * Initialize spatial node.
    */
-  init(spatial: nodeSpatialProps): void {
+  init(spatial: NodeSpatialProps): void {
     switch (spatial.positions) {
       case "free":
         this._positions = new FreePositions(this, spatial.specs);
@@ -75,8 +75,8 @@ export class NodeSpatial extends Config {
    * Serialize for JSON.
    * @return spatial object
    */
-  toJSON(): nodeSpatialProps {
-    const spatial: nodeSpatialProps = {};
+  toJSON(): NodeSpatialProps {
+    const spatial: NodeSpatialProps = {};
     if (this._positions != undefined) {
       spatial.positions = this._positions.name;
       spatial.specs = this._positions.toJSON();

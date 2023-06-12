@@ -2,19 +2,19 @@
 
 import { Config } from "@/helpers/config";
 
-import { Connection, connectionProps } from "../connection/connection";
+import { Connection, cCnnectionProps } from "../connection/connection";
 import { Connections } from "../connection/connections";
-import { CopyModel, copyModelProps } from "../model/copyModel";
+import { CopyModel, CopyModelProps } from "../model/copyModel";
 import { CopyModels } from "../model/copyModels";
 import { NetworkState } from "./networkState";
-import { Node, nodeProps } from "../node/node";
+import { Node, nNdeProps } from "../node/node";
 import { Nodes } from "../node/nodes";
 import { Project } from "../project/project";
 
-export interface networkProps {
-  models?: copyModelProps[];
-  nodes?: nodeProps[];
-  connections?: connectionProps[];
+export interface NetworkProps {
+  models?: CopyModelProps[];
+  nodes?: NodeProps[];
+  connections?: ConnectionProps[];
 }
 
 export class Network extends Config {
@@ -24,7 +24,7 @@ export class Network extends Config {
   private _project: Project; // project
   private _state: NetworkState; // network state
 
-  constructor(project: Project, network: networkProps = {}) {
+  constructor(project: Project, network: NetworkProps = {}) {
     super("Network");
     this._project = project;
 
@@ -253,7 +253,7 @@ export class Network extends Config {
    * Serialize for JSON.
    * @return network object
    */
-  toJSON(): networkProps {
+  toJSON(): NetworkProps {
     return {
       connections: this._connections.toJSON(),
       models: this._models.toJSON(),
@@ -266,7 +266,7 @@ export class Network extends Config {
    *
    * @param network - network object
    */
-  update(network: networkProps): void {
+  update(network: NetworkProps): void {
     this._models.update(network.models);
     this._nodes.update(network.nodes);
     this._connections.update(network.connections);

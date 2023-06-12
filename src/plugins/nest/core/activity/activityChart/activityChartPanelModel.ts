@@ -6,9 +6,11 @@ import { Activity } from "../activity";
 import { ActivityChartPanel } from "./activityChartPanel";
 import { NodeRecord } from "../../node/nodeRecord";
 
-export interface activityChartPanelModelProps {
+export interface ActivityChartPanelModelProps {
   id?: string;
-  params?: any[];
+  markerSize?: number;
+  params?: any;
+  records?: any;
 }
 
 export abstract class ActivityChartPanelModel {
@@ -65,6 +67,13 @@ export abstract class ActivityChartPanelModel {
     this._data = value;
   }
 
+  /**
+   * Check if it has any activities.
+   */
+  get hasActivities(): boolean {
+    return this.activities.length > 0;
+  }
+
   get icon(): string {
     return this._icon;
   }
@@ -93,16 +102,27 @@ export abstract class ActivityChartPanelModel {
     return this._panel;
   }
 
-  get params(): any[] {
+  get params(): { [key: string]: any } {
     return this._params;
   }
 
-  set params(value: any[]) {
+  set params(value: { [key: string]: any }) {
     this._params = value;
   }
 
   get state(): UnwrapRef<any> {
     return this._state;
+  }
+
+  /**
+   * Add data of this activity graph panel.
+   *
+   * @remarks
+   * It requires activity data.
+   * It is a replacement for abstract component.
+   */
+  addData(activity: Activity): void {
+    activity;
   }
 
   /**
@@ -113,17 +133,10 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Check if it has any activities.
+   * Get activity from the project.
    */
-  get hasActivities(): boolean {
-    return this.activities.length > 0;
-  }
-
-  /**
-   * Reset activity panel model.
-   */
-  reset(): any {
-    this.data = [];
+  getActivity(idx: number): Activity {
+    return this._panel.graph.project.activities[idx];
   }
 
   /**
@@ -141,17 +154,10 @@ export abstract class ActivityChartPanelModel {
    * This method will be overwritten in child classes.
    */
   abstract initActivities(): void;
-
-  /**
-   * Update active marker.
-   **/
-  updateActiveMarker(record?: NodeRecord): void {
-    record;
-  }
-
   /**
    * Initialize records from analog activities.
    */
+
   initAnalogRecords(): void {
     this._state.records = [];
     this.activities
@@ -209,6 +215,23 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
+   * Remove record from the state.
+   */
+  removeRecord(record: NodeRecord): void {
+    this._state.recordsVisible.splice(
+      this._state.recordsVisible.indexOf(record),
+      1
+    );
+  }
+
+  /**
+   * Reset activity panel model.
+   */
+  reset(): any {
+    this.data = [];
+  }
+
+  /**
    * Update panel model.
    *
    * @remarks
@@ -224,6 +247,13 @@ export abstract class ActivityChartPanelModel {
     });
 
     this.updateLayoutLabel();
+  }
+
+  /**
+   * Update active marker.
+   **/
+  updateActiveMarker(record?: NodeRecord): void {
+    record;
   }
 
   /**
@@ -258,13 +288,6 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Get activity from the project.
-   */
-  getActivity(idx: number): Activity {
-    return this._panel.graph.project.activities[idx];
-  }
-
-  /**
    * Update color for records.
    */
   updateRecordsColor(): void {
@@ -293,17 +316,6 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Add data of this activity graph panel.
-   *
-   * @remarks
-   * It requires activity data.
-   * It is a replacement for abstract component.
-   */
-  addData(activity: Activity): void {
-    activity;
-  }
-
-  /**
    * Update layout label.
    *
    * @remarks
@@ -314,36 +326,11 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Update time of the panel model.
-   *
-   * @remarks
-   * It needs activity data.
-   */
-  updateTime(): void {
-    // Update time
-    this._state.time.start = 0;
-    this._state.time.end = Math.max(
-      this._state.time.end,
-      this._panel.graph.currenttime + 1
-    );
-  }
-
-  /**
-   * Remove record from the state.
-   */
-  removeRecord(record: NodeRecord): void {
-    this._state.recordsVisible.splice(
-      this._state.recordsVisible.indexOf(record),
-      1
-    );
-  }
-
-  /**
    * Serialize for JSON.
    * @return activity chart panel model object
    */
-  toJSON(): activityChartPanelModelProps {
-    const model: activityChartPanelModelProps = {
+  toJSON(): ActivityChartPanelModelProps {
+    const model: ActivityChartPanelModelProps = {
       id: this._id,
       params: {},
     };
@@ -360,5 +347,20 @@ export abstract class ActivityChartPanelModel {
       );
     }
     return model;
+  }
+
+  /**
+   * Update time of the panel model.
+   *
+   * @remarks
+   * It needs activity data.
+   */
+  updateTime(): void {
+    // Update time
+    this._state.time.start = 0;
+    this._state.time.end = Math.max(
+      this._state.time.end,
+      this._panel.graph.currenttime + 1
+    );
   }
 }

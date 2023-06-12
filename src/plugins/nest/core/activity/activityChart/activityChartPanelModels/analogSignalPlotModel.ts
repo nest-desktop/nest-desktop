@@ -1,3 +1,5 @@
+// analogSignalPlotModel.ts
+
 import { darkMode } from "@/helpers/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";

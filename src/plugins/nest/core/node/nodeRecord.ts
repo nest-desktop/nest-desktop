@@ -5,7 +5,7 @@ import * as d3 from "d3";
 import { Activity } from "../activity/activity";
 import { Node } from "./node";
 
-export interface recordProps {
+export interface NodeRecordProps {
   id: string;
   color: string;
   groupId: string;
@@ -63,6 +63,14 @@ export class NodeRecord {
     return this._groupId;
   }
 
+  get hasEvent(): boolean {
+    return this._id in this._activity.events;
+  }
+
+  get hasValues(): boolean {
+    return this.values.length > 0;
+  }
+
   get id(): string {
     return this._id;
   }
@@ -99,14 +107,6 @@ export class NodeRecord {
     return this._activity.events[this._id];
   }
 
-  get hasEvent(): boolean {
-    return this._id in this._activity.events;
-  }
-
-  get hasValues(): boolean {
-    return this.values.length > 0;
-  }
-
   /**
    * Normalize value for color or height.
    */
@@ -116,7 +116,7 @@ export class NodeRecord {
     return (value - min) / (max - min);
   }
 
-  toJSON(): recordProps {
+  toJSON(): NodeRecordProps {
     return {
       id: this._id,
       color: this._color,

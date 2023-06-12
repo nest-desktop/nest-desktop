@@ -10,14 +10,14 @@ import { Activity } from "../activity/activity";
 import { ActivityGraph } from "../activity/activityGraph";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { Insite } from "./insite/insite";
-import { Network, networkProps } from "../network/network";
+import { Network, NetworkProps } from "../network/network";
 import { Node } from "../node/node";
 import { ProjectState } from "./projectState";
-import { Simulation, simulationProps } from "../simulation/simulation";
+import { Simulation, SimulationProps } from "../simulation/simulation";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { upgradeProject } from "../upgrades/upgrades";
 
-export interface projectProps {
+export interface ProjectProps {
   _id?: string;
   _rev?: string;
   activityGraph?: any;
@@ -25,8 +25,8 @@ export interface projectProps {
   description?: string;
   id?: string;
   name?: string;
-  network?: networkProps;
-  simulation?: simulationProps;
+  network?: NetworkProps;
+  simulation?: SimulationProps;
   updatedAt?: string;
   version?: string;
 }
@@ -50,7 +50,7 @@ export class Project {
   private _projectDBStore;
   private _projectStore;
 
-  constructor(project: projectProps = {}) {
+  constructor(project: ProjectProps = {}) {
     this._modelStore = useModelDBStore();
     this._projectDBStore = useProjectDBStore();
     this._projectStore = useProjectStore();
@@ -646,8 +646,8 @@ export class Project {
    * Serialize for JSON.
    * @return project object
    */
-  toJSON(): projectProps {
-    const project: projectProps = {
+  toJSON(): ProjectProps {
+    const project: ProjectProps = {
       activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,

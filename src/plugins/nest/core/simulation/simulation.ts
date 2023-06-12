@@ -4,16 +4,16 @@ import { reactive, UnwrapRef } from "vue";
 
 import { Config } from "@/helpers/config";
 import { Project } from "../project/project";
-import { SimulationKernel, simulationKernelProps } from "./simulationKernel";
-import { SimulationCode, simulationCodeProps } from "./simulationCode";
+import { SimulationKernel, SimulationKernelProps } from "./simulationKernel";
+import { SimulationCode, SimulationCodeProps } from "./simulationCode";
 
-export interface simulationProps {
-  code?: simulationCodeProps;
-  kernel?: simulationKernelProps;
+export interface SimulationProps {
+  code?: SimulationCodeProps;
+  kernel?: SimulationKernelProps;
   time?: number;
 }
 
-interface simulationState {
+interface SimulationState {
   biologicalTime: number;
   running: boolean;
   timeInfo: { [key: string]: number };
@@ -23,10 +23,10 @@ export class Simulation extends Config {
   private _code: SimulationCode;
   private _kernel: SimulationKernel; // simulation kernel
   private _project: Project; // parent
-  private _state: UnwrapRef<simulationState>;
+  private _state: UnwrapRef<SimulationState>;
   private _time: number; // simulation time
 
-  constructor(project: Project, simulation: simulationProps = {}) {
+  constructor(project: Project, simulation: SimulationProps = {}) {
     super("Simulation");
     this._project = project;
 
@@ -64,7 +64,7 @@ export class Simulation extends Config {
     return this._project;
   }
 
-  get state(): UnwrapRef<simulationState> {
+  get state(): UnwrapRef<SimulationState> {
     return this._state;
   }
 
@@ -259,8 +259,8 @@ export class Simulation extends Config {
    * Serialize for JSON.
    * @return simulation object
    */
-  toJSON(): simulationProps {
-    const simulation: simulationProps = {
+  toJSON(): SimulationProps {
+    const simulation: SimulationProps = {
       code: this._code.toJSON(),
       kernel: this._kernel.toJSON(),
       time: this._time,

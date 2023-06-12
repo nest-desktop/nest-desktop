@@ -1,12 +1,12 @@
-import * as math from 'mathjs';
-import * as THREE from 'three';
+import * as math from "mathjs";
+import * as THREE from "three";
 
-import { Activity } from '../activity';
-import { ActivityAnimationGraph } from './activityAnimationGraph';
-import { ActivityAnimationLayerModel } from './activityAnimationLayerModel';
-import { BoxGeometryLayerModel } from './activityAnimationLayerModels/BoxGeometryLayerModel';
-import { NodeRecord } from '../../node/nodeRecord';
-import { SphereGeometryLayerModel } from './activityAnimationLayerModels/SphereGeometryLayerModel';
+import { Activity } from "../activity";
+import { ActivityAnimationGraph } from "./activityAnimationGraph";
+import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
+import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/BoxGeometryLayerModel";
+import { NodeRecord } from "../../node/nodeRecord";
+import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/SphereGeometryLayerModel";
 
 export class ActivityAnimationLayer {
   private _activity: Activity;
@@ -20,23 +20,23 @@ export class ActivityAnimationLayer {
     trail: {
       fading: false,
       length: 0,
-      mode: 'off',
+      mode: "off",
     },
   };
   private _frames: any[] = [];
   private _graph: ActivityAnimationGraph;
-  private _graphGroup: THREE.Group;
-  private _model: ActivityAnimationLayerModel;
+  private _graphGroup?: THREE.Group;
+  private _model?: ActivityAnimationLayerModel;
   private _models: any[] = [
     {
       component: BoxGeometryLayerModel,
-      id: 'BoxGeometryLayerModel',
-      label: 'box geometry',
+      id: "BoxGeometryLayerModel",
+      label: "box geometry",
     },
     {
       component: SphereGeometryLayerModel,
-      id: 'SphereGeometryLayerModel',
-      label: 'sphere geometry',
+      id: "SphereGeometryLayerModel",
+      label: "sphere geometry",
     },
   ];
   private _offset: any = { x: 0, y: 0, z: 0 };
@@ -86,11 +86,11 @@ export class ActivityAnimationLayer {
     return this._graph;
   }
 
-  get graphGroup(): THREE.Group {
+  get graphGroup(): THREE.Group | undefined {
     return this._graphGroup;
   }
 
-  get model(): ActivityAnimationLayerModel {
+  get model(): ActivityAnimationLayerModel | undefined {
     return this._model;
   }
 
@@ -166,7 +166,7 @@ export class ActivityAnimationLayer {
     });
     if (this._state.record == null) {
       const record = this._state.records.find(
-        (record: NodeRecord) => record.id === 'V_m'
+        (record: NodeRecord) => record.id === "V_m"
       );
       this._state.record = record != null ? record : this._state.records[0];
     }
@@ -189,7 +189,10 @@ export class ActivityAnimationLayer {
     this._graphGroup = new THREE.Group();
     this._graphGroup.userData.layer = this;
     this._graphGroup.add(this.createGrids(this.bins));
-    this._graphGroup.add(this._model.graphGroup);
+    if (this._model) {
+      // @ts-ignore
+      this._graphGroup.add(this._model.graphGroup);
+    }
   }
 
   /**
@@ -299,6 +302,10 @@ export class ActivityAnimationLayer {
    * Render frame of activity.
    */
   renderFrame(): void {
+    if (this._model == undefined) {
+      return;
+    }
+
     if (this._state.visible) {
       this._model.render(this.frame);
     } else if (!this._state.reset) {

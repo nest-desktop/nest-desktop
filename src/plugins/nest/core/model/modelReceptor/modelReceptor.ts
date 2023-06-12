@@ -80,61 +80,17 @@ export class ModelReceptor {
   }
 
   /**
-   * Clean model receptor.
-   */
-  clean(): void {}
-
-  /**
-   * Observer for model receptor changes.
-   *
-   * @remarks
-   * It emits model changes.
-   */
-  modelChanges(): void {
-    this.clean();
-    this._model.modelChanges();
-  }
-
-  /**
-   * Update model parameters.
-   */
-  updateParameters(modelReceptor: ModelReceptorProps): void {
-    if (modelReceptor.params) {
-      modelReceptor.params.forEach((param: any) => {
-        if (this.getParameter(param.id)) {
-          this.updateParameter(param);
-        } else {
-          this.addParameter(param);
-        }
-      });
-    }
-  }
-
-  /**
-   * Update a parameter.
-   */
-  updateParameter(param: ModelReceptorParameterProps): void {
-    this._params[param.id].update(param);
-  }
-
-  /**
-   * Update the recordables from the config.
-   */
-  updateRecordables(model: any): void {
-    if ("recordables" in model) {
-      this._recordables = this._model.config.recordables.filter(
-        (recordable: any) => model.recordables.includes(recordable.id)
-      );
-    }
-  }
-
-  /**
    * Add a parameter component.
    * @param param - parameter object
    */
   addParameter(param: ModelReceptorParameterProps): void {
     this._params[param.id] = new ModelReceptorParameter(this, param);
   }
+
+  /**
+   * Clean model receptor.
+   */
+  clean(): void {}
 
   /**
    * Get parameter component.
@@ -154,6 +110,36 @@ export class ModelReceptor {
   }
 
   /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    Object.values(this.params).forEach(
+      (param: ModelReceptorParameter) => (param.state.visible = false)
+    );
+  }
+
+  /**
+   * Observer for model receptor changes.
+   *
+   * @remarks
+   * It emits model changes.
+   */
+  modelChanges(): void {
+    this.clean();
+    this._model.modelChanges();
+  }
+
+  /**
+   * Delete the model receptor.
+   *
+   * @remarks
+   * It removes the receptor from the model.
+   */
+  remove(): void {
+    // this._model.deleteReceptor(this);
+  }
+
+  /**
    * Reset value in parameter components.
    *
    * @remarks
@@ -167,31 +153,12 @@ export class ModelReceptor {
   }
 
   /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: ModelReceptorParameter) => (param.state.visible = false)
-    );
-  }
-
-  /**
    * Sets all params to visible.
    */
   showAllParams(): void {
     Object.values(this.params).forEach(
       (param: ModelReceptorParameter) => (param.state.visible = true)
     );
-  }
-
-  /**
-   * Delete the model receptor.
-   *
-   * @remarks
-   * It removes the receptor from the model.
-   */
-  remove(): void {
-    // this._model.deleteReceptor(this);
   }
 
   /**
@@ -215,5 +182,38 @@ export class ModelReceptor {
     }
 
     return receptor;
+  }
+
+  /**
+   * Update a parameter.
+   */
+  updateParameter(param: ModelReceptorParameterProps): void {
+    this._params[param.id].update(param);
+  }
+
+  /**
+   * Update model parameters.
+   */
+  updateParameters(modelReceptor: ModelReceptorProps): void {
+    if (modelReceptor.params) {
+      modelReceptor.params.forEach((param: any) => {
+        if (this.getParameter(param.id)) {
+          this.updateParameter(param);
+        } else {
+          this.addParameter(param);
+        }
+      });
+    }
+  }
+
+  /**
+   * Update the recordables from the config.
+   */
+  updateRecordables(model: any): void {
+    if ("recordables" in model) {
+      this._recordables = this._model.config.recordables.filter(
+        (recordable: any) => model.recordables.includes(recordable.id)
+      );
+    }
   }
 }

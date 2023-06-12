@@ -181,7 +181,7 @@ export class Backend extends Config {
     if (config.url != null && config.url !== '') {
       this.url = config.url;
     } else {
-      const newConfig = {};
+      const newConfig: { [key: string]: string} = {};
       if (config.path != null && config.path !== '') {
         newConfig['path'] = config.path;
       }
@@ -194,6 +194,7 @@ export class Backend extends Config {
         this.updateConfig(newConfig);
 
         // Update current url to set hostname.
+        // @ts-ignore
         this.url = this.url;
       }
     }

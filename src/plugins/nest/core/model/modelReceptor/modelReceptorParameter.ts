@@ -6,18 +6,18 @@ import { ModelReceptor } from "./modelReceptor";
 export interface ModelReceptorParameterProps extends ModelParameterProps {}
 
 export class ModelReceptorParameter extends ModelParameter {
-  constructor(modelReceptor: ModelReceptor, param: ModelReceptorParameterProps) {
+  constructor(
+    modelReceptor: ModelReceptor,
+    param: ModelReceptorParameterProps
+  ) {
     super(modelReceptor, param);
   }
 
   /**
-   * Get the options from the model receptor component.
-   *
-   * @remarks
-   * TODO: Validate this options to get options for input.
+   * Get model parameter.
    */
-  override get options(): ModelReceptorParameterProps {
-    return this.modelReceptor.params[this.id].toJSON();
+  override get modelParam(): ModelReceptorParameter {
+    return this.modelReceptor.params[this.id];
   }
 
   get modelReceptor(): ModelReceptor {

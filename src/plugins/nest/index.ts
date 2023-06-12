@@ -5,7 +5,7 @@ import { useModelStore } from "./store/modelStore";
 import { useProjectStore } from "./store/projectStore";
 
 export default {
-  install(app, options) {
+  install() {
     // configure the app
     const modelDBStore = useModelDBStore();
     modelDBStore.init().then(() => {

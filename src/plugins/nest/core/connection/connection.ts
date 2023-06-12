@@ -101,6 +101,13 @@ export class Connection extends Config {
     return this._idx;
   }
 
+  /**
+   * Check if source and target nodes has positions.
+   */
+  get isBothSpatial(): boolean {
+    return this.source.spatial.hasPositions && this.target.spatial.hasPositions;
+  }
+
   get mask(): ConnectionMask {
     return this._mask;
   }
@@ -190,40 +197,18 @@ export class Connection extends Config {
   }
 
   /**
-   * Sets all params to visible.
+   * Add connection parameter.
    */
-  public showAllParams(): void {
-    Object.values(this._params).forEach(
-      (param: ConnectionParameter) => (param.state.visible = true)
-    );
+  addParameter(param: ConnectionParameterProps): void {
+    this._params[param.id] = new ConnectionParameter(this, param);
   }
 
   /**
-   * Sets all params to invisible.
+   * Clean this component.
    */
-  public hideAllParams(): void {
-    Object.values(this._params).forEach(
-      (param: ConnectionParameter) => (param.state.visible = false)
-    );
-  }
-
-  /**
-   * Resets all parameters to their default.
-   */
-  public resetAllParams(): void {
-    const ruleConfig: any = this.getRuleConfig();
-
-    // Reset connection parameter.
-    Object.values(this._params).forEach((param: ConnectionParameter) => {
-      param.reset();
-      const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
-      param.value = p.value;
-    });
-
-    // Reset synapse parameter.
-    Object.values(this.synapse.params).forEach((param: SynapseParameter) =>
-      param.reset()
-    );
+  clean(): void {
+    this._idx = this._connections.all.indexOf(this);
+    this.updateHash();
   }
 
   /**
@@ -234,6 +219,15 @@ export class Connection extends Config {
    */
   connectionChanges(): void {
     this.network.networkChanges();
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    Object.values(this._params).forEach(
+      (param: ConnectionParameter) => (param.state.visible = false)
+    );
   }
 
   /**
@@ -257,13 +251,6 @@ export class Connection extends Config {
       }
       this.addParameter(param);
     });
-  }
-
-  /**
-   * Add connection parameter.
-   */
-  addParameter(param: ConnectionParameterProps): void {
-    this._params[param.id] = new ConnectionParameter(this, param);
   }
 
   /**
@@ -293,31 +280,6 @@ export class Connection extends Config {
   }
 
   /**
-   * Update hash for connection graph.
-   */
-  updateHash(): void {
-    this._hash = sha1({
-      // color: this.source.view.color,
-      idx: this.idx,
-    });
-  }
-
-  /**
-   * Clean this component.
-   */
-  clean(): void {
-    this._idx = this._connections.all.indexOf(this);
-    this.updateHash();
-  }
-
-  /**
-   * Check if source and target nodes has positions.
-   */
-  get isBothSpatial(): boolean {
-    return this.source.spatial.hasPositions && this.target.spatial.hasPositions;
-  }
-
-  /**
    * Set defaults.
    *
    * @remarks
@@ -332,10 +294,38 @@ export class Connection extends Config {
   }
 
   /**
+   * Resets all parameters to their default.
+   */
+  resetAllParams(): void {
+    const ruleConfig: any = this.getRuleConfig();
+
+    // Reset connection parameter.
+    Object.values(this._params).forEach((param: ConnectionParameter) => {
+      param.reset();
+      const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
+      param.value = p.value;
+    });
+
+    // Reset synapse parameter.
+    Object.values(this.synapse.params).forEach((param: SynapseParameter) =>
+      param.reset()
+    );
+  }
+
+  /**
    * Delete connection from the network.
    */
   remove(): void {
     this.network.deleteConnection(this);
+  }
+
+  /**
+   * Sets all params to visible.
+   */
+  showAllParams(): void {
+    Object.values(this._params).forEach(
+      (param: ConnectionParameter) => (param.state.visible = true)
+    );
   }
 
   /**
@@ -366,5 +356,15 @@ export class Connection extends Config {
     }
 
     return connection;
+  }
+
+  /**
+   * Update hash for connection graph.
+   */
+  updateHash(): void {
+    this._hash = sha1({
+      // color: this.source.view.color,
+      idx: this.idx,
+    });
   }
 }

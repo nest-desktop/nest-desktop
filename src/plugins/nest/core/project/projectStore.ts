@@ -55,7 +55,7 @@ export class ProjectStore {
       this._view.state.projectId = value.id;
       this._view.state.project = value;
     } else {
-      this._view.state.project = new Project(this._app);
+      this._view.state.project = new Project();
       this._view.state.projectId = this._view.state.project.id;
     }
   }
@@ -72,6 +72,154 @@ export class ProjectStore {
 
   get view(): ProjectView {
     return this._view;
+  }
+
+  /**
+   * Check if some project is changed.
+   */
+  checkSomeProjectChanges(): boolean {
+    const loadedProjects = this.loadedProjects;
+    if (loadedProjects.length === 0) return false;
+    return loadedProjects.some((project: Project) => project.state.changes);
+  }
+
+  /**
+   * Create a new project and add it to the list but not to the database.
+   */
+  createNewProject(data: any = {}): void {
+    console.debug("Create new project");
+    this._state.projects.unshift(data);
+    this.loadProject(data);
+    this.view.redirect();
+  }
+
+  /**
+   * Delete project in database and then update the list.
+   */
+  deleteProject(project: any): void {
+    console.debug("Delete project");
+    if (project.docId) {
+      this._db.delete(project.docId).finally(() => {
+        this.removeFromList(project.id);
+      });
+    } else if (project._id) {
+      this._db.delete(project._id).finally(() => {
+        this.removeFromList(project.id);
+      });
+    } else {
+      this.removeFromList(project.id);
+    }
+  }
+
+  /**
+   * Delete projects and then update the list.
+   * @param projects List of project objects.
+   */
+  deleteProjects(projects: any[]): void {
+    console.debug("Delete projects");
+    if (projects.length === 0) return;
+    const projectDocIds: string[] = projects.map(
+      (project: any) => project.docId || project._id || project.id
+    );
+    this._db.deleteBulk(projectDocIds).then(() => this.initProjectList());
+  }
+
+  /**
+   * Export project from the list.
+   */
+  exportProject(projectId: string, withActivities: boolean = false): void {
+    console.debug("Export project: " + projectId);
+    const project: Project = this._state.projects.find(
+      (p: Project) => p.id === projectId
+    );
+
+    const projectData: any = project.toJSON();
+    if (withActivities) {
+      projectData.activities = project.activities.map((activity: Activity) =>
+        activity.toJSON()
+      );
+    }
+    download(JSON.stringify(projectData), "project");
+  }
+
+  /**
+   * Export projects.
+   */
+  exportProjects(projects: Project[]): void {
+    console.debug("Export projects");
+    const projectsJSON: any[] = projects.map((project: Project) => {
+      const projectData: any = project.toJSON();
+      if (project.state.withActivities) {
+        projectData.activities = project.activities.map((activity: Activity) =>
+          activity.toJSON()
+        );
+      }
+      return projectData;
+    });
+    download(
+      JSON.stringify(projectsJSON),
+      projectsJSON.length === 1 ? "project" : "projects"
+    );
+  }
+
+  /**
+   * Get a project from the list if it exists.
+   * @param projectId ID of the project
+   * @returns project component
+   */
+  getProject(projectId: string): Project | undefined {
+    // console.log('Get project:', projectId);
+    if (this._state.projects.length === 0) return;
+
+    const projectIds = this._state.projects.map((project: any) => project.id);
+    if (!projectIds.includes(projectId)) {
+      return;
+    }
+    // Get project object.
+    const projectIdx = projectIds.indexOf(projectId);
+    let project = this._state.projects[projectIdx];
+
+    // Load project component.
+    if (project.doc == undefined) {
+      this.loadProject(project);
+      project = this._state.projects[projectIdx];
+    }
+
+    return project;
+  }
+
+  /*
+   * Get a project from the asset file.
+   */
+  getProjectFromFile(filename: string): Project {
+    console.debug("Get project from file");
+    const data: any = require(`../../assets/projects/${filename}.json`);
+    return new Project(data);
+  }
+
+  /**
+   * Check if project list has project.
+   */
+  hasProject(projectId: string): boolean {
+    console.debug("has project");
+    return this._state.projects.some(
+      (project: Project) => project.id === projectId
+    );
+  }
+
+  /**
+   * Import the project in the database and then update the list.
+   */
+  async importProject(project: Project): Promise<any> {
+    console.debug("Import project: " + project.name);
+    project.clean();
+
+    return project.docId ? this._db.update(project) : this._db.create(project);
+  }
+
+  importProjects(projects: any[]): void {
+    console.debug("Import projects");
+    this._db.addProjects(projects).then(() => this.initProjectList());
   }
 
   /**
@@ -92,12 +240,28 @@ export class ProjectStore {
   }
 
   /**
-   * Reset database and then update list.
+   * Initialize project or project revision from the list.
    */
-  async resetDatabase(): Promise<any> {
-    console.debug("Reset project database");
-
-    await this._db.reset().then(() => this.init());
+  initProject(id: string = "", rev: string = ""): Promise<any> {
+    console.log(`Initialize project: id=${id.slice(0, 6)}, rev=${rev}`);
+    return new Promise<any>((resolve) => {
+      try {
+        if (id && rev) {
+          this.project = this._state.projectRevisions.find(
+            (project: Project) => project.id === id && project.rev === rev
+          );
+        } else if (id) {
+          this.project = this.getProject(id);
+        } else {
+          const name = "Untitled project " + (this._state.projects.length + 1);
+          this.createNewProject({ name });
+        }
+        resolve(true);
+      } catch {
+        console.debug("Error in project initialization");
+        resolve(false);
+      }
+    });
   }
 
   /**
@@ -128,42 +292,57 @@ export class ProjectStore {
     });
   }
 
-  importProjects(projects: any[]): void {
-    console.debug("Import projects");
-    this._db.addProjects(projects).then(() => this.initProjectList());
+  /**
+   * Load a project in the list.
+   * @param project  project object
+   */
+  loadProject(project: any): void {
+    console.debug("Load project");
+    this.project.insite.cancelAllIntervals();
+    const projectIds = this._state.projects.map((project: any) => project.id);
+    const projectIdx = projectIds.indexOf(project.id);
+    if (project.doc == undefined) {
+      project = new Project(project);
+      project.init();
+      this._state.projects[projectIdx] = project;
+      this._state.numLoaded += 1;
+    }
   }
 
   /**
-   * Export projects.
+   * Reload the project in the list.
    */
-  exportProjects(projects: Project[]): void {
-    console.debug("Export projects");
-    const projectsJSON: any[] = projects.map((project: Project) => {
-      const projectData: any = project.toJSON();
-      if (project.state.withActivities) {
-        projectData.activities = project.activities.map((activity: Activity) =>
-          activity.toJSON()
-        );
-      }
-      return projectData;
-    });
-    download(
-      JSON.stringify(projectsJSON),
-      projectsJSON.length === 1 ? "project" : "projects"
-    );
+  reloadProject(project: Project): void {
+    console.debug("Reload project");
+
+    this.unloadProject(project);
+    this.project = this.getProject(project.id);
+
+    this._view.redirect(project.id);
   }
 
   /**
-   * Delete projects and then update the list.
-   * @param projects List of project objects.
+   * Remove project from the list.
    */
-  deleteProjects(projects: any[]): void {
-    console.debug("Delete projects");
-    if (projects.length === 0) return;
-    const projectDocIds: string[] = projects.map(
-      (project: any) => project.docId || project._id || project.id
-    );
-    this._db.deleteBulk(projectDocIds).then(() => this.initProjectList());
+  removeFromList(projectId: string): void {
+    console.debug("Remove project from the list: " + projectId);
+    const idx: number = this._state.projects
+      .map((p: Project) => p.id)
+      .indexOf(projectId);
+
+    if (idx !== -1) {
+      // Remove project from the project list.
+      this._state.projects.splice(idx, 1);
+    }
+  }
+
+  /**
+   * Reset database and then update list.
+   */
+  async resetDatabase(): Promise<any> {
+    console.debug("Reset project database");
+
+    await this._db.reset().then(() => this.init());
   }
 
   /**
@@ -208,23 +387,6 @@ export class ProjectStore {
   }
 
   /**
-   * Load a project in the list.
-   * @param project  project object
-   */
-  loadProject(project: any): void {
-    console.debug("Load project");
-    this.project.insite.cancelAllIntervals();
-    const projectIds = this._state.projects.map((project: any) => project.id);
-    const projectIdx = projectIds.indexOf(project.id);
-    if (project.doc == undefined) {
-      project = new Project(project);
-      project.init();
-      this._state.projects[projectIdx] = project;
-      this._state.numLoaded += 1;
-    }
-  }
-
-  /**
    * Unload the project in the list.
    */
   unloadProject(project: Project): void {
@@ -237,167 +399,5 @@ export class ProjectStore {
     this._state.numLoaded -= 1;
 
     this._view.redirect();
-  }
-
-  /**
-   * Get a project from the list if it exists.
-   * @param projectId ID of the project
-   * @returns project component
-   */
-  getProject(projectId: string): Project | undefined {
-    // console.log('Get project:', projectId);
-    if (this._state.projects.length === 0) return;
-
-    const projectIds = this._state.projects.map((project: any) => project.id);
-    if (!projectIds.includes(projectId)) {
-      return;
-    }
-    // Get project object.
-    const projectIdx = projectIds.indexOf(projectId);
-    let project = this._state.projects[projectIdx];
-
-    // Load project component.
-    if (project.doc == undefined) {
-      this.loadProject(project);
-      project = this._state.projects[projectIdx];
-    }
-
-    return project;
-  }
-
-  /*
-   * Get a project from the asset file.
-   */
-  getProjectFromFile(filename: string): Project {
-    console.debug("Get project from file");
-    const data: any = require(`../../assets/projects/${filename}.json`);
-    return new Project(this._app, data);
-  }
-
-  /**
-   * Reload the project in the list.
-   */
-  reloadProject(project: Project): void {
-    console.debug("Reload project");
-
-    this.unloadProject(project);
-    this.project = this.getProject(project.id);
-
-    this._view.redirect(project.id);
-  }
-
-  /**
-   * Initialize project or project revision from the list.
-   */
-  initProject(id: string = "", rev: string = ""): Promise<any> {
-    console.log(`Initialize project: id=${id.slice(0, 6)}, rev=${rev}`);
-    return new Promise<any>((resolve) => {
-      try {
-        if (id && rev) {
-          this.project = this._state.projectRevisions.find(
-            (project: Project) => project.id === id && project.rev === rev
-          );
-        } else if (id) {
-          this.project = this.getProject(id);
-        } else {
-          const name = "Untitled project " + (this._state.projects.length + 1);
-          this.createNewProject({ name });
-        }
-        resolve(true);
-      } catch {
-        console.debug("Error in project initialization");
-        resolve(false);
-      }
-    });
-  }
-
-  /**
-   * Delete project in database and then update the list.
-   */
-  deleteProject(project: any): void {
-    console.debug("Delete project");
-    if (project.docId) {
-      this._db.delete(project.docId).finally(() => {
-        this.removeFromList(project.id);
-      });
-    } else if (project._id) {
-      this._db.delete(project._id).finally(() => {
-        this.removeFromList(project.id);
-      });
-    } else {
-      this.removeFromList(project.id);
-    }
-  }
-
-  /**
-   * Create a new project and add it to the list but not to the database.
-   */
-  createNewProject(data: any = {}): void {
-    console.debug("Create new project");
-    this._state.projects.unshift(data);
-    this.loadProject(data);
-    this.view.redirect();
-  }
-
-  /**
-   * Check if project list has project.
-   */
-  hasProject(projectId: string): boolean {
-    console.debug("has project");
-    return this._state.projects.some(
-      (project: Project) => project.id === projectId
-    );
-  }
-
-  /**
-   * Import the project in the database and then update the list.
-   */
-  async importProject(project: Project): Promise<any> {
-    console.debug("Import project: " + project.name);
-    project.clean();
-
-    return project.docId ? this._db.update(project) : this._db.create(project);
-  }
-
-  /**
-   * Export project from the list.
-   */
-  exportProject(projectId: string, withActivities: boolean = false): void {
-    console.debug("Export project: " + projectId);
-    const project: Project = this._state.projects.find(
-      (p: Project) => p.id === projectId
-    );
-
-    const projectData: any = project.toJSON();
-    if (withActivities) {
-      projectData.activities = project.activities.map((activity: Activity) =>
-        activity.toJSON()
-      );
-    }
-    download(JSON.stringify(projectData), "project");
-  }
-
-  /**
-   * Check if some project is changed.
-   */
-  checkSomeProjectChanges(): boolean {
-    const loadedProjects = this.loadedProjects;
-    if (loadedProjects.length === 0) return false;
-    return loadedProjects.some((project: Project) => project.state.changes);
-  }
-
-  /**
-   * Remove project from the list.
-   */
-  removeFromList(projectId: string): void {
-    console.debug("Remove project from the list: " + projectId);
-    const idx: number = this._state.projects
-      .map((p: Project) => p.id)
-      .indexOf(projectId);
-
-    if (idx !== -1) {
-      // Remove project from the project list.
-      this._state.projects.splice(idx, 1);
-    }
   }
 }

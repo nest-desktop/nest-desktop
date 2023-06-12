@@ -2,16 +2,16 @@
 
 import * as math from "mathjs";
 
-import { ActivityChartPanelModel } from "./activityChartPanelModel";
 import {
-  ActivityChartGraph,
-  activityChartGraphPanelProps,
-} from "./activityChartGraph";
+  ActivityChartPanelModel,
+  ActivityChartPanelModelProps,
+} from "./activityChartPanelModel";
+import { ActivityChartGraph } from "./activityChartGraph";
 
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
 
-export interface activityChartPanelProps {
-  model?: { id: string };
+export interface ActivityChartPanelProps {
+  model?: ActivityChartPanelModelProps;
 }
 
 export class ActivityChartPanel {
@@ -36,11 +36,10 @@ export class ActivityChartPanel {
   };
   private _xaxis = 1;
 
-  constructor(
-    graph: ActivityChartGraph,
-    panel: activityChartGraphPanelProps = {}
-  ) {
+  constructor(graph: ActivityChartGraph, panel: ActivityChartPanelProps = {}) {
     this._graph = graph;
+    this._model = new SpikeTimesRasterPlotModel(this);
+
     this.selectModel(
       panel.model ? panel.model.id : "spikeTimesRasterPlot",
       panel.model
@@ -98,8 +97,11 @@ export class ActivityChartPanel {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
-  toggleVisible(): void {
-    this._state.visible = !this._state.visible;
+  decreaseHeight(): void {
+    if (this.height === 1) {
+      return;
+    }
+    this.height -= 1;
     this._graph.update();
   }
 
@@ -108,12 +110,11 @@ export class ActivityChartPanel {
     this._graph.update();
   }
 
-  decreaseHeight(): void {
-    if (this.height === 1) {
-      return;
-    }
-    this.height -= 1;
-    this._graph.update();
+  /**
+   * Remove this panel.
+   */
+  remove(): void {
+    this._graph.removePanel(this);
   }
 
   selectModel(
@@ -134,6 +135,19 @@ export class ActivityChartPanel {
       this._model = new SpikeTimesRasterPlotModel(this, modelSpec);
       this._state.initialized = true;
     }
+  }
+
+  toggleVisible(): void {
+    this._state.visible = !this._state.visible;
+    this._graph.update();
+  }
+
+  /**
+   * Serialize for JSON.
+   * @return activity chart panel object
+   */
+  toJSON(): ActivityChartPanelProps {
+    return { model: this._model.toJSON() };
   }
 
   /**
@@ -162,20 +176,5 @@ export class ActivityChartPanel {
     ];
     this.layout.yaxis.domain = domain;
     this.layout.xaxis.anchor = "y" + this.yaxis;
-  }
-
-  /**
-   * Remove this panel.
-   */
-  remove(): void {
-    this._graph.removePanel(this);
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return activity chart panel object
-   */
-  toJSON(): activityChartGraphPanelProps {
-    return { model: this._model.toJSON() };
   }
 }
