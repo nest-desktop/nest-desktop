@@ -1,5 +1,7 @@
 // upgrade_32_to_33.ts
 
+import { ActivityChartPanel } from "@nest/graph/activityGraph/activityChart/activityChartPanel";
+
 const validateVersion = (version: string) =>
   /^3\.2(\.\d+)?(\w+)?$/.test(version);
 
@@ -15,14 +17,14 @@ export function upgradeProject_32_to_33(project: any): any {
     project.activityGraph.chart.panels.length > 0
   ) {
     // Rename model ids of activity chart panels.
-    const activityChartPanelModels = {
-      analogSignalPlot: 'analogSignalTimeSeries',
-      inputAnalogSignalPlot: 'inputAnalogSignalTimeSeries',
-      neuronAnalogSignalPlot: 'neuronAnalogSignalTimeSeries',
-      spikeTimesHistogram: 'spikeTimeHistogram',
+    const activityChartPanelModels: { [key: string]: string } = {
+      analogSignalPlot: "analogSignalTimeSeries",
+      inputAnalogSignalPlot: "inputAnalogSignalTimeSeries",
+      neuronAnalogSignalPlot: "neuronAnalogSignalTimeSeries",
+      spikeTimesHistogram: "spikeTimeHistogram",
     };
 
-    project.activityGraph.chart.panels.forEach((panel: any) => {
+    project.activityGraph.chart.panels.forEach((panel: ActivityChartPanel) => {
       if (panel.model.id in activityChartPanelModels) {
         panel.model.id = activityChartPanelModels[panel.model.id];
       }
@@ -50,6 +52,6 @@ export function upgradeProject_32_to_33(project: any): any {
   //   }
   // });
 
-  project.version = '3.3';
+  project.version = "3.3";
   return project;
 }

@@ -23,11 +23,4 @@ export class ModelReceptorParameter extends ModelParameter {
   get modelReceptor(): ModelReceptor {
     return this.parent as ModelReceptor;
   }
-
-  /**
-   * Trigger changes when the parameter is changed.
-   */
-  override paramChanges(): void {
-    this.modelReceptor.modelChanges();
-  }
 }

@@ -1,4 +1,5 @@
 // copyModels.ts
+
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
@@ -8,8 +9,6 @@ import { Network } from "../network/network";
 interface CopyModelsState {
   hash: string;
 }
-
-export interface CopyModelProps extends CopyModelProps {}
 
 export class CopyModels {
   private _models: CopyModel[] = [];
@@ -103,7 +102,6 @@ export class CopyModels {
    */
   clean(): void {
     this._models.forEach((model: CopyModel) => model.clean());
-    this.updateHash();
   }
 
   /**

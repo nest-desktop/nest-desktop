@@ -1,8 +1,8 @@
-import { useModelDBStore } from "./store/modelDBStore";
-import { useProjectDBStore } from "./store/projectDBStore";
+import { useModelDBStore } from "./store/model/modelDBStore";
+import { useProjectDBStore } from "./store/project/projectDBStore";
 
-import { useModelStore } from "./store/modelStore";
-import { useProjectStore } from "./store/projectStore";
+import { useModelStore } from "./store/model/modelStore";
+import { useProjectStore } from "./store/project/projectStore";
 
 export default {
   install() {

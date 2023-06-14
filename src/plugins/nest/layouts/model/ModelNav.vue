@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useModelDBStore } from '../../store/modelDBStore';
+import { useModelDBStore } from '@nest/store/model/modelDBStore';
 const modelDBStore = useModelDBStore();
 
 const menuItems = [

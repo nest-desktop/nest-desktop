@@ -19,7 +19,7 @@ import { onMounted, reactive, watch } from "vue";
 
 const props = defineProps(["colorScheme"]);
 
-const colorSchemes = {
+const colorSchemes: {[key: string]: string[][]} = {
   category10: [
     ["#1f77b4"],
     ["#ff7f0e"],
@@ -132,7 +132,7 @@ const state = reactive({
   hideInputs: true,
   hideSliders: true,
   showSwatches: true,
-  swatches: [],
+  swatches: [] as string[][],
 });
 
 const update = () => {

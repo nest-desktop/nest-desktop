@@ -5,6 +5,7 @@
  */
 
 // Styles
+import 'vue-toast-notification/dist/theme-sugar.css';
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./main.scss";

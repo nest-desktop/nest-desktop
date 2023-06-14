@@ -23,7 +23,9 @@ export class NetworkState {
   private _elementTypeIdx: number = 0;
   private _focusedConnection?: Connection;
   private _focusedNode?: Node;
-  private _state: UnwrapRef<any>;
+  private _state: UnwrapRef<{
+    hash: string;
+  }>;
 
   private _icons = {
     all: {
@@ -59,17 +61,7 @@ export class NetworkState {
     this._network = network;
     this._state = reactive({
       hash: "",
-      nodesLength: 0,
-      connectionsLength: 0,
     });
-  }
-
-  get connectionsLength(): number {
-    return this._state.connectionsLength;
-  }
-
-  set connectionsLength(value: number) {
-    this._state.connectionsLength = value;
   }
 
   get displayIdx(): any {
@@ -132,14 +124,6 @@ export class NetworkState {
     return this._nodeAnnotations;
   }
 
-  get nodesLength(): number {
-    return this._state.nodesLength;
-  }
-
-  set nodesLength(value: number) {
-    this._state.nodesLength = value;
-  }
-
   get selectedConnection(): Connection | undefined {
     return this._selectedConnection;
   }
@@ -162,67 +146,6 @@ export class NetworkState {
   get state(): any {
     return this._state;
   }
-
-  /**
-   * Reset focus and selection.
-   */
-  reset(): void {
-    this.resetFocus();
-    this.resetSelection();
-  }
-
-  /**
-   * Reset focus.
-   */
-  resetFocus(): void {
-    this._focusedNode = undefined;
-    this._focusedConnection = undefined;
-  }
-
-  /**
-   * Reset selection.
-   */
-  resetSelection(): void {
-    this._selectedNode = undefined;
-    this._selectedConnection = undefined;
-  }
-
-  //
-  // Node
-  //
-
-  /**
-   * Check if node is focused.
-   */
-  isNodeFocused(node: Node): boolean {
-    return this._focusedNode === node;
-  }
-
-  /**
-   * Check if node is selected.
-   */
-  isNodeSelected(
-    node: Node,
-    unselected: boolean = true,
-    withConnection: boolean = true
-  ): boolean {
-    if (this._selectedNode != null) {
-      return this._selectedNode === node;
-    } else if (this._selectedConnection != null && withConnection) {
-      const connections: Connection[] = node.network.connections.filter(
-        (connection: Connection) =>
-          connection.sourceIdx === node.idx || connection.targetIdx === node.idx
-      );
-      return connections.some(
-        (connection: Connection) => connection === this.selectedConnection
-      );
-    }
-    return unselected;
-  }
-
-  //
-  // Connection
-  //
 
   /**
    * Check if connection is focused.
@@ -255,6 +178,63 @@ export class NetworkState {
   }
 
   /**
+   * Check if node is focused.
+   */
+  isNodeFocused(node: Node): boolean {
+    return this._focusedNode === node;
+  }
+
+  /**
+   * Check if node is selected.
+   */
+  isNodeSelected(
+    node: Node,
+    unselected: boolean = true,
+    withConnection: boolean = true
+  ): boolean {
+    if (this._selectedNode != null) {
+      return this._selectedNode === node;
+    } else if (this._selectedConnection != null && withConnection) {
+      const connections: Connection[] = node.network.connections.filter(
+        (connection: Connection) =>
+          connection.sourceIdx === node.idx || connection.targetIdx === node.idx
+      );
+      return connections.some(
+        (connection: Connection) => connection === this.selectedConnection
+      );
+    }
+    return unselected;
+  }
+
+  /**
+   * Reset focus and selection.
+   */
+  reset(): void {
+    this.resetFocus();
+    this.resetSelection();
+  }
+
+  /**
+   * Reset focus.
+   */
+  resetFocus(): void {
+    this._focusedNode = undefined;
+    this._focusedConnection = undefined;
+  }
+
+  /**
+   * Reset selection.
+   */
+  resetSelection(): void {
+    this._selectedNode = undefined;
+    this._selectedConnection = undefined;
+  }
+
+  update(): void {
+    this.updateHash();
+  }
+
+  /**
    * Update hash.
    */
   updateHash(): void {
@@ -263,39 +243,5 @@ export class NetworkState {
       nodes: this._network.nodes.state.hash,
       connections: this._network.connections.state.hash,
     });
-  }
-
-  /**
-   * Update node annotations.
-   */
-  updateNodeAnnotations(): void {
-    this._nodeAnnotations = [];
-    if (this._network.nodes.all.length === 0) return;
-
-    const nodeAnnotationsDict: { [key: string]: string[] } = {};
-    this._network.nodes
-      .filter((node: Node) => node.annotations.length > 0)
-      .forEach((node: Node) => {
-        const nodeLabel = node.view.label;
-        node.annotations.forEach((annotation: string) => {
-          if (annotation in nodeAnnotationsDict) {
-            nodeAnnotationsDict[annotation].push(nodeLabel);
-          } else {
-            nodeAnnotationsDict[annotation] = [nodeLabel];
-          }
-        });
-      });
-
-    if (nodeAnnotationsDict) {
-      Object.keys(nodeAnnotationsDict).forEach((userDictKey: string) => {
-        const nodes = nodeAnnotationsDict[userDictKey];
-        const nodesStr =
-          nodes.length === 1 ? nodes[0] : "(" + nodes.join("+") + ")";
-        this._nodeAnnotations.push({
-          key: userDictKey,
-          value: nodesStr,
-        });
-      });
-    }
   }
 }

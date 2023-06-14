@@ -4,14 +4,9 @@ import { reactive, UnwrapRef } from 'vue';
 
 import { Backend } from '@/helpers/backend';
 import { Config } from '@/helpers/config';
-import { ModelStore } from './model/modelStore';
-import { Project } from './project/project';
-import { ProjectStore } from './project/projectStore';
 
 export class App extends Config {
   private _backends: any = {};
-  private _model: ModelStore;
-  private _project: ProjectStore;
   private _state: UnwrapRef<any>;
 
   constructor() {
@@ -39,25 +34,10 @@ export class App extends Config {
       port: 52056,
       versionPath: '/',
     });
-
-    this._model = new ModelStore(this);
-    this._project = new ProjectStore(this);
   }
 
   get backends(): any {
     return this._backends;
-  }
-
-  get currentProject(): Project {
-    return this._project.project;
-  }
-
-  get model(): any {
-    return this._model;
-  }
-
-  get project(): any {
-    return this._project;
   }
 
   get state(): any {
@@ -77,10 +57,10 @@ export class App extends Config {
     // Check if backends is running.
     this.checkBackends().then(() => {
       // Fetch models from NEST Simulator.
-      this._model.fetchModelsNEST();
+      // this._model.fetchModelsNEST();
 
-      // Fetch model files from Github.
-      this._model.fetchModelFilesGithub();
+      // // Fetch model files from Github.
+      // this._model.fetchModelFilesGithub();
     });
 
     if (
@@ -92,10 +72,10 @@ export class App extends Config {
       }, this.config.intervalCheckBackends * 1000);
     }
 
-    let promise: Promise<void> = Promise.resolve();
-    promise = promise.then(() => this._model.init());
-    promise = promise.then(() => this._project.init());
-    promise.then(() => (this._state.ready = true));
+    // let promise: Promise<void> = Promise.resolve();
+    // // promise = promise.then(() => this._model.init());
+    // // promise = promise.then(() => this._project.init());
+    // promise.then(() => (this._state.ready = true));
   }
 
   /**
@@ -104,10 +84,10 @@ export class App extends Config {
   resetDatabases(): void {
     console.debug(this, 'Reset all client-side databases');
     this._state.ready = false;
-    let promise: Promise<void> = Promise.resolve();
-    promise = promise.then(() => this._model.resetDatabase());
-    promise = promise.then(() => this._project.resetDatabase());
-    promise.then(() => (this._state.ready = true));
+    // let promise: Promise<void> = Promise.resolve();
+    // promise = promise.then(() => this._model.resetDatabase());
+    // promise = promise.then(() => this._project.resetDatabase());
+    // promise.then(() => (this._state.ready = true));
   }
 
   /**

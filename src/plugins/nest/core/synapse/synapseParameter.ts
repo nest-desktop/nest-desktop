@@ -1,32 +1,51 @@
 // synapseParameters.ts
 
+import { Parameter, ParameterProps } from "@/helpers/parameter";
+
 import { ModelParameter } from "../model/modelParameter";
-import { Parameter, ParameterProps } from "../parameter";
 import { Synapse } from "./synapse";
 
 export interface SynapseParameterProps extends ParameterProps {}
 
 export class SynapseParameter extends Parameter {
+  private _parent: Synapse;
+
   constructor(synapse: Synapse, param: SynapseParameterProps) {
-    super(synapse, param);
+    super(param);
+    this._parent = synapse;
+  }
+
+  /**
+   * Check if this parameter can be spatial
+   * when the connection is spatial.
+   */
+  get isSpatial(): boolean {
+    return this._parent.connection.isBothSpatial;
   }
 
   /**
    * Get model parameter.
    */
   override get modelParam(): ModelParameter {
-    return this.synapse.model.params[this.id];
+    return this.parent.model.params[this.id];
   }
 
-  get synapse(): Synapse {
-    return this.parent as Synapse;
+  get parent(): Synapse {
+    return this._parent;
+  }
+
+  get types(): any[] {
+    const types: any[] = this.config.types;
+    return !this.isSpatial
+      ? types.filter((type: any) => !type.id.startsWith("spatial"))
+      : types;
   }
 
   /**
    * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
-    this.synapse.synapseChanges();
+    this._parent.synapseChanges();
   }
 
   /**

@@ -1,6 +1,7 @@
 // node.ts - 26 anys
 
 import { Config } from "@/helpers/config";
+import { Parameter } from "@/helpers/parameter";
 
 import { Activity, ActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
@@ -13,24 +14,23 @@ import {
   NodeCompartment,
   NodeCompartmentProps,
 } from "./nodeCompartment/nodeCompartment";
-import { NodeParameter, NodeParamProps } from "./nodeParameter";
+import { NodeParameter, NodeParameterProps } from "./nodeParameter";
 import { NodeReceptor, NodeReceptorProps } from "./nodeReceptor/nodeReceptor";
-import { NodeRecord, RecordProps } from "./nodeRecord";
+import { NodeRecord, NodeRecordProps } from "./nodeRecord";
 import { NodeSpatial, NodeSpatialProps } from "./nodeSpatial/nodeSpatial";
 import { NodeState } from "./nodeState";
 import { NodeView, NodeViewProps } from "./nodeView";
 import { Nodes } from "./nodes";
-import { Parameter } from "../parameter";
 import { SpikeActivity } from "../activity/spikeActivity";
 
 export interface NodeProps {
   model?: string;
   size?: number;
-  params?: NodeParamProps[];
+  params?: NodeParameterProps[];
   view?: NodeViewProps;
   annotations?: string[];
   spatial?: NodeSpatialProps;
-  records?: RecordProps[];
+  records?: NodeRecordProps[];
   receptors?: NodeReceptorProps[];
   compartments?: NodeCompartmentProps[];
   activity?: ActivityProps;
@@ -186,7 +186,7 @@ export class Node extends Config {
     if (
       this.network.models.some((model: CopyModel) => model.id === this.modelId)
     ) {
-      return this.network.models.get(this._modelId);
+      return this.network.models.getModelById(this._modelId);
     } else {
       return this.network.project.modelStore.getModel(this._modelId);
     }
@@ -208,7 +208,7 @@ export class Node extends Config {
     // Get models of the same element type.
     const elementType: string = this.model.elementType;
     const models: Model[] =
-      this.network.project.modelStore.getModels(elementType);
+      this.network.project.modelStore.getModelsByElementType(elementType);
 
     // Get copied models.
     const modelsCopied: CopyModel[] =
@@ -290,12 +290,12 @@ export class Node extends Config {
   }
 
   set paramsVisible(values: string[]) {
-    Object.values(this._params).forEach((param) => {
-      param.state.visible = values.includes(param.id);
-    });
-    // this._paramsVisible = Object.keys(this.modelParams).filter((paramId) =>
-    //   values.includes(paramId)
-    // );
+    this._paramsVisible = Object.keys(this.modelParams).filter((paramId) =>
+      values.includes(paramId)
+    );
+    // Object.values(this._params).forEach((param) => {
+    //   param.state.visible = values.includes(param.id);
+    // });
     this.nodeChanges();
   }
 
@@ -377,13 +377,13 @@ export class Node extends Config {
   }
 
   get targets(): Connection[] {
-    return this.network.connections.filter(
+    return this.network.connections.all.filter(
       (connection: Connection) => connection.sourceIdx === this._idx
     );
   }
 
   get targetNodes(): Node[] {
-    return this.network.connections
+    return this.network.connections.all
       .filter((connection: Connection) => connection.sourceIdx === this._idx)
       .map((connection: Connection) => connection.target);
   }
@@ -421,7 +421,7 @@ export class Node extends Config {
    * Add parameter component.
    * @param param - parameter object
    */
-  addParameter(param: nodeParamProps): void {
+  addParameter(param: NodeParameterProps): void {
     this._params[param.id] = new NodeParameter(this, param);
     // this._params.push(new NodeParameter(this, param));
   }
@@ -440,8 +440,6 @@ export class Node extends Config {
   clean(): void {
     this._idx = this._nodes.all.indexOf(this);
     this.view.clean();
-    this._state.updateHash();
-
     // this.updateRecords();
   }
 

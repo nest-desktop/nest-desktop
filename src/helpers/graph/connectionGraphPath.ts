@@ -4,8 +4,8 @@
  * Draw SVG path.
  */
 export default function drawPath(
-  source: { x: number; y: number },
-  target: { x: number; y: number },
+  source: { [key:string]: number },
+  target: { [key:string]: number },
   config: {
     radius?: number;
     ellipticalArc?: number;

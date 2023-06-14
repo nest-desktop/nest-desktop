@@ -1,7 +1,7 @@
 <template>
   <v-slider
     :max="max"
-    :ticks="state.ticks"
+    :ticks="Object.values(state.ticks)"
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi-plus"
@@ -23,14 +23,20 @@
 <script lang="ts" setup>
 import { computed, reactive, onMounted, watch } from "vue";
 
-const props = defineProps({
-  modelValue: { default: 0, type: [Number, String] },
-  ticks: { default: [0, 100], type: [Array<Number>, Array<String>] },
-  unit: { default: "", type: String },
+interface Props {
+  modelValue: number | string;
+  ticks?: number[];
+  unit?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: 0,
+  ticks: () => [0, 100],
+  unit: "",
 });
 const emit = defineEmits(["update:modelValue"]);
 
-const state = reactive({
+const state: { tickIdx: number; ticks: { [key: string]: number } } = reactive({
   tickIdx: 0,
   ticks: { 0: 0, 1: 100 },
 });
@@ -55,7 +61,7 @@ const increment = () => {
 
 const init = () => {
   state.ticks = {};
-  props.ticks.forEach((value: any, index: number) => {
+  props.ticks.forEach((value: number, index: number) => {
     state.ticks[index] = value;
   });
   update();
@@ -63,7 +69,7 @@ const init = () => {
 
 const update = () => {
   state.tickIdx = 0;
-  props.ticks.forEach((value: any, index: number) => {
+  props.ticks.forEach((value: number, index: number) => {
     if (props.modelValue === value) {
       state.tickIdx = index;
     }

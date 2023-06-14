@@ -92,9 +92,9 @@ export class Synapse {
   get models(): (CopyModel | Model)[] {
     const elementType: string = this.model.elementType;
     const models: Model[] =
-      this._connection.network.project.modelStore.filterModels(elementType);
+      this._connection.network.project.modelStore.getModelsByElementType(elementType);
     const modelsCopied: CopyModel[] =
-      this._connection.network.filterModels(elementType);
+      this._connection.network.models.filterByElementType(elementType);
     const filteredModels = [...models, ...modelsCopied];
     filteredModels.sort();
     return filteredModels;
@@ -217,9 +217,11 @@ export class Synapse {
    */
   inverseWeight(): void {
     const weight: SynapseParameter = this._params.weight;
-    weight.state.visible = true;
-    weight.value = -1 * weight.value;
-    this._connection.connectionChanges();
+    if (typeof weight.value === "number") {
+      weight.state.visible = true;
+      weight.value = -1 * weight.value;
+      this._connection.connectionChanges();
+    }
   }
 
   /**

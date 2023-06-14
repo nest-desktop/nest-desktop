@@ -4,11 +4,11 @@
     <v-card-text>
       <v-select
         :items="colorSchemes"
+        density="compact"
         label="Select a color scheme"
         persistent-hint
-        density="compact"
-        variant="outlined"
         v-model="state.colorScheme"
+        variant="outlined"
       />
       <color-picker :colorScheme="state.colorScheme" />
     </v-card-text>

@@ -6,5 +6,5 @@
 </template>
 
 <script lang="ts" setup>
-import NetworkGraph from "../../components/NetworkGraph.vue";
+import NetworkGraph from "@nest/components/NetworkGraph.vue";
 </script>

@@ -12,14 +12,17 @@
           <v-list-item>
             Network: {{ projectStore.project.network.state.hash }}
           </v-list-item>
+          <v-list-item>
+            Nodes: {{ projectStore.project.network.nodes.state.hash }}
+          </v-list-item>
+          <v-list-item>
+            Simulation: {{ projectStore.project.simulation.code.state.hash }}
+          </v-list-item>
           <v-list>
           <v-list-item :key="index" v-for="node,index in projectStore.project.network.nodes.all">
             Node {{ index }}: {{ node.state.hash }}
           </v-list-item>
           </v-list>
-          <v-list-item>
-            Simulation: {{ projectStore.project.simulation.code.state.hash }}
-          </v-list-item>
         </v-list>
       </v-card-text>
 
@@ -31,6 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "../../store/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
+
 const projectStore = useProjectStore();
 </script>

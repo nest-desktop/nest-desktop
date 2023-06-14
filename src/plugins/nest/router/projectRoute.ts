@@ -4,8 +4,8 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { useProjectDBStore } from "../store/projectDBStore";
-import { useProjectStore } from "../store/projectStore";
+import { useProjectDBStore } from "@nest/store/project/projectDBStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 
 const projectBeforeEnter = (to: any) => {
   // console.log("Before enter routes for project:", to.params);

@@ -1,16 +1,17 @@
 // nodeSlice.ts
 
 import { Config } from "@/helpers/config";
-import { Node } from "../node/node";
-import { Parameter, ParameterProps } from "../parameter";
+
+import { Node } from "./node";
+import { NodeParameter, NodeParameterProps } from "./nodeParameter";
 
 export class NodeSlice extends Config {
   private readonly _name = "NodeSlice";
   private _node: Node;
-  private _params: { [key: string]: Parameter } = {};
+  private _params: { [key: string]: NodeParameter } = {};
   private _visible: boolean = false;
 
-  constructor(node: Node, params: ParameterProps[] = []) {
+  constructor(node: Node, params: NodeParameterProps[] = []) {
     super("NodeSlice");
     this._node = node;
     this.initParameters(params);
@@ -25,20 +26,20 @@ export class NodeSlice extends Config {
       return "";
     }
 
-    const start: Parameter = this._params.start;
-    const stop: Parameter = this._params.stop;
-    const step: Parameter = this._params.step;
+    const start: NodeParameter = this._params.start;
+    const stop: NodeParameter = this._params.stop;
+    const step: NodeParameter = this._params.step;
 
     if (start.disabled && stop.disabled && step.disabled) {
       return "";
     }
 
-    const params: Parameter[] = [start, stop];
+    const params: NodeParameter[] = [start, stop];
     if (!step.disabled) {
       params.push(step);
     }
 
-    const indices = params.map((param: Parameter) =>
+    const indices = params.map((param: NodeParameter) =>
       param.disabled ? null : param.value
     );
     return `[${indices.join(":")}]`;
@@ -56,26 +57,26 @@ export class NodeSlice extends Config {
     return this._name;
   }
 
-  get params(): { [key: string]: Parameter } {
+  get params(): { [key: string]: NodeParameter } {
     return this._params;
   }
 
   /**
    * Initialize parameters.
    */
-  initParameters(params: ParameterProps[] = []): void {
+  initParameters(params: NodeParameterProps[] = []): void {
     this._params = {};
-    this.config.params.forEach((param: ParameterProps) => {
+    this.config.params.forEach((param: NodeParameterProps) => {
       if (params.length > 0) {
-        const p: ParameterProps | undefined = params.find(
-          (p: ParameterProps) => p.id === param.id
+        const p: NodeParameterProps | undefined = params.find(
+          (p: NodeParameterProps) => p.id === param.id
         );
         if (p) {
           param.value = p.value;
           param.disabled = false;
         }
       }
-      this._params[param.id] = new Parameter(this, param);
+      this._params[param.id] = new NodeParameter(this._node, param);
     });
   }
 
@@ -87,10 +88,10 @@ export class NodeSlice extends Config {
    * Serialize for JSON.
    * @return node slice object
    */
-  toJSON(): ParameterProps[] {
+  toJSON(): NodeParameterProps[] {
     return Object.values(this._params)
-      .filter((param: Parameter) => !param.disabled)
-      .map((param: Parameter) => {
+      .filter((param: NodeParameter) => !param.disabled)
+      .map((param: NodeParameter) => {
         return {
           id: param.id,
           value: param.value,

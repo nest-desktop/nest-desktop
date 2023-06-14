@@ -1,11 +1,13 @@
 // simulation.ts - 9 anys
 
 import { reactive, UnwrapRef } from "vue";
-
 import { Config } from "@/helpers/config";
+import { openToast } from "@/helpers/toast";
+
 import { Project } from "../project/project";
-import { SimulationKernel, SimulationKernelProps } from "./simulationKernel";
 import { SimulationCode, SimulationCodeProps } from "./simulationCode";
+import { SimulationKernel, SimulationKernelProps } from "./simulationKernel";
+import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
 
 export interface SimulationProps {
   code?: SimulationCodeProps;
@@ -48,8 +50,9 @@ export class Simulation extends Config {
     });
   }
 
-  get backends(): any {
-    return this._project.app.backends;
+  get nestSimulator(): any {
+    const nestSimulatorStore = useNESTSimulatorStore();
+    return nestSimulatorStore.backend
   }
 
   get code(): SimulationCode {
@@ -91,30 +94,6 @@ export class Simulation extends Config {
   }
 
   /**
-   * Open toast to show message from the backend.
-   */
-  openToast(message: string, type: string = "success") {
-    const stateToast = this._project.app.project.view.state;
-    stateToast.message = message;
-    stateToast.type = type;
-
-    // Add click event handler to redirect user to the documentation.
-    if (type === "error") {
-      stateToast.message += " -- Click for details...";
-      stateToast.onClick = () =>
-        window.open(
-          "https://nest-desktop.readthedocs.io/en/latest/troubleshootings/index.html#error-messages",
-          "_blank"
-        );
-    }
-
-    // Show NEST or Python error message via toast notification.
-    // if (stateToast.message) {
-    //   Vue.$toast.open(stateToast);
-    // }
-  }
-
-  /**
    * Reset simulation states.
    */
   resetState(): void {
@@ -136,7 +115,7 @@ export class Simulation extends Config {
   private async runSimulation(): Promise<any> {
     console.debug("Run simulation");
 
-    return this.backends.nestSimulator.instance
+    return this.nestSimulator.instance
       .post("exec", {
         source: this._code.script,
         return: "response",
@@ -145,7 +124,7 @@ export class Simulation extends Config {
         let data: any;
         switch (response.status) {
           case 0:
-            this.openToast("Failed to find NEST Simulator.", "error");
+            openToast("Failed to find NEST Simulator.", {type: "error"});
             break;
           case 200:
             if (response.data.data == null) {
@@ -159,7 +138,7 @@ export class Simulation extends Config {
 
             break;
           default:
-            this.openToast(response.data, "error");
+            openToast(response.data, {type:"error"});
             break;
         }
         return response;
@@ -167,19 +146,19 @@ export class Simulation extends Config {
       .catch((error: any) => {
         if ("response" in error && error.response.data != undefined) {
           // The request made and the server responded.
-          this.openToast(error.response.data, "error");
+          openToast(error.response.data, {type:"error"});
         } else if ("request" in error) {
           // The request was made but no response was received.
-          this.openToast(
+          openToast(
             "Failed to perform simulation (NEST Simulator is not running).",
-            "error"
+            {type:"error"}
           );
         } else if ("message" in error && error.message != undefined) {
           // Something happened in setting up the request
           // that triggered an error.
-          this.openToast(error.message, "error");
+          openToast(error.message, {type:"error"});
         } else {
-          this.openToast(error, "error");
+          openToast(error, {type:"error"});
         }
       })
       .finally(() => {
@@ -202,14 +181,14 @@ export class Simulation extends Config {
       stepSize: 1,
     };
 
-    return this.backends.nestSimulator.instance
+    return this.nestSimulator.instance
       .post("exec", { source: this._code.script })
       .then((response: any) => {
         switch (response.status) {
           case 0:
-            this.openToast(
+            openToast(
               "Failed to perform simulation (NEST Simulator is not running).",
-              "error"
+              {type:"error"}
             );
             this._project.insite.cancelAllIntervals();
             break;
@@ -219,7 +198,7 @@ export class Simulation extends Config {
             }
             break;
           default:
-            this.openToast(response.responseText, "error");
+            openToast(response.responseText, {type:"error"});
             this._project.insite.cancelAllIntervals();
             break;
         }
@@ -228,7 +207,7 @@ export class Simulation extends Config {
       .catch((error: any) => {
         this._project.insite.cancelAllIntervals();
         if ("response" in error && error.response.data != undefined) {
-          this.openToast(error.response.data, "error");
+          openToast(error.response.data, {type:"error"});
         }
         return error;
       })

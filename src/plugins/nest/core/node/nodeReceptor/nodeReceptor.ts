@@ -1,41 +1,46 @@
 // nodeReceptor.ts
 
-import { NodeParamProps } from "../nodeParameter";
+import { NodeParameterProps } from "../nodeParameter";
 import { ModelReceptor } from "../../model/modelReceptor/modelReceptor";
 import { ModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { Node } from "../node";
 import { NodeCompartment } from "../nodeCompartment/nodeCompartment";
 import { NodeReceptorParameter } from "./nodeReceptorParameter";
 
-export interface nodeReceptorProps {
+export interface NodeReceptorProps {
   compIdx: number;
-  id?: string;
-  params?: NodeParamProps[];
+  id: string;
+  params?: NodeParameterProps[];
   type?: string;
 }
 
 export class NodeReceptor {
   private readonly _name = "NodeReceptor";
 
-  // @ts-ignore
-  private _compartment: NodeCompartment;
+  private _compartment?: NodeCompartment;
   private _hash: string = "";
   private _id: string = "";
   private _idx: number; // generative
   private _node: Node; // parent
   private _params: { [key: string]: NodeReceptorParameter } = {};
 
-  constructor(node: Node, nodeReceptor: nodeReceptorProps) {
+  constructor(node: Node, nodeReceptor: NodeReceptorProps) {
     this._node = node;
 
-    this._id = nodeReceptor.id || nodeReceptor.type;
+    this._id = nodeReceptor.id;
     this._idx = this._node.receptors.length;
 
-    this.initCompartment(nodeReceptor.compIdx);
+    if (
+      -1 < nodeReceptor.compIdx &&
+      nodeReceptor.compIdx < this._node.compartments.length
+    ) {
+      this._compartment = this._node.compartments[nodeReceptor.compIdx];
+    }
+
     this.initParameters(nodeReceptor);
   }
 
-  get compartment(): NodeCompartment {
+  get compartment(): NodeCompartment | undefined {
     return this._compartment;
   }
 
@@ -64,7 +69,9 @@ export class NodeReceptor {
   }
 
   get label(): string {
-    return `${this.id} (${this.compartment.label})`;
+    return `${this.id} ` + this._compartment
+      ? `(${this._compartment?.label})`
+      : "";
   }
 
   get model(): ModelReceptor {
@@ -143,20 +150,10 @@ export class NodeReceptor {
   }
 
   /**
-   * Initialize the compartment component.
-   * @param compIdx compartment index
-   */
-  initCompartment(compIdx: number): void {
-    if (compIdx < this._node.compartments.length) {
-      this._compartment = this._node.compartments[compIdx];
-    }
-  }
-
-  /**
    * Initialize the parameter components.
    * @param receptor node receptor object
    */
-  initParameters(receptor: nodeReceptorProps): void {
+  initParameters(receptor: NodeReceptorProps): void {
     // Update parameters from model or node receptor
     this._params = {};
     const model = this.node.model;
@@ -238,9 +235,9 @@ export class NodeReceptor {
    * Serialize for JSON.
    * @return node object
    */
-  toJSON(): nodeReceptorProps {
+  toJSON(): NodeReceptorProps {
     return {
-      compIdx: this._compartment.idx,
+      compIdx: this._compartment ? this._compartment.idx : -1,
       id: this.id,
       params: Object.values(this._params).map((param: NodeReceptorParameter) =>
         param.toJSON()

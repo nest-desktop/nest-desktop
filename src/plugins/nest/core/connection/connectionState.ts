@@ -1,12 +1,28 @@
 // connectionState.ts
 
+import { sha1 } from "object-hash";
+
 import { Connection } from "./connection";
+import { UnwrapRef, reactive } from "vue";
+
+interface ConnectionStateState {
+  hash: string;
+}
 
 export class ConnectionState {
   private _connection: Connection; // parent
+  private _state: UnwrapRef<ConnectionStateState>;
 
   constructor(connection: Connection) {
     this._connection = connection;
+
+    this._state = reactive({
+      hash: "",
+    });
+  }
+
+  get hash(): string {
+    return this._state.hash;
   }
 
   /**
@@ -37,6 +53,14 @@ export class ConnectionState {
   }
 
   /**
+   * Returns the first six digits of the SHA-1 connection hash.
+   * @returns 6-digit hash value
+   */
+  get shortHash(): string {
+    return this._state.hash ? this._state.hash.slice(0, 6) : "";
+  }
+
+  /**
    * Focus this connection.
    */
   focus(forced: boolean = false): void {
@@ -56,5 +80,19 @@ export class ConnectionState {
       networkState.resetSelection();
     }
     networkState.selectedConnection = this._connection;
+  }
+
+  update() {
+    this.updateHash();
+  }
+
+  /**
+   * Update hash for connection graph.
+   */
+  updateHash(): void {
+    this._state.hash = sha1({
+      // color: this.source.view.color,
+      idx: this._connection.idx,
+    });
   }
 }

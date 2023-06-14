@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectDBStore } from "../../store/projectDBStore";
+import { useProjectDBStore } from "@nest/store/project/projectDBStore";
 const projectDBStore = useProjectDBStore();
 
 const projectsItems = [

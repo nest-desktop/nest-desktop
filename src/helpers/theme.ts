@@ -1,3 +1,5 @@
+// theme.ts
+
 import { useAppStore } from "@/store/appStore";
 
 export function darkMode(): boolean {

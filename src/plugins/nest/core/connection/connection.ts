@@ -1,6 +1,5 @@
 // connection.ts
 
-import { sha1 } from "object-hash";
 import { Config } from "@/helpers/config";
 
 import { ConnectionMask } from "./connectionMask";
@@ -34,7 +33,6 @@ export interface ConnectionProps {
 export class Connection extends Config {
   private readonly _name = "Connection";
 
-  private _hash: string = "";
   private _idx: number; // generative
   private _mask: ConnectionMask;
   private _connections: Connections; // parent
@@ -66,8 +64,6 @@ export class Connection extends Config {
     this.initParameters(connection.params);
     this._mask = new ConnectionMask(this, connection.mask);
     this._synapse = new Synapse(this, connection.synapse);
-
-    this.updateHash();
   }
 
   get connections(): Connections {
@@ -81,10 +77,6 @@ export class Connection extends Config {
     return Object.values(this._params).filter(
       (param: ConnectionParameter) => param.state.visible
     );
-  }
-
-  get hash(): string {
-    return this._hash;
   }
 
   get hasConnSpec(): boolean {
@@ -134,14 +126,6 @@ export class Connection extends Config {
 
   get rule(): ConnectionRule {
     return this._rule;
-  }
-
-  /**
-   * Returns the first six digits of the SHA-1 connection hash.
-   * @returns 6-digit hash value
-   */
-  get shortHash(): string {
-    return this._hash ? this._hash.slice(0, 6) : "";
   }
 
   get source(): Node {
@@ -208,7 +192,6 @@ export class Connection extends Config {
    */
   clean(): void {
     this._idx = this._connections.all.indexOf(this);
-    this.updateHash();
   }
 
   /**
@@ -358,13 +341,4 @@ export class Connection extends Config {
     return connection;
   }
 
-  /**
-   * Update hash for connection graph.
-   */
-  updateHash(): void {
-    this._hash = sha1({
-      // color: this.source.view.color,
-      idx: this.idx,
-    });
-  }
 }

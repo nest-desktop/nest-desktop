@@ -75,7 +75,7 @@
                       v-model="state.node.paramsVisible"
                     >
                       <template #append>
-                        {{ param.inputLabel || param.id }}: {{ param.value }}
+                        {{ param.id }}: {{ param.value }}
                         {{ param.unit }}
                       </template>
                     </v-checkbox>
@@ -88,21 +88,24 @@
                   @click.stop="() => state.node.showAllParams()"
                   size="small"
                   variant="outlined"
-                  >all</v-btn
                 >
+                  all
+                </v-btn>
                 <v-btn
                   @click.stop="() => state.node.hideAllParams()"
                   size="small"
                   variant="outlined"
-                  >none</v-btn
                 >
+                  none
+                </v-btn>
                 <v-spacer />
                 <v-btn
                   @click.stop="state.menu = false"
                   size="small"
                   variant="outlined"
-                  >close</v-btn
                 >
+                  close
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-menu>
@@ -157,29 +160,28 @@
     <v-card-actions
       class="pa-0"
       style="min-height: 40px"
-      v-if="
-        state.node.network.connections.all.length > 0 &&
-        state.node.targets.length > 0
-      "
+      v-if="state.node.state.targetsLength > 0"
     >
-      <v-expansion-panels variant="accordion">
-        <node-connection
-          :key="index"
-          :source="{
-            color: state.node.color,
-            label: state.node.label,
-            elementType: state.node.elementType,
-            weight: state.node.weight,
-          }"
-          :target="{
-            color: connection.target.color,
-            label: connection.target.label,
-            elementType: connection.target.elementType,
-            weight: state.node.weight,
-          }"
-          v-for="(connection, index) in state.node.targets"
-        />
-      </v-expansion-panels>
+      <div :key="state.node.state.targetsLength">
+        <v-expansion-panels variant="accordion">
+          <node-connection
+            :key="index"
+            :source="{
+              color: state.node.color,
+              label: state.node.label,
+              elementType: state.node.elementType,
+              weight: state.node.weight,
+            }"
+            :target="{
+              color: connection.target.color,
+              label: connection.target.label,
+              elementType: connection.target.elementType,
+              weight: state.node.weight,
+            }"
+            v-for="(connection, index) in state.node.targets"
+          />
+        </v-expansion-panels>
+      </div>
     </v-card-actions>
   </card>
 </template>
@@ -189,13 +191,19 @@ import { reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
-import { Node } from "../core/node/node";
+import { Node } from "@nest/core/node/node";
 
 import NodeAvatar from "./avatar/NodeAvatar.vue";
+import NodeConnection from "./NodeConnection.vue";
 import NodeParam from "./NodeParam.vue";
 
-const props = defineProps({ node: Node });
+interface Props {
+  node: Node;
+}
 
+const props = defineProps<Props>();
+
+// @ts-ignore
 const state = reactive({
   menu: false,
   node: props.node,
