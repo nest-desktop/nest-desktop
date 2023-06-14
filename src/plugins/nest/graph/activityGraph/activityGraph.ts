@@ -107,7 +107,7 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    const activitiesHash = this._project.activities.map(
+    const activitiesHash = this._project.activities.all.map(
       (activity: Activity) => activity.hash
     );
     if (sha1({ activitiesHash }) === this._state.dataHash) return;
@@ -126,7 +126,7 @@ export class ActivityGraph {
    */
   updateHash(): void {
     this._state.codeHash = this._project.simulation.code.state.hash;
-    const activitiesHash = this._project.activities.map(
+    const activitiesHash = this._project.activities.all.map(
       (activity: Activity) => activity.hash
     );
     this._state.dataHash = sha1({ activitiesHash });

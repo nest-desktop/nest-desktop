@@ -26,7 +26,7 @@ import SandboxCard from "@/components/sandbox/SandboxCard.vue";
 import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
 import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
-import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
+// import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 import SandboxToast from "@/components/sandbox/SandboxToast.vue";

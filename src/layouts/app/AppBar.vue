@@ -1,14 +1,24 @@
 <template>
-    <v-spacer />
+  <v-spacer />
 
-    <v-btn variant="text" size="x-small">
-      NEST
-      <v-icon class="mx-1" color="success" icon="mdi-circle" />
-    </v-btn>
+  <v-btn
+    @click.stop="() => nestSimulatorStore.backend.check()"
+    size="x-small"
+    variant="text"
+  >
+    {{ appStore.simulator }}
+    <v-icon
+      :color="nestSimulatorStore.backend.state.ready ? 'green' : 'red'"
+      class="mx-1"
+      icon="mdi-circle"
+    />
+  </v-btn>
 </template>
 
 <script lang="ts" setup>
-// import { useAppStore } from '@/state/app';
+import { useAppStore } from "@/store/appStore";
+import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
 
-// const app = useAppStore();
+const appStore = useAppStore();
+const nestSimulatorStore = useNESTSimulatorStore();
 </script>

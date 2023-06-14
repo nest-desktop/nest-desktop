@@ -8,7 +8,7 @@
     hide-details
     prepend-icon="mdi-minus"
     style="position: relative"
-    v-model="modelValue"
+    v-model="value"
   >
     <template #append>
       <v-text-field
@@ -19,7 +19,7 @@
         hide-details
         style="width: 80px"
         type="number"
-        v-model="modelValue"
+        v-model="value"
         variant="underlined"
       />
     </template>
@@ -39,7 +39,7 @@ const props = defineProps({
 
 const modelRef = ref(props.modelValue);
 
-const modelValue = computed({
+const value = computed({
   get: () => modelRef.value,
   set: (value) => {
     const val = (
@@ -56,11 +56,11 @@ const numDecimals = () => {
 };
 
 const decrement = () => {
-  modelValue.value -= props.step;
+  value.value -= props.step;
 };
 
 const increment = () => {
-  modelValue.value += props.step;
+  value.value += props.step;
 };
 
 watch(

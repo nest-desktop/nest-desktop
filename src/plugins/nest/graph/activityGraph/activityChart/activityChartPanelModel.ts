@@ -136,7 +136,7 @@ export abstract class ActivityChartPanelModel {
    * Get activity from the project.
    */
   getActivity(idx: number): Activity {
-    return this._panel.graph.project.activities[idx];
+    return this._panel.graph.project.activities.all[idx];
   }
 
   /**

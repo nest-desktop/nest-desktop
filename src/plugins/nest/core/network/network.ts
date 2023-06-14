@@ -10,6 +10,7 @@ import { NetworkState } from "./networkState";
 import { Node, NodeProps } from "../node/node";
 import { Nodes } from "../node/nodes";
 import { Project } from "../project/project";
+import { Activity } from "../activity/activity";
 
 export interface NetworkProps {
   models?: CopyModelProps[];
@@ -23,6 +24,8 @@ export class Network extends Config {
   private _nodes: Nodes; // for nest.Create
   private _project: Project; // project
   private _state: NetworkState; // network state
+  private _revisionIdx = -1; // Index of the network history;
+  private _revisions: any[] = []; // network history
 
   constructor(project: Project, network: NetworkProps = {}) {
     super("Network");
@@ -34,6 +37,8 @@ export class Network extends Config {
 
     this._state = new NetworkState(this);
     this.updateStates();
+
+    this.init();
   }
 
   get colors(): string[] {
@@ -68,8 +73,61 @@ export class Network extends Config {
     return this._project;
   }
 
+  /**
+   * Get revision index of the network history.
+   */
+  get revisionIdx(): number {
+    return this._revisionIdx;
+  }
+
+  /**
+   * Get list of network history.
+   */
+  get revisions(): any[] {
+    return this._revisions;
+  }
+
   get state(): NetworkState {
     return this._state;
+  }
+
+  /**
+   * Load network from the history list.
+   *
+   * @remarks It generates code.
+   */
+  checkout(): void {
+    console.debug("Checkout network");
+
+    // Update revision idx.
+    if (this._revisionIdx >= this._revisions.length) {
+      this._revisionIdx = this._revisions.length - 1;
+    }
+
+    // Update network.
+    const network: any = this._revisions[this._revisionIdx];
+    this.update(network);
+
+    // Generate simulation code.
+    this._project.simulation.code.generate();
+
+    // Initialize activity graph.
+    // It resets always the panels.
+    // TODO: Better solution to update activity graph.
+    this._project.activityGraph.init();
+
+    if (this._project.simulateAfterCheckout) {
+      // Run simulation.
+      setTimeout(() => this._project.startSimulation(), 1);
+    } else {
+      // Update activities.
+      const activities: any[] = this._project.activities.all.map(
+        (activity: Activity) => activity.toJSON()
+      );
+      this._project.activities.update(activities);
+    }
+
+    this.clean();
   }
 
   /**
@@ -84,10 +142,78 @@ export class Network extends Config {
   }
 
   /**
+   * Clear network history list.
+   */
+  clearNetworkHistory(): void {
+    this._revisions = [];
+    this._revisionIdx = -1;
+  }
+
+  /**
    * Clone network component.
    */
   clone(): Network {
     return new Network(this._project, { ...this.toJSON() });
+  }
+
+  /**
+   * Add network to the history list.
+   */
+  commit(): void {
+    console.debug("Commit network of " + this._project.shortId);
+
+    // Remove networks after the current.
+    this._revisions = this._revisions.slice(0, this._revisionIdx + 1);
+
+    // Limit max amount of network revisions.
+    const maxRev: number = 5;
+    if (this._revisions.length > maxRev) {
+      this._revisions = this._revisions.slice(this._revisions.length - maxRev);
+    }
+
+    // Get last network of the revisions.
+    const lastNetwork: any =
+      this._revisions.length > 0
+        ? this._revisions[this._revisions.length - 1]
+        : {};
+
+    let currentNetwork: any;
+    if (
+      lastNetwork.codeHash != null &&
+      lastNetwork.codeHash === this._project.simulation.code.state.hash
+    ) {
+      currentNetwork = this._revisions.pop();
+
+      // Add activity to recorder nodes.
+      this.nodes.all
+        .filter((node) => node.model.isRecorder)
+        .forEach((node) => {
+          currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+        });
+    } else {
+      // Get network object.
+      currentNetwork = this.toJSON();
+      // Copy code hash to current network.
+      currentNetwork.codeHash = this._project.simulation.code.state.hash;
+
+      // Add activity to recorder nodes only if hashes is matched.
+      if (
+        this._project.simulation.code.state.hash ===
+        this._project.activityGraph.codeHash
+      ) {
+        this.nodes.all
+          .filter((node: Node) => node.model.isRecorder)
+          .forEach((node: Node) => {
+            currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+          });
+      }
+    }
+
+    // Push current network to the revisions.
+    this._revisions.push(currentNetwork);
+
+    // Update idx of the latest network revision.
+    this._revisionIdx = this._revisions.length - 1;
   }
 
   /**
@@ -218,6 +344,10 @@ export class Network extends Config {
     return colors[idx % colors.length];
   }
 
+  init(): void {
+    this.clearNetworkHistory();
+  }
+
   /**
    * Observer for network changes
    *
@@ -248,6 +378,42 @@ export class Network extends Config {
     // }
 
     this._project.state.checkChanges();
+  }
+
+  /**
+   * Go to the newer network.
+   */
+  newer(): void {
+    if (this._revisionIdx < this._revisions.length) {
+      this._revisionIdx++;
+    }
+    this.checkout();
+  }
+
+  /**
+   * Go to the newest network.
+   */
+  newest(): void {
+    this._revisionIdx = this._revisions.length - 1;
+    this.checkout();
+  }
+
+  /**
+   * Go to the older network.
+   */
+  older(): void {
+    if (this._revisionIdx > 0) {
+      this._revisionIdx--;
+    }
+    this.checkout();
+  }
+
+  /**
+   * Go to the oldest network.
+   */
+  oldest(): void {
+    this._revisionIdx = 0;
+    this.checkout();
   }
 
   /**

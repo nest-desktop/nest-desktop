@@ -6,16 +6,13 @@ import { useModelDBStore } from "@nest/store/model/modelDBStore";
 import { useProjectDBStore } from "@nest/store/project/projectDBStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-import { Activity } from "../activity/activity";
 import { ActivityGraph } from "@nest/graph/activityGraph/activityGraph";
-import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { Insite } from "../insite/insite";
 import { Network, NetworkProps } from "../network/network";
-import { Node } from "../node/node";
 import { ProjectState } from "./projectState";
 import { Simulation, SimulationProps } from "../simulation/simulation";
-import { SpikeActivity } from "../activity/spikeActivity";
 import { upgradeProject } from "../upgrades/upgrades";
+import { Activities } from "../activity/activities";
 
 export interface ProjectProps {
   _id?: string;
@@ -32,6 +29,7 @@ export interface ProjectProps {
 }
 
 export class Project {
+  private _activities: Activities;
   private _activityGraph: ActivityGraph;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
@@ -40,8 +38,6 @@ export class Project {
   private _insite: Insite; // insite
   private _name: string; // project name
   private _network: Network; // network of neurons and devices
-  private _networkRevisionIdx = -1; // Index of the network history;
-  private _networkRevisions: any[] = []; // network history
   private _rev: string; // rev of the project
   private _simulation: Simulation; // settings for the simulation
   private _state: ProjectState;
@@ -77,13 +73,17 @@ export class Project {
     this._simulation = new Simulation(this, project.simulation);
 
     // Initialize network.
-    this.clearNetworkHistory();
     this._network = new Network(this, project.network);
 
-    // Initialize activity graph.
+    // Initialize activities.
+    this._activities = new Activities(this);
     this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
+  }
+
+  get activities(): Activities {
+    return this._activities;
   }
 
   get activityGraph(): ActivityGraph {
@@ -146,6 +146,10 @@ export class Project {
     return this._rev;
   }
 
+  get simulateAfterCheckout(): boolean {
+    return this._projectStore.simulateAfterCheckout;
+  }
+
   get simulation(): Simulation {
     return this._simulation;
   }
@@ -200,7 +204,7 @@ export class Project {
     this._network.state.reset();
 
     // Commit network in history.
-    this.commitNetwork(this._network);
+    this.network.commit();
   }
 
   /**
@@ -265,184 +269,6 @@ export class Project {
   }
 
   /*
-   * Project revisions
-   */
-
-  /**
-   * Networks
-   */
-
-  /**
-   * Initialize a network.
-   *
-   * @remarks
-   * It commits network after creating network component.
-   */
-  initNetwork(network: any = {}): void {
-    this.clearNetworkHistory();
-    this._network = new Network(this, network);
-  }
-
-  /**
-   * Get revision index of the network history.
-   */
-  get networkRevisionIdx(): number {
-    return this._networkRevisionIdx;
-  }
-
-  /**
-   * Get list of network history.
-   */
-  get networkRevisions(): any[] {
-    return this._networkRevisions;
-  }
-
-  /**
-   * Clear network history list.
-   */
-  clearNetworkHistory(): void {
-    this._networkRevisions = [];
-    this._networkRevisionIdx = -1;
-  }
-
-  /**
-   * Add network to the history list.
-   */
-  commitNetwork(network: Network): void {
-    console.debug("Commit network of " + network.project.shortId);
-
-    // Remove networks after the current.
-    this._networkRevisions = this._networkRevisions.slice(
-      0,
-      this._networkRevisionIdx + 1
-    );
-
-    // Limit max amount of network revisions.
-    const maxRev: number = 5;
-    if (this._networkRevisions.length > maxRev) {
-      this._networkRevisions = this._networkRevisions.slice(
-        this._networkRevisions.length - maxRev
-      );
-    }
-
-    // Get last network of the revisions.
-    const lastNetwork: any =
-      this._networkRevisions.length > 0
-        ? this._networkRevisions[this._networkRevisions.length - 1]
-        : {};
-
-    let currentNetwork: any;
-    if (
-      lastNetwork.codeHash != null &&
-      lastNetwork.codeHash === this._simulation.code.state.hash
-    ) {
-      currentNetwork = this._networkRevisions.pop();
-
-      // Add activity to recorder nodes.
-      network.nodes
-        .filter((node) => node.model.isRecorder)
-        .forEach((node) => {
-          currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
-        });
-    } else {
-      // Get network object.
-      currentNetwork = network.toJSON();
-      // Copy code hash to current network.
-      currentNetwork.codeHash = this._simulation.code.state.hash;
-
-      // Add activity to recorder nodes only if hashes is matched.
-      if (this._simulation.code.state.hash === this._activityGraph.codeHash) {
-        network.nodes
-          .filter((node) => node.model.isRecorder)
-          .forEach((node) => {
-            currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
-          });
-      }
-    }
-
-    // Push current network to the revisions.
-    this._networkRevisions.push(currentNetwork);
-
-    // Update idx of the latest network revision.
-    this._networkRevisionIdx = this._networkRevisions.length - 1;
-  }
-
-  /**
-   * Load network from the history list.
-   *
-   * @remarks It generates code.
-   */
-  checkoutNetwork(): void {
-    console.debug("Checkout network");
-
-    // Update revision idx.
-    if (this._networkRevisionIdx >= this._networkRevisions.length) {
-      this._networkRevisionIdx = this._networkRevisions.length - 1;
-    }
-
-    // Update network.
-    const network: any = this._networkRevisions[this._networkRevisionIdx];
-    this._network.update(network);
-
-    // Generate simulation code.
-    this._simulation.code.generate();
-
-    // Initialize activity graph.
-    // It resets always the panels.
-    // TODO: Better solution to update activity graph.
-    this._activityGraph.init();
-
-    if (this._projectStore.simulateAfterCheckout) {
-      // Run simulation.
-      setTimeout(() => this.startSimulation(), 1);
-    } else {
-      // Update activities.
-      const activities: any[] = this.activities.map((activity: Activity) =>
-        activity.toJSON()
-      );
-      this.initActivities(activities);
-    }
-
-    this.clean();
-  }
-
-  /**
-   * Go to the older network.
-   */
-  networkOlder(): void {
-    if (this._networkRevisionIdx > 0) {
-      this._networkRevisionIdx--;
-    }
-    this.checkoutNetwork();
-  }
-
-  /**
-   * Go to the oldest network.
-   */
-  networkOldest(): void {
-    this._networkRevisionIdx = 0;
-    this.checkoutNetwork();
-  }
-
-  /**
-   * Go to the newer network.
-   */
-  networkNewer(): void {
-    if (this._networkRevisionIdx < this._networkRevisions.length) {
-      this._networkRevisionIdx++;
-    }
-    this.checkoutNetwork();
-  }
-
-  /**
-   * Go to the newest network.
-   */
-  networkNewest(): void {
-    this._networkRevisionIdx = this._networkRevisions.length - 1;
-    this.checkoutNetwork();
-  }
-
-  /*
    * Simulation
    */
 
@@ -454,23 +280,23 @@ export class Project {
     this.insite.cancelAllIntervals();
 
     // Reset activities and activity graphs.
-    this.resetActivities();
+    this.activities.reset();
 
     this._simulation.start().then((response: any) => {
       if (
         response == null ||
         response.status != 200 ||
         response.data == null ||
-        !("data" in response.data)
+        !response.data.data
       ) {
         return;
       }
 
       // Initialize activities
-      this.initActivities(response.data.data);
+      this.activities.update(response.data.data);
 
       // Commit network for the history.
-      this.commitNetwork(this._network);
+      this.network.commit();
     });
 
     if (this._simulation.code.runSimulationInsite) {
@@ -490,56 +316,6 @@ export class Project {
    */
 
   /**
-   * Get a list of activities.
-   */
-  get activities(): Activity[] {
-    console.debug("Get activities");
-    const activities: Activity[] = this._network
-      ? this._network.nodes.recorders.map((recorder: Node) => recorder.activity)
-      : [];
-    activities.forEach((activity: Activity, idx: number) => {
-      activity.idx = idx;
-    });
-    return activities;
-  }
-
-  /**
-   * Get a list of analog signal activities.
-   */
-  get analogSignalActivities(): AnalogSignalActivity[] {
-    return this.activities.filter(
-      (activity: Activity) => activity.recorder.model.isAnalogRecorder
-    ) as AnalogSignalActivity[];
-  }
-
-  /**
-   * Get a list of neuronal analog signal activities.
-   */
-  get neuronAnalogSignalActivities(): AnalogSignalActivity[] {
-    return this.activities.filter(
-      (activity: Activity) => activity.hasNeuronAnalogData
-    ) as AnalogSignalActivity[];
-  }
-
-  /**
-   * Get a list of input analog signal activities.
-   */
-  get inputAnalogSignalActivities(): AnalogSignalActivity[] {
-    return this.activities.filter(
-      (activity: Activity) => activity.hasInputAnalogData
-    ) as AnalogSignalActivity[];
-  }
-
-  /**
-   * Get a list of spike activities.
-   */
-  get spikeActivities(): SpikeActivity[] {
-    return this.activities.filter(
-      (activity: Activity) => activity.recorder.model.isSpikeRecorder
-    ) as SpikeActivity[];
-  }
-
-  /**
    * Initialize activity graph.
    */
   initActivityGraph(): void {
@@ -549,80 +325,9 @@ export class Project {
     }
 
     this._activityGraph.init();
-
-    if (this._state.activities.hasSomeEvents) {
+    if (this.activities.state.hasSomeEvents) {
       this._activityGraph.update();
     }
-  }
-
-  /**
-   * Reset activities.
-   */
-  resetActivities(): void {
-    // Reset activities.
-    this.activities.forEach((activity: Activity) => {
-      activity.reset();
-    });
-
-    // Check if project has activities.
-    this._state.checkActivities();
-
-    // Update activity graph.
-    this._activityGraph.update();
-  }
-
-  /**
-   * Initialize activities in recorder nodes after simulation.
-   */
-  initActivities(data: any): void {
-    let activities: any[] = [];
-
-    if ("activities" in data) {
-      activities = data.activities;
-    } else if ("events" in data) {
-      activities = data.events.map((events: any) => ({
-        events,
-      }));
-    } else {
-      activities = data;
-    }
-
-    activities.forEach((activity: any) => {
-      if (!("nodeIds" in activity)) {
-        if ("ports" in activity.events) {
-          activity.nodeIds = activity.events.ports.filter(
-            (value: number, index: number, self: number[]) =>
-              self.indexOf(value) === index
-          );
-        } else {
-          activity.nodeIds = activity.events.senders.filter(
-            (value: number, index: number, self: number[]) =>
-              self.indexOf(value) === index
-          );
-        }
-      }
-      activity.nodeIds.sort((a: number, b: number) => a - b);
-    });
-
-    // Get node positions.
-    if ("positions" in data) {
-      activities.forEach((activity: any) => {
-        activity.nodePositions = activity.nodeIds.map(
-          (nodeId: number) => data.positions[nodeId]
-        );
-      });
-    }
-
-    // Initialize recorded activities.
-    this.activities.forEach((activity: Activity, idx: number) => {
-      activity.init(activities[idx]);
-    });
-
-    // Check if project has activities.
-    this._state.checkActivities();
-
-    // Update activity graph.
-    this._activityGraph.update();
   }
 
   /**

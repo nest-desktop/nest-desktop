@@ -270,16 +270,16 @@ export class ActivityChartGraph {
    * Initialize network chart graph.
    */
   init(panels: any[] = []): void {
-    this._project.state.checkActivities();
+    this._project.activities.checkActivities();
 
     this._panels = [];
     if (panels.length > 0) {
       panels.forEach((panel: any) => this.addPanel(panel));
     } else {
-      if (this._project.state.activities.hasSomeAnalogRecorders) {
+      if (this._project.activities.state.hasSomeAnalogRecorders) {
         this.addPanel({ model: { id: "analogSignalPlot" } });
       }
-      if (this._project.state.activities.hasSomeSpikeRecorders) {
+      if (this._project.activities.state.hasSomeSpikeRecorders) {
         this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
         this.addPanel({ model: { id: "spikeTimesHistogram" } });
       }

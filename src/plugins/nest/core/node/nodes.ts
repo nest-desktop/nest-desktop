@@ -10,7 +10,7 @@ interface NodesState {
   annotations: { [key: string]: string }[];
   focusedNode: number | null;
   hash: string;
-  nodesLength: number,
+  nodesLength: number;
   selectedNode: number | null;
 }
 
@@ -89,6 +89,13 @@ export class Nodes {
    */
   get recordersAnalog(): Node[] {
     return this._nodes.filter((node: Node) => node.model.isAnalogRecorder);
+  }
+
+  /**
+   * Get recorders
+   */
+  get recordersSpike(): Node[] {
+    return this._nodes.filter((node: Node) => node.model.isSpikeRecorder);
   }
 
   /**
@@ -290,7 +297,6 @@ export class Nodes {
   updateNodesLength(): void {
     this._state.nodesLength = this._nodes.length;
   }
-
 
   /**
    * Update records of recorders.

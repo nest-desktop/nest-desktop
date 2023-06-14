@@ -42,7 +42,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
    * Initialize activity for the panel model.
    */
   initActivities(): void {
-    this.activities = this.panel.graph.project.analogSignalActivities;
+    this.activities = this.panel.graph.project.activities.analogSignals;
   }
 
   get axisTitle(): string {
