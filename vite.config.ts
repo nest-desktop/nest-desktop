@@ -1,6 +1,7 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
 
+// Vite plugins
 import commonjs from "vite-plugin-commonjs";
 import electron from "vite-plugin-electron";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
@@ -14,8 +15,6 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    assetsInclude: ["**/*.code", "**/*.json"],
-    assetsInlineLimit: 0,
     build: {
       outDir: "./dist", // "./nest_desktop/app"
     },
