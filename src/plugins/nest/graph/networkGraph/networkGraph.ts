@@ -1,10 +1,10 @@
 // networkGraph.ts
 
+import { Ref } from "vue";
 import * as d3 from "d3";
 
 import { ConnectionGraph } from "../connectionGraph";
 import { ModelAssignGraph } from "../modelAssignGraph";
-import { Network } from "@nest/core/network/network";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { Node } from "@nest/core/node/node";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
@@ -23,8 +23,8 @@ export class NetworkGraph {
   private _selector: d3.Selection<any, any, any, any>;
   private _workspace: NetworkGraphWorkspace;
 
-  constructor(selector: string) {
-    this._selector = d3.select(selector);
+  constructor(ref: Ref<null>) {
+    this._selector = d3.select(ref.value);
 
     this._workspace = new NetworkGraphWorkspace(this);
     this._modelAssignGraph = new ModelAssignGraph(this);

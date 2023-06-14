@@ -1,6 +1,6 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
-    <svg class="networkGraph" height="600" id="networkGraph" width="800">
+    <svg class="networkGraph" height="600" ref="networkGraph" width="800">
       <g
         :key="state.graph.network.connections.state.connectionsLength"
         class="marker"
@@ -106,13 +106,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, onBeforeMount } from "vue";
+import { reactive, onMounted, onBeforeMount, ref, Ref } from "vue";
 
 import { darkMode } from "@/helpers/theme";
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
 
+const networkGraph: Ref<null> = ref(null);
+
 const state = reactive({
-  graph: new NetworkGraph("#networkGraph"),
+  graph: new NetworkGraph(networkGraph),
 });
 
 function observeSize() {
@@ -144,6 +146,8 @@ const update = () => {
 onMounted(() => {
   observeSize();
   window.addEventListener("darkmode", () => state.graph.render());
+
+  state.graph = new NetworkGraph(networkGraph);
 
   update();
 });

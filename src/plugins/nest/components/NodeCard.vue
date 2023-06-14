@@ -162,26 +162,27 @@
       style="min-height: 40px"
       v-if="state.node.state.targetsLength > 0"
     >
-      <div :key="state.node.state.targetsLength">
-        <v-expansion-panels variant="accordion">
-          <node-connection
-            :key="index"
-            :source="{
-              color: state.node.color,
-              label: state.node.label,
-              elementType: state.node.elementType,
-              weight: state.node.weight,
-            }"
-            :target="{
-              color: connection.target.color,
-              label: connection.target.label,
-              elementType: connection.target.elementType,
-              weight: state.node.weight,
-            }"
-            v-for="(connection, index) in state.node.targets"
-          />
-        </v-expansion-panels>
-      </div>
+      <v-expansion-panels
+        :key="state.node.state.targetsLength"
+        variant="accordion"
+      >
+        <node-connection
+          :key="index"
+          :source="{
+            color: state.node.color,
+            label: state.node.label,
+            elementType: state.node.elementType,
+            weight: state.node.weight,
+          }"
+          :target="{
+            color: connection.target.color,
+            label: connection.target.label,
+            elementType: connection.target.elementType,
+            weight: state.node.weight,
+          }"
+          v-for="(connection, index) in state.node.targets"
+        />
+      </v-expansion-panels>
     </v-card-actions>
   </card>
 </template>

@@ -210,7 +210,7 @@ export class ModelReceptor {
    * Update the recordables from the config.
    */
   updateRecordables(model: any): void {
-    if ("recordables" in model) {
+    if (model.recordables) {
       this._recordables = this._model.config.recordables.filter(
         (recordable: any) => model.recordables.includes(recordable.id)
       );
