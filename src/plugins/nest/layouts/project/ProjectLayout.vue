@@ -92,6 +92,7 @@
 <script lang="ts" setup>
 import { useNavStore } from "@/store/navStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
+import { useNESTSimulatorStore } from "../../store/backends/nestSimulatorStore";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectController from "./ProjectController.vue";
@@ -100,6 +101,8 @@ import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
 
 const navStore = useNavStore();
 const projectStore = useProjectStore();
+const nestSimulatorStore = useNESTSimulatorStore();
+nestSimulatorStore.backend.check()
 
 /**
  * Handle mouse move on resizing.

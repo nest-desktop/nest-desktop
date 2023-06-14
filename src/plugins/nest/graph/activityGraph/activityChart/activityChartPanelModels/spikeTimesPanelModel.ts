@@ -29,6 +29,6 @@ export class SpikeTimesPanelModel extends ActivityChartPanelModel {
    * Initialize model for spike activities.
    */
   initActivities(): void {
-    this.activities = this.panel.graph.project.spikeActivities;
+    this.activities = this.panel.graph.project.activities.spikes;
   }
 }

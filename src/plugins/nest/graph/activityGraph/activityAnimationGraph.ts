@@ -73,7 +73,7 @@ export class ActivityAnimationGraph {
       this._config.frames.sampleRate;
 
     // Update activity layers and frames.
-    this.project.activities.forEach((activity: Activity) => {
+    this.project.activities.all.forEach((activity: Activity) => {
       const layer = new ActivityAnimationLayer(this, activity);
       let position = activity.idx;
       if (this._layers[position] == null) {

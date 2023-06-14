@@ -107,9 +107,7 @@ export const useProjectDBStore = defineStore("project-db", {
 
       const projectData: any = project.toJSON();
       if (withActivities) {
-        projectData.activities = project.activities.map((activity: Activity) =>
-          activity.toJSON()
-        );
+        projectData.activities = project.activities.toJSON();
       }
       download(JSON.stringify(projectData), "project");
     },

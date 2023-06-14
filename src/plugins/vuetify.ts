@@ -13,7 +13,7 @@ import "./main.scss";
 // Composables
 import { createVuetify } from "vuetify";
 
-import { md1, md2, md3 } from "vuetify/blueprints";
+// import { md1, md2, md3 } from "vuetify/blueprints";
 
 import { mdi } from "vuetify/iconsets/mdi";
 import { nest } from "@/plugins/nest/components/iconsets/index";

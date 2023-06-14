@@ -1,15 +1,22 @@
 // backend.ts
 
-import axios from 'axios';
-import { reactive, UnwrapRef } from 'vue';
+import axios from "axios";
+import { reactive, UnwrapRef } from "vue";
 
-import { Config } from './config';
-import combineURLs from './combineURLs';
+import { Config } from "./config";
+import combineURLs from "./combineURLs";
+
+interface BackendState {
+  enabled: boolean;
+  ready: boolean;
+  seek: any;
+  version: any;
+}
 
 export class Backend extends Config {
-  private _state: UnwrapRef<any>;
+  private _state: UnwrapRef<BackendState>;
 
-  constructor(name: string, seek = { path: '', port: 0, versionPath: '' }) {
+  constructor(name: string, seek = { path: "", port: 0, versionPath: "" }) {
     super(name);
     this._state = reactive({
       enabled: false,
@@ -31,13 +38,13 @@ export class Backend extends Config {
 
   get host(): string {
     return combineURLs(
-      this.hostname + (this.port ? ':' + this.port : ''),
+      this.hostname + (this.port ? ":" + this.port : ""),
       this.path
     );
   }
 
   get hostname(): string {
-    return this.config.hostname || window.location.hostname || 'localhost';
+    return this.config.hostname || window.location.hostname || "localhost";
   }
 
   get instance(): any {
@@ -45,7 +52,7 @@ export class Backend extends Config {
   }
 
   get path(): string {
-    return this.config.path || '';
+    return this.config.path || "";
   }
 
   get port(): string {
@@ -71,11 +78,11 @@ export class Backend extends Config {
     if (
       this.protocol != undefined &&
       this.host != undefined &&
-      this.protocol !== '' &&
-      this.host !== ''
+      this.protocol !== "" &&
+      this.host !== ""
     )
-      return this.protocol + '//' + this.host;
-    return '';
+      return this.protocol + "//" + this.host;
+    return "";
   }
 
   /**
@@ -86,20 +93,20 @@ export class Backend extends Config {
    * @param value URL to save as hostname and protocol
    */
   set url(value: string) {
-    let hostname: string = '';
-    let path: string = '/';
-    let port: string = '';
-    let protocol: string = '';
+    let hostname: string = "";
+    let path: string = "/";
+    let port: string = "";
+    let protocol: string = "";
 
-    if (value != null && value !== '') {
-      const values: string[] = value.split('//');
+    if (value != null && value !== "") {
+      const values: string[] = value.split("//");
       if (values.length > 1) {
-        const paths: string[] = values[1].split('/');
-        const host: string[] = paths[0].split(':');
+        const paths: string[] = values[1].split("/");
+        const host: string[] = paths[0].split(":");
 
         hostname = host[0];
-        path = paths.length > 1 ? paths.slice(1).join('/') : '/';
-        port = host.length > 1 ? host[1] : '';
+        path = paths.length > 1 ? paths.slice(1).join("/") : "/";
+        port = host.length > 1 ? host[1] : "";
         protocol = values[0];
       }
     }
@@ -119,6 +126,7 @@ export class Backend extends Config {
    * Check if the backend is serving.
    */
   async check(): Promise<void> {
+    console.log("Check backend");
     this.resetState();
     if (this.config.enabled === false) return;
 
@@ -134,14 +142,15 @@ export class Backend extends Config {
    * Seek the server URL of the backend.
    */
   async seek(): Promise<any> {
+    console.log("Seek backend");
     const protocol: string = window.location.protocol;
-    const hostname: string = window.location.hostname || 'localhost';
+    const hostname: string = window.location.hostname || "localhost";
     const hosts: string[] = [
-      combineURLs(hostname + ':' + this._state.seek.port),
+      combineURLs(hostname + ":" + this._state.seek.port),
       combineURLs(hostname, this._state.seek.path),
     ];
     const hostPromises: any[] = hosts.map((host: string) =>
-      this.ping(protocol + '//' + host)
+      this.ping(protocol + "//" + host)
     );
     return axios.all(hostPromises);
   }
@@ -151,6 +160,7 @@ export class Backend extends Config {
    * @param url The URL which should be pinged.
    */
   async ping(url: string): Promise<any> {
+    console.log("Ping backend");
     return axios
       .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {
@@ -178,15 +188,15 @@ export class Backend extends Config {
    * @param config The configuration to update URL in local config.
    */
   updateURL(config: any = {}): void {
-    if (config.url != null && config.url !== '') {
+    if (config.url != null && config.url !== "") {
       this.url = config.url;
     } else {
-      const newConfig: { [key: string]: string} = {};
-      if (config.path != null && config.path !== '') {
-        newConfig['path'] = config.path;
+      const newConfig: { [key: string]: string } = {};
+      if (config.path != null && config.path !== "") {
+        newConfig["path"] = config.path;
       }
-      if (config.port != null && config.port !== '') {
-        newConfig['port'] = config.port;
+      if (config.port != null && config.port !== "") {
+        newConfig["port"] = config.port;
       }
 
       if (Object.keys(newConfig).length > 0) {

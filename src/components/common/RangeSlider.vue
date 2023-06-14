@@ -5,7 +5,7 @@
     hide-details
     strict
     style="position: relative"
-    v-model="modelValue"
+    v-model="value"
   >
     <template #prepend>
       <v-text-field
@@ -52,7 +52,7 @@ const modelRef: UnwrapRef<{ lower: number; upper: number }> = reactive({
 });
 
 // @ts-ignore
-const modelValue = computed({
+const value = computed({
   get: () => [modelRef.lower, modelRef.upper],
   set: (value) => {
     modelRef.lower = value[0];

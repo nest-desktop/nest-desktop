@@ -1,5 +1,6 @@
 // insite.ts
-import { Backend } from "@/helpers/backend";
+
+// import { Backend } from "@/helpers/backend";
 import { openToast } from "@/helpers/toast";
 
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
@@ -86,7 +87,7 @@ export class Insite {
   continuouslyUpdateActivityGraph(milliseconds: number = 1000): void {
     this.activityGraphIntervalId = window.setInterval(() => {
       // Check if project has activities.
-      this._project.state.checkActivities();
+      this._project.activities.checkActivities();
 
       // Update activity graph.
       this._project.activityGraph.update();
@@ -157,15 +158,15 @@ export class Insite {
     // Get node Ids from Insite.
     this.getNodePositions().then((positions: any) => {
       // Check if project has activities.
-      this._project.state.checkActivities();
+      this._project.activities.checkActivities();
 
       // Get spike activities from Insite.
-      if (this._project.state.activities.hasSomeSpikeRecorders) {
+      if (this._project.activities.state.hasSomeSpikeRecorders) {
         this.getSpikeActivities(positions);
       }
 
       // Get analog signal activities from Insite.
-      if (this._project.state.activities.hasSomeAnalogRecorders) {
+      if (this._project.activities.state.hasSomeAnalogRecorders) {
         this.getAnalogSignalActivities(positions);
       }
     });
@@ -226,10 +227,10 @@ export class Insite {
         );
 
         // Initialize activities.
-        this._project.initActivities(activities);
+        this._project.activities.update(activities);
 
         // Get analog signal activities from each multimeter.
-        this._project.analogSignalActivities.forEach(
+        this._project.activities.analogSignals.forEach(
           (activity: AnalogSignalActivity) =>
             this.getAnalogSignalsFromRecorder(activity)
         );
@@ -313,7 +314,7 @@ export class Insite {
       }
 
       // Get spike activities from each spike recorder.
-      this._project.spikeActivities.forEach((activity: SpikeActivity) => {
+      this._project.activities.spikes.forEach((activity: SpikeActivity) => {
         const events: { [key: string]: number[] } = {
           senders: [],
           times: [],
@@ -417,7 +418,7 @@ export class Insite {
         );
 
         // Initialize activities.
-        this._project.initActivities(activities);
+        this._project.activities.update(activities);
 
         // Get spike activities for each spike recorder.
         // this._project.spikeActivities.forEach((activity: SpikeActivity) => {

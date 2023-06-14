@@ -51,7 +51,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-const props = defineProps(["items"]);
+defineProps(["items"]);
 
 const state = reactive({
   listOpen: [],
