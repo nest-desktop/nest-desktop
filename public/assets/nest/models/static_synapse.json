@@ -1,0 +1,27 @@
+{
+  "elementType": "synapse",
+  "id": "static_synapse",
+  "label": "static synapse",
+  "params": [
+    {
+      "id": "weight",
+      "input": "valueSlider",
+      "label": "synaptic weight",
+      "max": 100,
+      "min": -100,
+      "step": 1,
+      "unit": "pA",
+      "value": 1
+    },
+    {
+      "id": "delay",
+      "input": "valueSlider",
+      "label": "synaptic delay",
+      "max": 100,
+      "min": 1,
+      "step": 1,
+      "unit": "ms",
+      "value": 1
+    }
+  ]
+}
