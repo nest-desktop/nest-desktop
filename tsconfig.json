@@ -16,6 +16,9 @@
     "paths": {
       "@/*": [
        "src/*"
+      ],
+      "@nest/*" : [
+        "src/plugins/nest/*"
       ]
      }
   },

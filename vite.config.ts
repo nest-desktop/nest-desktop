@@ -51,6 +51,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
+        "@nest": fileURLToPath(new URL("./src/plugins/nest", import.meta.url)),
       },
       extensions: [
         ".code",
