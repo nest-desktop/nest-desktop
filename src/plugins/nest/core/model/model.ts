@@ -4,7 +4,7 @@ import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { Config } from "@/helpers/config";
 
-import { ModelCompartmentParameter } from "./modelCompartmentParameter";
+import { ModelCompartmentalParameterProps, ModelCompartmentParameter } from "./modelCompartmentParameter";
 import { ModelParameter, ModelParameterProps } from "./modelParameter";
 import { ModelReceptor } from "./modelReceptor/modelReceptor";
 import { useModelDBStore } from "@nest/store/model/modelDBStore";
@@ -191,15 +191,15 @@ export class Model extends Config {
    * Add a parameter to the model specifications.
    * @param param parameter object
    */
-  addParameter(param: any): void {
-    this._params[param.id] = param;
+  addParameter(param: ModelParameterProps): void {
+    this._params[param.id] = new ModelParameter(this, param);
   }
 
   /**
    * Add a compartment parameter to the model specifications.
    * @param param parameter object
    */
-  addCompartmentParameter(param: any): void {
+  addCompartmentParameter(param: ModelCompartmentalParameterProps): void {
     this._compartmentParams[param.id] = new ModelCompartmentParameter(
       this,
       param
@@ -312,6 +312,8 @@ export class Model extends Config {
    * @return model object
    */
   toJSON(): ModelProps {
+    console.log(this._params)
+
     const model: any = {
       abbreviation: this._abbreviation,
       elementType: this._elementType,
@@ -393,7 +395,7 @@ export class Model extends Config {
    */
   updateCompartmentParameters(compartmentParams: any): void {
     this._compartmentParams = {};
-    compartmentParams.forEach((param: any) => {
+    Object.values(compartmentParams).forEach((param: any) => {
       this.addCompartmentParameter(param);
     });
   }
@@ -415,7 +417,7 @@ export class Model extends Config {
    */
   updateReceptors(receptors: any[]): void {
     this._receptors = {};
-    receptors.forEach((receptor: any) => {
+    Object.values(receptors).forEach((receptor: any) => {
       this._receptors[receptor.id] = new ModelReceptor(this, receptor);
     });
   }
