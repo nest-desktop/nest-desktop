@@ -54,7 +54,7 @@ import ModelBar from "./ModelBar.vue";
 import ModelNav from "./ModelNav.vue";
 
 import { useNavStore } from "@/store/navStore";
-import { useModelStore } from "../../store/modelStore";
+import { useModelStore } from "@nest/store/model/modelStore";
 
 const navState = useNavStore();
 const modelStore = useModelStore();

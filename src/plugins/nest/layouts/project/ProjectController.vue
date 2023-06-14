@@ -1,13 +1,12 @@
 <template>
   <v-card flat>
     <template v-if="projectStore.controllerView === 'network'">
-      <div :key="projectStore.project.network.state.nodesLength">
-        <template
+      <div :key="projectStore.project.network.nodes.state.nodesLength">
+        <node-card
           :key="index"
-          v-for="(item, index) in projectStore.project.network.nodes.all"
-        >
-          <node-card :node="item" />
-        </template>
+          :node="node"
+          v-for="(node, index) in projectStore.project.network.nodes.all"
+        />
       </div>
     </template>
     <template v-else-if="projectStore.controllerView === 'kernel'">
@@ -26,10 +25,11 @@
 </template>
 
 <script lang="ts" setup>
-import SimulationCodeEditor from "../../components/SimulationCodeEditor.vue";
-import NodeCard from "../../components/NodeCard.vue";
+import { useProjectStore } from "@nest/store/project/projectStore";
 
-import { useProjectStore } from "../../store/projectStore";
+import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
+import NodeCard from "@nest/components/NodeCard.vue";
+
 const projectStore = useProjectStore();
 </script>
 

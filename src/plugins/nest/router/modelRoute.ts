@@ -4,8 +4,8 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { useModelDBStore } from "../store/modelDBStore";
-import { useModelStore } from "../store/modelStore";
+import { useModelDBStore } from "@nest/store/model/modelDBStore";
+import { useModelStore } from "@nest/store/model/modelStore";
 
 const modelBeforeEnter = (to: any) => {
   const modelStore = useModelStore();

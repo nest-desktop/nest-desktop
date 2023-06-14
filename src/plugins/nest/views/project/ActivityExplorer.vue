@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "../../store/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
+
 const projectStore = useProjectStore();
 </script>

@@ -2,14 +2,14 @@
 
 import { v4 as uuidv4 } from "uuid";
 
-import { useModelDBStore } from "../../store/modelDBStore";
-import { useProjectDBStore } from "../../store/projectDBStore";
-import { useProjectStore } from "../../store/projectStore";
+import { useModelDBStore } from "@nest/store/model/modelDBStore";
+import { useProjectDBStore } from "@nest/store/project/projectDBStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 
 import { Activity } from "../activity/activity";
-import { ActivityGraph } from "../activity/activityGraph";
+import { ActivityGraph } from "@nest/graph/activityGraph/activityGraph";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
-import { Insite } from "./insite/insite";
+import { Insite } from "../insite/insite";
 import { Network, NetworkProps } from "../network/network";
 import { Node } from "../node/node";
 import { ProjectState } from "./projectState";
@@ -225,7 +225,7 @@ export class Project {
    */
   duplicate(): Project {
     const newProject: Project = this.clone();
-    this._projectStore.projects = newProject;
+    this._projectDBStore.addProject(newProject);
     return newProject;
   }
 
@@ -233,35 +233,35 @@ export class Project {
    * Delete this project from the list and database.
    */
   async delete(): Promise<any> {
-    return this._app.project.deleteProject(this);
+    return this._projectDBStore.deleteProject(this._id);
   }
 
   /**
    * Export this project.
    */
   export(): void {
-    this._app.project.exportProject(this._id);
+    this._projectDBStore.exportProject(this._id);
   }
 
   /**
    * Export this project and activities.
    */
   exportWithActivities(): void {
-    this._app.project.exportProject(this._id, true);
+    this._projectDBStore.exportProject(this._id, true);
   }
 
   /**
    * Reload this project.
    */
   async reload(): Promise<any> {
-    return this._app.project.reloadProject(this);
+    return this._projectDBStore.reloadProject(this._id);
   }
 
   /**
    * Unload this project.
    */
   async unload(): Promise<any> {
-    return this._app.project.unloadProject(this);
+    return this._projectDBStore.unloadProject(this._id);
   }
 
   /*

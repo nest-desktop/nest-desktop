@@ -41,10 +41,10 @@ const modelRef = ref(props.modelValue);
 
 const modelValue = computed({
   get: () => modelRef.value,
-  set: (value: Number | String) => {
+  set: (value) => {
     const val = (
       typeof value === "string" ? parseFloat(value) : value
-    ) as number;
+    );
     modelRef.value = parseFloat(val.toFixed(numDecimals()));
     emit("update:modelValue", modelRef.value);
   },

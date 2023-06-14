@@ -74,16 +74,15 @@
     permanent
   >
     <div @mousedown="resizeSideController" class="resize-handle left" />
-    <project-controller />
+    <project-controller :key="projectStore.projectId" />
   </v-navigation-drawer>
 
-  <router-view name="project" />
+  <router-view :key="projectStore.projectId" name="project" />
 
   <v-bottom-navigation
     :active="projectStore.bottomOpen"
     :height="projectStore.bottomNavHeight"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
-    elevation="0"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
     <simulation-code-editor />
@@ -91,14 +90,13 @@
 </template>
 
 <script lang="ts" setup>
+import { useNavStore } from "@/store/navStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
+
 import ProjectBar from "./ProjectBar.vue";
 import ProjectController from "./ProjectController.vue";
 import ProjectNav from "./ProjectNav.vue";
-
-import SimulationCodeEditor from "../../components/SimulationCodeEditor.vue";
-
-import { useNavStore } from "@/store/navStore";
-import { useProjectStore } from "../../store/projectStore";
+import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
 
 const navStore = useNavStore();
 const projectStore = useProjectStore();

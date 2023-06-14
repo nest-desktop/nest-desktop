@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "../store/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
 
 import { tooltips } from "@codemirror/view";
 import { autocompletion } from "@codemirror/autocomplete";
 import { python } from "@codemirror/lang-python";
-import { oneDark } from "@codemirror/theme-one-dark";
+// import { oneDark } from "@codemirror/theme-one-dark";
 
 import { nestCompletions } from "../codemirror/nestCompletion";
 import { nestRandomCompletions } from "../codemirror/nestRandomCompletion";
@@ -34,7 +34,7 @@ const extensions = [
       nestSpatialDistributionsCompletions,
     ],
   }),
-  oneDark,
+  // oneDark,
 ];
 </script>
 

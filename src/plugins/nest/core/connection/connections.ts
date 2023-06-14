@@ -8,6 +8,7 @@ import { Network } from "../network/network";
 import { Node } from "../node/node";
 
 interface ConnectionsState {
+  connectionsLength: number;
   focusedConnection: number | null;
   hash: string;
   selectedConnection: number | null;
@@ -22,6 +23,7 @@ export class Connections {
     this._network = network;
 
     this._state = reactive({
+      connectionsLength: 0,
       focusedConnection: null,
       hash: "",
       selectedConnection: null,
@@ -32,6 +34,10 @@ export class Connections {
 
   get all(): Connection[] {
     return this._connections;
+  }
+
+  get connectionsLength(): number {
+    return this._state.connectionsLength;
   }
 
   /**
@@ -193,6 +199,21 @@ export class Connections {
       connections.forEach((data: ConnectionProps) => this.add(data));
     }
     this.clean();
+  }
+
+  updateConnectionsLength(): void {
+    this._state.connectionsLength = this._connections.length;
+  }
+
+  /**
+   * Update states of all connections.
+   */
+  updateStates(): void {
+    this._connections.forEach((connection: Connection) =>
+      connection.state.update()
+    );
+    this.updateConnectionsLength();
+    this.updateHash();
   }
 
   /**

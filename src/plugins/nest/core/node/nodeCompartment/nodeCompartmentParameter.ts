@@ -1,11 +1,16 @@
 // nodeCompartmentParameter.ts
 
-import { NodeCompartment } from "./nodeCompartment";
-import { NodeParameter, NodeParamProps } from "../nodeParameter";
 import { ModelCompartmentParameter } from "../../model/modelCompartmentParameter";
+import { NodeCompartment } from "./nodeCompartment";
+import { NodeParameter, NodeParameterProps } from "../nodeParameter";
+
+export interface NodeCompartmentParameterProps extends NodeParameterProps {}
 
 export class NodeCompartmentParameter extends NodeParameter {
-  constructor(nodeCompartment: NodeCompartment, param: NodeParamProps) {
+  constructor(
+    nodeCompartment: NodeCompartment,
+    param: NodeCompartmentParameterProps
+  ) {
     super(nodeCompartment, param);
   }
 
@@ -18,12 +23,5 @@ export class NodeCompartmentParameter extends NodeParameter {
 
   get nodeCompartment(): NodeCompartment {
     return this.parent as NodeCompartment;
-  }
-
-  /**
-   * Trigger changes when the parameter is changed.
-   */
-  override paramChanges(): void {
-    this.nodeCompartment.nodeChanges();
   }
 }

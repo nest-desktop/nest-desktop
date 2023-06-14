@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, watch } from "vue";
+import { computed, reactive, UnwrapRef, watch } from "vue";
 
 const props = defineProps({
   inputLabel: { default: ["lower", "upper"], type: Array<String> },
@@ -46,14 +46,15 @@ const props = defineProps({
   unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);
-const modelRef = reactive({
-  lower: props.modelValue[0],
-  upper: props.modelValue[1],
+const modelRef: UnwrapRef<{ lower: number; upper: number }> = reactive({
+  lower: props.modelValue[0] as number,
+  upper: props.modelValue[1] as number,
 });
 
+// @ts-ignore
 const modelValue = computed({
   get: () => [modelRef.lower, modelRef.upper],
-  set: (value: Array<Number>) => {
+  set: (value) => {
     modelRef.lower = value[0];
     modelRef.upper = value[1];
     emit("update:modelValue", [modelRef.lower, modelRef.upper]);
@@ -79,8 +80,8 @@ const upper = computed({
 watch(
   () => [props.modelValue],
   () => {
-    modelRef.lower = props.modelValue[0];
-    modelRef.upper = props.modelValue[1];
+    modelRef.lower = props.modelValue[0] as number;
+    modelRef.upper = props.modelValue[1] as number;
   }
 );
 </script>

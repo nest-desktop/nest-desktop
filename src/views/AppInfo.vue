@@ -121,7 +121,7 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, watch } from "vue";
-import { useProjectDBStore } from "@/plugins/nest/store/projectDBStore";
+import { useProjectDBStore } from "@nest/store/project/projectDBStore";
 
 import AppDetails from "@/components/app/AppDetails.vue";
 

@@ -2,13 +2,13 @@
 
 import { ModelCompartmentParameter } from "../../model/modelCompartmentParameter";
 import { Node } from "../node";
-import { NodeParamProps } from "../nodeParameter";
+import { NodeParameterProps } from "../nodeParameter";
 import { NodeCompartmentParameter } from "./nodeCompartmentParameter";
 import { NodeReceptor } from "../nodeReceptor/nodeReceptor";
 
 export interface NodeCompartmentProps {
   parentIdx: number;
-  params?: NodeParamProps[];
+  params?: NodeParameterProps[];
   label?: string;
 }
 
@@ -151,7 +151,7 @@ export class NodeCompartment {
    * Add a parameter component.
    * @param param - parameter object
    */
-  addParameter(param: NodeParamProps): void {
+  addParameter(param: NodeParameterProps): void {
     this._params[param.id] = new NodeCompartmentParameter(this, param);
   }
 
@@ -214,7 +214,7 @@ export class NodeCompartment {
         }
       );
     } else if ("params" in comp) {
-      comp.params.forEach((param: NodeParamProps) => this.addParameter(param));
+      comp.params.forEach((param: NodeParameterProps) => this.addParameter(param));
     }
   }
 

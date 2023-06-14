@@ -1,10 +1,10 @@
 // nodeReceptorParameters.ts
 
 import { ModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
-import { NodeParameter, NodeParamProps } from "../nodeParameter";
+import { NodeParameter, NodeParameterProps } from "../nodeParameter";
 import { NodeReceptor } from "./nodeReceptor";
 
-export interface NodeReceptorParameterProps extends NodeParamProps {}
+export interface NodeReceptorParameterProps extends NodeParameterProps {}
 
 export class NodeReceptorParameter extends NodeParameter {
   constructor(nodeReceptor: NodeReceptor, param: NodeReceptorParameterProps) {
@@ -20,11 +20,5 @@ export class NodeReceptorParameter extends NodeParameter {
 
   get nodeReceptor(): NodeReceptor {
     return this.parent as NodeReceptor;
-  }
-  /**
-   * Trigger changes when the parameter is changed.
-   */
-  override paramChanges(): void {
-    this.nodeReceptor.nodeChanges();
   }
 }

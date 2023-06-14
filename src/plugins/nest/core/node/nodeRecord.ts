@@ -165,6 +165,7 @@ export class NodeRecord {
    * RGB color for a value in range [0 - 1].
    */
   valueColor(value: number): string {
+    // @ts-ignore
     const colorScale = d3[`interpolate${this._colorMap.scale}`];
     return colorScale(this._colorMap.reverse ? 1 - value : value);
   }

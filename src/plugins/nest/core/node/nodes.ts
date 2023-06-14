@@ -7,10 +7,11 @@ import { Node, NodeProps } from "./node";
 import { Network } from "../network/network";
 
 interface NodesState {
+  annotations: { [key: string]: string }[];
   focusedNode: number | null;
   hash: string;
+  nodesLength: number,
   selectedNode: number | null;
-  annotations: { [key: string]: string }[];
 }
 
 export class Nodes {
@@ -22,10 +23,11 @@ export class Nodes {
     this._network = network;
 
     this._state = reactive({
+      annotations: [],
       focusedNode: null,
       hash: "",
+      nodesLength: 0,
       selectedNode: null,
-      annotations: [],
     });
 
     this.init(nodes);
@@ -71,6 +73,10 @@ export class Nodes {
     return this._nodes.filter((node: Node) => node.model.isNeuron);
   }
 
+  get nodesLength(): number {
+    return this._state.nodesLength;
+  }
+
   /**
    * Get recorders
    */
@@ -106,7 +112,6 @@ export class Nodes {
   get stimulators(): Node[] {
     return this._nodes.filter((node: Node) => node.model.isStimulator);
   }
-
 
   /**
    * Get user dict from node annotations.
@@ -282,6 +287,11 @@ export class Nodes {
     });
   }
 
+  updateNodesLength(): void {
+    this._state.nodesLength = this._nodes.length;
+  }
+
+
   /**
    * Update records of recorders.
    *
@@ -306,5 +316,14 @@ export class Nodes {
     if (this._network.project.activityGraph.activityChartGraph) {
       this._network.project.activityGraph.activityChartGraph.updateRecordsColor();
     }
+  }
+
+  updateStates(): void {
+    this._nodes.forEach((node: Node) => node.state.update());
+
+    this.updateAnnotations();
+    this.updateNodesLength();
+
+    this.updateHash();
   }
 }

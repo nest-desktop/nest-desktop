@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import { onMounted, watch } from "vue";
 
-import { useModelStore } from "../../store/modelStore";
+import { useModelStore } from "@nest/store/model/modelStore";
 const modelStore = useModelStore();
 
 const props = defineProps({

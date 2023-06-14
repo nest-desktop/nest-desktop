@@ -2,11 +2,13 @@
 
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
+
 import { Node } from "./node";
 import { NodeParameter } from "./nodeParameter";
 
 interface NodeStateState {
   hash: string;
+  targetsLength: number;
 }
 
 export class NodeState {
@@ -18,6 +20,7 @@ export class NodeState {
 
     this._state = reactive({
       hash: "",
+      targetsLength: 0,
     });
 
     this.updateHash();
@@ -64,6 +67,10 @@ export class NodeState {
     return this._state.hash ? this._state.hash.slice(0, 6) : "";
   }
 
+  get targetsLength(): number {
+    return this._state.targetsLength;
+  }
+
   /**
    * Focus this node
    */
@@ -88,14 +95,25 @@ export class NodeState {
     networkState.selectedNode = this._node;
   }
 
+  update(): void {
+    this.updateHash();
+    this.updateTargetsLength();
+  }
+
   /**
    * Update hash
    */
   updateHash(): void {
     this._state.hash = sha1({
       model: this._node.modelId,
-      params: Object.values(this._node.params).map((param: NodeParameter) => param.toJSON()),
+      params: Object.values(this._node.params).map((param: NodeParameter) =>
+        param.toJSON()
+      ),
       size: this._node.size,
     });
+  }
+
+  updateTargetsLength(): void {
+    this._state.targetsLength = this._node.targets.length;
   }
 }

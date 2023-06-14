@@ -1,8 +1,8 @@
 // nodeSpatial.ts
 
 import { sha1 } from "object-hash";
-
 import { Config } from "@/helpers/config";
+
 import { FreePositions, FreePositionsProps } from "./freePositions";
 import { GridPositions, GridPositionsProps } from "./gridPositions";
 import { Node } from "../node";

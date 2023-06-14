@@ -2,12 +2,12 @@
 
 import { Config } from "@/helpers/config";
 
-import { Connection, cCnnectionProps } from "../connection/connection";
+import { Connection, ConnectionProps } from "../connection/connection";
 import { Connections } from "../connection/connections";
 import { CopyModel, CopyModelProps } from "../model/copyModel";
 import { CopyModels } from "../model/copyModels";
 import { NetworkState } from "./networkState";
-import { Node, nNdeProps } from "../node/node";
+import { Node, NodeProps } from "../node/node";
 import { Nodes } from "../node/nodes";
 import { Project } from "../project/project";
 
@@ -33,6 +33,7 @@ export class Network extends Config {
     this._connections = new Connections(this, network.connections);
 
     this._state = new NetworkState(this);
+    this.updateStates();
   }
 
   get colors(): string[] {
@@ -79,7 +80,7 @@ export class Network extends Config {
     this._connections.clean();
     this._models.clean();
 
-    this._state.updateHash();
+    this.updateStates();
   }
 
   /**
@@ -206,7 +207,7 @@ export class Network extends Config {
     this._nodes.empty();
     this._models.empty();
 
-    this._state.updateHash();
+    this.updateStates();
   }
 
   /**
@@ -228,10 +229,10 @@ export class Network extends Config {
   networkChanges(): void {
     // console.log("Network changes");
 
-    this._state.updateNodeAnnotations();
+    this.updateStates();
+
     this._project.simulation.code.generate();
 
-    this._state.updateHash();
     this._project.state.updateHash();
 
     // this._project.commitNetwork(this);
@@ -271,6 +272,12 @@ export class Network extends Config {
     this._nodes.update(network.nodes);
     this._connections.update(network.connections);
 
-    this._state.updateHash();
+    this.updateStates();
+  }
+
+  updateStates(): void {
+    this._nodes.updateStates();
+    this._connections.updateStates();
+    this._state.update();
   }
 }

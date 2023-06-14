@@ -1,12 +1,15 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
-    <svg height="600" ref="networkGraph" class="networkGraph" width="800">
-      <g class="marker" v-if="projectStore.project">
+    <svg class="networkGraph" height="600" id="networkGraph" width="800">
+      <g
+        :key="state.graph.network.connections.state.connectionsLength"
+        class="marker"
+        v-if="state.graph"
+      >
         <defs
           :key="'defs' + index"
           :color="connection.source.view.color"
-          v-for="(connection, index) of projectStore.project.network.connections
-            .all"
+          v-for="(connection, index) of state.graph.network.connections.all"
         >
           <marker
             :id="'generic' + index"
@@ -73,7 +76,7 @@
         :fill="
           state.graph && state.graph.config.transparentWorkspace
             ? 'transparent'
-            : $vuetify.theme.dark
+            : darkMode()
             ? '#121212'
             : 'white'
         "
@@ -103,18 +106,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, onBeforeMount } from "vue";
+import { reactive, onMounted, onBeforeMount } from "vue";
 
-import { NetworkGraph } from "../core/network/networkGraph/networkGraph";
-
-import { useProjectStore } from "../store/projectStore";
-const projectStore = useProjectStore();
-
-const networkGraph = ref(null);
+import { darkMode } from "@/helpers/theme";
+import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
 
 const state = reactive({
-  graph: new NetworkGraph(networkGraph.value, projectStore.project.network),
-  network: projectStore.project.network,
+  graph: new NetworkGraph("#networkGraph"),
 });
 
 function observeSize() {
@@ -130,6 +128,7 @@ function observeSize() {
     }
   });
 
+  // @ts-ignore
   resizeObserver.observe(document.getElementById("networkGraphLayout"));
 }
 
@@ -137,23 +136,16 @@ function observeSize() {
  * Update network graph.
  */
 const update = () => {
-  state.network = projectStore.project.network;
-  state.graph.update(projectStore.project.network);
-  // setMenuTrigger();
-  // showHelp();
+  state.graph.workspace.init();
+  state.graph.update();
+  state.graph.workspace.update();
 };
 
 onMounted(() => {
   observeSize();
   window.addEventListener("darkmode", () => state.graph.render());
 
-  const ref: any = networkGraph.value;
-  if (ref) {
-    state.graph = new NetworkGraph(ref, projectStore.project.network);
-    state.graph.workspace.init();
-    update();
-    state.graph.workspace.update();
-  }
+  update();
 });
 
 onBeforeMount(() => {

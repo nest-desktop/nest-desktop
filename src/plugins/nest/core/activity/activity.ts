@@ -2,10 +2,9 @@
 
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
-
 import { download } from "@/helpers/download";
 
-import { ActivityChartGraph } from "../activity/activityChart/activityChartGraph";
+import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
 import { Node } from "../node/node";
 import { Project } from "../project/project";
 import { NodeRecord } from "../node/nodeRecord";

@@ -1,6 +1,7 @@
 // copyModel.ts
 
 import { reactive, UnwrapRef } from "vue";
+import { Parameter } from "@/helpers/parameter";
 
 import { Connection } from "../connection/connection";
 import { Model } from "../model/model";
@@ -9,7 +10,6 @@ import { ModelParameter, ModelParameterProps } from "./modelParameter";
 import { ModelReceptor } from "./modelReceptor/modelReceptor";
 import { Network } from "../network/network";
 import { Node } from "../node/node";
-import { Parameter } from "../parameter";
 
 export interface CopyModelProps {
   existing: string;
@@ -185,8 +185,7 @@ export class CopyModel {
   }
 
   get models(): Model[] {
-    const models: Model[] = this._network.project.modelStore.state.models;
-    return [...models];
+    return this._network.project.modelStore.models as Model[];
   }
 
   get name(): string {

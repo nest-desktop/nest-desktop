@@ -28,6 +28,7 @@ import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
 import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
+import SandboxToast from "@/components/sandbox/SandboxToast.vue";
 
 const props = defineProps({
   component: { type: String, default: "alert" },
@@ -45,6 +46,7 @@ const components: any = {
   nodeCard: SandboxNodeCard,
   slider: SandboxSlider,
   tabs: SandboxTabs,
+  toast: SandboxToast,
 };
 
 watch(

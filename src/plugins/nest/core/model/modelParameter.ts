@@ -1,19 +1,25 @@
+// modelParameter.ts
+
+import { Parameter, ParameterProps } from '@/helpers/parameter';
+
 import { CopyModel } from './copyModel';
 import { Model } from './model';
 import { ModelReceptor } from './modelReceptor/modelReceptor';
-import { Parameter, ParameterProps } from '../parameter';
 
 type modelTypes = CopyModel | Model | ModelReceptor;
 
 export interface ModelParameterProps extends ParameterProps {}
 
 export class ModelParameter extends Parameter {
+  private _parent: modelTypes;
+
   constructor(model: modelTypes, param: ModelParameterProps) {
-    super(model, param);
+    super(param);
+    this._parent = model;
   }
 
   get model(): Model {
-    return this.parent as Model;
+    return this._parent as Model
   }
 
   /**
@@ -23,11 +29,15 @@ export class ModelParameter extends Parameter {
     return this.model.params[this.id];
   }
 
+  get parent(): modelTypes {
+    return this._parent;
+  }
+
   /**
    * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
-    this.model.modelChanges();
+    this.parent.modelChanges();
   }
 
   /**

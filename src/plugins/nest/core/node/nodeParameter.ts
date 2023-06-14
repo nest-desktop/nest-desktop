@@ -1,18 +1,22 @@
 // nodeParameter.ts
 
+import { Parameter, ParameterProps } from "@/helpers/parameter";
+
 import { ModelParameter } from "../model/modelParameter";
 import { Node } from "./node";
 import { NodeCompartment } from "./nodeCompartment/nodeCompartment";
 import { NodeReceptor } from "./nodeReceptor/nodeReceptor";
-import { Parameter, ParameterProps } from "../parameter";
 
 type nodeTypes = Node | NodeCompartment | NodeReceptor;
 
-export interface NodeParamProps extends ParameterProps {}
+export interface NodeParameterProps extends ParameterProps {}
 
 export class NodeParameter extends Parameter {
-  constructor(node: nodeTypes, param: NodeParamProps) {
-    super(node, param);
+  private _parent: nodeTypes;
+
+  constructor(node: nodeTypes, param: NodeParameterProps) {
+    super(param);
+    this._parent = node;
   }
 
   get isVisible(): boolean {
@@ -27,22 +31,26 @@ export class NodeParameter extends Parameter {
   }
 
   get node(): Node {
-    return this.parent as Node;
+    return this._parent as Node;
+  }
+
+  get parent(): nodeTypes {
+    return this._parent;
   }
 
   /**
    * Trigger changes when the parameter is changed.
    */
   override paramChanges(): void {
-    this.node.nodeChanges();
+    this.parent.nodeChanges();
   }
 
   /**
    * Serialize for JSON.
    * @return node parameter object
    */
-  override toJSON(): NodeParamProps {
-    const param: NodeParamProps = {
+  override toJSON(): NodeParameterProps {
+    const param: NodeParameterProps = {
       id: this.id,
       value: this.value,
     };

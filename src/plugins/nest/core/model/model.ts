@@ -2,14 +2,13 @@
 
 import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
-
 import { Config } from "@/helpers/config";
 
 import { ModelCompartmentParameter } from "./modelCompartmentParameter";
 import { ModelParameter, ModelParameterProps } from "./modelParameter";
 import { ModelReceptor } from "./modelReceptor/modelReceptor";
+import { useModelDBStore } from "@nest/store/model/modelDBStore";
 
-import { useModelDBStore } from "../../store/modelDBStore";
 
 export interface ModelProps {
   abbreviation?: string;

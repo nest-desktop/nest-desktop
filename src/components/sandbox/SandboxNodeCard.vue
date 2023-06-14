@@ -18,9 +18,9 @@
           value="components"
         >
           <value-slider
-            v-model="projectMockStore.project.simulation.time"
-            v-bind="{ label: 'Simulation time', max: 2000 }"
             @update:model-value="update"
+            v-bind="{ label: 'Simulation time', max: 2000 }"
+            v-model="projectMockStore.project.simulation.time"
           />
           <node-card
             :key="index"
@@ -43,7 +43,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import { useProjectMockStore } from "@/plugins/nest/store/projectMockStore";
+import { useProjectMockStore } from "@/plugins/nest/store/project/projectMockStore";
 const projectMockStore = useProjectMockStore();
 
 import NodeCard from "@/plugins/nest/components/NodeCard.vue";
@@ -55,8 +55,8 @@ const state = reactive({
 
 const update = () => {
   projectMockStore.project.network.nodes.forEach((node) => {
-    if (node.params != undefined) {
-      node.params.forEach((param) => {
+    if (node.modelParams != undefined) {
+      Object.values(node.modelParams).forEach((param) => {
         if (param.id === "stop") {
           const end = param.max === param.value;
           param.max = projectMockStore.project.simulation.time;

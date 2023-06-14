@@ -1,4 +1,4 @@
-// modelCompartmentalParameter.ts
+// modelCompartmentParameter.ts
 
 import { Model } from "./model";
 import { ModelParameter, ModelParameterProps } from "./modelParameter";

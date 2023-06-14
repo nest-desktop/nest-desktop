@@ -145,7 +145,7 @@ def getPositions(nodes):
 
 {{ /network.someSpatialNodes }}
 response = {
-  "events": [{{ #network.recorders }}{{ view.label }}.events, {{ /network.recorders }}]{{ #network.someSpatialNodes }},
+  "events": [{{ #network.nodes.recorders }}{{ view.label }}.events, {{ /network.nodes.recorders }}]{{ #network.someSpatialNodes }},
   "positions": getPositions([{{ #network.spatial }}{{ view.label }},{{ /network.spatial }}]){{ /network.someSpatialNodes }}
 }
 {{ /simulation.code.runSimulationInsite }}

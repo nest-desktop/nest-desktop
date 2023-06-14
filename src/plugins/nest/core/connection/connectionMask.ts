@@ -1,6 +1,7 @@
 // connectionMask.ts
 
 import { Config } from "@/helpers/config";
+
 import { Connection } from "./connection";
 
 enum MaskType {

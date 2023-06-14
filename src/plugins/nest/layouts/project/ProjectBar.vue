@@ -22,10 +22,12 @@
 
   <v-spacer />
 
-  <v-btn variant="outlined"> Simulate </v-btn>
+  <v-btn variant="outlined" @click="projectStore.project.startSimulation()">
+    Simulate
+  </v-btn>
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "../../store/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
 </script>
