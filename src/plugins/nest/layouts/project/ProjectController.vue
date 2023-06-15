@@ -4,7 +4,7 @@
       <div :key="projectStore.project.network.nodes.state.nodesLength">
         <node-card
           :key="index"
-          :node="node"
+          :node="(node as Node)"
           v-for="(node, index) in projectStore.project.network.nodes.all"
         />
       </div>
@@ -29,6 +29,8 @@ import { useProjectStore } from "@nest/store/project/projectStore";
 
 import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
 import NodeCard from "@nest/components/NodeCard.vue";
+
+import { Node } from "../../core/node/node";
 
 const projectStore = useProjectStore();
 </script>

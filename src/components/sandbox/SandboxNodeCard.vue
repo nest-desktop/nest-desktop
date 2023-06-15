@@ -18,14 +18,13 @@
           value="components"
         >
           <value-slider
-            @update:model-value="update"
             v-bind="{ label: 'Simulation time', max: 2000 }"
             v-model="projectMockStore.project.simulation.time"
           />
           <node-card
             :key="index"
-            :node="node"
-            v-for="(node, index) in projectMockStore.project.network.nodes"
+            :node="(node as Node)"
+            v-for="(node, index) in projectMockStore.project.network.nodes.all"
           />
         </v-window-item>
         <v-window-item
@@ -33,7 +32,7 @@
           transition="no-transition"
           value="values"
         >
-          <pre>{{ projectMockStore.project.network.nodes }}</pre>
+          <pre>{{ projectMockStore.project.network.nodes.all }}</pre>
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -48,32 +47,33 @@ const projectMockStore = useProjectMockStore();
 
 import NodeCard from "@/plugins/nest/components/NodeCard.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
+import { Node } from "@/plugins/nest/core/node/node";
 
 const state = reactive({
   tab: "components",
 });
 
-const update = () => {
-  projectMockStore.project.network.nodes.forEach((node) => {
-    if (node.modelParams != undefined) {
-      Object.values(node.modelParams).forEach((param) => {
-        if (param.id === "stop") {
-          const end = param.max === param.value;
-          param.max = projectMockStore.project.simulation.time;
-          if (end) {
-            param.value = param.max;
-          }
-        } else if (param.id === "time") {
-          const end = param.max === param.value[1];
-          param.max = projectMockStore.project.simulation.time;
-          if (end) {
-            param.value[1] = param.max;
-          }
-        }
-      });
-    }
-  });
-};
+// const update = () => {
+//   projectMockStore.project.network.nodes.all.forEach((node) => {
+//     if (node.modelParams != undefined) {
+//       Object.values(node.modelParams).forEach((param) => {
+//         if (param.id === "stop") {
+//           const end = param.max === param.value;
+//           param.max = projectMockStore.project.simulation.time;
+//           if (end) {
+//             param.value = param.max;
+//           }
+//         } else if (param && param.id === "time") {
+//           const end = param.max === param.value[1];
+//           param.max = projectMockStore.project.simulation.time;
+//           if (end) {
+//             param.value[1] = param.max;
+//           }
+//         }
+//       });
+//     }
+//   });
+// };
 </script>
 
 <style lang="scss">
