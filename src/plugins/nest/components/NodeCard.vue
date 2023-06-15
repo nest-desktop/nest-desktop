@@ -188,7 +188,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, PropType } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
@@ -198,11 +198,9 @@ import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeConnection from "./NodeConnection.vue";
 import NodeParam from "./NodeParam.vue";
 
-interface Props {
-  node: Node;
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  node: { type: Object as PropType<Node>, required: true}
+});
 
 // @ts-ignore
 const state = reactive({
