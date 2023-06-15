@@ -186,6 +186,9 @@ export class NetworkGraphWorkspace extends Config {
     ) {
       return;
     }
+
+    const bbox = this._handler.node().getBBox()
+
     let x: number = 0,
       y: number = 0;
 
@@ -207,8 +210,8 @@ export class NetworkGraphWorkspace extends Config {
       y = networkCenterPos.y;
     }
 
-    this._zoom.transform.x = this._size.width / 2 - x * this._zoom.transform.k;
-    this._zoom.transform.y = this._size.height / 2 - y * this._zoom.transform.k;
+    this._zoom.transform.x = bbox.width / 2 - x * this._zoom.transform.k;
+    this._zoom.transform.y = bbox.height / 2 - y * this._zoom.transform.k;
 
     this._state.transforming = true;
     this._handler.call(
@@ -298,17 +301,5 @@ export class NetworkGraphWorkspace extends Config {
       this._dragline.hide();
       this._state.enableConnection = false;
     }
-  }
-
-  /**
-   * Resize workspace handler.
-   */
-  resize(width: number, height: number): void {
-    this._size.width = width || this._size.width;
-    this._size.height = height || this._size.height;
-    this._networkGraph.resize(this._size.width, this._size.height);
-    this._handler
-      .attr("width", this._size.width)
-      .attr("height", this._size.height);
   }
 }

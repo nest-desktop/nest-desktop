@@ -15,6 +15,9 @@ export const useNavStore = defineStore("nav", {
         this.open = !this.open;
       }
       this.view = this.open ? navItem.id : "";
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 400);
     },
   },
 });

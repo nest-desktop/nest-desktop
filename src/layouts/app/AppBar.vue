@@ -21,4 +21,6 @@ import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
 
 const appStore = useAppStore();
 const nestSimulatorStore = useNESTSimulatorStore();
+nestSimulatorStore.backend.check()
+
 </script>

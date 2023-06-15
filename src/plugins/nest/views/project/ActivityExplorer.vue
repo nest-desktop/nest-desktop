@@ -1,22 +1,13 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title> Activity explorer </v-card-title>
-      <v-card-subtitle>{{ projectStore.project.name }} </v-card-subtitle>
-
-      <v-card-text>
-
-      </v-card-text>
-
-      <v-card-actions>
-        <v-btn> Action </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-container>
+  <activity-chart-graph
+    :key="projectStore.project.activityGraph.state.dataHash"
+    :graph="projectStore.project.activityGraph.activityChartGraph"
+  />
 </template>
 
 <script lang="ts" setup>
 import { useProjectStore } from "@nest/store/project/projectStore";
+import ActivityChartGraph from "@nest/components/ActivityChartGraph.vue";
 
 const projectStore = useProjectStore();
 </script>

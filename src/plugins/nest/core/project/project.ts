@@ -170,9 +170,9 @@ export class Project {
     return this._updatedAt;
   }
 
-  set updatedAt(value: string) {
-    this._updatedAt = value;
-  }
+  // set updatedAt(value: string) {
+  //   this._updatedAt = value;
+  // }
 
   /**
    * Is the current project selected?
