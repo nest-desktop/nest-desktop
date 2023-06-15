@@ -1,6 +1,6 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
-    <svg class="networkGraph" height="600" ref="networkGraph" width="800">
+    <svg class="networkGraph" height="100%" ref="networkGraph" width="100%">
       <g
         :key="state.graph.network.connections.state.connectionsLength"
         class="marker"
@@ -81,6 +81,8 @@
             : 'white'
         "
         id="workspaceHandler"
+        width="100%"
+        height="100%"
       />
 
       <g id="networkWorkspace">
@@ -117,39 +119,10 @@ const state = reactive({
   graph: new NetworkGraph(networkGraph),
 });
 
-function observeSize() {
-  const resizeObserver = new ResizeObserver(function () {
-    // console.log("Size changed");
-    const networkGraphLayout = document.getElementById("networkGraphLayout");
-    if (networkGraphLayout) {
-      state.graph.workspace.resize(
-        networkGraphLayout.offsetWidth,
-        networkGraphLayout.offsetHeight
-      );
-      state.graph.workspace.updateTransform();
-    }
-  });
-
-  // @ts-ignore
-  resizeObserver.observe(document.getElementById("networkGraphLayout"));
-}
-
-/**
- * Update network graph.
- */
-const update = () => {
-  state.graph.workspace.init();
-  state.graph.update();
-  state.graph.workspace.update();
-};
-
 onMounted(() => {
-  observeSize();
-  window.addEventListener("darkmode", () => state.graph.render());
-
   state.graph = new NetworkGraph(networkGraph);
-
-  update();
+  state.graph.init();
+  window.addEventListener("darkmode", () => state.graph.render());
 });
 
 onBeforeMount(() => {

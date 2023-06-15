@@ -10,7 +10,6 @@ import { Node } from "@nest/core/node/node";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-
 export class NetworkGraph {
   private _config: any = {
     nodeRadius: 24,
@@ -87,6 +86,11 @@ export class NetworkGraph {
     this._workspace.updateTransform();
   }
 
+  init(): void {
+    this.update();
+    this.observeSize();
+  }
+
   /**
    * Render network graph.
    */
@@ -95,6 +99,17 @@ export class NetworkGraph {
     this._modelAssignGraph.render();
     this._connectionGraph.render();
     this._nodeGraph.render();
+  }
+
+  /**
+   * Observe size changing in graph layout.
+   */
+  observeSize(): void {
+    const resizeObserver = new ResizeObserver(() => {
+      this._workspace.updateTransform();
+    });
+    // @ts-ignore
+    resizeObserver.observe(this._selector.node().parentNode);
   }
 
   /**
@@ -110,12 +125,5 @@ export class NetworkGraph {
     this._modelAssignGraph.update();
     this._connectionGraph.update();
     this._nodeGraph.update();
-  }
-
-  /**
-   * Resize graph.
-   */
-  resize(width: number, height: number): void {
-    this._selector.attr("width", width).attr("height", height);
   }
 }

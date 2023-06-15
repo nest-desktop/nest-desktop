@@ -1,5 +1,6 @@
 // activityChartGraph.ts - 23 anys
 
+import * as d3 from "d3";
 import * as Plotly from "plotly.js-dist-min";
 
 import { darkMode } from "@/helpers/theme";
@@ -111,10 +112,9 @@ export class ActivityChartGraph {
   constructor(project: Project, panels: ActivityChartPanelProps[] = []) {
     this._project = project;
     this._config = {
-      autoResize: true,
-      autoSizable: true,
       displaylogo: false,
       displayModeBar: true,
+      responsive: true,
       editable: true,
       modeBarButtons: [
         [
@@ -340,6 +340,14 @@ export class ActivityChartGraph {
     Plotly.react(this._state.ref, this._data, this._layout);
   }
 
+  relayout(): void {
+    const dark = darkMode();
+    this._layout.font.color = dark ? "white" : "#121212";
+    this._layout.paper_bgcolor = dark ? "#121212" : "white";
+    this._layout.plot_bgcolor = dark ? "#121212" : "white";
+    Plotly.relayout(this._state.ref, this._layout);
+  }
+
   /**
    * Remove panel.
    */
@@ -349,20 +357,13 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Reset layout of the chart graph.
-   */
-  resetLayout(): void {
-    this._layout = Object.assign({}, this._layout);
-  }
-
-  /**
    * Restyle plots with new updates.
    */
   restyle(): void {
     if (this._state.ref == null) return;
-    // if (this.project.state.activities.hasSomeSpikeRecorders) {
-    this.restyleMarkerHeightSpikeTimesRasterPlot();
-    // }
+    if (this.project.activities.state.hasSomeSpikeRecorders) {
+      this.restyleMarkerHeightSpikeTimesRasterPlot();
+    }
   }
 
   /**
@@ -402,7 +403,6 @@ export class ActivityChartGraph {
    */
   update(): void {
     this.empty();
-    this.resetLayout();
 
     this.updateVisiblePanelsLayout();
     this.updatePanelModels();

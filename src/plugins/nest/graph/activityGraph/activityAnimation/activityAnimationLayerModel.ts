@@ -5,15 +5,17 @@ import * as THREE from "three";
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 
 export class ActivityAnimationLayerModel {
-  private _graphGroup?: THREE.Group;
+  private _graphGroup: THREE.Group;
   private _layer: ActivityAnimationLayer;
 
   constructor(layer: ActivityAnimationLayer) {
     this._layer = layer;
+    this._graphGroup = new THREE.Group();
+
     this.initGraph();
   }
 
-  get graphGroup(): THREE.Group | undefined {
+  get graphGroup(): THREE.Group {
     return this._graphGroup;
   }
 
@@ -29,7 +31,6 @@ export class ActivityAnimationLayerModel {
    * Initialize graph for layer model.
    */
   initGraph(): void {
-    this._graphGroup = new THREE.Group();
     this.addGraph();
   }
 
@@ -72,7 +73,7 @@ export class ActivityAnimationLayerModel {
    */
   resetObjects(): void {
     if (this._graphGroup == undefined) {
-      return
+      return;
     }
 
     const scale: number = this._layer.config.object.size;

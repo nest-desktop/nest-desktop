@@ -3,6 +3,7 @@
     :model-value="navStore.open"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="navStore.width"
+    @update:modelValue="dispatchWindowResize"
     permanent
   >
     <div @mousedown="resizeSideNav" class="resize-handle right" />
@@ -70,6 +71,7 @@
     :model-value="projectStore.controllerOpen"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="projectStore.controllerWidth"
+    @update:modelValue="dispatchWindowResize"
     location="right"
     permanent
   >
@@ -92,7 +94,6 @@
 <script lang="ts" setup>
 import { useNavStore } from "@/store/navStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
-import { useNESTSimulatorStore } from "../../store/backends/nestSimulatorStore";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectController from "./ProjectController.vue";
@@ -101,8 +102,6 @@ import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
 
 const navStore = useNavStore();
 const projectStore = useProjectStore();
-const nestSimulatorStore = useNESTSimulatorStore();
-nestSimulatorStore.backend.check()
 
 /**
  * Handle mouse move on resizing.
@@ -186,6 +185,11 @@ const resizeSideController = () => {
   navStore.resizing = true;
   window.addEventListener("mousemove", handleSideControllerMouseMove);
   window.addEventListener("mouseup", handleSideControllerMouseUp);
+};
+
+const dispatchWindowResize = () => {
+  console.log("Dispatch window resize");
+  window.dispatchEvent(new Event("resize"));
 };
 </script>
 

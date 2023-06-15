@@ -1,5 +1,6 @@
 // projectStore.ts
 
+import { nextTick } from "vue";
 import { defineStore } from "pinia";
 
 import { Project } from "@nest/core/project/project";
@@ -46,12 +47,14 @@ export const useProjectStore = defineStore("project-view", {
       const projectDBStore = useProjectDBStore();
       projectDBStore.saveProject(this.projectId);
     },
-    toggle(item: any = null) {
+    toggle(item?: any) {
       if (!this.controllerOpen || this.controllerView === item.id) {
         this.controllerOpen = !this.controllerOpen;
       }
       this.controllerView = this.controllerOpen ? item.id : "";
-      window.dispatchEvent(new Event("resize"));
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 400);
     },
   },
 });
