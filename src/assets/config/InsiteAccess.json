@@ -4,5 +4,5 @@
   "hostname": "",
   "path": "/",
   "port": "52056",
-  "protocol": ""
+  "protocol": "http:"
 }

@@ -42,12 +42,12 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import { useProjectMockStore } from "@/plugins/nest/store/project/projectMockStore";
+import { useProjectMockStore } from "@nest/store/project/projectMockStore";
 const projectMockStore = useProjectMockStore();
 
-import NodeCard from "@/plugins/nest/components/NodeCard.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
-import { Node } from "@/plugins/nest/core/node/node";
+import NodeCard from "@nest/components/NodeCard.vue";
+import { Node } from "@nest/core/node/node";
 
 const state = reactive({
   tab: "components",

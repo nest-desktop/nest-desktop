@@ -6,7 +6,7 @@
 
 // Composables
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import nestRoutes from "@nest/router";
+import nestRoutes from "@nest/routes";
 
 import { useNavStore } from "@/store/navStore";
 

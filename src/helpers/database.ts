@@ -1,10 +1,10 @@
 // database.ts
 
-// @ts-ignore
-import * as PouchDB from "pouchdb/dist/pouchdb";
-import * as semver from "semver";
+import PouchDB from "pouchdb";
+import { major, minor } from "semver";
 
 export class DatabaseService {
+  // @ts-ignore
   private _db: PouchDB;
   private _options: any;
   private _state: any = {
@@ -25,6 +25,7 @@ export class DatabaseService {
     this._state.ready = true;
   }
 
+  // @ts-ignore
   get db(): PouchDB {
     return this._db;
   }
@@ -171,8 +172,8 @@ export class DatabaseService {
       .then((dbVersion: string) => {
         const appVersion: string = process.env.APP_VERSION || "";
         this._state.valid =
-          semver.major(dbVersion) === semver.major(appVersion) &&
-          semver.minor(dbVersion) === semver.minor(appVersion);
+          major(dbVersion) === major(appVersion) &&
+          minor(dbVersion) === minor(appVersion);
       })
       .catch(() => {
         this.setVersion().then(() => this.checkVersion());

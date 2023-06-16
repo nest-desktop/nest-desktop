@@ -1,10 +1,12 @@
+// vite.config.ts
+
 // Plugins
 import vue from "@vitejs/plugin-vue";
 
 // Vite plugins
-import commonjs from "vite-plugin-commonjs";
-import electron from "vite-plugin-electron";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+import electron from "vite-plugin-electron";
+// import renderer from "vite-plugin-electron-renderer";
 
 // Utilities
 import { defineConfig } from "vite";
@@ -14,6 +16,7 @@ import { fileURLToPath, URL } from "node:url";
 export default defineConfig({
   build: {
     outDir: "./dist", // "./nest_desktop/app"
+    chunkSizeWarningLimit: 10000,
   },
   plugins: [
     vue({
@@ -23,7 +26,6 @@ export default defineConfig({
     vuetify({
       autoImport: true,
     }),
-    commonjs(),
     electron([
       {
         entry: "electron/main.ts",
@@ -37,8 +39,10 @@ export default defineConfig({
         },
       },
     ]),
+    // renderer(),
   ],
   define: {
+    global: "window",
     "process.env": {
       APP_VERSION: process.env.npm_package_version,
     },
@@ -46,7 +50,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@nest": fileURLToPath(new URL("./src/plugins/nest", import.meta.url)),
+      "@nest": fileURLToPath(new URL("./src/nest", import.meta.url)),
     },
     extensions: [
       ".code",
