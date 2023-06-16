@@ -14,7 +14,8 @@ import router from "../router";
 import codeMirror from "./codemirror";
 
 // Simulator
-import nest from "./nest";
+// @ts-ignore
+import nest from "@nest";
 
 // Types
 import type { App } from "vue";

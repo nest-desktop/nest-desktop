@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="99"
+   height="99.000252"
+   id="svg3729"
+   version="1.1"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="nest-desktop-icon.svg"
+   inkscape:export-filename="/home/spreizer/Documents/NEST_Desktop/icons/nest-desktop/nest-desktop-16x16.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs3731" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="88.657939"
+     inkscape:cy="53.393744"
+     inkscape:document-units="px"
+     inkscape:current-layer="g3339"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1869"
+     inkscape:window-height="1138"
+     inkscape:window-x="51"
+     inkscape:window-y="34"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3734">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-353.26166,-545.8422)">
+    <g
+       id="g3339"
+       transform="translate(1027.2288,-45.71429)">
+      <path
+         id="path3341"
+         style="fill:#ff6633;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99752128"
+         d="m -574.96714,674.90189 c 0,8.07369 -6.6612,15.65485 -14.61768,15.65485 h -84.38132 l -10e-4,-84.38282 c 0,-8.07244 6.44773,-14.61743 14.40421,-14.61743 h 69.97811 c 7.95648,0 14.61768,8.14286 14.61768,14.61793 z"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="csccssscc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3356"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:74px;line-height:0%;font-family:'Courier 10 Pitch';-inkscape-font-specification:'Courier 10 Pitch Bold';text-align:start;letter-spacing:-2.5px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.99752128"
+         d="m -628.61133,649.95349 v -12.0321 c 0,-9.44851 -3.61701,-14.17278 -11.44157,-14.17278 -4.57662,0 -7.89838,1.77161 -10.18669,5.24098 v -2.80503 c 0,-0.95961 -0.66435,-1.55015 -2.06686,-1.55015 h -6.12678 c -3.02647,0 -4.50281,0.95962 -4.50281,3.98609 0,2.58358 1.32871,3.91228 3.91228,3.91228 0.14763,0 0.36908,0 0.59053,0 v 17.42071 c -0.14763,0 -0.29527,0 -0.4429,0 -2.7312,0 -4.05991,1.32871 -4.05991,3.9861 0,2.95266 1.40252,3.98609 4.50281,3.98609 h 8.93181 c 3.10029,0 4.50281,-1.03343 4.50281,-3.98609 0,-2.65739 -1.3287,-3.9861 -4.05991,-3.9861 -0.14764,0 -0.29527,0 -0.4429,0 v -10.40813 c 0,-5.09334 3.02649,-7.97219 6.79112,-7.97219 4.13373,0 5.24098,2.73122 5.24098,7.97219 v 10.40813 c -0.14763,0 -0.29527,0 -0.4429,0 -2.7312,0 -4.13373,1.32871 -4.13373,3.9861 0,2.95266 1.47634,3.98609 4.57663,3.98609 h 8.85799 c 3.10029,0 4.50281,-1.03343 4.50281,-3.98609 0,-2.65739 -1.3287,-3.9861 -4.05991,-3.9861 -0.14764,0 -0.29527,0 -0.4429,0" />
+      <circle
+         id="path3347"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.72088414"
+         cx="-611.36664"
+         cy="629.54193"
+         r="6.4838886" />
+      <circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.72088414"
+         id="path3349"
+         cx="-589.42114"
+         cy="629.54193"
+         r="6.4838886" />
+      <circle
+         id="path3351"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.72088414"
+         cx="-589.42114"
+         cy="651.48743"
+         r="6.4838886" />
+      <circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.72088414"
+         id="path3353"
+         cx="-611.36664"
+         cy="651.48743"
+         r="6.4838886" />
+    </g>
+  </g>
+</svg>

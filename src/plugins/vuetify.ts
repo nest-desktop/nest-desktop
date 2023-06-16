@@ -16,7 +16,10 @@ import { createVuetify } from "vuetify";
 // import { md1, md2, md3 } from "vuetify/blueprints";
 
 import { mdi } from "vuetify/iconsets/mdi";
-import { nest } from "@/plugins/nest/components/iconsets/index";
+import { stimulator } from "@/components/iconsets/stimulator";
+
+// @ts-ignore
+import { nest } from "@nest/components/iconsets";
 
 const colors = {
   blue: ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
@@ -80,6 +83,7 @@ export default createVuetify({
     sets: {
       mdi,
       nest,
+      stimulator,
     },
   },
 });

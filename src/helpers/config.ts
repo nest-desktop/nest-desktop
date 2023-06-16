@@ -18,6 +18,10 @@ export class Config {
     return "nest-desktop-" + this._configName;
   }
 
+  get configName(): string {
+    return this._configName;
+  }
+
   get isConfigValid(): boolean {
     const storedData = this.localStorage;
     if (process.env.APP_VERSION == undefined || storedData == undefined) {

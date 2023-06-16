@@ -8,7 +8,7 @@
       {{ state.listOpen[0] }}
     </v-list-item>
 
-    <template :key="index" v-for="(item, index) in items">
+    <div :key="index" v-for="(item, index) in items">
       <v-list-group
         :value="item.value"
         class="no-expand-transition"
@@ -44,7 +44,7 @@
           v-if="state.listOpen.length == 0"
         />
       </div>
-    </template>
+    </div>
   </v-list>
 </template>
 
@@ -60,7 +60,6 @@ const state = reactive({
 
 <style lang="scss">
 .list {
-
   .no-expand-transition .expand-transition-enter-active,
   .no-expand-transition .expand-transition-leave-active {
     transition: none !important;

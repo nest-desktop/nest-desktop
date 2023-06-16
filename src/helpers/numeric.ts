@@ -1,6 +1,6 @@
 // numeric.ts
 
-import * as d3 from "d3";
+import { deviation, extent, mean, randomNormal, randomUniform } from "d3";
 
 /**
  * An object for array generation.
@@ -18,14 +18,14 @@ export class Numeric {
    * Get standard deviation of values.
    */
   deviation(values: number[]): number {
-    return d3.deviation(values) as number;
+    return deviation(values) as number;
   }
 
   /**
    * Get extension of array, return [min, max].
    */
   extent(values: number[]): number[] {
-    return d3.extent(values) as number[];
+    return extent(values) as number[];
   }
 
   /**
@@ -47,7 +47,7 @@ export class Numeric {
    * Get mean of values.
    */
   mean(values: number[]): number {
-    return d3.mean(values) as number;
+    return mean(values) as number;
   }
 
   /**
@@ -76,14 +76,14 @@ export class Numeric {
    * Create an uniform distributed array of float values.
    */
   randomUniformFloat(min: number, max: number, size: number): number[] {
-    return Array.from({ length: size }, () => d3.randomUniform(min, max)());
+    return Array.from({ length: size }, () => randomUniform(min, max)());
   }
 
   /**
    * Create an normal distributed array of float values.
    */
   randomNormal(mu: number, sigma: number, size: number): number[] {
-    return Array.from({ length: size }, () => d3.randomNormal(mu, sigma)());
+    return Array.from({ length: size }, () => randomNormal(mu, sigma)());
   }
 
   /**

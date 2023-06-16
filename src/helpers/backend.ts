@@ -9,14 +9,24 @@ import combineURLs from "./combineURLs";
 interface BackendState {
   enabled: boolean;
   ready: boolean;
-  seek: any;
+  seek: SeekProps;
   version: any;
+}
+
+interface SeekProps {
+  path: string;
+  port: number;
+  protocol: string;
+  versionPath: string;
 }
 
 export class Backend extends Config {
   private _state: UnwrapRef<BackendState>;
 
-  constructor(name: string, seek = { path: "", port: 0, versionPath: "" }) {
+  constructor(
+    name: string,
+    seek: SeekProps = { path: "", port: 0, protocol: "", versionPath: "" }
+  ) {
     super(name);
     this._state = reactive({
       enabled: false,
@@ -126,7 +136,7 @@ export class Backend extends Config {
    * Check if the backend is serving.
    */
   async check(): Promise<void> {
-    console.log("Check backend");
+    // console.log("Check backend");
     this.resetState();
     if (this.config.enabled === false) return;
 
@@ -142,8 +152,8 @@ export class Backend extends Config {
    * Seek the server URL of the backend.
    */
   async seek(): Promise<any> {
-    console.log("Seek backend");
-    const protocol: string = window.location.protocol;
+    // console.log("Seek backend");
+    const protocol: string = this._state.seek.protocol || window.location.protocol;
     const hostname: string = window.location.hostname || "localhost";
     const hosts: string[] = [
       combineURLs(hostname + ":" + this._state.seek.port),
@@ -160,7 +170,7 @@ export class Backend extends Config {
    * @param url The URL which should be pinged.
    */
   async ping(url: string): Promise<any> {
-    console.log("Ping backend");
+    // console.log("Ping backend", url);
     return axios
       .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {

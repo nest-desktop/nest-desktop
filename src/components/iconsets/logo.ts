@@ -1,4 +1,4 @@
-// plugins/nest/iconsets/nest.ts
+// logo.ts
 // https://stackoverflow.com/questions/73795753/how-to-import-custom-svg-icons-in-vuetify-3
 
 import { h } from "vue";
