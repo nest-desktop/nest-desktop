@@ -98,7 +98,7 @@ import { useProjectStore } from "@nest/store/project/projectStore";
 import ProjectBar from "./ProjectBar.vue";
 import ProjectController from "./ProjectController.vue";
 import ProjectNav from "./ProjectNav.vue";
-import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
+import SimulationCodeEditor from "@nest/components/editor/SimulationCodeEditor.vue";
 
 const navStore = useNavStore();
 const projectStore = useProjectStore();

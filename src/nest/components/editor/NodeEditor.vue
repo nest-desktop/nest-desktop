@@ -124,8 +124,8 @@
     </v-card-title>
 
     <v-card-text class="pa-0">
-      <v-list>
-        <node-param
+      <v-list v-if="state.node.paramsVisible.length > 0">
+        <node-param-editor
           :color="state.node.color"
           :options="{ id: 'n', inputLabel: 'n', label: 'population' }"
           @update:model-value="state.node.nodeChanges()"
@@ -138,21 +138,18 @@
           v-model="state.node.size"
         />
 
-        <template v-if="state.node.paramsVisible.length > 0">
-          <node-param
-            :color="state.node.color"
-            :key="index"
-            :options="state.node.params[paramId].options"
-            @update:model-value="state.node.nodeChanges()"
-            v-for="(paramId, index) in state.node.paramsVisible"
-            v-model="state.node.params[paramId].value"
-          />
-        </template>
+        <node-param-editor
+          :color="state.node.color"
+          :key="index"
+          :options="state.node.params[paramId].options"
+          @update:model-value="state.node.nodeChanges()"
+          v-for="(paramId, index) in state.node.paramsVisible"
+          v-model="state.node.params[paramId].value"
+        />
       </v-list>
     </v-card-text>
 
     <v-card-actions
-      class="pa-0"
       style="min-height: 40px"
       v-if="state.node.state.targetsLength > 0"
     >
@@ -160,7 +157,7 @@
         :key="state.node.state.targetsLength"
         variant="accordion"
       >
-        <node-connection
+        <connection-editor
           :key="index"
           :source="{
             color: state.node.color,
@@ -188,15 +185,14 @@ import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
 import { Node } from "@nest/core/node/node";
 
-import NodeAvatar from "./avatar/NodeAvatar.vue";
-import NodeConnection from "./NodeConnection.vue";
-import NodeParam from "./NodeParam.vue";
+import ConnectionEditor from "./ConnectionEditor.vue";
+import NodeAvatar from "../avatar/NodeAvatar.vue";
+import NodeParamEditor from "./NodeParamEditor.vue";
 
 const props = defineProps({
   node: { type: Object as PropType<Node>, required: true },
 });
 
-// @ts-ignore
 const state = reactive({
   menu: false,
   node: props.node,

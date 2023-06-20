@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import { useProjectStore } from "@nest/store/project/projectStore";
-import ActivityChartGraph from "@nest/components/ActivityChartGraph.vue";
+import ActivityChartGraph from "@nest/components/graph/ActivityChartGraph.vue";
 
 const projectStore = useProjectStore();
 </script>

@@ -28,33 +28,20 @@
     </v-expansion-panel-title>
     <v-expansion-panel-text class="pa-0">
       <v-card variant="flat" class="ma-0">
-        <v-card-title>
-          <v-select
-            :items="rules"
-            hide-details
-            density="compact"
-            label="Connection rule"
-            variant="outlined"
-            v-model="state.connSpec.rule"
-          />
-        </v-card-title>
         <v-card-text>
           <v-list>
-            <node-param
-              :color="state.target.color"
+            <node-param-viewer
               :options="pOptions"
+              :value="state.connSpec.p"
               v-if="'p' in state.connSpec"
-              v-model="state.connSpec.p"
             />
-            <node-param
-              :color="state.target.color"
+            <node-param-viewer
               :options="weightOptions"
-              v-model="state.synSpec.weight"
+              :value="state.synSpec.weight"
             />
-            <node-param
-              :color="state.target.color"
+            <node-param-viewer
               :options="delayOptions"
-              v-model="state.synSpec.delay"
+              :value="state.synSpec.delay"
             />
           </v-list>
         </v-card-text>
@@ -66,8 +53,8 @@
 <script lang="ts" setup>
 import { reactive, onMounted, watch } from "vue";
 
-import NodeAvatar from "./avatar/NodeAvatar.vue";
-import NodeParam from "./NodeParam.vue";
+import NodeAvatar from "../avatar/NodeAvatar.vue";
+import NodeParamViewer from "./NodeParamViewer.vue";
 
 const props = defineProps(["source", "target", "connSpec", "synSpec"]);
 
@@ -90,6 +77,7 @@ const weightOptions = {
   max: 10,
   min: -10,
   step: 0.1,
+  unit: "pA"
 };
 
 const delayOptions = {
@@ -97,15 +85,8 @@ const delayOptions = {
   max: 10,
   min: 0,
   step: 0.1,
+  unit: "ms",
 };
-
-const rules = [
-  { title: "all to all", value: "all_to_all" },
-  { title: "one to one", value: "one_to_one" },
-  { title: "fixed indegree", value: "fixed_indegree" },
-  { title: "fixed outdegree", value: "fixed_outdegree" },
-  { title: "pairwise Bernoulli", value: "pairwise_bernoulli" },
-];
 
 const update = () => {
   state.source = props.source || state.source;
