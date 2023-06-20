@@ -5,7 +5,7 @@
     @click:prepend="decrement"
     append-icon="mdi-plus"
     class="py-2 value-slider"
-    hide-details
+    hide-details="auto"
     prepend-icon="mdi-minus"
     style="position: relative"
     v-model="value"
@@ -39,22 +39,6 @@ const props = defineProps({
 
 const modelRef = ref(props.modelValue);
 
-const value = computed({
-  get: () => modelRef.value,
-  set: (value) => {
-    const val = (
-      typeof value === "string" ? parseFloat(value) : value
-    );
-    modelRef.value = parseFloat(val.toFixed(numDecimals()));
-    emit("update:modelValue", modelRef.value);
-  },
-});
-
-const numDecimals = () => {
-  const stepStr = props.step.toString();
-  return stepStr.includes(".") ? stepStr.split(".")[1].length : 0;
-};
-
 const decrement = () => {
   value.value -= props.step;
 };
@@ -62,6 +46,20 @@ const decrement = () => {
 const increment = () => {
   value.value += props.step;
 };
+
+const numDecimals = () => {
+  const stepStr = props.step.toString();
+  return stepStr.includes(".") ? stepStr.split(".")[1].length : 0;
+};
+
+const value = computed({
+  get: () => modelRef.value,
+  set: (value) => {
+    const val = typeof value === "string" ? parseFloat(value) : value;
+    modelRef.value = parseFloat(val.toFixed(numDecimals()));
+    emit("update:modelValue", modelRef.value);
+  },
+});
 
 watch(
   () => props.modelValue,
@@ -75,7 +73,7 @@ watch(
 .value-slider {
   .mdi-minus,
   .mdi-plus {
-    opacity: 0;
+    opacity: 0 !important;
   }
 
   .mdi-plus {
@@ -99,7 +97,7 @@ watch(
 .value-slider:hover {
   .mdi-minus,
   .mdi-plus {
-    opacity: 0.6;
+    opacity: 0.6 !important;
   }
 }
 </style>

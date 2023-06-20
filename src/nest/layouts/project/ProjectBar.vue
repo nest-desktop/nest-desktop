@@ -22,12 +22,17 @@
 
   <v-spacer />
 
-  <v-btn variant="outlined" @click="projectStore.project.startSimulation()">
+  <simulation-button class="mx-2" />
+
+  <!-- <v-btn variant="outlined" @click="projectStore.project.startSimulation()">
     Simulate
-  </v-btn>
+  </v-btn> -->
+
 </template>
 
 <script lang="ts" setup>
+import SimulationButton from "@nest/components/SimulationButton.vue";
 import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
+
 </script>

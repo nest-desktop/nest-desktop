@@ -16,10 +16,10 @@ import { autocompletion } from "@codemirror/autocomplete";
 import { python } from "@codemirror/lang-python";
 // import { oneDark } from "@codemirror/theme-one-dark";
 
-import { nestCompletions } from "../codemirror/nestCompletion";
-import { nestRandomCompletions } from "../codemirror/nestRandomCompletion";
-import { nestSpatialCompletions } from "../codemirror/nestSpatialCompletion";
-import { nestSpatialDistributionsCompletions } from "../codemirror/nestSpatialDistributionsCompletion";
+import { nestCompletions } from "@nest/codemirror/nestCompletion";
+import { nestRandomCompletions } from "@nest/codemirror/nestRandomCompletion";
+import { nestSpatialCompletions } from "@nest/codemirror/nestSpatialCompletion";
+import { nestSpatialDistributionsCompletions } from "@nest/codemirror/nestSpatialDistributionsCompletion";
 
 const extensions = [
   tooltips({

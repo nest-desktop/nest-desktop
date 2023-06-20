@@ -1,8 +1,8 @@
 <template>
-  <v-card flat>
+  <v-card flat rounded="0">
     <template v-if="projectStore.controllerView === 'network'">
       <div :key="projectStore.project.network.nodes.state.nodesLength">
-        <node-card
+        <node-editor
           :key="index"
           :node="(node as Node)"
           v-for="(node, index) in projectStore.project.network.nodes.all"
@@ -10,7 +10,9 @@
       </div>
     </template>
     <template v-else-if="projectStore.controllerView === 'kernel'">
-      Kernel
+      <simulation-kernel
+        :simulation="projectStore.project.simulation as Simulation"
+      />
     </template>
     <template v-else-if="projectStore.controllerView === 'code'">
       <simulation-code-editor />
@@ -27,10 +29,12 @@
 <script lang="ts" setup>
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-import SimulationCodeEditor from "@nest/components/SimulationCodeEditor.vue";
-import NodeCard from "@nest/components/NodeCard.vue";
+import NodeEditor from "@nest/components/editor/NodeEditor.vue";
+import SimulationCodeEditor from "@nest/components/editor/SimulationCodeEditor.vue";
+import SimulationKernel from "@/nest/components/editor/SimulationKernelEditor.vue";
 
-import { Node } from "../../core/node/node";
+import { Node } from "@nest/core/node/node";
+import { Simulation } from "@nest/core/simulation/simulation";
 
 const projectStore = useProjectStore();
 </script>

@@ -89,7 +89,7 @@ const items = [
 
 <style lang="scss">
 .param:nth-child(odd) {
-  background-color: rgba(var(--v-theme-primary), 0.05);
+  background-color: rgba(var(--v-theme-primary), 0.03);
 }
 
 .param {
