@@ -2,7 +2,7 @@
 
 import { reactive, UnwrapRef } from "vue";
 import { Config } from "@/helpers/config";
-import { openToast } from "@/helpers/toast";
+import { openToast } from "@/utils/toast";
 
 import { Project } from "../project/project";
 import { SimulationCode, SimulationCodeProps } from "./simulationCode";

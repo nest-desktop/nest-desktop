@@ -1,6 +1,7 @@
 // valueGenerator.ts
 
-import { Numeric } from "./numeric";
+import { fill, linspace, range } from "@/utils/array";
+import { randomUniformInt, randomUniformFloat, randomNormal } from "@/utils/random";
 
 export class ValueGenerator {
   private _inputs: any = {
@@ -11,7 +12,6 @@ export class ValueGenerator {
     randomUniformFloat: ["min", "max", "size"],
     randomNormal: ["mu", "sigma", "size"],
   };
-  private _num = new Numeric();
   private _type: string = "fill";
   private _sort: boolean = false;
   private _options: any[] = [
@@ -95,17 +95,17 @@ export class ValueGenerator {
     let array: number[] = [];
     switch (this._type) {
       case "fill":
-        array = this._num.fill(parseFloat(p.value), parseInt(p.size, 0));
+        array = fill(parseFloat(p.value), parseInt(p.size, 0));
         break;
       case "range":
-        array = this._num.range(
+        array = range(
           parseFloat(p.start),
           parseFloat(p.end),
           parseFloat(p.step)
         );
         break;
       case "linspace":
-        array = this._num.linspace(
+        array = linspace(
           parseFloat(p.start),
           parseFloat(p.end),
           parseInt(p.size, 0)
@@ -115,14 +115,14 @@ export class ValueGenerator {
         );
         break;
       case "randomUniformInt":
-        array = this._num.randomUniformInt(
+        array = randomUniformInt(
           parseFloat(p.min),
           parseFloat(p.max),
           parseInt(p.size, 0)
         );
         break;
       case "randomUniformFloat":
-        array = this._num.randomUniformFloat(
+        array = randomUniformFloat(
           parseFloat(p.min),
           parseFloat(p.max),
           parseInt(p.size, 0)
@@ -132,7 +132,7 @@ export class ValueGenerator {
         );
         break;
       case "randomNormal":
-        array = this._num.randomNormal(
+        array = randomNormal(
           parseFloat(p.mu),
           parseFloat(p.sigma),
           parseInt(p.size, 0)

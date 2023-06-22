@@ -6,7 +6,7 @@
           <v-btn
             :disabled="state.disabled"
             :loading="projectStore.project.simulation.state.running"
-            @click="projectStore.project.startSimulation()"
+            @click="projectStore.startSimulation()"
             class="btn-main"
             variant="outlined"
             title="Simulate"
@@ -46,7 +46,7 @@
 
 <script lang="ts" setup>
 import { reactive } from "vue";
-import { useProjectStore } from "../store/project/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 
 const projectStore = useProjectStore();
 

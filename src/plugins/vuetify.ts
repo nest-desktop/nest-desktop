@@ -5,12 +5,15 @@
  */
 
 // Styles
-import 'vue-toast-notification/dist/theme-sugar.css';
+import "vue-toast-notification/dist/theme-sugar.css";
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./main.scss";
 
 // Composables
+import * as components from "vuetify/components";
+import * as directives from 'vuetify/directives'
+import { VDataTable, VDataTableVirtual } from "vuetify/labs/VDataTable";
 import { createVuetify } from "vuetify";
 
 // import { md1, md2, md3 } from "vuetify/blueprints";
@@ -46,6 +49,11 @@ const colors = {
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  components: {
+    ...components,
+    VDataTable,
+    VDataTableVirtual,
+  },
   // blueprint: md2,
   defaults: {
     // global: {
@@ -58,6 +66,7 @@ export default createVuetify({
     //   },
     // },
   },
+  directives,
   theme: {
     themes: {
       light: {

@@ -3,7 +3,7 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 import Mustache from "mustache";
-import { download } from "@/helpers/download";
+import { download } from "@/utils/download";
 
 import { Simulation } from "./simulation";
 

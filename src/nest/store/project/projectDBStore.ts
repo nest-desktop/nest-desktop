@@ -1,7 +1,7 @@
 // projectDBStore.ts
 
 import { defineStore } from "pinia";
-import { download } from "@/helpers/download";
+import { download } from "@/utils/download";
 
 import { Project } from "@nest/core/project/project";
 import { ProjectDB } from "./projectDB";

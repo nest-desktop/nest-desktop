@@ -1,9 +1,7 @@
 // activityGraph.ts
 
 import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
 
-import { Activity } from "@nest/core/activity/activity";
 import { ActivityChartGraph } from "./activityChartGraph";
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { Project } from "@nest/core/project/project";
@@ -107,10 +105,8 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    const activitiesHash = this._project.activities.all.map(
-      (activity: Activity) => activity.hash
-    );
-    if (sha1({ activitiesHash }) === this._state.dataHash) return;
+    console.log("Update activity graph");
+    if (this._project.activities.state.hash === this._state.dataHash) return;
 
     if (this._activityChartGraph) {
       this._activityChartGraph.update();
@@ -126,9 +122,6 @@ export class ActivityGraph {
    */
   updateHash(): void {
     this._state.codeHash = this._project.simulation.code.state.hash;
-    const activitiesHash = this._project.activities.all.map(
-      (activity: Activity) => activity.hash
-    );
-    this._state.dataHash = sha1({ activitiesHash });
+    this._state.dataHash = this._project.activities.state.hash;
   }
 }

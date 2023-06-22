@@ -2,7 +2,7 @@
 
 import { max, min } from "d3";
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import {

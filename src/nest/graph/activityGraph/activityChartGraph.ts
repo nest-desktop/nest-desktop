@@ -9,24 +9,25 @@ import {
   restyle,
 } from "plotly.js-dist-min";
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 
 import {
   ActivityChartPanel,
   ActivityChartPanelProps,
 } from "./activityChart/activityChartPanel";
 import { ActivityChartPanelModel } from "./activityChart/activityChartPanelModel";
-import { Project } from "@nest/core/project/project";
 import { AnalogSignalHistogramModel } from "./activityChart/activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChart/activityChartPanelModels/analogSignalPlotModel";
 import { CVISIHistogramModel } from "./activityChart/activityChartPanelModels/CVISIHistogramModel";
-import { SpikeCountPlotModel } from "./activityChart/activityChartPanelModels/spikeCountPlotModel";
 import { InterSpikeIntervalHistogramModel } from "./activityChart/activityChartPanelModels/interSpikeIntervalHistogramModel";
+import { Project } from "@nest/core/project/project";
 import { SenderCVISIPlotModel } from "./activityChart/activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChart/activityChartPanelModels/senderMeanISIPlotModel";
 import { SenderSpikeCountPlotModel } from "./activityChart/activityChartPanelModels/senderSpikeCountPlotModel";
+import { SpikeCountPlotModel } from "./activityChart/activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChart/activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChart/activityChartPanelModels/spikeTimesRasterPlotModel";
+import { debounce } from "@/utils/events";
 
 export class ActivityChartGraph {
   private _config: any = {};
@@ -109,6 +110,7 @@ export class ActivityChartGraph {
   private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
+  private _resizeObserver: ResizeObserver;
   private _state: any = {
     dialog: false,
     gd: undefined,
@@ -162,6 +164,12 @@ export class ActivityChartGraph {
 
     this._panel = new ActivityChartPanel(this);
     this.init(panels);
+
+    this._resizeObserver = new ResizeObserver(
+      debounce(() => {
+        this.relayout();
+      })
+    );
   }
 
   get data(): any[] {
@@ -231,6 +239,10 @@ export class ActivityChartGraph {
 
   get project(): Project {
     return this._project;
+  }
+
+  get resizeObserver(): ResizeObserver {
+    return this._resizeObserver;
   }
 
   get state(): any {
@@ -405,6 +417,7 @@ export class ActivityChartGraph {
    * It required network activities.
    */
   update(): void {
+    console.log("Update activity chart graph");
     this.empty();
 
     this.updateVisiblePanelsLayout();

@@ -1,7 +1,7 @@
 // insite.ts
 
 // import { Backend } from "@/helpers/backend";
-import { openToast } from "@/helpers/toast";
+import { openToast } from "@/utils/toast";
 
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { Project } from "../project/project";

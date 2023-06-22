@@ -24,6 +24,7 @@ import SandboxButton from "@/components/sandbox/SandboxButton.vue";
 import SandboxButtonToggle from "@/components/sandbox/SandboxButtonToggle.vue";
 import SandboxCard from "@/components/sandbox/SandboxCard.vue";
 import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
+import SandboxDataTable from "@/components/sandbox/SandboxDataTable.vue";
 import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
 // import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
@@ -43,6 +44,7 @@ const components: any = {
   buttonToggle: SandboxButtonToggle,
   card: SandboxCard,
   colorPicker: SandboxColorPicker,
+  dataTable: SandboxDataTable,
   importJSON: SandboxImportJSON,
   itemGroup: SandboxItemGroup,
   // nodeCard: SandboxNodeCard,

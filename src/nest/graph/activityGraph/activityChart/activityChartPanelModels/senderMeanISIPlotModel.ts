@@ -1,6 +1,6 @@
 //senderMeanISIPlotModel.ts
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";

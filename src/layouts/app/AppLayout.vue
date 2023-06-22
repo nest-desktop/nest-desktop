@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <v-system-bar flat color="systembar">
+    <v-system-bar class="d-print-none" color="systembar" flat>
       <app-bar />
     </v-system-bar>
 
-    <v-navigation-drawer permanent rail rail-width="64">
+    <v-navigation-drawer class="d-print-none" permanent rail rail-width="64">
       <app-navigation />
 
       <template #append>

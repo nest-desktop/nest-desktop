@@ -4,7 +4,7 @@ import axios from "axios";
 import { reactive, UnwrapRef } from "vue";
 
 import { Config } from "./config";
-import combineURLs from "./combineURLs";
+import combineURLs from "../utils/combineURLs";
 
 interface BackendState {
   enabled: boolean;

@@ -110,7 +110,7 @@
 <script lang="ts" setup>
 import { reactive, onMounted, onBeforeMount, ref, Ref } from "vue";
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
 
 const networkGraph: Ref<null> = ref(null);
@@ -121,11 +121,16 @@ const state = reactive({
 
 onMounted(() => {
   state.graph = new NetworkGraph(networkGraph);
+
   state.graph.init();
+  state.graph.resizeObserver.observe(state.graph.selector.node().parentNode);
+
   window.addEventListener("darkmode", () => state.graph.render());
 });
 
 onBeforeMount(() => {
+  state.graph.resizeObserver.disconnect();
+
   window.removeEventListener("darkmode", () => state.graph.render());
 });
 </script>
@@ -150,3 +155,4 @@ onBeforeMount(() => {
   }
 }
 </style>
+@/utils/theme
