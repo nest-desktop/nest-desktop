@@ -21,7 +21,7 @@
         return-object
         v-model="state.selectedRecord"
       >
-        <!-- <template #selection="{ (item: NodeRecord) }">
+        <!-- <template #selection="{ item }">
           <v-chip
             :color="item.color"
             class="mx-2"

@@ -99,28 +99,30 @@ const state = reactive({
 });
 </script>
 
-<style style="scss">
-.simulationButton .btn-split {
-  display: inline-block;
+<style lang="scss">
+.simulationButton {
+  .btn-split {
+    display: inline-block;
 
-  .btn-main {
-    border-right: none;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+    .btn-main {
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
 
-  .btn-prepend {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-    min-width: 35px !important;
-    padding: 0 !important;
-  }
+    .btn-prepend {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+      min-width: 35px !important;
+      padding: 0 !important;
+    }
 
-  .btn-append {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    min-width: 35px !important;
-    padding: 0 !important;
+    .btn-append {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      min-width: 35px !important;
+      padding: 0 !important;
+    }
   }
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
   <v-data-table
-    v-model:items-per-page="itemsPerPage"
     :headers="headers as any[]"
     :items="desserts"
     item-value="name"
@@ -9,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-const itemsPerPage = 5;
+
 const headers = [
   {
     title: "Dessert (100g serving)",
