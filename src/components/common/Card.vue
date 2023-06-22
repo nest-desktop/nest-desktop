@@ -14,6 +14,7 @@
 <style lang="scss">
 .card {
   border-left-width: 4px !important;
+  border-color: currentColor !important;
 
   .v-card-text {
     padding: 0

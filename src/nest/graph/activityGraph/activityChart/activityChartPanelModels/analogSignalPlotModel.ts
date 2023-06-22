@@ -1,6 +1,6 @@
 // analogSignalPlotModel.ts
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
@@ -42,82 +42,14 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Update panel model for analog signals.
-   *
-   * @remarks
-   * It requires activity data.
-   */
-  override update(): void {
-    this.data = [];
-    if (this.state.recordsVisible.length === 0) {
-      return;
-    }
-
-    this.updateAnalogRecords();
-    this.updateTime();
-
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === "V_m" && this.params[2].visible) {
-        // Add spike threshold for membrane potential.
-        this.addSpikeThresholdLine(record);
-      }
-
-      if (record.nodeSize === 1) {
-        // Add line for a single node.
-        this.addSingleLine(record);
-      } else if (record.nodeSize > 1) {
-        // Add multiple lines for the population.
-        this.addMultipleLines(record);
-
-        // Add average line for the population.
-        if (this.params[1].value) {
-          this.addAverageLine(record);
-        }
-      }
-
-      // Add active line.
-      this.addActiveLine(record);
-    });
-
-    this.updateLayoutLabel();
-  }
-
-  /**
-   * Creates the graph data points from a list of node IDs and the recorded
-   * data of a node.
-   * @param nodeIds Array of node IDs
-   * @param record Array of NodeRecords (containing the events)
-   * @returns Array containing x, y and name value for every data point
-   */
-  createGraphDataPoints(nodeIds: number[], record: NodeRecord): any[] {
-    const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: "" }));
-
-    let senders: number[];
-    if ("ports" in record.activity.events) {
-      senders = record.activity.events.ports;
-    } else {
-      senders = record.activity.events.senders;
-    }
-
-    senders.forEach((sender: number, idx: number) => {
-      const senderIdx: number = nodeIds.indexOf(sender);
-      if (senderIdx === -1) {
-        return;
-      }
-      data[senderIdx].x.push(record.times[idx]);
-      data[senderIdx].y.push(record.values[idx]);
-      data[senderIdx].name = record.id + " of " + record.nodeLabel;
-    });
-    return data;
-  }
-
-  /**
    * Add spike threshold data for membrane potential.
    */
   addSpikeThresholdLine(record: NodeRecord): void {
     const thresholds: number[] = record.node.nodes
       .filter((node: Node) => node.modelId.startsWith("iaf"))
-      .map((target: Node) => target.getParameter("V_th").value as number || -55);
+      .map(
+        (target: Node) => (target.getParameter("V_th").value as number) || -55
+      );
 
     if (thresholds.length > 0) {
       const line = {
@@ -147,6 +79,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Add single line data for analog signal.
    */
   addSingleLine(record: NodeRecord): void {
+    console.log("Add single line");
     if (!record.hasEvent) {
       return;
     }
@@ -298,6 +231,78 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       x: [],
       y: [],
     });
+  }
+
+  /**
+   * Creates the graph data points from a list of node IDs and the recorded
+   * data of a node.
+   * @param nodeIds Array of node IDs
+   * @param record Array of NodeRecords (containing the events)
+   * @returns Array containing x, y and name value for every data point
+   */
+  createGraphDataPoints(nodeIds: number[], record: NodeRecord): any[] {
+    const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: "" }));
+
+    let senders: number[];
+    if ("ports" in record.activity.events) {
+      senders = record.activity.events.ports;
+    } else {
+      senders = record.activity.events.senders;
+    }
+
+    senders.forEach((sender: number, idx: number) => {
+      const senderIdx: number = nodeIds.indexOf(sender);
+      if (senderIdx === -1) {
+        return;
+      }
+      data[senderIdx].x.push(record.times[idx]);
+      data[senderIdx].y.push(record.values[idx]);
+      data[senderIdx].name = record.id + " of " + record.nodeLabel;
+    });
+    return data;
+  }
+
+  /**
+   * Update panel model for analog signals.
+   *
+   * @remarks
+   * It requires activity data.
+   */
+  override update(): void {
+    // console.log('Update analog signal plot model')
+
+    this.data = [];
+    if (this.state.recordsVisible.length === 0) {
+      return;
+    }
+
+    this.updateAnalogRecords();
+    this.updateTime();
+
+    this.state.recordsVisible.forEach((record: NodeRecord) => {
+      if (record.id === "V_m" && this.params[2].visible) {
+        // Add spike threshold for membrane potential.
+        this.addSpikeThresholdLine(record);
+      }
+
+      if (record.nodeSize === 1) {
+        // Add line for a single node.
+        this.addSingleLine(record);
+      } else if (record.nodeSize > 1) {
+        // Add multiple lines for the population.
+        this.addMultipleLines(record);
+
+        // Add average line for the population.
+        if (this.params[1].value) {
+          this.addAverageLine(record);
+        }
+      }
+
+      // Add active line.
+      this.addActiveLine(record);
+    });
+
+    this.updateLayoutLabel();
   }
 
   /**

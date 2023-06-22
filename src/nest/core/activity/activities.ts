@@ -100,8 +100,11 @@ export class Activities {
   }
 
   changes(): void {
+    console.log('Changes in activities');
     // Check if project has activities.
     this.checkActivities();
+
+    this.updateHash();
 
     // Update activity graph.
     this._project.activityGraph.update();
@@ -154,7 +157,7 @@ export class Activities {
     });
 
     // Trigger activity changes.
-    this.changes();
+    // this.changes();
   }
 
   toJSON(): any {
@@ -165,21 +168,22 @@ export class Activities {
    * Update activities in recorder nodes after simulation.
    */
   update(data: any): void {
+    console.log('Update activities');
     let activities: any[] = [];
 
-    if ("activities" in data) {
-      activities = data.activities;
-    } else if ("events" in data) {
+    if (data.events) {
       activities = data.events.map((events: any) => ({
         events,
       }));
+    } else if (data.activities) {
+      activities = data.activities;
     } else {
       activities = data;
     }
 
     activities.forEach((activity: any) => {
-      if (!("nodeIds" in activity)) {
-        if ("ports" in activity.events) {
+      if (!(activity.nodeIds)) {
+        if (activity.events && activity.events.ports) {
           activity.nodeIds = activity.events.ports.filter(
             (value: number, index: number, self: number[]) =>
               self.indexOf(value) === index
@@ -195,7 +199,7 @@ export class Activities {
     });
 
     // Get node positions.
-    if ("positions" in data) {
+    if (data.positions) {
       activities.forEach((activity: any) => {
         activity.nodePositions = activity.nodeIds.map(
           (nodeId: number) => data.positions[nodeId]
@@ -210,6 +214,7 @@ export class Activities {
 
     // Trigger activity changes.
     this.changes();
+
   }
 
   /**

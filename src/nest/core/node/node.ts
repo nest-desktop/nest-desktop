@@ -440,7 +440,6 @@ export class Node extends Config {
   clean(): void {
     this._idx = this._nodes.all.indexOf(this);
     this.view.clean();
-    // this.updateRecords();
   }
 
   /**
@@ -770,6 +769,7 @@ export class Node extends Config {
    * It should be called after connections are created.
    */
   updateRecords(): void {
+    // console.log('Update node records')
     let recordables: any[] = [];
     // Initialize recordables.
     if (this.targets.length > 0) {

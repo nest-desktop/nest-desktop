@@ -33,9 +33,12 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
    * It sets activities and gets records from recorders.
    */
   override init(model: AnalogSignalPanelModelProps = {}): void {
+    // console.log('Initialize panel model')
     this.initActivities();
     this.initAnalogRecords();
-    this.initAnalogRecordsVisible(model.records);
+    if (model.records) {
+      this.initAnalogRecordsVisible(model.records);
+    }
   }
 
   /**

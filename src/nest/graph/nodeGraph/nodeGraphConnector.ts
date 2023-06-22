@@ -2,8 +2,8 @@
 
 import { Selection, Transition, drag, select, transition } from "d3";
 
-import { darkMode } from "@/helpers/theme";
-import drawPath from "@/helpers/graph/connectionGraphPath";
+import { darkMode } from "@/utils/theme";
+import drawPath from "@/utils/graph/connectionGraphPath";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";

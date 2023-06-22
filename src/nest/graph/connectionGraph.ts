@@ -1,7 +1,7 @@
 // connectionGraph.ts
 
 import { Selection, Transition, drag, select, transition } from "d3";
-import drawPath from "@/helpers/graph/connectionGraphPath";
+import drawPath from "@/utils/graph/connectionGraphPath";
 
 import { Connection } from "@nest/core/connection/connection";
 import { NetworkGraph } from "./networkGraph/networkGraph";

@@ -1,7 +1,7 @@
 // modelAssignGraph.ts
 
 import { Selection, select } from "d3";
-import drawPath from "@/helpers/graph/connectionGraphPath";
+import drawPath from "@/utils/graph/connectionGraphPath";
 
 import { Connection } from "@nest/core/connection/connection";
 import { CopyModel } from "@nest/core/model/copyModel";

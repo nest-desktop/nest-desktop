@@ -4,6 +4,7 @@
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="navStore.width"
     @update:modelValue="dispatchWindowResize"
+    class="d-print-none"
     permanent
   >
     <div @mousedown="resizeSideNav" class="resize-handle right" />
@@ -11,12 +12,12 @@
     <project-nav />
   </v-navigation-drawer>
 
-  <v-app-bar color="blue" height="48" flat>
+  <v-app-bar class="d-print-none" color="blue" height="48" flat>
     <project-bar />
   </v-app-bar>
 
   <v-navigation-drawer
-    class="full-height"
+    class="d-print-none full-height"
     location="right"
     permanent
     rail
@@ -33,7 +34,7 @@
       <v-tab
         :key="index"
         :value="item.id"
-        @click.stop="projectStore.toggle(item)"
+        @click.stop="projectStore.toggleController(item)"
         class="justify-center"
         height="72"
         minWidth="0"
@@ -72,6 +73,7 @@
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="projectStore.controllerWidth"
     @update:modelValue="dispatchWindowResize"
+    class="d-print-none"
     location="right"
     permanent
   >
@@ -85,6 +87,7 @@
     :active="projectStore.bottomOpen"
     :height="projectStore.bottomNavHeight"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
+    class="d-print-none"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
     <simulation-code-editor />

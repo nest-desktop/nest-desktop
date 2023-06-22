@@ -1,7 +1,7 @@
 // nodeGraphShape.ts
 
 import { Selection, select } from "d3";
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";

@@ -55,6 +55,10 @@ export class Network extends Config {
     return this._connections;
   }
 
+  get isEmpty(): boolean {
+    return this._models.all.length === 0 && this._nodes.all.length === 0 && this._connections.all.length === 0;
+  }
+
   /**
    * Get copied models
    */
@@ -97,7 +101,7 @@ export class Network extends Config {
    * @remarks It generates code.
    */
   checkout(): void {
-    console.debug("Checkout network");
+    console.log("Checkout network");
 
     // Update revision idx.
     if (this._revisionIdx >= this._revisions.length) {
@@ -134,10 +138,12 @@ export class Network extends Config {
    * Clean nodes and connection components.
    */
   clean(): void {
+    console.log("Clean network");
     this._nodes.clean();
     this._connections.clean();
     this._models.clean();
 
+    this._nodes.updateRecords();
     this.updateStates();
   }
 
@@ -346,6 +352,7 @@ export class Network extends Config {
 
   init(): void {
     this.clearNetworkHistory();
+    this._nodes.updateRecords();
   }
 
   /**
@@ -357,7 +364,7 @@ export class Network extends Config {
    * It commits the network in the network history.
    */
   networkChanges(): void {
-    // console.log("Network changes");
+    console.log("Network changes");
 
     this.updateStates();
 

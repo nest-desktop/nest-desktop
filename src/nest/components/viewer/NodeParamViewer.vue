@@ -1,10 +1,11 @@
 <template>
   <v-list-item class="paramViewer">
     <v-row no-gutters>
-      {{ props.options.label }}
+      <span class="text-medium-emphasis">{{ props.options.label }}</span>
       <v-spacer />
-      {{  props.value }}
-      {{  props.options.unit }}
+      {{ props.options.id }}:
+      {{ props.value }}
+      {{ props.options.unit }}
     </v-row>
   </v-list-item>
 </template>

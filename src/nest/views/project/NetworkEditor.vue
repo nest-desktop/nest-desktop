@@ -1,8 +1,5 @@
 <template>
-  <!-- <v-toolbar>Bla bla</v-toolbar> -->
-  <v-layout full-height>
-    <network-graph />
-  </v-layout>
+  <network-graph />
 </template>
 
 <script lang="ts" setup>

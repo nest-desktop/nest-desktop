@@ -3,10 +3,10 @@
     <v-toolbar
       :key="state.network.state.hash"
       absolute
-      dense
-      flat
+      density="compact"
       height="32"
       style="width: 100%; background-color: transparent"
+      variant="flat"
     >
       <div v-if="state.network">
         <v-row>
@@ -38,7 +38,7 @@
                   state.graph.workspace.state.enableConnection
                 "
               >
-                <v-icon class="ma-1" small v-text="'mdi-arrow-right'" />
+                <v-icon class="ma-1" size="small" icon="mdi-arrow-right" />
               </span>
 
               <span
@@ -58,33 +58,33 @@
       <v-spacer />
 
       <v-card flat>
-        <span v-if="state.network.project.app.config.devMode">
+        <span v-if="appStore.devMode">
           <v-chip
             label
-            outlined
-            small
+            size="small"
+            variant="outlined"
             v-if="state.network.state.hash"
-            v-text="state.network.state.hash.slice(0, 6)"
-          />
+          >
+            {{ state.network.state.hash.slice(0, 6) }}
+          </v-chip>
         </span>
 
         <span>
           <v-dialog max-width="450" v-model="state.dialogDownload">
-            <template #activator="{ on, attrs }">
+            <template #activator="{ props }">
               <v-btn
-                icon
-                small
+                icon="mdi-camera"
+                size="small"
                 title="Export network graph"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon small v-text="'mdi-camera'" />
-              </v-btn>
+                v-bind="props"
+              />
             </template>
 
             <v-card>
-              <v-card-title v-text="'Export network graph'" />
-              <v-card-subtitle v-text="'Please select the export options'" />
+              <v-card-title> v-text="'Export network graph'" </v-card-title>
+              <v-card-subtitle>
+                'Please select the export options'
+              </v-card-subtitle>
               <v-card-text>
                 <v-checkbox
                   label="Transparent background"
@@ -96,54 +96,43 @@
                 <v-spacer />
                 <v-btn
                   @click="state.dialogDownload = false"
-                  outlined
-                  small
-                  text
-                  v-text="'close'"
-                />
-                <v-btn
-                  @click="DownloadNetworkGraph"
-                  outlined
-                  small
-                  v-text="'save'"
-                />
+                  size="small"
+                  variant="outlined"
+                >
+                  close
+                </v-btn>
+                <v-btn @click="DownloadNetworkGraph" size="small">save</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
 
           <v-dialog max-width="450" v-model="state.dialogDelete">
-            <template #activator="{ on, attrs }">
+            <template #activator="{ props }">
               <v-btn
                 :disabled="state.network.isEmpty"
-                icon
+                icon="mdi-trash-can-outline"
                 small
                 title="Delete all network elements"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon small v-text="'mdi-trash-can-outline'" />
-              </v-btn>
+                v-bind="props"
+              />
             </template>
 
             <v-card>
-              <v-card-title
-                v-text="'Are you sure to delete all elements of this network?'"
-              />
+              <v-card-title>
+                Are you sure to delete all elements of this network?
+              </v-card-title>
               <v-card-actions>
                 <v-spacer />
                 <v-btn
                   @click="state.dialogDelete = false"
-                  outlined
-                  small
-                  text
-                  v-text="'close'"
-                />
-                <v-btn
-                  @click="deleteNetwork"
-                  outlined
-                  small
-                  v-text="'delete'"
-                />
+                  size="small"
+                  variant="outlined"
+                >
+                  close
+                </v-btn>
+                <v-btn @click="deleteNetwork" size="small" variant="outlined">
+                  delete
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -152,49 +141,35 @@
             :color="
               state.graph.workspace.state.centerSelected ? 'amber' : 'grey'
             "
+            :icon="
+              state.graph.workspace.state.centerSelected
+                ? 'mdi-image-filter-center-focus'
+                : 'mdi-image-filter-center-focus-strong-outline'
+            "
             @click="() => state.graph.workspace.toggleCenterSelected()"
-            icon
-            small
+            size="small"
             title="Auto-center currently selected element"
-          >
-            <v-icon
-              small
-              v-text="
-                state.graph.workspace.state.centerSelected
-                  ? 'mdi-image-filter-center-focus'
-                  : 'mdi-image-filter-center-focus-strong-outline'
-              "
-            />
-          </v-btn>
+          />
 
           <v-btn
             :color="
               state.graph.workspace.state.centerNetwork ? 'amber' : 'grey'
             "
             @click="() => state.graph.workspace.toggleCenterNetwork()"
-            icon
-            small
+            icon="mdi-focus-field"
+            size="small"
             title="Auto-center whole network graph"
-          >
-            <v-icon small v-text="'mdi-focus-field'" />
-          </v-btn>
+          />
 
           <v-btn
             :color="state.graph.workspace.state.showGrid ? 'amber' : 'grey'"
             @click="() => state.graph.workspace.toggleGrid()"
-            icon
-            small
+            :icon="
+              state.graph.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'
+            "
+            size="small"
             title="Show background grid"
-          >
-            <v-icon
-              small
-              v-text="
-                state.graph.workspace.state.showGrid
-                  ? 'mdi-grid'
-                  : 'mdi-grid-off'
-              "
-            />
-          </v-btn>
+          />
         </span>
       </v-card>
     </v-toolbar>
@@ -206,11 +181,16 @@ import { reactive, watch } from "vue";
 
 import { Network } from "@nest/core/network/network";
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
-import NodeChip from "@/components/node/NodeChip.vue";
+import NodeChip from "@nest/components/NodeChip.vue";
+import { downloadSVGImage } from "@/utils/download";
+import { useAppStore } from "@/store/appStore";
+
+const appStore = useAppStore();
 
 const props = defineProps({
   graph: NetworkGraph,
   network: Network,
+  transparentWorkspace: { default: false, type: Boolean },
 });
 
 const state = reactive({
@@ -232,7 +212,7 @@ const deleteNetwork = () => {
  * Download network graph as svg.
  */
 const DownloadNetworkGraph = () => {
-  state.graph.downloadImage();
+  downloadSVGImage(state.graph.selector.node(), state.network.project.name);
   state.dialogDownload = false;
 };
 
@@ -245,7 +225,7 @@ watch(
 );
 </script>
 
-<style>
+<style lang="scss">
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s;

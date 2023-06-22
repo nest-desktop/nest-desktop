@@ -1,7 +1,7 @@
 // networkGraphNodeAddPanel.ts
 import { Arc, Selection, arc } from "d3";
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/utils/theme";
 
 import { Network } from "@nest/core/network/network";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";

@@ -8,6 +8,7 @@ import { ModelAssignGraph } from "../modelAssignGraph";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { Node } from "@nest/core/node/node";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
+import { debounce } from "@/utils/events";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
 export class NetworkGraph {
@@ -21,6 +22,7 @@ export class NetworkGraph {
   private _nodeGraph: NodeGraph;
   private _selector: Selection<any, any, any, any>;
   private _workspace: NetworkGraphWorkspace;
+  private _resizeObserver: ResizeObserver;
 
   constructor(ref: Ref<null>) {
     this._selector = select(ref.value);
@@ -29,6 +31,12 @@ export class NetworkGraph {
     this._modelAssignGraph = new ModelAssignGraph(this);
     this._connectionGraph = new ConnectionGraph(this);
     this._nodeGraph = new NodeGraph(this);
+
+    this._resizeObserver = new ResizeObserver(
+      debounce(() => {
+        this._workspace.updateTransform();
+      })
+    );
   }
 
   get config(): any {
@@ -42,6 +50,10 @@ export class NetworkGraph {
 
   get nodeGraph(): NodeGraph {
     return this._nodeGraph;
+  }
+
+  get resizeObserver(): ResizeObserver {
+    return this._resizeObserver;
   }
 
   get selector(): Selection<any, any, any, any> {
@@ -86,7 +98,6 @@ export class NetworkGraph {
   init(): void {
     this._workspace.init();
     this.update();
-    this.observeSize();
   }
 
   /**
@@ -97,17 +108,6 @@ export class NetworkGraph {
     this._modelAssignGraph.render();
     this._connectionGraph.render();
     this._nodeGraph.render();
-  }
-
-  /**
-   * Observe size changing in graph layout.
-   */
-  observeSize(): void {
-    const resizeObserver = new ResizeObserver(() => {
-      this._workspace.updateTransform();
-    });
-    // @ts-ignore
-    resizeObserver.observe(this._selector.node().parentNode);
   }
 
   /**

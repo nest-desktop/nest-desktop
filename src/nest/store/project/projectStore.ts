@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 
 import { Project } from "@nest/core/project/project";
 import { useProjectDBStore } from "./projectDBStore";
+import router from "@/router";
 
 export const useProjectStore = defineStore("project-view", {
   state: () => ({
@@ -26,27 +27,47 @@ export const useProjectStore = defineStore("project-view", {
     code: "import nest\n\nnest.ResetKernel()\n\nn1 = nest.Create('iaf_psc_alpha')\ndc1 = nest.Create('dc_generator')\nvm1 = nest.Create('voltmeter')\n\nnest.Connect(dc1, n1)\nnest.Connect(vm1, n1)\n\nnest.Simulate(1000)",
   }),
   actions: {
-    loadProject(projectId: string = "") {
+    /**
+     * Load current project from store.
+     * @param projectId
+     */
+    loadProject(projectId: string = ""): void {
       // console.log("Load project:", projectId);
       const projectDBStore = useProjectDBStore();
       this.project = projectDBStore.getProject(projectId);
       this.projectId = this.project.id;
     },
     /**
+     * Start simulation of the current project.
+     */
+    startSimulation(): void {
+      router.push({
+        name: "ActivityExplorer",
+        params: { projectId: this.projectId },
+      });
+      this.project.startSimulation();
+    },
+    /**
      * Reload the project in the list.
      */
     reloadProject(project: Project): void {
       console.log("Reload project");
-
       const projectDBStore = useProjectDBStore();
       projectDBStore.unloadProject(project.id);
       this.project = projectDBStore.getProject(project.id);
     },
+    /**
+     * Save current project.
+     */
     saveCurrentProject() {
       const projectDBStore = useProjectDBStore();
       projectDBStore.saveProject(this.projectId);
     },
-    toggle(item?: any) {
+    /**
+     * Toggle navigation drawer.
+     * @param item
+     */
+    toggleController(item?: any) {
       if (!this.controllerOpen || this.controllerView === item.id) {
         this.controllerOpen = !this.controllerOpen;
       }

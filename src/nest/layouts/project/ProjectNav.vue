@@ -11,7 +11,7 @@
       variant="outlined"
     />
 
-    <v-btn icon size="small" title="Create a new project" >
+    <v-btn icon size="small" title="Create a new project">
       <v-icon icon="mdi-plus" />
     </v-btn>
 

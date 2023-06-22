@@ -1,16 +1,23 @@
 <template>
-  <card :color="state.node.color" class="node my-1" v-if="state.node">
+  <card
+    :color="state.node.color"
+    class="node my-1"
+    rounded="1"
+    variant="outlined"
+    v-if="state.node"
+  >
     <v-card-title>
       <div class="d-flex text-button">
         <node-avatar
           size="48px"
+          title="Graphical representation"
           :color="state.node.color"
           :label="state.node.label"
           :elementType="state.node.elementType"
           :weight="state.node.weight"
         />
-        <div class="ma-auto">{{ state.node.modelId }}</div>
-        <div class="my-auto">{{ state.node.size }}</div>
+        <div class="ma-auto" title="Node model">{{ state.node.modelId }}</div>
+        <div class="my-auto" title="Population size">{{ state.node.size }}</div>
       </div>
     </v-card-title>
 

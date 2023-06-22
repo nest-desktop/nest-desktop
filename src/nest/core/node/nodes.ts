@@ -243,6 +243,7 @@ export class Nodes {
    * @param network - network object
    */
   update(nodes?: NodeProps[]): void {
+    // console.log('Update nodes')
     if (nodes) {
       nodes.forEach((data: NodeProps) => this.add(data));
     }
@@ -305,7 +306,10 @@ export class Nodes {
    * It should be called after network created.
    */
   updateRecords(): void {
-    this.recorders.forEach((recorder: Node) => recorder.updateRecords());
+    // console.log("Update nodes records");
+    this.recorders
+      .filter((recorder: Node) => recorder.model.isAnalogRecorder)
+      .forEach((recorder: Node) => recorder.updateRecords());
   }
 
   /**

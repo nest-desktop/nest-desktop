@@ -276,6 +276,9 @@ export class Project {
    * Start simulation.
    */
   startSimulation(): void {
+    console.log("Start simulation");
+    this._network.clean();
+
     // Stop getting activities from Insite.
     this.insite.cancelAllIntervals();
 
@@ -285,7 +288,7 @@ export class Project {
     this._simulation.start().then((response: any) => {
       if (
         response == null ||
-        response.status != 200 ||
+        response.status !== 200 ||
         response.data == null ||
         !response.data.data
       ) {

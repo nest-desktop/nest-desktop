@@ -4,13 +4,14 @@ import { defineStore } from "pinia";
 
 export const useAppStore = defineStore("app", {
   state: () => ({
+    darkMode: false,
+    devMode: false,
     simulator: {
       id: "nest",
       title: "NEST",
       icon: "stimulator:nestIcon",
       color: "nest",
     },
-    darkMode: false,
   }),
   actions: {
     toggleTheme() {

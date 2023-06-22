@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import SimulationButton from "@nest/components/SimulationButton.vue";
+import SimulationButton from "@nest/components/simulation/SimulationButton.vue";
 import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
 

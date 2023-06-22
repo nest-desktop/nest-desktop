@@ -1,12 +1,12 @@
 <template>
   <v-card flat>
     <v-card-text>
-      <v-layout style="height: 240px">
+      <v-layout style="height: 300px">
         <network-graph />
       </v-layout>
 
       <v-row>
-        <v-col cols="12" md="4" sm="6">
+        <v-col class="pa-1" cols="12" md="4" sm="6">
           <div class="text-button">Stimulator</div>
           <node-viewer
             :node="(node as Node)"
@@ -16,7 +16,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4" sm="6">
+        <v-col class="pa-1" cols="12" md="4" sm="6">
           <div class="text-button">Neuron</div>
           <node-viewer
             :node="(node as Node)"
@@ -25,7 +25,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4" sm="6">
+        <v-col class="pa-1" cols="12" md="4" sm="6">
           <div class="text-button">Recorder</div>
           <node-viewer
             :node="(node as Node)"

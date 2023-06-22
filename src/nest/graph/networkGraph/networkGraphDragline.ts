@@ -1,7 +1,7 @@
 // networkGraphDragline.ts
 
 import { pointer } from "d3";
-import drawPath from "@/helpers/graph/connectionGraphPath";
+import drawPath from "@/utils/graph/connectionGraphPath";
 
 import { Network } from "@nest/core/network/network";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";

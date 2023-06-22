@@ -2,7 +2,7 @@
 
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
-import { download } from "@/helpers/download";
+import { download } from "@/utils/download";
 
 import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
 import { Node } from "../node/node";
@@ -287,7 +287,7 @@ export class Activity {
    * Update hash.
    */
   updateHash(): void {
-    // this._hash = sha1(JSON.stringify(this._events));
-    this._hash = sha1({ sendersLength: this._events.senders.length });
+    console.log("Update hash");
+    this._hash = sha1(this.toJSON());
   }
 }

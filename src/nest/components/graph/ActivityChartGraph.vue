@@ -27,7 +27,7 @@
       </v-card>
     </v-dialog>
 
-    <div class="activityChartGraph" ref="activityChartGraph" />
+    <div class="activityChartGraph full-height" ref="activityChartGraph" />
   </v-layout>
 </template>
 
@@ -64,6 +64,8 @@ const init = () => {
     ref.on("plotly_resize", () => {
       state.graph.restyle();
     });
+
+    state.graph.resizeObserver.observe(ref);
   }
 };
 
@@ -91,6 +93,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   closeDialog();
+  state.graph.resizeObserver.disconnect();
   window.removeEventListener("darkmode", () => state.graph.relayout());
 });
 
@@ -104,7 +107,6 @@ watch(
 .activityGraphLayout {
   .activityChartGraph {
     width: 100%;
-    height: calc(100vh - 24px - 48px);
   }
 }
 </style>
