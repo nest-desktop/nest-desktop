@@ -276,7 +276,8 @@ export class ActivityChartGraph {
    * Download image of the activity chart graph.
    */
   downloadImage(options: DownloadImgopts): void {
-    if (this._state.gd == null) return;
+    if (!this._state.gd) return;
+
     downloadImage(this._state.gd, options);
   }
 

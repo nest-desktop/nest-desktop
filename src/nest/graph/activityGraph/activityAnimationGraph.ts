@@ -201,17 +201,15 @@ export class ActivityAnimationGraph {
    * Update animation scene.
    */
   updateScene(): void {
-    if (this._scene == undefined) {
-      return;
-    }
+    if (!this._scene) return;
 
     this._scene.update();
 
     // Enable camera for all layers.
     this._layers.forEach((layer: ActivityAnimationLayer) => {
-      if (this._scene) {
-        this._scene.camera.layers.enable(layer.activity.idx + 1);
-      }
+      if (!this._scene) return;
+
+      this._scene.camera.layers.enable(layer.activity.idx + 1);
     });
   }
 
@@ -219,8 +217,8 @@ export class ActivityAnimationGraph {
    * Destroy animation scene.
    */
   destroyScene(): void {
-    if (this._scene) {
-      this._scene.destroy();
-    }
+    if (!this._scene) return;
+
+    this._scene.destroy();
   }
 }

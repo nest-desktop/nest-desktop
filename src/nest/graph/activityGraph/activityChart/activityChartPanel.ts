@@ -16,12 +16,12 @@ export interface ActivityChartPanelProps {
 }
 
 interface ActivityChartPanelLayoutProps {
-  xaxis: { showgrid: boolean; title: string; anchor?: string };
+  xaxis: { anchor?: string; showgrid: boolean; title: string; type?: string };
   yaxis: {
+    domain?: number[];
     height: number;
     showgrid: boolean;
     title: string;
-    domain?: number[];
   };
 }
 
@@ -142,10 +142,12 @@ export class ActivityChartPanel {
     modelSpec: ActivityChartPanelModelProps = {}
   ): void {
     if (modelId) {
-      const model: ActivityChartPanelModelProps | undefined = this._graph.models.find(
-        (model: ActivityChartPanelModelProps) => model.id === modelId
-      );
+      const model: ActivityChartPanelModelProps | undefined =
+        this._graph.models.find(
+          (model: ActivityChartPanelModelProps) => model.id === modelId
+        );
       if (model) {
+        // @ts-ignore
         this._model = new model.component(this, modelSpec);
         this._state.initialized = true;
       }
