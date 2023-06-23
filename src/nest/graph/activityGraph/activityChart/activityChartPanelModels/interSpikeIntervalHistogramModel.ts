@@ -1,8 +1,7 @@
 // interSpikeIntervalHistogramModel.ts
 
-import { max } from "d3";
-
 import { darkMode } from "@/utils/theme";
+import { max } from "@/utils/array";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";

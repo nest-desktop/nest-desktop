@@ -1,7 +1,8 @@
 // activityAnimationLayer.ts
 
-import { range as mrange } from "mathjs";
 import { GridHelper, Group } from "three";
+
+import { range } from "@/utils/array";
 
 import { Activity } from "@nest/core/activity/activity";
 import { ActivityAnimationGraph } from "../activityAnimationGraph";
@@ -232,8 +233,8 @@ export class ActivityAnimationLayer {
    */
   interval(min: number, max: number, size: number): number[] {
     const step: number = (max - min) / size / 2;
-    const range: any = mrange(min, max, step);
-    return range._data.filter((_: number, i: number) => i % 2 === 1);
+    const rangeData: number[] = range(min, max, step);
+    return rangeData.filter((_: number, i: number) => i % 2 === 1);
   }
 
   /**

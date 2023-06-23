@@ -1,6 +1,7 @@
 // activityChartPanel.ts - 7 anys
 
-import { sum } from "mathjs";
+import { sum } from "@/utils/array";
+import { UnwrapRef, reactive } from "vue";
 
 import {
   ActivityChartPanelModel,
@@ -14,11 +15,28 @@ export interface ActivityChartPanelProps {
   model?: ActivityChartPanelModelProps;
 }
 
+interface ActivityChartPanelLayoutProps {
+  xaxis: { showgrid: boolean; title: string; anchor?: string };
+  yaxis: {
+    height: number;
+    showgrid: boolean;
+    title: string;
+    domain?: number[];
+  };
+}
+
+interface ActivityChartPanelState {
+  initialized: boolean;
+  visible: boolean;
+}
+
+export const plotType = "scatter";
+
 export class ActivityChartPanel {
   // private static readonly _name = 'ActivityGraphPanel';
   // private _activities: Activity[] = [];
   private _graph: ActivityChartGraph; // parent
-  private _layout: any = {
+  private _layout: ActivityChartPanelLayoutProps = {
     xaxis: {
       showgrid: true,
       title: "",
@@ -30,15 +48,17 @@ export class ActivityChartPanel {
     },
   };
   private _model: ActivityChartPanelModel;
-  private _state = {
-    initialized: false,
-    visible: true,
-  };
+  private _state: UnwrapRef<ActivityChartPanelState>;
   private _xaxis = 1;
 
   constructor(graph: ActivityChartGraph, panel: ActivityChartPanelProps = {}) {
     this._graph = graph;
     this._model = new SpikeTimesRasterPlotModel(this);
+
+    this._state = reactive({
+      initialized: false,
+      visible: true,
+    });
 
     this.selectModel(
       panel.model ? panel.model.id : "spikeTimesRasterPlot",
@@ -62,7 +82,7 @@ export class ActivityChartPanel {
     return this.graph.panels.indexOf(this);
   }
 
-  get layout(): any {
+  get layout(): ActivityChartPanelLayoutProps {
     return this._layout;
   }
 
@@ -74,7 +94,7 @@ export class ActivityChartPanel {
     return [];
   }
 
-  get state(): any {
+  get state(): UnwrapRef<ActivityChartPanelState> {
     return this._state;
   }
 
@@ -91,7 +111,7 @@ export class ActivityChartPanel {
   }
 
   /**
-   * Capitalize axis label.
+   * Capitalize text.
    */
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -119,11 +139,11 @@ export class ActivityChartPanel {
 
   selectModel(
     modelId: string = "spikeTimesRasterPlot",
-    modelSpec: any = {}
+    modelSpec: ActivityChartPanelModelProps = {}
   ): void {
     if (modelId) {
-      const model: any = this._graph.models.find(
-        (model: any) => model.id === modelId
+      const model: ActivityChartPanelModelProps | undefined = this._graph.models.find(
+        (model: ActivityChartPanelModelProps) => model.id === modelId
       );
       if (model) {
         this._model = new model.component(this, modelSpec);

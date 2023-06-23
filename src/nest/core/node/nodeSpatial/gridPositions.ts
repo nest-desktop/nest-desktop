@@ -1,6 +1,7 @@
 // gridPositions.ts
 
-import { range as mrange } from "mathjs";
+import { range } from "@/utils/array";
+import { round } from "@/utils/converter";
 
 import { NodeSpatial } from "./nodeSpatial";
 
@@ -104,19 +105,15 @@ export class GridPositions {
     this._pos = [];
     X.forEach((x: number) => {
       Y.forEach((y: number) => {
-        this._pos.push([this.round(x), this.round(y)]);
+        this._pos.push([round(x), round(y)]);
       });
     });
   }
 
   range(min: number, max: number, size: number): number[] {
     const step: number = (max - min) / size / 2;
-    const range: any = mrange(min, max, step);
-    return range._data.filter((_: number, i: number) => i % 2 === 1);
-  }
-
-  round(value: number): number {
-    return Math.floor(value * 100) / 100;
+    const rangeData: number[] = range(min, max, step);
+    return rangeData.filter((_: number, i: number) => i % 2 === 1);
   }
 
   /**

@@ -1,6 +1,6 @@
 // nodeRecords.ts - 2 any
 
-import { max, min } from "d3";
+import { max, min } from "@/utils/array";
 
 import { Activity } from "../activity/activity";
 import { Node } from "./node";
