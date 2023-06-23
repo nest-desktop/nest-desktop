@@ -1,16 +1,18 @@
 // electron/main.ts
 // https://vuejsexamples.com/vite-vue3-electron-typescript-template/
-
-import { BrowserWindow, app } from "electron";
-import { join } from "path";
+// https://github.com/electron-vite/vite-plugin-electron/blob/main/examples/quick-start/electron/main.ts
 
 process.env.DIST = join(__dirname, "../dist");
 process.env.PUBLIC = app.isPackaged
   ? process.env.DIST
   : join(process.env.DIST, "../public");
 
+import { join } from "path";
+import { BrowserWindow, app } from "electron";
+
 let win: BrowserWindow | null;
-const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
+const preload = join(__dirname, "./preload.js");
+const url = process.env["VITE_DEV_SERVER_URL"];
 
 async function createWindow() {
   // Create the browser window.
@@ -19,7 +21,9 @@ async function createWindow() {
     width: 1200,
     height: 750,
     webPreferences: {
-      preload: join(__dirname, "./preload.js"),
+      contextIsolation: false,
+      nodeIntegration: true,
+      preload,
     },
   });
 
@@ -28,8 +32,8 @@ async function createWindow() {
     win?.webContents.send("main-process-message", new Date().toLocaleString());
   });
 
-  if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL);
+  if (url) {
+    win.loadURL(url);
   } else {
     // win.loadFile('dist/index.html')
     win.loadFile(join(process.env.DIST, "index.html"));

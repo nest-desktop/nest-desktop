@@ -29,6 +29,12 @@ export default defineConfig({
     electron([
       {
         entry: "electron/main.ts",
+        onstart: (options) => {
+          // Start Electron App
+          if (process.env["VITE_DEV_ELECTRON_STARTUP"]) {
+            options.startup([".", "--no-sandbox"]);
+          }
+        },
       },
       {
         entry: "electron/preload.ts",
@@ -39,7 +45,6 @@ export default defineConfig({
         },
       },
     ]),
-    // renderer(),
   ],
   define: {
     global: "window",
