@@ -123,14 +123,14 @@ onMounted(() => {
   state.graph = new NetworkGraph(networkGraph);
 
   state.graph.init();
-  state.graph.resizeObserver.observe(state.graph.selector.node().parentNode);
+  const ref = state.graph.selector.node().parentNode;
+  state.graph.resizeObserver.observe(ref);
 
   window.addEventListener("darkmode", () => state.graph.render());
 });
 
 onBeforeMount(() => {
   state.graph.resizeObserver.disconnect();
-
   window.removeEventListener("darkmode", () => state.graph.render());
 });
 </script>
