@@ -1,7 +1,16 @@
-// activityChartGraph.ts - 23 anys
+// activityChartGraph.ts
 
+import { UnwrapRef, reactive } from "vue";
 import {
+  Config,
+  Data,
+  DownloadImgopts,
   Icons,
+  Layout,
+  // @ts-ignore
+  Partial,
+  Root,
+  RootOrData,
   downloadImage,
   newPlot,
   react,
@@ -10,12 +19,12 @@ import {
 } from "plotly.js-dist-min";
 
 import { darkMode } from "@/utils/theme";
+import { debounce } from "@/utils/events";
 
 import {
   ActivityChartPanel,
   ActivityChartPanelProps,
 } from "./activityChart/activityChartPanel";
-import { ActivityChartPanelModel } from "./activityChart/activityChartPanelModel";
 import { AnalogSignalHistogramModel } from "./activityChart/activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChart/activityChartPanelModels/analogSignalPlotModel";
 import { CVISIHistogramModel } from "./activityChart/activityChartPanelModels/CVISIHistogramModel";
@@ -27,95 +36,104 @@ import { SenderSpikeCountPlotModel } from "./activityChart/activityChartPanelMod
 import { SpikeCountPlotModel } from "./activityChart/activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChart/activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChart/activityChartPanelModels/spikeTimesRasterPlotModel";
-import { debounce } from "@/utils/events";
+
+export interface ActivityChartPanelModelProps {
+  activityType: string;
+  component: Object;
+  id: string;
+  icon: string;
+  label: string;
+}
+
+interface ActivityChartGraphState {
+  dialog: Boolean;
+  gd?: RootOrData;
+  ref?: Root;
+}
+
+const models: ActivityChartPanelModelProps[] = [
+  {
+    activityType: "analog",
+    component: AnalogSignalPlotModel,
+    id: "analogSignalPlot",
+    icon: "mdi-chart-bell-curve-cumulative",
+    label: "Analog signals",
+  },
+  {
+    activityType: "analog",
+    component: AnalogSignalHistogramModel,
+    id: "analogSignalHistogram",
+    icon: "mdi-chart-bar",
+    label: "analog signals",
+  },
+  {
+    activityType: "spike",
+    component: SpikeTimesRasterPlotModel,
+    id: "spikeTimesRasterPlot",
+    icon: "mdi-chart-scatter-plot",
+    label: "Spike times",
+  },
+  {
+    activityType: "spike",
+    component: SpikeTimesHistogramModel,
+    id: "spikeTimesHistogram",
+    icon: "mdi-chart-bar",
+    label: "Spike times",
+  },
+  {
+    activityType: "spike",
+    component: SpikeCountPlotModel,
+    id: "spikeCountPlot",
+    icon: "mdi-chart-bell-curve-cumulative",
+    label: "Spike count",
+  },
+  {
+    activityType: "spike",
+    component: InterSpikeIntervalHistogramModel,
+    id: "interSpikeIntervalHistogram",
+    icon: "mdi-chart-bar",
+    label: "Inter-spike interval",
+  },
+  {
+    activityType: "spike",
+    component: CVISIHistogramModel,
+    id: "CVISIHistogram",
+    icon: "mdi-chart-bar",
+    label: "CV of ISI",
+  },
+  {
+    activityType: "spike",
+    component: SenderSpikeCountPlotModel,
+    id: "senderSpikeCountPlot",
+    icon: "mdi-chart-bell-curve-cumulative",
+    label: "Spike count in each sender",
+  },
+  {
+    activityType: "spike",
+    component: SenderMeanISIPlotModel,
+    id: "senderMeanISIPlot",
+    icon: "mdi-chart-bell-curve-cumulative",
+    label: "Mean ISI in each sender",
+  },
+  {
+    activityType: "spike",
+    component: SenderCVISIPlotModel,
+    id: "senderCVISIPlot",
+    icon: "mdi-chart-bell-curve-cumulative",
+    label: "CV ISI in each sender",
+  },
+];
 
 export class ActivityChartGraph {
-  private _config: any = {};
-  private _data: any[] = [];
-  private _imageButtonOptions: any;
-  private _layout: any = {};
-  private _models: any[] = [
-    {
-      activityType: "analog",
-      component: AnalogSignalPlotModel,
-      id: "analogSignalPlot",
-      icon: "mdi-chart-bell-curve-cumulative",
-      label: "Analog signals",
-    },
-    {
-      activityType: "analog",
-      component: AnalogSignalHistogramModel,
-      id: "analogSignalHistogram",
-      icon: "mdi-chart-bar",
-      label: "analog signals",
-    },
-    {
-      activityType: "spike",
-      component: SpikeTimesRasterPlotModel,
-      id: "spikeTimesRasterPlot",
-      icon: "mdi-chart-scatter-plot",
-      label: "Spike times",
-    },
-    {
-      activityType: "spike",
-      component: SpikeTimesHistogramModel,
-      id: "spikeTimesHistogram",
-      icon: "mdi-chart-bar",
-      label: "Spike times",
-    },
-    {
-      activityType: "spike",
-      component: SpikeCountPlotModel,
-      id: "spikeCountPlot",
-      icon: "mdi-chart-bell-curve-cumulative",
-      label: "Spike count",
-    },
-    {
-      activityType: "spike",
-      component: InterSpikeIntervalHistogramModel,
-      id: "interSpikeIntervalHistogram",
-      icon: "mdi-chart-bar",
-      label: "Inter-spike interval",
-    },
-    {
-      activityType: "spike",
-      component: CVISIHistogramModel,
-      id: "CVISIHistogram",
-      icon: "mdi-chart-bar",
-      label: "CV of ISI",
-    },
-    {
-      activityType: "spike",
-      component: SenderSpikeCountPlotModel,
-      id: "senderSpikeCountPlot",
-      icon: "mdi-chart-bell-curve-cumulative",
-      label: "Spike count in each sender",
-    },
-    {
-      activityType: "spike",
-      component: SenderMeanISIPlotModel,
-      id: "senderMeanISIPlot",
-      icon: "mdi-chart-bell-curve-cumulative",
-      label: "Mean ISI in each sender",
-    },
-    {
-      activityType: "spike",
-      component: SenderCVISIPlotModel,
-      id: "senderCVISIPlot",
-      icon: "mdi-chart-bell-curve-cumulative",
-      label: "CV ISI in each sender",
-    },
-  ];
-  private _options: any = {};
+  private _config: Partial<Config> = {};
+  private _data: Data[] = [];
+  private _layout: Partial<Layout> = {};
+  private _models: ActivityChartPanelModelProps[] = models;
   private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
   private _resizeObserver: ResizeObserver;
-  private _state: any = {
-    dialog: false,
-    gd: undefined,
-    ref: undefined,
-  };
+  private _state: UnwrapRef<ActivityChartGraphState>;
 
   constructor(project: Project, panels: ActivityChartPanelProps[] = []) {
     this._project = project;
@@ -128,9 +146,8 @@ export class ActivityChartGraph {
         [
           {
             name: "Download plot",
-            // @ts-ignore
             icon: Icons.camera,
-            click: (gd: any) => {
+            click: (gd: RootOrData) => {
               this._state.gd = gd;
               this._state.dialog = true;
             },
@@ -162,6 +179,10 @@ export class ActivityChartGraph {
       },
     };
 
+    this._state = reactive({
+      dialog: false,
+    });
+
     this._panel = new ActivityChartPanel(this);
     this.init(panels);
 
@@ -172,7 +193,7 @@ export class ActivityChartGraph {
     );
   }
 
-  get data(): any[] {
+  get data(): Data[] {
     return this._data;
   }
 
@@ -187,35 +208,27 @@ export class ActivityChartGraph {
     return this._project.simulation.state.biologicalTime;
   }
 
-  get imageButtonOptions(): any {
-    return this._imageButtonOptions;
-  }
-
-  get layout(): any {
+  get layout(): Partial<Layout> {
     return this._layout;
   }
 
-  get models(): ActivityChartPanelModel[] {
+  get models(): ActivityChartPanelModelProps[] {
     return this._models;
   }
 
-  get modelsAnalog(): ActivityChartPanelModel[] {
+  get modelsAnalog(): ActivityChartPanelModelProps[] {
     return this._models.filter(
-      (model: ActivityChartPanelModel) => model.activityType === "analog"
+      (model: ActivityChartPanelModelProps) => model.activityType === "analog"
     );
   }
 
-  get modelsSpike(): ActivityChartPanelModel[] {
+  get modelsSpike(): ActivityChartPanelModelProps[] {
     return this._models.filter(
-      (model: ActivityChartPanelModel) =>
+      (model: ActivityChartPanelModelProps) =>
         model.activityType === "spike" &&
         "source" in model &&
         model.source != "elephant"
     );
-  }
-
-  get options(): any {
-    return this._options;
   }
 
   get panel(): ActivityChartPanel {
@@ -245,21 +258,24 @@ export class ActivityChartGraph {
     return this._resizeObserver;
   }
 
-  get state(): any {
+  get state(): UnwrapRef<ActivityChartGraphState> {
     return this._state;
   }
 
   /**
    * Add panel.
    */
-  addPanel(panel: any = { model: "spikeTimesRasterPlot" }): void {
+  addPanel(
+    // @ts-ignore
+    panel: ActivityChartPanelProps = { model: "spikeTimesRasterPlot" }
+  ): void {
     this._panels.push(new ActivityChartPanel(this, panel));
   }
 
   /**
    * Download image of the activity chart graph.
    */
-  downloadImage(options: any): void {
+  downloadImage(options: DownloadImgopts): void {
     if (this._state.gd == null) return;
     downloadImage(this._state.gd, options);
   }
@@ -272,10 +288,10 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Gather data for the chart graph
+   * Gather data for the chart graph.
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: any) => {
+    panel.model.data.forEach((data: Partial<Data>) => {
       data.dataIdx = this._data.length;
       data.panelIdx = panel.idx;
       data.xaxis = "x" + panel.xaxis;
@@ -287,12 +303,12 @@ export class ActivityChartGraph {
   /**
    * Initialize network chart graph.
    */
-  init(panels: any[] = []): void {
+  init(panels: ActivityChartPanelProps[] = []): void {
     this._project.activities.checkActivities();
 
     this._panels = [];
     if (panels.length > 0) {
-      panels.forEach((panel: any) => this.addPanel(panel));
+      panels.forEach((panel: ActivityChartPanelProps) => this.addPanel(panel));
     } else {
       if (this._project.activities.state.hasSomeAnalogRecorders) {
         this.addPanel({ model: { id: "analogSignalPlot" } });
@@ -312,10 +328,13 @@ export class ActivityChartGraph {
    * Initialize Plotly events.
    */
   initEvents(): void {
+    if (!this._state.ref) return;
+
+    // @ts-ignore
     this._state.ref.on("plotly_legendclick", (plot: any) => {
       setTimeout(() => {
-        if (plot != null && plot.data != null) {
-          plot.data.forEach((d: any) => {
+        if (plot && plot.data) {
+          plot.data.forEach((d: Partial<Data>) => {
             const panel = this._panels[d.panelIdx];
             if (d.id === "threshold") {
               panel.model.state.visibleThreshold = d.visible;
@@ -338,8 +357,9 @@ export class ActivityChartGraph {
   /**
    * Create new Plot of the DOM reference.
    */
-  newPlot(ref: string): void {
+  newPlot(ref: Root): void {
     this._state.ref = ref;
+
     newPlot(this._state.ref, this._data, this._layout, this._config).then(
       () => {
         this.initEvents();
@@ -351,15 +371,19 @@ export class ActivityChartGraph {
    * React plots to new updates.
    */
   react(): void {
-    if (this._state.ref == null) return;
+    if (!this._state.ref) return;
+
     react(this._state.ref, this._data, this._layout);
   }
 
   relayout(): void {
+    if (!this._state.ref) return;
+
     const dark = darkMode();
     this._layout.font.color = dark ? "white" : "#121212";
     this._layout.paper_bgcolor = dark ? "#121212" : "white";
     this._layout.plot_bgcolor = dark ? "#121212" : "white";
+
     relayout(this._state.ref, this._layout);
   }
 
@@ -375,7 +399,8 @@ export class ActivityChartGraph {
    * Restyle plots with new updates.
    */
   restyle(): void {
-    if (this._state.ref == null) return;
+    if (!this._state.ref) return;
+
     if (this.project.activities.state.hasSomeSpikeRecorders) {
       this.restyleMarkerHeightSpikeTimesRasterPlot();
     }
@@ -385,19 +410,23 @@ export class ActivityChartGraph {
    * Restyle marker height of spike times raster plot
    */
   restyleMarkerHeightSpikeTimesRasterPlot() {
+    if (!this._state.ref) return;
+
     const dataSpikeTimeRasterPlot = this._data.filter(
-      (d: any) => d.modelId === "spikeTimesRasterPlot"
+      (d: Partial<Data>) => d.modelId === "spikeTimesRasterPlot"
     );
 
     const markerSizes = dataSpikeTimeRasterPlot.map(
       // @ts-ignore
-      (d: any) => this._panels[d.panelIdx].model.markerSize
+      (d: Partial<Data>) => this._panels[d.panelIdx].model.markerSize
     );
     const update = {
       "marker.size": markerSizes,
     };
 
-    const dataIndices = dataSpikeTimeRasterPlot.map((d: any) => d.dataIdx);
+    const dataIndices = dataSpikeTimeRasterPlot.map(
+      (d: Partial<Data>) => d.dataIdx
+    );
 
     restyle(this._state.ref, update, dataIndices);
   }
@@ -417,7 +446,7 @@ export class ActivityChartGraph {
    * It required network activities.
    */
   update(): void {
-    console.log("Update activity chart graph");
+    // console.log("Update activity chart graph");
     this.empty();
 
     this.updateVisiblePanelsLayout();

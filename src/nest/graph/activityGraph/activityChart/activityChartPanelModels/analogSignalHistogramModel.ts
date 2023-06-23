@@ -1,8 +1,7 @@
 // analogSignalHistogramModel.ts
 
-import { max, min } from "d3";
-
 import { darkMode } from "@/utils/theme";
+import { max, min } from "@/utils/array";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import {

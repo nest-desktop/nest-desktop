@@ -1,6 +1,7 @@
 // activityChartPanelModel.ts - 20 anys
 
 import { reactive, UnwrapRef } from "vue";
+import { Data } from "plotly.js-dist-min";
 
 import { Activity } from "@nest/core/activity/activity";
 import { ActivityChartPanel } from "./activityChartPanel";
@@ -16,7 +17,7 @@ export interface ActivityChartPanelModelProps {
 export abstract class ActivityChartPanelModel {
   private _activities: Activity[] = [];
   private _activityType: string = "";
-  private _data: any[] = [];
+  private _data: Data[] = [];
   private _icon: string = "";
   private _id: string = "";
   private _label: string = "";

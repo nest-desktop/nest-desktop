@@ -1,14 +1,20 @@
 // spikeTimesRasterPlotModel.ts
 
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeActivity } from '@nest/core/activity/spikeActivity';
-import { SpikeTimesPanelModel, SpikeTimesPanelModelProps } from './spikeTimesPanelModel';
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { SpikeActivity } from "@nest/core/activity/spikeActivity";
+import {
+  SpikeTimesPanelModel,
+  SpikeTimesPanelModelProps,
+} from "./spikeTimesPanelModel";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: SpikeTimesPanelModelProps = {}) {
+  constructor(
+    panel: ActivityChartPanel,
+    model: SpikeTimesPanelModelProps = {}
+  ) {
     super(panel, model);
-    this.icon = 'mdi-chart-scatter-plot';
-    this.id = 'spikeTimesRasterPlot';
+    this.icon = "mdi-chart-scatter-plot";
+    this.id = "spikeTimesRasterPlot";
     this.panel.height = 30;
     this.panel.xaxis = 1;
     this.state.height = 5;
@@ -44,21 +50,21 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      hoverinfo: 'x',
-      legendgroup: 'spikes' + activity.idx,
+      hoverinfo: "x",
+      legendgroup: "spikes" + activity.idx,
       marker: {
         line: {
           color: activity.recorder.view.color,
           width: 2,
         },
         size: 5,
-        symbol: 'line-ns',
+        symbol: "line-ns",
       },
-      mode: 'markers',
+      mode: "markers",
       modelId: this.id,
-      name: 'Spikes of ' + activity.recorder.view.label,
+      name: "Spikes of " + activity.recorder.view.label,
       showlegend: true,
-      type: 'scattergl',
+      type: plotType,
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,
@@ -69,7 +75,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * Update layout label for raster plot.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = 'Time [ms]';
-    this.panel.layout.yaxis.title = 'Neuron ID';
+    this.panel.layout.xaxis.title = "Time [ms]";
+    this.panel.layout.yaxis.title = "Neuron ID";
   }
 }

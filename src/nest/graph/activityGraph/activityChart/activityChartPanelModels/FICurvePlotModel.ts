@@ -1,15 +1,15 @@
 // FICurvePlotModel.ts
 
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeActivity } from '@nest/core/activity/spikeActivity';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { SpikeActivity } from "@nest/core/activity/spikeActivity";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bell-curve-cumulative';
-    this.id = 'FICurvePlot';
-    this.label = 'F-I curve';
+    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.id = "FICurvePlot";
+    this.label = "F-I curve";
     this.panel.height = 30;
     this.panel.xaxis = 5;
   }
@@ -22,16 +22,16 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      hoverinfo: 'none',
-      legendgroup: 'spikes' + activity.idx,
+      hoverinfo: "none",
+      legendgroup: "spikes" + activity.idx,
       marker: {
         size: 5,
         color: activity.recorder.view.color,
       },
-      mode: 'lines',
-      name: 'Spikes of ' + activity.recorder.view.label,
+      mode: "lines",
+      name: "Spikes of " + activity.recorder.view.label,
       showlegend: true,
-      type: 'scattergl',
+      type: plotType,
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,
@@ -42,7 +42,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * Update layout label for FI curve.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = 'Neuron ID';
-    this.panel.layout.yaxis.title = 'Spike count';
+    this.panel.layout.xaxis.title = "Neuron ID";
+    this.panel.layout.yaxis.title = "Spike count";
   }
 }

@@ -1,9 +1,8 @@
 // spikeCountPlotModel.ts
 
-import { deviation, max, mean, min } from "d3";
-import { sum } from "mathjs";
+import { sum, deviation, max, mean, min } from "@/utils/array";
 
-import { ActivityChartPanel } from "../activityChartPanel";
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
@@ -179,7 +178,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       mode: "lines",
       showlegend: false,
-      type: "scattergl",
+      type: plotType,
       visible: this.state.visible,
       x,
       y,
@@ -197,7 +196,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         },
         mode: "lines",
         showlegend: false,
-        type: "scattergl",
+        type: plotType,
         visible: this.state.visible,
         x: [start, end],
         y: [0.63, 0.63],

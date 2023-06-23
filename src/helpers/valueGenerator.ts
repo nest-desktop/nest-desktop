@@ -1,7 +1,7 @@
 // valueGenerator.ts
 
 import { fill, linspace, range } from "@/utils/array";
-import { randomUniformInt, randomUniformFloat, randomNormal } from "@/utils/random";
+import { randomUniformIntArray, randomUniformFloatArray, randomNormalArray } from "@/utils/random";
 
 export class ValueGenerator {
   private _inputs: any = {
@@ -115,14 +115,14 @@ export class ValueGenerator {
         );
         break;
       case "randomUniformInt":
-        array = randomUniformInt(
+        array = randomUniformIntArray(
           parseFloat(p.min),
           parseFloat(p.max),
           parseInt(p.size, 0)
         );
         break;
       case "randomUniformFloat":
-        array = randomUniformFloat(
+        array = randomUniformFloatArray(
           parseFloat(p.min),
           parseFloat(p.max),
           parseInt(p.size, 0)
@@ -132,7 +132,7 @@ export class ValueGenerator {
         );
         break;
       case "randomNormal":
-        array = randomNormal(
+        array = randomNormalArray(
           parseFloat(p.mu),
           parseFloat(p.sigma),
           parseInt(p.size, 0)

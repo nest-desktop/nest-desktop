@@ -1,6 +1,7 @@
 // freePositions.ts
 
-import { random } from "mathjs";
+import { randomUniformFloat } from "@/utils/random";
+import { round } from "@/utils/converter";
 
 import { NodeSpatial } from "./nodeSpatial";
 
@@ -87,13 +88,6 @@ export class FreePositions {
   }
 
   /**
-   * Rounds down the value (to two places after the comma).
-   */
-  round(value: number): number {
-    return Math.floor(value * 100) / 100;
-  }
-
-  /**
    * Generate positions.
    */
   generate(): void {
@@ -105,12 +99,12 @@ export class FreePositions {
     const maxZ: number = this._extent[2] / 2;
 
     this._pos = Array.from({ length: this._spatial.node.size }, () => {
-      const x: number = random(minX, maxX);
-      const y: number = random(minY, maxY);
-      const pos: number[] = [this.round(x), this.round(y)];
+      const x: number = randomUniformFloat(minX, maxX);
+      const y: number = randomUniformFloat(minY, maxY);
+      const pos: number[] = [round(x), round(y)];
       if (this._numDimensions === 3) {
-        const z: number = random(minZ, maxZ);
-        pos.push(this.round(z));
+        const z: number = randomUniformFloat(minZ, maxZ);
+        pos.push(round(z));
       }
       return pos;
     });

@@ -39,10 +39,24 @@ export function linspace(start: number, end: number, size: number): number[] {
 }
 
 /**
+ * Get max value.
+ */
+export function max(values: number[]): number {
+  return d3.max(values) as number;
+}
+
+/**
  * Get mean of values.
  */
 export function mean(values: number[]): number {
   return d3.mean(values) as number;
+}
+
+/**
+ * Get min value.
+ */
+export function min(values: number[]): number {
+  return d3.min(values) as number;
 }
 
 /**
@@ -66,7 +80,6 @@ export function onlyUnique(
 /**
  * Create an array of ranged values with value steps.
  */
-
 export function range(start: number, end?: number, step?: number): number[] {
   if (!end) {
     return Array.from({ length: start }, (_, index: number) => index);
@@ -83,6 +96,9 @@ export function range(start: number, end?: number, step?: number): number[] {
   }
 }
 
+/**
+ * Get summed value of array.
+ */
 export function sum(values: number[]): number {
   return d3.sum(values);
 }

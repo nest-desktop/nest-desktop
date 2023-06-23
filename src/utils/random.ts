@@ -11,9 +11,16 @@ export function randomInt(min: number, max: number): number {
 }
 
 /**
+ * Get an integer value based on an uniform distribution.
+ */
+export function randomUniformInt(start: number, end: number): number {
+  return randomInt(start, end);
+}
+
+/**
  * Create an uniform distributed array of integer values.
  */
-export function randomUniformInt(
+export function randomUniformIntArray(
   start: number,
   end: number,
   size: number
@@ -22,9 +29,16 @@ export function randomUniformInt(
 }
 
 /**
+ * Get a float value based on an uniform distribution.
+ */
+export function randomUniformFloat(min: number, max: number): number {
+  return d3.randomUniform(min, max)();
+}
+
+/**
  * Create an uniform distributed array of float values.
  */
-export function randomUniformFloat(
+export function randomUniformFloatArray(
   min: number,
   max: number,
   size: number
@@ -33,9 +47,16 @@ export function randomUniformFloat(
 }
 
 /**
- * Create an normal distributed array of float values.
+ * Get a value based on a normal distribution.
  */
-export function randomNormal(
+export function randomNormal(mu: number, sigma: number): number {
+  return d3.randomNormal(mu, sigma)();
+}
+
+/**
+ * Create a normal distributed array of float values.
+ */
+export function randomNormalArray(
   mu: number,
   sigma: number,
   size: number

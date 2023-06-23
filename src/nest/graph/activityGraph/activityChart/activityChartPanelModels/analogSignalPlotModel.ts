@@ -2,7 +2,7 @@
 
 import { darkMode } from "@/utils/theme";
 
-import { ActivityChartPanel } from "../activityChartPanel";
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 import { Node } from "@nest/core/node/node";
 import { NodeRecord } from "@nest/core/node/nodeRecord";
@@ -67,7 +67,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         opacity: 0.5,
         recordId: record.id,
         showlegend: false,
-        type: "scattergl",
+        type: plotType,
         visible: this.state.visible,
         x: [0.1, record.activity.currenttime],
         y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
@@ -98,7 +98,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       name: record.id + " of " + record.nodeLabel,
       recordId: record.id,
       showlegend: true,
-      type: "scattergl",
+      type: plotType,
       visible: this.state.visible,
       x: record.times,
       y: record.values,
@@ -135,7 +135,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         opacity: idx === 0 ? 0.5 : 0.3,
         recordId: record.id,
         showlegend: idx === 0,
-        type: "scattergl",
+        type: plotType,
         visible: this.state.visible,
         x: d.x,
         y: d.y,
@@ -180,7 +180,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       opacity: 0.7,
       recordId: record.id,
       showlegend: false,
-      type: "scattergl",
+      type: plotType,
       visible: this.state.visible,
       x,
       y,
@@ -200,7 +200,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       mode: "lines",
       recordId: record.id,
       showlegend: false,
-      type: "scattergl",
+      type: plotType,
       visible: this.state.visible,
       x,
       y,
@@ -226,7 +226,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       opacity: 0.5,
       recordId: record.id,
       showlegend: false,
-      type: "scattergl",
+      type: plotType,
       visible: false,
       x: [],
       y: [],
