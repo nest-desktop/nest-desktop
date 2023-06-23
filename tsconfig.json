@@ -5,7 +5,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
 
     /* Bundler mode */
