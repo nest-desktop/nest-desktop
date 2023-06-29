@@ -16,7 +16,7 @@ import synapseExcitatoryIcon from "./connections/SynapseExcitatoryIcon.vue";
 import synapseInhibitoryIcon from "./connections/SynapseInhibitoryIcon.vue";
 
 const customSvgNameToComponent: any = {
-  "neuron-default": neuronIcon,
+  "neuron": neuronIcon,
   "neuron-excitatory": neuronExcitatoryIcon,
   "neuron-inhibitory": neuronInhibitoryIcon,
   "synapse-excitatory": synapseExcitatoryIcon,

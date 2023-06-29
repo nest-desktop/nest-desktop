@@ -64,8 +64,6 @@ const init = () => {
     ref.on("plotly_resize", () => {
       state.graph.restyle();
     });
-
-    state.graph.resizeObserver.observe(ref);
   }
 };
 
@@ -93,7 +91,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   closeDialog();
-  state.graph.resizeObserver.disconnect();
   window.removeEventListener("darkmode", () => state.graph.relayout());
 });
 

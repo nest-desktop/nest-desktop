@@ -254,7 +254,7 @@ export class Parameter extends Config {
   /**
    * Updates when parameter is changed.
    */
-  paramChanges(): void {}
+  changes(): void {}
 
   /**
    * Reset value taken from options.
@@ -283,7 +283,7 @@ export class Parameter extends Config {
 
   toggleDisabled(): void {
     this._state.disabled = !this._state.disabled;
-    this.paramChanges();
+    this.changes();
   }
 
   /**

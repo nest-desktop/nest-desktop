@@ -2,6 +2,7 @@
 
 import { Selection, select } from "d3";
 import { darkMode } from "@/utils/theme";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";
@@ -10,6 +11,8 @@ function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;
   return [Math.cos(radian) * radius, y0 - Math.sin(radian) * radius];
 }
+
+const logger = mainLogger.getSubLogger({ name: "node graph shape" });
 
 function getHexagonPoints(radius: number): string {
   const a: number = radius * 0.9;
@@ -109,6 +112,7 @@ export class NodeGraphShape {
   }
 
   drawShape(selector: Selection<any, any, any, any>, node: Node): void {
+    logger.trace("draw shape");
     selector.attr("elementType", node.model.elementType);
     selector.attr("weight", node.view.weight);
 
@@ -124,7 +128,14 @@ export class NodeGraphShape {
         .attr("points", (n: Node) => nodePoints(n, this.nodeRadius));
     }
 
-    elem.append("text");
+    elem
+      .append("text")
+      .attr("class", "text-button")
+      .style("font-family", "Roboto")
+      .style("font-size", "0.7em", "important")
+      .style("font-weight", "900")
+      .style("pointer-events", "none")
+      .style("text-anchor", "middle");
   }
 
   /**
@@ -138,36 +149,34 @@ export class NodeGraphShape {
     this.drawShape(selector, node);
 
     elem.on("click", (e: MouseEvent) => {
-      // console.log("Node click");
-      const networkState = this._networkGraph.network.state;
-      const workspaceState = this._networkGraph.workspace.state;
-      node.state.focus();
+      const nodes = this._networkGraph.network.nodes;
 
-      if (networkState.selectedNode && workspaceState.enableConnection) {
+      if (
+        nodes.state.selectedNode &&
+        this._networkGraph.workspace.state.dragLine
+      ) {
         // Set cursor position of the focused node.
         this._networkGraph.workspace.updateCursorPosition(node.view.position);
 
         this._networkGraph.workspace.animationOff();
         this._networkGraph.network.connectNodes(
-          networkState.selectedNode,
+          nodes.state.selectedNode as Node,
           node
         );
+        this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {
+          nodes.unselectNode();
           this._networkGraph.workspace.reset();
-          networkState.resetSelection();
           this._networkGraph.workspace.update();
         }
       } else if (this._networkGraph.workspace.altPressed) {
-        node.state.select(true);
+        node.state.select();
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
       } else {
         node.state.select();
       }
-
-      this._networkGraph.update();
-      this._networkGraph.workspace.updateTransform();
     });
 
     elem.transition().style("opacity", 1);
@@ -177,12 +186,13 @@ export class NodeGraphShape {
    * Render all node shapes.
    */
   render(): void {
+    logger.trace("render");
     const nodes = select("g#nodes").selectAll("g.node");
     nodes.style("pointer-events", () =>
-      this._networkGraph.network.state.isNodeSourceSelected ||
-      !this._networkGraph.workspace.state.enableConnection
-        ? ""
-        : "none"
+      this._networkGraph.network.nodes.isWeightRecorderSelected &&
+      this._networkGraph.workspace.state.dragLine
+        ? "none"
+        : ""
     );
 
     // Check if neuron has to change its shape.
@@ -200,6 +210,7 @@ export class NodeGraphShape {
       elem
         .select(".shape")
         .style("stroke", "currentcolor")
+        .attr("stroke-linecap", "round")
         .style("fill", this.bgcolor)
         .style(
           "stroke-width",
@@ -209,16 +220,11 @@ export class NodeGraphShape {
 
       elem
         .select("text")
-        .attr("class", "text-button")
         .attr("dy", node.isInhibitoryNeuron ? "0.4em" : "0.8em")
         .style(
           "fill",
-          darkMode() ? "rgba(255, 255, 255, 0.7)" : "rgba(0,0,0,0.6)"
+          darkMode() ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"
         )
-        .style("font-family", "Roboto")
-        .style("text-anchor", "middle")
-        .style("font-size", "0.7em", "important")
-        .style("font-weight", "900")
         .text(node.view.label);
     });
   }

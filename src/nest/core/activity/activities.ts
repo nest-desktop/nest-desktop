@@ -1,12 +1,16 @@
 // activities.ts
 
+import { ILogObj, Logger } from "tslog";
+import { UnwrapRef, reactive } from "vue";
+import { sha1 } from "object-hash";
+
+import { logger as mainLogger } from "@/utils/logger";
+
 import { Activity } from "./activity";
 import { Node } from "../node/node";
 import { Project } from "../project/project";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { SpikeActivity } from "./spikeActivity";
-import { UnwrapRef, reactive } from "vue";
-import { sha1 } from "object-hash";
 
 interface ActivitiesState {
   hasSomeAnalogRecorders: boolean;
@@ -18,6 +22,7 @@ interface ActivitiesState {
 
 export class Activities {
   private _project: Project;
+  private _logger: Logger<ILogObj>;
   private _state: UnwrapRef<ActivitiesState>;
 
   constructor(project: Project) {
@@ -29,21 +34,31 @@ export class Activities {
       hasSomeSpikeRecorders: false,
       hash: "",
     });
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._project.shortId}] activities`,
+    });
   }
 
   /**
    * Get a list of activities.
    */
   get all(): Activity[] {
-    console.debug("Get activities");
+    this._logger.trace("all");
+    // @ts-ignore
     const activities: Activity[] = this._project.network
       ? this._project.network.nodes.recorders.map(
           (recorder: Node) => recorder.activity
         )
-      : [];
-    activities.forEach((activity: Activity, idx: number) => {
-      activity.idx = idx;
-    });
+      : ([] as Activity[]);
+
+    if (activities) {
+      activities.forEach((activity: Activity, idx: number) => {
+        if (activity) {
+          activity.idx = idx;
+        }
+      });
+    }
     return activities;
   }
 
@@ -99,12 +114,19 @@ export class Activities {
     return this._state;
   }
 
+  /**
+   * Observer for activities changes.
+   *
+   * @remarks
+   * It checks activities.
+   * It updates hash.
+   * It updates activity graph.
+   */
   changes(): void {
-    console.log('Changes in activities');
     // Check if project has activities.
     this.checkActivities();
-
     this.updateHash();
+    this._logger.trace("changes");
 
     // Update activity graph.
     this._project.activityGraph.update();
@@ -168,7 +190,7 @@ export class Activities {
    * Update activities in recorder nodes after simulation.
    */
   update(data: any): void {
-    console.log('Update activities');
+    this._logger.trace("update");
     let activities: any[] = [];
 
     if (data.events) {
@@ -182,7 +204,7 @@ export class Activities {
     }
 
     activities.forEach((activity: any) => {
-      if (!(activity.nodeIds)) {
+      if (!activity.nodeIds) {
         if (activity.events && activity.events.ports) {
           activity.nodeIds = activity.events.ports.filter(
             (value: number, index: number, self: number[]) =>
@@ -214,16 +236,17 @@ export class Activities {
 
     // Trigger activity changes.
     this.changes();
-
   }
 
   /**
    * Update hash for activity graph.
    */
   updateHash(): void {
-    const activitiesHash = this._project.activities.all.map(
-      (activity: Activity) => activity.hash
-    );
-    this._state.hash = sha1({ activitiesHash });
+    this._state.hash = sha1({
+      activities: this._project.activities.all.map(
+        (activity: Activity) => activity.state.hash
+      ),
+    }).slice(0, 6);
+    this._logger.settings.name = `[${this._project.shortId}] activities #${this._state.hash}`;
   }
 }

@@ -1,14 +1,19 @@
 // model.ts
 
+import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import { Config } from "@/helpers/config";
 
-import { ModelCompartmentalParameterProps, ModelCompartmentParameter } from "./modelCompartmentParameter";
+import { Config } from "@/helpers/config";
+import { logger as mainLogger } from "@/utils/logger";
+
+import {
+  ModelCompartmentalParameterProps,
+  ModelCompartmentParameter,
+} from "./modelCompartmentParameter";
 import { ModelParameter, ModelParameterProps } from "./modelParameter";
 import { ModelReceptor } from "./modelReceptor/modelReceptor";
 import { useModelDBStore } from "@nest/store/model/modelDBStore";
-
 
 export interface ModelProps {
   abbreviation?: string;
@@ -32,6 +37,7 @@ export class Model extends Config {
   private _id: string; // model id
   private _idx: number; // generative
   private _label: string; // model label for view
+  private _logger: Logger<ILogObj>;
   private _params: { [key: string]: ModelParameter } = {}; // model parameters
   private _receptors: { [key: string]: ModelReceptor } = {}; // receptor parameters
   private _recordables: any[] = []; // recordables for multimeter
@@ -44,6 +50,8 @@ export class Model extends Config {
     this._doc = model;
     this._id = model.id || uuidv4();
 
+    this._logger = mainLogger.getSubLogger({ name: `[${this._id}] model` });
+
     this._modelDBStore = useModelDBStore();
     this._idx = this._modelDBStore.models.length;
 
@@ -52,11 +60,11 @@ export class Model extends Config {
     this._label = model.label || "";
     this._abbreviation = model.abbreviation || "";
 
-    this.update(model);
-
     this._state = reactive({
       selected: false,
     });
+
+    this.update(model);
   }
 
   get abbreviation(): string {
@@ -260,7 +268,7 @@ export class Model extends Config {
     return this._modelDBStore.deleteModel(this.docId);
   }
 
-  modelChanges(): void {}
+  changes(): void {}
 
   /**
    * Create new parameter.
@@ -268,6 +276,7 @@ export class Model extends Config {
    * @param value parameter value
    */
   newParameter(paramId: string, value: any): void {
+    this._logger.trace("new parameter:", paramId);
     const param: any = {
       id: paramId,
       label: paramId,
@@ -304,6 +313,7 @@ export class Model extends Config {
    * Save the model object to the database.
    */
   async save(): Promise<any> {
+    this._logger.trace("save");
     return this._modelDBStore.saveModel(this);
   }
 
@@ -312,8 +322,6 @@ export class Model extends Config {
    * @return model object
    */
   toJSON(): ModelProps {
-    console.log(this._params)
-
     const model: any = {
       abbreviation: this._abbreviation,
       elementType: this._elementType,
@@ -354,6 +362,8 @@ export class Model extends Config {
    * @param model model object
    */
   update(model: any): void {
+    this._logger.trace("update");
+
     // Update the model ID.
     this._id = model.id;
 
@@ -383,6 +393,7 @@ export class Model extends Config {
    * @param model model object
    */
   updateParameters(params: ModelParameterProps[]): void {
+    // this._logger.trace("update parameters");
     this._params = {};
     params.forEach((param) => {
       this.addParameter(param);

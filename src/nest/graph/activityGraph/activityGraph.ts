@@ -1,6 +1,8 @@
 // activityGraph.ts
 
+import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { ActivityChartGraph } from "./activityChartGraph";
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
@@ -19,6 +21,7 @@ interface ActivityGraphState {
 export class ActivityGraph {
   private _activityAnimationGraph?: ActivityAnimationGraph;
   private _activityChartGraph?: ActivityChartGraph;
+  private _logger: Logger<ILogObj>;
   private _project: Project;
   private _state: UnwrapRef<ActivityGraphState>;
 
@@ -27,6 +30,10 @@ export class ActivityGraph {
     this._state = reactive({
       codeHash: "",
       dataHash: "",
+    });
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._project.shortId}] activity graph`,
     });
     this.init(activityGraph);
   }
@@ -64,6 +71,7 @@ export class ActivityGraph {
    * Initialize activity graph.
    */
   init(activityGraph: ActivityGraphProps = {}): void {
+    this._logger.trace("Init");
     this.initActivityChartGraph(activityGraph.panels);
     this.initActivityAnimationGraph();
     this.updateHash();
@@ -105,7 +113,7 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    console.log("Update activity graph");
+    console.log(this._project.activities.state.hash, this._state.dataHash);
     if (this._project.activities.state.hash === this._state.dataHash) return;
 
     if (this._activityChartGraph) {
@@ -115,6 +123,7 @@ export class ActivityGraph {
       this._activityAnimationGraph.update();
     }
     this.updateHash();
+    this._logger.trace("Update");
   }
 
   /**
@@ -123,5 +132,6 @@ export class ActivityGraph {
   updateHash(): void {
     this._state.codeHash = this._project.simulation.code.state.hash;
     this._state.dataHash = this._project.activities.state.hash;
+    this._logger.settings.name = `[${this._project.shortId}] activity graph #${this._state.codeHash} #${this._state.dataHash}`;
   }
 }

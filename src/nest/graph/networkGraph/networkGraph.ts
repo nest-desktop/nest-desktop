@@ -1,7 +1,10 @@
 // networkGraph.ts
 
-import { Ref } from "vue";
+import { ILogObj, Logger } from "tslog";
+import { Ref, watch } from "vue";
 import { Selection, select } from "d3";
+
+import { logger as mainLogger } from "@/utils/logger";
 
 import { ConnectionGraph } from "../connectionGraph";
 import { ModelAssignGraph } from "../modelAssignGraph";
@@ -9,7 +12,7 @@ import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { Node } from "@nest/core/node/node";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { debounce } from "@/utils/events";
-import { useProjectStore } from "@nest/store/project/projectStore";
+import { Network } from "@/nest/core/network/network";
 
 export class NetworkGraph {
   private _config: any = {
@@ -18,19 +21,26 @@ export class NetworkGraph {
     transparentWorkspace: true,
   };
   private _connectionGraph: ConnectionGraph;
+  private _logger: Logger<ILogObj>;
   private _modelAssignGraph: ModelAssignGraph;
+  private _network: Network;
   private _nodeGraph: NodeGraph;
-  private _selector: Selection<any, any, any, any>;
+  private _selector?: Selection<any, any, any, any>;
   private _workspace: NetworkGraphWorkspace;
   private _resizeObserver: ResizeObserver;
 
-  constructor(ref: Ref<null>) {
+  constructor(ref: Ref<null>, network: Network) {
     this._selector = select(ref.value);
+    this._network = network;
 
     this._workspace = new NetworkGraphWorkspace(this);
     this._modelAssignGraph = new ModelAssignGraph(this);
     this._connectionGraph = new ConnectionGraph(this);
     this._nodeGraph = new NodeGraph(this);
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._network.project.shortId}] network graph`,
+    });
 
     this._resizeObserver = new ResizeObserver(
       debounce(() => {
@@ -43,9 +53,10 @@ export class NetworkGraph {
     return this._config;
   }
 
-  get network(): any {
-    const projectStore = useProjectStore();
-    return projectStore.project.network;
+  get network(): Network {
+    return this._network;
+    // const projectStore = useProjectStore();
+    // return projectStore.project.network;
   }
 
   get nodeGraph(): NodeGraph {
@@ -56,7 +67,7 @@ export class NetworkGraph {
     return this._resizeObserver;
   }
 
-  get selector(): Selection<any, any, any, any> {
+  get selector(): Selection<any, any, any, any> | undefined {
     return this._selector;
   }
 
@@ -96,7 +107,16 @@ export class NetworkGraph {
    * Initialize network graph.
    */
   init(): void {
+    this._logger.trace("init");
     this._workspace.init();
+    watch(
+      () => [
+        this.network.nodes.state.selectedNode,
+        this.network.nodes.state.focusedNode,
+        this.network.connections.state.focusedConnection,
+      ],
+      () => this.render()
+    );
     this.update();
   }
 
@@ -104,7 +124,7 @@ export class NetworkGraph {
    * Render network graph.
    */
   render(): void {
-    // console.log("Render network graph of " + this._network.project.shortId);
+    this._logger.silly("render");
     this._modelAssignGraph.render();
     this._connectionGraph.render();
     this._nodeGraph.render();
@@ -117,8 +137,7 @@ export class NetworkGraph {
    * This function should be called when the network is changed.
    */
   update(): void {
-    // console.log("Update network graph of " + this._network.project.shortId);
-
+    this._logger.trace("update");
     this._workspace.update();
     this._modelAssignGraph.update();
     this._connectionGraph.update();

@@ -19,9 +19,8 @@ import { createVuetify } from "vuetify";
 // import { md1, md2, md3 } from "vuetify/blueprints";
 
 import { mdi } from "vuetify/iconsets/mdi";
-import { stimulator } from "@/components/iconsets/stimulator";
-
-// @ts-ignore
+import { custom } from "@/components/iconsets/custom";
+import { simulator } from "@/components/iconsets/simulator";
 import { nest } from "@nest/components/iconsets";
 
 const colors = {
@@ -75,6 +74,7 @@ export default createVuetify({
           primary: "#424242",
           secondary: "#EEEEEE",
           systembar: "#424242",
+          accent: "#808080",
         },
       },
       dark: {
@@ -83,6 +83,7 @@ export default createVuetify({
           primary: "#EEEEEE",
           secondary: "#424242",
           systembar: "#424242",
+          accent: "#808080",
         },
       },
     },
@@ -91,8 +92,9 @@ export default createVuetify({
     defaultSet: "mdi",
     sets: {
       mdi,
+      custom,
+      simulator,
       nest,
-      stimulator,
     },
   },
 });

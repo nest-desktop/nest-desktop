@@ -4,24 +4,36 @@
       <v-row no-gutters>
         <div>
           <v-btn icon size="small">
-            <node-avatar v-bind="state.source" />
+            <node-avatar
+              :color="state.connection.source.view.color"
+              :elementType="state.connection.source.model.elementType"
+              :label="state.connection.source.view.label"
+              :weight="state.connection.source.view.weight"
+              size="32px"
+            />
           </v-btn>
           <v-btn
-            :color="state.synSpec.weight > 0 ? 'blue' : 'red'"
+            :color="state.connection.synapse.weight > 0 ? 'blue' : 'red'"
             :icon="`nest:synapse-${
-              state.synSpec.weight > 0 ? 'excitatory' : 'inhibitory'
+              state.connection.synapse.weight > 0 ? 'excitatory' : 'inhibitory'
             }`"
             size="small"
             variant="text"
           />
           <v-btn icon size="small">
-            <node-avatar v-bind="state.target" />
+            <node-avatar
+              :color="state.connection.target.view.color"
+              :elementType="state.connection.target.model.elementType"
+              :label="state.connection.target.view.label"
+              :weight="state.connection.target.view.weight"
+              size="32px"
+            />
           </v-btn>
         </div>
         <v-spacer />
         <div class="d-flex justify-center align-center text-grey">
-          {{ state.connSpec.rule }}
-          {{ state.synSpec.model }}
+          {{ state.connection.params.rule }}
+          {{ state.connection.synapse.modelId }}
         </div>
         <v-spacer />
       </v-row>
@@ -35,18 +47,25 @@
             density="compact"
             label="Connection rule"
             variant="outlined"
-            v-model="state.connSpec.rule"
+            v-model="state.connection.rule"
           />
         </v-card-title>
         <v-card-text>
-          <v-list>
+          <v-list density="compact">
+            <v-list-item
+              :key="index"
+              v-for="(param, index) in state.connection.params"
+            >
+              {{ param.id }}
+            </v-list-item>
             <node-param-editor
-              :color="state.target.color"
-              :options="pOptions"
-              v-if="'p' in state.connSpec"
-              v-model="state.connSpec.p"
+              :color="state.connection.source.color"
+              :options="param.options"
+              v-model="param.value"
+              :key="index"
+              v-for="(param, index) in state.connection.synapse.params"
             />
-            <node-param-editor
+            <!-- <node-param-editor
               :color="state.target.color"
               :options="weightOptions"
               v-model="state.synSpec.weight"
@@ -55,7 +74,7 @@
               :color="state.target.color"
               :options="delayOptions"
               v-model="state.synSpec.delay"
-            />
+            /> -->
           </v-list>
         </v-card-text>
       </v-card>
@@ -68,36 +87,15 @@ import { reactive, onMounted, watch } from "vue";
 
 import NodeAvatar from "../avatar/NodeAvatar.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
+import { Connection } from "@/nest/core/connection/connection";
 
-const props = defineProps(["source", "target", "connSpec", "synSpec"]);
-
-const state = reactive({
-  source: { label: "", color: "", elementType: "", weight: "" },
-  target: { label: "", color: "", elementType: "" },
-  connSpec: { rule: "all_to_all" },
-  synSpec: { model: "static_synapse", weight: 1, delay: 1 },
+const props = defineProps({
+  connection: { type: Connection, required: true },
 });
 
-const pOptions = {
-  label: "connection probability",
-  max: 1,
-  min: 0,
-  step: 0.1,
-};
-
-const weightOptions = {
-  label: "synaptic weight",
-  max: 10,
-  min: -10,
-  step: 0.1,
-};
-
-const delayOptions = {
-  label: "synaptic delay",
-  max: 10,
-  min: 0,
-  step: 0.1,
-};
+const state = reactive({
+  connection: props.connection as Connection,
+});
 
 const rules = [
   { title: "all to all", value: "all_to_all" },
@@ -108,13 +106,10 @@ const rules = [
 ];
 
 const update = () => {
-  state.source = props.source || state.source;
-  state.target = props.target || state.target;
-  state.connSpec = props.connSpec || state.connSpec;
-  state.synSpec = props.synSpec || state.synSpec;
+  state.connection = props.connection as Connection;
 };
 
-watch(() => [props.target], update);
+watch(() => [props.connection], update);
 onMounted(update);
 </script>
 

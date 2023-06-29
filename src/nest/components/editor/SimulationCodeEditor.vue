@@ -1,46 +1,34 @@
 <template>
-  <codemirror
-    :extensions="extensions"
-    ref="codeMirror"
-    style="font-size: 0.75rem; width: 100%"
-    v-model="projectStore.project.simulation.code.script"
-  />
+  <v-toolbar color="transparent" density="compact">
+    <v-btn-toggle class="mx-1" color="blue" multiple rounded="0" variant="text">
+      <icon-btn
+        :icon="item.icon"
+        :key="index"
+        size="x-small"
+        v-for="(item, index) in codeBlocks"
+      >
+        {{ item.title }}
+      </icon-btn>
+    </v-btn-toggle>
+    <v-spacer />
+    <v-btn icon="mdi-download" size="small" />
+    <v-btn icon="mdi-dots-vertical" size="small" />
+  </v-toolbar>
+
+  <Simulation-code-mirror />
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "@nest/store/project/projectStore";
-const projectStore = useProjectStore();
+import SimulationCodeMirror from "./SimulationCodeMirror.vue";
 
-import { tooltips } from "@codemirror/view";
-import { autocompletion } from "@codemirror/autocomplete";
-import { python } from "@codemirror/lang-python";
-// import { oneDark } from "@codemirror/theme-one-dark";
+import IconBtn from "@/components/common/IconBtn.vue";
 
-import { nestCompletions } from "@nest/codemirror/nestCompletion";
-import { nestRandomCompletions } from "@nest/codemirror/nestRandomCompletion";
-import { nestSpatialCompletions } from "@nest/codemirror/nestSpatialCompletion";
-import { nestSpatialDistributionsCompletions } from "@nest/codemirror/nestSpatialDistributionsCompletion";
-
-const extensions = [
-  tooltips({
-    position: "absolute",
-  }),
-  python(),
-  autocompletion({
-    override: [
-      nestCompletions,
-      nestRandomCompletions,
-      nestSpatialCompletions,
-      nestSpatialDistributionsCompletions,
-    ],
-  }),
-  // oneDark,
+const codeBlocks = [
+  { icon: "mdi-delete-empty", title: "reset" },
+  { icon: "mdi-arrow-down", title: "insite" },
+  { icon: "mdi-engine-outline", title: "kernel" },
+  { icon: "mdi-shape", title: "create" },
+  { icon: "nest:network", title: "connect" },
+  { icon: "mdi-play", title: "simulate" },
 ];
 </script>
-
-<style lang="scss">
-.px-1px {
-  padding-left: 1px;
-  padding-right: 1px;
-}
-</style>

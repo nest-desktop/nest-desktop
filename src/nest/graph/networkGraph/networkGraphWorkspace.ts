@@ -1,6 +1,6 @@
 // networkGraphWorkspace.ts
 
-import { Selection, max, mean, min, pointer, select, zoomIdentity } from "d3";
+import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
 
 import { Config } from "@/helpers/config";
 
@@ -29,7 +29,7 @@ export class NetworkGraphWorkspace extends Config {
     connected: false,
     cursorPosition: { x: 0, y: 0 },
     dragging: false,
-    enableConnection: false,
+    dragLine: false,
     keyCode: undefined,
     transforming: false,
     showGrid: false,
@@ -116,25 +116,16 @@ export class NetworkGraphWorkspace extends Config {
       .on("mousemove", (e: MouseEvent) => {
         const position: number[] = pointer(e, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
-        if (this.network) {
-          this.network.state.resetFocus();
-        }
-        if (this._state.enableConnection) {
+        if (this._state.dragLine) {
           this._dragline.update(e);
         }
       })
       .on("click", () => {
-        if (this._state.enableConnection) {
-          this._dragline.hide();
-          this._state.enableConnection = false;
-        } else {
-          if (this.network) {
-            this.network.state.resetSelection();
-          }
+        if (this.network && this.network.nodes.state.selectedNode) {
+          this.network.nodes.unselectNode();
           this.reset();
         }
-        this._networkGraph.update();
-        this._networkGraph.workspace.updateTransform();
+        this.update();
       })
       .on("contextmenu", (e: MouseEvent) => {
         e.preventDefault();
@@ -183,28 +174,20 @@ export class NetworkGraphWorkspace extends Config {
     if (
       this.network == undefined ||
       (!this._state.centerNetwork && !this._state.centerSelected)
-    ) {
+    )
       return;
-    }
 
     const bbox = this._handler.node().getBBox();
 
     let x: number = 0,
       y: number = 0;
 
-    const networkState = this.network.state;
-    if (this._state.centerSelected && networkState.selectedNode) {
-      const nodePosition: any = networkState.selectedNode.view.position;
+    const nodes = this.network.nodes;
+    if (this._state.centerSelected && nodes.state.selectedNode) {
+      const nodePosition: any = nodes.state.selectedNode.view.position;
       x = nodePosition.x;
       y = nodePosition.y;
-    } else if (this._state.centerSelected && networkState.selectedConnection) {
-      const sourcePosition: any =
-        networkState.selectedConnection.source.view.position;
-      const targetPosition: any =
-        networkState.selectedConnection.target.view.position;
-      x = mean([sourcePosition.x, targetPosition.x]) || 0;
-      y = mean([sourcePosition.y, targetPosition.y]) || 0;
-    } else if (this._state.centerNetwork && this.network.nodes.all.length > 0) {
+    } else if (this._state.centerNetwork && nodes.all.length > 0) {
       const networkCenterPos: any = this.centerNetworkPos();
       x = networkCenterPos.x;
       y = networkCenterPos.y;
@@ -275,10 +258,10 @@ export class NetworkGraphWorkspace extends Config {
    */
   animationOff(): void {
     this.state.dragging = true;
-    this._networkGraph.selector.style("pointer-events", "none");
+    this._networkGraph.selector?.style("pointer-events", "none");
     setTimeout(() => {
       this.state.dragging = false;
-      this._networkGraph.selector.style("pointer-events", "");
+      this._networkGraph.selector?.style("pointer-events", "");
     }, 1);
   }
 
@@ -297,9 +280,6 @@ export class NetworkGraphWorkspace extends Config {
   reset(): void {
     this._handler.style("cursor", "default");
     this._nodeAddPanel.close();
-    if (!this.altPressed) {
-      this._dragline.hide();
-      this._state.enableConnection = false;
-    }
+    this._dragline.hide();
   }
 }

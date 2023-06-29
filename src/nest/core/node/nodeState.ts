@@ -6,6 +6,7 @@ import { sha1 } from "object-hash";
 import { Node } from "./node";
 import { NodeParameter } from "./nodeParameter";
 
+
 interface NodeStateState {
   hash: string;
   targetsLength: number;
@@ -34,21 +35,14 @@ export class NodeState {
    * Check if this node is focused.
    */
   get isFocused(): boolean {
-    return this._node.network.state.isNodeFocused(this._node);
-  }
-
-  /**
-   * Check if any node is selected.
-   */
-  get isAnySelected(): boolean {
-    return this._node.network.state.selectedNode != null;
+    return this._node.nodes.state.focusedNode === this._node;
   }
 
   /**
    * Check if this node is selected.
    */
   get isSelected(): boolean {
-    return this._node.network.state.isNodeSelected(this._node, false);
+    return this._node.nodes.state.selectedNode === this._node;
   }
 
   get node(): Node {
@@ -74,25 +68,16 @@ export class NodeState {
   /**
    * Focus this node
    */
-  focus(forced: boolean = false): void {
-    // console.log("Focus node of " + this._node.network.project.shortId);
-    const networkState = this._node.network.state;
-    if (forced) {
-      networkState.resetFocus();
-    }
-    networkState.focusedNode = this._node;
+  focus(): void {
+    this._node.nodes.state.focusedNode = this._node;
   }
 
   /**
    * Select this node
    */
-  select(forced: boolean = false): void {
-    // console.log("Select node of " + this._node.network.project.shortId);
-    const networkState = this._node.network.state;
-    if (forced) {
-      networkState.resetSelection();
-    }
-    networkState.selectedNode = this._node;
+  select(): void {
+    const nodes = this._node.nodes;
+    nodes.state.selectedNode = this.isSelected ? null : this._node;
   }
 
   update(): void {
@@ -110,7 +95,8 @@ export class NodeState {
         param.toJSON()
       ),
       size: this._node.size,
-    });
+    }).slice(0, 6);
+    this._node.logger.settings.name = `[${this._node.nodes.network.project.shortId}] node ${this._node.modelId} #${this._state.hash}`;
   }
 
   updateTargetsLength(): void {

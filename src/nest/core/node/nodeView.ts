@@ -12,7 +12,7 @@ import { Network } from "../network/network";
 import { CopyModels } from "../model/copyModels";
 
 export interface NodeViewProps {
-  position: { [key: string]: number };
+  position: { x: number, y: number };
   color?: string;
   visible?: boolean;
 }
@@ -20,7 +20,7 @@ export interface NodeViewProps {
 interface NodeViewState {
   hash: string;
   color?: string;
-  position: { [key: string]: number };
+  position: { x: number, y: number };
   visible?: boolean;
 }
 
@@ -142,7 +142,7 @@ export class NodeView {
     return this._node.nodes;
   }
 
-  get position(): { [key: string]: number } {
+  get position(): { x: number, y: number } {
     return this._state.position;
   }
 

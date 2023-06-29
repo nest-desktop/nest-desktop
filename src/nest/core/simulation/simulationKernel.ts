@@ -1,8 +1,8 @@
 // simulationKernel.ts
 
-import { Config } from '@/helpers/config';
+import { Config } from "@/helpers/config";
 
-import { Simulation } from './simulation';
+import { Simulation } from "./simulation";
 
 export interface SimulationKernelProps {
   resolution?: number;
@@ -17,7 +17,7 @@ export class SimulationKernel extends Config {
   private _rngSeed: number; // seed for random renerator
 
   constructor(simulation: Simulation, kernel: SimulationKernelProps = {}) {
-    super('SimulationKernel');
+    super("SimulationKernel");
     this._simulation = simulation;
     this._resolution = kernel.resolution || 0.1;
     this._localNumThreads = kernel.localNumThreads || 1;
@@ -30,6 +30,7 @@ export class SimulationKernel extends Config {
 
   set localNumThreads(value: number) {
     this._localNumThreads = value;
+    this._simulation.changes();
   }
 
   get rngSeed(): number {
@@ -38,6 +39,7 @@ export class SimulationKernel extends Config {
 
   set rngSeed(value: number) {
     this._rngSeed = value;
+    this._simulation.changes();
   }
 
   get resolution(): number {
@@ -46,6 +48,7 @@ export class SimulationKernel extends Config {
 
   set resolution(value: number) {
     this._resolution = value;
+    this._simulation.changes();
   }
 
   get simulation(): Simulation {

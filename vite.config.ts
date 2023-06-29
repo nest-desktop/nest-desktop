@@ -34,6 +34,7 @@ export default defineConfig({
           if (process.env["VITE_DEV_ELECTRON_STARTUP"]) {
             options.startup([".", "--no-sandbox"]);
           }
+          // options.startup()
         },
       },
       {

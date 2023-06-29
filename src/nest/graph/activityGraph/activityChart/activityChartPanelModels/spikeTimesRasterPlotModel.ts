@@ -33,8 +33,6 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   get markerSize(): number {
     // console.log('marker size')
     if (!this.panel.graph.state.ref) return 100;
-
-    console.log(this.panel.graph)
     const d = this.panel.graph.layout.yaxis.domain;
     const domain = d[1] - d[0];
     // @ts-ignore

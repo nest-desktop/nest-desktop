@@ -28,8 +28,8 @@
           :value="index"
           v-for="(item, index) in projectsItems"
         >
-          <template v-slot:prepend>
-            <v-icon :icon="item.icon"></v-icon>
+          <template #prepend>
+            <v-icon :icon="item.icon" />
           </template>
 
           <v-list-item-title>{{ item.title }}</v-list-item-title>

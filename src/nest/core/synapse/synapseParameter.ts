@@ -8,11 +8,11 @@ import { Synapse } from "./synapse";
 export interface SynapseParameterProps extends ParameterProps {}
 
 export class SynapseParameter extends Parameter {
-  private _parent: Synapse;
+  private _synapse: Synapse;
 
   constructor(synapse: Synapse, param: SynapseParameterProps) {
     super(param);
-    this._parent = synapse;
+    this._synapse = synapse;
   }
 
   /**
@@ -20,18 +20,18 @@ export class SynapseParameter extends Parameter {
    * when the connection is spatial.
    */
   get isSpatial(): boolean {
-    return this._parent.connection.isBothSpatial;
+    return this._synapse.connection.isBothSpatial;
   }
 
   /**
    * Get model parameter.
    */
   override get modelParam(): ModelParameter {
-    return this.parent.model.params[this.id];
+    return this._synapse.model.params[this.id];
   }
 
-  get parent(): Synapse {
-    return this._parent;
+  get synapse(): Synapse {
+    return this._synapse;
   }
 
   get types(): any[] {
@@ -42,10 +42,13 @@ export class SynapseParameter extends Parameter {
   }
 
   /**
-   * Trigger changes when the parameter is changed.
+   * Observer for parameter changes.
+   *
+   * @remarks
+   * It emits synapse changes.
    */
-  override paramChanges(): void {
-    this._parent.synapseChanges();
+  override changes(): void {
+    this._synapse.changes();
   }
 
   /**

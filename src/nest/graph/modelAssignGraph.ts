@@ -56,7 +56,7 @@ export class ModelAssignGraph {
         this._networkGraph.update();
       })
       .on("mouseout", () => {
-        this._networkGraph.network.state.resetFocus();
+        this._networkGraph.network.nodes.unfocusNode();
         this._networkGraph.update();
       });
   }
@@ -68,6 +68,8 @@ export class ModelAssignGraph {
    * This function should be called when connections in the network are changed.
    */
   update(): void {
+    if (!this._networkGraph.selector) return
+
     const models: Selection<any, any, any, any> = this._networkGraph.selector
       .select("g#modelAssigned")
       .selectAll("g.modelAssigned")

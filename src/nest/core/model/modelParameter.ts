@@ -34,10 +34,13 @@ export class ModelParameter extends Parameter {
   }
 
   /**
-   * Trigger changes when the parameter is changed.
+   * Observer for parameter changes.
+   *
+   * @remarks
+   * It emits model changes.
    */
-  override paramChanges(): void {
-    this.parent.modelChanges();
+  override changes(): void {
+    this._parent.changes();
   }
 
   /**

@@ -9,8 +9,7 @@ export class SpikeActivity extends Activity {
   private _times: number[][] = [];
 
   constructor(recorder: Node, activity: SpikeActivityProps = {}) {
-    super(recorder);
-    this.init(activity);
+    super(recorder, activity);
   }
 
   /**

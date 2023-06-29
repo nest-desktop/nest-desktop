@@ -39,10 +39,13 @@ export class NodeParameter extends Parameter {
   }
 
   /**
-   * Trigger changes when the parameter is changed.
+   * Observer for parameter changes.
+   *
+   * @remarks
+   * It emits node changes.
    */
-  override paramChanges(): void {
-    this.parent.nodeChanges();
+  override changes(): void {
+    this.node.changes();
   }
 
   /**

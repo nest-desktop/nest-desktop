@@ -3,8 +3,12 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
+import { logger as mainLogger } from "@/utils/logger";
+
 import { CopyModel, CopyModelProps } from "./copyModel";
 import { Network } from "../network/network";
+
+const logger = mainLogger.getSubLogger({ name: "copy model" });
 
 interface CopyModelsState {
   hash: string;
@@ -78,7 +82,7 @@ export class CopyModels {
    * @data Data of the model which should be copied and added
    */
   add(data: CopyModelProps): CopyModel {
-    // console.log("Add model");
+    logger.trace("Add model");
     const model = new CopyModel(this._network, data);
     this._models.push(model);
     return model;
@@ -89,7 +93,7 @@ export class CopyModels {
    * @param modelId ID of the model which should be copied adn added
    */
   copy(modelId: string): CopyModel {
-    // console.log("Copy model");
+    logger.trace("Copy model");
     const model: CopyModelProps = {
       existing: modelId,
       new: modelId + "_copied" + (this._models.length + 1),
@@ -105,10 +109,10 @@ export class CopyModels {
   }
 
   /**
-   * Empty model list.
+   * Clear model list.
    *
    */
-  empty(): void {
+  clear(): void {
     this.resetState();
     this._models = [];
   }
@@ -148,7 +152,7 @@ export class CopyModels {
    * Initialize
    */
   init(models: CopyModelProps[] = []): void {
-    this.empty();
+    this.clear();
     this.update(models);
   }
 
@@ -157,8 +161,7 @@ export class CopyModels {
    *
    */
   remove(model: CopyModel): void {
-    // console.log("Delete model");
-
+    logger.trace("Delete model");
     this.resetState();
 
     // Remove model from the model list.
@@ -194,7 +197,7 @@ export class CopyModels {
    * Update hash.
    */
   updateHash(): void {
-    // console.log('Update Hash');
+    logger.trace('Update Hash');
     this._state.hash = sha1({
       models: this._models.map(
         (model: CopyModel) => model.toJSON() //TODO node.state.hash

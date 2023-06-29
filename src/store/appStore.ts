@@ -9,7 +9,7 @@ export const useAppStore = defineStore("app", {
     simulator: {
       id: "nest",
       title: "NEST",
-      icon: "stimulator:nestIcon",
+      icon: "simulator:nest",
       color: "nest",
     },
   }),

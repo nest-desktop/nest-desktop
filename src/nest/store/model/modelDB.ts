@@ -1,6 +1,7 @@
 // modelDB.ts
 
 import { DatabaseService } from "@/helpers/database";
+
 import { Model } from "@nest/core/model/model";
 
 export class ModelDB extends DatabaseService {
@@ -12,7 +13,7 @@ export class ModelDB extends DatabaseService {
    * Add a model to the database.
    */
   async addModel(data: any): Promise<any> {
-    console.log("Add model: " + data.id);
+    this.logger.trace("add model:", data.id);
     const model: Model = new Model(data);
     return this.create(model.toJSON());
   }
@@ -21,7 +22,7 @@ export class ModelDB extends DatabaseService {
    * Add multiple models to database.
    */
   async addModels(data: any[]): Promise<any> {
-    console.debug("Add models");
+    this.logger.trace("add models");
     const models: any[] = data.map(
       (model: any) =>
         new Promise<any>((resolve) => {
@@ -37,7 +38,7 @@ export class ModelDB extends DatabaseService {
    * Delete a model in the database.
    */
   async deleteModel(modelId: string): Promise<any> {
-    console.debug("Delete model: " + modelId);
+    this.logger.trace("delete model:", modelId);
     return this.delete(modelId);
   }
 
@@ -45,7 +46,7 @@ export class ModelDB extends DatabaseService {
    * Import a model to the database.
    */
   async importModel(data: any): Promise<any> {
-    console.debug("Import model: " + data.id);
+    this.logger.trace("import model:", data.id);
     // return this.app.model.hasModel(data.id)
     //   ? this.updateModel(data)
     //   : this.addModel(data);
@@ -59,7 +60,7 @@ export class ModelDB extends DatabaseService {
    * Update a model in the database.
    */
   async updateModel(data: any): Promise<any> {
-    console.info("Update model: " + data.id);
+    this.logger.trace("update model:", data.id);
     // const model: Model = this.app.model.getModel(data.id);
     // model.update(data);
     // return this.update(model);

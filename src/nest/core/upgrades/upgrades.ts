@@ -1,9 +1,14 @@
 // upgrades.ts
 
+import { logger as mainLogger } from "@/utils/logger";
+
+import { ProjectProps } from "../project/project";
 import { upgradeProject_2x_to_30 } from "./upgrade_2x_to_30";
 import { upgradeProject_30_to_31 } from "./upgrade_30_to_31";
 import { upgradeProject_31_to_32 } from "./upgrade_31_to_32";
 import { upgradeProject_32_to_33 } from "./upgrade_32_to_33";
+
+const logger = mainLogger.getSubLogger({ name: "upgrade" });
 
 const VERSION = process.env.APP_VERSION as string | "";
 
@@ -21,7 +26,9 @@ const projectUpgrades = [
  * @returns project
  */
 
-export function upgradeProject(project: any): any {
+export function upgradeProject(project: any): ProjectProps {
+  const projectId = project.id || project._id;
+  logger.trace("upgrade project:", projectId?.slice(0, 6));
   if (Object.keys(project).length === 0) {
     return {};
   }
@@ -40,13 +47,12 @@ export function upgradeProject(project: any): any {
     }
   }
 
-  if (oldVersion != project.version) {
+  if (oldVersion !== project.version) {
     const projectId = project.id;
     if (projectId) {
-      console.log(
-        `Upgrade project (${project.id.slice(0, 6)}): ${oldVersion} -> ${
+      logger.debug(
+        `upgrade project (${project.id.slice(0, 6)}): ${oldVersion} -> ${
           project.version
-
         }`
       );
     }

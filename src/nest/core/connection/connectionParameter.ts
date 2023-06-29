@@ -14,15 +14,16 @@ const PyNNParamIds: { [key: string]: string } = {
 };
 
 export class ConnectionParameter extends Parameter {
-  private _parent: Connection;
+  private _connection: Connection;
 
   constructor(connection: Connection, param: ConnectionParameterProps) {
     super(param);
-    this._parent = connection;
+    this._connection = connection;
   }
 
-  get parent(): Connection {
-    return this._parent as Connection;
+
+  get connection(): Connection {
+    return this._connection as Connection;
   }
 
   /**
@@ -30,7 +31,7 @@ export class ConnectionParameter extends Parameter {
    * when the connection is spatial.
    */
   get isSpatial(): boolean {
-    return this._parent.isBothSpatial;
+    return this._connection.isBothSpatial;
   }
 
   get types(): any[] {
@@ -41,10 +42,13 @@ export class ConnectionParameter extends Parameter {
   }
 
   /**
-   * Trigger changes when parameter is changed.
+   * Observer for parameter changes.
+   *
+   * @remarks
+   * It emits connection changes.
    */
-  override paramChanges(): void {
-    this.parent.connectionChanges();
+  override changes(): void {
+    this.connection.changes();
   }
 
   PyNNParamId(): string {

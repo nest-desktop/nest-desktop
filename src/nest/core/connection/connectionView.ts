@@ -13,6 +13,24 @@ export class ConnectionView {
   }
 
   /**
+   * Calculate the centroid of connected nodes.
+   */
+  get centroidPosition(): { x: number; y: number } {
+    if (this._connection.source === this._connection.target) {
+      return { x: 0, y: 0 };
+    }
+    const source: any = this._connection.source.view.position;
+    const target: any = this._connection.target.view.position;
+    const x1: number = source.x;
+    const y1: number = source.y;
+    const x2: number = target.x;
+    const y2: number = target.y;
+    const dx: number = (x1 + x2) / 2;
+    const dy: number = (y1 + y2) / 2;
+    return { x: dx, y: dy };
+  }
+
+  /**
    * Get connection color based on synapse weight.
    */
   get colorWeight(): string {
@@ -23,13 +41,13 @@ export class ConnectionView {
     return value > 0 ? this._colorExcitation : this._colorInhibition;
   }
 
-  get position(): any {
+  get position(): { x: number; y: number } {
     const p0 = this._connection.source.view.position;
     const p1 = this._connection.target.view.position;
     return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
   }
 
-  get targetPosition(): any {
+  get targetPosition(): { x: number; y: number } {
     const source = this._connection.source.view.position;
     const target = this._connection.target.view.position;
 

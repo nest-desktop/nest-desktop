@@ -56,16 +56,6 @@
         />
       </v-row>
     </template>
-
-    <!-- <v-list nav>
-      <v-list-item
-        :key="index"
-        @click.stop="projectStore.toggle(item)"
-        :prepend-icon="item.icon"
-        :value="item.id"
-        v-for="(item, index) in items"
-      />
-    </v-list> -->
   </v-navigation-drawer>
 
   <v-navigation-drawer
@@ -78,7 +68,26 @@
     permanent
   >
     <div @mousedown="resizeSideController" class="resize-handle left" />
-    <project-controller :key="projectStore.projectId" />
+    <div :key="projectStore.controllerView">
+      <template v-if="projectStore.controllerView === 'network'">
+        <network-param-editor />
+      </template>
+      <template v-else-if="projectStore.controllerView === 'kernel'">
+        <simulation-kernel-editor />
+      </template>
+      <template v-else-if="projectStore.controllerView === 'raw'">
+        <pre>{{ projectStore.project.toJSON() }}</pre>
+      </template>
+      <template v-else-if="projectStore.controllerView === 'code'">
+        <simulation-code-editor />
+      </template>
+      <template v-else-if="projectStore.controllerView === 'activity'">
+        Activity
+      </template>
+      <template v-else-if="projectStore.controllerView === 'stats'">
+        <activity-stats />
+      </template>
+    </div>
   </v-navigation-drawer>
 
   <router-view :key="projectStore.projectId" name="project" />
@@ -90,7 +99,7 @@
     class="d-print-none"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
-    <simulation-code-editor />
+    <simulation-code-mirror />
   </v-bottom-navigation>
 </template>
 
@@ -98,17 +107,21 @@
 import { useNavStore } from "@/store/navStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-import ProjectBar from "./ProjectBar.vue";
-import ProjectController from "./ProjectController.vue";
-import ProjectNav from "./ProjectNav.vue";
+import ActivityStats from "@nest/components/viewer/activityStats/ActivityStats.vue";
+import NetworkParamEditor from "@nest/components/editor/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/editor/SimulationCodeEditor.vue";
+import SimulationCodeMirror from "@nest/components/editor/SimulationCodeMirror.vue";
+import SimulationKernelEditor from "@/nest/components/editor/SimulationKernelEditor.vue";
+
+import ProjectBar from "./ProjectBar.vue";
+import ProjectNav from "./ProjectNav.vue";
 
 const navStore = useNavStore();
 const projectStore = useProjectStore();
 
 /**
  * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
+ * @param e MouseEvent from which the x possition is taken
  */
 const handleSideNavMouseMove = (e: MouseEvent) => {
   navStore.width = e.clientX - 64;
@@ -191,7 +204,6 @@ const resizeSideController = () => {
 };
 
 const dispatchWindowResize = () => {
-  console.log("Dispatch window resize");
   window.dispatchEvent(new Event("resize"));
 };
 </script>

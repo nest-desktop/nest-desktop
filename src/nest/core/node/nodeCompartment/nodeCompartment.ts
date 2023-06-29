@@ -114,7 +114,7 @@ export class NodeCompartment {
 
   set parentIdx(value: number) {
     this._parentIdx = value === this._idx ? -1 : value;
-    this.nodeChanges();
+    this.changes();
   }
 
   get receptors(): NodeReceptor[] {
@@ -153,6 +153,17 @@ export class NodeCompartment {
    */
   addParameter(param: NodeParameterProps): void {
     this._params[param.id] = new NodeCompartmentParameter(this, param);
+  }
+
+  /**
+   * Observer for node compartment changes.
+   *
+   * @remarks
+   * It emits node changes.
+   */
+  changes(): void {
+    this.clean();
+    this._node.changes();
   }
 
   /**
@@ -214,19 +225,10 @@ export class NodeCompartment {
         }
       );
     } else if ("params" in comp) {
-      comp.params.forEach((param: NodeParameterProps) => this.addParameter(param));
+      comp.params.forEach((param: NodeParameterProps) =>
+        this.addParameter(param)
+      );
     }
-  }
-
-  /**
-   * Observer for node compartment changes.
-   *
-   * @remarks
-   * It emits node changes.
-   */
-  nodeChanges(): void {
-    this.clean();
-    this._node.nodeChanges();
   }
 
   /**
@@ -238,7 +240,7 @@ export class NodeCompartment {
   remove(): void {
     this._node.removeCompartment(this);
     this._node.compartments.forEach((comp: NodeCompartment) => comp.clean());
-    this._node.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -251,7 +253,7 @@ export class NodeCompartment {
     Object.values(this._params).forEach((param: NodeCompartmentParameter) =>
       param.reset()
     );
-    this.nodeChanges();
+    this.changes();
   }
 
   /**

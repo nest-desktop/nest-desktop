@@ -25,7 +25,7 @@ export class ConnectionGraph {
    * Drag connection graph by moving its node graphs.
    */
   drag(event: MouseEvent, connection: Connection): void {
-    if (!this.state.enableConnection) {
+    if (!this.state.dragLine) {
       const sourceNode = connection.source;
       sourceNode.view.position.x += event.movementX;
       sourceNode.view.position.y += event.movementY;
@@ -65,36 +65,43 @@ export class ConnectionGraph {
       .style("stroke-width", this.strokeWidth)
       .style("pointer-events", "none");
 
+    // elem
+    //   .append("text")
+    //   .attr(
+    //     "transform",
+    //     `translate(${connection.view.centroidPosition.x},${connection.view.centroidPosition.y})`
+    //   )
+    //   .text(connection.synapse.params.weight.value?.toString() || 1);
+
     elem
       .on("mouseover", (_, c: Connection) => {
         connection.state.focus();
         // Draw line between selected node and focused connection.
         if (
-          c.network.state.selectedNode &&
-          c.network.state.isWeightRecorderSelected &&
-          this.state.enableConnection
+          c.network.nodes.state.selectedNode &&
+          c.network.nodes.isWeightRecorderSelected &&
+          this.state.dragLine
         ) {
           this._networkGraph.workspace.dragline.drawPath(
-            c.network.state.selectedNode.view.position,
-            c.view.targetPosition,
-            { isTargetMouse: true }
+            c.network.nodes.state.selectedNode.view.position,
+            c.view.targetPosition
           );
         }
         this._networkGraph.update();
       })
       .on("mouseout", () => {
-        this._networkGraph.network.state.resetFocus();
+        this._networkGraph.network.connections.unfocusConnection();
         this._networkGraph.update();
       })
       .on("click", () => {
         const network = this._networkGraph.network;
         const workspace = this._networkGraph.workspace;
-        connection.state.focus();
+        connection.source.state.focus();
 
         if (
-          network.state.selectedNode &&
-          network.state.isWeightRecorderSelected &&
-          workspace.state.enableConnection
+          network.nodes.state.selectedNode &&
+          network.nodes.isWeightRecorderSelected &&
+          workspace.state.dragLine
         ) {
           // Set cursor position of the focused connection.
           workspace.updateCursorPosition(connection.view.position);
@@ -119,7 +126,8 @@ export class ConnectionGraph {
             // Assign weight recorder to copied synapse model.
             const WeightRecorderParam = modelCopied.params.weightRecorder; // TODO: Validate!!
             if (WeightRecorderParam) {
-              WeightRecorderParam.value = network.state.selectedNode.view.label;
+              WeightRecorderParam.value =
+                network.nodes.state.selectedNode.view.label;
             }
           }
 
@@ -128,21 +136,13 @@ export class ConnectionGraph {
 
           // Hide all synapse parameters.
           connection.synapse.hideAllParams();
-          connection.synapse.synapseChanges();
+          connection.synapse.changes();
 
           // Update record colors of the weight recorder.
-          network.state.selectedNode.updateRecordsColor();
-
-          // Reset selection and focus.
-          workspace.reset();
-          network.state.resetSelection();
-          workspace.update();
+          network.nodes.state.selectedNode.updateRecordsColor();
         } else {
           connection.state.select();
         }
-
-        this._networkGraph.update();
-        workspace.updateTransform();
       });
   }
 
@@ -152,17 +152,16 @@ export class ConnectionGraph {
   render(): void {
     const selector = select("g#connections").selectAll("g.connection");
     selector.style("pointer-events", () =>
-      this._networkGraph.network.state.isWeightRecorderSelected ||
-      !this._networkGraph.workspace.state.enableConnection
-        ? ""
-        : "none"
+      this._networkGraph.network.nodes.isWeightRecorderSelected &&
+      this._networkGraph.workspace.state.dragLine
+        ? "none"
+        : ""
     );
 
     const duration: number = this._networkGraph.workspace.state.dragging
       ? 0
       : 250;
-    const t: Transition<any, any, any, any> = transition()
-      .duration(duration);
+    const t: Transition<any, any, any, any> = transition().duration(duration);
 
     // @ts-ignore
     selector.each((connection: Connection, idx: number, elements: any[]) => {
@@ -175,7 +174,8 @@ export class ConnectionGraph {
           "d",
           drawPath(
             connection.source.view.position,
-            connection.target.view.position
+            connection.target.view.position,
+            connection.state.connectionGraphOptions
           )
         );
 
@@ -186,6 +186,8 @@ export class ConnectionGraph {
           "stroke-width",
           this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
         )
+        .style("opacity", connection.state.isFocused ? 1 : 0.67)
+        .attr("stroke-linecap", "round")
         .attr("marker-end", connection.view.markerEnd())
         .style(
           "stroke-dasharray",
@@ -193,6 +195,13 @@ export class ConnectionGraph {
         );
 
       elem.transition(t).delay(duration).style("opacity", 1);
+
+      // elem
+      //   .select("text")
+      //   .attr(
+      //     "transform",
+      //     `translate(${connection.view.centroidPosition.x},${connection.view.centroidPosition.y})`
+      //   );
     });
   }
 
@@ -203,6 +212,8 @@ export class ConnectionGraph {
    * This function should be called when connections in the network are changed.
    */
   update(): void {
+    if (!this._networkGraph.selector) return;
+
     const connections: Selection<any, any, any, any> =
       this._networkGraph.selector
         .select("g#connections")

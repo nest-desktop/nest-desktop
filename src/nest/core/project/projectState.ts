@@ -1,9 +1,9 @@
 // projectState.ts
 
-import { reactive, UnwrapRef } from 'vue';
-import { sha1 } from 'object-hash';
+import { reactive, UnwrapRef } from "vue";
+import { sha1 } from "object-hash";
 
-import { Project } from './project';
+import { Project } from "./project";
 
 type actionType = {
   onClick: object;
@@ -29,14 +29,14 @@ export class ProjectState {
 
     this._state = reactive({
       changes: false,
-      hash: ""
+      hash: "",
     });
 
     this._snackbar = {
       actions: [],
       important: false,
       show: false,
-      text: '',
+      text: "",
     };
   }
 
@@ -85,7 +85,7 @@ export class ProjectState {
       actions: [],
       important: false,
       show: false,
-      text: '',
+      text: "",
     };
   }
 
@@ -119,6 +119,7 @@ export class ProjectState {
       name: this._project.name,
       network: this._project.network.toJSON(),
       simulation: this._project.simulation.toJSON(),
-    });
+    }).slice(0, 6);
+    this._project.logger.settings.name = `[${this._project.shortId}] project #${this._state.hash}`;
   }
 }

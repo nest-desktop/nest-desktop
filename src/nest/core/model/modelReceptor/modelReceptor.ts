@@ -124,9 +124,9 @@ export class ModelReceptor {
    * @remarks
    * It emits model changes.
    */
-  modelChanges(): void {
+  changes(): void {
     this.clean();
-    this._model.modelChanges();
+    this._model.changes();
   }
 
   /**
@@ -149,7 +149,7 @@ export class ModelReceptor {
     Object.values(this._params).forEach((param: ModelReceptorParameter) =>
       param.reset()
     );
-    this.modelChanges();
+    this.changes();
   }
 
   /**

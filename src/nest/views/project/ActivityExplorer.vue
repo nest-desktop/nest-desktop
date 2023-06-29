@@ -1,6 +1,6 @@
 <template>
   <activity-chart-graph
-    :key="projectStore.project.activityGraph.state.dataHash"
+    :key="projectStore.project.shortId"
     :graph="projectStore.project.activityGraph.activityChartGraph"
   />
 </template>

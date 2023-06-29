@@ -86,7 +86,7 @@ export class CopyModel {
       this.newModelId = value + "_copied" + (this._idx + 1);
     }
     this.initParameters();
-    this.modelChanges();
+    this.changes();
   }
 
   get hasSomeVisibleParams(): boolean {
@@ -371,8 +371,8 @@ export class CopyModel {
    * @remarks
    * It emits network changes.
    */
-  modelChanges(): void {
-    this._network.networkChanges();
+  changes(): void {
+    this._network.changes();
   }
 
   /**

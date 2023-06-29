@@ -2,10 +2,13 @@
 
 import { reactive, UnwrapRef } from "vue";
 import { Data } from "plotly.js-dist-min";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Activity } from "@nest/core/activity/activity";
 import { ActivityChartPanel } from "./activityChartPanel";
 import { NodeRecord } from "@nest/core/node/nodeRecord";
+
+const logger = mainLogger.getSubLogger({ name: "activity chart panel model" });
 
 export interface ActivityChartPanelModelProps {
   id?: string;
@@ -160,7 +163,7 @@ export abstract class ActivityChartPanelModel {
    */
 
   initAnalogRecords(): void {
-    // console.log("Initialize analog records")
+    logger.trace("Init analog records");
     this._state.records = [];
     this.activities
       .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
@@ -181,7 +184,7 @@ export abstract class ActivityChartPanelModel {
    * Initialize visible records from analog activities.
    */
   initAnalogRecordsVisible(records: any[] = []): void {
-    // console.log('Initialize visible analog records')
+    logger.trace("Init visible analog records");
     if (this._state.records.length === 0) {
       this._state.recordsVisible = [];
       return;
@@ -241,6 +244,7 @@ export abstract class ActivityChartPanelModel {
    * It requires activity data.
    */
   update(): void {
+    logger.trace("Update");
     this.updateTime();
     this.updateAnalogRecords();
 
