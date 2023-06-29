@@ -1,6 +1,8 @@
 // connection.ts
 
+import { ILogObj, Logger } from "tslog";
 import { Config } from "@/helpers/config";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { ConnectionMask } from "./connectionMask";
 import {
@@ -33,9 +35,10 @@ export interface ConnectionProps {
 export class Connection extends Config {
   private readonly _name = "Connection";
 
-  private _idx: number; // generative
-  private _mask: ConnectionMask;
   private _connections: Connections; // parent
+  private _idx: number; // generative
+  private _logger: Logger<ILogObj>;
+  private _mask: ConnectionMask;
   private _params: { [key: string]: ConnectionParameter } = {};
   private _rule: ConnectionRule;
   private _sourceIdx: number; // Node index
@@ -51,6 +54,10 @@ export class Connection extends Config {
     this._connections = connections;
     this._idx = this._connections.all.length;
 
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._connections.network.project.shortId}] connection`,
+    });
+
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
 
@@ -61,9 +68,10 @@ export class Connection extends Config {
     this._targetSlice = new NodeSlice(this.target, connection.targetSlice);
 
     this._rule = new ConnectionRule(this, connection.rule);
-    this.initParameters(connection.params);
     this._mask = new ConnectionMask(this, connection.mask);
     this._synapse = new Synapse(this, connection.synapse);
+
+    this.initParameters(connection.params);
   }
 
   get connections(): Connections {
@@ -98,6 +106,10 @@ export class Connection extends Config {
    */
   get isBothSpatial(): boolean {
     return this.source.spatial.hasPositions && this.target.spatial.hasPositions;
+  }
+
+  get logger(): Logger<ILogObj> {
+    return this._logger;
   }
 
   get mask(): ConnectionMask {
@@ -188,20 +200,22 @@ export class Connection extends Config {
   }
 
   /**
-   * Clean this component.
-   */
-  clean(): void {
-    this._idx = this._connections.all.indexOf(this);
-  }
-
-  /**
    * Observer for connection changes.
    *
    * @remarks
    * It emits network changes.
    */
-  connectionChanges(): void {
-    this.network.networkChanges();
+  changes(): void {
+    this._state.updateHash();
+    this._logger.trace("changes");
+    this._connections.network.changes();
+  }
+
+  /**
+   * Clean this component.
+   */
+  clean(): void {
+    this._idx = this._connections.all.indexOf(this);
   }
 
   /**
@@ -217,6 +231,7 @@ export class Connection extends Config {
    * Initialize parameters.
    */
   initParameters(params: ConnectionParameterProps[] = []): void {
+    this._logger.trace("init parameter");
     this._params = {};
     const ruleConfig: any = this.getRuleConfig();
     ruleConfig.params.forEach((param: ConnectionParameterProps) => {
@@ -250,10 +265,11 @@ export class Connection extends Config {
    * It emits connection changes.
    */
   reverse(): void {
+    this._logger.trace("reverse");
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
 
     // Trigger connection change.
-    this.connectionChanges();
+    this.changes();
 
     // Initialize activity graph.
     if (this._view.connectRecorder()) {
@@ -269,11 +285,12 @@ export class Connection extends Config {
    * It emits connection changes.
    */
   reset(): void {
+    this._logger.trace("reset");
     this._rule.reset();
     this.initParameters();
     this.synapse.modelId = "static_synapse";
     this._mask.unmask();
-    this.connectionChanges();
+    this.changes();
   }
 
   /**
@@ -340,5 +357,4 @@ export class Connection extends Config {
 
     return connection;
   }
-
 }

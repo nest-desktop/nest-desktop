@@ -1,8 +1,11 @@
 // activity.ts
 
+import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
+
 import { download } from "@/utils/download";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
 import { Node } from "../node/node";
@@ -19,6 +22,7 @@ export interface ActivityProps {
 interface activityState {
   activeNodeId: number | undefined;
   fromTime: number;
+  hash: string;
   records: NodeRecord[];
 }
 
@@ -28,8 +32,8 @@ export interface EventProps {
 
 export class Activity {
   private _events: EventProps = {};
-  private _hash: string = "";
   private _idx: number = 0; // generative
+  private _logger: Logger<ILogObj>;
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _recorder: Node; // parent
@@ -41,8 +45,14 @@ export class Activity {
     this._state = reactive({
       activeNodeId: undefined,
       fromTime: 0,
+      hash: "",
       records: [],
     });
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this.recorder.modelId}] activity`,
+    });
+
     this.init(activity);
   }
 
@@ -91,10 +101,6 @@ export class Activity {
       this._recorder.model.isAnalogRecorder &&
       this.elementTypes.includes("neuron")
     );
-  }
-
-  get hash(): string {
-    return this._hash;
   }
 
   get idx(): number {
@@ -173,6 +179,7 @@ export class Activity {
    * Export activity (node indices, positions and events).
    */
   export(): void {
+    this._logger.trace("export activity");
     download(JSON.stringify(this.toJSON()), "activity");
   }
 
@@ -180,6 +187,7 @@ export class Activity {
    * Export events to file in json format.
    */
   exportEvents(): void {
+    this._logger.trace("export events");
     download(JSON.stringify(this._events), "events");
   }
 
@@ -187,6 +195,7 @@ export class Activity {
    * Export events to file in csv format.
    */
   exportEventsCSV(): void {
+    this._logger.trace("export events to csv");
     const eventKeys = ["senders", "times"];
     Object.keys(this._events).forEach((eventKey: string) => {
       if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);
@@ -211,6 +220,7 @@ export class Activity {
    * Overwrites events.
    */
   init(activity: ActivityProps = {}): void {
+    this._logger.trace("init");
     this.reset();
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
@@ -228,6 +238,7 @@ export class Activity {
    * Extends events.
    */
   update(activity: ActivityProps): void {
+    this._logger.trace("update");
     if (activity.events == undefined) return;
 
     this.updateEvents(activity.events);
@@ -242,6 +253,7 @@ export class Activity {
    * Reset activity.
    */
   reset(): void {
+    this._logger.trace("reset");
     this._events = {};
     this._nodeIds = [];
     this._nodePositions = [];
@@ -264,6 +276,7 @@ export class Activity {
    * Update events.
    */
   updateEvents(events: { [key: string]: number[] }): void {
+    this._logger.trace("update events");
     if (events == undefined) return;
     let updated = false;
 
@@ -287,7 +300,7 @@ export class Activity {
    * Update hash.
    */
   updateHash(): void {
-    console.log("Update hash");
-    this._hash = sha1(this.toJSON());
+    this._state.hash = sha1(this.toJSON()).slice(0, 6);
+    this._logger.settings.name = `[${this.recorder.modelId}] activity #${this._state.hash}`;
   }
 }

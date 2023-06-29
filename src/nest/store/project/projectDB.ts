@@ -11,7 +11,7 @@ export class ProjectDB extends DatabaseService {
    * Add project to the database.
    */
   async addProject(data: any): Promise<any> {
-    console.debug("Add project: " + data.name);
+    this.logger.trace("add project:", data.name);
     // const project: Project = new Project(data);
     // return this.create(project);
   }
@@ -20,7 +20,7 @@ export class ProjectDB extends DatabaseService {
    * Add projects to the database.
    */
   async addProjects(data: any[]): Promise<any> {
-    console.debug("Add projects");
+    this.logger.trace("add projects");
     const projects: any[] = data.map(
       (project: any) =>
         new Promise<any>((resolve) => {
@@ -36,7 +36,7 @@ export class ProjectDB extends DatabaseService {
    * Import projects from assets to the database.
    */
   async importProjectsFromAssets(): Promise<any> {
-    console.debug("Import projects from assets");
+    this.logger.trace("import projects from assets");
     const promise: Promise<any> = Promise.resolve();
     // this.app.config.projects.forEach((file: string) => {
     //   const data: any = require('../../assets/projects/' + file + '.json');

@@ -1,45 +1,84 @@
 <template>
-  <template v-if="projectStore.controllerView === 'network'">
-    <div :key="projectStore.project.network.nodes.state.nodesLength">
-      <node-editor
-        :key="index"
-        :node="(node as Node)"
-        v-for="(node, index) in projectStore.project.network.nodes.all"
-      />
-    </div>
-  </template>
-  <template v-else-if="projectStore.controllerView === 'kernel'">
-    <simulation-kernel
-      :simulation="projectStore.project.simulation as Simulation"
-    />
-  </template>
-  <template v-else-if="projectStore.controllerView === 'code'">
-    <simulation-code-editor />
-  </template>
-  <template v-else-if="projectStore.controllerView === 'activity'">
-    Activity
-  </template>
-  <template v-else-if="projectStore.controllerView === 'stats'">
-    <activity-stats />
-  </template>
+  <div :key="projectStore.controllerView">
+    <template v-if="projectStore.controllerView === 'network'">
+      <v-toolbar color="transparent" density="compact">
+        <v-btn-toggle class="mx-1">
+          <icon-btn
+            :icon="item.icon"
+            :key="index"
+            size="x-small"
+            v-for="(item, index) in nodeTypes"
+          >
+            {{ item.title }}
+          </icon-btn>
+        </v-btn-toggle>
+        <v-spacer />
+        <v-btn icon="mdi-dots-vertical" size="small" />
+      </v-toolbar>
+
+      <network-param-editor />
+    </template>
+
+    <template v-else-if="projectStore.controllerView === 'raw'">
+      <pre>{{ projectStore.project.toJSON() }}</pre>
+    </template>
+    <template v-else-if="projectStore.controllerView === 'kernel'">
+      <simulation-kernel-editor />
+    </template>
+    <template v-else-if="projectStore.controllerView === 'code'">
+      <div class="simulationCodeEditor">
+        <v-toolbar color="transparent" density="compact">
+          <v-btn-toggle color="blue" class="mx-1" multiple>
+            <icon-btn
+              :icon="item.icon"
+              :key="index"
+              size="x-small"
+              v-for="(item, index) in codeBlocks"
+            >
+              {{ item.title }}
+            </icon-btn>
+          </v-btn-toggle>
+          <v-spacer />
+          <v-btn icon="mdi-download" size="small" />
+          <v-btn icon="mdi-dots-vertical" size="small" />
+        </v-toolbar>
+
+        <simulation-code-editor />
+      </div>
+    </template>
+    <template v-else-if="projectStore.controllerView === 'activity'">
+      Activity
+    </template>
+    <template v-else-if="projectStore.controllerView === 'stats'">
+      <activity-stats />
+    </template>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { Node } from "@nest/core/node/node";
-import { Simulation } from "@nest/core/simulation/simulation";
-import { useProjectStore } from "@nest/store/project/projectStore";
+import IconBtn from "@/components/common/IconBtn.vue";
 
-import NodeEditor from "@nest/components/editor/NodeEditor.vue";
+import ActivityStats from "@nest/components/viewer/activityStats/ActivityStats.vue";
+import NetworkParamEditor from "@nest/components/editor/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/editor/SimulationCodeEditor.vue";
-import SimulationKernel from "@/nest/components/editor/SimulationKernelEditor.vue";
-import ActivityStats from "@nest/components/activityStats/ActivityStats.vue";
+import SimulationKernelEditor from "@/nest/components/editor/SimulationKernelEditor.vue";
 
+import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
-</script>
 
-<style lang="scss">
-.px-2px {
-  padding-left: 2px;
-  padding-right: 2px;
-}
-</style>
+const codeBlocks = [
+  { icon: "mdi-delete-empty", title: "reset" },
+  { icon: "mdi-arrow-down", title: "insite" },
+  { icon: "mdi-engine-outline", title: "kernel" },
+  { icon: "mdi-shape", title: "create" },
+  { icon: "nest:network", title: "connect" },
+  { icon: "mdi-play", title: "simulate" },
+];
+
+const nodeTypes = [
+  { icon: "mdi-all-inclusive", title: "all" },
+  { icon: "nest:stimulator", title: "stimulator" },
+  { icon: "mdi-shape", title: "neuron" },
+  { icon: "nest:recorder", title: "recorder" },
+];
+</script>

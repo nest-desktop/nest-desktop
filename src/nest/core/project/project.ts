@@ -1,6 +1,8 @@
 // project.ts
 
 import { v4 as uuidv4 } from "uuid";
+import { ILogObj, Logger } from "tslog";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { useModelDBStore } from "@nest/store/model/modelDBStore";
 import { useProjectDBStore } from "@nest/store/project/projectDBStore";
@@ -36,15 +38,16 @@ export class Project {
   private _doc: any; // doc data of the database
   private _id: string; // id of the project
   private _insite: Insite; // insite
+  private _logger: Logger<ILogObj>;
+  private _modelStore;
   private _name: string; // project name
   private _network: Network; // network of neurons and devices
+  private _projectDBStore;
+  private _projectStore;
   private _rev: string; // rev of the project
   private _simulation: Simulation; // settings for the simulation
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
-  private _modelStore;
-  private _projectDBStore;
-  private _projectStore;
 
   constructor(project: ProjectProps = {}) {
     this._modelStore = useModelDBStore();
@@ -61,6 +64,10 @@ export class Project {
     // Project metadata
     this._name = project.name || "undefined project";
     this._description = project.description || "";
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this.shortId}] project`,
+    });
 
     // Initialize project state.
     this._state = new ProjectState(this);
@@ -126,6 +133,10 @@ export class Project {
     return this._insite;
   }
 
+  get logger(): Logger<ILogObj> {
+    return this._logger;
+  }
+
   get modelStore() {
     return this._modelStore;
   }
@@ -182,29 +193,43 @@ export class Project {
   }
 
   /**
-   * Save the current project.
+   * Observer for network changes
+   *
+   * @remarks
+   * It updates hash of the network.
+   * It generates simulation code in the code editor.
+   * It commits the network in the network history.
    */
-  save(): void {
-    this._projectDBStore.saveProject(this.id).then(() => this.clean());
+  changes(): void {
+    this._state.updateHash();
+    this._state.checkChanges();
+
+    this._logger.trace("changes");
+    this._simulation.code.generate();
+
+    // Simulate when the configuration is set
+    // and the view mode is activity explorer.
+    // const projectView = this._project.app.project.view;
+    // if (
+    //   projectView.config.simulateAfterChange &&
+    //   projectView.state.modeIdx === 1
+    // ) {
+    //   setTimeout(() => this.startSimulation(), 1);
+    // }
   }
 
   /**
-   * Initialize project.
+   * Clean project.
+   *
+   * @remarks
+   * Clean project code.
+   * Update hash of this project.
    */
-  init(generateCode: boolean = true): void {
-    // console.log('Init project')
-    this.clean();
-
-    if (generateCode) {
-      setTimeout(() => {
-        this._simulation.code.generate();
-      });
-    }
-    // Reset network graph.
-    this._network.state.reset();
-
-    // Commit network in history.
-    this.network.commit();
+  clean(): void {
+    this._logger.trace("clean");
+    this._simulation.code.clean();
+    this._state.updateHash();
+    this._state.checkChanges();
   }
 
   /**
@@ -214,6 +239,7 @@ export class Project {
    * It generates new project id and empties updatedAt variable;
    */
   clone(): Project {
+    this._logger.trace("clone");
     const newProject = new Project(this.toJSON());
     newProject._id = uuidv4();
     newProject._updatedAt = "";
@@ -228,6 +254,7 @@ export class Project {
    * It pushes new project to the first line of the list.
    */
   duplicate(): Project {
+    this._logger.trace("duplicate");
     const newProject: Project = this.clone();
     this._projectDBStore.addProject(newProject);
     return newProject;
@@ -237,6 +264,7 @@ export class Project {
    * Delete this project from the list and database.
    */
   async delete(): Promise<any> {
+    this._logger.trace("delete");
     return this._projectDBStore.deleteProject(this._id);
   }
 
@@ -244,6 +272,7 @@ export class Project {
    * Export this project.
    */
   export(): void {
+    this._logger.trace("export");
     this._projectDBStore.exportProject(this._id);
   }
 
@@ -251,32 +280,64 @@ export class Project {
    * Export this project and activities.
    */
   exportWithActivities(): void {
+    this._logger.trace("export with activities");
     this._projectDBStore.exportProject(this._id, true);
+  }
+
+  /**
+   * Initialize project.
+   */
+  init(generateCode: boolean = true): void {
+    this._logger.trace("init");
+    this.clean();
+
+    if (generateCode) {
+      setTimeout(() => {
+        this._simulation.code.generate();
+      });
+    }
+    // Reset network graph.
+    this._network.nodes.resetState();
+
+    // Commit network in history.
+    this.network.commit();
+  }
+
+  /**
+   * Initialize activity graph.
+   */
+  initActivityGraph(): void {
+    this._logger.trace("init activity graph");
+    if (this._activityGraph == undefined) {
+      return;
+    }
+
+    this._activityGraph.init();
+    if (this.activities.state.hasSomeEvents) {
+      this._activityGraph.update();
+    }
   }
 
   /**
    * Reload this project.
    */
   async reload(): Promise<any> {
+    this._logger.trace("reload");
     return this._projectDBStore.reloadProject(this._id);
   }
 
   /**
-   * Unload this project.
+   * Save the current project.
    */
-  async unload(): Promise<any> {
-    return this._projectDBStore.unloadProject(this._id);
+  save(): void {
+    this._projectDBStore.saveProject(this.id).then(() => this.clean());
   }
-
-  /*
-   * Simulation
-   */
 
   /**
    * Start simulation.
    */
   startSimulation(): void {
-    console.log("Start simulation");
+    this._logger.trace("start simulation");
     this._network.clean();
 
     // Stop getting activities from Insite.
@@ -319,36 +380,8 @@ export class Project {
    */
 
   /**
-   * Initialize activity graph.
-   */
-  initActivityGraph(): void {
-    console.debug("Initialize activity graph of " + this._name);
-    if (this._activityGraph == undefined) {
-      return;
-    }
-
-    this._activityGraph.init();
-    if (this.activities.state.hasSomeEvents) {
-      this._activityGraph.update();
-    }
-  }
-
-  /**
    * Serialization
    */
-
-  /**
-   * Clean project.
-   *
-   * @remarks
-   * Clean project code.
-   * Update hash of this project.
-   */
-  clean(): void {
-    this._simulation.code.clean();
-    this._state.updateHash();
-    this._state.checkChanges();
-  }
 
   /**
    * Serialize for JSON.
@@ -367,5 +400,13 @@ export class Project {
       version: process.env.APP_VERSION as string,
     };
     return project;
+  }
+
+  /**
+   * Unload this project.
+   */
+  async unload(): Promise<any> {
+    this._logger.trace("unload");
+    return this._projectDBStore.unloadProject(this._id);
   }
 }

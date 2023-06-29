@@ -1,10 +1,13 @@
 // backend.ts
 
+import { ILogObj, Logger } from "tslog";
+
 import axios from "axios";
 import { reactive, UnwrapRef } from "vue";
 
+import { logger as mainLogger } from "@/utils/logger";
 import { Config } from "./config";
-import combineURLs from "../utils/combineURLs";
+import combineURLs from "@/utils/combineURLs";
 
 interface BackendState {
   enabled: boolean;
@@ -21,6 +24,7 @@ interface SeekProps {
 }
 
 export class Backend extends Config {
+  private _logger: Logger<ILogObj>;
   private _state: UnwrapRef<BackendState>;
 
   constructor(
@@ -34,6 +38,8 @@ export class Backend extends Config {
       seek,
       version: {},
     });
+
+    this._logger = mainLogger.getSubLogger({ name: `[${name}] backend` });
   }
 
   get enabled(): boolean {
@@ -136,7 +142,7 @@ export class Backend extends Config {
    * Check if the backend is serving.
    */
   async check(): Promise<void> {
-    // console.log("Check backend");
+    this._logger.trace("check");
     this.resetState();
     if (this.config.enabled === false) return;
 
@@ -152,8 +158,9 @@ export class Backend extends Config {
    * Seek the server URL of the backend.
    */
   async seek(): Promise<any> {
-    // console.log("Seek backend");
-    const protocol: string = this._state.seek.protocol || window.location.protocol;
+    this._logger.trace("seek");
+    const protocol: string =
+      this._state.seek.protocol || window.location.protocol;
     const hostname: string = window.location.hostname || "localhost";
     const hosts: string[] = [
       combineURLs(hostname + ":" + this._state.seek.port),
@@ -170,7 +177,7 @@ export class Backend extends Config {
    * @param url The URL which should be pinged.
    */
   async ping(url: string): Promise<any> {
-    // console.log("Ping backend", url);
+    this._logger.trace("ping:", url);
     return axios
       .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {

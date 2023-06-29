@@ -1,5 +1,5 @@
 <template>
-  <card :color="state.node.color" class="node my-1" v-if="state.node">
+  <card :color="state.node.color" class="node ma-1" v-if="state.node">
     <v-card-title class="mt-2 ml-10">
       <v-select
         :items="state.node.models"
@@ -21,11 +21,12 @@
             style="left: 8px; top: 8px"
           >
             <node-avatar
-              size="48px"
               :color="state.node.color"
-              :label="state.node.label"
               :elementType="state.node.elementType"
+              :label="state.node.label"
               :weight="state.node.weight"
+              @click="state.node.state.select()"
+              size="48px"
             />
           </v-btn>
         </template>
@@ -128,7 +129,7 @@
         <node-param-editor
           :color="state.node.color"
           :options="{ id: 'n', inputLabel: 'n', label: 'population' }"
-          @update:model-value="state.node.nodeChanges()"
+          @update:model-value="state.node.changes()"
           v-if="
             state.node.elementType !== 'recorder' &&
             state.node.size != undefined &&
@@ -142,38 +143,30 @@
           :color="state.node.color"
           :key="index"
           :options="state.node.params[paramId].options"
-          @update:model-value="state.node.nodeChanges()"
+          @update:model-value="state.node.changes()"
           v-for="(paramId, index) in state.node.paramsVisible"
           v-model="state.node.params[paramId].value"
         />
       </v-list>
     </v-card-text>
-
     <v-card-actions
       style="min-height: 40px"
       v-if="state.node.state.targetsLength > 0"
     >
-      <v-expansion-panels
-        :key="state.node.state.targetsLength"
-        variant="accordion"
-      >
-        <connection-editor
-          :key="index"
-          :source="{
-            color: state.node.color,
-            label: state.node.label,
-            elementType: state.node.elementType,
-            weight: state.node.weight,
-          }"
-          :target="{
-            color: connection.target.color,
-            label: connection.target.label,
-            elementType: connection.target.elementType,
-            weight: state.node.weight,
-          }"
-          v-for="(connection, index) in state.node.targets"
-        />
-      </v-expansion-panels>
+      <v-row>
+        <v-expansion-panels
+          :key="state.node.state.targetsLength"
+          variant="accordion"
+        >
+          <connection-editor
+            @mouseenter="connection.state.focus()"
+            @mouseleave="connection.connections.unfocusConnection()"
+            :key="index"
+            :connection="connection as Connection"
+            v-for="(connection, index) in state.node.targets"
+          />
+        </v-expansion-panels>
+      </v-row>
     </v-card-actions>
   </card>
 </template>
@@ -184,6 +177,7 @@ import { reactive, PropType } from "vue";
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
 import { Node } from "@nest/core/node/node";
+import { Connection } from "@nest/core/connection/connection";
 
 import ConnectionEditor from "./ConnectionEditor.vue";
 import NodeAvatar from "../avatar/NodeAvatar.vue";

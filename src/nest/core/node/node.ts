@@ -1,7 +1,10 @@
 // node.ts - 26 anys
 
+import { ILogObj, Logger } from "tslog";
+
 import { Config } from "@/helpers/config";
 import { Parameter } from "@/helpers/parameter";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Activity, ActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
@@ -39,11 +42,16 @@ export interface NodeProps {
 export class Node extends Config {
   private readonly _name = "Node";
 
-  private _activity: SpikeActivity | AnalogSignalActivity | Activity = new Activity(this);
+  private _activity?:
+    | SpikeActivity
+    | AnalogSignalActivity
+    | Activity;
   private _annotations: string[] = [];
   private _compartments: NodeCompartment[] = [];
   private _doc: NodeProps;
   private _idx: number; // generative
+  private _logger: Logger<ILogObj>;
+  private _model: Model | CopyModel;
   private _modelId: string;
   private _nodes: Nodes; // parent
   private _params: { [key: string]: NodeParameter } = {};
@@ -68,18 +76,19 @@ export class Node extends Config {
     this._annotations = node.annotations || [];
     this._doc = node;
 
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._nodes.network.project.shortId}] node`,
+    });
+
+    this._model = this.getModel(this._modelId);
     this._spatial = new NodeSpatial(this, node.spatial);
     this._view = new NodeView(this, node.view);
 
-    this.initParameters(node);
-    this.initCompartments(node);
-    this.initReceptors(node);
-    this.initActivity(node.activity);
-
     this._state = new NodeState(this);
+    this.init(node);
   }
 
-  get activity(): SpikeActivity | AnalogSignalActivity | Activity {
+  get activity(): SpikeActivity | AnalogSignalActivity | Activity | undefined {
     return this._activity;
   }
 
@@ -182,26 +191,30 @@ export class Node extends Config {
     return this._view.label;
   }
 
+  get logger(): Logger<ILogObj> {
+    return this._logger;
+  }
+
   get model(): CopyModel | Model {
-    if (
-      this.network.models.some((model: CopyModel) => model.id === this.modelId)
-    ) {
-      return this.network.models.getModelById(this._modelId);
-    } else {
-      return this.network.project.modelStore.getModel(this._modelId);
+    if (this._model?.id !== this._modelId) {
+      this._model = this.getModel(this._modelId);
     }
+    return this._model;
   }
 
   /**
    * Set model.
    *
    * @remarks
-   * Save model ID, see modelId.
+   * It initializes parameters and activity components.
+   * It triggers node changes.
    *
    * @param model - node model
    */
   set model(model: CopyModel | Model) {
-    this.modelId = model.id;
+    this._modelId = model.id;
+    this._model = model;
+    this.modelChanges();
   }
 
   get models(): (CopyModel | Model)[] {
@@ -227,32 +240,10 @@ export class Node extends Config {
   /**
    * Set model ID.
    *
-   * @remarks
-   * It initializes parameters and activity components.
-   * It triggers node changes.
-   *
    * @param value - id of the model
    */
   set modelId(value: string) {
-    this._paramsVisible = [];
-    this._modelId = value;
-
-    this.initParameters();
-    this.initCompartments();
-    this.initReceptors();
-
-    this.initActivity();
-
-    this.updateRecords();
-    this.updateRecordsColor();
-
-    // Trigger node change.
-    this.nodeChanges();
-
-    // Initialize activity graph.
-    if (this.model.isRecorder) {
-      this.network.project.initActivityGraph();
-    }
+    this.model = this.getModel(value);
   }
 
   get modelParams(): { [key: string]: ModelParameter } {
@@ -296,7 +287,7 @@ export class Node extends Config {
     // Object.values(this._params).forEach((param) => {
     //   param.state.visible = values.includes(param.id);
     // });
-    this.nodeChanges();
+    this.changes();
   }
 
   get positions(): number[][] {
@@ -328,7 +319,9 @@ export class Node extends Config {
   get recordsFixed(): string {
     return (
       "[" +
-      this._records.map((record: NodeRecord) => '"' + record.id + '"').join(",") +
+      this._records
+        .map((record: NodeRecord) => '"' + record.id + '"')
+        .join(",") +
       "]"
     );
   }
@@ -358,7 +351,7 @@ export class Node extends Config {
    */
   set size(value: number) {
     this._size = value;
-    this.nodeChanges();
+    this.changes();
   }
 
   get sourceNodes(): Node[] {
@@ -388,7 +381,6 @@ export class Node extends Config {
       .map((connection: Connection) => connection.target);
   }
 
-
   get view(): NodeView {
     return this._view;
   }
@@ -404,7 +396,7 @@ export class Node extends Config {
   addAnnotation(text: string): void {
     if (this._annotations.indexOf(text) !== -1) return;
     this._annotations.push(text);
-    this.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -423,7 +415,6 @@ export class Node extends Config {
    */
   addParameter(param: NodeParameterProps): void {
     this._params[param.id] = new NodeParameter(this, param);
-    // this._params.push(new NodeParameter(this, param));
   }
 
   /**
@@ -432,6 +423,19 @@ export class Node extends Config {
    */
   addReceptor(receptor: any): void {
     this._receptors.push(new NodeReceptor(this, receptor));
+  }
+
+  /**
+   * Observer for node changes.
+   *
+   * @remarks
+   * It emits network changes.
+   */
+  changes(): void {
+    this.clean();
+    this._state.updateHash();
+    this._logger.trace("changes");
+    this._nodes.network.changes();
   }
 
   /**
@@ -451,81 +455,14 @@ export class Node extends Config {
   }
 
   /**
-   * Initialize activity for the recorder.
+   * Get model.
    */
-  initActivity(data: any = {}): void {
-    if (!this.model.isRecorder) {
-      return;
-    }
-    if (this.model.isSpikeRecorder) {
-      this._activity = new SpikeActivity(this, data);
-    } else if (this.model.isAnalogRecorder) {
-      this._activity = new AnalogSignalActivity(this, data);
+  getModel(modelId: string): CopyModel | Model {
+    this._logger.trace("get model:", modelId);
+    if (this.network.models.some((model: CopyModel) => model.id === modelId)) {
+      return this.network.models.getModelById(modelId);
     } else {
-      this._activity = new Activity(this, data);
-    }
-  }
-
-  /**
-   * Initialize compartments for the node.
-   * @param node - node object
-   */
-  initCompartments(node?: any): void {
-    this._compartments = [];
-    if (node && node.compartments) {
-      node.compartments.forEach((compartment: any) =>
-        this.addCompartment(compartment)
-      );
-    }
-  }
-
-  /**
-   * Initialize receptors for the node.
-   * @param node - node object
-   */
-  initReceptors(node?: any): void {
-    this._receptors = [];
-    if (node && node.receptors) {
-      node.receptors.forEach((receptor: any) => this.addReceptor(receptor));
-    }
-  }
-
-  /**
-   * Initialize parameter components.
-   * @param node - node object
-   */
-  initParameters(node?: NodeProps): void {
-    // console.log("Update parameters from model or node", node);
-    this._paramsVisible = [];
-    this._params = {};
-    if (this.model) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        if (node && node.params && node.params.length > 0) {
-          const nodeParam = node.params.find(
-            (param: any) => param.id === modelParam.id
-          );
-          if (nodeParam) {
-            this.addParameter({
-              ...modelParam.options,
-              ...nodeParam,
-            });
-            if (
-              ("visible" in nodeParam && nodeParam.visible) ||
-              !("visible" in nodeParam)
-            ) {
-              this._paramsVisible.push(nodeParam.id);
-            }
-          } else {
-            this.addParameter(modelParam);
-          }
-        } else {
-          this.addParameter(modelParam);
-        }
-      });
-    } else if (node && node.params) {
-      Object.values(node.params).forEach((param: any) =>
-        this.addParameter(param)
-      );
+      return this.network.project.modelStore.getModel(modelId);
     }
   }
 
@@ -572,15 +509,124 @@ export class Node extends Config {
   }
 
   /**
-   * Observer for node changes.
+   * Initialize node.
+   */
+  init(node?: NodeProps): void {
+    this._logger.trace("init");
+
+    this.initParameters(node);
+    this.initCompartments(node);
+    this.initReceptors(node);
+
+    if (this.model.isRecorder) {
+      this.initActivity(node?.activity);
+    }
+
+    this._state.updateHash();
+  }
+
+  /**
+   * Initialize activity for the recorder.
+   */
+  initActivity(activity?: ActivityProps): void {
+    this._logger.trace("init activity");
+    if (!this.model.isRecorder) {
+      return;
+    }
+
+    if (this.model.isSpikeRecorder) {
+      this._activity = new SpikeActivity(this, activity);
+    } else if (this.model.isAnalogRecorder) {
+      this._activity = new AnalogSignalActivity(this, activity);
+    } else {
+      this._activity = new Activity(this, activity);
+    }
+  }
+
+  /**
+   * Initialize compartments for the node.
+   * @param node - node object
+   */
+  initCompartments(node?: NodeProps): void {
+    this._logger.trace("init compartments");
+    this._compartments = [];
+    if (node && node.compartments) {
+      node.compartments.forEach((compartment: any) =>
+        this.addCompartment(compartment)
+      );
+    }
+  }
+
+  /**
+   * Initialize receptors for the node.
+   * @param node - node object
+   */
+  initReceptors(node?: NodeProps): void {
+    this._logger.trace("init receptors");
+    this._receptors = [];
+    if (node && node.receptors) {
+      node.receptors.forEach((receptor: any) => this.addReceptor(receptor));
+    }
+  }
+
+  /**
+   * Initialize parameter components.
+   * @param node - node object
+   */
+  initParameters(node?: NodeProps): void {
+    this._logger.trace("init parameters");
+    this._paramsVisible = [];
+    this._params = {};
+    if (this.model) {
+      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
+        if (node && node.params && node.params.length > 0) {
+          const nodeParam = node.params.find(
+            (param: any) => param.id === modelParam.id
+          );
+          if (nodeParam) {
+            this.addParameter({
+              ...modelParam.options,
+              ...nodeParam,
+            });
+            if (
+              ("visible" in nodeParam && nodeParam.visible) ||
+              !("visible" in nodeParam)
+            ) {
+              this._paramsVisible.push(nodeParam.id);
+            }
+          } else {
+            this.addParameter(modelParam);
+          }
+        } else {
+          this.addParameter(modelParam);
+        }
+      });
+    } else if (node && node.params) {
+      Object.values(node.params).forEach((param: any) =>
+        this.addParameter(param)
+      );
+    }
+  }
+
+  /**
+   * Observer for model changes.
    *
    * @remarks
-   * It emits network changes.
+   * It emits node changes.
    */
-  nodeChanges(): void {
-    this.clean();
-    this._spatial.updateHash();
-    this.network.networkChanges();
+  modelChanges(): void {
+    this._logger.trace("model change");
+    this.init();
+    this.updateRecords();
+    this.updateRecordsColor();
+
+    // Trigger node change.
+    this.changes();
+
+    // Initialize activity graph.
+    if (this.model.isRecorder) {
+      this.network.project.initActivityGraph();
+    }
   }
 
   /**
@@ -600,7 +646,7 @@ export class Node extends Config {
   removeAnnotation(text: string): void {
     if (this._annotations.indexOf(text) === -1) return;
     this._annotations.splice(this._annotations.indexOf(text), 1);
-    this.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -645,6 +691,7 @@ export class Node extends Config {
    * It emits node changes.
    */
   resetParameters(): void {
+    this._logger.trace("reset parameters");
     Object.values(this._params).forEach((param: NodeParameter) =>
       param.reset()
     );
@@ -658,7 +705,7 @@ export class Node extends Config {
       );
     }
 
-    this.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -680,7 +727,7 @@ export class Node extends Config {
       weight.value = (term === "inhibitory" ? -1 : 1) * Math.abs(weight.value);
       weight.state.visible = true;
     });
-    this.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -707,7 +754,7 @@ export class Node extends Config {
     this._spatial.init({
       positions: this.spatial.hasPositions ? undefined : term,
     });
-    this.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -769,7 +816,7 @@ export class Node extends Config {
    * It should be called after connections are created.
    */
   updateRecords(): void {
-    // console.log('Update node records')
+    this._logger.trace("update records");
     let recordables: any[] = [];
     // Initialize recordables.
     if (this.targets.length > 0) {

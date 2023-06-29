@@ -1,12 +1,14 @@
 // insite.ts
 
-// import { Backend } from "@/helpers/backend";
 import { openToast } from "@/utils/toast";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { Project } from "../project/project";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { useInsiteAccessStore } from "@nest/store/backends/insiteAccessStore";
+
+const logger = mainLogger.getSubLogger({ name: "insite" });
 
 type activityType = {
   events: any;
@@ -100,7 +102,7 @@ export class Insite {
    * It calls `setInterval()` function.
    */
   continuouslyUpdateSimulationTimeInfo(milliseconds: number = 250): void {
-    console.debug("Update simulation time info continuously");
+    logger.trace("Update simulation time info continuously");
 
     this.simulationTimeIntervalId = window.setInterval(() => {
       this.insiteAccess.instance
@@ -184,7 +186,7 @@ export class Insite {
     if (!this._state.on) {
       return;
     }
-    console.debug("Get analog signal activities from Insite");
+    logger.trace("Get analog signal activities from Insite");
 
     this.insiteAccess.instance
       .get("nest/multimeters/")
@@ -349,7 +351,7 @@ export class Insite {
     if (!this._state.on) {
       return;
     }
-    console.debug("Get node IDs from Insite");
+    logger.trace("Get node IDs from Insite");
 
     const positions: any = {};
     return this.insiteAccess.instance
@@ -381,7 +383,7 @@ export class Insite {
     if (!this._state.on) {
       return;
     }
-    console.debug("Get spike activities from Insite");
+    logger.trace("Get spike activities from Insite");
 
     this.insiteAccess.instance
       .get("nest/spikerecorders/")

@@ -2,9 +2,13 @@
 
 import { defineStore } from "pinia";
 
+import { logger as mainLogger } from "@/utils/logger";
+import router from "@/router";
+
 import { Project } from "@nest/core/project/project";
 import { useProjectDBStore } from "./projectDBStore";
-import router from "@/router";
+
+const logger = mainLogger.getSubLogger({ name: "project store" });
 
 export const useProjectStore = defineStore("project-view", {
   state: () => ({
@@ -20,6 +24,7 @@ export const useProjectStore = defineStore("project-view", {
     controllerItems: [
       { id: "network", icon: "nest:network", title: "Edit network" },
       { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
+      { id: "raw", icon: "mdi-code-json" },
       { id: "code", icon: "mdi-xml" },
       { id: "activity", icon: "mdi-border-style" },
       { id: "stats", icon: "mdi-table-large" },
@@ -32,7 +37,7 @@ export const useProjectStore = defineStore("project-view", {
      * @param projectId
      */
     loadProject(projectId: string = ""): void {
-      // console.log("Load project:", projectId);
+      logger.trace("load project:", projectId?.slice(0, 6));
       const projectDBStore = useProjectDBStore();
       this.project = projectDBStore.getProject(projectId);
       this.projectId = this.project.id;
@@ -41,6 +46,7 @@ export const useProjectStore = defineStore("project-view", {
      * Start simulation of the current project.
      */
     startSimulation(): void {
+      logger.trace("start simulation:", this.projectId?.slice(0, 6));
       router.push({
         name: "ActivityExplorer",
         params: { projectId: this.projectId },
@@ -51,7 +57,7 @@ export const useProjectStore = defineStore("project-view", {
      * Reload the project in the list.
      */
     reloadProject(project: Project): void {
-      console.log("Reload project");
+      logger.trace("reload project:", project.id.slice(0, 6));
       const projectDBStore = useProjectDBStore();
       projectDBStore.unloadProject(project.id);
       this.project = projectDBStore.getProject(project.id);
@@ -60,6 +66,7 @@ export const useProjectStore = defineStore("project-view", {
      * Save current project.
      */
     saveCurrentProject() {
+      logger.trace("Save project:", this.projectId?.slice(0, 6));
       const projectDBStore = useProjectDBStore();
       projectDBStore.saveProject(this.projectId);
     },
@@ -68,6 +75,7 @@ export const useProjectStore = defineStore("project-view", {
      * @param item
      */
     toggleController(item?: any) {
+      logger.trace("toggle controller:", item.id);
       if (!this.controllerOpen || this.controllerView === item.id) {
         this.controllerOpen = !this.controllerOpen;
       }

@@ -1,6 +1,9 @@
 // nodeGraph.ts
 
+import { ILogObj, Logger } from "tslog";
 import { Selection, Transition, drag, select, transition } from "d3";
+
+import { logger as mainLogger } from "@/utils/logger";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";
@@ -8,6 +11,7 @@ import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
 
 export class NodeGraph {
+  private _logger: Logger<ILogObj>;
   private _networkGraph: NetworkGraph;
   private _nodeGraphConnector: NodeGraphConnector;
   private _nodeGraphShape: NodeGraphShape;
@@ -16,14 +20,14 @@ export class NodeGraph {
     this._networkGraph = networkGraph;
     this._nodeGraphConnector = new NodeGraphConnector(networkGraph);
     this._nodeGraphShape = new NodeGraphShape(networkGraph);
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._networkGraph.network.project.shortId}] node graph`,
+    });
   }
 
   get network(): any {
     return this._networkGraph.network;
-  }
-
-  get state(): any {
-    return this._networkGraph.workspace.state;
   }
 
   /**
@@ -34,6 +38,7 @@ export class NodeGraph {
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
+    this._logger.trace("init");
     const elem: Selection<any, any, any, any> = select(elements[idx]);
     elem.selectAll("*").remove();
 
@@ -41,20 +46,22 @@ export class NodeGraph {
     this._nodeGraphShape.init(elem, node);
 
     elem.on("mouseover", (_, n: Node) => {
-      node.state.focus();
+      n.state.focus();
       // Draw line between selected node and focused node.
-      if (node.state.isAnySelected && this.state.enableConnection) {
+      if (
+        n.nodes.state.selectedNode &&
+        this._networkGraph.workspace.state.dragLine
+      ) {
+        const sourcePos = n.nodes.state.selectedNode.view.position;
         this._networkGraph.workspace.dragline.drawPath(
-          this.network.state.selectedNode.view.position,
+          sourcePos,
           n.view.position
         );
       }
-      this.render();
     });
 
     elem.on("mouseout", () => {
-      this.network.state.resetFocus();
-      this.render();
+      this.network.nodes.unfocusNode();
     });
   }
 
@@ -65,6 +72,9 @@ export class NodeGraph {
    * This function should be called when nodes is changed.
    */
   update(): void {
+    this._logger.trace("update");
+    if (!this._networkGraph.selector) return;
+
     const nodes: Selection<any, any, any, any> = this._networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
@@ -104,9 +114,8 @@ export class NodeGraph {
    * Drag node graph.
    */
   drag(event: MouseEvent, node: Node): void {
-    if (this.state.enableConnection) {
-      return;
-    }
+    this._logger.silly("drag");
+    if (this._networkGraph.workspace.state.dragLine) return;
 
     node.view.position.x = event.x;
     node.view.position.y = event.y;
@@ -118,10 +127,13 @@ export class NodeGraph {
    * Render node graph.
    */
   render(): void {
+    this._logger.silly("render");
     this._nodeGraphShape.render();
     this._nodeGraphConnector.render();
 
-    const duration: number = this.state.dragging ? 0 : 250;
+    const duration: number = this._networkGraph.workspace.state.dragging
+      ? 0
+      : 250;
     const t: Transition<any, any, any, any> = transition().duration(duration);
 
     const nodes = select("g#nodes").selectAll("g.node");

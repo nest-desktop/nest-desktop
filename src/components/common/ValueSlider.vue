@@ -17,7 +17,7 @@
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="width: 80px"
+        style="width: 60px"
         type="number"
         v-model="value"
         variant="underlined"
@@ -98,6 +98,9 @@ watch(
   .mdi-minus,
   .mdi-plus {
     opacity: 0.6 !important;
+  }
+  .v-text-field__suffix {
+    opacity: 0;
   }
 }
 </style>

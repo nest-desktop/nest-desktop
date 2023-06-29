@@ -14,40 +14,12 @@
             <transition-group name="list" style="display: inline-flex">
               <span
                 key="sourceNode"
-                v-if="
-                  state.network.state.selectedNode ||
-                  state.network.state.selectedConnection
-                "
+                v-if="state.network.nodes.state.selectedNode"
               >
                 <NodeChip
                   :graph="state.graph"
-                  :node="state.network.state.selectedNode"
-                  v-if="state.network.state.selectedNode"
-                />
-                <NodeChip
-                  :graph="state.graph"
-                  :node="state.network.state.selectedConnection.source"
-                  v-if="state.network.state.selectedConnection"
-                />
-              </span>
-
-              <span
-                key="connection"
-                v-if="
-                  state.network.state.selectedConnection ||
-                  state.graph.workspace.state.enableConnection
-                "
-              >
-                <v-icon class="ma-1" size="small" icon="mdi-arrow-right" />
-              </span>
-
-              <span
-                key="targetNode"
-                v-if="state.network.state.selectedConnection"
-              >
-                <NodeChip
-                  :graph="state.graph"
-                  :node="state.network.state.selectedConnection.target"
+                  :node="state.network.nodes.state.selectedNode"
+                  v-if="state.network.nodes.state.selectedNode"
                 />
               </span>
             </transition-group>
@@ -204,7 +176,7 @@ const state = reactive({
  * Delete network.
  */
 const deleteNetwork = () => {
-  state.network.empty();
+  state.network.clear();
   state.dialogDelete = false;
 };
 
@@ -212,6 +184,7 @@ const deleteNetwork = () => {
  * Download network graph as svg.
  */
 const DownloadNetworkGraph = () => {
+  if (!state.graph.selector) return;
   downloadSVGImage(state.graph.selector.node(), state.network.project.name);
   state.dialogDownload = false;
 };

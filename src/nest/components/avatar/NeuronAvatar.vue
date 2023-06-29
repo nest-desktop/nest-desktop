@@ -5,7 +5,7 @@
     </span>
     <v-icon
       :color="props.color"
-      :icon="`nest:neuron-${props.weight || 'default'}`"
+      :icon="`nest:neuron${props.weight ? `-${$props.weight}` : ''}`"
       class="position-absolute icon-size"
     />
   </v-avatar>
@@ -15,7 +15,7 @@
 const props = defineProps({
   color: { type: String, default: "primary" },
   label: { type: String, default: "" },
-  weight: { type: String, default: "default" },
+  weight: { type: String, default: "" },
 });
 </script>
 

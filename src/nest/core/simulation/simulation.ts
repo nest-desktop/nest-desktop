@@ -1,13 +1,17 @@
 // simulation.ts - 9 anys
 
 import { reactive, UnwrapRef } from "vue";
+import { ILogObj, Logger } from "tslog";
+
 import { Config } from "@/helpers/config";
 import { openToast } from "@/utils/toast";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Project } from "../project/project";
 import { SimulationCode, SimulationCodeProps } from "./simulationCode";
 import { SimulationKernel, SimulationKernelProps } from "./simulationKernel";
 import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
+import { sha1 } from "object-hash";
 
 export interface SimulationProps {
   code?: SimulationCodeProps;
@@ -17,12 +21,14 @@ export interface SimulationProps {
 
 interface SimulationState {
   biologicalTime: number;
+  hash: string;
   running: boolean;
   timeInfo: { [key: string]: number };
 }
 
 export class Simulation extends Config {
   private _code: SimulationCode;
+  private _logger: Logger<ILogObj>;
   private _kernel: SimulationKernel; // simulation kernel
   private _project: Project; // parent
   private _state: UnwrapRef<SimulationState>;
@@ -32,6 +38,10 @@ export class Simulation extends Config {
     super("Simulation");
     this._project = project;
 
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._project.shortId}] simulation`,
+    });
+
     // Initialize code, kernel and time.
     this._code = new SimulationCode(this, simulation.code);
     this._kernel = new SimulationKernel(this, simulation.kernel);
@@ -40,6 +50,7 @@ export class Simulation extends Config {
     // Initialize simulation state.
     this._state = reactive({
       biologicalTime: 0,
+      hash: "",
       running: false,
       timeInfo: {
         begin: 0,
@@ -52,7 +63,7 @@ export class Simulation extends Config {
 
   get nestSimulator(): any {
     const nestSimulatorStore = useNESTSimulatorStore();
-    return nestSimulatorStore.backend
+    return nestSimulatorStore.backend;
   }
 
   get code(): SimulationCode {
@@ -77,19 +88,29 @@ export class Simulation extends Config {
 
   set time(value: number) {
     this._time = value;
+    this.changes();
   }
 
   get timeFixed(): string {
     return this._time.toFixed(1);
   }
 
+  changes(): void {
+    this.updateHash();
+    this._logger.trace("changes");
+    this._project.changes();
+  }
+
   /**
-   *Generate seed and simulation code.
+   * Generate seed.
+   *
+   * Generate simulation code.
    */
   generateSeed(): void {
+    this._logger.trace("generate seed");
     if (this._kernel.config.autoRNGSeed) {
       this._kernel.rngSeed = Math.round(Math.random() * 1000);
-      this._code.generate();
+      this.changes();
     }
   }
 
@@ -97,6 +118,7 @@ export class Simulation extends Config {
    * Reset simulation states.
    */
   resetState(): void {
+    this._logger.trace("reset state");
     this._state.biologicalTime = 0;
     this._state.timeInfo = {
       begin: 0,
@@ -113,7 +135,7 @@ export class Simulation extends Config {
    * After the simulation it updates the activities and commits the network.
    */
   private async runSimulation(): Promise<any> {
-    console.debug("Run simulation");
+    this._logger.trace("run simulation");
 
     return this.nestSimulator.instance
       .post("exec", {
@@ -124,7 +146,7 @@ export class Simulation extends Config {
         let data: any;
         switch (response.status) {
           case 0:
-            openToast("Failed to find NEST Simulator.", {type: "error"});
+            openToast("Failed to find NEST Simulator.", { type: "error" });
             break;
           case 200:
             if (response.data.data == null) {
@@ -138,7 +160,7 @@ export class Simulation extends Config {
 
             break;
           default:
-            openToast(response.data, {type:"error"});
+            openToast(response.data, { type: "error" });
             break;
         }
         return response;
@@ -146,19 +168,19 @@ export class Simulation extends Config {
       .catch((error: any) => {
         if ("response" in error && error.response.data != undefined) {
           // The request made and the server responded.
-          openToast(error.response.data, {type:"error"});
+          openToast(error.response.data, { type: "error" });
         } else if ("request" in error) {
           // The request was made but no response was received.
           openToast(
             "Failed to perform simulation (NEST Simulator is not running).",
-            {type:"error"}
+            { type: "error" }
           );
         } else if ("message" in error && error.message != undefined) {
           // Something happened in setting up the request
           // that triggered an error.
-          openToast(error.message, {type:"error"});
+          openToast(error.message, { type: "error" });
         } else {
-          openToast(error, {type:"error"});
+          openToast(error, { type: "error" });
         }
       })
       .finally(() => {
@@ -173,7 +195,7 @@ export class Simulation extends Config {
    * During the simulation it gets and updates activities.
    */
   private async runWithInsite(): Promise<any> {
-    console.debug("Run simulation with Insite");
+    this._logger.trace("run simulation with Insite");
     this._state.timeInfo = {
       begin: 0,
       current: 0,
@@ -188,7 +210,7 @@ export class Simulation extends Config {
           case 0:
             openToast(
               "Failed to perform simulation (NEST Simulator is not running).",
-              {type:"error"}
+              { type: "error" }
             );
             this._project.insite.cancelAllIntervals();
             break;
@@ -198,7 +220,7 @@ export class Simulation extends Config {
             }
             break;
           default:
-            openToast(response.responseText, {type:"error"});
+            openToast(response.responseText, { type: "error" });
             this._project.insite.cancelAllIntervals();
             break;
         }
@@ -207,7 +229,7 @@ export class Simulation extends Config {
       .catch((error: any) => {
         this._project.insite.cancelAllIntervals();
         if ("response" in error && error.response.data != undefined) {
-          openToast(error.response.data, {type:"error"});
+          openToast(error.response.data, { type: "error" });
         }
         return error;
       })
@@ -223,6 +245,7 @@ export class Simulation extends Config {
    * It runs the simulation with or without Insite.
    */
   async start(): Promise<any> {
+    this._logger.trace("start");
     this.resetState();
 
     // Generate seed and update simulation code.
@@ -245,5 +268,13 @@ export class Simulation extends Config {
       time: this._time,
     };
     return simulation;
+  }
+
+  updateHash(): void {
+    this._state.hash = sha1({
+      kernel: this._kernel.toJSON(),
+      time: this._time,
+    }).slice(0, 6);
+    this._logger.settings.name = `[${this._project.shortId}] simulation #${this._state.hash}`;
   }
 }

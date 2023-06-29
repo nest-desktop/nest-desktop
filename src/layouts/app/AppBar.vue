@@ -105,9 +105,9 @@ const settingsItems = [
 ];
 
 const simulatorItems = [
-  { id: "nest", title: "NEST", icon: "stimulator:nestIcon", color: "nest" },
-  { id: "pynn", title: "PyNN", icon: "stimulator:pynnIcon" },
-  { id: "arbor", title: "Arbor", icon: "stimulator:arborIcon" },
+  { id: "nest", title: "NEST", icon: "simulator:nest", color: "nest" },
+  { id: "pynn", title: "PyNN", icon: "simulator:pynn" },
+  { id: "arbor", title: "Arbor", icon: "simulator:arbor" },
   { id: "norse", title: "Norse", icon: "mdi-google-downasaur" },
 ];
 </script>

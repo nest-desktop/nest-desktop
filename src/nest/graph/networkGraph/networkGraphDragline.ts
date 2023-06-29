@@ -5,7 +5,9 @@ import drawPath from "@/utils/graph/connectionGraphPath";
 
 import { Network } from "@nest/core/network/network";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { Node } from "@nest/core/node/node";
+import { logger as mainLogger } from "@/utils/logger";
+
+const logger = mainLogger.getSubLogger({ name: "network graph drag line" });
 
 export class NetworkGraphDragline {
   private _workspace: NetworkGraphWorkspace;
@@ -22,7 +24,8 @@ export class NetworkGraphDragline {
    * Initialize drag line.
    */
   init(e: MouseEvent): void {
-    this._workspace.state.enableConnection = true;
+    logger.trace("Init");
+    this._workspace.state.dragLine = true;
     this.update(e);
     this._workspace.update();
   }
@@ -31,8 +34,9 @@ export class NetworkGraphDragline {
    * Update drag line.
    */
   update(e: MouseEvent): void {
-    if (this.network && this.network.state.selectedNode != null) {
-      const selectedNode: Node = this.network.state.selectedNode;
+    logger.trace("Update");
+    if (this.network && this.network.nodes.state.selectedNode != null) {
+      const selectedNode = this.network.nodes.state.selectedNode;
       const sourcePosition: any = selectedNode.view.position;
       const position: number[] = pointer(e, this._workspace.selector.node());
       const targetPosition: any = {
@@ -51,14 +55,19 @@ export class NetworkGraphDragline {
           })
         );
     } else {
-      console.log("No node was selected when dragLine() got executed!");
+      logger.warn("No node was selected when dragLine() got executed!");
     }
   }
 
   /**
    * Draw path of the drag line.
    */
-  drawPath(sourcePos: any, targetPos: any, options: any = {}): void {
+  drawPath(
+    sourcePos: { x: number; y: number },
+    targetPos: { x: number; y: number },
+    options: any = {}
+  ): void {
+    logger.trace("draw path");
     this._workspace.selector
       .select(".dragline")
       .style("opacity", 1)
@@ -73,5 +82,6 @@ export class NetworkGraphDragline {
       .select(".dragline")
       .style("opacity", 0)
       .attr("d", "M0,0L0,0");
+    this._workspace.state.dragLine = false;
   }
 }

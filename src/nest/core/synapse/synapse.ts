@@ -1,5 +1,8 @@
 // synapse.ts
 
+import { ILogObj, Logger } from "tslog";
+import { logger as mainLogger } from "@/utils/logger";
+
 import { Connection } from "../connection/connection";
 import { CopyModel } from "../model/copyModel";
 import { Model } from "../model/model";
@@ -15,21 +18,23 @@ export interface SynapseProps {
 export class Synapse {
   private readonly _name = "Synapse";
   private _connection: Connection; // parent
+  private _logger: Logger<ILogObj>;
+  private _model: CopyModel | Model;
   private _modelId: string;
   private _params: { [key: string]: SynapseParameter } = {};
   private _receptorIdx: number = 0;
 
-  constructor(connection: Connection, synapse: SynapseProps = {}) {
+  constructor(connection: Connection, synapse?: SynapseProps) {
     this._connection = connection;
+    this._modelId = synapse?.model || "static_synapse";
+    this._receptorIdx = synapse?.receptorIdx || 0;
 
-    if (synapse && synapse.params && synapse.params.length > 0) {
-      this._modelId = synapse.model || "static_synapse";
-      this._receptorIdx = synapse.receptorIdx || 0;
-      this.initParameters(synapse);
-    } else {
-      this._modelId = "static_synapse";
-      this.initParameters();
-    }
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._modelId}] synapse`,
+    });
+
+    this._model = this.getModel(this._modelId);
+    this.initParameters(synapse?.params);
   }
 
   get connection(): Connection {
@@ -64,35 +69,33 @@ export class Synapse {
   }
 
   get model(): CopyModel | Model {
-    if (
-      this._connection.network.models.synapseModels.some(
-        (model: CopyModel) => model.id === this.modelId
-      )
-    ) {
-      return this._connection.network.models.getModelById(this._modelId);
-    } else {
-      return this._connection.network.project.modelStore.getModel(
-        this._modelId
-      );
+    if (this._model?.id !== this._modelId) {
+      this._model = this.getModel(this._modelId);
     }
+    return this._model;
   }
 
   /**
    * Set model.
    *
    * @remarks
-   * Save model ID, see modelId.
+   * It initializes parameters and activity components.
+   * It triggers node changes.
    *
    * @param model - synapse model
    */
   set model(model: CopyModel | Model) {
-    this.modelId = model.id;
+    this._modelId = model.id;
+    this._model = model;
+    this.modelChanges();
   }
 
   get models(): (CopyModel | Model)[] {
     const elementType: string = this.model.elementType;
     const models: Model[] =
-      this._connection.network.project.modelStore.getModelsByElementType(elementType);
+      this._connection.network.project.modelStore.getModelsByElementType(
+        elementType
+      );
     const modelsCopied: CopyModel[] =
       this._connection.network.models.filterByElementType(elementType);
     const filteredModels = [...models, ...modelsCopied];
@@ -114,9 +117,6 @@ export class Synapse {
    */
   set modelId(value: string) {
     this._modelId = value;
-    this.initParameters();
-    this._connection.network.clean();
-    this.synapseChanges();
   }
 
   get name(): string {
@@ -177,8 +177,33 @@ export class Synapse {
    * Add model parameter component.
    * @param param - parameter object
    */
-  addParameter(param: any): void {
+  addParameter(param: SynapseParameterProps): void {
+    // this._logger.trace("add parameter:", param)
     this._params[param.id] = new SynapseParameter(this, param);
+  }
+
+  /**
+   * Observer for synapse changes.
+   *
+   * @remarks
+   * It emits connection changes.
+   */
+  changes(): void {
+    // this.updateHash()
+    this._connection.changes();
+  }
+
+  getModel(modelId: string): CopyModel | Model {
+    this._logger.trace("get model:", modelId);
+    if (
+      this._connection.network.models.synapseModels.some(
+        (model: CopyModel) => model.id === modelId
+      )
+    ) {
+      return this._connection.network.models.getModelById(modelId);
+    } else {
+      return this._connection.network.project.modelStore.getModel(modelId);
+    }
   }
 
   /**
@@ -193,12 +218,12 @@ export class Synapse {
   /**
    * Initialize synapse parameters.
    */
-  initParameters(synapse?: any): void {
-    // Update parameters from model or node.
+  initParameters(params?: SynapseParameterProps[]): void {
+    this._logger.trace("init parameters");
     this._params = {};
-    if (this.model && synapse && synapse.params) {
+    if (this.model && params) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = synapse.params.find(
+        const param = params?.find(
           (param: any) => param.id === modelParam.id
         );
         this.addParameter(param || modelParam);
@@ -207,8 +232,8 @@ export class Synapse {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) =>
         this.addParameter(modelParam)
       );
-    } else if (synapse.params) {
-      synapse.params.forEach((param: any) => this.addParameter(param));
+    } else if (params) {
+      params.forEach((param: any) => this.addParameter(param));
     }
   }
 
@@ -216,12 +241,25 @@ export class Synapse {
    * Inverse synaptic weight.
    */
   inverseWeight(): void {
+    this._logger.trace("inverse weight");
     const weight: SynapseParameter = this._params.weight;
     if (typeof weight.value === "number") {
       weight.state.visible = true;
       weight.value = -1 * weight.value;
-      this._connection.connectionChanges();
+      this._connection.changes();
     }
+  }
+
+  /**
+   * Observer for model changes.
+   *
+   * @remarks
+   * It emits synapse changes.
+   */
+  modelChanges(): void {
+    this.initParameters();
+    this._connection.network.clean();
+    this.changes();
   }
 
   /**
@@ -231,16 +269,6 @@ export class Synapse {
     Object.values(this.params).forEach(
       (param: SynapseParameter) => (param.state.visible = true)
     );
-  }
-
-  /**
-   * Observer for synapse changes.
-   *
-   * @remarks
-   * It emits connection changes.
-   */
-  synapseChanges(): void {
-    this._connection.connectionChanges();
   }
 
   /**

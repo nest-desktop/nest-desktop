@@ -1,53 +1,57 @@
 <template>
-  <div class="ma-2px simulationKernel">
-    <card color="primary">
+  <div class="simulationKernelEditor">
+    <v-toolbar color="transparent" density="compact">
+      <v-toolbar-title> Simulation kernel editor</v-toolbar-title>
+    </v-toolbar>
+    <card :color="props.color" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation kernel
       </v-card-title>
 
       <v-card-text>
         <TickSlider
-          v-bind="options.threadSettings"
-          @update:modelValue="paramChange()"
+          :color="props.color"
           class="mx-1 py-1"
-          v-model="state.simulation.kernel.localNumThreads"
+          v-bind="options.threadSettings"
+          v-model="projectStore.project.simulation.kernel.localNumThreads"
         />
 
         <TickSlider
-          v-bind="options.resolutionSettings"
-          @update:modelValue="paramChange()"
+          :color="props.color"
           class="mx-1 py-1"
-          v-model="state.simulation.kernel.resolution"
+          v-bind="options.resolutionSettings"
+          v-model="projectStore.project.simulation.kernel.resolution"
         />
 
         <ValueSlider
-          v-bind="options.rngSeedSettings"
-          @update:modelValue="paramChange()"
+          :color="props.color"
           class="mx-1 py-1"
-          v-model="state.simulation.kernel.rngSeed"
+          v-bind="options.rngSeedSettings"
+          v-model="projectStore.project.simulation.kernel.rngSeed"
         />
 
         <v-checkbox
-          v-bind="options.autoRNGSeedSettings"
-          @update:modelValue="updateAutoRNGSeed"
-          hide-details="auto"
+          :color="props.color"
+          @update:modelValue="updateAutoRNGSeed()"
           class="mx-1"
+          hide-details="auto"
+          v-bind="options.autoRNGSeedSettings"
           v-model="state.autoRNGSeed"
         />
       </v-card-text>
     </card>
 
-    <card color="primary">
+    <card :color="props.color" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation
       </v-card-title>
 
       <v-card-text class="py-0">
         <ValueSlider
-          v-bind="options.simulationTimeSettings"
-          @update:modelValue="paramChange()"
+          :color="props.color"
           class="mx-1 py-2"
-          v-model="state.simulation.time"
+          v-bind="options.simulationTimeSettings"
+          v-model="projectStore.project.simulation.time"
         />
       </v-card-text>
     </card>
@@ -57,13 +61,15 @@
 <script lang="ts" setup>
 import { onMounted, reactive } from "vue";
 
-import { Simulation } from "@nest/core/simulation/simulation";
+import { useProjectStore } from "@nest/store/project/projectStore";
 import ValueSlider from "@/components/common/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
 
+const projectStore = useProjectStore();
+
 const props = defineProps({
-  simulation: Simulation,
+  color: { type: String, default: "accent" },
 });
 
 const options = {
@@ -122,27 +128,18 @@ const options = {
 
 const state = reactive({
   autoRNGSeed: false,
-  simulation: props.simulation as Simulation,
 });
-
-/**
- * Triggers when parameter is changed.
- */
-const paramChange = () => {
-  state.simulation.project.simulation.code.generate();
-};
 
 /**
  * Updates when the usage of automatic RNG seed is switched on/off.
  */
 function updateAutoRNGSeed() {
-  state.simulation.kernel.updateConfig({
+  projectStore.project.simulation.kernel.updateConfig({
     autoRNGSeed: state.autoRNGSeed,
   });
 }
 
 onMounted(() => {
-  state.simulation = props.simulation as Simulation;
-  state.autoRNGSeed = state.simulation.kernel.config.autoRNGSeed;
+  state.autoRNGSeed = projectStore.project.simulation.kernel.config.autoRNGSeed;
 });
 </script>

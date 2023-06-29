@@ -3,29 +3,21 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { Connection } from "../connection/connection";
 import { Network } from "./network";
 import { Node } from "../node/node";
+import { Connection } from "../connection/connection";
+
+interface NetworkStateState {
+  displayIdx: {
+    connections: number[];
+    models: number[];
+    nodes: number[];
+  };
+  hash: string;
+}
 
 export class NetworkState {
-  private _displayIdx = {
-    connections: [],
-    models: [],
-    nodes: [],
-  };
-
-  private _elementTypes: string[] = [
-    "neuron",
-    "stimulator",
-    "recorder",
-    "model",
-  ];
-  private _elementTypeIdx: number = 0;
-  private _focusedConnection?: Connection;
-  private _focusedNode?: Node;
-  private _state: UnwrapRef<{
-    hash: string;
-  }>;
+  private _state: UnwrapRef<NetworkStateState>;
 
   private _icons = {
     all: {
@@ -53,195 +45,41 @@ export class NetworkState {
   };
 
   private _network: Network; // parent
-  private _nodeAnnotations: any[] = [];
-  private _selectedConnection?: Connection;
-  private _selectedNode?: Node;
 
   constructor(network: Network) {
     this._network = network;
     this._state = reactive({
+      displayIdx: {
+        connections: [],
+        models: [],
+        nodes: [],
+      },
       hash: "",
     });
-  }
-
-  get displayIdx(): any {
-    return this._displayIdx;
-  }
-
-  get elementType(): string {
-    return this._elementTypes[this._elementTypeIdx];
-  }
-
-  get elementTypes(): string[] {
-    return this._elementTypes;
-  }
-
-  get elementTypeIdx(): number {
-    return this._elementTypeIdx;
-  }
-
-  set elementTypeIdx(value: number) {
-    this._elementTypeIdx = value;
-  }
-
-  get isNodeSourceSelected(): boolean {
-    const selectedNode = this.selectedNode;
-    return selectedNode ? !selectedNode.model.isWeightRecorder : false;
-  }
-
-  get isWeightRecorderSelected(): boolean {
-    const selectedNode = this.selectedNode;
-    return selectedNode ? selectedNode.model.isWeightRecorder : false;
-  }
-
-  get focusedConnection(): Connection | undefined {
-    return this._focusedConnection;
-  }
-
-  set focusedConnection(connection: Connection | undefined) {
-    this._focusedNode = undefined;
-    this._focusedConnection = connection;
-  }
-
-  get focusedNode(): Node | undefined {
-    return this._focusedNode;
-  }
-
-  set focusedNode(node: Node | undefined) {
-    this._focusedConnection = undefined;
-    this._focusedNode = node;
   }
 
   get hash(): string {
     return this._state.hash;
   }
 
-  get icons(): any {
+  get icons(): { [key: string]: { [key: string]: string } } {
     return this._icons;
   }
 
-  get nodeAnnotations(): any {
-    return this._nodeAnnotations;
-  }
-
-  get selectedConnection(): Connection | undefined {
-    return this._selectedConnection;
-  }
-
-  set selectedConnection(connection: Connection | undefined) {
-    this._selectedNode = undefined;
-    this._selectedConnection =
-      this._selectedConnection !== connection ? connection : undefined;
-  }
-
-  get selectedNode(): Node | undefined {
-    return this._selectedNode;
-  }
-
-  set selectedNode(node: Node | undefined) {
-    this._selectedConnection = undefined;
-    this._selectedNode = this._selectedNode !== node ? node : undefined;
-  }
-
-  get state(): any {
+  get state(): UnwrapRef<NetworkStateState> {
     return this._state;
-  }
-
-  /**
-   * Check if connection is focused.
-   */
-  isConnectionFocused(
-    connection: Connection,
-    unselected: boolean = true
-  ): boolean {
-    if (this._focusedConnection != null) {
-      return this._focusedConnection === connection;
-    } else if (this._focusedNode != null) {
-      return this._focusedNode === connection.source;
-    }
-    return unselected;
-  }
-
-  /**
-   * Check if connection is selected.
-   */
-  isConnectionSelected(
-    connection: Connection,
-    unselected: boolean = true
-  ): boolean {
-    if (this._selectedConnection != null) {
-      return this._selectedConnection === connection;
-    } else if (this._selectedNode != null) {
-      return this._selectedNode === connection.source;
-    }
-    return unselected;
-  }
-
-  /**
-   * Check if node is focused.
-   */
-  isNodeFocused(node: Node): boolean {
-    return this._focusedNode === node;
-  }
-
-  /**
-   * Check if node is selected.
-   */
-  isNodeSelected(
-    node: Node,
-    unselected: boolean = true,
-    withConnection: boolean = true
-  ): boolean {
-    if (this._selectedNode != null) {
-      return this._selectedNode === node;
-    } else if (this._selectedConnection != null && withConnection) {
-      const connections: Connection[] = node.network.connections.filter(
-        (connection: Connection) =>
-          connection.sourceIdx === node.idx || connection.targetIdx === node.idx
-      );
-      return connections.some(
-        (connection: Connection) => connection === this.selectedConnection
-      );
-    }
-    return unselected;
-  }
-
-  /**
-   * Reset focus and selection.
-   */
-  reset(): void {
-    this.resetFocus();
-    this.resetSelection();
-  }
-
-  /**
-   * Reset focus.
-   */
-  resetFocus(): void {
-    this._focusedNode = undefined;
-    this._focusedConnection = undefined;
-  }
-
-  /**
-   * Reset selection.
-   */
-  resetSelection(): void {
-    this._selectedNode = undefined;
-    this._selectedConnection = undefined;
-  }
-
-  update(): void {
-    this.updateHash();
   }
 
   /**
    * Update hash.
    */
   updateHash(): void {
-    // console.log('Update Hash');
     this._state.hash = sha1({
-      nodes: this._network.nodes.state.hash,
-      connections: this._network.connections.state.hash,
-    });
+      nodes: this._network.nodes.all.map((node: Node) => node.state.hash),
+      connections: this._network.connections.all.map(
+        (connection: Connection) => connection.state.hash
+      ),
+    }).slice(0, 6);
+    this._network.logger.settings.name = `[${this._network.project.shortId}] network #${this._state.hash}`;
   }
 }

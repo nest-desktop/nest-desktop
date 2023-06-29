@@ -28,10 +28,6 @@ export class NodeGraphConnector {
     return this._networkGraph.config.nodeRadius;
   }
 
-  get state(): any {
-    return this._networkGraph.workspace.state;
-  }
-
   get strokeWidth(): number {
     return this._networkGraph.config.strokeWidth;
   }
@@ -130,7 +126,7 @@ export class NodeGraphConnector {
    * Call on dragging.
    */
   drag(e: MouseEvent, node: Node): void {
-    node.state.select(true);
+    node.state.select();
     this._networkGraph.workspace.reset();
     this._networkGraph.workspace.dragline.init(e);
   }
@@ -140,25 +136,25 @@ export class NodeGraphConnector {
    */
   dragEnd(e: MouseEvent): void {
     // this._networkGraph.workspace.dragline.hide();
-    // this._networkGraph.workspace.state.enableConnection = false;
+    // this._networkGraph.workspace.state.dragLine = false;
 
     const network = this._networkGraph.network;
     const workspace = this._networkGraph.workspace;
 
     if (
-      network.state.selectedNode &&
-      network.state.focusedNode &&
-      workspace.state.enableConnection
+      network.nodes.state.selectedNode &&
+      network.nodes.state.focusedNode &&
+      workspace.state.dragLine
     ) {
       network.connectNodes(
-        network.state.selectedNode,
-        network.state.focusedNode
+        network.nodes.state.selectedNode as Node,
+        network.nodes.state.focusedNode as Node
       );
     }
 
     if (!workspace.altPressed) {
       workspace.reset();
-      network.state.reset();
+      network.nodes.resetState();
     }
 
     this._networkGraph.dragEnd(e);
@@ -172,12 +168,14 @@ export class NodeGraphConnector {
       .selectAll("g.node")
       .selectAll("g.connector");
 
-    const duration: number = this.state.dragging ? 0 : 250;
+    const duration: number = this._networkGraph.workspace.state.dragging
+      ? 0
+      : 250;
     const t: Transition<any, any, any, any> = transition().duration(duration);
 
-    const workspaceState = this._networkGraph.workspace.state;
+    const workspace = this._networkGraph.workspace;
     const connectionDrag: boolean =
-      workspaceState.enableConnection || workspaceState.dragging;
+      workspace.state.dragLine || workspace.state.dragging;
 
     connector
       .transition(t)

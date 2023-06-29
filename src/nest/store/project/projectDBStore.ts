@@ -2,9 +2,12 @@
 
 import { defineStore } from "pinia";
 import { download } from "@/utils/download";
+import { logger as mainLogger } from "@/utils/logger";
 
-import { Project } from "@nest/core/project/project";
+import { Project, ProjectProps } from "@nest/core/project/project";
 import { ProjectDB } from "./projectDB";
+
+const logger = mainLogger.getSubLogger({ name: "project DB store" });
 
 export const useProjectDBStore = defineStore("project-db", {
   state: () => ({
@@ -17,7 +20,7 @@ export const useProjectDBStore = defineStore("project-db", {
       "spike-input",
       "current-input",
     ],
-    projects: [] as (Project | any)[],
+    projects: [] as (Project | ProjectProps | any)[], // TODO: any should be removed.
     searchTerm: "",
   }),
   getters: {
@@ -46,18 +49,18 @@ export const useProjectDBStore = defineStore("project-db", {
     /**
      * Create a project in the database.
      */
-    async createProject(data: any): Promise<any> {
-      // console.log("Add project: " + data.name);
+    async createProject(data: ProjectProps): Promise<any> {
+      logger.trace("add project", data.id?.slice(0, 6));
       return this.db.create(data);
     },
     /**
      * Create multiple projects in the database.
      */
-    async createProjects(data: any[]): Promise<any> {
-      // console.log("Add projects");
-      const projects: any[] = data.map(
-        (project: any) =>
-          new Promise<any>((resolve) => {
+    async createProjects(data: ProjectProps[]): Promise<ProjectProps[]> {
+      logger.trace("create projects");
+      const projects: Promise<ProjectProps>[] = data.map(
+        (project: ProjectProps) =>
+          new Promise<ProjectProps>((resolve) => {
             this.createProject(project).then(() => {
               resolve(project);
             });
@@ -68,30 +71,26 @@ export const useProjectDBStore = defineStore("project-db", {
     /**
      * Delete project in database and then update the list.
      */
-    deleteProject(project: any): void {
-      // console.log('Delete project');
-      if (project.docId) {
-        this.db.delete(project.docId).finally(() => {
-          this.removeFromList(project.id);
-        });
-      } else if (project._id) {
-        this.db.delete(project._id).finally(() => {
-          this.removeFromList(project.id);
-        });
-      } else {
-        this.removeFromList(project.id);
-      }
+    deleteProject(project: Project | ProjectProps | any): void {
+      // TODO: any should be removed.
+      logger.trace("delete project:", project.id.slice(0, 6));
+      const projectId: string = project.docId || project.id;
+      this.db.delete(projectId).finally(() => {
+        this.removeFromList(projectId);
+      });
     },
 
     /**
      * Delete projects and then update the list.
      * @param projects List of project objects.
      */
-    deleteProjects(projects: any[]): void {
-      console.debug("Delete projects");
+    deleteProjects(projects: (Project | ProjectProps)[]): void {
+      logger.trace("delete projects");
       if (projects.length === 0) return;
       const projectDocIds: string[] = projects.map(
-        (project: any) => project.docId || project._id || project.id
+        (
+          project: Project | ProjectProps | any // TODO: any should be removed.
+        ) => project.docId || project._id || project.id
       );
       this.db.deleteBulk(projectDocIds).then(() => this.updateList());
     },
@@ -99,7 +98,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Export project from the list.
      */
     exportProject(projectId: string, withActivities: boolean = false): void {
-      console.debug("Export project: " + projectId);
+      logger.trace("export project:", projectId.slice(0, 6));
       const project: Project = this.projects.find(
         (p: Project) => p.id === projectId
       );
@@ -115,6 +114,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Get project from the list.
      */
     getProject(projectId: string = ""): Project {
+      logger.trace("get project:", projectId.slice(0, 6));
       let project;
       if (projectId) {
         project = this.loadProject(projectId);
@@ -129,7 +129,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Import the project in the database.
      */
     async importProject(project: Project): Promise<any> {
-      // console.log("Import project: " + project.name);
+      logger.trace("import project:", project.id.slice(0, 6));
       project.clean();
 
       return project.docId
@@ -140,14 +140,14 @@ export const useProjectDBStore = defineStore("project-db", {
      * Import projects the update list.
      */
     importProjects(projects: any[]): void {
-      // console.log("Import projects");
+      logger.trace("import projects");
       this.createProjects(projects).then(() => this.updateList());
     },
     /**
      * Import multiple projects from assets and add them to the database.
      */
     async importProjectsFromAssets(): Promise<any> {
-      // console.log("Import projects from assets");
+      logger.trace("import projects from assets");
       let promise: Promise<any> = Promise.resolve();
       this.projectAssets.forEach(async (file: string) => {
         const response = await fetch("assets/nest/projects/" + file + ".json");
@@ -157,12 +157,12 @@ export const useProjectDBStore = defineStore("project-db", {
       return promise;
     },
     /**
-     * Initialize projects db.
+     * Initialize projects DB.
      */
     async init(): Promise<any> {
-      // console.log("Initialize project DB store");
+      logger.trace("init");
       return this.db.count().then(async (count: number) => {
-        console.debug("Projects in db: " + count);
+        logger.debug("projects in DB:", count);
         if (count === 0) {
           return this.importProjectsFromAssets().then(() => this.updateList());
         } else {
@@ -175,7 +175,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * @param projectId string
      */
     loadProject(projectId: string): Project | undefined {
-      // console.log("Load project:", projectId);
+      logger.trace("load project:", projectId.slice(0, 6));
       // this.project.insite.cancelAllIntervals();
 
       let project = this.projects.find(
@@ -207,7 +207,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Reload the project in the list.
      */
     reloadProject(projectId: string): void {
-      console.log("Reload project");
+      logger.trace("reload project:", projectId.slice(0, 6));
 
       this.unloadProject(projectId);
       this.loadProject(projectId);
@@ -216,7 +216,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Remove project from the list.
      */
     removeFromList(projectId: string): void {
-      console.log("Remove project from the list: " + projectId);
+      logger.trace("remove project from the list:", projectId.slice(0, 6));
       const idx: number = this.projects
         .map((p: Project) => p.id)
         .indexOf(projectId);
@@ -230,6 +230,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Save project from the list.
      */
     async saveProject(projectId: string): Promise<any> {
+      logger.trace("save project:", projectId.slice(0, 6));
       const project = this.projects.find(
         (project) => project._id === projectId
       );
@@ -240,7 +241,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * @param project string
      */
     unloadProject(projectId: string): void {
-      // console.debug("Unload project");
+      logger.trace("Unload project:", projectId);
 
       const project: Project = this.projects.find(
         (project: any) => project.id === projectId
@@ -259,7 +260,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Update project list from the database.
      */
     async updateList(): Promise<any> {
-      // console.log("Update project list");
+      logger.trace("update list");
       this.projects = [];
       return this.db.list("createdAt", true).then((projects: any[]) => {
         this.projects = projects;

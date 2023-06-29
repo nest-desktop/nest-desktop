@@ -122,6 +122,17 @@ export class NodeReceptor {
   }
 
   /**
+   * Observer for node receptor changes.
+   *
+   * @remarks
+   * It emits node changes.
+   */
+  changes(): void {
+    this.clean();
+    this._node.changes();
+  }
+
+  /**
    * Clean the node receptor.
    */
   clean(): void {
@@ -181,14 +192,12 @@ export class NodeReceptor {
   /**
    * Reset the value in the parameter components.
    *
-   * @remarks
-   * It emits node changes.
    */
   resetParameters(): void {
     Object.values(this._params).forEach((param: NodeReceptorParameter) =>
       param.reset()
     );
-    this.nodeChanges();
+    this.changes();
   }
 
   /**
@@ -201,25 +210,11 @@ export class NodeReceptor {
   }
 
   /**
-   * Observer for node receptor changes.
-   *
-   * @remarks
-   * It emits node changes.
-   */
-  nodeChanges(): void {
-    this.clean();
-    this._node.nodeChanges();
-  }
-
-  /**
-   * Delete node receptor.
-   *
-   * @remarks
-   * It removes receptor from the node.
+   * Remove node receptor.
    */
   remove(): void {
     this._node.removeReceptor(this);
-    this._node.nodeChanges();
+    this.changes();
   }
 
   /**

@@ -1,9 +1,12 @@
 // simulationCode.ts - 1 any
 
+import Mustache from "mustache";
+import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
-import Mustache from "mustache";
+
 import { download } from "@/utils/download";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Simulation } from "./simulation";
 
@@ -30,6 +33,7 @@ const simulationCodeBlocks: string[] = [
 ];
 
 export class SimulationCode {
+  private _logger: Logger<ILogObj>;
   private _simulation: Simulation; // parent
   private _state: UnwrapRef<SimulationCodeState>;
 
@@ -45,6 +49,10 @@ export class SimulationCode {
       template: "",
       hash: "",
       script: "",
+    });
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._simulation.project.shortId}] simulation code`,
     });
 
     this.loadTemplate();
@@ -121,6 +129,7 @@ export class SimulationCode {
    * Clean the simulation code.
    */
   clean(): void {
+    this._logger.trace("clean code");
     if (!this.isInsiteReady) {
       this._state.blocks = this._state.blocks.filter(
         (item: String) => item !== "runSimulationInsite"
@@ -132,6 +141,7 @@ export class SimulationCode {
    * Export the script to file.
    */
   export(format: string = "py"): void {
+    this._logger.trace("export script to file:", format);
     let data: string = "";
     if (format === "py") {
       data = this._state.script;
@@ -180,13 +190,14 @@ export class SimulationCode {
    * Renders the script and generates the hash.
    */
   generate(): void {
-    // console.log("Generate simulation code");
     if (this._state.template) {
       setTimeout(() => {
         this.script = Mustache.render(
           this._state.template || "",
           this._simulation.project
         );
+        this.updateHash();
+        this._logger.trace("generate");
       });
     } else {
       this.loadTemplate().then(() => this.generate());
@@ -198,6 +209,7 @@ export class SimulationCode {
    * @return promise
    */
   async loadTemplate(): Promise<any> {
+    this._logger.trace("load template");
     return import(`./simulationCodes/${this._state.version}.code?raw`).then(
       (template) => {
         this.state.template = template.default;
@@ -211,5 +223,12 @@ export class SimulationCode {
    */
   toJSON(): SimulationCodeProps {
     return { blocks: this._state.blocks };
+  }
+
+  updateHash(): void {
+    this._state.hash = sha1({
+      script: this._state.script,
+    }).slice(0, 6);
+    this._logger.settings.name = `[${this._simulation.project.shortId}] simulation code #${this._state.hash}`;
   }
 }

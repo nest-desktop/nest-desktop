@@ -4,11 +4,15 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
+import { logger as mainLogger } from "@/utils/logger";
+
 import { useProjectDBStore } from "@nest/store/project/projectDBStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
+const logger = mainLogger.getSubLogger({ name: "project route" });
+
 const projectBeforeEnter = (to: any) => {
-  // console.log("Before enter routes for project:", to.params);
+  logger.trace("Before enter project route:", to.path);
 
   const projectDBStore = useProjectDBStore();
   if (projectDBStore.projects.length === 0) {
@@ -24,7 +28,7 @@ const projectBeforeEnter = (to: any) => {
 };
 
 const projectRedirect = (to: any) => {
-  // console.log("Redirect path for project:", to.params);
+  logger.trace("Redirect project path:", to.params.projectId?.slice(0, 6));
   const projectStore = useProjectStore();
 
   if (to.params.projectId) {
@@ -54,9 +58,9 @@ export default [
       },
       {
         path: "edit",
-        name: "NetworkEditor",
+        name: "NetworkGraphEditor",
         components: {
-          project: () => import("../views/project/NetworkEditor.vue"),
+          project: () => import("../views/project/NetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

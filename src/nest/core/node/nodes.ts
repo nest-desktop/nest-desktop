@@ -1,20 +1,25 @@
 // networkNodes.ts
 
+import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
+
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Node, NodeProps } from "./node";
 import { Network } from "../network/network";
 
 interface NodesState {
   annotations: { [key: string]: string }[];
-  focusedNode: number | null;
+  elementTypeIdx: number;
+  focusedNode: Node | null;
   hash: string;
   nodesLength: number;
-  selectedNode: number | null;
+  selectedNode: Node | null;
 }
 
 export class Nodes {
+  private _logger: Logger<ILogObj>;
   private _network: Network; // parent
   private _nodes: Node[] = [];
   private _state: UnwrapRef<NodesState>; //reactive state
@@ -22,8 +27,13 @@ export class Nodes {
   constructor(network: Network, nodes?: NodeProps[]) {
     this._network = network;
 
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._network.project.shortId}] nodes`,
+    });
+
     this._state = reactive({
       annotations: [],
+      elementTypeIdx: 0,
       focusedNode: null,
       hash: "",
       nodesLength: 0,
@@ -31,6 +41,10 @@ export class Nodes {
     });
 
     this.init(nodes);
+  }
+
+  get annotations(): any {
+    return this._state.annotations;
   }
 
   get all(): Node[] {
@@ -60,6 +74,16 @@ export class Nodes {
    */
   get hasSomeSpatialNodes(): boolean {
     return this._nodes.some((node: Node) => node.spatial.hasPositions);
+  }
+
+  get isNodeSourceSelected(): boolean {
+    const selectedNode = this._state.selectedNode;
+    return selectedNode ? !selectedNode.model.isWeightRecorder : false;
+  }
+
+  get isWeightRecorderSelected(): boolean {
+    const selectedNode = this._state.selectedNode;
+    return selectedNode ? selectedNode.model.isWeightRecorder : false;
   }
 
   get network(): Network {
@@ -96,6 +120,10 @@ export class Nodes {
    */
   get recordersSpike(): Node[] {
     return this._nodes.filter((node: Node) => node.model.isSpikeRecorder);
+  }
+
+  set selectedNode(node: Node | null) {
+    this._state.selectedNode = this._state.selectedNode !== node ? node : null;
   }
 
   /**
@@ -160,7 +188,7 @@ export class Nodes {
    * @param data node props
    */
   add(data: NodeProps): Node {
-    // console.log("Add node");
+    this._logger.trace("add node:", data.model);
     const node = new Node(this, data);
     this._nodes.push(node);
     return node;
@@ -181,9 +209,9 @@ export class Nodes {
   }
 
   /**
-   * Empty nodes.
+   * Clear node list.
    */
-  empty(): void {
+  clear(): void {
     this.resetState();
     this._nodes = [];
   }
@@ -201,7 +229,7 @@ export class Nodes {
    * Initialize nodes.
    */
   init(nodes?: NodeProps[]): void {
-    this.empty();
+    this.clear();
 
     if (nodes) {
       this.update(nodes);
@@ -213,7 +241,7 @@ export class Nodes {
    *
    */
   remove(node: Node): void {
-    // console.log("Delete node");
+    this._logger.trace("remove node:", node.modelId);
     this.resetState();
 
     // Remove node from the node list.
@@ -224,8 +252,6 @@ export class Nodes {
    * Reset all states.
    */
   resetState(): void {
-    this._state.focusedNode = null;
-    this._state.selectedNode = null;
     this._state.hash = "";
   }
 
@@ -237,13 +263,21 @@ export class Nodes {
     return this._nodes.map((node: Node) => node.toJSON());
   }
 
+  unfocusNode(): void {
+    this._state.focusedNode = null;
+  }
+
+  unselectNode(): void {
+    this._state.selectedNode = null;
+  }
+
   /**
    * Update network component.
    *
    * @param network - network object
    */
   update(nodes?: NodeProps[]): void {
-    // console.log('Update nodes')
+    this._logger.trace("update nodes");
     if (nodes) {
       nodes.forEach((data: NodeProps) => this.add(data));
     }
@@ -287,12 +321,10 @@ export class Nodes {
    * Update hash.
    */
   updateHash(): void {
-    // console.log('Update Hash');
     this._state.hash = sha1({
-      nodes: this._nodes.map(
-        (node: Node) => node.toJSON() //TODO node.state.hash
-      ),
-    });
+      nodes: this._nodes.map((node: Node) => node.state.hash),
+    }).slice(0,6);
+    this._logger.settings.name = `[${this._network.project.shortId}] nodes #${this._state.hash}`;
   }
 
   updateNodesLength(): void {
@@ -306,7 +338,7 @@ export class Nodes {
    * It should be called after network created.
    */
   updateRecords(): void {
-    // console.log("Update nodes records");
+    this._logger.trace("update records");
     this.recorders
       .filter((recorder: Node) => recorder.model.isAnalogRecorder)
       .forEach((recorder: Node) => recorder.updateRecords());
@@ -328,6 +360,9 @@ export class Nodes {
     }
   }
 
+  /**
+   * Update states.
+   */
   updateStates(): void {
     this._nodes.forEach((node: Node) => node.state.update());
 

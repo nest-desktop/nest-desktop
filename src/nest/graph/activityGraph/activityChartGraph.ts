@@ -1,25 +1,14 @@
 // activityChartGraph.ts
 
+import { ILogObj, Logger } from "tslog";
 import { UnwrapRef, reactive } from "vue";
-import {
-  Config,
-  Data,
-  DownloadImgopts,
-  Icons,
-  Layout,
-  // @ts-ignore
-  Partial,
-  Root,
-  RootOrData,
-  downloadImage,
-  newPlot,
-  react,
-  relayout,
-  restyle,
-} from "plotly.js-dist-min";
+
+import Plotly from "plotly.js-dist-min";
+// @ts-ignore
+import { Partial } from "plotly.js-dist-min";
 
 import { darkMode } from "@/utils/theme";
-import { debounce } from "@/utils/events";
+import { logger as mainLogger } from "@/utils/logger";
 
 import {
   ActivityChartPanel,
@@ -47,8 +36,8 @@ export interface ActivityChartPanelModelProps {
 
 interface ActivityChartGraphState {
   dialog: Boolean;
-  gd?: RootOrData;
-  ref?: Root;
+  gd?: Plotly.RootOrData;
+  ref?: Plotly.Root;
 }
 
 const models: ActivityChartPanelModelProps[] = [
@@ -125,14 +114,14 @@ const models: ActivityChartPanelModelProps[] = [
 ];
 
 export class ActivityChartGraph {
-  private _config: Partial<Config> = {};
-  private _data: Data[] = [];
-  private _layout: Partial<Layout> = {};
+  private _config: Partial<Plotly.Config> = {};
+  private _data: Plotly.Data[] = [];
+  private _layout: Partial<Plotly.Layout> = {};
+  private _logger: Logger<ILogObj>;
   private _models: ActivityChartPanelModelProps[] = models;
   private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
-  private _resizeObserver: ResizeObserver;
   private _state: UnwrapRef<ActivityChartGraphState>;
 
   constructor(project: Project, panels: ActivityChartPanelProps[] = []) {
@@ -146,8 +135,8 @@ export class ActivityChartGraph {
         [
           {
             name: "Download plot",
-            icon: Icons.camera,
-            click: (gd: RootOrData) => {
+            icon: Plotly.Icons.camera,
+            click: (gd: Plotly.RootOrData) => {
               this._state.gd = gd;
               this._state.dialog = true;
             },
@@ -178,22 +167,20 @@ export class ActivityChartGraph {
         x: 0,
       },
     };
+    this._panel = new ActivityChartPanel(this);
+
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._project.shortId}] activity chart graph`,
+    });
 
     this._state = reactive({
       dialog: false,
     });
 
-    this._panel = new ActivityChartPanel(this);
     this.init(panels);
-
-    this._resizeObserver = new ResizeObserver(
-      debounce(() => {
-        this.relayout();
-      })
-    );
   }
 
-  get data(): Data[] {
+  get data(): Plotly.Data[] {
     return this._data;
   }
 
@@ -208,7 +195,7 @@ export class ActivityChartGraph {
     return this._project.simulation.state.biologicalTime;
   }
 
-  get layout(): Partial<Layout> {
+  get layout(): Partial<Plotly.Layout> {
     return this._layout;
   }
 
@@ -254,10 +241,6 @@ export class ActivityChartGraph {
     return this._project;
   }
 
-  get resizeObserver(): ResizeObserver {
-    return this._resizeObserver;
-  }
-
   get state(): UnwrapRef<ActivityChartGraphState> {
     return this._state;
   }
@@ -267,18 +250,20 @@ export class ActivityChartGraph {
    */
   addPanel(
     // @ts-ignore
-    panel: ActivityChartPanelProps = { model: "spikeTimesRasterPlot" }
+    panel: ActivityChartPanelProps = { model: { id: "spikeTimesRasterPlot" } }
   ): void {
+    this._logger.trace("add panel:", panel.model?.id);
     this._panels.push(new ActivityChartPanel(this, panel));
   }
 
   /**
    * Download image of the activity chart graph.
    */
-  downloadImage(options: DownloadImgopts): void {
+  downloadImage(options: Plotly.DownloadImgopts): void {
+    this._logger.trace("download Image:", options);
     if (!this._state.gd) return;
 
-    downloadImage(this._state.gd, options);
+    Plotly.downloadImage(this._state.gd, options);
   }
 
   /**
@@ -292,7 +277,7 @@ export class ActivityChartGraph {
    * Gather data for the chart graph.
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: Partial<Data>) => {
+    panel.model.data.forEach((data: Partial<Plotly.Data>) => {
       data.dataIdx = this._data.length;
       data.panelIdx = panel.idx;
       data.xaxis = "x" + panel.xaxis;
@@ -305,6 +290,7 @@ export class ActivityChartGraph {
    * Initialize network chart graph.
    */
   init(panels: ActivityChartPanelProps[] = []): void {
+    this._logger.trace("init");
     this._project.activities.checkActivities();
 
     this._panels = [];
@@ -329,13 +315,14 @@ export class ActivityChartGraph {
    * Initialize Plotly events.
    */
   initEvents(): void {
+    this._logger.trace("init events");
     if (!this._state.ref) return;
 
     // @ts-ignore
     this._state.ref.on("plotly_legendclick", (plot: any) => {
       setTimeout(() => {
         if (plot && plot.data) {
-          plot.data.forEach((d: Partial<Data>) => {
+          plot.data.forEach((d: Partial<Plotly.Data>) => {
             const panel = this._panels[d.panelIdx];
             if (d.id === "threshold") {
               panel.model.state.visibleThreshold = d.visible;
@@ -358,14 +345,18 @@ export class ActivityChartGraph {
   /**
    * Create new Plot of the DOM reference.
    */
-  newPlot(ref: Root): void {
+  newPlot(ref: Plotly.Root): void {
+    this._logger.trace("new plot");
     this._state.ref = ref;
 
-    newPlot(this._state.ref, this._data, this._layout, this._config).then(
-      () => {
-        this.initEvents();
-      }
-    );
+    Plotly.newPlot(
+      this._state.ref,
+      this._data,
+      this._layout,
+      this._config
+    ).then(() => {
+      this.initEvents();
+    });
   }
 
   /**
@@ -373,19 +364,23 @@ export class ActivityChartGraph {
    */
   react(): void {
     if (!this._state.ref) return;
-
-    react(this._state.ref, this._data, this._layout);
+    this._logger.trace("react");
+    Plotly.react(this._state.ref, this._data, this._layout);
   }
 
+  /**
+   * Relayout plots to new updates.
+   */
   relayout(): void {
     if (!this._state.ref) return;
+    this._logger.trace("relayout");
 
     const dark = darkMode();
     this._layout.font.color = dark ? "white" : "#121212";
     this._layout.paper_bgcolor = dark ? "#121212" : "white";
     this._layout.plot_bgcolor = dark ? "#121212" : "white";
 
-    relayout(this._state.ref, this._layout);
+    Plotly.relayout(this._state.ref, this._layout);
   }
 
   /**
@@ -401,6 +396,7 @@ export class ActivityChartGraph {
    */
   restyle(): void {
     if (!this._state.ref) return;
+    this._logger.trace("restyle");
 
     if (this.project.activities.state.hasSomeSpikeRecorders) {
       this.restyleMarkerHeightSpikeTimesRasterPlot();
@@ -414,22 +410,22 @@ export class ActivityChartGraph {
     if (!this._state.ref) return;
 
     const dataSpikeTimeRasterPlot = this._data.filter(
-      (d: Partial<Data>) => d.modelId === "spikeTimesRasterPlot"
+      (d: Partial<Plotly.Data>) => d.modelId === "spikeTimesRasterPlot"
     );
 
     const markerSizes = dataSpikeTimeRasterPlot.map(
       // @ts-ignore
-      (d: Partial<Data>) => this._panels[d.panelIdx].model.markerSize
+      (d: Partial<Plotly.Data>) => this._panels[d.panelIdx].model.markerSize
     );
     const update = {
       "marker.size": markerSizes,
     };
 
     const dataIndices = dataSpikeTimeRasterPlot.map(
-      (d: Partial<Data>) => d.dataIdx
+      (d: Partial<Plotly.Data>) => d.dataIdx
     );
 
-    restyle(this._state.ref, update, dataIndices);
+    Plotly.restyle(this._state.ref, update, dataIndices);
   }
 
   /**
@@ -447,7 +443,8 @@ export class ActivityChartGraph {
    * It required network activities.
    */
   update(): void {
-    // console.log("Update activity chart graph");
+    if (!this._state.ref) return;
+    this._logger.trace("update");
     this.empty();
 
     this.updateVisiblePanelsLayout();

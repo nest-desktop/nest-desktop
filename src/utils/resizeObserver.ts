@@ -12,7 +12,6 @@ export default function useResizeObserver(element: any) {
   onMounted(() => {
     if (element.value) {
       resizeObserver = new ResizeObserver((entries) => {
-        console.log(entries)
         const entry = entries[0];
         state.elementHeight = entry.contentRect.height
         state.elementWidth = entry.contentRect.width

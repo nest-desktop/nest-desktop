@@ -1,9 +1,12 @@
 // modelDBStore.ts
 
 import { defineStore } from "pinia";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Model } from "@nest/core/model/model";
 import { ModelDB } from "./modelDB";
+
+const logger = mainLogger.getSubLogger({ name: "model DB store" });
 
 const modelAssets = [
   "voltmeter",
@@ -36,6 +39,7 @@ export const useModelDBStore = defineStore("model-db", {
      * Delete model object from the database and then list model.
      */
     async deleteModel(modelId: string): Promise<any> {
+      logger.trace("gelete model:", modelId);
       return this.db.deleteModel(modelId).then(() => {
         this.updateList();
       });
@@ -44,6 +48,7 @@ export const useModelDBStore = defineStore("model-db", {
      * Get model from the model list.
      */
     getModel(modelId: string): Model {
+      logger.trace("get model:", modelId);
       return (
         // @ts-ignore
         this.models.find((model: Model) => model.id === modelId) ||
@@ -54,6 +59,7 @@ export const useModelDBStore = defineStore("model-db", {
      * Get models by elementType
      */
     getModelsByElementType(elementType: string): Model[] {
+      logger.trace("get model by element type:", elementType);
       return this.models.filter(
         // @ts-ignore
         (model: Model) => model.elementType === elementType
@@ -69,10 +75,9 @@ export const useModelDBStore = defineStore("model-db", {
      * Import multiple models from assets and add them to the database.
      */
     async importModelsFromAssets(): Promise<any> {
-      // console.log("Import models from assets");
+      logger.trace("import models from assets");
       let promise: Promise<any> = Promise.resolve();
       modelAssets.forEach(async (file: string) => {
-        console.log(file);
         const response = await fetch("assets/nest/models/" + file + ".json");
         const data = await response.json();
         promise = promise.then(() => this.db.addModel(data));
@@ -83,9 +88,9 @@ export const useModelDBStore = defineStore("model-db", {
      * Initialize model db.
      */
     async init(): Promise<any> {
-      // console.log("Initialize model DB store");
+      logger.trace("init");
       return this.db.count().then(async (count: number) => {
-        console.debug("Models in db: " + count);
+        logger.debug("models in DB:", count);
         if (count === 0) {
           return this.importModelsFromAssets().then(() => this.updateList());
         } else {
@@ -97,7 +102,7 @@ export const useModelDBStore = defineStore("model-db", {
      * Reset database and then initialize.
      */
     async resetDatabase(): Promise<any> {
-      // console.debug("Reset model database");
+      logger.trace("reset database");
       await this.db.reset().then(() => this.init());
     },
     /**
@@ -110,7 +115,7 @@ export const useModelDBStore = defineStore("model-db", {
      * Update model list from the database.
      */
     async updateList(): Promise<any> {
-      // console.log("Update models list");
+      logger.trace("update list");
       this.models = [];
       return this.db.list("id").then((models: any[]) => {
         // this.models = models;

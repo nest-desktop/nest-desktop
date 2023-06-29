@@ -1,7 +1,10 @@
 // connections.ts
 
+import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
+
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Connection, ConnectionProps } from "./connection";
 import { Network } from "../network/network";
@@ -9,18 +12,20 @@ import { Node } from "../node/node";
 
 interface ConnectionsState {
   connectionsLength: number;
-  focusedConnection: number | null;
+  focusedConnection: Connection | null;
   hash: string;
-  selectedConnection: number | null;
+  selectedConnection: Connection | null;
 }
 
 export class Connections {
   private _connections: Connection[] = [];
+  private _logger: Logger<ILogObj>;
   private _network: Network; // parent
   private _state: UnwrapRef<ConnectionsState>; // reactive state
 
   constructor(network: Network, connections: ConnectionProps[] = []) {
     this._network = network;
+    this._logger = mainLogger.getSubLogger({ name: `[${this._network.project.shortId}] connections` });
 
     this._state = reactive({
       connectionsLength: 0,
@@ -92,7 +97,7 @@ export class Connections {
    * Add connection component to the network.
    */
   add(data: ConnectionProps): Connection {
-    // console.log("Add connection");
+    this._logger.trace("add");
     const connection: Connection = new Connection(this, data);
     this._connections.push(connection);
     return connection;
@@ -102,6 +107,7 @@ export class Connections {
    * Clean nodes and connection components.
    */
   clean(): void {
+    this._logger.trace("clean");
     this._connections.forEach((connection: Connection) => connection.clean());
 
     this._connections.forEach((connection: Connection) => {
@@ -113,9 +119,10 @@ export class Connections {
   }
 
   /**
-   * Reset state and empty connections.
+   * Clear connections.
    */
-  empty(): void {
+  clear(): void {
+    this._logger.trace("clear");
     this.resetState();
     this._connections = [];
   }
@@ -124,7 +131,8 @@ export class Connections {
    * Initialize network connections.
    */
   init(connections?: ConnectionProps[]): void {
-    this.empty();
+    this._logger.trace("init");
+    this.clear();
 
     if (connections) {
       this.update(connections);
@@ -142,7 +150,7 @@ export class Connections {
    *
    */
   remove(connection: Connection): void {
-    // console.log("Delete connection");
+    this._logger.trace("remove");
     this.resetState();
 
     // Remove connection from the connection list.
@@ -189,6 +197,14 @@ export class Connections {
     );
   }
 
+  unfocusConnection(): void {
+    this._state.focusedConnection = null;
+  }
+
+  unselectConnection(): void {
+    this._state.selectedConnection = null;
+  }
+
   /**
    * Update connections.
    *
@@ -220,11 +236,11 @@ export class Connections {
    * Update hash.
    */
   updateHash(): void {
-    // console.log('Update Hash');
     this._state.hash = sha1({
       connections: this._connections.map(
-        (connection: Connection) => connection.toJSON() //TODO connection.state.hash
+        (connection: Connection) => connection.state.hash
       ),
     });
+    this._logger.trace("update hash:", this.state.hash.slice(0, 6));
   }
 }

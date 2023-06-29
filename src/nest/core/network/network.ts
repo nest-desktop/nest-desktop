@@ -1,6 +1,9 @@
 // network.ts
 
+import { ILogObj, Logger } from "tslog";
+
 import { Config } from "@/helpers/config";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { Connection, ConnectionProps } from "../connection/connection";
 import { Connections } from "../connection/connections";
@@ -20,12 +23,14 @@ export interface NetworkProps {
 
 export class Network extends Config {
   private _connections: Connections; // for nest.Connect
+  private _logger: Logger<ILogObj>;
   private _models: CopyModels; // for nest.CopyModel
   private _nodes: Nodes; // for nest.Create
   private _project: Project; // project
   private _state: NetworkState; // network state
   private _revisionIdx = -1; // Index of the network history;
   private _revisions: any[] = []; // network history
+  // private _graph: NetworkGraph;
 
   constructor(project: Project, network: NetworkProps = {}) {
     super("Network");
@@ -35,9 +40,13 @@ export class Network extends Config {
     this._nodes = new Nodes(this, network.nodes);
     this._connections = new Connections(this, network.connections);
 
+    // this._graph = new NetworkGraph(this);
     this._state = new NetworkState(this);
-    this.updateStates();
+    this._logger = mainLogger.getSubLogger({
+      name: `network`,
+    });
 
+    this.updateStates();
     this.init();
   }
 
@@ -55,8 +64,20 @@ export class Network extends Config {
     return this._connections;
   }
 
+  // get graph(): NetworkGraph {
+  //   return this._graph;
+  // }
+
   get isEmpty(): boolean {
-    return this._models.all.length === 0 && this._nodes.all.length === 0 && this._connections.all.length === 0;
+    return (
+      this._models.all.length === 0 &&
+      this._nodes.all.length === 0 &&
+      this._connections.all.length === 0
+    );
+  }
+
+  get logger(): Logger<ILogObj> {
+    return this._logger;
   }
 
   /**
@@ -96,12 +117,27 @@ export class Network extends Config {
   }
 
   /**
+   * Observer for network changes
+   *
+   * @remarks
+   * It updates hash of the network.
+   * It commits the network in the network history.
+   * It emits project changes.
+   */
+  changes(): void {
+    this._state.updateHash();
+    // this.commit();
+    this._logger.trace("changes");
+    this._project.changes();
+  }
+
+  /**
    * Load network from the history list.
    *
    * @remarks It generates code.
    */
   checkout(): void {
-    console.log("Checkout network");
+    this._logger.trace("checkout");
 
     // Update revision idx.
     if (this._revisionIdx >= this._revisions.length) {
@@ -138,12 +174,24 @@ export class Network extends Config {
    * Clean nodes and connection components.
    */
   clean(): void {
-    console.log("Clean network");
+    this._logger.trace("clean");
     this._nodes.clean();
     this._connections.clean();
     this._models.clean();
 
     this._nodes.updateRecords();
+    this.updateStates();
+  }
+
+  /**
+   * Clear the network.
+   */
+  clear(): void {
+    this._logger.trace("clear");
+    this._connections.clear();
+    this._nodes.clear();
+    this._models.clear();
+
     this.updateStates();
   }
 
@@ -166,7 +214,7 @@ export class Network extends Config {
    * Add network to the history list.
    */
   commit(): void {
-    console.debug("Commit network of " + this._project.shortId);
+    this._logger.trace("commit");
 
     // Remove networks after the current.
     this._revisions = this._revisions.slice(0, this._revisionIdx + 1);
@@ -194,7 +242,7 @@ export class Network extends Config {
       this.nodes.all
         .filter((node) => node.model.isRecorder)
         .forEach((node) => {
-          currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+          currentNetwork.nodes[node.idx].activity = node.activity?.toJSON();
         });
     } else {
       // Get network object.
@@ -210,7 +258,7 @@ export class Network extends Config {
         this.nodes.all
           .filter((node: Node) => node.model.isRecorder)
           .forEach((node: Node) => {
-            currentNetwork.nodes[node.idx].activity = node.activity.toJSON();
+            currentNetwork.nodes[node.idx].activity = node.activity?.toJSON();
           });
       }
     }
@@ -229,7 +277,7 @@ export class Network extends Config {
    * When it connects to a recorder, it initializes activity graph.
    */
   connectNodes(source: Node, target: Node): void {
-    // console.log("Connect nodes");
+    this._logger.trace("connect nodes");
 
     const connection: Connection = this._connections.add({
       source: source.idx,
@@ -242,7 +290,7 @@ export class Network extends Config {
     }
 
     // Trigger network change.
-    this.networkChanges();
+    this.changes();
 
     // Initialize activity graph.
     if (connection.view.connectRecorder()) {
@@ -255,7 +303,7 @@ export class Network extends Config {
    * Create node component by user interaction.
    */
   createNode(view: any): void {
-    // console.log("Create node");
+    this._logger.trace("create node");
 
     const defaultModels: { [key: string]: string } = {
       neuron: "iaf_psc_alpha",
@@ -268,7 +316,7 @@ export class Network extends Config {
       view: view,
     });
 
-    this.networkChanges();
+    this.changes();
   }
 
   /**
@@ -278,32 +326,32 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteConnection(connection: Connection): void {
-    // console.log("Delete connection");
+    this._logger.trace("delete connection");
 
     // Remove connection from the list.
     this._connections.remove(connection);
 
     // Trigger network change.
-    this.networkChanges();
+    this.changes();
 
     // Initialize activity graph.
     this._project.initActivityGraph();
   }
 
   /**
-   * Delete connection component from the network.
+   * Delete model component from the network.
    *
    * @remarks
    * It emits network changes.
    */
   deleteModel(model: CopyModel): void {
-    // console.log("Delete model");
+    this._logger.trace("delete copy model");
 
     // Remove model from the list.
     this._models.remove(model);
 
     // Trigger network change.
-    this.networkChanges();
+    this.changes();
 
     // Initialize activity graph.
     this._project.initActivityGraph();
@@ -316,7 +364,7 @@ export class Network extends Config {
    * It emits network changes.
    */
   deleteNode(node: Node): void {
-    // console.log("Delete node");
+    this._logger.trace("delete node");
 
     // Remove connection from the list.
     this._connections.removeByNode(node);
@@ -325,21 +373,10 @@ export class Network extends Config {
     this._nodes.remove(node);
 
     // Trigger network change.
-    this.networkChanges();
+    this.changes();
 
     // Initialize activity graph.
     this._project.initActivityGraph();
-  }
-
-  /**
-   * Clear the network.
-   */
-  empty(): void {
-    this._connections.empty();
-    this._nodes.empty();
-    this._models.empty();
-
-    this.updateStates();
   }
 
   /**
@@ -351,40 +388,9 @@ export class Network extends Config {
   }
 
   init(): void {
+    this._logger.trace("init");
     this.clearNetworkHistory();
     this._nodes.updateRecords();
-  }
-
-  /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It generates simulation code in the code editor.
-   * It commits the network in the network history.
-   */
-  networkChanges(): void {
-    console.log("Network changes");
-
-    this.updateStates();
-
-    this._project.simulation.code.generate();
-
-    this._project.state.updateHash();
-
-    // this._project.commitNetwork(this);
-
-    // Simulate when the configuration is set
-    // and the view mode is activity explorer.
-    // const projectView = this._project.app.project.view;
-    // if (
-    //   projectView.config.simulateAfterChange &&
-    //   projectView.state.modeIdx === 1
-    // ) {
-    //   setTimeout(() => this._project.startSimulation(), 1);
-    // }
-
-    this._project.state.checkChanges();
   }
 
   /**
@@ -441,16 +447,18 @@ export class Network extends Config {
    * @param network - network object
    */
   update(network: NetworkProps): void {
+    this._logger.trace("update");
     this._models.update(network.models);
     this._nodes.update(network.nodes);
     this._connections.update(network.connections);
 
+    // Update states.
     this.updateStates();
   }
 
   updateStates(): void {
     this._nodes.updateStates();
     this._connections.updateStates();
-    this._state.update();
+    this._state.updateHash();
   }
 }

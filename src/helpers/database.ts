@@ -1,7 +1,10 @@
 // database.ts
 
 import PouchDB from "pouchdb";
+import { ILogObj, Logger } from "tslog";
 import { major, minor } from "semver";
+
+import { logger as mainLogger } from "@/utils/logger";
 
 export class DatabaseService {
   // @ts-ignore
@@ -13,11 +16,15 @@ export class DatabaseService {
     version: "",
   };
   private _url: string;
+  private _logger: Logger<ILogObj>;
 
   constructor(url: string, options: any = {}) {
     this._url = url;
+    this._logger = mainLogger.getSubLogger({ name: `[${this._url}] database` });
+
     this._options = options;
     this._db = new PouchDB(url, options);
+
     this.getVersion().then((version: string) => {
       this._state.version = version;
     });
@@ -28,6 +35,10 @@ export class DatabaseService {
   // @ts-ignore
   get db(): PouchDB {
     return this._db;
+  }
+
+  get logger(): Logger<ILogObj> {
+    return this._logger;
   }
 
   get state(): any {
@@ -43,17 +54,21 @@ export class DatabaseService {
   }
 
   count(): any {
+    this._logger.trace("count");
     return this._db
       .allDocs()
       .then((result: any) => result.total_rows)
-      .catch((err: any) => err);
+      .catch((err: any) => this._logger.error("Get all docs:", err));
   }
 
   async destroy(): Promise<any> {
-    return this._db.destroy();
+    return this._db
+      .destroy()
+      .catch((err: any) => this._logger.error("Destroy db:", err));
   }
 
   list(sortedBy: string = "", reverse: boolean = false): any {
+    this._logger.trace("list");
     return this._db
       .allDocs({ include_docs: true })
       .then((res: any) => {
@@ -66,10 +81,11 @@ export class DatabaseService {
         }
         return docs;
       })
-      .catch((err: any) => err);
+      .catch((err: any) => this._logger.error("Get all docs:", err));
   }
 
   async reset(): Promise<any> {
+    this._logger.trace("reset");
     return this.destroy().then(() => {
       this._db = new PouchDB(this._url, this._options);
     });
@@ -78,6 +94,7 @@ export class DatabaseService {
   // CRUD - Create, Read, Update, Delete
 
   create(data: any): any {
+    this._logger.trace("create");
     data.version = process.env.APP_VERSION;
     data.createdAt = new Date();
     return (
@@ -91,19 +108,21 @@ export class DatabaseService {
         //   }
         //   data.updatedAt = undefined;
         // })
-        .catch((err: any) => console.log(err))
+        .catch((err: any) => this._logger.error("Post doc:", err))
     );
   }
 
   read(id: string, rev: string = ""): any {
+    this._logger.trace("read:", id);
     const options: any = { rev };
     return this._db
       .get(id, options)
       .then((doc: any) => doc)
-      .catch((err: any) => err);
+      .catch((err: any) => this._logger.error("Get doc:", err));
   }
 
   update(data: any): any {
+    this._logger.trace("update:", data.doc._id);
     return this._db
       .get(data.doc._id)
       .then((doc: any) => {
@@ -121,16 +140,24 @@ export class DatabaseService {
           .then(() => {
             data.updatedAt = dataJSON.updatedAt;
           })
-          .catch((err: any) => console.log(err));
+          .catch((err: any) => this._logger.error("Put doc:", err));
       })
       .catch((err: any) => {
-        console.log(err);
+        this._logger.error("Get doc:", err);
         return this.create(data);
       });
   }
 
   delete(id: string): any {
-    return this._db.get(id).then((doc: any) => this._db.remove(doc));
+    this._logger.trace("delete:", id);
+    return this._db
+      .get(id)
+      .then((doc: any) =>
+        this._db
+          .remove(doc)
+          .catch((err: any) => this._logger.error("Remove doc:", err))
+      )
+      .catch((err: any) => this._logger.error("Get doc:", err));
   }
 
   deleteBulk(ids: string[]): any {
@@ -138,7 +165,9 @@ export class DatabaseService {
       docs
         .filter((doc: any) => ids.includes(doc._id))
         .forEach((doc: any) => (doc._deleted = true));
-      return this._db.bulkDocs(docs);
+      return this._db
+        .bulkDocs(docs)
+        .catch((err: any) => this._logger.error("Bulk docs:", err));
     });
   }
 
@@ -151,20 +180,25 @@ export class DatabaseService {
             doc._revisions.start - idx + "-" + revId
         )
       )
-      .catch((err: any) => err);
+      .catch((err: any) => this._logger.error("Get doc:", err));
   }
 
   // Version
 
   getVersion(): any {
-    return this._db.get("_local/version").then((doc: any) => doc.version);
+    return this._db
+      .get("_local/version")
+      .then((doc: any) => doc.version)
+      .catch((err: any) => this._logger.error("Get version:", err));
   }
 
   setVersion(): any {
-    return this._db.put({
-      _id: "_local/version",
-      version: process.env.APP_VERSION,
-    });
+    return this._db
+      .put({
+        _id: "_local/version",
+        version: process.env.APP_VERSION,
+      })
+      .catch((err: any) => this._logger.error("Set version:", err));
   }
 
   checkVersion(): void {
@@ -175,7 +209,8 @@ export class DatabaseService {
           major(dbVersion) === major(appVersion) &&
           minor(dbVersion) === minor(appVersion);
       })
-      .catch(() => {
+      .catch((err: any) => {
+        this._logger.error("Get version:", err);
         this.setVersion().then(() => this.checkVersion());
       });
   }
