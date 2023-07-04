@@ -12,13 +12,18 @@ enum MaskType {
   rectangular = "rectangular",
 }
 
+export interface ConnectionMaskProps {
+  masktype?: MaskType;
+  specs: any;
+}
+
 export class ConnectionMask extends Config {
   private _connection: Connection;
   private _graph: any;
   private _masktype: MaskType;
   private _specs: any;
 
-  constructor(connection: Connection, mask: any = {}) {
+  constructor(connection: Connection, mask?: ConnectionMaskProps) {
     super("ConnectionMask");
     this._connection = connection;
     this._graph = {
@@ -29,8 +34,8 @@ export class ConnectionMask extends Config {
       },
       style: { position: "relative", width: "100%", height: "100%" },
     };
-    this._masktype = mask.masktype || MaskType.none;
-    this._specs = mask.specs || {};
+    this._masktype = mask?.masktype || MaskType.none;
+    this._specs = mask?.specs || {};
   }
 
   get connection(): Connection {

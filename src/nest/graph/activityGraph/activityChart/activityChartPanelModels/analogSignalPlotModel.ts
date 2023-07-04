@@ -14,29 +14,30 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.id = "analogSignalPlot";
     this.panel.xaxis = 1;
 
-    this.params = [
-      {
-        id: "displayedLines",
-        input: "rangeSlider",
-        label: "displayed lines",
-        value: [0, 10],
-        min: 0,
-        max: 100,
-      },
-      {
-        id: "averageLine",
-        input: "checkbox",
-        label: "average line",
-        value: false,
-      },
-      {
-        id: "spikeThreshold",
-        input: "checkbox+valueInput",
-        label: "spike threshold",
-        value: -55,
-        visible: false,
-      },
-    ];
+    this.params = {
+      selected: [0, 1, 2, 3, 4, 5],
+      // {
+      //   id: "displayedLines",
+      //   input: "rangeSlider",
+      //   label: "displayed lines",
+      //   value: [0, 10],
+      //   min: 0,
+      //   max: 100,
+      // },
+      // {
+      //   id: "averageLine",
+      //   input: "checkbox",
+      //   label: "average line",
+      //   value: false,
+      // },
+      // {
+      //   id: "spikeThreshold",
+      //   input: "checkbox+valueInput",
+      //   label: "spike threshold",
+      //   value: -55,
+      //   visible: false,
+      // },
+    };
 
     this.initParams(model.params);
   }
@@ -109,13 +110,10 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Add multiple lines data for analog signals.
    */
   addMultipleLines(record: NodeRecord): void {
-    if (!record.hasEvent) {
+    if (!record.hasEvent || record.activity.state.selected?.length === 0)
       return;
-    }
 
-    const nodeIds: number[] = record.activity.nodeIds.slice(
-      ...this.params[0].value
-    );
+    const nodeIds: number[] = record.activity.state.selected;
     const data: any[] = this.createGraphDataPoints(nodeIds, record);
 
     data.forEach((d: any, idx: number) => {
@@ -132,13 +130,15 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         mode: "lines",
         name: d.name,
         nodeId: nodeIds[idx],
-        opacity: idx === 0 ? 0.5 : 0.3,
+        // opacity: idx === 0 ? 0.5 : 0.3,
         recordId: record.id,
         showlegend: idx === 0,
         type: plotType,
         visible: this.state.visible,
+        // yaxis: 'y' + idx,
         x: d.x,
         y: d.y,
+        // y: d.y.map(y => y+= 15*idx),
       });
     });
   }
@@ -147,13 +147,12 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Add average line for analog signals.
    */
   addAverageLine(record: NodeRecord): void {
-    if (!record.hasEvent) {
+    if (!record.hasEvent || record.activity.state.selected?.length === 0)
       return;
-    }
 
-    const nodeIds: number[] = record.activity.nodeIds.slice(
-      ...this.params[0].value
-    );
+    const nodeIds: number[] = record.activity.state.selected; //record.activity.nodeIds.slice(
+    // ...this.params[0].value
+    // );
     const data: any[] = this.createGraphDataPoints(nodeIds, record);
 
     const x: any[] = data[0].x;
@@ -238,7 +237,11 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record Array of NodeRecords (containing the events)
    * @returns Array containing x, y and name value for every data point
    */
-  createGraphDataPoints(nodeIds: number[], record: NodeRecord): any[] {
+  createGraphDataPoints(
+    nodeIds: number[],
+    record: NodeRecord
+  ): { x: number[]; y: number[]; name: string }[] {
+    if (!nodeIds || nodeIds.length === 0) return [];
     const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: "" }));
 
     let senders: number[];
@@ -278,7 +281,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.state.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === "V_m" && this.params[2].visible) {
+      if (record.id === "V_m" && this.params.spikeThreshold?.visible) {
         // Add spike threshold for membrane potential.
         this.addSpikeThresholdLine(record);
       }
@@ -291,7 +294,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         this.addMultipleLines(record);
 
         // Add average line for the population.
-        if (this.params[1].value) {
+        if (this.params.averageLine) {
           this.addAverageLine(record);
         }
       }

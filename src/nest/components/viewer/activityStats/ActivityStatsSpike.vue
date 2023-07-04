@@ -59,7 +59,6 @@ const state = reactive({
   activity: props.activity as SpikeActivity,
   activityHash: "",
   items: [] as { [key: string]: number | string }[],
-  itemsPerPage: 20,
   loading: false,
   search: "",
 });
@@ -83,6 +82,7 @@ const update = () => {
   // console.log("Update stats of spike activity");
   state.loading = true;
   state.items = [];
+
   if (state.activity && state.activity.nodeIds.length > 0) {
     const times: any[] = Object.create(null);
     state.activity.nodeIds.forEach((id: number) => {

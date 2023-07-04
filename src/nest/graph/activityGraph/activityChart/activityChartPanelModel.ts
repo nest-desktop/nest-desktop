@@ -211,12 +211,10 @@ export abstract class ActivityChartPanelModel {
    * Initialize params for controller.
    */
   initParams(params: any = {}): void {
-    this._params
-      .filter((param: any) => param.id in params)
-      .forEach((param: any) => {
-        if (params[param.id] != undefined) {
-          param.value = params[param.id];
-        }
+    Object.keys(this._params)
+      .filter((paramKey: string) => params[paramKey])
+      .forEach((paramKey: string) => {
+        this.params[paramKey] = params[paramKey];
       });
   }
 

@@ -24,6 +24,7 @@ interface activityState {
   fromTime: number;
   hash: string;
   records: NodeRecord[];
+  selected: number[];
 }
 
 export interface EventProps {
@@ -47,6 +48,9 @@ export class Activity {
       fromTime: 0,
       hash: "",
       records: [],
+      selected: activity.nodeIds?.slice(0, 10) || [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+      ],
     });
 
     this._logger = mainLogger.getSubLogger({

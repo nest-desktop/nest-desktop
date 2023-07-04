@@ -29,26 +29,19 @@
               </div>
               <v-spacer />
             </v-row>
-
-            <!-- <template #actions>
-            <v-icon
-              :color="nodeColor(activity as Activity)"
-              class="mx-3"
-              icon="$expand"
-            />
-          </template> -->
           </v-expansion-panel-title>
 
           <v-expansion-panel-text
             :key="projectStore.project.simulation.code.state.hash"
             class="ma-0 pa-0"
           >
-            <ActivityStatsSpike
+            <activity-stats-spike
               :activity="activity as SpikeActivity"
               :height="state.height"
               v-if="activity.recorder.model.isSpikeRecorder"
             />
-            <ActivityStatsAnalog
+
+            <activity-stats-analog
               :activity="activity as AnalogSignalActivity"
               :height="state.height - 36"
               v-if="activity.recorder.model.isAnalogRecorder"

@@ -394,7 +394,8 @@ export class Parameter extends Config {
     this._value = param.value || 0;
 
     this._state = reactive({
-      visible: true,
+      visible: param.visible != undefined ? param.visible : false,
+      disabled: param.disabled != undefined ? param.disabled : true,
     });
 
     // optional param specifications
