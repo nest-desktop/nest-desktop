@@ -4,69 +4,33 @@
     "nodes": [
       {
         "model": "dc_generator",
-        "size": 1,
-        "view": {
-          "position": {
-            "x": -150,
-            "y": 25
-          }
-        },
         "params": [
-          {
-            "id": "amplitude",
-            "value": 1
-          },
-          {
-            "id": "start",
-            "value": 100
-          },
-          {
-            "id": "stop",
-            "value": 600
-          }
-        ]
+          { "id": "amplitude", "value": 1 },
+          { "id": "start", "value": 100 },
+          { "id": "stop", "value": 600 }
+        ],
+        "view": {
+          "position": { "x": 25, "y": 75 }
+        }
       },
       {
         "model": "iaf_psc_alpha",
-        "size": 1,
+        "params": [{ "id": "C_m", "value": 250 }],
         "view": {
-          "position": {
-            "x": 0,
-            "y": -25
-          }
-        },
-        "params": [
-          {
-            "id": "C_m",
-            "value": 250
-          }
-        ]
+          "position": { "x": 175, "y": 25 }
+        }
       },
       {
         "model": "voltmeter",
+        "params": [{ "id": "interval", "value": 0.1 }],
         "view": {
-          "position": {
-            "x": 150,
-            "y": 25
-          }
-        },
-        "params": [
-          {
-            "id": "interval",
-            "value": 0.1
-          }
-        ]
+          "position": { "x": 325, "y": 75 }
+        }
       }
     ],
     "connections": [
-      {
-        "source": 0,
-        "target": 1
-      },
-      {
-        "source": 2,
-        "target": 1
-      }
+      { "source": 0, "target": 1 },
+      { "source": 2, "target": 1 }
     ]
   },
   "simulation": {
