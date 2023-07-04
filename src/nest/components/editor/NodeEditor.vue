@@ -39,6 +39,7 @@
           >
             <template #activator="{ props }">
               <v-btn
+                color="primary"
                 icon="mdi-order-bool-ascending-variant"
                 size="small"
                 v-bind="props"
@@ -53,9 +54,8 @@
                     :color="state.node.color"
                     density="compact"
                     hide-details
-                    label="Population"
-                    v-model="state.node.paramsVisible"
-                    value="size"
+                    label="Population size"
+                    v-model="state.node.sizeVisible"
                   >
                     <template #append> n: {{ state.node.size }} </template>
                   </v-checkbox>
@@ -68,10 +68,10 @@
                     :value="param.id"
                     density="compact"
                     hide-details
-                    v-model="state.node.paramsVisible"
                     v-for="(param, index) in Object.values(
                       state.node.modelParams
                     )"
+                    v-model="state.node.paramsVisible"
                   >
                     <template #append>
                       {{ param.id }}: {{ param.value }}
@@ -111,6 +111,7 @@
           <v-menu :close-on-content-click="false" density="compact">
             <template #activator="{ props }">
               <v-btn
+                color="primary"
                 icon="mdi-dots-vertical"
                 size="small"
                 v-bind="props"
@@ -125,20 +126,15 @@
     </v-card-title>
 
     <v-card-text class="pa-0">
-      <v-list v-if="state.node.paramsVisible.length > 0">
+      <v-list class="py-0" v-if="state.node.sizeVisible">
         <node-param-editor
           :color="state.node.color"
           :options="{ id: 'n', inputLabel: 'n', label: 'population' }"
           @update:model-value="state.node.changes()"
-          v-if="
-            state.node.elementType !== 'recorder' &&
-            state.node.size != undefined &&
-            state.node.paramsVisible != undefined &&
-            state.node.paramsVisible.includes('size')
-          "
           v-model="state.node.size"
         />
-
+      </v-list>
+      <v-list class="py-0" v-if="state.node.paramsVisible.length > 0">
         <node-param-editor
           :color="state.node.color"
           :key="index"
@@ -161,6 +157,7 @@
           <connection-editor
             @mouseenter="connection.state.focus()"
             @mouseleave="connection.connections.unfocusConnection()"
+            :style="{ opacity: connection.state.isFocused ? 1 : 0.67 }"
             :key="index"
             :connection="connection as Connection"
             v-for="(connection, index) in state.node.targets"

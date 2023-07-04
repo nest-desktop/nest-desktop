@@ -8,7 +8,7 @@
     class="activityStatsAnalog"
     density="compact"
     fixed-header
-    loading-text="Loading... Please wait"
+    loadingText="Loading... Please wait"
   >
     <template #top>
       <v-select

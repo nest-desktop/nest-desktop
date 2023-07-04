@@ -6,7 +6,7 @@ import { ProjectProps } from "../project/project";
 import { upgradeProject_2x_to_30 } from "./upgrade_2x_to_30";
 import { upgradeProject_30_to_31 } from "./upgrade_30_to_31";
 import { upgradeProject_31_to_32 } from "./upgrade_31_to_32";
-import { upgradeProject_32_to_33 } from "./upgrade_32_to_33";
+// import { upgradeProject_32_to_40 } from "./upgrade_32_to_40";
 
 const logger = mainLogger.getSubLogger({ name: "upgrade" });
 
@@ -16,7 +16,7 @@ const projectUpgrades = [
   upgradeProject_2x_to_30,
   upgradeProject_30_to_31,
   upgradeProject_31_to_32,
-  upgradeProject_32_to_33,
+  // upgradeProject_32_to_40,
 ];
 
 /**
@@ -57,6 +57,9 @@ export function upgradeProject(project: any): ProjectProps {
       );
     }
   }
+
+
+  console.log(project)
 
   return project;
 }

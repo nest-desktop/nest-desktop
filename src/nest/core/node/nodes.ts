@@ -172,7 +172,7 @@ export class Nodes {
    * Get visible nodes.
    */
   get visibleNodes(): Node[] {
-    return this._nodes.filter((node: Node) => node.view.visible);
+    return this._nodes.filter((node: Node) => node.view.state.visible);
   }
 
   /**

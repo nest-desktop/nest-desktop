@@ -10,8 +10,8 @@
       <span class="mx-1">{{ state.node.model.label }}</span>
 
       <span class="mx-1" v-if="appStore.devMode">
-        ( {{ state.node.view.position.x.toFixed() }},
-        {{ state.node.view.position.y.toFixed() }})
+        ( {{ state.node.view.state.position.x.toFixed() }},
+        {{ state.node.view.state.position.y.toFixed() }})
       </span>
     </v-chip>
   </div>

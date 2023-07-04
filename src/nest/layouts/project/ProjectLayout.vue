@@ -68,25 +68,27 @@
     permanent
   >
     <div @mousedown="resizeSideController" class="resize-handle left" />
-    <div :key="projectStore.controllerView">
-      <template v-if="projectStore.controllerView === 'network'">
-        <network-param-editor />
-      </template>
-      <template v-else-if="projectStore.controllerView === 'kernel'">
-        <simulation-kernel-editor />
-      </template>
-      <template v-else-if="projectStore.controllerView === 'raw'">
-        <pre>{{ projectStore.project.toJSON() }}</pre>
-      </template>
-      <template v-else-if="projectStore.controllerView === 'code'">
-        <simulation-code-editor />
-      </template>
-      <template v-else-if="projectStore.controllerView === 'activity'">
-        Activity
-      </template>
-      <template v-else-if="projectStore.controllerView === 'stats'">
-        <activity-stats />
-      </template>
+    <div :key="projectStore.projectId">
+      <div :key="projectStore.controllerView">
+        <template v-if="projectStore.controllerView === 'network'">
+          <network-param-editor />
+        </template>
+        <template v-else-if="projectStore.controllerView === 'kernel'">
+          <simulation-kernel-editor />
+        </template>
+        <template v-else-if="projectStore.controllerView === 'raw'">
+          <pre>{{ projectStore.project.toJSON() }}</pre>
+        </template>
+        <template v-else-if="projectStore.controllerView === 'code'">
+          <simulation-code-editor />
+        </template>
+        <template v-else-if="projectStore.controllerView === 'activity'">
+          Activity
+        </template>
+        <template v-else-if="projectStore.controllerView === 'stats'">
+          <activity-stats />
+        </template>
+      </div>
     </div>
   </v-navigation-drawer>
 

@@ -11,3 +11,35 @@
     />
   </svg>
 </template>
+
+<script lang="ts">
+const rectPath = (
+  width: number,
+  height: number,
+  margin: number,
+  radius: number
+) => {
+  const d1 = [
+    "M" + (margin + width + radius) + "," + margin,
+    "H" + 3 * radius,
+    "a" + radius + "," + radius + " 0 0 0 " + -radius + "," + radius,
+    "v" + height,
+    "a" + radius + "," + radius + " 0 0 0 " + radius + "," + radius,
+    "h" + width,
+    "a" + radius + "," + radius + " 0 0 0 " + radius + "," + -radius,
+    "V" + 3 * radius,
+    "a" + radius + "," + radius + " 0 0 0 " + -radius + "," + -radius + "Z",
+  ];
+
+  const d2 = [
+    "m" + 0 + "," + (height + radius),
+    "H" + 3 * radius,
+    "V" + 3 * radius,
+    "h" + width,
+    "v" + height,
+    "Z",
+  ];
+
+  return d1.join("") + d2.join("");
+};
+</script>

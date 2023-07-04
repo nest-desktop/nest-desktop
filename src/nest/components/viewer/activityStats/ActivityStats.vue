@@ -50,7 +50,7 @@
             />
             <ActivityStatsAnalog
               :activity="activity as AnalogSignalActivity"
-              :height="state.height"
+              :height="state.height - 36"
               v-if="activity.recorder.model.isAnalogRecorder"
             />
           </v-expansion-panel-text>

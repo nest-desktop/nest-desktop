@@ -3,7 +3,7 @@
 import { Selection, Transition, drag, select, transition } from "d3";
 
 import { darkMode } from "@/utils/theme";
-import drawPath from "@/utils/graph/connectionGraphPath";
+import { drawPathMouse } from "@/utils/graph/connectionGraphPath";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";
@@ -193,12 +193,11 @@ export class NodeGraphConnector {
       .selectAll("path")
       .transition(t)
       .attr("d", (n: Node | any) =>
-        drawPath(
+        drawPathMouse(
           { x: 0, y: 0 },
           n.state.isFocused && !connectionDrag
             ? connectorEndPos
-            : { x: 0, y: 0 },
-          { isTargetMouse: true }
+            : { x: 0, y: 0 }
         )
       );
 

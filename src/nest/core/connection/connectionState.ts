@@ -1,61 +1,27 @@
 // connectionState.ts
 
 import { sha1 } from "object-hash";
+import { UnwrapRef, reactive } from "vue";
 
 import { Connection } from "./connection";
-import { UnwrapRef, reactive } from "vue";
-import { randomUniformInt } from "@/utils/random";
-
-interface ConnectionStateState {
-  hash: string;
-  xAxisRotation: number;
-}
 
 export class ConnectionState {
   private _connection: Connection; // parent
-  private _state: UnwrapRef<ConnectionStateState>;
-  private _sweep: number;
+  private _state: UnwrapRef<{hash: string}>;
 
   constructor(connection: Connection) {
     this._connection = connection;
 
     this._state = reactive({
       hash: "",
-      xAxisRotation: randomUniformInt(0, 360),
     });
-
-    this._sweep = this._connection.connections.connectionsLength % 2;
-  }
-
-  get xAxisRotation(): number {
-    return this._state.xAxisRotation;
-  }
-  set xAxisRotation(value: number) {
-    this._state.xAxisRotation = value;
   }
 
   get hash(): string {
     return this._state.hash;
   }
 
-  get connectionGraphOptions(): {
-    ellipticalArc: number;
-    sweep: number;
-    xAxisRotation: number;
-    isTargetMouse?: boolean;
-  } {
-    return {
-      ellipticalArc:
-        this._connection.source.state.isFocused ||
-        this._connection.source.state.isSelected
-          ? 1
-          : 10,
-      sweep: this._sweep,
-      xAxisRotation: this._state.xAxisRotation,
-    };
-  }
-
-  /**
+   /**
    * Check if this connection is focused.
    */
   get isFocused(): boolean {
@@ -97,10 +63,6 @@ export class ConnectionState {
     connections.state.selectedConnection = this.isSelected
       ? null
       : this._connection;
-  }
-
-  update() {
-    this.updateHash();
   }
 
   /**

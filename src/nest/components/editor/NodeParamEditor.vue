@@ -23,6 +23,7 @@
       <v-menu :close-on-content-click="false" density="compact">
         <template #activator="{ props }">
           <v-btn
+            color="primary"
             class="menu align-center justify-center my-auto"
             icon="mdi-dots-vertical"
             size="small"
@@ -88,9 +89,9 @@ const items = [
 </script>
 
 <style lang="scss">
-.param:nth-child(odd) {
-  background-color: rgba(var(--v-theme-primary), 0.03);
-}
+// .param:nth-child(odd) {
+//   background-color: rgba(var(--v-theme-background), var(--v-medium-emphasis-opacity));
+// }
 
 .param {
   .menu {
@@ -99,6 +100,9 @@ const items = [
 }
 
 .param:hover {
+  .v-text-field__suffix {
+    opacity: 0;
+  }
   .menu {
     opacity: 1;
   }

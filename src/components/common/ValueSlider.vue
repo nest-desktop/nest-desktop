@@ -81,6 +81,10 @@ watch(
     margin-right: 4px;
   }
 
+  .v-input__prepend, .v-input__append {
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))
+  }
+
   .v-slider__label {
     left: 0;
     pointer-events: none;
@@ -98,9 +102,6 @@ watch(
   .mdi-minus,
   .mdi-plus {
     opacity: 0.6 !important;
-  }
-  .v-text-field__suffix {
-    opacity: 0;
   }
 }
 </style>

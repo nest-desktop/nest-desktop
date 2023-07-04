@@ -1,20 +1,23 @@
 // nodeParameter.ts
 
-import { Parameter, ParameterProps } from "@/helpers/parameter";
+import {
+  Parameter,
+  ParameterProps,
+} from "@/helpers/parameter";
 
 import { ModelParameter } from "../model/modelParameter";
 import { Node } from "./node";
 import { NodeCompartment } from "./nodeCompartment/nodeCompartment";
 import { NodeReceptor } from "./nodeReceptor/nodeReceptor";
 
-type nodeTypes = Node | NodeCompartment | NodeReceptor;
+type NodeTypes = Node | NodeCompartment | NodeReceptor;
 
 export interface NodeParameterProps extends ParameterProps {}
 
 export class NodeParameter extends Parameter {
-  private _parent: nodeTypes;
+  private _parent: NodeTypes;
 
-  constructor(node: nodeTypes, param: NodeParameterProps) {
+  constructor(node: NodeTypes, param: NodeParameterProps) {
     super(param);
     this._parent = node;
   }
@@ -34,7 +37,7 @@ export class NodeParameter extends Parameter {
     return this._parent as Node;
   }
 
-  get parent(): nodeTypes {
+  get parent(): NodeTypes {
     return this._parent;
   }
 
@@ -49,30 +52,32 @@ export class NodeParameter extends Parameter {
   }
 
   /**
-   * Serialize for JSON.
-   * @return node parameter object
-   */
-  override toJSON(): NodeParameterProps {
-    const param: NodeParameterProps = {
-      id: this.id,
-      value: this.value,
-    };
+  * Serialize for JSON.
+  * @return parameter object
+  */
+ toJSON(): NodeParameterProps {
+   const param: any = {
+     id: this.id,
+     value: this.value,
+   };
 
-    // Add the value factors if existed.
-    if (this.factors.length > 0) {
-      param.factors = this.factors;
-    }
 
-    // Add the rules for validation if existed.
-    if (this.rules.length > 0) {
-      param.rules = this.rules;
-    }
 
-    // Add param type if not constant.
-    if (!this.isConstant) {
-      param.type = this.typeToJSON();
-    }
+   // Add value factors if existed.
+   if (this.factors.length > 0) {
+     param.factors = this.factors;
+   }
 
-    return param;
-  }
+   // Add rules for validation if existed.
+   if (this.rules.length > 0) {
+     param.rules = this.rules;
+   }
+
+   // Add param type if not constant.
+   if (!this.isConstant) {
+     param.type = this.typeToJSON();
+   }
+
+   return param;
+ }
 }

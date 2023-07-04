@@ -6,10 +6,6 @@ import { sha1 } from "object-hash";
 import { Connection } from "../connection/connection";
 import { CopyModel } from "../model/copyModel";
 import { Node } from "./node";
-import { Nodes } from "./nodes";
-import { Connections } from "../connection/connections";
-import { Network } from "../network/network";
-import { CopyModels } from "../model/copyModels";
 
 export interface NodeViewProps {
   position: { x: number, y: number };
@@ -18,16 +14,16 @@ export interface NodeViewProps {
 }
 
 interface NodeViewState {
-  hash: string;
   color?: string;
+  hash: string;
+  label?: string;
   position: { x: number, y: number };
+  positions?: number[][];
   visible?: boolean;
 }
 
 export class NodeView {
-  private _label: string = "";
   private _node: Node; // parent
-  private _positions: number[][] = [];
   private _state: UnwrapRef<NodeViewState>;
 
   constructor(
@@ -40,8 +36,10 @@ export class NodeView {
     this._node = node;
 
     this._state = reactive({
-      hash: "",
       ...view,
+      hash: "",
+      label: "",
+      positions: [],
     });
   }
 
@@ -79,14 +77,9 @@ export class NodeView {
     this._state.color = value === "none" || value === "" ? undefined : value;
     this._node.network.clean();
   }
-
-  get connections(): Connections {
-    return this.network.connections;
-  }
-
   get label(): string {
-    if (this._label) {
-      return this._label;
+    if (this._state.label) {
+      return this._state.label;
     }
 
     let nodes: Node[];
@@ -96,7 +89,7 @@ export class NodeView {
 
     switch (this._node.model.elementType) {
       case "neuron":
-        nodes = this.nodes.neurons;
+        nodes = this._node.nodes.neurons;
         idx = nodes.indexOf(this._node);
         label = "n" + (idx + 1);
         break;
@@ -107,12 +100,12 @@ export class NodeView {
       //   label = varname + (idx + 1);
       //   break;
       case undefined:
-        nodes = this.nodes.all;
+        nodes = this._node.nodes.all;
         idx = nodes.indexOf(this._node);
         label = "n" + (idx + 1);
         break;
       default:
-        nodes = this.nodes.filterByModelId(this._node.modelId);
+        nodes = this._node.nodes.filterByModelId(this._node.modelId);
         idx = nodes.indexOf(this._node);
         label =
           this._node.model.abbreviation ||
@@ -126,40 +119,8 @@ export class NodeView {
     return label;
   }
 
-  get models(): CopyModels {
-    return this.network.models;
-  }
-
-  get network(): Network {
-    return this._node.network;
-  }
-
-  get node(): Node {
-    return this._node;
-  }
-
-  get nodes(): Nodes {
-    return this._node.nodes;
-  }
-
-  get position(): { x: number, y: number } {
-    return this._state.position;
-  }
-
-  get positions(): number[][] {
-    return this._positions;
-  }
-
-  set positions(value: number[][]) {
-    this._positions = value;
-  }
-
-  get visible(): boolean {
-    return this._state.visible || false;
-  }
-
-  set visible(value: boolean) {
-    this._state.visible = value;
+  get state(): UnwrapRef<NodeViewState> {
+    return this._state;
   }
 
   /**
@@ -169,7 +130,7 @@ export class NodeView {
     if (this._node.model.isRecorder) {
       return "";
     }
-    const connections: Connection[] = this.connections.filter(
+    const connections: Connection[] = this._node.nodes.network.connections.filter(
       (connection: Connection) =>
         connection.source.idx === this._node.idx &&
         !connection.target.model.isRecorder
@@ -194,13 +155,13 @@ export class NodeView {
    */
   clean(): void {
     const cleanWeightRecorder = false;
-    if (this.node.model.isWeightRecorder && cleanWeightRecorder) {
-      const copiedSynapseModels = this.models.synapseModels.filter(
-        (model: CopyModel) => model.isAssignedToWeightRecorder(this.node)
+    if (this._node.model.isWeightRecorder && cleanWeightRecorder) {
+      const copiedSynapseModels = this._node.nodes.network.models.synapseModels.filter(
+        (model: CopyModel) => model.isAssignedToWeightRecorder(this._node)
       );
       if (copiedSynapseModels.length === 1) {
         const copiedSynapseModel = copiedSynapseModels[0];
-        const connection = this.connections.getBySynapseModelId(
+        const connection = this._node.nodes.network.connections.getBySynapseModelId(
           copiedSynapseModel.id
         );
         if (connection) {
