@@ -22,53 +22,15 @@
   },
   "network": {
     "connections": [
-      {
-        "params": [],
-        "rule": "one_to_one",
-        "source": 1,
-        "synapse": {
-          "model": "static_synapse",
-          "params": [
-            { "id": "weight", "value": 1, "visible": false },
-            { "id": "delay", "value": 1, "visible": false }
-          ]
-        },
-        "target": 0
-      },
-      {
-        "params": [],
-        "rule": "all_to_all",
-        "source": 0,
-        "synapse": {
-          "model": "static_synapse",
-          "params": [
-            { "id": "weight", "value": 1, "visible": false },
-            { "id": "delay", "value": 1, "visible": false }
-          ]
-        },
-        "target": 2
-      }
+      { "rule": "one_to_one", "source": 1, "target": 0 },
+      { "rule": "all_to_all", "source": 0, "target": 2 }
     ],
     "nodes": [
       {
         "model": "iaf_psc_alpha",
-        "params": [
-          { "id": "C_m", "value": 250, "visible": false },
-          { "id": "E_L", "value": -70, "visible": false },
-          { "id": "I_e", "value": 0, "visible": false },
-          { "id": "V_m", "value": -70, "visible": false },
-          { "id": "V_reset", "value": -70, "visible": false },
-          { "id": "V_th", "value": -55, "visible": false },
-          { "id": "t_ref", "value": 2, "visible": false },
-          { "id": "tau_m", "value": 10, "visible": false },
-          { "id": "tau_syn_ex", "value": 2, "visible": false },
-          { "id": "tau_syn_in", "value": 2, "visible": false }
-        ],
-        "size": "1000",
+        "size": 1000,
         "view": {
-          "color": null,
-          "position": { "x": -253, "y": -226 },
-          "visible": true
+          "position": { "x": 25, "y": 25 }
         }
       },
       {
@@ -77,7 +39,6 @@
           {
             "id": "amplitude",
             "value": 0,
-            "visible": true,
             "type": {
               "id": "numpy.arange",
               "specs": [
@@ -86,28 +47,17 @@
                 { "id": "step", "value": 1 }
               ]
             }
-          },
-          { "id": "start", "value": 0, "visible": false },
-          { "id": "stop", "value": 1000, "visible": false }
+          }
         ],
-        "size": "1000",
+        "size": 1000,
         "view": {
-          "color": null,
-          "position": { "x": -374, "y": -273 },
-          "visible": true
+          "position": { "x": 175, "y": 75 }
         }
       },
       {
         "model": "spike_recorder",
-        "params": [
-          { "id": "start", "value": 0, "visible": false },
-          { "id": "stop", "value": 10000, "visible": false }
-        ],
-        "size": 1,
         "view": {
-          "color": null,
-          "position": { "x": -125, "y": -269 },
-          "visible": true
+          "position": { "x": 325, "y": 25 }
         }
       }
     ]

@@ -4,63 +4,37 @@
     "nodes": [
       {
         "model": "spike_generator",
-        "size": 1,
-        "view": {
-          "position": {
-            "x": -150,
-            "y": 25
-          }
-        },
         "params": [
           {
             "id": "spike_times",
-            "value": [100, 300],
-            "visible": true
+            "value": [100, 300]
           },
           {
             "id": "spike_weights",
-            "value": [1, -1],
-            "visible": true
+            "value": [1, -1]
           }
-        ]
+        ],
+        "view": {
+          "position": { "x": 25, "y": 75 }
+        }
       },
       {
         "model": "iaf_psc_alpha",
         "view": {
-          "position": {
-            "x": 0,
-            "y": -25
-          }
-        },
-        "params": []
+          "position": { "x": 175, "y": 25 }
+        }
       },
       {
         "model": "voltmeter",
-        "size": 1,
+        "params": [{ "id": "interval", "value": 0.1 }],
         "view": {
-          "position": {
-            "x": 150,
-            "y": 25
-          }
-        },
-        "params": [
-          {
-            "id": "interval",
-            "value": 0.1,
-            "visible": true
-          }
-        ]
+          "position": { "x": 325, "y": 75 }
+        }
       }
     ],
     "connections": [
-      {
-        "source": 0,
-        "target": 1
-      },
-      {
-        "source": 2,
-        "target": 1
-      }
+      { "source": 0, "target": 1 },
+      { "source": 2, "target": 1 }
     ]
   },
   "simulation": {
