@@ -1,7 +1,7 @@
 // networkGraphDragline.ts
 
 import { pointer } from "d3";
-import drawPath from "@/utils/graph/connectionGraphPath";
+import { drawPathMouse, drawPathNode } from "@/utils/graph/connectionGraphPath";
 
 import { Network } from "@nest/core/network/network";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
@@ -24,7 +24,7 @@ export class NetworkGraphDragline {
    * Initialize drag line.
    */
   init(e: MouseEvent): void {
-    logger.trace("Init");
+    logger.trace("init");
     this._workspace.state.dragLine = true;
     this.update(e);
     this._workspace.update();
@@ -34,12 +34,12 @@ export class NetworkGraphDragline {
    * Update drag line.
    */
   update(e: MouseEvent): void {
-    logger.trace("Update");
+    logger.trace("update");
     if (this.network && this.network.nodes.state.selectedNode != null) {
       const selectedNode = this.network.nodes.state.selectedNode;
-      const sourcePosition: any = selectedNode.view.position;
+      const sourcePosition: {x: number, y: number} = selectedNode.view.state.position;
       const position: number[] = pointer(e, this._workspace.selector.node());
-      const targetPosition: any = {
+      const targetPosition: {x: number, y: number} = {
         x: position[0],
         y: position[1],
       };
@@ -48,12 +48,7 @@ export class NetworkGraphDragline {
         .select(".dragline")
         .style("opacity", 0.5)
         .style("stroke", selectedNode.view.color)
-        .attr(
-          "d",
-          drawPath(sourcePosition, targetPosition, {
-            isTargetMouse: true,
-          })
-        );
+        .attr("d", drawPathMouse(sourcePosition, targetPosition));
     } else {
       logger.warn("No node was selected when dragLine() got executed!");
     }
@@ -65,19 +60,19 @@ export class NetworkGraphDragline {
   drawPath(
     sourcePos: { x: number; y: number },
     targetPos: { x: number; y: number },
-    options: any = {}
   ): void {
     logger.trace("draw path");
     this._workspace.selector
       .select(".dragline")
       .style("opacity", 1)
-      .attr("d", drawPath(sourcePos, targetPos, options));
+      .attr("d", drawPathNode(sourcePos, targetPos));
   }
 
   /**
    * Hide drag line.
    */
   hide(): void {
+    logger.trace("hide");
     this._workspace.selector
       .select(".dragline")
       .style("opacity", 0)

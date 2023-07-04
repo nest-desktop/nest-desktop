@@ -25,7 +25,9 @@ export class Connections {
 
   constructor(network: Network, connections: ConnectionProps[] = []) {
     this._network = network;
-    this._logger = mainLogger.getSubLogger({ name: `[${this._network.project.shortId}] connections` });
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._network.project.shortId}] connections`,
+    });
 
     this._state = reactive({
       connectionsLength: 0,
@@ -89,7 +91,7 @@ export class Connections {
 
   get visibleConnections(): Connection[] {
     return this._connections.filter(
-      (connection: Connection) => connection.view.visible
+      (connection: Connection) => connection.view.state.visible
     );
   }
 
@@ -225,9 +227,6 @@ export class Connections {
    * Update states of all connections.
    */
   updateStates(): void {
-    this._connections.forEach((connection: Connection) =>
-      connection.state.update()
-    );
     this.updateConnectionsLength();
     this.updateHash();
   }
@@ -237,9 +236,10 @@ export class Connections {
    */
   updateHash(): void {
     this._state.hash = sha1({
-      connections: this._connections.map(
-        (connection: Connection) => connection.state.hash
-      ),
+      connections: this._connections.map((connection: Connection) => {
+        connection.state.updateHash();
+        return connection.state.hash;
+      }),
     });
     this._logger.trace("update hash:", this.state.hash.slice(0, 6));
   }

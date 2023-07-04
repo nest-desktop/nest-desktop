@@ -42,10 +42,7 @@ export interface NodeProps {
 export class Node extends Config {
   private readonly _name = "Node";
 
-  private _activity?:
-    | SpikeActivity
-    | AnalogSignalActivity
-    | Activity;
+  private _activity?: SpikeActivity | AnalogSignalActivity | Activity;
   private _annotations: string[] = [];
   private _compartments: NodeCompartment[] = [];
   private _doc: NodeProps;
@@ -61,6 +58,7 @@ export class Node extends Config {
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = []; // only for multimeter
   private _size: number;
+  private _sizeVisible: boolean;
   private _spatial: NodeSpatial;
   private _state: NodeState;
   private _view: NodeView;
@@ -71,14 +69,15 @@ export class Node extends Config {
     this._nodes = nodes;
     this._idx = this._nodes.all.length;
 
-    this._modelId = node.model || "iaf_psc_alpha";
-    this._size = node.size || 1;
-    this._annotations = node.annotations || [];
-    this._doc = node;
-
     this._logger = mainLogger.getSubLogger({
       name: `[${this._nodes.network.project.shortId}] node`,
     });
+
+    this._modelId = node.model || "iaf_psc_alpha";
+    this._size = node.size || 1;
+    this._sizeVisible = this._size > 1;
+    this._annotations = node.annotations || [];
+    this._doc = node;
 
     this._model = this.getModel(this._modelId);
     this._spatial = new NodeSpatial(this, node.spatial);
@@ -281,12 +280,7 @@ export class Node extends Config {
   }
 
   set paramsVisible(values: string[]) {
-    this._paramsVisible = Object.keys(this.modelParams).filter((paramId) =>
-      values.includes(paramId)
-    );
-    // Object.values(this._params).forEach((param) => {
-    //   param.state.visible = values.includes(param.id);
-    // });
+    this._paramsVisible = values;
     this.changes();
   }
 
@@ -351,6 +345,15 @@ export class Node extends Config {
    */
   set size(value: number) {
     this._size = value;
+    this.changes();
+  }
+
+  get sizeVisible(): boolean {
+    return this._sizeVisible;
+  }
+
+  set sizeVisible(value: boolean) {
+    this._sizeVisible = value;
     this.changes();
   }
 
@@ -579,20 +582,17 @@ export class Node extends Config {
     this._params = {};
     if (this.model) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        if (node && node.params && node.params.length > 0) {
+        if (node && node.params) {
           const nodeParam = node.params.find(
-            (param: any) => param.id === modelParam.id
+            (param: NodeParameterProps) => param.id === modelParam.id
           );
           if (nodeParam) {
             this.addParameter({
-              ...modelParam.options,
               ...nodeParam,
+              ...modelParam,
             });
-            if (
-              ("visible" in nodeParam && nodeParam.visible) ||
-              !("visible" in nodeParam)
-            ) {
-              this._paramsVisible.push(nodeParam.id);
+            if (nodeParam.visible !== false) {
+              this._paramsVisible.push(modelParam.id);
             }
           } else {
             this.addParameter(modelParam);
@@ -602,9 +602,7 @@ export class Node extends Config {
         }
       });
     } else if (node && node.params) {
-      Object.values(node.params).forEach((param: any) =>
-        this.addParameter(param)
-      );
+      node.params.forEach((param: any) => this.addParameter(param));
     }
   }
 

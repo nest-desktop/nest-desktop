@@ -1,6 +1,6 @@
 // analogSignalPlotModel.ts
 
-import { darkMode } from "@/utils/theme";
+import { currentBackgroundColor, currentColor } from "@/utils/theme";
 
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
@@ -165,17 +165,15 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return avg;
     });
 
-    const bgLine = {
-      color: darkMode() ? "#121212" : "white",
-      width: 4.5,
-    };
-
     this.data.push({
       activityIdx: record.activity.idx,
       class: "background",
       hoverinfo: "none",
       legendgroup: record.groupId,
-      line: bgLine,
+      line: {
+        color: currentBackgroundColor(),
+        width: 4.5,
+      },
       mode: "lines",
       opacity: 0.7,
       recordId: record.id,
@@ -219,7 +217,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       hoverinfo: "x+y",
       legendgroup: record.groupId,
       line: {
-        color: darkMode() ? "white" : "#121212",
+        color: currentColor(),
         width: 1.5,
       },
       mode: "lines",
@@ -347,7 +345,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
     plotData.x = data.x;
     plotData.y = data.y;
-    plotData.line.color = darkMode() ? "white" : "#121212";
+    plotData.line.color = currentColor();
     plotData.visible = true;
   }
 

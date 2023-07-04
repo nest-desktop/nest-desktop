@@ -1,6 +1,6 @@
 // analogSignalHistogramModel.ts
 
-import { darkMode } from "@/utils/theme";
+import { currentBackgroundColor } from "@/utils/theme";
 import { max, min } from "@/utils/array";
 
 import { ActivityChartPanel } from "../activityChartPanel";
@@ -96,7 +96,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       marker: {
         color: record.color,
         line: {
-          color: darkMode() ? "#121212" : "white",
+          color: currentBackgroundColor(),
           width: this.params[0].value > 100 ? 0 : 1,
         },
       },

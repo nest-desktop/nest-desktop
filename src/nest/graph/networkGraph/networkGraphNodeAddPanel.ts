@@ -123,14 +123,14 @@ export class NetworkGraphNodeAddPanel {
       const f: number = (idx * 2) / 3 + 1 / 3;
       this._selector
         .append("text")
-        .attr("class", "label select textcolor " + elementType)
-        .style("font-size", "0.7em")
-        .style("font-weight", "bold")
-        .style("text-anchor", "middle")
+        .attr("class", "label select text-button textcolor " + elementType)
+        .style("font-size", "0.7em", "important")
+        .style("font-weight", "900")
         .style("pointer-events", "none")
-        .attr("dx", Math.sin(Math.PI * f) * 32)
+        .style("text-anchor", "middle")
+        .attr("dx", Math.sin(Math.PI * f) * 32 + 1)
         .attr("dy", -Math.cos(Math.PI * f) * 32 + 5)
-        .text(elementType.slice(0, 1).toUpperCase());
+        .text(elementType.slice(0, 1));
     });
 
     this._selector
@@ -143,14 +143,17 @@ export class NetworkGraphNodeAddPanel {
       .select("g.tooltip")
       .append("rect")
       .attr("class", "bgcolor")
+      .attr("height", "16px")
       .attr("transform", "translate(-37, -14)")
-      .attr("width", "74px")
-      .attr("height", "16px");
+      .attr("width", "74px");
 
     this._selector
       .select("g.tooltip")
       .append("text")
-      .attr("class", "label textcolor")
+      .attr("class", "label textcolor text-button")
+      .style("font-size", "0.7em", "important")
+      .style("font-weight", "900")
+      .style("pointer-events", "none")
       .style("text-anchor", "middle");
   }
 
@@ -171,7 +174,7 @@ export class NetworkGraphNodeAddPanel {
   }
 
   /**
-   * Open panel to add node.
+   * Open panel.
    */
   open(): void {
     this.update();
@@ -185,7 +188,7 @@ export class NetworkGraphNodeAddPanel {
   }
 
   /**
-   * Close panel to add node.
+   * Close panel.
    */
   close(): void {
     this._selector.style("display", "none").style("opacity", "0");

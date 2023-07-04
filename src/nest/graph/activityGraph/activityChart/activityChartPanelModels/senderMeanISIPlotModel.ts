@@ -1,6 +1,6 @@
 //senderMeanISIPlotModel.ts
 
-import { darkMode } from "@/utils/theme";
+import { currentBackgroundColor } from "@/utils/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";
@@ -84,7 +84,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
       marker: {
         color: activity.recorder.view.color,
         line: {
-          color: darkMode() ? "#121212" : "white",
+          color: currentBackgroundColor(),
           width: x.length > 100 ? 0 : 1,
         },
       },

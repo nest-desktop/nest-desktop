@@ -7,7 +7,7 @@ import Plotly from "plotly.js-dist-min";
 // @ts-ignore
 import { Partial } from "plotly.js-dist-min";
 
-import { darkMode } from "@/utils/theme";
+import { darkMode, currentBackgroundColor, currentColor } from "@/utils/theme";
 import { logger as mainLogger } from "@/utils/logger";
 
 import {
@@ -25,6 +25,7 @@ import { SenderSpikeCountPlotModel } from "./activityChart/activityChartPanelMod
 import { SpikeCountPlotModel } from "./activityChart/activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChart/activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChart/activityChartPanelModels/spikeTimesRasterPlotModel";
+import vuetify from "@/plugins/vuetify";
 
 export interface ActivityChartPanelModelProps {
   activityType: string;
@@ -154,13 +155,13 @@ export class ActivityChartGraph {
       autosize: true,
       barmode: "overlay",
       font: {
-        color: darkMode() ? "white" : "#121212",
+        color: currentColor(),
       },
       margin: {
         t: 40,
       },
-      paper_bgcolor: darkMode() ? "#121212" : "white",
-      plot_bgcolor: darkMode() ? "#121212" : "white",
+      paper_bgcolor: currentBackgroundColor(),
+      plot_bgcolor: currentBackgroundColor(),
       title: {
         text: "",
         xref: "paper",
@@ -374,12 +375,7 @@ export class ActivityChartGraph {
   relayout(): void {
     if (!this._state.ref) return;
     this._logger.trace("relayout");
-
-    const dark = darkMode();
-    this._layout.font.color = dark ? "white" : "#121212";
-    this._layout.paper_bgcolor = dark ? "#121212" : "white";
-    this._layout.plot_bgcolor = dark ? "#121212" : "white";
-
+    this.updateThemeColor();
     Plotly.relayout(this._state.ref, this._layout);
   }
 
@@ -449,7 +445,7 @@ export class ActivityChartGraph {
 
     this.updateVisiblePanelsLayout();
     this.updatePanelModels();
-    this.updateLayoutColor();
+    // this.updateLayoutColor();
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       this.gatherData(panel);
@@ -461,12 +457,12 @@ export class ActivityChartGraph {
   }
 
   /**
-   * Update the layout color of the chart graph.
+   * Update the theme color of the chart graph.
    */
-  updateLayoutColor(): void {
-    this._layout.font.color = darkMode() ? "white" : "#121212";
-    this._layout.paper_bgcolor = darkMode() ? "#121212" : "white";
-    this._layout.plot_bgcolor = darkMode() ? "#121212" : "white";
+  updateThemeColor(): void {
+    this._layout.font.color = currentColor();
+    this._layout.paper_bgcolor = currentBackgroundColor();
+    this._layout.plot_bgcolor = currentBackgroundColor();
   }
 
   /**

@@ -2,7 +2,7 @@
   <v-expansion-panel class="node-connection" elevation="0" rounded="0">
     <v-expansion-panel-title style="min-height: 52px; height: 52px">
       <v-row no-gutters>
-        <div>
+        <div style="pointer-events:none">
           <v-btn icon size="small">
             <node-avatar
               :color="state.connection.source.view.color"

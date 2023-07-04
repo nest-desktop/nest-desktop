@@ -1,4 +1,4 @@
-//neuronAnalogSignalPlotModel.ts
+// neuronAnalogSignalPlotModel.ts
 
 import { ActivityChartPanel } from '../activityChartPanel';
 import { AnalogSignalPlotModel } from './analogSignalPlotModel';

@@ -4,6 +4,7 @@ import { ILogObj, Logger } from "tslog";
 import { Selection, Transition, drag, select, transition } from "d3";
 
 import { logger as mainLogger } from "@/utils/logger";
+import { darkMode, currentBackgroundColor } from "@/utils/theme";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";
@@ -52,10 +53,10 @@ export class NodeGraph {
         n.nodes.state.selectedNode &&
         this._networkGraph.workspace.state.dragLine
       ) {
-        const sourcePos = n.nodes.state.selectedNode.view.position;
+        const sourcePos = n.nodes.state.selectedNode.view.state.position;
         this._networkGraph.workspace.dragline.drawPath(
           sourcePos,
-          n.view.position
+          n.view.state.position
         );
       }
     });
@@ -72,7 +73,7 @@ export class NodeGraph {
    * This function should be called when nodes is changed.
    */
   update(): void {
-    this._logger.trace("update");
+    this._logger.silly("update");
     if (!this._networkGraph.selector) return;
 
     const nodes: Selection<any, any, any, any> = this._networkGraph.selector
@@ -90,9 +91,9 @@ export class NodeGraph {
       .attr(
         "transform",
         (n: Node) =>
-          `translate(${n.view.position.x},${n.view.position.y}) scale( ${
-            n.state.isFocused ? 1.2 : 1
-          })`
+          `translate(${n.view.state.position.x},${
+            n.view.state.position.y
+          }) scale( ${n.state.isFocused ? 1.2 : 1})`
       )
       .style("opacity", 0)
       // @ts-ignore
@@ -117,8 +118,8 @@ export class NodeGraph {
     this._logger.silly("drag");
     if (this._networkGraph.workspace.state.dragLine) return;
 
-    node.view.position.x = event.x;
-    node.view.position.y = event.y;
+    node.view.state.position.x = event.x;
+    node.view.state.position.y = event.y;
     this._networkGraph.network.nodes.cleanWeightRecorders();
     this._networkGraph.render();
   }
@@ -141,12 +142,13 @@ export class NodeGraph {
       .transition(t)
       .style("opacity", 1)
       .attr("color", (n: any) => n.view.color)
+      .style("background-color", currentBackgroundColor())
       .attr(
         "transform",
         (n: any) =>
-          `translate(${n.view.position.x},${n.view.position.y}) scale( ${
-            n.state.isFocused ? 1.2 : 1
-          })`
+          `translate(${n.view.state.position.x},${
+            n.view.state.position.y
+          }) scale( ${n.state.isFocused ? 1.2 : 1})`
       );
   }
 }

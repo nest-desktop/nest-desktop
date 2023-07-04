@@ -1,7 +1,8 @@
 // nodeGraphShape.ts
 
+import { ILogObj, Logger } from "tslog";
 import { Selection, select } from "d3";
-import { darkMode } from "@/utils/theme";
+
 import { logger as mainLogger } from "@/utils/logger";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
@@ -11,8 +12,6 @@ function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;
   return [Math.cos(radian) * radius, y0 - Math.sin(radian) * radius];
 }
-
-const logger = mainLogger.getSubLogger({ name: "node graph shape" });
 
 function getHexagonPoints(radius: number): string {
   const a: number = radius * 0.9;
@@ -71,7 +70,6 @@ function getTrianglePoints(radius: number): string {
   const p0: number[] = anglePoint(90, a, 4);
   const p1: number[] = anglePoint(210, a, 4);
   const p2: number[] = anglePoint(330, a, 4);
-  // const points: string = [[-x,y].join(','),[2*x,0].join(','),[-x,-y].join(',')].join(',');
   const points: string = [p0.join(","), p1.join(","), p2.join(",")].join(",");
   return points;
 }
@@ -90,17 +88,13 @@ function nodePoints(node: Node, radius: number): string {
 
 export class NodeGraphShape {
   private _networkGraph: NetworkGraph;
+  private _logger: Logger<ILogObj>;
 
   constructor(networkGraph: NetworkGraph) {
     this._networkGraph = networkGraph;
-  }
-
-  get bgcolor(): string {
-    if (this._networkGraph.network == undefined) {
-      return "white";
-    }
-
-    return darkMode() ? "#121212" : "white";
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._networkGraph.network.project.shortId}] node graph shape`,
+    });
   }
 
   get nodeRadius(): number {
@@ -112,7 +106,7 @@ export class NodeGraphShape {
   }
 
   drawShape(selector: Selection<any, any, any, any>, node: Node): void {
-    logger.trace("draw shape");
+    this._logger.trace("draw shape");
     selector.attr("elementType", node.model.elementType);
     selector.attr("weight", node.view.weight);
 
@@ -125,23 +119,28 @@ export class NodeGraphShape {
       elem
         .append("polygon")
         .attr("class", "shape")
+        .attr("style", "stroke-linejoin: round")
+        .attr("stroke", "currentcolor")
+        .attr("fill", "white")
         .attr("points", (n: Node) => nodePoints(n, this.nodeRadius));
     }
 
     elem
       .append("text")
       .attr("class", "text-button")
-      .style("font-family", "Roboto")
-      .style("font-size", "0.7em", "important")
+      .style("font-family", "Roboto, sans-serif", "important")
+      .style("font-size", "0.7rem", "important")
       .style("font-weight", "900")
       .style("pointer-events", "none")
-      .style("text-anchor", "middle");
+      .style("text-anchor", "middle")
+      .style("text-transform", "uppercase", "important");
   }
 
   /**
    * Initialize a node shape.
    */
   init(selector: Selection<any, any, any, any>, node: Node): void {
+    this._logger.silly("init");
     const elem: Selection<any, any, any, any> = selector
       .append("g")
       .attr("class", "core");
@@ -156,7 +155,9 @@ export class NodeGraphShape {
         this._networkGraph.workspace.state.dragLine
       ) {
         // Set cursor position of the focused node.
-        this._networkGraph.workspace.updateCursorPosition(node.view.position);
+        this._networkGraph.workspace.updateCursorPosition(
+          node.view.state.position
+        );
 
         this._networkGraph.workspace.animationOff();
         this._networkGraph.network.connectNodes(
@@ -186,7 +187,7 @@ export class NodeGraphShape {
    * Render all node shapes.
    */
   render(): void {
-    logger.trace("render");
+    this._logger.silly("render");
     const nodes = select("g#nodes").selectAll("g.node");
     nodes.style("pointer-events", () =>
       this._networkGraph.network.nodes.isWeightRecorderSelected &&
@@ -209,22 +210,24 @@ export class NodeGraphShape {
 
       elem
         .select(".shape")
-        .style("stroke", "currentcolor")
-        .attr("stroke-linecap", "round")
-        .style("fill", this.bgcolor)
         .style(
           "stroke-width",
-          (node.size > 1 ? 1.3 : 1) * this._networkGraph.config.strokeWidth
+          (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
-        .style("stroke-dasharray", node.state.isSelected ? "7.85" : "");
+        .style(
+          "opacity",
+          !this._networkGraph.network.nodes.state.selectedNode ||
+            (this._networkGraph.network.nodes.state.selectedNode &&
+              node.state.isSelected) ||
+            (this._networkGraph.network.nodes.state.focusedNode &&
+              node.state.isFocused)
+            ? "1"
+            : "0.6"
+        );
 
       elem
         .select("text")
         .attr("dy", node.isInhibitoryNeuron ? "0.4em" : "0.8em")
-        .style(
-          "fill",
-          darkMode() ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"
-        )
         .text(node.view.label);
     });
   }

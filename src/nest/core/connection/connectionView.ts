@@ -1,33 +1,35 @@
 // connectionView.ts
 
+import { UnwrapRef, reactive } from "vue";
+
+import { randomUniformInt } from "@/utils/random";
+import { calcPathNode } from "@/utils/graph/connectionGraphPath";
+
 import { Connection } from "./connection";
+
+interface ConnectionViewState {
+  xAxisRotation: number;
+  visible?: boolean;
+}
 
 export class ConnectionView {
   private _colorExcitation = "#595289"; // '#467ab3';
   private _colorInhibition = "#AF143C"; // '#b34846';
   private _connection: Connection; // parent
-  private _visible: boolean = true;
+  private _state: UnwrapRef<ConnectionViewState>;
 
   constructor(connection: Connection) {
     this._connection = connection;
+
+    this._state = reactive({
+      xAxisRotation: randomUniformInt(0, 90),
+    });
   }
 
-  /**
-   * Calculate the centroid of connected nodes.
-   */
-  get centroidPosition(): { x: number; y: number } {
-    if (this._connection.source === this._connection.target) {
-      return { x: 0, y: 0 };
-    }
-    const source: any = this._connection.source.view.position;
-    const target: any = this._connection.target.view.position;
-    const x1: number = source.x;
-    const y1: number = source.y;
-    const x2: number = target.x;
-    const y2: number = target.y;
-    const dx: number = (x1 + x2) / 2;
-    const dy: number = (y1 + y2) / 2;
-    return { x: dx, y: dy };
+  get centerPosition(): { x: number; y: number } {
+    const p0 = this._connection.source.view.state.position;
+    const p1 = this._connection.target.view.state.position;
+    return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
   }
 
   /**
@@ -41,38 +43,57 @@ export class ConnectionView {
     return value > 0 ? this._colorExcitation : this._colorInhibition;
   }
 
-  get position(): { x: number; y: number } {
-    const p0 = this._connection.source.view.position;
-    const p1 = this._connection.target.view.position;
-    return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
+  get connectionGraphOptions(): {
+    ellipticalArc: number;
+    sweep: number;
+    xAxisRotation: number;
+  } {
+    return {
+      ellipticalArc: this._connection.source.state.isSelected || this._connection.source.state.targetsLength > 2 ? 1 : 10,
+      sweep: this._connection.idx % 2,
+      xAxisRotation: this._state.xAxisRotation,
+    };
   }
 
-  get targetPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.position;
-    const target = this._connection.target.view.position;
-
-    const r: number = 18;
-    const tr: number = r + 12;
-
-    const x1: number = source.x;
-    const y1: number = source.y;
-    const x2: number = target.x;
-    const y2: number = target.y;
-
-    const dx: number = x2 - x1;
-    const dy: number = y2 - y1;
-    const a: number = Math.atan2(dy, dx);
-    const mx2 = dx === 0 && dy === 0 ? x2 + 1 : x2 - Math.cos(a) * tr;
-    const my2 = dx === 0 && dy === 0 ? y2 - r - 4 : y2 - Math.sin(a) * tr;
-    return { x: mx2, y: my2 };
+  /**
+   * Generates a string describing the end of this connections' marker.
+   */
+  get markerEndLabel(): string {
+    if (this.connectRecorder()) {
+      return "generic";
+    } else if (this._connection.synapse.weight > 0) {
+      return "exc";
+    } else if (this._connection.synapse.weight < 0) {
+      return "inh";
+    }
+    return "generic";
   }
 
-  get visible(): boolean {
-    return this._visible;
+  get markerEndPosition(): { x: number; y: number } {
+    const source = this._connection.source.view.state.position;
+    const target = this._connection.target.view.state.position;
+    const path = calcPathNode(source, target, this.connectionGraphOptions);
+    return { x: path.x2, y: path.y2 };
   }
 
-  set visible(value: boolean) {
-    this._visible = value;
+  get pathCentroidPosition(): { x: number; y: number } {
+    const source = this._connection.source.view.state.position;
+    const target = this._connection.view.markerEndPosition;
+    const path = calcPathNode(source, target, this.connectionGraphOptions);
+    const x2 = path.x1 + Math.cos(0) * path.tr;
+    const y2 = path.y1 + Math.sin(0) * path.tr;
+    return { x: x2, y: y2 };
+  }
+
+  get state(): UnwrapRef<ConnectionViewState> {
+    return this._state;
+  }
+
+  get toRight(): boolean {
+    return (
+      this._connection.source.view.state.position.x <
+      this._connection.target.view.state.position.x
+    );
   }
 
   /**
@@ -109,8 +130,9 @@ export class ConnectionView {
     if (this._connection.source === this._connection.target) {
       return 0;
     }
-    const source: any = this._connection.source.view.position;
-    const target: any = this._connection.target.view.position;
+
+    const source: any = this._connection.source.view.state.position;
+    const target: any = this._connection.target.view.state.position;
     const x1: number = source.x;
     const y1: number = source.y;
     const x2: number = target.x;
@@ -125,18 +147,5 @@ export class ConnectionView {
    */
   probabilistic(): boolean {
     return !["all_to_all", "one_to_one"].includes(this._connection.rule.value);
-  }
-
-  /**
-   * Generates a string describing the end of this connections' marker.
-   */
-  markerEnd(): string {
-    if (this._connection.synapse.weight > 0 && !this.connectRecorder()) {
-      return "url(#exc" + this._connection.idx + ")";
-    } else if (this._connection.synapse.weight < 0 && !this.connectRecorder()) {
-      return "url(#inh" + this._connection.idx + ")";
-    } else {
-      return "url(#generic" + this._connection.idx + ")";
-    }
   }
 }

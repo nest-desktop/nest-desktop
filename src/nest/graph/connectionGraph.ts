@@ -1,7 +1,7 @@
 // connectionGraph.ts
 
 import { Selection, Transition, drag, select, transition } from "d3";
-import drawPath from "@/utils/graph/connectionGraphPath";
+import { drawPathNode } from "@/utils/graph/connectionGraphPath";
 
 import { Connection } from "@nest/core/connection/connection";
 import { NetworkGraph } from "./networkGraph/networkGraph";
@@ -25,18 +25,21 @@ export class ConnectionGraph {
    * Drag connection graph by moving its node graphs.
    */
   drag(event: MouseEvent, connection: Connection): void {
-    if (!this.state.dragLine) {
-      const sourceNode = connection.source;
-      sourceNode.view.position.x += event.movementX;
-      sourceNode.view.position.y += event.movementY;
+    if (this.state.dragLine) return;
+    const sourceNodePosition = connection.source.view.state.position;
+    // @ts-ignore
+    sourceNodePosition.x += event.dx;
+    // @ts-ignore
+    sourceNodePosition.y += event.dy;
 
-      const targetNode = connection.target;
-      targetNode.view.position.x += event.movementX;
-      targetNode.view.position.y += event.movementY;
+    const targetNodePosition = connection.target.view.state.position;
+    // @ts-ignore
+    targetNodePosition.x += event.dx;
+    // @ts-ignore
+    targetNodePosition.y += event.dy;
 
-      this._networkGraph.network.nodes.cleanWeightRecorders();
-      this._networkGraph.render();
-    }
+    this._networkGraph.network.nodes.cleanWeightRecorders();
+    this._networkGraph.render();
   }
 
   /**
@@ -56,26 +59,24 @@ export class ConnectionGraph {
       .style("fill", "none")
       .style("stroke", "black")
       .style("opacity", 0)
-      .style("stroke-width", 40);
+      .attr("stroke-linecap", "round")
+      .style("stroke-width", 30);
 
     elem
       .append("path")
       .attr("class", "color")
       .style("fill", "none")
+      .style("opacity", 1)
+      .attr("stroke-linecap", "round")
       .style("stroke-width", this.strokeWidth)
       .style("pointer-events", "none");
 
     // elem
-    //   .append("text")
-    //   .attr(
-    //     "transform",
-    //     `translate(${connection.view.centroidPosition.x},${connection.view.centroidPosition.y})`
-    //   )
-    //   .text(connection.synapse.params.weight.value?.toString() || 1);
+    //   .append("text");
 
     elem
       .on("mouseover", (_, c: Connection) => {
-        connection.state.focus();
+        c.state.focus();
         // Draw line between selected node and focused connection.
         if (
           c.network.nodes.state.selectedNode &&
@@ -83,8 +84,8 @@ export class ConnectionGraph {
           this.state.dragLine
         ) {
           this._networkGraph.workspace.dragline.drawPath(
-            c.network.nodes.state.selectedNode.view.position,
-            c.view.targetPosition
+            c.network.nodes.state.selectedNode.view.state.position,
+            c.view.markerEndPosition
           );
         }
         this._networkGraph.update();
@@ -104,7 +105,7 @@ export class ConnectionGraph {
           workspace.state.dragLine
         ) {
           // Set cursor position of the focused connection.
-          workspace.updateCursorPosition(connection.view.position);
+          workspace.updateCursorPosition(connection.view.centerPosition);
 
           // Disable animation in network workspace.
           workspace.animationOff();
@@ -150,13 +151,10 @@ export class ConnectionGraph {
    * Render connection graphs.
    */
   render(): void {
-    const selector = select("g#connections").selectAll("g.connection");
-    selector.style("pointer-events", () =>
-      this._networkGraph.network.nodes.isWeightRecorderSelected &&
-      this._networkGraph.workspace.state.dragLine
-        ? "none"
-        : ""
+    select("g#connections").style("pointer-events", () =>
+      this._networkGraph.workspace.state.dragLine ? "none" : ""
     );
+    const selector = select("g#connections").selectAll("g.connection");
 
     const duration: number = this._networkGraph.workspace.state.dragging
       ? 0
@@ -172,10 +170,10 @@ export class ConnectionGraph {
         .transition(t)
         .attr(
           "d",
-          drawPath(
-            connection.source.view.position,
-            connection.target.view.position,
-            connection.state.connectionGraphOptions
+          drawPathNode(
+            connection.source.view.state.position,
+            connection.target.view.state.position,
+            connection.view.connectionGraphOptions
           )
         );
 
@@ -186,9 +184,11 @@ export class ConnectionGraph {
           "stroke-width",
           this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
         )
-        .style("opacity", connection.state.isFocused ? 1 : 0.67)
-        .attr("stroke-linecap", "round")
-        .attr("marker-end", connection.view.markerEnd())
+        .style("opacity", connection.state.isFocused ? 1 : 0.3)
+        .attr(
+          "marker-end",
+          `url(#${connection.view.markerEndLabel}${connection.idx})`
+        )
         .style(
           "stroke-dasharray",
           connection.view.probabilistic() ? "7.85" : ""
@@ -196,12 +196,21 @@ export class ConnectionGraph {
 
       elem.transition(t).delay(duration).style("opacity", 1);
 
-      // elem
-      //   .select("text")
-      //   .attr(
-      //     "transform",
-      //     `translate(${connection.view.centroidPosition.x},${connection.view.centroidPosition.y})`
-      //   );
+      // const pos = connection.view.markerEndPosition;
+
+      this._networkGraph.selector
+        ?.selectAll(`#${connection.view.markerEndLabel}${connection.idx}`)
+        .select("text")
+        .attr("dx", connection.view.toRight ? 8 : -8)
+        .attr("dy", connection.view.toRight ? 3.5 : -4.5)
+        .classed("toLeft", !connection.view.toRight)
+        .text(connection.synapse.weight);
+      //   .style("font-family", "Roboto")
+      //   .style("font-size", "0.7em", "important")
+      //   .style("font-weight", "900")
+      //   .style("pointer-events", "none")
+      //   .style("text-anchor", "middle")
+      //   .attr("transform", `translate(${pos.x},${pos.y})`);
     });
   }
 

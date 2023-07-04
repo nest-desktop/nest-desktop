@@ -66,7 +66,7 @@ const state = reactive({
   }
 
   .sublist {
-    border-left: 2px solid rgb(var(--v-theme-primary), 0.6) !important;
+    border-left: 2px solid rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
     margin-inline-start: 28px !important;
   }
 }

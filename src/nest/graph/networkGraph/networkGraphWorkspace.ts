@@ -94,6 +94,37 @@ export class NetworkGraphWorkspace extends Config {
   }
 
   /**
+   * Turn the animation off.
+   */
+  animationOff(): void {
+    this.state.dragging = true;
+    this._networkGraph.selector?.style("pointer-events", "none");
+    setTimeout(() => {
+      this.state.dragging = false;
+      this._networkGraph.selector?.style("pointer-events", "");
+    }, 1);
+  }
+
+  /**
+   * Center position of nodes.
+   */
+  centerNetworkPos(): { x: number; y: number } {
+    if (this.network == undefined) {
+      return { x: 0, y: 1 };
+    }
+
+    const X: number[] = [];
+    const Y: number[] = [];
+    this.network.nodes.all.forEach((node: Node) => {
+      X.push(node.view.state.position.x);
+      Y.push(node.view.state.position.y);
+    });
+    const x: number = ((min(X) || 0) + (max(X) || 1)) / 2;
+    const y: number = ((min(Y) || 0) + (max(Y) || 1)) / 2;
+    return { x, y };
+  }
+
+  /**
    * Initialize workspace.
    */
   init(): void {
@@ -121,9 +152,9 @@ export class NetworkGraphWorkspace extends Config {
         }
       })
       .on("click", () => {
+        this.reset();
         if (this.network && this.network.nodes.state.selectedNode) {
           this.network.nodes.unselectNode();
-          this.reset();
         }
         this.update();
       })
@@ -134,23 +165,6 @@ export class NetworkGraphWorkspace extends Config {
         this._nodeAddPanel.open();
       })
       .call(this._zoom.handler);
-  }
-
-  /**
-   * Update workspace.
-   */
-  update(): void {
-    this.updateState();
-    this._grid.update();
-    this._nodeAddPanel.update();
-  }
-
-  /**
-   * Update cursor position.
-   */
-  updateCursorPosition(position: any = { x: 0, y: 0 }): void {
-    this._state.cursorPosition.x = position.x;
-    this._state.cursorPosition.y = position.y;
   }
 
   /**
@@ -168,61 +182,12 @@ export class NetworkGraphWorkspace extends Config {
   }
 
   /**
-   * Update transform of the workspace.
+   * Reset graph.
    */
-  updateTransform(): void {
-    if (
-      this.network == undefined ||
-      (!this._state.centerNetwork && !this._state.centerSelected)
-    )
-      return;
-
-    const bbox = this._handler.node().getBBox();
-
-    let x: number = 0,
-      y: number = 0;
-
-    const nodes = this.network.nodes;
-    if (this._state.centerSelected && nodes.state.selectedNode) {
-      const nodePosition: any = nodes.state.selectedNode.view.position;
-      x = nodePosition.x;
-      y = nodePosition.y;
-    } else if (this._state.centerNetwork && nodes.all.length > 0) {
-      const networkCenterPos: any = this.centerNetworkPos();
-      x = networkCenterPos.x;
-      y = networkCenterPos.y;
-    }
-
-    this._zoom.transform.x = bbox.width / 2 - x * this._zoom.transform.k;
-    this._zoom.transform.y = bbox.height / 2 - y * this._zoom.transform.k;
-
-    this._state.transforming = true;
-    this._handler.call(
-      this._zoom.handler.transform,
-      zoomIdentity
-        .translate(this._zoom.transform.x, this._zoom.transform.y)
-        .scale(this._zoom.transform.k)
-    );
-    this._state.transforming = false;
-  }
-
-  /**
-   * Center position of nodes.
-   */
-  centerNetworkPos(): { x: number; y: number } {
-    if (this.network == undefined) {
-      return { x: 0, y: 1 };
-    }
-
-    const X: number[] = [];
-    const Y: number[] = [];
-    this.network.nodes.all.forEach((node: Node) => {
-      X.push(node.view.position.x);
-      Y.push(node.view.position.y);
-    });
-    const x: number = ((min(X) || 0) + (max(X) || 1)) / 2;
-    const y: number = ((min(Y) || 0) + (max(Y) || 1)) / 2;
-    return { x, y };
+  reset(): void {
+    this._handler.style("cursor", "default");
+    this._nodeAddPanel.close();
+    this._dragline.hide();
   }
 
   /**
@@ -254,15 +219,20 @@ export class NetworkGraphWorkspace extends Config {
   }
 
   /**
-   * Turn the animation off.
+   * Update workspace.
    */
-  animationOff(): void {
-    this.state.dragging = true;
-    this._networkGraph.selector?.style("pointer-events", "none");
-    setTimeout(() => {
-      this.state.dragging = false;
-      this._networkGraph.selector?.style("pointer-events", "");
-    }, 1);
+  update(): void {
+    this.updateState();
+    this._grid.update();
+    this._nodeAddPanel.update();
+  }
+
+  /**
+   * Update cursor position.
+   */
+  updateCursorPosition(position: any = { x: 0, y: 0 }): void {
+    this._state.cursorPosition.x = position.x;
+    this._state.cursorPosition.y = position.y;
   }
 
   /**
@@ -275,11 +245,41 @@ export class NetworkGraphWorkspace extends Config {
   }
 
   /**
-   * Reset graph.
+   * Update transform of the workspace.
    */
-  reset(): void {
-    this._handler.style("cursor", "default");
-    this._nodeAddPanel.close();
-    this._dragline.hide();
+  updateTransform(): void {
+    if (
+      this.network == undefined ||
+      (!this._state.centerNetwork && !this._state.centerSelected)
+    )
+      return;
+
+    const bbox = this._handler.node().getBBox();
+
+    let x: number = 0,
+      y: number = 0;
+
+    const nodes = this.network.nodes;
+    if (this._state.centerSelected && nodes.state.selectedNode) {
+      const nodePosition: any = nodes.state.selectedNode.view.state.position;
+      x = nodePosition.x;
+      y = nodePosition.y;
+    } else if (this._state.centerNetwork && nodes.all.length > 0) {
+      const networkCenterPos: any = this.centerNetworkPos();
+      x = networkCenterPos.x;
+      y = networkCenterPos.y;
+    }
+
+    this._zoom.transform.x = bbox.width / 2 - x * this._zoom.transform.k;
+    this._zoom.transform.y = bbox.height / 2 - y * this._zoom.transform.k;
+
+    this._state.transforming = true;
+    this._handler.call(
+      this._zoom.handler.transform,
+      zoomIdentity
+        .translate(this._zoom.transform.x, this._zoom.transform.y)
+        .scale(this._zoom.transform.k)
+    );
+    this._state.transforming = false;
   }
 }

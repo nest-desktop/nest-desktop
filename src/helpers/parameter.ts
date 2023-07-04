@@ -4,7 +4,7 @@ import { reactive, UnwrapRef } from "vue";
 
 import { Config } from "./config";
 
-type valueTypes = boolean | number | string | (number | string)[];
+type ParamValueTypes = boolean | number | string | (number | string)[];
 
 export interface ParameterProps {
   disabled?: boolean;
@@ -17,7 +17,7 @@ export interface ParameterProps {
   step?: number;
   ticks?: (number | string)[];
   unit?: string;
-  value?: valueTypes;
+  value?: ParamValueTypes;
   visible?: boolean;
   factors?: any[];
   type?: any;
@@ -43,7 +43,7 @@ export class Parameter extends Config {
   private _ticks: (number | string)[] = [];
   private _type: { [key: string]: any } = { id: "constant" };
   private _unit: string = "";
-  private _value: valueTypes = 0; // constant value;
+  private _value: ParamValueTypes = 0; // constant value;
 
   constructor(param: ParameterProps) {
     super("Parameter");
@@ -216,11 +216,11 @@ export class Parameter extends Config {
     this._unit = value;
   }
 
-  get value(): valueTypes {
+  get value(): ParamValueTypes {
     return this._value;
   }
 
-  set value(value: valueTypes) {
+  set value(value: ParamValueTypes) {
     this._value = value;
   }
 
@@ -248,7 +248,7 @@ export class Parameter extends Config {
    * Copy paramter component
    */
   override copy(): any {
-    return new Parameter(this);
+    return new Parameter(this.toJSON());
   }
 
   /**
@@ -394,15 +394,14 @@ export class Parameter extends Config {
     this._value = param.value || 0;
 
     this._state = reactive({
-      visible: param.visible != undefined ? param.visible : false,
-      disabled: param.disabled != undefined ? param.disabled : true,
+      visible: true,
     });
 
     // optional param specifications
     this._rules = param.rules || [];
     this._factors = param.factors || [];
 
-    if (param.type != null) {
+    if (param.type) {
       const type = this.config.types.find((t: any) => t.id === param.type.id);
       if (type != null) {
         this._type = { ...type, ...param.type };

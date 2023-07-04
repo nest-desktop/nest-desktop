@@ -1,7 +1,7 @@
 // modelAssignGraph.ts
 
 import { Selection, select } from "d3";
-import drawPath from "@/utils/graph/connectionGraphPath";
+import { drawPathMouse } from "@/utils/graph/connectionGraphPath";
 
 import { Connection } from "@nest/core/connection/connection";
 import { CopyModel } from "@nest/core/model/copyModel";
@@ -68,7 +68,7 @@ export class ModelAssignGraph {
    * This function should be called when connections in the network are changed.
    */
   update(): void {
-    if (!this._networkGraph.selector) return
+    if (!this._networkGraph.selector) return;
 
     const models: Selection<any, any, any, any> = this._networkGraph.selector
       .select("g#modelAssigned")
@@ -109,12 +109,9 @@ export class ModelAssignGraph {
           .selectAll("path")
           .attr(
             "d",
-            drawPath(
-              weightRecorder.view.position,
-              connection.view.targetPosition,
-              {
-                isTargetMouse: true,
-              }
+            drawPathMouse(
+              weightRecorder.view.state.position,
+              connection.view.markerEndPosition
             )
           )
           .style("stroke-dasharray", 3);

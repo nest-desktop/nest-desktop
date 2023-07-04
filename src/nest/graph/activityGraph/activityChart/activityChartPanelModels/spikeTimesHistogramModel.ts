@@ -1,24 +1,24 @@
 // spikeTimesHistogramModel.ts
 
-import { darkMode } from '@/utils/theme';
+import { currentBackgroundColor } from "@/utils/theme";
 
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeActivity } from '@nest/core/activity/spikeActivity';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { ActivityChartPanel } from "../activityChartPanel";
+import { SpikeActivity } from "@nest/core/activity/spikeActivity";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bar';
-    this.id = 'spikeTimesHistogram';
+    this.icon = "mdi-chart-bar";
+    this.id = "spikeTimesHistogram";
     this.panel.xaxis = 1;
     this.params = [
       {
-        id: 'binSize',
-        input: 'tickSlider',
-        label: 'bin size',
+        id: "binSize",
+        input: "tickSlider",
+        label: "bin size",
         ticks: [5, 10, 20, 50, 100, 200, 500, 1000],
-        unit: 'ms',
+        unit: "ms",
         value: 20,
       },
     ];
@@ -39,21 +39,21 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      histfunc: 'count',
-      hoverinfo: 'x+y',
-      legendgroup: 'spikes' + activity.idx,
+      histfunc: "count",
+      hoverinfo: "x+y",
+      legendgroup: "spikes" + activity.idx,
       marker: {
         color: activity.recorder.view.color,
         line: {
-          color: darkMode() ? '#121212' : 'white',
+          color: currentBackgroundColor(),
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      name: 'Histogram of spike times in' + activity.recorder.view.label,
+      name: "Histogram of spike times in" + activity.recorder.view.label,
       opacity: 0.6,
       showlegend: false,
-      source: 'x+y',
-      type: 'histogram',
+      source: "x+y",
+      type: "histogram",
       visible: this.state.visible,
       x,
       xbins: {
@@ -68,7 +68,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
    * Update layout label for spike time histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = 'Time [ms]';
-    this.panel.layout.yaxis.title = 'Spike count';
+    this.panel.layout.xaxis.title = "Time [ms]";
+    this.panel.layout.yaxis.title = "Spike count";
   }
 }

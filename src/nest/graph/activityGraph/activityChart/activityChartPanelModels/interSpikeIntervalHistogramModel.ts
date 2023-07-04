@@ -1,6 +1,6 @@
 // interSpikeIntervalHistogramModel.ts
 
-import { darkMode } from "@/utils/theme";
+import { currentBackgroundColor } from "@/utils/theme";
 import { max } from "@/utils/array";
 
 import { ActivityChartPanel } from "../activityChartPanel";
@@ -49,7 +49,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
       marker: {
         color: activity.recorder.view.color,
         line: {
-          color: darkMode() ? "#121212" : "white",
+          color: currentBackgroundColor(),
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },

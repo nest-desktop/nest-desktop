@@ -137,7 +137,7 @@ export class NetworkGraph {
    * This function should be called when the network is changed.
    */
   update(): void {
-    this._logger.trace("update");
+    this._logger.silly("update");
     this._workspace.update();
     this._modelAssignGraph.update();
     this._connectionGraph.update();
