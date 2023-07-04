@@ -9,47 +9,59 @@
     density="compact"
     fixed-header
     loadingText="Loading... Please wait"
+    show-select
+    v-model="state.activity.state.selected"
+    @update:model-value="() => state.activity.chartGraph?.update()"
   >
     <template #top>
       <v-select
         :items="state.activity.state.records"
         @change="update"
-        chips
         density="compact"
         hide-details
         item-value="id"
+        item-title="id"
         return-object
+        rounded="0"
         v-model="state.selectedRecord"
       >
-        <!-- <template #selection="{ item }">
+        <template #selection="{ item }">
           <v-chip
-            :color="item.color"
+            :color="item.value.color"
             class="mx-2"
             label
             variant="outlined"
             size="small"
           >
-            {{ item.id }}
+            {{ item.title }}
           </v-chip>
           <div style="font-size: 12px">
-            <span>{{ item.label }}</span>
-            <span v-if="item.unit">({{ item.unit }})</span>
+            <span>{{ item.value.label }}</span>
+            <span v-if="item.value.unit"> ({{ item.value.unit }})</span>
           </div>
-        </template> -->
+        </template>
 
-        <!-- <template #item="{ item }">
-          <v-chip :color="item.color" class="mx-2" label outlined small>
-            {{ item.id }}
-          </v-chip>
-          <div style="font-size: 12px">
-            <span> {{ item.label }}</span>
-            <span v-if="item.unit"> ({{ item.unit }}) </span>
+        <template #item="{ item }">
+          <div>
+            <v-chip
+              :color="item.value.color"
+              class="mx-2"
+              label
+              variant="outlined"
+              size="small"
+            >
+              {{ item.title }}
+            </v-chip>
+            <div style="font-size: 12px">
+              <span> {{ item.value.label }}</span>
+              <span v-if="item.value.unit"> ({{ item.value.unit }}) </span>
+            </div>
           </div>
-        </template> -->
+        </template>
       </v-select>
     </template>
 
-    <template #item="{ item }">
+    <!-- <template #item="{ item }">
       <tr
         :class="{
           active: isActive(item.value),
@@ -63,6 +75,13 @@
         <td>{{ toFixed(item.columns.mean) }}</td>
         <td>{{ toFixed(item.columns.std) }}</td>
       </tr>
+    </template> -->
+
+    <template #item.mean="{ item }">
+      {{ toFixed(item.columns.mean) }}
+    </template>
+    <template #item.std="{ item }">
+      {{ toFixed(item.columns.std) }}
     </template>
 
     <template #bottom>
@@ -92,24 +111,14 @@ import { toFixed } from "@/utils/converter";
 import { AnalogSignalActivity } from "@nest/core/activity/analogSignalActivity";
 import { NodeRecord } from "@nest/core/node/nodeRecord";
 
-
 const props = defineProps({
   activity: AnalogSignalActivity,
-  height: Number,
+  height: { default: 500, type: Number },
 });
 
 const state = reactive({
   activity: props.activity as AnalogSignalActivity,
   activityHash: "",
-  headers: [
-    {
-      text: "ID",
-      align: "start",
-      value: "id",
-    },
-    { text: "Mean", value: "mean" },
-    { text: "Std", value: "std" },
-  ],
   items: [] as { [key: string]: number | string }[],
   loading: false,
   search: "",
@@ -127,18 +136,18 @@ const headers = [
   { title: "Std", key: "std" },
 ];
 
-const activeLineGraph = (nodeId?: number) => {
-  state.activity.state.activeNodeId =
-    state.activity.state.activeNodeId == nodeId ? undefined : nodeId;
-  state.activity.chartGraph?.panels.forEach((panel) =>
-    panel.model.updateActiveMarker(state.selectedRecord as NodeRecord)
-  );
-  state.activity.chartGraph?.react();
-};
+// const activeLineGraph = (nodeId?: number) => {
+//   state.activity.state.activeNodeId =
+//     state.activity.state.activeNodeId == nodeId ? undefined : nodeId;
+//   state.activity.chartGraph?.panels.forEach((panel) =>
+//     panel.model.updateActiveMarker(state.selectedRecord as NodeRecord)
+//   );
+//   state.activity.chartGraph?.react();
+// };
 
-const isActive = (nodeId: number) => {
-  return state.activity.state.activeNodeId === nodeId;
-};
+// const isActive = (nodeId: number) => {
+//   return state.activity.state.activeNodeId === nodeId;
+// };
 
 /**
  * Update stats of analog activity.
@@ -147,9 +156,11 @@ const update = () => {
   console.log("Update stats of analog activity");
   state.loading = true;
   state.items = [];
+
   if (!state.selectedRecord && state.activity.state.records.length > 0) {
     state.selectedRecord = state.activity.state.records[0] as NodeRecord;
   }
+
   if (state.activity && state.selectedRecord) {
     const activityData: any[] = state.activity.events[state.selectedRecord.id];
     const data: any[] = Object.create(null);

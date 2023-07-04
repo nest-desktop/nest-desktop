@@ -26,7 +26,7 @@ export class ConnectionRule {
   private _connection: Connection; // parent
   private _value: string;
 
-  constructor(connection: Connection, rule: string) {
+  constructor(connection: Connection, rule?: string) {
     this._connection = connection;
     this._value = rule || "all_to_all";
   }

@@ -4,7 +4,7 @@ import { ILogObj, Logger } from "tslog";
 import { Config } from "@/helpers/config";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { ConnectionMask } from "./connectionMask";
+import { ConnectionMask, ConnectionMaskProps } from "./connectionMask";
 import {
   ConnectionParameter,
   ConnectionParameterProps,
@@ -18,18 +18,19 @@ import { Model } from "../model/model";
 import { Network } from "../network/network";
 import { Node } from "../node/node";
 import { NodeSlice } from "../node/nodeSlice";
-import { Synapse } from "../synapse/synapse";
+import { Synapse, SynapseProps } from "../synapse/synapse";
 import { SynapseParameter } from "../synapse/synapseParameter";
+import { NodeParameterProps } from "../node/nodeParameter";
 
 export interface ConnectionProps {
   source: number;
   target: number;
-  sourceSlice?: any;
-  targetSlice?: any;
-  rule?: any;
+  sourceSlice?: NodeParameterProps[];
+  targetSlice?: NodeParameterProps[];
+  rule?: string;
   params?: ConnectionParameterProps[];
-  mask?: any;
-  synapse?: any;
+  mask?: ConnectionMaskProps;
+  synapse?: SynapseProps;
 }
 
 export class Connection extends Config {
@@ -62,7 +63,7 @@ export class Connection extends Config {
     this._view = new ConnectionView(this);
 
     this._sourceIdx = connection.source;
-    this._sourceSlice = new NodeSlice(this.source, connection.sourceSlice);
+    this._sourceSlice = new NodeSlice(this.source, []);
 
     this._targetIdx = connection.target;
     this._targetSlice = new NodeSlice(this.target, connection.targetSlice);
@@ -88,7 +89,7 @@ export class Connection extends Config {
   }
 
   get hasConnSpec(): boolean {
-    return this._rule.value != "all_to_all";
+    return this._rule.value !== "all_to_all";
   }
 
   get hasSomeVisibleParams(): boolean {

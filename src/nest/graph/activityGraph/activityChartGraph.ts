@@ -7,7 +7,7 @@ import Plotly from "plotly.js-dist-min";
 // @ts-ignore
 import { Partial } from "plotly.js-dist-min";
 
-import { darkMode, currentBackgroundColor, currentColor } from "@/utils/theme";
+import { currentBackgroundColor, currentColor } from "@/utils/theme";
 import { logger as mainLogger } from "@/utils/logger";
 
 import {
@@ -25,7 +25,6 @@ import { SenderSpikeCountPlotModel } from "./activityChart/activityChartPanelMod
 import { SpikeCountPlotModel } from "./activityChart/activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChart/activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChart/activityChartPanelModels/spikeTimesRasterPlotModel";
-import vuetify from "@/plugins/vuetify";
 
 export interface ActivityChartPanelModelProps {
   activityType: string;
@@ -283,6 +282,7 @@ export class ActivityChartGraph {
       data.panelIdx = panel.idx;
       data.xaxis = "x" + panel.xaxis;
       data.yaxis = "y" + panel.yaxis;
+      // data.yaxis = "y" + index;
       this._data.push(data);
     });
   }
