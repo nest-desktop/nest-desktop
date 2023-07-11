@@ -105,7 +105,7 @@ export default Vue.extend({
       core.app.backends.coSimAccess.check().finally(function () {
         // update the version (is updated as well in case of failure)
         state.coSimVersion =
-          core.app.backends.coSimAccess.state.version.coSim || '';
+          core.app.backends.coSimAccess.state.version.CoSimServer || '';
       });
     }
 
