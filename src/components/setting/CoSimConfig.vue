@@ -6,30 +6,30 @@
         <v-spacer />
         <v-switch
           :title="
-            (state.app.backends.coSimAccess.enabled ? 'Ignore' : 'Search for') +
+            (state.app.backends.coSim.enabled ? 'Ignore' : 'Search for') +
             ' this backend'
           "
           dense
           hide-details
-          v-model="state.app.backends.coSimAccess.enabled"
+          v-model="state.app.backends.coSim.enabled"
         />
       </v-card-title>
       <v-card-subtitle>Co-simulation framework</v-card-subtitle>
 
-      <v-card-text v-if="state.app.backends.coSimAccess.state.enabled">
+      <v-card-text v-if="state.app.backends.coSim.state.enabled">
         <v-text-field
           :rules="rules"
-          @change="updateCoSimAccessConfig({ custom: true })"
+          @change="updateCoSimConfig({ custom: true })"
           hint="Please enter the URL where the server of CoSim can be found at (including protocol!)."
           label="URL of CoSim access"
           persistent-hint
           placeholder="http://127.0.0.1:52428"
-          v-model="state.app.backends.coSimAccess.url"
+          v-model="state.app.backends.coSim.url"
         />
       </v-card-text>
 
-      <v-card-actions v-if="state.app.backends.coSimAccess.state.enabled">
-        <v-btn @click="checkCoSimAccess" outlined small v-text="'Check'" />
+      <v-card-actions v-if="state.app.backends.coSim.state.enabled">
+        <v-btn @click="checkcoSim" outlined small v-text="'Check'" />
 
         <div class="mx-3">
           <span v-if="state.coSimVersion && state.coSimVersion !== 'unknown'">
@@ -89,23 +89,23 @@ import { onBeforeMount, reactive } from '@vue/composition-api';
 import core from '@/core';
 
 export default Vue.extend({
-  name: 'coSimAccessConfig',
+  name: 'coSimConfig',
   setup() {
     const state = reactive({
       app: core.app,
       coSimVersion: 'unknown',
     });
 
-    onBeforeMount(() => checkCoSimAccess());
+    onBeforeMount(() => checkCoSim());
 
     /**
      * Check if CoSim is running in the backend.
      */
-    async function checkCoSimAccess() {
-      core.app.backends.coSimAccess.check().finally(function () {
+    async function checkCoSim() {
+      core.app.backends.coSim.check().finally(function () {
         // update the version (is updated as well in case of failure)
         state.coSimVersion =
-          core.app.backends.coSimAccess.state.version.CoSimServer || '';
+          core.app.backends.coSim.state.version.CoSimServer || '';
       });
     }
 
@@ -123,16 +123,16 @@ export default Vue.extend({
     /**
      * Update configurations for CoSim access.
      */
-    const updateCoSimAccessConfig = (config: any = {}) => {
-      state.app.backends.coSimAccess.updateConfig(config);
-      checkCoSimAccess();
+    const updateCoSimConfig = (config: any = {}) => {
+      state.app.backends.coSim.updateConfig(config);
+      checkCoSim();
     };
 
     return {
-      checkCoSimAccess,
+      checkCoSim,
       rules,
       state,
-      updateCoSimAccessConfig,
+      updateCoSimConfig,
     };
   },
 });
