@@ -23,7 +23,7 @@
           hint="Please enter the URL where the server of CoSim can be found at (including protocol!)."
           label="URL of CoSim access"
           persistent-hint
-          placeholder="http://127.0.0.1:8080"
+          placeholder="http://127.0.0.1:52428"
           v-model="state.app.backends.coSimAccess.url"
         />
       </v-card-text>
