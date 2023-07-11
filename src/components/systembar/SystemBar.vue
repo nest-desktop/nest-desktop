@@ -9,6 +9,10 @@
 
       <BackendStatus
         class="mx-1"
+        :backend="{ id: 'coSim', text: 'CoSim' }"
+      />
+      <BackendStatus
+        class="mx-1"
         :backend="{ id: 'insiteAccess', text: 'Insite' }"
       />
       <BackendStatus
