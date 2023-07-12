@@ -115,12 +115,12 @@ def configure_nest(nest, addresses):
     "label": addresses['stimulus_source'],
     "stimulus_source": "mpi",
   })
-  nest.Connect(input_stimulator, {{ network.state.nodeInput }})
-
   output_recorder = nest.Create("spike_recorder", params={
     "label": addresses['record_to'],
     "record_to": "mpi",
   })
+
+  nest.Connect(input_stimulator, {{ network.state.nodeInput }})
   nest.Connect({{ network.state.nodeOutput }}, output_recorder)
 
   # Prepare simulation
