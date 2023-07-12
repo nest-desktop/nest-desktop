@@ -2,6 +2,7 @@ import { Config } from '../common/config';
 import { Simulation } from './simulation';
 
 export class SimulationKernel extends Config {
+  private _dataPath: string;
   private _localNumThreads: number; // number of threads
   private _resolution: number; // time resolution of simulation steps
   private _simulation: Simulation; // parent
@@ -10,9 +11,14 @@ export class SimulationKernel extends Config {
   constructor(simulation: Simulation, kernel: any = {}) {
     super('SimulationKernel');
     this._simulation = simulation;
-    this._resolution = kernel.resolution || 0.1;
+    this._dataPath = kernel.dataPath || "";
     this._localNumThreads = kernel.localNumThreads || 1;
+    this._resolution = kernel.resolution || 0.1;
     this._rngSeed = parseInt(kernel.rngSeed, 0) || 1;
+  }
+
+  get dataPath(): string {
+    return this._dataPath;
   }
 
   get localNumThreads(): number {

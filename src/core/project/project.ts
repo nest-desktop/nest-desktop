@@ -52,8 +52,8 @@ export class Project {
     project = upgradeProject(this._app, project);
 
     // Initialize simulation and network.
-    this._simulation = new Simulation(this, project.simulation);
     this.initNetwork(project.network);
+    this._simulation = new Simulation(this, project.simulation);
 
     // Initialize activity graph.
     this._activityGraph = new ActivityGraph(this, project.activityGraph);

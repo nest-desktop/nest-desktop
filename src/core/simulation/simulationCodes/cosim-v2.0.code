@@ -1,10 +1,7 @@
 import numpy
 
-def configure_nest(nest):
-  {{ #simulation.code.resetKernel }}
-
+def configure_nest(nest, addresses):
   nest.ResetKernel()
-  {{ /simulation.code.resetKernel }}
   {{ #simulation.code.runSimulationInsite }}
 
   try:
@@ -12,16 +9,14 @@ def configure_nest(nest):
   except:
     pass
   {{ /simulation.code.runSimulationInsite }}
-  {{ #simulation.code.setKernelStatus }}
 
   # Set simulation kernel
   nest.SetKernelStatus({
+    # "data_path": "{{ simulation.kernel.dataPath }}",
     "local_num_threads": {{ simulation.kernel.localNumThreads }},
     "resolution": {{ simulation.kernel.resolution }},
-    "rng_seed": {{ simulation.kernel.rngSeed }}
+    "rng_seed": {{ simulation.kernel.rngSeed }},
   })
-  {{ /simulation.code.setKernelStatus }}
-  {{ #simulation.code.createNodes }}
   {{ #network.hasNodeModels }}
 
   # Copy node models
@@ -82,8 +77,6 @@ def configure_nest(nest):
   {{ /hasReceptors }}
   {{ /network.nodes }}
   {{ /network.hasSomeNodeReceptors }}
-  {{ /simulation.code.createNodes }}
-  {{ #simulation.code.connectNodes }}
   {{ #network.hasSynapseModels }}
 
   # Copy synapse models
@@ -113,21 +106,21 @@ def configure_nest(nest):
   {{ /synapse.hasReceptorIndices }}
   }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
   {{ /network.connections }}
-  {{ /simulation.code.connectNodes }}
-  {{ #simulation.code.tagAnnotations }}
 
-  # Tag annotations
-  nest.userdict.clear()
-  {{ #network.state.nodeAnnotations }}
-  nest.userdict["{{ key }}"] = {{ &value }}.tolist()
-  {{ /network.state.nodeAnnotations }}
-  {{ /simulation.code.tagAnnotations }}
+  input_stimulator = nest.Create("spike_generator", params={
+    "label": addresses['stimulus_source'],
+    "stimulus_source": "mpi",
+  })
+  nest.Connect(input_stimulator, {{ network.state.nodeInput }})
 
-  input_to_simulator = []
-  output_from_simulator = []
+  output_recorder = nest.Create("spike_recorder", params={
+    "label": addresses['record_to'],
+    "record_to": "mpi",
+  })
+  nest.Connect({{ network.state.nodeOutput }}, output_recorder)
 
   # Prepare simulation
   nest.Prepare()
 
-  return input_to_simulator, output_from_simulator
+  return input_stimulator, output_recorder
 

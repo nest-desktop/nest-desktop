@@ -50,6 +50,7 @@ export class NetworkState {
 
   private _network: Network; // parent
   private _nodeAnnotations: any[] = [];
+  private _nodeAnnotationsDict: { input?: string; output?: string } = {};
   private _selectedConnection: number | null = null;
   private _selectedNode: number | null = null;
 
@@ -117,6 +118,14 @@ export class NetworkState {
 
   get nodeAnnotations(): any {
     return this._nodeAnnotations;
+  }
+
+  get nodeInput(): string {
+    return this._nodeAnnotationsDict.input || '';
+  }
+
+  get nodeOutput(): string {
+    return this._nodeAnnotationsDict.output || '';
   }
 
   get selectedConnection(): Connection | null {
@@ -269,6 +278,7 @@ export class NetworkState {
           key: userDictKey,
           value: nodesStr,
         });
+        this._nodeAnnotationsDict[userDictKey] = nodesStr;
       });
     }
   }

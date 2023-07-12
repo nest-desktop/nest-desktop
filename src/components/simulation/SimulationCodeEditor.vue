@@ -63,8 +63,8 @@
                 @change="state.code.generate()"
                 class="ma-0"
                 hide-details
-                label="Script language"
-                v-model="state.code.state.version"
+                label="Script template"
+                v-model="state.code.state.template"
               >
                 <v-radio
                   :key="item.value"
@@ -72,7 +72,7 @@
                   :value="item.value"
                   class="text-no-wrap"
                   hide-details
-                  v-for="item in state.nestVersions"
+                  v-for="item in templates"
                 />
               </v-radio-group>
             </v-list-item>
@@ -226,20 +226,21 @@ export default Vue.extend({
         },
         theme: root.$vuetify.theme.dark ? 'base16-dark' : 'default',
       },
-      nestVersions: [
-        { text: 'CoSim v2.0', value: 'cosim-v2.0' },
-        // { text: 'NEST dev', value: 'nest-master' },
-        { text: 'NEST v3.4', value: 'nest-v3.4' },
-        { text: 'NEST v3.3', value: 'nest-v3.3' },
-        // { text: 'NEST v3.2', value: 'nest-v3.2' },
-        // { text: 'NEST v3.1', value: 'nest-v3.1' },
-        // { text: 'NEST v3.0', value: 'nest-v3.0' },
-        { text: 'PyNN v0.10', value: 'pyNN-v0.10' },
-      ],
       style: {
         width: 300,
       },
     });
+
+    const templates = [
+      { text: 'CoSim v2.0', value: 'cosim-v2.0' },
+      // { text: 'NEST dev', value: 'nest-master' },
+      { text: 'NEST v3.4', value: 'nest-v3.4' },
+      { text: 'NEST v3.3', value: 'nest-v3.3' },
+      // { text: 'NEST v3.2', value: 'nest-v3.2' },
+      // { text: 'NEST v3.1', value: 'nest-v3.1' },
+      // { text: 'NEST v3.0', value: 'nest-v3.0' },
+      { text: 'PyNN v0.10', value: 'pyNN-v0.10' },
+    ];
 
     /**
      * Initialize hint (only for NEST commands!) after CodeMirror is ready.
@@ -310,6 +311,7 @@ export default Vue.extend({
       onCmReady,
       simulationCodeEditor,
       state,
+      templates,
     };
   },
 });

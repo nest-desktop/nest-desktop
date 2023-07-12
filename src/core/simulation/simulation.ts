@@ -131,8 +131,8 @@ export class Simulation extends Config {
   private async runCoSimulation(): Promise<any> {
     this.consoleLog('Run Co-simulation');
 
-    return this.backends.cosim.instance
-      .post('submit', {
+    return this.backends.coSim.instance
+      .post('write', {
         script: this._code.script
       })
       .then((response: any) => {
@@ -180,7 +180,7 @@ export class Simulation extends Config {
   private async runCoSimulationWithInsite(): Promise<any> {
     this.consoleLog('Run co-simulation with Insite');
 
-    return this.backends.cosim.instance
+    return this.backends.coSim.instance
       .post('submit', { script: this._code.script })
       .then((response: any) => {
         switch (response.status) {
@@ -325,7 +325,7 @@ export class Simulation extends Config {
     this._state.running = true;
 
     let response;
-    if (this._code.state.version.startsWith('cosim')) {
+    if (this._code.state.template.startsWith('cosim')) {
       if (this._code.runSimulationInsite) {
         response = this.runCoSimulationWithInsite();
       } else {
