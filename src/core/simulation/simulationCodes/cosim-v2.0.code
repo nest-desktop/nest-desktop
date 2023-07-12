@@ -107,6 +107,10 @@ def configure_nest(nest, addresses):
   }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
   {{ /network.connections }}
 
+  # Configurations for Co-Simulation:
+  # - input neurons recieve spikes from other simulator
+  # - output neurons send spikes to other simulator
+
   input_stimulator = nest.Create("spike_generator", params={
     "label": addresses['stimulus_source'],
     "stimulus_source": "mpi",
