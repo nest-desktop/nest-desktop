@@ -122,15 +122,104 @@ export class Simulation extends Config {
       stepSize: 1,
     };
   }
-
   /**
-   * Run simulation.
+   * Run NEST simulation in CoSim.
    *
    * @remarks
    * After the simulation it updates the activities and commits the network.
    */
-  private async runSimulation(): Promise<any> {
-    this.consoleLog('Run simulation');
+  private async runCoSimulation(): Promise<any> {
+    this.consoleLog('Run Co-simulation');
+
+    return this.backends.cosim.instance
+      .post('submit', {
+        script: this._code.script
+      })
+      .then((response: any) => {
+        // let data: any;
+        switch (response.status) {
+          case 0:
+            this.openToast('Failed to find CoSim Server.', 'error');
+            break;
+          case 200:
+            console.log('Submitted')
+            break;
+          default:
+            this.openToast(response.data, 'error');
+            break;
+        }
+        return response;
+      })
+      .catch((error: any) => {
+        if ('response' in error && error.response.data != undefined) {
+          // The request made and the server responded.
+          this.openToast(error.response.data, 'error');
+        } else if ('request' in error) {
+          // The request was made but no response was received.
+          this.openToast(
+            'Failed to submit simulation script (CoSim Server not found).',
+            'error'
+          );
+        } else if ('message' in error && error.message != undefined) {
+          // Something happened in setting up the request
+          // that triggered an error.
+          this.openToast(error.message, 'error');
+        } else {
+          this.openToast(error, 'error');
+        }
+      });
+  }
+
+
+  /**
+   * Run co-simulation with recording backend Insite.
+   *
+   * @remarks
+   * During the simulation it gets and updates activities.
+   */
+  private async runCoSimulationWithInsite(): Promise<any> {
+    this.consoleLog('Run co-simulation with Insite');
+
+    return this.backends.cosim.instance
+      .post('submit', { script: this._code.script })
+      .then((response: any) => {
+        switch (response.status) {
+          case 0:
+            this.openToast(
+              'Failed to submit simulation script (CoSim Server not found).',
+              'error'
+            );
+            this._project.insite.cancelAllIntervals();
+            break;
+          case 200:
+            if (this._code.runSimulation) {
+              this._project.insite.simulationEndNotification();
+            }
+            break;
+          default:
+            this.openToast(response.responseText, 'error');
+            this._project.insite.cancelAllIntervals();
+            break;
+        }
+        return response;
+      })
+      .catch((error: any) => {
+        this._project.insite.cancelAllIntervals();
+        if ('response' in error && error.response.data != undefined) {
+          this.openToast(error.response.data, 'error');
+        }
+        return error;
+      });
+  }
+
+  /**
+   * Run NEST simulation.
+   *
+   * @remarks
+   * After the simulation it updates the activities and commits the network.
+   */
+  private async runNESTSimulation(): Promise<any> {
+    this.consoleLog('Run NEST simulation');
 
     return this.backends.nestSimulator.instance
       .post('exec', {
@@ -141,7 +230,7 @@ export class Simulation extends Config {
         let data: any;
         switch (response.status) {
           case 0:
-            this.openToast('Failed to find NEST Simulator.', 'error');
+            this.openToast('Failed to find NEST Server.', 'error');
             break;
           case 200:
             if (response.data.data == null) {
@@ -167,7 +256,7 @@ export class Simulation extends Config {
         } else if ('request' in error) {
           // The request was made but no response was received.
           this.openToast(
-            'Failed to perform simulation (NEST Simulator is not running).',
+            'Failed to execute simulation (NEST Server not found).',
             'error'
           );
         } else if ('message' in error && error.message != undefined) {
@@ -177,9 +266,6 @@ export class Simulation extends Config {
         } else {
           this.openToast(error, 'error');
         }
-      })
-      .finally(() => {
-        this._state.running = false;
       });
   }
 
@@ -189,14 +275,8 @@ export class Simulation extends Config {
    * @remarks
    * During the simulation it gets and updates activities.
    */
-  private async runWithInsite(): Promise<any> {
+  private async runNESTSimulationWithInsite(): Promise<any> {
     this.consoleLog('Run simulation with Insite');
-    this._state.timeInfo = {
-      begin: 0,
-      current: 0,
-      end: 0,
-      stepSize: 1,
-    };
 
     return this.backends.nestSimulator.instance
       .post('exec', { source: this._code.script })
@@ -204,7 +284,7 @@ export class Simulation extends Config {
         switch (response.status) {
           case 0:
             this.openToast(
-              'Failed to perform simulation (NEST Simulator is not running).',
+              'Failed to perform simulation (NEST Server not found).',
               'error'
             );
             this._project.insite.cancelAllIntervals();
@@ -227,9 +307,6 @@ export class Simulation extends Config {
           this.openToast(error.response.data, 'error');
         }
         return error;
-      })
-      .finally(() => {
-        this._state.running = false;
       });
   }
 
@@ -246,9 +323,26 @@ export class Simulation extends Config {
     this.generateSeed();
 
     this._state.running = true;
-    return this._code.runSimulationInsite
-      ? this.runWithInsite()
-      : this.runSimulation();
+
+    let response;
+    if (this._code.state.version.startsWith('cosim')) {
+      if (this._code.runSimulationInsite) {
+        response = this.runCoSimulationWithInsite();
+      } else {
+        response = this.runCoSimulation();
+      }
+    } else {
+      if (this._code.runSimulationInsite) {
+        response = this.runNESTSimulationWithInsite();
+      } else {
+        response = this.runNESTSimulation();
+      }
+    }
+
+    response.finally(() => {
+      this._state.running = false;
+    });
+    return response;
   }
 
   /**
