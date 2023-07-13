@@ -132,8 +132,8 @@ export class Simulation extends Config {
     this.consoleLog('Run Co-simulation');
 
     return this.backends.coSim.instance
-      .post('write', {
-        script: this._code.script
+      .post('submit', {
+        script: this._code.script,
       })
       .then((response: any) => {
         // let data: any;
@@ -142,7 +142,7 @@ export class Simulation extends Config {
             this.openToast('Failed to find CoSim Server.', 'error');
             break;
           case 200:
-            console.log('Submitted')
+            console.log('Submitted');
             break;
           default:
             this.openToast(response.data, 'error');
@@ -324,7 +324,7 @@ export class Simulation extends Config {
 
     this._state.running = true;
 
-    let response;
+    let response: Promise<any>;
     if (this._code.state.template.startsWith('cosim')) {
       if (this._code.runSimulationInsite) {
         response = this.runCoSimulationWithInsite();
