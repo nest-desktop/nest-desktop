@@ -1,101 +1,66 @@
-// activityGraph.ts
+// activityGraphStore.ts
+
+import { UnwrapRef, reactive } from "vue";
 
 import { ILogObj, Logger } from "tslog";
-import { reactive, UnwrapRef } from "vue";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { ActivityChartGraph } from "./activityChartGraph";
-import { ActivityAnimationGraph } from "./activityAnimationGraph";
-import { Project } from "@nest/core/project/project";
-import { ActivityChartPanelProps } from "./activityChart/activityChartPanel";
-
-export interface ActivityGraphProps {
-  panels?: ActivityChartPanelProps[];
-}
-
-interface ActivityGraphState {
-  codeHash: string;
-  dataHash: string;
-}
+import { ActivityAnimationGraph } from "@nest/graph/activityGraph/activityAnimationGraph";
+import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
+import { ActivityChartPanelProps } from "@/nest/graph/activityGraph/activityChart/activityChartPanel";
+import { Project } from "@/nest/core/project/project";
 
 export class ActivityGraph {
-  private _activityAnimationGraph?: ActivityAnimationGraph;
-  private _activityChartGraph?: ActivityChartGraph;
-  private _logger: Logger<ILogObj>;
   private _project: Project;
-  private _state: UnwrapRef<ActivityGraphState>;
+  private _activityChartGraph: ActivityChartGraph;
+  private _activityAnimationGraph: ActivityAnimationGraph;
+  private _state: UnwrapRef<any>;
+  private _logger: Logger<ILogObj>;
 
-  constructor(project: Project, activityGraph: ActivityGraphProps = {}) {
+  constructor(
+    project: Project,
+    activityGraph?: { panels: ActivityChartPanelProps[] }
+  ) {
     this._project = project;
+    this._activityChartGraph = new ActivityChartGraph(
+      project,
+      activityGraph?.panels
+    );
+    this._activityAnimationGraph = new ActivityAnimationGraph(project);
+    this._logger = mainLogger.getSubLogger({
+      name: `activity graph`,
+    });
+
     this._state = reactive({
       codeHash: "",
       dataHash: "",
     });
-
-    this._logger = mainLogger.getSubLogger({
-      name: `[${this._project.shortId}] activity graph`,
-    });
-    this.init(activityGraph);
   }
 
-  get activityAnimationGraph(): ActivityAnimationGraph | undefined {
+  get activityAnimationGraph(): ActivityAnimationGraph {
     return this._activityAnimationGraph;
   }
 
-  get activityChartGraph(): ActivityChartGraph | undefined {
+  get activityChartGraph(): ActivityChartGraph {
     return this._activityChartGraph;
   }
 
-  get codeHash(): string {
-    return this._state.codeHash;
-  }
-
-  get project(): Project {
-    return this._project;
-  }
-
-  get state(): UnwrapRef<ActivityGraphState> {
+  get state(): any {
     return this._state;
-  }
-
-  /**
-   * Empty activity graph.
-   */
-  emptyActivityGraph(): void {
-    if (this._activityChartGraph) {
-      this._activityChartGraph.empty();
-    }
   }
 
   /**
    * Initialize activity graph.
    */
-  init(activityGraph: ActivityGraphProps = {}): void {
-    this._logger.trace("Init");
-    this.initActivityChartGraph(activityGraph.panels);
-    this.initActivityAnimationGraph();
+  init(): void {
     this.updateHash();
-  }
+    this._logger.trace("init");
 
-  /**
-   * Initialize activity animation graph (Three).
-   */
-  initActivityAnimationGraph(): void {
-    if (this._activityAnimationGraph == null) {
-      this._activityAnimationGraph = new ActivityAnimationGraph(this._project);
-    } else {
-      this._activityAnimationGraph.init();
-    }
-  }
+    this._activityChartGraph.init();
+    // this.activityAnimationGraph.init();
 
-  /**
-   * Initialize activity chart graph (plotly).
-   */
-  initActivityChartGraph(panels: ActivityChartPanelProps[] = []): void {
-    if (this._activityChartGraph == undefined) {
-      this._activityChartGraph = new ActivityChartGraph(this._project, panels);
-    } else {
-      this._activityChartGraph.init(panels);
+    if (this._project.activities.state.hasSomeEvents) {
+      this.update();
     }
   }
 
@@ -103,7 +68,7 @@ export class ActivityGraph {
    * Serialize for JSON.
    * @return activity graph object
    */
-  toJSON(): ActivityGraphProps {
+  toJSON(): { panels: ActivityChartPanelProps[] } {
     return {
       panels: this._activityChartGraph ? this._activityChartGraph.toJSON() : [],
     };
@@ -113,17 +78,13 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    console.log(this._project.activities.state.hash, this._state.dataHash);
-    if (this._project.activities.state.hash === this._state.dataHash) return;
+    // if (this.project.activities.state.hash === this.dataHash) return;
 
-    if (this._activityChartGraph) {
-      this._activityChartGraph.update();
-    }
-    if (this._activityAnimationGraph) {
-      this._activityAnimationGraph.update();
-    }
+    this._activityChartGraph.update();
+    // this.activityAnimationGraph.update();
+
     this.updateHash();
-    this._logger.trace("Update");
+    this._logger.trace("update");
   }
 
   /**
@@ -132,6 +93,6 @@ export class ActivityGraph {
   updateHash(): void {
     this._state.codeHash = this._project.simulation.code.state.hash;
     this._state.dataHash = this._project.activities.state.hash;
-    this._logger.settings.name = `[${this._project.shortId}] activity graph #${this._state.codeHash} #${this._state.dataHash}`;
+    this._logger.settings.name = `[${this._project.shortId}] activity graph #${this._state.odeHash} #${this._state.dataHash}`;
   }
 }

@@ -12,7 +12,7 @@ import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { Node } from "@nest/core/node/node";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { debounce } from "@/utils/events";
-import { Network } from "@/nest/core/network/network";
+import { Network } from "@nest/core/network/network";
 
 export class NetworkGraph {
   private _config: any = {

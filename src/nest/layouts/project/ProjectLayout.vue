@@ -83,7 +83,15 @@
           <simulation-code-editor />
         </template>
         <template v-else-if="projectStore.controllerView === 'activity'">
-          Activity
+          <activity-chart-controller />
+          {{  projectStore.project.activityGraph.activityChartGraph.panels.length }}
+          <div
+            :key="index"
+            v-for="(panel, index) in projectStore.project.activityGraph
+              .activityChartGraph.panels"
+          >
+            {{ panel.model.id }}
+          </div>
         </template>
         <template v-else-if="projectStore.controllerView === 'stats'">
           <activity-stats />
@@ -109,11 +117,12 @@
 import { useNavStore } from "@/store/navStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-import ActivityStats from "@nest/components/viewer/activityStats/ActivityStats.vue";
-import NetworkParamEditor from "@nest/components/editor/NetworkParamEditor.vue";
-import SimulationCodeEditor from "@nest/components/editor/SimulationCodeEditor.vue";
-import SimulationCodeMirror from "@nest/components/editor/SimulationCodeMirror.vue";
-import SimulationKernelEditor from "@/nest/components/editor/SimulationKernelEditor.vue";
+import ActivityChartController from "@nest/components/activity/ActivityChartController.vue";
+import ActivityStats from "@nest/components/activity/activityStats/ActivityStats.vue";
+import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
+import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
+import SimulationCodeMirror from "@nest/components/simulation/SimulationCodeMirror.vue";
+import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectNav from "./ProjectNav.vue";

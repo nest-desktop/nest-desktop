@@ -119,12 +119,11 @@ export class ActivityChartGraph {
   private _layout: Partial<Plotly.Layout> = {};
   private _logger: Logger<ILogObj>;
   private _models: ActivityChartPanelModelProps[] = models;
-  private _panel: ActivityChartPanel;
   private _panels: ActivityChartPanel[] = [];
   private _project: Project;
   private _state: UnwrapRef<ActivityChartGraphState>;
 
-  constructor(project: Project, panels: ActivityChartPanelProps[] = []) {
+  constructor(project: Project, panels?: ActivityChartPanelProps[]) {
     this._project = project;
     this._config = {
       displaylogo: false,
@@ -167,7 +166,6 @@ export class ActivityChartGraph {
         x: 0,
       },
     };
-    this._panel = new ActivityChartPanel(this);
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this._project.shortId}] activity chart graph`,
@@ -177,7 +175,7 @@ export class ActivityChartGraph {
       dialog: false,
     });
 
-    this.init(panels);
+    this.initPanels(panels);
   }
 
   get data(): Plotly.Data[] {
@@ -216,10 +214,6 @@ export class ActivityChartGraph {
         "source" in model &&
         model.source != "elephant"
     );
-  }
-
-  get panel(): ActivityChartPanel {
-    return this._panel;
   }
 
   get panels(): ActivityChartPanel[] {
@@ -290,22 +284,12 @@ export class ActivityChartGraph {
   /**
    * Initialize network chart graph.
    */
-  init(panels: ActivityChartPanelProps[] = []): void {
+  init(): void {
+    // this._project = project;
+    // this._logger.settings.name = `[${this._project.shortId}] activity chart graph`;
+
     this._logger.trace("init");
     this._project.activities.checkActivities();
-
-    this._panels = [];
-    if (panels.length > 0) {
-      panels.forEach((panel: ActivityChartPanelProps) => this.addPanel(panel));
-    } else {
-      if (this._project.activities.state.hasSomeAnalogRecorders) {
-        this.addPanel({ model: { id: "analogSignalPlot" } });
-      }
-      if (this._project.activities.state.hasSomeSpikeRecorders) {
-        this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
-        this.addPanel({ model: { id: "spikeTimesHistogram" } });
-      }
-    }
 
     this.updateVisiblePanelsLayout();
 
@@ -337,10 +321,28 @@ export class ActivityChartGraph {
   }
 
   /**
+   * Initialize panel models.
+   */
+  initPanelModels(): void {
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
+  }
+
+  /**
    * Initialize panels.
    */
-  initPanels(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
+  initPanels(panels?: ActivityChartPanelProps[]): void {
+    this._panels = [];
+    if (panels && panels.length > 0) {
+      panels.forEach((panel: ActivityChartPanelProps) => this.addPanel(panel));
+    } else {
+        if (this._project.activities.state.hasSomeAnalogRecorders) {
+        this.addPanel({ model: { id: "analogSignalPlot" } });
+      }
+      if (this._project.activities.state.hasSomeSpikeRecorders) {
+        this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
+        this.addPanel({ model: { id: "spikeTimesHistogram" } });
+      }
+    }
   }
 
   /**
@@ -442,6 +444,8 @@ export class ActivityChartGraph {
     if (!this._state.ref) return;
     this._logger.trace("update");
     this.empty();
+
+    this._project.activities.checkActivities();
 
     this.updateVisiblePanelsLayout();
     this.updatePanelModels();

@@ -55,20 +55,20 @@
 
           <marker
             :id="'inh' + index"
-            markerHeight="6"
-            markerWidth="12"
+            markerHeight="8"
+            markerWidth="16"
             orient="auto"
-            refX="13"
-            refY="3"
+            refX="14"
+            refY="4"
             v-if="connection.view.markerEndLabel === 'inh'"
           >
             <circle
               fill="currentcolor"
               r="2"
               stroke="currentcolor"
-              transform="translate(11,3)"
+              transform="translate(12,4)"
             />
-            <text dx="1" dy="5" />
+            <text dx="8" dy="5" />
           </marker>
 
           <marker
@@ -107,8 +107,8 @@ const props = defineProps({ graph: { type: NetworkGraph, required: true } });
 
 // import { Ref, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 
-// import { useProjectStore } from "@/nest/store/project/projectStore";
-// import { Network } from "@/nest/core/network/network";
+// import { useProjectStore } from "@nest/store/project/projectStore";
+// import { Network } from "@nest/core/network/network";
 
 // const projectStore = useProjectStore();
 

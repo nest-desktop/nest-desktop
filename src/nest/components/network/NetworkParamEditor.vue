@@ -20,8 +20,9 @@
           :node="(node as Node)"
           @mouseenter="node.state.focus()"
           @mouseleave="node.nodes.unfocusNode()"
-          :style="{opacity: showNode(node as Node) ? 1 : 0.2}"
-        />
+          v-if="showNode(node as Node)"
+          />
+          <!-- :style="{opacity: showNode(node as Node) ? 1 : 0.2}" -->
       </div>
     </div>
   </div>
@@ -32,7 +33,7 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import NodeEditor from "@nest/components/editor/NodeEditor.vue";
+import NodeEditor from "@nest/components/node/NodeEditor.vue";
 import { Node } from "@nest/core/node/node";
 import { useProjectStore } from "@nest/store/project/projectStore";
 

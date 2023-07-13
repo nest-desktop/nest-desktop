@@ -8,13 +8,14 @@ import { useModelDBStore } from "@nest/store/model/modelDBStore";
 import { useProjectDBStore } from "@nest/store/project/projectDBStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-import { ActivityGraph } from "@nest/graph/activityGraph/activityGraph";
 import { Insite } from "../insite/insite";
 import { Network, NetworkProps } from "../network/network";
 import { ProjectState } from "./projectState";
 import { Simulation, SimulationProps } from "../simulation/simulation";
 import { upgradeProject } from "../upgrades/upgrades";
 import { Activities } from "../activity/activities";
+// import { useActivityGraphStore } from "@/nest/store/graph/activityGraphStore";
+import { ActivityGraph } from "@/nest/graph/activityGraph/activityGraph";
 
 export interface ProjectProps {
   _id?: string;
@@ -64,6 +65,7 @@ export class Project {
     // Project metadata
     this._name = project.name || "undefined project";
     this._description = project.description || "";
+    this._activityGraph = project.activityGraph;
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this.shortId}] project`,
@@ -84,6 +86,7 @@ export class Project {
 
     // Initialize activities.
     this._activities = new Activities(this);
+
     this._activityGraph = new ActivityGraph(this, project.activityGraph);
 
     this.clean();
@@ -93,7 +96,7 @@ export class Project {
     return this._activities;
   }
 
-  get activityGraph(): ActivityGraph {
+  get activityGraph() {
     return this._activityGraph;
   }
 
@@ -205,6 +208,7 @@ export class Project {
     this._state.checkChanges();
 
     this._logger.trace("changes");
+    this._activities.checkRecorders();
     this._simulation.code.generate();
 
     // Simulate when the configuration is set
@@ -308,14 +312,7 @@ export class Project {
    */
   initActivityGraph(): void {
     this._logger.trace("init activity graph");
-    if (this._activityGraph == undefined) {
-      return;
-    }
-
     this._activityGraph.init();
-    if (this.activities.state.hasSomeEvents) {
-      this._activityGraph.update();
-    }
   }
 
   /**
@@ -389,7 +386,7 @@ export class Project {
    */
   toJSON(): ProjectProps {
     const project: ProjectProps = {
-      activityGraph: this._activityGraph.toJSON(),
+      activityGraph: this._activityGraph,
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,

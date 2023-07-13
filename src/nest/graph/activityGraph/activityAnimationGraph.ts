@@ -30,7 +30,6 @@ export class ActivityAnimationGraph {
 
   constructor(project: Project) {
     this._project = project;
-    this.init();
   }
 
   get config(): any {
@@ -59,7 +58,8 @@ export class ActivityAnimationGraph {
    * @remarks
    * It runs without checking activities.
    */
-  init(): void {
+  init(project: Project): void {
+    this._project = project;
     this._layers = [];
   }
 

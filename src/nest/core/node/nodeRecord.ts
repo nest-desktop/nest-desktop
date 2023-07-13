@@ -9,6 +9,8 @@ export interface NodeRecordProps {
   id: string;
   color: string;
   groupId: string;
+  label?: string;
+  unit?: string;
 }
 
 export class NodeRecord {
@@ -27,13 +29,13 @@ export class NodeRecord {
   private _nodeSize: number = 0;
   private _unit: string;
 
-  constructor(node: Node, record: any) {
+  constructor(node: Node, record: NodeRecordProps) {
     this._node = node;
     this._activity = new Activity(this.node);
 
     this._id = record.id;
-    this._label = record.label;
-    this._unit = record.unit;
+    this._label = record.label || "";
+    this._unit = record.unit || "";
 
     this.updateGroupID();
     this.updateColor();

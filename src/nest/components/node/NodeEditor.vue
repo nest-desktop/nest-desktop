@@ -153,11 +153,20 @@
         <v-expansion-panels
           :key="state.node.state.targetsLength"
           variant="accordion"
+          v-model="state.node.state.connectionPanelIdx"
         >
           <connection-editor
             @mouseenter="connection.state.focus()"
             @mouseleave="connection.connections.unfocusConnection()"
-            :style="{ opacity: connection.state.isFocused ? 1 : 0.67 }"
+            :style="{
+              opacity:
+                node.state.targetsLength === 1 ||
+                !connection.connections.state.focusedConnection ||
+                connection.state.isFocused ||
+                connection.state.isSelected
+                  ? 1
+                  : 0.3,
+            }"
             :key="index"
             :connection="connection as Connection"
             v-for="(connection, index) in state.node.targets"
@@ -173,11 +182,11 @@ import { reactive, PropType } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
+
 import { Node } from "@nest/core/node/node";
 import { Connection } from "@nest/core/connection/connection";
-
-import ConnectionEditor from "./ConnectionEditor.vue";
-import NodeAvatar from "../avatar/NodeAvatar.vue";
+import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
+import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 
 const props = defineProps({
@@ -187,6 +196,7 @@ const props = defineProps({
 const state = reactive({
   menu: false,
   node: props.node,
+  panelIdx: null
 });
 
 const admins = [

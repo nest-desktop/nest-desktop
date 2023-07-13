@@ -275,7 +275,7 @@ export class Connection extends Config {
     // Initialize activity graph.
     if (this._view.connectRecorder()) {
       this.recorder.initActivity();
-      this.network.project.initActivityGraph();
+      // this.network.project.initActivityGraph();
     }
   }
 

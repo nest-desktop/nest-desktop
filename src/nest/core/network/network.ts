@@ -154,7 +154,7 @@ export class Network extends Config {
     // Initialize activity graph.
     // It resets always the panels.
     // TODO: Better solution to update activity graph.
-    this._project.activityGraph.init();
+    // this._project.initActivityGraph();
 
     if (this._project.simulateAfterCheckout) {
       // Run simulation.
@@ -251,16 +251,16 @@ export class Network extends Config {
       currentNetwork.codeHash = this._project.simulation.code.state.hash;
 
       // Add activity to recorder nodes only if hashes is matched.
-      if (
-        this._project.simulation.code.state.hash ===
-        this._project.activityGraph.codeHash
-      ) {
-        this.nodes.all
-          .filter((node: Node) => node.model.isRecorder)
-          .forEach((node: Node) => {
-            currentNetwork.nodes[node.idx].activity = node.activity?.toJSON();
-          });
-      }
+      // if (
+      //   this._project.simulation.code.state.hash ===
+      //   this._project.activityGraph.codeHash
+      // ) {
+      this.nodes.all
+        .filter((node: Node) => node.model.isRecorder)
+        .forEach((node: Node) => {
+          currentNetwork.nodes[node.idx].activity = node.activity?.toJSON();
+        });
+      // }
     }
 
     // Push current network to the revisions.
@@ -295,7 +295,7 @@ export class Network extends Config {
     // Initialize activity graph.
     if (connection.view.connectRecorder()) {
       connection.recorder.initActivity();
-      this._project.initActivityGraph();
+      // this._project.initActivityGraph();
     }
   }
 
@@ -335,7 +335,7 @@ export class Network extends Config {
     this.changes();
 
     // Initialize activity graph.
-    this._project.initActivityGraph();
+    // this._project.initActivityGraph();
   }
 
   /**
@@ -354,7 +354,7 @@ export class Network extends Config {
     this.changes();
 
     // Initialize activity graph.
-    this._project.initActivityGraph();
+    // this._project.initActivityGraph();
   }
 
   /**
@@ -376,7 +376,7 @@ export class Network extends Config {
     this.changes();
 
     // Initialize activity graph.
-    this._project.initActivityGraph();
+    // this._project.initActivityGraph();
   }
 
   /**

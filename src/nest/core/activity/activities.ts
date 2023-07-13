@@ -11,6 +11,7 @@ import { Node } from "../node/node";
 import { Project } from "../project/project";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { SpikeActivity } from "./spikeActivity";
+// import { useActivityGraphStore } from "@/nest/store/graph/activityGraphStore";
 
 interface ActivitiesState {
   hasSomeAnalogRecorders: boolean;
@@ -38,6 +39,8 @@ export class Activities {
     this._logger = mainLogger.getSubLogger({
       name: `[${this._project.shortId}] activities`,
     });
+
+    this.checkRecorders();
   }
 
   /**
@@ -129,7 +132,24 @@ export class Activities {
     this._logger.trace("changes");
 
     // Update activity graph.
+    // const activityGraphStore = useActivityGraphStore()
+    // activityGraphStore.update();
     this._project.activityGraph.update();
+  }
+
+  /**
+   * Check whether the project has some recorders of each type.
+   */
+  checkRecorders(): void {
+    this._logger.trace("check recorders");
+
+    // Check if the project contains some analog signal recorder.
+    this._state.hasSomeAnalogRecorders =
+      this._project.network.nodes.recordersAnalog.length > 0;
+
+    // Check if the project contains some spike recorder.
+    this._state.hasSomeSpikeRecorders =
+      this._project.network.nodes.recordersSpike.length > 0;
   }
 
   /**
@@ -142,22 +162,6 @@ export class Activities {
     this._state.hasSomeEvents =
       activities.length > 0
         ? activities.some((activity: Activity) => activity.hasEvents)
-        : false;
-
-    // Check if it contains some analog recorder.
-    this._state.hasSomeAnalogRecorders =
-      activities.length > 0
-        ? activities.some(
-            (activity: Activity) => activity.recorder.model.isAnalogRecorder
-          )
-        : false;
-
-    // Check if it contains some spike recorder.
-    this._state.hasSomeSpikeRecorders =
-      activities.length > 0
-        ? activities.some(
-            (activity: Activity) => activity.recorder.model.isSpikeRecorder
-          )
         : false;
 
     // Check if it has spatial activities.
