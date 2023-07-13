@@ -450,6 +450,20 @@ export class Node extends Config {
     } else if (this.hasParameters(node)) {
       node.params.forEach((param: any) => this.addParameter(param));
     }
+
+    if (this.model.isRecorder) {
+      this.addParameter({
+        id: 'record_to',
+        label: 'record to',
+        value: 'memory',
+        valueInput: 'select',
+        items: [
+          { text: 'memory', value: 'memory' },
+          { text: 'insite', value: 'insite' },
+          { text: 'mpi', value: 'mpi' },
+        ],
+      });
+    }
   }
 
   /**

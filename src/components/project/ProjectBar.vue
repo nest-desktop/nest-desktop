@@ -127,7 +127,6 @@
 
       <div @click="projectView.state.modeIdx = 1">
         <SimulationButton
-          :disabled="!nestSimulatorState.ready"
           :project="projectView.state.project"
         />
       </div>
