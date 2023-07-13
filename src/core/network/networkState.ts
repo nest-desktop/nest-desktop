@@ -120,12 +120,12 @@ export class NetworkState {
     return this._nodeAnnotations;
   }
 
-  get nodeInput(): string {
-    return this._nodeAnnotationsDict.input || '';
+  get mpiSpikeInput(): string {
+    return this._nodeAnnotationsDict['MPI spike input'] || '';
   }
 
-  get nodeOutput(): string {
-    return this._nodeAnnotationsDict.output || '';
+  get mpiSpikeOutput(): string {
+    return this._nodeAnnotationsDict['MPI spike output'] || '';
   }
 
   get selectedConnection(): Connection | null {

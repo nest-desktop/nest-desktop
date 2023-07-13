@@ -111,17 +111,17 @@ def configure_nest(nest, addresses):
   # - input neurons recieve spikes from other simulator
   # - output neurons send spikes to other simulator
 
-  input_stimulator = nest.Create("spike_generator", params={
+  {{ #network.state.mpiSpikeInput }}input_stimulator = nest.Create("spike_generator", params={
     "mpi_address": addresses['stimulus_source'],
     "stimulus_source": "mpi",
-  })
-  output_recorder = nest.Create("spike_recorder", params={
+  }){{ /network.state.mpiSpikeInput }}
+  {{ #network.state.mpiSpikeOutput }}output_recorder = nest.Create("spike_recorder", params={
     "mpi_address": addresses['record_to'],
     "record_to": "mpi",
-  })
+  }){{ /network.state.mpiSpikeOutput }}
 
-  nest.Connect(input_stimulator, {{ network.state.nodeInput }})
-  nest.Connect({{ network.state.nodeOutput }}, output_recorder)
+  {{ #network.state.mpiSpikeInput }}nest.Connect(input_stimulator, {{ network.state.mpiSpikeInput }}){{ /network.state.mpiSpikeInput }}
+  {{ #network.state.mpiSpikeOutput }}nest.Connect({{ network.state.mpiSpikeOutput }}, output_recorder){{ /network.state.mpiSpikeOutput }}
 
   # Prepare simulation
   nest.Prepare()
