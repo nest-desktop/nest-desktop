@@ -1,6 +1,6 @@
 <template>
-  <v-layout class="activityGraphLayout" full-height id="activityGraphLayout">
-    <v-dialog max-width="300" v-model="state.graph.state.dialog">
+  <v-layout class="activityGraphLayout" full-height>
+    <v-dialog max-width="300" v-model="state.dialog">
       <v-card>
         <v-card-title>Download plot as image</v-card-title>
 
@@ -17,7 +17,7 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="closeDialog" size="small" variant="outlined">
+          <v-btn @click="state.dialog = false" size="small" variant="outlined">
             cancel
           </v-btn>
           <v-btn @click="downloadImage" size="small" variant="outlined">
@@ -32,12 +32,28 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
 
-const props = defineProps(["graph"]);
+// import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
+import { DownloadImgopts } from "plotly.js";
+import { useProjectStore } from "@/nest/store/project/projectStore";
+
+// const activityGraphStore = useActivityGraphStore();
+const graph = computed(
+  () => projectStore.project.activityGraph.activityChartGraph
+);
+
+const projectStore = useProjectStore();
 
 const state = reactive({
-  graph: props.graph,
+  dialog: false,
   imageFormats: ["jpeg", "png", "svg", "webp"],
   toImageButtonOptions: {
     filename: "nest-desktop",
@@ -50,52 +66,44 @@ const state = reactive({
 const activityChartGraph = ref(null);
 
 const init = () => {
-  state.graph = props.graph;
   const ref: any = activityChartGraph.value;
   if (ref) {
-    state.graph.newPlot(ref);
+    graph.value?.newPlot(ref);
 
     // On zoom behavior
     ref.on("plotly_relayout", () => {
-      state.graph.restyle();
+      graph.value?.restyle();
     });
 
     // On resize behavior
     ref.on("plotly_resize", () => {
-      state.graph.restyle();
+      graph.value?.restyle();
     });
   }
-};
-
-/**
- * Close dialog.
- */
-const closeDialog = () => {
-  state.graph.state.dialog = false;
 };
 
 /**
  * Download image of the current plot.
  */
 const downloadImage = () => {
-  closeDialog();
+  state.dialog = false;
   const date: string = new Date().toISOString();
-  state.toImageButtonOptions.filename = `nest_desktop-${state.graph.project.name}-${date}`;
-  state.graph.downloadImage(state.toImageButtonOptions);
+  state.toImageButtonOptions.filename = `nest_desktop-${graph.value?.project.name}-${date}`;
+  graph.value?.downloadImage(state.toImageButtonOptions as DownloadImgopts);
 };
 
 onMounted(() => {
   init();
-  window.addEventListener("darkmode", () => state.graph.relayout());
+  window.addEventListener("darkmode", () => graph.value?.relayout());
 });
 
 onBeforeUnmount(() => {
-  closeDialog();
-  window.removeEventListener("darkmode", () => state.graph.relayout());
+  state.dialog = false;
+  window.removeEventListener("darkmode", () => graph.value?.relayout());
 });
 
 watch(
-  () => props.graph,
+  () => graph.value,
   () => init()
 );
 </script>

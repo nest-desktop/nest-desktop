@@ -49,8 +49,12 @@ export class ConnectionView {
     xAxisRotation: number;
   } {
     return {
-      ellipticalArc: this._connection.source.state.isSelected || this._connection.source.state.targetsLength > 2 ? 1 : 10,
-      sweep: this._connection.idx % 2,
+      ellipticalArc:
+        this._connection.source.state.isSelected &&
+        this._connection.source.state.targetsLength > 1
+          ? 1
+          : 10,
+      sweep: this._connection.source.targets.indexOf(this._connection) % 2,
       xAxisRotation: this._state.xAxisRotation,
     };
   }

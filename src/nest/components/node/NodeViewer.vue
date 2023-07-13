@@ -44,18 +44,7 @@
       >
         <connection-viewer
           :key="index"
-          :source="{
-            color: state.node.color,
-            label: state.node.label,
-            elementType: state.node.elementType,
-            weight: state.node.weight,
-          }"
-          :target="{
-            color: connection.target.color,
-            label: connection.target.label,
-            elementType: connection.target.elementType,
-            weight: state.node.weight,
-          }"
+          :connection="(connection as Connection)"
           v-for="(connection, index) in state.node.targets"
         />
       </v-expansion-panels>
@@ -67,10 +56,11 @@
 import { reactive, PropType } from "vue";
 
 import Card from "@/components/common/Card.vue";
-import { Node } from "@nest/core/node/node";
 
-import NodeAvatar from "../avatar/NodeAvatar.vue";
-import ConnectionViewer from "../viewer/ConnectionViewer.vue";
+import { Connection } from "@nest/core/connection/connection";
+import { Node } from "@nest/core/node/node";
+import NodeAvatar from "./avatar/NodeAvatar.vue";
+import ConnectionViewer from "@nest/components/connection/ConnectionViewer.vue";
 import NodeParamViewer from "./NodeParamViewer.vue";
 
 const props = defineProps({

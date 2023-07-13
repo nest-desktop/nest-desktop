@@ -184,7 +184,15 @@ export class ConnectionGraph {
           "stroke-width",
           this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
         )
-        .style("opacity", connection.state.isFocused ? 1 : 0.3)
+        .style(
+          "opacity",
+          connection.source.state.targetsLength === 1 ||
+            !connection.connections.state.focusedConnection ||
+            connection.state.isFocused ||
+            connection.state.isSelected
+            ? 1
+            : 0.3
+        )
         .attr(
           "marker-end",
           `url(#${connection.view.markerEndLabel}${connection.idx})`

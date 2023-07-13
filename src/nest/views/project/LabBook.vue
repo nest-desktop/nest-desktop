@@ -43,7 +43,7 @@
 import { Ref, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 
 import NetworkGraph from "@nest/components/network/NetworkGraph.vue";
-import NodeViewer from "@nest/components/viewer/NodeViewer.vue";
+import NodeViewer from "@nest/components/node/NodeViewer.vue";
 import { Node } from "@nest/core/node/node";
 import { useProjectStore } from "@nest/store/project/projectStore";
 import { NetworkGraph as NetworkGraphClass } from "@nest/graph/networkGraph/networkGraph";

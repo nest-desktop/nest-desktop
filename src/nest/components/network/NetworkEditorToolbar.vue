@@ -100,7 +100,7 @@ import { reactive } from "vue";
 import { downloadSVGImage } from "@/utils/download";
 
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
-import { useProjectStore } from "@/nest/store/project/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 
 const projectStore = useProjectStore();
 

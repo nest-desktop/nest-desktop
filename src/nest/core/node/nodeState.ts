@@ -6,10 +6,10 @@ import { sha1 } from "object-hash";
 import { Node } from "./node";
 import { NodeParameter } from "./nodeParameter";
 
-
 interface NodeStateState {
   hash: string;
   targetsLength: number;
+  connectionPanelIdx: number | null;
 }
 
 export class NodeState {
@@ -22,9 +22,22 @@ export class NodeState {
     this._state = reactive({
       hash: "",
       targetsLength: 0,
+      connectionPanelIdx: null,
     });
 
     this.updateHash();
+  }
+
+  get connectionPanelIdx(): number | null {
+    return this._state.connectionPanelIdx;
+  }
+
+  set connectionPanelIdx(value: number | null) {
+    this._state.connectionPanelIdx = value;
+
+    if (this._state.connectionPanelIdx != null) {
+      this._node.targets[this._state.connectionPanelIdx].state.select();
+    }
   }
 
   get hash(): string {

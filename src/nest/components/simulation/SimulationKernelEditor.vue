@@ -3,6 +3,7 @@
     <v-toolbar color="transparent" density="compact">
       <v-toolbar-title> Simulation kernel editor</v-toolbar-title>
     </v-toolbar>
+
     <card :color="props.color" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation kernel
@@ -61,10 +62,11 @@
 <script lang="ts" setup>
 import { onMounted, reactive } from "vue";
 
-import { useProjectStore } from "@nest/store/project/projectStore";
 import ValueSlider from "@/components/common/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
+
+import { useProjectStore } from "@nest/store/project/projectStore";
 
 const projectStore = useProjectStore();
 

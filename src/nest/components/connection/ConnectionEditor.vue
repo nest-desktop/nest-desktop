@@ -2,7 +2,7 @@
   <v-expansion-panel class="node-connection" elevation="0" rounded="0">
     <v-expansion-panel-title style="min-height: 52px; height: 52px">
       <v-row no-gutters>
-        <div style="pointer-events:none">
+        <div style="pointer-events: none">
           <v-btn icon size="small">
             <node-avatar
               :color="state.connection.source.view.color"
@@ -32,8 +32,10 @@
         </div>
         <v-spacer />
         <div class="d-flex justify-center align-center text-grey">
-          {{ state.connection.params.rule }}
-          {{ state.connection.synapse.modelId }}
+          {{ state.connection.rule.value }}
+          <span v-if="state.connection.view.connectOnlyNeurons()">
+            {{ state.connection.synapse.modelId }}
+          </span>
         </div>
         <v-spacer />
       </v-row>
@@ -85,9 +87,9 @@
 <script lang="ts" setup>
 import { reactive, onMounted, watch } from "vue";
 
-import NodeAvatar from "../avatar/NodeAvatar.vue";
-import NodeParamEditor from "./NodeParamEditor.vue";
-import { Connection } from "@/nest/core/connection/connection";
+import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
+import NodeParamEditor from "@nest/components/node/NodeParamEditor.vue";
+import { Connection } from "@nest/core/connection/connection";
 
 const props = defineProps({
   connection: { type: Connection, required: true },

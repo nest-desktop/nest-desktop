@@ -1,13 +1,12 @@
 <template>
-  <activity-chart-graph
-    :key="projectStore.project.shortId"
-    :graph="projectStore.project.activityGraph.activityChartGraph"
-  />
+  <!-- <v-toolbar density="compact">
+    <v-btn icon="mdi-plus"></v-btn>
+    <v-btn icon="mdi-minus"></v-btn>
+  </v-toolbar> -->
+
+  <activity-chart-graph />
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "@nest/store/project/projectStore";
-import ActivityChartGraph from "@nest/components/graph/ActivityChartGraph.vue";
-
-const projectStore = useProjectStore();
+import ActivityChartGraph from "@nest/components/activity/activityGraph/ActivityChartGraph.vue";
 </script>

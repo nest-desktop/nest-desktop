@@ -21,6 +21,7 @@ export class Synapse {
   private _logger: Logger<ILogObj>;
   private _model: CopyModel | Model;
   private _modelId: string;
+  private _paramsVisible: string[] = [];
   private _params: { [key: string]: SynapseParameter } = {};
   private _receptorIdx: number = 0;
 
@@ -45,9 +46,7 @@ export class Synapse {
    * Returns all visible parameters.
    */
   get filteredParams(): SynapseParameter[] {
-    return Object.values(this._params).filter(
-      (param: SynapseParameter) => param.state.visible
-    );
+    return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   get hasReceptorIndices(): boolean {
@@ -55,9 +54,10 @@ export class Synapse {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return Object.values(this._params).some(
-      (param: SynapseParameter) => param.state.visible
-    );
+    return this._paramsVisible.length > 0;
+    // return Object.values(this._params).some(
+    // (param: SynapseParameter) => param.state.visible
+    // );
   }
 
   get hasSynSpec(): boolean {
@@ -66,6 +66,15 @@ export class Synapse {
 
   get isStatic(): boolean {
     return this.model.id === "static_synapse";
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get model(): CopyModel | Model {
@@ -223,10 +232,11 @@ export class Synapse {
     this._params = {};
     if (this.model && params) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = params?.find(
-          (param: any) => param.id === modelParam.id
-        );
+        const param = params?.find((param: any) => param.id === modelParam.id);
         this.addParameter(param || modelParam);
+        if (param?.visible !== false) {
+          this._paramsVisible.push(modelParam.id);
+        }
       });
     } else if (this.model) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) =>

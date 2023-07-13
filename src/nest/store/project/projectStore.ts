@@ -7,6 +7,7 @@ import router from "@/router";
 
 import { Project } from "@nest/core/project/project";
 import { useProjectDBStore } from "./projectDBStore";
+// import { useActivityGraphStore } from "../graph/activityGraphStore";
 
 const logger = mainLogger.getSubLogger({ name: "project store" });
 
@@ -41,6 +42,12 @@ export const useProjectStore = defineStore("project-view", {
       const projectDBStore = useProjectDBStore();
       this.project = projectDBStore.getProject(projectId);
       this.projectId = this.project.id;
+
+      // this.project.activityGraph.init();
+
+      // const activityGraphStore = useActivityGraphStore();
+      // activityGraphStore.init(this.project as Project);
+      // activityGraphStore.update();
     },
     /**
      * Start simulation of the current project.

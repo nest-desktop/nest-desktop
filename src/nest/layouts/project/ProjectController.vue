@@ -47,7 +47,7 @@
       </div>
     </template>
     <template v-else-if="projectStore.controllerView === 'activity'">
-      Activity
+      <activity-chart-controller />
     </template>
     <template v-else-if="projectStore.controllerView === 'stats'">
       <activity-stats />
@@ -58,10 +58,11 @@
 <script lang="ts" setup>
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import ActivityStats from "@nest/components/viewer/activityStats/ActivityStats.vue";
-import NetworkParamEditor from "@nest/components/editor/NetworkParamEditor.vue";
-import SimulationCodeEditor from "@nest/components/editor/SimulationCodeEditor.vue";
-import SimulationKernelEditor from "@/nest/components/editor/SimulationKernelEditor.vue";
+import ActivityChartController from "@nest/components/activity/ActivityChartController.vue";
+import ActivityStats from "@nest/components/activity/activityStats/ActivityStats.vue";
+import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
+import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
+import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
 
 import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();

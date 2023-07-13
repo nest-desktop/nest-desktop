@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-import SimulationCodeMirror from "./SimulationCodeMirror.vue";
-
 import IconBtn from "@/components/common/IconBtn.vue";
+
+import SimulationCodeMirror from "./SimulationCodeMirror.vue";
 
 const codeBlocks = [
   { icon: "mdi-delete-empty", title: "reset" },

@@ -20,9 +20,10 @@
 <script lang="ts" setup>
 import { reactive, watch } from "vue";
 
+import { useAppStore } from "@/store/appStore";
+
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";
-import { useAppStore } from "@/store/appStore";
 
 const appStore = useAppStore();
 

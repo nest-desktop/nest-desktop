@@ -622,9 +622,9 @@ export class Node extends Config {
     this.changes();
 
     // Initialize activity graph.
-    if (this.model.isRecorder) {
-      this.network.project.initActivityGraph();
-    }
+    // if (this.model.isRecorder) {
+    //   this.network.project.initActivityGraph();
+    // }
   }
 
   /**

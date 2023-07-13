@@ -36,7 +36,7 @@ export class ConnectionState {
   get isSelected(): boolean {
     return (
       this._connection.connections.state.selectedConnection ===
-        this._connection || true
+        this._connection
     );
   }
 

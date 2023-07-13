@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import NodeAvatar from "@nest/components/avatar/NodeAvatar.vue";
+import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
 import { AnalogSignalActivity } from "@nest/core/activity/analogSignalActivity";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";
 import { useProjectStore } from "@nest/store/project/projectStore";

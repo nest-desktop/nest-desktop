@@ -4,7 +4,7 @@ import { ILogObj, Logger } from "tslog";
 import { Selection, Transition, drag, select, transition } from "d3";
 
 import { logger as mainLogger } from "@/utils/logger";
-import { darkMode, currentBackgroundColor } from "@/utils/theme";
+import { currentBackgroundColor } from "@/utils/theme";
 
 import { NetworkGraph } from "../networkGraph/networkGraph";
 import { Node } from "@nest/core/node/node";
