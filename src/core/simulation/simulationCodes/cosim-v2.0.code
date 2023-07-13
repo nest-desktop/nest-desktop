@@ -112,11 +112,11 @@ def configure_nest(nest, addresses):
   # - output neurons send spikes to other simulator
 
   input_stimulator = nest.Create("spike_generator", params={
-    "label": addresses['stimulus_source'],
+    "mpi_address": addresses['stimulus_source'],
     "stimulus_source": "mpi",
   })
   output_recorder = nest.Create("spike_recorder", params={
-    "label": addresses['record_to'],
+    "mpi_address": addresses['record_to'],
     "record_to": "mpi",
   })
 
