@@ -69,34 +69,21 @@
   >
     <div @mousedown="resizeSideController" class="resize-handle left" />
     <div :key="projectStore.projectId">
-      <div :key="projectStore.controllerView">
-        <template v-if="projectStore.controllerView === 'network'">
-          <network-param-editor />
-        </template>
-        <template v-else-if="projectStore.controllerView === 'kernel'">
-          <simulation-kernel-editor />
-        </template>
-        <template v-else-if="projectStore.controllerView === 'raw'">
-          <pre>{{ projectStore.project.toJSON() }}</pre>
-        </template>
-        <template v-else-if="projectStore.controllerView === 'code'">
-          <simulation-code-editor />
-        </template>
-        <template v-else-if="projectStore.controllerView === 'activity'">
-          <activity-chart-controller />
-          {{  projectStore.project.activityGraph.activityChartGraph.panels.length }}
-          <div
-            :key="index"
-            v-for="(panel, index) in projectStore.project.activityGraph
-              .activityChartGraph.panels"
-          >
-            {{ panel.model.id }}
-          </div>
-        </template>
-        <template v-else-if="projectStore.controllerView === 'stats'">
-          <activity-stats />
-        </template>
-      </div>
+      <network-param-editor v-if="projectStore.controllerView === 'network'" />
+      <simulation-kernel-editor
+        v-else-if="projectStore.controllerView === 'kernel'"
+      />
+      <pre v-else-if="projectStore.controllerView === 'raw'">
+        {{ projectStore.project.toJSON() }}
+        </pre
+      >
+      <simulation-code-editor
+        v-else-if="projectStore.controllerView === 'code'"
+      />
+      <activity-chart-controller
+        v-else-if="projectStore.controllerView === 'activity'"
+      />
+      <activity-stats v-else-if="projectStore.controllerView === 'stats'" />
     </div>
   </v-navigation-drawer>
 
@@ -117,7 +104,7 @@
 import { useNavStore } from "@/store/navStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
-import ActivityChartController from "@nest/components/activity/ActivityChartController.vue";
+import ActivityChartController from "@nest/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@nest/components/activity/activityStats/ActivityStats.vue";
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";

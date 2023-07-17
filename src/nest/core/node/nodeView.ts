@@ -159,13 +159,14 @@ export class NodeView {
       const copiedSynapseModels = this._node.nodes.network.models.synapseModels.filter(
         (model: CopyModel) => model.isAssignedToWeightRecorder(this._node)
       );
+
       if (copiedSynapseModels.length === 1) {
         const copiedSynapseModel = copiedSynapseModels[0];
         const connection = this._node.nodes.network.connections.getBySynapseModelId(
           copiedSynapseModel.id
         );
         if (connection) {
-          this._state.position = connection.view.position;
+          this._state.position = connection.view.centerPosition;
         }
       }
     }

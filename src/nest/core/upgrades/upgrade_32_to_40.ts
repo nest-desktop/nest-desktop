@@ -1,26 +1,26 @@
-// upgrade_32_to_40.ts
+// upgrade_33_to_40.ts
 
 const validateVersion = (version: string) =>
-  /^3\.2(\.\d+)?(\w+)?$/.test(version);
+  /^3\.3(\.\d+)?(\w+)?$/.test(version);
 
-const upgradeParams = (oldParams: any[]) => {
-  const newParams: { [key: string]: any } = {};
-  oldParams
-    .filter((param: any) => param.visible !== false)
-    .forEach((param: any) => {
-      if (param.type) {
-        newParams[param.id] = param.type;
-      } else {
-        newParams[param.id] = param.value;
-      }
-    });
-  return newParams;
-};
+// const upgradeParams = (oldParams: any[]) => {
+//   const newParams: { [key: string]: any } = {};
+//   oldParams
+//     .filter((param: any) => param.visible !== false)
+//     .forEach((param: any) => {
+//       if (param.type) {
+//         newParams[param.id] = param.type;
+//       } else {
+//         newParams[param.id] = param.value;
+//       }
+//     });
+//   return newParams;
+// };
 
 export function upgradeProject_32_to_40(project: any): any {
-  // if (!validateVersion(project.version)) {
-  //   return project;
-  // }
+  if (!validateVersion(project.version)) {
+    return project;
+  }
 
   console.log('Upgrade to 4.0')
 

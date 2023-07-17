@@ -100,9 +100,6 @@ const items = [
 }
 
 .param:hover {
-  .v-text-field__suffix {
-    opacity: 0;
-  }
   .menu {
     opacity: 1;
   }

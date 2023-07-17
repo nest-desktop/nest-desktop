@@ -17,7 +17,7 @@
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="width: 60px"
+        style="width: 70px"
         type="number"
         v-model="value"
         variant="underlined"
@@ -96,6 +96,11 @@ watch(
   .v-slider-track__background {
     background-color: rgb(var(--v-theme-secondary)) !important;
   }
+
+  .v-input:hover .v-text-field__suffix {
+    display: none;
+  }
+
 }
 
 .value-slider:hover {
@@ -103,5 +108,6 @@ watch(
   .mdi-plus {
     opacity: 0.6 !important;
   }
+
 }
 </style>

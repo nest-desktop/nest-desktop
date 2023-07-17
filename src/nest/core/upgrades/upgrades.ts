@@ -58,8 +58,5 @@ export function upgradeProject(project: any): ProjectProps {
     }
   }
 
-
-  console.log(project)
-
   return project;
 }

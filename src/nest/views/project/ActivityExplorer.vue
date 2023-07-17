@@ -8,5 +8,5 @@
 </template>
 
 <script lang="ts" setup>
-import ActivityChartGraph from "@nest/components/activity/activityGraph/ActivityChartGraph.vue";
+import ActivityChartGraph from "@nest/components/activity/activityChartGraph/ActivityChartGraph.vue";
 </script>
