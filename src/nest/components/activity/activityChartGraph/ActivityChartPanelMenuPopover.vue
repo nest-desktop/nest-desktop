@@ -1,34 +1,42 @@
 <template>
   <div class="activityChartPanelMenuPopover">
     <v-card>
-      <v-list
-        v-show="projectStore.project.activities.state.hasSomeAnalogRecorders"
-      >
-        <v-list-subheader>Analog signals</v-list-subheader>
-        <v-list-item
-          :key="'analogPanel' + index"
-          @click="selectModel(model.id)"
-          v-for="(model, index) in projectStore.project.activityGraph
-            .activityChartGraph.modelsAnalog"
-        >
-          <v-icon left small icon="model.icon" />
-          <v-list-item-title> {{ model.label }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
+      <v-list min-width="300">
+        <v-list-group fluid value="Analog signals">
+          <template #activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              title="Analog signals"
+            />
+          </template>
+          <v-list-item
+            :prepend-icon="model.icon"
+            :key="'analogPanel' + index"
+            @click="selectModel(model.id)"
+            v-for="(model, index) in projectStore.project.activityGraph
+              .activityChartGraph.modelsAnalog"
+          >
+            <v-list-item-title> {{ model.label }}</v-list-item-title>
+          </v-list-item>
+        </v-list-group>
 
-      <v-list
-        v-show="projectStore.project.activities.state.hasSomeSpikeRecorders"
-      >
-        <v-list-subheader>Spike activity</v-list-subheader>
-        <v-list-item
-          :key="'spikePanel' + index"
-          @click="selectModel(model.id)"
-          v-for="(model, index) in projectStore.project.activityGraph
-            .activityChartGraph.modelsSpike"
-        >
-          <v-icon left small :icon="model.icon" />
-          <v-list-item-title>{{ model.label }}</v-list-item-title>
-        </v-list-item>
+        <v-list-group fluid value="Spike activity">
+          <template #activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              title="Spike activity"
+            />
+          </template>
+          <v-list-item
+            :prepend-icon="model.icon"
+            :key="'spikePanel' + index"
+            @click="selectModel(model.id)"
+            v-for="(model, index) in projectStore.project.activityGraph
+              .activityChartGraph.modelsSpike"
+          >
+            <v-list-item-title>{{ model.label }}</v-list-item-title>
+          </v-list-item>
+        </v-list-group>
       </v-list>
     </v-card>
   </div>

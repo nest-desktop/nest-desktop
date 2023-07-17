@@ -17,27 +17,14 @@
     </v-menu> -->
 
     <v-toolbar color="transparent" density="compact">
-      <v-btn
-        @click="resetPanels"
-        class="mt-1"
-        icon="mdi-reload"
-        size="x-small"
-      />
+      <v-btn @click="resetPanels" icon="mdi-reload" size="small" />
 
       <v-spacer />
-      <v-menu left offset-y>
+      <v-menu :close-on-content-click="false" left offset-y>
         <template #activator="{ props }">
-          <v-btn
-            class="mt-1"
-            icon="mdi-plus"
-            size="x-small"
-            v-bind="props"
-            title="Add panel"
-          />
+          <v-btn prepend-icon="mdi-plus" v-bind="props"> Add panel </v-btn>
         </template>
-        <activity-chart-panel-menu-popover
-          @changed="addPanel"
-        />
+        <activity-chart-panel-menu-popover @changed="addPanel" />
       </v-menu>
     </v-toolbar>
 
@@ -154,7 +141,8 @@ const projectStore = useProjectStore();
 
 const state = reactive({
   color: "#9e9e9e",
-  graph: projectStore.project.activityGraph.activityChartGraph as ActivityChartGraph,
+  graph: projectStore.project.activityGraph
+    .activityChartGraph as ActivityChartGraph,
   menu: {
     position: {
       x: 0,
