@@ -84,7 +84,7 @@
     "babel-loader": "~8.3",
     "chai": "~4.3",
     "chai-as-promised": "~7.1",
-    "electron": "25.2.0",
+    "electron": "25.3",
     "electron-devtools-installer": "~3.2",
     "eslint": "~8.43",
     "eslint-plugin-prettier": "~4.2",
