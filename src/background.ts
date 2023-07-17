@@ -49,8 +49,10 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 
-  // Stop NEST Server after closing NEST Desktop.
-  nestServer.stop();
+  if (process.env.NEST_SERVER_AUTOSTART) {
+    // Stop NEST Server after closing NEST Desktop.
+    nestServer.stop();
+  }
 });
 
 app.on('activate', () => {
@@ -63,8 +65,10 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  // Start NEST Server before NEST Desktop.
-  nestServer.start();
+  if (process.env.NEST_SERVER_AUTOSTART) {
+    // Start NEST Server before NEST Desktop.
+    nestServer.start();
+  }
 
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
@@ -74,7 +78,7 @@ app.on('ready', async () => {
     //   console.error('Vue Devtools failed to install:', e.toString());
     // }
   }
-  
+
   createWindow();
 });
 

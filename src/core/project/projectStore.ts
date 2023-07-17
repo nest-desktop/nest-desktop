@@ -270,7 +270,7 @@ export class ProjectStore {
    */
   getProjectFromFile(filename: string): Project {
     this.consoleLog('Get project from file');
-    const data: any = require(`../../assets/projects/${filename}.json`);
+    const data: any = require(`@/assets/projects/${filename}.json`);
     return new Project(this._app, data);
   }
 
