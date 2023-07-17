@@ -7,7 +7,7 @@ module.exports = {
   //  https: true,
   //  http2: true,
   //},
-  publicPath: process.env.BASE_URL, // '.',
+  publicPath: process.env.IS_ELECTRON ? process.env.BASE_URL : './',
   outputDir: './nest_desktop/app',
   transpileDependencies: ['vuetify'],
   productionSourceMap: false,
