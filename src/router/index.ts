@@ -70,6 +70,8 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
+console.log(process.env)
+
 export default createRouter({
   history: createWebHashHistory(process.env.BASE_URL),
   routes,

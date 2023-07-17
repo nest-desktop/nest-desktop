@@ -11,7 +11,6 @@ import { Network } from "../network/network";
 import { Node } from "../node/node";
 
 interface ConnectionsState {
-  connectionsLength: number;
   focusedConnection: Connection | null;
   hash: string;
   selectedConnection: Connection | null;
@@ -30,7 +29,6 @@ export class Connections {
     });
 
     this._state = reactive({
-      connectionsLength: 0,
       focusedConnection: null,
       hash: "",
       selectedConnection: null,
@@ -41,10 +39,6 @@ export class Connections {
 
   get all(): Connection[] {
     return this._connections;
-  }
-
-  get connectionsLength(): number {
-    return this._state.connectionsLength;
   }
 
   /**
@@ -219,15 +213,10 @@ export class Connections {
     this.clean();
   }
 
-  updateConnectionsLength(): void {
-    this._state.connectionsLength = this._connections.length;
-  }
-
   /**
    * Update states of all connections.
    */
   updateStates(): void {
-    this.updateConnectionsLength();
     this.updateHash();
   }
 

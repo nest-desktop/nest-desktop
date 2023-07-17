@@ -1,6 +1,8 @@
 // spikeTimesRasterPlotModel.ts
 
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { useAppStore } from "@/store/appStore";
+
+import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";
 import {
   SpikeTimesPanelModel,
@@ -48,6 +50,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
+    const appStore = useAppStore();
 
     this.data.push({
       activityIdx: activity.idx,
@@ -65,7 +68,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       modelId: this.id,
       name: "Spikes of " + activity.recorder.view.label,
       showlegend: true,
-      type: plotType,
+      type: appStore.webGL ? "scattergl" : "scatter",
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,

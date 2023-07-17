@@ -14,7 +14,6 @@ interface NodesState {
   elementTypeIdx: number;
   focusedNode: Node | null;
   hash: string;
-  nodesLength: number;
   selectedNode: Node | null;
 }
 
@@ -36,7 +35,6 @@ export class Nodes {
       elementTypeIdx: 0,
       focusedNode: null,
       hash: "",
-      nodesLength: 0,
       selectedNode: null,
     });
 
@@ -86,6 +84,13 @@ export class Nodes {
     return selectedNode ? selectedNode.model.isWeightRecorder : false;
   }
 
+  /**
+   * Get length of nodes list.
+   */
+  get length(): number {
+    return this._nodes.length;
+  }
+
   get network(): Network {
     return this._network;
   }
@@ -95,10 +100,6 @@ export class Nodes {
    */
   get neurons(): Node[] {
     return this._nodes.filter((node: Node) => node.model.isNeuron);
-  }
-
-  get nodesLength(): number {
-    return this._state.nodesLength;
   }
 
   /**
@@ -323,12 +324,8 @@ export class Nodes {
   updateHash(): void {
     this._state.hash = sha1({
       nodes: this._nodes.map((node: Node) => node.state.hash),
-    }).slice(0,6);
+    }).slice(0, 6);
     this._logger.settings.name = `[${this._network.project.shortId}] nodes #${this._state.hash}`;
-  }
-
-  updateNodesLength(): void {
-    this._state.nodesLength = this._nodes.length;
   }
 
   /**
@@ -367,8 +364,6 @@ export class Nodes {
     this._nodes.forEach((node: Node) => node.state.update());
 
     this.updateAnnotations();
-    this.updateNodesLength();
-
     this.updateHash();
   }
 }
