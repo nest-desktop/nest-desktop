@@ -62,21 +62,11 @@
             </v-list-item>
             <node-param-editor
               :color="state.connection.source.color"
-              :options="param.options"
-              v-model="param.value"
               :key="index"
+              :options="param.options"
               v-for="(param, index) in state.connection.synapse.params"
+              v-model="param.value"
             />
-            <!-- <node-param-editor
-              :color="state.target.color"
-              :options="weightOptions"
-              v-model="state.synSpec.weight"
-            />
-            <node-param-editor
-              :color="state.target.color"
-              :options="delayOptions"
-              v-model="state.synSpec.delay"
-            /> -->
           </v-list>
         </v-card-text>
       </v-card>

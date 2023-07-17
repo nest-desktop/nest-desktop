@@ -58,7 +58,7 @@
 <script lang="ts" setup>
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import ActivityChartController from "@nest/components/activity/ActivityChartController.vue";
+import ActivityChartController from "@nest/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@nest/components/activity/activityStats/ActivityStats.vue";
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";

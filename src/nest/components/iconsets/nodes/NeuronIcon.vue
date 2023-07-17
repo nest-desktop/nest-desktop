@@ -12,7 +12,7 @@
   </svg>
 </template>
 
-<script lang="ts">
+<!-- <script lang="ts">
 const rectPath = (
   width: number,
   height: number,
@@ -42,4 +42,4 @@ const rectPath = (
 
   return d1.join("") + d2.join("");
 };
-</script>
+</script> -->
