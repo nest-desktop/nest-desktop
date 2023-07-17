@@ -10,6 +10,7 @@
       <template #append>
         <v-row align="center" class="my-1" justify="center" no-gutters>
           <v-btn
+            :color="item.color ? item.color : 'primary'"
             :href="item.href"
             :icon="item.text ? false : item.icon"
             :key="index"
@@ -52,7 +53,19 @@ const toggleTheme = () => {
   window.dispatchEvent(new Event("darkmode"));
 };
 
+const toggleWebGL = () => {
+  appStore.webGL = !appStore.webGL;
+  console.log(appStore.webGL);
+};
+
 const items = [
+  {
+    click: toggleWebGL,
+    icon: "mdi-google-downasaur",
+    id: "webgl",
+    title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
+    color: appStore.webGL ? "green" : "red",
+  },
   {
     click: toggleTheme,
     icon: "mdi-theme-light-dark",

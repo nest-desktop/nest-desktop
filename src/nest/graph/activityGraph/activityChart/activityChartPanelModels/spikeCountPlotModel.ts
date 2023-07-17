@@ -1,8 +1,9 @@
 // spikeCountPlotModel.ts
 
+import { useAppStore } from "@/store/appStore";
 import { sum, deviation, max, mean, min } from "@/utils/array";
 
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeActivity } from "@nest/core/activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
@@ -130,17 +131,18 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
+    const appStore = useAppStore();
 
-    const nodesLength = sum(
+    const nodeSizeTotal = sum(
       activity.recorder.nodes.all.map((node) => node.size)
     );
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
-    const size: number = this.binSize;
+    const binSize: number = this.binSize;
 
-    const x: number[] = this.range(start, end, size);
-    const h: number[] = this.histogram(times, start, end, size);
+    const x: number[] = this.range(start, end, binSize);
+    const h: number[] = this.histogram(times, start, end, binSize);
 
     let y: number[];
     if (this.normalization === "min-max scale") {
@@ -154,7 +156,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         end,
         this.lowerUpperBinSize
       );
-      const ratio = size / this.lowerUpperBinSize;
+      const ratio = binSize / this.lowerUpperBinSize;
       const minVal = (min(hh) as number) * ratio;
       const maxVal = (max(hh) as number) * ratio;
       y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
@@ -163,7 +165,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       const std = deviation(h) as number;
       y = h.map((val: number) => (val - m) / std);
     } else if (this.normalization.startsWith("firing rate")) {
-      y = h.map((val: number) => (val / nodesLength / size) * 1000);
+      y = h.map((val: number) => (val / nodeSizeTotal / binSize) * 1000);
     } else {
       y = h;
     }
@@ -178,7 +180,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       mode: "lines",
       showlegend: false,
-      type: plotType,
+      type: appStore.webGL ? "scattergl" : "scatter",
       visible: this.state.visible,
       x,
       y,
@@ -196,7 +198,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         },
         mode: "lines",
         showlegend: false,
-        type: plotType,
+        type: appStore.webGL ? "scattergl" : "scatter",
         visible: this.state.visible,
         x: [start, end],
         y: [0.63, 0.63],

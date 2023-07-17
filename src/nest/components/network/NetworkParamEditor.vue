@@ -14,7 +14,7 @@
       <v-spacer />
       <v-btn icon="mdi-dots-vertical" size="small" />
     </v-toolbar>
-    <div :key="nodes.state.nodesLength">
+    <div :key="nodes.length">
       <div :key="index" v-for="(node, index) in nodes.all">
         <node-editor
           :node="(node as Node)"

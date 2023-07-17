@@ -12,6 +12,7 @@ export const useAppStore = defineStore("app-store", {
       icon: "simulator:nest",
       color: "nest",
     },
+    webGL: false,
   }),
   actions: {
     toggleTheme() {
