@@ -49,7 +49,7 @@
         </span>
       </template>
 
-      <activity-chart-panel-menu-popover @changed="selectModel" style="width:100%" />
+      <activity-chart-panel-menu-popover @changed="selectModel" />
     </v-menu>
   </div>
 </template>
