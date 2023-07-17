@@ -1,7 +1,7 @@
 // Utilities
 import { defineStore } from "pinia";
 
-export const useNavStore = defineStore("nav", {
+export const useNavStore = defineStore("nav-store", {
   state: () => ({
     resizing: false,
     open: false,
