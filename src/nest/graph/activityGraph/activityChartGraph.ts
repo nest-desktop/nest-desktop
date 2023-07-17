@@ -209,10 +209,7 @@ export class ActivityChartGraph {
 
   get modelsSpike(): ActivityChartPanelModelProps[] {
     return this._models.filter(
-      (model: ActivityChartPanelModelProps) =>
-        model.activityType === "spike" &&
-        "source" in model &&
-        model.source != "elephant"
+      (model: ActivityChartPanelModelProps) => model.activityType === "spike"
     );
   }
 
@@ -335,7 +332,7 @@ export class ActivityChartGraph {
     if (panels && panels.length > 0) {
       panels.forEach((panel: ActivityChartPanelProps) => this.addPanel(panel));
     } else {
-        if (this._project.activities.state.hasSomeAnalogRecorders) {
+      if (this._project.activities.state.hasSomeAnalogRecorders) {
         this.addPanel({ model: { id: "analogSignalPlot" } });
       }
       if (this._project.activities.state.hasSomeSpikeRecorders) {

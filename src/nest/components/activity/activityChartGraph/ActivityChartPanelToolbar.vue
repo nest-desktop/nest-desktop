@@ -1,6 +1,6 @@
 <template>
   <div class="activityChartPanelToolbar">
-    <v-menu offset-y>
+    <v-menu offset-y :close-on-content-click="false">
       <template #activator="{ props }">
         <v-btn
           :prepend-icon="panel.model.icon"
@@ -9,7 +9,7 @@
           v-bind="props"
           size="x-large"
         >
-          {{ props.panel.model.label }}
+          {{ panel.model?.label }}
           <v-spacer />
         </v-btn>
 
@@ -49,7 +49,7 @@
         </span>
       </template>
 
-      <activity-chart-panel-menu-popover @changed="selectModel" />
+      <activity-chart-panel-menu-popover @changed="selectModel" style="width:100%" />
     </v-menu>
   </div>
 </template>
