@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive } from '@vue/composition-api';
+import { onMounted, onUpdated, reactive } from '@vue/composition-api';
 
 import core from '@/core';
 
@@ -81,6 +81,21 @@ export default Vue.extend({
       window.location.reload();
     };
 
+    /**
+     * Get access token from URL.
+     */
+    const getTokenFromURL = () => {
+      let token: string;
+      if (context.root.$route.query.token) {
+        token = context.root.$route.query.token as string;
+      } else {
+        token = new URLSearchParams(window.location.search).get('token');
+      }
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+    };
+
     onMounted(() => {
       // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
@@ -99,6 +114,16 @@ export default Vue.extend({
         window.onbeforeunload = () =>
           core.app.project.checkSomeProjectChanges() ? '' : null;
       }
+    });
+
+    onUpdated(() => {
+      getTokenFromURL();
+
+      // Check if backends is running.
+      core.app.checkBackends().then(() => {
+        // Fetch models from NEST Simulator.
+        core.app.model.fetchModelsNEST();
+      });
     });
 
     return { core, refreshApp, state };
