@@ -42,7 +42,6 @@ export class Backend extends Config {
   }
 
   get instance(): AxiosInstance {
-    this.refreshToken();
     return this._instance;
   }
 
@@ -177,13 +176,12 @@ export class Backend extends Config {
   }
 
   /**
-   * Refresh access token in headers.
+   * Update authorization token in instance headers.
    */
-  refreshToken(): void {
-    if (localStorage.getItem('token')) {
-      this._instance.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${localStorage.getItem('token')}`;
+  updateAuthToken(itemKey: string): void {
+    const token = localStorage.getItem(itemKey);
+    if (token) {
+      this._instance.defaults.headers.Authorization = `Bearer ${token}`;
     }
   }
 

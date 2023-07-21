@@ -32,6 +32,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { onMounted, onUpdated, reactive } from '@vue/composition-api';
+import { Route } from 'vue-router';
 
 import core from '@/core';
 
@@ -82,17 +83,19 @@ export default Vue.extend({
     };
 
     /**
-     * Get access token from URL.
+     * Store parameter from URL.
      */
-    const getTokenFromURL = () => {
-      let token: string;
-      if (context.root.$route.query.token) {
-        token = context.root.$route.query.token as string;
+    const storeParamFromURL = (route: Route, paramKey: string) => {
+      let param: string;
+      if (route.query[paramKey]) {
+        param = route.query[paramKey] as string;
+      } else if (route.params[paramKey]) {
+        param = route.params[paramKey] as string;
       } else {
-        token = new URLSearchParams(window.location.search).get('token');
+        param = new URLSearchParams(window.location.search).get(paramKey);
       }
-      if (token) {
-        localStorage.setItem('token', token);
+      if (param) {
+        localStorage.setItem(paramKey, param);
       }
     };
 
@@ -117,7 +120,12 @@ export default Vue.extend({
     });
 
     onUpdated(() => {
-      getTokenFromURL();
+
+      // Update access token for NEST Server.
+      storeParamFromURL(context.root.$route, 'nest_server_access_token');
+      core.app.backends.nestSimulator.updateAuthToken(
+        'nest_server_access_token'
+      );
 
       // Check if backends is running.
       core.app.checkBackends().then(() => {
