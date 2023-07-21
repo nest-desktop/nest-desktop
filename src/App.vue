@@ -83,9 +83,9 @@ export default Vue.extend({
     };
 
     /**
-     * Store parameter from URL.
+     * Get parameter from URL.
      */
-    const storeParamFromURL = (route: Route, paramKey: string) => {
+    const getParamFromURL = (route: Route, paramKey: string) => {
       let param: string;
       if (route.query[paramKey]) {
         param = route.query[paramKey] as string;
@@ -94,9 +94,7 @@ export default Vue.extend({
       } else {
         param = new URLSearchParams(window.location.search).get(paramKey);
       }
-      if (param) {
-        localStorage.setItem(paramKey, param);
-      }
+      return param;
     };
 
     onMounted(() => {
@@ -120,12 +118,16 @@ export default Vue.extend({
     });
 
     onUpdated(() => {
+      const nestServerAccessToken = 'nest_server_access_token';
+
+      // Store access token for NEST Server.
+      const token = getParamFromURL(context.root.$route, nestServerAccessToken);
+      if (token) {
+        localStorage.setItem(nestServerAccessToken, token);
+      }
 
       // Update access token for NEST Server.
-      storeParamFromURL(context.root.$route, 'nest_server_access_token');
-      core.app.backends.nestSimulator.updateAuthToken(
-        'nest_server_access_token'
-      );
+      core.app.backends.nestSimulator.updateAuthToken(nestServerAccessToken);
 
       // Check if backends is running.
       core.app.checkBackends().then(() => {
