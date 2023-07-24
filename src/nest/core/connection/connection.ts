@@ -42,6 +42,7 @@ export class Connection extends Config {
   private _mask: ConnectionMask;
   private _params: { [key: string]: ConnectionParameter } = {};
   private _rule: ConnectionRule;
+  private _paramsVisible: string[] = [];
   private _sourceIdx: number; // Node index
   private _sourceSlice: NodeSlice;
   private _state: ConnectionState;
@@ -83,9 +84,7 @@ export class Connection extends Config {
    * Returns all visible parameters.
    */
   get filteredParams(): ConnectionParameter[] {
-    return Object.values(this._params).filter(
-      (param: ConnectionParameter) => param.state.visible
-    );
+    return this._paramsVisible.map((paramId: string) => this._params[paramId]);
   }
 
   get hasConnSpec(): boolean {
@@ -129,8 +128,17 @@ export class Connection extends Config {
     return this._connections.network;
   }
 
-  get params(): { [key: string]: ConnectionParameterProps } {
+  get params(): { [key: string]: ConnectionParameter } {
     return this._params;
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get recorder(): Node {
@@ -233,6 +241,7 @@ export class Connection extends Config {
    */
   initParameters(params: ConnectionParameterProps[] = []): void {
     this._logger.trace("init parameter");
+    this._paramsVisible = [];
     this._params = {};
     const ruleConfig: any = this.getRuleConfig();
     ruleConfig.params.forEach((param: ConnectionParameterProps) => {
@@ -242,10 +251,12 @@ export class Connection extends Config {
         );
         if (p != null) {
           param.value = p.value;
-          param.visible = p.visible;
           if (p.type != null) {
             param.type = p.type;
           }
+        }
+        if (param && param.visible !== false) {
+          this._paramsVisible.push(param.id);
         }
       }
       this.addParameter(param);
@@ -335,14 +346,26 @@ export class Connection extends Config {
    */
   toJSON(): ConnectionProps {
     const connection: ConnectionProps = {
-      params: Object.values(this._params).map((param: ConnectionParameter) =>
-        param.toJSON()
-      ),
-      rule: this._rule.value,
       source: this._sourceIdx,
-      synapse: this._synapse.toJSON(),
       target: this._targetIdx,
     };
+
+    if (this._rule.value !== "all_to_all") {
+      connection.rule = this._rule.value;
+    }
+
+    if (this._paramsVisible.length > 0) {
+      connection.params = this.filteredParams.map(
+        (param: ConnectionParameter) => param.toJSON()
+      );
+    }
+
+    if (
+      this._synapse.modelId !== "static_synapse" ||
+      this._synapse.paramsVisible.length > 0
+    ) {
+      connection.synapse = this._synapse.toJSON();
+    }
 
     if (this._sourceSlice.visible) {
       connection.sourceSlice = this._sourceSlice.toJSON();

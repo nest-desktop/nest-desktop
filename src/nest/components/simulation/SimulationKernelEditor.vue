@@ -71,7 +71,7 @@ import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
 
 const props = defineProps({
-  color: { type: String, default: "accent" },
+  color: { default: "accent", type: String },
 });
 
 const options = {

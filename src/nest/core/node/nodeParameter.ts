@@ -1,9 +1,6 @@
 // nodeParameter.ts
 
-import {
-  Parameter,
-  ParameterProps,
-} from "@/helpers/parameter";
+import { Parameter, ParameterProps } from "@/helpers/parameter";
 
 import { ModelParameter } from "../model/modelParameter";
 import { Node } from "./node";
@@ -52,32 +49,39 @@ export class NodeParameter extends Parameter {
   }
 
   /**
-  * Serialize for JSON.
-  * @return parameter object
-  */
- toJSON(): NodeParameterProps {
-   const param: any = {
-     id: this.id,
-     value: this.value,
-   };
+   * Hide this parameter.
+   */
+  hide(): void {
+    this.node.paramsVisible = this.node.paramsVisible.filter(
+      (item) => item !== this.id
+    );
+  }
 
+  /**
+   * Serialize for JSON.
+   * @return parameter object
+   */
+  toJSON(): NodeParameterProps {
+    const param: any = {
+      id: this.id,
+      value: this.value,
+    };
 
+    // Add value factors if existed.
+    if (this.factors.length > 0) {
+      param.factors = this.factors;
+    }
 
-   // Add value factors if existed.
-   if (this.factors.length > 0) {
-     param.factors = this.factors;
-   }
+    // Add rules for validation if existed.
+    if (this.rules.length > 0) {
+      param.rules = this.rules;
+    }
 
-   // Add rules for validation if existed.
-   if (this.rules.length > 0) {
-     param.rules = this.rules;
-   }
+    // Add param type if not constant.
+    if (!this.isConstant) {
+      param.type = this.typeToJSON();
+    }
 
-   // Add param type if not constant.
-   if (!this.isConstant) {
-     param.type = this.typeToJSON();
-   }
-
-   return param;
- }
+    return param;
+  }
 }
