@@ -52,6 +52,15 @@ export class SynapseParameter extends Parameter {
   }
 
   /**
+   * Hide this parameter.
+   */
+  hide(): void {
+    this.synapse.paramsVisible = this.synapse.paramsVisible.filter(
+      (item) => item !== this.id
+    );
+  }
+
+  /**
    * Serialize for JSON.
    * @return synapse parameter object
    */
@@ -59,7 +68,6 @@ export class SynapseParameter extends Parameter {
     const param: any = {
       id: this.id,
       value: this.value,
-      visible: this.state.visible,
     };
 
     // Add the value factors if existed.

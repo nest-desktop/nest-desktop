@@ -1,22 +1,17 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
-      <range-slider
-        :color="param.node.color"
-        :model-value="(param.value as number[])"
+      <v-checkbox
+        :color="param.connection.source.color"
+        :model-value="(param.value as boolean)"
         @update:model-value="update"
+        density="compact"
+        hide-details
         v-bind="param.options"
-        v-if="param.options.variant === 'range'"
-      />
-      <tick-slider
-        :color="param.node.color"
-        :model-value="(param.value as number)"
-        @update:model-value="update"
-        v-bind="param.options"
-        v-else-if="param.options.variant === 'ticks'"
+        v-if="param.options.variant === 'checkbox'"
       />
       <value-slider
-        :color="param.node.color"
+        :color="param.connection.source.color"
         :model-value="(param.value as number)"
         @update:model-value="update"
         v-bind="param.options"
@@ -56,18 +51,16 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import RangeSlider from "@/components/common/RangeSlider.vue";
-import TickSlider from "@/components/common/TickSlider.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
-import { NodeParameter } from "@/nest/core/node/nodeParameter";
+import { ConnectionParameter } from "@/nest/core/connection/connectionParameter";
 
 const props = defineProps({
-  param: { required: true, type: NodeParameter },
+  param: { required: true, type: ConnectionParameter },
 });
 
-const param = computed(() => props.param as NodeParameter);
+const param = computed(() => props.param as ConnectionParameter);
 
-const update = (value: number | number[]) => {
+const update = (value: number | number[] | boolean) => {
   param.value.value = value;
   param.value.changes();
 };

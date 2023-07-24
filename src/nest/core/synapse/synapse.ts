@@ -8,6 +8,11 @@ import { CopyModel } from "../model/copyModel";
 import { Model } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
 import { SynapseParameter, SynapseParameterProps } from "./synapseParameter";
+import { UnwrapRef, reactive } from "vue";
+
+interface SynapseState {
+  hash: string;
+}
 
 export interface SynapseProps {
   model?: string;
@@ -24,6 +29,7 @@ export class Synapse {
   private _paramsVisible: string[] = [];
   private _params: { [key: string]: SynapseParameter } = {};
   private _receptorIdx: number = 0;
+  private _state: UnwrapRef<SynapseState>;
 
   constructor(connection: Connection, synapse?: SynapseProps) {
     this._connection = connection;
@@ -34,12 +40,25 @@ export class Synapse {
       name: `[${this._modelId}] synapse`,
     });
 
+    this._state = reactive({
+      hash: '',
+    });
+
     this._model = this.getModel(this._modelId);
     this.initParameters(synapse?.params);
   }
 
   get connection(): Connection {
     return this._connection;
+  }
+
+  get delay(): number {
+    const delay: any = this._params.delay;
+    return delay ? delay.value : 1;
+  }
+
+  set delay(value: number) {
+    this._params.delay.value = value;
   }
 
   /**
@@ -66,15 +85,6 @@ export class Synapse {
 
   get isStatic(): boolean {
     return this.model.id === "static_synapse";
-  }
-
-  get paramsVisible(): string[] {
-    return this._paramsVisible;
-  }
-
-  set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
-    this.changes();
   }
 
   get model(): CopyModel | Model {
@@ -128,8 +138,25 @@ export class Synapse {
     this._modelId = value;
   }
 
+  get modelParams(): { [key: string]: ModelParameter } {
+    return this.model.params;
+  }
+
   get name(): string {
     return this._name;
+  }
+
+  get params(): { [key: string]: SynapseParameter } {
+    return this._params;
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get receptorIdx(): number {
@@ -142,10 +169,6 @@ export class Synapse {
 
   get receptorIndices(): number[] {
     return this.connection.target.receptors.map((_, idx: number) => idx);
-  }
-
-  get params(): { [key: string]: SynapseParameter } {
-    return this._params;
   }
 
   get showReceptorType(): boolean {
@@ -161,6 +184,10 @@ export class Synapse {
     );
   }
 
+  get state(): UnwrapRef<SynapseState> {
+    return this._state;
+  }
+
   get weight(): number {
     let weight: any = this._params.weight;
     if (weight && !weight.state.visible) {
@@ -171,15 +198,6 @@ export class Synapse {
 
   set weight(value: number) {
     this._params.weight.value = value;
-  }
-
-  get delay(): number {
-    const delay: any = this._params.delay;
-    return delay ? delay.value : 1;
-  }
-
-  set delay(value: number) {
-    this._params.delay.value = value;
   }
 
   /**
@@ -229,12 +247,13 @@ export class Synapse {
    */
   initParameters(params?: SynapseParameterProps[]): void {
     this._logger.trace("init parameters");
+    this._paramsVisible = [];
     this._params = {};
     if (this.model && params) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
         const param = params?.find((param: any) => param.id === modelParam.id);
         this.addParameter(param || modelParam);
-        if (param?.visible !== false) {
+        if (param && param.visible !== false) {
           this._paramsVisible.push(modelParam.id);
         }
       });
@@ -286,12 +305,18 @@ export class Synapse {
    * @return synapse object
    */
   toJSON(): SynapseProps {
-    const synapse: SynapseProps = {
-      model: this._modelId,
-      params: Object.values(this._params).map((param: SynapseParameter) =>
+    const synapse: SynapseProps = {};
+
+    if (this._modelId !== "static_synapse") {
+      synapse.model = this._modelId;
+    }
+
+    if (this.filteredParams.length > 0) {
+      synapse.params = this.filteredParams.map((param: SynapseParameter) =>
         param.toJSON()
-      ),
-    };
+      );
+    }
+
     if (this._receptorIdx !== 0) {
       synapse.receptorIdx = this._receptorIdx;
     }

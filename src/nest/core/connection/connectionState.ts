@@ -5,15 +5,21 @@ import { UnwrapRef, reactive } from "vue";
 
 import { Connection } from "./connection";
 
+interface ConnectionStateState {
+  hash: string;
+  showRule: boolean,
+}
+
 export class ConnectionState {
   private _connection: Connection; // parent
-  private _state: UnwrapRef<{hash: string}>;
+  private _state: UnwrapRef<ConnectionStateState>;
 
   constructor(connection: Connection) {
     this._connection = connection;
 
     this._state = reactive({
       hash: "",
+      showRule: false,
     });
   }
 
@@ -21,7 +27,7 @@ export class ConnectionState {
     return this._state.hash;
   }
 
-   /**
+  /**
    * Check if this connection is focused.
    */
   get isFocused(): boolean {
@@ -35,8 +41,7 @@ export class ConnectionState {
    */
   get isSelected(): boolean {
     return (
-      this._connection.connections.state.selectedConnection ===
-        this._connection
+      this._connection.connections.state.selectedConnection === this._connection
     );
   }
 
@@ -46,6 +51,10 @@ export class ConnectionState {
    */
   get shortHash(): string {
     return this._state.hash ? this._state.hash.slice(0, 6) : "";
+  }
+
+  get state(): UnwrapRef<ConnectionStateState> {
+    return this._state;
   }
 
   /**

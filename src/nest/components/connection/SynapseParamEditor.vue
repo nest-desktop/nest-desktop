@@ -2,21 +2,21 @@
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
       <range-slider
-        :color="param.node.color"
+        :color="param.synapse.connection.source.color"
         :model-value="(param.value as number[])"
         @update:model-value="update"
         v-bind="param.options"
         v-if="param.options.variant === 'range'"
       />
       <tick-slider
-        :color="param.node.color"
+        :color="param.synapse.connection.source.color"
         :model-value="(param.value as number)"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.variant === 'ticks'"
       />
       <value-slider
-        :color="param.node.color"
+        :color="param.synapse.connection.source.color"
         :model-value="(param.value as number)"
         @update:model-value="update"
         v-bind="param.options"
@@ -59,13 +59,13 @@ import { computed } from "vue";
 import RangeSlider from "@/components/common/RangeSlider.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
-import { NodeParameter } from "@/nest/core/node/nodeParameter";
+import { SynapseParameter } from "@/nest/core/synapse/synapseParameter";
 
 const props = defineProps({
-  param: { required: true, type: NodeParameter },
+  param: { required: true, type: SynapseParameter },
 });
 
-const param = computed(() => props.param as NodeParameter);
+const param = computed(() => props.param as SynapseParameter);
 
 const update = (value: number | number[]) => {
   param.value.value = value;

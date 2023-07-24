@@ -8,30 +8,30 @@ type ParamValueTypes = boolean | number | string | (number | string)[];
 
 export interface ParameterProps {
   disabled?: boolean;
+  factors?: any[];
+  format?: string;
   id: string;
+  input?: string; // backward compatible
   inputLabel?: string;
+  items?: any[];
   label?: string;
   max?: number;
   min?: number;
+  readonly?: boolean;
   rules?: string[][];
   step?: number;
   ticks?: (number | string)[];
+  type?: any;
   unit?: string;
   value?: ParamValueTypes;
+  variant?: string;
   visible?: boolean;
-  factors?: any[];
-  type?: any;
-  format?: string;
-  input?: string;
-  items?: any[];
-  readonly?: boolean;
 }
 
 export class Parameter extends Config {
   private _factors: string[] = []; // not functional yet
   private _format: string = "";
   private _id: string = "";
-  private _input: string = "valueInput";
   private _items: string[] = [];
   private _label: string = "";
   private _max: number = 1;
@@ -44,6 +44,7 @@ export class Parameter extends Config {
   private _type: { [key: string]: any } = { id: "constant" };
   private _unit: string = "";
   private _value: ParamValueTypes = 0; // constant value;
+  private _variant: string = "valueInput";
 
   constructor(param: ParameterProps) {
     super("Parameter");
@@ -64,14 +65,6 @@ export class Parameter extends Config {
 
   get id(): string {
     return this._id;
-  }
-
-  get input(): string {
-    return this._input;
-  }
-
-  set input(value: string) {
-    this._input = value;
   }
 
   /**
@@ -157,6 +150,8 @@ export class Parameter extends Config {
       step: param.step,
       ticks: param.ticks,
       unit: param.unit,
+      defaultValue: param.value,
+      variant: param.variant,
     };
   }
 
@@ -244,6 +239,14 @@ export class Parameter extends Config {
     }
   }
 
+  get variant(): string {
+    return this._variant;
+  }
+
+  set variant(value: string) {
+    this._variant = value;
+  }
+
   /**
    * Copy paramter component
    */
@@ -262,7 +265,7 @@ export class Parameter extends Config {
   reset(): void {
     this.typeId = "constant";
     if (this.options) {
-      this._value = this.options.value;
+      this._value = this.options.defaultValue;
     }
   }
 
@@ -410,7 +413,6 @@ export class Parameter extends Config {
     }
 
     this._format = param.format || "";
-    this._input = param.input || "valueInput";
     this._items = param.items || [];
     this._label = param.label || param.id;
     this._max = param.max || 1;
@@ -419,5 +421,6 @@ export class Parameter extends Config {
     this._step = param.step || 1;
     this._ticks = param.ticks || [];
     this._unit = param.unit || "";
+    this._variant = param.variant || param.input || "valueInput";
   }
 }

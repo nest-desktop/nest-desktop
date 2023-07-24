@@ -21,7 +21,6 @@ export class ConnectionParameter extends Parameter {
     this._connection = connection;
   }
 
-
   get connection(): Connection {
     return this._connection as Connection;
   }
@@ -49,6 +48,15 @@ export class ConnectionParameter extends Parameter {
    */
   override changes(): void {
     this.connection.changes();
+  }
+
+  /**
+   * Hide this parameter.
+   */
+  hide(): void {
+    this.connection.paramsVisible = this.connection.paramsVisible.filter(
+      (item) => item !== this.id
+    );
   }
 
   PyNNParamId(): string {

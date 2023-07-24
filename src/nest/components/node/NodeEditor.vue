@@ -7,7 +7,7 @@
         hide-details
         item-value="id"
         item-title="label"
-        label="Model"
+        label="Node model"
         density="compact"
         v-model="state.node.modelId"
         variant="outlined"
@@ -126,25 +126,22 @@
     </v-card-title>
 
     <v-card-text class="pa-0">
-      <v-list class="py-0" v-if="state.node.sizeVisible">
+      <!-- <v-list class="py-0" v-if="state.node.sizeVisible">
         <node-param-editor
-          :color="state.node.color"
           :options="{ id: 'n', inputLabel: 'n', label: 'population' }"
           @update:model-value="state.node.changes()"
           v-model="state.node.size"
         />
-      </v-list>
+      </v-list> -->
       <v-list class="py-0" v-if="state.node.paramsVisible.length > 0">
         <node-param-editor
-          :color="state.node.color"
           :key="index"
-          :options="state.node.params[paramId].options"
-          @update:model-value="state.node.changes()"
+          :param="state.node.params[paramId]"
           v-for="(paramId, index) in state.node.paramsVisible"
-          v-model="state.node.params[paramId].value"
         />
       </v-list>
     </v-card-text>
+
     <v-card-actions
       style="min-height: 40px"
       v-if="state.node.state.targetsLength > 0"

@@ -4,7 +4,7 @@
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi-plus"
-    class="py-2 value-slider"
+    class="py-1 value-slider"
     hide-details="auto"
     prepend-icon="mdi-minus"
     style="position: relative"
@@ -81,8 +81,9 @@ watch(
     margin-right: 4px;
   }
 
-  .v-input__prepend, .v-input__append {
-    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))
+  .v-input__prepend,
+  .v-input__append {
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
   }
 
   .v-slider__label {
@@ -100,7 +101,6 @@ watch(
   .v-input:hover .v-text-field__suffix {
     display: none;
   }
-
 }
 
 .value-slider:hover {
@@ -108,6 +108,5 @@ watch(
   .mdi-plus {
     opacity: 0.6 !important;
   }
-
 }
 </style>
