@@ -37,7 +37,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 
 # Create nodes
 {{ #network.nodes }}
-{{ view.label }} = nest.Create("{{ modelId }}"{{ ^spatial.hasGridPositions }}, {{ n }}{{ /spatial.hasGridPositions }}{{ #hasSomeVisibleParams }}, params={
+{{ view.label }} = nest.Create("{{ modelId }}"{{ #sizeVisible }}, {{ n }}{{ /sizeVisible }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
