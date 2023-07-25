@@ -179,6 +179,7 @@ export class NodeGraphConnector {
 
     connector
       .transition(t)
+      .delay(this._networkGraph.network?.nodes.state.focusedNode ? 0 : 1000)
       .style("opacity", (n: Node) =>
         n.state.isFocused && !connectionDrag ? "1" : "0"
       );
