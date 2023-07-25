@@ -346,6 +346,10 @@ export class Node extends Config {
     this.changes();
   }
 
+  get sizeVisible(): boolean {
+    return this._view.state.showSize && !this._spatial.hasGridPositions;
+  }
+
   get sourceNodes(): Node[] {
     const nodes: Node[] = this.network.connections
       .filter((connection: Connection) => connection.targetIdx === this._idx)
