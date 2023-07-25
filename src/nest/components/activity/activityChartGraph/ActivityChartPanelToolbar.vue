@@ -55,19 +55,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ActivityChartPanel } from "@nest/graph/activityGraph/activityChart/activityChartPanel";
-import ActivityChartPanelMenuPopover from "@nest/components/activity/activityChartGraph/ActivityChartPanelMenuPopover.vue";
 import { computed } from "vue";
 
+import { ActivityChartPanel } from "@nest/graph/activityGraph/activityChart/activityChartPanel";
+import ActivityChartPanelMenuPopover from "@nest/components/activity/activityChartGraph/ActivityChartPanelMenuPopover.vue";
+
 const props = defineProps({
-  panel: { required: true, type: ActivityChartPanel },
+  panel: ActivityChartPanel,
 });
 
-const panel = computed(() => props.panel);
+const panel = computed(() => props.panel as ActivityChartPanel);
 
 const selectModel = (modelId: string) => {
-  props.panel.selectModel(modelId, props.panel.model.toJSON());
-  props.panel.graph.update();
+  panel.value.selectModel(modelId, panel.value.model.toJSON());
+  panel.value.graph.update();
 };
 </script>
 

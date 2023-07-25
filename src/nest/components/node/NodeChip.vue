@@ -1,24 +1,24 @@
 <template>
   <div class="nodeChip">
     <v-chip
-      :color="state.node.view.color"
+      :color="node.view.color"
       @click="selectNode"
       size="small"
       variant="outlined"
     >
-      <span class="font-weight-bold">{{ state.node.view.label }}</span>
-      <span class="mx-1">{{ state.node.model.label }}</span>
+      <span class="font-weight-bold">{{ node.view.label }}</span>
+      <span class="mx-1">{{ node.model.label }}</span>
 
       <span class="mx-1" v-if="appStore.devMode">
-        ( {{ state.node.view.state.position.x.toFixed() }},
-        {{ state.node.view.state.position.y.toFixed() }})
+        ( {{ node.view.state.position.x.toFixed() }},
+        {{ node.view.state.position.y.toFixed() }})
       </span>
     </v-chip>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch } from "vue";
+import { computed } from "vue";
 
 import { useAppStore } from "@/store/appStore";
 
@@ -31,21 +31,12 @@ const props = defineProps({
   graph: NetworkGraph,
   node: Node,
 });
-const state = reactive({
-  graph: props.graph as NetworkGraph,
-  node: props.node as Node,
-});
+
+const node = computed(() => props.node as Node);
+const graph = computed(() => props.graph as NetworkGraph);
 
 const selectNode = () => {
-  state.node.state.select();
-  state.graph.update();
+  node.value.state.select();
+  graph.value.update();
 };
-
-watch(
-  () => [props.graph, props.node],
-  () => {
-    state.graph = props.graph as NetworkGraph;
-    state.node = props.node as Node;
-  }
-);
 </script>

@@ -62,7 +62,7 @@ import ValueSlider from "@/components/common/ValueSlider.vue";
 import { NodeParameter } from "@/nest/core/node/nodeParameter";
 
 const props = defineProps({
-  param: { required: true, type: NodeParameter },
+  param: NodeParameter,
 });
 
 const param = computed(() => props.param as NodeParameter);

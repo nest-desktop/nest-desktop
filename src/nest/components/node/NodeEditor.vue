@@ -193,7 +193,7 @@
                   : 0.3,
             }"
             :key="index"
-            :connection="connection as Connection"
+            :connection="connection"
             @mouseenter="connection.state.focus()"
             @mouseleave="connection.connections.unfocusConnection()"
             v-for="(connection, index) in node.targets"
@@ -211,14 +211,13 @@ import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
 
 import { Node } from "@nest/core/node/node";
-import { Connection } from "@nest/core/connection/connection";
 import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
 
 const props = defineProps({
-  node: { type: Node, required: true },
+  node: Node,
 });
 
 const node = computed(() => props.node as Node);

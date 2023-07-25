@@ -5,36 +5,36 @@
         <div style="pointer-events: none">
           <v-btn icon size="small">
             <node-avatar
-              :color="state.connection.source.view.color"
-              :elementType="state.connection.source.model.elementType"
-              :label="state.connection.source.view.label"
-              :weight="state.connection.source.view.weight"
+              :color="connection.source.view.color"
+              :elementType="connection.source.model.elementType"
+              :label="connection.source.view.label"
+              :weight="connection.source.view.weight"
               size="32px"
             />
           </v-btn>
           <v-btn
-            :color="state.connection.synapse.weight > 0 ? 'blue' : 'red'"
+            :color="connection.synapse.weight > 0 ? 'blue' : 'red'"
             :icon="`nest:synapse-${
-              state.connection.synapse.weight > 0 ? 'excitatory' : 'inhibitory'
+              connection.synapse.weight > 0 ? 'excitatory' : 'inhibitory'
             }`"
             size="small"
             variant="text"
           />
           <v-btn icon size="small">
             <node-avatar
-              :color="state.connection.target.view.color"
-              :elementType="state.connection.target.model.elementType"
-              :label="state.connection.target.view.label"
-              :weight="state.connection.target.view.weight"
+              :color="connection.target.view.color"
+              :elementType="connection.target.model.elementType"
+              :label="connection.target.view.label"
+              :weight="connection.target.view.weight"
               size="32px"
             />
           </v-btn>
         </div>
         <v-spacer />
         <div class="d-flex justify-center align-center text-grey">
-          {{ state.connection.rule.value }}
-          <span v-if="state.connection.view.connectOnlyNeurons()">
-            {{ state.connection.synapse.modelId }}
+          {{ connection.rule.value }}
+          <span v-if="connection.view.connectOnlyNeurons()">
+            {{ connection.synapse.modelId }}
           </span>
         </div>
         <v-spacer />
@@ -46,17 +46,17 @@
           <v-list>
             <v-list-item
               :key="index"
-              v-for="(param, index) in state.connection.params"
+              v-for="(param, index) in connection.params"
             >
               {{ param.id }}
             </v-list-item>
 
             <node-param-viewer
-              :color="state.connection.source.color"
+              :color="connection.source.color"
               :options="param.options"
               v-model="param.value"
               :key="index"
-              v-for="(param, index) in state.connection.synapse.params"
+              v-for="(param, index) in connection.synapse.params"
             />
           </v-list>
         </v-card-text>
@@ -66,26 +66,17 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, watch } from "vue";
+import { computed } from "vue";
 
 import { Connection } from "@nest/core/connection/connection";
 import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
 import NodeParamViewer from "@nest/components/node/NodeParamViewer.vue";
 
 const props = defineProps({
-  connection: { type: Connection, required: true },
+  connection: Connection,
 });
 
-const state = reactive({
-  connection: props.connection as Connection,
-});
-
-const update = () => {
-  state.connection = props.connection as Connection;
-};
-
-watch(() => [props.connection], update);
-onMounted(update);
+const connection = computed(() => props.connection as Connection);
 </script>
 
 <style lang="scss">

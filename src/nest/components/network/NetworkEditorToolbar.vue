@@ -6,7 +6,6 @@
     density="compact"
     absolute
   >
-
     <v-spacer />
     <v-btn
       icon="mdi-camera"
@@ -52,7 +51,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-<!--
+      <!--
       <v-text-field
         class="px-4  "
         hide-details
@@ -62,31 +61,29 @@
       /> -->
 
       <v-btn
-        :color="props.graph.workspace.state.centerSelected ? 'amber' : 'grey'"
+        :color="graph.workspace.state.centerSelected ? 'amber' : 'grey'"
         :icon="
-          props.graph.workspace.state.centerSelected
+          graph.workspace.state.centerSelected
             ? 'mdi-image-filter-center-focus'
             : 'mdi-image-filter-center-focus-strong-outline'
         "
-        @click="() => props.graph.workspace.toggleCenterSelected()"
+        @click="() => graph.workspace.toggleCenterSelected()"
         size="small"
         title="Auto-center currently selected element"
       />
 
       <v-btn
-        :color="props.graph.workspace.state.centerNetwork ? 'amber' : 'grey'"
-        @click="() => props.graph.workspace.toggleCenterNetwork()"
+        :color="graph.workspace.state.centerNetwork ? 'amber' : 'grey'"
+        @click="() => graph.workspace.toggleCenterNetwork()"
         icon="mdi-focus-field"
         size="small"
         title="Auto-center whole network graph"
       />
 
       <v-btn
-        :color="props.graph.workspace.state.showGrid ? 'amber' : 'grey'"
-        @click="() => props.graph.workspace.toggleGrid()"
-        :icon="
-          props.graph.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'
-        "
+        :color="graph.workspace.state.showGrid ? 'amber' : 'grey'"
+        @click="() => graph.workspace.toggleGrid()"
+        :icon="graph.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
         size="small"
         title="Show background grid"
       />
@@ -95,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 
 import { downloadSVGImage } from "@/utils/download";
 
@@ -105,9 +102,11 @@ import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
 
 const props = defineProps({
-  graph: { type: NetworkGraph, required: true },
+  graph: NetworkGraph,
   transparentWorkspace: { default: false, type: Boolean },
 });
+
+const graph = computed(() => props.graph as NetworkGraph);
 
 const state = reactive({
   dialogDelete: false,
@@ -127,9 +126,9 @@ const deleteNetwork = () => {
  * Download network graph as svg.
  */
 const downloadNetworkGraph = () => {
-  if (!props.graph.selector) return;
+  if (!graph.value.selector) return;
   downloadSVGImage(
-    props.graph.selector.node(),
+    graph.value.selector.node(),
     projectStore.project.network.project.name
   );
   state.dialogDownload = false;

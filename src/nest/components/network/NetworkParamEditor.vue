@@ -37,11 +37,13 @@ import IconBtn from "@/components/common/IconBtn.vue";
 import NodeEditor from "@nest/components/node/NodeEditor.vue";
 import { Node } from "@nest/core/node/node";
 import { useProjectStore } from "@nest/store/project/projectStore";
+import { Nodes } from "@/nest/core/node/nodes";
+import { NetworkState } from "@/nest/core/network/networkState";
 
 const projectStore = useProjectStore();
 
-const networkState = computed(() => projectStore.project.network.state);
-const nodes = computed(() => projectStore.project.network.nodes);
+const networkState = computed(() => projectStore.project.network.state as NetworkState);
+const nodes = computed(() => projectStore.project.network.nodes as Nodes);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },

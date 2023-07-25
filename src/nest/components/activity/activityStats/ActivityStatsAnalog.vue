@@ -10,12 +10,12 @@
     fixed-header
     loadingText="Loading... Please wait"
     show-select
-    v-model="state.activity.state.selected"
-    @update:model-value="() => state.activity.chartGraph?.update()"
+    v-model="activity.state.selected"
+    @update:model-value="() => activity.chartGraph?.update()"
   >
     <template #top>
       <v-select
-        :items="state.activity.state.records"
+        :items="activity.state.records"
         @change="update"
         density="compact"
         hide-details
@@ -104,7 +104,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from "vue";
+import { computed, onMounted, reactive, watch } from "vue";
 import { deviation, mean } from "@/utils/array";
 import { toFixed } from "@/utils/converter";
 
@@ -116,8 +116,9 @@ const props = defineProps({
   height: { default: 500, type: Number },
 });
 
+const activity = computed(() => props.activity as AnalogSignalActivity);
+
 const state = reactive({
-  activity: props.activity as AnalogSignalActivity,
   activityHash: "",
   items: [] as { [key: string]: number | string }[],
   loading: false,
@@ -137,16 +138,16 @@ const headers = [
 ];
 
 // const activeLineGraph = (nodeId?: number) => {
-//   state.activity.state.activeNodeId =
-//     state.activity.state.activeNodeId == nodeId ? undefined : nodeId;
-//   state.activity.chartGraph?.panels.forEach((panel) =>
+//   activity.state.activeNodeId =
+//     activity.state.activeNodeId == nodeId ? undefined : nodeId;
+//   activity.chartGraph?.panels.forEach((panel) =>
 //     panel.model.updateActiveMarker(state.selectedRecord as NodeRecord)
 //   );
-//   state.activity.chartGraph?.react();
+//   activity.chartGraph?.react();
 // };
 
 // const isActive = (nodeId: number) => {
-//   return state.activity.state.activeNodeId === nodeId;
+//   return activity.state.activeNodeId === nodeId;
 // };
 
 /**
@@ -157,18 +158,18 @@ const update = () => {
   state.loading = true;
   state.items = [];
 
-  if (!state.selectedRecord && state.activity.state.records.length > 0) {
-    state.selectedRecord = state.activity.state.records[0] as NodeRecord;
+  if (!state.selectedRecord && activity.value.state.records.length > 0) {
+    state.selectedRecord = activity.value.state.records[0] as NodeRecord;
   }
 
-  if (state.activity && state.selectedRecord) {
-    const activityData: any[] = state.activity.events[state.selectedRecord.id];
+  if (activity.value && state.selectedRecord) {
+    const activityData: any[] = activity.value.events[state.selectedRecord.id];
     const data: any[] = Object.create(null);
-    state.activity.nodeIds.forEach((id) => (data[id] = []));
-    state.activity.events.senders.forEach((sender: number, idx: number) => {
+    activity.value.nodeIds.forEach((id) => (data[id] = []));
+    activity.value.events.senders.forEach((sender: number, idx: number) => {
       data[sender].push(activityData[idx]);
     });
-    state.items = state.activity.nodeIds.map((id) => {
+    state.items = activity.value.nodeIds.map((id) => {
       const d: any = data[id];
       return {
         id,
@@ -177,7 +178,7 @@ const update = () => {
       };
     });
   }
-  state.activityHash = state.activity.state.hash;
+  state.activityHash = activity.value.state.hash;
   state.loading = false;
 };
 
@@ -186,12 +187,11 @@ const colMean = (key: string) => {
 };
 
 onMounted(() => {
-  state.activity = props.activity as AnalogSignalActivity;
   update();
 });
 
 watch(
-  () => props.activity?.state.hash,
+  () => activity.value.state.hash,
   () => update()
 );
 </script>

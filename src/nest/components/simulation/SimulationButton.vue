@@ -5,16 +5,14 @@
         <div class="btn-split text-no-wrap">
           <v-btn
             :disabled="state.disabled"
-            :loading="projectStore.project.simulation.state.running"
+            :loading="simulation.state.running"
             @click="projectStore.startSimulation()"
             class="btn-main"
             variant="outlined"
             title="Simulate"
             prepend-icon="mdi-play"
           >
-            <span v-if="projectStore.project.simulation.code.runSimulation">
-              Simulate
-            </span>
+            <span v-if="simulation.code.runSimulation"> Simulate </span>
             <span v-else>Prepare</span>
           </v-btn>
 
@@ -45,14 +43,19 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 import { useProjectStore } from "@nest/store/project/projectStore";
+import { Simulation } from "@/nest/core/simulation/simulation";
 
 const projectStore = useProjectStore();
 
 const props = defineProps({
   disabled: Boolean,
 });
+
+const simulation = computed(
+  () => projectStore.project.simulation as Simulation
+);
 
 const state = reactive({
   disabled: props.disabled,

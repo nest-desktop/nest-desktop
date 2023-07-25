@@ -8,12 +8,12 @@
       <!-- <v-subheader v-text="'Activity statistics'" /> -->
       <v-expansion-panels
         mandatory
-        v-model="projectStore.project.state.activityStatsPanelId"
+        v-model="project.state.activityStatsPanelId"
         variant="accordion"
       >
         <v-expansion-panel
           :key="index"
-          v-for="(activity, index) in projectStore.project.activities.all"
+          v-for="(activity, index) in project.activities.all"
         >
           <v-expansion-panel-title class="py-0">
             <v-row class="text-button">
@@ -32,7 +32,7 @@
           </v-expansion-panel-title>
 
           <v-expansion-panel-text
-            :key="projectStore.project.simulation.code.state.hash"
+            :key="project.simulation.code.state.hash"
             class="ma-0 pa-0"
           >
             <activity-stats-spike
@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 
 import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
 import { AnalogSignalActivity } from "@nest/core/activity/analogSignalActivity";
@@ -63,8 +63,11 @@ import { useProjectStore } from "@nest/store/project/projectStore";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
+import { Project } from "@/nest/core/project/project";
 
 const projectStore = useProjectStore();
+
+const project = computed(() => projectStore.project as Project);
 
 const state = reactive({
   height: 700,
@@ -78,7 +81,7 @@ const onResize = () => {
     52 - // toolbar
     64 - // expansion panel title
     48 - // data table footer
-    (projectStore.project.activities.all.length - 1) * 48; // other closed expansion panel
+    (project.value.activities.all.length - 1) * 48; // other closed expansion panel
 };
 </script>
 

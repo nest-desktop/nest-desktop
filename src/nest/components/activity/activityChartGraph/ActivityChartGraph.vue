@@ -44,10 +44,11 @@ import {
 // import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
 import { DownloadImgopts } from "plotly.js";
 import { useProjectStore } from "@/nest/store/project/projectStore";
+import { ActivityChartGraph } from "@/nest/graph/activityGraph/activityChartGraph";
 
 // const activityGraphStore = useActivityGraphStore();
 const graph = computed(
-  () => projectStore.project.activityGraph.activityChartGraph
+  () => projectStore.project.activityGraph.activityChartGraph as ActivityChartGraph
 );
 
 const projectStore = useProjectStore();

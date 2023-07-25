@@ -62,7 +62,7 @@ import ValueSlider from "@/components/common/ValueSlider.vue";
 import { SynapseParameter } from "@/nest/core/synapse/synapseParameter";
 
 const props = defineProps({
-  param: { required: true, type: SynapseParameter },
+  param: SynapseParameter,
 });
 
 const param = computed(() => props.param as SynapseParameter);

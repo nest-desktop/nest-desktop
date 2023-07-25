@@ -201,10 +201,10 @@ import SynapseParamEditor from "@nest/components/connection/SynapseParamEditor.v
 import { Connection } from "@nest/core/connection/connection";
 
 const props = defineProps({
-  connection: { type: Connection, required: true },
+  connection: Connection,
 });
 
-const connection = computed(() => props.connection);
+const connection = computed(() => props.connection as Connection);
 
 const rules = [
   { title: "all to all", value: "all_to_all" },
