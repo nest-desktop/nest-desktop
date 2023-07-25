@@ -15,7 +15,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     this.panel.xaxis = 3;
     this.params = [
       {
-        input: 'tickSlider',
+        variant: 'tickSlider',
         label: 'bin size',
         ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
         value: 0.05,

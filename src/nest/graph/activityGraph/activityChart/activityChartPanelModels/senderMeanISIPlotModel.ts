@@ -18,7 +18,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
         _parent: this,
         _value: "bar",
         id: "plotMode",
-        input: "select",
+        variant: "select",
         items: ["lines", "lines+markers", "markers", "bar"],
         label: "Plot mode",
         parent: this,
@@ -32,7 +32,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
       },
       {
         id: "lineShape",
-        input: "select",
+        variant: "select",
         items: [
           { text: "linear", value: "linear" },
           { text: "spline", value: "spline" },

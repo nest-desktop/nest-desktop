@@ -282,13 +282,13 @@ export class Model extends Config {
       label: paramId,
       value,
       level: 1,
-      input: "valueSlider",
+      variant: "valueSlider",
       min: 0,
       max: 100,
       step: 1,
     };
     if (Array.isArray(value)) {
-      param.input = "arrayInput";
+      param.variant = "arrayInput";
     }
     this.addParameter(param);
     // this._params.sort((a: any, b: any) => a.id - b.id);

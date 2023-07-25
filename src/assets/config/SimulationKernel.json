@@ -4,7 +4,7 @@
     {
       "format": "integer",
       "id": "localNumThreads",
-      "input": "tickSlider",
+      "variant": "tickSlider",
       "label": "local number of threads",
       "ticks": [1, 2, 4, 8],
       "value": 1
@@ -12,7 +12,7 @@
     {
       "format": "integer",
       "id": "rngSeed",
-      "input": "valueSlider",
+      "variant": "valueSlider",
       "label": "seed of random number generator",
       "max": 1000,
       "min": 1,
@@ -21,7 +21,7 @@
     },
     {
       "id": "resolution",
-      "input": "tickSlider",
+      "variant": "tickSlider",
       "label": "time resolution",
       "ticks": [0.01, 0.1, 1],
       "unit": "ms",

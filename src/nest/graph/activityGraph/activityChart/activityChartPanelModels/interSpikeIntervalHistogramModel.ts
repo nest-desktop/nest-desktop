@@ -17,7 +17,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     this.params = [
       {
         id: "binSize",
-        input: "tickSlider",
+        variant: "tickSlider",
         label: "bin size",
         ticks: [1, 2, 5, 10, 20, 50],
         unit: "ms",

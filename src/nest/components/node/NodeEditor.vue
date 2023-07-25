@@ -1,15 +1,15 @@
 <template>
-  <card :color="state.node.color" class="node ma-1" v-if="state.node">
+  <card :color="node.color" class="node ma-1" v-if="node">
     <v-card-title class="mt-2 ml-10">
       <v-select
-        :items="state.node.models"
+        :items="node.models"
         @update:model-value="state.menu = true"
-        hide-details
-        item-value="id"
-        item-title="label"
-        label="Node model"
         density="compact"
-        v-model="state.node.modelId"
+        hide-details
+        item-title="label"
+        item-value="id"
+        label="Node model"
+        v-model="node.modelId"
         variant="outlined"
       >
         <template #prepend>
@@ -21,11 +21,11 @@
             style="left: 8px; top: 8px"
           >
             <node-avatar
-              :color="state.node.color"
-              :elementType="state.node.elementType"
-              :label="state.node.label"
-              :weight="state.node.weight"
-              @click="state.node.state.select()"
+              :color="node.color"
+              :elementType="node.elementType"
+              :label="node.label"
+              :weight="node.weight"
+              @click="node.state.select()"
               size="48px"
             />
           </v-btn>
@@ -49,29 +49,26 @@
 
             <v-card>
               <v-card-text>
-                <template v-if="state.node.elementType !== 'recorder'">
+                <v-checkbox
+                  :disabled="node.model.isRecorder"
+                  :color="node.color"
+                  density="compact"
+                  hide-details
+                  label="Population size"
+                  v-model="node.view.state.showSize"
+                >
+                  <template #append> n: {{ node.size }} </template>
+                </v-checkbox>
+                <template v-if="node.modelParams">
                   <v-checkbox
-                    :color="state.node.color"
-                    density="compact"
-                    hide-details
-                    label="Population size"
-                    v-model="state.node.sizeVisible"
-                  >
-                    <template #append> n: {{ state.node.size }} </template>
-                  </v-checkbox>
-                </template>
-                <template v-if="state.node.modelParams">
-                  <v-checkbox
-                    :color="state.node.color"
+                    :color="node.color"
                     :key="index"
                     :label="param.label"
                     :value="param.id"
                     density="compact"
                     hide-details
-                    v-for="(param, index) in Object.values(
-                      state.node.modelParams
-                    )"
-                    v-model="state.node.paramsVisible"
+                    v-for="(param, index) in Object.values(node.modelParams)"
+                    v-model="node.paramsVisible"
                   >
                     <template #append>
                       {{ param.id }}: {{ param.value }}
@@ -83,14 +80,14 @@
 
               <v-card-actions>
                 <v-btn
-                  @click.stop="() => state.node.showAllParams()"
+                  @click.stop="() => node.showAllParams()"
                   size="small"
                   variant="outlined"
                 >
                   all
                 </v-btn>
                 <v-btn
-                  @click.stop="() => state.node.hideAllParams()"
+                  @click.stop="() => node.hideAllParams()"
                   size="small"
                   variant="outlined"
                 >
@@ -126,35 +123,66 @@
     </v-card-title>
 
     <v-card-text class="pa-0">
-      <!-- <v-list class="py-0" v-if="state.node.sizeVisible">
-        <node-param-editor
-          :options="{ id: 'n', inputLabel: 'n', label: 'population' }"
-          @update:model-value="state.node.changes()"
-          v-model="state.node.size"
-        />
-      </v-list> -->
-      <v-list class="py-0" v-if="state.node.paramsVisible.length > 0">
+      <v-list class="py-0" v-if="node.view.state.showSize">
+        <v-list-item class="param pl-0 pr-1">
+          <v-row no-gutters>
+            <value-slider
+              :color="node.color"
+              @update:model-value="node.changes()"
+              id="n"
+              inputLabel="n"
+              label="population size"
+              v-model="node.size"
+            />
+            <v-menu :close-on-content-click="false" density="compact">
+              <template #activator="{ props }">
+                <v-btn
+                  color="primary"
+                  class="menu align-center justify-center my-auto"
+                  icon="mdi-dots-vertical"
+                  size="x-small"
+                  v-bind="props"
+                  variant="text"
+                />
+              </template>
+
+              <v-list density="compact">
+                <v-list-item
+                  :key="index"
+                  :icon="item.icon"
+                  @click="item.onclick"
+                  v-for="(item, index) in items"
+                >
+                  <template #prepend>
+                    <v-icon :icon="item.icon" />
+                  </template>
+                  {{ item.title }}
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-row>
+        </v-list-item>
+      </v-list>
+      <v-list class="py-0" v-if="node.paramsVisible.length > 0">
         <node-param-editor
           :key="index"
-          :param="state.node.params[paramId]"
-          v-for="(paramId, index) in state.node.paramsVisible"
+          :param="node.params[paramId]"
+          v-for="(paramId, index) in node.paramsVisible"
         />
       </v-list>
     </v-card-text>
 
     <v-card-actions
       style="min-height: 40px"
-      v-if="state.node.state.targetsLength > 0"
+      v-if="node.state.targetsLength > 0"
     >
       <v-row>
         <v-expansion-panels
-          :key="state.node.state.targetsLength"
+          :key="node.state.targetsLength"
+          v-model="node.state.connectionPanelIdx"
           variant="accordion"
-          v-model="state.node.state.connectionPanelIdx"
         >
           <connection-editor
-            @mouseenter="connection.state.focus()"
-            @mouseleave="connection.connections.unfocusConnection()"
             :style="{
               opacity:
                 node.state.targetsLength === 1 ||
@@ -166,7 +194,9 @@
             }"
             :key="index"
             :connection="connection as Connection"
-            v-for="(connection, index) in state.node.targets"
+            @mouseenter="connection.state.focus()"
+            @mouseleave="connection.connections.unfocusConnection()"
+            v-for="(connection, index) in node.targets"
           />
         </v-expansion-panels>
       </v-row>
@@ -175,7 +205,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, PropType } from "vue";
+import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import List from "@/components/common/List.vue";
@@ -185,15 +215,17 @@ import { Connection } from "@nest/core/connection/connection";
 import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
+import ValueSlider from "@/components/common/ValueSlider.vue";
 
 const props = defineProps({
-  node: { type: Object as PropType<Node>, required: true },
+  node: { type: Node, required: true },
 });
+
+const node = computed(() => props.node as Node);
 
 const state = reactive({
   menu: false,
-  node: props.node,
-  panelIdx: null
+  panelIdx: null,
 });
 
 const admins = [

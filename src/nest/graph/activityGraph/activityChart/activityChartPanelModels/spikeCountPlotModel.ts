@@ -17,7 +17,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     this.params = [
       {
         id: "binSize",
-        input: "tickSlider",
+        variant: "tickSlider",
         label: "Bin size",
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
         unit: "ms",
@@ -27,7 +27,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         _parent: this,
         _value: "off",
         id: "normalizedValue",
-        input: "select",
+        variant: "select",
         items: [
           "off",
           "firing rate [spikes/s]",
@@ -47,7 +47,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       {
         id: "lowerUpperBinSize",
-        input: "tickSlider",
+        variant: "tickSlider",
         label: "Bin size for lower-upper averages",
         show: false,
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
@@ -56,7 +56,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       {
         id: "horizontalLine",
-        input: "checkbox",
+        variant: "checkbox",
         label: "Horizontal line for time constant (63%)",
         show: false,
         value: false,

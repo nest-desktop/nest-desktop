@@ -12,7 +12,7 @@
         {
           "format": "integer",
           "id": "indegree",
-          "input": "valueSlider",
+          "variant": "valueSlider",
           "label": "indegree",
           "max": 100,
           "min": 1,
@@ -25,14 +25,14 @@
         },
         {
           "id": "allow_autapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "allow_multapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -46,7 +46,7 @@
         {
           "format": "integer",
           "id": "outdegree",
-          "input": "valueSlider",
+          "variant": "valueSlider",
           "label": "outdegree",
           "max": 100,
           "min": 1,
@@ -59,14 +59,14 @@
         },
         {
           "id": "allow_autapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "allow_multapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -80,7 +80,7 @@
         {
           "format": "integer",
           "id": "N",
-          "input": "valueSlider",
+          "variant": "valueSlider",
           "label": "N",
           "max": 1000,
           "min": 1,
@@ -93,14 +93,14 @@
         },
         {
           "id": "allow_autapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "allow_multapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -119,7 +119,7 @@
         {
           "format": "float",
           "id": "p",
-          "input": "valueSlider",
+          "variant": "valueSlider",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
@@ -136,14 +136,14 @@
         },
         {
           "id": "allow_autapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "use_on_source",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "use on source",
           "value": false,
           "visible": false
@@ -156,7 +156,7 @@
       "params": [
         {
           "id": "p",
-          "input": "valueSlider",
+          "variant": "valueSlider",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
@@ -173,7 +173,7 @@
         },
         {
           "id": "allow_autapses",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "allow autapses",
           "readonly": true,
           "value": false,
@@ -181,7 +181,7 @@
         },
         {
           "id": "make_symmetric",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "make symmetric",
           "readonly": true,
           "value": true,
@@ -189,7 +189,7 @@
         },
         {
           "id": "use_on_source",
-          "input": "checkbox",
+          "variant": "checkbox",
           "label": "use on source",
           "value": false,
           "visible": false

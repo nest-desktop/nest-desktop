@@ -58,7 +58,6 @@ export class Node extends Config {
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = []; // only for multimeter
   private _size: number;
-  private _sizeVisible: boolean;
   private _spatial: NodeSpatial;
   private _state: NodeState;
   private _view: NodeView;
@@ -75,7 +74,6 @@ export class Node extends Config {
 
     this._modelId = node.model || "iaf_psc_alpha";
     this._size = node.size || 1;
-    this._sizeVisible = this._size > 1;
     this._annotations = node.annotations || [];
     this._doc = node;
 
@@ -345,15 +343,6 @@ export class Node extends Config {
    */
   set size(value: number) {
     this._size = value;
-    this.changes();
-  }
-
-  get sizeVisible(): boolean {
-    return this._sizeVisible;
-  }
-
-  set sizeVisible(value: boolean) {
-    this._sizeVisible = value;
     this.changes();
   }
 

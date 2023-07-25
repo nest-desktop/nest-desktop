@@ -283,7 +283,7 @@ export class CopyModel {
   addWeightRecorderParameter(param: any): void {
     this.addParameter({
       id: "weight_recorder",
-      input: "select",
+      variant: "select",
       label: "weight recorder",
       items: this._network.nodes.weightRecorders.map(
         (recorder: Node) => recorder.view.label
