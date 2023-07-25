@@ -28,11 +28,11 @@ export class NetworkGraphWorkspace extends Config {
     centerSelected: false,
     connected: false,
     cursorPosition: { x: 0, y: 0 },
-    dragging: false,
     dragLine: false,
+    dragging: false,
     keyCode: undefined,
-    transforming: false,
     showGrid: false,
+    transforming: false,
   };
   private _zoom: NetworkGraphZoom;
 
