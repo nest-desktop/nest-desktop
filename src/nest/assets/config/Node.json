@@ -2,7 +2,7 @@
   "size": {
     "format": "integer",
     "id": "n",
-    "input": "valueSlider",
+    "variant": "valueSlider",
     "label": "population size",
     "max": 1000,
     "min": 1,

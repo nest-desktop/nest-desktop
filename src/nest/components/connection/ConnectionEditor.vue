@@ -61,6 +61,7 @@
     <v-expansion-panel-text class="ma-1">
       <v-row no-gutters class="mx-1">
         <v-select
+          :disabled="connection.source.size === 1 && connection.target.size === 1"
           :items="rules"
           class="pa-1"
           density="compact"
@@ -123,10 +124,10 @@
         />
       </v-list>
 
-      <v-row no-gutters class="mx-1">
+      <v-row no-gutters class="mx-1" v-if="!connection.view.connectRecorder()">
         <v-select
-          :items="connection.synapse.models"
           :disabled="connection.synapse.models.length < 2"
+          :items="connection.synapse.models"
           class="pa-1"
           density="compact"
           hide-details

@@ -2,7 +2,7 @@
   "params": [
     {
       "id": "time",
-      "input": "valueSlider",
+      "variant": "valueSlider",
       "label": "simulation time",
       "max": 2000,
       "min": 0,

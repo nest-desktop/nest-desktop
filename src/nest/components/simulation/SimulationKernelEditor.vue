@@ -76,7 +76,7 @@ const props = defineProps({
 
 const options = {
   autoRNGSeedSettings: {
-    input: "checkbox",
+    variant: "checkbox",
     label: "randomize seed",
     rules: [
       (value: boolean) =>
@@ -86,7 +86,7 @@ const options = {
   },
   resolutionSettings: {
     id: "resolution",
-    input: "tickSlider",
+    variant: "tickSlider",
     label: "simulation resolution",
     ticks: [0.01, 0.1, 1, 10],
     unit: "ms",
@@ -98,7 +98,7 @@ const options = {
   },
   rngSeedSettings: {
     id: "rng_seed",
-    input: "valueSlider",
+    variant: "valueSlider",
     label: "seed of the random number generator",
     max: 1000,
     min: 1,
@@ -109,7 +109,7 @@ const options = {
   },
   simulationTimeSettings: {
     id: "time",
-    input: "valueSlider",
+    variant: "valueSlider",
     label: "simulation time",
     max: 2000,
     min: 0,
@@ -122,7 +122,7 @@ const options = {
     ],
   },
   threadSettings: {
-    input: "tickSlider",
+    variant: "tickSlider",
     label: "local number of threads",
     ticks: [1, 2, 4, 8],
   },

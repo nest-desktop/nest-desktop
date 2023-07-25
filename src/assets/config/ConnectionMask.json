@@ -3,7 +3,7 @@
     "specs": [
       {
         "id": "radius",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "radius",
         "max": 10,
         "min": 0,
@@ -16,7 +16,7 @@
     "specs": [
       {
         "id": "inner_radius",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "inner radius",
         "max": 10,
         "min": 0,
@@ -25,7 +25,7 @@
       },
       {
         "id": "outer_radius",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "outer radius",
         "max": 10,
         "min": 0,
@@ -38,7 +38,7 @@
     "specs": [
       {
         "id": "major_axis",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "major axis",
         "max": 10,
         "min": 0,
@@ -47,7 +47,7 @@
       },
       {
         "id": "minor_axis",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "minor_axis",
         "max": 10,
         "min": 0,
@@ -56,7 +56,7 @@
       },
       {
         "id": "azimuth_angle",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "azimuth angle",
         "max": 360,
         "min": 0,
@@ -65,7 +65,7 @@
       },
       {
         "id": "anchor",
-        "input": "arrayInput",
+        "variant": "arrayInput",
         "label": "anchor",
         "value": [0, 0]
       }
@@ -75,19 +75,19 @@
     "specs": [
       {
         "id": "lower_left",
-        "input": "arrayInput",
+        "variant": "arrayInput",
         "label": "lower left",
         "value": [-0.5, -0.5]
       },
       {
         "id": "upper_right",
-        "input": "arrayInput",
+        "variant": "arrayInput",
         "label": "upper right",
         "value": [0.5, 0.5]
       },
       {
         "id": "azimuth_angle",
-        "input": "valueSlider",
+        "variant": "valueSlider",
         "label": "azimuth angle",
         "max": 360,
         "min": 0,

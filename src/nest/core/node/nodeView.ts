@@ -19,6 +19,7 @@ interface NodeViewState {
   label?: string;
   position: { x: number, y: number };
   positions?: number[][];
+  showSize: boolean;
   visible?: boolean;
 }
 
@@ -40,6 +41,7 @@ export class NodeView {
       hash: "",
       label: "",
       positions: [],
+      showSize: node.size > 1,
     });
   }
 

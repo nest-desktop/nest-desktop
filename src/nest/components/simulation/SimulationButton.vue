@@ -59,7 +59,7 @@ const state = reactive({
   items: [
     {
       id: "simulateAfterChange",
-      input: "checkbox",
+      variant: "checkbox",
       title: "Simulate after change",
       value: "simulateAfterChange",
       show: () => true,
@@ -71,7 +71,7 @@ const state = reactive({
     },
     {
       id: "simulateAfterLoad",
-      input: "checkbox",
+      variant: "checkbox",
       title: "Simulate after load",
       value: "simulateAfterLoad",
       show: () => true,
@@ -83,7 +83,7 @@ const state = reactive({
     },
     {
       id: "simulateAfterCheckout",
-      input: "checkbox",
+      variant: "checkbox",
       title: "Simulate after checkout",
       value: "simulateAfterCheckout",
       show: () => true,

@@ -2,21 +2,21 @@
   "params": [
     {
       "id": "start",
-      "input": "valueInput",
+      "variant": "valueInput",
       "label": "start",
       "value": 0,
       "visible": true
     },
     {
       "id": "stop",
-      "input": "valueInput",
+      "variant": "valueInput",
       "label": "stop",
       "value": 1,
       "visible": true
     },
     {
       "id": "step",
-      "input": "valueInput",
+      "variant": "valueInput",
       "label": "step",
       "value": 1,
       "visible": true

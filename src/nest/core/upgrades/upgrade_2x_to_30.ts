@@ -6,7 +6,7 @@ const validateVersion = (version: string) =>
 const StaticSynapseParams = [
   {
     id: "weight",
-    input: "valueSlider",
+    variant: "valueSlider",
     label: "synaptic weight",
     max: 100,
     min: -100,
@@ -16,7 +16,7 @@ const StaticSynapseParams = [
   },
   {
     id: "delay",
-    input: "valueSlider",
+    variant: "valueSlider",
     label: "synaptic delay",
     max: 100,
     min: 1,
