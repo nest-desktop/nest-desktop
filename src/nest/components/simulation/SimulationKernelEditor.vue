@@ -14,21 +14,21 @@
           :color="props.color"
           class="mx-1 py-1"
           v-bind="options.threadSettings"
-          v-model="projectStore.project.simulation.kernel.localNumThreads"
+          v-model="simulation.kernel.localNumThreads"
         />
 
         <TickSlider
           :color="props.color"
           class="mx-1 py-1"
           v-bind="options.resolutionSettings"
-          v-model="projectStore.project.simulation.kernel.resolution"
+          v-model="simulation.kernel.resolution"
         />
 
         <ValueSlider
           :color="props.color"
           class="mx-1 py-1"
           v-bind="options.rngSeedSettings"
-          v-model="projectStore.project.simulation.kernel.rngSeed"
+          v-model="simulation.kernel.rngSeed"
         />
 
         <v-checkbox
@@ -52,7 +52,7 @@
           :color="props.color"
           class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
-          v-model="projectStore.project.simulation.time"
+          v-model="simulation.time"
         />
       </v-card-text>
     </card>
@@ -60,19 +60,24 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
 
 import ValueSlider from "@/components/common/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
 
 import { useProjectStore } from "@nest/store/project/projectStore";
+import { Simulation } from "@/nest/core/simulation/simulation";
 
 const projectStore = useProjectStore();
 
 const props = defineProps({
   color: { default: "accent", type: String },
 });
+
+const simulation = computed(
+  () => projectStore.project.simulation as Simulation
+);
 
 const options = {
   autoRNGSeedSettings: {
@@ -136,12 +141,12 @@ const state = reactive({
  * Updates when the usage of automatic RNG seed is switched on/off.
  */
 function updateAutoRNGSeed() {
-  projectStore.project.simulation.kernel.updateConfig({
+  simulation.value.kernel.updateConfig({
     autoRNGSeed: state.autoRNGSeed,
   });
 }
 
 onMounted(() => {
-  state.autoRNGSeed = projectStore.project.simulation.kernel.config.autoRNGSeed;
+  state.autoRNGSeed = simulation.value.kernel.config.autoRNGSeed;
 });
 </script>

@@ -4,10 +4,7 @@
       <v-list min-width="300">
         <v-list-group fluid value="Analog signals">
           <template #activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              title="Analog signals"
-            />
+            <v-list-item v-bind="props" title="Analog signals" />
           </template>
           <v-list-item
             :prepend-icon="model.icon"
@@ -22,10 +19,7 @@
 
         <v-list-group fluid value="Spike activity">
           <template #activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              title="Spike activity"
-            />
+            <v-list-item v-bind="props" title="Spike activity" />
           </template>
           <v-list-item
             :prepend-icon="model.icon"

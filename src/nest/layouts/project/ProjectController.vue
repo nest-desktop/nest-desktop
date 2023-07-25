@@ -20,7 +20,7 @@
     </template>
 
     <template v-else-if="projectStore.controllerView === 'raw'">
-      <pre>{{ projectStore.project.toJSON() }}</pre>
+      <pre>{{ project.toJSON() }}</pre>
     </template>
     <template v-else-if="projectStore.controllerView === 'kernel'">
       <simulation-kernel-editor />
@@ -56,6 +56,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import IconBtn from "@/components/common/IconBtn.vue";
 
 import ActivityChartController from "@nest/components/activity/activityChartGraph/ActivityChartController.vue";
@@ -63,9 +65,11 @@ import ActivityStats from "@nest/components/activity/activityStats/ActivityStats
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
 import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
+import { Project } from "@/nest/core/project/project";
 
 import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
+const project = computed(() => projectStore.project as Project);
 
 const codeBlocks = [
   { icon: "mdi-delete-empty", title: "reset" },

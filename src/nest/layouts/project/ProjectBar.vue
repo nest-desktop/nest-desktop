@@ -17,18 +17,21 @@
   <v-spacer />
 
   <v-app-bar-title>
-    {{ projectStore.project.name }}
+    {{ project.name }}
   </v-app-bar-title>
 
   <v-spacer />
 
   <simulation-button class="mx-2" />
-
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import SimulationButton from "@nest/components/simulation/SimulationButton.vue";
+import { Project } from "@/nest/core/project/project";
 import { useProjectStore } from "@nest/store/project/projectStore";
 
 const projectStore = useProjectStore();
+const project = computed(() => projectStore.project as Project);
 </script>

@@ -5,7 +5,7 @@
     <g class="grid no-print" />
     <g>
       <path
-        :style="{ strokeWidth: props.graph.config.strokeWidth }"
+        :style="{ strokeWidth: graph.config.strokeWidth }"
         class="dragline"
         d="M0,0L0,0"
         fill="none"
@@ -13,11 +13,11 @@
     </g>
 
     <g id="network">
-      <g :key="props.graph.network.connections.state.hash" class="marker">
+      <g :key="graph.network.connections.state.hash" class="marker">
         <defs
           :key="'defs' + index"
           :color="connection.source.view.color"
-          v-for="(connection, index) of props.graph.network.connections.all"
+          v-for="(connection, index) of graph.network.connections.all"
         >
           <marker
             :id="'generic' + index"
@@ -101,9 +101,13 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
 
-const props = defineProps({ graph: { type: NetworkGraph, required: true } });
+const props = defineProps({ graph: NetworkGraph });
+
+const graph = computed(() => props.graph as NetworkGraph)
 
 // import { Ref, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 

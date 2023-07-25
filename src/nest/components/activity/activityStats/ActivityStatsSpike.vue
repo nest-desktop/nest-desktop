@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from "vue";
+import { computed, onMounted, reactive, watch } from "vue";
 
 import { deviation, diff, mean, sum } from "@/utils/array";
 import { toFixed } from "@/utils/converter";
@@ -55,8 +55,9 @@ const props = defineProps({
   height: { default: 500, type: Number },
 });
 
+const activity = computed(() => props.activity as SpikeActivity);
+
 const state = reactive({
-  activity: props.activity as SpikeActivity,
   activityHash: "",
   items: [] as { [key: string]: number | string }[],
   loading: false,
@@ -83,15 +84,15 @@ const update = () => {
   state.loading = true;
   state.items = [];
 
-  if (state.activity && state.activity.nodeIds.length > 0) {
+  if (activity.value && activity.value.nodeIds.length > 0) {
     const times: any[] = Object.create(null);
-    state.activity.nodeIds.forEach((id: number) => {
+    activity.value.nodeIds.forEach((id: number) => {
       times[id] = [];
     });
-    state.activity.events.senders.forEach((sender: number, idx: number) => {
-      times[sender].push(state.activity.events.times[idx]);
+    activity.value.events.senders.forEach((sender: number, idx: number) => {
+      times[sender].push(activity.value.events.times[idx]);
     });
-    state.items = state.activity.nodeIds.map((id) => {
+    state.items = activity.value.nodeIds.map((id) => {
       let spikeTimes: number[] = times[id];
       let isi: number[] = [];
       let meanISI = NaN,
@@ -115,7 +116,7 @@ const update = () => {
       };
     });
   }
-  state.activityHash = state.activity.state.hash;
+  state.activityHash = activity.value.state.hash;
   state.loading = false;
 };
 
@@ -128,12 +129,11 @@ const colMean = (key: string): number => {
 };
 
 onMounted(() => {
-  state.activity = props.activity as SpikeActivity;
   update();
 });
 
 watch(
-  () => props.activity?.state.hash,
+  () => activity.value.state.hash,
   () => update()
 );
 </script>

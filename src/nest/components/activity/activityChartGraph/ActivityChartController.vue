@@ -8,7 +8,7 @@
       transition="slide-y-transition"
     >
       <v-color-picker
-        @update:color="state.graph.updateRecordsColor()"
+        @update:color="graph.updateRecordsColor()"
         flat
         show-swatches
         v-if="state.menu.record"
@@ -28,8 +28,8 @@
       </v-menu>
     </v-toolbar>
 
-    <!-- <draggable handle=".handle" v-model="state.graph.panels"> -->
-    <div :key="'panel' + index" v-for="(panel, index) in state.graph.panels">
+    <!-- <draggable handle=".handle" v-model="graph.panels"> -->
+    <div :key="'panel' + index" v-for="(panel, index) in graph.panels">
       <card class="mx-1">
         <v-card-title class="pa-0">
           <activity-chart-panel-toolbar
@@ -44,7 +44,7 @@
               @change="
                 () => {
                   panel.model.init();
-                  state.graph.update();
+                  graph.update();
                 }
               "
               attach
@@ -71,7 +71,7 @@
                   @click:close="
                     () => {
                       panel.model.removeRecord(item);
-                      state.graph.update();
+                      graph.update();
                     }
                   "
                   close
@@ -106,7 +106,7 @@
                     :key="'param' + index"
                     :options="param"
                     :value.sync="param.value"
-                    @update:value="state.graph.update()"
+                    @update:value="graph.update()"
                     v-for="(param, index) of panel.model.params"
                   /> -->
         </v-card-text>
@@ -117,16 +117,13 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 // import draggable from "vuedraggable";
 
 // import { useAppStore } from "@/store/appStore";
 import { useProjectStore } from "@nest/store/project/projectStore";
-
 import { ActivityChartPanel } from "@nest/graph/activityGraph/activityChart/activityChartPanel";
-
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
-
 import Card from "@/components/common/Card.vue";
 
 // import { NodeRecord } from "@nest/core/node/nodeRecord";
@@ -139,10 +136,13 @@ import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 // const appStore = useAppStore();
 const projectStore = useProjectStore();
 
+const graph = computed(
+  () =>
+    projectStore.project.activityGraph.activityChartGraph as ActivityChartGraph
+);
+
 const state = reactive({
   color: "#9e9e9e",
-  graph: projectStore.project.activityGraph
-    .activityChartGraph as ActivityChartGraph,
   menu: {
     position: {
       x: 0,
@@ -157,16 +157,16 @@ const state = reactive({
  * Add panel.
  */
 const addPanel = (modelId: string) => {
-  state.graph.addPanel({ model: { id: modelId } });
-  state.graph.update();
+  graph.value.addPanel({ model: { id: modelId } });
+  graph.value.update();
 };
 
 /**
  * Reset panels.
  */
 const resetPanels = () => {
-  state.graph.init();
-  state.graph.update();
+  graph.value.init();
+  graph.value.update();
 };
 
 // /**
