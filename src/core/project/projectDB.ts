@@ -36,7 +36,7 @@ export class ProjectDB extends DatabaseService {
     this.consoleLog('Import projects from assets');
     let promise: Promise<any> = Promise.resolve();
     this.app.config.projects.forEach((file: string) => {
-      const data: any = require('../../assets/projects/' + file + '.json');
+      const data: any = require('@/assets/projects/' + file + '.json');
       promise = promise.then(() => this.addProject(data));
     });
     return promise;
