@@ -32,90 +32,90 @@
         </template>
 
         <template #append>
-          <v-menu :close-on-content-click="false" v-model="state.menu">
-            <template #activator="{ props }">
-              <v-btn
-                class="d-print-none menu"
-                color="primary"
-                icon="mdi-order-bool-ascending-variant"
-                size="small"
-                v-bind="props"
-                variant="text"
-              />
-            </template>
+          <div class="d-print-none menu">
+            <v-menu :close-on-content-click="false" v-model="state.menu">
+              <template #activator="{ props }">
+                <v-btn
+                  color="primary"
+                  icon="mdi-order-bool-ascending-variant"
+                  size="small"
+                  v-bind="props"
+                  variant="text"
+                />
+              </template>
 
-            <v-card>
-              <v-card-text>
-                <v-checkbox
-                  :disabled="node.model.isRecorder"
-                  :color="node.color"
-                  density="compact"
-                  hide-details
-                  label="Population size"
-                  v-model="node.view.state.showSize"
-                >
-                  <template #append> n: {{ node.size }} </template>
-                </v-checkbox>
-                <template v-if="node.modelParams">
+              <v-card>
+                <v-card-text>
                   <v-checkbox
+                    :disabled="node.model.isRecorder"
                     :color="node.color"
-                    :key="index"
-                    :label="param.label"
-                    :value="param.id"
                     density="compact"
                     hide-details
-                    v-for="(param, index) in Object.values(node.modelParams)"
-                    v-model="node.paramsVisible"
+                    label="Population size"
+                    v-model="node.view.state.showSize"
                   >
-                    <template #append>
-                      {{ param.id }}: {{ param.value }}
-                      {{ param.unit }}
-                    </template>
+                    <template #append> n: {{ node.size }} </template>
                   </v-checkbox>
-                </template>
-              </v-card-text>
+                  <template v-if="node.modelParams">
+                    <v-checkbox
+                      :color="node.color"
+                      :key="index"
+                      :label="param.label"
+                      :value="param.id"
+                      density="compact"
+                      hide-details
+                      v-for="(param, index) in Object.values(node.modelParams)"
+                      v-model="node.paramsVisible"
+                    >
+                      <template #append>
+                        {{ param.id }}: {{ param.value }}
+                        {{ param.unit }}
+                      </template>
+                    </v-checkbox>
+                  </template>
+                </v-card-text>
 
-              <v-card-actions>
-                <v-btn
-                  @click.stop="() => node.showAllParams()"
-                  size="small"
-                  variant="outlined"
-                >
-                  all
-                </v-btn>
-                <v-btn
-                  @click.stop="() => node.hideAllParams()"
-                  size="small"
-                  variant="outlined"
-                >
-                  none
-                </v-btn>
-                <v-spacer />
-                <v-btn
-                  @click.stop="state.menu = false"
-                  size="small"
-                  variant="outlined"
-                >
-                  close
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-menu>
+                <v-card-actions>
+                  <v-btn
+                    @click.stop="() => node.showAllParams()"
+                    size="small"
+                    variant="outlined"
+                  >
+                    all
+                  </v-btn>
+                  <v-btn
+                    @click.stop="() => node.hideAllParams()"
+                    size="small"
+                    variant="outlined"
+                  >
+                    none
+                  </v-btn>
+                  <v-spacer />
+                  <v-btn
+                    @click.stop="state.menu = false"
+                    size="small"
+                    variant="outlined"
+                  >
+                    close
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-menu>
 
-          <v-menu :close-on-content-click="false">
-            <template #activator="{ props }">
-              <v-btn
-                class="d-print-none menu"
-                color="primary"
-                icon="mdi-dots-vertical"
-                size="small"
-                v-bind="props"
-                variant="text"
-              />
-            </template>
+            <v-menu :close-on-content-click="false">
+              <template #activator="{ props }">
+                <v-btn
+                  color="primary"
+                  icon="mdi-dots-vertical"
+                  size="small"
+                  v-bind="props"
+                  variant="text"
+                />
+              </template>
 
-            <list :items="items" density="compact" />
-          </v-menu>
+              <list :items="items" density="compact" />
+            </v-menu>
+          </div>
         </template>
       </v-select>
     </v-card-title>

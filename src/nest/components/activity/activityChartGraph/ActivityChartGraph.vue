@@ -43,8 +43,8 @@ import {
 
 // import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
 import { DownloadImgopts } from "plotly.js";
-import { useProjectStore } from "@/nest/store/project/projectStore";
-import { ActivityChartGraph } from "@/nest/graph/activityGraph/activityChartGraph";
+import { useProjectStore } from "@nest/store/project/projectStore";
+import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
 
 // const activityGraphStore = useActivityGraphStore();
 const graph = computed(

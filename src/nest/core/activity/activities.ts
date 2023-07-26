@@ -11,7 +11,7 @@ import { Node } from "../node/node";
 import { Project } from "../project/project";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { SpikeActivity } from "./spikeActivity";
-// import { useActivityGraphStore } from "@/nest/store/graph/activityGraphStore";
+// import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
 
 interface ActivitiesState {
   hasSomeAnalogRecorders: boolean;

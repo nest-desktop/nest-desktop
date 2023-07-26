@@ -58,7 +58,7 @@ import { computed } from "vue";
 import RangeSlider from "@/components/common/RangeSlider.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
-import { SynapseParameter } from "@/nest/core/synapse/synapseParameter";
+import { SynapseParameter } from "@nest/core/synapse/synapseParameter";
 
 const props = defineProps({
   param: SynapseParameter,

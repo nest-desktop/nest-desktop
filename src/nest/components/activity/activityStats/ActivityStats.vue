@@ -63,7 +63,7 @@ import { useProjectStore } from "@nest/store/project/projectStore";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
-import { Project } from "@/nest/core/project/project";
+import { Project } from "@nest/core/project/project";
 
 const projectStore = useProjectStore();
 

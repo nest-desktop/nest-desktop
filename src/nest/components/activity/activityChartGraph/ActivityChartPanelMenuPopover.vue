@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "@/nest/store/project/projectStore";
+import { useProjectStore } from "@nest/store/project/projectStore";
 const projectStore = useProjectStore();
 
 const emit = defineEmits(["changed"]);

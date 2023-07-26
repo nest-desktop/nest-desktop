@@ -14,8 +14,8 @@ import { ProjectState } from "./projectState";
 import { Simulation, SimulationProps } from "../simulation/simulation";
 import { upgradeProject } from "../upgrades/upgrades";
 import { Activities } from "../activity/activities";
-// import { useActivityGraphStore } from "@/nest/store/graph/activityGraphStore";
-import { ActivityGraph } from "@/nest/graph/activityGraph/activityGraph";
+// import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
+import { ActivityGraph } from "@nest/graph/activityGraph/activityGraph";
 
 export interface ProjectProps {
   _id?: string;

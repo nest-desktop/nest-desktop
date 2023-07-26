@@ -37,8 +37,8 @@ import IconBtn from "@/components/common/IconBtn.vue";
 import NodeEditor from "@nest/components/node/NodeEditor.vue";
 import { Node } from "@nest/core/node/node";
 import { useProjectStore } from "@nest/store/project/projectStore";
-import { Nodes } from "@/nest/core/node/nodes";
-import { NetworkState } from "@/nest/core/network/networkState";
+import { Nodes } from "@nest/core/node/nodes";
+import { NetworkState } from "@nest/core/network/networkState";
 
 const projectStore = useProjectStore();
 
