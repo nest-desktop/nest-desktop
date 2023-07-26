@@ -176,6 +176,7 @@ export class NodeGraphConnector {
     const duration: number = this.state.dragging ? 0 : 250;
     const t: d3.Transition<any, any, any, any> = d3
       .transition()
+      .delay(this._networkGraph.network?.state.focusedNode ? 0 : 1000)
       .duration(duration);
 
     const workspaceState = this._networkGraph.workspace.state;
