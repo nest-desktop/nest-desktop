@@ -67,7 +67,7 @@ import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
 
 import { useProjectStore } from "@nest/store/project/projectStore";
-import { Simulation } from "@/nest/core/simulation/simulation";
+import { Simulation } from "@nest/core/simulation/simulation";
 
 const projectStore = useProjectStore();
 

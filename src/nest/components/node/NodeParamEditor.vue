@@ -59,7 +59,7 @@ import { computed } from "vue";
 import RangeSlider from "@/components/common/RangeSlider.vue";
 import TickSlider from "@/components/common/TickSlider.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
-import { NodeParameter } from "@/nest/core/node/nodeParameter";
+import { NodeParameter } from "@nest/core/node/nodeParameter";
 
 const props = defineProps({
   param: NodeParameter,

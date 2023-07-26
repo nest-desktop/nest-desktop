@@ -8,7 +8,10 @@
     elevation="0"
     rounded="0"
   >
-    <v-expansion-panel-title style="min-height: 52px; height: 52px">
+    <v-expansion-panel-title
+      class="panel-title"
+      style="min-height: 52px; height: 52px"
+    >
       <v-row no-gutters>
         <div style="pointer-events: none">
           <v-btn icon size="small">
@@ -51,6 +54,7 @@
         <v-spacer />
 
         <v-btn
+          class="d-print-none menu"
           icon="mdi-dots-vertical"
           size="small"
           @click.stop="() => console.log('bing')"
@@ -59,7 +63,7 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <v-row no-gutters class="mx-1">
+      <v-row class="conn-spec mx-1" no-gutters>
         <v-select
           :disabled="
             connection.source.size === 1 && connection.target.size === 1
@@ -73,47 +77,47 @@
           variant="outlined"
         />
 
-        <v-menu :close-on-content-click="false">
-          <template #activator="{ props }">
-            <v-btn
-              :disabled="Object.keys(connection.params).length === 0"
-              class="ma-auto"
-              color="primary"
-              icon="mdi-order-bool-ascending-variant"
-              size="small"
-              v-bind="props"
-              variant="text"
-            />
-          </template>
+        <div class="d-print-none menu align-center justify-center my-auto mx-1">
+          <v-menu :close-on-content-click="false">
+            <template #activator="{ props }">
+              <v-btn
+                :disabled="Object.keys(connection.params).length === 0"
+                color="primary"
+                icon="mdi-order-bool-ascending-variant"
+                size="small"
+                v-bind="props"
+                variant="text"
+              />
+            </template>
 
-          <v-card>
-            <v-card-text>
-              <v-checkbox
-                :color="connection.source.color"
-                :key="index"
-                :label="param.label"
-                :value="param.id"
-                density="compact"
-                hide-details
-                v-for="(param, index) in Object.values(connection.params)"
-                v-model="connection.paramsVisible"
-              >
-                <template #append>
-                  {{ param.id }}: {{ param.value }}
-                  {{ param.unit }}
-                </template>
-              </v-checkbox>
-            </v-card-text>
-          </v-card>
-        </v-menu>
+            <v-card>
+              <v-card-text>
+                <v-checkbox
+                  :color="connection.source.color"
+                  :key="index"
+                  :label="param.label"
+                  :value="param.id"
+                  density="compact"
+                  hide-details
+                  v-for="(param, index) in Object.values(connection.params)"
+                  v-model="connection.paramsVisible"
+                >
+                  <template #append>
+                    {{ param.id }}: {{ param.value }}
+                    {{ param.unit }}
+                  </template>
+                </v-checkbox>
+              </v-card-text>
+            </v-card>
+          </v-menu>
 
-        <v-btn
-          class="menu ma-auto"
-          color="primary"
-          icon="mdi-dots-vertical"
-          size="small"
-          variant="text"
-        />
+          <v-btn
+            color="primary"
+            icon="mdi-dots-vertical"
+            size="small"
+            variant="text"
+          />
+        </div>
       </v-row>
 
       <v-list density="compact" v-if="connection.paramsVisible.length > 0">
@@ -124,7 +128,11 @@
         />
       </v-list>
 
-      <v-row no-gutters class="mx-1" v-if="!connection.view.connectRecorder()">
+      <v-row
+        class="syn-spec mx-1"
+        no-gutters
+        v-if="!connection.view.connectRecorder()"
+      >
         <v-select
           :disabled="connection.synapse.models.length < 2"
           :items="connection.synapse.models"
@@ -137,49 +145,48 @@
           v-model="connection.synapse.modelId"
           variant="outlined"
         />
+        <div class="d-print-none menu align-center justify-center my-auto mx-1">
+          <v-menu :close-on-content-click="false">
+            <template #activator="{ props }">
+              <v-btn
+                color="primary"
+                icon="mdi-order-bool-ascending-variant"
+                size="small"
+                v-bind="props"
+                variant="text"
+              />
+            </template>
 
-        <v-menu :close-on-content-click="false">
-          <template #activator="{ props }">
-            <v-btn
-              class="ma-auto"
-              color="primary"
-              icon="mdi-order-bool-ascending-variant"
-              size="small"
-              v-bind="props"
-              variant="text"
-            />
-          </template>
+            <v-card>
+              <v-card-text>
+                <v-checkbox
+                  :color="connection.source.color"
+                  :key="index"
+                  :label="param.label"
+                  :value="param.id"
+                  density="compact"
+                  hide-details
+                  v-for="(param, index) in Object.values(
+                    connection.synapse.modelParams
+                  )"
+                  v-model="connection.synapse.paramsVisible"
+                >
+                  <template #append>
+                    {{ param.id }}: {{ param.value }}
+                    {{ param.unit }}
+                  </template>
+                </v-checkbox>
+              </v-card-text>
+            </v-card>
+          </v-menu>
 
-          <v-card>
-            <v-card-text>
-              <v-checkbox
-                :color="connection.source.color"
-                :key="index"
-                :label="param.label"
-                :value="param.id"
-                density="compact"
-                hide-details
-                v-for="(param, index) in Object.values(
-                  connection.synapse.modelParams
-                )"
-                v-model="connection.synapse.paramsVisible"
-              >
-                <template #append>
-                  {{ param.id }}: {{ param.value }}
-                  {{ param.unit }}
-                </template>
-              </v-checkbox>
-            </v-card-text>
-          </v-card>
-        </v-menu>
-
-        <v-btn
-          class="ma-auto"
-          color="primary"
-          icon="mdi-dots-vertical"
-          size="small"
-          variant="text"
-        />
+          <v-btn
+            color="primary"
+            icon="mdi-dots-vertical"
+            size="small"
+            variant="text"
+          />
+        </div>
       </v-row>
 
       <v-list
@@ -221,6 +228,22 @@ const rules = [
 
 <style lang="scss">
 .node-connection {
+  .panel-title,
+  .conn-spec,
+  .syn-spec {
+    .menu {
+      opacity: 0;
+    }
+  }
+
+  .panel-title:hover,
+  .conn-spec:hover,
+  .syn-spec:hover {
+    .menu {
+      opacity: 1;
+    }
+  }
+
   .v-expansion-panel-text__wrapper {
     padding: 0;
   }

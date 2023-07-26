@@ -7,8 +7,8 @@ import { logger as mainLogger } from "@/utils/logger";
 
 import { ActivityAnimationGraph } from "@nest/graph/activityGraph/activityAnimationGraph";
 import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
-import { ActivityChartPanelProps } from "@/nest/graph/activityGraph/activityChart/activityChartPanel";
-import { Project } from "@/nest/core/project/project";
+import { ActivityChartPanelProps } from "@nest/graph/activityGraph/activityChart/activityChartPanel";
+import { Project } from "@nest/core/project/project";
 
 export class ActivityGraph {
   private _project: Project;

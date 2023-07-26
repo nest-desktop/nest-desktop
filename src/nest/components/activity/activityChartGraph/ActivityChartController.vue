@@ -128,7 +128,7 @@ import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import Card from "@/components/common/Card.vue";
 
 // import { NodeRecord } from "@nest/core/node/nodeRecord";
-import { ActivityChartGraph } from "@/nest/graph/activityGraph/activityChartGraph";
+import { ActivityChartGraph } from "@nest/graph/activityGraph/activityChartGraph";
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 // import ActivityChartPanelMenuPopover from "@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue";
 // import ActivityChartPanelToolbar from "@/components/activity/activityChart/ActivityChartPanelToolbar.vue";
