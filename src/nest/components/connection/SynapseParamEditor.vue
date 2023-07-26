@@ -23,15 +23,14 @@
         v-else
       />
 
-      <v-menu :close-on-content-click="false" density="compact">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
+            class="d-print-none menu align-center justify-center my-auto"
             color="primary"
-            class="menu align-center justify-center my-auto"
             icon="mdi-dots-vertical"
             size="x-small"
             v-bind="props"
-            variant="text"
           />
         </template>
 

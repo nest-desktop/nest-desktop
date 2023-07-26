@@ -1,6 +1,6 @@
 <template>
-  <card :color="node.color" class="node ma-1" v-if="node">
-    <v-card-title class="mt-2 ml-10">
+  <card :color="node.color" class="node ma-1">
+    <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
         @update:model-value="state.menu = true"
@@ -32,13 +32,10 @@
         </template>
 
         <template #append>
-          <v-menu
-            :close-on-content-click="false"
-            density="compact"
-            v-model="state.menu"
-          >
+          <v-menu :close-on-content-click="false" v-model="state.menu">
             <template #activator="{ props }">
               <v-btn
+                class="d-print-none menu"
                 color="primary"
                 icon="mdi-order-bool-ascending-variant"
                 size="small"
@@ -105,9 +102,10 @@
             </v-card>
           </v-menu>
 
-          <v-menu :close-on-content-click="false" density="compact">
+          <v-menu :close-on-content-click="false">
             <template #activator="{ props }">
               <v-btn
+                class="d-print-none menu"
                 color="primary"
                 icon="mdi-dots-vertical"
                 size="small"
@@ -116,7 +114,7 @@
               />
             </template>
 
-            <list :items="items" />
+            <list :items="items" density="compact" />
           </v-menu>
         </template>
       </v-select>
@@ -134,11 +132,12 @@
               label="population size"
               v-model="node.size"
             />
-            <v-menu :close-on-content-click="false" density="compact">
+
+            <v-menu :close-on-content-click="false">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
-                  class="menu align-center justify-center my-auto"
+                  class="d-print-none menu align-center justify-center my-auto"
                   icon="mdi-dots-vertical"
                   size="x-small"
                   v-bind="props"
@@ -274,6 +273,18 @@ const items = [
 
 <style lang="scss">
 .node {
+  .node-title {
+    .menu {
+      opacity: 0;
+    }
+  }
+
+  .node-title:hover {
+    .menu {
+      opacity: 1;
+    }
+  }
+
   .v-list {
     overflow: visible;
 

@@ -5,7 +5,6 @@
       :position-x="state.menu.position.x"
       :position-y="state.menu.position.y"
       :value="state.menu.show"
-      transition="slide-y-transition"
     >
       <v-color-picker
         @update:color="graph.updateRecordsColor()"
@@ -20,10 +19,12 @@
       <v-btn @click="resetPanels" icon="mdi-reload" size="small" />
 
       <v-spacer />
-      <v-menu :close-on-content-click="false" left offset-y>
+
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn prepend-icon="mdi-plus" v-bind="props"> Add panel </v-btn>
         </template>
+
         <activity-chart-panel-menu-popover @changed="addPanel" />
       </v-menu>
     </v-toolbar>

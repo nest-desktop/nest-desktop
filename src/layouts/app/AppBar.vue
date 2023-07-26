@@ -1,19 +1,18 @@
 <template>
-  <v-menu transition="slide-y-transition">
+  <v-menu>
     <template #activator="{ props }">
       <v-btn
         append-icon="mdi-menu-down"
-        size="small"
+        size="x-small"
         v-bind="props"
         variant="text"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon
             :color="appStore.simulator.color"
             :icon="appStore.simulator.icon"
           />
         </template>
-
         {{ appStore.simulator.title }}
       </v-btn>
     </template>
@@ -25,20 +24,19 @@
         @click="() => Object.assign(appStore.simulator, item)"
         v-for="(item, index) in simulatorItems"
       >
-        <template v-slot:prepend>
-          <v-icon :icon="item.icon" :color="item.color" />
+        <template #prepend>
+          <v-icon :icon="item.icon" :color="item.color" size="small" />
         </template>
-
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
 
-  <v-menu transition="slide-y-transition">
+  <v-menu>
     <template #activator="{ props }">
       <v-btn
         append-icon="mdi-menu-down"
-        size="small"
+        size="x-small"
         v-bind="props"
         variant="text"
       >
@@ -53,7 +51,10 @@
         @click="item.onClick"
         v-for="(item, index) in settingsItems"
       >
-        {{ item.title }}
+        <template #prepend>
+          <v-icon :icon="item.icon" size="small" />
+        </template>
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -87,11 +88,13 @@ DatabaseService;
 
 const settingsItems = [
   {
+    icon: "mdi-cog-refresh-outline",
     id: "clearConfig",
     title: "Clear config",
     onClick: () => localStorage.clear(),
   },
   {
+    icon: "mdi-database-refresh-outline",
     id: "destroyDatabase",
     title: "Destroy database",
     onClick: () => {

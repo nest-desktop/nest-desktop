@@ -10,11 +10,9 @@
       variant="outlined"
     />
 
-    <v-menu location="end" transition="slide-x-transition">
+    <v-menu>
       <template #activator="{ props }">
-        <v-btn icon size="small" v-bind="props">
-          <v-icon icon="mdi-dots-vertical" />
-        </v-btn>
+        <v-btn icon="mdi-dots-vertical" size="small" v-bind="props" />
       </template>
 
       <v-list density="compact">
@@ -23,10 +21,9 @@
           :value="index"
           v-for="(item, index) in menuItems"
         >
-          <template v-slot:prepend>
+          <template #prepend>
             <v-icon :icon="item.icon"></v-icon>
           </template>
-
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -55,7 +52,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useModelDBStore } from '@nest/store/model/modelDBStore';
+import { useModelDBStore } from "@nest/store/model/modelDBStore";
 const modelDBStore = useModelDBStore();
 
 const menuItems = [

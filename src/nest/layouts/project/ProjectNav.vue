@@ -15,11 +15,9 @@
       <v-icon icon="mdi-plus" />
     </v-btn>
 
-    <v-menu transition="slide-y-transition">
+    <v-menu>
       <template #activator="{ props }">
-        <v-btn size="small" icon v-bind="props">
-          <v-icon icon="mdi-dots-vertical" />
-        </v-btn>
+        <v-btn icon="mdi-dots-vertical" size="small" v-bind="props" />
       </template>
 
       <v-list density="compact">
@@ -55,7 +53,7 @@
           variant="text"
         />
 
-        <v-menu location="end" transition="slide-x-transition">
+        <v-menu>
           <template #activator="{ props }">
             <v-btn
               @click="(e: MouseEvent) => e.preventDefault()"
@@ -73,10 +71,9 @@
               :key="index"
               :value="index"
             >
-              <template v-slot:prepend>
-                <v-icon :icon="item.icon"></v-icon>
+              <template #prepend>
+                <v-icon :icon="item.icon" />
               </template>
-
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
