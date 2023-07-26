@@ -18,7 +18,7 @@
         v-else
       />
 
-      <v-menu :close-on-content-click="false" density="compact">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
             color="primary"
@@ -26,7 +26,6 @@
             icon="mdi-dots-vertical"
             size="x-small"
             v-bind="props"
-            variant="text"
           />
         </template>
 

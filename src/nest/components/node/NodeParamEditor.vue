@@ -23,7 +23,7 @@
         v-else
       />
 
-      <v-menu :close-on-content-click="false" density="compact">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
             color="primary"

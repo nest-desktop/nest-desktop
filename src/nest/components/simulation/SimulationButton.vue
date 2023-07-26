@@ -1,44 +1,41 @@
 <template>
   <div class="simulationButton">
-    <v-menu :close-on-content-click="false" offset-y>
-      <template #activator="{ props }">
-        <div class="btn-split text-no-wrap">
-          <v-btn
-            :disabled="state.disabled"
-            :loading="simulation.state.running"
-            @click="projectStore.startSimulation()"
-            class="btn-main"
-            variant="outlined"
-            title="Simulate"
-            prepend-icon="mdi-play"
-          >
-            <span v-if="simulation.code.runSimulation"> Simulate </span>
-            <span v-else>Prepare</span>
-          </v-btn>
+    <div class="btn-split text-no-wrap">
+      <v-btn
+        :disabled="state.disabled"
+        :loading="simulation.state.running"
+        @click="projectStore.startSimulation()"
+        class="btn-main"
+        variant="outlined"
+        title="Simulate"
+        prepend-icon="mdi-play"
+      >
+        <span v-if="simulation.code.runSimulation"> Simulate </span>
+        <span v-else>Prepare</span>
+      </v-btn>
 
-          <v-btn class="btn-append" variant="outlined" v-bind="props">
-            <v-icon icon="mdi-menu-down" />
-          </v-btn>
-        </div>
-      </template>
+      <v-btn class="btn-append" variant="outlined">
+        <v-icon icon="mdi-menu-down" />
 
-      <v-list density="compact">
-        <v-list-item
-          :key="index"
-          @click="item.onClick"
-          v-for="(item, index) in state.items"
-          v-show="item.show()"
-        >
-          <template #prepend="{ isActive }">
-            <v-list-item-action start>
-              <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
-            </v-list-item-action>
-          </template>
+        <v-menu :close-on-content-click="false" activator="parent">
+          <v-list density="compact">
+            <v-list-item
+              :key="index"
+              @click="item.onClick"
+              v-for="(item, index) in state.items"
+            >
+              <template #prepend="{ isActive }">
+                <v-list-item-action start>
+                  <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
+                </v-list-item-action>
+              </template>
 
-          <v-list-item-title> {{ item.title }} </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+              <v-list-item-title> {{ item.title }} </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+    </div>
   </div>
 </template>
 

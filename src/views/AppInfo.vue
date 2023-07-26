@@ -22,35 +22,28 @@
       <v-col :cols="12" :md="12" :xl="8" :offset-xl="2">
         <v-row v-if="state.includeProjectButtons">
           <v-col :lg="4" :xs="6" :offset-lg="2">
-            <v-btn
-              block
-              color="blue"
-              flat
-              size="large"
-              to="/nest/project"
-            >
-              <v-icon icon="mdi-plus" left />
+            <v-btn block color="blue" flat size="large" to="/nest/project">
+              <template #prepend>
+                <v-icon icon="mdi-plus" />
+              </template>
               Start a new project
             </v-btn>
           </v-col>
           <v-col :lg="4" :xs="6">
             <v-menu>
               <template #activator="{ props }">
-                <v-btn
-                  block
-                  color="blue"
-                  flat
-                  size="large"
-                  v-bind="props"
-                >
-                  <v-spacer />
-                  <v-icon icon="'mdi-upload-outline'" left />
+                <v-btn block color="blue" flat size="large" v-bind="props">
+                  <template #prepend>
+                    <v-icon icon="mdi-upload-outline" />
+                  </template>
                   Load a project
-                  <v-spacer />
-                  <v-icon icon="'mdi-dots-vertical'" right />
+                  <template #append>
+                    <v-icon icon="mdi-dots-vertical" />
+                  </template>
                 </v-btn>
               </template>
-              <v-list dense>
+
+              <v-list density="compact">
                 <v-list-item
                   :key="index"
                   :to="`/nest/project/${project._id}`"

@@ -12,7 +12,7 @@ import "./main.scss";
 
 // Composables
 import * as components from "vuetify/components";
-import * as directives from 'vuetify/directives'
+import * as directives from "vuetify/directives";
 import { VDataTable, VDataTableVirtual } from "vuetify/labs/VDataTable";
 import { createVuetify } from "vuetify";
 
@@ -64,6 +64,9 @@ export default createVuetify({
     //     VBtn: { size: "small", variant: "outlined", ripple: true },
     //   },
     // },
+    VMenu: {
+      transition: "slide-y-transition",
+    },
   },
   directives,
   theme: {
