@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import combineURLs from 'axios/lib/helpers/combineURLs';
 import { reactive, UnwrapRef } from '@vue/composition-api';
 
@@ -6,6 +6,7 @@ import { Config } from './config';
 
 export class Backend extends Config {
   private _state: UnwrapRef<any>;
+  private _instance: AxiosInstance;
 
   constructor(name: string, seek = { path: '', port: 0, versionPath: '' }) {
     super(name);
@@ -15,6 +16,8 @@ export class Backend extends Config {
       seek,
       version: {},
     });
+
+    this._instance = axios.create({ baseURL: this.url });
   }
 
   get enabled(): boolean {
@@ -38,8 +41,8 @@ export class Backend extends Config {
     return this.config.hostname || window.location.hostname || 'localhost';
   }
 
-  get instance(): any {
-    return axios.create({ baseURL: this.url });
+  get instance(): AxiosInstance {
+    return this._instance;
   }
 
   get path(): string {
@@ -103,6 +106,7 @@ export class Backend extends Config {
     }
 
     this.updateConfig({ hostname, path, port, protocol });
+    this._instance.defaults.baseURL = value;
   }
 
   /**
@@ -149,7 +153,7 @@ export class Backend extends Config {
    * @param url The URL which should be pinged.
    */
   async ping(url: string): Promise<any> {
-    return axios
+    return this.instance
       .get(combineURLs(url, this.state.seek.versionPath))
       .then((response: any) => {
         switch (response.status) {
@@ -169,6 +173,16 @@ export class Backend extends Config {
       .catch(() => {
         this.state.ready = false;
       });
+  }
+
+  /**
+   * Update authorization token in instance headers.
+   */
+  updateAuthToken(itemKey: string): void {
+    const token = localStorage.getItem(itemKey);
+    if (token) {
+      this._instance.defaults.headers.Authorization = `Bearer ${token}`;
+    }
   }
 
   /**
