@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
-import './registerServiceWorker';
-import combineURLs from 'axios/lib/helpers/combineURLs';
+
+import { registerServiceWorker } from './registerServiceWorker';
 
 import router from './router';
 import vuetify from './plugins/vuetify';
@@ -42,8 +42,9 @@ if (process.env.IS_ELECTRON) {
   };
   mountApp();
 } else {
+  registerServiceWorker();
   // Load the data from config.json for the global config and mount the app.
-  fetch(combineURLs(process.env.BASE_URL, 'config/app.json'))
+  fetch('./config/app.json') // use relative path.
     .then(response => response.json())
     .then(appConfig => (Vue.prototype.$appConfig = appConfig))
     .finally(mountApp);
