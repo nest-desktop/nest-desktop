@@ -167,11 +167,6 @@ export class NodeGraphConnector {
    * Render all node connectors.
    */
   render(): void {
-    console.log(
-      "render",
-      this._networkGraph.workspace.state.dragLine,
-      this._networkGraph.workspace.state.dragging
-    );
     const connector: Selection<any, any, any, any> = select("g#nodes")
       .selectAll("g.node")
       .selectAll("g.connector");
