@@ -80,6 +80,17 @@ export class ConnectionView {
     return { x: path.x2, y: path.y2 };
   }
 
+  get opacity(): boolean {
+    return (
+      this._connection.source.connections.length === 1 ||
+      this._connection.connections.state.focusedConnection?.source !==
+        this._connection.source ||
+      !this._connection.connections.state.focusedConnection ||
+      this._connection.state.isFocused ||
+      this._connection.state.isSelected
+    );
+  }
+
   get pathCentroidPosition(): { x: number; y: number } {
     const source = this._connection.source.view.state.position;
     const target = this._connection.view.markerEndPosition;

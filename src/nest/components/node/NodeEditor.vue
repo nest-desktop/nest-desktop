@@ -165,13 +165,7 @@
         >
           <connection-editor
             :style="{
-              opacity:
-                node.connections.length === 1 ||
-                !connection.connections.state.focusedConnection ||
-                connection.state.isFocused ||
-                connection.state.isSelected
-                  ? 1
-                  : 0.3,
+              opacity: connection.view.opacity ? 1 : 0.3,
             }"
             :key="index"
             :connection="connection"
