@@ -81,6 +81,7 @@ export class NodeView {
     this._state.color = value === "none" || value === "" ? undefined : value;
     this._node.network.clean();
   }
+
   get label(): string {
     if (this._state.label) {
       return this._state.label;
@@ -121,6 +122,15 @@ export class NodeView {
     }
 
     return label;
+  }
+
+  get opacity(): boolean {
+    return true || (
+      this._node.nodes.state.selectedNode == null ||
+      (this._node.nodes.state.selectedNode != null &&
+        this._node.state.isSelected) ||
+      (this._node.nodes.state.focusedNode != null && this._node.state.isFocused)
+    );
   }
 
   get state(): UnwrapRef<NodeViewState> {

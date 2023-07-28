@@ -218,16 +218,7 @@ export class NodeGraphShape {
           "stroke-width",
           (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
         )
-        .style(
-          "opacity",
-          !this._networkGraph.network.nodes.state.selectedNode ||
-            (this._networkGraph.network.nodes.state.selectedNode &&
-              node.state.isSelected) ||
-            (this._networkGraph.network.nodes.state.focusedNode &&
-              node.state.isFocused)
-            ? "1"
-            : "0.6"
-        );
+        .style("opacity", node.view.opacity ? 1 : 0.6);
 
       elem
         .select("text")
