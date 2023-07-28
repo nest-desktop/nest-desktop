@@ -156,13 +156,10 @@
       </v-list>
     </v-card-text>
 
-    <v-card-actions
-      style="min-height: 40px"
-      v-if="node.state.connectionsLength > 0"
-    >
+    <v-card-actions style="min-height: 40px" v-if="node.connections.length > 0">
       <v-row>
         <v-expansion-panels
-          :key="node.state.connectionsLength"
+          :key="node.connections.length"
           v-model="node.state.connectionPanelIdx"
           variant="accordion"
         >

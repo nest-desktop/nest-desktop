@@ -65,6 +65,7 @@ export class NodeGraphConnector {
       .attr("stroke-width", this.strokeWidth)
       .on("click", (e: MouseEvent, n: Node) => {
         this.drag(e, n);
+        this.render();
       })
       // @ts-ignore
       .call(
@@ -126,7 +127,9 @@ export class NodeGraphConnector {
    * Call on dragging.
    */
   drag(e: MouseEvent, node: Node): void {
-    node.state.select();
+    if (!node.state.isSelected) {
+      node.state.select();
+    }
     this._networkGraph.workspace.reset();
     this._networkGraph.workspace.dragline.init(e);
   }
@@ -164,22 +167,30 @@ export class NodeGraphConnector {
    * Render all node connectors.
    */
   render(): void {
+    console.log(
+      "render",
+      this._networkGraph.workspace.state.dragLine,
+      this._networkGraph.workspace.state.dragging
+    );
     const connector: Selection<any, any, any, any> = select("g#nodes")
       .selectAll("g.node")
       .selectAll("g.connector");
-
-    const duration: number = this._networkGraph.workspace.state.dragging
-      ? 0
-      : 250;
-    const t: Transition<any, any, any, any> = transition().duration(duration);
 
     const workspace = this._networkGraph.workspace;
     const connectionDrag: boolean =
       workspace.state.dragLine || workspace.state.dragging;
 
+    const duration: number = connectionDrag ? 0 : 250;
+    const t: Transition<any, any, any, any> = transition().duration(duration);
+
     connector
       .transition(t)
-      .delay(this._networkGraph.network?.nodes.state.focusedNode ? 0 : 1000)
+      .delay(
+        this._networkGraph.network?.nodes.state.focusedNode ||
+          workspace.state.dragLine
+          ? 0
+          : 1000
+      )
       .style("opacity", (n: Node) =>
         n.state.isFocused && !connectionDrag ? "1" : "0"
       );

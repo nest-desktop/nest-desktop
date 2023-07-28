@@ -48,7 +48,7 @@ const nodes = computed(() => projectStore.project.network.nodes as Nodes);
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
   { icon: "nest:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "mdi-shape", id: "neuron", title: "neuron" },
+  { icon: "nest:neuron-shape", id: "neuron", title: "neuron" },
   { icon: "nest:recorder", id: "recorder", title: "recorder" },
   // { icon: "custom:copyModel", id: "model", title: "model" },
 ];
