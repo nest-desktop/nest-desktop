@@ -1,15 +1,16 @@
 <template>
   <v-app>
-    <v-system-bar flat color="systembar">
+    <v-system-bar class="d-print-none" color="systembar" flat>
       <app-bar />
     </v-system-bar>
 
-    <v-navigation-drawer permanent rail rail-width="64">
+    <v-navigation-drawer class="d-print-none" permanent rail rail-width="64">
       <app-navigation />
 
       <template #append>
-        <v-row align="center" justify="center" no-gutters>
+        <v-row align="center" class="my-1" justify="center" no-gutters>
           <v-btn
+            :color="item.color ? item.color : 'primary'"
             :href="item.href"
             :icon="item.text ? false : item.icon"
             :key="index"
@@ -21,7 +22,7 @@
             :title="item.title"
             :to="item.to"
             @click.stop="item.click ? item.click() : undefined"
-            rounded="0"
+            rounded="1"
             v-for="(item, index) in items"
             variant="plain"
           />
@@ -39,15 +40,32 @@
 import { useTheme } from "vuetify";
 const theme = useTheme();
 
+import { useAppStore } from "@/store/appStore";
+const appStore = useAppStore();
+
 import AppBar from "./AppBar.vue";
 import AppNavigation from "./AppNavigation.vue";
 
-const toggleTheme = () =>
-  (theme.global.name.value = theme.global.current.value.dark
-    ? "light"
-    : "dark");
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
+  appStore.darkMode = theme.global.current.value.dark;
+
+  window.dispatchEvent(new Event("darkmode"));
+};
+
+const toggleWebGL = () => {
+  appStore.webGL = !appStore.webGL;
+  console.log(appStore.webGL);
+};
 
 const items = [
+  {
+    click: toggleWebGL,
+    icon: "mdi-google-downasaur",
+    id: "webgl",
+    title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
+    color: appStore.webGL ? "green" : "red",
+  },
   {
     click: toggleTheme,
     icon: "mdi-theme-light-dark",

@@ -1,11 +1,12 @@
 appId: com.electron.nest-desktop
+asar: true
 deb:
   depends:
-    - gconf2
     - gconf-service
+    - gconf2
     - libnotify4
-    - libxtst6
     - libnss3
+    - libxtst6
   synopsis: NEST Desktop
 icon: icons/icon.png
 linux:
@@ -16,7 +17,12 @@ linux:
     # - snap
 productName: nest-desktop
 directories:
+  # buildResources: "assets"
   output: "release/${version}"
 files:
+  # - assets
   - dist
   - dist-electron
+# extraResources:
+#   from: public/assets
+#   to: assets

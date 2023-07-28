@@ -1,0 +1,138 @@
+{
+  "a": {
+    "id": "a",
+    "label": "a",
+    "max": 10,
+    "min": -10,
+    "step": 0.01,
+    "value": 1
+  },
+  "c": {
+    "id": "c",
+    "label": "c",
+    "max": 10,
+    "min": -10,
+    "step": 0.01,
+    "value": 0
+  },
+  "kappa": {
+    "id": "kappa",
+    "label": "kappa",
+    "max": 10,
+    "min": 0,
+    "step": 0.1,
+    "value": 1
+  },
+  "max": {
+    "id": "max",
+    "label": "max",
+    "max": 10,
+    "min": 0,
+    "step": 0.01,
+    "value": 1
+  },
+  "mean": {
+    "id": "mean",
+    "label": "mean",
+    "max": 10,
+    "min": -10,
+    "step": 0.01,
+    "value": 0
+  },
+  "mean_x": {
+    "id": "mean_x",
+    "label": "mean x",
+    "max": 10,
+    "min": -10,
+    "step": 0.01,
+    "value": 0
+  },
+  "mean_y": {
+    "id": "mean_y",
+    "label": "mean y",
+    "max": 10,
+    "min": -10,
+    "step": 0.01,
+    "value": 0
+  },
+  "min": {
+    "id": "min",
+    "label": "min",
+    "max": 10,
+    "min": 0,
+    "step": 0.01,
+    "value": 0
+  },
+  "mu": {
+    "id": "mu",
+    "label": "mu",
+    "max": 10,
+    "min": 0,
+    "step": 0.01,
+    "value": 0
+  },
+  "p_center": {
+    "id": "p_center",
+    "label": "p center",
+    "max": 10,
+    "min": 0,
+    "step": 0.01,
+    "value": 1
+  },
+  "rho": {
+    "id": "rho",
+    "label": "rho",
+    "max": 1,
+    "min": 0,
+    "step": 0.01,
+    "value": 0
+  },
+  "sigma": {
+    "id": "sigma",
+    "label": "sigma",
+    "max": 10,
+    "min": 0.01,
+    "step": 0.01,
+    "value": 0.1
+  },
+  "sigma_x": {
+    "id": "sigma_x",
+    "label": "sigma x",
+    "max": 10,
+    "min": 0.01,
+    "step": 0.01,
+    "value": 0.1
+  },
+  "sigma_y": {
+    "id": "sigma_y",
+    "label": "sigma y",
+    "max": 10,
+    "min": 0.01,
+    "step": 0.01,
+    "value": 0.1
+  },
+  "tau": {
+    "id": "tau",
+    "label": "tau",
+    "max": 10,
+    "min": 0.01,
+    "step": 0.01,
+    "value": 1
+  },
+  "theta": {
+    "id": "theta",
+    "label": "theta",
+    "max": 10,
+    "min": 0,
+    "step": 0.1,
+    "value": 1
+  },
+  "value": {
+    "id": "value",
+    "label": "value",
+    "max": 10,
+    "min": -10,
+    "step": 0.01,
+    "value": 0
+  }
+}

@@ -11,7 +11,7 @@
       :key="index"
       :ripple="false"
       :title="item.title"
-      :to="'/' + item.id"
+      :to="item.path"
       @click.stop="navStore.toggle(item)"
       class="justify-center"
       height="72"
@@ -33,16 +33,14 @@ const navItems = [
     id: "project",
     icon: "nest:network",
     title: "Project",
+    path: "/nest/project",
   },
   {
     id: "model",
     icon: "nest:logo",
     title: "Model",
+    path: "/nest/model",
   },
 ];
 
-const toggleTheme = () =>
-  (theme.global.name.value = theme.global.current.value.dark
-    ? "light"
-    : "dark");
 </script>

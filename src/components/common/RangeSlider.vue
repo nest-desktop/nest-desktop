@@ -5,11 +5,11 @@
     hide-details
     strict
     style="position: relative"
-    v-model="modelValue"
+    v-model="value"
   >
     <template #prepend>
       <v-text-field
-        :label="props.inputLabel[0]"
+        :label="(props.inputLabel[0] as string)"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -22,7 +22,7 @@
     </template>
     <template #append>
       <v-text-field
-        :label="props.inputLabel[1]"
+        :label="(props.inputLabel[1] as string)"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, watch } from "vue";
+import { computed, reactive, UnwrapRef, watch } from "vue";
 
 const props = defineProps({
   inputLabel: { default: ["lower", "upper"], type: Array<String> },
@@ -46,12 +46,13 @@ const props = defineProps({
   unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);
-const modelRef = reactive({
-  lower: props.modelValue[0],
-  upper: props.modelValue[1],
+const modelRef: UnwrapRef<{ lower: number; upper: number }> = reactive({
+  lower: props.modelValue[0] as number,
+  upper: props.modelValue[1] as number,
 });
 
-const modelValue = computed({
+// @ts-ignore
+const value = computed({
   get: () => [modelRef.lower, modelRef.upper],
   set: (value) => {
     modelRef.lower = value[0];
@@ -79,8 +80,8 @@ const upper = computed({
 watch(
   () => [props.modelValue],
   () => {
-    modelRef.lower = props.modelValue[0];
-    modelRef.upper = props.modelValue[1];
+    modelRef.lower = props.modelValue[0] as number;
+    modelRef.upper = props.modelValue[1] as number;
   }
 );
 </script>

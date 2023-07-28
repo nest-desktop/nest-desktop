@@ -1,0 +1,128 @@
+{
+  "elementType": "neuron",
+  "id": "hh_psc_alpha",
+  "label": "HH psc alpha",
+  "recordables": ["Act_m", "Act_n", "I_syn_ex", "I_syn_in", "Inact_h", "V_m"],
+  "params": [
+    {
+      "id": "C_m",
+      "input": "valueSlider",
+      "label": "capacity of the membrane",
+      "max": 500,
+      "min": 0,
+      "step": 1,
+      "unit": "pF",
+      "value": 100
+    },
+    {
+      "id": "E_K",
+      "input": "valueSlider",
+      "label": "potassium reversal potential",
+      "max": 100,
+      "min": -100,
+      "step": 1,
+      "unit": "mV",
+      "value": -77
+    },
+    {
+      "id": "E_L",
+      "input": "valueSlider",
+      "label": "leak reversal potential",
+      "max": 100,
+      "min": -100,
+      "step": 1,
+      "unit": "mV",
+      "value": -54.4
+    },
+    {
+      "id": "E_Na",
+      "input": "valueSlider",
+      "label": "sodium reversal potential",
+      "max": 100,
+      "min": -100,
+      "step": 1,
+      "unit": "mV",
+      "value": 50
+    },
+    {
+      "id": "I_e",
+      "input": "valueSlider",
+      "label": "constant external input current",
+      "max": 100,
+      "min": -100,
+      "step": 1,
+      "unit": "pA",
+      "value": 0
+    },
+    {
+      "id": "V_m",
+      "input": "valueSlider",
+      "label": "initial membrane potential",
+      "max": 100,
+      "min": -100,
+      "step": 1,
+      "unit": "mV",
+      "value": -65
+    },
+    {
+      "id": "g_K",
+      "input": "valueSlider",
+      "label": "potassium conductance",
+      "max": 5000,
+      "min": 10,
+      "step": 10,
+      "unit": "nS",
+      "value": 3600
+    },
+    {
+      "id": "g_L",
+      "input": "valueSlider",
+      "label": "leak conductance",
+      "max": 30,
+      "min": 1,
+      "step": 1,
+      "unit": "nS",
+      "value": 30
+    },
+    {
+      "id": "g_Na",
+      "input": "valueSlider",
+      "label": "sodium conductance",
+      "max": 20000,
+      "min": 100,
+      "step": 100,
+      "unit": "nS",
+      "value": 12000
+    },
+    {
+      "id": "t_ref",
+      "input": "valueSlider",
+      "label": "duration of refractory period",
+      "max": 5,
+      "min": 0.1,
+      "step": 0.1,
+      "unit": "ms",
+      "value": 2
+    },
+    {
+      "id": "tau_syn_ex",
+      "input": "valueSlider",
+      "label": "time constant of the excitatory synapse",
+      "max": 4,
+      "min": 0.1,
+      "step": 0.1,
+      "unit": "ms",
+      "value": 0.2
+    },
+    {
+      "id": "tau_syn_in",
+      "input": "valueSlider",
+      "label": "time constant of the inhibitory synapse",
+      "max": 4,
+      "min": 0.1,
+      "step": 0.1,
+      "unit": "ms",
+      "value": 2
+    }
+  ]
+}

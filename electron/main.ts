@@ -1,35 +1,42 @@
 // electron/main.ts
 // https://vuejsexamples.com/vite-vue3-electron-typescript-template/
-
-import { join } from "path";
-import { app, BrowserWindow } from "electron";
+// https://github.com/electron-vite/vite-plugin-electron/blob/main/examples/quick-start/electron/main.ts
 
 process.env.DIST = join(__dirname, "../dist");
 process.env.PUBLIC = app.isPackaged
   ? process.env.DIST
   : join(process.env.DIST, "../public");
 
+import { join } from "path";
+import { BrowserWindow, app } from "electron";
+
+let win: BrowserWindow | null;
+const preload = join(__dirname, "./preload.js");
 const url = process.env["VITE_DEV_SERVER_URL"];
 
 async function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  win = new BrowserWindow({
+    icon: join(process.env.PUBLIC, "nest-desktop-icon.svg"),
     width: 1200,
     height: 750,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      preload: join(__dirname, "./preload.js"),
+      preload,
     },
   });
 
-  // You can use `process.env.VITE_DEV_SERVER_URL` when the vite command is called `serve`
+  // Test active push message to Renderer-process.
+  win.webContents.on("did-finish-load", () => {
+    win?.webContents.send("main-process-message", new Date().toLocaleString());
+  });
+
   if (url) {
-    mainWindow.loadURL(url);
+    win.loadURL(url);
   } else {
-    // Load your file
-    // @ts-ignore
-    mainWindow.loadFile(join(process.env.DIST, "index.html"));
+    // win.loadFile('dist/index.html')
+    win.loadFile(join(process.env.DIST, "index.html"));
   }
 }
 

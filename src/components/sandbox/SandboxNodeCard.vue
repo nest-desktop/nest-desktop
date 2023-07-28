@@ -18,14 +18,13 @@
           value="components"
         >
           <value-slider
-            v-model="projectStore.project.kernel[0].value"
-            v-bind="projectStore.project.kernel[0]"
-            @update:model-value="update"
+            v-bind="{ label: 'Simulation time', max: 2000 }"
+            v-model="projectMockStore.project.simulation.time"
           />
           <node-card
             :key="index"
-            v-bind="node"
-            v-for="(node, index) in projectStore.project.nodes"
+            :node="(node as Node)"
+            v-for="(node, index) in projectMockStore.project.network.nodes.all"
           />
         </v-window-item>
         <v-window-item
@@ -33,7 +32,7 @@
           transition="no-transition"
           value="values"
         >
-          <pre>{{ projectStore.project.nodes }}</pre>
+          <pre>{{ projectMockStore.project.network.nodes.all }}</pre>
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -43,37 +42,38 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import { useProjectStore } from "@/store/projectStore";
-const projectStore = useProjectStore();
+import { useProjectMockStore } from "@nest/store/project/projectMockStore";
+const projectMockStore = useProjectMockStore();
 
-import NodeCard from "@/components/nest/NodeCard.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
+import NodeCard from "@nest/components/NodeCard.vue";
+import { Node } from "@nest/core/node/node";
 
 const state = reactive({
   tab: "components",
 });
 
-const update = () => {
-  projectStore.project.nodes.forEach((node) => {
-    if (node.params != undefined) {
-      node.params.forEach((param) => {
-        if (param.id === "stop") {
-          const end = param.max === param.value;
-          param.max = projectStore.project.kernel[0].value;
-          if (end) {
-            param.value = param.max;
-          }
-        } else if (param.id === "time") {
-          const end = param.max === param.value[1];
-          param.max = projectStore.project.kernel[0].value;
-          if (end) {
-            param.value[1] = param.max;
-          }
-        }
-      });
-    }
-  });
-};
+// const update = () => {
+//   projectMockStore.project.network.nodes.all.forEach((node) => {
+//     if (node.modelParams != undefined) {
+//       Object.values(node.modelParams).forEach((param) => {
+//         if (param.id === "stop") {
+//           const end = param.max === param.value;
+//           param.max = projectMockStore.project.simulation.time;
+//           if (end) {
+//             param.value = param.max;
+//           }
+//         } else if (param && param.id === "time") {
+//           const end = param.max === param.value[1];
+//           param.max = projectMockStore.project.simulation.time;
+//           if (end) {
+//             param.value[1] = param.max;
+//           }
+//         }
+//       });
+//     }
+//   });
+// };
 </script>
 
 <style lang="scss">

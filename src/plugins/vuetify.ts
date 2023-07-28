@@ -5,17 +5,23 @@
  */
 
 // Styles
+import "vue-toast-notification/dist/theme-sugar.css";
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./main.scss";
 
 // Composables
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
+import { VDataTable, VDataTableVirtual } from "vuetify/labs/VDataTable";
 import { createVuetify } from "vuetify";
 
-import { md1, md2, md3 } from "vuetify/blueprints";
+// import { md1, md2, md3 } from "vuetify/blueprints";
 
 import { mdi } from "vuetify/iconsets/mdi";
-import { nest } from "@/components/iconsets/nest/index";
+import { custom } from "@/components/iconsets/custom";
+import { simulator } from "@/components/iconsets/simulator";
+import { nest } from "@nest/components/iconsets";
 
 const colors = {
   blue: ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
@@ -42,6 +48,11 @@ const colors = {
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  components: {
+    ...components,
+    VDataTable,
+    VDataTableVirtual,
+  },
   // blueprint: md2,
   defaults: {
     // global: {
@@ -53,7 +64,11 @@ export default createVuetify({
     //     VBtn: { size: "small", variant: "outlined", ripple: true },
     //   },
     // },
+    VMenu: {
+      transition: "slide-y-transition",
+    },
   },
+  directives,
   theme: {
     themes: {
       light: {
@@ -62,6 +77,7 @@ export default createVuetify({
           primary: "#424242",
           secondary: "#EEEEEE",
           systembar: "#424242",
+          accent: "#808080",
         },
       },
       dark: {
@@ -70,6 +86,7 @@ export default createVuetify({
           primary: "#EEEEEE",
           secondary: "#424242",
           systembar: "#424242",
+          accent: "#808080",
         },
       },
     },
@@ -78,6 +95,8 @@ export default createVuetify({
     defaultSet: "mdi",
     sets: {
       mdi,
+      custom,
+      simulator,
       nest,
     },
   },

@@ -1,0 +1,200 @@
+{
+  "rules": [
+    {
+      "value": "all_to_all",
+      "label": "all to all",
+      "params": []
+    },
+    {
+      "value": "fixed_indegree",
+      "label": "fixed indegree",
+      "params": [
+        {
+          "format": "integer",
+          "id": "indegree",
+          "variant": "valueSlider",
+          "label": "indegree",
+          "max": 100,
+          "min": 1,
+          "rules": [
+            ["value > 0", "The value must be strictly positive.", "error"]
+          ],
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "id": "allow_autapses",
+          "variant": "checkbox",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "id": "allow_multapses",
+          "variant": "checkbox",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "fixed_outdegree",
+      "label": "fixed outdegree",
+      "params": [
+        {
+          "format": "integer",
+          "id": "outdegree",
+          "variant": "valueSlider",
+          "label": "outdegree",
+          "max": 100,
+          "min": 1,
+          "rules": [
+            ["value > 0", "The value must be strictly positive.", "error"]
+          ],
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "id": "allow_autapses",
+          "variant": "checkbox",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "id": "allow_multapses",
+          "variant": "checkbox",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "fixed_total_number",
+      "label": "fixed total number",
+      "params": [
+        {
+          "format": "integer",
+          "id": "N",
+          "variant": "valueSlider",
+          "label": "N",
+          "max": 1000,
+          "min": 1,
+          "rules": [
+            ["value > 0", "The value must be strictly positive.", "error"]
+          ],
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "id": "allow_autapses",
+          "variant": "checkbox",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "id": "allow_multapses",
+          "variant": "checkbox",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "one_to_one",
+      "label": "one to one",
+      "params": []
+    },
+    {
+      "value": "pairwise_bernoulli",
+      "label": "pairwise Bernoulli",
+      "params": [
+        {
+          "format": "float",
+          "id": "p",
+          "variant": "valueSlider",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "rules": [
+            [
+              "0 < value && value <= 1",
+              "The value must be between 0.01 and 1.",
+              "error"
+            ]
+          ],
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "id": "allow_autapses",
+          "variant": "checkbox",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "id": "use_on_source",
+          "variant": "checkbox",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "symmetric_pairwise_bernoulli",
+      "label": "symmetric pairwise Bernoulli",
+      "params": [
+        {
+          "id": "p",
+          "variant": "valueSlider",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "rules": [
+            [
+              "value > 0 && value <= 1",
+              "The value must be between 0.01 and 1.",
+              "error"
+            ]
+          ],
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "id": "allow_autapses",
+          "variant": "checkbox",
+          "label": "allow autapses",
+          "readonly": true,
+          "value": false,
+          "visible": true
+        },
+        {
+          "id": "make_symmetric",
+          "variant": "checkbox",
+          "label": "make symmetric",
+          "readonly": true,
+          "value": true,
+          "visible": true
+        },
+        {
+          "id": "use_on_source",
+          "variant": "checkbox",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    }
+  ]
+}

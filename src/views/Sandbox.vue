@@ -2,9 +2,13 @@
   <v-container class="sandbox">
     <v-navigation-drawer permanent>
       <v-list nav density="compact">
-        <v-list-item :key="component" :to="`${component}`" :value="component" v-for="(_, component) in components">
-          {{ component }}
-        </v-list-item>
+        <v-list-item
+          :key="component"
+          :title="component"
+          :to="`${component}`"
+          :value="component"
+          v-for="(_, component) in components"
+        />
       </v-list>
     </v-navigation-drawer>
 
@@ -20,13 +24,16 @@ import SandboxButton from "@/components/sandbox/SandboxButton.vue";
 import SandboxButtonToggle from "@/components/sandbox/SandboxButtonToggle.vue";
 import SandboxCard from "@/components/sandbox/SandboxCard.vue";
 import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
+import SandboxDataTable from "@/components/sandbox/SandboxDataTable.vue";
+import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
-import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
+// import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
+import SandboxToast from "@/components/sandbox/SandboxToast.vue";
 
 const props = defineProps({
-  component: {type: String, default: "alert"},
+  component: { type: String, default: "alert" },
 });
 
 const currentComponent = ref(props.component);
@@ -37,13 +44,19 @@ const components: any = {
   buttonToggle: SandboxButtonToggle,
   card: SandboxCard,
   colorPicker: SandboxColorPicker,
+  dataTable: SandboxDataTable,
+  importJSON: SandboxImportJSON,
   itemGroup: SandboxItemGroup,
-  nodeCard: SandboxNodeCard,
+  // nodeCard: SandboxNodeCard,
   slider: SandboxSlider,
   tabs: SandboxTabs,
+  toast: SandboxToast,
 };
 
-watch(() => props.component, () => currentComponent.value = props.component)
+watch(
+  () => props.component,
+  () => (currentComponent.value = props.component)
+);
 </script>
 
 <style lang="scss">
