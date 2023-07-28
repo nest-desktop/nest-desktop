@@ -32,6 +32,7 @@ export class Model extends Config {
 
   private _abbreviation: string;
   private _compartmentParams: { [key: string]: ModelCompartmentParameter } = {}; // model compartmental parameters
+  private _compartmentParamsVisible: string[] = [];
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
   private _id: string; // model id
@@ -39,6 +40,7 @@ export class Model extends Config {
   private _label: string; // model label for view
   private _logger: Logger<ILogObj>;
   private _params: { [key: string]: ModelParameter } = {}; // model parameters
+  private _paramsVisible: string[] = [];
   private _receptors: { [key: string]: ModelReceptor } = {}; // receptor parameters
   private _recordables: any[] = []; // recordables for multimeter
   private _state: UnwrapRef<any>;
@@ -73,6 +75,15 @@ export class Model extends Config {
 
   get compartmentParams(): { [key: string]: ModelCompartmentParameter } {
     return this._compartmentParams;
+  }
+
+  get compartmentParamsVisible(): string[] {
+    return this._compartmentParamsVisible;
+  }
+
+  set compartmentParamsVisible(values: string[]) {
+    this._compartmentParamsVisible = values;
+    this.changes();
   }
 
   get doc(): any {
@@ -173,6 +184,19 @@ export class Model extends Config {
 
   get params(): { [key: string]: ModelParameter } {
     return this._params;
+  }
+
+  get paramsAll(): ModelParameter[] {
+    return Object.values(this._params);
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get receptors(): { [key: string]: ModelReceptor } {

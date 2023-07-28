@@ -23,6 +23,7 @@ export class NodeReceptor {
   private _idx: number; // generative
   private _node: Node; // parent
   private _params: { [key: string]: NodeReceptorParameter } = {};
+  private _paramsVisible: string[] = [];
 
   constructor(node: Node, nodeReceptor: NodeReceptorProps) {
     this._node = node;
@@ -45,20 +46,18 @@ export class NodeReceptor {
   }
 
   get filteredParams(): NodeReceptorParameter[] {
-    return Object.values(this._params).filter(
-      (param: NodeReceptorParameter) => param.state.visible
-    );
+    return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   get hash(): string {
     return this._hash;
   }
 
-  get hasSomeParams(): boolean {
-    return Object.values(this._params).some(
-      (param: NodeReceptorParameter) => param.state.visible
-    );
-  }
+  // get hasSomeParams(): boolean {
+  //   return Object.values(this._params).some(
+  //     (param: NodeReceptorParameter) => param.visible
+  //   );
+  // }
 
   get id(): string {
     return this._id;
@@ -92,6 +91,19 @@ export class NodeReceptor {
 
   set params(values: { [key: string]: NodeReceptorParameter }) {
     this._params = values;
+  }
+
+  get paramsAll(): NodeReceptorParameter[] {
+    return Object.values(this._params);
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get recordables(): any[] {
@@ -194,9 +206,7 @@ export class NodeReceptor {
    *
    */
   resetParameters(): void {
-    Object.values(this._params).forEach((param: NodeReceptorParameter) =>
-      param.reset()
-    );
+    this.paramsAll.forEach((param: NodeReceptorParameter) => param.reset());
     this.changes();
   }
 
@@ -204,8 +214,8 @@ export class NodeReceptor {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: NodeReceptorParameter) => (param.state.visible = false)
+    this.paramsAll.forEach(
+      (param: NodeReceptorParameter) => (param.visible = false)
     );
   }
 
@@ -221,8 +231,8 @@ export class NodeReceptor {
    * Sets all params to visible.
    */
   showAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: NodeReceptorParameter) => (param.state.visible = true)
+    this.paramsAll.forEach(
+      (param: NodeReceptorParameter) => (param.visible = true)
     );
   }
 
@@ -234,7 +244,7 @@ export class NodeReceptor {
     return {
       compIdx: this._compartment ? this._compartment.idx : -1,
       id: this.id,
-      params: Object.values(this._params).map((param: NodeReceptorParameter) =>
+      params: this.filteredParams.map((param: NodeReceptorParameter) =>
         param.toJSON()
       ),
     };

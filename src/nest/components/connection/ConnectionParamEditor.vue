@@ -2,7 +2,7 @@
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
       <v-checkbox
-        :color="param.connection.source.color"
+        :color="param.connection.source.view.color"
         :model-value="(param.value as boolean)"
         @update:model-value="update"
         density="compact"
@@ -11,7 +11,7 @@
         v-if="param.options.variant === 'checkbox'"
       />
       <value-slider
-        :color="param.connection.source.color"
+        :color="param.connection.source.view.color"
         :model-value="(param.value as number)"
         @update:model-value="update"
         v-bind="param.options"

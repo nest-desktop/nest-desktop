@@ -14,13 +14,16 @@ import recorderIcon from "./nodes/RecorderIcon.vue";
 import stimulatorIcon from "./nodes/StimulatorIcon.vue";
 import synapseExcitatoryIcon from "./connections/SynapseExcitatoryIcon.vue";
 import synapseInhibitoryIcon from "./connections/SynapseInhibitoryIcon.vue";
+import synapseRecorderIcon from "./connections/SynapseRecorderIcon.vue";
 
 const customSvgNameToComponent: any = {
   "neuron": neuronIcon,
+  "neuron-mixed": neuronIcon,
   "neuron-excitatory": neuronExcitatoryIcon,
   "neuron-inhibitory": neuronInhibitoryIcon,
   "synapse-excitatory": synapseExcitatoryIcon,
   "synapse-inhibitory": synapseInhibitoryIcon,
+  "synapse-recorder": synapseRecorderIcon,
   connection: connectionIcon,
   logo: nestIcon,
   network: networkIcon,

@@ -5,9 +5,9 @@
     style="height: calc(100vh - 24px - 48px)"
   >
     <iframe
-      :src="`https://nest-simulator.readthedocs.io/en/latest/models/${
-        props.modelId
-      }.html#models-${parseKebabCase(props.modelId as string)}--page-root`"
+      :src="`https://nest-simulator.readthedocs.io/en/latest/models/${modelId}.html#models-${parseKebabCase(
+        modelId
+      )}--page-root`"
       frameborder="0"
       height="100%"
       width="100%"
@@ -16,11 +16,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 
 const props = defineProps({
   modelId: String,
 });
+
+const modelId = computed(() => props.modelId as string);
 
 const parseKebabCase = (text: string) => {
   return text.replaceAll("_", "-");

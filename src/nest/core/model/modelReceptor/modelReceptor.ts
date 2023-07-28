@@ -21,6 +21,7 @@ export class ModelReceptor {
   private _label: string;
   private _model: Model; // parent
   private _params: { [key: string]: ModelReceptorParameter } = {};
+  private _paramsVisible: string[] = [];
   private _recordables: any[] = []; // recordables for multimeter
 
   constructor(model: Model, modelReceptor: ModelReceptorProps) {
@@ -34,9 +35,7 @@ export class ModelReceptor {
   }
 
   get filteredParams(): ModelReceptorParameter[] {
-    return Object.values(this._params).filter(
-      (param: ModelReceptorParameter) => param.state.visible
-    );
+    return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   get hash(): string {
@@ -65,6 +64,19 @@ export class ModelReceptor {
 
   set params(values: { [key: string]: ModelReceptorParameter }) {
     this._params = values;
+  }
+
+  get paramsAll(): ModelReceptorParameter[] {
+    return Object.values(this._params);
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get recordables(): any[] {
@@ -113,7 +125,7 @@ export class ModelReceptor {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    Object.values(this.params).forEach(
+    this.paramsAll.forEach(
       (param: ModelReceptorParameter) => (param.state.visible = false)
     );
   }
@@ -152,12 +164,12 @@ export class ModelReceptor {
     this.changes();
   }
 
-  /**
-   * Sets all params to visible.
-   */
+  // /**
+  //  * Sets all params to visible.
+  //  */
   showAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: ModelReceptorParameter) => (param.state.visible = true)
+    this.paramsAll.forEach(
+      (param: ModelReceptorParameter) => (param.visible = true)
     );
   }
 

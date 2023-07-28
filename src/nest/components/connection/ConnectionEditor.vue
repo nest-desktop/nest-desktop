@@ -15,30 +15,16 @@
       <v-row no-gutters>
         <div style="pointer-events: none">
           <v-btn icon size="small">
-            <node-avatar
-              :color="connection.source.view.color"
-              :elementType="connection.source.model.elementType"
-              :label="connection.source.view.label"
-              :weight="connection.source.view.weight"
-              size="32px"
-            />
+            <node-avatar :node="connection.source" size="32px" />
           </v-btn>
           <v-btn
-            :color="connection.synapse.weight > 0 ? 'blue' : 'red'"
-            :icon="`nest:synapse-${
-              connection.synapse.weight > 0 ? 'excitatory' : 'inhibitory'
-            }`"
+            :color="connection.source.view.color"
+            :icon="connection.synapse.icon"
             size="small"
             variant="text"
           />
           <v-btn icon size="small">
-            <node-avatar
-              :color="connection.target.view.color"
-              :elementType="connection.target.model.elementType"
-              :label="connection.target.view.label"
-              :weight="connection.target.view.weight"
-              size="32px"
-            />
+            <node-avatar :node="connection.target" size="32px" />
           </v-btn>
         </div>
 
@@ -53,152 +39,37 @@
 
         <v-spacer />
 
-        <v-btn
-          class="d-print-none menu"
-          icon="mdi-dots-vertical"
-          size="small"
-          @click.stop="() => console.log('bing')"
-        />
+        <v-menu>
+          <template #activator="{ props }">
+            <v-btn
+              color="primary"
+              icon="mdi-dots-vertical"
+              size="small"
+              variant="text"
+              v-bind="props"
+            />
+          </template>
+
+          <v-list density="compact">
+            <v-list-item
+              :icon="item.icon"
+              :key="index"
+              @click="item.onClick"
+              v-for="(item, index) in items"
+            >
+              <template #prepend>
+                <v-icon :icon="item.icon" />
+              </template>
+              {{ item.title }}
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-row>
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <v-row class="conn-spec mx-1" no-gutters>
-        <v-select
-          :disabled="
-            connection.source.size === 1 && connection.target.size === 1
-          "
-          :items="rules"
-          class="pa-1"
-          density="compact"
-          hide-details
-          label="Connection rule"
-          v-model="connection.rule.value"
-          variant="outlined"
-        />
-
-        <div class="d-print-none menu align-center justify-center my-auto mx-1">
-          <v-menu :close-on-content-click="false">
-            <template #activator="{ props }">
-              <v-btn
-                :disabled="Object.keys(connection.params).length === 0"
-                color="primary"
-                icon="mdi-order-bool-ascending-variant"
-                size="small"
-                v-bind="props"
-                variant="text"
-              />
-            </template>
-
-            <v-card>
-              <v-card-text>
-                <v-checkbox
-                  :color="connection.source.color"
-                  :key="index"
-                  :label="param.label"
-                  :value="param.id"
-                  density="compact"
-                  hide-details
-                  v-for="(param, index) in Object.values(connection.params)"
-                  v-model="connection.paramsVisible"
-                >
-                  <template #append>
-                    {{ param.id }}: {{ param.value }}
-                    {{ param.unit }}
-                  </template>
-                </v-checkbox>
-              </v-card-text>
-            </v-card>
-          </v-menu>
-
-          <v-btn
-            color="primary"
-            icon="mdi-dots-vertical"
-            size="small"
-            variant="text"
-          />
-        </div>
-      </v-row>
-
-      <v-list density="compact" v-if="connection.paramsVisible.length > 0">
-        <connection-param-editor
-          :key="index"
-          :param="connection.params[paramId]"
-          v-for="(paramId, index) in connection.paramsVisible"
-        />
-      </v-list>
-
-      <v-row
-        class="syn-spec mx-1"
-        no-gutters
-        v-if="!connection.view.connectRecorder()"
-      >
-        <v-select
-          :disabled="connection.synapse.models.length < 2"
-          :items="connection.synapse.models"
-          class="pa-1"
-          density="compact"
-          hide-details
-          item-title="label"
-          item-value="id"
-          label="Synapse model"
-          v-model="connection.synapse.modelId"
-          variant="outlined"
-        />
-        <div class="d-print-none menu align-center justify-center my-auto mx-1">
-          <v-menu :close-on-content-click="false">
-            <template #activator="{ props }">
-              <v-btn
-                color="primary"
-                icon="mdi-order-bool-ascending-variant"
-                size="small"
-                v-bind="props"
-                variant="text"
-              />
-            </template>
-
-            <v-card>
-              <v-card-text>
-                <v-checkbox
-                  :color="connection.source.color"
-                  :key="index"
-                  :label="param.label"
-                  :value="param.id"
-                  density="compact"
-                  hide-details
-                  v-for="(param, index) in Object.values(
-                    connection.synapse.modelParams
-                  )"
-                  v-model="connection.synapse.paramsVisible"
-                >
-                  <template #append>
-                    {{ param.id }}: {{ param.value }}
-                    {{ param.unit }}
-                  </template>
-                </v-checkbox>
-              </v-card-text>
-            </v-card>
-          </v-menu>
-
-          <v-btn
-            color="primary"
-            icon="mdi-dots-vertical"
-            size="small"
-            variant="text"
-          />
-        </div>
-      </v-row>
-
-      <v-list
-        density="compact"
-        v-if="connection.synapse.paramsVisible.length > 0"
-      >
-        <synapse-param-editor
-          :key="index"
-          :param="connection.synapse.params[paramId]"
-          v-for="(paramId, index) in connection.synapse.paramsVisible"
-        />
-      </v-list>
+      <connection-spec-editor :connection="connection" />
+      <synapse-spec-editor :synapse="connection.synapse" />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -206,9 +77,9 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from "@nest/components/connection/ConnectionParamEditor.vue";
+import ConnectionSpecEditor from "@nest/components/connection/ConnectionSpecEditor.vue";
 import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
-import SynapseParamEditor from "@nest/components/connection/SynapseParamEditor.vue";
+import SynapseSpecEditor from "@nest/components/synapse/SynapseSpecEditor.vue";
 import { Connection } from "@nest/core/connection/connection";
 
 const props = defineProps({
@@ -217,28 +88,76 @@ const props = defineProps({
 
 const connection = computed(() => props.connection as Connection);
 
-const rules = [
-  { title: "all to all", value: "all_to_all" },
-  { title: "one to one", value: "one_to_one" },
-  { title: "fixed indegree", value: "fixed_indegree" },
-  { title: "fixed outdegree", value: "fixed_outdegree" },
-  { title: "pairwise Bernoulli", value: "pairwise_bernoulli" },
+const items = [
+  {
+    id: "connectionReset",
+    icon: "mdi-restart",
+    title: "Reset connection",
+    onClick: () => {
+      connection.value.reset();
+      connection.value.synapse.reset();
+      connection.value.synapse.hideAllParams();
+    },
+  },
+  // {
+  //   id: "sourceSlice",
+  //   icon: "mdi-code-brackets",
+  //   title: "Toggle source slicing",
+  //   onClick: () => {
+  //     connection.value.sourceSlice.toggleVisible();
+  //     connection.value.changes();
+  //   },
+  //   // show: () => state.connection.source.size > 1,
+  // },
+  // {
+  //   id: "targetSlice",
+  //   icon: "mdi-code-brackets",
+  //   title: "Toggle target slicing",
+  //   onClick: () => {
+  //     connection.value.targetSlice.toggleVisible();
+  //     connection.value.changes();
+  //   },
+  //   // show: () => state.connection.target.size > 1,
+  // },
+  {
+    id: "connectionReverse",
+    icon: "mdi-rotate-3d-variant",
+    title: "Reverse connection",
+    onClick: () => {
+      connection.value.reverse();
+      connection.value.changes();
+    },
+  },
+  {
+    id: "weightInverse",
+    icon: "mdi-contrast",
+    title: "Inverse synaptic weight",
+    onClick: () => {
+      connection.value.synapse.inverseWeight();
+    },
+  },
+  {
+    id: "connectionDelete",
+    icon: "mdi-trash-can-outline",
+    title: "Delete connection",
+    onClick: () => {
+      connection.value.remove()
+      // state.content = "connectionDelete";
+    },
+    append: true,
+  },
 ];
 </script>
 
 <style lang="scss">
 .node-connection {
-  .panel-title,
-  .conn-spec,
-  .syn-spec {
+  .panel-title {
     .menu {
       opacity: 0;
     }
   }
 
-  .panel-title:hover,
-  .conn-spec:hover,
-  .syn-spec:hover {
+  .panel-title:hover {
     .menu {
       opacity: 1;
     }
@@ -246,22 +165,6 @@ const rules = [
 
   .v-expansion-panel-text__wrapper {
     padding: 0;
-  }
-
-  .icon-size-1x {
-    --v-icon-size-multiplier: 1;
-  }
-
-  .icon-size-1-8x {
-    --v-icon-size-multiplier: 1.8;
-  }
-
-  .icon-size-2x {
-    --v-icon-size-multiplier: 2;
-  }
-
-  .icon-size-3x {
-    --v-icon-size-multiplier: 3;
   }
 }
 </style>

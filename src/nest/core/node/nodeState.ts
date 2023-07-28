@@ -8,8 +8,8 @@ import { NodeParameter } from "./nodeParameter";
 
 interface NodeStateState {
   hash: string;
-  targetsLength: number;
   connectionPanelIdx: number | null;
+  connectionsLength: number;
 }
 
 export class NodeState {
@@ -21,8 +21,8 @@ export class NodeState {
 
     this._state = reactive({
       hash: "",
-      targetsLength: 0,
       connectionPanelIdx: null,
+      connectionsLength: 0,
     });
 
     this.updateHash();
@@ -36,8 +36,12 @@ export class NodeState {
     this._state.connectionPanelIdx = value;
 
     if (this._state.connectionPanelIdx != null) {
-      this._node.targets[this._state.connectionPanelIdx].state.select();
+      this._node.connections[this._state.connectionPanelIdx].state.select();
     }
+  }
+
+  get connectionsLength(): number {
+    return this._state.connectionsLength;
   }
 
   get hash(): string {
@@ -74,10 +78,6 @@ export class NodeState {
     return this._state.hash ? this._state.hash.slice(0, 6) : "";
   }
 
-  get targetsLength(): number {
-    return this._state.targetsLength;
-  }
-
   /**
    * Focus this node
    */
@@ -95,7 +95,7 @@ export class NodeState {
 
   update(): void {
     this.updateHash();
-    this.updateTargetsLength();
+    this.updateConnectionsLength();
   }
 
   /**
@@ -112,7 +112,7 @@ export class NodeState {
     this._node.logger.settings.name = `[${this._node.nodes.network.project.shortId}] node ${this._node.modelId} #${this._state.hash}`;
   }
 
-  updateTargetsLength(): void {
-    this._state.targetsLength = this._node.targets.length;
+  updateConnectionsLength(): void {
+    this._state.connectionsLength = this._node.connections.length;
   }
 }

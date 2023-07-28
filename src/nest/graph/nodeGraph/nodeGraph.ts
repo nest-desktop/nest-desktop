@@ -87,7 +87,7 @@ export class NodeGraph {
       .attr("class", "node")
       .attr("color", (n: Node) => n.view.color)
       .attr("idx", (n: Node) => n.idx)
-      .attr("weight", (n: Node) => n.view.weight)
+      .attr("weight", (n: Node) => n.view.synWeights as string)
       .attr(
         "transform",
         (n: Node) =>

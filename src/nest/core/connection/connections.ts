@@ -83,11 +83,11 @@ export class Connections {
     return this._state;
   }
 
-  get visibleConnections(): Connection[] {
-    return this._connections.filter(
-      (connection: Connection) => connection.view.state.visible
-    );
-  }
+  // get visibleConnections(): Connection[] {
+  //   return this._connections.filter(
+  //     (connection: Connection) => connection.view.state.visible
+  //   );
+  // }
 
   /**
    * Add connection component to the network.

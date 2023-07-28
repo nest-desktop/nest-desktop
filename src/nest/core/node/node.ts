@@ -109,10 +109,6 @@ export class Node extends Config {
     );
   }
 
-  get color(): string {
-    return this._view.color;
-  }
-
   get connectedNodes(): Node[] {
     if (this.model.isSpikeRecorder) {
       return this.sourceNodes;
@@ -124,9 +120,15 @@ export class Node extends Config {
   }
 
   get connections(): Connection[] {
-    return this.network.connections.filter(
+    return this.network.connections.all.filter(
+      (connection: Connection) => connection.sourceIdx === this._idx
+    );
+  }
+
+  get connectionsNeurons(): Connection[] {
+    return this.network.connections.all.filter(
       (connection: Connection) =>
-        connection.source === this || connection.target === this
+        connection.sourceIdx === this._idx && connection.target.model.isNeuron
     );
   }
 
@@ -170,14 +172,14 @@ export class Node extends Config {
    * Check if it is an excitatory neuron.
    */
   get isExcitatoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.weight === "excitatory";
+    return this.model.isNeuron && this._view.synWeights === "excitatory";
   }
 
   /**
    * Check if it is an inhibitory neuron.
    */
   get isInhibitoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.weight === "inhibitory";
+    return this.model.isNeuron && this._view.synWeights === "inhibitory";
   }
 
   get idx(): number {
@@ -273,6 +275,10 @@ export class Node extends Config {
     });
   }
 
+  get paramsAll(): NodeParameter[] {
+    return Object.values(this._params)
+  }
+
   get paramsVisible(): string[] {
     return this._paramsVisible;
   }
@@ -365,12 +371,6 @@ export class Node extends Config {
     return this._state;
   }
 
-  get targets(): Connection[] {
-    return this.network.connections.all.filter(
-      (connection: Connection) => connection.sourceIdx === this._idx
-    );
-  }
-
   get targetNodes(): Node[] {
     return this.network.connections.all
       .filter((connection: Connection) => connection.sourceIdx === this._idx)
@@ -379,10 +379,6 @@ export class Node extends Config {
 
   get view(): NodeView {
     return this._view;
-  }
-
-  get weight(): string {
-    return this._view.weight;
   }
 
   /**
@@ -683,7 +679,7 @@ export class Node extends Config {
    */
   resetParameters(): void {
     this._logger.trace("reset parameters");
-    Object.values(this._params).forEach((param: NodeParameter) =>
+    this.paramsAll.forEach((param: NodeParameter) =>
       param.reset()
     );
 
@@ -696,28 +692,6 @@ export class Node extends Config {
       );
     }
 
-    this.changes();
-  }
-
-  /**
-   * Set all synaptic weights.
-   *
-   * @remarks
-   * It emits node changes.
-   *
-   * @param term - inhibitory (negative) or excitatory (positive)
-   */
-  setWeights(term: string): void {
-    const connections: Connection[] = this.network.connections.filter(
-      (connection: Connection) =>
-        connection.source.idx === this._idx &&
-        !connection.target.model.isRecorder
-    );
-    connections.forEach((connection: Connection) => {
-      const weight: any = connection.synapse.params.weight;
-      weight.value = (term === "inhibitory" ? -1 : 1) * Math.abs(weight.value);
-      weight.state.visible = true;
-    });
     this.changes();
   }
 
@@ -810,7 +784,7 @@ export class Node extends Config {
     this._logger.trace("update records");
     let recordables: any[] = [];
     // Initialize recordables.
-    if (this.targets.length > 0) {
+    if (this.connections.length > 0) {
       if (this.model.isMultimeter) {
         const recordablesNodes = this.targetNodes.map((target: Node) => {
           return target.modelId === "cm_default"

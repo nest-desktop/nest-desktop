@@ -19,10 +19,6 @@ export class NodeParameter extends Parameter {
     this._parent = node;
   }
 
-  get isVisible(): boolean {
-    return this.node.paramsVisible.includes(this.id);
-  }
-
   /**
    * Get model parameter.
    */
@@ -36,6 +32,21 @@ export class NodeParameter extends Parameter {
 
   get parent(): NodeTypes {
     return this._parent;
+  }
+
+  get visible(): boolean {
+    return this.node.paramsVisible.includes(this.id);
+  }
+
+  set visible(value: boolean) {
+    const isVisible = this.node.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.node.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.node.paramsVisible = this.node.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id
+      );
+    }
   }
 
   /**
@@ -52,9 +63,7 @@ export class NodeParameter extends Parameter {
    * Hide this parameter.
    */
   hide(): void {
-    this.node.paramsVisible = this.node.paramsVisible.filter(
-      (item) => item !== this.id
-    );
+    this.visible = false;
   }
 
   /**

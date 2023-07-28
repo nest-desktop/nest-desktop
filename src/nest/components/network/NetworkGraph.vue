@@ -1,144 +1,99 @@
 <template>
-  <rect id="workspaceHandler" width="100%" height="100%" />
+  <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
+    <rect id="workspaceHandler" width="100%" height="100%" />
 
-  <g id="networkWorkspace">
-    <g class="grid no-print" />
-    <g>
-      <path
-        :style="{ strokeWidth: graph.config.strokeWidth }"
-        class="dragline"
-        d="M0,0L0,0"
-        fill="none"
-      />
-    </g>
-
-    <g id="network">
-      <g :key="graph.network.connections.state.hash" class="marker">
-        <defs
-          :key="'defs' + index"
-          :color="connection.source.view.color"
-          v-for="(connection, index) of graph.network.connections.all"
-        >
-          <marker
-            :id="'generic' + index"
-            markerHeight="8"
-            markerWidth="16"
-            orient="auto"
-            refX="14"
-            refY="4"
-            v-if="connection.view.markerEndLabel === 'generic'"
-          >
-            <path
-              d="M10,2L14,4L10,6"
-              fill="transparent"
-              stroke="currentcolor"
-            />
-            <text dx="8" dy="5" />
-          </marker>
-
-          <marker
-            :id="'exc' + index"
-            markerHeight="8"
-            markerWidth="16"
-            orient="auto"
-            refX="14"
-            refY="4"
-            v-if="connection.view.markerEndLabel === 'exc'"
-          >
-            <path
-              d="M10,2L14,4L10,6L10,2L14,4"
-              fill="currentcolor"
-              stroke="currentcolor"
-            />
-            <text dx="8" dy="5" />
-          </marker>
-
-          <marker
-            :id="'inh' + index"
-            markerHeight="8"
-            markerWidth="16"
-            orient="auto"
-            refX="14"
-            refY="4"
-            v-if="connection.view.markerEndLabel === 'inh'"
-          >
-            <circle
-              fill="currentcolor"
-              r="2"
-              stroke="currentcolor"
-              transform="translate(12,4)"
-            />
-            <text dx="8" dy="5" />
-          </marker>
-
-          <marker
-            :id="'assigned' + index"
-            markerHeight="10"
-            markerWidth="10"
-            orient="auto"
-            refX="5"
-            refY="5"
-            v-if="connection.view.markerEndLabel === 'assigned'"
-          >
-            <circle
-              fill="transparent"
-              r="4"
-              stroke="currentcolor"
-              transform="translate(5,5)"
-            />
-            <text transform="translate(1,5)" />
-          </marker>
-        </defs>
+    <g id="networkWorkspace">
+      <g class="grid no-print" />
+      <g>
+        <path
+          :style="{ strokeWidth: graph?.config.strokeWidth }"
+          class="dragline"
+          d="M0,0L0,0"
+          fill="none"
+        />
       </g>
 
-      <g id="modelAssigned" />
-      <g id="connections" />
-      <g id="nodes" />
-    </g>
+      <g id="network">
+        <g :key="graph?.network.connections.all.length" class="synMarker">
+          <defs
+            :key="'defs' + index"
+            :color="connection.source.view.color"
+            v-for="(connection, index) of graph?.network.connections.all"
+          >
+            <marker
+              :key="connection.state.hash"
+              :id="'syn-' + index"
+              markerHeight="8"
+              markerWidth="16"
+              orient="auto"
+              refX="14"
+              refY="4"
+            >
+              <path
+                d="M10,2L14,4L10,6"
+                fill="transparent"
+                stroke="currentcolor"
+                v-if="connection.view.markerEndLabel === 'generic'"
+              />
+              <circle
+                fill="currentcolor"
+                r="2"
+                stroke="currentcolor"
+                transform="translate(12,4)"
+                v-if="connection.view.markerEndLabel === 'inh'"
+              />
+              <path
+                d="M10,2L14,4L10,6L10,2L14,4"
+                fill="currentcolor"
+                stroke="currentcolor"
+                v-if="connection.view.markerEndLabel === 'exc'"
+              />
+              <circle
+                fill="transparent"
+                r="4"
+                stroke="currentcolor"
+                transform="translate(5,5)"
+                v-if="connection.view.markerEndLabel === 'assigned'"
+              />
+              <text dx="8" dy="5" />
+            </marker>
+          </defs>
+        </g>
 
-    <g id="nodeAddPanel" />
-  </g>
+        <g id="modelAssigned" />
+        <g id="connections" />
+        <g id="nodes" />
+      </g>
+
+      <g id="nodeAddPanel" />
+    </g>
+  </svg>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
+import { useNetworkGraphStore } from "@nest/store/graph/networkGraphStore";
 
-const props = defineProps({ graph: NetworkGraph });
+import { Network } from "@nest/core/network/network";
+import { NetworkGraph } from "@/nest/graph/networkGraph/networkGraph";
 
-const graph = computed(() => props.graph as NetworkGraph)
+const props = defineProps({ network: Network });
+const network = computed(() => props.network as Network);
+const graph = computed(() => {
+  return networkGraphStore.graph as NetworkGraph;
+});
 
-// import { Ref, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+const networkGraphStore = useNetworkGraphStore();
+const networkGraphRef: Ref<null> = ref(null);
 
-// import { useProjectStore } from "@nest/store/project/projectStore";
-// import { Network } from "@nest/core/network/network";
+onMounted(() => {
+  networkGraphStore.mount(networkGraphRef, network.value);
+});
 
-// const projectStore = useProjectStore();
-
-// const networkGraphRef: Ref<null> = ref(null);
-
-// const state = reactive({
-//   graph: new NetworkGraph(
-//     networkGraphRef,
-//     projectStore.project.network as Network
-//   ),
-// });
-
-// onMounted(() => {
-//   state.graph = new NetworkGraph(
-//     networkGraphRef,
-//     projectStore.project.network as Network
-//   );
-
-//   const ref = state.graph.selector?.node().parentNode;
-//   state.graph.resizeObserver.observe(ref);
-//   state.graph.init();
-// });
-
-// onBeforeUnmount(() => {
-//   state.graph.resizeObserver.disconnect();
-// });
+onBeforeUnmount(() => {
+  networkGraphStore.unmount();
+});
 </script>
 
 <style lang="scss">
@@ -151,7 +106,7 @@ const graph = computed(() => props.graph as NetworkGraph)
     stroke-linecap: round;
   }
 
-  .marker {
+  .synMarker {
     text {
       font-size: 4px;
       font-weight: 100;
@@ -184,7 +139,7 @@ const graph = computed(() => props.graph as NetworkGraph)
     text {
       fill: rgb(var(--v-border-color));
       font-size: 12px;
-      opacity: var(--v-high-emphasis-opacity);
+      opacity: var(--v-medium-emphasis-opacity);
       pointer-events: none;
       text-transform: uppercase !important;
     }

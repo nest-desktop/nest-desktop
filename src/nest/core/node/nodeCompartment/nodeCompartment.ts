@@ -20,6 +20,7 @@ export class NodeCompartment {
   private _label: string | undefined;
   private _node: Node; // parent
   private _params: { [key: string]: NodeCompartmentParameter } = {};
+  private _paramsVisible: string[] = [];
   private _parentIdx: number;
 
   constructor(node: any, comp: NodeCompartmentProps) {
@@ -33,20 +34,18 @@ export class NodeCompartment {
   }
 
   get filteredParams(): NodeCompartmentParameter[] {
-    return Object.values(this._params).filter(
-      (param: NodeCompartmentParameter) => param.state.visible
-    );
+    return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   get hash(): string {
     return this._hash;
   }
 
-  get hasSomeParams(): boolean {
-    return Object.values(this._params).some(
-      (param: NodeCompartmentParameter) => param.state.visible
-    );
-  }
+  // get hasSomeParams(): boolean {
+  //   return Object.values(this._params).some(
+  //     (param: NodeCompartmentParameter) => param.visible
+  //   );
+  // }
 
   get idx(): number {
     return this._idx;
@@ -100,6 +99,19 @@ export class NodeCompartment {
 
   set params(values: { [key: string]: NodeCompartmentParameter }) {
     this._params = values;
+  }
+
+  get paramsAll(): NodeCompartmentParameter[] {
+    return Object.values(this._params);
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
   }
 
   get parent(): NodeCompartment {
@@ -198,8 +210,8 @@ export class NodeCompartment {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    Object.values(this._params).forEach(
-      (param: NodeCompartmentParameter) => (param.state.visible = false)
+    this.paramsAll.forEach(
+      (param: NodeCompartmentParameter) => (param.visible = false)
     );
   }
 
@@ -250,7 +262,7 @@ export class NodeCompartment {
    * It emits node compartment changes.
    */
   resetParameters(): void {
-    Object.values(this._params).forEach((param: NodeCompartmentParameter) =>
+    this.paramsAll.forEach((param: NodeCompartmentParameter) =>
       param.reset()
     );
     this.changes();
@@ -260,8 +272,8 @@ export class NodeCompartment {
    * Sets all params to visible.
    */
   showAllParams(): void {
-    Object.values(this._params).forEach(
-      (param: NodeCompartmentParameter) => (param.state.visible = true)
+    this.paramsAll.forEach(
+      (param: NodeCompartmentParameter) => (param.visible = true)
     );
   }
 
@@ -272,8 +284,8 @@ export class NodeCompartment {
   toJSON(): NodeCompartmentProps {
     const comp: NodeCompartmentProps = {
       parentIdx: this._parentIdx,
-      params: Object.values(this._params).map(
-        (param: NodeCompartmentParameter) => param.toJSON()
+      params: this.filteredParams.map((param: NodeCompartmentParameter) =>
+        param.toJSON()
       ),
     };
 
