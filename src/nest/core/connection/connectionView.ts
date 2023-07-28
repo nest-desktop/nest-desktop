@@ -85,7 +85,7 @@ export class ConnectionView {
       this._connection.source.connections.length === 1 ||
       this._connection.connections.state.focusedConnection?.source !==
         this._connection.source ||
-      !this._connection.connections.state.focusedConnection ||
+      this._connection.connections.state.focusedConnection == null ||
       this._connection.state.isFocused ||
       this._connection.state.isSelected
     );
