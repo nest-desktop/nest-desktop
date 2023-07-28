@@ -32,10 +32,10 @@
     <v-card-actions
       class="pa-0"
       style="min-height: 40px"
-      v-if="node.state.connectionsLength > 0"
+      v-if="node.connections.length > 0"
     >
       <v-expansion-panels
-        :key="node.state.connectionsLength"
+        :key="node.connections.length"
         multiple
         variant="accordion"
       >

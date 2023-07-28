@@ -186,7 +186,7 @@ export class ConnectionGraph {
         )
         .style(
           "opacity",
-          connection.source.state.connectionsLength === 1 ||
+          connection.source.connections.length === 1 ||
             !connection.connections.state.focusedConnection ||
             connection.state.isFocused ||
             connection.state.isSelected

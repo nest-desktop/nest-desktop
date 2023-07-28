@@ -166,7 +166,7 @@
           <connection-editor
             :style="{
               opacity:
-                node.state.connectionsLength === 1 ||
+                node.connections.length === 1 ||
                 !connection.connections.state.focusedConnection ||
                 connection.state.isFocused ||
                 connection.state.isSelected

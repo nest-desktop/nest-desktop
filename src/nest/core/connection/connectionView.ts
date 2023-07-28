@@ -51,7 +51,7 @@ export class ConnectionView {
     return {
       ellipticalArc:
         this._connection.source.state.isSelected &&
-        this._connection.source.state.connectionsLength > 1
+        this._connection.source.connections.length > 1
           ? 1
           : 10,
       sweep: this._connection.source.connections.indexOf(this._connection) % 2,
