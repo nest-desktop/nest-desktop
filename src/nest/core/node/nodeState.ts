@@ -9,7 +9,6 @@ import { NodeParameter } from "./nodeParameter";
 interface NodeStateState {
   hash: string;
   connectionPanelIdx: number | null;
-  connectionsLength: number;
 }
 
 export class NodeState {
@@ -22,7 +21,6 @@ export class NodeState {
     this._state = reactive({
       hash: "",
       connectionPanelIdx: null,
-      connectionsLength: 0,
     });
 
     this.updateHash();
@@ -38,10 +36,6 @@ export class NodeState {
     if (this._state.connectionPanelIdx != null) {
       this._node.connections[this._state.connectionPanelIdx].state.select();
     }
-  }
-
-  get connectionsLength(): number {
-    return this._state.connectionsLength;
   }
 
   get hash(): string {
@@ -95,7 +89,6 @@ export class NodeState {
 
   update(): void {
     this.updateHash();
-    this.updateConnectionsLength();
   }
 
   /**
@@ -110,9 +103,5 @@ export class NodeState {
       size: this._node.size,
     }).slice(0, 6);
     this._node.logger.settings.name = `[${this._node.nodes.network.project.shortId}] node ${this._node.modelId} #${this._state.hash}`;
-  }
-
-  updateConnectionsLength(): void {
-    this._state.connectionsLength = this._node.connections.length;
   }
 }
