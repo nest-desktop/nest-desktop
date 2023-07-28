@@ -96,6 +96,7 @@ export class NodeState {
    */
   updateHash(): void {
     this._state.hash = sha1({
+      idx: this._node.idx,
       model: this._node.modelId,
       params: Object.values(this._node.params).map((param: NodeParameter) =>
         param.toJSON()
