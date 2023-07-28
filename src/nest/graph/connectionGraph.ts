@@ -184,19 +184,8 @@ export class ConnectionGraph {
           "stroke-width",
           this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
         )
-        .style(
-          "opacity",
-          connection.source.connections.length === 1 ||
-            !connection.connections.state.focusedConnection ||
-            connection.state.isFocused ||
-            connection.state.isSelected
-            ? 1
-            : 0.3
-        )
-        .attr(
-          "marker-end",
-          `url(#syn-${connection.idx})`
-        )
+        .style("opacity", connection.view.opacity ? 1 : 0.3)
+        .attr("marker-end", `url(#syn-${connection.idx})`)
         .style(
           "stroke-dasharray",
           connection.view.probabilistic() ? "7.85" : ""

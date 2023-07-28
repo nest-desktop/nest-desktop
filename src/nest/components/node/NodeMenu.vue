@@ -197,12 +197,15 @@ import { computed, onMounted, reactive } from "vue";
 
 import { Node } from "@nest/core/node/node";
 import ModelDocumentation from "@nest/views/model/ModelDoc.vue";
+import { useNetworkGraphStore } from "@/nest/store/graph/networkGraphStore";
 // import NodeModelSelect from '@nest/components/node/NodeModelSelect.vue';
 // import NodeParamEdit from '@nest/components/node/NodeParamEdit.vue';
 
 const props = defineProps({
   node: Node,
 });
+
+const networkGraphStore = useNetworkGraphStore();
 
 const node = computed(() => props.node as Node);
 
@@ -371,6 +374,7 @@ const updateSynWeights = (value?: string) => {
   node.value.view.state.synWeights = value || "";
   node.value.view.synWeights = value || "";
   node.value.changes();
+  networkGraphStore.graph.render();
 };
 
 /**
