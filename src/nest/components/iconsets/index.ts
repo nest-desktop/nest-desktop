@@ -7,6 +7,7 @@ import type { IconSet, IconProps } from "vuetify";
 import connectionIcon from "./connections/ConnectionIcon.vue";
 import nestIcon from "./NESTIcon.vue";
 import networkIcon from "./NetworkIcon.vue";
+import neuronShapeIcon from "./nodes/NeuronShapeIcon.vue";
 import neuronExcitatoryIcon from "./nodes/NeuronExcitatoryIcon.vue";
 import neuronInhibitoryIcon from "./nodes/NeuronInhibitoryIcon.vue";
 import neuronIcon from "./nodes/NeuronIcon.vue";
@@ -18,6 +19,7 @@ import synapseRecorderIcon from "./connections/SynapseRecorderIcon.vue";
 
 const customSvgNameToComponent: any = {
   "neuron": neuronIcon,
+  "neuron-shape": neuronShapeIcon,
   "neuron-mixed": neuronIcon,
   "neuron-excitatory": neuronExcitatoryIcon,
   "neuron-inhibitory": neuronInhibitoryIcon,
