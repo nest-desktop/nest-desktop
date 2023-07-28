@@ -1,5 +1,5 @@
 <template>
-  <card :color="node.color" class="node ma-1">
+  <card :color="node.view.color" class="node ma-1">
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
@@ -21,10 +21,7 @@
             style="left: 8px; top: 8px"
           >
             <node-avatar
-              :color="node.color"
-              :elementType="node.elementType"
-              :label="node.label"
-              :weight="node.weight"
+              :node="node"
               @click="node.state.select()"
               size="48px"
             />
@@ -48,7 +45,7 @@
                 <v-card-text>
                   <v-checkbox
                     :disabled="node.model.isRecorder"
-                    :color="node.color"
+                    :color="node.view.color"
                     density="compact"
                     hide-details
                     label="Population size"
@@ -58,7 +55,7 @@
                   </v-checkbox>
                   <template v-if="node.modelParams">
                     <v-checkbox
-                      :color="node.color"
+                      :color="node.view.color"
                       :key="index"
                       :label="param.label"
                       :value="param.id"
@@ -102,19 +99,7 @@
               </v-card>
             </v-menu>
 
-            <v-menu :close-on-content-click="false">
-              <template #activator="{ props }">
-                <v-btn
-                  color="primary"
-                  icon="mdi-dots-vertical"
-                  size="small"
-                  v-bind="props"
-                  variant="text"
-                />
-              </template>
-
-              <list :items="items" density="compact" />
-            </v-menu>
+            <node-menu :node="node" />
           </div>
         </template>
       </v-select>
@@ -125,7 +110,7 @@
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
             <value-slider
-              :color="node.color"
+              :color="node.view.color"
               @update:model-value="node.changes()"
               id="n"
               inputLabel="n"
@@ -149,7 +134,6 @@
                 <v-list-item
                   :key="index"
                   :icon="item.icon"
-                  @click="item.onclick"
                   v-for="(item, index) in items"
                 >
                   <template #prepend>
@@ -162,6 +146,7 @@
           </v-row>
         </v-list-item>
       </v-list>
+
       <v-list class="py-0" v-if="node.paramsVisible.length > 0">
         <node-param-editor
           :key="index"
@@ -173,18 +158,18 @@
 
     <v-card-actions
       style="min-height: 40px"
-      v-if="node.state.targetsLength > 0"
+      v-if="node.state.connectionsLength > 0"
     >
       <v-row>
         <v-expansion-panels
-          :key="node.state.targetsLength"
+          :key="node.state.connectionsLength"
           v-model="node.state.connectionPanelIdx"
           variant="accordion"
         >
           <connection-editor
             :style="{
               opacity:
-                node.state.targetsLength === 1 ||
+                node.state.connectionsLength === 1 ||
                 !connection.connections.state.focusedConnection ||
                 connection.state.isFocused ||
                 connection.state.isSelected
@@ -195,7 +180,7 @@
             :connection="connection"
             @mouseenter="connection.state.focus()"
             @mouseleave="connection.connections.unfocusConnection()"
-            v-for="(connection, index) in node.targets"
+            v-for="(connection, index) in node.connections"
           />
         </v-expansion-panels>
       </v-row>
@@ -207,11 +192,11 @@
 import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
-import List from "@/components/common/List.vue";
 
 import { Node } from "@nest/core/node/node";
 import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
+import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 import ValueSlider from "@/components/common/ValueSlider.vue";
 

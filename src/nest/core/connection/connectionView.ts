@@ -51,10 +51,10 @@ export class ConnectionView {
     return {
       ellipticalArc:
         this._connection.source.state.isSelected &&
-        this._connection.source.state.targetsLength > 1
+        this._connection.source.state.connectionsLength > 1
           ? 1
           : 10,
-      sweep: this._connection.source.targets.indexOf(this._connection) % 2,
+      sweep: this._connection.source.connections.indexOf(this._connection) % 2,
       xAxisRotation: this._state.xAxisRotation,
     };
   }

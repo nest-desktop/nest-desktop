@@ -91,11 +91,11 @@ export class Connection extends Config {
     return this._rule.value !== "all_to_all";
   }
 
-  get hasSomeVisibleParams(): boolean {
-    return Object.values(this._params).some(
-      (param: ConnectionParameter) => param.state.visible
-    );
-  }
+  // get hasSomeVisibleParams(): boolean {
+  //   return Object.values(this._params).some(
+  //     (param: ConnectionParameter) => param.visible
+  //   );
+  // }
 
   get idx(): number {
     return this._idx;
@@ -227,14 +227,14 @@ export class Connection extends Config {
     this._idx = this._connections.all.indexOf(this);
   }
 
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    Object.values(this._params).forEach(
-      (param: ConnectionParameter) => (param.state.visible = false)
-    );
-  }
+  // /**
+  //  * Sets all params to invisible.
+  //  */
+  // hideAllParams(): void {
+  //   Object.values(this._params).forEach(
+  //     (param: ConnectionParameter) => (param.visible = false)
+  //   );
+  // }
 
   /**
    * Initialize parameters.
@@ -331,14 +331,14 @@ export class Connection extends Config {
     this.network.deleteConnection(this);
   }
 
-  /**
-   * Sets all params to visible.
-   */
-  showAllParams(): void {
-    Object.values(this._params).forEach(
-      (param: ConnectionParameter) => (param.state.visible = true)
-    );
-  }
+  // /**
+  //  * Sets all params to visible.
+  //  */
+  // showAllParams(): void {
+  //   Object.values(this._params).forEach(
+  //     (param: ConnectionParameter) => (param.visible = true)
+  //   );
+  // }
 
   /**
    * Serialize for JSON.

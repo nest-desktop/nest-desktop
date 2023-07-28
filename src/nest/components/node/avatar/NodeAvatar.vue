@@ -1,35 +1,38 @@
 <template>
   <stimulator-avatar
-    :color="props.color"
-    :label="props.label"
+    :color="node.view.color"
+    :label="node.view.label"
     :size="props.size"
-    v-if="props.elementType === 'stimulator'"
+    v-if="node.elementType === 'stimulator'"
   />
   <recorder-avatar
-    :color="props.color"
-    :label="props.label"
+    :color="node.view.color"
+    :label="node.view.label"
     :size="props.size"
-    v-else-if="props.elementType === 'recorder'"
+    v-else-if="node.elementType === 'recorder'"
   />
   <neuron-avatar
-    :color="props.color"
-    :label="props.label"
+    :color="node.view.color"
+    :label="node.view.label"
     :size="props.size"
-    :weight="props.weight"
+    :weight="node.view.synWeights"
     v-else
   />
 </template>
 
 <script lang="ts" setup>
+import {computed } from 'vue';
+
+import { Node } from '@nest/core/node/node';
+
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";
 import StimulatorAvatar from "./StimulatorAvatar.vue";
 
 const props = defineProps({
-  color: { type: String, default: "primary" },
-  label: { type: String, default: "" },
-  elementType: { type: String, default: "neuron" },
+  node: Node,
   size: { type: String, default: "40px" },
-  weight: {type: String, default: "default"},
 });
+
+const node = computed(() => props.node as Node);
 </script>

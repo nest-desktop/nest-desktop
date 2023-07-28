@@ -17,12 +17,7 @@
         >
           <v-expansion-panel-title class="py-0">
             <v-row class="text-button">
-              <node-avatar
-                :color="activity.recorder.color"
-                :label="activity.recorder.label"
-                :elementType="activity.recorder.elementType"
-                :weight="activity.recorder.weight"
-              />
+              <node-avatar :node="activity.recorder" />
               <v-spacer />
               <div>
                 {{ activity.recorder.model.label }}

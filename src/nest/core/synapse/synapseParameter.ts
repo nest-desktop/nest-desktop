@@ -41,6 +41,21 @@ export class SynapseParameter extends Parameter {
       : types;
   }
 
+  get visible(): boolean {
+    return this.synapse.paramsVisible.includes(this.id);
+  }
+
+  set visible(value: boolean) {
+    const isVisible = this.synapse.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.synapse.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.synapse.paramsVisible = this.synapse.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id
+      );
+    }
+  }
+
   /**
    * Observer for parameter changes.
    *
@@ -55,9 +70,7 @@ export class SynapseParameter extends Parameter {
    * Hide this parameter.
    */
   hide(): void {
-    this.synapse.paramsVisible = this.synapse.paramsVisible.filter(
-      (item) => item !== this.id
-    );
+    this.visible = false;
   }
 
   /**

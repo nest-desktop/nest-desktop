@@ -108,13 +108,17 @@ export class NodeGraphShape {
   drawShape(selector: Selection<any, any, any, any>, node: Node): void {
     this._logger.trace("draw shape");
     selector.attr("elementType", node.model.elementType);
-    selector.attr("weight", node.view.weight);
+    selector.attr("weight", node.view.synWeights);
 
     const elem = selector.select(".core");
     elem.selectAll("*").remove();
 
     if (node.isInhibitoryNeuron) {
-      elem.append("circle").attr("class", "shape").attr("r", this.nodeRadius);
+      elem
+        .append("circle")
+        .attr("class", "shape")
+        .attr("stroke", "currentcolor")
+        .attr("r", this.nodeRadius * 0.78);
     } else {
       elem
         .append("polygon")
@@ -203,7 +207,7 @@ export class NodeGraphShape {
 
       if (
         elem.attr("elementType") !== node.model.elementType ||
-        elem.attr("weight") !== node.view.weight
+        elem.attr("weight") !== node.view.synWeights
       ) {
         this.drawShape(elem, node);
       }

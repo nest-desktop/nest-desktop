@@ -1,10 +1,10 @@
 // modelParameter.ts
 
-import { Parameter, ParameterProps } from '@/helpers/parameter';
+import { Parameter, ParameterProps } from "@/helpers/parameter";
 
-import { CopyModel } from './copyModel';
-import { Model } from './model';
-import { ModelReceptor } from './modelReceptor/modelReceptor';
+import { CopyModel } from "./copyModel";
+import { Model } from "./model";
+import { ModelReceptor } from "./modelReceptor/modelReceptor";
 
 type modelTypes = CopyModel | Model | ModelReceptor;
 
@@ -19,7 +19,7 @@ export class ModelParameter extends Parameter {
   }
 
   get model(): Model {
-    return this._parent as Model
+    return this._parent as Model;
   }
 
   /**
@@ -31,6 +31,21 @@ export class ModelParameter extends Parameter {
 
   get parent(): modelTypes {
     return this._parent;
+  }
+
+  get visible(): boolean {
+    return this.model.paramsVisible.includes(this.id);
+  }
+
+  set visible(value: boolean) {
+    const isVisible = this.model.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.model.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.model.paramsVisible = this.model.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id
+      );
+    }
   }
 
   /**
@@ -54,7 +69,7 @@ export class ModelParameter extends Parameter {
       label: this.label,
       unit: this.unit,
       value: this.value,
-      visible: this.state.visible as boolean,
+      // visible: this.visible as boolean,
     };
 
     if (this.variant === "valueSlider") {

@@ -8,7 +8,7 @@ import { CopyModel } from "../model/copyModel";
 import { Node } from "./node";
 
 export interface NodeViewProps {
-  position: { x: number, y: number };
+  position: { x: number; y: number };
   color?: string;
   visible?: boolean;
 }
@@ -17,10 +17,11 @@ interface NodeViewState {
   color?: string;
   hash: string;
   label?: string;
-  position: { x: number, y: number };
+  position: { x: number; y: number };
   positions?: number[][];
   showSize: boolean;
   visible?: boolean;
+  synWeights?: string;
 }
 
 export class NodeView {
@@ -42,6 +43,7 @@ export class NodeView {
       label: "",
       positions: [],
       showSize: node.size > 1,
+      synWeights: "",
     });
   }
 
@@ -128,28 +130,46 @@ export class NodeView {
   /**
    * Get term based on synapse weight.
    */
-  get weight(): string {
-    if (this._node.model.isRecorder) {
+  get synWeights(): string {
+    if (
+      this._node.model.isRecorder ||
+      this._node.network.connections.length === 0 ||
+      this._node.connections.length === 0 ||
+      this._node.connectionsNeurons.length === 0
+    )
       return "";
-    }
-    const connections: Connection[] = this._node.nodes.network.connections.filter(
+
+    const weights: number[] = this._node.connectionsNeurons.map(
       (connection: Connection) =>
-        connection.source.idx === this._node.idx &&
-        !connection.target.model.isRecorder
+        connection.synapse.params.weight.value as number
     );
-    if (connections.length > 0) {
-      const weights: number[] = connections.map(
-        (connection: Connection) => connection.synapse.weight
-      );
-      if (weights.every((weight: number) => weight > 0)) {
-        return "excitatory";
-      }
-      if (weights.every((weight: number) => weight < 0)) {
-        return "inhibitory";
-      }
-      return "mixed";
+
+    if (weights.every((weight: number) => weight > 0)) {
+      return "excitatory";
     }
-    return "";
+    if (weights.every((weight: number) => weight < 0)) {
+      return "inhibitory";
+    }
+    return "mixed";
+  }
+
+  /**
+   * Set all synaptic weights.
+   *
+   * @remarks
+   * It emits node changes.
+   *
+   * @param term - inhibitory (negative) or excitatory (positive)
+   */
+  set synWeights(value: string) {
+    this._state.synWeights = value;
+
+    if (this._node.connectionsNeurons.length === 0) return;
+
+    this._node.connectionsNeurons.forEach((connection: Connection) => {
+      connection.synapse.weightLabel = value;
+    });
+    this._node.changes();
   }
 
   /**
@@ -157,16 +177,19 @@ export class NodeView {
    */
   clean(): void {
     const cleanWeightRecorder = false;
+
     if (this._node.model.isWeightRecorder && cleanWeightRecorder) {
-      const copiedSynapseModels = this._node.nodes.network.models.synapseModels.filter(
-        (model: CopyModel) => model.isAssignedToWeightRecorder(this._node)
-      );
+      const copiedSynapseModels =
+        this._node.nodes.network.models.synapseModels.filter(
+          (model: CopyModel) => model.isAssignedToWeightRecorder(this._node)
+        );
 
       if (copiedSynapseModels.length === 1) {
         const copiedSynapseModel = copiedSynapseModels[0];
-        const connection = this._node.nodes.network.connections.getBySynapseModelId(
-          copiedSynapseModel.id
-        );
+        const connection =
+          this._node.nodes.network.connections.getBySynapseModelId(
+            copiedSynapseModel.id
+          );
         if (connection) {
           this._state.position = connection.view.centerPosition;
         }
@@ -207,6 +230,7 @@ export class NodeView {
     if (this._state.color) {
       nodeView.color = this._state.color;
     }
+
     return nodeView;
   }
 

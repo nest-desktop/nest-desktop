@@ -4,7 +4,7 @@
       <span class="text-medium-emphasis">{{ props.options.label }}</span>
       <v-spacer />
       {{ props.options.id }}:
-      {{ props.value }}
+      {{ props.value || props.options.value || props.options.defaultValue }}
       {{ props.options.unit }}
     </v-row>
   </v-list-item>

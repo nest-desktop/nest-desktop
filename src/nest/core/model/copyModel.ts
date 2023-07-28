@@ -29,6 +29,7 @@ export class CopyModel {
   private _network: Network;
   private _newModelId: string;
   private _params: { [key: string]: ModelParameter } = {};
+  private _paramsVisible: string[] = [];
   private _state: UnwrapRef<CopyModelState>;
 
   constructor(
@@ -89,11 +90,11 @@ export class CopyModel {
     this.changes();
   }
 
-  get hasSomeVisibleParams(): boolean {
-    return Object.values(this._params).some(
-      (param: ModelParameter) => param.state.visible
-    );
-  }
+  // get hasSomeVisibleParams(): boolean {
+  //   return Object.values(this._params).some(
+  //     (param: ModelParameter) => param.visible
+  //   );
+  // }
 
   get hasWeightRecorderParam(): boolean {
     return "weight_recorder" in this._params;
@@ -164,9 +165,7 @@ export class CopyModel {
   }
 
   get filteredParams(): ModelParameter[] {
-    return Object.values(this._params).filter(
-      (param: ModelParameter) => param.state.visible
-    );
+    return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   /**
@@ -232,6 +231,19 @@ export class CopyModel {
     this._params = { ...this._params, ...values };
   }
 
+  get paramsAll(): ModelParameter[] {
+    return Object.values(this._params);
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
+  }
+
   get receptors(): { [key: string]: ModelReceptor } {
     return this.model.receptors;
   }
@@ -272,7 +284,7 @@ export class CopyModel {
   //  */
   // addParameter(param: any): void {
   //   const parameter = new Parameter(this, param);
-  //   parameter.state.visible = true;
+  //   parameter.visible = true;
   //   this._params.push(parameter);
   // }
 
@@ -306,13 +318,11 @@ export class CopyModel {
     }
   }
 
-  /**
-   * Sets all params to invisible.
-   */
+  // /**
+  //  * Sets all params to invisible.
+  //  */
   hideAllParams(): void {
-    Object.values(this.params).map(
-      (param: ModelParameter) => (param.state.visible = false)
-    );
+    this.paramsAll.forEach((param: ModelParameter) => (param.visible = false));
   }
 
   /**
@@ -398,13 +408,11 @@ export class CopyModel {
     this.clean();
   }
 
-  /**
-   * Sets all params to visible.
-   */
+  // /**
+  //  * Sets all params to visible.
+  //  */
   showAllParams(): void {
-    Object.values(this.params).map(
-      (param: ModelParameter) => (param.state.visible = true)
-    );
+    this.paramsAll.forEach((param: ModelParameter) => (param.visible = true));
   }
 
   /**

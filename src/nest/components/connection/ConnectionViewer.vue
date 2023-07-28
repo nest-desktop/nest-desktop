@@ -4,30 +4,16 @@
       <v-row no-gutters>
         <div style="pointer-events: none">
           <v-btn icon size="small">
-            <node-avatar
-              :color="connection.source.view.color"
-              :elementType="connection.source.model.elementType"
-              :label="connection.source.view.label"
-              :weight="connection.source.view.weight"
-              size="32px"
-            />
+            <node-avatar :node="connection.source" size="32px" />
           </v-btn>
           <v-btn
-            :color="connection.synapse.weight > 0 ? 'blue' : 'red'"
-            :icon="`nest:synapse-${
-              connection.synapse.weight > 0 ? 'excitatory' : 'inhibitory'
-            }`"
+            :color="connection.source.view.color"
+            :icon="connection.synapse.icon"
             size="small"
             variant="text"
           />
           <v-btn icon size="small">
-            <node-avatar
-              :color="connection.target.view.color"
-              :elementType="connection.target.model.elementType"
-              :label="connection.target.view.label"
-              :weight="connection.target.view.weight"
-              size="32px"
-            />
+            <node-avatar :node="connection.target" size="32px" />
           </v-btn>
         </div>
         <v-spacer />
@@ -51,11 +37,11 @@
               {{ param.id }}
             </v-list-item>
 
-            <node-param-viewer
-              :color="connection.source.color"
-              :options="param.options"
-              v-model="param.value"
+            <synapse-param-viewer
+              :color="connection.source.view.color"
               :key="index"
+              :options="param.options"
+              :value="param.value"
               v-for="(param, index) in connection.synapse.params"
             />
           </v-list>
@@ -70,7 +56,7 @@ import { computed } from "vue";
 
 import { Connection } from "@nest/core/connection/connection";
 import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
-import NodeParamViewer from "@nest/components/node/NodeParamViewer.vue";
+import SynapseParamViewer from "@nest/components/synapse/SynapseParamViewer.vue";
 
 const props = defineProps({
   connection: Connection,

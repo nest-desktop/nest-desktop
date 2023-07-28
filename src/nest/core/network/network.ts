@@ -284,9 +284,8 @@ export class Network extends Config {
       target: target.idx,
     });
 
-    const weight: string = source.view.weight;
-    if (weight === "inhibitory") {
-      source.setWeights(weight);
+    if (source.view.state.synWeights) {
+      connection.synapse.weightLabel = source.view.state.synWeights;
     }
 
     // Trigger network change.

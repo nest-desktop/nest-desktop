@@ -1,7 +1,7 @@
 <template>
   <v-toolbar
     :collapse="state.collapse"
-    :key="projectStore.project.network.state.hash"
+    :key="graph?.network.state.hash"
     color="transparent"
     density="compact"
     absolute
@@ -24,7 +24,7 @@
       <v-dialog max-width="450" v-model="state.dialogDelete">
         <template #activator="{ props }">
           <v-btn
-            :disabled="projectStore.project.network.isEmpty"
+            :disabled="graph?.network.isEmpty"
             icon="mdi-trash-can-outline"
             size="small"
             title="Delete all network elements"
@@ -61,29 +61,29 @@
       /> -->
 
       <v-btn
-        :color="graph.workspace.state.centerSelected ? 'amber' : 'grey'"
+        :color="graph?.workspace.state.centerSelected ? 'amber' : 'grey'"
         :icon="
-          graph.workspace.state.centerSelected
+          graph?.workspace.state.centerSelected
             ? 'mdi-image-filter-center-focus'
             : 'mdi-image-filter-center-focus-strong-outline'
         "
-        @click="() => graph.workspace.toggleCenterSelected()"
+        @click="() => graph?.workspace.toggleCenterSelected()"
         size="small"
         title="Auto-center currently selected element"
       />
 
       <v-btn
-        :color="graph.workspace.state.centerNetwork ? 'amber' : 'grey'"
-        @click="() => graph.workspace.toggleCenterNetwork()"
+        :color="graph?.workspace.state.centerNetwork ? 'amber' : 'grey'"
+        @click="() => graph?.workspace.toggleCenterNetwork()"
         icon="mdi-focus-field"
         size="small"
         title="Auto-center whole network graph"
       />
 
       <v-btn
-        :color="graph.workspace.state.showGrid ? 'amber' : 'grey'"
-        @click="() => graph.workspace.toggleGrid()"
-        :icon="graph.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
+        :color="graph?.workspace.state.showGrid ? 'amber' : 'grey'"
+        @click="() => graph?.workspace.toggleGrid()"
+        :icon="graph?.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
         size="small"
         title="Show background grid"
       />
@@ -97,16 +97,10 @@ import { computed, reactive } from "vue";
 import { downloadSVGImage } from "@/utils/download";
 
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
-import { useProjectStore } from "@nest/store/project/projectStore";
+import { useNetworkGraphStore } from "@/nest/store/graph/networkGraphStore";
 
-const projectStore = useProjectStore();
-
-const props = defineProps({
-  graph: NetworkGraph,
-  transparentWorkspace: { default: false, type: Boolean },
-});
-
-const graph = computed(() => props.graph as NetworkGraph);
+const networkGraphStore = useNetworkGraphStore();
+const graph = computed(() => networkGraphStore.graph as NetworkGraph);
 
 const state = reactive({
   dialogDelete: false,
@@ -118,7 +112,7 @@ const state = reactive({
  * Delete network.
  */
 const deleteNetwork = () => {
-  projectStore.project.network.clear();
+  graph.value?.network.clear();
   state.dialogDelete = false;
 };
 
@@ -128,8 +122,8 @@ const deleteNetwork = () => {
 const downloadNetworkGraph = () => {
   if (!graph.value.selector) return;
   downloadSVGImage(
-    graph.value.selector.node(),
-    projectStore.project.network.project.name
+    graph.value?.selector.node(),
+    graph.value?.network.project.name
   );
   state.dialogDownload = false;
 };

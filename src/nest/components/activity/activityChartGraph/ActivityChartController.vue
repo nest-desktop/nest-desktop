@@ -118,7 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 // import draggable from "vuedraggable";
 
 // import { useAppStore } from "@/store/appStore";
@@ -142,17 +142,17 @@ const graph = computed(
     projectStore.project.activityGraph.activityChartGraph as ActivityChartGraph
 );
 
-const state = reactive({
-  color: "#9e9e9e",
-  menu: {
-    position: {
-      x: 0,
-      y: 0,
-    },
-    // record: null as NodeRecord,
-    show: false,
-  },
-});
+// const state = reactive({
+//   color: "#9e9e9e",
+//   menu: {
+//     position: {
+//       x: 0,
+//       y: 0,
+//     },
+//     // record: null as NodeRecord,
+//     show: false,
+//   },
+// });
 
 /**
  * Add panel.

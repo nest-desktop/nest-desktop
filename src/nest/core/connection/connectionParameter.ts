@@ -40,6 +40,21 @@ export class ConnectionParameter extends Parameter {
       : types;
   }
 
+  get visible(): boolean {
+    return this.connection.paramsVisible.includes(this.id);
+  }
+
+  set visible(value: boolean) {
+    const isVisible = this.connection.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.connection.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.connection.paramsVisible = this.connection.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id
+      );
+    }
+  }
+
   /**
    * Observer for parameter changes.
    *
@@ -54,9 +69,7 @@ export class ConnectionParameter extends Parameter {
    * Hide this parameter.
    */
   hide(): void {
-    this.connection.paramsVisible = this.connection.paramsVisible.filter(
-      (item) => item !== this.id
-    );
+    this.visible = false
   }
 
   PyNNParamId(): string {

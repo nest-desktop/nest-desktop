@@ -186,7 +186,7 @@ export class ConnectionGraph {
         )
         .style(
           "opacity",
-          connection.source.state.targetsLength === 1 ||
+          connection.source.state.connectionsLength === 1 ||
             !connection.connections.state.focusedConnection ||
             connection.state.isFocused ||
             connection.state.isSelected
@@ -195,7 +195,7 @@ export class ConnectionGraph {
         )
         .attr(
           "marker-end",
-          `url(#${connection.view.markerEndLabel}${connection.idx})`
+          `url(#syn-${connection.idx})`
         )
         .style(
           "stroke-dasharray",
@@ -207,7 +207,7 @@ export class ConnectionGraph {
       // const pos = connection.view.markerEndPosition;
 
       this._networkGraph.selector
-        ?.selectAll(`#${connection.view.markerEndLabel}${connection.idx}`)
+        ?.selectAll(`#syn-${connection.idx}`)
         .select("text")
         .attr("dx", connection.view.toRight ? 8 : -8)
         .attr("dy", connection.view.toRight ? 3.5 : -4.5)

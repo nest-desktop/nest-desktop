@@ -1,6 +1,6 @@
 <template>
   <card
-    :color="node.color"
+    :color="node.view.color"
     class="node my-1"
     rounded="1"
     variant="outlined"
@@ -9,12 +9,9 @@
     <v-card-title>
       <div class="d-flex text-button">
         <node-avatar
+          :node="node"
           size="48px"
           title="Graphical representation"
-          :color="node.color"
-          :label="node.label"
-          :elementType="node.elementType"
-          :weight="node.weight"
         />
         <div class="ma-auto" title="Node model">{{ node.modelId }}</div>
         <div class="my-auto" title="Population size">{{ node.size }}</div>
@@ -35,17 +32,17 @@
     <v-card-actions
       class="pa-0"
       style="min-height: 40px"
-      v-if="node.state.targetsLength > 0"
+      v-if="node.state.connectionsLength > 0"
     >
       <v-expansion-panels
-        :key="node.state.targetsLength"
+        :key="node.state.connectionsLength"
         multiple
         variant="accordion"
       >
         <connection-viewer
           :key="index"
           :connection="(connection as Connection)"
-          v-for="(connection, index) in node.targets"
+          v-for="(connection, index) in node.connections"
         />
       </v-expansion-panels>
     </v-card-actions>

@@ -24,4 +24,20 @@ export class NodeCompartmentParameter extends NodeParameter {
   get nodeCompartment(): NodeCompartment {
     return this.parent as NodeCompartment;
   }
+
+  get visible(): boolean {
+    return this.nodeCompartment.node.paramsVisible.includes(this.id);
+  }
+
+  set visible(value: boolean) {
+    const isVisible = this.nodeCompartment.node.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.nodeCompartment.node.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.nodeCompartment.node.paramsVisible =
+        this.nodeCompartment.node.paramsVisible.filter(
+          (paramId: string) => paramId !== this.id
+        );
+    }
+  }
 }
