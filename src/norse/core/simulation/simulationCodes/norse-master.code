@@ -23,7 +23,7 @@ l1.weight.data.fill_(1) # all to all connectivity
 {{ view.label }} = norse.torch.{{ modelId }}({{ #hasSomeVisibleParams }}p=norse.torch.LIFParameters({{ #filteredParams }}
   {{ id }}=torch.tensor({{ code }}),{{ /filteredParams }})
 {{ /hasSomeVisibleParams }}{{ #network.nodes.hasSomeAnalogRecorder }}
-  , record_states=True{{ /network.nodes.hasSomeAnalogRecorder }})
+{{ #hasSomeVisibleParams }}  , {{ /hasSomeVisibleParams }}record_states=True{{ /network.nodes.hasSomeAnalogRecorder }})
 {{ /network.nodes.neurons }}
 {{ /simulation.code.createNodes }}
 
