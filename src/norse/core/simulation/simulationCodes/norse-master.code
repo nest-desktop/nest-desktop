@@ -13,9 +13,7 @@
 # Connect nodes
 {{ #network.connections.connectionsWithoutRecorders }}
 l1 = torch.nn.Linear({{ source.size }}, {{ target.size }}, bias=False)
-
 l1.weight.data.fill_(1) # all to all connectivity
-
 {{ /network.connections.connectionsWithoutRecorders }}
 
 # Create neurons
