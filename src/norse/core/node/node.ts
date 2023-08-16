@@ -113,6 +113,10 @@ export class Node extends NorseConfig {
     return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
+  get firstTargetNodeSize(): number {
+    return this.targetNodes.length > 0 ? this.targetNodes[0].size : 0
+  }
+
   get hash(): string {
     return this._state.hash;
   }

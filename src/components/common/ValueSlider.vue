@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -36,8 +36,6 @@ const props = defineProps({
   step: { default: 1, type: Number },
   unit: { default: "", type: String },
 });
-
-const modelRef = ref(0);
 
 const decrement = () => {
   value.value -= props.step;
@@ -53,20 +51,13 @@ const numDecimals = () => {
 };
 
 const value = computed({
-  get: () => modelRef.value,
+  get: () => props.modelValue,
   set: (value) => {
     const val = typeof value === "string" ? parseFloat(value) : value;
-    modelRef.value = parseFloat(val.toFixed(numDecimals()));
-    emit("update:modelValue", modelRef.value);
+    const valueFixed = parseFloat(val.toFixed(numDecimals()));
+    emit("update:modelValue", valueFixed);
   },
 });
-
-watch(
-  () => props.modelValue,
-  () => {
-    modelRef.value = props.modelValue;
-  }
-);
 </script>
 
 <style lang="scss">

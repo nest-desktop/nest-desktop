@@ -143,7 +143,7 @@ export class Simulation extends NorseConfig {
         return: "response",
       })
       .then((response: any) => {
-        console.log(response);
+        console.log(response)
         let data: any;
         switch (response.status) {
           case 0:
