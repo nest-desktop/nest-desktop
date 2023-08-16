@@ -7,7 +7,7 @@ export const useNorseSimulatorStore = defineStore("norse-simulator-backend", {
   state: () => ({
     backend: new Backend("NorseSimulator", {
       path: "/",
-      port: 5000,
+      port: 11428,
       versionPath: "/",
       protocol: "http:"
     }),
