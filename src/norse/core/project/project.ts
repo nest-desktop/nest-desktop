@@ -330,7 +330,6 @@ export class Project {
     this.activities.reset();
 
     this._simulation.start().then((response: any) => {
-      console.log(response);
 
       if (
         response == null ||

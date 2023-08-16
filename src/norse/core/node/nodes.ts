@@ -53,6 +53,20 @@ export class Nodes {
     return this._nodes.filter;
   }
 
+  /**
+   * Some recorders for analog signals
+   */
+  get hasSomeAnalogRecorder(): boolean {
+    return this._nodes.some((node: Node) => node.model.isAnalogRecorder);
+  }
+
+  /**
+   * Get recorders
+   */
+  get hasSomeSpikeRecorder(): boolean {
+    return this._nodes.some((node: Node) => node.model.isSpikeRecorder);
+  }
+
   get isNodeSourceSelected(): boolean {
     const selectedNode = this._state.selectedNode;
     return selectedNode ? !selectedNode.model.isWeightRecorder : false;

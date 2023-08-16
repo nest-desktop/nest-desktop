@@ -3,6 +3,7 @@
   "elementType": "stimulator",
   "id": "dc_generator",
   "label": "direct current",
+  "code": "torch.ones",
   "recordables": ["I"],
   "params": [
     {
@@ -13,6 +14,15 @@
       "min": -1000,
       "step": 1,
       "unit": "pA",
+      "value": 0
+    },
+    {
+      "id": "timesteps",
+      "input": "valueSlider",
+      "label": "timesteps",
+      "max": 100,
+      "min": 0,
+      "step": 1,
       "value": 0
     },
     {

@@ -14,6 +14,7 @@ export const useProjectDBStore = defineStore("norse-project-db", {
     db: new ProjectDB(),
     numLoaded: 0,
     projectAssets: [
+      "neuronal-states",
       "spike-activity"
     ],
     projects: [] as (Project | ProjectProps | any)[], // TODO: any should be removed.

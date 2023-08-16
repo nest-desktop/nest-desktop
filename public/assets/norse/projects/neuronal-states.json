@@ -1,5 +1,5 @@
 {
-  "name": "spike activity",
+  "name": "neuronal-states",
   "network": {
     "nodes": [
       {
@@ -18,7 +18,7 @@
         }
       },
       {
-        "model": "spike_recorder",
+        "model": "voltmeter",
         "view": {
           "position": { "x": 325, "y": 25 }
         }
@@ -26,7 +26,7 @@
     ],
     "connections": [
       { "source": 0, "target": 1 },
-      { "source": 1, "target": 2 }
+      { "source": 2, "target": 1 }
     ]
   },
   "simulation": {
