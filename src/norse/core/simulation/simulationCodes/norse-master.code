@@ -43,9 +43,9 @@ response = {
 {{ #network.nodes.hasSomeAnalogRecorder }}
 # Get voltage
 vm = state1.v.detach().numpy()
-t = np.arange(0,100)
-id = np.arange(0,10)
-ids, ts  = np.meshgrid(id,t)
+t = np.arange(0, {{ simulation.time }})
+id = np.arange(0, 1)
+ids, ts  = np.meshgrid(id, t)
 
 response = {
   "events": [ {
