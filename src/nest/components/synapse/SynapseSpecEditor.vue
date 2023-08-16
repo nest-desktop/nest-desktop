@@ -89,7 +89,7 @@
 import { computed } from "vue";
 
 import SynapseParamEditor from "@nest/components/synapse/SynapseParamEditor.vue";
-import { Synapse } from "@/nest/core/synapse/synapse";
+import { Synapse } from "@nest/core/synapse/synapse";
 
 const props = defineProps({
   synapse: Synapse,

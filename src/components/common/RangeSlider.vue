@@ -47,8 +47,8 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:modelValue"]);
 const modelRef: UnwrapRef<{ lower: number; upper: number }> = reactive({
-  lower: props.modelValue[0] as number,
-  upper: props.modelValue[1] as number,
+  lower: 0,
+  upper: 1,
 });
 
 // @ts-ignore

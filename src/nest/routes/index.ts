@@ -13,14 +13,14 @@ import projectRoutes from "./projectRoute";
 export default [
   {
     path: "model/",
-    name: "modelParent",
-    component: () => import("../layouts/model/ModelLayout.vue"),
+    name: "NESTModelParent",
+    component: () => import("@nest/layouts/model/ModelLayout.vue"),
     children: modelRoutes as RouteRecordRaw[],
   },
   {
     path: "project/",
-    name: "projectParent",
-    component: () => import("../layouts/project/ProjectLayout.vue"),
+    name: "NESTProjectParent",
+    component: () => import("@nest/layouts/project/ProjectLayout.vue"),
     children: projectRoutes as RouteRecordRaw[],
   },
 ];

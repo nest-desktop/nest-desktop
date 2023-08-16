@@ -1,7 +1,6 @@
 // connectionMask.ts
 
-import { Config } from "@/helpers/config";
-
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Connection } from "./connection";
 
 enum MaskType {
@@ -17,7 +16,7 @@ export interface ConnectionMaskProps {
   specs: any;
 }
 
-export class ConnectionMask extends Config {
+export class ConnectionMask extends NESTConfig {
   private _connection: Connection;
   private _graph: any;
   private _masktype: MaskType;

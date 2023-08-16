@@ -1,10 +1,10 @@
 // nodeSpatial.ts
 
 import { sha1 } from "object-hash";
-import { Config } from "@/helpers/config";
 
 import { FreePositions, FreePositionsProps } from "./freePositions";
 import { GridPositions, GridPositionsProps } from "./gridPositions";
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Node } from "../node";
 
 export interface NodeSpatialProps {
@@ -12,7 +12,7 @@ export interface NodeSpatialProps {
   specs?: FreePositionsProps | GridPositionsProps;
 }
 
-export class NodeSpatial extends Config {
+export class NodeSpatial extends NESTConfig {
   private _hash: string = "";
   private _node: Node;
   private _positions: FreePositions | GridPositions | undefined;

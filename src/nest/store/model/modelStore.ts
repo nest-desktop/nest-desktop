@@ -2,7 +2,7 @@
 
 import { defineStore } from "pinia";
 
-export const useModelStore = defineStore("model-view", {
+export const useModelStore = defineStore("nest-model-view", {
   state: () => ({
     controllerOpen: false,
     controllerView: "",

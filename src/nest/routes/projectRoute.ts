@@ -43,7 +43,7 @@ const projectRedirect = (to: any) => {
 export default [
   {
     path: "",
-    name: "Project",
+    name: "NESTProject",
     redirect: projectRedirect,
   },
   {
@@ -52,33 +52,33 @@ export default [
     children: [
       {
         path: "",
-        name: "ProjectId",
+        name: "NESTProjectId",
         props: true,
         redirect: projectRedirect,
       },
       {
         path: "edit",
-        name: "NetworkGraphEditor",
+        name: "NESTNetworkGraphEditor",
         components: {
-          project: () => import("../views/project/NetworkGraphEditor.vue"),
+          project: () => import("@nest/views/project/NetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
       },
       {
         path: "explore",
-        name: "ActivityExplorer",
+        name: "NESTActivityExplorer",
         components: {
-          project: () => import("../views/project/ActivityExplorer.vue"),
+          project: () => import("@nest/views/project/ActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
       },
       {
         path: "lab",
-        name: "LabBook",
+        name: "NESTLabBook",
         components: {
-          project: () => import("../views/project/LabBook.vue"),
+          project: () => import("@nest/views/project/LabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

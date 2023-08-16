@@ -31,7 +31,7 @@ export class Backend extends Config {
     name: string,
     seek: SeekProps = { path: "", port: 0, protocol: "", versionPath: "" }
   ) {
-    super(name);
+    super(`Backend${name}`);
     this._state = reactive({
       enabled: false,
       ready: false,

@@ -3,10 +3,10 @@
 import { reactive, UnwrapRef } from "vue";
 import { ILogObj, Logger } from "tslog";
 
-import { Config } from "@/helpers/config";
 import { openToast } from "@/utils/toast";
 import { logger as mainLogger } from "@/utils/logger";
 
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Project } from "../project/project";
 import { SimulationCode, SimulationCodeProps } from "./simulationCode";
 import { SimulationKernel, SimulationKernelProps } from "./simulationKernel";
@@ -26,7 +26,7 @@ interface SimulationState {
   timeInfo: { [key: string]: number };
 }
 
-export class Simulation extends Config {
+export class Simulation extends NESTConfig {
   private _code: SimulationCode;
   private _logger: Logger<ILogObj>;
   private _kernel: SimulationKernel; // simulation kernel

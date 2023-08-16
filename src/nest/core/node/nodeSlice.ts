@@ -1,11 +1,10 @@
 // nodeSlice.ts
 
-import { Config } from "@/helpers/config";
-
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Node } from "./node";
 import { NodeParameter, NodeParameterProps } from "./nodeParameter";
 
-export class NodeSlice extends Config {
+export class NodeSlice extends NESTConfig {
   private readonly _name = "NodeSlice";
   private _node: Node;
   private _params: { [key: string]: NodeParameter } = {};
