@@ -6,7 +6,7 @@ import { defineStore } from "pinia";
 export const useNorseSimulatorStore = defineStore("norse-simulator-backend", {
   state: () => ({
     backend: new Backend("NorseSimulator", {
-      path: "/",
+      path: "/norse",
       port: 11428,
       versionPath: "/",
       protocol: "http:"

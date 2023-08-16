@@ -2,7 +2,7 @@
   "custom": false,
   "enabled": true,
   "hostname": "",
-  "path": "/",
+  "path": "/norse",
   "port": "11428",
   "protocol": "http:"
 }
