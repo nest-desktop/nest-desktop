@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from "vue";
+import { computed } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
