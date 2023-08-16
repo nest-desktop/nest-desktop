@@ -2,7 +2,6 @@
 
 import { ILogObj, Logger } from "tslog";
 
-import { Config } from "@/helpers/config";
 import { Parameter } from "@/helpers/parameter";
 import { logger as mainLogger } from "@/utils/logger";
 
@@ -12,6 +11,7 @@ import { Connection } from "../connection/connection";
 import { CopyModel } from "../model/copyModel";
 import { Model } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Network } from "../network/network";
 import {
   NodeCompartment,
@@ -39,7 +39,7 @@ export interface NodeProps {
   activity?: ActivityProps;
 }
 
-export class Node extends Config {
+export class Node extends NESTConfig {
   private readonly _name = "Node";
 
   private _activity?: SpikeActivity | AnalogSignalActivity | Activity;

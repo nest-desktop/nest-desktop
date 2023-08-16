@@ -97,7 +97,7 @@ import { computed, reactive } from "vue";
 import { downloadSVGImage } from "@/utils/download";
 
 import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
-import { useNetworkGraphStore } from "@/nest/store/graph/networkGraphStore";
+import { useNetworkGraphStore } from "@nest/store/graph/networkGraphStore";
 
 const networkGraphStore = useNetworkGraphStore();
 const graph = computed(() => networkGraphStore.graph as NetworkGraph);

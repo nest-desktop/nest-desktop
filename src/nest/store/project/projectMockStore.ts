@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 
 import { Project } from "@nest/core/project/project";
 
-export const useProjectMockStore = defineStore("projectMock", () => {
+export const useProjectMockStore = defineStore("nest-project-mock", () => {
   const state = reactive({
     project: new Project(),
   });

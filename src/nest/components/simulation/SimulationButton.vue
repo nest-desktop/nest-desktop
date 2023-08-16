@@ -2,7 +2,7 @@
   <div class="simulationButton">
     <div class="btn-split text-no-wrap">
       <v-btn
-        :disabled="state.disabled"
+        :disabled="simulation.state.running"
         :loading="simulation.state.running"
         @click="projectStore.startSimulation()"
         class="btn-main"
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useProjectStore } from "@nest/store/project/projectStore";
 import { Simulation } from "@nest/core/simulation/simulation";
 
@@ -55,7 +55,7 @@ const simulation = computed(
 );
 
 const state = reactive({
-  disabled: props.disabled,
+  disabled: false,
   items: [
     {
       id: "simulateAfterChange",
@@ -97,6 +97,10 @@ const state = reactive({
   // project: props.project as Project,
   // projectConfig: projectView.config,
 });
+
+onMounted(() => {
+  state.disabled = props.disabled || false
+})
 </script>
 
 <style lang="scss">

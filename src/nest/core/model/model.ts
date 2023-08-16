@@ -4,7 +4,6 @@ import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
-import { Config } from "@/helpers/config";
 import { logger as mainLogger } from "@/utils/logger";
 
 import {
@@ -13,6 +12,7 @@ import {
 } from "./modelCompartmentParameter";
 import { ModelParameter, ModelParameterProps } from "./modelParameter";
 import { ModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { useModelDBStore } from "@nest/store/model/modelDBStore";
 
 export interface ModelProps {
@@ -27,7 +27,7 @@ export interface ModelProps {
   version?: string;
 }
 
-export class Model extends Config {
+export class Model extends NESTConfig {
   private readonly _name = "Model";
 
   private _abbreviation: string;

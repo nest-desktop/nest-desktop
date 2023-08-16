@@ -7,6 +7,7 @@
 // Composables
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import nestRoutes from "@nest/routes";
+import norseRoutes from "@norse/routes";
 
 import { useNavStore } from "@/store/navStore";
 
@@ -65,6 +66,11 @@ const routes: RouteRecordRaw[] = [
         path: "nest/",
         name: "nest",
         children: nestRoutes as RouteRecordRaw[],
+      },
+      {
+        path: "norse/",
+        name: "norse",
+        children: norseRoutes as RouteRecordRaw[],
       },
     ],
   },

@@ -1,0 +1,35 @@
+{
+  "name": "spike activity",
+  "network": {
+    "nodes": [
+      {
+        "model": "dc_generator",
+        "params": [{ "id": "amplitude", "value": 1 }],
+        "view": {
+          "position": { "x": 25, "y": 25 }
+        }
+      },
+      {
+        "model": "LIF",
+        "size": 10,
+        "view": {
+          "position": { "x": 175, "y": 75 }
+        }
+      },
+      {
+        "model": "spike_recorder",
+        "view": {
+          "position": { "x": 325, "y": 25 }
+        }
+      }
+    ],
+    "connections": [
+      { "source": 0, "target": 1 },
+      { "source": 1, "target": 2 }
+    ]
+  },
+  "simulation": {
+    "time": 100
+  },
+  "version": "3.3.0"
+}

@@ -2,18 +2,18 @@
 
 import { ILogObj, Logger } from "tslog";
 
-import { Config } from "@/helpers/config";
 import { logger as mainLogger } from "@/utils/logger";
 
+import { Activity } from "../activity/activity";
 import { Connection, ConnectionProps } from "../connection/connection";
 import { Connections } from "../connection/connections";
 import { CopyModel, CopyModelProps } from "../model/copyModel";
 import { CopyModels } from "../model/copyModels";
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { NetworkState } from "./networkState";
 import { Node, NodeProps } from "../node/node";
 import { Nodes } from "../node/nodes";
 import { Project } from "../project/project";
-import { Activity } from "../activity/activity";
 
 export interface NetworkProps {
   models?: CopyModelProps[];
@@ -21,7 +21,7 @@ export interface NetworkProps {
   connections?: ConnectionProps[];
 }
 
-export class Network extends Config {
+export class Network extends NESTConfig {
   private _connections: Connections; // for nest.Connect
   private _logger: Logger<ILogObj>;
   private _models: CopyModels; // for nest.CopyModel

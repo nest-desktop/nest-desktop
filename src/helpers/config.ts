@@ -5,12 +5,13 @@ export class Config {
 
   constructor(name: string) {
     this._configName = name;
+
     if (!this.isConfigValid) {
       this.upgradeConfig();
     }
   }
 
-  get config(): any{
+  get config(): any {
     return this.localStorage;
   }
 
@@ -70,6 +71,7 @@ export class Config {
 
   upgradeConfig(): void {
     this.importConfig().then((importedData) => {
+      console.log(importedData);
       const storedData: any = this.localStorage || {};
       Object.entries(importedData).forEach((entry: any) => {
         if (!(entry[0] in storedData)) {

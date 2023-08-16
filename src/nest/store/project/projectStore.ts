@@ -11,7 +11,7 @@ import { useProjectDBStore } from "./projectDBStore";
 
 const logger = mainLogger.getSubLogger({ name: "project store" });
 
-export const useProjectStore = defineStore("project-view", {
+export const useProjectStore = defineStore("nest-project-view", {
   state: () => ({
     bottomOpen: false,
     controllerOpen: false,
@@ -53,9 +53,9 @@ export const useProjectStore = defineStore("project-view", {
      * Start simulation of the current project.
      */
     startSimulation(): void {
-      logger.trace("start simulation:", this.projectId?.slice(0, 6));
+      logger.trace("start NEST simulation:", this.projectId?.slice(0, 6));
       router.push({
-        name: "ActivityExplorer",
+        name: "NESTActivityExplorer",
         params: { projectId: this.projectId },
       });
       this.project.startSimulation();

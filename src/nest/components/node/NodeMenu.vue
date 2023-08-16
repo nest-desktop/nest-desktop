@@ -197,7 +197,7 @@ import { computed, onMounted, reactive } from "vue";
 
 import { Node } from "@nest/core/node/node";
 import ModelDocumentation from "@nest/views/model/ModelDoc.vue";
-import { useNetworkGraphStore } from "@/nest/store/graph/networkGraphStore";
+import { useNetworkGraphStore } from "@nest/store/graph/networkGraphStore";
 // import NodeModelSelect from '@nest/components/node/NodeModelSelect.vue';
 // import NodeParamEdit from '@nest/components/node/NodeParamEdit.vue';
 

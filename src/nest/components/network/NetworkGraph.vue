@@ -76,7 +76,7 @@ import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNetworkGraphStore } from "@nest/store/graph/networkGraphStore";
 
 import { Network } from "@nest/core/network/network";
-import { NetworkGraph } from "@/nest/graph/networkGraph/networkGraph";
+import { NetworkGraph } from "@nest/graph/networkGraph/networkGraph";
 
 const props = defineProps({ network: Network });
 const network = computed(() => props.network as Network);

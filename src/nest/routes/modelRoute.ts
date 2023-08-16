@@ -37,7 +37,7 @@ const modelRedirect = (to: any) => {
 export default [
   {
     path: "",
-    name: "Model",
+    name: "NESTModel",
     redirect: modelRedirect,
   },
   {
@@ -46,34 +46,34 @@ export default [
     children: [
       {
         path: "doc",
-        name: "ModelDoc",
+        name: "NESTModelDoc",
         components: {
-          model: () => import("../views/model/ModelDoc.vue"),
+          model: () => import("@nest/views/model/ModelDoc.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
       },
       {
         path: "explore",
-        name: "ModelExplorer",
+        name: "NESTModelExplorer",
         components: {
-          model: () => import("../views/model/ModelExplorer.vue"),
+          model: () => import("@nest/views/model/ModelExplorer.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
       },
       {
         path: "edit",
-        name: "ModelEditor",
+        name: "NESTModelEditor",
         components: {
-          model: () => import("../views/model/ModelEditor.vue"),
+          model: () => import("@nest/views/model/ModelEditor.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
       },
       {
         path: "*",
-        name: "ModelId",
+        name: "NESTModelId",
         props: true,
         redirect: modelRedirect,
       },

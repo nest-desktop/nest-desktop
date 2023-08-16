@@ -1,7 +1,6 @@
 // connection.ts
 
 import { ILogObj, Logger } from "tslog";
-import { Config } from "@/helpers/config";
 import { logger as mainLogger } from "@/utils/logger";
 
 import { ConnectionMask, ConnectionMaskProps } from "./connectionMask";
@@ -15,12 +14,13 @@ import { ConnectionView } from "./connectionView";
 import { Connections } from "./connections";
 import { CopyModel } from "../model/copyModel";
 import { Model } from "../model/model";
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Network } from "../network/network";
 import { Node } from "../node/node";
+import { NodeParameterProps } from "../node/nodeParameter";
 import { NodeSlice } from "../node/nodeSlice";
 import { Synapse, SynapseProps } from "../synapse/synapse";
 import { SynapseParameter } from "../synapse/synapseParameter";
-import { NodeParameterProps } from "../node/nodeParameter";
 
 export interface ConnectionProps {
   source: number;
@@ -33,7 +33,7 @@ export interface ConnectionProps {
   synapse?: SynapseProps;
 }
 
-export class Connection extends Config {
+export class Connection extends NESTConfig {
   private readonly _name = "Connection";
 
   private _connections: Connections; // parent

@@ -25,7 +25,7 @@ const modelAssets = [
   "ac_generator",
 ];
 
-export const useModelDBStore = defineStore("model-db", {
+export const useModelDBStore = defineStore("nest-model-db", {
   state: () => ({
     db: new ModelDB(),
     models: [] as Model[],

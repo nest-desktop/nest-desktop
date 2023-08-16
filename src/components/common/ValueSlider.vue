@@ -37,7 +37,7 @@ const props = defineProps({
   unit: { default: "", type: String },
 });
 
-const modelRef = ref(props.modelValue);
+const modelRef = ref(0);
 
 const decrement = () => {
   value.value -= props.step;

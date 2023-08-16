@@ -20,7 +20,7 @@
       </div>
 
       <v-col :cols="12" :md="12" :xl="8" :offset-xl="2">
-        <v-row v-if="state.includeProjectButtons">
+        <v-row v-if="includeProjectButtons">
           <v-col :lg="4" :xs="6" :offset-lg="2">
             <v-btn block color="blue" flat size="large" to="/nest/project">
               <template #prepend>
@@ -113,21 +113,22 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from "vue";
-import { useProjectDBStore } from "@nest/store/project/projectDBStore";
+import { computed } from "vue";
 
 import AppDetails from "@/components/app/AppDetails.vue";
-
 import ebrainsLogo from "@/assets/img/logo/ebrains-logo.svg";
 import euLogo from "@/assets/img/logo/eu-logo.png";
 import hbpLogo from "@/assets/img/logo/hbp-logo.png";
 import nestLogo from "@/assets/img/logo/nest.svg";
 
+import { useProjectDBStore } from "@nest/store/project/projectDBStore";
 const projectDBStore = useProjectDBStore();
 
 const props = defineProps({
   includeProjectButtons: Boolean,
 });
+
+const includeProjectButtons = computed(() => props.includeProjectButtons)
 
 const references = [
   {
@@ -159,23 +160,6 @@ const references = [
     url: "https://www.nest-simulator.org",
   },
 ];
-
-const state = reactive({
-  includeProjectButtons: props.includeProjectButtons,
-  projects: [],
-});
-
-onMounted(() => {
-  state.includeProjectButtons =
-    (props.includeProjectButtons as boolean) || false;
-});
-
-watch(
-  () => [props.includeProjectButtons],
-  () => {
-    state.includeProjectButtons = props.includeProjectButtons as boolean;
-  }
-);
 </script>
 
 <!-- <style lang="scss">

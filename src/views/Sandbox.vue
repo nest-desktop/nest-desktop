@@ -36,7 +36,7 @@ const props = defineProps({
   component: { type: String, default: "alert" },
 });
 
-const currentComponent = ref(props.component);
+const currentComponent = ref("");
 
 const components: any = {
   alert: SandboxAlert,

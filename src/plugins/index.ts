@@ -14,8 +14,8 @@ import router from "../router";
 import codeMirror from "./codemirror";
 
 // Simulator
-// @ts-ignore
-import nest from "@nest";
+import nest from "@/nest";
+import norse from "@/norse";
 
 // Types
 import type { App } from "vue";
@@ -37,5 +37,8 @@ export function registerPlugins(app: App) {
 
   // Use NEST
   app.use(nest);
+
+  // Use Norse
+  app.use(norse);
 
 }

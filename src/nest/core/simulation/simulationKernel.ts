@@ -1,7 +1,6 @@
 // simulationKernel.ts
 
-import { Config } from "@/helpers/config";
-
+import { NESTConfig } from "@nest/core/helpers/nestConfig";
 import { Simulation } from "./simulation";
 
 export interface SimulationKernelProps {
@@ -10,7 +9,7 @@ export interface SimulationKernelProps {
   rngSeed?: number;
 }
 
-export class SimulationKernel extends Config {
+export class SimulationKernel extends NESTConfig {
   private _localNumThreads: number; // number of threads
   private _resolution: number; // time resolution of simulation steps
   private _simulation: Simulation; // parent

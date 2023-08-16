@@ -73,6 +73,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@nest": fileURLToPath(new URL("./src/nest", import.meta.url)),
+      "@norse": fileURLToPath(new URL("./src/norse", import.meta.url)),
     },
     extensions: [
       ".code",

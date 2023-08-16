@@ -1,0 +1,32 @@
+{{ #simulation.code.importModules }}
+# import norse
+# import torch
+# import numpy as np
+{{ /simulation.code.importModules }}
+
+{{ #simulation.code.createNodes }}
+# Create stimulators
+{{ #network.nodes.stimulators }}
+{{ view.label }} = torch.ones(100,1)
+{{ /network.nodes.stimulators }}
+
+# Create neurons
+{{ #network.nodes.neurons }}
+{{ view.label }} = norse.torch.{{ modelId }}()
+{{ /network.nodes.neurons }}
+{{ /simulation.code.createNodes }}
+
+{{ #simulation.code.runSimulation }}
+# Run simulation
+output1, state1 = n1(dc1)
+
+# Get spike times
+spikes = np.argwhere(output1.detach().numpy() == 1)
+
+response = {
+  "events": [ {
+    "times": spikes[:,0],
+    "senders": spikes[:,1]
+  } ],
+}
+{{ /simulation.code.runSimulation }}

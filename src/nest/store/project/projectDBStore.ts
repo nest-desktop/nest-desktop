@@ -9,7 +9,7 @@ import { ProjectDB } from "./projectDB";
 
 const logger = mainLogger.getSubLogger({ name: "project DB store" });
 
-export const useProjectDBStore = defineStore("project-db", {
+export const useProjectDBStore = defineStore("nest-project-db", {
   state: () => ({
     db: new ProjectDB(),
     numLoaded: 0,

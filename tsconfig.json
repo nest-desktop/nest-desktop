@@ -28,6 +28,9 @@
       ],
       "@nest/*" : [
         "src/nest/*"
+      ],
+      "@norse/*" : [
+        "src/norse/*"
       ]
      }
   },
