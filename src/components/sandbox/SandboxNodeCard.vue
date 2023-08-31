@@ -45,7 +45,7 @@ import { reactive } from "vue";
 import { useProjectMockStore } from "@nest/store/project/projectMockStore";
 const projectMockStore = useProjectMockStore();
 
-import ValueSlider from "@/components/common/ValueSlider.vue";
+import ValueSlider from "@/components/controls/ValueSlider.vue";
 import NodeCard from "@nest/components/NodeCard.vue";
 import { Node } from "@nest/core/node/node";
 

@@ -14,8 +14,8 @@ import router from "../router";
 import codeMirror from "./codemirror";
 
 // Simulator
-import nest from "@/nest";
-import norse from "@/norse";
+import nest from "@/plugins/nest";
+import norse from "@/plugins/norse";
 
 // Types
 import type { App } from "vue";
