@@ -51,7 +51,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import Slider from "@/components/common/Slider.vue";
+import Slider from "@/components/controls/Slider.vue";
 
 const state = reactive({
   tab: "components",

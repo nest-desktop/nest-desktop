@@ -1,8 +1,8 @@
 {
-  "custom": false,
+  "custom": true,
   "enabled": true,
-  "hostname": "",
-  "path": "/norse",
-  "port": "11428",
-  "protocol": "http:"
+  "hostname": "nest-desktop-norse.apps-dev.hbp.eu",
+  "path": "norse",
+  "port": "",
+  "protocol": "https:"
 }
