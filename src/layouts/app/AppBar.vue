@@ -1,4 +1,6 @@
 <template>
+  <v-btn class="mx-2" color="systembar" flat icon="mdi-home" size="x-small" to="/" />
+
   <v-menu>
     <template #activator="{ props }">
       <v-btn
@@ -9,11 +11,13 @@
       >
         <template #prepend>
           <v-icon
-            :color="appStore.simulator.color"
-            :icon="appStore.simulator.icon"
+            :color="appStore.currentSimulator.color"
+            :icon="appStore.currentSimulator.icon"
+            style="background-color: white; border-radius: 4px; opacity: 1"
+            size="large"
           />
         </template>
-        {{ appStore.simulator.title }}
+        {{ appStore.currentSimulator.title }}
       </v-btn>
     </template>
 
@@ -21,7 +25,7 @@
       <v-list-item
         :key="index"
         :value="item.id"
-        @click="() => Object.assign(appStore.simulator, item)"
+        :to="'/' + item.id"
         v-for="(item, index) in simulatorItems"
       >
         <template #prepend>
@@ -61,30 +65,17 @@
 
   <v-spacer />
 
-  <v-btn
-    @click.stop="() => nestSimulatorStore.backend.check()"
-    size="x-small"
-    variant="text"
-  >
-    {{ appStore.simulator.title }}
-    <v-icon
-      :color="nestSimulatorStore.backend.state.ready ? 'green' : 'red'"
-      class="mx-1"
-      icon="mdi-circle"
-    />
+  <v-btn size="x-small" variant="text">
+    {{ appStore.currentSimulator.title }}
+    <v-icon class="mx-1" icon="mdi-circle" />
   </v-btn>
 </template>
 
 <script lang="ts" setup>
 import { DatabaseService } from "@/helpers/database";
-import { useAppStore } from "@/store/appStore";
-import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
+import { simulatorItems, useAppStore } from "@/store/appStore";
 
 const appStore = useAppStore();
-const nestSimulatorStore = useNESTSimulatorStore();
-nestSimulatorStore.backend.check();
-
-DatabaseService;
 
 const settingsItems = [
   {
@@ -98,20 +89,17 @@ const settingsItems = [
     id: "destroyDatabase",
     title: "Destroy database",
     onClick: () => {
-      const databases = ["NEST_MODEL_STORE", "NEST_PROJECT_STORE"];
+      const databases = [
+        "NEST_MODEL_STORE",
+        "NEST_PROJECT_STORE",
+        "NORSE_MODEL_STORE",
+        "NORSE_PROJECT_STORE",
+      ];
       databases.forEach((url) => {
         const db = new DatabaseService(url);
         db.destroy();
       });
     },
   },
-];
-
-const simulatorItems = [
-  { id: "nest", title: "NEST", icon: "simulator:nest", color: "nest" },
-  { id: "norse", title: "Norse", icon: "simulator:norse" },
-  { id: "pynn", title: "PyNN", icon: "simulator:pynn" },
-  // { id: "arbor", title: "Arbor", icon: "simulator:arbor" },
-  // { id: "norse", title: "Norse", icon: "simulator:norse" },
 ];
 </script>

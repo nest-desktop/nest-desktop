@@ -8,7 +8,6 @@
     width="64"
   >
     <v-tab
-      :key="index"
       :ripple="false"
       :title="item.title"
       :to="item.path"
@@ -16,7 +15,9 @@
       class="justify-center"
       height="72"
       minWidth="0"
+      :key="index"
       v-for="(item, index) in navItems"
+      v-show="item.simulator === appStore.simulator"
     >
       <v-icon :icon="item.icon" class="ma-1" size="large" />
       <span style="font-size: 9px"> {{ item.title }}</span>
@@ -25,28 +26,33 @@
 </template>
 
 <script lang="ts" setup>
+import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
+
+const appStore = useAppStore();
 const navStore = useNavStore();
 
 const navItems = [
   {
+    icon: "nest:network",
     id: "nestProject",
-    icon: "nest:network",
-    title: "NEST Project",
     path: "/nest/project",
+    simulator: "nest",
+    title: "NEST Project",
   },
   {
-    id: "nestModel",
     icon: "nest:logo",
-    title: "Model",
+    id: "nestModel",
     path: "/nest/model",
+    simulator: "nest",
+    title: "Model",
   },
   {
-    id: "project",
     icon: "nest:network",
-    title: "Norse Project",
+    id: "norseProject",
     path: "/norse/project",
+    simulator: "norse",
+    title: "Norse Project",
   },
 ];
-
 </script>

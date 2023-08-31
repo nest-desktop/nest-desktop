@@ -12,7 +12,7 @@
     <project-nav />
   </v-navigation-drawer>
 
-  <v-app-bar class="d-print-none" color="blue" height="48" flat>
+  <v-app-bar class="d-print-none" color="norse" height="48" flat>
     <project-bar :project="(project as Project)"/>
   </v-app-bar>
 

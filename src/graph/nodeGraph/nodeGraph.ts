@@ -121,7 +121,6 @@ export class NodeGraph {
 
     node.view.state.position.x = event.x;
     node.view.state.position.y = event.y;
-    this._networkGraph.network.nodes.cleanWeightRecorders();
     this._networkGraph.render();
   }
 

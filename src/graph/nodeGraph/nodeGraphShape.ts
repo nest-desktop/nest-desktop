@@ -193,10 +193,7 @@ export class NodeGraphShape {
     this._logger.silly("render");
     const nodes = select("g#nodes").selectAll("g.node");
     nodes.style("pointer-events", () =>
-      this._networkGraph.network.nodes.isWeightRecorderSelected &&
-      this._networkGraph.workspace.state.dragLine
-        ? "none"
-        : ""
+      this._networkGraph.workspace.state.dragLine ? "none" : ""
     );
 
     // Check if neuron has to change its shape.
