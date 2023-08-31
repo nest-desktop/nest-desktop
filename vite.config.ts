@@ -72,15 +72,15 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@nest": fileURLToPath(new URL("./src/nest", import.meta.url)),
-      "@norse": fileURLToPath(new URL("./src/norse", import.meta.url)),
+      "@nest": fileURLToPath(new URL("./src/plugins/nest", import.meta.url)),
+      "@norse": fileURLToPath(new URL("./src/plugins/norse", import.meta.url)),
     },
     extensions: [
-      ".code",
       ".js",
       ".json",
       ".jsx",
       ".mjs",
+      ".mustache",
       ".ts",
       ".tsx",
       ".vue",
