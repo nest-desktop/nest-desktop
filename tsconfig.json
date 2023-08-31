@@ -27,10 +27,10 @@
        "src/*"
       ],
       "@nest/*" : [
-        "src/nest/*"
+        "src/plugins/nest/*"
       ],
       "@norse/*" : [
-        "src/norse/*"
+        "src/plugins/norse/*"
       ]
      }
   },
