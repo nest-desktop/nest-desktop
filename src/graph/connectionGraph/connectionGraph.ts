@@ -39,7 +39,6 @@ export class ConnectionGraph {
     // @ts-ignore
     targetNodePosition.y += event.dy;
 
-    this._networkGraph.network.nodes.cleanWeightRecorders();
     this._networkGraph.render();
   }
 
@@ -81,7 +80,6 @@ export class ConnectionGraph {
         // Draw line between selected node and focused connection.
         if (
           c.network.nodes.state.selectedNode &&
-          c.network.nodes.isWeightRecorderSelected &&
           this.state.dragLine
         ) {
           this._networkGraph.workspace.dragline.drawPath(
@@ -102,7 +100,6 @@ export class ConnectionGraph {
 
         if (
           network.nodes.state.selectedNode &&
-          network.nodes.isWeightRecorderSelected &&
           workspace.state.dragLine
         ) {
           // Set cursor position of the focused connection.

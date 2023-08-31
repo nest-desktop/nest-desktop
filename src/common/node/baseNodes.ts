@@ -43,26 +43,34 @@ export class BaseNodes {
     this.init(nodes);
   }
 
-  get annotations(): any {
-    return this._state.annotations;
-  }
-
   get all(): Node[] {
     return this._nodes;
+  }
+
+  get annotations(): any {
+    return this._state.annotations;
   }
 
   get filter() {
     return this._nodes.filter;
   }
 
-  get isNodeSourceSelected(): boolean {
-    const selectedNode = this._state.selectedNode;
-    return selectedNode ? !selectedNode.model.isWeightRecorder : false;
+  /**
+   * Some recorders for analog signals
+   */
+  get hasSomeAnalogRecorder(): boolean {
+    return this._nodes.some((node: Node) => node.model.isAnalogRecorder);
   }
 
-  get isWeightRecorderSelected(): boolean {
-    const selectedNode = this._state.selectedNode;
-    return selectedNode ? selectedNode.model.isWeightRecorder : false;
+  /**
+   * Some spike recorders
+   */
+  get hasSomeSpikeRecorder(): boolean {
+    return this._nodes.some((node: Node) => node.model.isSpikeRecorder);
+  }
+
+  get isAnyNodeSelected(): boolean {
+    return this._state.selectedNode != null;
   }
 
   /**
@@ -104,13 +112,13 @@ export class BaseNodes {
     return this._nodes.filter((node: Node) => node.model.isSpikeRecorder);
   }
 
-  set selectedNode(node: Node | null) {
-    this._state.selectedNode = this._state.selectedNode !== node ? node : null;
-  }
+  // set selectedNode(node: Node | null) {
+  //   this._state.selectedNode = this._state.selectedNode !== node ? node : null;
+  // }
 
-  get some() {
-    return this._nodes.some;
-  }
+  // get some() {
+  //   return this._nodes.some;
+  // }
 
   get state(): UnwrapRef<NodesState> {
     return this._state;
@@ -151,13 +159,6 @@ export class BaseNodes {
   }
 
   /**
-   * Get nodes with weight recorders.
-   */
-  get weightRecorders(): Node[] {
-    return this._nodes.filter((node: Node) => node.model.isWeightRecorder);
-  }
-
-  /**
    * Add node component.
    *
    * @param data node props
@@ -174,13 +175,6 @@ export class BaseNodes {
    */
   clean(): void {
     this._nodes.forEach((node: Node) => node.clean());
-  }
-
-  /**
-   * Clean weight recorder components.
-   */
-  cleanWeightRecorders(): void {
-    this.weightRecorders.forEach((node: Node) => node.clean());
   }
 
   /**

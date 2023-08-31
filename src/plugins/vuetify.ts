@@ -24,6 +24,13 @@ import { custom } from "@/components/iconsets/custom";
 import { simulator } from "@/components/iconsets/simulator";
 import { nest } from "@nest/components/iconsets";
 
+const colorSimulators = {
+  "norse-accent": "#e6007e",
+  nest: "ff6633",
+  "norse-logo": "#000080",
+  norse: "0F9959"
+};
+
 const colors = {
   blue: ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
   orange: ["ff6633", "#FF7F0E", "#F28E2C"][0],
@@ -74,6 +81,7 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
+          ...colorSimulators,
           ...colors,
           primary: "#424242",
           secondary: "#EEEEEE",
@@ -83,6 +91,7 @@ export default createVuetify({
       },
       dark: {
         colors: {
+          ...colorSimulators,
           ...colors,
           primary: "#EEEEEE",
           secondary: "#424242",

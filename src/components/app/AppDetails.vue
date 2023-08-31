@@ -73,7 +73,6 @@ import { computed, reactive } from "vue";
 import { detect } from "detect-browser";
 
 const appVersion = process.env.APP_VERSION;
-const nestVersion = "3.4";
 const license = "MIT License";
 const contactName = "📧 Sebastian Spreizer";
 const mailto = "spreizer@uni-trier.de";
@@ -98,7 +97,6 @@ const mailBody = () => [
   `Browser name: ${state.browserName}`,
   `Browser version: ${state.browserVersion}`,
   `NEST Desktop version: ${appVersion}`,
-  `NEST Simulator version: ${nestVersion}`,
   `OS type: ${state.osType}`,
 ];
 

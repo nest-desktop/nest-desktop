@@ -8,6 +8,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // Store
+import { simulatorItems, useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
 // Simulators
@@ -21,11 +22,8 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        name: "AppInfo",
-        component: () => import("@/views/AppInfo.vue"),
-        props: {
-          includeProjectButtons: true,
-        },
+        name: "Home",
+        component: () => import("@/views/Home.vue"),
         beforeEnter: () => {
           const navStore = useNavStore();
           navStore.open = false;
@@ -33,8 +31,8 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "about",
-        name: "Home",
-        component: () => import("@/views/AppInfo.vue"),
+        name: "About",
+        component: () => import("@/views/About.vue"),
         props: {
           includeProjectButtons: false,
         },
@@ -44,7 +42,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "sandbox/",
+        path: "sandbox",
         name: "sandboxParent",
         children: [
           {
@@ -66,13 +64,21 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/Vuetify.vue"),
       },
       {
-        path: "nest/",
+        path: "nest",
         name: "nest",
+        beforeEnter: () => {
+          const appStore = useAppStore();
+          appStore.simulator = 'nest';
+        },
         children: nestRoutes as RouteRecordRaw[],
       },
       {
-        path: "norse/",
+        path: "norse",
         name: "norse",
+        beforeEnter: () => {
+          const appStore = useAppStore();
+          appStore.simulator = 'norse';
+        },
         children: norseRoutes as RouteRecordRaw[],
       },
     ],

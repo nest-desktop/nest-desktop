@@ -12,13 +12,18 @@ import projectRoutes from "./projectRoute";
 
 export default [
   {
-    path: "model/",
+    path: "",
+    name: "NorseHome",
+    component: () => import("@norse/layouts/NorseHome.vue"),
+  },
+  {
+    path: "model",
     name: "NorseModelLayout",
     component: () => import("@norse/layouts/model/ModelLayout.vue"),
     children: modelRoutes as RouteRecordRaw[],
   },
   {
-    path: "project/",
+    path: "project",
     name: "NorseProjectLayout",
     component: () => import("@norse/layouts/project/ProjectLayout.vue"),
     children: projectRoutes as RouteRecordRaw[],
