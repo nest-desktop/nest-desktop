@@ -3,7 +3,15 @@
 </template>
 
 <script lang="ts" setup>
-//
+import { onMounted } from "vue";
+import { useTheme } from "vuetify";
+import { useAppStore } from "./store/appStore";
+
+onMounted(() => {
+  const theme = useTheme();
+  const appStore = useAppStore();
+  theme.global.name.value = appStore.darkMode ? "dark" : "light";
+});
 </script>
 
 <style lang="scss">

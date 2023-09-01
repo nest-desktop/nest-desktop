@@ -1,11 +1,19 @@
 <template>
-  <v-btn class="mx-2" color="systembar" flat icon="mdi-home" size="x-small" to="/" />
+  <v-btn
+    class="mx-2"
+    color="systembar"
+    flat
+    icon="mdi-home"
+    size="x-small"
+    to="/"
+  />
 
   <v-menu>
     <template #activator="{ props }">
       <v-btn
         append-icon="mdi-menu-down"
-        size="x-small"
+        rounded="0"
+        size="small"
         v-bind="props"
         variant="text"
       >
@@ -40,7 +48,8 @@
     <template #activator="{ props }">
       <v-btn
         append-icon="mdi-menu-down"
-        size="x-small"
+        rounded="0"
+        size="small"
         v-bind="props"
         variant="text"
       >
@@ -62,6 +71,18 @@
       </v-list-item>
     </v-list>
   </v-menu>
+
+  <v-btn rounded="0" size="small" to="/about" variant="text"> about </v-btn>
+  <v-btn
+    href="https://nest-desktop.readthedocs.io"
+    rounded="0"
+    size="small"
+    target="_blank"
+    variant="text"
+    append-icon="mdi-open-in-new"
+  >
+    help
+  </v-btn>
 
   <v-spacer />
 
@@ -89,13 +110,7 @@ const settingsItems = [
     id: "destroyDatabase",
     title: "Destroy database",
     onClick: () => {
-      const databases = [
-        "NEST_MODEL_STORE",
-        "NEST_PROJECT_STORE",
-        "NORSE_MODEL_STORE",
-        "NORSE_PROJECT_STORE",
-      ];
-      databases.forEach((url) => {
+      appStore.currentSimulator.databases.forEach((url) => {
         const db = new DatabaseService(url);
         db.destroy();
       });

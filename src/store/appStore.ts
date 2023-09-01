@@ -2,19 +2,43 @@
 
 import { defineStore } from "pinia";
 
-export const simulatorItems: { [key: string]: { [key: string]: string } } = {
-  nest: { id: "nest", title: "NEST", icon: "simulator:nest", color: "nest" },
-  norse: { id: "norse", title: "Norse", icon: "simulator:norse" },
+export const simulatorItems: {
+  [key: string]: {
+    id: string;
+    title: string;
+    icon: string;
+    color?: string;
+    databases: string[];
+  };
+} = {
+  nest: {
+    id: "nest",
+    title: "NEST",
+    icon: "simulator:nest",
+    color: "nest",
+    databases: ["NEST_MODEL_STORE", "NEST_PROJECT_STORE"],
+  },
+  norse: {
+    id: "norse",
+    title: "Norse",
+    icon: "simulator:norse",
+    databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
+  },
+  pynn: {
+    id: "pynn",
+    title: "PyNN",
+    icon: "simulator:pynn",
+    databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
+  },
 };
 
 //   { id: "nest", title: "NEST", icon: "simulator:nest", color: "nest" },
 //   { id: "norse", title: "Norse", icon: "simulator:norse" },
 //   { id: "pynn", title: "PyNN", icon: "simulator:pynn" },
 //   // { id: "arbor", title: "Arbor", icon: "simulator:arbor" },
-//   // { id: "norse", title: "Norse", icon: "simulator:norse" },
 // ];
 
-export const useAppStore = defineStore("app-store", {
+export const useAppStore = defineStore("nest-desktop-app-store", {
   state: () => ({
     darkMode: false,
     devMode: false,
@@ -24,14 +48,5 @@ export const useAppStore = defineStore("app-store", {
   getters: {
     currentSimulator: (state) => simulatorItems[state.simulator],
   },
-  actions: {
-    toggleTheme() {
-      this.darkMode = !this.darkMode;
-
-      // this.updateConfig({ darkMode: value });
-      // this._project.view.update();
-      // this._model.view.update();
-      window.dispatchEvent(new Event("darkmode"));
-    },
-  },
+  persist: true,
 });

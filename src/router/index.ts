@@ -12,34 +12,30 @@ import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
 // Simulators
-import nestRoutes from "@nest/routes";
-import norseRoutes from "@norse/routes";
+import nestRoute from "@nest/routes";
+import norseRoute from "@norse/routes";
+
+const closeNav = () => {
+  const navStore = useNavStore();
+  navStore.open = false;
+};
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("@/layouts/app/AppLayout.vue"),
+    component: () => import("@/layouts/AppLayout.vue"),
     children: [
       {
         path: "",
-        name: "Home",
+        name: "home",
         component: () => import("@/views/Home.vue"),
-        beforeEnter: () => {
-          const navStore = useNavStore();
-          navStore.open = false;
-        },
+        beforeEnter: closeNav,
       },
       {
         path: "about",
-        name: "About",
+        name: "about",
         component: () => import("@/views/About.vue"),
-        props: {
-          includeProjectButtons: false,
-        },
-        beforeEnter: () => {
-          const navStore = useNavStore();
-          navStore.open = false;
-        },
+        beforeEnter: closeNav,
       },
       {
         path: "sandbox",
@@ -63,23 +59,16 @@ const routes: RouteRecordRaw[] = [
         name: "vuetify",
         component: () => import("@/views/Vuetify.vue"),
       },
+      nestRoute,
+      norseRoute,
       {
-        path: "nest",
-        name: "nest",
+        path: "pynn",
+        name: "pynn",
         beforeEnter: () => {
           const appStore = useAppStore();
-          appStore.simulator = 'nest';
+          appStore.simulator = "pynn";
         },
-        children: nestRoutes as RouteRecordRaw[],
-      },
-      {
-        path: "norse",
-        name: "norse",
-        beforeEnter: () => {
-          const appStore = useAppStore();
-          appStore.simulator = 'norse';
-        },
-        children: norseRoutes as RouteRecordRaw[],
+        component: () => import("@/components/HelloWorld.vue"),
       },
     ],
   },
