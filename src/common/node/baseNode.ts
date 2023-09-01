@@ -21,13 +21,13 @@ import { Node } from "@/types/nodeTypes";
 import { Nodes } from "@/types/nodesTypes";
 
 export interface NodeProps {
-  model?: string;
-  size?: number;
-  params?: NodeParameterProps[];
-  view?: NodeViewProps;
-  annotations?: string[];
-  records?: NodeRecordProps[];
   activity?: ActivityProps;
+  annotations?: string[];
+  model?: string;
+  params?: NodeParameterProps[];
+  records?: NodeRecordProps[];
+  size?: number;
+  view?: NodeViewProps;
 }
 
 export class BaseNode extends Config {
@@ -43,7 +43,6 @@ export class BaseNode extends Config {
   private _nodes: Nodes; // parent
   private _params: { [key: string]: NodeParameter } = {};
   private _paramsVisible: string[] = [];
-  private _positions: number[][] = [];
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = []; // only for multimeter
   private _size: number;
@@ -107,6 +106,10 @@ export class BaseNode extends Config {
     );
   }
 
+  get doc(): NodeProps {
+    return this._doc;
+  }
+
   get elementType(): string {
     return this.model.elementType;
   }
@@ -121,6 +124,10 @@ export class BaseNode extends Config {
 
   get hash(): string {
     return this._state.hash;
+  }
+
+  get hasSomeVisibleParams(): boolean {
+    return this._paramsVisible.length > 0 || this._modelId === "multimeter";
   }
 
   /**
@@ -236,12 +243,12 @@ export class BaseNode extends Config {
     this.changes();
   }
 
-  get positions(): number[][] {
-    return this._positions;
-  }
-
   get recordables(): NodeRecord[] {
     return this._recordables;
+  }
+
+  set recordables(value: NodeRecord[]) {
+    this._recordables = value;
   }
 
   get records(): NodeRecord[] {
@@ -267,13 +274,6 @@ export class BaseNode extends Config {
       this.connections.filter((connection: Connection) =>
         connection.view.connectSpikeRecorder()
       ).length > 0
-    );
-  }
-
-  get hasSomeVisibleParams(): boolean {
-    return (
-      this._paramsVisible.length > 0 ||
-      this._modelId === "multimeter"
     );
   }
 
@@ -379,13 +379,6 @@ export class BaseNode extends Config {
   }
 
   /**
-   * Check if node has params.
-   */
-  hasParameters(node: NodeProps): boolean {
-    return "params" in node;
-  }
-
-  /**
    * Check if node has parameter component.
    * @param paramId - parameter ID
    */
@@ -393,6 +386,13 @@ export class BaseNode extends Config {
     return Object.keys(this._params).some(
       (paramKey: string) => paramKey === paramId
     );
+  }
+
+  /**
+   * Check if node has params.
+   */
+  hasParameters(node: NodeProps): boolean {
+    return "params" in node;
   }
 
   /**
@@ -528,7 +528,9 @@ export class BaseNode extends Config {
    */
   resetParameters(): void {
     this._logger.trace("reset parameters");
-    this.paramsAll.forEach((param: NodeParameter) => param.reset());
+    this.paramsAll.forEach((param: NodeParameter) => {
+      param.reset();
+    });
 
     this.changes();
   }

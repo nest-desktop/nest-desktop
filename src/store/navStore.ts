@@ -20,4 +20,7 @@ export const useNavStore = defineStore("nav-store", {
       }, 400);
     },
   },
+  persist: {
+    storage: sessionStorage,
+  },
 });

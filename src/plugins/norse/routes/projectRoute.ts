@@ -27,8 +27,18 @@ const projectBeforeEnter = (to: any) => {
   projectStore.view = path[path.length - 1] || "edit";
 };
 
+const projectNew = () => {
+  logger.trace("Create a new norse project");
+  const projectStore = useNorseProjectStore();
+  projectStore.loadProject();
+
+  return {
+    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
+  };
+};
+
 const projectRedirect = (to: any) => {
-  logger.trace("Redirect project path:", to.params.projectId?.slice(0, 6));
+  logger.trace("Redirect to project:", to.params.projectId?.slice(0, 6));
   const projectStore = useNorseProjectStore();
 
   if (to.params.projectId) {
@@ -45,6 +55,11 @@ export default [
     path: "",
     name: "NorseProject",
     redirect: projectRedirect,
+  },
+  {
+    path: "new",
+    name: "NorseProjectNew",
+    redirect: projectNew,
   },
   {
     path: ":projectId/",

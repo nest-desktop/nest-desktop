@@ -63,7 +63,7 @@ export class Simulation extends NESTConfig {
 
   get nestSimulator(): any {
     const nestSimulatorStore = useNESTSimulatorStore();
-    return nestSimulatorStore.backend;
+    return nestSimulatorStore;
   }
 
   get code(): SimulationCode {

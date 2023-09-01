@@ -35,8 +35,7 @@ export class NorseSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const norseSimulatorStore = useNorseSimulatorStore();
-
-    return norseSimulatorStore.backend.instance
+    return norseSimulatorStore.instance
       .post("exec", {
         source: this.code.script,
         return: "response",
@@ -62,6 +61,8 @@ export class NorseSimulation extends BaseSimulation {
             openToast(response.data, { type: "error" });
             break;
         }
+        console.log(data);
+
         return response;
       });
   }

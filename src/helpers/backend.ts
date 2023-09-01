@@ -13,7 +13,7 @@ interface BackendState {
   enabled: boolean;
   ready: boolean;
   seek: SeekProps;
-  version: any;
+  response: any;
 }
 
 interface SeekProps {
@@ -24,6 +24,7 @@ interface SeekProps {
 }
 
 export class Backend extends Config {
+  private _name: string;
   private _logger: Logger<ILogObj>;
   private _state: UnwrapRef<BackendState>;
 
@@ -32,14 +33,15 @@ export class Backend extends Config {
     seek: SeekProps = { path: "", port: 0, protocol: "", versionPath: "" }
   ) {
     super(`Backend${name}`);
+    this._name = name;
     this._state = reactive({
       enabled: false,
       ready: false,
       seek,
-      version: {},
+      response: {},
     });
 
-    this._logger = mainLogger.getSubLogger({ name: `[${name}] backend` });
+    this._logger = mainLogger.getSubLogger({ name: `[${name}] backend`, minLevel: 0 });
   }
 
   get enabled(): boolean {
@@ -65,6 +67,10 @@ export class Backend extends Config {
 
   get instance(): any {
     return axios.create({ baseURL: this.url });
+  }
+
+  get name(): string {
+    return this._name;
   }
 
   get path(): string {
@@ -127,7 +133,7 @@ export class Backend extends Config {
       }
     }
 
-    this.updateConfig({ hostname, path, port, protocol });
+    // this.updateConfig({ hostname, path, port, protocol });
   }
 
   /**
@@ -188,15 +194,16 @@ export class Backend extends Config {
           case 200:
             this.url = url;
             this.state.ready = true;
-            this.state.version = response.data;
+            this.state.response = response;
             break;
           default:
             this.state.ready = false;
             break;
         }
       })
-      .catch(() => {
+      .catch((response: any) => {
         this.state.ready = false;
+        this.state.response = response;
       });
   }
 

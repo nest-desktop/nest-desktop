@@ -1,65 +1,48 @@
 <template>
-  <v-container class="fill-height">
-    <v-responsive class="align-center text-center fill-height">
-      <div class="mb-10">
-        <v-img
-          src="@/assets/img/logo/nest-desktop-logo-light.svg"
-          class="logo my-6"
-          contain
-          height="250"
-        />
+  <v-container>
+    <v-responsive>
+      <v-card class="ma-auto pb-10" flat max-width="640px">
+        <div class="text-center">
+          <v-img
+            src="@/assets/img/logo/nest-desktop-logo-light.svg"
+            class="logo my-6"
+            contain
+            height="250"
+          />
 
-        <!-- :src="
+          <!-- :src="
                 $vuetify.theme.dark
                   ? require('@/assets/img/logo/nest-desktop-logo-dark.svg')
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-        <p class="text-h2">NEST Desktop</p>
-        <p class="text-subtitle-1">An educational GUI for neuroscience</p>
-      </div>
+          <p class="text-h2">NEST Desktop</p>
+          <p class="text-subtitle-1">An educational GUI for neuroscience</p>
+        </div>
 
-      <v-row justify="center" no-gutters>
-        <v-col cols="12" md="6">
-          <v-card flat height="100%" rounded="0" variant="text">
-            <v-card-text>
-              <p class="text-justify">
-                NEST Desktop is a web-based GUI application for NEST Simulator,
-                an advanced simulation tool for computational neuroscience. The
-                application enables the rapid construction, parametrization, and
-                instrumentation of neuronal network models.
-              </p>
-              <p class="text-justify">
-                The primary objective is to provide an accessible classroom tool
-                that allows users to rapidly explore neuroscience concepts
-                without the need to learn a simulator control language at the
-                same time.
-              </p>
-            </v-card-text>
-          </v-card>
-        </v-col>
+        <v-card flat height="100%" rounded="0" variant="text">
+          <v-card-text class="text-justify">
+            <div class="my-1">
+              NEST Desktop is a web-based GUI application for multiple
+              simulation tools with neuronal networks. The application enables
+              the rapid construction, parametrization, and instrumentation of
+              neuronal network models.
+            </div>
+            <div class="my-1">
+              The primary objective is to provide an accessible classroom tool
+              that allows users to rapidly explore neuroscience concepts without
+              the need to learn a simulator control language at the same time.
+            </div>
+          </v-card-text>
+        </v-card>
 
-        <v-col cols="12" md="6">
-          <v-card flat height="100%" rounded="0" variant="text">
-            <v-layout fill-height="true">
-              <v-row align="center">
-                <v-col align="center" cols="12">
-                  <v-card flat>
-                    <v-card-text>
-                      <AppDetails />
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-layout>
-          </v-card>
-        </v-col>
-      </v-row>
+        <v-divider />
+        <AppDetails flat />
+        <v-divider />
 
-      <v-row justify="center" no-gutters>
-        <v-card flat max-width="600px">
-          <v-card-title> Acknowledgement </v-card-title>
-          <v-card-text>
+        <v-card flat>
+          <v-card-title>Acknowledgement</v-card-title>
+          <v-card-text class="text-justify">
             This project has received funding from the European Union’s Horizon
             2020 Framework Programme for Research and Innovation under Specific
             Grant Agreement No. 785907 (Human Brain Project SGA2) and No. 945539
@@ -68,23 +51,25 @@
             SO-092 (Advanced Computing Architectures, ACA). This work was
             supported by the DFG Excellence Cluster BrainLinks-BrainTools (grant
             EXC 1086).
+
+            <v-row class="my-4" justify="center" no-gutters>
+              <v-col
+                :key="reference.title"
+                cols="12"
+                md="4"
+                sm="6"
+                v-for="reference in references"
+              >
+                <v-img :src="reference.iconSrc" contain height="32px" />
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
-      </v-row>
+      </v-card>
 
       <v-footer>
         <v-row justify="center" no-gutters>
-          <v-col
-            :key="reference.title"
-            cols="12"
-            md="4"
-            sm="6"
-            v-for="reference in references"
-          >
-            <v-img :src="reference.iconSrc" contain height="32px" />
-          </v-col>
-
-          <v-col class="text-center mt-4" cols="12">
+          <v-col class="text-center" cols="12">
             2023 — <strong>NEST Desktop</strong>
           </v-col>
         </v-row>
