@@ -38,7 +38,7 @@ const navItems = [
     id: "nestProject",
     path: "/nest/project",
     simulator: "nest",
-    title: "NEST Project",
+    title: "Project",
   },
   {
     icon: "nest:logo",
@@ -52,7 +52,7 @@ const navItems = [
     id: "norseProject",
     path: "/norse/project",
     simulator: "norse",
-    title: "Norse Project",
+    title: "Project",
   },
 ];
 </script>
