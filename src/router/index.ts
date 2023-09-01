@@ -8,7 +8,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // Store
-import { simulatorItems, useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
 // Simulators
