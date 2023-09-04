@@ -32,6 +32,7 @@
     "mustache": "~4.2",
     "object-hash": "~3.0",
     "pinia": "~2.1",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "plotly.js": "~2.25",
     "plotly.js-dist-min": "~2.25",
     "pouchdb": "~8.0",
