@@ -71,7 +71,6 @@ export class Config {
 
   upgradeConfig(): void {
     this.importConfig().then((importedData) => {
-      console.log(importedData);
       const storedData: any = this.localStorage || {};
       Object.entries(importedData).forEach((entry: any) => {
         if (!(entry[0] in storedData)) {

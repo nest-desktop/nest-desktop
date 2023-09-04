@@ -94,13 +94,13 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
+import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
 import { downloadSVGImage } from "@/utils/download";
-import { NetworkGraph } from "@/types/networkGraphTypes";
-
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
+
 const networkGraphStore = useNetworkGraphStore();
 
-const graph = computed(() => networkGraphStore.graph as NetworkGraph);
+const graph = computed(() => networkGraphStore.graph as BaseNetworkGraph);
 
 const state = reactive({
   dialogDelete: false,

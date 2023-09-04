@@ -2,7 +2,7 @@
 
 import { DatabaseService } from "@/helpers/database";
 
-import { BaseModel } from "@/components/model/baseModel";
+import { BaseModel } from "@/helpers/model/baseModel";
 import { Model } from "@/types/modelTypes";
 
 export class ModelDB extends DatabaseService {

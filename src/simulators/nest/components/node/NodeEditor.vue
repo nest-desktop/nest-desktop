@@ -184,11 +184,11 @@ import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
 import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
+import { NESTNode } from "@nest/helpers/node/nestNode";
 
-import { NESTNode } from "./nestNode";
-import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 

@@ -2,7 +2,7 @@
 
 import { DatabaseService } from "@/helpers/database";
 
-import { NorseModel } from "@norse/components/model/norseModel";
+import { NorseModel } from "@norse/helpers/model/norseModel";
 
 export class NorseModelDB extends DatabaseService {
   constructor() {

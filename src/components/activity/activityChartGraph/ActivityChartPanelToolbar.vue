@@ -56,7 +56,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ActivityChartPanel } from "./activityChartPanel";
+import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
+
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 
 const props = defineProps({

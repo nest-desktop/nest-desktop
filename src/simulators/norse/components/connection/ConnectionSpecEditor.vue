@@ -85,8 +85,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from ".ConnectionParamEditor.vue";
-import { NorseConnection } from "./norseConnection";
+import ConnectionParamEditor from "./ConnectionParamEditor.vue";
+import { NorseConnection } from "@norse/helpers/connection/norseConnection";
 
 const props = defineProps({
   connection: NorseConnection,

@@ -8,9 +8,10 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import NetworkEditorToolbar from "@nest/components/network/NetworkEditorToolbar.vue";
-import NetworkGraph from "@nest/components/network/NetworkGraph.vue";
-import { NESTNetwork } from "@nest/components/network/nestNetwork";
+import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
+import NetworkGraph from "@/components/network/NetworkGraph.vue";
+
+import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();

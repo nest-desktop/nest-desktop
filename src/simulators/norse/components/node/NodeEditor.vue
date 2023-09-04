@@ -189,7 +189,7 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
-import { NorseNode } from "./norseNode";
+import { NorseNode } from "@norse/helpers/node/norseNode";
 
 const props = defineProps({
   node: NorseNode,

@@ -6,7 +6,7 @@ import { logger as mainLogger } from "@/helpers/logger";
 
 import { Project } from "@/types/projectTypes";
 import { ProjectDB } from "./projectDB";
-import { BaseProject, ProjectProps } from "@/components/project/baseProject";
+import { BaseProject, ProjectProps } from "@/helpers/project/baseProject";
 
 const logger = mainLogger.getSubLogger({ name: "project DB store" });
 
@@ -108,7 +108,7 @@ export const useProjectDBStore = defineStore("project-db", {
     /**
      * Get project from the list.
      */
-    getProject(projectId: string = ""): Project {
+    getProject(projectId: string = ""): BaseProject {
       logger.trace("get project:", projectId.slice(0, 6));
       let project;
       if (projectId) {
@@ -169,7 +169,7 @@ export const useProjectDBStore = defineStore("project-db", {
      * Load a project in the list.
      * @param projectId string
      */
-    loadProject(projectId: string): Project | undefined {
+    loadProject(projectId: string): BaseProject | undefined {
       logger.trace("load project:", projectId.slice(0, 6));
       // this.project.insite.cancelAllIntervals();
 

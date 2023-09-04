@@ -23,16 +23,17 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import { BaseNode } from "@/helpers/node/baseNode";
+import { NodePropTypes } from "@/types/nodeTypes";
+
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";
 import StimulatorAvatar from "./StimulatorAvatar.vue";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
-
 
 const props = defineProps({
   node: NodePropTypes,
   size: { type: String, default: "40px" },
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as BaseNode);
 </script>

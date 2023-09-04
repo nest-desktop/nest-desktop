@@ -30,7 +30,7 @@ import { computed } from "vue";
 
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
 
-import { NorseProject } from "@norse/components/project/norseProject";
+import { NorseProject } from "@norse/helpers/project/norseProject";
 
 const props = defineProps({
   project: NorseProject,

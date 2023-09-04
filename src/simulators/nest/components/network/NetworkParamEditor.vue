@@ -38,9 +38,9 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import { NESTNode } from "@nest/components/node/nestNode";
+import { NESTNode } from "@nest/helpers/node/nestNode";
 import NodeEditor from "@nest/components/node/NodeEditor.vue";
-import { NESTNetwork } from "./nestNetwork";
+import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();

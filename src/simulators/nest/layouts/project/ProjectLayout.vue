@@ -102,8 +102,9 @@
 
 <script lang="ts" setup>
 
-import ActivityChartController from "@nest/components/activity/activityChartGraph/ActivityChartController.vue";
-import ActivityStats from "@nest/components/activity/activityStats/ActivityStats.vue";
+import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
+import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
+
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@nest/components/simulation/SimulationCodeMirror.vue";

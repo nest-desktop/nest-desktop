@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ActivityChartGraph as ActivityChartGraphClass } from "@/components/activity/activityChartGraph/activityChartGraph";
+import { ActivityChartGraph as ActivityChartGraphClass } from "@/helpers/activityChartGraph/activityChartGraph";
 import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
 
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";

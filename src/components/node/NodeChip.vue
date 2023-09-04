@@ -20,8 +20,9 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { BaseNetworkGraph } from "@/components/network/networkGraph/baseNetworkGraph";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
+import { BaseNode } from "@/helpers/node/baseNode";
+import { NodePropTypes } from "@/types/nodeTypes";
 import { useAppStore } from "@/store/appStore";
 
 const appStore = useAppStore();
@@ -31,7 +32,7 @@ const props = defineProps({
   node: NodePropTypes,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as BaseNode);
 const graph = computed(() => props.graph as BaseNetworkGraph);
 
 const selectNode = () => {

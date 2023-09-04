@@ -65,7 +65,7 @@ import ActivityStats from "@nest/components/activity/activityStats/ActivityStats
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
 import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
-import { NESTProject } from "@nest/components/project/nestProject";
+import { NESTProject } from "@nest/helpers/project/nestProject";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();

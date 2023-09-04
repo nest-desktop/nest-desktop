@@ -1,10 +1,11 @@
 // nestProjectDBStore.ts
 
 import { defineStore } from "pinia";
+
 import { download } from "@/utils/download";
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { NESTProject, NESTProjectProps } from "@nest/components/project/nestProject";
+import { NESTProject, NESTProjectProps } from "@nest/helpers/project/nestProject";
 import { NESTProjectDB } from "./nestProjectDB";
 
 const logger = mainLogger.getSubLogger({ name: "project DB store" });

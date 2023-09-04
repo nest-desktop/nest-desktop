@@ -106,11 +106,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
 
-import { NodeRecord } from "@/components/node/nodeRecord";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { deviation, mean } from "@/helpers/array";
 import { toFixed } from "@/utils/converter";
-
-import { AnalogSignalActivity } from "../analogSignalActivity";
 
 const props = defineProps({
   activity: AnalogSignalActivity,

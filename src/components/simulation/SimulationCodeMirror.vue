@@ -15,13 +15,14 @@ import { tooltips } from "@codemirror/view";
 import { python } from "@codemirror/lang-python";
 // import { oneDark } from "@codemirror/theme-one-dark";
 
-import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { SimulationPropTypes } from "@/types/simulationTypes";
+import { BaseSimulation } from "@/helpers/simulation/baseSimulation";
 
 const props = defineProps({
   simulation: SimulationPropTypes,
 });
 
-const simulation = computed(() => props.simulation as Simulation);
+const simulation = computed(() => props.simulation as BaseSimulation);
 
 const extensions = [
   tooltips({

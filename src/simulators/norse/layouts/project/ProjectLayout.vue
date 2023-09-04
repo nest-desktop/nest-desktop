@@ -13,7 +13,7 @@
   </v-navigation-drawer>
 
   <v-app-bar class="d-print-none" color="norse" height="48" flat>
-    <project-bar :project="(project as Project)"/>
+    <project-bar :project="(project as NorseProject)"/>
   </v-app-bar>
 
   <v-navigation-drawer
@@ -107,13 +107,13 @@ import ActivityChartController from "@/components/activity/activityChartGraph/Ac
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
-import { ActivityChartGraph } from "@/components/activity/activityChartGraph/activityChartGraph";
-import { Project } from "@/types/projectTypes";
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { Simulation } from "@/types/simulationTypes";
 import { useNavStore } from "@/store/navStore";
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 import NetworkParamEditor from "@norse/components/network/NetworkParamEditor.vue";
+import { NorseProject } from "@norse/helpers/project/norseProject";
+import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectNav from "./ProjectNav.vue";

@@ -1,8 +1,8 @@
 // projectTypes.ts
 
-import { BaseProject } from "@/components/project/baseProject";
-import { NESTProject } from "@nest/components/project/nestProject";
-import { NorseProject } from "@norse/components/project/norseProject";
+import { BaseProject } from "@/helpers/project/baseProject";
+import { NESTProject } from "@nest/helpers/project/nestProject";
+import { NorseProject } from "@norse/helpers/project/norseProject";
 
 export type Project = BaseProject | NESTProject | NorseProject;
 

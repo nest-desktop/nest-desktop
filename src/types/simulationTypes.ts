@@ -1,8 +1,8 @@
 // simulationTypes.ts
 
-import { BaseSimulation } from "@/components/simulation/baseSimulation";
-import { NESTSimulation } from "@nest/components/simulation/nestSimulation";
-import { NorseSimulation } from "@norse/components/simulation/norseSimulation";
+import { BaseSimulation } from "@/helpers/simulation/baseSimulation";
+import { NESTSimulation } from "@nest/helpers/simulation/nestSimulation";
+import { NorseSimulation } from "@norse/helpers/simulation/norseSimulation";
 
 export type Simulation = BaseSimulation | NESTSimulation | NorseSimulation;
 
