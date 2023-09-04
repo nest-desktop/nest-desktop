@@ -18,7 +18,7 @@
     <div :key="network.nodes.length">
       <div :key="index" v-for="(node, index) in network.nodes.all">
         <node-editor
-          :node="(node as Node)"
+          :node="(node as NorseNode)"
           @mouseenter="node.state.focus()"
           @mouseleave="node.nodes.unfocusNode()"
           v-if="showNode(node)"
@@ -33,14 +33,15 @@
 import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
-import { Network } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
 
+import { NorseNetwork } from "./norseNetwork"
+import { NorseNode } from "../node/norseNode";
 import NodeEditor from "@norse/components/node/NodeEditor.vue";
+
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 const projectStore = useNorseProjectStore();
 
-const network = computed(() => projectStore.project.network as Network);
+const network = computed(() => projectStore.project.network as NorseNetwork);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
@@ -53,7 +54,7 @@ const nodeTypes = [
 /**
  * Show node in list.
  */
-const showNode = (node: Node) => {
+const showNode = (node: NorseNode) => {
   const elementTypeIdx = network.value.nodes.state.elementTypeIdx;
 
   if (elementTypeIdx === 4) {

@@ -26,15 +26,16 @@ import { computed } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
-import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { NorseSimulation } from "./norseSimulation";
+
 
 const props = defineProps({
   color: { default: "accent", type: String },
-  simulation: SimulationPropTypes,
+  simulation: NorseSimulation,
 });
 
 const simulation = computed(
-  () => props.simulation as Simulation
+  () => props.simulation as NorseSimulation
 );
 
 const options = {

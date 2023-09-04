@@ -85,14 +85,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from "@norse/components/connection/ConnectionParamEditor.vue";
-import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
+import ConnectionParamEditor from ".ConnectionParamEditor.vue";
+import { NorseConnection } from "./norseConnection";
 
 const props = defineProps({
-  connection: ConnectionPropTypes,
+  connection: NorseConnection,
 });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as NorseConnection);
 
 const rules = [
   { title: "all to all", value: "all_to_all" },

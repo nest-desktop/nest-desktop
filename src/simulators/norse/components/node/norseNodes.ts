@@ -1,6 +1,6 @@
 // norseNodes.ts
 
-import { BaseNodes } from "@/common/node/baseNodes";
+import { BaseNodes } from "@/components/node/baseNodes";
 
 import { NorseNetwork } from "../network/norseNetwork";
 import { NorseNode, NorseNodeProps } from "./norseNode";

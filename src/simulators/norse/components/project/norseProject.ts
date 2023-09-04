@@ -2,13 +2,14 @@
 
 import { v4 as uuidv4 } from "uuid";
 
+import { BaseProject, ProjectProps } from "@/components/project/baseProject";
+
 import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
 import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 
 import { NorseNetwork, NorseNetworkProps } from "../network/norseNetwork";
 import { NorseSimulation, NorseSimulationProps } from "../simulation/norseSimulation";
-import { BaseProject, ProjectProps } from "@/common/project/baseProject";
 
 export interface NorseProjectProps extends ProjectProps {
   network?: NorseNetworkProps;

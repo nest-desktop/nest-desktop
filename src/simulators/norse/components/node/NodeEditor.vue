@@ -186,16 +186,16 @@ import Card from "@/components/common/Card.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
 
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
+import { NorseNode } from "./norseNode";
 
 const props = defineProps({
-  node: NodePropTypes,
+  node: NorseNode,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as NorseNode);
 
 const state = reactive({
   menu: false,

@@ -4,13 +4,13 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { useModelDBStore } from "@nest/store/model/modelDBStore";
-import { useModelStore } from "@nest/store/model/modelStore";
+import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
+import { useNESTModelStore } from "@nest/store/model/nestModelStore";
 
 const modelBeforeEnter = (to: any) => {
-  const modelStore = useModelStore();
+  const modelStore = useNESTModelStore();
 
-  const modelDBStore = useModelDBStore();
+  const modelDBStore = useNESTModelDBStore();
   if (modelDBStore.models.length === 0) {
     setTimeout(() => modelBeforeEnter(to), 100);
     return;
@@ -25,7 +25,7 @@ const modelBeforeEnter = (to: any) => {
 };
 
 const modelRedirect = (to: any) => {
-  const modelStore = useModelStore();
+  const modelStore = useNESTModelStore();
 
   if (to.params.modelId) {
     modelStore.modelId = to.params.modelId;

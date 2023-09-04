@@ -1,6 +1,6 @@
 // colorSchemes.ts
 
-import { Config } from '@/helpers/config';
+import { Config } from './config';
 
 export class ColorSchemes extends Config {
   constructor() {

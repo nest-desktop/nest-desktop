@@ -195,19 +195,19 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { Node } from "@nest/core/node/node";
+import { NESTNode } from "./nestNode";
 import ModelDocumentation from "@nest/views/model/ModelDoc.vue";
-import { useNetworkGraphStore } from "@nest/store/graph/networkGraphStore";
 // import NodeModelSelect from '@nest/components/node/NodeModelSelect.vue';
 // import NodeParamEdit from '@nest/components/node/NodeParamEdit.vue';
 
-const props = defineProps({
-  node: Node,
-});
-
+import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
-const node = computed(() => props.node as Node);
+const props = defineProps({
+  node: NESTNode,
+});
+
+const node = computed(() => props.node as NESTNode);
 
 const state = reactive({
   content: undefined as string | undefined,
@@ -372,7 +372,7 @@ const updateStates = () => {
 
 const updateSynWeights = (value?: string) => {
   node.value.view.state.synWeights = value || "";
-  node.value.view.synWeights = value || "";
+  // node.value.view.synWeights = value || "";
   node.value.changes();
   networkGraphStore.graph.render();
 };

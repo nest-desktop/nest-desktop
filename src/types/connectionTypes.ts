@@ -1,7 +1,7 @@
 // connectionTypes.ts
 
-import { BaseConnection } from "@/common/connection/baseConnection"
-import { NorseConnection } from "@norse/components/connection/norseConnection"
+import { BaseConnection } from "@/components/connection/baseConnection";
+import { NESTConnection } from "@nest/components/connection/nestConnection";
+import { NorseConnection } from "@norse/components/connection/norseConnection";
 
-export type Connection = BaseConnection | NorseConnection;
-export const ConnectionPropTypes = [BaseConnection, NorseConnection];
+export type Connection = BaseConnection | NESTConnection | NorseConnection;

@@ -119,14 +119,12 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
-// import draggable from "vuedraggable";
 
-// import { useAppStore } from "@/store/appStore";
-import { ActivityChartPanel } from "@/graph/activityGraph/activityChart/activityChartPanel";
 import Card from "@/components/common/Card.vue";
 
-// import { NodeRecord } from "@norse/core/node/nodeRecord";
-import { ActivityChartGraph } from "@/graph/activityGraph/activityChartGraph";
+import { ActivityChartPanel } from "./activityChartPanel";
+import { ActivityChartGraph } from "./activityChartGraph";
+
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 // import ActivityChartPanelMenuPopover from "@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue";
 // import ActivityChartPanelToolbar from "@/components/activity/activityChart/ActivityChartPanelToolbar.vue";

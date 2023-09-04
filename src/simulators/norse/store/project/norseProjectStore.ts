@@ -2,7 +2,7 @@
 
 import { defineStore } from "pinia";
 
-import { logger as mainLogger } from "@/utils/logger";
+import { logger as mainLogger } from "@/helpers/logger";
 import router from "@/router";
 
 import { NorseProject } from "@norse/components/project/norseProject";

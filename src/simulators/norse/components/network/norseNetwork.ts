@@ -1,6 +1,6 @@
 // norseNetwork.ts
 
-import { BaseNetwork, NetworkProps } from "@/common/network/baseNetwork";
+import { BaseNetwork, NetworkProps } from "@/components/network/baseNetwork";
 
 import { NorseConnectionProps } from "../../components/connection/norseConnection";
 import { NorseConnections } from "../connection/norseConnections";
@@ -8,8 +8,8 @@ import { NorseNodeProps } from "../../components/node/norseNode";
 import { NorseNodes } from "../node/norseNodes";
 
 import { Project } from "@/types/projectTypes";
-import { NodeProps } from "@/common/node/baseNode";
-import { ConnectionProps } from "@/common/connection/baseConnection";
+import { NodeProps } from "@/components/node/baseNode";
+import { ConnectionProps } from "@/components/connection/baseConnection";
 
 export interface NorseNetworkProps extends NetworkProps {
   nodes?: NorseNodeProps[];

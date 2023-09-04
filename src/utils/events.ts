@@ -1,4 +1,5 @@
 // events.ts
+//
 // https://stackoverflow.com/questions/69469814/how-can-i-throttle-a-resizeobserver
 // https://programmingwithmosh.com/javascript/javascript-throttle-and-debounce-patterns/
 

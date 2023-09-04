@@ -41,17 +41,18 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
-import { useProjectStore } from "@nest/store/project/projectStore";
-import { Simulation } from "@nest/core/simulation/simulation";
 
-const projectStore = useProjectStore();
+import { NESTSimulation } from "./nestSimulation";
+
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
 
 const props = defineProps({
   disabled: Boolean,
 });
 
 const simulation = computed(
-  () => projectStore.project.simulation as Simulation
+  () => projectStore.project.simulation as NESTSimulation
 );
 
 const state = reactive({

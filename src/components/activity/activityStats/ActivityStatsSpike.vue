@@ -44,9 +44,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
 
-import { SpikeActivity } from "@/common/activity/spikeActivity";
-import { deviation, diff, mean, sum } from "@/utils/array";
+import { deviation, diff, mean, sum } from "@/helpers/array";
 import { toFixed } from "@/utils/converter";
+
+import { SpikeActivity } from "../spikeActivity";
 
 const props = defineProps({
   activity: SpikeActivity,

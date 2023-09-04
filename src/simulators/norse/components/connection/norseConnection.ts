@@ -1,6 +1,6 @@
 // norseConnection.ts
 
-import { BaseConnection, ConnectionProps } from "@/common/connection/baseConnection";
+import { BaseConnection, ConnectionProps } from "@/components/connection/baseConnection";
 import { NorseConnections } from "./norseConnections";
 
 export interface NorseConnectionProps extends ConnectionProps {}

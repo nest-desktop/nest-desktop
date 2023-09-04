@@ -51,7 +51,7 @@
 import { computed } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { ConnectionParameter } from "@/common/connection/connectionParameter";
+import { ConnectionParameter } from "@/components/connection/connectionParameter";
 
 const props = defineProps({
   param: ConnectionParameter,

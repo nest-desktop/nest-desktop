@@ -70,8 +70,9 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionSpecEditor from "@norse/components/connection/ConnectionSpecEditor.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+
+import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
 import { NorseConnection } from "./norseConnection";
 
 const props = defineProps({

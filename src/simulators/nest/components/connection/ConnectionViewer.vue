@@ -54,15 +54,17 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { Connection } from "@nest/core/connection/connection";
-import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+
 import SynapseParamViewer from "@nest/components/synapse/SynapseParamViewer.vue";
 
+import { NESTConnection } from "./nestConnection";
+
 const props = defineProps({
-  connection: Connection,
+  connection: NESTConnection,
 });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as NESTConnection);
 </script>
 
 <style lang="scss">

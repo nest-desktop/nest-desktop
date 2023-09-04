@@ -65,11 +65,12 @@ import ActivityStats from "@nest/components/activity/activityStats/ActivityStats
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
 import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
-import { Project } from "@nest/core/project/project";
+import { NESTProject } from "@nest/components/project/nestProject";
 
-import { useProjectStore } from "@nest/store/project/projectStore";
-const projectStore = useProjectStore();
-const project = computed(() => projectStore.project as Project);
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
+
+const project = computed(() => projectStore.project as NESTProject);
 
 const codeBlocks = [
   { icon: "mdi-delete-empty", title: "reset" },

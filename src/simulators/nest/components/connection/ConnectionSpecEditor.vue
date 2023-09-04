@@ -76,8 +76,8 @@
   <v-list density="compact" v-if="connection.paramsVisible.length > 0">
     <connection-param-editor
       :key="index"
-      :param="connection.params[paramId]"
-      v-for="(paramId, index) in connection.paramsVisible"
+      :param="param"
+      v-for="(param, index) in connection.filteredParams"
     />
   </v-list>
 </template>
@@ -85,14 +85,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from "@nest/components/connection/ConnectionParamEditor.vue";
-import { Connection } from "@nest/core/connection/connection";
+import ConnectionParamEditor from "./ConnectionParamEditor.vue";
+import { NESTConnection } from "./nestConnection";
 
 const props = defineProps({
-  connection: Connection,
+  connection: NESTConnection,
 });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as NESTConnection);
 
 const rules = [
   { title: "all to all", value: "all_to_all" },

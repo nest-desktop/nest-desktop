@@ -54,10 +54,10 @@ import ModelBar from "./ModelBar.vue";
 import ModelNav from "./ModelNav.vue";
 
 import { useNavStore } from "@/store/navStore";
-import { useModelStore } from "@nest/store/model/modelStore";
-
 const navState = useNavStore();
-const modelStore = useModelStore();
+
+import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+const modelStore = useNESTModelStore();
 
 /**
  * Handle mouse move on resizing.

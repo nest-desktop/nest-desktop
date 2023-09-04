@@ -2,11 +2,11 @@
 
 import { defineStore } from "pinia";
 import { download } from "@/utils/download";
-import { logger as mainLogger } from "@/utils/logger";
+import { logger as mainLogger } from "@/helpers/logger";
 
 import { Project } from "@/types/projectTypes";
 import { ProjectDB } from "./projectDB";
-import { BaseProject, ProjectProps } from "@/common/project/baseProject";
+import { BaseProject, ProjectProps } from "@/components/project/baseProject";
 
 const logger = mainLogger.getSubLogger({ name: "project DB store" });
 

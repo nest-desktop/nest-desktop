@@ -56,15 +56,15 @@ import Card from "@/components/common/Card.vue";
 import ConnectionViewer from "@norse/components/connection/ConnectionViewer.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamViewer from "@/components/node/NodeParamViewer.vue";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
 
 import { NorseConnection } from "../connection/norseConnection";
+import { NorseNode } from "./norseNode";
 
 const props = defineProps({
-  node: NodePropTypes,
+  node: NorseNode,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as NorseNode);
 </script>
 
 <style lang="scss">

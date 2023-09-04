@@ -107,7 +107,7 @@ import ActivityChartController from "@/components/activity/activityChartGraph/Ac
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
-import { ActivityChartGraph } from "@/graph/activityGraph/activityChartGraph";
+import { ActivityChartGraph } from "@/components/activity/activityChartGraph/activityChartGraph";
 import { Project } from "@/types/projectTypes";
 import { Simulation } from "@/types/simulationTypes";
 import { useNavStore } from "@/store/navStore";

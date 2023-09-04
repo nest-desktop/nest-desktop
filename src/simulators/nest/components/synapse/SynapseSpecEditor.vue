@@ -79,8 +79,8 @@
   <v-list density="compact" v-if="synapse.paramsVisible.length > 0">
     <synapse-param-editor
       :key="index"
-      :param="synapse.params[paramId]"
-      v-for="(paramId, index) in synapse.paramsVisible"
+      :param="param"
+      v-for="(param, index) in synapse.filteredParams"
     />
   </v-list>
 </template>
@@ -88,14 +88,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import SynapseParamEditor from "@nest/components/synapse/SynapseParamEditor.vue";
-import { Synapse } from "@nest/core/synapse/synapse";
+import SynapseParamEditor from "./SynapseParamEditor.vue";
+import { NESTSynapse } from "./nestSynapse";
 
 const props = defineProps({
-  synapse: Synapse,
+  synapse: NESTSynapse,
 });
 
-const synapse = computed(() => props.synapse as Synapse);
+const synapse = computed(() => props.synapse as NESTSynapse);
 
 const items = [
   {
@@ -113,7 +113,7 @@ const items = [
     title: "Inverse synaptic weight",
     onClick: () => {
       synapse.value.inverseWeight();
-    }
+    },
   },
 ];
 </script>

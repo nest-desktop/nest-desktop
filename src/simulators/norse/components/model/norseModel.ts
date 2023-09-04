@@ -1,6 +1,6 @@
 // norseModel.ts
 
-import { BaseModel, ModelProps } from "@/common/model/baseModel";
+import { BaseModel, ModelProps } from "@/components/model/baseModel";
 
 export interface NorseModelProps extends ModelProps {}
 

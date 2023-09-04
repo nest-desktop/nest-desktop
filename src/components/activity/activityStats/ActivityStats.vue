@@ -52,9 +52,10 @@
 import { computed, reactive } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import { AnalogSignalActivity } from "@/common/activity/analogSignalActivity";
 import { Project, ProjectPropTypes } from "@/types/projectTypes";
-import { SpikeActivity } from "@/common/activity/spikeActivity";
+
+import { AnalogSignalActivity } from "../analogSignalActivity";
+import { SpikeActivity } from "../spikeActivity";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";

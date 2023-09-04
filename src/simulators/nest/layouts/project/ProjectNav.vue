@@ -89,8 +89,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectDBStore } from "@nest/store/project/projectDBStore";
-const projectDBStore = useProjectDBStore();
+import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
+const projectDBStore = useNESTProjectDBStore();
 
 const projectsItems = [
   { title: "Upload", icon: "mdi-upload" },
