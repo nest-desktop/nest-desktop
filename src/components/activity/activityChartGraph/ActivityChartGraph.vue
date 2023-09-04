@@ -67,7 +67,6 @@ const init = () => {
   const ref: any = activityChartGraph.value;
 
   if (ref) {
-    console.log(ref);
     graph.value?.newPlot(ref);
 
     // On zoom behavior
@@ -79,6 +78,10 @@ const init = () => {
     ref.on("plotly_resize", () => {
       graph.value?.restyle();
     });
+
+    if (graph.value?.data) {
+      graph.value.react()
+    }
   }
 };
 
@@ -105,11 +108,6 @@ onBeforeUnmount(() => {
 watch(
   () => props.graph,
   () => init()
-);
-
-watch(
-  () => graph.value.project.activities.state.hash,
-  () => graph.value.update()
 );
 </script>
 

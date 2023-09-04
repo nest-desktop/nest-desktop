@@ -363,7 +363,6 @@ export class ActivityChartGraph {
    * React plots to new updates.
    */
   react(): void {
-    console.log('React')
     if (!this._state.ref) return;
     this._logger.trace("react");
     Plotly.react(this._state.ref, this._data, this._layout);
