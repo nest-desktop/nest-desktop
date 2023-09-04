@@ -42,7 +42,7 @@ import {
 } from "vue";
 import { DownloadImgopts } from "plotly.js";
 
-import { ActivityChartGraph } from "@/graph/activityGraph/activityChartGraph";
+import { ActivityChartGraph } from "./activityChartGraph";
 
 const props = defineProps({
   graph: ActivityChartGraph,

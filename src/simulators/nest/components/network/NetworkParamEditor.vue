@@ -1,7 +1,11 @@
 <template>
   <div class="networkParamEditor">
     <v-toolbar color="transparent" density="compact">
-      <v-btn-toggle class="mx-1" mandatory v-model="nodes.state.elementTypeIdx">
+      <v-btn-toggle
+        class="mx-1"
+        mandatory
+        v-model="network.nodes.state.elementTypeIdx"
+      >
         <icon-btn
           :icon="item.icon"
           :key="index"
@@ -15,15 +19,15 @@
       <v-btn icon="mdi-dots-vertical" size="small" />
     </v-toolbar>
 
-    <div :key="nodes.length">
-      <div :key="index" v-for="(node, index) in nodes.all">
+    <div :key="network.nodes.length">
+      <div :key="index" v-for="(node, index) in network.nodes.all">
         <node-editor
-          :node="(node as Node)"
+          :node="(node as NESTNode)"
           @mouseenter="node.state.focus()"
           @mouseleave="node.nodes.unfocusNode()"
-          v-if="showNode(node as Node)"
-          />
-          <!-- :style="{opacity: showNode(node as Node) ? 1 : 0.2}" -->
+          v-if="showNode(node)"
+        />
+        <!-- :style="{opacity: showNode(node as Node) ? 1 : 0.2}" -->
       </div>
     </div>
   </div>
@@ -34,16 +38,14 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
+import { NESTNode } from "@nest/components/node/nestNode";
 import NodeEditor from "@nest/components/node/NodeEditor.vue";
-import { Node } from "@nest/core/node/node";
-import { useProjectStore } from "@nest/store/project/projectStore";
-import { Nodes } from "@nest/core/node/nodes";
-import { NetworkState } from "@nest/core/network/networkState";
+import { NESTNetwork } from "./nestNetwork";
 
-const projectStore = useProjectStore();
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
 
-const networkState = computed(() => projectStore.project.network.state as NetworkState);
-const nodes = computed(() => projectStore.project.network.nodes as Nodes);
+const network = computed(() => projectStore.project.network as NESTNetwork);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
@@ -56,12 +58,12 @@ const nodeTypes = [
 /**
  * Show node in list.
  */
-const showNode = (node: Node) => {
-  const elementTypeIdx = nodes.value.state.elementTypeIdx;
+const showNode = (node: NESTNode) => {
+  const elementTypeIdx = network.value.nodes.state.elementTypeIdx;
 
   if (elementTypeIdx === 4) {
     return false;
-  } else if (nodes.value.state.selectedNode) {
+  } else if (network.value.nodes.state.selectedNode) {
     // selected view
     return node.state.isSelected;
   } else if (elementTypeIdx === 0) {
@@ -72,7 +74,7 @@ const showNode = (node: Node) => {
     return nodeTypes[elementTypeIdx].id === node.model.elementType;
   } else {
     // custom view
-    return networkState.value.state.displayIdx.nodes.includes(node.idx);
+    return network.value.state.state.displayIdx.nodes.includes(node.idx);
   }
 };
 </script>

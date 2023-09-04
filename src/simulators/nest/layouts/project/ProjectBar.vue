@@ -29,9 +29,10 @@
 import { computed } from "vue";
 
 import SimulationButton from "@nest/components/simulation/SimulationButton.vue";
-import { Project } from "@nest/core/project/project";
-import { useProjectStore } from "@nest/store/project/projectStore";
+import { NESTProject } from "@nest/components/project/nestProject";
 
-const projectStore = useProjectStore();
-const project = computed(() => projectStore.project as Project);
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
+
+const project = computed(() => projectStore.project as NESTProject);
 </script>

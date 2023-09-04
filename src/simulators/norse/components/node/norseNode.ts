@@ -1,6 +1,6 @@
 // norseNode.ts
 
-import { BaseNode, NodeProps } from "@/common/node/baseNode";
+import { BaseNode, NodeProps } from "@/components/node/baseNode";
 import { NorseNodes } from "./norseNodes";
 
 export interface NorseNodeProps extends NodeProps {}

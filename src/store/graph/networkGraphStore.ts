@@ -1,10 +1,8 @@
 // networkGraphStore.ts
 
-import { Ref } from "vue";
 import { defineStore } from "pinia";
 
-import { NetworkGraph } from "@/graph/networkGraph/networkGraph";
-import { Network } from "@/types/networkTypes";
+import { NetworkGraph } from "@/types/networkGraphTypes";
 
 export const useNetworkGraphStore = defineStore("network-graph", {
   state: () => ({
@@ -12,8 +10,8 @@ export const useNetworkGraphStore = defineStore("network-graph", {
     graph: null as NetworkGraph,
   }),
   actions: {
-    mount(ref: Ref<null>, network: Network) {
-      this.graph = new NetworkGraph(ref, network);
+    mount(graph: NetworkGraph) {
+      this.graph = graph;
       this.graph.resizeObserver.observe(this.graph.selector?.node().parentNode);
       this.graph.init();
     },

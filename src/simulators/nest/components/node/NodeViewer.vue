@@ -41,7 +41,7 @@
       >
         <connection-viewer
           :key="index"
-          :connection="(connection as Connection)"
+          :connection="(connection as NESTConnection)"
           v-for="(connection, index) in node.connections"
         />
       </v-expansion-panels>
@@ -53,18 +53,19 @@
 import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
-import { Connection } from "@nest/core/connection/connection";
-import { Node } from "@nest/core/node/node";
-import NodeAvatar from "./avatar/NodeAvatar.vue";
 import ConnectionViewer from "@nest/components/connection/ConnectionViewer.vue";
+import { NESTConnection } from "@nest/components/connection/nestConnection";
+
 import NodeParamViewer from "./NodeParamViewer.vue";
+import { NESTNode } from "./nestNode";
 
 const props = defineProps({
-  node: Node,
+  node: NESTNode,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as NESTNode);
 </script>
 
 <style lang="scss">

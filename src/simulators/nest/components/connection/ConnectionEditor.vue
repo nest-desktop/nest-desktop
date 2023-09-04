@@ -68,8 +68,8 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <connection-spec-editor :connection="connection" />
-      <synapse-spec-editor :synapse="connection.synapse" />
+      <connection-spec-editor :connection="(connection as NESTConnection)" />
+      <synapse-spec-editor :synapse="(connection.synapse as NESTSynapse)" />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -77,16 +77,19 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionSpecEditor from "@nest/components/connection/ConnectionSpecEditor.vue";
-import NodeAvatar from "@nest/components/node/avatar/NodeAvatar.vue";
-import SynapseSpecEditor from "@nest/components/synapse/SynapseSpecEditor.vue";
-import { Connection } from "@nest/core/connection/connection";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+
+import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
+import { NESTSynapse } from "../synapse/nestSynapse";
+
+import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
+import { NESTConnection } from "./nestConnection";
 
 const props = defineProps({
-  connection: Connection,
+  connection: NESTConnection,
 });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as NESTConnection);
 
 const items = [
   {

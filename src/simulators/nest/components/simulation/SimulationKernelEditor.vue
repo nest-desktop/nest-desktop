@@ -66,17 +66,17 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
 
-import { useProjectStore } from "@nest/store/project/projectStore";
-import { Simulation } from "@nest/core/simulation/simulation";
+import { NESTSimulation } from "./nestSimulation";
 
-const projectStore = useProjectStore();
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
 
 const props = defineProps({
   color: { default: "accent", type: String },
 });
 
 const simulation = computed(
-  () => projectStore.project.simulation as Simulation
+  () => projectStore.project.simulation as NESTSimulation
 );
 
 const options = {

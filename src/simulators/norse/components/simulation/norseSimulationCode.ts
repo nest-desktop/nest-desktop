@@ -1,10 +1,12 @@
 // norseSimulationCode.ts
 
-import { Simulation } from "@/types/simulationTypes";
 import {
   BaseSimulationCode,
   SimulationCodeProps,
-} from "@/common/simulation/baseSimulationCode";
+} from "@/components/simulation/baseSimulationCode";
+import { Simulation } from "@/types/simulationTypes";
+
+export interface NorseSimulationCodeProps extends SimulationCodeProps {}
 
 const simulationCodeBlocks: string[] = [
   "importModules",
@@ -16,7 +18,7 @@ const simulationCodeBlocks: string[] = [
 export class NorseSimulationCode extends BaseSimulationCode {
   constructor(
     simulation: Simulation,
-    simulationCode: SimulationCodeProps = {}
+    simulationCode: NorseSimulationCodeProps = {}
   ) {
     simulationCode.blocks = simulationCode?.blocks || simulationCodeBlocks;
     simulationCode.templateFilename = "norse-master";

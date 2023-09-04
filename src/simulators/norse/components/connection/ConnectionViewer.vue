@@ -44,13 +44,14 @@
 import { computed } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
+
+import { NorseConnection } from "./norseConnection";
 
 const props = defineProps({
-  connection: ConnectionPropTypes,
+  connection: NorseConnection,
 });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as NorseConnection);
 </script>
 
 <style lang="scss">

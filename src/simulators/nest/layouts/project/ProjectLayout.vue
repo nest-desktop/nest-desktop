@@ -101,8 +101,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useNavStore } from "@/store/navStore";
-import { useProjectStore } from "@nest/store/project/projectStore";
 
 import ActivityChartController from "@nest/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@nest/components/activity/activityStats/ActivityStats.vue";
@@ -114,8 +112,11 @@ import SimulationKernelEditor from "@nest/components/simulation/SimulationKernel
 import ProjectBar from "./ProjectBar.vue";
 import ProjectNav from "./ProjectNav.vue";
 
+import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
-const projectStore = useProjectStore();
+
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
 
 /**
  * Handle mouse move on resizing.

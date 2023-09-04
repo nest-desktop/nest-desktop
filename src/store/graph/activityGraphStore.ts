@@ -1,7 +1,7 @@
 // // activityGraphStore.ts
 
 // import { defineStore } from "pinia";
-// import { logger as mainLogger } from "@/utils/logger";
+// import { logger as mainLogger } from "@/helpers/logger";
 
 // import { ActivityAnimationGraph } from "@norse/graph/activityGraph/activityAnimationGraph";
 // import { ActivityChartGraph } from "@norse/graph/activityGraph/activityChartGraph";

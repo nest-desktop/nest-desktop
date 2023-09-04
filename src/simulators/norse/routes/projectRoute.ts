@@ -4,7 +4,7 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { logger as mainLogger } from "@/utils/logger";
+import { logger as mainLogger } from "@/helpers/logger";
 
 import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";

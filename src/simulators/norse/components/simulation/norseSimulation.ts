@@ -3,9 +3,9 @@
 import {
   BaseSimulation,
   SimulationProps,
-} from "@/common/simulation/baseSimulation";
-import { SimulationCodeProps } from "@/common/simulation/baseSimulationCode";
-import { openToast } from "@/utils/toast";
+} from "@/components/simulation/baseSimulation";
+import { SimulationCodeProps } from "@/components/simulation/baseSimulationCode";
+import { openToast } from "@/helpers/toast";
 
 import { NorseProject } from "../project/norseProject";
 import { useNorseSimulatorStore } from "@norse/store/backends/norseSimulatorStore";

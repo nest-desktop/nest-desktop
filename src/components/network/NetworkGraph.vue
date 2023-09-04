@@ -73,22 +73,22 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
+import { BaseNetworkGraph } from "@/components/network/networkGraph/baseNetworkGraph";
 import { Network, NetworkPropTypes } from "@/types/networkTypes";
-import { NetworkGraph } from "@/graph/networkGraph/networkGraph";
-import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 
+import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps({ network: NetworkPropTypes });
 const network = computed(() => props.network as Network);
 const graph = computed(() => {
-  return networkGraphStore.graph as NetworkGraph;
+  return networkGraphStore.graph as BaseNetworkGraph;
 });
 
 const networkGraphRef: Ref<null> = ref(null);
 
 onMounted(() => {
-  networkGraphStore.mount(networkGraphRef, network.value);
+  networkGraphStore.mount(new BaseNetworkGraph(networkGraphRef, network.value));
 });
 
 onBeforeUnmount(() => {

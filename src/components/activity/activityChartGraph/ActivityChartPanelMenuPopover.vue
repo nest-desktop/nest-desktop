@@ -36,7 +36,8 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
-import { ActivityChartPanel } from "@/graph/activityGraph/activityChart/activityChartPanel";
+
+import { ActivityChartPanel } from "./activityChartPanel";
 
 const props = defineProps({
   panel: ActivityChartPanel,

@@ -8,9 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useProjectStore } from "@nest/store/project/projectStore";
-const projectStore = useProjectStore();
-
 import { tooltips } from "@codemirror/view";
 import { autocompletion } from "@codemirror/autocomplete";
 import { python } from "@codemirror/lang-python";
@@ -20,6 +17,9 @@ import { nestCompletions } from "@nest/codemirror/nestCompletion";
 import { nestRandomCompletions } from "@nest/codemirror/nestRandomCompletion";
 import { nestSpatialCompletions } from "@nest/codemirror/nestSpatialCompletion";
 import { nestSpatialDistributionsCompletions } from "@nest/codemirror/nestSpatialDistributionsCompletion";
+
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
 
 const extensions = [
   tooltips({

@@ -24,6 +24,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useModelStore } from "@nest/store/model/modelStore";
-const modelStore = useModelStore();
+import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+const modelStore = useNESTModelStore();
 </script>

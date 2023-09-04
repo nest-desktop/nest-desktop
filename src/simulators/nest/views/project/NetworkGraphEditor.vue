@@ -1,19 +1,18 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
     <network-editor-toolbar />
-    <network-graph :network="(network as Network)" />
+    <network-graph :network="(network as NESTNetwork)" />
   </v-layout>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { useProjectStore } from "@nest/store/project/projectStore";
-import { Network } from "@nest/core/network/network";
-
-import NetworkGraph from "@nest/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@nest/components/network/NetworkEditorToolbar.vue";
+import NetworkGraph from "@nest/components/network/NetworkGraph.vue";
+import { NESTNetwork } from "@nest/components/network/nestNetwork";
 
-const projectStore = useProjectStore();
-const network = computed(() => projectStore.project.network as Network);
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
+const network = computed(() => projectStore.project.network as NESTNetwork);
 </script>

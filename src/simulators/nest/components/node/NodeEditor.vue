@@ -150,8 +150,8 @@
       <v-list class="py-0" v-if="node.paramsVisible.length > 0">
         <node-param-editor
           :key="index"
-          :param="node.params[paramId]"
-          v-for="(paramId, index) in node.paramsVisible"
+          :param="param"
+          v-for="(param, index) in node.filteredParams"
         />
       </v-list>
     </v-card-text>
@@ -183,19 +183,20 @@
 import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
+import ValueSlider from "@/components/controls/ValueSlider.vue";
 
-import { Node } from "@nest/core/node/node";
 import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
+
+import { NESTNode } from "./nestNode";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 const props = defineProps({
-  node: Node,
+  node: NESTNode,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as NESTNode);
 
 const state = reactive({
   menu: false,

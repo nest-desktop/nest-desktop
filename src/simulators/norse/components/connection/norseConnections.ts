@@ -1,6 +1,6 @@
 // norseConnections.ts
 
-import { BaseConnections } from "@/common/connection/baseConnections";
+import { BaseConnections } from "@/components/connection/baseConnections";
 
 import { NorseConnection, NorseConnectionProps } from "./norseConnection";
 import { NorseNetwork } from "../network/norseNetwork";

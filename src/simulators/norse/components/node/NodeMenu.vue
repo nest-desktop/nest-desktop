@@ -144,16 +144,15 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { Node, NodePropTypes } from "@/types/nodeTypes";
-
 import ModelDocumentation from "@norse/views/model/ModelDoc.vue";
 
+import { NorseNode } from "./norseNode";
 
 const props = defineProps({
-  node: NodePropTypes,
+  node: NorseNode,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as NorseNode);
 
 const state = reactive({
   content: undefined as string | undefined,

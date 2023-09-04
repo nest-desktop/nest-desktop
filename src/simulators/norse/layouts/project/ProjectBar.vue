@@ -28,13 +28,13 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { Project, ProjectPropTypes } from "@/types/projectTypes";
-
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
 
+import { NorseProject } from "@norse/components/project/norseProject";
+
 const props = defineProps({
-  project: ProjectPropTypes,
+  project: NorseProject,
 })
 
-const project = computed(() => props.project as Project);
+const project = computed(() => props.project as NorseProject);
 </script>

@@ -95,11 +95,11 @@
 import { computed, reactive } from "vue";
 
 import { downloadSVGImage } from "@/utils/download";
+import { NetworkGraph } from "@/types/networkGraphTypes";
 
-import { NetworkGraph } from "@/graph/networkGraph/networkGraph";
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
-
 const networkGraphStore = useNetworkGraphStore();
+
 const graph = computed(() => networkGraphStore.graph as NetworkGraph);
 
 const state = reactive({

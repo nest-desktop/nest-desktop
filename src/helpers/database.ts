@@ -4,7 +4,7 @@ import PouchDB from "pouchdb";
 import { ILogObj, Logger } from "tslog";
 import { major, minor } from "semver";
 
-import { logger as mainLogger } from "@/utils/logger";
+import { logger as mainLogger } from "./logger";
 
 export class DatabaseService {
   // @ts-ignore

@@ -1,6 +1,7 @@
 // simulationCodeTypes.ts
 
-import { BaseSimulationCode } from "@/common/simulation/baseSimulationCode";
+import { BaseSimulationCode } from "@/components/simulation/baseSimulationCode";
+import { NESTSimulationCode } from "@nest/components/simulation/nestSimulationCode";
 import { NorseSimulationCode } from "@norse/components/simulation/norseSimulationCode";
 
-export type SimulationCode = BaseSimulationCode | NorseSimulationCode;
+export type SimulationCode = BaseSimulationCode | NESTSimulationCode | NorseSimulationCode;

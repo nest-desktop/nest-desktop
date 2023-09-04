@@ -16,8 +16,8 @@
 <script lang="ts" setup>
 import { onMounted, watch } from "vue";
 
-import { useModelStore } from "@nest/store/model/modelStore";
-const modelStore = useModelStore();
+import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+const modelStore = useNESTModelStore();
 
 const props = defineProps({
   modelId: String,

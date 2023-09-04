@@ -219,9 +219,9 @@ import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
 import { useInsiteAccessStore } from "@nest/store/backends/insiteAccessStore";
 import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
-import { useProjectDBStore } from "@nest/store/project/projectDBStore";
+import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
 
-const projectDBStore = useProjectDBStore();
+const projectDBStore = useNESTProjectDBStore();
 const nestSimulatorStore = useNESTSimulatorStore();
 const insiteAccessStore = useInsiteAccessStore();
 

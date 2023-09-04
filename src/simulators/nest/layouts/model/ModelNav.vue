@@ -52,8 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useModelDBStore } from "@nest/store/model/modelDBStore";
-const modelDBStore = useModelDBStore();
+import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
+const modelDBStore = useNESTModelDBStore();
 
 const menuItems = [
   { title: "Upload", icon: "mdi-upload" },
