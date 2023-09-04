@@ -5,7 +5,7 @@
  */
 
 import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
-import { useNorseModelStore } from "@/plugins/norse/store/model/norseModelStore";
+import { useNorseModelStore } from "@norse/store/model/norseModelStore";
 
 const modelBeforeEnter = (to: any) => {
   const modelStore = useNorseModelStore();
