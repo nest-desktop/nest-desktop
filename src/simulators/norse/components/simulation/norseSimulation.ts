@@ -61,7 +61,6 @@ export class NorseSimulation extends BaseSimulation {
             openToast(response.data, { type: "error" });
             break;
         }
-        console.log(data);
 
         return response;
       });

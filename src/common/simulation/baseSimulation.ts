@@ -41,7 +41,6 @@ export class BaseSimulation extends Config {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this._project.shortId}] simulation`,
-      minLevel: 1
     });
 
     // Initialize time.

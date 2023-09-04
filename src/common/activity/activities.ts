@@ -39,7 +39,6 @@ export class Activities {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this._project.shortId}] activities`,
-      minLevel: 1
     });
 
     this.checkRecorders();
