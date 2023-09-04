@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-responsive>
-      <v-card class="ma-auto pb-10" flat max-width="640px">
+      <v-card class="ma-auto my-4" flat max-width="640px">
         <div class="text-center">
           <v-img
             src="@/assets/img/logo/nest-desktop-logo-light.svg"
@@ -52,7 +52,7 @@
             supported by the DFG Excellence Cluster BrainLinks-BrainTools (grant
             EXC 1086).
 
-            <v-row class="my-4" justify="center" no-gutters>
+            <v-row class="mt-4" justify="center" no-gutters>
               <v-col
                 :key="reference.title"
                 cols="12"
@@ -66,16 +66,16 @@
           </v-card-text>
         </v-card>
       </v-card>
-
-      <v-footer>
-        <v-row justify="center" no-gutters>
-          <v-col class="text-center" cols="12">
-            2023 — <strong>NEST Desktop</strong>
-          </v-col>
-        </v-row>
-      </v-footer>
     </v-responsive>
   </v-container>
+
+  <v-footer>
+    <v-row justify="center" no-gutters>
+      <v-col class="text-center" cols="12">
+        2023 — <strong>NEST Desktop</strong>
+      </v-col>
+    </v-row>
+  </v-footer>
 </template>
 
 <script lang="ts" setup>

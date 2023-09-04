@@ -378,7 +378,7 @@ export class BaseProject {
         return;
       }
 
-      // Initialize activities
+      // Update activities.
       this.activities.update(response.data.data);
 
       // Commit network for the history.

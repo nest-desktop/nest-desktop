@@ -13,11 +13,17 @@ import { createApp } from "vue";
 // Plugins
 import { registerPlugins } from "@/plugins";
 
+// Simulators
+import { registerSimulators } from "@/simulators";
+
 // Create app
 const app = createApp(App);
 
 // Register plugins
 registerPlugins(app);
+
+// Register simulators
+registerSimulators(app);
 
 // Mount app
 app.mount("#app");

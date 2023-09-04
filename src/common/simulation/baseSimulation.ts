@@ -8,7 +8,6 @@ import { logger as mainLogger } from "@/utils/logger";
 import { Config } from "@/helpers/config";
 
 import { BaseSimulationCode, SimulationCodeProps } from "./baseSimulationCode";
-import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
 import { sha1 } from "object-hash";
 
 import { Project } from "@/types/projectTypes";
@@ -42,6 +41,7 @@ export class BaseSimulation extends Config {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this._project.shortId}] simulation`,
+      minLevel: 1
     });
 
     // Initialize time.
@@ -145,36 +145,6 @@ export class BaseSimulation extends Config {
   async run(): Promise<any> {
     this._logger.trace("run simulation");
 
-    const nestSimulatorStore = useNESTSimulatorStore();
-
-    return nestSimulatorStore.backend.instance
-      .post("exec", {
-        source: this._code.script,
-        return: "response",
-      })
-      .then((response: any) => {
-        let data: any;
-        switch (response.status) {
-          case 0:
-            openToast("Failed to find NEST Simulator.", { type: "error" });
-            break;
-          case 200:
-            if (response.data.data == null) {
-              break;
-            }
-            data = response.data.data;
-
-            // Get biological time
-            this.state.biologicalTime =
-              data.biological_time != null ? data.biological_time : this._time;
-
-            break;
-          default:
-            openToast(response.data, { type: "error" });
-            break;
-        }
-        return response;
-      });
   }
 
   /**
@@ -190,7 +160,7 @@ export class BaseSimulation extends Config {
     this.prepare();
 
     this._state.running = true;
-    this.run()
+    return this.run()
       .catch((error: any) => {
         if ("response" in error && error.response.data != undefined) {
           // The request made and the server responded.
