@@ -48,6 +48,11 @@ export class NESTSimulation extends BaseSimulation {
     return this._kernel;
   }
 
+  override beforeSimulation(): void {
+    this.logger.trace("before simulation");
+    this.generateSeed();
+  }
+
   /**
    * Generate seed.
    *
@@ -71,9 +76,22 @@ export class NESTSimulation extends BaseSimulation {
    * Run simulation.
    *
    * @remarks
+   * It runs the simulation with or without Insite.
+   */
+  override async run(): Promise<any> {
+    this.logger.trace("run simulation");
+    return this.code.runSimulationInsite
+      ? this.runWithInsite()
+      : this.runSimulation();
+  }
+
+  /**
+   * Run simulation.
+   *
+   * @remarks
    * After the simulation it updates the activities and commits the network.
    */
-  private async runSimulation(): Promise<any> {
+  async runSimulation(): Promise<any> {
     this.logger.trace("run simulation");
 
     return this.nestSimulator.instance
@@ -150,29 +168,7 @@ export class NESTSimulation extends BaseSimulation {
           openToast(error.response.data, { type: "error" });
         }
         return error;
-      })
-      .finally(() => {
-        this.state.running = false;
       });
-  }
-
-  /**
-   * Start simulation.
-   *
-   * @remarks
-   * It runs the simulation with or without Insite.
-   */
-  override async start(): Promise<any> {
-    this.logger.trace("start");
-    this.resetState();
-
-    // Generate seed and update simulation code.
-    this.generateSeed();
-
-    this.state.running = true;
-    return this.code.runSimulationInsite
-      ? this.runWithInsite()
-      : this.runSimulation();
   }
 
   /**

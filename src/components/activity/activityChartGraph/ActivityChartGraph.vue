@@ -67,6 +67,8 @@ const init = () => {
   const ref: any = activityChartGraph.value;
 
   if (ref) {
+    console.log(graph)
+
     graph.value?.newPlot(ref);
 
     // On zoom behavior

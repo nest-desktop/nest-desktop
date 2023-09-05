@@ -1,18 +1,10 @@
-import { BaseNetwork } from '../network/baseNetwork';
-import { BaseNode } from '../node/baseNode';
-import { darkMode } from '@/helpers/theme';
-import {
-  drag,
-  select,
-  Selection,
-  Transition,
-  transition
-  } from 'd3';
-import { drawPathMouse } from '@/helpers/connectionGraph/connectionGraphPath';
-import { NetworkGraph } from '@/types/networkGraphTypes';
 // nodeGraphConnector.ts
 
-
+import { NetworkGraph } from "@/types/networkGraphTypes";
+import { Node } from "@/types/nodeTypes";
+import { darkMode } from "@/helpers/theme";
+import { drag, select, Selection, Transition, transition } from "d3";
+import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 
 export class NodeGraphConnector {
   private _connectorRadius: number = 6;
@@ -65,7 +57,7 @@ export class NodeGraphConnector {
     const dragging = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       // @ts-ignore
-      .on("drag", (e: MouseEvent, n: BaseNode) => this.drag(e, n))
+      .on("drag", (e: MouseEvent, n: Node) => this.drag(e, n))
       .on("end", (e: MouseEvent) => this.dragEnd(e));
 
     const connectorEnd = connector.append("g").attr("class", "end");
@@ -75,7 +67,7 @@ export class NodeGraphConnector {
       .attr("class", "color")
       .attr("r", "6px")
       .attr("stroke-width", this.strokeWidth)
-      .on("click", (e: MouseEvent, n: BaseNode) => {
+      .on("click", (e: MouseEvent, n: Node) => {
         this.drag(e, n);
         this.render();
       })
@@ -132,7 +124,7 @@ export class NodeGraphConnector {
   /**
    * Call on dragging.
    */
-  drag(e: MouseEvent, node: BaseNode): void {
+  drag(e: MouseEvent, node: Node): void {
     if (!node.state.isSelected) {
       node.state.select();
     }
@@ -147,7 +139,7 @@ export class NodeGraphConnector {
     // this._networkGraph.workspace.dragline.hide();
     // this._networkGraph.workspace.state.dragLine = false;
 
-    const network = this._networkGraph.network as BaseNetwork;
+    const network = this._networkGraph.network;
     const workspace = this._networkGraph.workspace;
 
     if (
@@ -155,9 +147,10 @@ export class NodeGraphConnector {
       network.nodes.state.focusedNode &&
       workspace.state.dragLine
     ) {
-      network.connectNodes(
-        network.nodes.state.selectedNode as BaseNode,
-        network.nodes.state.focusedNode as BaseNode
+      this._networkGraph.network.connectNodes(
+        // @ts-ignore
+        network.nodes.state.selectedNode,
+        network.nodes.state.focusedNode
       );
     }
 
@@ -192,7 +185,7 @@ export class NodeGraphConnector {
           ? 0
           : 1000
       )
-      .style("opacity", (n: BaseNode) =>
+      .style("opacity", (n: Node) =>
         n.state.isFocused && !connectionDrag ? "1" : "0"
       );
 
@@ -205,7 +198,7 @@ export class NodeGraphConnector {
     connector
       .selectAll("path")
       .transition(t)
-      .attr("d", (n: BaseNode | any) =>
+      .attr("d", (n: Node | any) =>
         drawPathMouse(
           { x: 0, y: 0 },
           n.state.isFocused && !connectionDrag
@@ -217,7 +210,7 @@ export class NodeGraphConnector {
     connector
       .select(".end")
       .transition(t)
-      .attr("transform", (n: BaseNode) =>
+      .attr("transform", (n: Node) =>
         n.state.isFocused && !connectionDrag
           ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
           : "translate(0,0)"

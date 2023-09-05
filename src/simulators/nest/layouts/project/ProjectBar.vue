@@ -22,13 +22,13 @@
 
   <v-spacer />
 
-  <simulation-button class="mx-2" />
+  <simulation-button class="mx-2" :simulation="project.simulation" />
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import SimulationButton from "@nest/components/simulation/SimulationButton.vue";
+import SimulationButton from "@/components/simulation/SimulationButton.vue";
 import { NESTProject } from "@nest/helpers/project/nestProject";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";

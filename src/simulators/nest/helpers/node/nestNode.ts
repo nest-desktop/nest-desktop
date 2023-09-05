@@ -196,7 +196,7 @@ export class NESTNode extends BaseNode {
   override getModel(modelId: string): NESTCopyModel | NESTModel {
     this.logger.trace("get model:", modelId);
     if (
-      this.network.modelsCopied.some(
+      this.network.modelsCopied?.some(
         (model: NESTCopyModel) => model.id === modelId
       )
     ) {

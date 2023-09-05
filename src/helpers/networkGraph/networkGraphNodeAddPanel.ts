@@ -4,7 +4,7 @@ import { Arc, Selection, arc } from "d3";
 import { darkMode } from "@/helpers/theme";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { BaseNetwork } from "../network/baseNetwork";
+import { Network } from "@/types/networkTypes";
 
 export class NetworkGraphNodeAddPanel {
   private _workspace: NetworkGraphWorkspace;
@@ -26,8 +26,8 @@ export class NetworkGraphNodeAddPanel {
       : "#424242";
   }
 
-  get network(): BaseNetwork | undefined {
-    return this._workspace.network as BaseNetwork;
+  get network(): Network | undefined {
+    return this._workspace.network;
   }
 
   get position(): any {

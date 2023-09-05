@@ -2,8 +2,8 @@
 
 import { pointer } from "d3";
 
-import { BaseNetwork } from "../network/baseNetwork";
-import { BaseNode } from "../node/baseNode";
+import { Network } from "@/types/networkTypes";
+
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { drawPathMouse, drawPathNode } from "../connectionGraph/connectionGraphPath";
 import { logger as mainLogger } from "../logger";
@@ -17,8 +17,8 @@ export class NetworkGraphDragline {
     this._workspace = networkGraphWorkspace;
   }
 
-  get network(): BaseNetwork | undefined {
-    return this._workspace.networkGraph.network as BaseNetwork;
+  get network(): Network | undefined {
+    return this._workspace.networkGraph.network;
   }
 
   /**
@@ -37,7 +37,7 @@ export class NetworkGraphDragline {
   update(e: MouseEvent): void {
     logger.trace("update");
     if (this.network && this.network.nodes.state.selectedNode != null) {
-      const selectedNode = this.network.nodes.state.selectedNode as BaseNode;
+      const selectedNode = this.network.nodes.state.selectedNode;
       const sourcePosition: {x: number, y: number} = selectedNode.view.state.position;
       const position: number[] = pointer(e, this._workspace.selector.node());
       const targetPosition: {x: number, y: number} = {

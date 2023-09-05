@@ -77,9 +77,7 @@ export class NESTNodes extends BaseNodes {
    * Get nodes with weight recorders.
    */
   get weightRecorders(): NESTNode[] {
-    return this.nodes.filter(
-      (node: NESTNode) => node.model.isWeightRecorder
-    );
+    return this.nodes.filter((node: NESTNode) => node.model.isWeightRecorder);
   }
 
   /**
@@ -87,5 +85,9 @@ export class NESTNodes extends BaseNodes {
    */
   cleanWeightRecorders(): void {
     this.weightRecorders.forEach((node: NESTNode) => node.clean());
+  }
+
+  override newNode(data?: NESTNodeProps): NESTNode {
+    return new NESTNode(this, data);
   }
 }

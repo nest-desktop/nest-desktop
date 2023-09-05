@@ -4,7 +4,7 @@
       <v-btn
         :disabled="simulation.state.running"
         :loading="simulation.state.running"
-        @click="simulation.project.startSimulation()"
+        @click="simulation.project.projectStore.startSimulation()"
         class="btn-main"
         variant="outlined"
         title="Simulate"
@@ -42,15 +42,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { SimulationPropTypes } from "@/types/simulationTypes";
-import { BaseSimulation } from "@/helpers/simulation/baseSimulation";
+import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
 
 const props = defineProps({
   simulation: SimulationPropTypes,
   disabled: Boolean,
 });
 
-const simulation = computed(() => props.simulation as BaseSimulation);
+const simulation = computed(() => props.simulation as Simulation);
 
 const state = reactive({
   disabled: false,

@@ -6,7 +6,24 @@
     density="compact"
     absolute
   >
+    <v-btn icon size="small" v-if="graph?.network.nodes.state.selectedNode">
+      <node-avatar
+        :node="graph?.network.nodes.state.selectedNode"
+        @click="graph?.network.nodes.state.selectedNode.state.select()"
+        size="32px"
+      />
+    </v-btn>
+
     <v-spacer />
+
+    <div v-if="graph?.network.connections.state.selectedConnection">
+      <connection-avatar
+        :connection="graph?.network.connections.state.selectedConnection"
+      />
+    </div>
+
+    <v-spacer />
+
     <v-btn
       icon="mdi-camera"
       size="small"
@@ -94,13 +111,14 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
 import { downloadSVGImage } from "@/utils/download";
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
+import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
 const networkGraphStore = useNetworkGraphStore();
 
-const graph = computed(() => networkGraphStore.graph as BaseNetworkGraph);
+const graph = computed(() => networkGraphStore.graph);
 
 const state = reactive({
   dialogDelete: false,

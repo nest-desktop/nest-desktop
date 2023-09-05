@@ -6,7 +6,6 @@ import { Connection } from "@/types/connectionTypes";
 import { NetworkGraph } from "@/types/networkGraphTypes";
 
 import { drawPathNode } from "./connectionGraphPath";
-import { BaseConnection } from "../connection/baseConnection";
 import { BaseNetworkGraph } from "../networkGraph/baseNetworkGraph";
 
 export class ConnectionGraph {
@@ -31,7 +30,7 @@ export class ConnectionGraph {
   /**
    * Drag connection graph by moving its node graphs.
    */
-  drag(event: MouseEvent, connection: BaseConnection): void {
+  drag(event: MouseEvent, connection: Connection): void {
     if (this.state.dragLine) return;
     const sourceNodePosition = connection.source.view.state.position;
     // @ts-ignore
@@ -52,7 +51,7 @@ export class ConnectionGraph {
    * Initialize a connection graph.
    */
   init(
-    connection: BaseConnection,
+    connection: Connection,
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
@@ -81,7 +80,7 @@ export class ConnectionGraph {
     //   .append("text");
 
     elem
-      .on("mouseover", (_, c: BaseConnection) => {
+      .on("mouseover", (_, c: Connection) => {
         c.state.focus();
         // Draw line between selected node and focused connection.
         if (
@@ -215,13 +214,13 @@ export class ConnectionGraph {
       .enter()
       .append("g")
       .attr("class", "connection")
-      .attr("color", (c: BaseConnection) => c.source.view.color)
-      .attr("idx", (c: BaseConnection) => c.idx)
-      .attr("hash", (c: BaseConnection) => c.state.shortHash)
+      .attr("color", (c: Connection) => c.source.view.color)
+      .attr("idx", (c: Connection) => c.idx)
+      .attr("hash", (c: Connection) => c.state.shortHash)
       .style("opacity", 0)
       // @ts-ignore
       .call(dragging)
-      .each((c: BaseConnection, i: number, e) => this.init(c, i, e));
+      .each((c: Connection, i: number, e) => this.init(c, i, e));
 
     connections.exit().remove();
 
