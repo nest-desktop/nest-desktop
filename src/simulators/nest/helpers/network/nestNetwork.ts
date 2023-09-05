@@ -10,7 +10,7 @@ import {
 import { NESTConnections } from "../connection/nestConnections";
 import { NESTCopyModel, NESTCopyModelProps } from "../model/nestCopyModel";
 import { NESTCopyModels } from "../model/nestCopyModels";
-import { NESTNodeProps } from "../node/nestNode";
+import { NESTNode, NESTNodeProps } from "../node/nestNode";
 import { NESTNodes } from "../node/nestNodes";
 import { NESTProject } from "../project/nestProject";
 
@@ -94,7 +94,7 @@ export class NESTNetwork extends BaseNetwork {
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
    */
-  override connectNodes(source: Node, target: Node): void {
+  override connectNodes(source: NESTNode, target: Node): void {
     this.logger.trace("connect nodes");
 
     const connection: NESTConnection = this.connections.add({

@@ -11,6 +11,7 @@ import { openToast } from "@/helpers/toast";
 
 import { BaseSimulationCode, SimulationCodeProps } from "./baseSimulationCode";
 import { SimulationCode } from "@/types/simulationCodeTypes";
+import { AxiosResponse } from "axios";
 
 export interface SimulationProps {
   code?: SimulationCodeProps;
@@ -93,6 +94,8 @@ export class BaseSimulation extends Config {
     return this._time.toFixed(1);
   }
 
+  beforeSimulation(): void {}
+
   changes(): void {
     this.updateHash();
     this._logger.trace("changes");
@@ -118,10 +121,6 @@ export class BaseSimulation extends Config {
     return new BaseSimulationCode(this, simulationCode);
   }
 
-  prepare(): void {
-    // this.generateSeed();
-  }
-
   /**
    * Reset simulation states.
    */
@@ -144,7 +143,6 @@ export class BaseSimulation extends Config {
    */
   async run(): Promise<any> {
     this._logger.trace("run simulation");
-
   }
 
   /**
@@ -157,7 +155,7 @@ export class BaseSimulation extends Config {
     this._logger.trace("start");
     this.resetState();
 
-    this.prepare();
+    this.beforeSimulation();
 
     this._state.running = true;
     return this.run()

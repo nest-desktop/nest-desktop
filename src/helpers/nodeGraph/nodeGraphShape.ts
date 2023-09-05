@@ -3,9 +3,8 @@
 import { ILogObj, Logger } from "tslog";
 import { Selection, select } from "d3";
 
-import { BaseNode } from "../node/baseNode";
-import { BaseNodes } from "../node/baseNodes";
 import { NetworkGraph } from "@/types/networkGraphTypes";
+import { Node } from "@/types/nodeTypes";
 import { logger as mainLogger } from "@/helpers/logger";
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
@@ -74,7 +73,7 @@ function getTrianglePoints(radius: number): string {
   return points;
 }
 
-function nodePoints(node: BaseNode, radius: number): string {
+function nodePoints(node: Node, radius: number): string {
   if (node.model.isStimulator) {
     return getHexagonPoints(radius);
   } else if (node.model.isRecorder) {
@@ -105,7 +104,7 @@ export class NodeGraphShape {
     return this._networkGraph.config.strokeWidth;
   }
 
-  drawShape(selector: Selection<any, any, any, any>, node: BaseNode): void {
+  drawShape(selector: Selection<any, any, any, any>, node: Node): void {
     this._logger.trace("draw shape");
     selector.attr("elementType", node.model.elementType);
     selector.attr("weight", node.view.synWeights);
@@ -126,7 +125,7 @@ export class NodeGraphShape {
         .attr("style", "stroke-linejoin: round")
         .attr("stroke", "currentcolor")
         .attr("fill", "white")
-        .attr("points", (n: BaseNode) => nodePoints(n, this.nodeRadius));
+        .attr("points", (n: Node) => nodePoints(n, this.nodeRadius));
     }
 
     elem
@@ -143,7 +142,7 @@ export class NodeGraphShape {
   /**
    * Initialize a node shape.
    */
-  init(selector: Selection<any, any, any, any>, node: BaseNode): void {
+  init(selector: Selection<any, any, any, any>, node: Node): void {
     this._logger.silly("init");
     const elem: Selection<any, any, any, any> = selector
       .append("g")
@@ -152,7 +151,7 @@ export class NodeGraphShape {
     this.drawShape(selector, node);
 
     elem.on("click", (e: MouseEvent) => {
-      const nodes = this._networkGraph.network.nodes as BaseNodes;
+      const nodes = this._networkGraph.network.nodes;
 
       if (
         nodes.state.selectedNode &&
@@ -164,10 +163,8 @@ export class NodeGraphShape {
         );
 
         this._networkGraph.workspace.animationOff();
-        this._networkGraph.network.connectNodes(
-          nodes.state.selectedNode as BaseNode,
-          node
-        );
+        // @ts-ignore
+        this._networkGraph.network.connectNodes(nodes.state.selectedNode, node);
         this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {
@@ -193,13 +190,10 @@ export class NodeGraphShape {
   render(): void {
     this._logger.silly("render");
     const nodes = select("g#nodes").selectAll("g.node");
-    nodes.style("pointer-events", () =>
-      this._networkGraph.workspace.state.dragLine ? "none" : ""
-    );
 
     // Check if neuron has to change its shape.
     //@ts-ignore
-    nodes.each((node: BaseNode, idx: number, elements: any[]) => {
+    nodes.each((node: Node, idx: number, elements: any[]) => {
       const elem = select(elements[idx]);
 
       if (

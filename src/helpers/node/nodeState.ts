@@ -47,14 +47,14 @@ export class NodeState {
    * Check if this node is focused.
    */
   get isFocused(): boolean {
-    return this.node.nodes.state.focusedNode === this._node;
+    return this.node.nodes.state.focusedNode === this.node;
   }
 
   /**
    * Check if this node is selected.
    */
   get isSelected(): boolean {
-    return this.node.nodes.state.selectedNode === this._node;
+    return this.node.nodes.state.selectedNode === this.node;
   }
 
   get node(): Node {
@@ -77,7 +77,7 @@ export class NodeState {
    * Focus this node
    */
   focus(): void {
-    this.node.nodes.state.focusedNode = this._node;
+    this.node.nodes.state.focusedNode = this.node;
   }
 
   /**
@@ -85,7 +85,7 @@ export class NodeState {
    */
   select(): void {
     const nodes = this.node.nodes;
-    nodes.state.selectedNode = this.isSelected ? null : this._node;
+    nodes.state.selectedNode = this.isSelected ? null : this.node;
   }
 
   update(): void {

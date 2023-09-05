@@ -3,8 +3,9 @@
 import { ILogObj, Logger } from "tslog";
 import { Selection, Transition, drag, select, transition } from "d3";
 
-import { BaseNode } from "../node/baseNode";
+import { Network } from "@/types/networkTypes";
 import { NetworkGraph } from "@/types/networkGraphTypes";
+import { Node } from "@/types/nodeTypes";
 import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
 import { currentBackgroundColor } from "@/helpers/theme";
@@ -26,7 +27,7 @@ export class NodeGraph {
     });
   }
 
-  get network(): any {
+  get network(): Network {
     return this._networkGraph.network;
   }
 
@@ -34,7 +35,7 @@ export class NodeGraph {
    * Initialize node graph.
    */
   init(
-    node: BaseNode,
+    node: Node,
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
@@ -45,14 +46,14 @@ export class NodeGraph {
     this._nodeGraphConnector.init(elem);
     this._nodeGraphShape.init(elem, node);
 
-    elem.on("mouseover", (_, n: BaseNode) => {
+    elem.on("mouseover", (_, n: Node) => {
       n.state.focus();
       // Draw line between selected node and focused node.
       if (
         n.nodes.state.selectedNode &&
         this._networkGraph.workspace.state.dragLine
       ) {
-        const selectedNode = n.nodes.state.selectedNode as BaseNode;
+        const selectedNode = n.nodes.state.selectedNode;
         const sourcePos = selectedNode.view.state.position;
         this._networkGraph.workspace.dragline.drawPath(
           sourcePos,
@@ -84,19 +85,19 @@ export class NodeGraph {
     const dragging = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       // @ts-ignore
-      .on("drag", (e: MouseEvent, n: BaseNode) => this.drag(e, n))
+      .on("drag", (e: MouseEvent, n: Node) => this.drag(e, n))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     nodes
       .enter()
       .append("g")
       .attr("class", "node")
-      .attr("color", (n: BaseNode) => n.view.color)
-      .attr("idx", (n: BaseNode) => n.idx)
-      .attr("weight", (n: BaseNode) => n.view.synWeights as string)
+      .attr("color", (n: Node) => n.view.color)
+      .attr("idx", (n: Node) => n.idx)
+      .attr("weight", (n: Node) => n.view.synWeights as string)
       .attr(
         "transform",
-        (n: BaseNode) =>
+        (n: Node) =>
           `translate(${n.view.state.position.x},${
             n.view.state.position.y
           }) scale( ${n.state.isFocused ? 1.2 : 1})`
@@ -104,7 +105,7 @@ export class NodeGraph {
       .style("opacity", 0)
       // @ts-ignore
       .call(dragging)
-      .each((n: BaseNode, i: number, e) => this.init(n, i, e));
+      .each((n: Node, i: number, e) => this.init(n, i, e));
 
     nodes.exit().remove();
 
@@ -114,7 +115,7 @@ export class NodeGraph {
   /**
    * Drag node graph.
    */
-  drag(event: MouseEvent, node: BaseNode): void {
+  drag(event: MouseEvent, node: Node): void {
     this._logger.silly("drag");
     if (this._networkGraph.workspace.state.dragLine) return;
 

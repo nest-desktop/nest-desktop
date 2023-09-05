@@ -3,10 +3,10 @@
 import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
 
 import { Config } from "@/helpers/config";
+import { Network } from "@/types/networkTypes";
 import { NetworkGraph } from "@/types/networkGraphTypes";
+import { Node } from "@/types/nodeTypes";
 
-import { BaseNetwork } from "../network/baseNetwork";
-import { BaseNode } from "../node/baseNode";
 import { NetworkGraphDragline } from "./networkGraphDragline";
 import { NetworkGraphGrid } from "./networkGraphGrid";
 import { NetworkGraphNodeAddPanel } from "./networkGraphNodeAddPanel";
@@ -61,8 +61,8 @@ export class NetworkGraphWorkspace extends Config {
     return this._grid;
   }
 
-  get network(): BaseNetwork | undefined {
-    return this._networkGraph.network as BaseNetwork;
+  get network(): Network | undefined {
+    return this._networkGraph.network;
   }
 
   get networkGraph(): NetworkGraph {
@@ -115,7 +115,7 @@ export class NetworkGraphWorkspace extends Config {
 
     const X: number[] = [];
     const Y: number[] = [];
-    this.network.nodes.all.forEach((node: BaseNode) => {
+    this.network.nodes.all.forEach((node: Node) => {
       X.push(node.view.state.position.x);
       Y.push(node.view.state.position.y);
     });
