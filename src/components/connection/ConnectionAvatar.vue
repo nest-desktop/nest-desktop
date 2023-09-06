@@ -5,7 +5,7 @@
     </v-btn>
     <v-btn
       :color="connection.source.view.color"
-      :icon="connection.synapse?.icon || 'nest:synapse-recorder'"
+      :icon="connection.synapse.icon"
       size="small"
       variant="text"
     />

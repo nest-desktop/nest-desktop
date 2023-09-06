@@ -39,10 +39,9 @@ export class NESTNode extends BaseNode {
   private _spatial: NESTNodeSpatial;
 
   constructor(nodes: NESTNodes, node: NESTNodeProps = {}) {
-    super(nodes, node, "NESTNode");
+    super(nodes, node);
 
     this._spatial = new NESTNodeSpatial(this, node.spatial);
-    this.init(node);
   }
 
   get assignedModels(): NESTCopyModel[] {

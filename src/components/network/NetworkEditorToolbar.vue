@@ -8,7 +8,7 @@
   >
     <v-btn icon size="small" v-if="graph?.network.nodes.state.selectedNode">
       <node-avatar
-        :node="graph?.network.nodes.state.selectedNode"
+        :node="(graph?.network.nodes.state.selectedNode as Node)"
         @click="graph?.network.nodes.state.selectedNode.state.select()"
         size="32px"
       />
@@ -18,7 +18,7 @@
 
     <div v-if="graph?.network.connections.state.selectedConnection">
       <connection-avatar
-        :connection="graph?.network.connections.state.selectedConnection"
+        :connection="(graph?.network.connections.state.selectedConnection as Connection)"
       />
     </div>
 
@@ -115,6 +115,8 @@ import { downloadSVGImage } from "@/utils/download";
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import { Node } from "@/types/nodeTypes";
+import { Connection } from "@/types/connectionTypes";
 
 const networkGraphStore = useNetworkGraphStore();
 

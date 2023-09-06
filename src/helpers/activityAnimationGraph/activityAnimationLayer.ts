@@ -164,7 +164,6 @@ export class ActivityAnimationLayer {
     this._state.records = [];
     if (this._activity.recorder.records == null) return;
     this._activity.recorder.records.forEach((record: NodeRecord) => {
-      record.activity = this._activity;
       this._state.records.push(record);
     });
     if (this._state.record == null) {

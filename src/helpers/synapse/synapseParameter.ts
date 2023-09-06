@@ -1,16 +1,15 @@
 // nestSynapseParameters.ts
 
-import { Parameter, ParameterProps } from "@/helpers/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
+import { Parameter, ParameterProps } from "@/helpers/parameter";
+import { Synapse } from "@/types/synapseTypes";
 
-import { NESTSynapse } from "./nestSynapse";
+export interface SynapseParameterProps extends ParameterProps {}
 
-export interface NESTSynapseParameterProps extends ParameterProps {}
+export class SynapseParameter extends Parameter {
+  private _synapse: Synapse;
 
-export class NESTSynapseParameter extends Parameter {
-  private _synapse: NESTSynapse;
-
-  constructor(synapse: NESTSynapse, param: NESTSynapseParameterProps) {
+  constructor(synapse: Synapse, param: SynapseParameterProps) {
     super(param);
     this._synapse = synapse;
   }
@@ -22,15 +21,13 @@ export class NESTSynapseParameter extends Parameter {
     return this._synapse.model.params[this.id];
   }
 
-  get synapse(): NESTSynapse {
+  get synapse(): Synapse {
     return this._synapse;
   }
 
   get types(): any[] {
     const types: any[] = this.config.types;
-    return !this.synapse.isSpatial
-      ? types.filter((type: any) => !type.id.startsWith("spatial"))
-      : types;
+    return types;
   }
 
   get visible(): boolean {
@@ -69,7 +66,7 @@ export class NESTSynapseParameter extends Parameter {
    * Serialize for JSON.
    * @return synapse parameter object
    */
-  override toJSON(): any {
+  override toJSON(): SynapseParameterProps {
     const param: any = {
       id: this.id,
       value: this.value,

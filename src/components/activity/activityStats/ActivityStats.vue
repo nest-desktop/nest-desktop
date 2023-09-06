@@ -38,7 +38,7 @@
 
             <activity-stats-analog
               :activity="activity as AnalogSignalActivity"
-              :height="state.height - 36"
+              :height="state.height - (activity.recorder.model.isMultimeter ? 60 :  0)"
               v-if="activity.recorder.model.isAnalogRecorder"
             />
           </v-expansion-panel-text>

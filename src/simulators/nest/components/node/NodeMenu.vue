@@ -21,7 +21,7 @@
 
       <span v-if="state.content == undefined">
         <v-list density="compact">
-          <v-list-item>
+          <v-list-item v-if="!node.model.isRecorder">
             <template #prepend>
               <v-icon icon="mdi-contrast" />
             </template>
@@ -284,16 +284,16 @@ const items = [
     show: () => true,
     title: "Clone node",
   },
-  {
-    icon: "nest:synapse-excitatory",
-    id: "setSynWeights",
-    onClick: () => {
-      state.content = "synWeights";
-    },
-    append: true,
-    show: () => true,
-    title: "Set synaptic weights",
-  },
+  // {
+  //   icon: "nest:synapse-excitatory",
+  //   id: "setSynWeights",
+  //   onClick: () => {
+  //     state.content = "synWeights";
+  //   },
+  //   append: true,
+  //   show: () => true,
+  //   title: "Set synaptic weights",
+  // },
   {
     icon: "mdi-download",
     id: "eventsExport",
@@ -372,7 +372,6 @@ const updateStates = () => {
 
 const updateSynWeights = (value?: string) => {
   node.value.view.state.synWeights = value || "";
-  // node.value.view.synWeights = value || "";
   node.value.changes();
   networkGraphStore.graph.render();
 };

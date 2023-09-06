@@ -173,7 +173,6 @@ export abstract class ActivityChartPanelModel {
       .forEach((activity: Activity) => {
         if (activity.recorder.records) {
           activity.recorder.records.forEach((record: NodeRecord) => {
-            record.activity = activity;
             this._state.records.push(record);
           });
         }
@@ -297,7 +296,6 @@ export abstract class ActivityChartPanelModel {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
             if (!this._state.records.includes(record)) {
-              record.activity = activity;
               this._state.records.push(record);
             }
           });

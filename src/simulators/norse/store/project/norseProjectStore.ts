@@ -17,7 +17,8 @@ export const useNorseProjectStore = defineStore("norse-project-view", {
     bottomOpen: false,
     controllerOpen: false,
     controllerView: "",
-    project: new NorseProject(),
+    // @ts-ignore
+    project: undefined as NorseProject,
     projectId: "",
     simulateAfterCheckout: false,
     view: "edit",

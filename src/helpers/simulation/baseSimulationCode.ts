@@ -1,4 +1,4 @@
-// baseSimulationCode.ts - 1 any
+// baseSimulationCode.ts
 
 import Mustache from "mustache";
 import { ILogObj, Logger } from "tslog";
@@ -16,6 +16,7 @@ export interface SimulationCodeProps {
 
 interface SimulationCodeState {
   blocks: string[];
+  customBlocks: boolean,
   templateFilename: string;
   hash: string;
   template?: string;
@@ -40,6 +41,7 @@ export class BaseSimulationCode {
     this._simulation = simulation;
     this._state = reactive({
       blocks: simulationCode?.blocks || simulationCodeBlocks,
+      customBlocks: false,
       templateFilename: simulationCode?.templateFilename || "",
       template: "",
       hash: "",

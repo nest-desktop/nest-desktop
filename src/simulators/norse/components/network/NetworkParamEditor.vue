@@ -21,7 +21,7 @@
           :node="(node as NorseNode)"
           @mouseenter="node.state.focus()"
           @mouseleave="node.nodes.unfocusNode()"
-          v-if="showNode(node)"
+          v-if="showNode(node as NorseNode)"
           />
           <!-- :style="{opacity: showNode(node as Node) ? 1 : 0.2}" -->
       </div>

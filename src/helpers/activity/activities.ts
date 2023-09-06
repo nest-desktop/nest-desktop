@@ -4,14 +4,13 @@ import { ILogObj, Logger } from "tslog";
 import { UnwrapRef, reactive } from "vue";
 import { sha1 } from "object-hash";
 
+import { Node } from "@/types/nodeTypes";
 import { Project } from "@/types/projectTypes";
 import { logger as mainLogger } from "@/helpers/logger";
 
 import { Activity } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { SpikeActivity } from "./spikeActivity";
-import { BaseProject } from "../project/baseProject";
-import { BaseNode } from "../node/baseNode";
 // import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
 
 
@@ -52,11 +51,10 @@ export class Activities {
    * Get a list of activities.
    */
   get all(): Activity[] {
-    this._logger.trace("all");
     // @ts-ignore
     const activities: Activity[] = this._project.network
       ? this.project.network.nodes.recorders.map(
-          (recorder: BaseNode) => recorder.activity
+          (recorder: Node) => recorder.activity
         )
       : ([] as Activity[]);
 
@@ -76,7 +74,7 @@ export class Activities {
   get analogSignals(): AnalogSignalActivity[] {
     const activities: AnalogSignalActivity[] = this._project.network
       ? this.project.network.nodes.recordersAnalog.map(
-          (recorder: BaseNode) => recorder.activity as AnalogSignalActivity
+          (recorder: Node) => recorder.activity as AnalogSignalActivity
         )
       : [];
     activities.forEach((activity: Activity, idx: number) => {
@@ -103,8 +101,8 @@ export class Activities {
     );
   }
 
-  get project(): BaseProject {
-    return this._project as BaseProject;
+  get project(): Project {
+    return this._project;
   }
 
   /**
@@ -113,7 +111,7 @@ export class Activities {
   get spikes(): SpikeActivity[] {
     const activities: SpikeActivity[] = this._project.network
       ? this.project.network.nodes.recordersSpike.map(
-          (recorder: BaseNode) => recorder.activity as SpikeActivity
+          (recorder: Node) => recorder.activity as SpikeActivity
         )
       : [];
     activities.forEach((activity: Activity, idx: number) => {
@@ -165,6 +163,7 @@ export class Activities {
    * Check whether the project has some events in activities.
    */
   checkActivities(): void {
+    this._logger.trace("check");
     const activities: Activity[] = this._project.activities.all;
 
     // Check if it has some activities.
@@ -186,6 +185,7 @@ export class Activities {
    * Reset activities.
    */
   reset(): void {
+    this._logger.trace("reset");
     // Reset activities.
     this.all.forEach((activity: Activity) => {
       activity.reset();

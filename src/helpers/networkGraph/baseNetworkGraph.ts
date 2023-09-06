@@ -5,16 +5,16 @@ import { Ref, watch } from "vue";
 import { Selection, select } from "d3";
 
 import { BaseNode } from "../node/baseNode";
+import { BaseNetwork } from "../network/baseNetwork";
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
 import { Network } from "@/types/networkTypes";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { debounce } from "@/utils/events";
 import { logger as mainLogger } from "../logger";
-import { BaseNetwork } from "../network/baseNetwork";
 
 export class BaseNetworkGraph {
-  private _config: any = {
+  private _config = {
     nodeRadius: 24,
     strokeWidth: 3,
     transparentWorkspace: true,
