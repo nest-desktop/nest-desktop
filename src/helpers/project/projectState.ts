@@ -18,7 +18,6 @@ type snackbarType = {
 };
 
 export class ProjectState {
-  private _activityStatsPanelId: number = 0;
   private _state: UnwrapRef<any>;
   private _project: Project;
   private _selected: boolean = false;
@@ -38,14 +37,6 @@ export class ProjectState {
       show: false,
       text: "",
     };
-  }
-
-  get activityStatsPanelId(): number {
-    return this._activityStatsPanelId;
-  }
-
-  set activityStatsPanelId(value: number) {
-    this._activityStatsPanelId = value;
   }
 
   get changes(): boolean {

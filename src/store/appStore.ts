@@ -1,4 +1,4 @@
-// appStore
+// appStore.ts
 
 import { defineStore } from "pinia";
 
@@ -24,19 +24,14 @@ export const simulatorItems: {
     icon: "simulator:norse",
     databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
   },
-  pynn: {
-    id: "pynn",
-    title: "PyNN",
-    icon: "simulator:pynn",
-    databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
-  },
+  // pynn: {
+  //   id: "pynn",
+  //   title: "PyNN",
+  //   icon: "simulator:pynn",
+  //   databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
+  // },
+  // arbor: { id: "arbor", title: "Arbor", icon: "simulator:arbor" }
 };
-
-//   { id: "nest", title: "NEST", icon: "simulator:nest", color: "nest" },
-//   { id: "norse", title: "Norse", icon: "simulator:norse" },
-//   { id: "pynn", title: "PyNN", icon: "simulator:pynn" },
-//   // { id: "arbor", title: "Arbor", icon: "simulator:arbor" },
-// ];
 
 export const useAppStore = defineStore("nest-desktop-app-store", {
   state: () => ({

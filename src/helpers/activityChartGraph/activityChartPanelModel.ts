@@ -9,7 +9,9 @@ import { logger as mainLogger } from "@/helpers/logger";
 
 import { ActivityChartPanel } from "./activityChartPanel";
 
-const logger = mainLogger.getSubLogger({ name: "activity chart panel model" });
+const logger = mainLogger.getSubLogger({
+  name: "activity chart panel model",
+});
 
 export interface ActivityChartPanelModelProps {
   id?: string;
@@ -185,27 +187,27 @@ export abstract class ActivityChartPanelModel {
    * Initialize visible records from analog activities.
    */
   initAnalogRecordsVisible(records: any[] = []): void {
-    logger.trace("Init visible analog records");
+    logger.trace("Init visible analog records:", records);
     if (this._state.records.length === 0) {
       this._state.recordsVisible = [];
       return;
     }
 
-    if (records.length > 0) {
-      this._state.recordsVisible = records
-        .filter((record: any) =>
-          this._state.records.some(
-            (rec: NodeRecord) => rec.groupId === record.groupId
-          )
-        )
-        .map((record: any) => {
-          const recordVisible = this._state.records.find(
-            (rec: NodeRecord) => rec.groupId === record.groupId
-          );
-          if (recordVisible != null) recordVisible.color = record.color;
-          return recordVisible;
-        });
-    }
+    // if (records.length > 0) {
+    //   this._state.recordsVisible = records
+    //     .filter((record: any) =>
+    //       this._state.records.some(
+    //         (rec: NodeRecord) => rec.groupId === record.groupId
+    //       )
+    //     )
+    //     .map((record: any) => {
+    //       const recordVisible = this._state.records.find(
+    //         (rec: NodeRecord) => rec.groupId === record.groupId
+    //       );
+    //       if (recordVisible != null) recordVisible.color = record.color;
+    //       return recordVisible;
+    //     });
+    // }
   }
 
   /**
@@ -244,14 +246,20 @@ export abstract class ActivityChartPanelModel {
    */
   update(): void {
     logger.trace("Update");
+
+    // Update time.
     this.updateTime();
+
+    // Update activities.
+    this.updateActivities();
+
+    // Update analog records.
     this.updateAnalogRecords();
 
-    this.data = [];
-    this.activities.forEach((activity: Activity) => {
-      this.addData(activity);
-    });
+    // Update data.
+    this.updateData();
 
+    // Update label for layout.
     this.updateLayoutLabel();
   }
 
@@ -260,6 +268,13 @@ export abstract class ActivityChartPanelModel {
    **/
   updateActiveMarker(record?: NodeRecord): void {
     record;
+  }
+
+  /**
+   * Update activities.
+   */
+  updateActivities(): void {
+    this.activities = this.panel.graph.project.activities.all;
   }
 
   /**
@@ -291,6 +306,13 @@ export abstract class ActivityChartPanelModel {
 
     // Update records.
     this._state.records.forEach((record: NodeRecord) => record.update());
+  }
+
+  updateData(): void {
+    this.data = [];
+    this.activities.forEach((activity: Activity) => {
+      this.addData(activity);
+    });
   }
 
   /**
@@ -362,7 +384,6 @@ export abstract class ActivityChartPanelModel {
    * It needs activity data.
    */
   updateTime(): void {
-    // Update time
     this._state.time.start = 0;
     this._state.time.end = Math.max(
       this._state.time.end,

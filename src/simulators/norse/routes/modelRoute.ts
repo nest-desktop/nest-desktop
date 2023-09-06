@@ -21,7 +21,7 @@ const modelBeforeEnter = (to: any) => {
   }
 
   const path = to.path.split("/");
-  modelStore.view = path[path.length - 1] || "doc";
+  modelStore.view = path[path.length - 1] || "edit";
 };
 
 const modelRedirect = (to: any) => {
@@ -44,15 +44,6 @@ export default [
     path: ":modelId/",
     redirect: modelRedirect,
     children: [
-      {
-        path: "doc",
-        name: "NorseModelDoc",
-        components: {
-          model: () => import("@norse/views/model/ModelDoc.vue"),
-        },
-        props: true,
-        beforeEnter: modelBeforeEnter,
-      },
       {
         path: "explore",
         name: "NorseModelExplorer",

@@ -37,7 +37,6 @@ export class BaseNode extends Config {
   private _doc: NodeProps;
   private _idx: number; // generative
   private _logger: Logger<ILogObj>;
-  private _modelId: string;
   private _params: { [key: string]: NodeParameter } = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
@@ -46,6 +45,7 @@ export class BaseNode extends Config {
   private _state: NodeState;
   private _view: NodeView;
 
+  public _modelId: string;
   public _model: Model;
   public _nodes: Nodes; // parent
 
@@ -102,7 +102,32 @@ export class BaseNode extends Config {
   get connectionsNeurons(): Connection[] {
     return this.network.connections.all.filter(
       (connection: Connection) =>
+        (connection.sourceIdx === this._idx &&
+          connection.target.model.isNeuron) ||
+        (connection.targetIdx === this._idx && connection.source.model.isNeuron)
+    );
+  }
+
+  get connectionsNeuronSources(): Connection[] {
+    return this.network.connections.all.filter(
+      (connection: Connection) =>
+        connection.targetIdx === this._idx && connection.source.model.isNeuron
+    );
+  }
+
+
+  get connectionsNeuronTargets(): Connection[] {
+    return this.network.connections.all.filter(
+      (connection: Connection) =>
         connection.sourceIdx === this._idx && connection.target.model.isNeuron
+    );
+  }
+
+  get connectionsStimulatorSources(): Connection[] {
+    return this.network.connections.all.filter(
+      (connection: Connection) =>
+        connection.targetIdx === this._idx &&
+        connection.source.model.isStimulator
     );
   }
 
@@ -349,7 +374,7 @@ export class BaseNode extends Config {
    * Clean node component.
    */
   clean(): void {
-    const nodes = this.nodes.all as Node[]
+    const nodes = this.nodes.all as Node[];
     this._idx = nodes.indexOf(this);
     this.view.clean();
   }

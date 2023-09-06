@@ -1,14 +1,10 @@
 <template>
   <v-tabs stacked>
-    <v-tab title="Read documentation" size="small" to="doc">
-      <v-icon icon="mdi-text-box-outline" />
-      Doc
-    </v-tab>
-    <v-tab title="Explore activity" size="small" to="explore">
+    <v-tab size="small" title="Explore activity" to="explore">
       <v-icon icon="mdi-chart-scatter-plot" />
       Explorer
     </v-tab>
-    <v-tab title="Edit network" size="small" to="edit">
+    <v-tab size="small" title="Edit network" to="edit">
       <v-icon icon="mdi-pencil" />
       Editor
     </v-tab>

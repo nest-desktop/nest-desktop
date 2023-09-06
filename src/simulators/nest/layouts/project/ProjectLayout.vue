@@ -74,16 +74,21 @@
         v-else-if="projectStore.controllerView === 'kernel'"
       />
       <pre v-else-if="projectStore.controllerView === 'raw'">
-        {{ projectStore.project.toJSON() }}
+        {{ project.toJSON() }}
         </pre
       >
       <simulation-code-editor
+        :simulation="(project.simulation as NESTSimulation)"
         v-else-if="projectStore.controllerView === 'code'"
       />
       <activity-chart-controller
+        :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
         v-else-if="projectStore.controllerView === 'activity'"
       />
-      <activity-stats v-else-if="projectStore.controllerView === 'stats'" />
+      <activity-stats
+        :activities="(project.activities as Activities)"
+        v-else-if="projectStore.controllerView === 'stats'"
+      />
     </div>
   </v-navigation-drawer>
 
@@ -96,19 +101,25 @@
     class="d-print-none"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
-    <simulation-code-mirror />
+    <simulation-code-mirror
+      :simulation="(project.simulation as NESTSimulation)"
+    />
   </v-bottom-navigation>
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
 
 import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
+import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
+import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
+import { Activities } from "@/helpers/activity/activities";
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
-import SimulationCodeEditor from "@nest/components/simulation/SimulationCodeEditor.vue";
-import SimulationCodeMirror from "@nest/components/simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
+import { NESTSimulation } from "@nest/helpers/simulation/nestSimulation";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectNav from "./ProjectNav.vue";
@@ -118,6 +129,8 @@ const navStore = useNavStore();
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();
+
+const project = computed(() => projectStore.project);
 
 /**
  * Handle mouse move on resizing.

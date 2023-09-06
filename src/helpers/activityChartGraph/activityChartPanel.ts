@@ -62,7 +62,6 @@ export class ActivityChartPanel {
 
     this.selectModel(
       panel.model ? panel.model.id : "spikeTimesRasterPlot",
-      panel.model
     );
   }
 

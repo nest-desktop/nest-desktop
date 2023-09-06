@@ -449,6 +449,7 @@ export class ActivityChartGraph {
     // this.updateLayoutColor();
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
+      panel.model.activities;
       this.gatherData(panel);
       this.updateLayoutPanel(panel);
     });

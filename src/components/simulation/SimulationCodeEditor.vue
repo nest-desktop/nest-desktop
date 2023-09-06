@@ -34,8 +34,8 @@ const simulation = computed(() => props.simulation as Simulation);
 
 const codeBlocks = [
   { icon: "mdi-delete-empty", title: "reset" },
-  { icon: "mdi-arrow-down", title: "insite" },
-  { icon: "mdi-engine-outline", title: "kernel" },
+  // { icon: "mdi-arrow-down", title: "insite" },
+  // { icon: "mdi-engine-outline", title: "kernel" },
   { icon: "mdi-shape", title: "create" },
   { icon: "nest:network", title: "connect" },
   { icon: "mdi-play", title: "simulate" },

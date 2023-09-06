@@ -130,7 +130,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       project.clean();
 
       return project.docId
-        ? this.db.update(project.toJSON())
+        ? this.db.update(project)
         : this.db.create(project.toJSON());
     },
     /**
@@ -238,7 +238,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      * @param project string
      */
     unloadProject(projectId: string): void {
-      logger.trace("Unload project:", projectId);
+      logger.trace("unload project:", projectId);
 
       const project: NorseProject = this.projects.find(
         (project: any) => project.id === projectId

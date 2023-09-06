@@ -80,7 +80,6 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Add single line data for analog signal.
    */
   addSingleLine(record: NodeRecord): void {
-    console.log("Add single line");
     if (!record.hasEvent) {
       return;
     }
@@ -270,8 +269,6 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * It requires activity data.
    */
   override update(): void {
-    // console.log('Update analog signal plot model')
-
     this.data = [];
     if (this.state.recordsVisible.length === 0) {
       return;
@@ -281,10 +278,10 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.state.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === "V_m" && this.params.spikeThreshold?.visible) {
-        // Add spike threshold for membrane potential.
-        this.addSpikeThresholdLine(record);
-      }
+      // if (record.id === "V_m" && this.params.spikeThreshold?.visible) {
+      //   // Add spike threshold for membrane potential.
+      //   this.addSpikeThresholdLine(record);
+      // }
 
       if (record.nodeSize === 1) {
         // Add line for a single node.

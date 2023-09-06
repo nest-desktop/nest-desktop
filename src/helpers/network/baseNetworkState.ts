@@ -79,6 +79,11 @@ export class BaseNetworkState {
     return this._state;
   }
 
+  unSelectAll(): void {
+    this._network.nodes.unselectNode();
+    this._network.connections.unselectConnection();
+  }
+
   /**
    * Update hash.
    */

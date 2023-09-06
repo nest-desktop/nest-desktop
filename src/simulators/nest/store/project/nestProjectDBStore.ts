@@ -134,7 +134,7 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
       project.clean();
 
       return project.docId
-        ? this.db.update(project.toJSON())
+        ? this.db.update(project)
         : this.db.create(project.toJSON());
     },
     /**
@@ -242,7 +242,7 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
      * @param project string
      */
     unloadProject(projectId: string): void {
-      logger.trace("Unload project:", projectId);
+      logger.trace("unload project:", projectId);
 
       const project: NESTProject = this.projects.find(
         (project: any) => project.id === projectId

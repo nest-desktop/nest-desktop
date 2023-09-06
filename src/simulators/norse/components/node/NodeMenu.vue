@@ -88,12 +88,6 @@
         </v-card-actions>
       </span>
 
-      <span>
-        <v-dialog :value="state.dialog" width="80%">
-          <ModelDocumentation :id="node.modelId" />
-        </v-dialog>
-      </span>
-
       <span v-if="state.content === 'nodeColor'">
         <v-color-picker
           @update:color="nodeColorChange()"
@@ -143,8 +137,6 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
-
-import ModelDocumentation from "@norse/views/model/ModelDoc.vue";
 
 import { NorseNode } from "@norse/helpers/node/norseNode";
 

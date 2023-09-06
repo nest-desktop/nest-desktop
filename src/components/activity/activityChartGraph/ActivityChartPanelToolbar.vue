@@ -67,7 +67,7 @@ const props = defineProps({
 const panel = computed(() => props.panel as ActivityChartPanel);
 
 const selectModel = (modelId: string) => {
-  panel.value.selectModel(modelId, panel.value.model.toJSON());
+  panel.value.selectModel(modelId);
   panel.value.graph.update();
 };
 </script>

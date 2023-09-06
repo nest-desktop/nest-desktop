@@ -45,53 +45,56 @@
       </v-col>
 
       <v-col md="6">
-        <v-card>
-          <v-card-title> Settings </v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col cols="1">
-                <v-checkbox v-model="norseSimulatorStore.enabled" />
-              </v-col>
-              <v-col cols="11">
-                <v-text-field
-                  :disabled="!norseSimulatorStore.enabled"
-                  density="compact"
-                  label="URL of backend"
-                  v-model="norseSimulatorStore.url"
-                  variant="outlined"
-                >
-                  <template #append>
-                    <v-btn
-                      @click="norseSimulatorStore.ping()"
-                      variant="outlined"
-                    >
-                      <template #append>
-                        <v-icon
-                          icon="mdi-circle"
-                          :color="norseSimulatorStore.isOK ? 'green' : 'red'"
-                        ></v-icon>
-                      </template>
-                      ping
-                    </v-btn>
-                  </template>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title> Settings </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-row>
+                <v-col cols="1">
+                  <v-checkbox v-model="norseSimulatorStore.enabled" />
+                </v-col>
+                <v-col cols="11">
+                  <v-text-field
+                    :disabled="!norseSimulatorStore.enabled"
+                    density="compact"
+                    label="URL of backend"
+                    v-model="norseSimulatorStore.url"
+                    variant="outlined"
+                  >
+                    <template #append>
+                      <v-btn
+                        @click="norseSimulatorStore.ping()"
+                        variant="outlined"
+                      >
+                        <template #append>
+                          <v-icon
+                            icon="mdi-circle"
+                            :color="norseSimulatorStore.isOK ? 'green' : 'red'"
+                          ></v-icon>
+                        </template>
+                        ping
+                      </v-btn>
+                    </template>
 
-                  <template #details>
-                    <div
-                      v-if="
-                        norseSimulatorStore.isOK && norseSimulatorStore.isValid
-                      "
-                    >
-                      {{ norseSimulatorStore.response.data }}
-                    </div>
-                    <div v-else>
-                      {{ norseSimulatorStore.error }}
-                    </div>
-                  </template>
-                </v-text-field>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
+                    <template #details>
+                      <div
+                        v-if="
+                          norseSimulatorStore.isOK &&
+                          norseSimulatorStore.isValid
+                        "
+                      >
+                        {{ norseSimulatorStore.response.data }}
+                      </div>
+                      <div v-else>
+                        {{ norseSimulatorStore.error }}
+                      </div>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
 
         <v-card class="mt-2">
           <v-card-title> Projects </v-card-title>

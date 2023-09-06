@@ -1,9 +1,13 @@
 // spikeTimePanelModel.ts
 
-import { ActivityChartPanelModel, ActivityChartPanelModelProps } from "../activityChartPanelModel";
+import {
+  ActivityChartPanelModel,
+  ActivityChartPanelModelProps,
+} from "../activityChartPanelModel";
 import { ActivityChartPanel } from "../activityChartPanel";
 
-export interface SpikeTimesPanelModelProps extends ActivityChartPanelModelProps {}
+export interface SpikeTimesPanelModelProps
+  extends ActivityChartPanelModelProps {}
 
 export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   constructor(
@@ -29,7 +33,14 @@ export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   /**
    * Initialize model for spike activities.
    */
-  initActivities(): void {
+  override initActivities(): void {
+    this.activities = this.panel.graph.project.activities.spikes;
+  }
+
+  /**
+   * Update spike activities.
+   */
+  override updateActivities(): void {
     this.activities = this.panel.graph.project.activities.spikes;
   }
 }

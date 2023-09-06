@@ -81,112 +81,118 @@
       </v-col>
 
       <v-col md="6">
-        <v-card>
-          <v-card-title> Settings </v-card-title>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title> Settings </v-expansion-panel-title>
 
-          <v-tabs density="compact" v-model="tab">
-            <v-tab value="one">NEST Simulator</v-tab>
-            <v-tab value="two">Insite Access</v-tab>
-          </v-tabs>
+            <v-expansion-panel-text>
+              <v-tabs density="compact" v-model="tab">
+                <v-tab value="one">NEST Simulator</v-tab>
+                <v-tab value="two">Insite Access</v-tab>
+              </v-tabs>
 
-          <v-card-text>
-            <v-window v-model="tab">
-              <v-window-item value="one">
-                <v-row>
-                  <v-col cols="1">
-                    <v-checkbox v-model="nestSimulatorStore.enabled" />
-                  </v-col>
-                  <v-col cols="11">
-                    <v-text-field
-                      :disabled="!nestSimulatorStore.enabled"
-                      class="my-2"
-                      density="compact"
-                      label="URL of backend"
-                      v-model="nestSimulatorStore.url"
-                      variant="outlined"
-                    >
-                      <template #append>
-                        <v-btn
-                          @click="nestSimulatorStore.ping()"
-                          variant="outlined"
-                        >
-                          <template #append>
-                            <v-icon
-                              icon="mdi-circle"
-                              :color="nestSimulatorStore.isOK ? 'green' : 'red'"
-                            ></v-icon>
-                          </template>
-                          ping
-                        </v-btn>
-                      </template>
+              <v-window v-model="tab">
+                <v-window-item value="one">
+                  <v-row>
+                    <v-col cols="1">
+                      <v-checkbox v-model="nestSimulatorStore.enabled" />
+                    </v-col>
+                    <v-col cols="11">
+                      <v-text-field
+                        :disabled="!nestSimulatorStore.enabled"
+                        class="my-2"
+                        density="compact"
+                        label="URL of backend"
+                        v-model="nestSimulatorStore.url"
+                        variant="outlined"
+                      >
+                        <template #append>
+                          <v-btn
+                            @click="nestSimulatorStore.ping()"
+                            variant="outlined"
+                          >
+                            <template #append>
+                              <v-icon
+                                icon="mdi-circle"
+                                :color="
+                                  nestSimulatorStore.isOK ? 'green' : 'red'
+                                "
+                              ></v-icon>
+                            </template>
+                            ping
+                          </v-btn>
+                        </template>
 
-                      <template #details>
-                        <div
-                          v-if="
-                            nestSimulatorStore.isOK &&
-                            nestSimulatorStore.isValid
-                          "
-                        >
-                          {{ nestSimulatorStore.response.data }}
-                        </div>
-                        <div v-else>
-                          {{ nestSimulatorStore.error }}
-                        </div>
-                      </template>
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-              </v-window-item>
+                        <template #details>
+                          <div
+                            v-if="
+                              nestSimulatorStore.isOK &&
+                              nestSimulatorStore.isValid
+                            "
+                          >
+                            {{ nestSimulatorStore.response.data }}
+                          </div>
+                          <div v-else>
+                            {{ nestSimulatorStore.error }}
+                          </div>
+                        </template>
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-window-item>
 
-              <v-window-item value="two">
-                <v-row>
-                  <v-col cols="1">
-                    <v-checkbox v-model="insiteAccessStore.enabled" />
-                  </v-col>
-                  <v-col cols="11">
-                    <v-text-field
-                      :disabled="!insiteAccessStore.enabled"
-                      class="my-2"
-                      density="compact"
-                      label="URL of backend"
-                      v-model="insiteAccessStore.url"
-                      variant="outlined"
-                    >
-                      <template #append>
-                        <v-btn
-                          @click="insiteAccessStore.ping()"
-                          variant="outlined"
-                        >
-                          <template #append>
-                            <v-icon
-                              icon="mdi-circle"
-                              :color="insiteAccessStore.isOK ? 'green' : 'red'"
-                            ></v-icon>
-                          </template>
-                          ping
-                        </v-btn>
-                      </template>
+                <v-window-item value="two">
+                  <v-row>
+                    <v-col cols="1">
+                      <v-checkbox v-model="insiteAccessStore.enabled" />
+                    </v-col>
+                    <v-col cols="11">
+                      <v-text-field
+                        :disabled="!insiteAccessStore.enabled"
+                        class="my-2"
+                        density="compact"
+                        label="URL of backend"
+                        v-model="insiteAccessStore.url"
+                        variant="outlined"
+                      >
+                        <template #append>
+                          <v-btn
+                            @click="insiteAccessStore.ping()"
+                            variant="outlined"
+                          >
+                            <template #append>
+                              <v-icon
+                                icon="mdi-circle"
+                                :color="
+                                  insiteAccessStore.isOK ? 'green' : 'red'
+                                "
+                              ></v-icon>
+                            </template>
+                            ping
+                          </v-btn>
+                        </template>
 
-                      <template #details>
-                        <div
-                          v-if="
-                            insiteAccessStore.isOK &&
-                            insiteAccessStore.isValid
-                          "
-                        >
-                          {{ insiteAccessStore.response.data }}
-                        </div>
-                        <div v-else>
-                          {{ insiteAccessStore.error }}
-                        </div>
-                      </template>
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-              </v-window-item>
-            </v-window>
-          </v-card-text>
-        </v-card>
+                        <template #details>
+                          <div
+                            v-if="
+                              insiteAccessStore.isOK &&
+                              insiteAccessStore.isValid
+                            "
+                          >
+                            {{ insiteAccessStore.response.data }}
+                          </div>
+                          <div v-else>
+                            {{ insiteAccessStore.error }}
+                          </div>
+                        </template>
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-window-item>
+              </v-window>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
 
         <v-card class="mt-2">
           <v-card-title> Projects </v-card-title>

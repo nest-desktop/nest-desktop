@@ -11,6 +11,7 @@ import { useModelDBStore } from "@/store/model/modelDBStore";
 import { ModelParameter, ModelParameterProps } from "./modelParameter";
 
 export interface ModelProps {
+  doc?: any;
   abbreviation?: string;
   elementType?: string;
   id?: string;

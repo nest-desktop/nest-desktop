@@ -153,13 +153,12 @@ export class NetworkGraphWorkspace extends Config {
       })
       .on("click", () => {
         this.reset();
-        if (this.network && this.network.nodes.state.selectedNode) {
-          this.network.nodes.unselectNode();
-        }
+        this.network?.state.unSelectAll();
         this.update();
       })
       .on("contextmenu", (e: MouseEvent) => {
         e.preventDefault();
+        this.network?.state.unSelectAll();
         const position: number[] = pointer(e, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
         this._nodeAddPanel.open();
