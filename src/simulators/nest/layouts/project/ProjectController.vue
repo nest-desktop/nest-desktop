@@ -47,10 +47,10 @@
       </div>
     </template>
     <template v-else-if="projectStore.controllerView === 'activity'">
-      <activity-chart-controller />
+      <activity-chart-controller :graph="project.activityGraph.activityChartGraph" />
     </template>
     <template v-else-if="projectStore.controllerView === 'stats'">
-      <activity-stats />
+      <activity-stats :activities="project.activities" />
     </template>
   </div>
 </template>

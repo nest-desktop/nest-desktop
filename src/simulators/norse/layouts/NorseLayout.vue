@@ -17,5 +17,12 @@ const navItems = [
     simulator: "norse",
     title: "Project",
   },
+  {
+    icon: "simulator:norse",
+    id: "norseModel",
+    path: "/norse/model",
+    simulator: "norse",
+    title: "Model",
+  },
 ];
 </script>

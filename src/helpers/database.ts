@@ -126,7 +126,7 @@ export class DatabaseService {
     return this._db
       .get(data.doc._id)
       .then((doc: any) => {
-        data.doc = doc;
+        // data.doc = doc;
         const dataJSON = data.toJSON();
         dataJSON.hash = data.state.hash || undefined;
         dataJSON.version = process.env.APP_VERSION;

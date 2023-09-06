@@ -1,4 +1,5 @@
-// Utilities
+// navStore.ts
+
 import { defineStore } from "pinia";
 
 export const useNavStore = defineStore("nav-store", {

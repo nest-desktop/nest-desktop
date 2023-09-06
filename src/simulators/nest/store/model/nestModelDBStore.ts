@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { NESTModel } from "@nest/helpers/model/nestModel";
+import { NESTModel, NESTModelProps } from "@nest/helpers/model/nestModel";
 import { NESTModelDB } from "./nestModelDB";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });
@@ -72,6 +72,16 @@ export const useNESTModelDBStore = defineStore("nest-model-db", {
       return this.models.some((model: any) => model.id === modelId);
     },
     /**
+     * Import model object to the database.
+     */
+    async importModel(model: NESTModel): Promise<any> {
+      console.log("import model:", model.id.slice(0, 6));
+
+      return model.docId
+        ? this.db.update(model)
+        : this.db.create(model.toJSON());
+    },
+    /**
      * Import multiple models from assets and add them to the database.
      */
     async importModelsFromAssets(): Promise<any> {
@@ -108,8 +118,13 @@ export const useNESTModelDBStore = defineStore("nest-model-db", {
     /**
      * Save model object to the database.
      */
-    async saveModel(model: NESTModel): Promise<any> {
-      return this.db.importModel(model);
+    async saveModel(modelId: string): Promise<any> {
+      logger.trace("save model:", modelId.slice(0, 6));
+      const model = this.models.find(
+        (model) => model.id === modelId
+      ) as NESTModel;
+
+      return this.importModel(model);
     },
     /**
      * Update model list from the database.

@@ -408,7 +408,7 @@ export class BaseProject {
    */
   toJSON(): ProjectProps {
     const project: ProjectProps = {
-      activityGraph: this._activityGraph,
+      // activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,

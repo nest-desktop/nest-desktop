@@ -69,6 +69,16 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
       return this.models.some((model: any) => model.id === modelId);
     },
     /**
+     * Import model object to the database.
+     */
+    async importModel(model: NorseModel): Promise<any> {
+      console.log("import model:", model.id.slice(0, 6));
+
+      return model.docId
+        ? this.db.update(model)
+        : this.db.create(model.toJSON());
+    },
+    /**
      * Import multiple models from assets and add them to the database.
      */
     async importModelsFromAssets(): Promise<any> {
@@ -105,8 +115,13 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
     /**
      * Save model object to the database.
      */
-    async saveModel(model: NorseModel): Promise<any> {
-      return this.db.importModel(model);
+    async saveModel(modelId: string): Promise<any> {
+      logger.trace("save model", modelId.slice(0, 6));
+      const model = this.models.find(
+        (model) => model.id === modelId
+      ) as NorseModel;
+
+      return this.importModel(model);
     },
     /**
      * Update model list from the database.

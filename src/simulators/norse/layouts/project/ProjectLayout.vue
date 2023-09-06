@@ -13,7 +13,7 @@
   </v-navigation-drawer>
 
   <v-app-bar class="d-print-none" color="norse" height="48" flat>
-    <project-bar :project="(project as NorseProject)"/>
+    <project-bar :project="(project as NorseProject)" />
   </v-app-bar>
 
   <v-navigation-drawer
@@ -76,14 +76,17 @@
       </pre>
 
       <simulation-code-editor
-        :simulation="(project.simulation as Simulation)"
+        :simulation="(project.simulation as NorseSimulation)"
         v-else-if="projectStore.controllerView === 'code'"
       />
       <activity-chart-controller
         :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
         v-else-if="projectStore.controllerView === 'activity'"
       />
-      <activity-stats v-else-if="projectStore.controllerView === 'stats'" />
+      <activity-stats
+        :activities="(project.activities as Activities)"
+        v-else-if="projectStore.controllerView === 'stats'"
+      />
     </div>
   </v-navigation-drawer>
 
@@ -96,7 +99,7 @@
     class="d-print-none"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
-    <simulation-code-mirror :simulation="(project.simulation as Simulation)" />
+    <simulation-code-mirror :simulation="(project.simulation as NorseSimulation)" />
   </v-bottom-navigation>
 </template>
 
@@ -107,18 +110,20 @@ import ActivityChartController from "@/components/activity/activityChartGraph/Ac
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
+import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { Simulation } from "@/types/simulationTypes";
-import { useNavStore } from "@/store/navStore";
 
 import NetworkParamEditor from "@norse/components/network/NetworkParamEditor.vue";
 import { NorseProject } from "@norse/helpers/project/norseProject";
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { NorseSimulation } from "@norse/helpers/simulation/norseSimulation";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectNav from "./ProjectNav.vue";
 
+import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
+
+import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 const projectStore = useNorseProjectStore();
 
 const project = computed(() => projectStore.project);

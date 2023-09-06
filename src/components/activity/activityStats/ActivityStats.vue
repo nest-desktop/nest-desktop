@@ -8,12 +8,12 @@
       <!-- <v-subheader v-text="'Activity statistics'" /> -->
       <v-expansion-panels
         mandatory
-        v-model="project.state.activityStatsPanelId"
+        v-model="activities.state.activityStatsPanelId"
         variant="accordion"
       >
         <v-expansion-panel
           :key="index"
-          v-for="(activity, index) in project.activities.all"
+          v-for="(activity, index) in activities.all"
         >
           <v-expansion-panel-title class="py-0">
             <v-row class="text-button">
@@ -27,7 +27,7 @@
           </v-expansion-panel-title>
 
           <v-expansion-panel-text
-            :key="project.simulation.code.state.hash"
+            :key="activities.state.hash"
             class="ma-0 pa-0"
           >
             <activity-stats-spike
@@ -52,19 +52,18 @@
 import { computed, reactive } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import { Activities } from "@/helpers/activity/activities";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { ProjectPropTypes } from "@/types/projectTypes";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
-import { BaseProject } from "@/helpers/project/baseProject";
 
 const props = defineProps({
-  project: ProjectPropTypes,
+  activities: Activities,
 })
 
-const project = computed(() => props.project as BaseProject);
+const activities = computed(() => props.activities as Activities);
 
 const state = reactive({
   height: 700,
@@ -78,7 +77,7 @@ const onResize = () => {
     52 - // toolbar
     64 - // expansion panel title
     48 - // data table footer
-    (project.value.activities.all.length - 1) * 48; // other closed expansion panel
+    (activities.value.all.length - 1) * 48; // other closed expansion panel
 };
 </script>
 

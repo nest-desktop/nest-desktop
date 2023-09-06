@@ -3,7 +3,7 @@
   "elementType": "stimulator",
   "id": "dc_generator",
   "label": "direct current",
-  "code": "torch.ones",
+  "codeTemplate": "{{ view.label }} = torch.ones({{ params.timesteps.value }},{{ size }}) * {{ params.amplitude.value }}",
   "recordables": ["I"],
   "params": [
     {

@@ -81,7 +81,7 @@ export class NESTNode extends BaseNode {
     );
   }
 
-  override get connectionsNeurons(): NESTConnection[] {
+  override get connectionsNeuronTargets(): NESTConnection[] {
     return this.network.connections.all.filter(
       (connection: NESTConnection) =>
         connection.sourceIdx === this.idx && connection.target.model.isNeuron
@@ -107,7 +107,22 @@ export class NESTNode extends BaseNode {
     if (this._model?.id !== this.modelId) {
       this._model = this.getModel(this.modelId);
     }
-    return this._model as (NESTCopyModel | NESTModel);
+    return this._model as NESTCopyModel | NESTModel;
+  }
+
+  /**
+   * Set model.
+   *
+   * @remarks
+   * It initializes parameters and activity components.
+   * It triggers node changes.
+   *
+   * @param model - node model
+   */
+  override set model(model: NESTCopyModel | NESTModel) {
+    this._modelId = model.id;
+    this._model = model;
+    this.modelChanges();
   }
 
   override get models(): (NESTCopyModel | NESTModel)[] {

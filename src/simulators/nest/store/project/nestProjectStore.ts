@@ -74,7 +74,7 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
      * Save current project.
      */
     saveCurrentProject() {
-      logger.trace("Save project:", this.projectId?.slice(0, 6));
+      logger.trace("save project:", this.projectId?.slice(0, 6));
       const projectDBStore = useNESTProjectDBStore();
       projectDBStore.saveProject(this.projectId);
     },

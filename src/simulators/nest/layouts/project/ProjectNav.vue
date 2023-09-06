@@ -51,11 +51,15 @@
     >
       <template #append>
         <v-btn
-          @click="(e: MouseEvent) => e.preventDefault()"
-          disabled
-          :icon="project.doc ? 'mdi-content-save-check-outline' : ''"
+          @click="(e: MouseEvent) => {
+            e.preventDefault()
+            project.save()
+            }"
+          :disabled="!project.state?.changes"
+          icon="mdi-content-save-check-outline"
           size="small"
           variant="text"
+          v-show="project.doc"
         />
 
         <v-menu>

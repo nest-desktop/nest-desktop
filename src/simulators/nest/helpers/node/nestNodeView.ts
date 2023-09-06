@@ -146,11 +146,11 @@ export class NESTNodeView {
       this._node.model.isRecorder ||
       this._node.network.connections.length === 0 ||
       this._node.connections.length === 0 ||
-      this._node.connectionsNeurons.length === 0
+      this._node.connectionsNeuronTargets.length === 0
     )
       return "";
 
-    const weights: number[] = this._node.connectionsNeurons.map(
+    const weights: number[] = this._node.connectionsNeuronTargets.map(
       (connection: NESTConnection) =>
         connection.synapse.params.weight.value as number
     );
@@ -175,9 +175,9 @@ export class NESTNodeView {
   set synWeights(value: string) {
     this._state.synWeights = value;
 
-    if (this._node.connectionsNeurons.length === 0) return;
+    if (this._node.connectionsNeuronTargets.length === 0) return;
 
-    this._node.connectionsNeurons.forEach((connection: NESTConnection) => {
+    this._node.connectionsNeuronTargets.forEach((connection: NESTConnection) => {
       connection.synapse.weightLabel = value;
     });
     this._node.changes();

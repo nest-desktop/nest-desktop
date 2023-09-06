@@ -16,6 +16,7 @@ import { BaseNode } from "../node/baseNode";
 
 
 interface ActivitiesState {
+  activityStatsPanelId: number;
   hasSomeAnalogRecorders: boolean;
   hasSomeEvents: boolean;
   hasSomeSpatialActivities: boolean;
@@ -32,6 +33,7 @@ export class Activities {
   constructor(project: Project) {
     this._project = project;
     this._state = reactive({
+      activityStatsPanelId: 0,
       hasSomeAnalogRecorders: false,
       hasSomeEvents: false,
       hasSomeSpatialActivities: false,

@@ -1,14 +1,14 @@
 <template>
   <v-tabs stacked>
-    <v-tab title="Edit network" size="small" to="edit">
+    <v-tab size="small" title="Edit network"  to="edit">
       <v-icon icon="nest:network" />
       Editor
     </v-tab>
-    <v-tab title="Explore activity" size="small" to="explore">
+    <v-tab size="small" title="Explore activity" to="explore">
       <v-icon class="rotate-270" icon="mdi-border-style" />
       Explorer
     </v-tab>
-    <v-tab title="Lab book" size="small" to="lab">
+    <v-tab size="small" title="Lab book" to="lab">
       <v-icon icon="mdi-book-open-outline" />
       Lab book
     </v-tab>

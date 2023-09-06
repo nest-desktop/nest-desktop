@@ -28,11 +28,9 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :color="item.color ? item.color : 'primary'"
           :icon="item.icon"
           :key="index"
           :title="item.title"
-          :to="item.to"
           @click.stop="item.click ? item.click() : undefined"
           rounded="1"
           size="small"
@@ -64,25 +62,25 @@ const toggleTheme = () => {
   window.dispatchEvent(new Event("darkmode"));
 };
 
-const toggleWebGL = () => {
-  appStore.webGL = !appStore.webGL;
-  console.log(appStore.webGL);
-};
+// const toggleWebGL = () => {
+//   appStore.webGL = !appStore.webGL;
+//   console.log(appStore.webGL);
+// };
 
 const items = [
-  {
-    click: toggleWebGL,
-    icon: "mdi-google-downasaur",
-    id: "webgl",
-    title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
-    color: appStore.webGL ? "green" : "red",
-  },
-  {
-    icon: "mdi-slide",
-    id: "sandbox",
-    title: "sandbox",
-    to: "/sandbox/",
-  },
+  // {
+  //   click: toggleWebGL,
+  //   icon: "mdi-google-downasaur",
+  //   id: "webgl",
+  //   title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
+  //   color: appStore.webGL ? "green" : "red",
+  // },
+  // {
+  //   icon: "mdi-slide",
+  //   id: "sandbox",
+  //   title: "sandbox",
+  //   to: "/sandbox/",
+  // },
   {
     click: toggleTheme,
     icon: "mdi-theme-light-dark",

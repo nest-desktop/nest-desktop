@@ -34,19 +34,11 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
    * It sets activities and gets records from recorders.
    */
   override init(model: AnalogSignalPanelModelProps = {}): void {
-    // console.log('Initialize panel model')
     this.initActivities();
     this.initAnalogRecords();
     if (model.records) {
       this.initAnalogRecordsVisible(model.records);
     }
-  }
-
-  /**
-   * Initialize activity for the panel model.
-   */
-  initActivities(): void {
-    this.activities = this.panel.graph.project.activities.analogSignals;
   }
 
   get axisTitle(): string {
@@ -75,5 +67,19 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
       title = "Multiple records";
     }
     return title;
+  }
+
+  /**
+   * Initialize activity for the panel model.
+   */
+  override initActivities(): void {
+    this.activities = this.panel.graph.project.activities.analogSignals;
+  }
+
+  /**
+   * Update activities of analog signals.
+   */
+  override updateActivities(): void {
+    this.activities = this.panel.graph.project.activities.analogSignals;
   }
 }

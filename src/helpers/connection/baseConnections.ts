@@ -11,7 +11,6 @@ import { logger as mainLogger } from "@/helpers/logger";
 import { BaseConnection, ConnectionProps } from "./baseConnection";
 import { Node } from "@/types/nodeTypes";
 
-
 interface ConnectionsState {
   focusedConnection: Connection | null;
   hash: string;
