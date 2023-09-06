@@ -17,7 +17,8 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
     bottomOpen: false,
     controllerOpen: false,
     controllerView: "",
-    project: new NESTProject(),
+    // @ts-ignore
+    project: undefined as NESTProject,
     projectId: "",
     simulateAfterCheckout: false,
     view: "edit",

@@ -3,7 +3,7 @@
     :model-value="navStore.open"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="navStore.width"
-    @update:modelValue="dispatchWindowResize"
+    @update:model-value="dispatchWindowResize"
     class="d-print-none"
     permanent
   >
@@ -62,7 +62,7 @@
     :model-value="projectStore.controllerOpen"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="projectStore.controllerWidth"
-    @update:modelValue="dispatchWindowResize"
+    @update:model-value="dispatchWindowResize"
     class="d-print-none"
     location="right"
     permanent
@@ -71,18 +71,28 @@
     <div :key="projectStore.projectId">
       <network-param-editor v-if="projectStore.controllerView === 'network'" />
 
-      <pre v-else-if="projectStore.controllerView === 'raw'">
-        {{ project.toJSON() }}
-      </pre>
+      <simulation-kernel-editor
+        :simulation="(project.simulation as NorseSimulation)"
+        v-else-if="projectStore.controllerView === 'kernel'"
+      />
+
+      <codemirror
+        :extensions="extensions"
+        :model-value="projectJSON"
+        disabled
+        v-else-if="projectStore.controllerView === 'raw'"
+      />
 
       <simulation-code-editor
         :simulation="(project.simulation as NorseSimulation)"
         v-else-if="projectStore.controllerView === 'code'"
       />
+
       <activity-chart-controller
         :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
         v-else-if="projectStore.controllerView === 'activity'"
       />
+
       <activity-stats
         :activities="(project.activities as Activities)"
         v-else-if="projectStore.controllerView === 'stats'"
@@ -99,12 +109,16 @@
     class="d-print-none"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
-    <simulation-code-mirror :simulation="(project.simulation as NorseSimulation)" />
+    <simulation-code-mirror
+      :simulation="(project.simulation as NorseSimulation)"
+    />
   </v-bottom-navigation>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
+import { Codemirror } from "vue-codemirror";
+import { json } from "@codemirror/lang-json";
 
 import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
@@ -114,6 +128,7 @@ import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
 import NetworkParamEditor from "@norse/components/network/NetworkParamEditor.vue";
+import SimulationKernelEditor from "@norse/components/simulation/SimulationKernelEditor.vue";
 import { NorseProject } from "@norse/helpers/project/norseProject";
 import { NorseSimulation } from "@norse/helpers/simulation/norseSimulation";
 
@@ -127,6 +142,11 @@ import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 const projectStore = useNorseProjectStore();
 
 const project = computed(() => projectStore.project);
+
+const projectJSON = computed(() =>
+  JSON.stringify(project.value.toJSON(), null, 2)
+);
+const extensions = [json()];
 
 /**
  * Handle mouse move on resizing.

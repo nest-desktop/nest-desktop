@@ -147,6 +147,10 @@
         </v-list-item>
       </v-list>
 
+      <v-list class="py-0" v-if="node.model.isMultimeter">
+        <node-record-select :node="node" />
+      </v-list>
+
       <v-list class="py-0" v-if="node.paramsVisible.length > 0">
         <node-param-editor
           :key="index"
@@ -183,8 +187,9 @@
 import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
+import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
 import { NESTNode } from "@nest/helpers/node/nestNode";

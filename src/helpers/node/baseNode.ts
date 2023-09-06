@@ -1,4 +1,4 @@
-// baseNode.ts - 26 anys
+// baseNode.ts
 
 import { ILogObj, Logger } from "tslog";
 
@@ -32,7 +32,9 @@ export interface NodeProps {
 export class BaseNode extends Config {
   private readonly _name = "Node";
 
-  private _activity?: SpikeActivity | AnalogSignalActivity | Activity;
+  private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
+    // @ts-ignore
+    undefined as Activity;
   private _annotations: string[] = [];
   private _doc: NodeProps;
   private _idx: number; // generative
@@ -49,8 +51,8 @@ export class BaseNode extends Config {
   public _model: Model;
   public _nodes: Nodes; // parent
 
-  constructor(nodes: Nodes, node: NodeProps = {}, name: string = "Node") {
-    super(name);
+  constructor(nodes: Nodes, node: NodeProps = {}) {
+    super("Node");
 
     this._nodes = nodes;
     this._idx = this.nodes.all.length;
@@ -68,6 +70,7 @@ export class BaseNode extends Config {
     this._view = new NodeView(this, node.view);
 
     this._state = new NodeState(this);
+
     this.init(node);
   }
 
@@ -114,7 +117,6 @@ export class BaseNode extends Config {
         connection.targetIdx === this._idx && connection.source.model.isNeuron
     );
   }
-
 
   get connectionsNeuronTargets(): Connection[] {
     return this.network.connections.all.filter(
@@ -456,8 +458,6 @@ export class BaseNode extends Config {
       this._activity = new SpikeActivity(this, activity);
     } else if (this.model.isAnalogRecorder) {
       this._activity = new AnalogSignalActivity(this, activity);
-    } else {
-      this._activity = new Activity(this, activity);
     }
   }
 
@@ -630,12 +630,6 @@ export class BaseNode extends Config {
           )
         );
       }
-    } else if (this._modelId === "weight_recorder") {
-      recordables.push(
-        this.model.config.recordables.find(
-          (record: any) => record.id === "weights"
-        )
-      );
     }
 
     let recordableIds: string[];

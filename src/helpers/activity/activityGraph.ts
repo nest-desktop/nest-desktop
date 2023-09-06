@@ -8,7 +8,6 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 import { ActivityChartPanelProps } from "@/helpers/activityChartGraph/activityChartPanel";
 import { Project } from "@/types/projectTypes";
 import { logger as mainLogger } from "@/helpers/logger";
-import { BaseProject } from "../project/baseProject";
 
 export class ActivityGraph {
   private _project: Project;
@@ -45,8 +44,8 @@ export class ActivityGraph {
     return this._activityChartGraph;
   }
 
-  get project(): BaseProject {
-    return this._project as BaseProject;
+  get project(): Project {
+    return this._project;
   }
 
   get state(): any {

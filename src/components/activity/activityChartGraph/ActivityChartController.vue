@@ -22,10 +22,13 @@
 
       <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
-          <v-btn prepend-icon="mdi-plus" v-bind="props"> Add panel </v-btn>
+          <v-btn prepend-icon="mdi-plus" size="small" v-bind="props" variant="outlined"> Add panel </v-btn>
         </template>
 
-        <activity-chart-panel-menu-popover @changed="addPanel" />
+        <activity-chart-panel-menu-popover
+          :graph="(graph as ActivityChartGraph)"
+          @changed="addPanel"
+        />
       </v-menu>
     </v-toolbar>
 
@@ -42,26 +45,48 @@
           <span v-if="panel.model.state.records.length > 0">
             <v-select
               :items="panel.model.state.records"
-              @change="
-                () => {
-                  panel.model.init();
-                  graph.update();
-                }
-              "
+              @update:model-value="update(panel)"
               attach
               chips
               class="pa-1 pt-3"
               clearable
               density="compact"
+              item-title="id"
               hide-details
-              item-value="groupId"
               label="Recorded events"
               multiple
               persistent-hint
               return-object
-              size="small"
               v-model="panel.model.state.recordsVisible"
+              variant="outlined"
             >
+              <template #chip="{ item }">
+                <node-record-chip :node-record="item.value" />
+              </template>
+
+              <!-- <template #prepend-item>
+                <v-list-item title="Select All" />
+                <v-divider />
+              </template> -->
+
+              <template #item="{ item, props }">
+                <v-list-item :value="item.value" @click="props.onClick">
+                  <template #prepend="{ isSelected }">
+                    <!-- <node-avatar :node="item.value.node" /> -->
+                    <v-checkbox-btn :model-value="isSelected" />
+                  </template>
+
+                  {{
+                    item.value.labelCapitalize +
+                    (item.value.unit ? ` (${item.value.unit})` : "")
+                  }}
+
+                  <template #append>
+                    <node-record-chip :node-record="item.value" />
+                  </template>
+                </v-list-item>
+              </template>
+
               <!-- <template #selection="{ item }">
                 <v-chip
                   :color="item.color"
@@ -84,7 +109,9 @@
                 >
                   {{ appStore.devMode ? item.groupId : item.id }}
                 </v-chip>
-              </template>
+              </template> -->
+
+              <!--
 
               <template #item="{ item }">
                 <v-chip
@@ -121,9 +148,9 @@
 import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
-
-import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
+import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 // import ActivityChartPanelMenuPopover from "@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue";
@@ -190,4 +217,11 @@ const resetPanels = () => {
 //   state.menu.position.y = 0;
 //   state.menu.record = null as NodeRecord;
 // };
+
+const update = (panel: ActivityChartPanel) => {
+  setTimeout(() => {
+    panel.model.init();
+    graph.value.update();
+  }, 1);
+};
 </script>

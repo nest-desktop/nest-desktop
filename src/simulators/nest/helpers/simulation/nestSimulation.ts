@@ -27,7 +27,7 @@ export class NESTSimulation extends BaseSimulation {
   private _kernel: NESTSimulationKernel; // simulation kernel
 
   constructor(project: NESTProject, simulation: NESTSimulationProps = {}) {
-    super(project, simulation, "NESTSimulation");
+    super(project, simulation);
     this._kernel = new NESTSimulationKernel(this, simulation.kernel);
   }
 
@@ -176,11 +176,14 @@ export class NESTSimulation extends BaseSimulation {
    * @return simulation object
    */
   override toJSON(): NESTSimulationProps {
-    return {
-      code: this.code.toJSON(),
+    const simulation:NESTSimulationProps = {
       kernel: this._kernel.toJSON(),
       time: this.time,
     };
+    if (this.code.state.customBlocks) {
+      simulation.code = this.code.toJSON();
+    }
+    return simulation;
   }
 
   override updateHash(): void {

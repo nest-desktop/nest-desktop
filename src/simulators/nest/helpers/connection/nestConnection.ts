@@ -30,7 +30,6 @@ export interface NESTConnectionProps extends ConnectionProps {
 export class NESTConnection extends BaseConnection {
   private _mask: NESTConnectionMask;
   private _sourceSlice: NESTNodeSlice;
-  private _synapse: NESTSynapse;
   private _targetSlice: NESTNodeSlice;
 
   constructor(connections: NESTConnections, connection: NESTConnectionProps) {
@@ -40,7 +39,6 @@ export class NESTConnection extends BaseConnection {
     this._targetSlice = new NESTNodeSlice(this.target, connection.targetSlice);
 
     this._mask = new NESTConnectionMask(this, connection.mask);
-    this._synapse = new NESTSynapse(this, connection.synapse);
   }
 
   override get connections(): NESTConnections {
@@ -59,7 +57,7 @@ export class NESTConnection extends BaseConnection {
   }
 
   get model(): NESTCopyModel | NESTModel {
-    return this._synapse.model;
+    return this.synapse.model;
   }
 
   override get network(): NESTNetwork {
@@ -74,8 +72,8 @@ export class NESTConnection extends BaseConnection {
     return this._sourceSlice;
   }
 
-  get synapse(): NESTSynapse {
-    return this._synapse;
+  override get synapse(): NESTSynapse {
+    return this._synapse as NESTSynapse;
   }
 
   override get target(): NESTNode {
@@ -84,6 +82,10 @@ export class NESTConnection extends BaseConnection {
 
   get targetSlice(): NESTNodeSlice {
     return this._targetSlice;
+  }
+
+  override newSynapse(synapse: NESTSynapseProps): NESTSynapse {
+    return new NESTSynapse(this, synapse);
   }
 
   /**

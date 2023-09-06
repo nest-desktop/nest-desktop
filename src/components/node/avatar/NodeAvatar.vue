@@ -23,8 +23,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { BaseNode } from "@/helpers/node/baseNode";
-import { NodePropTypes } from "@/types/nodeTypes";
+import { Node, NodePropTypes } from "@/types/nodeTypes";
 
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";
@@ -35,5 +34,5 @@ const props = defineProps({
   size: { type: String, default: "40px" },
 });
 
-const node = computed(() => props.node as BaseNode);
+const node = computed(() => props.node as Node);
 </script>

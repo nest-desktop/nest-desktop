@@ -14,7 +14,7 @@ export class NorseNode extends BaseNode {
   private _code: string = "";
 
   constructor(nodes: NorseNodes, node: NorseNodeProps = {}) {
-    super(nodes, node, "NorseNode");
+    super(nodes, node);
   }
 
   get code(): string {

@@ -1,4 +1,4 @@
-// network.ts
+// baseNetwork.ts
 
 import { ILogObj, Logger } from "tslog";
 
@@ -16,6 +16,7 @@ import { logger as mainLogger } from "../logger";
 
 import { Node } from "@/types/nodeTypes";
 import { Connection } from "@/types/connectionTypes";
+import { Network } from "@/types/networkTypes";
 
 export interface NetworkProps {
   nodes?: NodeProps[];
@@ -42,13 +43,12 @@ export class BaseNetwork extends Config {
   constructor(
     project: Project,
     network: NetworkProps = {},
-    name: string = "Network"
   ) {
-    super(name);
+    super("Network");
 
     // this._graph = new NetworkGraph(this);
     this._logger = mainLogger.getSubLogger({
-      name,
+      name: "network",
     });
 
     this._state = new BaseNetworkState(this);
@@ -132,7 +132,7 @@ export class BaseNetwork extends Config {
    */
   changes(): void {
     this._state.updateHash();
-    // this.commit();
+    this.commit();
     this._logger.trace("changes");
     this.project.changes();
   }
@@ -212,7 +212,7 @@ export class BaseNetwork extends Config {
   /**
    * Clone base network component.
    */
-  clone(): BaseNetwork {
+  clone(): Network {
     return new BaseNetwork(this.project, { ...this.toJSON() });
   }
 

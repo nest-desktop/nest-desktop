@@ -1,8 +1,8 @@
 // nodeRecord.ts
 
-import { Activity } from "@/helpers/activity/activity";
 import { Node } from "@/types/nodeTypes";
 import { max, min } from "@/helpers/array";
+import { Activity } from "../activity/activity";
 
 export interface NodeRecordProps {
   id: string;
@@ -13,7 +13,7 @@ export interface NodeRecordProps {
 }
 
 export class NodeRecord {
-  private _activity: Activity;
+  // private _activity: Activity;
   private _color: string = "blue";
   private _colorMap = {
     max: -55,
@@ -30,7 +30,7 @@ export class NodeRecord {
 
   constructor(node: Node, record: NodeRecordProps) {
     this._node = node;
-    this._activity = new Activity(this.node);
+    // this._activity = node.activity;
 
     this._id = record.id;
     this._label = record.label || "";
@@ -41,11 +41,7 @@ export class NodeRecord {
   }
 
   get activity(): Activity {
-    return this._activity;
-  }
-
-  set activity(value: Activity) {
-    this._activity = value;
+    return this._node.activity as Activity;
   }
 
   get color(): string {
@@ -65,7 +61,7 @@ export class NodeRecord {
   }
 
   get hasEvent(): boolean {
-    return this._id in this._activity.events;
+    return this._node.activity ? this._id in this._node.activity.events : false;
   }
 
   get hasValues(): boolean {
@@ -96,8 +92,12 @@ export class NodeRecord {
     return this._nodeSize;
   }
 
+  get selectTitle(): string {
+    return this.labelCapitalize + (this.unit ? ` (${this.unit})` : "");
+  }
+
   get times(): number[] {
-    return this._activity.events.times;
+    return this.node.activity?.events.times || [];
   }
 
   get unit(): string {
@@ -105,7 +105,7 @@ export class NodeRecord {
   }
 
   get values(): number[] {
-    return this._activity.events[this._id];
+    return this.node.activity?.events[this._id] || [];
   }
 
   /**
@@ -129,7 +129,7 @@ export class NodeRecord {
    * Update node record.
    */
   update(): void {
-    this._nodeSize = this._activity.nodeIds.length;
+    this._nodeSize = this.node.activity?.nodeIds.length || 0;
     this.updateGroupID();
     this.updateState();
   }

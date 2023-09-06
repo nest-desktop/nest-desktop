@@ -13,7 +13,10 @@
         </v-btn>
       </template>
 
-      <activity-chart-panel-menu-popover :panel="panel" @changed="selectModel" />
+      <activity-chart-panel-menu-popover
+        :graph="(panel.graph as ActivityChartGraph)"
+        @changed="selectModel"
+      />
     </v-menu>
 
     <span class="icons">
@@ -22,7 +25,7 @@
         @click="panel.toggleVisible()"
         class="mx-1"
         right
-        size="small"
+        size="x-small"
         variant="text"
       />
       <v-btn
@@ -30,7 +33,7 @@
         class="mx-1"
         icon="mdi-minus"
         right
-        size="small"
+        size="x-small"
         variant="text"
       />
       <v-btn
@@ -38,7 +41,7 @@
         class="mx-1"
         icon="mdi-plus"
         right
-        size="small"
+        size="x-small"
         variant="text"
       />
       <v-btn
@@ -46,7 +49,7 @@
         class="mx-1"
         icon="mdi-trash-can-outline"
         right
-        size="small"
+        size="x-small"
         variant="text"
       />
     </span>
@@ -56,6 +59,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";

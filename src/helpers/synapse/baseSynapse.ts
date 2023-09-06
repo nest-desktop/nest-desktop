@@ -1,46 +1,38 @@
-// nestSynapse.ts
+// baseSynapse.ts
 
 import { UnwrapRef, reactive } from "vue";
 import { ILogObj, Logger } from "tslog";
 
-import { logger as mainLogger } from "@/helpers/logger";
+import { Model } from "@/types/modelTypes";
 import { ModelParameter } from "@/helpers/model/modelParameter";
+import { logger as mainLogger } from "@/helpers/logger";
+import { Connection } from "@/types/connectionTypes";
 
-import { NESTConnection } from "../connection/nestConnection";
-import { NESTCopyModel } from "../model/nestCopyModel";
-import { NESTModel } from "../model/nestModel";
-import {
-  NESTSynapseParameter,
-  NESTSynapseParameterProps,
-} from "./nestSynapseParameter";
+import { SynapseParameter, SynapseParameterProps } from "./synapseParameter";
 
-type Model = NESTCopyModel | NESTModel;
-
-interface NESTSynapseState {
+interface SynapseState {
   hash: string;
 }
 
-export interface NESTSynapseProps {
+export interface SynapseProps {
   model?: string;
-  params?: NESTSynapseParameterProps[];
+  params?: SynapseParameterProps[];
   receptorIdx?: number;
 }
 
-export class NESTSynapse {
+export class BaseSynapse {
   private readonly _name = "Synapse";
-  private _connection: NESTConnection; // parent
+  private _connection: Connection; // parent
   private _logger: Logger<ILogObj>;
   private _model: Model;
   private _modelId: string;
   private _paramsVisible: string[] = [];
-  private _params: { [key: string]: NESTSynapseParameter } = {};
-  private _receptorIdx: number = 0;
-  private _state: UnwrapRef<NESTSynapseState>;
+  private _params: { [key: string]: SynapseParameter } = {};
+  private _state: UnwrapRef<SynapseState>;
 
-  constructor(connection: NESTConnection, synapse?: NESTSynapseProps) {
+  constructor(connection: Connection, synapse?: SynapseProps) {
     this._connection = connection;
     this._modelId = synapse?.model || "static_synapse";
-    this._receptorIdx = synapse?.receptorIdx || 0;
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this._modelId}] synapse`,
@@ -54,7 +46,7 @@ export class NESTSynapse {
     this.initParameters(synapse?.params);
   }
 
-  get connection(): NESTConnection {
+  get connection(): Connection {
     return this._connection;
   }
 
@@ -70,12 +62,8 @@ export class NESTSynapse {
   /**
    * Returns all visible parameters.
    */
-  get filteredParams(): NESTSynapseParameter[] {
+  get filteredParams(): SynapseParameter[] {
     return this._paramsVisible.map((paramId) => this._params[paramId]);
-  }
-
-  get hasReceptorIndices(): boolean {
-    return this.receptorIndices?.length > 0;
   }
 
   get hasSomeVisibleParams(): boolean {
@@ -92,14 +80,6 @@ export class NESTSynapse {
     } else {
       return "nest:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
     }
-  }
-
-  /**
-   * Check if synapse parameter can be spatial
-   * when the connection is spatial.
-   */
-  get isSpatial(): boolean {
-    return this.connection.isBothSpatial;
   }
 
   get isStatic(): boolean {
@@ -130,15 +110,11 @@ export class NESTSynapse {
 
   get models(): Model[] {
     const elementType: string = this.model.elementType;
-    const models: NESTModel[] =
+    const models: Model[] =
       this._connection.network.project.modelStore.getModelsByElementType(
         elementType
       );
-    const modelsCopied: NESTCopyModel[] =
-      this._connection.network.modelsCopied.filterByElementType(elementType);
-    const filteredModels = [...models, ...modelsCopied];
-    filteredModels.sort();
-    return filteredModels;
+    return models;
   }
 
   get modelId(): string {
@@ -165,7 +141,7 @@ export class NESTSynapse {
     return this._name;
   }
 
-  get params(): { [key: string]: NESTSynapseParameter } {
+  get params(): { [key: string]: SynapseParameter } {
     return this._params;
   }
 
@@ -178,26 +154,7 @@ export class NESTSynapse {
     this.changes();
   }
 
-  get receptorIdx(): number {
-    return this._receptorIdx;
-  }
-
-  set receptorIdx(value: number) {
-    this._receptorIdx = value;
-  }
-
-  get receptorIndices(): number[] {
-    return this.connection.target.receptors?.map((_, idx: number) => idx);
-  }
-
-  get showReceptorType(): boolean {
-    return (
-      !this.connection.source.model.isRecorder &&
-      this.connection.target.receptors.length > 0
-    );
-  }
-
-  get state(): UnwrapRef<NESTSynapseState> {
+  get state(): UnwrapRef<SynapseState> {
     return this._state;
   }
 
@@ -230,7 +187,7 @@ export class NESTSynapse {
   }
 
   set weightLabel(value: string) {
-    const weight: NESTSynapseParameter = this.params.weight;
+    const weight: SynapseParameter = this.params.weight;
     weight.visible = true;
     weight.value =
       (value === "inhibitory" ? -1 : 1) * Math.abs(weight.value as number);
@@ -240,9 +197,9 @@ export class NESTSynapse {
    * Add model parameter component.
    * @param param - parameter object
    */
-  addParameter(param: NESTSynapseParameterProps): void {
+  addParameter(param: SynapseParameterProps): void {
     // this._logger.trace("add parameter:", param)
-    this._params[param.id] = new NESTSynapseParameter(this, param);
+    this._params[param.id] = new SynapseParameter(this, param);
   }
 
   /**
@@ -258,15 +215,7 @@ export class NESTSynapse {
 
   getModel(modelId: string): Model {
     this._logger.trace("get model:", modelId);
-    if (
-      this._connection.network.modelsCopied?.synapseModels.some(
-        (model: NESTCopyModel) => model.id === modelId
-      )
-    ) {
-      return this._connection.network.modelsCopied.getModelById(modelId);
-    } else {
-      return this._connection.network.project.modelStore.getModel(modelId);
-    }
+    return this._connection.network.project.modelStore.getModel(modelId);
   }
 
   /**
@@ -279,7 +228,7 @@ export class NESTSynapse {
   /**
    * Initialize synapse parameters.
    */
-  initParameters(params?: NESTSynapseParameterProps[]): void {
+  initParameters(params?: SynapseParameterProps[]): void {
     this._logger.trace("init parameters");
     this._paramsVisible = [];
     this._params = {};
@@ -305,7 +254,7 @@ export class NESTSynapse {
    */
   inverseWeight(): void {
     this._logger.trace("inverse weight");
-    const weight: NESTSynapseParameter = this._params.weight;
+    const weight: SynapseParameter = this._params.weight;
     if (typeof weight.value === "number") {
       weight.visible = true;
       weight.value = -1 * weight.value;
@@ -326,7 +275,7 @@ export class NESTSynapse {
   }
 
   reset(): void {
-    this.filteredParams.forEach((param: NESTSynapseParameter) => param.reset());
+    this.filteredParams.forEach((param: SynapseParameter) => param.reset());
   }
 
   /**
@@ -334,7 +283,7 @@ export class NESTSynapse {
    */
   showAllParams(): void {
     Object.values(this.params).forEach(
-      (param: NESTSynapseParameter) => (param.visible = true)
+      (param: SynapseParameter) => (param.visible = true)
     );
   }
 
@@ -342,22 +291,19 @@ export class NESTSynapse {
    * Serialize for JSON.
    * @return synapse object
    */
-  toJSON(): NESTSynapseProps {
-    const synapse: NESTSynapseProps = {};
+  toJSON(): SynapseProps {
+    const synapse: SynapseProps = {};
 
     if (this._modelId !== "static_synapse") {
       synapse.model = this._modelId;
     }
 
     if (this.filteredParams.length > 0) {
-      synapse.params = this.filteredParams.map((param: NESTSynapseParameter) =>
+      synapse.params = this.filteredParams.map((param: SynapseParameter) =>
         param.toJSON()
       );
     }
 
-    if (this._receptorIdx !== 0) {
-      synapse.receptorIdx = this._receptorIdx;
-    }
     return synapse;
   }
 }

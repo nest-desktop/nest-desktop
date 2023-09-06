@@ -25,7 +25,7 @@ export class NESTNetwork extends BaseNetwork {
   private _modelsCopied: NESTCopyModels; // for nest.CopyModel
 
   constructor(project: NESTProject, network: NESTNetworkProps = {}) {
-    super(project, network, "NESTNetwork");
+    super(project, network);
     this._modelsCopied = new NESTCopyModels(this, network.models);
   }
 

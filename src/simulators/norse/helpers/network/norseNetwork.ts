@@ -18,7 +18,7 @@ export interface NorseNetworkProps extends NetworkProps {
 
 export class NorseNetwork extends BaseNetwork {
   constructor(project: Project, network: NorseNetworkProps = {}) {
-    super(project, network, "NorseNetwork");
+    super(project, network);
 
     this.defaultModels = {
       neuron: "LIF",

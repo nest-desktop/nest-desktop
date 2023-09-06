@@ -10,7 +10,6 @@ import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { Project } from "@/types/projectTypes";
 import { download } from "@/utils/download";
 import { logger as mainLogger } from "@/helpers/logger";
-import { BaseNode } from "../node/baseNode";
 
 export interface ActivityProps {
   events?: EventProps;
@@ -54,7 +53,7 @@ export class Activity {
     });
 
     this._logger = mainLogger.getSubLogger({
-      name: `[${this.recorder.modelId}] activity`,
+      name: `[${this.recorder.idx} - ${this.recorder.modelId}] activity`,
     });
 
     this.init(activity);
@@ -72,7 +71,9 @@ export class Activity {
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.all.map((node: BaseNode) => node.model.elementType);
+    return this.recorder.nodes.all.map(
+      (node: Node) => node.model.elementType
+    );
   }
 
   get endtime(): number {
@@ -85,6 +86,13 @@ export class Activity {
 
   set events(value: EventProps) {
     this._events = value;
+  }
+
+  /**
+   * Check if activity has events.
+   */
+  get hasEvents(): boolean {
+    return this.nEvents > 0;
   }
 
   /**
@@ -145,8 +153,8 @@ export class Activity {
     return this.recorder.network.project;
   }
 
-  get recorder(): BaseNode {
-    return this._recorder as BaseNode;
+  get recorder(): Node {
+    return this._recorder;
   }
 
   get recorderUnitId(): number {
@@ -165,18 +173,15 @@ export class Activity {
     return this.recorder.network.project.simulation.state.timeInfo.value;
   }
 
+  changes(): void {
+    this.project.changes()
+  }
+
   /**
    * Clone activity.
    */
   clone(): Activity {
     return new Activity(this.recorder, this.toJSON());
-  }
-
-  /**
-   * Check if activity has events.
-   */
-  get hasEvents(): boolean {
-    return this.nEvents > 0;
   }
 
   /**

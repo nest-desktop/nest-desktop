@@ -16,7 +16,7 @@ export interface NorseSimulationProps extends SimulationProps {}
 
 export class NorseSimulation extends BaseSimulation {
   constructor(project: NorseProject, simulation: NorseSimulationProps = {}) {
-    super(project, simulation, "NorseSimulation");
+    super(project, simulation);
   }
 
   override newSimulationCode(

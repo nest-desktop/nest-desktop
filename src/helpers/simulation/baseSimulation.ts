@@ -1,4 +1,4 @@
-// baseSimulation.ts - 9 anys
+// baseSimulation.ts
 
 import { reactive, UnwrapRef } from "vue";
 import { ILogObj, Logger } from "tslog";
@@ -6,12 +6,11 @@ import { sha1 } from "object-hash";
 
 import { Config } from "@/helpers/config";
 import { Project } from "@/types/projectTypes";
+import { SimulationCode } from "@/types/simulationCodeTypes";
 import { logger as mainLogger } from "@/helpers/logger";
 import { openToast } from "@/helpers/toast";
 
 import { BaseSimulationCode, SimulationCodeProps } from "./baseSimulationCode";
-import { SimulationCode } from "@/types/simulationCodeTypes";
-import { AxiosResponse } from "axios";
 
 export interface SimulationProps {
   code?: SimulationCodeProps;
@@ -33,12 +32,8 @@ export class BaseSimulation extends Config {
   public _code: SimulationCode;
   public _project: Project; // parent
 
-  constructor(
-    project: Project,
-    simulation: SimulationProps = {},
-    name: string = "Simulation"
-  ) {
-    super(name);
+  constructor(project: Project, simulation: SimulationProps = {}) {
+    super("Simulation");
     this._project = project;
 
     this._logger = mainLogger.getSubLogger({
@@ -188,9 +183,11 @@ export class BaseSimulation extends Config {
    */
   toJSON(): SimulationProps {
     const simulation: SimulationProps = {
-      code: this._code.toJSON(),
       time: this._time,
     };
+    if (this.code.state.customBlocks) {
+      simulation.code = this.code.toJSON();
+    }
     return simulation;
   }
 

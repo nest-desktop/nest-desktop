@@ -16,12 +16,15 @@ import { ConnectionView } from "./connectionView";
 import { Node } from "@/types/nodeTypes";
 import { Connection } from "@/types/connectionTypes";
 import { Network } from "@/types/networkTypes";
+import { Synapse } from "@/types/synapseTypes";
+import { BaseSynapse, SynapseProps } from "../synapse/baseSynapse";
 
 export interface ConnectionProps {
-  source: number;
-  target: number;
-  rule?: string;
   params?: ConnectionParameterProps[];
+  rule?: string;
+  source: number;
+  synapse?: SynapseProps;
+  target: number;
 }
 
 export class BaseConnection extends Config {
@@ -38,6 +41,7 @@ export class BaseConnection extends Config {
   private _view: ConnectionView;
 
   public _connections: Connections; // parent
+  public _synapse: Synapse;
 
   constructor(
     connections: Connections,
@@ -61,6 +65,8 @@ export class BaseConnection extends Config {
     this._rule = new ConnectionRule(this, connection.rule);
 
     this.initParameters(connection.params);
+
+    this._synapse = this.newSynapse(connection.synapse);
   }
 
   get connections(): Connections {
@@ -144,6 +150,10 @@ export class BaseConnection extends Config {
 
   get state(): ConnectionState {
     return this._state;
+  }
+
+  get synapse(): Synapse {
+    return this._synapse;
   }
 
   get target(): Node {
@@ -234,6 +244,10 @@ export class BaseConnection extends Config {
    */
   getRuleConfig(): any {
     return this.config.rules.find((r: any) => r.value === this._rule.value);
+  }
+
+  newSynapse(synapse?: SynapseProps): Synapse {
+    return new BaseSynapse(this, synapse)
   }
 
   /**

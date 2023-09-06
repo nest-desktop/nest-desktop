@@ -1,4 +1,4 @@
-// networkState.ts
+// baseNetworkState.ts
 
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
