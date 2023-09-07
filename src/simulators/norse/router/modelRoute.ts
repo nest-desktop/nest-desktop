@@ -45,6 +45,12 @@ export default [
     redirect: modelRedirect,
     children: [
       {
+        path: "",
+        name: "norseModel",
+        props: true,
+        redirect: modelRedirect,
+      },
+      {
         path: "edit",
         name: "norseModelEditor",
         components: {
@@ -61,12 +67,6 @@ export default [
         },
         props: true,
         beforeEnter: modelBeforeEnter,
-      },
-      {
-        path: "*",
-        name: "norseModel",
-        props: true,
-        redirect: modelRedirect,
       },
     ],
   },

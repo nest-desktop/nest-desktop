@@ -45,6 +45,12 @@ export default [
     redirect: modelRedirect,
     children: [
       {
+        path: "",
+        name: "nestModel",
+        props: true,
+        redirect: modelRedirect,
+      },
+      {
         path: "doc",
         name: "nestModelDoc",
         components: {
@@ -70,12 +76,6 @@ export default [
         },
         props: true,
         beforeEnter: modelBeforeEnter,
-      },
-      {
-        path: "*",
-        name: "nestModel",
-        props: true,
-        redirect: modelRedirect,
       },
     ],
   },
