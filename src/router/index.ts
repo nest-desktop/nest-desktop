@@ -6,41 +6,39 @@
 
 // Composables
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import nestRoutes from "@nest/routes";
 
+// Store
+import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
+
+// Simulators
+import nestRoute from "@nest/routes";
+import norseRoute from "@norse/routes";
+
+const closeNav = () => {
+  const navStore = useNavStore();
+  navStore.open = false;
+};
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("@/layouts/app/AppLayout.vue"),
+    component: () => import("@/layouts/AppLayout.vue"),
     children: [
       {
         path: "",
-        name: "AppInfo",
-        component: () => import("@/views/AppInfo.vue"),
-        props: {
-          includeProjectButtons: true,
-        },
-        beforeEnter: () => {
-          const navStore = useNavStore();
-          navStore.open = false;
-        },
+        name: "home",
+        component: () => import("@/views/Home.vue"),
+        beforeEnter: closeNav,
       },
       {
         path: "about",
-        name: "Home",
-        component: () => import("@/views/AppInfo.vue"),
-        props: {
-          includeProjectButtons: false,
-        },
-        beforeEnter: () => {
-          const navStore = useNavStore();
-          navStore.open = false;
-        },
+        name: "about",
+        component: () => import("@/views/About.vue"),
+        beforeEnter: closeNav,
       },
       {
-        path: "sandbox/",
+        path: "sandbox",
         name: "sandboxParent",
         children: [
           {
@@ -61,10 +59,16 @@ const routes: RouteRecordRaw[] = [
         name: "vuetify",
         component: () => import("@/views/Vuetify.vue"),
       },
+      nestRoute,
+      norseRoute,
       {
-        path: "nest/",
-        name: "nest",
-        children: nestRoutes as RouteRecordRaw[],
+        path: "pynn",
+        name: "pynn",
+        beforeEnter: () => {
+          const appStore = useAppStore();
+          appStore.simulator = "pynn";
+        },
+        component: () => import("@/components/HelloWorld.vue"),
       },
     ],
   },

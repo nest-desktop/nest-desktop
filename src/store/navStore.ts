@@ -1,4 +1,5 @@
-// Utilities
+// navStore.ts
+
 import { defineStore } from "pinia";
 
 export const useNavStore = defineStore("nav-store", {
@@ -19,5 +20,8 @@ export const useNavStore = defineStore("nav-store", {
         window.dispatchEvent(new Event("resize"));
       }, 400);
     },
+  },
+  persist: {
+    storage: sessionStorage,
   },
 });

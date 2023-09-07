@@ -4,7 +4,7 @@ import PouchDB from "pouchdb";
 import { ILogObj, Logger } from "tslog";
 import { major, minor } from "semver";
 
-import { logger as mainLogger } from "@/utils/logger";
+import { logger as mainLogger } from "./logger";
 
 export class DatabaseService {
   // @ts-ignore
@@ -58,13 +58,13 @@ export class DatabaseService {
     return this._db
       .allDocs()
       .then((result: any) => result.total_rows)
-      .catch((err: any) => this._logger.error("Get all docs:", err));
+      .catch((err: any) => this._logger.error("Get all docs:", err.stack));
   }
 
   async destroy(): Promise<any> {
     return this._db
       .destroy()
-      .catch((err: any) => this._logger.error("Destroy db:", err));
+      .catch((err: any) => this._logger.error("Destroy db:", err.stack));
   }
 
   list(sortedBy: string = "", reverse: boolean = false): any {
@@ -81,7 +81,7 @@ export class DatabaseService {
         }
         return docs;
       })
-      .catch((err: any) => this._logger.error("Get all docs:", err));
+      .catch((err: any) => this._logger.error("Get all docs:", err.stack));
   }
 
   async reset(): Promise<any> {
@@ -108,7 +108,7 @@ export class DatabaseService {
         //   }
         //   data.updatedAt = undefined;
         // })
-        .catch((err: any) => this._logger.error("Post doc:", err))
+        .catch((err: any) => this._logger.error("Post doc:", err.stack))
     );
   }
 
@@ -118,7 +118,7 @@ export class DatabaseService {
     return this._db
       .get(id, options)
       .then((doc: any) => doc)
-      .catch((err: any) => this._logger.error("Get doc:", err));
+      .catch((err: any) => this._logger.error("Get doc:", err.stack));
   }
 
   update(data: any): any {
@@ -126,7 +126,7 @@ export class DatabaseService {
     return this._db
       .get(data.doc._id)
       .then((doc: any) => {
-        data.doc = doc;
+        // data.doc = doc;
         const dataJSON = data.toJSON();
         dataJSON.hash = data.state.hash || undefined;
         dataJSON.version = process.env.APP_VERSION;
@@ -140,10 +140,10 @@ export class DatabaseService {
           .then(() => {
             data.updatedAt = dataJSON.updatedAt;
           })
-          .catch((err: any) => this._logger.error("Put doc:", err));
+          .catch((err: any) => this._logger.error("Put doc:", err.stack));
       })
       .catch((err: any) => {
-        this._logger.error("Get doc:", err);
+        this._logger.error("Get doc:", err.stack);
         return this.create(data);
       });
   }
@@ -155,9 +155,9 @@ export class DatabaseService {
       .then((doc: any) =>
         this._db
           .remove(doc)
-          .catch((err: any) => this._logger.error("Remove doc:", err))
+          .catch((err: any) => this._logger.error("Remove doc:", err.stack))
       )
-      .catch((err: any) => this._logger.error("Get doc:", err));
+      .catch((err: any) => this._logger.error("Get doc:", err.stack));
   }
 
   deleteBulk(ids: string[]): any {
@@ -167,7 +167,7 @@ export class DatabaseService {
         .forEach((doc: any) => (doc._deleted = true));
       return this._db
         .bulkDocs(docs)
-        .catch((err: any) => this._logger.error("Bulk docs:", err));
+        .catch((err: any) => this._logger.error("Bulk docs:", err.stack));
     });
   }
 
@@ -180,7 +180,7 @@ export class DatabaseService {
             doc._revisions.start - idx + "-" + revId
         )
       )
-      .catch((err: any) => this._logger.error("Get doc:", err));
+      .catch((err: any) => this._logger.error("Get doc:", err.stack));
   }
 
   // Version
@@ -189,7 +189,10 @@ export class DatabaseService {
     return this._db
       .get("_local/version")
       .then((doc: any) => doc.version)
-      .catch((err: any) => this._logger.error("Get version:", err));
+      .catch((err: any) => {
+        console.log(err);
+        this._logger.error("Get version:", err.stack);
+      });
   }
 
   setVersion(): any {
@@ -198,7 +201,7 @@ export class DatabaseService {
         _id: "_local/version",
         version: process.env.APP_VERSION,
       })
-      .catch((err: any) => this._logger.error("Set version:", err));
+      .catch((err: any) => this._logger.error("Set version:", err.stack));
   }
 
   checkVersion(): void {
@@ -210,7 +213,7 @@ export class DatabaseService {
           minor(dbVersion) === minor(appVersion);
       })
       .catch((err: any) => {
-        this._logger.error("Get version:", err);
+        this._logger.error("Get version:", err.stack);
         this.setVersion().then(() => this.checkVersion());
       });
   }

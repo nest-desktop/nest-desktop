@@ -5,12 +5,13 @@ export class Config {
 
   constructor(name: string) {
     this._configName = name;
+
     if (!this.isConfigValid) {
       this.upgradeConfig();
     }
   }
 
-  get config(): any{
+  get config(): any {
     return this.localStorage;
   }
 

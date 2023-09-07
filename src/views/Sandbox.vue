@@ -27,7 +27,6 @@ import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
 import SandboxDataTable from "@/components/sandbox/SandboxDataTable.vue";
 import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
-// import SandboxNodeCard from "@/components/sandbox/SandboxNodeCard.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 import SandboxToast from "@/components/sandbox/SandboxToast.vue";
@@ -36,7 +35,7 @@ const props = defineProps({
   component: { type: String, default: "alert" },
 });
 
-const currentComponent = ref(props.component);
+const currentComponent = ref("");
 
 const components: any = {
   alert: SandboxAlert,
@@ -47,7 +46,6 @@ const components: any = {
   dataTable: SandboxDataTable,
   importJSON: SandboxImportJSON,
   itemGroup: SandboxItemGroup,
-  // nodeCard: SandboxNodeCard,
   slider: SandboxSlider,
   tabs: SandboxTabs,
   toast: SandboxToast,

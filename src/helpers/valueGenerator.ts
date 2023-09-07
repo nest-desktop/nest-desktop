@@ -1,7 +1,7 @@
 // valueGenerator.ts
 
-import { fill, linspace, range } from "@/utils/array";
-import { randomUniformIntArray, randomUniformFloatArray, randomNormalArray } from "@/utils/random";
+import { fill, linspace, range } from "./array";
+import { randomUniformIntArray, randomUniformFloatArray, randomNormalArray } from "./random";
 
 export class ValueGenerator {
   private _inputs: any = {

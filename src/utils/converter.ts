@@ -25,7 +25,7 @@ export function radToDeg(rad: number): number {
  * @returns number | string
  */
 export function toFixed(value: number, digit: number = 1): number | string {
-  return value && !isNaN(value)
+  return !isNaN(value)
     ? (Math.round(value * 10 ** digit) / 10 ** digit).toFixed(digit)
     : NaN;
 }

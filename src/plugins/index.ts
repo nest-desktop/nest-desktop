@@ -9,13 +9,10 @@ import { loadFonts } from "./webfontloader";
 
 // Plugins
 import vuetify from "./vuetify";
-import pinia from "../store";
-import router from "../router";
 import codeMirror from "./codemirror";
 
-// Simulator
-// @ts-ignore
-import nest from "@nest";
+import pinia from "@/store";
+import router from "@/router";
 
 // Types
 import type { App } from "vue";
@@ -24,7 +21,7 @@ export function registerPlugins(app: App) {
   loadFonts();
 
   // Use vuetify
-  app.use(vuetify)
+  app.use(vuetify);
 
   // Use pinia
   app.use(pinia);
@@ -34,8 +31,4 @@ export function registerPlugins(app: App) {
 
   // Use CodeMirror
   app.use(codeMirror);
-
-  // Use NEST
-  app.use(nest);
-
 }

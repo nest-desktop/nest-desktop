@@ -1,17 +1,13 @@
 <template>
-  <div class="appDetails">
-    <v-list dense max-width="500px">
+  <v-card class="appDetails">
+    <v-list density="compact">
       <v-list-item>
         <v-row>
           <v-col class="font-weight-bold text-left" cols="4">
             Documentation
           </v-col>
           <v-col class="text-right" cols="8">
-            <a
-              :href="doc"
-              class="text-decoration-none text--primary"
-              target="_blank"
-            >
+            <a :href="doc" target="_blank">
               {{ doc }}
             </a>
           </v-col>
@@ -23,11 +19,7 @@
             Source code
           </v-col>
           <v-col class="text-right" cols="8">
-            <a
-              :href="repo"
-              class="text-decoration-none text--primary"
-              target="_blank"
-            >
+            <a :href="repo" target="_blank">
               {{ repo }}
             </a>
           </v-col>
@@ -55,17 +47,12 @@
         <v-row>
           <v-col class="font-weight-bold text-left" cols="4"> Contact </v-col>
           <v-col class="text-caption text-right" cols="8">
-            <a
-              :href="mailText"
-              class="text-decoration-none text--primary"
-              v-text="contactName"
-            />
+            <a :href="mailText" v-text="contactName" />
           </v-col>
         </v-row>
       </v-list-item>
     </v-list>
-
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -73,7 +60,6 @@ import { computed, reactive } from "vue";
 import { detect } from "detect-browser";
 
 const appVersion = process.env.APP_VERSION;
-const nestVersion = "3.4";
 const license = "MIT License";
 const contactName = "📧 Sebastian Spreizer";
 const mailto = "spreizer@uni-trier.de";
@@ -98,7 +84,6 @@ const mailBody = () => [
   `Browser name: ${state.browserName}`,
   `Browser version: ${state.browserVersion}`,
   `NEST Desktop version: ${appVersion}`,
-  `NEST Simulator version: ${nestVersion}`,
   `OS type: ${state.osType}`,
 ];
 

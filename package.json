@@ -19,6 +19,7 @@
   },
   "main": "dist-electron/main.js",
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-python": "~6.1",
     "@codemirror/state": "~6.2",
     "@codemirror/theme-one-dark": "~6.1",
@@ -32,6 +33,7 @@
     "mustache": "~4.2",
     "object-hash": "~3.0",
     "pinia": "~2.1",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "plotly.js": "~2.25",
     "plotly.js-dist-min": "~2.25",
     "pouchdb": "~8.0",
