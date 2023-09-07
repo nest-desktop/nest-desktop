@@ -6,21 +6,21 @@
 
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 
 const logger = mainLogger.getSubLogger({ name: "project route" });
 
 const projectBeforeEnter = (to: any) => {
   logger.trace("Before enter project route:", to.path);
 
-  const projectDBStore = useNorseProjectDBStore();
+  const projectDBStore = useNESTProjectDBStore();
   if (projectDBStore.projects.length === 0) {
     setTimeout(() => projectBeforeEnter(to), 100);
     return;
   }
 
-  const projectStore = useNorseProjectStore();
+  const projectStore = useNESTProjectStore();
   projectStore.loadProject(to.params.projectId);
 
   const path = to.path.split("/");
@@ -28,37 +28,37 @@ const projectBeforeEnter = (to: any) => {
 };
 
 const projectNew = () => {
-  logger.trace("Create a new norse project");
-  const projectStore = useNorseProjectStore();
+  logger.trace("Create a new nest project");
+  const projectStore = useNESTProjectStore();
   projectStore.loadProject();
 
   return {
-    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/nest/project/" + projectStore.projectId + "/" + projectStore.view,
   };
 };
 
 const projectRedirect = (to: any) => {
   logger.trace("Redirect to project:", to.params.projectId?.slice(0, 6));
-  const projectStore = useNorseProjectStore();
+  const projectStore = useNESTProjectStore();
 
   if (to.params.projectId) {
     projectStore.loadProject(to.params.projectId);
   }
 
   return {
-    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/nest/project/" + projectStore.projectId + "/" + projectStore.view,
   };
 };
 
 export default [
   {
     path: "",
-    name: "NorseProjectRoot",
+    name: "nestProjectRoot",
     redirect: projectRedirect,
   },
   {
     path: "new",
-    name: "NorseProjectNew",
+    name: "nestProjectNew",
     redirect: projectNew,
   },
   {
@@ -67,33 +67,33 @@ export default [
     children: [
       {
         path: "",
-        name: "NorseProject",
+        name: "nestProject",
         props: true,
         redirect: projectRedirect,
       },
       {
         path: "edit",
-        name: "NorseNetworkEditor",
+        name: "nestNetworkEditor",
         components: {
-          project: () => import("@norse/views/project/NetworkGraphEditor.vue"),
+          project: () => import("@nest/views/project/NESTNetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
       },
       {
         path: "explore",
-        name: "NorseActivityExplorer",
+        name: "nestActivityExplorer",
         components: {
-          project: () => import("@norse/views/project/ActivityExplorer.vue"),
+          project: () => import("@nest/views/project/NESTActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
       },
       {
         path: "lab",
-        name: "NorseLabBook",
+        name: "nestLabBook",
         components: {
-          project: () => import("@norse/views/project/LabBook.vue"),
+          project: () => import("@nest/views/project/NESTLabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

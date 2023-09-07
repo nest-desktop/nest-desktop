@@ -19,32 +19,31 @@ const closeNav = () => {
 };
 
 export default {
-  path: "nest",
-  name: "nestLayout",
+  path: "norse",
+  name: "norseLayout",
   beforeEnter: () => {
     const appStore = useAppStore();
-    appStore.simulator = "nest";
+    appStore.simulator = "norse";
   },
-  component: () => import("@nest/layouts/NESTLayout.vue"),
+  component: () => import("@norse/layouts/NorseLayout.vue"),
   children: [
     {
       path: "",
-      name: "NESTHome",
-      component: () => import("@nest/views/NESTHome.vue"),
+      name: "norseHome",
+      component: () => import("@norse/views/NorseHome.vue"),
       beforeEnter: closeNav,
     },
     {
-      path: "model/",
-      name: "NESTModelLayout",
-      component: () => import("@nest/layouts/model/ModelLayout.vue"),
+      path: "model",
+      name: "norseModelLayout",
+      component: () => import("@norse/layouts/NorseModelLayout.vue"),
       children: modelRoutes as RouteRecordRaw[],
     },
     {
-      path: "project/",
-      name: "NESTProjectLayout",
-      component: () => import("@nest/layouts/project/ProjectLayout.vue"),
+      path: "project",
+      name: "norseProjectLayout",
+      component: () => import("@norse/layouts/NorseProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
     },
   ],
 };
-

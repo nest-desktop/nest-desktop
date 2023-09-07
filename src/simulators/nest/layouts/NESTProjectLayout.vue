@@ -3,7 +3,7 @@
     :model-value="navStore.open"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="navStore.width"
-    @update:model-value="dispatchWindowResize"
+    @update:modelValue="dispatchWindowResize"
     class="d-print-none"
     permanent
   >
@@ -12,8 +12,8 @@
     <project-nav />
   </v-navigation-drawer>
 
-  <v-app-bar class="d-print-none" color="norse" height="48" flat>
-    <project-bar :project="project" />
+  <v-app-bar class="d-print-none" color="blue" height="48" flat>
+    <project-bar :project="(project as NESTProject)" :tab-items="tabItems" />
   </v-app-bar>
 
   <v-navigation-drawer
@@ -65,7 +65,7 @@
     :model-value="projectStore.controllerOpen"
     :style="{ transition: navStore.resizing ? 'initial' : '' }"
     :width="projectStore.controllerWidth"
-    @update:model-value="dispatchWindowResize"
+    @update:modelValue="dispatchWindowResize"
     class="d-print-none"
     location="right"
     permanent
@@ -75,7 +75,6 @@
       <network-param-editor v-if="projectStore.controllerView === 'network'" />
 
       <simulation-kernel-editor
-        :simulation="(project.simulation as NorseSimulation)"
         v-else-if="projectStore.controllerView === 'kernel'"
       />
 
@@ -88,7 +87,7 @@
       />
 
       <simulation-code-editor
-        :simulation="(project.simulation as NorseSimulation)"
+        :simulation="(project.simulation as NESTSimulation)"
         v-else-if="projectStore.controllerView === 'code'"
       />
 
@@ -114,7 +113,7 @@
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
     <simulation-code-mirror
-      :simulation="(project.simulation as NorseSimulation)"
+      :simulation="(project.simulation as NESTSimulation)"
     />
   </v-bottom-navigation>
 </template>
@@ -126,18 +125,17 @@ import { json } from "@codemirror/lang-json";
 
 import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
+import ProjectBar from "@/components/project/ProjectBar.vue";
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
-import NetworkParamEditor from "@norse/components/network/NetworkParamEditor.vue";
-import SimulationKernelEditor from "@norse/components/simulation/SimulationKernelEditor.vue";
-import { NorseProject } from "@norse/helpers/project/norseProject";
-import { NorseSimulation } from "@norse/helpers/simulation/norseSimulation";
-
-import ProjectBar from "./ProjectBar.vue";
-import ProjectNav from "./ProjectNav.vue";
+import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
+import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
+import { NESTProject } from "@nest/helpers/project/nestProject";
+import { NESTSimulation } from "@nest/helpers/simulation/nestSimulation";
+import ProjectNav from "@nest/components/project/ProjectNav.vue";
 
 import { useAppStore } from "@/store/appStore";
 const appStore = useAppStore();
@@ -145,10 +143,10 @@ const appStore = useAppStore();
 import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
-const projectStore = useNorseProjectStore();
+import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+const projectStore = useNESTProjectStore();
 
-const project = computed(() => projectStore.project as NorseProject);
+const project = computed(() => projectStore.project);
 
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)
@@ -162,6 +160,33 @@ const controllerItems = [
   { id: "code", icon: "mdi-xml" },
   { id: "activity", icon: "mdi-border-style" },
   { id: "stats", icon: "mdi-table-large" },
+];
+
+const tabItems = [
+  {
+    icon: "nest:network",
+    id: "networkEditor",
+    label: "Editor",
+    title: "Network editor",
+    to: { name: "nestNetworkEditor", params: { projectId: project.value.id } },
+  },
+  {
+    icon: "mdi-border-style",
+    id: "activityExplorer",
+    label: "Explorer",
+    title: "Activity explorer",
+    to: {
+      name: "nestActivityExplorer",
+      params: { projectId: project.value.id },
+    },
+  },
+  {
+    icon: "mdi-book-open-outline",
+    id: "labBook",
+    label: "Lab book",
+    title: "Lab book",
+    to: { name: "nestLabBook", params: { projectId: project.value.id } },
+  },
 ];
 
 /**

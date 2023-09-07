@@ -10,7 +10,7 @@
   </v-navigation-drawer>
 
   <v-app-bar color="orange" height="48" flat>
-    <model-bar :model="model" />
+    <model-bar :model="model" :tab-items="tabItems" />
   </v-app-bar>
 
   <v-navigation-drawer location="right" permanent rail rail-width="64">
@@ -51,19 +51,51 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { NESTModel } from "@nest/helpers/model/nestModel";
+import ModelBar from "@/components/model/ModelBar.vue";
 
-import ModelController from "./ModelController.vue";
-import ModelBar from "./ModelBar.vue";
-import ModelNav from "./ModelNav.vue";
+import ModelController from "@norse/components/model/ModelController.vue";
+import ModelNav from "@norse/components/model/ModelNav.vue";
 
 import { useNavStore } from "@/store/navStore";
 const navState = useNavStore();
 
-import { useNESTModelStore } from "@nest/store/model/nestModelStore";
-const modelStore = useNESTModelStore();
+import { useNorseModelStore } from "@norse/store/model/norseModelStore";
+const modelStore = useNorseModelStore();
 
-const model = computed(() => modelStore.model as NESTModel)
+const model = computed(() => modelStore.model);
+
+const items = [
+  {
+    id: "defaults",
+    icon: "mdi-format-list-numbered-rtl",
+    title: "View defaults",
+  },
+  { id: "model", icon: "mdi-tune-variant", title: "Edit model" },
+  { id: "code", icon: "mdi-xml" },
+];
+
+const tabItems = [
+  {
+    icon: "mdi-chart-scatter-plot",
+    id: "modelExplorer",
+    label: "Explore",
+    title: "Explore activity",
+    to: {
+      name: "norseModelExplorer",
+      params: { modelId: model.value.id },
+    },
+  },
+  {
+    icon: "mdi-pencil",
+    id: "modelEditor",
+    label: "Edit",
+    title: "Edit activity",
+    to: {
+      name: "norseModelEditor",
+      params: { modelId: model.value.id },
+    },
+  },
+];
 
 /**
  * Handle mouse move on resizing.
@@ -92,12 +124,6 @@ const resizeSidebar = () => {
   window.addEventListener("mousemove", handleMouseMove);
   window.addEventListener("mouseup", handleMouseUp);
 };
-
-const items = [
-  { id: "defaults", icon: "mdi-format-list-numbered-rtl", title: "View defaults" },
-  { id: "model", icon: "mdi-tune-variant", title: "Edit model" },
-  { id: "code", icon: "mdi-xml" },
-];
 </script>
 
 <style scoped>

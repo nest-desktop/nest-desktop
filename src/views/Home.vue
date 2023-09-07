@@ -25,7 +25,7 @@
         <v-row>
           <v-col>
             <v-btn
-              :to="'/' + simulator.id"
+              :to="{ name: simulator.routerName }"
               :key="index"
               class="ma-2"
               size="x-large"

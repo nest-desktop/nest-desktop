@@ -49,7 +49,7 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
     startSimulation(): void {
       logger.trace("start NEST simulation:", this.projectId?.slice(0, 6));
       router.push({
-        name: "NESTActivityExplorer",
+        name: "nestActivityExplorer",
         params: { projectId: this.projectId },
       });
       this.project.startSimulation();

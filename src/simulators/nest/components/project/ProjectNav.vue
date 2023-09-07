@@ -11,7 +11,12 @@
       variant="outlined"
     />
 
-    <v-btn icon size="small" title="Create a new project">
+    <v-btn
+      :to="{ name: 'nestProjectNew' }"
+      icon
+      size="small"
+      title="Create a new project"
+    >
       <v-icon icon="mdi-plus" />
     </v-btn>
 
@@ -41,7 +46,10 @@
       :key="index"
       :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
       :title="project.name"
-      :to="{ name: 'NorseProject', params: { projectId: project._id } }"
+      :to="{
+        name: 'nestProject',
+        params: { projectId: project._id },
+      }"
       v-for="(project, index) in projectDBStore.projects"
     >
       <template #append>
@@ -51,9 +59,10 @@
             project.save()
             }"
           :disabled="!project.state?.changes"
-          :icon="project.doc ? 'mdi-content-save-check-outline' : ''"
+          icon="mdi-content-save-check-outline"
           size="small"
           variant="text"
+          v-show="project.doc"
         />
 
         <v-menu>
@@ -87,8 +96,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
-const projectDBStore = useNorseProjectDBStore();
+import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
+const projectDBStore = useNESTProjectDBStore();
 
 const projectsItems = [
   { title: "Upload", icon: "mdi-upload" },

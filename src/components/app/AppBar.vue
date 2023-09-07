@@ -72,7 +72,9 @@
     </v-list>
   </v-menu>
 
-  <v-btn rounded="0" size="small" to="/about" variant="text"> about </v-btn>
+  <v-btn :to="{ name: 'about' }" rounded="0" size="small" variant="text">
+    about
+  </v-btn>
   <v-btn
     href="https://nest-desktop.readthedocs.io"
     rounded="0"

@@ -13,16 +13,16 @@ const navItems = [
 {
     icon: "nest:network",
     id: "nestProject",
-    path: "/nest/project",
     simulator: "nest",
     title: "Project",
+    to: { name: "nestProjectRoot" },
   },
   {
     icon: "nest:logo",
     id: "nestModel",
-    path: "/nest/model",
     simulator: "nest",
     title: "Model",
+    to: { name: "nestModelRoot" },
   },
 ];
 </script>

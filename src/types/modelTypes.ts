@@ -6,3 +6,6 @@ import { NESTModel } from "@nest/helpers/model/nestModel";
 import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
 
 export type Model = BaseModel | NESTCopyModel | NESTModel | NorseModel;
+
+// for model bar
+export const ModelPropTypes = [BaseModel, NESTCopyModel, NESTModel, NorseModel];

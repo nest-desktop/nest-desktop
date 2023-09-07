@@ -37,7 +37,7 @@ const modelRedirect = (to: any) => {
 export default [
   {
     path: "",
-    name: "NorseModelRoot",
+    name: "norseModelRoot",
     redirect: modelRedirect,
   },
   {
@@ -46,25 +46,25 @@ export default [
     children: [
       {
         path: "edit",
-        name: "NorseModelEditor",
+        name: "norseModelEditor",
         components: {
-          model: () => import("@norse/views/model/ModelEditor.vue"),
+          model: () => import("@norse/views/model/NorseModelEditor.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
       },
       {
         path: "explore",
-        name: "NorseModelExplorer",
+        name: "norseModelExplorer",
         components: {
-          model: () => import("@norse/views/model/ModelExplorer.vue"),
+          model: () => import("@norse/views/model/NorseModelExplorer.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
       },
       {
         path: "*",
-        name: "NorseModel",
+        name: "norseModel",
         props: true,
         redirect: modelRedirect,
       },
