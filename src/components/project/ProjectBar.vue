@@ -1,26 +1,30 @@
 <template>
-  <v-tabs stacked>
-    <v-tab
-      :key="index"
-      :to="tab.to"
-      :title="tab.title"
-      size="small"
-      v-for="(tab, index) in tabItems"
-    >
-      <v-icon :icon="tab.icon" />
-      <span class="text-no-wrap">{{ tab.label }}</span>
-    </v-tab>
-  </v-tabs>
+  <v-app-bar class="d-print-none" height="48" flat>
+    <v-tabs stacked>
+      <slot name="tabs">
+        <v-tab
+          :key="index"
+          :to="tab.to"
+          :title="tab.title"
+          size="small"
+          v-for="(tab, index) in tabItems"
+        >
+          <v-icon :icon="tab.icon" />
+          <span class="text-no-wrap">{{ tab.label }}</span>
+        </v-tab>
+      </slot>
+    </v-tabs>
 
-  <v-spacer />
+    <v-spacer />
 
-  <v-app-bar-title>
-    {{ project.name }}
-  </v-app-bar-title>
+    <v-app-bar-title>
+      {{ project.name }}
+    </v-app-bar-title>
 
-  <v-spacer />
+    <v-spacer />
 
-  <simulation-button class="mx-2" :simulation="project.simulation" />
+    <simulation-button class="mx-2" :simulation="project.simulation" />
+  </v-app-bar>
 </template>
 
 <script lang="ts" setup>
@@ -29,11 +33,45 @@ import { computed } from "vue";
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
 import { Project, ProjectPropTypes } from "@/types/projectTypes";
 
+import { useAppStore } from "@/store/appStore";
+const appStore = useAppStore();
+
 const props = defineProps({
   project: ProjectPropTypes,
-  tabItems: Object,
 });
 
 const project = computed(() => props.project as Project);
-const tabItems = computed(() => props.tabItems as Object);
+
+const tabItems = [
+  {
+    icon: "nest:network",
+    id: "networkEditor",
+    label: "Editor",
+    title: "Network editor",
+    to: {
+      name: appStore.simulator + "NetworkEditor",
+      params: { projectId: project.value.id },
+    },
+  },
+  {
+    icon: "mdi-border-style",
+    id: "activityExplorer",
+    label: "Explorer",
+    title: "Activity explorer",
+    to: {
+      name: appStore.simulator + "ActivityExplorer",
+      params: { projectId: project.value.id },
+    },
+  },
+  {
+    icon: "mdi-book-open-outline",
+    id: "labBook",
+    label: "Lab book",
+    title: "Lab book",
+    to: {
+      name: appStore.simulator + "LabBook",
+      params: { projectId: project.value.id },
+    },
+  },
+];
 </script>
