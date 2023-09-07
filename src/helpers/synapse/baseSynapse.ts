@@ -17,18 +17,18 @@ interface SynapseState {
 export interface SynapseProps {
   model?: string;
   params?: SynapseParameterProps[];
-  receptorIdx?: number;
 }
 
 export class BaseSynapse {
   private readonly _name = "Synapse";
-  private _connection: Connection; // parent
   private _logger: Logger<ILogObj>;
-  private _model: Model;
   private _modelId: string;
   private _paramsVisible: string[] = [];
   private _params: { [key: string]: SynapseParameter } = {};
   private _state: UnwrapRef<SynapseState>;
+
+  public _connection: Connection; // parent
+  public _model: Model;
 
   constructor(connection: Connection, synapse?: SynapseProps) {
     this._connection = connection;
@@ -82,8 +82,19 @@ export class BaseSynapse {
     }
   }
 
+  /**
+   * Check if synapse parameter can be spatial.
+   */
+  get isSpatial(): boolean {
+    return false;
+  }
+
   get isStatic(): boolean {
     return this.model.id === "static_synapse";
+  }
+
+  get logger(): Logger<ILogObj> {
+    return this._logger;
   }
 
   get model(): Model {

@@ -53,7 +53,7 @@ const projectRedirect = (to: any) => {
 export default [
   {
     path: "",
-    name: "NorseProject",
+    name: "NorseProjectRoot",
     redirect: projectRedirect,
   },
   {
@@ -67,13 +67,13 @@ export default [
     children: [
       {
         path: "",
-        name: "NorseProjectId",
+        name: "NorseProject",
         props: true,
         redirect: projectRedirect,
       },
       {
         path: "edit",
-        name: "NorseNetworkGraphEditor",
+        name: "NorseNetworkEditor",
         components: {
           project: () => import("@norse/views/project/NetworkGraphEditor.vue"),
         },

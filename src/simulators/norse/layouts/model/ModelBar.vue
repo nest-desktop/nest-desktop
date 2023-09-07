@@ -1,10 +1,24 @@
 <template>
   <v-tabs stacked>
-    <v-tab size="small" title="Explore activity" to="explore">
+    <v-tab
+      :to="{
+        name: 'NorseModelExplorer',
+        params: { modelId: model.id },
+      }"
+      size="small"
+      title="Explore model"
+    >
       <v-icon icon="mdi-chart-scatter-plot" />
       Explorer
     </v-tab>
-    <v-tab size="small" title="Edit network" to="edit">
+    <v-tab
+      :to="{
+        name: 'NorseModelEditor',
+        params: { modelId: model.id },
+      }"
+      size="small"
+      title="Edit model"
+    >
       <v-icon icon="mdi-pencil" />
       Editor
     </v-tab>
@@ -12,7 +26,7 @@
 
   <v-spacer />
 
-  <v-app-bar-title> {{ modelStore.modelId }} </v-app-bar-title>
+  <v-app-bar-title> {{ model.id }} </v-app-bar-title>
 
   <v-spacer />
 
@@ -20,6 +34,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useNorseModelStore } from "@norse/store/model/norseModelStore";
-const modelStore = useNorseModelStore();
+import { computed } from "vue";
+
+import { NorseModel } from "@norse/helpers/model/norseModel";
+
+const props = defineProps({
+  model: NorseModel,
+});
+
+const model = computed(() => props.model as NorseModel);
 </script>

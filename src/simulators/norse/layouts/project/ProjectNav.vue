@@ -41,7 +41,7 @@
       :key="index"
       :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
       :title="project.name"
-      :to="'/norse/project/' + project._id"
+      :to="{ name: 'NorseProject', params: { projectId: project._id } }"
       v-for="(project, index) in projectDBStore.projects"
     >
       <template #append>

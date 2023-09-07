@@ -1,14 +1,35 @@
 <template>
   <v-tabs stacked>
-    <v-tab size="small" title="Read documentation" to="doc">
+    <v-tab
+      :to="{
+        name: 'NESTModelDoc',
+        params: { modelId: model.id },
+      }"
+      size="small"
+      title="Read documentation"
+    >
       <v-icon icon="mdi-text-box-outline" />
       Doc
     </v-tab>
-    <v-tab size="small" title="Explore activity" to="explore">
+    <v-tab
+      :to="{
+        name: 'NESTModelExplorer',
+        params: { modelId: model.id },
+      }"
+      size="small"
+      title="Explore activity"
+    >
       <v-icon icon="mdi-chart-scatter-plot" />
       Explorer
     </v-tab>
-    <v-tab size="small" title="Edit network" to="edit">
+    <v-tab
+      :to="{
+        name: 'NESTModelEditor',
+        params: { modelId: model.id },
+      }"
+      size="small"
+      title="Edit network"
+    >
       <v-icon icon="mdi-pencil" />
       Editor
     </v-tab>
@@ -16,7 +37,7 @@
 
   <v-spacer />
 
-  <v-app-bar-title> {{ modelStore.modelId }} </v-app-bar-title>
+  <v-app-bar-title> {{ model.id }} </v-app-bar-title>
 
   <v-spacer />
 
@@ -24,6 +45,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useNESTModelStore } from "@nest/store/model/nestModelStore";
-const modelStore = useNESTModelStore();
+import { computed } from "vue";
+
+import { NESTModel } from "@nest/helpers/model/nestModel";
+
+const props = defineProps({
+  model: NESTModel,
+});
+
+const model = computed(() => props.model as NESTModel);
 </script>

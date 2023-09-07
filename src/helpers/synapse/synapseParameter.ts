@@ -1,4 +1,4 @@
-// nestSynapseParameters.ts
+// synapseParameters.ts
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { Parameter, ParameterProps } from "@/helpers/parameter";
@@ -27,7 +27,9 @@ export class SynapseParameter extends Parameter {
 
   get types(): any[] {
     const types: any[] = this.config.types;
-    return types;
+    return !this.synapse.isSpatial
+      ? types.filter((type: any) => !type.id.startsWith("spatial"))
+      : types;
   }
 
   get visible(): boolean {

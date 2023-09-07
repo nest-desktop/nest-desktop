@@ -1,6 +1,7 @@
 // nestModelStore.ts
 
 import { defineStore } from "pinia";
+import { useNESTModelDBStore } from "./nestModelDBStore";
 
 export const useNESTModelStore = defineStore("nest-model-view", {
   state: () => ({
@@ -10,9 +11,14 @@ export const useNESTModelStore = defineStore("nest-model-view", {
     view: "doc",
     width: 320,
   }),
-
+  getters: {
+    model: (state) => {
+      const nestModelDBStore = useNESTModelDBStore();
+      return nestModelDBStore.getModel(state.modelId);
+    },
+  },
   actions: {
-    toggle(item: any=null) {
+    toggle(item: any = null) {
       if (!this.controllerOpen || this.controllerView === item.id) {
         this.controllerOpen = !this.controllerOpen;
       }

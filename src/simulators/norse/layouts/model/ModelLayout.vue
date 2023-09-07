@@ -10,7 +10,7 @@
   </v-navigation-drawer>
 
   <v-app-bar color="orange" height="48" flat>
-    <model-bar />
+    <model-bar :model="model" />
   </v-app-bar>
 
   <v-navigation-drawer location="right" permanent rail rail-width="64">
@@ -49,15 +49,19 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import ModelController from "./ModelController.vue";
 import ModelBar from "./ModelBar.vue";
 import ModelNav from "./ModelNav.vue";
 
 import { useNavStore } from "@/store/navStore";
-import { useNorseModelStore } from "@norse/store/model/norseModelStore";
-
 const navState = useNavStore();
+
+import { useNorseModelStore } from "@norse/store/model/norseModelStore";
 const modelStore = useNorseModelStore();
+
+const model = computed(() => modelStore.model)
 
 /**
  * Handle mouse move on resizing.
@@ -88,7 +92,11 @@ const resizeSidebar = () => {
 };
 
 const items = [
-  { id: "defaults", icon: "mdi-format-list-numbered-rtl", title: "View defaults" },
+  {
+    id: "defaults",
+    icon: "mdi-format-list-numbered-rtl",
+    title: "View defaults",
+  },
   { id: "model", icon: "mdi-tune-variant", title: "Edit model" },
   { id: "code", icon: "mdi-xml" },
 ];

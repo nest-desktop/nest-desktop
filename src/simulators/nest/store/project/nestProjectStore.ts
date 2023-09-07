@@ -24,14 +24,6 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
     view: "edit",
     controllerWidth: 480,
     bottomNavHeight: 200,
-    controllerItems: [
-      { id: "network", icon: "nest:network", title: "Edit network" },
-      { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
-      { id: "raw", icon: "mdi-code-json" },
-      { id: "code", icon: "mdi-xml" },
-      { id: "activity", icon: "mdi-border-style" },
-      { id: "stats", icon: "mdi-table-large" },
-    ],
     code: "import nest\n\nnest.ResetKernel()\n\nn1 = nest.Create('iaf_psc_alpha')\ndc1 = nest.Create('dc_generator')\nvm1 = nest.Create('voltmeter')\n\nnest.Connect(dc1, n1)\nnest.Connect(vm1, n1)\n\nnest.Simulate(1000)",
   }),
   actions: {

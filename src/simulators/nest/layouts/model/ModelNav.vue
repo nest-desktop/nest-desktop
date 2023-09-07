@@ -35,7 +35,7 @@
       :key="index"
       :subtitle="model.elementType"
       :title="model.label"
-      :to="'/nest/model/' + model.id"
+      :to="{ name: 'NESTModel', params: { modelId: model.id } }"
       v-for="(model, index) in modelDBStore.models"
     >
       <template #append>

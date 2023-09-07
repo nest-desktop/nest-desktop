@@ -13,7 +13,7 @@
   </v-navigation-drawer>
 
   <v-app-bar class="d-print-none" color="blue" height="48" flat>
-    <project-bar />
+    <project-bar :project="(project as NESTProject)" />
   </v-app-bar>
 
   <v-navigation-drawer
@@ -38,7 +38,10 @@
         class="justify-center"
         height="72"
         minWidth="0"
-        v-for="(item, index) in projectStore.controllerItems"
+        v-for="(item, index) in controllerItems"
+        v-show="
+          item.show !== 'dev' || (item.show === 'dev' && appStore.devMode)
+        "
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px"> {{ item.id }}</span>
@@ -79,7 +82,8 @@
         :extensions="extensions"
         :model-value="projectJSON"
         disabled
-        v-else-if="projectStore.controllerView === 'raw'"
+        style="font-size: 0.75rem; width: 100%"
+        v-else-if="appStore.devMode && projectStore.controllerView === 'raw'"
       />
 
       <simulation-code-editor
@@ -128,10 +132,14 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 
 import NetworkParamEditor from "@nest/components/network/NetworkParamEditor.vue";
 import SimulationKernelEditor from "@nest/components/simulation/SimulationKernelEditor.vue";
+import { NESTProject } from "@nest/helpers/project/nestProject";
 import { NESTSimulation } from "@nest/helpers/simulation/nestSimulation";
 
 import ProjectBar from "./ProjectBar.vue";
 import ProjectNav from "./ProjectNav.vue";
+
+import { useAppStore } from "@/store/appStore";
+const appStore = useAppStore();
 
 import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
@@ -141,8 +149,19 @@ const projectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.project);
 
-const projectJSON = computed(() => JSON.stringify(project.value.toJSON(), null, 2));
+const projectJSON = computed(() =>
+  JSON.stringify(project.value.toJSON(), null, 2)
+);
 const extensions = [json()];
+
+const controllerItems = [
+  { id: "network", icon: "nest:network", title: "Edit network" },
+  { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
+  { id: "raw", icon: "mdi-code-json", show: "dev" },
+  { id: "code", icon: "mdi-xml" },
+  { id: "activity", icon: "mdi-border-style" },
+  { id: "stats", icon: "mdi-table-large" },
+];
 
 /**
  * Handle mouse move on resizing.

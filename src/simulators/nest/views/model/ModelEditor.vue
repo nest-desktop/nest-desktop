@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title> Editor </v-card-title>
-      <v-card-subtitle>{{ props.modelId }} </v-card-subtitle>
+      <v-card-subtitle>{{ model.label }} </v-card-subtitle>
 
       <v-card-text> Text </v-card-text>
 
@@ -13,23 +13,11 @@
   </v-container>
 </template>
 
-
 <script lang="ts" setup>
-import { onMounted, watch } from "vue";
+import { computed } from "vue";
 
-const props = defineProps({
-  modelId: String,
-});
+import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+const modelStore = useNESTModelStore();
 
-onMounted(() => {
-  console.log('onMounted', props.modelId);
-});
-
-watch(
-  () => [props.modelId],
-  () => {
-    console.log('watch', props.modelId);
-  }
-);
-
+const model = computed(() => modelStore.model);
 </script>

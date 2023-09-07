@@ -53,7 +53,7 @@ const projectRedirect = (to: any) => {
 export default [
   {
     path: "",
-    name: "NESTProject",
+    name: "NESTProjectRoot",
     redirect: projectRedirect,
   },
   {
@@ -67,13 +67,13 @@ export default [
     children: [
       {
         path: "",
-        name: "NESTProjectId",
+        name: "NESTProject",
         props: true,
         redirect: projectRedirect,
       },
       {
         path: "edit",
-        name: "NESTNetworkGraphEditor",
+        name: "NESTNetworkEditor",
         components: {
           project: () => import("@nest/views/project/NetworkGraphEditor.vue"),
         },

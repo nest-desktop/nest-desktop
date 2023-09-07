@@ -35,7 +35,7 @@
       :key="index"
       :subtitle="model.elementType"
       :title="model.label"
-      :to="'/norse/model/' + model.id"
+      :to="{ name: 'NorseModel', params: { modelId: model.id } }"
       v-for="(model, index) in modelDBStore.models"
     >
       <template #append>

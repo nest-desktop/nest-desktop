@@ -1,10 +1,8 @@
 <template>
   <v-container>
-    <v-card>
-      <v-card-title> Editor </v-card-title>
-      <v-card-subtitle>{{ props.modelId }} </v-card-subtitle>
-
+    <v-card :title="model.label" subtitle="model editor">
       <v-card-text>
+        <h3>Code template</h3>
         <codemirror
           ref="codeMirror"
           style="font-size: 0.75rem; width: 100%"
@@ -13,7 +11,7 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn @click="norseModelStore.save"> Save </v-btn>
+        <v-btn @click="modelStore.save"> Save </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -24,12 +22,7 @@ import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
 
 import { useNorseModelStore } from "@norse/store/model/norseModelStore";
-const norseModelStore = useNorseModelStore();
+const modelStore = useNorseModelStore();
 
-const props = defineProps({
-  modelId: String,
-});
-
-
-const model = computed(() => norseModelStore.model)
+const model = computed(() => modelStore.model);
 </script>
