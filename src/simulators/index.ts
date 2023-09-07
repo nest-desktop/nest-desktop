@@ -6,7 +6,6 @@
 
 // Simulators
 import nest from "@/simulators/nest";
-
 import norse from "@/simulators/norse";
 
 // Types

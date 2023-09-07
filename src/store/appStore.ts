@@ -4,16 +4,18 @@ import { defineStore } from "pinia";
 
 export const simulatorItems: {
   [key: string]: {
-    id: string;
-    title: string;
-    icon: string;
     color?: string;
     databases: string[];
+    icon: string;
+    id: string;
+    routerName: string;
+    title: string;
   };
 } = {
   nest: {
     id: "nest",
     title: "NEST",
+    routerName: "nestHome",
     icon: "simulator:nest",
     color: "nest",
     databases: ["NEST_MODEL_STORE", "NEST_PROJECT_STORE"],
@@ -21,6 +23,7 @@ export const simulatorItems: {
   norse: {
     id: "norse",
     title: "Norse",
+    routerName: "norseHome",
     icon: "simulator:norse",
     databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
   },

@@ -1,26 +1,26 @@
 /**
- * router/projectRoute.ts
+ * routes/projectRoute.ts
  *
  * router documentation: https://router.vuejs.org/guide/
  */
 
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
+import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 
 const logger = mainLogger.getSubLogger({ name: "project route" });
 
 const projectBeforeEnter = (to: any) => {
   logger.trace("Before enter project route:", to.path);
 
-  const projectDBStore = useNESTProjectDBStore();
+  const projectDBStore = useNorseProjectDBStore();
   if (projectDBStore.projects.length === 0) {
     setTimeout(() => projectBeforeEnter(to), 100);
     return;
   }
 
-  const projectStore = useNESTProjectStore();
+  const projectStore = useNorseProjectStore();
   projectStore.loadProject(to.params.projectId);
 
   const path = to.path.split("/");
@@ -28,37 +28,37 @@ const projectBeforeEnter = (to: any) => {
 };
 
 const projectNew = () => {
-  logger.trace("Create a new nest project");
-  const projectStore = useNESTProjectStore();
+  logger.trace("Create a new norse project");
+  const projectStore = useNorseProjectStore();
   projectStore.loadProject();
 
   return {
-    path: "/nest/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
   };
 };
 
 const projectRedirect = (to: any) => {
   logger.trace("Redirect to project:", to.params.projectId?.slice(0, 6));
-  const projectStore = useNESTProjectStore();
+  const projectStore = useNorseProjectStore();
 
   if (to.params.projectId) {
     projectStore.loadProject(to.params.projectId);
   }
 
   return {
-    path: "/nest/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
   };
 };
 
 export default [
   {
     path: "",
-    name: "NESTProjectRoot",
+    name: "norseProjectRoot",
     redirect: projectRedirect,
   },
   {
     path: "new",
-    name: "NESTProjectNew",
+    name: "norseProjectNew",
     redirect: projectNew,
   },
   {
@@ -67,33 +67,33 @@ export default [
     children: [
       {
         path: "",
-        name: "NESTProject",
+        name: "norseProject",
         props: true,
         redirect: projectRedirect,
       },
       {
         path: "edit",
-        name: "NESTNetworkEditor",
+        name: "norseNetworkEditor",
         components: {
-          project: () => import("@nest/views/project/NetworkGraphEditor.vue"),
+          project: () => import("@norse/views/project/NorseNetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
       },
       {
         path: "explore",
-        name: "NESTActivityExplorer",
+        name: "norseActivityExplorer",
         components: {
-          project: () => import("@nest/views/project/ActivityExplorer.vue"),
+          project: () => import("@norse/views/project/NorseActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
       },
       {
         path: "lab",
-        name: "NESTLabBook",
+        name: "norseLabBook",
         components: {
-          project: () => import("@nest/views/project/LabBook.vue"),
+          project: () => import("@norse/views/project/NorseLabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

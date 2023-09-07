@@ -57,7 +57,7 @@ export const useNorseProjectStore = defineStore("norse-project-view", {
     startSimulation(): void {
       logger.trace("start Norse simulation:", this.projectId?.slice(0, 6));
       router.push({
-        name: "NorseActivityExplorer",
+        name: "norseActivityExplorer",
         params: { projectId: this.projectId },
       });
       this.project.startSimulation();

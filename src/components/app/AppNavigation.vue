@@ -9,14 +9,14 @@
       width="64"
     >
       <v-tab
+        :key="index"
         :ripple="false"
         :title="item.title"
-        :to="item.path"
+        :to="item.to"
         @click.stop="navStore.toggle(item)"
         class="justify-center"
         height="72"
         minWidth="0"
-        :key="index"
         v-for="(item, index) in navItems"
         v-show="item.simulator === appStore.simulator"
       >

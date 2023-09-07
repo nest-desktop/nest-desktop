@@ -35,7 +35,7 @@
       :key="index"
       :subtitle="model.elementType"
       :title="model.label"
-      :to="{ name: 'NESTModel', params: { modelId: model.id } }"
+      :to="{ name: 'norseModel', params: { modelId: model.id } }"
       v-for="(model, index) in modelDBStore.models"
     >
       <template #append>
@@ -52,8 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
-const modelDBStore = useNESTModelDBStore();
+import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
+const modelDBStore = useNorseModelDBStore();
 
 const menuItems = [
   { title: "Upload", icon: "mdi-upload" },

@@ -99,7 +99,7 @@
         <v-card class="mt-2">
           <v-card-title> Projects </v-card-title>
           <v-list lines="two" nav>
-            <v-list-item :to="{ name: 'NorseProjectNew' }">
+            <v-list-item :to="{ name: 'norseProjectNew' }">
               <template #prepend>
                 <v-icon icon="mdi-plus" />
               </template>
@@ -112,7 +112,7 @@
               :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
               :title="project.name"
               :to="{
-                name: 'NorseProject',
+                name: 'norseProject',
                 params: { projectId: project._id },
               }"
               v-for="(project, index) in projectDBStore.projects"

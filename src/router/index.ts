@@ -12,8 +12,8 @@ import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
 // Simulators
-import nestRoute from "@nest/routes";
-import norseRoute from "@norse/routes";
+import nestRouter from "@/simulators/nest/router";
+import norseRouter from "@/simulators/norse/router";
 
 const closeNav = () => {
   const navStore = useNavStore();
@@ -23,6 +23,7 @@ const closeNav = () => {
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
+    name: "appLayout",
     component: () => import("@/layouts/AppLayout.vue"),
     children: [
       {
@@ -48,7 +49,7 @@ const routes: RouteRecordRaw[] = [
           },
           {
             path: ":component",
-            name: "SandboxComponent",
+            name: "sandboxComponent",
             props: true,
             component: () => import("@/views/Sandbox.vue"),
           },
@@ -59,8 +60,8 @@ const routes: RouteRecordRaw[] = [
         name: "vuetify",
         component: () => import("@/views/Vuetify.vue"),
       },
-      nestRoute,
-      norseRoute,
+      nestRouter,
+      norseRouter,
       {
         path: "pynn",
         name: "pynn",

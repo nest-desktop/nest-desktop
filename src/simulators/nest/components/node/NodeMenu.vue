@@ -196,7 +196,7 @@
 import { computed, onMounted, reactive } from "vue";
 
 import { NESTNode } from "@nest/helpers/node/nestNode";
-import ModelDocumentation from "@nest/views/model/ModelDoc.vue";
+import ModelDocumentation from "@nest/views/model/NESTModelDoc.vue";
 // import NodeModelSelect from '@nest/components/node/NodeModelSelect.vue';
 // import NodeParamEdit from '@nest/components/node/NodeParamEdit.vue';
 
