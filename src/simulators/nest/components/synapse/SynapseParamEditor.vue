@@ -58,14 +58,13 @@ import { computed } from "vue";
 import RangeSlider from "@/components/controls/RangeSlider.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-
-import { NESTSynapseParameter } from "@nest/helpers/synapse/nestSynapseParameter";
+import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
 
 const props = defineProps({
-  param: NESTSynapseParameter,
+  param: SynapseParameter,
 });
 
-const param = computed(() => props.param as NESTSynapseParameter);
+const param = computed(() => props.param as SynapseParameter);
 
 const update = (value: number | number[]) => {
   param.value.value = value;

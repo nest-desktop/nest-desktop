@@ -28,11 +28,11 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
+          :color="item.color"
           :icon="item.icon"
           :key="index"
           :title="item.title"
           @click.stop="item.click ? item.click() : undefined"
-          rounded="1"
           size="small"
           v-for="(item, index) in items"
           variant="plain"
@@ -56,10 +56,14 @@ const navStore = useNavStore();
 const props = defineProps(["navItems"]);
 const navItems = computed(() => props.navItems);
 
-const toggleTheme = () => {
+const toggleDarkMode = () => {
   appStore.darkMode = !theme.global.current.value.dark;
   theme.global.name.value = appStore.darkMode ? "dark" : "light";
   window.dispatchEvent(new Event("darkmode"));
+};
+
+const toggleDevMode = () => {
+  appStore.devMode = !appStore.devMode;
 };
 
 // const toggleWebGL = () => {
@@ -67,7 +71,13 @@ const toggleTheme = () => {
 //   console.log(appStore.webGL);
 // };
 
-const items = [
+const items: {
+  click: any;
+  color?: string;
+  icon: string;
+  id: string;
+  title: string;
+}[] = [
   // {
   //   click: toggleWebGL,
   //   icon: "mdi-google-downasaur",
@@ -82,7 +92,14 @@ const items = [
   //   to: "/sandbox/",
   // },
   {
-    click: toggleTheme,
+    click: toggleDevMode,
+    color: appStore.devMode ? "green" : "red",
+    icon: "mdi-developer-board",
+    id: "theme-light-dark",
+    title: "Toggle dev mode",
+  },
+  {
+    click: toggleDarkMode,
     icon: "mdi-theme-light-dark",
     id: "theme-light-dark",
     title: "Toggle dark mode",

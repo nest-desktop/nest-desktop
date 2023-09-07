@@ -117,7 +117,7 @@
                                 :color="
                                   nestSimulatorStore.isOK ? 'green' : 'red'
                                 "
-                              ></v-icon>
+                              />
                             </template>
                             ping
                           </v-btn>
@@ -197,7 +197,7 @@
         <v-card class="mt-2">
           <v-card-title> Projects </v-card-title>
           <v-list lines="two" nav>
-            <v-list-item to="/nest/project/new">
+            <v-list-item :to="{ name: 'NESTProjectNew' }">
               <template #prepend>
                 <v-icon icon="mdi-plus" />
               </template>
@@ -209,7 +209,10 @@
               :key="index"
               :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
               :title="project.name"
-              :to="'/nest/project/' + project._id"
+              :to="{
+                name: 'NESTProject',
+                params: { projectId: project._id },
+              }"
               v-for="(project, index) in projectDBStore.projects"
             />
           </v-list>

@@ -37,7 +37,7 @@ const modelRedirect = (to: any) => {
 export default [
   {
     path: "",
-    name: "NESTModel",
+    name: "NESTModelRoot",
     redirect: modelRedirect,
   },
   {
@@ -73,7 +73,7 @@ export default [
       },
       {
         path: "*",
-        name: "NESTModelId",
+        name: "NESTModel",
         props: true,
         redirect: modelRedirect,
       },

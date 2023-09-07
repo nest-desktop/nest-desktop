@@ -70,7 +70,7 @@
                           <v-icon
                             icon="mdi-circle"
                             :color="norseSimulatorStore.isOK ? 'green' : 'red'"
-                          ></v-icon>
+                          />
                         </template>
                         ping
                       </v-btn>
@@ -99,7 +99,7 @@
         <v-card class="mt-2">
           <v-card-title> Projects </v-card-title>
           <v-list lines="two" nav>
-            <v-list-item to="/norse/project">
+            <v-list-item :to="{ name: 'NorseProjectNew' }">
               <template #prepend>
                 <v-icon icon="mdi-plus" />
               </template>
@@ -111,7 +111,10 @@
               :key="index"
               :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
               :title="project.name"
-              :to="'/norse/project/' + project._id"
+              :to="{
+                name: 'NorseProject',
+                params: { projectId: project._id },
+              }"
               v-for="(project, index) in projectDBStore.projects"
             >
             </v-list-item>

@@ -10,7 +10,7 @@
   </v-navigation-drawer>
 
   <v-app-bar color="orange" height="48" flat>
-    <model-bar />
+    <model-bar :model="model" />
   </v-app-bar>
 
   <v-navigation-drawer location="right" permanent rail rail-width="64">
@@ -49,6 +49,10 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
+import { NESTModel } from "@nest/helpers/model/nestModel";
+
 import ModelController from "./ModelController.vue";
 import ModelBar from "./ModelBar.vue";
 import ModelNav from "./ModelNav.vue";
@@ -58,6 +62,8 @@ const navState = useNavStore();
 
 import { useNESTModelStore } from "@nest/store/model/nestModelStore";
 const modelStore = useNESTModelStore();
+
+const model = computed(() => modelStore.model as NESTModel)
 
 /**
  * Handle mouse move on resizing.

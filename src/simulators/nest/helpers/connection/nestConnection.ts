@@ -18,7 +18,7 @@ import { NESTNetwork } from "../network/nestNetwork";
 import { NESTNode } from "../node/nestNode";
 import { NESTNodeSlice } from "../node/nestNodeSlice";
 import { NESTSynapse, NESTSynapseProps } from "../synapse/nestSynapse";
-import { NESTSynapseParameter } from "../synapse/nestSynapseParameter";
+import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
 
 export interface NESTConnectionProps extends ConnectionProps {
   sourceSlice?: NodeParameterProps[];
@@ -117,7 +117,7 @@ export class NESTConnection extends BaseConnection {
     });
 
     // Reset synapse parameter.
-    Object.values(this.synapse.params).forEach((param: NESTSynapseParameter) =>
+    Object.values(this.synapse.params).forEach((param: SynapseParameter) =>
       param.reset()
     );
   }

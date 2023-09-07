@@ -12,10 +12,10 @@
     />
 
     <v-btn
+      :to="{ name: 'NESTProjectNew' }"
       icon
       size="small"
       title="Create a new project"
-      to="/nest/project/new"
     >
       <v-icon icon="mdi-plus" />
     </v-btn>
@@ -46,7 +46,10 @@
       :key="index"
       :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
       :title="project.name"
-      :to="'/nest/project/' + project._id"
+      :to="{
+        name: 'NESTProject',
+        params: { projectId: project._id },
+      }"
       v-for="(project, index) in projectDBStore.projects"
     >
       <template #append>

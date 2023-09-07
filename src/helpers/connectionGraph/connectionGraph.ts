@@ -173,19 +173,20 @@ export class ConnectionGraph {
 
       // const pos = connection.view.markerEndPosition;
 
-      // this._networkGraph.selector
-      //   ?.selectAll(`#syn-${connection.idx}`)
-      //   .select("text")
-      //   .attr("dx", connection.view.toRight ? 8 : -8)
-      //   .attr("dy", connection.view.toRight ? 3.5 : -4.5)
-      //   .classed("toLeft", !connection.view.toRight)
-      //   .text(connection.synapse ? connection.synapse.weight : '');
-      //   .style("font-family", "Roboto")
-      //   .style("font-size", "0.7em", "important")
-      //   .style("font-weight", "900")
-      //   .style("pointer-events", "none")
-      //   .style("text-anchor", "middle")
-      //   .attr("transform", `translate(${pos.x},${pos.y})`);
+      this._networkGraph.selector
+        ?.selectAll(`#syn-${connection.idx}`)
+        .select("text")
+        .attr("dx", connection.view.toRight ? 8 : -8)
+        .attr("dy", connection.view.toRight ? 3.5 : -4.5)
+        .classed("toLeft", !connection.view.toRight)
+        .text(connection.synapse ? connection.synapse.weight : '');
+
+        // .style("font-family", "Roboto")
+        // .style("font-size", "0.7em", "important")
+        // .style("font-weight", "900")
+        // .style("pointer-events", "none")
+        // .style("text-anchor", "middle")
+        // .attr("transform", `translate(${pos.x},${pos.y})`);
     });
   }
 
