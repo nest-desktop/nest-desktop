@@ -53,7 +53,7 @@
     "@babel/types": "~7.22",
     "@types/d3": "~7.4",
     "@types/mustache": "~4.2",
-    "@types/node": "~20.4",
+    "@types/node": "~20.5",
     "@types/object-hash": "~3.0",
     "@types/plotly.js": "~2.12",
     "@types/plotly.js-dist-min": "~2.3",
