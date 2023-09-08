@@ -113,7 +113,7 @@
               :title="project.name"
               :to="{
                 name: 'norseProject',
-                params: { projectId: project._id },
+                params: { projectId: project.id },
               }"
               v-for="(project, index) in projectDBStore.projects"
             >

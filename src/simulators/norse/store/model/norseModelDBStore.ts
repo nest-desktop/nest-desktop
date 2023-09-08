@@ -75,7 +75,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
       console.log("import model:", model.id.slice(0, 6));
 
       return model.docId
-        ? this.db.update(model)
+        ? this.db.update(model.docId, model.toJSON())
         : this.db.create(model.toJSON());
     },
     /**

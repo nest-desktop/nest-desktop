@@ -23,7 +23,7 @@
         minWidth="0"
         v-for="(item, index) in controllerItems"
         v-show="
-          item.show !== 'dev' || (item.show === 'dev' && appStore.devMode)
+          item.show !== 'dev' || (item.show === 'dev' && appSessionStore.devMode)
         "
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
@@ -69,7 +69,7 @@
       </template>
 
       <template
-        v-else-if="appStore.devMode && projectStore.controllerView === 'raw'"
+        v-else-if="appSessionStore.devMode && projectStore.controllerView === 'raw'"
       >
         <codemirror
           :extensions="extensions"
@@ -128,8 +128,8 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 import { Project } from "@/types/projectTypes";
 import { Simulation } from "@/types/simulationTypes";
 
-import { useAppStore } from "@/store/appStore";
-const appStore = useAppStore();
+import { useAppSessionStore } from "@/store/appSessionStore";
+const appSessionStore = useAppSessionStore();
 
 import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();

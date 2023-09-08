@@ -85,7 +85,7 @@ export const useProjectDBStore = defineStore("project-db", {
       const projectDocIds: string[] = projects.map(
         (
           project: Project | ProjectProps | any // TODO: any should be removed.
-        ) => project.docId || project._id || project.id
+        ) => project.docId || project.id
       );
       this.db.deleteBulk(projectDocIds).then(() => this.updateList());
     },
@@ -128,7 +128,7 @@ export const useProjectDBStore = defineStore("project-db", {
       project.clean();
 
       return project.docId
-        ? this.db.update(project.toJSON())
+        ? this.db.update(project.docId, project.toJSON())
         : this.db.create(project.toJSON());
     },
     /**
@@ -174,7 +174,7 @@ export const useProjectDBStore = defineStore("project-db", {
       // this.project.insite.cancelAllIntervals();
 
       let project = this.projects.find(
-        (project: any) => project._id === projectId
+        (project: any) => project.id === projectId
       );
 
       if (project == undefined) {
@@ -182,7 +182,7 @@ export const useProjectDBStore = defineStore("project-db", {
       }
 
       if (project.doc == undefined) {
-        const projectIds = this.projects.map((project: any) => project._id);
+        const projectIds = this.projects.map((project: any) => project.id);
         const projectIdx = projectIds.indexOf(projectId);
 
         if (projectIdx === -1) {
@@ -227,7 +227,7 @@ export const useProjectDBStore = defineStore("project-db", {
     async saveProject(projectId: string): Promise<any> {
       logger.trace("save project:", projectId.slice(0, 6));
       const project = this.projects.find(
-        (project) => project._id === projectId
+        (project) => project.id === projectId
       );
       return this.importProject(project);
     },

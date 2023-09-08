@@ -1,6 +1,9 @@
 // norseProjectDB.ts
 
 import { DatabaseService } from "@/helpers/database";
+import { truncate } from "@/utils/truncate";
+
+import { NorseProject } from "@norse/helpers/project/norseProject";
 
 export class NorseProjectDB extends DatabaseService {
   constructor() {
@@ -44,4 +47,18 @@ export class NorseProjectDB extends DatabaseService {
     // });
     return promise;
   }
+
+    /**
+   * Update a project in the database.
+   */
+    async updateProject(project: NorseProject): Promise<any> {
+      this.logger.trace("update project:", truncate(project.id));
+      const data = project.toJSON();
+      return this.update(project.docId, data).then((res: any) => {
+        if (res.ok) {
+          project.doc._id = res.id;
+          project.doc._rev = res.rev;
+        }
+      });
+    }
 }

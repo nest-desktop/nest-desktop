@@ -63,7 +63,7 @@ const toggleDarkMode = () => {
 };
 
 const toggleDevMode = () => {
-  appStore.devMode = !appStore.devMode;
+  appStore.session.devMode = !appStore.session.devMode;
 };
 
 // const toggleWebGL = () => {
@@ -93,7 +93,7 @@ const items: {
   // },
   {
     click: toggleDevMode,
-    color: appStore.devMode ? "green" : "red",
+    color: appStore.session.devMode ? "green" : "red",
     icon: "mdi-developer-board",
     id: "theme-light-dark",
     title: "Toggle dev mode",

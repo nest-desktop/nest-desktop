@@ -1,7 +1,5 @@
 // norseProject.ts
 
-import { v4 as uuidv4 } from "uuid";
-
 import { BaseProject, ProjectProps } from "@/helpers/project/baseProject";
 
 import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
@@ -9,14 +7,16 @@ import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
 
 import { NorseNetwork, NorseNetworkProps } from "../network/norseNetwork";
-import { NorseSimulation, NorseSimulationProps } from "../simulation/norseSimulation";
+import {
+  NorseSimulation,
+  NorseSimulationProps,
+} from "../simulation/norseSimulation";
 
 export interface NorseProjectProps extends ProjectProps {
   network?: NorseNetworkProps;
 }
 
 export class NorseProject extends BaseProject {
-
   constructor(project: NorseProjectProps = {}) {
     super(project);
   }
@@ -29,10 +29,11 @@ export class NorseProject extends BaseProject {
    */
   clone(): NorseProject {
     this.logger.trace("clone");
-    const newProject = new NorseProject(this.toJSON());
-    newProject.id = uuidv4();
-    newProject.updatedAt = "";
-    newProject.init();
+    const newProject = new NorseProject({
+      ...this.toJSON(),
+      id: undefined,
+      updatedAt: "",
+    });
     return newProject;
   }
 

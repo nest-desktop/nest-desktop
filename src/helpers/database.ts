@@ -3,7 +3,9 @@
 import PouchDB from "pouchdb";
 import { ILogObj, Logger } from "tslog";
 import { major, minor } from "semver";
+import { v4 as uuidv4 } from "uuid";
 
+import { truncate } from "@/utils/truncate";
 import { logger as mainLogger } from "./logger";
 
 export class DatabaseService {
@@ -20,7 +22,10 @@ export class DatabaseService {
 
   constructor(url: string, options: any = {}) {
     this._url = url;
-    this._logger = mainLogger.getSubLogger({ name: `[${this._url}] database` });
+    this._logger = mainLogger.getSubLogger({
+      name: `[${this._url}] database`,
+      minLevel: 1
+    });
 
     this._options = options;
     this._db = new PouchDB(url, options);
@@ -54,7 +59,7 @@ export class DatabaseService {
   }
 
   count(): any {
-    this._logger.trace("count");
+    this._logger.silly("count");
     return this._db
       .allDocs()
       .then((result: any) => result.total_rows)
@@ -91,65 +96,55 @@ export class DatabaseService {
     });
   }
 
+  clean(data: any): void {
+    data.version = process.env.APP_VERSION;
+    if (!data.id) {
+      data.id = uuidv4();
+    }
+  }
+
   // CRUD - Create, Read, Update, Delete
 
   create(data: any): any {
     this._logger.trace("create");
-    data.version = process.env.APP_VERSION;
+    this.clean(data);
     data.createdAt = new Date();
-    return (
-      this._db
-        .post(data)
-        // .then((res: any) => {
-        //   data.doc._id = res.id;
-        //   data.doc.hash = data.hash;
-        //   if (!data.createdAt) {
-        //     data.createdAt = data.createdAt;
-        //   }
-        //   data.updatedAt = undefined;
-        // })
-        .catch((err: any) => this._logger.error("Post doc:", err.stack))
-    );
+    return this._db
+      .post(data)
+      .catch((err: any) => this._logger.error("Post doc:", err.stack));
   }
 
   read(id: string, rev: string = ""): any {
-    this._logger.trace("read:", id);
-    const options: any = { rev };
+    this._logger.trace("read:", truncate(id));
     return this._db
-      .get(id, options)
+      .get(id, { rev })
       .then((doc: any) => doc)
       .catch((err: any) => this._logger.error("Get doc:", err.stack));
   }
 
-  update(data: any): any {
-    this._logger.trace("update:", data.doc._id);
+  update(id: string, data: any): any {
+    this._logger.trace("update:", truncate(id));
+    this.clean(data);
     return this._db
-      .get(data.doc._id)
+      .get(id)
       .then((doc: any) => {
-        // data.doc = doc;
-        const dataJSON = data.toJSON();
-        dataJSON.hash = data.state.hash || undefined;
-        dataJSON.version = process.env.APP_VERSION;
-        dataJSON.updatedAt = new Date();
-        const keys: string[] = Object.keys(dataJSON);
+        data.updatedAt = new Date();
+        const keys: string[] = Object.keys(data);
         keys
           .filter((key: string) => !key.startsWith("_"))
-          .forEach((key: string) => (doc[key] = dataJSON[key]));
+          .forEach((key: string) => (doc[key] = data[key]));
         return this._db
           .put(doc)
-          .then(() => {
-            data.updatedAt = dataJSON.updatedAt;
-          })
           .catch((err: any) => this._logger.error("Put doc:", err.stack));
       })
       .catch((err: any) => {
         this._logger.error("Get doc:", err.stack);
-        return this.create(data);
+        // return this.create(data);
       });
   }
 
   delete(id: string): any {
-    this._logger.trace("delete:", id);
+    this._logger.trace("delete:", truncate(id));
     return this._db
       .get(id)
       .then((doc: any) =>
@@ -163,7 +158,7 @@ export class DatabaseService {
   deleteBulk(ids: string[]): any {
     return this.list().then((docs: any[]) => {
       docs
-        .filter((doc: any) => ids.includes(doc._id))
+        .filter((doc: any) => ids.includes(doc.id))
         .forEach((doc: any) => (doc._deleted = true));
       return this._db
         .bulkDocs(docs)

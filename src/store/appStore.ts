@@ -1,6 +1,7 @@
-// appStore.ts
+// appPersistStore.ts
 
 import { defineStore } from "pinia";
+import { useAppSessionStore } from "./appSessionStore";
 
 export const simulatorItems: {
   [key: string]: {
@@ -36,15 +37,17 @@ export const simulatorItems: {
   // arbor: { id: "arbor", title: "Arbor", icon: "simulator:arbor" }
 };
 
-export const useAppStore = defineStore("nest-desktop-app-store", {
+export const useAppStore = defineStore("app-store", {
   state: () => ({
     darkMode: false,
-    devMode: false,
     simulator: "nest",
-    webGL: false,
   }),
   getters: {
     currentSimulator: (state) => simulatorItems[state.simulator],
+    session: () => {
+      const appSessionStore = useAppSessionStore();
+      return appSessionStore;
+    }
   },
-  persist: true,
+  persist: true
 });

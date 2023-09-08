@@ -1,13 +1,20 @@
 /**
- * router/modelRoute.ts
+ * router/nestModelRoute.ts
  *
  * router documentation: https://router.vuejs.org/guide/
  */
+import { logger as mainLogger } from "@/helpers/logger";
 
 import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
 import { useNESTModelStore } from "@nest/store/model/nestModelStore";
 
+const logger = mainLogger.getSubLogger({
+  name: "nest model route",
+  minLevel: 1
+});
+
 const modelBeforeEnter = (to: any) => {
+  logger.trace("before enter:", to.path);
   const modelStore = useNESTModelStore();
 
   const modelDBStore = useNESTModelDBStore();
@@ -25,6 +32,7 @@ const modelBeforeEnter = (to: any) => {
 };
 
 const modelRedirect = (to: any) => {
+  logger.trace("Redirect to model:", to.params.modelId);
   const modelStore = useNESTModelStore();
 
   if (to.params.modelId) {

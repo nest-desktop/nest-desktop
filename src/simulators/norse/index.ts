@@ -23,7 +23,7 @@ export default {
       if (projectDBStore.projects.length > 0) {
         const projectStore = useNorseProjectStore();
         const firstProject = projectDBStore.projects[0]
-        projectStore.projectId = firstProject._id;
+        projectStore.projectId = firstProject.id;
       }
     });
   },
