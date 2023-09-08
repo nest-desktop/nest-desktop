@@ -2,15 +2,21 @@
   <app-navigation :nav-items="navItems" />
 
   <v-main>
-    <router-view />
+    <v-app v-if="nestSessionStore.loading">
+      <v-progress-circular class="ma-auto" indeterminate color="primary" />
+    </v-app>
+    <router-view v-else />
   </v-main>
 </template>
 
 <script lang="ts" setup>
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
+import { useNESTSessionStore } from "@nest/store/nestSessionStore";
+const nestSessionStore = useNESTSessionStore();
+
 const navItems = [
-{
+  {
     icon: "nest:network",
     id: "nestProject",
     simulator: "nest",

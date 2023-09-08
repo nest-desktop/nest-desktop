@@ -7,11 +7,10 @@
 // Composables
 import { RouteRecordRaw } from "vue-router";
 
-import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
-import modelRoutes from "./modelRoute";
-import projectRoutes from "./projectRoute";
+import modelRoutes from "./nestModelRoute";
+import projectRoutes from "./nestProjectRoute";
 
 const closeNav = () => {
   const navStore = useNavStore();
@@ -21,10 +20,6 @@ const closeNav = () => {
 export default {
   path: "nest",
   name: "nestLayout",
-  beforeEnter: () => {
-    const appStore = useAppStore();
-    appStore.simulator = "nest";
-  },
   component: () => import("@nest/layouts/NESTLayout.vue"),
   children: [
     {
@@ -47,4 +42,3 @@ export default {
     },
   ],
 };
-

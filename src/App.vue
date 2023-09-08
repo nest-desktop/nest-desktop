@@ -5,11 +5,13 @@
 <script lang="ts" setup>
 import { onMounted } from "vue";
 import { useTheme } from "vuetify";
-import { useAppStore } from "./store/appStore";
+
+import { useAppStore } from "@/store/appStore";
+
+const theme = useTheme();
+const appStore = useAppStore();
 
 onMounted(() => {
-  const theme = useTheme();
-  const appStore = useAppStore();
   theme.global.name.value = appStore.darkMode ? "dark" : "light";
 });
 </script>

@@ -17,8 +17,14 @@ type snackbarType = {
   text: string;
 };
 
+export interface ProjectStateState {
+  changes: boolean,
+  editMode: boolean,
+  hash: string,
+}
+
 export class ProjectState {
-  private _state: UnwrapRef<any>;
+  private _state: UnwrapRef<ProjectStateState>;
   private _project: Project;
   private _selected: boolean = false;
   private _snackbar: snackbarType;
@@ -28,6 +34,7 @@ export class ProjectState {
 
     this._state = reactive({
       changes: false,
+      editMode: false,
       hash: "",
     });
 
@@ -41,6 +48,10 @@ export class ProjectState {
 
   get changes(): boolean {
     return this._state.changes;
+  }
+
+  get editMode(): boolean {
+    return this._state.editMode;
   }
 
   get hash(): string {
@@ -59,12 +70,16 @@ export class ProjectState {
     return this._snackbar;
   }
 
+  get state(): UnwrapRef<ProjectStateState> {
+    return this._state;
+  }
+
   /**
    * Check the changes in project.
    */
   checkChanges(): void {
     this._state.changes =
-      this._project.id !== this._project.doc.id ||
+      // this._project.id !== this._project.doc.id ||
       this._state.hash !== this._project.doc.hash;
   }
 
@@ -107,6 +122,7 @@ export class ProjectState {
   updateHash(): void {
     this._state.hash = sha1({
       description: this._project.description,
+      id: this._project.id,
       name: this._project.name,
       network: this._project.network.toJSON(),
       simulation: this._project.simulation.toJSON(),

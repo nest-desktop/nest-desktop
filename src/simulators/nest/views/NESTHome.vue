@@ -211,7 +211,7 @@
               :title="project.name"
               :to="{
                 name: 'nestProject',
-                params: { projectId: project._id },
+                params: { projectId: project.id },
               }"
               v-for="(project, index) in projectDBStore.projects"
             />

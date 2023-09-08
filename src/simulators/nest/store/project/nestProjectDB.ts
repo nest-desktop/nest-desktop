@@ -1,6 +1,18 @@
 // nestProjectDB.ts
 
+import { logger as mainLogger } from "@/helpers/logger";
 import { DatabaseService } from "@/helpers/database";
+
+import {
+  NESTProject,
+  NESTProjectProps,
+} from "@nest/helpers/project/nestProject";
+import { truncate } from "@/utils/truncate";
+
+const logger = mainLogger.getSubLogger({
+  name: "project DB store",
+  minLevel: 1,
+});
 
 export class NESTProjectDB extends DatabaseService {
   constructor() {
@@ -33,6 +45,51 @@ export class NESTProjectDB extends DatabaseService {
   }
 
   /**
+   * Create a project in the database.
+   */
+  async createProject(project: NESTProject): Promise<any> {
+    logger.trace("create project", truncate(project.id));
+    const data = project.toJSON();
+    return this.create(data).then((res: any) => {
+      if (res.ok) {
+        project.doc._id = res.id;
+        project.doc._rev = res.rev;
+      }
+    });
+  }
+
+  /**
+   * Create multiple projects in the database.
+   */
+  async createProjects(data: NESTProjectProps[]): Promise<NESTProjectProps[]> {
+    logger.trace("create projects");
+    const projects: Promise<NESTProjectProps>[] = data.map(
+      (project: NESTProjectProps) =>
+        new Promise<NESTProjectProps>((resolve) => {
+          this.create(project).then(() => {
+            resolve(project);
+          });
+        })
+    );
+    return Promise.all(projects);
+  }
+
+  /**
+   * Delete projects and then update the list.
+   * @param projects List of project objects.
+   */
+  async deleteProjects(
+    projects: (NESTProject | NESTProjectProps)[]
+  ): Promise<any> {
+    logger.trace("delete projects");
+    const projectDocIds: string[] = projects.map(
+      (
+        project: NESTProject | NESTProjectProps | any // TODO: any should be removed.
+      ) => project.docId || project.id
+    );
+    return this.deleteBulk(projectDocIds);
+  }
+  /**
    * Import projects from assets to the database.
    */
   async importProjectsFromAssets(): Promise<any> {
@@ -43,5 +100,19 @@ export class NESTProjectDB extends DatabaseService {
     //   promise = promise.then(() => this.addProject(data));
     // });
     return promise;
+  }
+
+  /**
+   * Update a project in the database.
+   */
+  async updateProject(project: NESTProject): Promise<any> {
+    logger.trace("update project:", truncate(project.id));
+    const data = project.toJSON();
+    return this.update(project.docId, data).then((res: any) => {
+      if (res.ok) {
+        project.doc._id = res.id;
+        project.doc._rev = res.rev;
+      }
+    });
   }
 }

@@ -78,7 +78,7 @@ export const useNESTModelDBStore = defineStore("nest-model-db", {
       console.log("import model:", model.id.slice(0, 6));
 
       return model.docId
-        ? this.db.update(model)
+        ? this.db.update(model.id, model)
         : this.db.create(model.toJSON());
     },
     /**

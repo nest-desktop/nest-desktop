@@ -15,6 +15,7 @@
         hide-details
         placeholder="Search model"
         prepend-inner-icon="mdi-magnify"
+        v-model="search"
         variant="outlined"
       />
 
@@ -43,7 +44,10 @@
         :key="index"
         :subtitle="model.elementType"
         :title="model.label"
-        :to="{ name: appStore.simulator + 'Model', params: { modelId: model.id } }"
+        :to="{
+          name: appStore.simulator + 'Model',
+          params: { modelId: model.id },
+        }"
         v-for="(model, index) in models"
       >
         <template #append>
@@ -61,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import { Model } from "@/types/modelTypes";
 
@@ -72,10 +76,16 @@ import { useNavStore } from "@/store/navStore";
 const navState = useNavStore();
 
 const props = defineProps({
-  store: {required: true, type: Object},
+  store: { required: true, type: Object },
 });
 
-const models = computed(() => props.store.models as Model[]);
+const search = ref("");
+
+const models = computed(() =>
+  props.store.models.filter((model: Model) =>
+    model.label.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+  )
+);
 
 const menuItems = [
   { title: "Upload", icon: "mdi-upload" },
@@ -88,7 +98,7 @@ const menuItems = [
  * Handle mouse move on resizing.
  * @param e MouseEvent from which the x position is taken
  */
- const handleMouseMove = (e: MouseEvent) => {
+const handleMouseMove = (e: MouseEvent) => {
   navState.width = e.clientX - 64;
   // window.dispatchEvent(new Event("resize"));
 };

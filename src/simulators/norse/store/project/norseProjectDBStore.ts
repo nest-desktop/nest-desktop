@@ -4,7 +4,10 @@ import { defineStore } from "pinia";
 import { download } from "@/utils/download";
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { NorseProject, NorseProjectProps } from "@norse/helpers/project/norseProject";
+import {
+  NorseProject,
+  NorseProjectProps,
+} from "@norse/helpers/project/norseProject";
 import { NorseProjectDB } from "./norseProjectDB";
 
 const logger = mainLogger.getSubLogger({ name: "norse project DB store" });
@@ -13,10 +16,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
   state: () => ({
     db: new NorseProjectDB(),
     numLoaded: 0,
-    projectAssets: [
-      "neuronal-states",
-      "spike-activity"
-    ],
+    projectAssets: ["neuronal-states", "spike-activity"],
     projects: [] as (NorseProject | NorseProjectProps | any)[], // TODO: any should be removed.
     searchTerm: "",
   }),
@@ -53,7 +53,9 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
     /**
      * Create multiple projects in the database.
      */
-    async createProjects(data: NorseProjectProps[]): Promise<NorseProjectProps[]> {
+    async createProjects(
+      data: NorseProjectProps[]
+    ): Promise<NorseProjectProps[]> {
       logger.trace("create projects");
       const projects: Promise<NorseProjectProps>[] = data.map(
         (project: NorseProjectProps) =>
@@ -87,7 +89,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       const projectDocIds: string[] = projects.map(
         (
           project: NorseProject | NorseProjectProps | any // TODO: any should be removed.
-        ) => project.docId || project._id || project.id
+        ) => project.docId || project.id
       );
       this.db.deleteBulk(projectDocIds).then(() => this.updateList());
     },
@@ -130,7 +132,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       project.clean();
 
       return project.docId
-        ? this.db.update(project)
+        ? this.db.update(project.docId, project.toJSON())
         : this.db.create(project.toJSON());
     },
     /**
@@ -176,7 +178,8 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       // this.project.insite.cancelAllIntervals();
 
       let project = this.projects.find(
-        (project: NorseProjectProps | NorseProject | any) => project._id === projectId
+        (project: NorseProjectProps | NorseProject | any) =>
+          project.id === projectId
       );
 
       if (project == undefined) {
@@ -184,7 +187,9 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       }
 
       if (project.doc == undefined) {
-        const projectIds = this.projects.map((project: NorseProjectProps | NorseProject | any) => project._id);
+        const projectIds = this.projects.map(
+          (project: NorseProjectProps | NorseProject | any) => project.id
+        );
         const projectIdx = projectIds.indexOf(projectId);
 
         if (projectIdx === -1) {
@@ -228,9 +233,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      */
     async saveProject(projectId: string): Promise<any> {
       logger.trace("save project:", projectId.slice(0, 6));
-      const project = this.projects.find(
-        (project) => project._id === projectId
-      );
+      const project = this.projects.find((project) => project.id === projectId);
       return this.importProject(project);
     },
     /**

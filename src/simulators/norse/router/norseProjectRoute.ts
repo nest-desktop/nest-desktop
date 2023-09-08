@@ -1,5 +1,5 @@
 /**
- * router/projectRoute.ts
+ * router/norseProjectRoute.ts
  *
  * router documentation: https://router.vuejs.org/guide/
  */

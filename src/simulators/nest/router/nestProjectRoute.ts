@@ -1,34 +1,43 @@
 /**
- * router/projectRoute.ts
+ * router/nestProjectRoute.ts
  *
  * router documentation: https://router.vuejs.org/guide/
  */
 
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNESTSessionStore } from "../store/nestSessionStore";
+import { computed, watch } from "vue";
+import { truncate } from "@/utils/truncate";
 
-const logger = mainLogger.getSubLogger({ name: "project route" });
+const logger = mainLogger.getSubLogger({
+  name: "nest project route",
+  minLevel: 1
+});
 
 const projectBeforeEnter = (to: any) => {
-  logger.trace("Before enter project route:", to.path);
+  logger.trace("before enter:", to.path);
 
-  const projectDBStore = useNESTProjectDBStore();
-  if (projectDBStore.projects.length === 0) {
-    setTimeout(() => projectBeforeEnter(to), 100);
-    return;
-  }
-
+  const nestSessionStore = useNESTSessionStore();
   const projectStore = useNESTProjectStore();
-  projectStore.loadProject(to.params.projectId);
+
+  if (to.params.projectId) {
+    const loading = computed(() => nestSessionStore.loading);
+    watch(loading, (state) => {
+      if (!state) {
+        projectStore.loadProject(to.params.projectId);
+      }
+    });
+  }
 
   const path = to.path.split("/");
   projectStore.view = path[path.length - 1] || "edit";
+  logger.trace("enter:", to.path);
 };
 
 const projectNew = () => {
-  logger.trace("Create a new nest project");
+  logger.trace("create a new nest project");
   const projectStore = useNESTProjectStore();
   projectStore.loadProject();
 
@@ -38,7 +47,8 @@ const projectNew = () => {
 };
 
 const projectRedirect = (to: any) => {
-  logger.trace("Redirect to project:", to.params.projectId?.slice(0, 6));
+  logger.trace("Redirect to project:", truncate(to.params.projectId));
+
   const projectStore = useNESTProjectStore();
 
   if (to.params.projectId) {
@@ -75,7 +85,8 @@ export default [
         path: "edit",
         name: "nestNetworkEditor",
         components: {
-          project: () => import("@nest/views/project/NESTNetworkGraphEditor.vue"),
+          project: () =>
+            import("@nest/views/project/NESTNetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
