@@ -14,28 +14,16 @@ export default {
     const projectDBStore = useNESTProjectDBStore();
     const projectStore = useNESTProjectStore();
 
-    let promise = Promise.resolve();
-
-    promise = promise.then(() => modelDBStore.init());
-
-    promise = promise.then(() => {
+    Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
       if (modelDBStore.models.length > 0) {
         const firstModel = modelDBStore.models[0];
         modelStore.modelId = firstModel.id;
       }
-    });
-
-    promise = promise.then(() => projectDBStore.init());
-
-    promise = promise.then(() => {
       if (projectDBStore.projects.length > 0) {
         const firstProject = projectDBStore.projects[0];
         projectStore.project = firstProject;
         projectStore.projectId = firstProject.id;
       }
-    });
-
-    promise.then(() => {
       nestSessionStore.loading = false;
     });
   },
