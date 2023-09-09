@@ -68,7 +68,7 @@ export class BaseModel extends Config {
     return this._doc;
   }
 
-  get docId(): string {
+  get docId(): string | undefined {
     return this._doc ? this._doc._id : undefined;
   }
 

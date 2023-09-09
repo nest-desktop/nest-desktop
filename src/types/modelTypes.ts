@@ -3,9 +3,8 @@
 import { BaseModel } from "@/helpers/model/baseModel";
 import { NorseModel } from "@norse/helpers/model/norseModel";
 import { NESTModel } from "@nest/helpers/model/nestModel";
-import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
 
-export type Model = BaseModel | NESTCopyModel | NESTModel | NorseModel;
+export type Model = BaseModel | NESTModel | NorseModel;
 
 // for model bar
-export const ModelPropTypes = [BaseModel, NESTCopyModel, NESTModel, NorseModel];
+export const ModelPropTypes = [BaseModel, NESTModel, NorseModel];

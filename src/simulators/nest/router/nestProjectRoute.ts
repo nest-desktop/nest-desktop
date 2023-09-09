@@ -13,7 +13,6 @@ import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({
   name: "nest project route",
-  minLevel: 1
 });
 
 const projectBeforeEnter = (to: any) => {

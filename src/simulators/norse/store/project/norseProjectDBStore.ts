@@ -8,15 +8,16 @@ import {
   NorseProject,
   NorseProjectProps,
 } from "@norse/helpers/project/norseProject";
-import { NorseProjectDB } from "./norseProjectDB";
+import { NorseProjectDB } from "@norse/helpers/project/norseProjectDB";
 
 const logger = mainLogger.getSubLogger({ name: "norse project DB store" });
 
+const projectAssets = ["neuronal-states", "spike-activity"];
+const db = new NorseProjectDB();
+
 export const useNorseProjectDBStore = defineStore("norse-project-db", {
   state: () => ({
-    db: new NorseProjectDB(),
     numLoaded: 0,
-    projectAssets: ["neuronal-states", "spike-activity"],
     projects: [] as (NorseProject | NorseProjectProps | any)[], // TODO: any should be removed.
     searchTerm: "",
   }),
@@ -48,7 +49,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      */
     async createProject(data: NorseProjectProps): Promise<any> {
       logger.trace("add project", data.id?.slice(0, 6));
-      return this.db.create(data);
+      return db.create(data);
     },
     /**
      * Create multiple projects in the database.
@@ -74,7 +75,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       // TODO: any should be removed.
       logger.trace("delete project:", project.id.slice(0, 6));
       const projectId: string = project.docId || project.id;
-      this.db.delete(projectId).finally(() => {
+      db.delete(projectId).finally(() => {
         this.removeFromList(projectId);
       });
     },
@@ -91,7 +92,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
           project: NorseProject | NorseProjectProps | any // TODO: any should be removed.
         ) => project.docId || project.id
       );
-      this.db.deleteBulk(projectDocIds).then(() => this.updateList());
+      db.deleteBulk(projectDocIds).then(() => this.updateList());
     },
     /**
      * Export project from the list.
@@ -132,15 +133,15 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       project.clean();
 
       return project.docId
-        ? this.db.update(project.docId, project.toJSON())
-        : this.db.create(project.toJSON());
+        ? db.updateProject(project)
+        : db.createProject(project);
     },
     /**
      * Import projects the update list.
      */
     importProjects(projects: any[]): void {
       logger.trace("import projects");
-      this.createProjects(projects).then(() => this.updateList());
+      db.createProjects(projects).then(() => this.updateList());
     },
     /**
      * Import multiple projects from assets and add them to the database.
@@ -148,7 +149,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
     async importProjectsFromAssets(): Promise<any> {
       logger.trace("import projects from assets");
       let promise: Promise<any> = Promise.resolve();
-      this.projectAssets.forEach(async (file: string) => {
+      projectAssets.forEach(async (file: string) => {
         const response = await fetch("assets/norse/projects/" + file + ".json");
         const data = await response.json();
         promise = promise.then(() => this.createProject(data));
@@ -160,7 +161,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      */
     async init(): Promise<any> {
       logger.trace("init");
-      return this.db.count().then(async (count: number) => {
+      return db.count().then(async (count: number) => {
         logger.debug("projects in DB:", count);
         if (count === 0) {
           return this.importProjectsFromAssets().then(() => this.updateList());
@@ -262,22 +263,8 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
     async updateList(): Promise<any> {
       logger.trace("update list");
       this.projects = [];
-      return this.db.list("createdAt", true).then((projects: any[]) => {
+      return db.list("createdAt", true).then((projects: any[]) => {
         this.projects = projects;
-
-        // if (this.projects.length === 0) {
-        //   this._view.redirect();
-        // }
-
-        // Redirect if project id from the current route is provided in the list.
-        // const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
-
-        // if (currentRoute.name === 'projectId') {
-        //   this.project =
-        //     this.getProject(currentRoute.params.id) ||
-        //     this.getProject(this.recentProjectId);
-        //   this._view.redirect(this._view.state.projectId);
-        // }
       });
     },
   },

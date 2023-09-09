@@ -10,7 +10,7 @@ import {
   NESTProject,
   NESTProjectProps,
 } from "@nest/helpers/project/nestProject";
-import { NESTProjectDB } from "./nestProjectDB";
+import { NESTProjectDB } from "@nest/helpers/project/nestProjectDB";
 
 const logger = mainLogger.getSubLogger({
   name: "project DB store",
@@ -23,7 +23,6 @@ const projectAssets = [
   "spike-input",
   "current-input",
 ];
-
 const db = new NESTProjectDB();
 
 export const useNESTProjectDBStore = defineStore("nest-project-db", {
@@ -61,6 +60,26 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
       const project = new NESTProject(data);
       this.projects.unshift(project);
       return project;
+    },
+    /**
+     * Delete project in database and then update the list.
+     */
+    deleteProject(project: NESTProject | NESTProjectProps | any): void {
+      if (!project) return;
+      logger.trace("delete project:", truncate(project.id));
+      db.deleteProject(project).then(() => {
+        this.removeFromList(project.id);
+      });
+    },
+
+    /**
+     * Delete projects and then update the list.
+     * @param projects List of project objects.
+     */
+    deleteProjects(projects: (NESTProject | NESTProjectProps)[]): void {
+      if (projects.length === 0) return;
+      logger.trace("delete projects");
+      db.deleteProjects(projects).then(() => this.updateList());
     },
     /**
      * Export project from the list.
@@ -163,6 +182,9 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
         }
       });
     },
+    isProjectLoaded(project: NESTProject | NESTProjectProps | undefined) {
+      return project instanceof NESTProject;
+    },
     /**
      * Load a project in the list.
      * @param projectId string
@@ -182,9 +204,6 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
 
       this.projects[projectIdx] = project;
       this.numLoaded += 1;
-    },
-    isProjectLoaded(project: NESTProject | NESTProjectProps | undefined) {
-      return project instanceof NESTProject;
     },
     /**
      * Reload the project in the list.
@@ -208,31 +227,6 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
         // Remove project from the project list.
         this.projects.splice(idx, 1);
       }
-    },
-    /**
-     * Delete project in database and then update the list.
-     */
-    removeProject(project: NESTProject | NESTProjectProps): void {
-      if (!project) return;
-      logger.trace("delete project:", truncate(project.id));
-
-      // @ts-ignore
-      const docId = project.docId || (project._id as string);
-      const projectId = project.id as string;
-      console.log(project, docId, projectId);
-      db.delete(docId).then(() => {
-        this.removeFromList(projectId);
-      });
-    },
-
-    /**
-     * Delete projects and then update the list.
-     * @param projects List of project objects.
-     */
-    removeProjects(projects: (NESTProject | NESTProjectProps)[]): void {
-      if (projects.length === 0) return;
-      logger.trace("delete projects");
-      db.deleteProjects(projects).then(() => this.updateList());
     },
     /*
      * Save project.
