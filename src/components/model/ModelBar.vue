@@ -41,7 +41,7 @@ const props = defineProps({
 
 const model = computed(() => props.model as Model);
 
-const tabItems = [
+const tabItems = computed(() => [
   {
     icon: "mdi-chart-scatter-plot",
     id: "modelExplorer",
@@ -56,5 +56,5 @@ const tabItems = [
     title: "Edit activity",
     to: { name: appStore.simulator + "ModelEditor" },
   },
-];
+]);
 </script>

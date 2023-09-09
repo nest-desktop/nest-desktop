@@ -44,7 +44,7 @@ const props = defineProps({
 
 const project = computed(() => props.project as Project);
 
-const tabItems = [
+const tabItems = computed(() => [
   {
     icon: "nest:network",
     id: "networkEditor",
@@ -75,5 +75,5 @@ const tabItems = [
       params: { projectId: project.value.id },
     },
   },
-];
+]);
 </script>

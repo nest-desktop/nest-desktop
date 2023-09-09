@@ -1,30 +1,30 @@
 // index.ts
 
 import { useNorseModelDBStore } from "./store/model/norseModelDBStore";
-import { useNorseProjectDBStore } from "./store/project/norseProjectDBStore";
-
 import { useNorseModelStore } from "./store/model/norseModelStore";
+import { useNorseProjectDBStore } from "./store/project/norseProjectDBStore";
 import { useNorseProjectStore } from "./store/project/norseProjectStore";
+import { useNorseSessionStore } from "./store/norseSessionStore";
 
 export default {
   install() {
-    // configure the app
+    const norseSessionStore = useNorseSessionStore();
     const modelDBStore = useNorseModelDBStore();
-    modelDBStore.init().then(() => {
+    const modelStore = useNorseModelStore();
+    const projectDBStore = useNorseProjectDBStore();
+    const projectStore = useNorseProjectStore();
+
+    Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
       if (modelDBStore.models.length > 0) {
-        const modelStore = useNorseModelStore();
-        const firstModel = modelDBStore.models[0]
+        const firstModel = modelDBStore.models[0];
         modelStore.modelId = firstModel.id;
       }
-    });
-
-    const projectDBStore = useNorseProjectDBStore();
-    projectDBStore.init().then(() => {
       if (projectDBStore.projects.length > 0) {
-        const projectStore = useNorseProjectStore();
-        const firstProject = projectDBStore.projects[0]
+        const firstProject = projectDBStore.projects[0];
+        projectStore.project = firstProject;
         projectStore.projectId = firstProject.id;
       }
+      norseSessionStore.loading = false;
     });
   },
 };
