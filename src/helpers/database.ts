@@ -24,7 +24,6 @@ export class DatabaseService {
     this._url = url;
     this._logger = mainLogger.getSubLogger({
       name: `[${this._url}] database`,
-      minLevel: 1
     });
 
     this._options = options;
@@ -158,7 +157,7 @@ export class DatabaseService {
   deleteBulk(ids: string[]): any {
     return this.list().then((docs: any[]) => {
       docs
-        .filter((doc: any) => ids.includes(doc.id))
+        .filter((doc: any) => ids.includes(doc._id))
         .forEach((doc: any) => (doc._deleted = true));
       return this._db
         .bulkDocs(docs)

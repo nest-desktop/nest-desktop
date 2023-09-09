@@ -50,21 +50,30 @@ const tabItems = [
     id: "networkEditor",
     label: "Editor",
     title: "Network editor",
-    to: { name: appStore.simulator + "NetworkEditor" },
+    to: {
+      name: appStore.simulator + "NetworkEditor",
+      params: { projectId: project.value.id },
+    },
   },
   {
     icon: "mdi-border-style",
     id: "activityExplorer",
     label: "Explorer",
     title: "Activity explorer",
-    to: { name: appStore.simulator + "ActivityExplorer" },
+    to: {
+      name: appStore.simulator + "ActivityExplorer",
+      params: { projectId: project.value.id },
+    },
   },
   {
     icon: "mdi-book-open-outline",
     id: "labBook",
     label: "Lab book",
     title: "Lab book",
-    to: { name: appStore.simulator + "LabBook" },
+    to: {
+      name: appStore.simulator + "LabBook",
+      params: { projectId: project.value.id },
+    },
   },
 ];
 </script>

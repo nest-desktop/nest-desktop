@@ -121,7 +121,7 @@ export class BaseProject {
     this._doc = value;
   }
 
-  get docId(): string {
+  get docId(): string | undefined {
     return this._doc ? this._doc._id : undefined;
   }
 
