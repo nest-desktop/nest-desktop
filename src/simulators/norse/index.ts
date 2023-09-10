@@ -2,7 +2,7 @@
 
 import router from "@/router";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
-import { simulatorItems } from "@/simulators";
+import { simulatorItems } from "..";
 
 import norseRoute from "./routes";
 import { norseIconSet } from "./components/iconsets";

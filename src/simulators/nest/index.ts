@@ -2,7 +2,7 @@
 
 import router from "@/router";
 import { addTheme, addIconSet } from "@/plugins/vuetify";
-import { simulatorItems } from "@/simulators";
+import { simulatorItems } from "..";
 
 import nestRoute from "./routes";
 import { nestIconSet } from "./components/iconsets";
