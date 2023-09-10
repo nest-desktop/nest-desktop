@@ -20,7 +20,7 @@ export default defineConfig({
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo) => {
+        assetFileNames: (assetInfo: any) => {
           let extType = assetInfo.name.split(".").at(1);
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
             extType = "img";
@@ -72,8 +72,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@nest": fileURLToPath(new URL("./src/simulators/nest", import.meta.url)),
-      "@norse": fileURLToPath(new URL("./src/simulators/norse", import.meta.url)),
     },
     extensions: [
       ".js",

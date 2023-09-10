@@ -23,10 +23,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@/*": ["src/*"],
-      "@nest/*": ["src/simulators/nest/*"],
-      "@norse/*": ["src/simulators/norse/*"]
-    }
+      "@/*": ["src/*"]
+    },
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "electron"],
   "references": [{ "path": "./tsconfig.node.json" }],
