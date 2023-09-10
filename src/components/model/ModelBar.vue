@@ -47,14 +47,20 @@ const tabItems = computed(() => [
     id: "modelExplorer",
     label: "Explore",
     title: "Explore activity",
-    to: { name: appStore.simulator + "ModelExplorer" },
+    to: {
+      name: appStore.simulator + "ModelExplorer",
+      params: { modelId: model.value.id },
+    },
   },
   {
     icon: "mdi-pencil",
     id: "modelEditor",
     label: "Edit",
     title: "Edit activity",
-    to: { name: appStore.simulator + "ModelEditor" },
+    to: {
+      name: appStore.simulator + "ModelEditor",
+      params: { modelId: model.value.id },
+    },
   },
 ]);
 </script>

@@ -22,12 +22,11 @@
     <div :key="network.nodes.length">
       <div :key="index" v-for="(node, index) in network.nodes.all">
         <node-editor
-          :node="(node as NESTNode)"
+          :node="node"
           @mouseenter="node.state.focus()"
           @mouseleave="node.nodes.unfocusNode()"
           v-if="showNode(node)"
         />
-        <!-- :style="{opacity: showNode(node as Node) ? 1 : 0.2}" -->
       </div>
     </div>
   </div>
@@ -38,27 +37,26 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import NodeEditor from "../node/NodeEditor.vue";
-import { NESTNetwork } from "../../helpers/network/nestNetwork";
-import { NESTNode } from "../../helpers/node/nestNode";
+import NodeEditor from "@/components/node/NodeEditor.vue";
+import { Network, NetworkPropTypes } from "@/types/networkTypes";
+import { Node } from "@/types/nodeTypes";
 
-import { useNESTProjectStore } from "../../store/project/nestProjectStore";
-const projectStore = useNESTProjectStore();
-
-const network = computed(() => projectStore.project.network as NESTNetwork);
+const props = defineProps({
+  network: NetworkPropTypes,
+})
+const network = computed(() => props.network as Network);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
   { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
   { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
   { icon: "network:recorder", id: "recorder", title: "recorder" },
-  { icon: "nest:copyModel", id: "model", title: "model" },
 ];
 
 /**
  * Show node in list.
  */
-const showNode = (node: NESTNode) => {
+const showNode = (node: Node) => {
   const elementTypeIdx = network.value.nodes.state.elementTypeIdx;
 
   if (elementTypeIdx === 4) {

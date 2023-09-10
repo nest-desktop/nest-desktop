@@ -62,9 +62,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import ValueSlider from "@/components/controls/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
+import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { NESTSimulation } from "../../helpers/simulation/nestSimulation";
 

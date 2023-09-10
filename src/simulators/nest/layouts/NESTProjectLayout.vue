@@ -4,10 +4,6 @@
   <project-bar :project="(project as NESTProject)" color="blue" />
 
   <project-controller :store="projectStore">
-    <template #networkParamEditor>
-      <network-param-editor />
-    </template>
-
     <template #simulationKernelEditor>
       <simulation-kernel-editor
         :simulation="(project.simulation as NESTSimulation)"
@@ -25,7 +21,6 @@ import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 
-import NetworkParamEditor from "../components/network/NetworkParamEditor.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
 import { NESTProject } from "../helpers/project/nestProject";
 import { NESTSimulation } from "../helpers/simulation/nestSimulation";

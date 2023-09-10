@@ -15,6 +15,7 @@ import {
 
 export interface NESTProjectProps extends ProjectProps {
   network?: NESTNetworkProps;
+  simulation? : NESTSimulationProps;
 }
 
 export class NESTProject extends BaseProject {

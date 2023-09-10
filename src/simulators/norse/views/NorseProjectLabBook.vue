@@ -44,8 +44,8 @@ import { computed } from "vue";
 
 import { Network } from "@/types/networkTypes";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
+import NodeViewer from "@/components/node/NodeViewer.vue";
 
-import NodeViewer from "../components/node/NodeViewer.vue";
 import { useNorseProjectStore } from "../store/project/norseProjectStore";
 import { NorseNode } from "../helpers/node/norseNode";
 

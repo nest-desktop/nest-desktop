@@ -41,7 +41,7 @@
       >
         <connection-viewer
           :key="index"
-          :connection="(connection as NorseConnection)"
+          :connection="connection"
           v-for="(connection, index) in node.connections"
         />
       </v-expansion-panels>
@@ -53,18 +53,16 @@
 import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
+import ConnectionViewer from "@/components/connection/ConnectionViewer.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamViewer from "@/components/node/NodeParamViewer.vue";
-
-import ConnectionViewer from "../connection/ConnectionViewer.vue";
-import { NorseConnection } from "../../helpers/connection/norseConnection";
-import { NorseNode } from "../../helpers/node/norseNode";
+import { Node, NodePropTypes } from "@/types/nodeTypes";
 
 const props = defineProps({
-  node: NorseNode,
+  node: NodePropTypes,
 });
 
-const node = computed(() => props.node as NorseNode);
+const node = computed(() => props.node as Node);
 </script>
 
 <style lang="scss">

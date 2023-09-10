@@ -85,14 +85,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from "./ConnectionParamEditor.vue";
-import { NESTConnection } from "../../helpers/connection/nestConnection";
+import ConnectionParamEditor from "@/components/connection/ConnectionParamEditor.vue";
+import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
 
 const props = defineProps({
-  connection: NESTConnection,
+  connection: ConnectionPropTypes,
 });
 
-const connection = computed(() => props.connection as NESTConnection);
+const connection = computed(() => props.connection as Connection);
 
 const rules = [
   { title: "all to all", value: "all_to_all" },

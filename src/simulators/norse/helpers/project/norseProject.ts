@@ -13,6 +13,7 @@ import { useNorseProjectStore } from "../../store/project/norseProjectStore";
 
 export interface NorseProjectProps extends ProjectProps {
   network?: NorseNetworkProps;
+  simulation?: NorseSimulationProps;
 }
 
 export class NorseProject extends BaseProject {

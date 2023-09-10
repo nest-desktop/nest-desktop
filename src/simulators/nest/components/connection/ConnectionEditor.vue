@@ -78,8 +78,8 @@
 import { computed } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import ConnectionSpecEditor from "@/components/ConnectionSpecEditor.vue";
 
-import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
 import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
 import { NESTConnection } from "../../helpers/connection/nestConnection";
 import { NESTSynapse } from "../../helpers/synapse/nestSynapse";

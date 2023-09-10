@@ -147,15 +147,11 @@
         </v-list-item>
       </v-list>
 
-      <v-list class="py-0" v-if="node.model.isMultimeter">
-        <node-record-select :node="node" />
-      </v-list>
-
       <v-list class="py-0" v-if="node.paramsVisible.length > 0">
         <node-param-editor
           :key="index"
-          :param="param"
-          v-for="(param, index) in node.filteredParams"
+          :param="node.params[paramId]"
+          v-for="(paramId, index) in node.paramsVisible"
         />
       </v-list>
     </v-card-text>
@@ -187,20 +183,19 @@
 import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
+import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
+import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
+import { Node, NodePropTypes } from "@/types/nodeTypes";
 
-import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
-import NodeParamEditor from "./NodeParamEditor.vue";
-import { NESTNode } from "../../helpers/node/nestNode";
 
 const props = defineProps({
-  node: NESTNode,
+  node: NodePropTypes,
 });
 
-const node = computed(() => props.node as NESTNode);
+const node = computed(() => props.node as Node);
 
 const state = reactive({
   menu: false,

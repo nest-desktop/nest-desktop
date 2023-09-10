@@ -1,6 +1,9 @@
 <template>
   <v-expansion-panel
-    :readonly="connection.paramsVisible.length === 0"
+    :readonly="
+      connection.paramsVisible.length === 0 &&
+      connection.synapse.paramsVisible.length === 0
+    "
     class="node-connection"
     elevation="0"
     rounded="0"
@@ -16,7 +19,7 @@
           </v-btn>
           <v-btn
             :color="connection.source.view.color"
-            icon="network:synapse-excitatory"
+            :icon="connection.synapse.icon"
             size="small"
             variant="text"
           />
@@ -29,6 +32,9 @@
 
         <div class="d-flex flex-column justify-center align-center text-grey">
           <div>{{ connection.rule.value }}</div>
+          <div v-if="connection.view.connectOnlyNeurons()">
+            {{ connection.synapse.modelId }}
+          </div>
         </div>
 
         <v-spacer />
@@ -62,7 +68,7 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <connection-spec-editor :connection="connection" />
+      <connection-spec-editor :connection="(connection as Connection)" />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -71,15 +77,15 @@
 import { computed } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
 
 import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
-import { NorseConnection } from "../../helpers/connection/norseConnection";
 
 const props = defineProps({
-  connection: NorseConnection,
+  connection: ConnectionPropTypes,
 });
 
-const connection = computed(() => props.connection as NorseConnection);
+const connection = computed(() => props.connection as Connection);
 
 const items = [
   {
@@ -88,6 +94,8 @@ const items = [
     title: "Reset connection",
     onClick: () => {
       connection.value.reset();
+      connection.value.synapse.reset();
+      connection.value.synapse.hideAllParams();
     },
   },
   // {
@@ -120,11 +128,19 @@ const items = [
     },
   },
   {
+    id: "weightInverse",
+    icon: "mdi-contrast",
+    title: "Inverse synaptic weight",
+    onClick: () => {
+      connection.value.synapse.inverseWeight();
+    },
+  },
+  {
     id: "connectionDelete",
     icon: "mdi-trash-can-outline",
     title: "Delete connection",
     onClick: () => {
-      connection.value.remove();
+      connection.value.remove()
       // state.content = "connectionDelete";
     },
     append: true,

@@ -60,7 +60,7 @@ export default [
         path: "doc",
         name: "nestModelDoc",
         components: {
-          model: () => import("../views/model/NESTModelDoc.vue"),
+          model: () => import("../views/NESTModelDoc.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
@@ -69,7 +69,7 @@ export default [
         path: "explore",
         name: "nestModelExplorer",
         components: {
-          model: () => import("../views/model/NESTModelExplorer.vue"),
+          model: () => import("../views/NESTModelExplorer.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
@@ -78,7 +78,7 @@ export default [
         path: "edit",
         name: "nestModelEditor",
         components: {
-          model: () => import("../views/model/NESTModelEditor.vue"),
+          model: () => import("../views/NESTModelEditor.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
