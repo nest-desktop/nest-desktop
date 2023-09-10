@@ -1,4 +1,4 @@
-<template>
+<template :key="theme.name.value">
   <v-app>
     <v-system-bar class="d-print-none" color="systembar" flat>
       <app-bar />
@@ -16,16 +16,18 @@
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
-import { useTheme } from "vuetify";
 
 import AppBar from "@/components/app/AppBar.vue";
 
-import { useAppStore } from "@/store/appStore";
-
+import { useTheme } from "vuetify";
 const theme = useTheme();
+
+import { useAppStore } from "@/store/appStore";
 const appStore = useAppStore();
 
 onMounted(() => {
-  theme.global.name.value = appStore.darkMode ? "dark" : "light";
+  if (appStore.darkMode) {
+    appStore.setDarkMode(theme);
+  }
 });
 </script>
