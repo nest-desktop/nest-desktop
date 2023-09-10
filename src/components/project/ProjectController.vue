@@ -23,7 +23,8 @@
         minWidth="0"
         v-for="(item, index) in controllerItems"
         v-show="
-          item.show !== 'dev' || (item.show === 'dev' && appSessionStore.devMode)
+          item.show !== 'dev' ||
+          (item.show === 'dev' && appSessionStore.devMode)
         "
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
@@ -58,18 +59,22 @@
     <div :key="projectStore.projectId">
       <template v-if="projectStore.controllerView === 'network'">
         <slot name="networkParamEditor">
-          <!-- <network-param-editor /> -->
+          <network-param-editor :network="(project.network as Network)" />
         </slot>
       </template>
 
       <template v-else-if="projectStore.controllerView === 'kernel'">
         <slot name="simulationKernelEditor">
-          <!-- <simulation-kernel-editor /> -->
+          <simulation-kernel-editor
+            :simulation="(project.simulation as Simulation)"
+          />
         </slot>
       </template>
 
       <template
-        v-else-if="appSessionStore.devMode && projectStore.controllerView === 'raw'"
+        v-else-if="
+          appSessionStore.devMode && projectStore.controllerView === 'raw'
+        "
       >
         <codemirror
           :extensions="extensions"
@@ -121,10 +126,13 @@ import { json } from "@codemirror/lang-json";
 
 import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
+import NetworkParamEditor from "@/components/network/NetworkParamEditor.vue"
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
+import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { Network } from "@/types/networkTypes";
 import { Project } from "@/types/projectTypes";
 import { Simulation } from "@/types/simulationTypes";
 

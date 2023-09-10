@@ -138,13 +138,13 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { NorseNode } from "../../helpers/node/norseNode";
+import { Node, NodePropTypes } from "@/types/nodeTypes";
 
 const props = defineProps({
-  node: NorseNode,
+  node: NodePropTypes,
 });
 
-const node = computed(() => props.node as NorseNode);
+const node = computed(() => props.node as Node);
 
 const state = reactive({
   content: undefined as string | undefined,

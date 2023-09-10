@@ -75,7 +75,7 @@ export default [
         path: "edit",
         name: "norseNetworkEditor",
         components: {
-          project: () => import("../views/NorseProjectNetworkGraphEditor.vue"),
+          project: () => import("../views/NorseProjectNetworkEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

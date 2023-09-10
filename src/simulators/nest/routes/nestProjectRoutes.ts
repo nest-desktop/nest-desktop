@@ -86,7 +86,7 @@ export default [
         name: "nestNetworkEditor",
         components: {
           project: () =>
-            import("../views/project/NESTNetworkGraphEditor.vue"),
+            import("../views/NESTProjectNetworkEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -95,7 +95,7 @@ export default [
         path: "explore",
         name: "nestActivityExplorer",
         components: {
-          project: () => import("../views/project/NESTActivityExplorer.vue"),
+          project: () => import("../views/NESTProjectActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -104,7 +104,7 @@ export default [
         path: "lab",
         name: "nestLabBook",
         components: {
-          project: () => import("../views/project/NESTLabBook.vue"),
+          project: () => import("../views/NESTProjectLabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
