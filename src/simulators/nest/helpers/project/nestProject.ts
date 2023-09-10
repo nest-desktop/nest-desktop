@@ -6,12 +6,12 @@ import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
 import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 
-import { Insite } from "../insite/insite";
-import { NESTNetwork, NESTNetworkProps } from "../network/nestNetwork";
+import { Insite } from "@nest/helpers/insite/insite";
+import { NESTNetwork, NESTNetworkProps } from "@nest/helpers/network/nestNetwork";
 import {
   NESTSimulation,
   NESTSimulationProps,
-} from "../simulation/nestSimulation";
+} from "@nest/helpers/simulation/nestSimulation";
 
 export interface NESTProjectProps extends ProjectProps {
   network?: NESTNetworkProps;

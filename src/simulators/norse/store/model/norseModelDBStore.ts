@@ -1,10 +1,10 @@
 // norseModelDBStore.ts
 
 import { defineStore } from "pinia";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NorseModel } from "@norse/helpers/model/norseModel";
-import { NorseModelDB } from "../../helpers/model/norseModelDB";
+import { NorseModelDB } from "@norse/helpers/model/norseModelDB";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });
 

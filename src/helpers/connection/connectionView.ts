@@ -3,8 +3,9 @@
 import { UnwrapRef, reactive } from "vue";
 
 import { Connection } from "@/types/connectionTypes";
-import { calcPathNode } from "../connectionGraph/connectionGraphPath";
-import { randomUniformInt } from "../random";
+import { calcPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
+import { randomUniformInt } from "@/helpers/common/random";
+
 import { BaseConnection } from "./baseConnection";
 
 interface ConnectionViewState {

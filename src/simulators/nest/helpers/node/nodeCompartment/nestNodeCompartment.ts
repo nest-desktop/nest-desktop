@@ -1,13 +1,14 @@
 // nestNodeCompartment.ts
 
 import { NodeParameterProps } from "@/helpers/node/nodeParameter";
-
-import { NESTModelCompartmentParameter } from "../../model/nestModelCompartmentParameter";
-import { NESTNode } from "../../node/nestNode";
-import { NESTNodeCompartmentParameter } from "./nestNodeCompartmentParameter";
-import { NESTNodeReceptor } from "../../node/nodeReceptor/nestNodeReceptor";
-import { NESTModel } from "../../model/nestModel";
 import { NodeView } from "@/helpers/node/nodeView";
+
+import { NESTModelCompartmentParameter } from "@nest/helpers/model/nestModelCompartmentParameter";
+import { NESTNode } from "@nest/helpers/node/nestNode";
+import { NESTNodeReceptor } from "@nest/helpers/node/nodeReceptor/nestNodeReceptor";
+import { NESTModel } from "@nest/helpers/model/nestModel";
+
+import { NESTNodeCompartmentParameter } from "./nestNodeCompartmentParameter";
 
 export interface NESTNodeCompartmentProps {
   parentIdx: number;

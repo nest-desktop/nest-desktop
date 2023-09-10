@@ -5,7 +5,7 @@
     </span>
     <v-icon
       :color="props.color"
-      :icon="`nest:neuron${props.weight ? `-${$props.weight}` : ''}`"
+      :icon="`network:neuron${props.weight ? `-${$props.weight}` : ''}`"
       class="position-absolute icon-size"
     />
   </v-avatar>

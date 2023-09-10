@@ -2,18 +2,17 @@
 
 import { defineStore } from "pinia";
 
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import router from "@/router";
 
 import { BaseProject } from "@/helpers/project/baseProject";
 import { Project } from "@/types/projectTypes";
 
 import { useProjectDBStore } from "./projectDBStore";
-// import { useActivityGraphStore } from "../graph/activityGraphStore";
 
 const logger = mainLogger.getSubLogger({ name: "project store" });
 
-export const useProjectStore = defineStore("norse-project-view", {
+export const useProjectStore = defineStore("project-view", {
   state: () => ({
     bottomOpen: false,
     controllerOpen: false,

@@ -1,7 +1,7 @@
 // synapseParameters.ts
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { Parameter, ParameterProps } from "@/helpers/parameter";
+import { Parameter, ParameterProps } from "@/helpers/common/parameter";
 import { Synapse } from "@/types/synapseTypes";
 
 export interface SynapseParameterProps extends ParameterProps {}

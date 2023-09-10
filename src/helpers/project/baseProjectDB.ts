@@ -1,10 +1,10 @@
 // baseProjectDB.ts
 
-import { DatabaseService } from "@/helpers/database";
+import { DatabaseService } from "@/helpers/common/database";
 import { Project } from "@/types/projectTypes";
-import { logger as mainLogger } from "@/helpers/logger";
-import { truncate } from "@/utils/truncate";
 import { ProjectProps } from "@/helpers/project/baseProject";
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({
   name: "project DB",

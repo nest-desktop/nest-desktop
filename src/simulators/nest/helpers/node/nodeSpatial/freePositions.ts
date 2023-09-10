@@ -1,6 +1,6 @@
 // freePositions.ts
 
-import { randomUniformFloat } from "@/helpers/random";
+import { randomUniformFloat } from "@/helpers/common/random";
 import { round } from "@/utils/converter";
 
 import { NESTNodeSpatial } from "./nestNodeSpatial";

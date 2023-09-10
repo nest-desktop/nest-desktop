@@ -2,7 +2,7 @@
 
 import { defineStore } from "pinia";
 import { download } from "@/utils/download";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { Project } from "@/types/projectTypes";
 import { BaseProjectDB } from "@/helpers/project/baseProjectDB";
@@ -123,7 +123,7 @@ export const useProjectDBStore = defineStore("project-db", {
       logger.trace("import projects from assets");
       let promise: Promise<any> = Promise.resolve();
       projectAssets.forEach(async (file: string) => {
-        const response = await fetch("assets/norse/projects/" + file + ".json");
+        const response = await fetch("assets/projects/" + file + ".json");
         const data = await response.json();
         promise = promise.then(() => db.createProject(data));
       });
@@ -157,6 +157,7 @@ export const useProjectDBStore = defineStore("project-db", {
         return;
       }
 
+      // @ts-ignore
       if (!project.docId) {
         const projectIds = this.projects.map((project: any) => project.id);
         const projectIdx = projectIds.indexOf(projectId);
@@ -165,6 +166,7 @@ export const useProjectDBStore = defineStore("project-db", {
           return;
         }
 
+      // @ts-ignore
         project = new BaseProject(project);
         project.init();
 
@@ -172,6 +174,7 @@ export const useProjectDBStore = defineStore("project-db", {
         this.numLoaded += 1;
       }
 
+      // @ts-ignore
       return project;
     },
     newProject(data?: ProjectProps): BaseProject {

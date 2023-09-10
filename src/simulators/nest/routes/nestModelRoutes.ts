@@ -1,9 +1,7 @@
 /**
- * router/nestModelRoute.ts
- *
- * router documentation: https://router.vuejs.org/guide/
+ * nestModelRoutes.ts
  */
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
 import { useNESTModelStore } from "@nest/store/model/nestModelStore";

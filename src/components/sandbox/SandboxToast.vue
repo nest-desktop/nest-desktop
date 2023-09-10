@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { openToast } from "@/helpers/toast";
+import { openToast } from "@/helpers/common/toast";
 
 const types = ["success", "error", "warning", "info", "default"];
 </script>

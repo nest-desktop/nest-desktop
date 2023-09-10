@@ -3,10 +3,10 @@
 import { pointer } from "d3";
 
 import { Network } from "@/types/networkTypes";
+import { drawPathMouse, drawPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { drawPathMouse, drawPathNode } from "../connectionGraph/connectionGraphPath";
-import { logger as mainLogger } from "../logger";
 
 const logger = mainLogger.getSubLogger({ name: "network graph drag line" });
 

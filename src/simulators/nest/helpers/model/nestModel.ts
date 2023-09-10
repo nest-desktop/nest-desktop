@@ -1,5 +1,6 @@
 // nestModel.ts
 
+import { BaseModel, ModelProps } from "@/helpers/model/baseModel";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import {
@@ -7,7 +8,6 @@ import {
   NESTModelCompartmentParameter,
 } from "./nestModelCompartmentParameter";
 import { NESTModelReceptor } from "./modelReceptor/nestModelReceptor";
-import { BaseModel, ModelProps } from "@/helpers/model/baseModel";
 
 export interface NESTModelProps extends ModelProps {
   compartmentalParams?: any[];

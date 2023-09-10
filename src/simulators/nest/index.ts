@@ -1,5 +1,12 @@
 // index.ts
 
+import router from "@/router";
+import { addTheme, addIconSet } from "@/plugins/vuetify";
+import { simulatorItems } from "@/simulators";
+
+import nestRoute from "./routes";
+import { nestIconSet } from "./components/iconsets";
+
 import { useNESTModelDBStore } from "./store/model/nestModelDBStore";
 import { useNESTModelStore } from "./store/model/nestModelStore";
 import { useNESTProjectDBStore } from "./store/project/nestProjectDBStore";
@@ -8,6 +15,23 @@ import { useNESTSessionStore } from "./store/nestSessionStore";
 
 export default {
   install() {
+    router.addRoute("appLayout", nestRoute);
+
+    addTheme({
+      nest: "ff6633",
+    });
+
+    addIconSet({ nest: nestIconSet });
+
+    simulatorItems.nest = {
+      id: "nest",
+      title: "NEST",
+      routerName: "nestHome",
+      icon: "nest:logo",
+      color: "nest",
+      databases: ["NEST_MODEL_STORE", "NEST_PROJECT_STORE"],
+    };
+
     const nestSessionStore = useNESTSessionStore();
     const modelDBStore = useNESTModelDBStore();
     const modelStore = useNESTModelStore();

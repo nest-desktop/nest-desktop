@@ -3,11 +3,11 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
+import { BaseConnection } from "@/helpers/connection/baseConnection";
 import { Network } from "@/types/networkTypes";
+import { Node } from "@/types/nodeTypes";
 
 import { BaseNetwork } from "./baseNetwork";
-import { BaseNode } from "../node/baseNode";
-import { BaseConnection } from "../connection/baseConnection";
 
 interface BaseNetworkStateData {
   displayIdx: {
@@ -89,7 +89,7 @@ export class BaseNetworkState {
    */
   updateHash(): void {
     this._state.hash = sha1({
-      nodes: this.network.nodes.all.map((node: BaseNode) => node.state.hash),
+      nodes: this.network.nodes.all.map((node: Node) => node.state.hash),
       connections: this.network.connections.all.map(
         (connection: BaseConnection) => connection.state.hash
       ),

@@ -1,8 +1,8 @@
 // spikeCountPlotModel.ts
 
-import { BaseNode } from "@/helpers/node/baseNode";
+import { Node } from "@/types/nodeTypes";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { sum, deviation, max, mean, min } from "@/helpers/array";
+import { sum, deviation, max, mean, min } from "@/helpers/common/array";
 import { useAppSessionStore } from "@/store/appSessionStore";
 
 import { ActivityChartPanel } from "../activityChartPanel";
@@ -135,7 +135,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     const appSessionStore = useAppSessionStore();
 
     const nodeSizeTotal = sum(
-      activity.recorder.nodes.all.map((node: BaseNode) => node.size)
+      activity.recorder.nodes.all.map((node: Node) => node.size)
     );
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;

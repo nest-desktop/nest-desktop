@@ -2,13 +2,12 @@
 
 import { ILogObj, Logger } from "tslog";
 import { UnwrapRef, reactive } from "vue";
-
 import Plotly from "plotly.js-dist-min";
 // @ts-ignore
 import { Partial } from "plotly.js-dist-min";
 
-import { currentBackgroundColor, currentColor } from "@/helpers/theme";
-import { logger as mainLogger } from "@/helpers/logger";
+import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { Project } from "@/types/projectTypes";
 
 import {

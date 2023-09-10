@@ -1,7 +1,7 @@
 // modelDBStore.ts
 
 import { defineStore } from "pinia";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { BaseModel } from "@/helpers/model/baseModel";
 import { BaseModelDB } from "@/helpers/model/baseModelDB";
@@ -36,7 +36,8 @@ export const useModelDBStore = defineStore("model-db", {
      */
     findModel(modelId: string): Model | undefined {
       logger.trace("find model:", truncate(modelId));
-      return this.models.find((model: Model) => model.id === modelId);
+      // @ts-ignore
+      return this.models.find((model: Model | any) => model.id === modelId);
     },
     /**
      * Get model from the model list.
@@ -45,8 +46,7 @@ export const useModelDBStore = defineStore("model-db", {
       logger.trace("get model:", truncate(modelId));
       return (
         // @ts-ignore
-        this.models.find((model: Model) => model.id === modelId) ||
-        new BaseModel({ id: modelId, params: [] })
+        this.findModel(modelId) || new BaseModel({ id: modelId, params: [] })
       );
     },
     /**
@@ -72,7 +72,7 @@ export const useModelDBStore = defineStore("model-db", {
       logger.trace("import models from assets");
       let promise: Promise<any> = Promise.resolve();
       modelAssets.forEach(async (file: string) => {
-        const response = await fetch("assets/norse/models/" + file + ".json");
+        const response = await fetch("assets/models/" + file + ".json");
         const data = await response.json();
         promise = promise.then(() => db.createModel(data));
       });
@@ -104,7 +104,7 @@ export const useModelDBStore = defineStore("model-db", {
      */
     async saveModel(modelId: string): Promise<any> {
       logger.trace("save model:", truncate(modelId));
-      const model = this.models.find((model) => model.id === modelId) as Model;
+      const model = this.findModel(modelId) as Model;
       return db.importModel(model);
     },
     /**

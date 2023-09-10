@@ -4,8 +4,8 @@ import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
-import { logger as mainLogger } from "@/helpers/logger";
-import { Config } from "@/helpers/config";
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { Config } from "@/helpers/common/config";
 import { useModelDBStore } from "@/store/model/modelDBStore";
 
 import { ModelParameter, ModelParameterProps } from "./modelParameter";
@@ -68,7 +68,7 @@ export class BaseModel extends Config {
     return this._doc;
   }
 
-  get docId(): string | undefined {
+  get docId(): string {
     return this._doc ? this._doc._id : undefined;
   }
 
@@ -266,7 +266,7 @@ export class BaseModel extends Config {
    */
   async save(): Promise<any> {
     this._logger.trace("save");
-    return this._modelDBStore.saveModel(this);
+    return this._modelDBStore.saveModel(this._id);
   }
 
   /**

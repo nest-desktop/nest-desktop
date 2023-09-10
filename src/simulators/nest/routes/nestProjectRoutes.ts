@@ -4,12 +4,13 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { logger as mainLogger } from "@/helpers/logger";
+import { computed, watch } from "vue";
+
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { truncate } from "@/utils/truncate";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
-import { useNESTSessionStore } from "../store/nestSessionStore";
-import { computed, watch } from "vue";
-import { truncate } from "@/utils/truncate";
+import { useNESTSessionStore } from "@nest/store/nestSessionStore";
 
 const logger = mainLogger.getSubLogger({
   name: "nest project route",

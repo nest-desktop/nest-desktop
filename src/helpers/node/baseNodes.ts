@@ -6,7 +6,7 @@ import { sha1 } from "object-hash";
 
 import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { BaseNode, NodeProps } from "./baseNode";
 
@@ -205,7 +205,7 @@ export class BaseNodes {
     }
   }
 
-  newNode(data?: NodeProps): BaseNode {
+  newNode(data?: NodeProps): Node {
     return new BaseNode(this, data);
   }
 

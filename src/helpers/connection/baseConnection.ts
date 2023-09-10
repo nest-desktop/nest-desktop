@@ -2,9 +2,14 @@
 
 import { ILogObj, Logger } from "tslog";
 
-import { Config } from "@/helpers/config";
+import { BaseSynapse, SynapseProps } from "@/helpers/synapse/baseSynapse";
+import { Config } from "@/helpers/common/config";
+import { Connection } from "@/types/connectionTypes";
 import { Connections } from "@/types/connectionsTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { Network } from "@/types/networkTypes";
+import { Node } from "@/types/nodeTypes";
+import { Synapse } from "@/types/synapseTypes";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import {
   ConnectionParameter,
@@ -13,11 +18,6 @@ import {
 import { ConnectionRule } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
-import { Node } from "@/types/nodeTypes";
-import { Connection } from "@/types/connectionTypes";
-import { Network } from "@/types/networkTypes";
-import { Synapse } from "@/types/synapseTypes";
-import { BaseSynapse, SynapseProps } from "../synapse/baseSynapse";
 
 export interface ConnectionProps {
   params?: ConnectionParameterProps[];

@@ -10,8 +10,8 @@ import { RouteRecordRaw } from "vue-router";
 import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
-import modelRoutes from "./nestModelRoute";
-import projectRoutes from "./nestProjectRoute";
+import modelRoutes from "./nestModelRoutes";
+import projectRoutes from "./nestProjectRoutes";
 
 const closeNav = () => {
   const navStore = useNavStore();

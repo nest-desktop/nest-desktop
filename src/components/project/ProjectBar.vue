@@ -46,7 +46,7 @@ const project = computed(() => props.project as Project);
 
 const tabItems = computed(() => [
   {
-    icon: "nest:network",
+    icon: "network:network",
     id: "networkEditor",
     label: "Editor",
     title: "Network editor",

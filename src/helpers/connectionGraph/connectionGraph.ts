@@ -2,11 +2,11 @@
 
 import { Selection, Transition, drag, select, transition } from "d3";
 
+import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
 import { Connection } from "@/types/connectionTypes";
 import { NetworkGraph } from "@/types/networkGraphTypes";
 
 import { drawPathNode } from "./connectionGraphPath";
-import { BaseNetworkGraph } from "../networkGraph/baseNetworkGraph";
 
 export class ConnectionGraph {
   private _networkGraph: NetworkGraph;

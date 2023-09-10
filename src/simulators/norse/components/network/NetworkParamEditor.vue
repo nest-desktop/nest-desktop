@@ -45,10 +45,9 @@ const network = computed(() => projectStore.project.network as NorseNetwork);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
-  { icon: "nest:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "nest:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "nest:recorder", id: "recorder", title: "recorder" },
-  // { icon: "custom:copyModel", id: "model", title: "model" },
+  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "network:recorder", id: "recorder", title: "recorder" },
 ];
 
 /**

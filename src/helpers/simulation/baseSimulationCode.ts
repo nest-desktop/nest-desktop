@@ -7,7 +7,7 @@ import { sha1 } from "object-hash";
 
 import { Simulation } from "@/types/simulationTypes";
 import { download } from "@/utils/download";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 export interface SimulationCodeProps {
   blocks?: string[];

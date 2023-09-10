@@ -6,10 +6,10 @@ import { sha1 } from "object-hash";
 
 import { Connection } from "@/types/connectionTypes";
 import { Network } from "@/types/networkTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { Node } from "@/types/nodeTypes";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { BaseConnection, ConnectionProps } from "./baseConnection";
-import { Node } from "@/types/nodeTypes";
 
 interface ConnectionsState {
   focusedConnection: Connection | null;

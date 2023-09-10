@@ -6,19 +6,23 @@ import {
 } from "@/helpers/connection/baseConnection";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 import { NodeParameterProps } from "@/helpers/node/nodeParameter";
+import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
+
+import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
+import { NESTModel } from "@nest/helpers/model/nestModel";
+import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTNode } from "@nest/helpers/node/nestNode";
+import { NESTNodeSlice } from "@nest/helpers/node/nestNodeSlice";
+import {
+  NESTSynapse,
+  NESTSynapseProps,
+} from "@nest/helpers/synapse/nestSynapse";
 
 import {
   NESTConnectionMask,
   NESTConnectionMaskProps,
 } from "./nestConnectionMask";
 import { NESTConnections } from "./nestConnections";
-import { NESTCopyModel } from "../model/nestCopyModel";
-import { NESTModel } from "../model/nestModel";
-import { NESTNetwork } from "../network/nestNetwork";
-import { NESTNode } from "../node/nestNode";
-import { NESTNodeSlice } from "../node/nestNodeSlice";
-import { NESTSynapse, NESTSynapseProps } from "../synapse/nestSynapse";
-import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
 
 export interface NESTConnectionProps extends ConnectionProps {
   sourceSlice?: NodeParameterProps[];

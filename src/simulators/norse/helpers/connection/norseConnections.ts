@@ -2,8 +2,9 @@
 
 import { BaseConnections } from "@/helpers/connection/baseConnections";
 
+import { NorseNetwork } from "@norse/helpers/network/norseNetwork";
+
 import { NorseConnection, NorseConnectionProps } from "./norseConnection";
-import { NorseNetwork } from "../network/norseNetwork";
 
 export class NorseConnections extends BaseConnections {
   constructor(network: NorseNetwork, connections: NorseConnectionProps[] = []) {

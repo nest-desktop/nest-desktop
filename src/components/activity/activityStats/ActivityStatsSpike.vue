@@ -45,7 +45,7 @@
 import { computed, onMounted, reactive, watch } from "vue";
 
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { deviation, diff, mean, sum } from "@/helpers/array";
+import { deviation, diff, mean, sum } from "@/helpers/common/array";
 import { toFixed } from "@/utils/converter";
 
 const props = defineProps({

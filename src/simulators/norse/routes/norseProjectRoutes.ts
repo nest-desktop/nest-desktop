@@ -4,7 +4,7 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
@@ -75,7 +75,7 @@ export default [
         path: "edit",
         name: "norseNetworkEditor",
         components: {
-          project: () => import("@norse/views/project/NorseNetworkGraphEditor.vue"),
+          project: () => import("@norse/views/NorseProjectNetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -84,7 +84,7 @@ export default [
         path: "explore",
         name: "norseActivityExplorer",
         components: {
-          project: () => import("@norse/views/project/NorseActivityExplorer.vue"),
+          project: () => import("@norse/views/NorseProjectActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -93,7 +93,7 @@ export default [
         path: "lab",
         name: "norseLabBook",
         components: {
-          project: () => import("@norse/views/project/NorseLabBook.vue"),
+          project: () => import("@norse/views/NorseProjectLabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

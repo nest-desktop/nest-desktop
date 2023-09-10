@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 
 import { download } from "@/utils/download";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
 import {
@@ -255,7 +255,7 @@ export const useNESTProjectDBStore = defineStore("nest-project-db", {
     /**
      * Update project list from the database.
      */
-    updateList(): Promise<any> {
+    async updateList(): Promise<any> {
       logger.trace("update project list");
       this.projects = [];
       return db.list("createdAt", true).then((projects: NESTProjectProps[]) => {

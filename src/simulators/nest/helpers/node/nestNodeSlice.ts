@@ -1,6 +1,6 @@
 // nodeSlice.ts
 
-import { Config } from "@/helpers/config";
+import { Config } from "@/helpers/common/config";
 import { NodeParameter, NodeParameterProps } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./nestNode";

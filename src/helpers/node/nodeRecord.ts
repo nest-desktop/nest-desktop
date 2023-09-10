@@ -1,8 +1,8 @@
 // nodeRecord.ts
 
+import { Activity } from "@/helpers/activity/activity";
 import { Node } from "@/types/nodeTypes";
-import { max, min } from "@/helpers/array";
-import { Activity } from "../activity/activity";
+import { max, min } from "@/helpers/common/array";
 
 export interface NodeRecordProps {
   id: string;

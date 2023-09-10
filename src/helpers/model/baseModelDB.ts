@@ -1,9 +1,9 @@
 // modelDB.ts
 
 import { BaseModel, ModelProps } from "@/helpers/model/baseModel";
-import { DatabaseService } from "@/helpers/database";
+import { DatabaseService } from "@/helpers/common/database";
 import { Model } from "@/types/modelTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({

@@ -1,6 +1,6 @@
 // CVISIHistogramModel.ts
 
-import { currentBackgroundColor } from '@/helpers/theme';
+import { currentBackgroundColor } from '@/helpers/common/theme';
 import { SpikeActivity } from '@/helpers/activity/spikeActivity';
 
 import { ActivityChartPanel } from '../activityChartPanel';

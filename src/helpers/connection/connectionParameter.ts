@@ -2,7 +2,7 @@
 
 import { BaseConnection } from "./baseConnection";
 import { Connection } from "@/types/connectionTypes";
-import { Parameter, ParameterProps } from "@/helpers/parameter";
+import { Parameter, ParameterProps } from "@/helpers/common/parameter";
 
 export interface ConnectionParameterProps extends ParameterProps {}
 
