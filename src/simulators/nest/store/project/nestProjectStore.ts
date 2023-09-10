@@ -3,13 +3,12 @@
 import { defineStore } from "pinia";
 
 import router from "@/router";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
 import { NESTProject } from "@nest/helpers/project/nestProject";
 
 import { useNESTProjectDBStore } from "./nestProjectDBStore";
-// import { useActivityGraphStore } from "../graph/activityGraphStore";
 
 const logger = mainLogger.getSubLogger({ name: "project store" });
 

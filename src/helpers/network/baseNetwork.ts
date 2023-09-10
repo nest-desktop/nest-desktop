@@ -2,21 +2,21 @@
 
 import { ILogObj, Logger } from "tslog";
 
-import { Activity } from "../activity/activity";
-import { BaseConnection, ConnectionProps } from "../connection/baseConnection";
-import { BaseConnections } from "../connection/baseConnections";
-import { BaseNetworkState } from "./baseNetworkState";
-import { NodeProps } from "../node/baseNode";
-import { BaseNodes } from "../node/baseNodes";
-import { Config } from "../config";
+import { Activity } from "@/helpers/activity/activity";
+import { BaseConnection, ConnectionProps } from "@/helpers/connection/baseConnection";
+import { BaseConnections } from "@/helpers/connection/baseConnections";
+import { BaseNodes } from "@/helpers/node/baseNodes";
+import { Config } from "@/helpers/common/config";
+import { Connection } from "@/types/connectionTypes";
 import { Connections } from "@/types/connectionsTypes";
+import { Network } from "@/types/networkTypes";
+import { Node } from "@/types/nodeTypes";
+import { NodeProps } from "@/helpers/node/baseNode";
 import { Nodes } from "@/types/nodesTypes";
 import { Project } from "@/types/projectTypes";
-import { logger as mainLogger } from "../logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { Node } from "@/types/nodeTypes";
-import { Connection } from "@/types/connectionTypes";
-import { Network } from "@/types/networkTypes";
+import { BaseNetworkState } from "./baseNetworkState";
 
 export interface NetworkProps {
   nodes?: NodeProps[];

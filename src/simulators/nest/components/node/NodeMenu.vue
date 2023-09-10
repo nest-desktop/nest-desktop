@@ -285,7 +285,7 @@ const items = [
     title: "Clone node",
   },
   // {
-  //   icon: "nest:synapse-excitatory",
+  //   icon: "network:synapse-excitatory",
   //   id: "setSynWeights",
   //   onClick: () => {
   //     state.content = "synWeights";

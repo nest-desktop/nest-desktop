@@ -1,8 +1,8 @@
 // analogSignalPlotModel.ts
 
-import { BaseNode } from "@/helpers/node/baseNode";
+import { Node } from "@/types/nodeTypes";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { currentBackgroundColor, currentColor } from "@/helpers/theme";
+import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
 
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
@@ -47,9 +47,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   addSpikeThresholdLine(record: NodeRecord): void {
     const thresholds: number[] = record.node.nodes.all
-      .filter((node: BaseNode) => node.modelId.startsWith("iaf"))
+      .filter((node: Node) => node.modelId.startsWith("iaf"))
       .map(
-        (target: BaseNode) => (target.getParameter("V_th").value as number) || -55
+        (target: Node) => (target.getParameter("V_th").value as number) || -55
       );
 
     if (thresholds.length > 0) {

@@ -77,7 +77,7 @@ import { computed, onMounted, reactive, watch } from "vue";
 // import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 // import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { deviation, mean } from "@/helpers/array";
+import { deviation, mean } from "@/helpers/common/array";
 import { toFixed } from "@/utils/converter";
 
 const props = defineProps({

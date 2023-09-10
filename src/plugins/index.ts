@@ -3,28 +3,34 @@
  *
  * Automatically included in `./src/main.ts`
  */
+import type { App } from "vue";
+
+import pinia from "@/store";
+import router from "@/router";
+
+// Simulators
+import { registerSimulators } from "@/simulators";
 
 // Load fonts
 import { loadFonts } from "./webfontloader";
 
 // Plugins
-import vuetify from "./vuetify";
+import { vuetify } from "./vuetify";
 import codeMirror from "./codemirror";
 
-import pinia from "@/store";
-import router from "@/router";
-
-// Types
-import type { App } from "vue";
-
 export function registerPlugins(app: App) {
-  loadFonts();
 
-  // Use vuetify
-  app.use(vuetify);
+  // Load fonts
+  loadFonts();
 
   // Use pinia
   app.use(pinia);
+
+  // Register simulators
+  registerSimulators(app);
+
+  // Use vuetify
+  app.use(vuetify);
 
   // Use router
   app.use(router);

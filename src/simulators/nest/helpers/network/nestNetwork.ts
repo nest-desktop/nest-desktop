@@ -6,13 +6,13 @@ import { Node } from "@/types/nodeTypes";
 import {
   NESTConnection,
   NESTConnectionProps,
-} from "../connection/nestConnection";
-import { NESTConnections } from "../connection/nestConnections";
-import { NESTCopyModel, NESTCopyModelProps } from "../model/nestCopyModel";
-import { NESTCopyModels } from "../model/nestCopyModels";
-import { NESTNode, NESTNodeProps } from "../node/nestNode";
-import { NESTNodes } from "../node/nestNodes";
-import { NESTProject } from "../project/nestProject";
+} from "@nest/helpers/connection/nestConnection";
+import { NESTConnections } from "@nest/helpers/connection/nestConnections";
+import { NESTCopyModel, NESTCopyModelProps } from "@nest/helpers/model/nestCopyModel";
+import { NESTCopyModels } from "@nest/helpers/model/nestCopyModels";
+import { NESTNode, NESTNodeProps } from "@nest/helpers/node/nestNode";
+import { NESTNodes } from "@nest/helpers/node/nestNodes";
+import { NESTProject } from "@nest/helpers/project/nestProject";
 
 
 export interface NESTNetworkProps {

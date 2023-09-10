@@ -53,10 +53,10 @@
 import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
-import ConnectionViewer from "@norse/components/connection/ConnectionViewer.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamViewer from "@/components/node/NodeParamViewer.vue";
 
+import ConnectionViewer from "@norse/components/connection/ConnectionViewer.vue";
 import { NorseConnection } from "@norse/helpers/connection/norseConnection";
 import { NorseNode } from "@norse/helpers/node/norseNode";
 

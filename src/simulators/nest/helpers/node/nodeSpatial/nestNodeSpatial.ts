@@ -2,7 +2,7 @@
 
 import { sha1 } from "object-hash";
 
-import { Config } from "@/helpers/config";
+import { Config } from "@/helpers/common/config";
 
 import { FreePositions, FreePositionsProps } from "./freePositions";
 import { GridPositions, GridPositionsProps } from "./gridPositions";

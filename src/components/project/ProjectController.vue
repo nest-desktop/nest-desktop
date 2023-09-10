@@ -146,7 +146,7 @@ const projectJSON = computed(() =>
 );
 
 const controllerItems = [
-  { id: "network", icon: "nest:network", title: "Edit network" },
+  { id: "network", icon: "network:network", title: "Edit network" },
   { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
   { id: "raw", icon: "mdi-code-json", show: "dev" },
   { id: "code", icon: "mdi-xml" },

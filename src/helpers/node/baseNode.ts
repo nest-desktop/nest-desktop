@@ -4,7 +4,7 @@ import { ILogObj, Logger } from "tslog";
 
 import { Activity, ActivityProps } from "@/helpers/activity/activity";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { Config } from "@/helpers/config";
+import { Config } from "@/helpers/common/config";
 import { Connection } from "@/types/connectionTypes";
 import { Model } from "@/types/modelTypes";
 import { ModelParameter } from "@/helpers/model/modelParameter";
@@ -12,7 +12,7 @@ import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
 import { Nodes } from "@/types/nodesTypes";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NodeParameter, NodeParameterProps } from "./nodeParameter";
 import { NodeRecord, NodeRecordProps } from "./nodeRecord";

@@ -4,38 +4,15 @@
 import { h } from "vue";
 import type { IconSet, IconProps } from "vuetify";
 
-import connectionIcon from "./connections/ConnectionIcon.vue";
 import nestIcon from "./NESTIcon.vue";
-import networkIcon from "./NetworkIcon.vue";
-import neuronShapeIcon from "./nodes/NeuronShapeIcon.vue";
-import neuronExcitatoryIcon from "./nodes/NeuronExcitatoryIcon.vue";
-import neuronInhibitoryIcon from "./nodes/NeuronInhibitoryIcon.vue";
-import neuronIcon from "./nodes/NeuronIcon.vue";
-import recorderIcon from "./nodes/RecorderIcon.vue";
-import stimulatorIcon from "./nodes/StimulatorIcon.vue";
-import synapseExcitatoryIcon from "./connections/SynapseExcitatoryIcon.vue";
-import synapseInhibitoryIcon from "./connections/SynapseInhibitoryIcon.vue";
-import synapseRecorderIcon from "./connections/SynapseRecorderIcon.vue";
+import copyModelIcon from "./CopyModelIcon.vue";
 
-const customSvgNameToComponent: any = {
-  "neuron": neuronIcon,
-  "neuron-shape": neuronShapeIcon,
-  "neuron-mixed": neuronIcon,
-  "neuron-excitatory": neuronExcitatoryIcon,
-  "neuron-inhibitory": neuronInhibitoryIcon,
-  "synapse-excitatory": synapseExcitatoryIcon,
-  "synapse-inhibitory": synapseInhibitoryIcon,
-  "synapse-recorder": synapseRecorderIcon,
-  connection: connectionIcon,
+const nestSvgNameToComponent: any = {
   logo: nestIcon,
-  network: networkIcon,
-  recorder: recorderIcon,
-  stimulator: stimulatorIcon,
+  copyModel: copyModelIcon,
 };
 
-const nest: IconSet = {
+export const nestIconSet: IconSet = {
   // @ts-ignore
-  component: (props: IconProps) => h(customSvgNameToComponent[props.icon]),
+  component: (props: IconProps) => h(nestSvgNameToComponent[props.icon]),
 };
-
-export { nest /* aliases */ };

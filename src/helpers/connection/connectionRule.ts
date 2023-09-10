@@ -1,6 +1,7 @@
 // connectionRule.ts
 
 import { Connection } from "@/types/connectionTypes";
+
 import { BaseConnection } from "./baseConnection";
 
 enum Rule {

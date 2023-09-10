@@ -1,18 +1,19 @@
 // nestCopyModel.ts
 
 import { reactive, UnwrapRef } from "vue";
-import { Parameter } from "@/helpers/parameter";
+import { Parameter } from "@/helpers/common/parameter";
 import {
   ModelParameter,
   ModelParameterProps,
 } from "@/helpers/model/modelParameter";
 
-import { NESTConnection } from "../connection/nestConnection";
+import { NESTConnection } from "@nest/helpers/connection/nestConnection";
+import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTNode } from "@nest/helpers/node/nestNode";
+
 import { NESTModel } from "./nestModel";
 import { NESTModelCompartmentParameter } from "./nestModelCompartmentParameter";
 import { NESTModelReceptor } from "./modelReceptor/nestModelReceptor";
-import { NESTNetwork } from "../network/nestNetwork";
-import { NESTNode } from "../node/nestNode";
 
 export interface NESTCopyModelProps {
   existing: string;
@@ -286,7 +287,7 @@ export class NESTCopyModel {
    * @param param - parameter object
    */
   addParameter(param: any): void {
-    this._params[param.id] = new ModelParameter(this, param);
+    this._params[param.id] = new ModelParameter(this.model, param);
   }
 
   // /**

@@ -20,16 +20,8 @@ import { createVuetify } from "vuetify";
 // import { md1, md2, md3 } from "vuetify/blueprints";
 
 import { mdi } from "vuetify/iconsets/mdi";
-import { custom } from "@/components/iconsets/custom";
-import { simulator } from "@/components/iconsets/simulator";
-import { nest } from "@nest/components/iconsets";
-
-const colorSimulators = {
-  "norse-accent": "#e6007e",
-  nest: "ff6633",
-  "norse-logo": "#000080",
-  norse: "0F9959"
-};
+import { custom } from "@/components/iconsets/common";
+import { network } from "@/components/iconsets/network";
 
 const colors = {
   blue: ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
@@ -55,7 +47,7 @@ const colors = {
 };
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-export default createVuetify({
+export const vuetify = createVuetify({
   components: {
     ...components,
     VDataTable,
@@ -81,7 +73,6 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          ...colorSimulators,
           ...colors,
           primary: "#424242",
           secondary: "#EEEEEE",
@@ -91,7 +82,6 @@ export default createVuetify({
       },
       dark: {
         colors: {
-          ...colorSimulators,
           ...colors,
           primary: "#EEEEEE",
           secondary: "#424242",
@@ -106,8 +96,26 @@ export default createVuetify({
     sets: {
       mdi,
       custom,
-      simulator,
-      nest,
+      network,
     },
   },
 });
+
+export function addTheme(colors: any): void {
+  vuetify.theme.themes.value.light.colors = Object.assign(
+    vuetify.theme.themes.value.light.colors,
+    colors
+  );
+
+  vuetify.theme.themes.value.dark.colors = Object.assign(
+    vuetify.theme.themes.value.dark.colors,
+    colors
+  );
+}
+
+export function addIconSet(iconSet: any): void {
+  vuetify.icons.sets = Object.assign(
+    vuetify.icons.sets,
+    iconSet
+  );
+}

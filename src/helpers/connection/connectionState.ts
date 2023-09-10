@@ -4,6 +4,7 @@ import { sha1 } from "object-hash";
 import { UnwrapRef, reactive } from "vue";
 
 import { Connection } from "@/types/connectionTypes";
+
 import { BaseConnection } from "./baseConnection";
 
 interface ConnectionStateState {

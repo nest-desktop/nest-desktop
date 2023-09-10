@@ -1,12 +1,11 @@
 // insite.ts
 
-import { openToast } from "@/helpers/toast";
-import { logger as mainLogger } from "@/helpers/logger";
+import { openToast } from "@/helpers/common/toast";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
-import { NESTProject } from "../project/nestProject";
-
+import { NESTProject } from "@nest/helpers/project/nestProject";
 import { useInsiteAccessStore } from "@nest/store/backends/insiteAccessStore";
 
 const logger = mainLogger.getSubLogger({ name: "insite" });

@@ -4,7 +4,7 @@
   <model-bar :model="model" color="orange">
     <template #prependTabs>
       <v-tab
-        :to="{ name: 'nestModelDoc' }"
+        :to="{ name: 'nestModelDoc', params: { modelId: model.id } }"
         size="small"
         title="Read documentation"
       >

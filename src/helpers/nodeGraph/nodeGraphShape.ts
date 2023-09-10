@@ -5,7 +5,7 @@ import { Selection, select } from "d3";
 
 import { NetworkGraph } from "@/types/networkGraphTypes";
 import { Node } from "@/types/nodeTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;

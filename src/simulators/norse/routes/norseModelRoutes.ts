@@ -54,7 +54,7 @@ export default [
         path: "edit",
         name: "norseModelEditor",
         components: {
-          model: () => import("@norse/views/model/NorseModelEditor.vue"),
+          model: () => import("@norse/views/NorseModelEditor.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
@@ -63,7 +63,7 @@ export default [
         path: "explore",
         name: "norseModelExplorer",
         components: {
-          model: () => import("@norse/views/model/NorseModelExplorer.vue"),
+          model: () => import("@norse/views/NorseModelExplorer.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,

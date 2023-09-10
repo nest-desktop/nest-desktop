@@ -8,7 +8,7 @@
           </v-btn>
           <v-btn
             :color="connection.source.view.color"
-            icon="nest:synapse-excitatory"
+            icon="network:synapse-excitatory"
             size="small"
             variant="text"
           />

@@ -3,9 +3,10 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
+import { NESTNode } from "@nest/helpers/node/nestNode";
+import { NESTConnection } from "@nest/helpers/connection/nestConnection";
+
 import { NESTNetwork } from "./nestNetwork";
-import { NESTNode } from "../node/nestNode";
-import { NESTConnection } from "../../helpers/connection/nestConnection";
 
 interface NESTNetworkStateState {
   displayIdx: {

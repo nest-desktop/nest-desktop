@@ -129,9 +129,9 @@
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 
 import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
-import { useNorseSimulatorStore } from "../store/backends/norseSimulatorStore";
 const projectDBStore = useNorseProjectDBStore();
 
+import { useNorseSimulatorStore } from "@norse/store/backends/norseSimulatorStore";
 const norseSimulatorStore = useNorseSimulatorStore();
 //
 </script>

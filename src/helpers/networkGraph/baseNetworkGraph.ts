@@ -4,14 +4,15 @@ import { ILogObj, Logger } from "tslog";
 import { Ref, watch } from "vue";
 import { Selection, select } from "d3";
 
-import { BaseNode } from "../node/baseNode";
-import { BaseNetwork } from "../network/baseNetwork";
-import { ConnectionGraph } from "../connectionGraph/connectionGraph";
+import { BaseNetwork } from "@/helpers/network/baseNetwork";
+import { BaseNode } from "@/helpers/node/baseNode";
+import { ConnectionGraph } from "@/helpers/connectionGraph/connectionGraph";
 import { Network } from "@/types/networkTypes";
-import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { NodeGraph } from "../nodeGraph/nodeGraph";
+import { NodeGraph } from "@/helpers/nodeGraph/nodeGraph";
 import { debounce } from "@/utils/events";
-import { logger as mainLogger } from "../logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
+
+import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 export class BaseNetworkGraph {
   private _config = {

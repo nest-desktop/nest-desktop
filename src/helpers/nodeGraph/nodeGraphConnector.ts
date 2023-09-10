@@ -1,9 +1,10 @@
 // nodeGraphConnector.ts
 
+import { drag, select, Selection, Transition, transition } from "d3";
+
 import { NetworkGraph } from "@/types/networkGraphTypes";
 import { Node } from "@/types/nodeTypes";
-import { darkMode } from "@/helpers/theme";
-import { drag, select, Selection, Transition, transition } from "d3";
+import { darkMode } from "@/helpers/common/theme";
 import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 
 export class NodeGraphConnector {

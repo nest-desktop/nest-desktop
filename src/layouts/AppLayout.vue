@@ -8,16 +8,24 @@
       class="ma-auto"
       indeterminate
       color="primary"
-      v-if="appSessionStore.loading"
+      v-if="appStore.session.loading"
     />
     <router-view v-else />
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import { useAppSessionStore } from "@/store/appSessionStore";
+import { onMounted } from "vue";
+import { useTheme } from "vuetify";
 
 import AppBar from "@/components/app/AppBar.vue";
 
-const appSessionStore = useAppSessionStore();
+import { useAppStore } from "@/store/appStore";
+
+const theme = useTheme();
+const appStore = useAppStore();
+
+onMounted(() => {
+  theme.global.name.value = appStore.darkMode ? "dark" : "light";
+});
 </script>

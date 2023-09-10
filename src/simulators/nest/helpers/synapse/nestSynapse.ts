@@ -3,9 +3,9 @@
 import { BaseSynapse, SynapseProps } from "@/helpers/synapse/baseSynapse";
 import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
 
-import { NESTConnection } from "../connection/nestConnection";
-import { NESTCopyModel } from "../model/nestCopyModel";
-import { NESTModel } from "../model/nestModel";
+import { NESTConnection } from "@nest/helpers/connection/nestConnection";
+// import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
+import { NESTModel } from "@nest/helpers/model/nestModel";
 
 export interface NESTSynapseProps extends SynapseProps {
   receptorIdx?: number;
@@ -35,24 +35,27 @@ export class NESTSynapse extends BaseSynapse {
     return this.connection.isBothSpatial;
   }
 
-  override get model(): NESTCopyModel | NESTModel {
+  override get model(): NESTModel {
     if (this._model?.id !== this.modelId) {
       this._model = this.getModel(this.modelId);
     }
-    return this._model as NESTCopyModel | NESTModel;
+    return this._model as NESTModel;
   }
 
-  override get models(): (NESTCopyModel | NESTModel)[] {
+  override get models(): (NESTModel)[] {
     const elementType: string = this.model.elementType;
     const models: NESTModel[] =
       this.connection.network.project.modelStore.getModelsByElementType(
         elementType
       );
-    const modelsCopied: NESTCopyModel[] =
-      this.connection.network.modelsCopied.filterByElementType(elementType);
-    const filteredModels = [...models, ...modelsCopied];
-    filteredModels.sort();
-    return filteredModels;
+
+    // const modelsCopied: NESTCopyModel[] =
+    //   this.connection.network.modelsCopied.filterByElementType(elementType);
+
+    // const filteredModels = [...models, ...modelsCopied];
+    // filteredModels.sort();
+
+    return models;
   }
 
   get receptorIdx(): number {
@@ -74,17 +77,18 @@ export class NESTSynapse extends BaseSynapse {
     );
   }
 
-  override getModel(modelId: string): NESTCopyModel | NESTModel {
+  override getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
-    if (
-      this.connection.network.modelsCopied?.synapseModels.some(
-        (model: NESTCopyModel) => model.id === modelId
-      )
-    ) {
-      return this.connection.network.modelsCopied.getModelById(modelId);
-    } else {
-      return this.connection.network.project.modelStore.getModel(modelId);
-    }
+    // if (
+    //   this.connection.network.modelsCopied?.synapseModels.some(
+    //     (model: NESTCopyModel) => model.id === modelId
+    //   )
+    // ) {
+    //   return this.connection.network.modelsCopied.getModelById(modelId);
+    // } else {
+    //   return this.connection.network.project.modelStore.getModel(modelId);
+    // }
+    return this.connection.network.project.modelStore.getModel(modelId);
   }
 
   /**

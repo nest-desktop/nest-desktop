@@ -2,7 +2,6 @@
 
 import { v4 as uuidv4 } from "uuid";
 import { ILogObj, Logger } from "tslog";
-import { logger as mainLogger } from "@/helpers/logger";
 
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityGraph } from "@/helpers/activity/activityGraph";
@@ -11,13 +10,13 @@ import {
   BaseSimulation,
   SimulationProps,
 } from "@/helpers/simulation/baseSimulation";
+import { Network } from "@/types/networkTypes";
+import { ProjectState } from "./projectState";
+import { Simulation } from "@/types/simulationTypes";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { useModelDBStore } from "@/store/model/modelDBStore";
 import { useProjectDBStore } from "@/store/project/projectDBStore";
 import { useProjectStore } from "@/store/project/projectStore";
-
-import { ProjectState } from "./projectState";
-import { Network } from "@/types/networkTypes";
-import { Simulation } from "@/types/simulationTypes";
 
 export interface ProjectProps {
   activityGraph?: any;

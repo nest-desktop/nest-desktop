@@ -1,6 +1,6 @@
 // gridPositions.ts
 
-import { range } from "@/helpers/array";
+import { range } from "@/helpers/common/array";
 import { round } from "@/utils/converter";
 
 import { NESTNodeSpatial } from "./nestNodeSpatial";

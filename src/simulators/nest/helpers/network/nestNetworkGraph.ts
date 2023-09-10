@@ -4,7 +4,8 @@ import { Ref } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
 
-import { NESTModelAssignGraph } from "../model/nestModelAssignGraph";
+import { NESTModelAssignGraph } from "@nest/helpers/model/nestModelAssignGraph";
+
 import { NESTNetwork } from "./nestNetwork";
 
 export class NESTNetworkGraph extends BaseNetworkGraph {

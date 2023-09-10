@@ -8,8 +8,8 @@ import { NetworkGraph } from "@/types/networkGraphTypes";
 import { Node } from "@/types/nodeTypes";
 import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
-import { currentBackgroundColor } from "@/helpers/theme";
-import { logger as mainLogger } from "@/helpers/logger";
+import { currentBackgroundColor } from "@/helpers/common/theme";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 export class NodeGraph {
   private _logger: Logger<ILogObj>;

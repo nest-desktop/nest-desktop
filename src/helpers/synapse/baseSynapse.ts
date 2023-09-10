@@ -3,10 +3,10 @@
 import { UnwrapRef, reactive } from "vue";
 import { ILogObj, Logger } from "tslog";
 
+import { Connection } from "@/types/connectionTypes";
 import { Model } from "@/types/modelTypes";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { logger as mainLogger } from "@/helpers/logger";
-import { Connection } from "@/types/connectionTypes";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { SynapseParameter, SynapseParameterProps } from "./synapseParameter";
 
@@ -76,9 +76,9 @@ export class BaseSynapse {
 
   get icon(): string {
     if (this.connection.view.connectRecorder() || this.weight === 0) {
-      return "nest:synapse-recorder";
+      return "network:synapse-recorder";
     } else {
-      return "nest:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
+      return "network:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
     }
   }
 

@@ -17,7 +17,7 @@ import {
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from "stats.js";
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/helpers/common/theme";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 

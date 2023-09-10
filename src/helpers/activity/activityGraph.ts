@@ -7,7 +7,7 @@ import { ActivityAnimationGraph } from "@/helpers/activityAnimationGraph/activit
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanelProps } from "@/helpers/activityChartGraph/activityChartPanel";
 import { Project } from "@/types/projectTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 export class ActivityGraph {
   private _project: Project;

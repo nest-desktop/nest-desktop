@@ -1,6 +1,6 @@
 // nestConnectionParameter.ts
 
-import { Parameter, ParameterProps } from "@/helpers/parameter";
+import { Parameter, ParameterProps } from "@/helpers/common/parameter";
 
 import { NESTConnection } from "./nestConnection";
 

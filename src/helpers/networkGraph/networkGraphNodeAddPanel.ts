@@ -1,10 +1,10 @@
 // networkGraphNodeAddPanel.ts
 import { Arc, Selection, arc } from "d3";
 
-import { darkMode } from "@/helpers/theme";
+import { darkMode } from "@/helpers/common/theme";
+import { Network } from "@/types/networkTypes";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { Network } from "@/types/networkTypes";
 
 export class NetworkGraphNodeAddPanel {
   private _workspace: NetworkGraphWorkspace;

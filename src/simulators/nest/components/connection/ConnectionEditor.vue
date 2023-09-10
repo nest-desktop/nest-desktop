@@ -79,10 +79,10 @@ import { computed } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
+import SynapseSpecEditor from "@nest/components/synapse/SynapseSpecEditor.vue";
 import { NESTSynapse } from "@nest/helpers/synapse/nestSynapse";
 import { NESTConnection } from "@nest/helpers/connection/nestConnection";
 
-import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
 import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
 
 const props = defineProps({

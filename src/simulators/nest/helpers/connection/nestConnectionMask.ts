@@ -1,6 +1,6 @@
 // nestConnectionMask.ts
 
-import { Config } from "@/helpers/config";
+import { Config } from "@/helpers/common/config";
 
 import { NESTConnection } from "./nestConnection";
 

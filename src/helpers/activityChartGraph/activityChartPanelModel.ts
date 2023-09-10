@@ -5,7 +5,7 @@ import { Data } from "plotly.js-dist-min";
 
 import { Activity } from "@/helpers/activity/activity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { ActivityChartPanel } from "./activityChartPanel";
 

@@ -1,7 +1,7 @@
 // nestModelDBStore.ts
 
 import { defineStore } from "pinia";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NESTModel } from "@nest/helpers/model/nestModel";
 import { NESTModelDB } from "@nest/helpers/model/nestModelDB";

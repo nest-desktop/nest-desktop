@@ -37,7 +37,7 @@ const codeBlocks = [
   // { icon: "mdi-arrow-down", title: "insite" },
   // { icon: "mdi-engine-outline", title: "kernel" },
   { icon: "mdi-shape", title: "create" },
-  { icon: "nest:network", title: "connect" },
+  { icon: "network:network", title: "connect" },
   { icon: "mdi-play", title: "simulate" },
 ];
 </script>

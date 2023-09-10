@@ -5,7 +5,7 @@
     </span>
     <v-icon
       :color="props.color"
-      icon="nest:stimulator"
+      icon="network:stimulator"
       class="position-absolute icon-size"
     />
   </v-avatar>
