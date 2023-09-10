@@ -25,24 +25,24 @@ export default {
     const appStore = useAppStore();
     appStore.simulator = "nest";
   },
-  component: () => import("@nest/layouts/NESTLayout.vue"),
+  component: () => import("../layouts/NESTLayout.vue"),
   children: [
     {
       path: "",
       name: "nestHome",
-      component: () => import("@nest/views/NESTHome.vue"),
+      component: () => import("../views/NESTHome.vue"),
       beforeEnter: closeNav,
     },
     {
       path: "model/",
       name: "nestModelLayout",
-      component: () => import("@nest/layouts/NESTModelLayout.vue"),
+      component: () => import("../layouts/NESTModelLayout.vue"),
       children: modelRoutes as RouteRecordRaw[],
     },
     {
       path: "project/",
       name: "nestProjectLayout",
-      component: () => import("@nest/layouts/NESTProjectLayout.vue"),
+      component: () => import("../layouts/NESTProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
     },
   ],

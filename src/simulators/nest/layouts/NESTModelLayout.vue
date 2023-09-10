@@ -26,12 +26,12 @@ import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 
-import { NESTModel } from "@nest/helpers/model/nestModel";
+import { NESTModel } from "../helpers/model/nestModel";
 
-import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+import { useNESTModelStore } from "../store/model/nestModelStore";
 const modelStore = useNESTModelStore();
 
-import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
+import { useNESTModelDBStore } from "../store/model/nestModelDBStore";
 const modelDBStore = useNESTModelDBStore();
 
 const model = computed(() => modelStore.model as NESTModel);

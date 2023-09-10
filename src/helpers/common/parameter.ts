@@ -2,7 +2,7 @@
 
 import { reactive, UnwrapRef } from "vue";
 
-import { Config } from "./config";
+import { Config } from "../config";
 
 type ParamValueTypes = boolean | number | string | (number | string)[];
 

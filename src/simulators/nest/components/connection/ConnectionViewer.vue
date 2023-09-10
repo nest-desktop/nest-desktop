@@ -56,9 +56,8 @@ import { computed } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
-import SynapseParamViewer from "@nest/components/synapse/SynapseParamViewer.vue";
-
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
+import SynapseParamViewer from "../synapse/SynapseParamViewer.vue";
+import { NESTConnection } from "../../helpers/connection/nestConnection";
 
 const props = defineProps({
   connection: NESTConnection,

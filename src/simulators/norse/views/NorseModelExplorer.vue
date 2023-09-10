@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { useNorseModelStore } from "@norse/store/model/norseModelStore";
+import { useNorseModelStore } from "../store/model/norseModelStore";
 const modelStore = useNorseModelStore();
 
 const model = computed(() => modelStore.model);

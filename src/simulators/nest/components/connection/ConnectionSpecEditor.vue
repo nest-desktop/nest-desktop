@@ -85,9 +85,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-
 import ConnectionParamEditor from "./ConnectionParamEditor.vue";
+import { NESTConnection } from "../../helpers/connection/nestConnection";
 
 const props = defineProps({
   connection: NESTConnection,

@@ -45,9 +45,9 @@ import { computed } from "vue";
 import { Network } from "@/types/networkTypes";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 
-import NodeViewer from "@norse/components/node/NodeViewer.vue";
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
-import { NorseNode } from "@norse/helpers/node/norseNode";
+import NodeViewer from "../components/node/NodeViewer.vue";
+import { useNorseProjectStore } from "../store/project/norseProjectStore";
+import { NorseNode } from "../helpers/node/norseNode";
 
 const projectStore = useNorseProjectStore();
 const network = computed(() => projectStore.project.network as Network);

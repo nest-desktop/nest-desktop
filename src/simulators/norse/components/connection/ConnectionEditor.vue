@@ -73,7 +73,7 @@ import { computed } from "vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
 import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
-import { NorseConnection } from "@norse/helpers/connection/norseConnection";
+import { NorseConnection } from "../../helpers/connection/norseConnection";
 
 const props = defineProps({
   connection: NorseConnection,

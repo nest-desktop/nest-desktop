@@ -34,11 +34,11 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import { NorseNetwork } from "@norse/helpers/network/norseNetwork"
-import { NorseNode } from "@norse/helpers/node/norseNode";
-import NodeEditor from "@norse/components/node/NodeEditor.vue";
+import { NorseNetwork } from "../../helpers/network/norseNetwork"
+import { NorseNode } from "../../helpers/node/norseNode";
+import NodeEditor from "../node/NodeEditor.vue";
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNorseProjectStore } from "../../store/project/norseProjectStore";
 const projectStore = useNorseProjectStore();
 
 const network = computed(() => projectStore.project.network as NorseNetwork);

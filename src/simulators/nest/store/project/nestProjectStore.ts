@@ -6,7 +6,7 @@ import router from "@/router";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
-import { NESTProject } from "@nest/helpers/project/nestProject";
+import { NESTProject } from "../../helpers/project/nestProject";
 
 import { useNESTProjectDBStore } from "./nestProjectDBStore";
 

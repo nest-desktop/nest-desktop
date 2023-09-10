@@ -4,7 +4,7 @@ import { BaseConnections } from "@/helpers/connection/baseConnections";
 import { Network } from "@/types/networkTypes";
 import { Connection } from "@/types/connectionTypes";
 
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTNetwork } from "../network/nestNetwork";
 
 import { NESTConnection, NESTConnectionProps } from "./nestConnection";
 

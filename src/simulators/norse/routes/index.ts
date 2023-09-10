@@ -25,24 +25,24 @@ export default {
     const appStore = useAppStore();
     appStore.simulator = "norse";
   },
-  component: () => import("@norse/layouts/NorseLayout.vue"),
+  component: () => import("../layouts/NorseLayout.vue"),
   children: [
     {
       path: "",
       name: "norseHome",
-      component: () => import("@norse/views/NorseHome.vue"),
+      component: () => import("../views/NorseHome.vue"),
       beforeEnter: closeNav,
     },
     {
       path: "model",
       name: "norseModelLayout",
-      component: () => import("@norse/layouts/NorseModelLayout.vue"),
+      component: () => import("../layouts/NorseModelLayout.vue"),
       children: modelRoutes as RouteRecordRaw[],
     },
     {
       path: "project",
       name: "norseProjectLayout",
-      component: () => import("@norse/layouts/NorseProjectLayout.vue"),
+      component: () => import("../layouts/NorseProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
     },
   ],

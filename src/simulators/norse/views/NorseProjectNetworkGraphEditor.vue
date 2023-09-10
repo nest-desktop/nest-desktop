@@ -12,7 +12,7 @@ import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import { Network } from "@/types/networkTypes";
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNorseProjectStore } from "../store/project/norseProjectStore";
 
 const projectStore = useNorseProjectStore();
 const network = computed(() => projectStore.project.network as Network);

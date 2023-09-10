@@ -2,14 +2,14 @@
 
 import { BaseProject, ProjectProps } from "@/helpers/project/baseProject";
 
-import { NorseNetwork, NorseNetworkProps } from "@norse/helpers/network/norseNetwork";
+import { NorseNetwork, NorseNetworkProps } from "../network/norseNetwork";
 import {
   NorseSimulation,
   NorseSimulationProps,
-} from "@norse/helpers/simulation/norseSimulation";
-import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+} from "../simulation/norseSimulation";
+import { useNorseModelDBStore } from "../../store/model/norseModelDBStore";
+import { useNorseProjectDBStore } from "../../store/project/norseProjectDBStore";
+import { useNorseProjectStore } from "../../store/project/norseProjectStore";
 
 export interface NorseProjectProps extends ProjectProps {
   network?: NorseNetworkProps;

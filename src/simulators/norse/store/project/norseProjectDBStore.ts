@@ -7,8 +7,8 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import {
   NorseProject,
   NorseProjectProps,
-} from "@norse/helpers/project/norseProject";
-import { NorseProjectDB } from "@norse/helpers/project/norseProjectDB";
+} from "../../helpers/project/norseProject";
+import { NorseProjectDB } from "../../helpers/project/norseProjectDB";
 
 const logger = mainLogger.getSubLogger({ name: "norse project DB store" });
 

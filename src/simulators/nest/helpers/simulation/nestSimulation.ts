@@ -5,8 +5,8 @@ import { sha1 } from "object-hash";
 import { openToast } from "@/helpers/common/toast";
 import { BaseSimulation } from "@/helpers/simulation/baseSimulation";
 
-import { NESTProject } from "@nest/helpers/project/nestProject";
-import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
+import { NESTProject } from "../project/nestProject";
+import { useNESTSimulatorStore } from "../../store/backends/nestSimulatorStore";
 
 import {
   NESTSimulationCode,

@@ -13,8 +13,8 @@ export const useModelStore = defineStore("model-view", {
   }),
   getters: {
     model: (state) => {
-      const norseModelDBStore = useModelDBStore();
-      return norseModelDBStore.getModel(state.modelId);
+      const modelDBStore = useModelDBStore();
+      return modelDBStore.getModel(state.modelId);
     },
   },
   actions: {
@@ -28,8 +28,8 @@ export const useModelStore = defineStore("model-view", {
      * Save current model to the database.
      */
     save(): void {
-      const norseModelDBStore = useModelDBStore();
-      norseModelDBStore.saveModel(this.model.id);
+      const modelDBStore = useModelDBStore();
+      modelDBStore.saveModel(this.model.id);
     },
   },
 });

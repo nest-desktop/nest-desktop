@@ -66,9 +66,9 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
 
-import { NESTSimulation } from "@nest/helpers/simulation/nestSimulation";
+import { NESTSimulation } from "../../helpers/simulation/nestSimulation";
 
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNESTProjectStore } from "../../store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();
 
 const props = defineProps({

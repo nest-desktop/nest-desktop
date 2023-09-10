@@ -13,7 +13,7 @@ import { computed } from "vue";
 import { ActivityChartGraph as ActivityChartGraphClass } from "@/helpers/activityChartGraph/activityChartGraph";
 import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNorseProjectStore } from "../store/project/norseProjectStore";
 
 const projectStore = useNorseProjectStore();
 

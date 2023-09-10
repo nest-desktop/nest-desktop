@@ -7,9 +7,9 @@ import {
   ModelParameterProps,
 } from "@/helpers/model/modelParameter";
 
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
-import { NESTNode } from "@nest/helpers/node/nestNode";
+import { NESTConnection } from "../connection/nestConnection";
+import { NESTNetwork } from "../network/nestNetwork";
+import { NESTNode } from "../node/nestNode";
 
 import { NESTModel } from "./nestModel";
 import { NESTModelCompartmentParameter } from "./nestModelCompartmentParameter";

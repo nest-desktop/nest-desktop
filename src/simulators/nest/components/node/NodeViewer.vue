@@ -55,9 +55,9 @@ import { computed } from "vue";
 import Card from "@/components/common/Card.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
-import ConnectionViewer from "@nest/components/connection/ConnectionViewer.vue";
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-import { NESTNode } from "@nest/helpers/node/nestNode";
+import ConnectionViewer from "../connection/ConnectionViewer.vue";
+import { NESTConnection } from "../../helpers/connection/nestConnection";
+import { NESTNode } from "../../helpers/node/nestNode";
 
 import NodeParamViewer from "./NodeParamViewer.vue";
 

@@ -5,10 +5,10 @@ import { ConnectionProps } from "@/helpers/connection/baseConnection";
 import { NodeProps } from "@/helpers/node/baseNode";
 import { Project } from "@/types/projectTypes";
 
-import { NorseConnectionProps } from "@norse/helpers/connection/norseConnection";
-import { NorseConnections } from "@norse/helpers/connection/norseConnections";
-import { NorseNodeProps } from "@norse/helpers/node/norseNode";
-import { NorseNodes } from "@norse/helpers/node/norseNodes";
+import { NorseConnectionProps } from "../connection/norseConnection";
+import { NorseConnections } from "../connection/norseConnections";
+import { NorseNodeProps } from "../node/norseNode";
+import { NorseNodes } from "../node/norseNodes";
 
 export interface NorseNetworkProps extends NetworkProps {
   nodes?: NorseNodeProps[];

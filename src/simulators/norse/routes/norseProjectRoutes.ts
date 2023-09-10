@@ -6,8 +6,8 @@
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNorseProjectDBStore } from "../store/project/norseProjectDBStore";
+import { useNorseProjectStore } from "../store/project/norseProjectStore";
 
 const logger = mainLogger.getSubLogger({ name: "project route" });
 
@@ -75,7 +75,7 @@ export default [
         path: "edit",
         name: "norseNetworkEditor",
         components: {
-          project: () => import("@norse/views/NorseProjectNetworkGraphEditor.vue"),
+          project: () => import("../views/NorseProjectNetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -84,7 +84,7 @@ export default [
         path: "explore",
         name: "norseActivityExplorer",
         components: {
-          project: () => import("@norse/views/NorseProjectActivityExplorer.vue"),
+          project: () => import("../views/NorseProjectActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -93,7 +93,7 @@ export default [
         path: "lab",
         name: "norseLabBook",
         components: {
-          project: () => import("@norse/views/NorseProjectLabBook.vue"),
+          project: () => import("../views/NorseProjectLabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

@@ -187,8 +187,8 @@ import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
-import ConnectionEditor from "@norse/components/connection/ConnectionEditor.vue";
-import { NorseNode } from "@norse/helpers/node/norseNode";
+import ConnectionEditor from "../connection/ConnectionEditor.vue";
+import { NorseNode } from "../../helpers/node/norseNode";
 
 import NodeMenu from "./NodeMenu.vue";
 
