@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import router from "@/router";
 
-import { NorseProject } from "@norse/helpers/project/norseProject";
+import { NorseProject } from "../../helpers/project/norseProject";
 
 import { useNorseProjectDBStore } from "./norseProjectDBStore";
 

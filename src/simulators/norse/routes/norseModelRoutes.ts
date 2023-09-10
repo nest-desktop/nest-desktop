@@ -4,8 +4,8 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
-import { useNorseModelStore } from "@norse/store/model/norseModelStore";
+import { useNorseModelDBStore } from "../store/model/norseModelDBStore";
+import { useNorseModelStore } from "../store/model/norseModelStore";
 
 const modelBeforeEnter = (to: any) => {
   const modelStore = useNorseModelStore();
@@ -54,7 +54,7 @@ export default [
         path: "edit",
         name: "norseModelEditor",
         components: {
-          model: () => import("@norse/views/NorseModelEditor.vue"),
+          model: () => import("../views/NorseModelEditor.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
@@ -63,7 +63,7 @@ export default [
         path: "explore",
         name: "norseModelExplorer",
         components: {
-          model: () => import("@norse/views/NorseModelExplorer.vue"),
+          model: () => import("../views/NorseModelExplorer.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,

@@ -25,15 +25,15 @@ import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 
-import NetworkParamEditor from "@norse/components/network/NetworkParamEditor.vue";
-import SimulationKernelEditor from "@norse/components/simulation/SimulationKernelEditor.vue";
-import { NorseProject } from "@norse/helpers/project/norseProject";
-import { NorseSimulation } from "@norse/helpers/simulation/norseSimulation";
+import NetworkParamEditor from "../components/network/NetworkParamEditor.vue";
+import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
+import { NorseProject } from "../helpers/project/norseProject";
+import { NorseSimulation } from "../helpers/simulation/norseSimulation";
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNorseProjectStore } from "../store/project/norseProjectStore";
 const projectStore = useNorseProjectStore();
 
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
+import { useNorseProjectDBStore } from "../store/project/norseProjectDBStore";
 const projectDBStore = useNorseProjectDBStore();
 
 const project = computed(() => projectStore.project as NorseProject);

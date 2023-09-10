@@ -3,8 +3,8 @@
  */
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
-import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+import { useNESTModelDBStore } from "../store/model/nestModelDBStore";
+import { useNESTModelStore } from "../store/model/nestModelStore";
 
 const logger = mainLogger.getSubLogger({
   name: "nest model route",
@@ -60,7 +60,7 @@ export default [
         path: "doc",
         name: "nestModelDoc",
         components: {
-          model: () => import("@nest/views/model/NESTModelDoc.vue"),
+          model: () => import("../views/model/NESTModelDoc.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
@@ -69,7 +69,7 @@ export default [
         path: "explore",
         name: "nestModelExplorer",
         components: {
-          model: () => import("@nest/views/model/NESTModelExplorer.vue"),
+          model: () => import("../views/model/NESTModelExplorer.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,
@@ -78,7 +78,7 @@ export default [
         path: "edit",
         name: "nestModelEditor",
         components: {
-          model: () => import("@nest/views/model/NESTModelEditor.vue"),
+          model: () => import("../views/model/NESTModelEditor.vue"),
         },
         props: true,
         beforeEnter: modelBeforeEnter,

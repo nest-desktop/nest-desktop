@@ -3,8 +3,8 @@
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { NESTModel } from "@nest/helpers/model/nestModel";
-import { NESTModelDB } from "@nest/helpers/model/nestModelDB";
+import { NESTModel } from "../../helpers/model/nestModel";
+import { NESTModelDB } from "../../helpers/model/nestModelDB";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });
 

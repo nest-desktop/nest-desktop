@@ -3,9 +3,9 @@
 import { BaseSynapse, SynapseProps } from "@/helpers/synapse/baseSynapse";
 import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
 
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-// import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
-import { NESTModel } from "@nest/helpers/model/nestModel";
+import { NESTConnection } from "../connection/nestConnection";
+// import { NESTCopyModel } from "../model/nestCopyModel";
+import { NESTModel } from "../model/nestModel";
 
 export interface NESTSynapseProps extends SynapseProps {
   receptorIdx?: number;

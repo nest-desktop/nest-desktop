@@ -9,8 +9,8 @@ import { truncate } from "@/utils/truncate";
 import {
   NESTProject,
   NESTProjectProps,
-} from "@nest/helpers/project/nestProject";
-import { NESTProjectDB } from "@nest/helpers/project/nestProjectDB";
+} from "../../helpers/project/nestProject";
+import { NESTProjectDB } from "../../helpers/project/nestProjectDB";
 
 const logger = mainLogger.getSubLogger({
   name: "project DB store",

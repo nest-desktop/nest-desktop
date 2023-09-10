@@ -3,8 +3,8 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
+import { NESTConnection } from "../connection/nestConnection";
+import { NESTCopyModel } from "../model/nestCopyModel";
 
 import { NESTNode } from "./nestNode";
 

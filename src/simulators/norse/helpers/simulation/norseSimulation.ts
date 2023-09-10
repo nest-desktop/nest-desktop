@@ -7,8 +7,8 @@ import {
 import { SimulationCodeProps } from "@/helpers/simulation/baseSimulationCode";
 import { openToast } from "@/helpers/common/toast";
 
-import { NorseProject } from "@norse/helpers/project/norseProject";
-import { useNorseSimulatorStore } from "@norse/store/backends/norseSimulatorStore";
+import { NorseProject } from "../project/norseProject";
+import { useNorseSimulatorStore } from "../../store/backends/norseSimulatorStore";
 
 import { NorseSimulationCode } from "./norseSimulationCode";
 

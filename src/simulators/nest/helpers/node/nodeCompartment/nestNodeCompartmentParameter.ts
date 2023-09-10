@@ -5,7 +5,7 @@ import {
   NodeParameterProps,
 } from "@/helpers/node/nodeParameter";
 
-import { NESTModelCompartmentParameter } from "@nest/helpers/model/nestModelCompartmentParameter";
+import { NESTModelCompartmentParameter } from "../../model/nestModelCompartmentParameter";
 
 import { NESTNodeCompartment } from "./nestNodeCompartment";
 

@@ -128,10 +128,10 @@
 <script setup lang="ts">
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
+import { useNorseProjectDBStore } from "../store/project/norseProjectDBStore";
 const projectDBStore = useNorseProjectDBStore();
 
-import { useNorseSimulatorStore } from "@norse/store/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../store/backends/norseSimulatorStore";
 const norseSimulatorStore = useNorseSimulatorStore();
 //
 </script>

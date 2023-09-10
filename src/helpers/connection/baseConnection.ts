@@ -3,7 +3,7 @@
 import { ILogObj, Logger } from "tslog";
 
 import { BaseSynapse, SynapseProps } from "@/helpers/synapse/baseSynapse";
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/helpers/config";
 import { Connection } from "@/types/connectionTypes";
 import { Connections } from "@/types/connectionsTypes";
 import { Network } from "@/types/networkTypes";

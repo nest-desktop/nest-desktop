@@ -6,7 +6,7 @@ import { Activity } from "@/helpers/activity/activity";
 import { BaseConnection, ConnectionProps } from "@/helpers/connection/baseConnection";
 import { BaseConnections } from "@/helpers/connection/baseConnections";
 import { BaseNodes } from "@/helpers/node/baseNodes";
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/helpers/config";
 import { Connection } from "@/types/connectionTypes";
 import { Connections } from "@/types/connectionsTypes";
 import { Network } from "@/types/networkTypes";

@@ -226,9 +226,9 @@
 import { ref } from "vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
-import { useInsiteAccessStore } from "@nest/store/backends/insiteAccessStore";
-import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
-import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
+import { useInsiteAccessStore } from "../store/backends/insiteAccessStore";
+import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
+import { useNESTProjectDBStore } from "../store/project/nestProjectDBStore";
 
 const projectDBStore = useNESTProjectDBStore();
 const nestSimulatorStore = useNESTSimulatorStore();

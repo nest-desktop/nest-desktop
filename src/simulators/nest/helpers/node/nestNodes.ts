@@ -2,7 +2,7 @@
 
 import { BaseNodes } from "@/helpers/node/baseNodes";
 
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTNetwork } from "../network/nestNetwork";
 
 import { NESTNode, NESTNodeProps } from "./nestNode";
 

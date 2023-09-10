@@ -9,8 +9,8 @@ import { computed, watch } from "vue";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
-import { useNESTSessionStore } from "@nest/store/nestSessionStore";
+import { useNESTProjectStore } from "../store/project/nestProjectStore";
+import { useNESTSessionStore } from "../store/nestSessionStore";
 
 const logger = mainLogger.getSubLogger({
   name: "nest project route",
@@ -86,7 +86,7 @@ export default [
         name: "nestNetworkEditor",
         components: {
           project: () =>
-            import("@nest/views/project/NESTNetworkGraphEditor.vue"),
+            import("../views/project/NESTNetworkGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -95,7 +95,7 @@ export default [
         path: "explore",
         name: "nestActivityExplorer",
         components: {
-          project: () => import("@nest/views/project/NESTActivityExplorer.vue"),
+          project: () => import("../views/project/NESTActivityExplorer.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
@@ -104,7 +104,7 @@ export default [
         path: "lab",
         name: "nestLabBook",
         components: {
-          project: () => import("@nest/views/project/NESTLabBook.vue"),
+          project: () => import("../views/project/NESTLabBook.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

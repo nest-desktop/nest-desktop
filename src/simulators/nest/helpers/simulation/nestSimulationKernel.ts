@@ -1,6 +1,6 @@
 // nestSimulationKernel.ts
 
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/helpers/config";
 
 import { NESTSimulation } from "./nestSimulation";
 

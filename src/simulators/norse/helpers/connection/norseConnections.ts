@@ -2,7 +2,7 @@
 
 import { BaseConnections } from "@/helpers/connection/baseConnections";
 
-import { NorseNetwork } from "@norse/helpers/network/norseNetwork";
+import { NorseNetwork } from "../network/norseNetwork";
 
 import { NorseConnection, NorseConnectionProps } from "./norseConnection";
 

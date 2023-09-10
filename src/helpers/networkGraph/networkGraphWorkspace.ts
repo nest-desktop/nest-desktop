@@ -2,7 +2,7 @@
 
 import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
 
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/helpers/config";
 import { Network } from "@/types/networkTypes";
 import { NetworkGraph } from "@/types/networkGraphTypes";
 import { Node } from "@/types/nodeTypes";

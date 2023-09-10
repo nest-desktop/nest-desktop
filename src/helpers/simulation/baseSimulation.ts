@@ -4,7 +4,7 @@ import { reactive, UnwrapRef } from "vue";
 import { ILogObj, Logger } from "tslog";
 import { sha1 } from "object-hash";
 
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/helpers/config";
 import { Project } from "@/types/projectTypes";
 import { SimulationCode } from "@/types/simulationCodeTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";

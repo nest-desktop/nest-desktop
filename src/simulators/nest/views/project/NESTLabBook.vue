@@ -42,13 +42,13 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import NetworkGraph from "@nest/components/network/NestNetworkGraph.vue";
+import NetworkGraph from "../../components/network/NestNetworkGraph.vue";
 
-import NodeViewer from "@nest/components/node/NodeViewer.vue";
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
-import { NESTNode } from "@nest/helpers/node/nestNode";
+import NodeViewer from "../../components/node/NodeViewer.vue";
+import { NESTNetwork } from "../../helpers/network/nestNetwork";
+import { NESTNode } from "../../helpers/node/nestNode";
 
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNESTProjectStore } from "../../store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();
 const network = computed(() => projectStore.project.network as NESTNetwork);
 </script>

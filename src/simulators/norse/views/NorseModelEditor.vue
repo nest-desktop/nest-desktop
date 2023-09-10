@@ -21,7 +21,7 @@
 import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
 
-import { useNorseModelStore } from "@norse/store/model/norseModelStore";
+import { useNorseModelStore } from "../store/model/norseModelStore";
 const modelStore = useNorseModelStore();
 
 const model = computed(() => modelStore.model);

@@ -4,10 +4,10 @@ import { Selection, select } from "d3";
 
 import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
-import { NESTNetworkGraph } from "@nest/helpers/network/nestNetworkGraph";
-import { NESTNode } from "@nest/helpers/node/nestNode";
+import { NESTConnection } from "../connection/nestConnection";
+import { NESTCopyModel } from "../model/nestCopyModel";
+import { NESTNetworkGraph } from "../network/nestNetworkGraph";
+import { NESTNode } from "../node/nestNode";
 
 export class NESTModelAssignGraph {
   private _networkGraph: NESTNetworkGraph;

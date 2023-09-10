@@ -5,8 +5,8 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
-import { NESTProject } from "@nest/helpers/project/nestProject";
-import { useInsiteAccessStore } from "@nest/store/backends/insiteAccessStore";
+import { NESTProject } from "../project/nestProject";
+import { useInsiteAccessStore } from "../../store/backends/insiteAccessStore";
 
 const logger = mainLogger.getSubLogger({ name: "insite" });
 

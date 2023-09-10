@@ -5,7 +5,7 @@ import { sha1 } from "object-hash";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTNetwork } from "../network/nestNetwork";
 
 import { NESTCopyModel, NESTCopyModelProps } from "./nestCopyModel";
 

@@ -3,10 +3,10 @@
 import { NodeParameterProps } from "@/helpers/node/nodeParameter";
 import { NodeView } from "@/helpers/node/nodeView";
 
-import { NESTModelCompartmentParameter } from "@nest/helpers/model/nestModelCompartmentParameter";
-import { NESTNode } from "@nest/helpers/node/nestNode";
-import { NESTNodeReceptor } from "@nest/helpers/node/nodeReceptor/nestNodeReceptor";
-import { NESTModel } from "@nest/helpers/model/nestModel";
+import { NESTModelCompartmentParameter } from "../../model/nestModelCompartmentParameter";
+import { NESTNode } from "../../node/nestNode";
+import { NESTNodeReceptor } from "../../node/nodeReceptor/nestNodeReceptor";
+import { NESTModel } from "../../model/nestModel";
 
 import { NESTNodeCompartmentParameter } from "./nestNodeCompartmentParameter";
 

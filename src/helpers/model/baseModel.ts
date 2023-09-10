@@ -5,7 +5,7 @@ import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/helpers/config";
 import { useModelDBStore } from "@/store/model/modelDBStore";
 
 import { ModelParameter, ModelParameterProps } from "./modelParameter";

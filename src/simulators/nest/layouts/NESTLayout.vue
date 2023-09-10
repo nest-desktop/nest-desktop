@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
-import { useNESTSessionStore } from "@nest/store/nestSessionStore";
+import { useNESTSessionStore } from "../store/nestSessionStore";
 const nestSessionStore = useNESTSessionStore();
 
 const navItems = [

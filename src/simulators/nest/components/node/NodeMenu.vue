@@ -195,10 +195,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { NESTNode } from "@nest/helpers/node/nestNode";
-import ModelDocumentation from "@nest/views/model/NESTModelDoc.vue";
-// import NodeModelSelect from '@nest/components/node/NodeModelSelect.vue';
-// import NodeParamEdit from '@nest/components/node/NodeParamEdit.vue';
+import { NESTNode } from "../../helpers/node/nestNode";
+import ModelDocumentation from "../../views/model/NESTModelDoc.vue";
+// import NodeModelSelect from '../node/NodeModelSelect.vue';
+// import NodeParamEdit from '../node/NodeParamEdit.vue';
 
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

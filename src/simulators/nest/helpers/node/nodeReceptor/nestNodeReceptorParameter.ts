@@ -2,7 +2,7 @@
 
 import { NodeParameter, NodeParameterProps } from "@/helpers/node/nodeParameter";
 
-import { NESTModelReceptorParameter } from "@nest/helpers/model/modelReceptor/nestModelReceptorParameter";
+import { NESTModelReceptorParameter } from "../../model/modelReceptor/nestModelReceptorParameter";
 
 import { NESTNodeReceptor } from "./nestNodeReceptor";
 

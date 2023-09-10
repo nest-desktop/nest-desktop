@@ -5,14 +5,14 @@ import { BaseNode, NodeProps } from "@/helpers/node/baseNode";
 import { NodeRecord, NodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
-import { NESTConnection } from "@nest/helpers/connection/nestConnection";
-import { NESTCopyModel } from "@nest/helpers/model/nestCopyModel";
-import { NESTModel } from "@nest/helpers/model/nestModel";
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTConnection } from "../connection/nestConnection";
+import { NESTCopyModel } from "../model/nestCopyModel";
+import { NESTModel } from "../model/nestModel";
+import { NESTNetwork } from "../network/nestNetwork";
 import {
   NESTNodeCompartment,
   NESTNodeCompartmentProps,
-} from "@nest/helpers/node/nodeCompartment/nestNodeCompartment";
+} from "../node/nodeCompartment/nestNodeCompartment";
 
 import { NESTNodes } from "./nestNodes";
 import {
