@@ -44,23 +44,18 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
+
 import { useTheme } from "vuetify";
 const theme = useTheme();
 
 import { useAppStore } from "@/store/appStore";
-import { useNavStore } from "@/store/navStore";
-
 const appStore = useAppStore();
+
+import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
 
 const props = defineProps(["navItems"]);
 const navItems = computed(() => props.navItems);
-
-const toggleDarkMode = () => {
-  appStore.darkMode = !theme.global.current.value.dark;
-  theme.global.name.value = appStore.darkMode ? "dark" : "light";
-  window.dispatchEvent(new Event("darkmode"));
-};
 
 const toggleDevMode = () => {
   appStore.session.devMode = !appStore.session.devMode;
@@ -99,7 +94,7 @@ const items: {
     title: "Toggle dev mode",
   },
   {
-    click: toggleDarkMode,
+    click: () => appStore.toggleDarkMode(theme),
     icon: "mdi-theme-light-dark",
     id: "theme-light-dark",
     title: "Toggle dark mode",

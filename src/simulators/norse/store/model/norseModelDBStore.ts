@@ -76,7 +76,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
       modelAssets.forEach(async (file: string) => {
         const response = await fetch("assets/norse/models/" + file + ".json");
         const data = await response.json();
-        promise = promise.then(() => db.createModel(data));
+        promise = promise.then(() => db.create(data));
       });
       return promise;
     },

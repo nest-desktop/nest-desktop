@@ -4,7 +4,6 @@ import { BaseModel, ModelProps } from "@/helpers/model/baseModel";
 import { DatabaseService } from "@/helpers/common/database";
 import { Model } from "@/types/modelTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
-import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({
   name: "model DB",
@@ -20,7 +19,7 @@ export class BaseModelDB extends DatabaseService {
    * Create a model in the database.
    */
   async createModel(model: Model): Promise<Model> {
-    logger.trace("create model", truncate(model.id));
+    logger.trace("create model", model.id);
     const data = model.toJSON();
     return this.create(data).then((res: any) => {
       if (res.ok) {
@@ -50,7 +49,7 @@ export class BaseModelDB extends DatabaseService {
    * Delete a model in the database.
    */
   async deleteModel(model: BaseModel | ModelProps | any): Promise<any> {
-    this.logger.trace("delete model:", truncate(model.id));
+    this.logger.trace("delete model:", model.id);
     const modelDocId: string = model.docId || model._id;
     return this.delete(modelDocId);
   }
@@ -72,7 +71,7 @@ export class BaseModelDB extends DatabaseService {
    * Import model object to the database.
    */
   async importModel(model: Model): Promise<any> {
-    console.log("import model:", truncate(model.id));
+    console.log("import model:", model.id);
     return model.docId ? this.updateModel(model) : this.createModel(model);
   }
 
@@ -82,7 +81,7 @@ export class BaseModelDB extends DatabaseService {
   async updateModel(model: Model): Promise<Model | undefined> {
     if (!model.docId) return;
     this.logger.trace("update model:", model.id);
-    logger.trace("update model:", truncate(model.id));
+    logger.trace("update model:", model.id);
     const data = model.toJSON();
     return this.update(model.docId, data).then((res: any) => {
       if (res.ok) {
