@@ -29,7 +29,7 @@ export const useNorseModelStore = defineStore("norse-model-view", {
      */
     save(): void {
       const norseModelDBStore = useNorseModelDBStore();
-      norseModelDBStore.importModel(this.model);
+      norseModelDBStore.saveModel(this.model.id);
     },
   },
 });

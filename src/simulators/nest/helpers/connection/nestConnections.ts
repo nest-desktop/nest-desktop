@@ -4,8 +4,9 @@ import { BaseConnections } from "@/helpers/connection/baseConnections";
 import { Network } from "@/types/networkTypes";
 import { Connection } from "@/types/connectionTypes";
 
-import { NESTConnection, NESTConnectionProps } from "./nestConnection";
 import { NESTNetwork } from "../network/nestNetwork";
+
+import { NESTConnection, NESTConnectionProps } from "./nestConnection";
 
 export class NESTConnections extends BaseConnections {
   constructor(network: Network, connections: NESTConnectionProps[] = []) {

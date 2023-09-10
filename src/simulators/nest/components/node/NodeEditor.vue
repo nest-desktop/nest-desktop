@@ -191,11 +191,10 @@ import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
-import ConnectionEditor from "@nest/components/connection/ConnectionEditor.vue";
-import { NESTNode } from "@nest/helpers/node/nestNode";
-
+import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
+import { NESTNode } from "../../helpers/node/nestNode";
 
 const props = defineProps({
   node: NESTNode,

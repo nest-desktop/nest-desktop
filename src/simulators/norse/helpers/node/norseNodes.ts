@@ -3,6 +3,7 @@
 import { BaseNodes } from "@/helpers/node/baseNodes";
 
 import { NorseNetwork } from "../network/norseNetwork";
+
 import { NorseNode, NorseNodeProps } from "./norseNode";
 
 export class NorseNodes extends BaseNodes {

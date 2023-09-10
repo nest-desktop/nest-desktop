@@ -95,8 +95,9 @@
 </template>
 
 <script lang="ts" setup>
-import { DatabaseService } from "@/helpers/database";
-import { simulatorItems, useAppStore } from "@/store/appStore";
+import { DatabaseService } from "@/helpers/common/database";
+import { simulatorItems } from "@/simulators";
+import { useAppStore } from "@/store/appStore";
 
 const appStore = useAppStore();
 

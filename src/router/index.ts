@@ -11,10 +11,6 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
-// Simulators
-import nestRouter from "@/simulators/nest/router";
-import norseRouter from "@/simulators/norse/router";
-
 const closeNav = () => {
   const navStore = useNavStore();
   navStore.open = false;
@@ -40,11 +36,11 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "sandbox",
-        name: "sandboxParent",
+        name: "sandbox",
         children: [
           {
             path: "",
-            name: "Sandbox",
+            name: "SandboxRoot",
             component: () => import("@/views/Sandbox.vue"),
           },
           {
@@ -60,8 +56,6 @@ const routes: RouteRecordRaw[] = [
         name: "vuetify",
         component: () => import("@/views/Vuetify.vue"),
       },
-      nestRouter,
-      norseRouter,
       {
         path: "pynn",
         name: "pynn",

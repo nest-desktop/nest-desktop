@@ -2,12 +2,12 @@
 
 import { Group } from "three";
 
-import { Project } from "@/types/projectTypes";
 import { Activity } from "@/helpers/activity/activity";
+import { BaseProject } from "@/helpers/project/baseProject";
+import { Project } from "@/types/projectTypes";
 
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
-import { BaseProject } from "../project/baseProject";
 
 export class ActivityAnimationGraph {
   private _config: any = {

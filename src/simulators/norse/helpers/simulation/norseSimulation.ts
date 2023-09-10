@@ -5,10 +5,10 @@ import {
   SimulationProps,
 } from "@/helpers/simulation/baseSimulation";
 import { SimulationCodeProps } from "@/helpers/simulation/baseSimulationCode";
-import { openToast } from "@/helpers/toast";
+import { openToast } from "@/helpers/common/toast";
 
 import { NorseProject } from "../project/norseProject";
-import { useNorseSimulatorStore } from "@norse/store/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../../store/backends/norseSimulatorStore";
 
 import { NorseSimulationCode } from "./norseSimulationCode";
 

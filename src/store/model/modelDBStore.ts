@@ -1,19 +1,20 @@
 // modelDBStore.ts
 
 import { defineStore } from "pinia";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { BaseModel } from "@/helpers/model/baseModel";
+import { BaseModelDB } from "@/helpers/model/baseModelDB";
 import { Model } from "@/types/modelTypes";
-import { ModelDB } from "./modelDB";
+import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });
 
 const modelAssets: any[] = [];
+const db = new BaseModelDB();
 
 export const useModelDBStore = defineStore("model-db", {
   state: () => ({
-    db: new ModelDB(),
     models: [] as Model[],
   }),
   getters: {
@@ -26,19 +27,26 @@ export const useModelDBStore = defineStore("model-db", {
      */
     async deleteModel(modelId: string): Promise<any> {
       logger.trace("gelete model:", modelId);
-      return this.db.deleteModel(modelId).then(() => {
+      return db.deleteModel(modelId).then(() => {
         this.updateList();
       });
+    },
+    /**
+     * Find model from the list.
+     */
+    findModel(modelId: string): Model | undefined {
+      logger.trace("find model:", truncate(modelId));
+      // @ts-ignore
+      return this.models.find((model: Model | any) => model.id === modelId);
     },
     /**
      * Get model from the model list.
      */
     getModel(modelId: string): Model {
-      logger.trace("get model:", modelId);
+      logger.trace("get model:", truncate(modelId));
       return (
         // @ts-ignore
-        this.models.find((model: Model) => model.id === modelId) ||
-        new BaseModel({ id: modelId, params: [] })
+        this.findModel(modelId) || new BaseModel({ id: modelId, params: [] })
       );
     },
     /**
@@ -64,9 +72,9 @@ export const useModelDBStore = defineStore("model-db", {
       logger.trace("import models from assets");
       let promise: Promise<any> = Promise.resolve();
       modelAssets.forEach(async (file: string) => {
-        const response = await fetch("assets/norse/models/" + file + ".json");
+        const response = await fetch("assets/models/" + file + ".json");
         const data = await response.json();
-        promise = promise.then(() => this.db.addModel(data));
+        promise = promise.then(() => db.createModel(data));
       });
       return promise;
     },
@@ -75,7 +83,7 @@ export const useModelDBStore = defineStore("model-db", {
      */
     async init(): Promise<any> {
       logger.trace("init");
-      return this.db.count().then(async (count: number) => {
+      return db.count().then(async (count: number) => {
         logger.debug("models in DB:", count);
         if (count === 0) {
           return this.importModelsFromAssets().then(() => this.updateList());
@@ -89,13 +97,15 @@ export const useModelDBStore = defineStore("model-db", {
      */
     async resetDatabase(): Promise<any> {
       logger.trace("reset database");
-      await this.db.reset().then(() => this.init());
+      await db.reset().then(() => this.init());
     },
     /**
      * Save model object to the database.
      */
-    async saveModel(model: Model): Promise<any> {
-      return this.db.importModel(model);
+    async saveModel(modelId: string): Promise<any> {
+      logger.trace("save model:", truncate(modelId));
+      const model = this.findModel(modelId) as Model;
+      return db.importModel(model);
     },
     /**
      * Update model list from the database.
@@ -103,23 +113,9 @@ export const useModelDBStore = defineStore("model-db", {
     async updateList(): Promise<any> {
       logger.trace("update list");
       this.models = [];
-      return this.db.list("id").then((models: any[]) => {
+      return db.list("id").then((models: any[]) => {
         // this.models = models;
         models.forEach((model) => this.models.push(new BaseModel(model)));
-
-        // if (this.projects.length === 0) {
-        //   this._view.redirect();
-        // }
-
-        // Redirect if project id from the current route is provided in the list.
-        // const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
-
-        // if (currentRoute.name === 'projectId') {
-        //   this.project =
-        //     this.getProject(currentRoute.params.id) ||
-        //     this.getProject(this.recentProjectId);
-        //   this._view.redirect(this._view.state.projectId);
-        // }
       });
     },
   },

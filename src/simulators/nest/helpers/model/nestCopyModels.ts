@@ -3,10 +3,11 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
+
+import { NESTNetwork } from "../network/nestNetwork";
 
 import { NESTCopyModel, NESTCopyModelProps } from "./nestCopyModel";
-import { NESTNetwork } from "../network/nestNetwork";
 
 const logger = mainLogger.getSubLogger({ name: "copy model" });
 

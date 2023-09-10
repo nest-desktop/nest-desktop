@@ -4,7 +4,7 @@ import { GridHelper, Group } from "three";
 
 import { Activity } from "@/helpers/activity/activity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { range } from "@/helpers/array";
+import { range } from "@/helpers/common/array";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";

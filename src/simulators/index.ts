@@ -4,17 +4,26 @@
  * Automatically included in `./src/main.ts`
  */
 
-// Simulators
-import nest from "@/simulators/nest";
-import norse from "@/simulators/norse";
+import { App } from "vue";
 
-// Types
-import type { App } from "vue";
+import nest from "./nest";
+import norse from "./norse";
+
+export const simulatorItems: {
+  [key: string]: {
+    color?: string;
+    databases: string[];
+    icon: string;
+    id: string;
+    routerName: string;
+    title: string;
+  };
+} = {};
 
 export function registerSimulators(app: App) {
-  // NEST Simulator
+  // install nest
   app.use(nest);
 
-  // Norse Simulator
+  // install norse
   app.use(norse);
 }

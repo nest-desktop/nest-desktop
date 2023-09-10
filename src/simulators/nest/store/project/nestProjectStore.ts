@@ -3,12 +3,12 @@
 import { defineStore } from "pinia";
 
 import router from "@/router";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { truncate } from "@/utils/truncate";
 
-import { NESTProject } from "@nest/helpers/project/nestProject";
+import { NESTProject } from "../../helpers/project/nestProject";
 
 import { useNESTProjectDBStore } from "./nestProjectDBStore";
-// import { useActivityGraphStore } from "../graph/activityGraphStore";
 
 const logger = mainLogger.getSubLogger({ name: "project store" });
 
@@ -31,8 +31,8 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
      * Load current project from store.
      * @param projectId
      */
-    loadProject(projectId: string = ""): void {
-      logger.trace("load project:", projectId?.slice(0, 6));
+    loadProject(projectId?: string): void {
+      logger.trace("load project:", truncate(projectId));
       const projectDBStore = useNESTProjectDBStore();
       this.project = projectDBStore.getProject(projectId);
       this.projectId = this.project.id;
@@ -47,7 +47,7 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
      * Start simulation of the current project.
      */
     startSimulation(): void {
-      logger.trace("start NEST simulation:", this.projectId?.slice(0, 6));
+      logger.trace("start nest simulation:", truncate(this.projectId));
       router.push({
         name: "nestActivityExplorer",
         params: { projectId: this.projectId },
@@ -58,18 +58,17 @@ export const useNESTProjectStore = defineStore("nest-project-view", {
      * Reload the project in the list.
      */
     reloadProject(project: NESTProject): void {
-      logger.trace("reload project:", project.id.slice(0, 6));
+      logger.trace("reload project:", truncate(project.id));
       const projectDBStore = useNESTProjectDBStore();
-      projectDBStore.unloadProject(project.id);
-      this.project = projectDBStore.getProject(project.id);
+      projectDBStore.reloadProject(project.id);
     },
     /**
      * Save current project.
      */
     saveCurrentProject() {
-      logger.trace("save project:", this.projectId?.slice(0, 6));
+      logger.trace("save project:", truncate(this.projectId));
       const projectDBStore = useNESTProjectDBStore();
-      projectDBStore.saveProject(this.projectId);
+      projectDBStore.saveProject(this.project as NESTProject);
     },
     /**
      * Toggle navigation drawer.

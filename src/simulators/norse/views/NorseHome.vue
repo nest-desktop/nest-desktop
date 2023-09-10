@@ -113,7 +113,7 @@
               :title="project.name"
               :to="{
                 name: 'norseProject',
-                params: { projectId: project._id },
+                params: { projectId: project.id },
               }"
               v-for="(project, index) in projectDBStore.projects"
             >
@@ -128,10 +128,10 @@
 <script setup lang="ts">
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 
-import { useNorseProjectDBStore } from "@norse/store/project/norseProjectDBStore";
-import { useNorseSimulatorStore } from "../store/backends/norseSimulatorStore";
+import { useNorseProjectDBStore } from "../store/project/norseProjectDBStore";
 const projectDBStore = useNorseProjectDBStore();
 
+import { useNorseSimulatorStore } from "../store/backends/norseSimulatorStore";
 const norseSimulatorStore = useNorseSimulatorStore();
 //
 </script>

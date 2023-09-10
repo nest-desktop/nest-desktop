@@ -15,10 +15,10 @@ import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 
-import { useNorseModelStore } from "@norse/store/model/norseModelStore";
+import { useNorseModelStore } from "../store/model/norseModelStore";
 const modelStore = useNorseModelStore();
 
-import { useNorseModelDBStore } from "@norse/store/model/norseModelDBStore";
+import { useNorseModelDBStore } from "../store/model/norseModelDBStore";
 const modelDBStore = useNorseModelDBStore();
 
 const model = computed(() => modelStore.model);

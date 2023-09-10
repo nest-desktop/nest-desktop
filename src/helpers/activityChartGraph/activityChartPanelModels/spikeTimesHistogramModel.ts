@@ -1,7 +1,7 @@
 // spikeTimesHistogramModel.ts
 
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { currentBackgroundColor } from "@/helpers/theme";
+import { currentBackgroundColor } from "@/helpers/common/theme";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";

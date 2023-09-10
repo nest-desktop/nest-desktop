@@ -73,8 +73,8 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
-import { NESTNetworkGraph } from "@nest/helpers/network/nestNetworkGraph";
+import { NESTNetwork } from "../../helpers/network/nestNetwork";
+import { NESTNetworkGraph } from "../../helpers/network/nestNetworkGraph";
 
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

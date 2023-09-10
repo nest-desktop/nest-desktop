@@ -12,7 +12,7 @@ import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
 import { Nodes } from "@/types/nodesTypes";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NodeParameter, NodeParameterProps } from "./nodeParameter";
 import { NodeRecord, NodeRecordProps } from "./nodeRecord";

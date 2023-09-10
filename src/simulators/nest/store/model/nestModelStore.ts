@@ -24,5 +24,12 @@ export const useNESTModelStore = defineStore("nest-model-view", {
       }
       this.controllerView = this.controllerOpen ? item.id : "";
     },
+    /**
+     * Save current model to the database.
+     */
+    save(): void {
+      const norseModelDBStore = useNESTModelDBStore();
+      norseModelDBStore.saveModel(this.model.id);
+    },
   },
 });

@@ -2,24 +2,23 @@
 
 import { v4 as uuidv4 } from "uuid";
 import { ILogObj, Logger } from "tslog";
-import { logger as mainLogger } from "@/helpers/logger";
 
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityGraph } from "@/helpers/activity/activityGraph";
 import { BaseNetwork, NetworkProps } from "@/helpers/network/baseNetwork";
-import { BaseSimulation, SimulationProps } from "@/helpers/simulation/baseSimulation";
+import {
+  BaseSimulation,
+  SimulationProps,
+} from "@/helpers/simulation/baseSimulation";
+import { Network } from "@/types/networkTypes";
+import { ProjectState } from "./projectState";
+import { Simulation } from "@/types/simulationTypes";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { useModelDBStore } from "@/store/model/modelDBStore";
 import { useProjectDBStore } from "@/store/project/projectDBStore";
 import { useProjectStore } from "@/store/project/projectStore";
 
-import { ProjectState } from "./projectState";
-import { Network } from "@/types/networkTypes";
-import { Simulation } from "@/types/simulationTypes";
-
-
 export interface ProjectProps {
-  _id?: string;
-  _rev?: string;
   activityGraph?: any;
   createdAt?: string;
   description?: string;
@@ -36,7 +35,7 @@ export class BaseProject {
   private _activityGraph: ActivityGraph;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
-  private _doc: any; // doc data of the database
+  private _doc: any; // raw data of the database
   private _id: string; // id of the project
   private _logger: Logger<ILogObj>;
   private _modelStore: any;
@@ -44,7 +43,6 @@ export class BaseProject {
   public _network: BaseNetwork; // network of neurons and devices
   private _projectDBStore: any;
   private _projectStore: any;
-  private _rev: string; // rev of the project
   public _simulation: BaseSimulation; // settings for the simulation
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
@@ -52,8 +50,7 @@ export class BaseProject {
   constructor(project: ProjectProps = {}) {
     // Database instance
     this._doc = project || {};
-    this._id = project._id || uuidv4();
-    this._rev = project._rev || "";
+    this._id = project.id || uuidv4();
     this._createdAt = project.createdAt || new Date().toLocaleDateString();
     this._updatedAt = project.updatedAt;
 
@@ -123,16 +120,12 @@ export class BaseProject {
     this._doc = value;
   }
 
-  get docId(): string {
+  get docId(): string | undefined {
     return this._doc ? this._doc._id : undefined;
   }
 
   get id(): string {
     return this._id;
-  }
-
-  set id(value: string) {
-    this._id = value;
   }
 
   get logger(): Logger<ILogObj> {
@@ -175,10 +168,6 @@ export class BaseProject {
     this._projectStore = value;
   }
 
-  get rev(): string {
-    return this._rev;
-  }
-
   get simulateAfterCheckout(): boolean {
     return this._projectStore.simulateAfterCheckout;
   }
@@ -211,7 +200,7 @@ export class BaseProject {
    * Is the current project selected?
    */
   get isSelected(): boolean {
-    return this._id === this._projectStore.projectId;
+    return this.id === this._projectStore.projectId;
   }
 
   /**
@@ -263,10 +252,10 @@ export class BaseProject {
    */
   clone(): BaseProject {
     this._logger.trace("clone");
-    const newProject = new BaseProject(this.toJSON());
-    newProject._id = uuidv4();
-    newProject._updatedAt = "";
-    newProject.init();
+    const newProject = new BaseProject({ ...this.toJSON() });
+    // newProject._id = uuidv4();
+    // newProject._updatedAt = "";
+    // newProject.init();
     return newProject;
   }
 
@@ -288,7 +277,7 @@ export class BaseProject {
    */
   async delete(): Promise<any> {
     this._logger.trace("delete");
-    return this._projectDBStore.deleteProject(this._id);
+    return this._projectDBStore.removeProject(this);
   }
 
   /**
@@ -296,7 +285,7 @@ export class BaseProject {
    */
   export(): void {
     this._logger.trace("export");
-    this._projectDBStore.exportProject(this._id);
+    this._projectDBStore.exportProject(this.id);
   }
 
   /**
@@ -304,7 +293,7 @@ export class BaseProject {
    */
   exportWithActivities(): void {
     this._logger.trace("export with activities");
-    this._projectDBStore.exportProject(this._id, true);
+    this._projectDBStore.exportProject(this.id, true);
   }
 
   /**
@@ -363,7 +352,8 @@ export class BaseProject {
    * Save the current project.
    */
   save(): void {
-    this._projectDBStore.saveProject(this.id).then(() => this.clean());
+    this._state.state.editMode = false;
+    this._projectDBStore.saveProject(this);
   }
 
   /**
@@ -426,6 +416,6 @@ export class BaseProject {
    */
   async unload(): Promise<any> {
     this._logger.trace("unload");
-    return this._projectDBStore.unloadProject(this._id);
+    return this._projectDBStore.unloadProject(this.id);
   }
 }

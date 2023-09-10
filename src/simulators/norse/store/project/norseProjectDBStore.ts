@@ -2,21 +2,22 @@
 
 import { defineStore } from "pinia";
 import { download } from "@/utils/download";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { NorseProject, NorseProjectProps } from "@norse/helpers/project/norseProject";
-import { NorseProjectDB } from "./norseProjectDB";
+import {
+  NorseProject,
+  NorseProjectProps,
+} from "../../helpers/project/norseProject";
+import { NorseProjectDB } from "../../helpers/project/norseProjectDB";
 
 const logger = mainLogger.getSubLogger({ name: "norse project DB store" });
 
+const projectAssets = ["neuronal-states", "spike-activity"];
+const db = new NorseProjectDB();
+
 export const useNorseProjectDBStore = defineStore("norse-project-db", {
   state: () => ({
-    db: new NorseProjectDB(),
     numLoaded: 0,
-    projectAssets: [
-      "neuronal-states",
-      "spike-activity"
-    ],
     projects: [] as (NorseProject | NorseProjectProps | any)[], // TODO: any should be removed.
     searchTerm: "",
   }),
@@ -48,12 +49,14 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      */
     async createProject(data: NorseProjectProps): Promise<any> {
       logger.trace("add project", data.id?.slice(0, 6));
-      return this.db.create(data);
+      return db.create(data);
     },
     /**
      * Create multiple projects in the database.
      */
-    async createProjects(data: NorseProjectProps[]): Promise<NorseProjectProps[]> {
+    async createProjects(
+      data: NorseProjectProps[]
+    ): Promise<NorseProjectProps[]> {
       logger.trace("create projects");
       const projects: Promise<NorseProjectProps>[] = data.map(
         (project: NorseProjectProps) =>
@@ -72,7 +75,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       // TODO: any should be removed.
       logger.trace("delete project:", project.id.slice(0, 6));
       const projectId: string = project.docId || project.id;
-      this.db.delete(projectId).finally(() => {
+      db.delete(projectId).finally(() => {
         this.removeFromList(projectId);
       });
     },
@@ -87,9 +90,9 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       const projectDocIds: string[] = projects.map(
         (
           project: NorseProject | NorseProjectProps | any // TODO: any should be removed.
-        ) => project.docId || project._id || project.id
+        ) => project.docId || project.id
       );
-      this.db.deleteBulk(projectDocIds).then(() => this.updateList());
+      db.deleteBulk(projectDocIds).then(() => this.updateList());
     },
     /**
      * Export project from the list.
@@ -130,15 +133,15 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       project.clean();
 
       return project.docId
-        ? this.db.update(project)
-        : this.db.create(project.toJSON());
+        ? db.updateProject(project)
+        : db.createProject(project);
     },
     /**
      * Import projects the update list.
      */
     importProjects(projects: any[]): void {
       logger.trace("import projects");
-      this.createProjects(projects).then(() => this.updateList());
+      db.createProjects(projects).then(() => this.updateList());
     },
     /**
      * Import multiple projects from assets and add them to the database.
@@ -146,7 +149,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
     async importProjectsFromAssets(): Promise<any> {
       logger.trace("import projects from assets");
       let promise: Promise<any> = Promise.resolve();
-      this.projectAssets.forEach(async (file: string) => {
+      projectAssets.forEach(async (file: string) => {
         const response = await fetch("assets/norse/projects/" + file + ".json");
         const data = await response.json();
         promise = promise.then(() => this.createProject(data));
@@ -158,7 +161,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      */
     async init(): Promise<any> {
       logger.trace("init");
-      return this.db.count().then(async (count: number) => {
+      return db.count().then(async (count: number) => {
         logger.debug("projects in DB:", count);
         if (count === 0) {
           return this.importProjectsFromAssets().then(() => this.updateList());
@@ -176,7 +179,8 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       // this.project.insite.cancelAllIntervals();
 
       let project = this.projects.find(
-        (project: NorseProjectProps | NorseProject | any) => project._id === projectId
+        (project: NorseProjectProps | NorseProject | any) =>
+          project.id === projectId
       );
 
       if (project == undefined) {
@@ -184,7 +188,9 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
       }
 
       if (project.doc == undefined) {
-        const projectIds = this.projects.map((project: NorseProjectProps | NorseProject | any) => project._id);
+        const projectIds = this.projects.map(
+          (project: NorseProjectProps | NorseProject | any) => project.id
+        );
         const projectIdx = projectIds.indexOf(projectId);
 
         if (projectIdx === -1) {
@@ -228,9 +234,7 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
      */
     async saveProject(projectId: string): Promise<any> {
       logger.trace("save project:", projectId.slice(0, 6));
-      const project = this.projects.find(
-        (project) => project._id === projectId
-      );
+      const project = this.projects.find((project) => project.id === projectId);
       return this.importProject(project);
     },
     /**
@@ -259,22 +263,8 @@ export const useNorseProjectDBStore = defineStore("norse-project-db", {
     async updateList(): Promise<any> {
       logger.trace("update list");
       this.projects = [];
-      return this.db.list("createdAt", true).then((projects: any[]) => {
+      return db.list("createdAt", true).then((projects: any[]) => {
         this.projects = projects;
-
-        // if (this.projects.length === 0) {
-        //   this._view.redirect();
-        // }
-
-        // Redirect if project id from the current route is provided in the list.
-        // const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
-
-        // if (currentRoute.name === 'projectId') {
-        //   this.project =
-        //     this.getProject(currentRoute.params.id) ||
-        //     this.getProject(this.recentProjectId);
-        //   this._view.redirect(this._view.state.projectId);
-        // }
       });
     },
   },

@@ -2,7 +2,7 @@
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { NodeParameterTypes } from "@/types/nodeParameterTypes";
-import { Parameter, ParameterProps } from "@/helpers/parameter";
+import { Parameter, ParameterProps } from "@/helpers/common/parameter";
 
 export interface NodeParameterProps extends ParameterProps {}
 

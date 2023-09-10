@@ -34,21 +34,20 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import { NorseNetwork } from "@norse/helpers/network/norseNetwork"
-import { NorseNode } from "@norse/helpers/node/norseNode";
-import NodeEditor from "@norse/components/node/NodeEditor.vue";
+import { NorseNetwork } from "../../helpers/network/norseNetwork"
+import { NorseNode } from "../../helpers/node/norseNode";
+import NodeEditor from "../node/NodeEditor.vue";
 
-import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { useNorseProjectStore } from "../../store/project/norseProjectStore";
 const projectStore = useNorseProjectStore();
 
 const network = computed(() => projectStore.project.network as NorseNetwork);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
-  { icon: "nest:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "nest:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "nest:recorder", id: "recorder", title: "recorder" },
-  // { icon: "custom:copyModel", id: "model", title: "model" },
+  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "network:recorder", id: "recorder", title: "recorder" },
 ];
 
 /**

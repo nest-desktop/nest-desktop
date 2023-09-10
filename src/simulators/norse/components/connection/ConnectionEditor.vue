@@ -16,7 +16,7 @@
           </v-btn>
           <v-btn
             :color="connection.source.view.color"
-            icon="nest:synapse-excitatory"
+            icon="network:synapse-excitatory"
             size="small"
             variant="text"
           />
@@ -73,7 +73,7 @@ import { computed } from "vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
 import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
-import { NorseConnection } from "@norse/helpers/connection/norseConnection";
+import { NorseConnection } from "../../helpers/connection/norseConnection";
 
 const props = defineProps({
   connection: NorseConnection,

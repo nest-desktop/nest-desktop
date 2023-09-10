@@ -2,7 +2,7 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { sum } from "@/helpers/array";
+import { sum } from "@/helpers/common/array";
 
 import {
   ActivityChartPanelModel,

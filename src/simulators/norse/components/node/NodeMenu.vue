@@ -138,7 +138,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { NorseNode } from "@norse/helpers/node/norseNode";
+import { NorseNode } from "../../helpers/node/norseNode";
 
 const props = defineProps({
   node: NorseNode,

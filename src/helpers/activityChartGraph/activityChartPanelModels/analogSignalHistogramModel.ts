@@ -1,8 +1,8 @@
 // analogSignalHistogramModel.ts
 
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { currentBackgroundColor } from "@/helpers/theme";
-import { max, min } from "@/helpers/array";
+import { currentBackgroundColor } from "@/helpers/common/theme";
+import { max, min } from "@/helpers/common/array";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import {

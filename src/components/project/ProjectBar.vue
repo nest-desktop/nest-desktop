@@ -1,18 +1,20 @@
 <template>
   <v-app-bar class="d-print-none" height="48" flat>
     <v-tabs stacked>
-      <slot name="tabs">
-        <v-tab
-          :key="index"
-          :to="tab.to"
-          :title="tab.title"
-          size="small"
-          v-for="(tab, index) in tabItems"
-        >
-          <v-icon :icon="tab.icon" />
-          <span class="text-no-wrap">{{ tab.label }}</span>
-        </v-tab>
-      </slot>
+      <slot name="prependTabs"></slot>
+
+      <v-tab
+        :key="index"
+        :to="tab.to"
+        :title="tab.title"
+        size="small"
+        v-for="(tab, index) in tabItems"
+      >
+        <v-icon :icon="tab.icon" />
+        <span class="text-no-wrap">{{ tab.label }}</span>
+      </v-tab>
+
+      <slot name="appendTabs"></slot>
     </v-tabs>
 
     <v-spacer />
@@ -42,9 +44,9 @@ const props = defineProps({
 
 const project = computed(() => props.project as Project);
 
-const tabItems = [
+const tabItems = computed(() => [
   {
-    icon: "nest:network",
+    icon: "network:network",
     id: "networkEditor",
     label: "Editor",
     title: "Network editor",
@@ -73,5 +75,5 @@ const tabItems = [
       params: { projectId: project.value.id },
     },
   },
-];
+]);
 </script>

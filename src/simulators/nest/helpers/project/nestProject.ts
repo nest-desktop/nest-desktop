@@ -1,12 +1,10 @@
 // nestProject.ts
 
-import { v4 as uuidv4 } from "uuid";
-
 import { BaseProject, ProjectProps } from "@/helpers/project/baseProject";
 
-import { useNESTModelDBStore } from "@nest/store/model/nestModelDBStore";
-import { useNESTProjectDBStore } from "@nest/store/project/nestProjectDBStore";
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNESTModelDBStore } from "../../store/model/nestModelDBStore";
+import { useNESTProjectDBStore } from "../../store/project/nestProjectDBStore";
+import { useNESTProjectStore } from "../../store/project/nestProjectStore";
 
 import { Insite } from "../insite/insite";
 import { NESTNetwork, NESTNetworkProps } from "../network/nestNetwork";
@@ -47,10 +45,11 @@ export class NESTProject extends BaseProject {
    */
   override clone(): NESTProject {
     this.logger.trace("clone");
-    const newProject = new NESTProject({ ...this.toJSON() });
-    newProject.id = uuidv4();
-    newProject.updatedAt = "";
-    newProject.init();
+    const newProject = new NESTProject({
+      ...this.toJSON(),
+      id: undefined,
+      updatedAt: "",
+    });
     return newProject;
   }
 
@@ -63,7 +62,7 @@ export class NESTProject extends BaseProject {
   override duplicate(): NESTProject {
     this.logger.trace("duplicate");
     const newProject: NESTProject = this.clone();
-    this.projectDBStore.addProject(newProject);
+    this.projectDBStore.addProject(newProject.toJSON());
     return newProject;
   }
 

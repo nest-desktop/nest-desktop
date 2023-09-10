@@ -1,13 +1,14 @@
 // nestNodeReceptor.ts
 
 import { NodeParameterProps } from "@/helpers/node/nodeParameter";
+import { NodeView } from "@/helpers/node/nodeView";
 
 import { NESTModelReceptor } from "../../model/modelReceptor/nestModelReceptor";
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/nestModelReceptorParameter";
-import { NESTNode } from "../nestNode";
 import { NESTNodeCompartment } from "../../node/nodeCompartment/nestNodeCompartment";
+
+import { NESTNode } from "../nestNode";
 import { NESTNodeReceptorParameter } from "./nestNodeReceptorParameter";
-import { NodeView } from "@/helpers/node/nodeView";
 
 export interface NESTNodeReceptorProps {
   compIdx: number;

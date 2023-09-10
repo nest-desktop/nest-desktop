@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { simulatorItems } from "@/store/appStore";
+import { simulatorItems } from "@/simulators";
 </script>
 
 <!-- <style lang="scss">

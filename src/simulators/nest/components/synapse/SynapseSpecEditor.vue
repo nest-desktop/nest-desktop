@@ -88,7 +88,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { NESTSynapse } from "@nest/helpers/synapse/nestSynapse";
+import { NESTSynapse } from "../../helpers/synapse/nestSynapse";
 
 import SynapseParamEditor from "./SynapseParamEditor.vue";
 

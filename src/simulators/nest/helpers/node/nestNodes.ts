@@ -2,8 +2,9 @@
 
 import { BaseNodes } from "@/helpers/node/baseNodes";
 
-import { NESTNode, NESTNodeProps } from "./nestNode";
 import { NESTNetwork } from "../network/nestNetwork";
+
+import { NESTNode, NESTNodeProps } from "./nestNode";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodes?: NESTNodeProps[]) {

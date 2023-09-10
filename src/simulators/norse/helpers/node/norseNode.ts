@@ -6,6 +6,7 @@ import { BaseNode, NodeProps } from "@/helpers/node/baseNode";
 
 import { NorseConnection } from "../connection/norseConnection";
 import { NorseModel } from "../model/norseModel";
+
 import { NorseNodes } from "./norseNodes";
 
 export interface NorseNodeProps extends NodeProps {}

@@ -6,13 +6,11 @@ import { sha1 } from "object-hash";
 
 import { Node } from "@/types/nodeTypes";
 import { Project } from "@/types/projectTypes";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { Activity } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { SpikeActivity } from "./spikeActivity";
-// import { useActivityGraphStore } from "@nest/store/graph/activityGraphStore";
-
 
 interface ActivitiesState {
   activityStatsPanelId: number;

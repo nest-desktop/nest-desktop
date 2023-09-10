@@ -2,10 +2,12 @@
 
 import { sha1 } from "object-hash";
 
-import { openToast } from "@/helpers/toast";
+import { openToast } from "@/helpers/common/toast";
 import { BaseSimulation } from "@/helpers/simulation/baseSimulation";
 
-import { NESTProject } from "../../helpers/project/nestProject";
+import { NESTProject } from "../project/nestProject";
+import { useNESTSimulatorStore } from "../../store/backends/nestSimulatorStore";
+
 import {
   NESTSimulationCode,
   NESTSimulationCodeProps,
@@ -15,7 +17,6 @@ import {
   NESTSimulationKernelProps,
 } from "./nestSimulationKernel";
 
-import { useNESTSimulatorStore } from "@nest/store/backends/nestSimulatorStore";
 
 export interface NESTSimulationProps {
   code?: NESTSimulationCodeProps;

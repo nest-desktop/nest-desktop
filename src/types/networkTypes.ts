@@ -1,8 +1,8 @@
 // networkTypes.ts
 
 import { BaseNetwork } from "@/helpers/network/baseNetwork";
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
-import { NorseNetwork } from "@norse/helpers/network/norseNetwork";
+import { NESTNetwork } from "@/simulators/nest/helpers/network/nestNetwork";
+import { NorseNetwork } from "@/simulators/norse/helpers/network/norseNetwork";
 
 export type Network = BaseNetwork | NESTNetwork | NorseNetwork;
 

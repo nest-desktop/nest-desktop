@@ -38,21 +38,21 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import { NESTNode } from "@nest/helpers/node/nestNode";
-import NodeEditor from "@nest/components/node/NodeEditor.vue";
-import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import NodeEditor from "../node/NodeEditor.vue";
+import { NESTNetwork } from "../../helpers/network/nestNetwork";
+import { NESTNode } from "../../helpers/node/nestNode";
 
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNESTProjectStore } from "../../store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();
 
 const network = computed(() => projectStore.project.network as NESTNetwork);
 
 const nodeTypes = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
-  { icon: "nest:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "nest:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "nest:recorder", id: "recorder", title: "recorder" },
-  // { icon: "custom:copyModel", id: "model", title: "model" },
+  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "network:recorder", id: "recorder", title: "recorder" },
+  { icon: "nest:copyModel", id: "model", title: "model" },
 ];
 
 /**

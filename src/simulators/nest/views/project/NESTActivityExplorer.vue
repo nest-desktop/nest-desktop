@@ -13,7 +13,7 @@ import { computed } from "vue";
 import { ActivityChartGraph as ActivityChartGraphClass } from "@/helpers/activityChartGraph/activityChartGraph";
 import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
 
-import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
+import { useNESTProjectStore } from "../../store/project/nestProjectStore";
 
 const projectStore = useNESTProjectStore();
 

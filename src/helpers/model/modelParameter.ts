@@ -1,7 +1,7 @@
 // modelParameter.ts
 
 import { Model } from "@/types/modelTypes";
-import { Parameter, ParameterProps } from "@/helpers/parameter";
+import { Parameter, ParameterProps } from "@/helpers/common/parameter";
 
 export interface ModelParameterProps extends ParameterProps {}
 

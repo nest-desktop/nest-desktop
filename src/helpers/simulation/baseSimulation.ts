@@ -7,8 +7,8 @@ import { sha1 } from "object-hash";
 import { Config } from "@/helpers/config";
 import { Project } from "@/types/projectTypes";
 import { SimulationCode } from "@/types/simulationCodeTypes";
-import { logger as mainLogger } from "@/helpers/logger";
-import { openToast } from "@/helpers/toast";
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { openToast } from "@/helpers/common/toast";
 
 import { BaseSimulationCode, SimulationCodeProps } from "./baseSimulationCode";
 

@@ -1,10 +1,10 @@
 // norseModelDBStore.ts
 
 import { defineStore } from "pinia";
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { NorseModel } from "@norse/helpers/model/norseModel";
-import { NorseModelDB } from "./norseModelDB";
+import { NorseModel } from "../../helpers/model/norseModel";
+import { NorseModelDB } from "../../helpers/model/norseModelDB";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });
 
@@ -21,10 +21,9 @@ const modelAssets = [
   "dc_generator",
   "ac_generator",
 ];
-
+const db = new NorseModelDB();
 export const useNorseModelDBStore = defineStore("norse-model-db", {
   state: () => ({
-    db: new NorseModelDB(),
     models: [] as NorseModel[],
   }),
   getters: {
@@ -37,7 +36,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
      */
     async deleteModel(modelId: string): Promise<any> {
       logger.trace("gelete model:", modelId);
-      return this.db.deleteModel(modelId).then(() => {
+      return db.deleteModel(modelId).then(() => {
         this.updateList();
       });
     },
@@ -69,16 +68,6 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
       return this.models.some((model: any) => model.id === modelId);
     },
     /**
-     * Import model object to the database.
-     */
-    async importModel(model: NorseModel): Promise<any> {
-      console.log("import model:", model.id.slice(0, 6));
-
-      return model.docId
-        ? this.db.update(model)
-        : this.db.create(model.toJSON());
-    },
-    /**
      * Import multiple models from assets and add them to the database.
      */
     async importModelsFromAssets(): Promise<any> {
@@ -87,7 +76,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
       modelAssets.forEach(async (file: string) => {
         const response = await fetch("assets/norse/models/" + file + ".json");
         const data = await response.json();
-        promise = promise.then(() => this.db.addModel(data));
+        promise = promise.then(() => db.createModel(data));
       });
       return promise;
     },
@@ -96,7 +85,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
      */
     async init(): Promise<any> {
       logger.trace("init");
-      return this.db.count().then(async (count: number) => {
+      return db.count().then(async (count: number) => {
         logger.debug("models in DB:", count);
         if (count === 0) {
           return this.importModelsFromAssets().then(() => this.updateList());
@@ -110,7 +99,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
      */
     async resetDatabase(): Promise<any> {
       logger.trace("reset database");
-      await this.db.reset().then(() => this.init());
+      await db.reset().then(() => this.init());
     },
     /**
      * Save model object to the database.
@@ -121,7 +110,7 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
         (model) => model.id === modelId
       ) as NorseModel;
 
-      return this.importModel(model);
+      return db.importModel(model);
     },
     /**
      * Update model list from the database.
@@ -129,23 +118,9 @@ export const useNorseModelDBStore = defineStore("norse-model-db", {
     async updateList(): Promise<any> {
       logger.trace("update list");
       this.models = [];
-      return this.db.list("id").then((models: any[]) => {
+      return db.list("id").then((models: any[]) => {
         // this.models = models;
         models.forEach((model) => this.models.push(new NorseModel(model)));
-
-        // if (this.projects.length === 0) {
-        //   this._view.redirect();
-        // }
-
-        // Redirect if project id from the current route is provided in the list.
-        // const currentRoute = this._app.vueSetupContext.root.$router.currentRoute;
-
-        // if (currentRoute.name === 'projectId') {
-        //   this.project =
-        //     this.getProject(currentRoute.params.id) ||
-        //     this.getProject(this.recentProjectId);
-        //   this._view.redirect(this._view.state.projectId);
-        // }
       });
     },
   },

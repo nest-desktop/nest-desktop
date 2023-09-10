@@ -5,7 +5,7 @@
     </span>
     <v-icon
       :color="props.color"
-      icon="nest:recorder"
+      icon="network:recorder"
       class="position-absolute icon-size"
     />
   </v-avatar>

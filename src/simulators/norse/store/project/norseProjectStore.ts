@@ -2,13 +2,12 @@
 
 import { defineStore } from "pinia";
 
-import { logger as mainLogger } from "@/helpers/logger";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import router from "@/router";
 
-import { NorseProject } from "@norse/helpers/project/norseProject";
+import { NorseProject } from "../../helpers/project/norseProject";
 
 import { useNorseProjectDBStore } from "./norseProjectDBStore";
-// import { useActivityGraphStore } from "../graph/activityGraphStore";
 
 const logger = mainLogger.getSubLogger({ name: "norse project store" });
 
@@ -25,7 +24,7 @@ export const useNorseProjectStore = defineStore("norse-project-view", {
     controllerWidth: 480,
     bottomNavHeight: 200,
     controllerItems: [
-      { id: "network", icon: "nest:network", title: "Edit network" },
+      { id: "network", icon: "network:network", title: "Edit network" },
       { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
       { id: "raw", icon: "mdi-code-json" },
       { id: "code", icon: "mdi-xml" },

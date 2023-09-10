@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { useNESTModelStore } from "@nest/store/model/nestModelStore";
+import { useNESTModelStore } from "../../store/model/nestModelStore";
 const modelStore = useNESTModelStore();
 
 const model = computed(() => modelStore.model)
