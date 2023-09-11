@@ -8,6 +8,7 @@ import { App } from "vue";
 
 import nest from "./nest";
 import norse from "./norse";
+import pynn from "./pynn";
 
 export const simulatorItems: {
   [key: string]: {
@@ -26,4 +27,7 @@ export function registerSimulators(app: App) {
 
   // install norse
   app.use(norse);
+
+  // install pynn
+  app.use(pynn);
 }

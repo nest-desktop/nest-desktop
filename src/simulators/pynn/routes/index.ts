@@ -17,29 +17,29 @@ const closeNav = () => {
 };
 
 export default {
-  path: "norse",
-  name: "norseLayout",
+  path: "pynn",
+  name: "pynnLayout",
   beforeEnter: () => {
     const appStore = useAppStore();
-    appStore.simulator = "norse";
+    appStore.simulator = "pynn";
   },
   component: () => import("../layouts/MainLayout.vue"),
   children: [
     {
       path: "",
-      name: "norseHome",
+      name: "pynnHome",
       component: () => import("../views/Home.vue"),
       beforeEnter: closeNav,
     },
     {
       path: "model",
-      name: "norseModelLayout",
+      name: "pynnModelLayout",
       component: () => import("../layouts/ModelLayout.vue"),
       children: modelRoutes as RouteRecordRaw[],
     },
     {
       path: "project",
-      name: "norseProjectLayout",
+      name: "pynnProjectLayout",
       component: () => import("../layouts/ProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
     },

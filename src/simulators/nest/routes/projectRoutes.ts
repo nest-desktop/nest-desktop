@@ -1,7 +1,5 @@
 /**
- * router/nestProjectRoute.ts
- *
- * router documentation: https://router.vuejs.org/guide/
+ * projectRoutes.ts
  */
 
 import { computed, watch } from "vue";
@@ -47,7 +45,7 @@ const projectNew = () => {
 };
 
 const projectRedirect = (to: any) => {
-  logger.trace("Redirect to project:", truncate(to.params.projectId));
+  logger.trace("redirect to project:", truncate(to.params.projectId));
 
   const projectStore = useNESTProjectStore();
 
@@ -85,8 +83,7 @@ export default [
         path: "edit",
         name: "nestNetworkEditor",
         components: {
-          project: () =>
-            import("../views/ProjectNetworkEditor.vue"),
+          project: () => import("../views/ProjectNetworkEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,
