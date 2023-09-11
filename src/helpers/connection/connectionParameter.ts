@@ -1,6 +1,5 @@
 // connectionParameter.ts
 
-import { BaseConnection } from "./baseConnection";
 import { Connection } from "@/types/connectionTypes";
 import { Parameter, ParameterProps } from "@/helpers/common/parameter";
 
@@ -14,8 +13,8 @@ export class ConnectionParameter extends Parameter {
     this._connection = connection;
   }
 
-  get connection(): BaseConnection {
-    return this._connection as BaseConnection;
+  get connection(): Connection {
+    return this._connection as Connection;
   }
 
   get types(): any[] {

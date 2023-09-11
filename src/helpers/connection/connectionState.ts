@@ -5,8 +5,6 @@ import { UnwrapRef, reactive } from "vue";
 
 import { Connection } from "@/types/connectionTypes";
 
-import { BaseConnection } from "./baseConnection";
-
 interface ConnectionStateState {
   hash: string;
   showRule: boolean,
@@ -25,8 +23,8 @@ export class ConnectionState {
     });
   }
 
-  get connection(): BaseConnection {
-    return this._connection as BaseConnection;
+  get connection(): Connection {
+    return this._connection as Connection;
   }
 
   get hash(): string {

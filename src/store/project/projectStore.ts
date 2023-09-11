@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import router from "@/router";
 
-import { BaseProject } from "@/helpers/project/baseProject";
+import { BaseProject } from "@/helpers/project/project";
 import { Project } from "@/types/projectTypes";
 
 import { useProjectDBStore } from "./projectDBStore";

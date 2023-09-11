@@ -6,8 +6,6 @@ import { Connection } from "@/types/connectionTypes";
 import { calcPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
 import { randomUniformInt } from "@/helpers/common/random";
 
-import { BaseConnection } from "./baseConnection";
-
 interface ConnectionViewState {
   xAxisRotation: number;
   visible?: boolean;
@@ -83,7 +81,7 @@ export class ConnectionView {
 
   get opacity(): boolean {
     const focusedConnection = this._connection.connections.state
-      .focusedConnection as BaseConnection;
+      .focusedConnection as Connection;
 
     return (
       this._connection.source.connections.length === 1 ||

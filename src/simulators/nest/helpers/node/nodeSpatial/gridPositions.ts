@@ -3,7 +3,7 @@
 import { range } from "@/helpers/common/array";
 import { round } from "@/utils/converter";
 
-import { NESTNodeSpatial } from "./nestNodeSpatial";
+import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface GridPositionsProps {
   center?: number[];

@@ -195,8 +195,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { NESTNode } from "../../helpers/node/nestNode";
-import ModelDocumentation from "../../views/model/NESTModelDoc.vue";
+import { NESTNode } from "../../helpers/node/node";
+import ModelDocumentation from "../../views/model/ModelDoc.vue";
 
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

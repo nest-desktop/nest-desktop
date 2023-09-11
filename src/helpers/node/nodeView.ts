@@ -3,10 +3,9 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { Node } from "@/types/nodeTypes";
 import { Connection } from "@/types/connectionTypes";
-
-import { NodeRecord } from "./nodeRecord";
+import { Node } from "@/types/nodeTypes";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 export interface NodeViewProps {
   position: { x: number; y: number };
@@ -52,11 +51,12 @@ export class NodeView {
     if (this._state.color) {
       return this._state.color;
     } else if (this.node.model.isRecorder) {
-      const connections: Connection[] = this.node.network.connections.all.filter(
-        (connection: Connection) =>
-          connection.sourceIdx === this.node.idx ||
-          connection.targetIdx === this.node.idx
-      );
+      const connections: Connection[] =
+        this.node.network.connections.all.filter(
+          (connection: Connection) =>
+            connection.sourceIdx === this.node.idx ||
+            connection.targetIdx === this.node.idx
+        );
       if (
         connections.length === 1 &&
         connections[0].sourceIdx !== connections[0].targetIdx

@@ -3,7 +3,7 @@
 import { randomUniformFloat } from "@/helpers/common/random";
 import { round } from "@/utils/converter";
 
-import { NESTNodeSpatial } from "./nestNodeSpatial";
+import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface FreePositionsProps {
   edgeWrap?: boolean;

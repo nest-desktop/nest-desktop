@@ -1,8 +1,7 @@
 // spikeActivity.ts
 
+import { Activity, ActivityProps, EventProps } from "@/helpers/activity/activity";
 import { Node } from "@/types/nodeTypes";
-
-import { Activity, ActivityProps, EventProps } from "./activity";
 
 interface SpikeActivityProps extends ActivityProps {}
 

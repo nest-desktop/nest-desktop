@@ -7,11 +7,11 @@ import { simulatorItems } from "..";
 import norseRoute from "./routes";
 import { norseIconSet } from "./components/iconsets";
 
-import { useNorseModelDBStore } from "./store/model/norseModelDBStore";
-import { useNorseModelStore } from "./store/model/norseModelStore";
-import { useNorseProjectDBStore } from "./store/project/norseProjectDBStore";
-import { useNorseProjectStore } from "./store/project/norseProjectStore";
-import { useNorseSessionStore } from "./store/norseSessionStore";
+import { useNorseModelDBStore } from "./store/model/modelDBStore";
+import { useNorseModelStore } from "./store/model/modelStore";
+import { useNorseProjectDBStore } from "./store/project/projectDBStore";
+import { useNorseProjectStore } from "./store/project/projectStore";
+import { useNorseSessionStore } from "./store/sessionStore";
 
 export default {
   install() {

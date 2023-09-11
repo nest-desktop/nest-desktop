@@ -7,11 +7,11 @@ import { simulatorItems } from "..";
 import nestRoute from "./routes";
 import { nestIconSet } from "./components/iconsets";
 
-import { useNESTModelDBStore } from "./store/model/nestModelDBStore";
-import { useNESTModelStore } from "./store/model/nestModelStore";
-import { useNESTProjectDBStore } from "./store/project/nestProjectDBStore";
-import { useNESTProjectStore } from "./store/project/nestProjectStore";
-import { useNESTSessionStore } from "./store/nestSessionStore";
+import { useNESTModelDBStore } from "./store/model/modelDBStore";
+import { useNESTModelStore } from "./store/model/modelStore";
+import { useNESTProjectDBStore } from "./store/project/projectDBStore";
+import { useNESTProjectStore } from "./store/project/projectStore";
+import { useNESTSessionStore } from "./store/sessionStore";
 
 export default {
   install() {
