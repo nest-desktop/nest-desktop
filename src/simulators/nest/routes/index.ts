@@ -1,7 +1,5 @@
 /**
- * router/index.ts
- *
- * router documentation: https://router.vuejs.org/guide/
+ * index.ts
  */
 
 // Composables

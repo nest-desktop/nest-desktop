@@ -1,21 +1,20 @@
 /**
- * modelRoutes.ts
- * */
+ * modelRoute.ts
+ */
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNorseModelDBStore } from "../store/model/modelDBStore";
-import { useNorseModelStore } from "../store/model/modelStore";
+import { usePyNNModelDBStore } from "../store/model/modelDBStore";
+import { usePyNNModelStore } from "../store/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
-  name: "norse model route",
+  name: "pynn model route",
 });
-
 const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
-  const modelStore = useNorseModelStore();
+  const modelStore = usePyNNModelStore();
 
-  const modelDBStore = useNorseModelDBStore();
+  const modelDBStore = usePyNNModelDBStore();
   if (modelDBStore.models.length === 0) {
     setTimeout(() => modelBeforeEnter(to), 100);
     return;
@@ -31,19 +30,19 @@ const modelBeforeEnter = (to: any) => {
 
 const modelRedirect = (to: any) => {
   logger.trace("Redirect to model:", to.params.modelId);
-  const modelStore = useNorseModelStore();
+  const modelStore = usePyNNModelStore();
 
   if (to.params.modelId) {
     modelStore.modelId = to.params.modelId;
   }
 
-  return { path: "/norse/model/" + modelStore.modelId + "/" + modelStore.view };
+  return { path: "/pynn/model/" + modelStore.modelId + "/" + modelStore.view };
 };
 
 export default [
   {
     path: "",
-    name: "norseModelRoot",
+    name: "pynnModelRoot",
     redirect: modelRedirect,
   },
   {
@@ -52,13 +51,13 @@ export default [
     children: [
       {
         path: "",
-        name: "norseModel",
+        name: "pynnModel",
         props: true,
         redirect: modelRedirect,
       },
       {
         path: "edit",
-        name: "norseModelEditor",
+        name: "pynnModelEditor",
         components: {
           model: () => import("../views/ModelEditor.vue"),
         },
@@ -67,7 +66,7 @@ export default [
       },
       {
         path: "explore",
-        name: "norseModelExplorer",
+        name: "pynnModelExplorer",
         components: {
           model: () => import("../views/ModelExplorer.vue"),
         },

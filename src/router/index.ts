@@ -8,7 +8,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // Store
-import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
 const closeNav = () => {
@@ -55,15 +54,6 @@ const routes: RouteRecordRaw[] = [
         path: "vuetify",
         name: "vuetify",
         component: () => import("@/views/Vuetify.vue"),
-      },
-      {
-        path: "pynn",
-        name: "pynn",
-        beforeEnter: () => {
-          const appStore = useAppStore();
-          appStore.simulator = "pynn";
-        },
-        component: () => import("@/components/HelloWorld.vue"),
       },
     ],
   },

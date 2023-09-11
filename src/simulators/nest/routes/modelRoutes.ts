@@ -1,6 +1,7 @@
 /**
- * nestModelRoutes.ts
+ * modelRoutes.ts
  */
+
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { useNESTModelDBStore } from "../store/model/modelDBStore";
@@ -8,7 +9,6 @@ import { useNESTModelStore } from "../store/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
   name: "nest model route",
-  minLevel: 1
 });
 
 const modelBeforeEnter = (to: any) => {
