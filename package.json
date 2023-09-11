@@ -10,7 +10,7 @@
   "scripts": {
     "app:build": "vue-tsc && vite build && electron-builder",
     "app:dev": "vite",
-    "app:preview": "./release/4.0.0-dev/nest-desktop-4.0.0-dev.AppImage",
+    "app:preview": "./release/4.0.0-alpha1/nest-desktop-4.0.0-alpha1.AppImage",
     "build": "vue-tsc --noEmit && vite build",
     "dev": "vite",
     "lint": "eslint . --fix --ignore-path .gitignore",
