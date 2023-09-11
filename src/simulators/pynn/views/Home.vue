@@ -6,9 +6,11 @@
           <v-card-title>
             <v-img class="mx-10" :src="pynnLogo" max-height="400" />
           </v-card-title>
+
           <v-card-subtitle>
             An integration layer for neural simulation
           </v-card-subtitle>
+
           <v-card-text>
             <p>
               PyNN (pronounced 'pine') is a simulator-independent language for
@@ -32,11 +34,6 @@
               neuron or synapse model supported by your simulator, and are not
               restricted to the standard models.
             </p>
-            <p>
-              PyNN is open-source software (CeCILL licence). For downloads and
-              full documentation see http://neuralensemble.org/PyNN/. For more
-              information, see Davison et al. (2009)
-            </p>
           </v-card-text>
         </v-card>
 
@@ -46,19 +43,27 @@
             <v-list>
               <v-list-item
                 append-icon="mdi-open-in-new"
-                href="https://pynn.github.io/pynn"
-                prepend-icon="mdi-github"
+                href="http://neuralensemble.org/PyNN/"
+                prepend-icon="mdi-home"
                 target="_blank"
               >
-                https://github.com/pynn
+                http://neuralensemble.org/PyNN/
               </v-list-item>
               <v-list-item
                 append-icon="mdi-open-in-new"
-                href="https://pynn.github.io/pynn"
+                href="https://github.com/NeuralEnsemble/PyNN/"
+                prepend-icon="mdi-github"
+                target="_blank"
+              >
+                https://github.com/NeuralEnsemble/PyNN/
+              </v-list-item>
+              <v-list-item
+                append-icon="mdi-open-in-new"
+                href="http://neuralensemble.org/docs/PyNN/"
                 prepend-icon="mdi-book-open"
                 target="_blank"
               >
-                https://pynn.github.io/pynn
+                http://neuralensemble.org/docs/PyNN/
               </v-list-item>
             </v-list>
           </v-card-text>
