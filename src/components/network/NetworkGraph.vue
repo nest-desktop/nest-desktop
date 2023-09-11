@@ -73,7 +73,7 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { Network, NetworkPropTypes } from "@/types/networkTypes";
 
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";

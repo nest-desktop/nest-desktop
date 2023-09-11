@@ -4,8 +4,7 @@ import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
 import { Node } from "@/types/nodeTypes";
-
-import { NodeParameter } from "./nodeParameter";
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 interface NodeStateState {
   hash: string;

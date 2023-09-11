@@ -1,8 +1,7 @@
 // analogSignalActivity.ts
 
+import { Activity, ActivityProps } from "@/helpers/activity/activity";
 import { Node } from "@/types/nodeTypes";
-
-import { Activity, ActivityProps } from "./activity";
 
 interface AnalogSignalActivityProps extends ActivityProps {}
 

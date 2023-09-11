@@ -5,8 +5,8 @@ import { download } from "@/utils/download";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { Project } from "@/types/projectTypes";
-import { BaseProjectDB } from "@/helpers/project/baseProjectDB";
-import { BaseProject, ProjectProps } from "@/helpers/project/baseProject";
+import { BaseProjectDB } from "@/helpers/project/projectDB";
+import { BaseProject, ProjectProps } from "@/helpers/project/project";
 import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({ name: "project DB store" });

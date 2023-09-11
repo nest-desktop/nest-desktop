@@ -1,8 +1,8 @@
 // connectionTypes.ts
 
-import { BaseConnection } from "@/helpers/connection/baseConnection";
-import { NESTConnection } from "@/simulators/nest/helpers/connection/nestConnection";
-import { NorseConnection } from "@/simulators/norse/helpers/connection/norseConnection";
+import { BaseConnection } from "@/helpers/connection/connection";
+import { NESTConnection } from "@/simulators/nest/helpers/connection/connection";
+import { NorseConnection } from "@/simulators/norse/helpers/connection/connection";
 
 export type Connection = BaseConnection | NESTConnection | NorseConnection;
 

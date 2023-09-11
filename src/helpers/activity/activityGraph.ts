@@ -1,4 +1,4 @@
-// activityGraphStore.ts
+// activityGraph.ts
 
 import { UnwrapRef, reactive } from "vue";
 import { ILogObj, Logger } from "tslog";

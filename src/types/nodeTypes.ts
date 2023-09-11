@@ -1,8 +1,8 @@
 // nodeTypes.ts
 
-import { BaseNode } from "@/helpers/node/baseNode";
-import { NESTNode } from "@/simulators/nest/helpers/node/nestNode";
-import { NorseNode } from "@/simulators/norse/helpers/node/norseNode";
+import { BaseNode } from "@/helpers/node/node";
+import { NESTNode } from "@/simulators/nest/helpers/node/node";
+import { NorseNode } from "@/simulators/norse/helpers/node/node";
 
 export type Node =
   | BaseNode

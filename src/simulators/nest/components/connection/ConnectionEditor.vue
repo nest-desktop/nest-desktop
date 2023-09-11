@@ -81,8 +81,8 @@ import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import ConnectionSpecEditor from "@/components/ConnectionSpecEditor.vue";
 
 import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
-import { NESTConnection } from "../../helpers/connection/nestConnection";
-import { NESTSynapse } from "../../helpers/synapse/nestSynapse";
+import { NESTConnection } from "../../helpers/connection/connection";
+import { NESTSynapse } from "../../helpers/synapse/synapse";
 
 const props = defineProps({
   connection: NESTConnection,

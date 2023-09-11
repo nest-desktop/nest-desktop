@@ -3,8 +3,8 @@
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { BaseModel } from "@/helpers/model/baseModel";
-import { BaseModelDB } from "@/helpers/model/baseModelDB";
+import { BaseModel } from "@/helpers/model/model";
+import { BaseModelDB } from "@/helpers/model/modelDB";
 import { Model } from "@/types/modelTypes";
 import { truncate } from "@/utils/truncate";
 

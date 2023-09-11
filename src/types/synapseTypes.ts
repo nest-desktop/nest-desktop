@@ -1,6 +1,6 @@
 // synapseTypes.ts
 
-import { BaseSynapse } from "@/helpers/synapse/baseSynapse";
-import { NESTSynapse } from "@/simulators/nest/helpers/synapse/nestSynapse";
+import { BaseSynapse } from "@/helpers/synapse/synapse";
+import { NESTSynapse } from "@/simulators/nest/helpers/synapse/synapse";
 
 export type Synapse = BaseSynapse | NESTSynapse;

@@ -3,7 +3,7 @@
 import { Group } from "three";
 
 import { Activity } from "@/helpers/activity/activity";
-import { BaseProject } from "@/helpers/project/baseProject";
+import { BaseProject } from "@/helpers/project/project";
 import { Project } from "@/types/projectTypes";
 
 import { ActivityAnimationLayer } from "./activityAnimationLayer";

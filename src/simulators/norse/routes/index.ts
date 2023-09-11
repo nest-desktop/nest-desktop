@@ -10,8 +10,8 @@ import { RouteRecordRaw } from "vue-router";
 import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
 
-import modelRoutes from "./norseModelRoutes";
-import projectRoutes from "./norseProjectRoutes";
+import modelRoutes from "./modelRoutes";
+import projectRoutes from "./projectRoutes";
 
 const closeNav = () => {
   const navStore = useNavStore();
@@ -25,24 +25,24 @@ export default {
     const appStore = useAppStore();
     appStore.simulator = "norse";
   },
-  component: () => import("../layouts/NorseLayout.vue"),
+  component: () => import("../layouts/MainLayout.vue"),
   children: [
     {
       path: "",
       name: "norseHome",
-      component: () => import("../views/NorseHome.vue"),
+      component: () => import("../views/Home.vue"),
       beforeEnter: closeNav,
     },
     {
       path: "model",
       name: "norseModelLayout",
-      component: () => import("../layouts/NorseModelLayout.vue"),
+      component: () => import("../layouts/ModelLayout.vue"),
       children: modelRoutes as RouteRecordRaw[],
     },
     {
       path: "project",
       name: "norseProjectLayout",
-      component: () => import("../layouts/NorseProjectLayout.vue"),
+      component: () => import("../layouts/ProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
     },
   ],

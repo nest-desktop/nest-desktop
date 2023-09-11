@@ -4,13 +4,12 @@ import { ILogObj, Logger } from "tslog";
 import { UnwrapRef, reactive } from "vue";
 import { sha1 } from "object-hash";
 
+import { Activity } from "@/helpers/activity/activity";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { Node } from "@/types/nodeTypes";
 import { Project } from "@/types/projectTypes";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { logger as mainLogger } from "@/helpers/common/logger";
-
-import { Activity } from "./activity";
-import { AnalogSignalActivity } from "./analogSignalActivity";
-import { SpikeActivity } from "./spikeActivity";
 
 interface ActivitiesState {
   activityStatsPanelId: number;

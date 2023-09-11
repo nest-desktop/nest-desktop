@@ -20,8 +20,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
-import { BaseNode } from "@/helpers/node/baseNode";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
+import { BaseNode } from "@/helpers/node/node";
 import { NodePropTypes } from "@/types/nodeTypes";
 import { useAppSessionStore } from "@/store/appSessionStore";
 

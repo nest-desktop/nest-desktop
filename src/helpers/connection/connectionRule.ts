@@ -2,8 +2,6 @@
 
 import { Connection } from "@/types/connectionTypes";
 
-import { BaseConnection } from "./baseConnection";
-
 enum Rule {
   AllToAll = "all_to_all",
   FixedIndegree = "fixed_indegree",
@@ -23,8 +21,8 @@ export class ConnectionRule {
     this._value = rule || "all_to_all";
   }
 
-  get connection(): BaseConnection {
-    return this._connection as BaseConnection;
+  get connection(): Connection {
+    return this._connection as Connection;
   }
 
   get value(): string {
