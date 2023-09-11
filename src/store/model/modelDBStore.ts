@@ -3,14 +3,14 @@
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
+import { Model } from "@/types/modelTypes";
 import { BaseModel } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
-import { Model } from "@/types/modelTypes";
 import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });
 
-const modelAssets: any[] = [];
+const modelAssets: string[] = [];
 const db = new BaseModelDB();
 
 export const useModelDBStore = defineStore("model-db", {
@@ -74,7 +74,7 @@ export const useModelDBStore = defineStore("model-db", {
       modelAssets.forEach(async (file: string) => {
         const response = await fetch("assets/models/" + file + ".json");
         const data = await response.json();
-        promise = promise.then(() => db.createModel(data));
+        promise = promise.then(() => db.create(data));
       });
       return promise;
     },
@@ -118,5 +118,5 @@ export const useModelDBStore = defineStore("model-db", {
         models.forEach((model) => this.models.push(new BaseModel(model)));
       });
     },
-  },
+  }
 });

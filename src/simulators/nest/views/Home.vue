@@ -44,6 +44,14 @@
             <v-list density="compact">
               <v-list-item
                 append-icon="mdi-open-in-new"
+                href="https://nest-initiative.org/"
+                prepend-icon="mdi-home"
+                target="_blank"
+              >
+                https://nest-initiative.org/
+              </v-list-item>
+              <v-list-item
+                append-icon="mdi-open-in-new"
                 href="https://github.com/nest/nest-simulator/"
                 prepend-icon="mdi-github"
                 target="_blank"
