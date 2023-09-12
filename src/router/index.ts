@@ -8,7 +8,15 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // Store
+import { useAppStore } from "@/store/appStore";
 import { useNavStore } from "@/store/navStore";
+
+const checkSimulator = () => {
+  const appStore = useAppStore();
+  if (!appStore.hasSimulator) {
+    appStore.resetSimulator()
+  }
+}
 
 const closeNav = () => {
   const navStore = useNavStore();
@@ -19,6 +27,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "appLayout",
+    beforeEnter: checkSimulator,
     component: () => import("@/layouts/AppLayout.vue"),
     children: [
       {

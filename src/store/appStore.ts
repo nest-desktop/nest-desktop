@@ -12,6 +12,10 @@ export const useAppStore = defineStore("app-store", {
     simulator: "nest",
   }),
   getters: {
+    hasSimulator: (state) => {
+      const simulatorIds = Object.keys(simulatorItems);
+      return simulatorIds.includes(state.simulator);
+    },
     currentSimulator: (state) => simulatorItems[state.simulator],
     session: () => {
       const appSessionStore = useAppSessionStore();
@@ -19,9 +23,8 @@ export const useAppStore = defineStore("app-store", {
     },
   },
   actions: {
-    toggleDarkMode(theme: ThemeInstance) {
-      this.darkMode = !this.darkMode;
-      this.setDarkMode(theme);
+    resetSimulator() {
+      this.simulator = Object.keys(simulatorItems)[0];
     },
     setDarkMode(theme: ThemeInstance) {
       if (theme.global) {
@@ -31,6 +34,11 @@ export const useAppStore = defineStore("app-store", {
         // @ts-ignore
         theme.window.name.value = this.darkMode ? "dark" : "light";
       }
+    },
+
+    toggleDarkMode(theme: ThemeInstance) {
+      this.darkMode = !this.darkMode;
+      this.setDarkMode(theme);
     },
   },
   persist: true,
