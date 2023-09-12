@@ -4,7 +4,7 @@
       <v-btn
         :disabled="simulation.state.running"
         :loading="simulation.state.running"
-        @click="simulation.project.projectStore.startSimulation()"
+        @click="projectStore?.startSimulation()"
         class="btn-main"
         variant="outlined"
         title="Simulate"
@@ -46,10 +46,12 @@ import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
 
 const props = defineProps({
   simulation: SimulationPropTypes,
+  projectStore: Object,
   disabled: Boolean,
 });
 
 const simulation = computed(() => props.simulation as Simulation);
+const projectStore = computed(() => props.projectStore)
 
 const state = reactive({
   disabled: false,

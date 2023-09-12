@@ -23,7 +23,7 @@ export default {
       "norse-accent": "#e6007e",
     });
 
-    addIconSet({norse: norseIconSet})
+    addIconSet({ norse: norseIconSet });
 
     simulatorItems.norse = {
       id: "norse",
@@ -31,7 +31,7 @@ export default {
       routerName: "norseHome",
       icon: "norse:logo",
       databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
-    }
+    };
 
     const norseSessionStore = useNorseSessionStore();
     const modelDBStore = useNorseModelDBStore();
@@ -40,15 +40,8 @@ export default {
     const projectStore = useNorseProjectStore();
 
     Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      if (modelDBStore.models.length > 0) {
-        const firstModel = modelDBStore.models[0];
-        modelStore.modelId = firstModel.id;
-      }
-      if (projectDBStore.projects.length > 0) {
-        const firstProject = projectDBStore.projects[0];
-        projectStore.project = firstProject;
-        projectStore.projectId = firstProject.id;
-      }
+      modelStore.init();
+      projectStore.init();
       norseSessionStore.loading = false;
     });
   },

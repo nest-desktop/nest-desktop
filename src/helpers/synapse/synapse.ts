@@ -6,7 +6,10 @@ import { ILogObj, Logger } from "tslog";
 import { Connection } from "@/types/connectionTypes";
 import { Model } from "@/types/modelTypes";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { SynapseParameter, SynapseParameterProps } from "@/helpers/synapse/synapseParameter";
+import {
+  SynapseParameter,
+  SynapseParameterProps,
+} from "@/helpers/synapse/synapseParameter";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 interface SynapseState {
@@ -77,7 +80,9 @@ export class BaseSynapse {
     if (this.connection.view.connectRecorder() || this.weight === 0) {
       return "network:synapse-recorder";
     } else {
-      return "network:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
+      return (
+        "network:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory")
+      );
     }
   }
 
@@ -118,13 +123,8 @@ export class BaseSynapse {
     this.modelChanges();
   }
 
-  get models(): Model[] {
-    const elementType: string = this.model.elementType;
-    const models: Model[] =
-      this._connection.network.project.modelStore.getModelsByElementType(
-        elementType
-      );
-    return models;
+  get modelDBStore(): any {
+    return this.connection.connections.network.project.modelDBStore;
   }
 
   get modelId(): string {
@@ -145,6 +145,13 @@ export class BaseSynapse {
 
   get modelParams(): { [key: string]: ModelParameter } {
     return this.model.params;
+  }
+
+  get models(): Model[] {
+    const elementType: string = this.model.elementType;
+    const models: Model[] =
+      this.modelDBStore.getModelsByElementType(elementType);
+    return models;
   }
 
   get name(): string {
@@ -225,7 +232,7 @@ export class BaseSynapse {
 
   getModel(modelId: string): Model {
     this._logger.trace("get model:", modelId);
-    return this._connection.network.project.modelStore.getModel(modelId);
+    return this.modelDBStore.getModel(modelId);
   }
 
   /**

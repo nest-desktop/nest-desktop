@@ -9,7 +9,6 @@ import {
   NESTSimulationProps,
 } from "../simulation/simulation";
 import { useNESTModelDBStore } from "../../store/model/modelDBStore";
-import { useNESTProjectDBStore } from "../../store/project/projectDBStore";
 import { useNESTProjectStore } from "../../store/project/projectStore";
 
 export interface NESTProjectProps extends ProjectProps {
@@ -62,7 +61,7 @@ export class NESTProject extends BaseProject {
   override duplicate(): NESTProject {
     this.logger.trace("duplicate");
     const newProject: NESTProject = this.clone();
-    this.projectDBStore.addProject(newProject.toJSON());
+    this.projectStore.db.addProject(newProject.toJSON());
     return newProject;
   }
 
@@ -70,9 +69,8 @@ export class NESTProject extends BaseProject {
    * Initialize store for NEST.
    */
   override initStore(): void {
-    this.modelStore = useNESTModelDBStore();
-    this.projectDBStore = useNESTProjectDBStore();
-    this.projectStore = useNESTProjectStore();
+    this.modelDBStore = useNESTModelDBStore();
+    // this.projectStore = useNESTProjectStore();
   }
 
   override newNetwork(data?: NESTNetworkProps): NESTNetwork {

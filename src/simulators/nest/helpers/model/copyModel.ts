@@ -184,11 +184,15 @@ export class NESTCopyModel {
   }
 
   get model(): NESTModel {
-    return this._network.project.modelStore.getModel(this._existingModelId);
+    return this.modelDBStore.getModel(this._existingModelId);
+  }
+
+  get modelDBStore(): any {
+    return this._network.project.modelDBStore;
   }
 
   get models(): NESTModel[] {
-    return this._network.project.modelStore.models as NESTModel[];
+    return this.modelDBStore.models as NESTModel[];
   }
 
   get name(): string {

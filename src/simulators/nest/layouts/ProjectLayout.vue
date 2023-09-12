@@ -1,7 +1,11 @@
 <template>
   <project-nav :store="projectDBStore" />
 
-  <project-bar :project="(project as NESTProject)" color="blue" />
+  <project-bar
+    :project="(project as NESTProject)"
+    :project-store="projectStore"
+    color="blue"
+  />
 
   <project-controller :store="projectStore">
     <template #simulationKernelEditor>

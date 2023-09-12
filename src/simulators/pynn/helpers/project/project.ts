@@ -7,7 +7,6 @@ import {
   PyNNSimulationProps,
 } from "../simulation/simulation";
 import { usePyNNModelDBStore } from "../../store/model/modelDBStore";
-import { usePyNNProjectDBStore } from "../../store/project/projectDBStore";
 import { usePyNNProjectStore } from "../../store/project/projectStore";
 
 export interface PyNNProjectProps extends ProjectProps {
@@ -44,7 +43,7 @@ export class PyNNProject extends BaseProject {
   duplicate(): PyNNProject {
     this.logger.trace("duplicate");
     const newProject: PyNNProject = this.clone();
-    this.projectDBStore.addProject(newProject);
+    this.projectStore.db.addProject(newProject);
     return newProject;
   }
 
@@ -52,9 +51,8 @@ export class PyNNProject extends BaseProject {
    * Initialize store for PyNN.
    */
   override initStore(): void {
-    this.modelStore = usePyNNModelDBStore();
-    this.projectDBStore = usePyNNProjectDBStore();
-    this.projectStore = usePyNNProjectStore();
+    this.modelDBStore = usePyNNModelDBStore();
+    // this.projectStore = usePyNNProjectStore();
   }
 
   override newSimulation(data?: PyNNSimulationProps): PyNNSimulation {

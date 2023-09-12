@@ -25,7 +25,11 @@
 
     <v-spacer />
 
-    <simulation-button class="mx-2" :simulation="project.simulation" />
+    <simulation-button
+      class="mx-2"
+      :project-store="projectStore"
+      :simulation="project.simulation"
+    />
   </v-app-bar>
 </template>
 
@@ -40,9 +44,11 @@ const appStore = useAppStore();
 
 const props = defineProps({
   project: ProjectPropTypes,
+  projectStore: Object,
 });
 
 const project = computed(() => props.project as Project);
+const projectStore = computed(() => props.projectStore);
 
 const tabItems = computed(() => [
   {

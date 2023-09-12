@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Config } from "@/helpers/config";
 import { ModelParameter, ModelParameterProps } from "@/helpers/model/modelParameter";
 import { logger as mainLogger } from "@/helpers/common/logger";
-import { useModelDBStore } from "@/store/model/modelDBStore";
+// import { useModelDBStore } from "@/store/model/modelDBStore";
 
 export interface ModelProps {
   doc?: any;
@@ -27,14 +27,14 @@ export class BaseModel extends Config {
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
   private _id: string; // model id
-  private _idx: number; // generative
+  // private _idx: number; // generative
   private _label: string; // model label for view
   private _logger: Logger<ILogObj>;
   private _params: { [key: string]: ModelParameter } = {}; // model parameters
   private _paramsVisible: string[] = [];
   private _recordables: any[] = []; // recordables for multimeter
   private _state: UnwrapRef<any>;
-  private _modelDBStore;
+  // private _modelDBStore;
 
   constructor(model: ModelProps = {}, name: string = "Model") {
     super(name);
@@ -44,8 +44,8 @@ export class BaseModel extends Config {
 
     this._logger = mainLogger.getSubLogger({ name: `[${this._id}] model` });
 
-    this._modelDBStore = useModelDBStore();
-    this._idx = this._modelDBStore.models.length;
+    // this._modelDBStore = useModelDBStore();
+    // this._idx = this._modelDBStore.models.length;
 
     this._elementType = model.elementType || "neuron";
 
@@ -83,9 +83,9 @@ export class BaseModel extends Config {
     this._id = value;
   }
 
-  get idx(): number {
-    return this._idx;
-  }
+  // get idx(): number {
+  //   return this._idx;
+  // }
 
   /**
    * Check if the model is an analog recorder.
@@ -186,7 +186,7 @@ export class BaseModel extends Config {
    * Clean the model index.
    */
   clean(): void {
-    this._idx = this._modelDBStore.models.indexOf(this);
+    // this._idx = this._modelDBStore.models.indexOf(this);
   }
 
   /**
@@ -216,7 +216,7 @@ export class BaseModel extends Config {
    * Delete the model object from model list.
    */
   async delete(): Promise<any> {
-    return this._modelDBStore.deleteModel(this.docId);
+    // return this._modelDBStore.deleteModel(this.docId);
   }
 
   changes(): void {}
@@ -265,7 +265,7 @@ export class BaseModel extends Config {
    */
   async save(): Promise<any> {
     this._logger.trace("save");
-    return this._modelDBStore.saveModel(this._id);
+    // return this._modelDBStore.saveModel(this._id);
   }
 
   /**
