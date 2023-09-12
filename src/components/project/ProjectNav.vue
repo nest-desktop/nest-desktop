@@ -64,7 +64,7 @@
         <template #append>
           <template v-if="project.doc">
             <v-btn
-              @click.prevent="project.save()"
+              @click.prevent="saveProject(project)"
               :disabled="!project.state?.changes && !project.state?.editMode"
               :icon="
                 project.state?.changes
@@ -74,7 +74,7 @@
               size="x-small"
               variant="text"
             />
-            <project-menu :project="project" />
+            <project-menu :project="project" :projectDBStore="projectDBStore" />
           </template>
 
           <template v-else>
@@ -91,7 +91,7 @@
               </template>
 
               <v-list density="compact">
-                <v-list-item @click="store.removeProject(project)">
+                <v-list-item @click="projectDBStore.deleteProject(project)">
                   <template #prepend>
                     <v-icon icon="mdi-trash-can-outline" />
                   </template>
@@ -161,13 +161,15 @@ import { useNavStore } from "@/store/navStore";
 const navStore = useNavStore();
 
 const props = defineProps({
-  store: { required: true, type: Object },
+  projectDBStore: { required: true, type: Object },
 });
+
+const projectDBStore = computed(() => props.projectDBStore);
 
 const search = ref("");
 
 const projects = computed(() =>
-  props.store.projects.filter((project: Project) =>
+  props.projectDBStore.projects.filter((project: Project) =>
     project.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );
@@ -179,6 +181,14 @@ const projectsMenuItems = [
   { title: "Reload list", icon: "mdi-reload" },
   { title: "Reset database", icon: "mdi-database-sync-outline" },
 ];
+
+/**
+ * Close project.
+ */
+ const saveProject = (project: Project) => {
+  project.state.state.editMode = false;
+  projectDBStore.value.saveProject(project.id);
+};
 
 /**
  * Handle mouse move on resizing.

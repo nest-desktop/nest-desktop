@@ -39,10 +39,7 @@ export class BaseNetwork extends Config {
     stimulator: "dc_generator",
   };
 
-  constructor(
-    project: Project,
-    network: NetworkProps = {},
-  ) {
+  constructor(project: Project, network: NetworkProps = {}) {
     super("Network");
 
     // this._graph = new NetworkGraph(this);
@@ -161,17 +158,12 @@ export class BaseNetwork extends Config {
     // TODO: Better solution to update activity graph.
     // this.project.initActivityGraph();
 
-    if (this.project?.simulateAfterCheckout) {
-      // Run simulation.
-      setTimeout(() => this.project.startSimulation(), 1);
-    } else {
-      // Update activities.
-      const activities: any[] | undefined = this.project.activities.all.map(
-        (activity: Activity) => activity.toJSON()
-      );
-      if (activities) {
-        this.project.activities.update(activities);
-      }
+    // Update activities.
+    const activities: any[] | undefined = this.project.activities.all.map(
+      (activity: Activity) => activity.toJSON()
+    );
+    if (activities) {
+      this.project.activities.update(activities);
     }
 
     this.clean();

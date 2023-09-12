@@ -8,7 +8,6 @@ import {
   NorseSimulationProps,
 } from "../simulation/simulation";
 import { useNorseModelDBStore } from "../../store/model/modelDBStore";
-import { useNorseProjectStore } from "../../store/project/projectStore";
 
 export interface NorseProjectProps extends ProjectProps {
   network?: NorseNetworkProps;
@@ -37,24 +36,10 @@ export class NorseProject extends BaseProject {
   }
 
   /**
-   * Clone this current project and add it to the list.
-   *
-   * @remarks
-   * It pushes new project to the first line of the list.
-   */
-  duplicate(): NorseProject {
-    this.logger.trace("duplicate");
-    const newProject: NorseProject = this.clone();
-    this.projectStore.db.addProject(newProject);
-    return newProject;
-  }
-
-  /**
    * Initialize store for Norse.
    */
   override initStore(): void {
     this.modelDBStore = useNorseModelDBStore();
-    // this.projectStore = useNorseProjectStore();
   }
 
   override newNetwork(data?: NorseNetworkProps): NorseNetwork {
