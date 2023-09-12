@@ -45,7 +45,7 @@ export class NESTSynapse extends BaseSynapse {
   override get models(): (NESTModel)[] {
     const elementType: string = this.model.elementType;
     const models: NESTModel[] =
-      this.connection.network.project.modelStore.getModelsByElementType(
+      this.modelDBStore.getModelsByElementType(
         elementType
       );
 
@@ -88,7 +88,7 @@ export class NESTSynapse extends BaseSynapse {
     // } else {
     //   return this.connection.network.project.modelStore.getModel(modelId);
     // }
-    return this.connection.network.project.modelStore.getModel(modelId);
+    return this.modelDBStore.getModel(modelId);
   }
 
   /**

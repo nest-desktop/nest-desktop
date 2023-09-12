@@ -23,7 +23,7 @@ export default {
       "pynn-accent": "#e6007e",
     });
 
-    addIconSet({pynn: pynnIconSet})
+    addIconSet({ pynn: pynnIconSet });
 
     simulatorItems.pynn = {
       id: "pynn",
@@ -31,7 +31,7 @@ export default {
       routerName: "pynnHome",
       icon: "pynn:logo",
       databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
-    }
+    };
 
     const pynnSessionStore = usePyNNSessionStore();
     const modelDBStore = usePyNNModelDBStore();
@@ -40,15 +40,8 @@ export default {
     const projectStore = usePyNNProjectStore();
 
     Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      if (modelDBStore.models.length > 0) {
-        const firstModel = modelDBStore.models[0];
-        modelStore.modelId = firstModel.id;
-      }
-      if (projectDBStore.projects.length > 0) {
-        const firstProject = projectDBStore.projects[0];
-        projectStore.project = firstProject;
-        projectStore.projectId = firstProject.id;
-      }
+      modelStore.init();
+      projectStore.init();
       pynnSessionStore.loading = false;
     });
   },

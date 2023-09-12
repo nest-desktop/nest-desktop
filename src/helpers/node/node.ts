@@ -10,7 +10,10 @@ import { Model } from "@/types/modelTypes";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
-import { NodeParameter, NodeParameterProps } from "@/helpers/node/nodeParameter";
+import {
+  NodeParameter,
+  NodeParameterProps,
+} from "@/helpers/node/nodeParameter";
 import { NodeRecord, NodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NodeState } from "@/helpers/node/nodeState";
 import { NodeView, NodeViewProps } from "@/helpers/node/nodeView";
@@ -204,13 +207,8 @@ export class BaseNode extends Config {
     this.modelChanges();
   }
 
-  get models(): Model[] {
-    // Get models of the same element type.
-    const elementType: string = this.model.elementType;
-    const models: Model[] =
-      this.network.project.modelStore.getModelsByElementType(elementType);
-
-    return models;
+  get modelDBStore(): any {
+    return this.nodes.network.project.modelDBStore;
   }
 
   get modelId(): string {
@@ -228,6 +226,15 @@ export class BaseNode extends Config {
 
   get modelParams(): { [key: string]: ModelParameter } {
     return this.model.params;
+  }
+
+  get models(): Model[] {
+    // Get models of the same element type.
+    const elementType: string = this.model.elementType;
+    const models: Model[] =
+      this.modelDBStore.getModelsByElementType(elementType);
+
+    return models;
   }
 
   get n(): number {
@@ -393,7 +400,7 @@ export class BaseNode extends Config {
    */
   getModel(modelId: string): Model {
     this._logger.trace("get model:", modelId);
-    return this.network.project.modelStore.getModel(modelId);
+    return this.modelDBStore.getModel(modelId);
   }
 
   /**

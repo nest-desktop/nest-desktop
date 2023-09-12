@@ -16,8 +16,6 @@ import { ProjectState } from "./projectState";
 import { Simulation } from "@/types/simulationTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { useModelDBStore } from "@/store/model/modelDBStore";
-import { useProjectDBStore } from "@/store/project/projectDBStore";
-import { useProjectStore } from "@/store/project/projectStore";
 
 export interface ProjectProps {
   activityGraph?: any;
@@ -39,10 +37,9 @@ export class BaseProject {
   private _doc: any; // raw data of the database
   private _id: string; // id of the project
   private _logger: Logger<ILogObj>;
-  private _modelStore: any;
+  private _modelDBStore: any;
   private _name: string; // project name
   public _network: BaseNetwork; // network of neurons and devices
-  private _projectDBStore: any;
   private _projectStore: any;
   public _simulation: BaseSimulation; // settings for the simulation
   private _state: ProjectState;
@@ -133,12 +130,12 @@ export class BaseProject {
     return this._logger;
   }
 
-  get modelStore() {
-    return this._modelStore;
+  get modelDBStore() {
+    return this._modelDBStore;
   }
 
-  set modelStore(value) {
-    this._modelStore = value;
+  set modelDBStore(value: any) {
+    this._modelDBStore = value;
   }
 
   get name(): string {
@@ -151,14 +148,6 @@ export class BaseProject {
 
   get network(): Network {
     return this._network;
-  }
-
-  get projectDBStore() {
-    return this._projectDBStore;
-  }
-
-  set projectDBStore(value) {
-    this._projectDBStore = value;
   }
 
   get projectStore() {
@@ -249,7 +238,7 @@ export class BaseProject {
    * Clone a new project of this current project.
    *
    * @remarks
-   * It generates new project id and empties updatedAt variable;
+   * It generates ne project id and empties updatedAt variable;
    */
   clone(): Project {
     this._logger.trace("clone");
@@ -269,7 +258,7 @@ export class BaseProject {
   duplicate(): Project {
     this._logger.trace("duplicate");
     const newProject: BaseProject = this.clone();
-    this._projectDBStore.addProject(newProject);
+    this._projectStore.db.addProject(newProject);
     return newProject;
   }
 
@@ -278,7 +267,7 @@ export class BaseProject {
    */
   async delete(): Promise<any> {
     this._logger.trace("delete");
-    return this._projectDBStore.removeProject(this);
+    return this._projectStore.db.removeProject(this);
   }
 
   /**
@@ -286,7 +275,7 @@ export class BaseProject {
    */
   export(): void {
     this._logger.trace("export");
-    this._projectDBStore.exportProject(this.id);
+    this._projectStore.db.exportProject(this.id);
   }
 
   /**
@@ -294,7 +283,7 @@ export class BaseProject {
    */
   exportWithActivities(): void {
     this._logger.trace("export with activities");
-    this._projectDBStore.exportProject(this.id, true);
+    this._projectStore.db.exportProject(this.id, true);
   }
 
   /**
@@ -328,9 +317,8 @@ export class BaseProject {
    * Initialize store.
    */
   initStore(): void {
-    this._modelStore = useModelDBStore();
-    this._projectDBStore = useProjectDBStore();
-    this._projectStore = useProjectStore();
+    this._modelDBStore = useModelDBStore();
+    // this._projectStore = useProjectStore();
   }
 
   newNetwork(data?: NetworkProps): Network {
@@ -346,7 +334,7 @@ export class BaseProject {
    */
   async reload(): Promise<any> {
     this._logger.trace("reload");
-    return this._projectDBStore.reloadProject(this._id);
+    return this._projectStore.db.reloadProject(this._id);
   }
 
   /**
@@ -354,7 +342,7 @@ export class BaseProject {
    */
   save(): void {
     this._state.state.editMode = false;
-    this._projectDBStore.saveProject(this);
+    this._projectStore.db.saveProject(this);
   }
 
   /**
@@ -417,6 +405,6 @@ export class BaseProject {
    */
   async unload(): Promise<any> {
     this._logger.trace("unload");
-    return this._projectDBStore.unloadProject(this.id);
+    return this._projectStore.db.unloadProject(this.id);
   }
 }

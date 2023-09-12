@@ -1,7 +1,11 @@
 <template>
   <project-nav :store="projectDBStore" />
 
-  <project-bar :project="(project as NorseProject)" color="purple" />
+  <project-bar
+    :project="(project as NorseProject)"
+    :project-store="projectStore"
+    color="purple"
+  />
 
   <project-controller :store="projectStore" />
 

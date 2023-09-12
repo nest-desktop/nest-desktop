@@ -127,7 +127,7 @@ export class NESTNode extends BaseNode {
     // Get models of the same element type.
     const elementType: string = this.model.elementType;
     const models: NESTModel[] =
-      this.network.project.modelStore.getModelsByElementType(elementType);
+      this.modelDBStore.getModelsByElementType(elementType);
 
     // // Get copied models.
     // const modelsCopied: NESTCopyModel[] =
@@ -217,7 +217,7 @@ export class NESTNode extends BaseNode {
     // } else {
     //   return this.network.project.modelStore.getModel(modelId);
     // }
-    return this.network.project.modelStore.getModel(modelId);
+    return this.modelDBStore.getModel(modelId);
   }
 
   /**

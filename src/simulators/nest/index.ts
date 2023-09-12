@@ -39,15 +39,8 @@ export default {
     const projectStore = useNESTProjectStore();
 
     Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      if (modelDBStore.models.length > 0) {
-        const firstModel = modelDBStore.models[0];
-        modelStore.modelId = firstModel.id;
-      }
-      if (projectDBStore.projects.length > 0) {
-        const firstProject = projectDBStore.projects[0];
-        projectStore.project = firstProject;
-        projectStore.projectId = firstProject.id;
-      }
+      modelStore.init();
+      projectStore.init();
       nestSessionStore.loading = false;
     });
   },
