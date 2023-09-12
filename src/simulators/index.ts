@@ -10,6 +10,8 @@ import nest from "./nest";
 import norse from "./norse";
 import pynn from "./pynn";
 
+const simulators = [nest, norse, pynn];
+
 export const simulatorItems: {
   [key: string]: {
     color?: string;
@@ -22,12 +24,6 @@ export const simulatorItems: {
 } = {};
 
 export function registerSimulators(app: App) {
-  // install nest
-  app.use(nest);
-
-  // install norse
-  app.use(norse);
-
-  // install pynn
-  app.use(pynn);
+  // Use simulators
+  simulators.forEach((simulator) => app.use(simulator));
 }
