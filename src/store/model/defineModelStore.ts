@@ -26,7 +26,7 @@ export function defineModelStore(
       controllerOpen: false,
       controllerView: "",
       modelId: "",
-      view: args.defaultView || "doc",
+      view: args.defaultView || "edit",
       width: 320,
     }),
     getters: {

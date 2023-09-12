@@ -40,7 +40,7 @@ export class BaseProject {
   private _modelDBStore: any;
   private _name: string; // project name
   public _network: BaseNetwork; // network of neurons and devices
-  private _projectStore: any;
+  // private _projectStore: any;
   public _simulation: BaseSimulation; // settings for the simulation
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
@@ -150,17 +150,13 @@ export class BaseProject {
     return this._network;
   }
 
-  get projectStore() {
-    return this._projectStore;
-  }
+  // get projectStore() {
+  //   return this._projectStore;
+  // }
 
-  set projectStore(value) {
-    this._projectStore = value;
-  }
-
-  get simulateAfterCheckout(): boolean {
-    return this._projectStore.simulateAfterCheckout;
-  }
+  // get simulateAfterCheckout(): boolean {
+  //   return this._projectStore.simulateAfterCheckout;
+  // }
 
   get simulation(): Simulation {
     return this._simulation;
@@ -186,12 +182,12 @@ export class BaseProject {
     this._updatedAt = value;
   }
 
-  /**
-   * Is the current project selected?
-   */
-  get isSelected(): boolean {
-    return this.id === this._projectStore.projectId;
-  }
+  // /**
+  //  * Is the current project selected?
+  //  */
+  // get isSelected(): boolean {
+  //   return this.id === this._projectStore.projectId;
+  // }
 
   /**
    * Observer for network changes
@@ -249,42 +245,42 @@ export class BaseProject {
     return newProject;
   }
 
-  /**
-   * Clone this current project and add it to the list.
-   *
-   * @remarks
-   * It pushes new project to the first line of the list.
-   */
-  duplicate(): Project {
-    this._logger.trace("duplicate");
-    const newProject: BaseProject = this.clone();
-    this._projectStore.db.addProject(newProject);
-    return newProject;
-  }
+  // /**
+  //  * Clone this current project and add it to the list.
+  //  *
+  //  * @remarks
+  //  * It pushes new project to the first line of the list.
+  //  */
+  // duplicate(): Project {
+  //   this._logger.trace("duplicate");
+  //   const newProject: BaseProject = this.clone();
+  //   this._projectStore.addProject(newProject);
+  //   return newProject;
+  // }
 
-  /**
-   * Delete this project from the list and database.
-   */
-  async delete(): Promise<any> {
-    this._logger.trace("delete");
-    return this._projectStore.db.removeProject(this);
-  }
+  // /**
+  //  * Delete this project from the list and database.
+  //  */
+  // async delete(): Promise<any> {
+  //   this._logger.trace("delete");
+  //   return this._projectStore.db.removeProject(this);
+  // }
 
-  /**
-   * Export this project.
-   */
-  export(): void {
-    this._logger.trace("export");
-    this._projectStore.db.exportProject(this.id);
-  }
+  // /**
+  //  * Export this project.
+  //  */
+  // export(): void {
+  //   this._logger.trace("export");
+  //   this._projectStore.db.exportProject(this.id);
+  // }
 
-  /**
-   * Export this project and activities.
-   */
-  exportWithActivities(): void {
-    this._logger.trace("export with activities");
-    this._projectStore.db.exportProject(this.id, true);
-  }
+  // /**
+  //  * Export this project and activities.
+  //  */
+  // exportWithActivities(): void {
+  //   this._logger.trace("export with activities");
+  //   this._projectStore.db.exportProject(this.id, true);
+  // }
 
   /**
    * Initialize project.
@@ -329,21 +325,21 @@ export class BaseProject {
     return new BaseSimulation(this, data);
   }
 
-  /**
-   * Reload this project.
-   */
-  async reload(): Promise<any> {
-    this._logger.trace("reload");
-    return this._projectStore.db.reloadProject(this._id);
-  }
+  // /**
+  //  * Reload this project.
+  //  */
+  // async reload(): Promise<any> {
+  //   this._logger.trace("reload");
+  //   return this._projectStore.db.reloadProject(this._id);
+  // }
 
-  /**
-   * Save the current project.
-   */
-  save(): void {
-    this._state.state.editMode = false;
-    this._projectStore.db.saveProject(this);
-  }
+  // /**
+  //  * Save the current project.
+  //  */
+  // save(): void {
+  //   this._state.state.editMode = false;
+  //   this._projectStore.db.saveProject(this);
+  // }
 
   /**
    * Start simulation.
@@ -400,11 +396,11 @@ export class BaseProject {
     return project;
   }
 
-  /**
-   * Unload this project.
-   */
-  async unload(): Promise<any> {
-    this._logger.trace("unload");
-    return this._projectStore.db.unloadProject(this.id);
-  }
+  // /**
+  //  * Unload this project.
+  //  */
+  // async unload(): Promise<any> {
+  //   this._logger.trace("unload");
+  //   return this._projectStore.db.unloadProject(this.id);
+  // }
 }

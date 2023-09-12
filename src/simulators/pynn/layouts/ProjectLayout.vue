@@ -1,5 +1,5 @@
 <template>
-  <project-nav :store="projectDBStore" />
+  <project-nav :projectDBStore="projectDBStore" />
 
   <project-bar :project="(project as PyNNProject)" color="green" />
 

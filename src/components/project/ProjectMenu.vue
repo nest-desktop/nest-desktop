@@ -86,9 +86,11 @@ const route = useRoute();
 
 const props = defineProps({
   project: ProjectPropTypes,
+  projectDBStore: {required: true, type: Object},
 });
 
 const project = computed(() => props.project as Project);
+const projectDBStore = computed(() => props.projectDBStore)
 
 const state = reactive({
   dialog: {
@@ -110,20 +112,20 @@ const projectMenuItems = [
   {
     title: "Save",
     icon: "mdi-content-save-outline",
-    onClick: () => project.value.save(),
+    onClick: () => projectDBStore.value.saveProject(project.value.id),
   },
   {
     icon: "mdi-reload",
     title: "Reload",
     onClick: () => {
-      project.value.reload();
+      projectDBStore.value.reloadProject(project.value.id);
     },
   },
   {
     icon: "mdi-power",
     title: "Unload",
     onClick: () => {
-      project.value.unload();
+      projectDBStore.value.unloadProject(project.value.id);
     },
   },
   {
@@ -131,7 +133,7 @@ const projectMenuItems = [
     icon: "mdi-content-duplicate",
     title: "Duplicate",
     onClick: () => {
-      const newProject = project.value.duplicate();
+      const newProject = projectDBStore.value.duplicate();
       if (!route.path.endsWith(newProject.id)) {
         router.push({
           name: appStore.simulator + "NetworkEditor",
@@ -143,12 +145,12 @@ const projectMenuItems = [
   {
     title: "Download",
     icon: "mdi-download",
-    onClick: () => project.value.export(),
+    onClick: () => projectDBStore.value.exportProject(project.value.id),
   },
   {
     title: "Delete",
     icon: "mdi-trash-can-outline",
-    onClick: () => project.value.delete(),
+    onClick: () => projectDBStore.value.delete(project.value.id),
   },
 ];
 
@@ -164,8 +166,9 @@ const closeDialog = () => {
  * Close project.
  */
 const saveProject = () => {
+  project.value.state.state.editMode = false;
   project.value.name = state.projectName;
-  project.value.save();
+  projectDBStore.value.saveProject(project.value.id);
   closeDialog();
 };
 
@@ -173,7 +176,7 @@ const saveProject = () => {
  * Delete project.
  */
 const deleteProject = () => {
-  project.value.delete();
+  projectDBStore.value.deleteProject(project.value.id);
   closeDialog();
 };
 

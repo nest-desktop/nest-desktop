@@ -8,7 +8,6 @@ import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({
   name: "project DB",
-  minLevel: 1,
 });
 
 export class BaseProjectDB extends DatabaseService {
