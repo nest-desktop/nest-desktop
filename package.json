@@ -63,7 +63,7 @@
     "@types/uuid": "~9.0",
     "@types/webfontloader": "~1.6",
     "@vitejs/plugin-vue": "~4.3",
-    "@vue/eslint-config-typescript": "~11.0",
+    "@vue/eslint-config-typescript": "~12.0",
     "electron": "~26.2",
     "electron-builder": "~24.6",
     "electron-devtools-installer": "~3.2",
@@ -72,7 +72,7 @@
     "sass": "~1.66",
     "semver": "~7.5",
     "tslog": "^4.8.2",
-    "typescript": "~5.1",
+    "typescript": "~5.2",
     "vite": "~4.4",
     "vite-plugin-electron": "~0.14",
     "vite-plugin-vuetify": "~1.0",
@@ -81,7 +81,6 @@
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: use node LTS version (v18.16)",
-    "typescript: >= 5.2 not supported by @typescript-eslint/typescript-estree"
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
