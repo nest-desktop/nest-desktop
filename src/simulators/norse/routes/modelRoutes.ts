@@ -9,7 +9,6 @@ import { useNorseModelStore } from "../store/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
   name: "norse model route",
-  minLevel: 1
 });
 
 const modelBeforeEnter = (to: any) => {

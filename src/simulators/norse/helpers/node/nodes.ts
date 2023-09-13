@@ -10,6 +10,10 @@ export class NorseNodes extends BaseNodes {
     super(network, nodes);
   }
 
+  override get all(): NorseNode[] {
+    return this._nodes as NorseNode[];
+  }
+
   override newNode(data?: NorseNodeProps): NorseNode {
     return new NorseNode(this, data);
   }

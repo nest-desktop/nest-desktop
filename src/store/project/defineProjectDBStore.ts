@@ -147,7 +147,7 @@ export function defineProjectDBStore(
             `assets/${args.simulator}/projects/${file}.json`
           );
           const data = await response.json();
-          promise = promise.then(() => db.createProject(data));
+          promise = promise.then(() => db.create(data));
         });
         return promise;
       },
