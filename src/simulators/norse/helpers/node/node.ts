@@ -7,6 +7,7 @@ import { BaseNode, NodeProps } from "@/helpers/node/node";
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
 import { NorseNodes } from "./nodes";
+import { NorseSimulation } from "../simulation/simulation";
 
 export interface NorseNodeProps extends NodeProps {}
 
@@ -51,6 +52,10 @@ export class NorseNode extends BaseNode {
 
   override get nodes(): NorseNodes {
     return this._nodes as NorseNodes;
+  }
+
+  override get simulation(): NorseSimulation {
+    return this.nodes.network.project.simulation as NorseSimulation;
   }
 
   /**

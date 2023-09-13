@@ -80,7 +80,7 @@
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
-    "node: use node LTS version (v18.16)",
+    "node: use node LTS version (v18.16)"
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"

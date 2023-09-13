@@ -20,6 +20,7 @@ import { NodeView, NodeViewProps } from "@/helpers/node/nodeView";
 import { Nodes } from "@/types/nodesTypes";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { Simulation } from "@/types/simulationTypes";
 
 export interface NodeProps {
   activity?: ActivityProps;
@@ -308,6 +309,10 @@ export class BaseNode extends Config {
         connection.view.connectSpikeRecorder()
       ).length > 0
     );
+  }
+
+  get simulation(): Simulation {
+    return this.nodes.network.project.simulation
   }
 
   get size(): number {

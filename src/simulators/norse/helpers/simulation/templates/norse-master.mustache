@@ -28,7 +28,7 @@ def simulateAnalogs(neuron, connection_layer, stimulator, offset=0):
 # Create connection layer
 {{ #network.connections.connectionsWithoutRecorders }}
 l{{ idx }} = torch.nn.Linear({{ source.size }}, {{ target.size }}, bias=False)
-l{{ idx }}.weight.data.fill_(1) # all to all connectivity
+l{{ idx }}.weight.data.fill_({{ synapse.weight }}) # all to all connectivity
 {{ /network.connections.connectionsWithoutRecorders }}
 
 # Create neurons

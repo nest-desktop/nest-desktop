@@ -67,11 +67,11 @@ export class BaseProject {
     // Initialize project state.
     this._state = new ProjectState(this);
 
-    // Initialize network.
-    this._network = this.newNetwork(project.network);
-
     // Initialize simulation.
     this._simulation = this.newSimulation(project.simulation);
+
+    // Initialize network.
+    this._network = this.newNetwork(project.network);
 
     // Initialize activities.
     this._activities = new Activities(this);
@@ -203,6 +203,7 @@ export class BaseProject {
 
     this._logger.trace("changes");
     this._activities.checkRecorders();
+
     this._simulation.code.generate();
 
     // Simulate when the configuration is set

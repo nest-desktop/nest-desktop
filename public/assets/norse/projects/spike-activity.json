@@ -5,8 +5,7 @@
       {
         "model": "dc_generator",
         "params": [
-          { "id": "amplitude", "value": 0.21 },
-          { "id": "timesteps", "value": 100 }
+          { "id": "amplitude", "value": 0.21 }
         ],
         "view": {
           "position": { "x": 25, "y": 25 }

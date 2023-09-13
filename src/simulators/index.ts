@@ -10,7 +10,8 @@ import nest from "./nest";
 import norse from "./norse";
 import pynn from "./pynn";
 
-const simulators = [nest, norse, pynn];
+const simulatorVisible = ["nest", "norse"];
+const simulators: { [key: string]: any } = { nest, norse, pynn };
 
 export const simulatorItems: {
   [key: string]: {
@@ -25,5 +26,5 @@ export const simulatorItems: {
 
 export function registerSimulators(app: App) {
   // Use simulators
-  simulators.forEach((simulator) => app.use(simulator));
+  simulatorVisible.forEach((id) => app.use(simulators[id]));
 }

@@ -5,6 +5,7 @@ import { sha1 } from "object-hash";
 
 import { Node } from "@/types/nodeTypes";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
+import { truncate } from "@/utils/truncate";
 
 interface NodeStateState {
   hash: string;
@@ -68,8 +69,8 @@ export class NodeState {
    * Returns the first six digits of the SHA-1 node hash.
    * @returns 6-digit hash value
    */
-  get shortHash(): string {
-    return this._state.hash ? this._state.hash.slice(0, 6) : "";
+  get shortHash(): string | undefined {
+    return truncate(this._state.hash);
   }
 
   /**
@@ -95,14 +96,17 @@ export class NodeState {
    * Update hash
    */
   updateHash(): void {
-    this._state.hash = sha1({
-      idx: this.node.idx,
-      model: this.node.modelId,
-      params: Object.values(this.node.params).map((param: NodeParameter) =>
-        param.toJSON()
-      ),
-      size: this.node.size,
-    }).slice(0, 6);
+    this._state.hash = truncate(
+      sha1({
+        idx: this.node.idx,
+        model: this.node.modelId,
+        params: Object.values(this.node.params).map((param: NodeParameter) =>
+          param.toJSON()
+        ),
+        size: this.node.size,
+        simulationTime: this.node.simulation.time,
+      })
+    ) as string;
     this.node.logger.settings.name = `[${this.node.nodes.network.project.shortId}] node ${this.node.modelId} #${this._state.hash}`;
   }
 }

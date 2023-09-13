@@ -24,6 +24,14 @@ export class NorseNetwork extends BaseNetwork {
     };
   }
 
+  override get connections(): NorseConnections {
+    return this._connections as NorseConnections;
+  }
+
+  override get nodes(): NorseNodes {
+    return this._nodes as NorseNodes;
+  }
+
   /**
    * Clone norse network component.
    */

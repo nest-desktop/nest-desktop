@@ -7,7 +7,6 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 
 const logger = mainLogger.getSubLogger({
   name: "model DB",
-  minLevel: 1,
 });
 
 export class BaseModelDB extends DatabaseService {
