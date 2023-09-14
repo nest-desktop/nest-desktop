@@ -6845,6 +6845,7 @@ electron-publish@22.14.13:
     mime "^2.5.2"
 
 electron-to-chromium@^1.4.477:
+<<<<<<< HEAD
   version "1.4.526"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.526.tgz#1bcda5f2b8238e497c20fcdb41af5da907a770e2"
   integrity sha512-tjjTMjmZAx1g6COrintLTa2/jcafYKxKoiEkdQOrVdbLaHh2wCt2nsAF8ZHweezkrP+dl/VG9T5nabcYoo0U5Q==
@@ -6853,6 +6854,16 @@ electron@26.2.2:
   version "26.2.2"
   resolved "https://registry.yarnpkg.com/electron/-/electron-26.2.2.tgz#d465b7b5ead240448c131208631d172a45ae4953"
   integrity sha512-Ihb3Zt4XYnHF52DYSq17ySkgFqJV4OT0VnfhUYZASAql7Vembz3VsAq7mB3OALBHXltAW34P8BxTIwTqZaMS3g==
+=======
+  version "1.4.520"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.520.tgz#c19c25a10d87bd88a9aae2b76cae9235a50c2994"
+  integrity sha512-Frfus2VpYADsrh1lB3v/ft/WVFlVzOIm+Q0p7U7VqHI6qr7NWHYKe+Wif3W50n7JAFoBsWVsoU0+qDks6WQ60g==
+
+electron@26.2.1:
+  version "26.2.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-26.2.1.tgz#2ef86c03d9753647622bb9a53c4213fb290e5eac"
+  integrity sha512-SNT24Cf/wRvfcFZQoERXjzswUlg5ouqhIuA2t9x2L7VdTn+2Jbs0QXRtOfzcnOV/raVMz3e8ICyaU2GGeciKLg==
+>>>>>>> ef368e9e (Upgrade node modules)
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"
@@ -10573,9 +10584,15 @@ matcher@^3.0.0:
     escape-string-regexp "^4.0.0"
 
 mathjs@~11.11:
+<<<<<<< HEAD
   version "11.11.1"
   resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-11.11.1.tgz#883784ee038271e00f1ef9ba5fc0f03d4bb4b500"
   integrity sha512-uWrwMrhU31TCqHKmm1yFz0C352njGUVr/I1UnpMOxI/VBTTbCktx/mREUXx5Vyg11xrFdg/F3wnMM7Ql/csVsQ==
+=======
+  version "11.11.0"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-11.11.0.tgz#d26187bef06dafacb951eb784f00ee0c8e0f29da"
+  integrity sha512-i1Ao/tv1mlNd09XlOMOUu3KMySX3S0jhHNfDPzh0sCnPf1i62x6RjxhLwZ9ytmVSs0OdhF3moI4O84VSEjmUFw==
+>>>>>>> ef368e9e (Upgrade node modules)
   dependencies:
     "@babel/runtime" "^7.22.15"
     complex.js "^2.1.1"
@@ -12897,7 +12914,11 @@ regex-not@^1.0.0, regex-not@^1.0.2:
     extend-shallow "^3.0.2"
     safe-regex "^1.1.0"
 
+<<<<<<< HEAD
 regexp.prototype.flags@^1.2.0, regexp.prototype.flags@^1.5.1:
+=======
+regexp.prototype.flags@^1.2.0, regexp.prototype.flags@^1.5.0:
+>>>>>>> ef368e9e (Upgrade node modules)
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/regexp.prototype.flags/-/regexp.prototype.flags-1.5.1.tgz#90ce989138db209f81492edd734183ce99f9677e"
   integrity sha512-sy6TXMN+hnP/wMy+ISxg3krXx7BAtWVO4UouuCN/ziM9UEne0euamVNafDfvC83bRNr95y0V5iijeDQFUNpvrg==
@@ -13299,10 +13320,17 @@ sass-loader@~10.4:
     schema-utils "^3.0.0"
     semver "^7.3.2"
 
+<<<<<<< HEAD
 sass@~1.68:
   version "1.68.0"
   resolved "https://registry.yarnpkg.com/sass/-/sass-1.68.0.tgz#0034b0cc9a50248b7d1702ac166fd25990023669"
   integrity sha512-Lmj9lM/fef0nQswm1J2HJcEsBUba4wgNx2fea6yJHODREoMFnwRpZydBnX/RjyXw2REIwdkbqE4hrTo4qfDBUA==
+=======
+sass@~1.67:
+  version "1.67.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.67.0.tgz#fed84d74b9cd708db603b1380d6dc1f71bb24f6f"
+  integrity sha512-SVrO9ZeX/QQyEGtuZYCVxoeAL5vGlYjJ9p4i4HFuekWl8y/LtJ7tJc10Z+ck1c8xOuoBm2MYzcLfTAffD0pl/A==
+>>>>>>> ef368e9e (Upgrade node modules)
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -14847,7 +14875,11 @@ typed-array-length@^1.0.4:
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
 
+<<<<<<< HEAD
 typed-function@^4.1.1:
+=======
+typed-function@^4.1.0:
+>>>>>>> ef368e9e (Upgrade node modules)
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-4.1.1.tgz#38ce3cae31f4f513bcb263563fdad27b2afa73e8"
   integrity sha512-Pq1DVubcvibmm8bYcMowjVnnMwPVMeh0DIdA8ad8NZY2sJgapANJmiigSUwlt+EgXxpfIv8MWrQXTIzkfYZLYQ==
