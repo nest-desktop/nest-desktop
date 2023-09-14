@@ -181,7 +181,7 @@ export class Backend extends Config {
   updateAuthToken(itemKey: string): void {
     const token = localStorage.getItem(itemKey);
     if (token) {
-      this._instance.defaults.headers.Authorization = `Bearer ${token}`;
+      this._instance.defaults.headers.NESTServerAuth = token;
     }
   }
 
