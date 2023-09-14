@@ -69,7 +69,7 @@
     "electron-devtools-installer": "~3.2",
     "eslint": "~8.49",
     "eslint-plugin-vue": "~9.17",
-    "sass": "~1.66",
+    "sass": "~1.67",
     "semver": "~7.5",
     "tslog": "^4.8.2",
     "typescript": "~5.2",
