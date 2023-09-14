@@ -1,7 +1,11 @@
 // synapse.ts
 
 import { BaseSynapse, SynapseProps } from "@/helpers/synapse/synapse";
-import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
+import {
+  SynapseParameter,
+  SynapseParameterProps,
+} from "@/helpers/synapse/synapseParameter";
 
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
@@ -9,22 +13,58 @@ import { NESTModel } from "../model/model";
 
 export interface NESTSynapseProps extends SynapseProps {
   receptorIdx?: number;
+  model?: string;
+  params?: SynapseParameterProps[];
 }
 
 export class NESTSynapse extends BaseSynapse {
+  private _paramsVisible: string[] = [];
+  private _params: { [key: string]: SynapseParameter } = {};
+
+  private _modelId: string;
+  public _model: NESTModel;
   private _receptorIdx: number = 0;
 
   constructor(connection: NESTConnection, synapse?: NESTSynapseProps) {
     super(connection, synapse);
+
+    this._modelId = synapse?.model || "static_synapse";
+    this._model = this.getModel(this._modelId);
     this._receptorIdx = synapse?.receptorIdx || 0;
+
+    this.initParameters(synapse?.params);
   }
 
   get connection(): NESTConnection {
     return this._connection as NESTConnection;
   }
 
+  get delay(): number {
+    const delay: any = this._params.delay;
+    return delay ? delay.value : 1;
+  }
+
+  set delay(value: number) {
+    this._params.delay.value = value;
+  }
+
+  /**
+   * Returns all visible parameters.
+   */
+  get filteredParams(): SynapseParameter[] {
+    return this._paramsVisible.map((paramId) => this._params[paramId]);
+  }
+
+  get hasSomeVisibleParams(): boolean {
+    return this._paramsVisible.length > 0;
+  }
+
   get hasReceptorIndices(): boolean {
     return this.receptorIndices?.length > 0;
+  }
+
+  get hasSynSpec(): boolean {
+    return !this.isStatic || this.hasSomeVisibleParams;
   }
 
   /**
@@ -35,19 +75,60 @@ export class NESTSynapse extends BaseSynapse {
     return this.connection.isBothSpatial;
   }
 
-  override get model(): NESTModel {
+  get isStatic(): boolean {
+    return this.model.id === "static_synapse";
+  }
+
+  get model(): NESTModel {
     if (this._model?.id !== this.modelId) {
       this._model = this.getModel(this.modelId);
     }
     return this._model as NESTModel;
   }
 
-  override get models(): (NESTModel)[] {
+  /**
+   * Set model.
+   *
+   * @remarks
+   * It initializes parameters and activity components.
+   * It triggers node changes.
+   *
+   * @param model - synapse model
+   */
+  set model(model: NESTModel) {
+    this._modelId = model.id;
+    this._model = model;
+    this.modelChanges();
+  }
+
+  get modelDBStore(): any {
+    return this.connection.connections.network.project.modelDBStore;
+  }
+
+  get modelId(): string {
+    return this._modelId;
+  }
+
+  /**
+   * Set model ID.
+   *
+   * @remarks
+   * It initializes parameters.
+   *
+   * @param value - ID of the model
+   */
+  set modelId(value: string) {
+    this._modelId = value;
+  }
+
+  get modelParams(): { [key: string]: ModelParameter } {
+    return this.model.params;
+  }
+
+  get models(): NESTModel[] {
     const elementType: string = this.model.elementType;
     const models: NESTModel[] =
-      this.modelDBStore.getModelsByElementType(
-        elementType
-      );
+      this.modelDBStore.getModelsByElementType(elementType);
 
     // const modelsCopied: NESTCopyModel[] =
     //   this.connection.network.modelsCopied.filterByElementType(elementType);
@@ -70,6 +151,19 @@ export class NESTSynapse extends BaseSynapse {
     return this.connection.target.receptors?.map((_, idx: number) => idx);
   }
 
+  get params(): { [key: string]: SynapseParameter } {
+    return this._params;
+  }
+
+  get paramsVisible(): string[] {
+    return this._paramsVisible;
+  }
+
+  set paramsVisible(values: string[]) {
+    this._paramsVisible = values;
+    this.changes();
+  }
+
   get showReceptorType(): boolean {
     return (
       !this.connection.source.model.isRecorder &&
@@ -77,7 +171,28 @@ export class NESTSynapse extends BaseSynapse {
     );
   }
 
-  override getModel(modelId: string): NESTModel {
+  override get weight(): number {
+    let weight: any = this._params.weight;
+    if (weight && !weight.visible) {
+      weight = this.model.params.weight;
+    }
+    return weight ? weight.value : 1;
+  }
+
+  override set weight(value: number) {
+    this._params.weight.value = value;
+  }
+
+  /**
+   * Add model parameter component.
+   * @param param - parameter object
+   */
+  addParameter(param: SynapseParameterProps): void {
+    // this._logger.trace("add parameter:", param)
+    this._params[param.id] = new SynapseParameter(this, param);
+  }
+
+  getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
     // if (
     //   this.connection.network.modelsCopied?.synapseModels.some(
@@ -89,6 +204,78 @@ export class NESTSynapse extends BaseSynapse {
     //   return this.connection.network.project.modelStore.getModel(modelId);
     // }
     return this.modelDBStore.getModel(modelId);
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    this._paramsVisible = [];
+  }
+
+  /**
+   * Initialize synapse parameters.
+   */
+  initParameters(params?: SynapseParameterProps[]): void {
+    this.logger.trace("init parameters");
+    this._paramsVisible = [];
+    this._params = {};
+    if (this.model && params) {
+      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
+        const param = params?.find((param: any) => param.id === modelParam.id);
+        this.addParameter(param || modelParam);
+        if (param && param.visible !== false) {
+          this._paramsVisible.push(modelParam.id);
+        }
+      });
+    } else if (this.model) {
+      Object.values(this.model.params).forEach((modelParam: ModelParameter) =>
+        this.addParameter(modelParam)
+      );
+    } else if (params) {
+      params.forEach((param: any) => this.addParameter(param));
+    }
+  }
+
+  /**
+   * Inverse synaptic weight.
+   */
+  inverseWeight(): void {
+    this.logger.trace("inverse weight");
+    const weight: SynapseParameter = this._params.weight;
+    if (typeof weight.value === "number") {
+      weight.visible = true;
+      weight.value = -1 * weight.value;
+      this.connection.changes();
+    }
+  }
+
+  /**
+   * Observer for model changes.
+   *
+   * @remarks
+   * It emits synapse changes.
+   */
+  modelChanges(): void {
+    this.initParameters();
+    this.connection.network.clean();
+    this.changes();
+  }
+
+  /**
+   * Reset synapse parameter values.
+   */
+  reset(): void {
+    this.filteredParams.forEach((param: SynapseParameter) => param.reset());
+  }
+
+  /**
+   * Sets all params to visible.
+   */
+  showAllParams(): void {
+    Object.values(this.params).forEach(
+      (param: SynapseParameter) => (param.visible = true)
+    );
   }
 
   /**

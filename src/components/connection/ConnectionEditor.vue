@@ -1,9 +1,5 @@
 <template>
   <v-expansion-panel
-    :readonly="
-      connection.paramsVisible.length === 0 &&
-      connection.synapse.paramsVisible.length === 0
-    "
     class="node-connection"
     elevation="0"
     rounded="0"
@@ -32,9 +28,7 @@
 
         <div class="d-flex flex-column justify-center align-center text-grey">
           <div>{{ connection.rule.value }}</div>
-          <div v-if="connection.view.connectOnlyNeurons()">
-            {{ connection.synapse.modelId }}
-          </div>
+          <div v-if="connection.view.connectOnlyNeurons()"></div>
         </div>
 
         <v-spacer />
@@ -69,6 +63,7 @@
 
     <v-expansion-panel-text class="ma-1">
       <connection-spec-editor :connection="(connection as Connection)" />
+      <synapse-spec-editor :synapse="(connection.synapse as Synapse)" />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -76,10 +71,11 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import ConnectionSpecEditor from "@/components/connection/ConnectionSpecEditor.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import SynapseSpecEditor from "@/components/synapse/SynapseSpecEditor.vue";
 import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
-
-import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
+import { Synapse } from "@/types/synapseTypes";
 
 const props = defineProps({
   connection: ConnectionPropTypes,
@@ -95,7 +91,6 @@ const items = [
     onClick: () => {
       connection.value.reset();
       connection.value.synapse.reset();
-      connection.value.synapse.hideAllParams();
     },
   },
   // {
@@ -140,7 +135,7 @@ const items = [
     icon: "mdi-trash-can-outline",
     title: "Delete connection",
     onClick: () => {
-      connection.value.remove()
+      connection.value.remove();
       // state.content = "connectionDelete";
     },
     append: true,
