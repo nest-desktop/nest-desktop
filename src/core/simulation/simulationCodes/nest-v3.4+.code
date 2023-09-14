@@ -120,7 +120,7 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 # Tag annotations
 nest.userdict.clear()
 {{ #network.state.nodeAnnotations }}
-nest.userdict["{{ key }}"] = {{ &value }}.tolist()
+nest.userdict["{{ key }}"] = {{ &value }}
 {{ /network.state.nodeAnnotations }}
 {{ /simulation.code.tagAnnotations }}
 

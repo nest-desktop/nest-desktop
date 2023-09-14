@@ -28,7 +28,7 @@ export class SimulationCode {
             'connectNodes',
             'runSimulation',
           ],
-      template: simulationCode.template || 'nest-v3.4',
+      template: simulationCode.template || 'nest-v3.4+',
     });
 
     this.clean();
