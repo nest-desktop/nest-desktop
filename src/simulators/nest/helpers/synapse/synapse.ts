@@ -2,11 +2,11 @@
 
 import { BaseSynapse, SynapseProps } from "@/helpers/synapse/synapse";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import {
-  SynapseParameter,
-  SynapseParameterProps,
-} from "@/helpers/synapse/synapseParameter";
 
+import {
+  NESTSynapseParameter,
+  SynapseParameterProps,
+} from "./synapseParameter";
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
@@ -19,7 +19,7 @@ export interface NESTSynapseProps extends SynapseProps {
 
 export class NESTSynapse extends BaseSynapse {
   private _paramsVisible: string[] = [];
-  private _params: { [key: string]: SynapseParameter } = {};
+  private _params: { [key: string]: NESTSynapseParameter } = {};
 
   private _modelId: string;
   public _model: NESTModel;
@@ -51,7 +51,7 @@ export class NESTSynapse extends BaseSynapse {
   /**
    * Returns all visible parameters.
    */
-  get filteredParams(): SynapseParameter[] {
+  get filteredParams(): NESTSynapseParameter[] {
     return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
@@ -151,7 +151,7 @@ export class NESTSynapse extends BaseSynapse {
     return this.connection.target.receptors?.map((_, idx: number) => idx);
   }
 
-  get params(): { [key: string]: SynapseParameter } {
+  get params(): { [key: string]: NESTSynapseParameter } {
     return this._params;
   }
 
@@ -189,7 +189,7 @@ export class NESTSynapse extends BaseSynapse {
    */
   addParameter(param: SynapseParameterProps): void {
     // this._logger.trace("add parameter:", param)
-    this._params[param.id] = new SynapseParameter(this, param);
+    this._params[param.id] = new NESTSynapseParameter(this, param);
   }
 
   getModel(modelId: string): NESTModel {
@@ -242,7 +242,7 @@ export class NESTSynapse extends BaseSynapse {
    */
   inverseWeight(): void {
     this.logger.trace("inverse weight");
-    const weight: SynapseParameter = this._params.weight;
+    const weight: NESTSynapseParameter = this._params.weight;
     if (typeof weight.value === "number") {
       weight.visible = true;
       weight.value = -1 * weight.value;
@@ -266,7 +266,7 @@ export class NESTSynapse extends BaseSynapse {
    * Reset synapse parameter values.
    */
   reset(): void {
-    this.filteredParams.forEach((param: SynapseParameter) => param.reset());
+    this.filteredParams.forEach((param: NESTSynapseParameter) => param.reset());
   }
 
   /**
@@ -274,7 +274,7 @@ export class NESTSynapse extends BaseSynapse {
    */
   showAllParams(): void {
     Object.values(this.params).forEach(
-      (param: SynapseParameter) => (param.visible = true)
+      (param: NESTSynapseParameter) => (param.visible = true)
     );
   }
 
@@ -290,7 +290,7 @@ export class NESTSynapse extends BaseSynapse {
     }
 
     if (this.filteredParams.length > 0) {
-      synapse.params = this.filteredParams.map((param: SynapseParameter) =>
+      synapse.params = this.filteredParams.map((param: NESTSynapseParameter) =>
         param.toJSON()
       );
     }
