@@ -12,13 +12,13 @@ icon: icons/icon.png
 linux:
   category: Education;Science
   target:
-    - AppImage
-    # - deb
+    # - AppImage
+    - deb
     # - snap
 productName: nest-desktop
 directories:
   # buildResources: "assets"
-  output: "release/${version}"
+  output: "release"
 files:
   # - assets
   - dist
