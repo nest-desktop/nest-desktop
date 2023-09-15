@@ -2,14 +2,14 @@
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { Parameter, ParameterProps } from "@/helpers/common/parameter";
-import { Synapse } from "@/types/synapseTypes";
+import { NESTSynapse } from "./synapse";
 
 export interface SynapseParameterProps extends ParameterProps {}
 
-export class SynapseParameter extends Parameter {
-  private _synapse: Synapse;
+export class NESTSynapseParameter extends Parameter {
+  private _synapse: NESTSynapse;
 
-  constructor(synapse: Synapse, param: SynapseParameterProps) {
+  constructor(synapse: NESTSynapse, param: SynapseParameterProps) {
     super(param);
     this._synapse = synapse;
   }
@@ -21,7 +21,7 @@ export class SynapseParameter extends Parameter {
     return this._synapse.model.params[this.id];
   }
 
-  get synapse(): Synapse {
+  get synapse(): NESTSynapse {
     return this._synapse;
   }
 

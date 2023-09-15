@@ -6,8 +6,12 @@ import {
 } from "@/helpers/connection/connection";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 import { NodeParameterProps } from "@/helpers/node/nodeParameter";
-import { SynapseParameter } from "@/helpers/synapse/synapseParameter";
 
+import {
+  NESTConnectionMask,
+  NESTConnectionMaskProps,
+} from "./connectionMask";
+import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
@@ -17,12 +21,7 @@ import {
   NESTSynapse,
   NESTSynapseProps,
 } from "../synapse/synapse";
-
-import {
-  NESTConnectionMask,
-  NESTConnectionMaskProps,
-} from "./connectionMask";
-import { NESTConnections } from "./connections";
+import { NESTSynapseParameter } from "../synapse/synapseParameter";
 
 export interface NESTConnectionProps extends ConnectionProps {
   sourceSlice?: NodeParameterProps[];
@@ -121,7 +120,7 @@ export class NESTConnection extends BaseConnection {
     });
 
     // Reset synapse parameter.
-    Object.values(this.synapse.params).forEach((param: SynapseParameter) =>
+    Object.values(this.synapse.params).forEach((param: NESTSynapseParameter) =>
       param.reset()
     );
   }
@@ -147,8 +146,8 @@ export class NESTConnection extends BaseConnection {
     }
 
     if (
-      this._synapse.modelId !== "static_synapse" ||
-      this._synapse.paramsVisible.length > 0
+      this.synapse.modelId !== "static_synapse" ||
+      this.synapse.paramsVisible.length > 0
     ) {
       connection.synapse = this._synapse.toJSON();
     }
