@@ -16,7 +16,6 @@
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
-
 import AppBar from "@/components/app/AppBar.vue";
 
 import { useTheme } from "vuetify";
