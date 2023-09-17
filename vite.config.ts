@@ -6,7 +6,7 @@ import vue from "@vitejs/plugin-vue";
 // Vite plugins
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import electron from "vite-plugin-electron";
-// import renderer from "vite-plugin-electron-renderer";
+import { VitePWA } from "vite-plugin-pwa";
 
 // Utilities
 import { defineConfig } from "vite";
@@ -48,15 +48,21 @@ export default defineConfig({
     vuetify({
       autoImport: true,
     }),
+    VitePWA({
+      registerType: "autoUpdate",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+        maximumFileSizeToCacheInBytes: 6000000
+      },
+    }),
     electron([
       {
         entry: "electron/main.ts",
         onstart: (options) => {
           // Start Electron App
           if (process.env["VITE_DEV_ELECTRON_STARTUP"]) {
-            options.startup([".", "--no-sandbox"]);
+            options.startup([".", "--no-sandbox"]); // options.startup()
           }
-          // options.startup()
         },
       },
       {

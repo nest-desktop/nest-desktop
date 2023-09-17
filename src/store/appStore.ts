@@ -8,6 +8,7 @@ import { simulatorItems } from "@/simulators";
 
 export const useAppStore = defineStore("app-store", {
   state: () => ({
+    autoUpdate: false,
     darkMode: false,
     simulator: "nest",
   }),
