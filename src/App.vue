@@ -139,7 +139,7 @@ export default Vue.extend({
       if (token) {
         // Update access token for NEST Server from local storage.
         const nestSimulatorInstance = core.app.backends.nestSimulator.instance;
-        nestSimulatorInstance.defaultConfig.headers.NESTServerAuth = token;
+        nestSimulatorInstance.defaults.headers.common.NESTServerAuth = token;
       }
 
       // Check if backends is running.
