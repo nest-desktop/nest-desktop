@@ -176,16 +176,6 @@ export class Backend extends Config {
   }
 
   /**
-   * Update authorization token in instance headers.
-   */
-  updateAuthToken(itemKey: string): void {
-    const token = localStorage.getItem(itemKey);
-    if (token) {
-      this._instance.defaults.headers.NESTServerAuth = token;
-    }
-  }
-
-  /**
    * Update URL.
    * @param config The configuration to update URL in local config.
    */

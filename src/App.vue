@@ -127,13 +127,20 @@ export default Vue.extend({
       }
 
       const nestServerAccessToken = 'nest_server_access_token';
+      let token: string;
+
       // Store access token for NEST Server to local storage.
-      const token = getParamFromURL(context.root.$route, nestServerAccessToken);
+      token = getParamFromURL(context.root.$route, nestServerAccessToken);
       if (token) {
         localStorage.setItem(nestServerAccessToken, token);
       }
-      // Update access token for NEST Server from local storage.
-      core.app.backends.nestSimulator.updateAuthToken(nestServerAccessToken);
+
+      token = localStorage.getItem(nestServerAccessToken);
+      if (token) {
+        // Update access token for NEST Server from local storage.
+        const nestSimulatorInstance = core.app.backends.nestSimulator.instance;
+        nestSimulatorInstance.defaultConfig.headers.NESTServerAuth = token;
+      }
 
       // Check if backends is running.
       core.app.checkBackends().then(() => {
