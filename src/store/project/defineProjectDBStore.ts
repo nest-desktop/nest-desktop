@@ -27,7 +27,7 @@ export function defineProjectDBStore(
 ) {
   const logger = mainLogger.getSubLogger({
     name: args.simulator + " project DB store",
-    minLevel: args.loggerMinLevel || 3,
+    minLevel: args.loggerMinLevel || 1,
   });
 
   const db = new args.ProjectDB();
@@ -141,15 +141,17 @@ export function defineProjectDBStore(
        */
       async importProjectsFromAssets(): Promise<any> {
         logger.trace("import projects from assets");
-        let promise: Promise<any> = Promise.resolve();
-        args.projectAssets?.forEach(async (file: string) => {
-          const response = await fetch(
-            `assets/${args.simulator}/projects/${file}.json`
-          );
-          const data = await response.json();
-          promise = promise.then(() => db.create(data));
-        });
-        return promise;
+        let promises = [];
+        if (args.projectAssets) {
+          promises = args.projectAssets.map(async (file: string) => {
+            const response = await fetch(
+              `assets/${args.simulator}/projects/${file}.json`
+            );
+            const data = await response.json();
+            return db.create(data);
+          }) as any[];
+        }
+        return Promise.all(promises);
       },
       /**
        * Initialize projects DB.
@@ -159,9 +161,11 @@ export function defineProjectDBStore(
         return db.count().then(async (count: number) => {
           logger.debug("projects in DB:", count);
           if (count === 0) {
-            return this.importProjectsFromAssets().then(() =>
-              this.updateList()
-            );
+            return this.importProjectsFromAssets().then(() => {
+              setTimeout(() => {
+                this.updateList();
+              }, 100);
+            });
           } else {
             return this.updateList();
           }
@@ -257,7 +261,7 @@ export function defineProjectDBStore(
         logger.trace("update list");
 
         this.projects = [];
-        return db.list("createdAt", true).then((projects: any[]) => {
+        return db.list("", true).then((projects: any[]) => {
           this.projects = projects;
         });
       },

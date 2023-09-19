@@ -26,7 +26,7 @@
             :node="node"
             @mouseenter="node.state.focus()"
             @mouseleave="node.nodes.unfocusNode()"
-            v-if="network.nodes.showNode(node)"
+            v-if="node.state.show"
           />
         </div>
       </div>

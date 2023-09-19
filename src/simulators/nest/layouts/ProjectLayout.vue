@@ -21,7 +21,7 @@
             :node="(node as NESTNode)"
             @mouseenter="node.state.focus()"
             @mouseleave="node.nodes.unfocusNode()"
-            v-if="project.network.nodes.showNode(node)"
+            v-if="node.state.show"
           />
         </div>
       </div>

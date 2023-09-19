@@ -98,7 +98,7 @@
 
         <v-card class="mt-2">
           <v-card-title> Projects </v-card-title>
-          <v-list lines="two" nav>
+          <v-list :key="projectDBStore.projects.length" lines="two" nav>
             <v-list-item :to="{ name: 'norseProjectNew' }">
               <template #prepend>
                 <v-icon icon="mdi-plus" />
