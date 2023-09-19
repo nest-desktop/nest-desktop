@@ -29,10 +29,10 @@ export class DatabaseService {
     this._options = options;
     this._db = new PouchDB(url, options);
 
-    this.getVersion().then((version: string) => {
-      this._state.version = version;
-    });
-    this.checkVersion();
+    // this.getVersion().then((version: string) => {
+    //   this._state.version = version;
+    // });
+    // this.checkVersion();
     this._state.ready = true;
   }
 

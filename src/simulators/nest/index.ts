@@ -26,7 +26,16 @@ export default {
     addIconSet({ nest: nestIconSet });
 
     const nestSimulatorStore = useNESTSimulatorStore();
-    // nestSimulatorStore.init();
+    nestSimulatorStore.update = () => {
+      // Add token to axios instance header.
+      if (nestSimulatorStore.accessToken) {
+        nestSimulatorStore.session.instance.defaults.headers.common[
+          "NESTServerAuth"
+        ] = nestSimulatorStore.accessToken;
+      }
+      nestSimulatorStore.init();
+    };
+    nestSimulatorStore.update();
 
     const insiteAccessStore = useInsiteAccessStore();
     insiteAccessStore.init();
@@ -48,20 +57,11 @@ export default {
     const projectStore = useNESTProjectStore();
 
     Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      modelStore.init();
-      projectStore.init();
-      nestSessionStore.loading = false;
+      setTimeout(() => {
+        modelStore.init();
+        projectStore.init();
+        nestSessionStore.loading = false;
+      }, 300);    // TODO: find better solution for setTimeout.
     });
-
-    nestSimulatorStore.update = () => {
-      // Add token to axios instance header.
-      if (nestSimulatorStore.accessToken) {
-        nestSimulatorStore.session.instance.defaults.headers.common[
-          "NESTServerAuth"
-        ] = nestSimulatorStore.accessToken;
-      }
-      nestSimulatorStore.init();
-    };
-    nestSimulatorStore.update();
   },
 };

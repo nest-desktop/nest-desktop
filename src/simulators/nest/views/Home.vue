@@ -101,113 +101,21 @@
 
               <v-window v-model="tab">
                 <v-window-item value="one">
-                  <v-row>
-                    <v-col cols="1">
-                      <v-checkbox v-model="nestSimulatorStore.enabled" />
-                    </v-col>
-                    <v-col cols="11">
-                      <v-text-field
-                        :disabled="!nestSimulatorStore.enabled"
-                        class="my-2"
-                        density="compact"
-                        label="URL of backend"
-                        v-model="nestSimulatorStore.url"
-                        variant="outlined"
-                      >
-                        <template #append>
-                          <v-btn
-                            @click="nestSimulatorStore.ping()"
-                            variant="outlined"
-                          >
-                            <template #append>
-                              <v-icon
-                                icon="mdi-circle"
-                                :color="
-                                  nestSimulatorStore.session.isOK
-                                    ? 'green'
-                                    : 'red'
-                                "
-                              />
-                            </template>
-                            ping
-                          </v-btn>
-                        </template>
-
-                        <template #details>
-                          <div
-                            v-if="
-                              nestSimulatorStore.session.isOK &&
-                              nestSimulatorStore.session.isValid
-                            "
-                          >
-                            {{ nestSimulatorStore.session.response.data }}
-                          </div>
-                          <div v-else>
-                            {{ nestSimulatorStore.session.error }}
-                          </div>
-                        </template>
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
+                  <backend-settings :store="nestSimulatorStore" />
                 </v-window-item>
 
                 <v-window-item value="two">
-                  <v-row>
-                    <v-col cols="1">
-                      <v-checkbox v-model="insiteAccessStore.enabled" />
-                    </v-col>
-                    <v-col cols="11">
-                      <v-text-field
-                        :disabled="!insiteAccessStore.enabled"
-                        class="my-2"
-                        density="compact"
-                        label="URL of backend"
-                        v-model="insiteAccessStore.url"
-                        variant="outlined"
-                      >
-                        <template #append>
-                          <v-btn
-                            @click="insiteAccessStore.ping()"
-                            variant="outlined"
-                          >
-                            <template #append>
-                              <v-icon
-                                icon="mdi-circle"
-                                :color="
-                                  insiteAccessStore.session.isOK
-                                    ? 'green'
-                                    : 'red'
-                                "
-                              ></v-icon>
-                            </template>
-                            ping
-                          </v-btn>
-                        </template>
-
-                        <template #details>
-                          <div
-                            v-if="
-                              insiteAccessStore.session.isOK &&
-                              insiteAccessStore.session.isValid
-                            "
-                          >
-                            {{ insiteAccessStore.session.response.data }}
-                          </div>
-                          <div v-else>
-                            {{ insiteAccessStore.session.error }}
-                          </div>
-                        </template>
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
+                  <backend-settings :store="insiteAccessStore" />
                 </v-window-item>
               </v-window>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-card class="mt-2">
-          <v-card-title> Projects </v-card-title>
+        <v-card class="mt-2" title="Projects">
+          <v-card-subtitle>
+            Current project: {{ truncate(projectStore.projectId) }}
+          </v-card-subtitle>
           <v-list :key="projectDBStore.projects.length" lines="two" nav>
             <v-list-item :to="{ name: 'nestProjectNew' }">
               <template #prepend>
@@ -236,10 +144,16 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+
+import BackendSettings from "@/components/BackendSettings.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
+import { truncate } from "@/utils/truncate";
 
 import { useNESTProjectDBStore } from "../store/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
+
+import { useNESTProjectStore } from "../store/project/projectStore";
+const projectStore = useNESTProjectStore();
 
 import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
 const nestSimulatorStore = useNESTSimulatorStore();

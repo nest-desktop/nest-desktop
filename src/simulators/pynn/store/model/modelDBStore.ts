@@ -6,20 +6,20 @@ import { PyNNModel } from "../../helpers/model/model";
 import { PyNNModelDB } from "../../helpers/model/modelDB";
 
 const modelAssets = [
-  "voltmeter",
-  "step_current_generator",
-  "static_synapse",
-  "spike_recorder",
-  "spike_generator",
-  "poisson_generator",
-  "parrot_neuron",
-  "noise_generator",
-  "multimeter",
-  "iaf_psc_alpha",
-  "iaf_cond_alpha",
-  "hh_psc_alpha",
-  "dc_generator",
   "ac_generator",
+  "dc_generator",
+  "hh_psc_alpha",
+  "iaf_cond_alpha",
+  "iaf_psc_alpha",
+  "multimeter",
+  "noise_generator",
+  "parrot_neuron",
+  "poisson_generator",
+  "spike_generator",
+  "spike_recorder",
+  "static_synapse",
+  "step_current_generator",
+  "voltmeter",
 ];
 
 export const usePyNNModelDBStore = defineModelDBStore({
