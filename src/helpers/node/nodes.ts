@@ -9,6 +9,13 @@ import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
+const _nodeTypes = [
+  { icon: "mdi-all-inclusive", id: "all", title: "all" },
+  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "network:recorder", id: "recorder", title: "recorder" },
+];
+
 interface NodesState {
   annotations: { [key: string]: string }[];
   elementTypeIdx: number;
@@ -208,6 +215,10 @@ export class BaseNodes {
     return new BaseNode(this, data);
   }
 
+  get nodeTypes() {
+    return _nodeTypes;
+  }
+
   /**
    * Remove node component from the network.
    *
@@ -225,6 +236,29 @@ export class BaseNodes {
    */
   resetState(): void {
     this._state.hash = "";
+  }
+
+  /**
+   * Show node in list.
+   */
+  showNode(node: Node): boolean {
+    const elementTypeIdx = this._state.elementTypeIdx;
+
+    if (elementTypeIdx === 4) {
+      return false;
+    } else if (this._state.selectedNode) {
+      // selected view
+      return node.state.isSelected;
+    } else if (elementTypeIdx === 0) {
+      // all view
+      return true;
+    } else if (elementTypeIdx < _nodeTypes.length) {
+      // element type view
+      return _nodeTypes[elementTypeIdx].id === node.model.elementType;
+    } else {
+      // custom view
+      return this._network.state.state.displayIdx.nodes.includes(node.idx);
+    }
   }
 
   /**

@@ -69,7 +69,7 @@
                         <template #append>
                           <v-icon
                             icon="mdi-circle"
-                            :color="norseSimulatorStore.isOK ? 'green' : 'red'"
+                            :color="norseSimulatorStore.session.isOK ? 'green' : 'red'"
                           />
                         </template>
                         ping
@@ -79,14 +79,14 @@
                     <template #details>
                       <div
                         v-if="
-                          norseSimulatorStore.isOK &&
-                          norseSimulatorStore.isValid
+                          norseSimulatorStore.session.isOK &&
+                          norseSimulatorStore.session.isValid
                         "
                       >
-                        {{ norseSimulatorStore.response.data }}
+                        {{ norseSimulatorStore.session.response.data }}
                       </div>
                       <div v-else>
-                        {{ norseSimulatorStore.error }}
+                        {{ norseSimulatorStore.session.error }}
                       </div>
                     </template>
                   </v-text-field>

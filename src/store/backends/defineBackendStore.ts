@@ -6,15 +6,19 @@ import { defineStore } from "pinia";
 import combineURLs from "@/utils/combineURLs";
 import { defineBackendSessionStore } from "./defineBackendSessionStore";
 
-export function defineBackendStore(args: {
-  enabled?: boolean;
-  name: string;
-  url: string;
-  defaults: { path: string; port: string; protocol: string };
-}) {
-  return defineStore(args.name + "-backend-store", {
+export function defineBackendStore(
+  name: string,
+  args: {
+    enabled?: boolean;
+    url: string;
+    defaults: { path: string; port: string; protocol: string };
+  }
+) {
+  return defineStore(name + "-backend-store", {
     state: () => ({
+      accessToken: "",
       enabled: args.enabled || false,
+      name: name,
       url: args.url,
     }),
     getters: {
@@ -24,13 +28,8 @@ export function defineBackendStore(args: {
       defaults(): { path: string; port: string; protocol: string } {
         return args.defaults;
       },
-      instance(state: any): any {
-        return axios.create({ baseURL: state.url });
-      },
       session: () => {
-        const useBackendSessionSore = defineBackendSessionStore({
-          name: args.name,
-        });
+        const useBackendSessionSore = defineBackendSessionStore(name);
         const backendSessionStore = useBackendSessionSore();
         return backendSessionStore;
       },
@@ -41,6 +40,12 @@ export function defineBackendStore(args: {
 
         // Check if the hostname does not already exist in the config.
         return this.URL.hostname ? this.ping() : this.seek();
+      },
+      init(): void {
+        this.session.instance.defaults.baseURL = this.url;
+        if (this.enabled) {
+          this.ping();
+        }
       },
       /**
        * Seek the server URL of the backend.
@@ -63,29 +68,11 @@ export function defineBackendStore(args: {
        * @param url The URL which should be pinged.
        */
       async ping(url?: string): Promise<any> {
-        this.session.reset();
-
-        return axios
-          .get(url || this.url)
-          .then((response: any) => {
-            this.session.response = response;
-            switch (response.status) {
-              case 0:
-                // See https://fetch.spec.whatwg.org/#concept-network-error
-                this.session.error = response.data;
-                break;
-              case 200:
-                if (url) {
-                  this.url = url;
-                }
-                break;
-              default:
-                break;
-            }
-          })
-          .catch((error: any) => {
-            this.session.error = error;
-          });
+        return this.session.ping(url || this.url).then(() => {
+          if (url) {
+            this.url = url;
+          }
+        });
       },
     },
     persist: true,

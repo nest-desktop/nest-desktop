@@ -10,7 +10,7 @@
           :icon="item.icon"
           :key="index"
           size="x-small"
-          v-for="(item, index) in nodeTypes"
+          v-for="(item, index) in network.nodes.nodeTypes"
         >
           {{ item.title }}
         </icon-btn>
@@ -19,16 +19,18 @@
       <v-btn icon="mdi-dots-vertical" size="small" />
     </v-toolbar>
 
-    <div :key="network.nodes.length">
-      <div :key="index" v-for="(node, index) in network.nodes.all">
-        <node-editor
-          :node="node"
-          @mouseenter="node.state.focus()"
-          @mouseleave="node.nodes.unfocusNode()"
-          v-if="showNode(node)"
-        />
+    <slot name="nodes">
+      <div :key="network.nodes.length">
+        <div :key="index" v-for="(node, index) in network.nodes.all">
+          <node-editor
+            :node="node"
+            @mouseenter="node.state.focus()"
+            @mouseleave="node.nodes.unfocusNode()"
+            v-if="network.nodes.showNode(node)"
+          />
+        </div>
       </div>
-    </div>
+    </slot>
   </div>
 </template>
 
@@ -39,40 +41,9 @@ import IconBtn from "@/components/common/IconBtn.vue";
 
 import NodeEditor from "@/components/node/NodeEditor.vue";
 import { Network, NetworkPropTypes } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
 
 const props = defineProps({
   network: NetworkPropTypes,
-})
+});
 const network = computed(() => props.network as Network);
-
-const nodeTypes = [
-  { icon: "mdi-all-inclusive", id: "all", title: "all" },
-  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "network:recorder", id: "recorder", title: "recorder" },
-];
-
-/**
- * Show node in list.
- */
-const showNode = (node: Node) => {
-  const elementTypeIdx = network.value.nodes.state.elementTypeIdx;
-
-  if (elementTypeIdx === 4) {
-    return false;
-  } else if (network.value.nodes.state.selectedNode) {
-    // selected view
-    return node.state.isSelected;
-  } else if (elementTypeIdx === 0) {
-    // all view
-    return true;
-  } else if (elementTypeIdx < nodeTypes.length) {
-    // element type view
-    return nodeTypes[elementTypeIdx].id === node.model.elementType;
-  } else {
-    // custom view
-    return network.value.state.state.displayIdx.nodes.includes(node.idx);
-  }
-};
 </script>

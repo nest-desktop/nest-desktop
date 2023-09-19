@@ -12,6 +12,7 @@ import { usePyNNModelStore } from "./store/model/modelStore";
 import { usePyNNProjectDBStore } from "./store/project/projectDBStore";
 import { usePyNNProjectStore } from "./store/project/projectStore";
 import { usePyNNSessionStore } from "./store/sessionStore";
+import { usePyNNSimulatorStore } from "./store/backends/pynnSimulatorStore";
 
 export default {
   install() {
@@ -25,12 +26,16 @@ export default {
 
     addIconSet({ pynn: pynnIconSet });
 
+    const pynnSimulatorStore = usePyNNSimulatorStore();
+    pynnSimulatorStore.init();
+
     simulatorItems.pynn = {
-      id: "pynn",
-      title: "PyNN",
-      routerName: "pynnHome",
-      icon: "pynn:logo",
+      backends: [pynnSimulatorStore],
       databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
+      icon: "pynn:logo",
+      id: "pynn",
+      routerName: "pynnHome",
+      title: "PyNN",
     };
 
     const pynnSessionStore = usePyNNSessionStore();
@@ -44,5 +49,6 @@ export default {
       projectStore.init();
       pynnSessionStore.loading = false;
     });
+
   },
 };

@@ -58,13 +58,17 @@
 
     <div :key="projectStore.projectId">
       <template v-if="projectStore.controllerView === 'network'">
-        <slot name="networkParamEditor">
-          <network-param-editor :network="(project.network as Network)" />
+        <slot name="network">
+          <network-param-editor :network="(project.network as Network)">
+            <template #nodes>
+              <slot name="nodes" />
+            </template>
+          </network-param-editor>
         </slot>
       </template>
 
       <template v-else-if="projectStore.controllerView === 'kernel'">
-        <slot name="simulationKernelEditor">
+        <slot name="simulationKernel">
           <simulation-kernel-editor
             :simulation="(project.simulation as Simulation)"
           />
@@ -126,7 +130,7 @@ import { json } from "@codemirror/lang-json";
 
 import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
-import NetworkParamEditor from "@/components/network/NetworkParamEditor.vue"
+import NetworkParamEditor from "@/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";

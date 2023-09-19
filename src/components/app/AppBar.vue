@@ -37,7 +37,7 @@
         v-for="(item, index) in simulatorItems"
       >
         <template #prepend>
-          <v-icon :icon="item.icon" :color="item.color" size="small" />
+          <v-icon :color="item.color" :icon="item.icon" size="small" />
         </template>
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
@@ -88,9 +88,21 @@
 
   <v-spacer />
 
-  <v-btn size="x-small" variant="text">
-    {{ appStore.currentSimulator.title }}
-    <v-icon class="mx-1" icon="mdi-circle" />
+  <v-btn
+    :disabled="!backend.enabled"
+    :key="index"
+    size="x-small"
+    v-for="(backend, index) in appStore.currentSimulator.backends"
+    variant="text"
+  >
+    {{ backend.name }}
+    <v-icon
+      :color="
+        backend.enabled ? (backend.session.isValid ? 'green' : 'red') : ''
+      "
+      class="mx-1"
+      icon="mdi-circle"
+    />
   </v-btn>
 </template>
 

@@ -95,7 +95,7 @@ export class NESTSimulation extends BaseSimulation {
   async runSimulation(): Promise<any> {
     this.logger.trace("run simulation");
 
-    return this.nestSimulator.instance
+    return this.nestSimulator.session.instance
       .post("exec", {
         source: this.code.script,
         return: "response",
@@ -140,7 +140,7 @@ export class NESTSimulation extends BaseSimulation {
       stepSize: 1,
     };
 
-    return this.nestSimulator.instance
+    return this.nestSimulator.session.instance
       .post("exec", { source: this.code.script })
       .then((response: any) => {
         switch (response.status) {
