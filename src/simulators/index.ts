@@ -21,6 +21,7 @@ export const simulatorItems: {
     id: string;
     routerName: string;
     title: string;
+    backends: any[];
   };
 } = {};
 

@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
 import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
 import { useNESTSessionStore } from "../store/sessionStore";
-import { onUpdated } from "vue";
 
 const nestSessionStore = useNESTSessionStore();
 
@@ -55,7 +55,7 @@ const getParamFromURL = (paramKey: string) => {
   return param;
 };
 
-onUpdated(() => {
+onMounted(() => {
   const nestSimulatorStore = useNESTSimulatorStore();
 
   const nestServerURL = getParamFromURL("nest_server_url");
@@ -63,20 +63,12 @@ onUpdated(() => {
     nestSimulatorStore.url = nestServerURL;
   }
 
-  const nestServerAccessToken = "nest_server_access_token";
-  let token: string | null;
-
   // Store access token for NEST Server to local storage.
-  token = getParamFromURL(nestServerAccessToken);
-  if (token) {
-    localStorage.setItem(nestServerAccessToken, token);
+  const accessToken = getParamFromURL("nest_server_access_token");
+  if (accessToken) {
+    nestSimulatorStore.accessToken = accessToken;
   }
 
-  // Update access token for NEST Server from local storage.
-  token = localStorage.getItem(nestServerAccessToken);
-  if (token) {
-    const nestSimulatorInstance = nestSimulatorStore.instance;
-    nestSimulatorInstance.defaultConfig.headers.NESTServerAuth = token;
-  }
+  nestSimulatorStore.update();
 });
 </script>

@@ -12,6 +12,7 @@ import { useNorseModelStore } from "./store/model/modelStore";
 import { useNorseProjectDBStore } from "./store/project/projectDBStore";
 import { useNorseProjectStore } from "./store/project/projectStore";
 import { useNorseSessionStore } from "./store/sessionStore";
+import { useNorseSimulatorStore } from "./store/backends/norseSimulatorStore";
 
 export default {
   install() {
@@ -25,12 +26,16 @@ export default {
 
     addIconSet({ norse: norseIconSet });
 
+    const norseSimulatorStore = useNorseSimulatorStore();
+    norseSimulatorStore.init();
+
     simulatorItems.norse = {
-      id: "norse",
-      title: "Norse",
-      routerName: "norseHome",
-      icon: "norse:logo",
+      backends: [norseSimulatorStore],
       databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
+      icon: "norse:logo",
+      id: "norse",
+      routerName: "norseHome",
+      title: "Norse",
     };
 
     const norseSessionStore = useNorseSessionStore();
@@ -44,5 +49,6 @@ export default {
       projectStore.init();
       norseSessionStore.loading = false;
     });
+
   },
 };

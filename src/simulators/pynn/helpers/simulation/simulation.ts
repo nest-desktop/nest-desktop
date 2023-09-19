@@ -34,7 +34,7 @@ export class PyNNSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const pynnSimulatorStore = usePyNNSimulatorStore();
-    return pynnSimulatorStore.instance
+    return pynnSimulatorStore.session.instance
       .post("exec", {
         source: this.code.script,
         return: "response",

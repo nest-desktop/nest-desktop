@@ -95,7 +95,9 @@
                         <template #append>
                           <v-icon
                             icon="mdi-circle"
-                            :color="pynnSimulatorStore.isOK ? 'green' : 'red'"
+                            :color="
+                              pynnSimulatorStore.session.isOK ? 'green' : 'red'
+                            "
                           />
                         </template>
                         ping
@@ -105,13 +107,14 @@
                     <template #details>
                       <div
                         v-if="
-                          pynnSimulatorStore.isOK && pynnSimulatorStore.isValid
+                          pynnSimulatorStore.session.isOK &&
+                          pynnSimulatorStore.session.isValid
                         "
                       >
-                        {{ pynnSimulatorStore.response.data }}
+                        {{ pynnSimulatorStore.session.response.data }}
                       </div>
                       <div v-else>
-                        {{ pynnSimulatorStore.error }}
+                        {{ pynnSimulatorStore.session.error }}
                       </div>
                     </template>
                   </v-text-field>

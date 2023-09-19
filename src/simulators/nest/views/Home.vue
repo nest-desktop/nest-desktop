@@ -123,7 +123,7 @@
                               <v-icon
                                 icon="mdi-circle"
                                 :color="
-                                  nestSimulatorStore.isOK ? 'green' : 'red'
+                                  nestSimulatorStore.session.isOK ? 'green' : 'red'
                                 "
                               />
                             </template>
@@ -134,14 +134,14 @@
                         <template #details>
                           <div
                             v-if="
-                              nestSimulatorStore.isOK &&
-                              nestSimulatorStore.isValid
+                              nestSimulatorStore.session.isOK &&
+                              nestSimulatorStore.session.isValid
                             "
                           >
-                            {{ nestSimulatorStore.response.data }}
+                            {{ nestSimulatorStore.session.response.data }}
                           </div>
                           <div v-else>
-                            {{ nestSimulatorStore.error }}
+                            {{ nestSimulatorStore.session.error }}
                           </div>
                         </template>
                       </v-text-field>
@@ -172,7 +172,7 @@
                               <v-icon
                                 icon="mdi-circle"
                                 :color="
-                                  insiteAccessStore.isOK ? 'green' : 'red'
+                                  insiteAccessStore.session.isOK ? 'green' : 'red'
                                 "
                               ></v-icon>
                             </template>
@@ -183,14 +183,14 @@
                         <template #details>
                           <div
                             v-if="
-                              insiteAccessStore.isOK &&
-                              insiteAccessStore.isValid
+                              insiteAccessStore.session.isOK &&
+                              insiteAccessStore.session.isValid
                             "
                           >
-                            {{ insiteAccessStore.response.data }}
+                            {{ insiteAccessStore.session.response.data }}
                           </div>
                           <div v-else>
-                            {{ insiteAccessStore.error }}
+                            {{ insiteAccessStore.session.error }}
                           </div>
                         </template>
                       </v-text-field>

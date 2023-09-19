@@ -34,7 +34,7 @@ export class NorseSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const norseSimulatorStore = useNorseSimulatorStore();
-    return norseSimulatorStore.instance
+    return norseSimulatorStore.session.instance
       .post("exec", {
         source: this.code.script,
         return: "response",
