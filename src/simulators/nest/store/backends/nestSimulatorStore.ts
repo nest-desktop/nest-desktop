@@ -2,6 +2,11 @@
 
 import { defineBackendStore } from "@/store/backends/defineBackendStore";
 
+const urls = [
+  'http://localhost:52425',
+  'https://nest-desktop-next.apps-dev.hbp.eu/nest',
+]
+
 export const useNESTSimulatorStore = defineBackendStore('nest', {
   defaults: {
     path: "nest",
@@ -9,5 +14,5 @@ export const useNESTSimulatorStore = defineBackendStore('nest', {
     protocol: "",
   },
   enabled: true,
-  url: "http://localhost:52425",
+  url: urls[0],
 });

@@ -49,49 +49,7 @@
           <v-expansion-panel>
             <v-expansion-panel-title> Settings </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-row>
-                <v-col cols="1">
-                  <v-checkbox v-model="norseSimulatorStore.enabled" />
-                </v-col>
-                <v-col cols="11">
-                  <v-text-field
-                    :disabled="!norseSimulatorStore.enabled"
-                    density="compact"
-                    label="URL of backend"
-                    v-model="norseSimulatorStore.url"
-                    variant="outlined"
-                  >
-                    <template #append>
-                      <v-btn
-                        @click="norseSimulatorStore.ping()"
-                        variant="outlined"
-                      >
-                        <template #append>
-                          <v-icon
-                            icon="mdi-circle"
-                            :color="norseSimulatorStore.session.isOK ? 'green' : 'red'"
-                          />
-                        </template>
-                        ping
-                      </v-btn>
-                    </template>
-
-                    <template #details>
-                      <div
-                        v-if="
-                          norseSimulatorStore.session.isOK &&
-                          norseSimulatorStore.session.isValid
-                        "
-                      >
-                        {{ norseSimulatorStore.session.response.data }}
-                      </div>
-                      <div v-else>
-                        {{ norseSimulatorStore.session.error }}
-                      </div>
-                    </template>
-                  </v-text-field>
-                </v-col>
-              </v-row>
+              <backend-settings :store="norseSimulatorStore" />
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -126,6 +84,7 @@
 </template>
 
 <script setup lang="ts">
+import BackendSettings from "@/components/BackendSettings.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 
 import { useNorseProjectDBStore } from "../store/project/projectDBStore";

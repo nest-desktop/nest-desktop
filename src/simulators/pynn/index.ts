@@ -45,10 +45,11 @@ export default {
     const projectStore = usePyNNProjectStore();
 
     Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      modelStore.init();
-      projectStore.init();
-      pynnSessionStore.loading = false;
+      setTimeout(() => {
+        modelStore.init();
+        projectStore.init();
+        pynnSessionStore.loading = false;
+      }, 300); // TODO: find better solution for setTimeout.
     });
-
   },
 };

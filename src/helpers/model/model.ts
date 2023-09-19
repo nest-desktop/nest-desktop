@@ -332,7 +332,7 @@ export class BaseModel extends Config {
    * @param model model object
    */
   updateRecordables(model: any): void {
-    this._recordables = this.config.recordables.filter((recordable: any) =>
+    this._recordables = this.config.recordables?.filter((recordable: any) =>
       model.recordables.includes(recordable.id)
     );
   }

@@ -75,51 +75,7 @@
           <v-expansion-panel>
             <v-expansion-panel-title> Settings </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-row>
-                <v-col cols="1">
-                  <v-checkbox v-model="pynnSimulatorStore.enabled" />
-                </v-col>
-                <v-col cols="11">
-                  <v-text-field
-                    :disabled="!pynnSimulatorStore.enabled"
-                    density="compact"
-                    label="URL of backend"
-                    v-model="pynnSimulatorStore.url"
-                    variant="outlined"
-                  >
-                    <template #append>
-                      <v-btn
-                        @click="pynnSimulatorStore.ping()"
-                        variant="outlined"
-                      >
-                        <template #append>
-                          <v-icon
-                            icon="mdi-circle"
-                            :color="
-                              pynnSimulatorStore.session.isOK ? 'green' : 'red'
-                            "
-                          />
-                        </template>
-                        ping
-                      </v-btn>
-                    </template>
-
-                    <template #details>
-                      <div
-                        v-if="
-                          pynnSimulatorStore.session.isOK &&
-                          pynnSimulatorStore.session.isValid
-                        "
-                      >
-                        {{ pynnSimulatorStore.session.response.data }}
-                      </div>
-                      <div v-else>
-                        {{ pynnSimulatorStore.session.error }}
-                      </div>
-                    </template>
-                  </v-text-field>
-                </v-col>
-              </v-row>
+              <backend-settings :store="pynnSimulatorStore" />
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -154,6 +110,7 @@
 </template>
 
 <script setup lang="ts">
+import BackendSettings from "@/components/BackendSettings.vue";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
 
 import { usePyNNProjectDBStore } from "../store/project/projectDBStore";
