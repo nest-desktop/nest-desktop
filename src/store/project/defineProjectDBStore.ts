@@ -27,7 +27,7 @@ export function defineProjectDBStore(
 ) {
   const logger = mainLogger.getSubLogger({
     name: args.simulator + " project DB store",
-    minLevel: args.loggerMinLevel || 1,
+    minLevel: args.loggerMinLevel || 3,
   });
 
   const db = new args.ProjectDB();
