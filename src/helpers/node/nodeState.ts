@@ -61,6 +61,10 @@ export class NodeState {
     return this._node;
   }
 
+  get show(): boolean {
+    return this._node.nodes.showNode(this._node);
+  }
+
   get state(): UnwrapRef<NodeStateState> {
     return this._state;
   }
