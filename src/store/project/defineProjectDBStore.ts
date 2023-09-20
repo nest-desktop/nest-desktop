@@ -34,6 +34,8 @@ export function defineProjectDBStore(
 
   return defineStore(args.simulator + "-project-db", {
     state: () => ({
+      tryImports: 3,
+      initialized: true,
       numLoaded: 0,
       projects: [] as (Project | any)[], // TODO: any should be removed.
       searchTerm: "",
@@ -156,16 +158,13 @@ export function defineProjectDBStore(
       /**
        * Initialize projects DB.
        */
-      async init(): Promise<any> {
+      async init(): Promise<void> {
         logger.trace("init project db store");
         return db.count().then(async (count: number) => {
           logger.debug("projects in DB:", count);
-          if (count === 0) {
-            return this.importProjectsFromAssets().then(() => {
-              setTimeout(() => {
-                this.updateList();
-              }, 100);
-            });
+          if (count === 0 && this.tryImports > 0) {
+            this.tryImports -= 1;
+            this.importProjectsFromAssets().then(() => this.init());
           } else {
             return this.updateList();
           }
@@ -235,7 +234,7 @@ export function defineProjectDBStore(
       /*
        * Save project from the list.
        */
-      async saveProject(projectId: string): Promise<any> {
+      async saveProject(projectId: string): Promise<void> {
         logger.trace("save project:", truncate(projectId));
 
         const project = this.findProject(projectId) as Project;
@@ -257,12 +256,13 @@ export function defineProjectDBStore(
       /**
        * Update project list from the database.
        */
-      async updateList(): Promise<any> {
+      async updateList(): Promise<void> {
         logger.trace("update list");
 
         this.projects = [];
         return db.list("", true).then((projects: any[]) => {
           this.projects = projects;
+          this.initialized = true;
         });
       },
     },

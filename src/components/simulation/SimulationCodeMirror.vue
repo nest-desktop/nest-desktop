@@ -4,6 +4,7 @@
     ref="codeMirror"
     style="font-size: 0.75rem; width: 100%"
     v-model="simulation.code.script"
+    v-if="simulation"
   />
 </template>
 

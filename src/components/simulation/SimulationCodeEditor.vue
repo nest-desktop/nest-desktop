@@ -15,7 +15,10 @@
     <v-btn icon="mdi-dots-vertical" size="small" />
   </v-toolbar>
 
-  <Simulation-code-mirror :simulation="(simulation as Simulation)" />
+  <Simulation-code-mirror
+    :simulation="(simulation as Simulation)"
+    v-if="simulation"
+  />
 </template>
 
 <script lang="ts" setup>

@@ -10,10 +10,7 @@ import { nestIconSet } from "./components/iconsets";
 
 import { useInsiteAccessStore } from "./store/backends/insiteAccessStore";
 import { useNESTModelDBStore } from "./store/model/modelDBStore";
-import { useNESTModelStore } from "./store/model/modelStore";
 import { useNESTProjectDBStore } from "./store/project/projectDBStore";
-import { useNESTProjectStore } from "./store/project/projectStore";
-import { useNESTSessionStore } from "./store/sessionStore";
 import { useNESTSimulatorStore } from "./store/backends/nestSimulatorStore";
 
 const _configNames = [
@@ -27,9 +24,13 @@ const _configNames = [
 
 export default {
   install() {
+    // Load config files
+    _configNames.forEach((configName) => new Config(configName, "nest"));
 
-    // Load config files.
-    _configNames.forEach((configName) => new Config(configName, 'nest'));
+    // Init stores
+    const modelDBStore = useNESTModelDBStore();
+    const projectDBStore = useNESTProjectDBStore();
+    Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
     // Init backend NEST Simulator
     const nestSimulatorStore = useNESTSimulatorStore();
@@ -67,23 +68,8 @@ export default {
       title: "NEST",
     };
 
-    // Add router for NEST
+    // Add router
     router.addRoute("appLayout", nestRoute);
-
-    // Init stores
-    const nestSessionStore = useNESTSessionStore();
-    const modelDBStore = useNESTModelDBStore();
-    const modelStore = useNESTModelStore();
-    const projectDBStore = useNESTProjectDBStore();
-    const projectStore = useNESTProjectStore();
-
-    Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      setTimeout(() => {
-        modelStore.init();
-        projectStore.init();
-        nestSessionStore.loading = false;
-      }, 300); // TODO: find better solution for setTimeout.
-    });
 
   },
 };

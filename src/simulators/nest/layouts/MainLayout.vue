@@ -17,11 +17,18 @@ import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
+import { getParamFromURL } from "@/utils/paramQuery";
 
-import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
 import { useNESTSessionStore } from "../store/sessionStore";
+import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
+import { useNESTModelStore } from "../store/model/modelStore";
+import { useNESTProjectStore } from "../store/project/projectStore";
 
+const modelStore = useNESTModelStore();
 const nestSessionStore = useNESTSessionStore();
+const nestSimulatorStore = useNESTSimulatorStore();
+const projectStore = useNESTProjectStore();
+const route = useRoute();
 
 const navItems = [
   {
@@ -40,37 +47,23 @@ const navItems = [
   },
 ];
 
-/**
- * Get parameter from URL.
- */
-const getParamFromURL = (paramKey: string) => {
-  const route = useRoute();
-
-  let param: string | null;
-  if (route.query[paramKey]) {
-    param = route.query[paramKey] as string;
-  } else if (route.params[paramKey]) {
-    param = route.params[paramKey] as string;
-  } else {
-    param = new URLSearchParams(window.location.search).get(paramKey);
-  }
-  return param;
-};
-
 onMounted(() => {
-  const nestSimulatorStore = useNESTSimulatorStore();
-
-  const nestServerURL = getParamFromURL("nest_server_url");
+  // Store URL of NEST Server from the query.
+  const nestServerURL = getParamFromURL(route, "nest_server_url");
   if (nestServerURL) {
     nestSimulatorStore.url = nestServerURL;
   }
 
-  // Store access token for NEST Server to local storage.
-  const accessToken = getParamFromURL("nest_server_access_token");
+  // Store access token for NEST Server from the query.
+  const accessToken = getParamFromURL(route, "nest_server_access_token");
   if (accessToken) {
     nestSimulatorStore.accessToken = accessToken;
   }
 
   nestSimulatorStore.update();
+
+  modelStore.init();
+  projectStore.init();
+  nestSessionStore.loading = false;
 });
 </script>

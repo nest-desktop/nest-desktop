@@ -9,43 +9,36 @@ import norseRoute from "./routes";
 import { norseIconSet } from "./components/iconsets";
 
 import { useNorseModelDBStore } from "./store/model/modelDBStore";
-import { useNorseModelStore } from "./store/model/modelStore";
 import { useNorseProjectDBStore } from "./store/project/projectDBStore";
-import { useNorseProjectStore } from "./store/project/projectStore";
-import { useNorseSessionStore } from "./store/sessionStore";
 import { useNorseSimulatorStore } from "./store/backends/norseSimulatorStore";
 
 const _configNames = ["NorseModel"];
 
 export default {
   install() {
-    _configNames.forEach((configName) => new Config(configName));
+    // Load config files
+    _configNames.forEach((configName) => new Config(configName, "norse"));
 
+    // Init stores
+    const modelDBStore = useNorseModelDBStore();
+    const projectDBStore = useNorseProjectDBStore();
+    Promise.all([modelDBStore.init(), projectDBStore.init()])
+
+    // Init backend Norse Simulator
     const norseSimulatorStore = useNorseSimulatorStore();
     norseSimulatorStore.init();
 
-    const norseSessionStore = useNorseSessionStore();
-    const modelDBStore = useNorseModelDBStore();
-    const modelStore = useNorseModelStore();
-    const projectDBStore = useNorseProjectDBStore();
-    const projectStore = useNorseProjectStore();
-
-    Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      setTimeout(() => {
-        modelStore.init();
-        projectStore.init();
-        norseSessionStore.loading = false;
-      }, 300); // TODO: find better solution for setTimeout.
-    });
-
+    // Add theme to vuetify
     addTheme({
       "norse-logo": "#000080",
       norse: "0F9959",
       "norse-accent": "#e6007e",
     });
 
+    // Add icon set for vuetify
     addIconSet({ norse: norseIconSet });
 
+    // Add settings for App navigation
     simulatorItems.norse = {
       backends: [norseSimulatorStore],
       databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
@@ -55,6 +48,7 @@ export default {
       title: "Norse",
     };
 
+    // Add router
     router.addRoute("appLayout", norseRoute);
   },
 };

@@ -113,7 +113,7 @@
         </v-expansion-panels>
 
         <v-card class="mt-2" title="Projects">
-          <v-card-subtitle>
+          <v-card-subtitle :key="projectStore.projectId">
             Current project: {{ truncate(projectStore.projectId) }}
           </v-card-subtitle>
           <v-list :key="projectDBStore.projects.length" lines="two" nav>
