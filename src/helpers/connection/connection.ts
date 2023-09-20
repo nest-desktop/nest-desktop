@@ -46,9 +46,10 @@ export class BaseConnection extends Config {
   constructor(
     connections: Connections,
     connection: ConnectionProps,
-    name: string = "Connection"
+    name: string = "Connection",
+    simulator: string = "",
   ) {
-    super(name);
+    super(name, simulator);
     this._connections = connections;
     this._idx = this.connections.all.length;
 

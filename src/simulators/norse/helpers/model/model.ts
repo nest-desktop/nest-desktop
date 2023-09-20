@@ -11,7 +11,7 @@ export class NorseModel extends BaseModel {
   private _codeTemplate: string = "";
 
   constructor(model: NorseModelProps = {}) {
-    super(model, "NorseModel");
+    super(model, "NorseModel", "norse");
 
     if (model.codeTemplate) {
       this._codeTemplate = model.codeTemplate;

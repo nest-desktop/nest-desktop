@@ -1,9 +1,0 @@
-{
-  "recordables": [
-    {
-      "id": "V_m",
-      "label": "membrane potential",
-      "unit": "mV"
-    }
-  ]
-}

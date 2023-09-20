@@ -7,20 +7,14 @@ import {
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 import { NodeParameterProps } from "@/helpers/node/nodeParameter";
 
-import {
-  NESTConnectionMask,
-  NESTConnectionMaskProps,
-} from "./connectionMask";
+import { NESTConnectionMask, NESTConnectionMaskProps } from "./connectionMask";
 import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
 import { NESTNodeSlice } from "../node/nodeSlice";
-import {
-  NESTSynapse,
-  NESTSynapseProps,
-} from "../synapse/synapse";
+import { NESTSynapse, NESTSynapseProps } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
 
 export interface NESTConnectionProps extends ConnectionProps {

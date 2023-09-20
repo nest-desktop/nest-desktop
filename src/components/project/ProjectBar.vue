@@ -29,6 +29,7 @@
       class="mx-2"
       :project-store="projectStore"
       :simulation="project.simulation"
+      v-if="project"
     />
   </v-app-bar>
 </template>

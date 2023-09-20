@@ -11,7 +11,8 @@ import norse from "./norse";
 import pynn from "./pynn";
 
 const simulatorVisible = ["nest", "norse"];
-const simulators: { [key: string]: any } = { nest, norse, pynn };
+export const simulators: { [key: string]: any } = { nest, norse, pynn };
+export const simulatorNames = Object.keys(simulators);
 
 export const simulatorItems: {
   [key: string]: {

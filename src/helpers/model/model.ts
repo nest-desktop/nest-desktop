@@ -5,7 +5,10 @@ import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { Config } from "@/helpers/config";
-import { ModelParameter, ModelParameterProps } from "@/helpers/model/modelParameter";
+import {
+  ModelParameter,
+  ModelParameterProps,
+} from "@/helpers/model/modelParameter";
 import { logger as mainLogger } from "@/helpers/common/logger";
 // import { useModelDBStore } from "@/store/model/modelDBStore";
 
@@ -36,8 +39,12 @@ export class BaseModel extends Config {
   private _state: UnwrapRef<any>;
   // private _modelDBStore;
 
-  constructor(model: ModelProps = {}, name: string = "Model") {
-    super(name);
+  constructor(
+    model: ModelProps = {},
+    name: string = "Model",
+    simulator: string = ""
+  ) {
+    super(name, simulator);
 
     this._doc = model;
     this._id = model.id || uuidv4();

@@ -50,9 +50,7 @@ export class NESTConnections extends BaseConnections {
    */
   override clean(): void {
     this.logger.trace("clean");
-    this.all.forEach((connection: NESTConnection) =>
-      connection.clean()
-    );
+    this.all.forEach((connection: NESTConnection) => connection.clean());
 
     this.all.forEach((connection: NESTConnection) => {
       connection.sourceSlice.update();

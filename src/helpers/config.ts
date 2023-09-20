@@ -2,9 +2,11 @@
 
 export class Config {
   private _configName: string;
+  private _simulator: string;
 
-  constructor(name: string) {
+  constructor(name: string, simulator: string = "") {
     this._configName = name;
+    this._simulator = simulator;
 
     if (!this.isConfigValid) {
       this.upgradeConfig();
@@ -56,7 +58,13 @@ export class Config {
   }
 
   async importConfig(): Promise<any> {
-    return import(`@/assets/config/${this._configName}.json`);
+    const path = this._simulator
+      ? `assets/${this._simulator}/configs/${this._configName}.json`
+      : `assets/configs/${this._configName}.json`;
+    const response = await fetch(path);
+    const data = await response.json();
+    return data;
+    // return import(`@/assets/config/${this._configName}.json`);
   }
 
   resetConfig(): void {

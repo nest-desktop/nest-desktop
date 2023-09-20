@@ -145,7 +145,7 @@ export function defineProjectDBStore(
         if (args.projectAssets) {
           promises = args.projectAssets.map(async (file: string) => {
             const response = await fetch(
-              `assets/${args.simulator}/projects/${file}.json`
+              `assets/simulators/${args.simulator}/projects/${file}.json`
             );
             const data = await response.json();
             return db.create(data);

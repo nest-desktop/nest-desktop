@@ -19,7 +19,7 @@ export class NESTNodeSpatial extends Config {
   private _positions: FreePositions | GridPositions | undefined;
 
   constructor(node: NESTNode, spatial?: NESTNodeSpatialProps) {
-    super("NESTNodeSpatial");
+    super("NESTNodeSpatial", "nest");
     this._node = node;
 
     if (spatial) {
@@ -33,7 +33,7 @@ export class NESTNodeSpatial extends Config {
   }
 
   get hasGridPositions(): boolean {
-    return this._positions?.name === 'grid';
+    return this._positions?.name === "grid";
   }
 
   get hash(): string {

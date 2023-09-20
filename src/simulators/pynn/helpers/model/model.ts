@@ -11,7 +11,7 @@ export class PyNNModel extends BaseModel {
   private _codeTemplate: string = "";
 
   constructor(model: PyNNModelProps = {}) {
-    super(model, "PyNNModel");
+    super(model, "PyNNModel", "pynn");
 
     if (model.codeTemplate) {
       this._codeTemplate = model.codeTemplate;
