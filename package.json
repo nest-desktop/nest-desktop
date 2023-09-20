@@ -1,6 +1,6 @@
 {
   "name": "nest-desktop",
-  "version": "4.0.0-alpha2",
+  "version": "4.0.0-alpha7",
   "private": false,
   "description": "NEST Desktop is a web-based application which provides a graphical user interface for NEST Simulator.",
   "author": {
@@ -10,7 +10,7 @@
   "scripts": {
     "app:build": "vue-tsc && vite build && electron-builder",
     "app:dev": "vite",
-    "app:preview": "./release/4.0.0-alpha1/nest-desktop-4.0.0-alpha1.AppImage",
+    "app:preview": "./release/nest-desktop-*.AppImage",
     "build": "vue-tsc --noEmit && vite build",
     "dev": "vite",
     "lint": "eslint . --fix --ignore-path .gitignore",
@@ -72,7 +72,7 @@
     "register-service-worker": "~1.7",
     "sass": "~1.67",
     "semver": "~7.5",
-    "tslog": "^4.8.2",
+    "tslog": "~4.9",
     "typescript": "~5.2",
     "vite": "~4.4",
     "vite-plugin-electron": "~0.14",
