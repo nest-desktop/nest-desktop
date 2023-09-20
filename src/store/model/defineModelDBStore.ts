@@ -92,7 +92,7 @@ export function defineModelDBStore(
         let promise: Promise<any> = Promise.resolve();
         args.modelAssets?.forEach(async (file: string) => {
           const response = await fetch(
-            `assets/${args.simulator}/models/${file}.json`
+            `assets/simulators/${args.simulator}/models/${file}.json`
           );
           const data = await response.json();
           promise = promise.then(() => db.create(data));

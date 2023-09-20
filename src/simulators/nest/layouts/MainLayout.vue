@@ -1,13 +1,15 @@
 <template>
-  <app-navigation :nav-items="navItems" />
+  <v-app v-if="nestSessionStore.loading">
+    <v-progress-circular class="ma-auto" indeterminate color="primary" />
+  </v-app>
 
-  <v-main>
-    <v-app v-if="nestSessionStore.loading">
-      <v-progress-circular class="ma-auto" indeterminate color="primary" />
-    </v-app>
+  <template v-else>
+    <app-navigation :nav-items="navItems" />
 
-    <router-view v-else />
-  </v-main>
+    <v-main>
+      <router-view />
+    </v-main>
+  </template>
 </template>
 
 <script lang="ts" setup>

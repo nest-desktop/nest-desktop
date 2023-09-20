@@ -20,7 +20,7 @@ export class NESTSimulationKernel extends Config {
     simulation: NESTSimulation,
     kernel: NESTSimulationKernelProps = {}
   ) {
-    super("NESTSimulationKernel");
+    super("NESTSimulationKernel", "nest");
     this._simulation = simulation;
     this._resolution = kernel.resolution || 0.1;
     this._localNumThreads = kernel.localNumThreads || 1;

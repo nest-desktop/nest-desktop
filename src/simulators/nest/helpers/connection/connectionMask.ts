@@ -24,7 +24,7 @@ export class NESTConnectionMask extends Config {
   private _specs: any;
 
   constructor(connection: NESTConnection, mask?: NESTConnectionMaskProps) {
-    super("NESTConnectionMask");
+    super("NESTConnectionMask", "nest");
     this._connection = connection;
     this._graph = {
       data: [],

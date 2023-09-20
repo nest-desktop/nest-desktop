@@ -15,12 +15,13 @@ export interface NESTModelProps extends ModelProps {
 }
 
 export class NESTModel extends BaseModel {
-  private _compartmentParams: { [key: string]: NESTModelCompartmentParameter } = {}; // model compartmental parameters
+  private _compartmentParams: { [key: string]: NESTModelCompartmentParameter } =
+    {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
   private _receptors: { [key: string]: NESTModelReceptor } = {}; // receptor parameters
 
   constructor(model: ModelProps = {}) {
-    super(model, "NESTModel");
+    super(model, "NESTModel", "nest");
   }
 
   get compartmentParams(): { [key: string]: NESTModelCompartmentParameter } {

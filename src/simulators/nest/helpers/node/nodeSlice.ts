@@ -1,7 +1,10 @@
 // nodeSlice.ts
 
 import { Config } from "@/helpers/config";
-import { NodeParameter, NodeParameterProps } from "@/helpers/node/nodeParameter";
+import {
+  NodeParameter,
+  NodeParameterProps,
+} from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";
 
@@ -12,7 +15,7 @@ export class NESTNodeSlice extends Config {
   private _visible: boolean = false;
 
   constructor(node: NESTNode, params: NodeParameterProps[] = []) {
-    super("NESTNodeSlice");
+    super("NESTNodeSlice", "nest");
     this._node = node;
     this.initParameters(params);
     this._visible = params.length > 0;

@@ -1,6 +1,7 @@
 // index.ts
 
 import router from "@/router";
+import { Config } from "@/helpers/config";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
 import { simulatorItems } from "..";
 
@@ -14,29 +15,14 @@ import { useNorseProjectStore } from "./store/project/projectStore";
 import { useNorseSessionStore } from "./store/sessionStore";
 import { useNorseSimulatorStore } from "./store/backends/norseSimulatorStore";
 
+const _configNames = ["NorseModel"];
+
 export default {
   install() {
-    router.addRoute("appLayout", norseRoute);
-
-    addTheme({
-      "norse-logo": "#000080",
-      norse: "0F9959",
-      "norse-accent": "#e6007e",
-    });
-
-    addIconSet({ norse: norseIconSet });
+    _configNames.forEach((configName) => new Config(configName));
 
     const norseSimulatorStore = useNorseSimulatorStore();
     norseSimulatorStore.init();
-
-    simulatorItems.norse = {
-      backends: [norseSimulatorStore],
-      databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
-      icon: "norse:logo",
-      id: "norse",
-      routerName: "norseHome",
-      title: "Norse",
-    };
 
     const norseSessionStore = useNorseSessionStore();
     const modelDBStore = useNorseModelDBStore();
@@ -51,5 +37,24 @@ export default {
         norseSessionStore.loading = false;
       }, 300); // TODO: find better solution for setTimeout.
     });
+
+    addTheme({
+      "norse-logo": "#000080",
+      norse: "0F9959",
+      "norse-accent": "#e6007e",
+    });
+
+    addIconSet({ norse: norseIconSet });
+
+    simulatorItems.norse = {
+      backends: [norseSimulatorStore],
+      databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
+      icon: "norse:logo",
+      id: "norse",
+      routerName: "norseHome",
+      title: "Norse",
+    };
+
+    router.addRoute("appLayout", norseRoute);
   },
 };
