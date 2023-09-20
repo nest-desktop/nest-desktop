@@ -22,15 +22,25 @@ export default defineConfig({
       output: {
         assetFileNames: (assetInfo: any) => {
           let extType = assetInfo.name.split(".").at(1);
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+          if (/png|svg/.test(extType)) {
             extType = "img";
           } else if (/woff|woff2|eot|ttf|otf/.test(extType)) {
             extType = "fonts";
           }
           return `assets/${extType}/[name]-[hash][extname]`;
         },
-        chunkFileNames: "assets/js/[name]-[hash].js",
-        entryFileNames: "assets/js/[name]-[hash].js",
+        chunkFileNames: (assetInfo) => {
+          if (
+            assetInfo.facadeModuleId &&
+            assetInfo.facadeModuleId.includes("simulators")
+          ) {
+            const path = assetInfo.facadeModuleId.split("/");
+            const simulatorIdx = path.indexOf("simulators") + 1;
+            return `assets/simulators/${path[simulatorIdx]}/js/[name]-[hash].js`;
+          }
+          return "assets/js/[name]-[hash].js";
+        },
+        entryFileNames: "assets/js/[name]-[hash].js"
       },
     },
   },
@@ -51,8 +61,11 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+        globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
         maximumFileSizeToCacheInBytes: 6000000,
+        // Don't fallback on document based (e.g. `/some-page`) requests
+        // Even though this says `null` by default, I had to set this specifically to `null` to make it work
+        navigateFallback: null,
       },
     }),
     electron([
