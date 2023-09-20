@@ -15,7 +15,7 @@ export function defineModelDBStore(
   args: {
     Model: Class<Model>;
     ModelDB: Class<ModelDB>;
-    loggerMinLevel?: number,
+    loggerMinLevel?: number;
     modelAssets?: string[];
     simulator: string;
   } = {
@@ -26,13 +26,14 @@ export function defineModelDBStore(
 ) {
   const logger = mainLogger.getSubLogger({
     name: args.simulator + " model DB store",
-    minLevel: args.loggerMinLevel || 3
+    minLevel: args.loggerMinLevel || 3,
   });
 
   const db = new args.ModelDB();
 
   return defineStore(args.simulator + "-model-db", {
     state: () => ({
+      tryImports: 3,
       models: [] as Model[],
     }),
     getters: {
@@ -89,15 +90,17 @@ export function defineModelDBStore(
        */
       async importModelsFromAssets(): Promise<any> {
         logger.trace("import models from assets");
-        let promise: Promise<any> = Promise.resolve();
-        args.modelAssets?.forEach(async (file: string) => {
-          const response = await fetch(
-            `assets/simulators/${args.simulator}/models/${file}.json`
-          );
-          const data = await response.json();
-          promise = promise.then(() => db.create(data));
-        });
-        return promise;
+        let promises = [];
+        if (args.modelAssets) {
+          promises = args.modelAssets.map(async (file: string) => {
+            const response = await fetch(
+              `assets/simulators/${args.simulator}/models/${file}.json`
+            );
+            const data = await response.json();
+            db.create(data);
+          }) as any[];
+        }
+        return Promise.all(promises);
       },
       /**
        * Initialize model db.
@@ -106,8 +109,9 @@ export function defineModelDBStore(
         logger.trace("init");
         return db.count().then(async (count: number) => {
           logger.debug("models in DB:", count);
-          if (count === 0) {
-            return this.importModelsFromAssets().then(() => this.updateList());
+          if (count === 0 && this.tryImports > 0) {
+            this.tryImports -= 1;
+            return this.importModelsFromAssets().then(() => this.init());
           } else {
             return this.updateList();
           }

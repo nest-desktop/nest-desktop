@@ -1,0 +1,8 @@
+{
+  "coloredToolbar": false,
+  "maxNetworkRevisions": 5,
+  "showHelp": true,
+  "simulateAfterChange": false,
+  "simulateAfterCheckout": false,
+  "simulateAfterLoad": false
+}

@@ -14,5 +14,5 @@ export const useNESTSimulatorStore = defineBackendStore('nest', {
     protocol: "",
   },
   enabled: true,
-  url: urls[1],
+  url: urls[0],
 });

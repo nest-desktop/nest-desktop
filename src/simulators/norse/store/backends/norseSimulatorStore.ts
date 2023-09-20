@@ -13,6 +13,6 @@ export const useNorseSimulatorStore = defineBackendStore("norse", {
     port: "11428",
     protocol: "",
   },
-  enabled: true,
-  url: urls[1],
+  enabled: false,
+  url: urls[0],
 });

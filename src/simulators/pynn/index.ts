@@ -9,43 +9,36 @@ import pynnRoute from "./routes";
 import { pynnIconSet } from "./components/iconsets";
 
 import { usePyNNModelDBStore } from "./store/model/modelDBStore";
-import { usePyNNModelStore } from "./store/model/modelStore";
 import { usePyNNProjectDBStore } from "./store/project/projectDBStore";
-import { usePyNNProjectStore } from "./store/project/projectStore";
-import { usePyNNSessionStore } from "./store/sessionStore";
 import { usePyNNSimulatorStore } from "./store/backends/pynnSimulatorStore";
 
 const _configNames = ["PyNNModel"];
 
 export default {
   install() {
-    _configNames.forEach((configName) => new Config(configName));
+    // Load config files
+    _configNames.forEach((configName) => new Config(configName, "pynn"));
 
+    // Init stores
+    const modelDBStore = usePyNNModelDBStore();
+    const projectDBStore = usePyNNProjectDBStore();
+    Promise.all([modelDBStore.init(), projectDBStore.init()]);
+
+    // Init backend PyNN Simulator
     const pynnSimulatorStore = usePyNNSimulatorStore();
     pynnSimulatorStore.init();
 
-    const pynnSessionStore = usePyNNSessionStore();
-    const modelDBStore = usePyNNModelDBStore();
-    const modelStore = usePyNNModelStore();
-    const projectDBStore = usePyNNProjectDBStore();
-    const projectStore = usePyNNProjectStore();
-
-    Promise.all([modelDBStore.init(), projectDBStore.init()]).then(() => {
-      setTimeout(() => {
-        modelStore.init();
-        projectStore.init();
-        pynnSessionStore.loading = false;
-      }, 300); // TODO: find better solution for setTimeout.
-    });
-
+    // Add theme to vuetify
     addTheme({
       "pynn-logo": "#000080",
       pynn: "0F9959",
       "pynn-accent": "#e6007e",
     });
 
+    // Add icon set for vuetify
     addIconSet({ pynn: pynnIconSet });
 
+    // Add settings for App navigation
     simulatorItems.pynn = {
       backends: [pynnSimulatorStore],
       databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
@@ -55,6 +48,7 @@ export default {
       title: "PyNN",
     };
 
+    // Add router
     router.addRoute("appLayout", pynnRoute);
   },
 };
