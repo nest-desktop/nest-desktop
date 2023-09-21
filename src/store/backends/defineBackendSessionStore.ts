@@ -3,7 +3,14 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
+import { logger as mainLogger } from "@/helpers/common/logger";
+
 export function defineBackendSessionStore(name: string) {
+  const logger = mainLogger.getSubLogger({
+    name: name + " backend session store",
+    minLevel: 3,
+  });
+
   return defineStore(name + "-backend-session-store", {
     state: () => ({
       error: "",
@@ -30,6 +37,8 @@ export function defineBackendSessionStore(name: string) {
        * @param url The URL which should be pinged.
        */
       async ping(url: string): Promise<any> {
+        logger.trace("ping:", url);
+
         this.reset();
 
         return this.instance

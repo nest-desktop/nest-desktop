@@ -69,17 +69,12 @@
     </v-responsive>
   </v-container>
 
-  <v-footer>
-    <v-row justify="center" no-gutters>
-      <v-col class="text-center" cols="12">
-        2023 — <strong>NEST Desktop</strong>
-      </v-col>
-    </v-row>
-  </v-footer>
+  <app-footer />
 </template>
 
 <script lang="ts" setup>
 import AppDetails from "@/components/app/AppDetails.vue";
+import AppFooter from "@/components/app/AppFooter.vue";
 import ebrainsLogo from "@/assets/img/logo/ebrains-logo.svg";
 import euLogo from "@/assets/img/logo/eu-logo.png";
 import hbpLogo from "@/assets/img/logo/hbp-logo.png";

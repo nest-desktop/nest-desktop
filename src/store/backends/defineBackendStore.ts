@@ -1,39 +1,35 @@
 // defineBackendStore.ts
 
-import axios from "axios";
 import { defineStore } from "pinia";
 
-import { combineURLs } from "@/utils/urls";
+import { getBoolean } from "@/utils/boolean";
+import { getRuntimeConfig } from "@/utils/fetch";
+import { logger as mainLogger } from "@/helpers/common/logger";
+
 import { defineBackendSessionStore } from "./defineBackendSessionStore";
 
-interface DefaultProps {
-  path: string;
-  port: string;
-  protocol: string;
-  url: string;
-}
-
 export function defineBackendStore(
+  simulator: string,
   name: string,
-  args: {
-    disabled?: boolean;
-    url?: string;
-    defaults: DefaultProps;
-  }
+  url: string
 ) {
+  const logger = mainLogger.getSubLogger({
+    name: simulator + " backend store",
+    minLevel: 3,
+  });
+
   return defineStore(name + "-backend-store", {
     state: () => ({
       accessToken: "",
-      enabled: !(args.disabled || false),
-      name: name,
-      url: args.url || args.defaults.url,
+      defaults: { url },
+      enabled: false,
+      configLoadedFromAssets: false,
+      name,
+      url,
     }),
     getters: {
       URL(state: any): URL {
         return new URL(state.url);
-      },
-      defaults(): DefaultProps {
-        return args.defaults;
       },
       session: () => {
         const useBackendSessionSore = defineBackendSessionStore(name);
@@ -42,33 +38,40 @@ export function defineBackendStore(
       },
     },
     actions: {
+      async loadConfig(): Promise<void> {
+        logger.trace("load config");
+        return getRuntimeConfig(
+          `/assets/simulators/${simulator}/config/backends.json`
+        )
+          .then((data) => {
+            const config = data[this.name];
+            const baseURL =
+              window.location.protocol + "//" + window.location.hostname;
+            if (config.port) {
+              this.url = baseURL + ":" + config.port;
+            } else if (config.path) {
+              this.url = baseURL + "/" + config.path;
+            } else {
+              this.url = config.url || this.defaults.url;
+            }
+            this.enabled = getBoolean(config.enabled) || false;
+          })
+          .finally(() => {
+            this.configLoadedFromAssets = true;
+          });
+      },
       async check(): Promise<void> {
+        logger.trace("check");
         if (this.enabled === false) return;
-
-        // Check if the hostname does not already exist in the config.
-        return this.URL.hostname ? this.ping() : this.seek();
+        return this.ping();
       },
       init(): void {
-        this.session.instance.defaults.baseURL = this.url;
-        if (this.enabled) {
-          this.ping();
+        logger.trace("init");
+        if (!this.configLoadedFromAssets) {
+          this.loadConfig();
         }
-      },
-      /**
-       * Seek the server URL of the backend.
-       */
-      async seek(): Promise<any> {
-        const protocol: string =
-          this.default.protocol || window.location.protocol;
-        const hostname: string = window.location.hostname || "localhost";
-        const hosts: string[] = [
-          combineURLs(hostname + ":" + this.default.port),
-          combineURLs(hostname, this.default.path),
-        ];
-        const hostPromises: any[] = hosts.map((host: string) =>
-          this.ping(protocol + "//" + host)
-        );
-        return axios.all(hostPromises);
+        this.updateURL();
+        this.check();
       },
       reset(): void {
         this.url = this.defaults.url;
@@ -78,11 +81,11 @@ export function defineBackendStore(
        * @param url The URL which should be pinged.
        */
       async ping(url?: string): Promise<any> {
-        return this.session.ping(url || this.url).then(() => {
-          if (url) {
-            this.url = url;
-          }
-        });
+        logger.trace("ping");
+        return this.session.ping(url || this.url);
+      },
+      updateURL(): void {
+        this.session.instance.defaults.baseURL = this.url;
       },
     },
     persist: true,

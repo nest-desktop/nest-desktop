@@ -23,7 +23,7 @@ const _configNames = [
 ];
 
 export default {
-  install() {
+  async install() {
     // Load config files
     _configNames.forEach((configName) => new Config(configName, "nest"));
 
