@@ -35,14 +35,11 @@
     </v-responsive>
   </v-container>
 
-  <v-footer>
-    <v-row justify="center" no-gutters>
-      <v-col class="text-center"> 2023 — <strong>NEST Desktop</strong> </v-col>
-    </v-row>
-  </v-footer>
+  <app-footer />
 </template>
 
 <script lang="ts" setup>
+import AppFooter from "@/components/app/AppFooter.vue";
 import { simulatorNames } from "@/simulators";
 
 import { useTheme } from "vuetify";

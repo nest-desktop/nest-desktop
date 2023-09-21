@@ -1,6 +1,10 @@
 <template>
   <v-app v-if="nestSessionStore.loading">
-    <v-progress-circular class="ma-auto" indeterminate color="primary" />
+    <v-container class="fill-height">
+      <v-progress-circular class="ma-auto" indeterminate color="primary" />
+    </v-container>
+
+    <app-footer />
   </v-app>
 
   <template v-else>
@@ -16,6 +20,7 @@
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
+import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 import { getParamFromURL } from "@/utils/paramQuery";
 

@@ -1,6 +1,10 @@
 <template>
   <v-app v-if="pynnSessionStore.loading">
+    <v-container class="fill-height">
     <v-progress-circular class="ma-auto" indeterminate color="primary" />
+    </v-container>
+
+    <app-footer />
   </v-app>
 
   <template v-else>
@@ -15,6 +19,7 @@
 <script lang="ts" setup>
 import { onMounted } from "vue";
 
+import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
 import { usePyNNSessionStore } from "../store/sessionStore";

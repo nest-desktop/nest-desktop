@@ -59,8 +59,8 @@ export class Config {
 
   async importConfig(): Promise<any> {
     const path = this._simulator
-      ? `assets/simulators/${this._simulator}/configs/${this._configName}.json`
-      : `assets/configs/${this._configName}.json`;
+      ? `assets/simulators/${this._simulator}/config/${this._configName}.json`
+      : `assets/config/${this._configName}.json`;
     const response = await fetch(path);
     const data = await response.json();
     return data;
