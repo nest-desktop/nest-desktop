@@ -60,6 +60,12 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        path: "settings",
+        name: "settings",
+        component: () => import("@/views/Settings.vue"),
+        beforeEnter: closeNav,
+      },
+      {
         path: "vuetify",
         name: "vuetify",
         component: () => import("@/views/Vuetify.vue"),

@@ -40,7 +40,7 @@ export default {
 
     // Add settings for App navigation
     simulatorItems.pynn = {
-      backends: [pynnSimulatorStore],
+      backends: { pynn: pynnSimulatorStore },
       databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
       icon: "pynn:logo",
       id: "pynn",

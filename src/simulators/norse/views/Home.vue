@@ -46,38 +46,14 @@
 
       <v-col md="6">
         <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title> Settings </v-expansion-panel-title>
+          <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
               <backend-settings :store="norseSimulatorStore" />
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-card class="mt-2">
-          <v-card-title> Projects </v-card-title>
-          <v-list :key="projectDBStore.projects.length" lines="two" nav>
-            <v-list-item :to="{ name: 'norseProjectNew' }">
-              <template #prepend>
-                <v-icon icon="mdi-plus" />
-              </template>
-              New project
-            </v-list-item>
-            <v-divider />
-            <v-list-subheader>Existing projects</v-list-subheader>
-            <v-list-item
-              :key="index"
-              :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
-              :title="project.name"
-              :to="{
-                name: 'norseProject',
-                params: { projectId: project.id },
-              }"
-              v-for="(project, index) in projectDBStore.projects"
-            >
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <store-list :stores="stores" simulator="norse"  />
       </v-col>
     </v-row>
   </v-container>
@@ -85,11 +61,23 @@
 
 <script setup lang="ts">
 import BackendSettings from "@/components/BackendSettings.vue";
+import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
+
+import { useNorseModelDBStore } from "../store/model/modelDBStore";
+const modelDBStore = useNorseModelDBStore();
+
+import { useNorseModelStore } from "../store/model/modelStore";
+const modelStore = useNorseModelStore();
 
 import { useNorseProjectDBStore } from "../store/project/projectDBStore";
 const projectDBStore = useNorseProjectDBStore();
 
+import { useNorseProjectStore } from "../store/project/projectStore";
+const projectStore = useNorseProjectStore();
+
 import { useNorseSimulatorStore } from "../store/backends/norseSimulatorStore";
 const norseSimulatorStore = useNorseSimulatorStore();
+
+const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
 </script>

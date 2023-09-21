@@ -18,7 +18,7 @@
         <h2 class="text-h2">NEST Desktop</h2>
       </div>
 
-      <div style="height:60px" />
+      <div style="height: 60px" />
 
       <div>
         <h5>Select a simulation tool</h5>

@@ -6,9 +6,15 @@
     <v-col cols="11">
       <v-text-field
         :disabled="!store.enabled"
+        :placeholder="store.defaults.url"
+        :rules="[
+          (value) => value.length === 0 || isURL(value) || 'URL is not valid',
+        ]"
+        @update:focused="updateOnFocus"
         class="my-2"
         density="compact"
         label="URL of backend"
+        persistent-placeholder
         v-model="store.url"
         variant="outlined"
       >
@@ -40,6 +46,17 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import { isURL } from "@/utils/urls";
+
 const props = defineProps(["store"]);
 const store = computed(() => props.store);
+
+const updateOnFocus = (focus: boolean) => {
+  if (!focus) {
+    if (store.value.url == null || store.value.url.length === 0) {
+      store.value.reset();
+    }
+    store.value.ping();
+  }
+};
 </script>
