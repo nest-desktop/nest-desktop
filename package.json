@@ -1,6 +1,6 @@
 {
   "name": "nest-desktop",
-  "version": "4.0.0-alpha7",
+  "version": "4.0.0-alpha13",
   "private": false,
   "description": "NEST Desktop is a web-based application which provides a graphical user interface for NEST Simulator.",
   "author": {
@@ -70,7 +70,7 @@
     "eslint": "~8.49",
     "eslint-plugin-vue": "~9.17",
     "register-service-worker": "~1.7",
-    "sass": "~1.67",
+    "sass": "~1.68",
     "semver": "~7.5",
     "tslog": "~4.9",
     "typescript": "~5.2",
