@@ -22,7 +22,7 @@ export default {
     // Init stores
     const modelDBStore = useNorseModelDBStore();
     const projectDBStore = useNorseProjectDBStore();
-    Promise.all([modelDBStore.init(), projectDBStore.init()])
+    Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
     // Init backend Norse Simulator
     const norseSimulatorStore = useNorseSimulatorStore();
@@ -40,7 +40,7 @@ export default {
 
     // Add settings for App navigation
     simulatorItems.norse = {
-      backends: [norseSimulatorStore],
+      backends: { norse: norseSimulatorStore },
       databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
       icon: "norse:logo",
       id: "norse",

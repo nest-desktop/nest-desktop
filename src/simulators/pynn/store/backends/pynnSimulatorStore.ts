@@ -7,7 +7,6 @@ export const usePyNNSimulatorStore = defineBackendStore("pynn", {
     path: "pynn",
     port: "91198",
     protocol: "",
-  },
-  enabled: false,
-  url: "http://localhost:91198",
+    url: "http://localhost:91198",
+  }
 });

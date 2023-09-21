@@ -6,11 +6,12 @@
 
 import { App } from "vue";
 
+import { useAppStore } from "@/store/appStore";
+
 import nest from "./nest";
 import norse from "./norse";
 import pynn from "./pynn";
 
-const simulatorVisible = ["nest", "norse"];
 export const simulators: { [key: string]: any } = { nest, norse, pynn };
 export const simulatorNames = Object.keys(simulators);
 
@@ -22,11 +23,17 @@ export const simulatorItems: {
     id: string;
     routerName: string;
     title: string;
-    backends: any[];
+    backends: any;
   };
 } = {};
 
 export function registerSimulators(app: App) {
+  const appStore = useAppStore();
+
   // Use simulators
-  simulatorVisible.forEach((id) => app.use(simulators[id]));
+  appStore.simulatorVisible.forEach((id) => app.use(simulators[id]));
+
+  // const hostname = "https://nest-desktop-next.apps-dev.hbp.eu";
+  // simulatorItems.nest.backends.nest.url = hostname + "/nest";
+  // simulatorItems.norse.backends.norse.url = hostname + "/norse";
 }

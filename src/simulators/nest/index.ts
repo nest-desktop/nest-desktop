@@ -59,7 +59,7 @@ export default {
 
     // Add settings for App navigation
     simulatorItems.nest = {
-      backends: [insiteAccessStore, nestSimulatorStore],
+      backends: { insite: insiteAccessStore, nest: nestSimulatorStore },
       color: "nest",
       databases: ["NEST_MODEL_STORE", "NEST_PROJECT_STORE"],
       icon: "nest:logo",
@@ -70,6 +70,5 @@ export default {
 
     // Add router
     router.addRoute("appLayout", nestRoute);
-
   },
 };

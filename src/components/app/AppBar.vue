@@ -69,6 +69,16 @@
         </template>
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
+
+      <v-divider />
+
+      <v-list-item :to="{ name: 'settings' }">
+        <template #prepend>
+          <v-icon icon="mdi-cogs" size="small" />
+        </template>
+        <v-list-item-title> Settings </v-list-item-title>
+      </v-list-item>
+
     </v-list>
   </v-menu>
 
@@ -107,7 +117,10 @@
 </template>
 
 <script lang="ts" setup>
-import { DatabaseService } from "@/helpers/common/database";
+import { useTheme } from "vuetify";
+const theme = useTheme();
+
+// import { DatabaseService } from "@/helpers/common/database";
 import { simulatorItems } from "@/simulators";
 import { useAppStore } from "@/store/appStore";
 
@@ -115,21 +128,27 @@ const appStore = useAppStore();
 
 const settingsItems = [
   {
-    icon: "mdi-cog-refresh-outline",
-    id: "clearConfig",
-    title: "Clear config",
-    onClick: () => localStorage.clear(),
+    icon: "mdi-theme-light-dark",
+    id: "theme-light-dark",
+    onClick: () => appStore.toggleDarkMode(theme),
+    title: "Dark mode",
   },
   {
-    icon: "mdi-database-refresh-outline",
-    id: "destroyDatabase",
-    title: "Destroy database",
-    onClick: () => {
-      appStore.currentSimulator.databases.forEach((url) => {
-        const db = new DatabaseService(url);
-        db.destroy();
-      });
-    },
+    icon: "mdi-cog-refresh-outline",
+    id: "clearConfig",
+    onClick: () => localStorage.clear(),
+    title: "Clear config",
   },
+  // {
+  //   icon: "mdi-database-refresh-outline",
+  //   id: "destroyDatabase",
+  //   title: `Destroy ${appStore.currentSimulator.id} database`,
+  //   onClick: () => {
+  //     appStore.currentSimulator.databases.forEach((url) => {
+  //       const db = new DatabaseService(url);
+  //       db.destroy();
+  //     });
+  //   },
+  // },
 ];
 </script>

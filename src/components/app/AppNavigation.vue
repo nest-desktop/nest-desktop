@@ -45,8 +45,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { useTheme } from "vuetify";
-const theme = useTheme();
+// import { useTheme } from "vuetify";
+// const theme = useTheme();
 
 import { useAppStore } from "@/store/appStore";
 const appStore = useAppStore();
@@ -57,9 +57,9 @@ const navStore = useNavStore();
 const props = defineProps(["navItems"]);
 const navItems = computed(() => props.navItems);
 
-const toggleDevMode = () => {
-  appStore.session.devMode = !appStore.session.devMode;
-};
+// const toggleDevMode = () => {
+//   appStore.session.devMode = !appStore.session.devMode;
+// };
 
 // const toggleWebGL = () => {
 //   appStore.webGL = !appStore.webGL;
@@ -86,19 +86,19 @@ const items: {
   //   title: "sandbox",
   //   to: "/sandbox/",
   // },
-  {
-    click: toggleDevMode,
-    color: appStore.session.devMode ? "green" : "red",
-    icon: "mdi-developer-board",
-    id: "theme-light-dark",
-    title: "Toggle dev mode",
-  },
-  {
-    click: () => appStore.toggleDarkMode(theme),
-    icon: "mdi-theme-light-dark",
-    id: "theme-light-dark",
-    title: "Toggle dark mode",
-  },
+  // {
+  //   click: toggleDevMode,
+  //   color: appStore.session.devMode ? "green" : "red",
+  //   icon: "mdi-developer-board",
+  //   id: "theme-light-dark",
+  //   title: "Toggle dev mode",
+  // },
+  // {
+  //   click: () => appStore.toggleDarkMode(theme),
+  //   icon: "mdi-theme-light-dark",
+  //   id: "theme-light-dark",
+  //   title: "Toggle dark mode",
+  // },
   // {
   //   icon: "mdi-cogs",
   //   id: "settings",

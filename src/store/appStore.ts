@@ -11,6 +11,7 @@ export const useAppStore = defineStore("app-store", {
     autoUpdate: false,
     darkMode: false,
     simulator: "nest",
+    simulatorVisible: ["nest", "norse"]
   }),
   getters: {
     hasSimulator: (state) => {

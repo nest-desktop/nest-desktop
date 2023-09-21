@@ -90,16 +90,13 @@
 
       <v-col md="6">
         <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title> Settings </v-expansion-panel-title>
-
-            <v-expansion-panel-text>
-              <v-tabs density="compact" v-model="tab">
+          <v-expansion-panel title="Backend settings">
+            <v-expansion-panel-text class="ma-0 pa-0">
+              <v-tabs density="compact" v-model="backendTab">
                 <v-tab value="one">NEST Simulator</v-tab>
                 <v-tab value="two">Insite Access</v-tab>
               </v-tabs>
-
-              <v-window v-model="tab">
+              <v-window v-model="backendTab">
                 <v-window-item value="one">
                   <backend-settings :store="nestSimulatorStore" />
                 </v-window-item>
@@ -112,31 +109,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-card class="mt-2" title="Projects">
-          <v-card-subtitle :key="projectStore.projectId">
-            Current project: {{ truncate(projectStore.projectId) }}
-          </v-card-subtitle>
-          <v-list :key="projectDBStore.projects.length" lines="two" nav>
-            <v-list-item :to="{ name: 'nestProjectNew' }">
-              <template #prepend>
-                <v-icon icon="mdi-plus" />
-              </template>
-              New project
-            </v-list-item>
-            <v-divider />
-            <v-list-subheader>Existing projects</v-list-subheader>
-            <v-list-item
-              :key="index"
-              :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
-              :title="project.name"
-              :to="{
-                name: 'nestProject',
-                params: { projectId: project.id },
-              }"
-              v-for="(project, index) in projectDBStore.projects"
-            />
-          </v-list>
-        </v-card>
+        <store-list :stores="stores" simulator="nest" />
       </v-col>
     </v-row>
   </v-container>
@@ -146,11 +119,18 @@
 import { ref } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
+import StoreList from "@/components/StoreList.vue";
+
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
-import { truncate } from "@/utils/truncate";
+
+import { useNESTModelDBStore } from "../store/model/modelDBStore";
+const modelDBStore = useNESTModelDBStore();
 
 import { useNESTProjectDBStore } from "../store/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
+
+import { useNESTModelStore } from "../store/model/modelStore";
+const modelStore = useNESTModelStore();
 
 import { useNESTProjectStore } from "../store/project/projectStore";
 const projectStore = useNESTProjectStore();
@@ -161,5 +141,7 @@ const nestSimulatorStore = useNESTSimulatorStore();
 import { useInsiteAccessStore } from "../store/backends/insiteAccessStore";
 const insiteAccessStore = useInsiteAccessStore();
 
-const tab = ref("one");
+const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
+
+const backendTab = ref("one");
 </script>

@@ -3,29 +3,36 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
-import combineURLs from "@/utils/combineURLs";
+import { combineURLs } from "@/utils/urls";
 import { defineBackendSessionStore } from "./defineBackendSessionStore";
+
+interface DefaultProps {
+  path: string;
+  port: string;
+  protocol: string;
+  url: string;
+}
 
 export function defineBackendStore(
   name: string,
   args: {
-    enabled?: boolean;
-    url: string;
-    defaults: { path: string; port: string; protocol: string };
+    disabled?: boolean;
+    url?: string;
+    defaults: DefaultProps;
   }
 ) {
   return defineStore(name + "-backend-store", {
     state: () => ({
       accessToken: "",
-      enabled: args.enabled || false,
+      enabled: !(args.disabled || false),
       name: name,
-      url: args.url,
+      url: args.url || args.defaults.url,
     }),
     getters: {
       URL(state: any): URL {
         return new URL(state.url);
       },
-      defaults(): { path: string; port: string; protocol: string } {
+      defaults(): DefaultProps {
         return args.defaults;
       },
       session: () => {
@@ -62,6 +69,9 @@ export function defineBackendStore(
           this.ping(protocol + "//" + host)
         );
         return axios.all(hostPromises);
+      },
+      reset(): void {
+        this.url = this.defaults.url;
       },
       /**
        * Ping the server of the backend.

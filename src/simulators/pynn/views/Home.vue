@@ -72,38 +72,14 @@
 
       <v-col md="6">
         <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title> Settings </v-expansion-panel-title>
+          <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
               <backend-settings :store="pynnSimulatorStore" />
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-card class="mt-2">
-          <v-card-title> Projects </v-card-title>
-          <v-list :key="projectDBStore.projects.length" lines="two" nav>
-            <v-list-item :to="{ name: 'pynnProjectNew' }">
-              <template #prepend>
-                <v-icon icon="mdi-plus" />
-              </template>
-              New project
-            </v-list-item>
-            <v-divider />
-            <v-list-subheader>Existing projects</v-list-subheader>
-            <v-list-item
-              :key="index"
-              :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
-              :title="project.name"
-              :to="{
-                name: 'pynnProject',
-                params: { projectId: project.id },
-              }"
-              v-for="(project, index) in projectDBStore.projects"
-            >
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <store-list :stores="stores" simulator="pynn"  />
       </v-col>
     </v-row>
   </v-container>
@@ -111,11 +87,24 @@
 
 <script setup lang="ts">
 import BackendSettings from "@/components/BackendSettings.vue";
+import StoreList from "@/components/StoreList.vue";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
+
+import { usePyNNModelDBStore } from "../store/model/modelDBStore";
+const modelDBStore = usePyNNModelDBStore();
+
+import { usePyNNModelStore } from "../store/model/modelStore";
+const modelStore = usePyNNModelStore();
 
 import { usePyNNProjectDBStore } from "../store/project/projectDBStore";
 const projectDBStore = usePyNNProjectDBStore();
 
+import { usePyNNProjectStore } from "../store/project/projectStore";
+const projectStore = usePyNNProjectStore();
+
 import { usePyNNSimulatorStore } from "../store/backends/pynnSimulatorStore";
 const pynnSimulatorStore = usePyNNSimulatorStore();
+
+const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
+
 </script>
