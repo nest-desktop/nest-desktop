@@ -1,6 +1,10 @@
 {
   "name": "nest-desktop",
+<<<<<<< HEAD
   "version": "3.3.0-rc1",
+=======
+  "version": "3.3.0rc1",
+>>>>>>> b3105d2c (Upgrade node modules)
   "private": false,
   "description": "NEST Desktop is a web-based application which provides a graphical user interface for NEST Simulator.",
   "author": {
@@ -86,7 +90,7 @@
     "chai-as-promised": "~7.1",
     "electron": "26.2.2",
     "electron-devtools-installer": "~3.2",
-    "eslint": "~8.49",
+    "eslint": "~8.50",
     "eslint-plugin-prettier": "~4.2",
     "eslint-plugin-vue": "~8.7",
     "prettier": "~2.8",
