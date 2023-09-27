@@ -1,0 +1,28 @@
+[project]
+name = "nest-desktop"
+description = "A web-based GUI application for spiking neuronal networks"
+license = { text = "MIT" }
+authors = [
+    {name = "Sebastian Spreizer", email = "spreizer@web.de"},
+]
+readme = "README.md"
+requires-python = ">=3.6"
+keywords = ["HTML", "NEST", "Norse", "Simulation"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = []
+dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/nest-desktop/nest-desktop"
+documentation = "https://nest-desktop.readthedocs.io"
+
+[tool.setuptools]
+package-dir = {"nest_desktop" = "nest_desktop"}
+script-files = ["scripts/nest-desktop"]
+
+[tool.setuptools.dynamic]
+version = {attr = "nest_desktop.__version__"}
