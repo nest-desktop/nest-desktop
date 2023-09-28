@@ -1,0 +1,70 @@
+{{ #simulation.code.importModules }}
+# import norse
+# import torch
+# import numpy as np
+{{ /simulation.code.importModules }}
+
+{{ #network.nodes.hasSomeSpikeRecorder }}
+def simulateSpikes(neuron, connection_layer, stimulator, offset=0):
+    output, state = neuron(connection_layer(stimulator))
+    spikes = np.argwhere(output.detach().numpy() == 1)
+    return {"times": spikes[:,0], "senders": spikes[:,1] + offset}
+{{ /network.nodes.hasSomeSpikeRecorder }}
+
+{{ #network.nodes.hasSomeAnalogRecorder }}
+def simulateAnalogs(neuron, connection_layer, stimulator, offset=0):
+    output, state = neuron(connection_layer(stimulator))
+    vm = state.v.detach().numpy()
+    ids, ts  = np.meshgrid(np.arange(0, 1), np.arange(0, {{ simulation.time }}))
+    return {"times": ts.ravel(), "senders": ids.ravel() + offset, "V_m": vm.ravel()}
+{{ /network.nodes.hasSomeAnalogRecorder }}
+
+{{ #simulation.code.createNodes }}
+# Create stimulators
+{{ #network.nodes.stimulators }}
+{{ &code }}
+{{ /network.nodes.stimulators }}
+
+# Create connection layer
+{{ #network.connections.connectionsWithoutRecorders }}
+l{{ idx }} = torch.nn.Linear({{ source.size }}, {{ target.size }}, bias=False)
+l{{ idx }}.weight.data.fill_({{ synapse.weight }}) # all to all connectivity
+{{ /network.connections.connectionsWithoutRecorders }}
+
+# Create neurons
+{{ #network.nodes.neurons }}
+{{ view.label }} = norse.torch.{{ modelId }}({{ #hasSomeVisibleParams }}p=norse.torch.LIFParameters({{ #filteredParams }}
+    {{ id }}=torch.tensor({{ code }}),{{ /filteredParams }})
+{{ /hasSomeVisibleParams }}{{ #network.nodes.hasSomeAnalogRecorder }}
+{{ #hasSomeVisibleParams }}  , {{ /hasSomeVisibleParams }}record_states=True{{ /network.nodes.hasSomeAnalogRecorder }})
+{{ /network.nodes.neurons }}
+{{ /simulation.code.createNodes }}
+
+events = []
+{{ #simulation.code.runSimulation }}
+# Run simulation
+{{ #network.nodes.recorders }}
+{{ #model.isSpikeRecorder }}
+{{ #connectionsNeuronSources }}
+{{ #source.connectionsStimulatorSources }}
+event = simulateSpikes({{ target.view.label }}, l{{ idx }}, {{ source.view.label }}, {{ idx }})
+events.append(event)
+{{ /source.connectionsStimulatorSources }}
+{{ /connectionsNeuronSources }}
+{{ /model.isSpikeRecorder }}
+{{ #model.isAnalogRecorder }}
+{{ #connectionsNeuronTargets }}
+{{ #target.connectionsStimulatorSources }}
+event = simulateAnalogs({{ target.view.label }}, l{{ idx }}, {{ source.view.label }})
+events.append(event)
+{{ /target.connectionsStimulatorSources }}
+{{ /connectionsNeuronTargets }}
+{{ /model.isAnalogRecorder }}
+{{ /network.nodes.recorders }}
+{{ /simulation.code.runSimulation }}
+
+# Get spike times
+response = {
+    "events": events,
+}
+

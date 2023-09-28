@@ -1,0 +1,8 @@
+{
+  "autoUpdate": true,
+  "darkMode": false,
+  "devMode": false,
+  "intervalCheckBackends": 5,
+  "log": false,
+  "pinNav": true
+}

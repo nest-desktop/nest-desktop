@@ -1,9 +1,0 @@
-{
-  "insiteAccess": {
-    "enabled": false
-  },
-  "nestSimulator": {
-    "enabled": true,
-    "url": ""
-  }
-}

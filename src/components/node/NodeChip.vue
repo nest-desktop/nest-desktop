@@ -1,52 +1,42 @@
 <template>
   <div class="nodeChip">
-    <v-chip :color="state.node.view.color" @click="selectNode" outlined small>
-      <span class="font-weight-bold" v-text="state.node.view.label" />
-      <span class="mx-1" v-text="state.node.model.label" />
-      <span class="mx-1" v-if="state.node.network.project.app.config.devMode">
-        ( {{ state.node.view.position.x.toFixed() }},
-        {{ state.node.view.position.y.toFixed() }})
+    <v-chip
+      :color="node.view.color"
+      @click="selectNode"
+      size="small"
+      variant="outlined"
+    >
+      <span class="font-weight-bold">{{ node.view.label }}</span>
+      <span class="mx-1">{{ node.model.label }}</span>
+
+      <span class="mx-1" v-if="appSessionStore.devMode">
+        ( {{ node.view.state.position.x.toFixed() }},
+        {{ node.view.state.position.y.toFixed() }})
       </span>
     </v-chip>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+<script lang="ts" setup>
+import { computed } from "vue";
 
-import { NetworkGraph } from '@/core/network/networkGraph/networkGraph';
-import { Node } from '@/core/node/node';
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
+import { BaseNode } from "@/helpers/node/node";
+import { NodePropTypes } from "@/types/nodeTypes";
+import { useAppSessionStore } from "@/store/appSessionStore";
 
-export default Vue.extend({
-  name: 'NodeChip',
-  props: {
-    graph: NetworkGraph,
-    node: Node,
-  },
-  setup(props) {
-    const state = reactive({
-      graph: props.graph as NetworkGraph,
-      node: props.node as Node,
-    });
+const appSessionStore = useAppSessionStore();
 
-    const selectNode = () => {
-      state.node.state.select();
-      state.graph.update();
-    };
-
-    watch(
-      () => [props.graph, props.node],
-      () => {
-        state.graph = props.graph as NetworkGraph;
-        state.node = props.node as Node;
-      }
-    );
-
-    return {
-      selectNode,
-      state,
-    };
-  },
+const props = defineProps({
+  graph: BaseNetworkGraph,
+  node: NodePropTypes,
 });
+
+const node = computed(() => props.node as BaseNode);
+const graph = computed(() => props.graph as BaseNetworkGraph);
+
+const selectNode = () => {
+  node.value.state.select();
+  graph.value.update();
+};
 </script>

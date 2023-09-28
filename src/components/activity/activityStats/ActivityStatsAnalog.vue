@@ -1,210 +1,179 @@
 <template>
-  <div
+  <v-data-table-virtual
+    :headers="(headers as any)"
+    :items="state.items"
+    :key="state.activityHash"
+    :loading="state.loading"
+    @update:model-value="updateGraph"
     class="activityStatsAnalog"
-    v-if="state.activity && state.activity.hash === state.activityHash"
+    density="compact"
+    fixed-header
+    loading-text="Loading... Please wait"
+    show-select
+    v-model="activity.state.selected"
   >
-    <v-card flat tile>
-      <!-- <v-card-title>
-        <v-text-field
-          v-model="state.search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-card-title> -->
-      <v-card-title class="pa-2">
-        <v-select
-          :items="state.activity.state.records"
-          @change="update"
-          chips
-          dense
-          hide-details
-          item-value="id"
-          return-object
-          v-model="state.selectedRecord"
-        >
-          <template #selection="{ item }">
-            <v-chip
-              :color="item.color"
-              class="mx-2"
-              label
-              outlined
-              small
-              v-text="item.id"
-            />
-            <div style="font-size: 12px">
-              <span v-text="item.label" />
-              <span v-if="item.unit" v-text="` (${item.unit})`" />
-            </div>
-          </template>
-
-          <template #item="{ item }">
-            <v-chip
-              :color="item.color"
-              class="mx-2"
-              label
-              outlined
-              small
-              v-text="item.id"
-            />
-            <div style="font-size: 12px">
-              <span v-text="item.label" />
-              <span v-if="item.unit" v-text="` (${item.unit})`" />
-            </div>
-          </template>
-        </v-select>
-      </v-card-title>
-
-      <v-data-table
-        :headers="state.headers"
-        :items-per-page="15"
-        :items="state.items"
-        :loading="state.loading"
-        dense
-        fixed-header
-        loading-text="Loading... Please wait"
-        sort-by="id"
+    <template #top>
+      <v-select
+        :items="activity.state.records"
+        @update:model-value="selected"
+        density="compact"
+        hide-details
+        item-title="selectTitle"
+        item-value="id"
+        v-model="state.selectedRecord" v-if="activity.recorder.model.isMultimeter"
       >
-        <template #body="{ items }">
-          <tbody>
-            <tr
-              :class="{
-                active: isActive(item.id),
-              }"
-              :key="item.id"
-              @mouseout="activeLineGraph()"
-              @mouseover="activeLineGraph(item.id)"
-              style="cursor: pointer"
-              v-for="item in items"
-            >
-              <td>{{ item.id }}</td>
-              <td>{{ item.mean }}</td>
-              <td>{{ item.std }}</td>
-            </tr>
-          </tbody>
+        <!-- <template #selection="{ item }">
+      <v-list-item min-width="400px">
+        <template #append>
+          <node-record-chip :node-record="item.value" />
+        </template>
+        <span>{{ item.value.labelCapitalize }}</span>
+        <span v-if="item.value.unit"> ({{ item.value.unit }})</span>
+      </v-list-item>
+    </template>
+
+      <template #item="{ item, props: { onClick } }">
+      <v-list-item :value="item.value" @click="onClick">
+        <template #append>
+          <node-record-chip :node-record="item.value" />
         </template>
 
-        <template v-if="state.items.length > 1" #[`body.append`]="{ headers }">
+        <span> {{ item.value.labelCapitalize }}</span>
+        <span v-if="item.value.unit"> ({{ item.value.unit }}) </span>
+      </v-list-item>
+    </template> -->
+      </v-select>
+    </template>
+
+    <template #item.mean="{ item }">
+      {{ toFixed(item.columns.mean) }}
+    </template>
+    <template #item.std="{ item }">
+      {{ toFixed(item.columns.std) }}
+    </template>
+
+    <template #bottom>
+      <div class="wrapper-table">
+        <table>
           <tr>
             <td :key="idx" v-for="(header, idx) in headers">
-              <div v-if="header.value === 'id'" v-text="'All'" />
-              <div v-else-if="['mean', 'std'].includes(header.value)">
+              <div v-if="header.key === 'id'">Total</div>
+              <div v-else-if="['mean', 'std'].includes(header.key)">
                 <span>&#956;</span>
-                = {{ mean(header.value).toFixed(2) }}
+                = {{ toFixed(colMean(header.key)) }}
               </div>
               <div v-else />
             </td>
           </tr>
-        </template>
-      </v-data-table>
-    </v-card>
-  </div>
+        </table>
+      </div>
+    </template>
+  </v-data-table-virtual>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import { onMounted, reactive, watch } from '@vue/composition-api';
-import * as d3 from 'd3';
+<script lang="ts" setup>
+import { computed, onMounted, reactive, watch } from "vue";
 
-import { Activity } from '@/core/activity/activity';
+// import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
+// import { NodeRecord } from "@/helpers/node/nodeRecord";
+import { deviation, mean } from "@/helpers/common/array";
+import { toFixed } from "@/utils/converter";
 
-export default Vue.extend({
-  name: 'ActivityStatsAnalog',
-  props: {
-    activity: Activity,
-  },
-  setup(props) {
-    const state = reactive({
-      activity: undefined as Activity | undefined,
-      activityHash: '',
-      headers: [
-        {
-          text: 'ID',
-          align: 'start',
-          value: 'id',
-        },
-        { text: 'Mean', value: 'mean' },
-        { text: 'Std', value: 'std' },
-      ],
-      items: [],
-      loading: false,
-      search: '',
-      selectedRecord: undefined,
-    });
-
-    const activeLineGraph = (nodeId: number = undefined) => {
-      state.activity.state.activeNodeId =
-        state.activity.state.activeNodeId == nodeId ? undefined : nodeId;
-      state.activity.chartGraph.panels.forEach(panel =>
-        panel.model.updateActiveMarker(state.selectedRecord)
-      );
-      state.activity.chartGraph.react();
-    };
-
-    const isActive = (nodeId: number) => {
-      return state.activity.state.activeNodeId === nodeId;
-    };
-
-    /**
-     * Update stats of analog activity.
-     */
-    const update = () => {
-      state.items = [];
-      if (
-        state.selectedRecord == null &&
-        state.activity.state.records.length > 0
-      ) {
-        state.selectedRecord = state.activity.state.records[0];
-      }
-      if (state.activity != undefined) {
-        state.loading = true;
-        const activityData: any[] =
-          state.activity.events[state.selectedRecord.id];
-        const data: any[] = Object.create(null);
-        state.activity.nodeIds.forEach(id => (data[id] = []));
-        state.activity.events.senders.forEach((sender: number, idx: number) => {
-          data[sender].push(activityData[idx]);
-        });
-        state.items = state.activity.nodeIds.map(id => {
-          const d: any = data[id];
-          return {
-            id,
-            mean: d.length > 0 ? d3.mean(d).toFixed(2) : NaN,
-            std: d.length > 0 ? d3.deviation(d).toFixed(2) : NaN,
-          };
-        });
-        state.activityHash = state.activity.hash;
-        state.loading = false;
-      }
-    };
-
-    const sum = (key: string) => {
-      return d3.sum(state.items.map(item => item[key]));
-    };
-
-    const mean = (key: string) => {
-      return d3.mean(state.items.map(item => item[key]));
-    };
-
-    onMounted(() => {
-      state.activity = props.activity as Activity;
-      update();
-    });
-
-    watch(
-      () => props.activity,
-      () => update()
-    );
-
-    return {
-      activeLineGraph,
-      isActive,
-      mean,
-      state,
-      sum,
-      update,
-    };
-  },
+const props = defineProps({
+  activity: AnalogSignalActivity,
 });
+
+const activity = computed(() => props.activity as AnalogSignalActivity);
+
+const state = reactive({
+  activityHash: "",
+  items: [] as { [key: string]: number | string }[],
+  loading: false,
+  // @ts-ignore
+  selectedRecord: "",
+});
+
+const headers = [
+  {
+    title: "ID",
+    align: "start",
+    key: "id",
+  },
+  { title: "Mean", key: "mean" },
+  { title: "Std", key: "std" },
+];
+
+// const activeLineGraph = (nodeId?: number) => {
+//   activity.state.activeNodeId =
+//     activity.state.activeNodeId == nodeId ? undefined : nodeId;
+//   activity.chartGraph?.panels.forEach((panel) =>
+//     panel.model.updateActiveMarker(state.selectedRecord as NodeRecord)
+//   );
+//   activity.chartGraph?.react();
+// };
+
+// const isActive = (nodeId: number) => {
+//   return activity.state.activeNodeId === nodeId;
+// };
+
+const selected = () => {
+  setTimeout(() => update(), 1);
+};
+
+/**
+ * Update stats of analog activity.
+ */
+const update = () => {
+  state.loading = true;
+  state.items = [];
+
+  if (!state.selectedRecord && activity.value.state.records.length > 0) {
+    state.selectedRecord = activity.value.state.records[0].id;
+  }
+
+  if (activity.value && state.selectedRecord) {
+    const activityData: any[] = activity.value.events[state.selectedRecord];
+    const data: any[] = Object.create(null);
+    activity.value.nodeIds.forEach((id) => (data[id] = []));
+    activity.value.events.senders.forEach((sender: number, idx: number) => {
+      data[sender].push(activityData[idx]);
+    });
+    state.items = activity.value.nodeIds.map((id: number) => {
+      const d: number[] = data[id];
+      return {
+        id,
+        mean: d.length > 0 ? mean(d) : NaN,
+        std: d.length > 0 ? deviation(d) : NaN,
+      };
+    });
+  }
+  state.activityHash = activity.value.state.hash;
+  state.loading = false;
+};
+
+const updateGraph = () => {
+  setTimeout(() => activity.value.chartGraph.update(), 1)
+}
+
+const colMean = (key: string) => {
+  return mean(state.items.map((item) => item[key]) as number[]);
+};
+
+onMounted(() => {
+  update();
+});
+
+watch(
+  () => activity.value.state.hash,
+  () => update()
+);
 </script>
+
+<style lang="scss">
+.wrapper-table {
+  table {
+    width: 100%;
+  }
+}
+</style>

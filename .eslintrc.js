@@ -3,20 +3,18 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['plugin:vue/essential', '@vue/prettier', '@vue/typescript'],
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-  },
-  parserOptions: {
-    parser: '@typescript-eslint/parser',
-  },
-  overrides: [
-    {
-      files: ['**/__tests__/*.{j,t}s?(x)'],
-      env: {
-        mocha: true,
-      },
-    },
+  extends: [
+    "plugin:vue/vue3-essential",
+    "eslint:recommended",
+    "@vue/eslint-config-typescript",
   ],
+  rules: {
+    "vue/multi-word-component-names": "off",
+    "vue/valid-v-slot": [
+      "error",
+      {
+        allowModifiers: true,
+      },
+    ],
+  },
 };

@@ -1,7 +1,7 @@
 /.git
 /.github
 /build
-/dist
+#/dist
 /dist_electron
 /docs
 /icon

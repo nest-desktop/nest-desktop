@@ -11,19 +11,23 @@ COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the built app from the build folder to the NGINX serve folder
-COPY ./nest_desktop/app/ /usr/share/nginx/html/
+COPY ./dist /usr/share/nginx/html/
 
 # Run nginx as non-root
-RUN chmod -R 777 /var/cache/nginx
-
-RUN touch /var/run/nginx.pid && \
+RUN chmod -R 777 /usr/share/nginx/html/assets && \
+    chmod -R 777 /var/cache/nginx && \
+    touch /var/run/nginx.pid && \
     chmod -R 777 /var/run/nginx.pid
 
-EXPOSE 54286
+# Copy entrypoint.sh and make it executable
+COPY ./docker/simulators /usr/local/bin/simulators
+RUN chmod +x -R /usr/local/bin/simulators
 
 # Copy entrypoint.sh and make it executable
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 54286
 
 # Define the entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

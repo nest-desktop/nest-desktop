@@ -1,0 +1,28 @@
+{
+  "abbreviation": "sg",
+  "elementType": "stimulator",
+  "id": "spike_generator",
+  "label": "spike generator",
+  "codeTemplate": "{{ view.label }} = torch.zeros({{ simulation.time }}, {{ size }}){{ #params.spike_times.value }}\n{{ view.label }}[{{ &value }}] = 1{{ /params.spike_times.value }}",
+  "params": [
+    {
+      "id": "spike_times",
+      "input": "arrayInput",
+      "label": "spike times",
+      "rules": [
+        [
+          "value.slice(1).every((item, idx) => value[idx] < item)",
+          "The values must be sorted in ascending order.",
+          "error"
+        ]
+      ],
+      "unit": "ms"
+    },
+    {
+      "id": "spike_weights",
+      "input": "arrayInput",
+      "label": "weights of spike",
+      "unit": "pA"
+    }
+  ]
+}

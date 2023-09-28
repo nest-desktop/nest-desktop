@@ -1,0 +1,25 @@
+# Create nodes
+{{ #network.nodes.all }}
+{{ view.label }} = create("{{ modelId }}"{{ #sizeVisible }}, {{ n }}{{ /sizeVisible }}{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.nodes.all }}
+
+# Connect nodes
+{{ #network.connections.all }}
+connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule.value }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
+  "rule": "{{ rule.value }}",
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.connections.all }}
+
+# Run simulation
+simulate({{ simulation.time }})
+
+response = {
+  "events": [{{ #network.nodes.recorders }}{{ view.label }}.events, {{ /network.nodes.recorders }}]
+}

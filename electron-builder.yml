@@ -1,17 +1,28 @@
-appId: 'com.electron.nest-desktop'
+appId: com.electron.nest-desktop
+asar: true
 deb:
   depends:
-    - gconf2
     - gconf-service
+    - gconf2
     - libnotify4
-    - libxtst6
     - libnss3
-  synopsis: 'NEST Desktop'
-icon: 'icons/icon.png'
+    - libxtst6
+  synopsis: NEST Desktop
+icon: icons/icon.png
 linux:
-  category: 'Education;Science'
+  category: Education;Science
   target:
     # - AppImage
     - deb
     # - snap
-productName: 'nest-desktop'
+productName: nest-desktop
+directories:
+  # buildResources: "assets"
+  output: "release"
+files:
+  # - assets
+  - dist
+  - dist-electron
+# extraResources:
+#   from: public/assets
+#   to: assets

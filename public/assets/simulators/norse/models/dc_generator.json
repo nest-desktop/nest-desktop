@@ -1,0 +1,20 @@
+{
+  "abbreviation": "dc",
+  "elementType": "stimulator",
+  "id": "dc_generator",
+  "label": "direct current",
+  "codeTemplate": "{{ view.label }} = torch.ones({{ simulation.time }}, {{ size }}) * {{ params.amplitude.value }}",
+  "recordables": ["I"],
+  "params": [
+    {
+      "id": "amplitude",
+      "input": "valueSlider",
+      "label": "amplitude of current",
+      "max": 10,
+      "min": -10,
+      "step": 0.01,
+      "unit": "pA",
+      "value": 0
+    }
+  ]
+}

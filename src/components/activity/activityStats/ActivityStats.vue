@@ -1,108 +1,90 @@
 <template>
-  <div class="activityStats">
-    <v-card class="ma-2px" flat tile>
-      <!-- <v-subheader v-text="'Activity statistics'" /> -->
+  <div class="activityStatsViewer">
+    <v-toolbar color="transparent" density="compact">
+      <v-toolbar-title> Activity stats </v-toolbar-title>
+    </v-toolbar>
 
+    <v-layout class="activityStats ml-1" full-height v-resize="onResize">
+      <!-- <v-subheader v-text="'Activity statistics'" /> -->
       <v-expansion-panels
-        accordion
-        flat
-        v-model="projectView.state.project.state.activityStatsPanelId"
+        mandatory
+        v-model="activities.state.activityStatsPanelId"
+        variant="accordion"
       >
         <v-expansion-panel
-          :disabled="!activity.hasEvents"
           :key="index"
-          v-for="(activity, index) in projectView.state.project.activities"
+          v-for="(activity, index) in activities.all"
         >
-          <v-expansion-panel-header>
-            <v-card flat tile>
-              <v-sheet :color="activity.recorder.view.color">
-                <v-card class="ml-1" flat tile>
-                  <v-btn
-                    :color="activity.recorder.view.color"
-                    :dark="projectView.config.coloredToolbar"
-                    :height="48"
-                    :ripple="false"
-                    :text="!projectView.config.coloredToolbar"
-                    block
-                    depressed
-                    tile
-                  >
-                    <v-row>
-                      <v-col cols="3" v-text="activity.recorder.view.label" />
-                      <v-col cols="9" v-text="activity.recorder.model.label" />
-                    </v-row>
-                  </v-btn>
-                </v-card>
-              </v-sheet>
-            </v-card>
+          <v-expansion-panel-title class="py-0">
+            <v-row class="text-button">
+              <node-avatar :node="activity.recorder" />
+              <v-spacer />
+              <div>
+                {{ activity.recorder.model.label }}
+              </div>
+              <v-spacer />
+            </v-row>
+          </v-expansion-panel-title>
 
-            <template #actions>
-              <v-icon
-                :color="activity.recorder.view.color"
-                class="mx-3"
-                v-text="'$expand'"
-              />
-            </template>
-          </v-expansion-panel-header>
-
-          <v-expansion-panel-content
-            :key="projectView.state.project.simulation.code.hash"
-            v-if="activity.hasEvents"
+          <v-expansion-panel-text
+            :key="activities.state.hash"
+            class="ma-0 pa-0"
           >
-            <v-card flat tile>
-              <v-sheet :color="activity.recorder.view.color">
-                <v-card class="ml-1" flat tile>
-                  <ActivityStatsSpike
-                    :activity="activity"
-                    v-if="activity.recorder.model.isSpikeRecorder"
-                  />
-                  <ActivityStatsAnalog
-                    :activity="activity"
-                    v-if="activity.recorder.model.isAnalogRecorder"
-                  />
-                </v-card>
-              </v-sheet>
-            </v-card>
-          </v-expansion-panel-content>
+            <activity-stats-spike
+              :activity="activity as SpikeActivity"
+              :height="state.height"
+              v-if="activity.recorder.model.isSpikeRecorder"
+            />
+
+            <activity-stats-analog
+              :activity="activity as AnalogSignalActivity"
+              :height="state.height - (activity.recorder.model.isMultimeter ? 60 :  0)"
+              v-if="activity.recorder.model.isAnalogRecorder"
+            />
+          </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-    </v-card>
+    </v-layout>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
+<script lang="ts" setup>
+import { computed, reactive } from "vue";
 
-import core from '@/core';
-import ActivityStatsAnalog from '@/components/activity/activityStats/ActivityStatsAnalog.vue';
-import ActivityStatsSpike from '@/components/activity/activityStats/ActivityStatsSpike.vue';
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import { Activities } from "@/helpers/activity/activities";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
-export default Vue.extend({
-  name: 'ActivityStats',
-  components: {
-    ActivityStatsAnalog,
-    ActivityStatsSpike,
-  },
-  setup() {
-    const projectView = core.app.project.view;
-    return { projectView };
-  },
+import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
+import ActivityStatsSpike from "./ActivityStatsSpike.vue";
+
+const props = defineProps({
+  activities: Activities,
+})
+
+const activities = computed(() => props.activities as Activities);
+
+const state = reactive({
+  height: 700,
 });
+
+const onResize = () => {
+  state.height =
+    window.innerHeight -
+    24 - // system bar
+    48 - // project bar
+    52 - // toolbar
+    64 - // expansion panel title
+    48 - // data table footer
+    (activities.value.all.length - 1) * 48; // other closed expansion panel
+};
 </script>
 
-<style>
-.activityStats .v-expansion-panel {
-  border-width: 1px 1px 1px 0;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  margin: 1px;
-}
-
-.activityStats .v-expansion-panel-content__wrap {
-  padding: 0;
-}
-.activityStats .v-expansion-panel > .v-expansion-panel-header,
-.activityStats .v-expansion-panel--active > .v-expansion-panel-header {
-  min-height: 40px;
-  padding: 0;
+<style lang="scss">
+.activityStats {
+  .v-expansion-panel-text__wrapper {
+    padding: 8px 0 0 0;
+  }
 }
 </style>
