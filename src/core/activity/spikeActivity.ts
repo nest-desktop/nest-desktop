@@ -14,6 +14,8 @@ export class SpikeActivity extends Activity {
    */
   override postInit(): void {
     this._times = Object.create(null);
+    if (this.nodeIds.length === 0) return;
+
     this.nodeIds.forEach((id: number) => (this._times[id] = []));
     this.updateTimes(this.events);
   }
@@ -22,6 +24,7 @@ export class SpikeActivity extends Activity {
    * Post-update spike activity.
    */
   override postUpdate(activity: any): void {
+    if (activity.events == undefined) return;
     this.updateTimes(activity.events);
   }
 
@@ -29,6 +32,15 @@ export class SpikeActivity extends Activity {
    * Update times for ISI or CV(ISI).
    */
   updateTimes(events: any): void {
+    if (
+      events.senders == undefined ||
+      events.times == undefined ||
+      events.senders.length === 0 ||
+      events.times.length === 0
+    ) {
+      return;
+    }
+
     events.senders.forEach((sender: number, idx: number) => {
       this._times[sender].push(this.events.times[idx]);
     });
@@ -90,33 +102,5 @@ export class SpikeActivity extends Activity {
    */
   override clone(): SpikeActivity {
     return new SpikeActivity(this.recorder, this.toJSON());
-  }
-
-  /**
-   * Get activity from Insite.
-   */
-  override getActivityInsite(): void {
-    if (!this.project.insite.state.on) {
-      return;
-    }
-
-    const path = `nest/spikerecorders/${this.recorderUnitId}/spikes/?fromTime=${
-      this.lastTime + 0.1
-    }`;
-    this.project.app.backends.insiteAccess.instance
-      .get(path)
-      .then((response: any) => {
-        this.update({
-          events: {
-            senders: response.data.nodeIds, // y
-            times: response.data.simulationTimes, // x
-          },
-        });
-
-        // Recursive call after 500ms.
-        setTimeout(() => {
-          this.getActivityInsite();
-        }, 500);
-      });
   }
 }

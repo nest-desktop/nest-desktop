@@ -52,8 +52,8 @@ export class Project {
     project = upgradeProject(this._app, project);
 
     // Initialize simulation and network.
-    this._simulation = new Simulation(this, project.simulation);
     this.initNetwork(project.network);
+    this._simulation = new Simulation(this, project.simulation);
 
     // Initialize activity graph.
     this._activityGraph = new ActivityGraph(this, project.activityGraph);
@@ -436,7 +436,7 @@ export class Project {
    */
   startSimulation(): void {
     // Stop getting activities from Insite.
-    this.insite.cancelGettingActivity();
+    this.insite.cancelAllIntervals();
 
     // Reset activities and activity graphs.
     this.resetActivities();
@@ -459,7 +459,13 @@ export class Project {
     });
 
     if (this._simulation.code.runSimulationInsite) {
-      // Get activities from the Insite Access Node.
+      // Update time info during the simulation.
+      this.insite.continuouslyUpdateSimulationTimeInfo(250);
+
+      // Update activity graph during the simulation.
+      this.insite.continuouslyUpdateActivityGraph(500);
+
+      // Get activities from Insite.
       this.insite.getActivities();
     }
   }

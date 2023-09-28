@@ -31,7 +31,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { onMounted, reactive } from '@vue/composition-api';
+import { onMounted, onUpdated, reactive } from '@vue/composition-api';
+import { Route } from 'vue-router';
 
 import core from '@/core';
 
@@ -81,6 +82,21 @@ export default Vue.extend({
       window.location.reload();
     };
 
+    /**
+     * Get parameter from URL.
+     */
+    const getParamFromURL = (route: Route, paramKey: string) => {
+      let param: string;
+      if (route.query[paramKey]) {
+        param = route.query[paramKey] as string;
+      } else if (route.params[paramKey]) {
+        param = route.params[paramKey] as string;
+      } else {
+        param = new URLSearchParams(window.location.search).get(paramKey);
+      }
+      return param;
+    };
+
     onMounted(() => {
       // Check if new updates existed.
       document.addEventListener('swUpdated', updateAvailable, {
@@ -99,6 +115,38 @@ export default Vue.extend({
         window.onbeforeunload = () =>
           core.app.project.checkSomeProjectChanges() ? '' : null;
       }
+    });
+
+    onUpdated(() => {
+      const nestServerURL = getParamFromURL(
+        context.root.$route,
+        'nest_server_url'
+      );
+      if (nestServerURL) {
+        core.app.backends.nestSimulator.url = nestServerURL;
+      }
+
+      const nestServerAccessToken = 'nest_server_access_token';
+      let token: string;
+
+      // Store access token for NEST Server to local storage.
+      token = getParamFromURL(context.root.$route, nestServerAccessToken);
+      if (token) {
+        localStorage.setItem(nestServerAccessToken, token);
+      }
+
+      token = localStorage.getItem(nestServerAccessToken);
+      if (token) {
+        // Update access token for NEST Server from local storage.
+        const nestSimulatorInstance = core.app.backends.nestSimulator.instance;
+        nestSimulatorInstance.defaults.headers.common.NESTServerAuth = token;
+      }
+
+      // Check if backends is running.
+      core.app.checkBackends().then(() => {
+        // Fetch models from NEST Simulator.
+        core.app.model.fetchModelsNEST();
+      });
     });
 
     return { core, refreshApp, state };

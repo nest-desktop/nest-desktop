@@ -37,7 +37,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 
 # Create nodes
 {{ #network.nodes }}
-{{ view.label }} = nest.Create("{{ modelId }}", {{ n }}{{ #hasSomeVisibleParams }}, params={
+{{ view.label }} = nest.Create("{{ modelId }}"{{ ^spatial.hasGridPositions }}, {{ n }}{{ /spatial.hasGridPositions }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ valueFixed }},
 {{ /filteredParams }}
@@ -67,8 +67,8 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 
 # Connect nodes
 {{ #network.connections }}
-nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
-  "rule": "{{ rule }}",
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule.value }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
+  "rule": "{{ rule.value }}",
 {{ #filteredParams }}
   "{{ id }}": {{ value }},
 {{ /filteredParams }}

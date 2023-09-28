@@ -59,7 +59,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         label: 'Horizontal line for time constant (63%)',
         show: false,
         value: false,
-      }
+      },
     ];
 
     this.initParams(model.params);
@@ -67,8 +67,8 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
 
   get binSize(): number {
     return this.params[0].value;
-  }  
-  
+  }
+
   get horizontalLine(): string {
     return this.params[3].value;
   }

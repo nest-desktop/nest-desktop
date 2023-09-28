@@ -48,6 +48,11 @@ export class App extends Config {
       port: 52056,
       versionPath: '/',
     });
+    this._backends.coSim = new Backend('CoSim', {
+      path: '/cosim',
+      port: 52428,
+      versionPath: '/',
+    });
 
     this._model = new ModelStore(this);
     this._project = new ProjectStore(this);
@@ -118,14 +123,8 @@ export class App extends Config {
     // Update configs from global config.
     this.updateConfigs(config);
 
-    // Check if backends is running.
-    this.checkBackends().then(() => {
-      // Fetch models from NEST Simulator.
-      this._model.fetchModelsNEST();
-
-      // Fetch model files from Github.
-      this._model.fetchModelFilesGithub();
-    });
+    // Fetch model files from Github.
+    this._model.fetchModelFilesGithub();
 
     if (
       this.config.intervalCheckBackends > 0 &&

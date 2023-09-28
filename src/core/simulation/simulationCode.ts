@@ -10,8 +10,8 @@ export class SimulationCode {
   private _simulation: Simulation; // parent
   private _state: {
     codeInsite: boolean;
-    blocks: String[];
-    version: string;
+    blocks: string[];
+    template: string;
   };
 
   constructor(simulation: Simulation, simulationCode: any = {}) {
@@ -28,7 +28,7 @@ export class SimulationCode {
             'connectNodes',
             'runSimulation',
           ],
-      version: 'v3.3',
+      template: simulationCode.template || 'nest-v3.4+',
     });
 
     this.clean();
@@ -99,6 +99,10 @@ export class SimulationCode {
     return this._state;
   }
 
+  get tagAnnotations(): boolean {
+    return this._state.blocks.includes('tagAnnotations');
+  }
+
   /**
    * Clean the simulation code.
    */
@@ -115,7 +119,7 @@ export class SimulationCode {
    */
   generate(): void {
     const template =
-      require(`./simulationCodes/nest-${this._state.version}.code`).default;
+      require(`./simulationCodes/${this._state.template}.code`).default;
 
     const data = this._simulation.project;
     this._script = Mustache.render(template, data);
@@ -175,6 +179,6 @@ export class SimulationCode {
    * @return simulation code object
    */
   toJSON(): any {
-    return { blocks: this._state.blocks };
+    return { blocks: this._state.blocks, template: this._state.template };
   }
 }

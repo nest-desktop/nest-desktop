@@ -20,6 +20,10 @@ export class NodeSpatial extends Config {
     return this.positions ? this.positions.toPythonCode() : '';
   }
 
+  get hasGridPositions(): boolean {
+    return this._positions?.name === 'grid';
+  }
+
   get hash(): string {
     return this._hash;
   }

@@ -212,6 +212,7 @@ export class ProjectStore {
    */
   loadProject(project: any): void {
     this.consoleLog('Load project');
+    this.project.insite.cancelAllIntervals();
     const projectIds = this._state.projects.map((project: any) => project.id);
     const projectIdx = projectIds.indexOf(project.id);
     if (project.doc == undefined) {
@@ -269,7 +270,7 @@ export class ProjectStore {
    */
   getProjectFromFile(filename: string): Project {
     this.consoleLog('Get project from file');
-    const data: any = require(`../../assets/projects/${filename}.json`);
+    const data: any = require(`@/assets/projects/${filename}.json`);
     return new Project(this._app, data);
   }
 

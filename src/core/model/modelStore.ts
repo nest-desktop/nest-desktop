@@ -120,7 +120,7 @@ export class ModelStore {
   async importModelFromGithub(modelId: string = ''): Promise<any> {
     this.consoleLog('Import model from GitHub');
     const url =
-      'https://raw.githubusercontent.com/nest-desktop/nest-desktop-models/main/';
+      'https://raw.githubusercontent.com/nest-desktop/nest-desktop-models/v3/';
     const path: string = this._state.filesGithub.find((file: string) =>
       file.includes('/' + (modelId || this._state.modelId))
     );

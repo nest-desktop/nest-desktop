@@ -71,7 +71,6 @@ export class ProjectView extends Config {
     // Global state for project view.
     this._state = reactive({
       activityGraph: 'abstract',
-      fromTime: 0,
       modeIdx: 0,
       networkGraphHeight: 'calc(100vh - 48px)',
       project: new Project(this._app),

@@ -280,7 +280,7 @@ export default Vue.extend({
       if (!Object.keys(state.selectedTree).includes('path')) {
         return;
       }
-      const url = `https://raw.githubusercontent.com/nest-desktop/nest-desktop-projects/main/${state.selectedTree['path']}/${state.selectedFile['path']}`;
+      const url = `https://raw.githubusercontent.com/nest-desktop/nest-desktop-projects/v3/${state.selectedTree['path']}/${state.selectedFile['path']}`;
       getProjectsFromUrl(url);
     };
 

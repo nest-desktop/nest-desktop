@@ -41,6 +41,12 @@ export class Network extends Config {
     return this._connections;
   }
 
+  get connectionsExcludeRecorders(): Connection[] {
+    return this._connections.filter(
+      (connection: Connection) => !connection.view.connectRecorder()
+    );
+  }
+
   set connections(values: Connection[]) {
     this._connections = values;
     this._connections.forEach((connection: Connection) => {
@@ -157,6 +163,23 @@ export class Network extends Config {
     return this._models.filter((model: CopyModel) => model.model.isSynapse);
   }
 
+  get nodesUserDict(): any {
+    const userDict = {};
+    this._project.network.nodes
+      .filter((node: Node) => node.annotations.length > 0)
+      .forEach((node: Node) => {
+        const nodeLabel = node.view.label;
+        node.annotations.forEach((annotation: string) => {
+          if (annotation in userDict) {
+            userDict[annotation].push(nodeLabel);
+          } else {
+            userDict[annotation] = [nodeLabel];
+          }
+        });
+      });
+    return userDict;
+  }
+
   get visibleNodes(): Node[] {
     return this._nodes.filter((node: Node) => node.view.visible);
   }
@@ -210,6 +233,7 @@ export class Network extends Config {
   networkChanges(): void {
     this.clean();
 
+    this._state.updateNodeAnnotations();
     this._project.simulation.code.generate();
     this._state.updateHash();
     this._project.state.updateHash();

@@ -125,7 +125,7 @@
                 >
                   <v-img
                     :src="
-                      require(`@/assets/img/logo/` +
+                      require('@/assets/img/logo/' +
                         ($vuetify.theme.dark
                           ? reference.iconSrcDark
                           : reference.iconSrc))
