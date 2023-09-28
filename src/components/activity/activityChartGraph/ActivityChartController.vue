@@ -122,8 +122,8 @@ import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
 
-import { ActivityChartPanel } from "./activityChartPanel";
-import { ActivityChartGraph } from "./activityChartGraph";
+import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 // import ActivityChartPanelMenuPopover from "@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue";

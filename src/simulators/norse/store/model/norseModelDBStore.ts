@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { NorseModel } from "@norse/components/model/norseModel";
+import { NorseModel } from "@norse/helpers/model/norseModel";
 import { NorseModelDB } from "./norseModelDB";
 
 const logger = mainLogger.getSubLogger({ name: "model DB store" });

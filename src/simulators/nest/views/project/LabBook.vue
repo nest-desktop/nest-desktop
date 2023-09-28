@@ -40,10 +40,11 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import NetworkGraph from "@nest/components/network/NetworkGraph.vue";
+import NetworkGraph from "@nest/components/network/NestNetworkGraph.vue";
+
 import NodeViewer from "@nest/components/node/NodeViewer.vue";
-import { NESTNetwork } from "@nest/components/network/nestNetwork";
-import { NESTNode } from "@nest/components/node/nestNode";
+import { NESTNetwork } from "@nest/helpers/network/nestNetwork";
+import { NESTNode } from "@nest/helpers/node/nestNode";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();

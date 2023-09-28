@@ -2,7 +2,7 @@
 
 import { DatabaseService } from "@/helpers/database";
 
-import { NESTModel } from "@nest/components/model/nestModel";
+import { NESTModel } from "@nest/helpers/model/nestModel";
 
 export class NESTModelDB extends DatabaseService {
   constructor() {

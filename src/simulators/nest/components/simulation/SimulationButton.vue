@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { NESTSimulation } from "./nestSimulation";
+import { NESTSimulation } from "@nest/helpers/simulation/nestSimulation";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();

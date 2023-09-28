@@ -56,10 +56,10 @@ import Card from "@/components/common/Card.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
 import ConnectionViewer from "@nest/components/connection/ConnectionViewer.vue";
-import { NESTConnection } from "@nest/components/connection/nestConnection";
+import { NESTConnection } from "@nest/helpers/connection/nestConnection";
+import { NESTNode } from "@nest/helpers/node/nestNode";
 
 import NodeParamViewer from "./NodeParamViewer.vue";
-import { NESTNode } from "./nestNode";
 
 const props = defineProps({
   node: NESTNode,

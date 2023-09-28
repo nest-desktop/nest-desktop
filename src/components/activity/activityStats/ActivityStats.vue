@@ -52,19 +52,19 @@
 import { computed, reactive } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import { Project, ProjectPropTypes } from "@/types/projectTypes";
-
-import { AnalogSignalActivity } from "../analogSignalActivity";
-import { SpikeActivity } from "../spikeActivity";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
+import { ProjectPropTypes } from "@/types/projectTypes";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
+import { BaseProject } from "@/helpers/project/baseProject";
 
 const props = defineProps({
   project: ProjectPropTypes,
 })
 
-const project = computed(() => props.project as Project);
+const project = computed(() => props.project as BaseProject);
 
 const state = reactive({
   height: 700,

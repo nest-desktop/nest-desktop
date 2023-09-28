@@ -1,7 +1,7 @@
 // networkGraphTypes.ts
 
-import { BaseNetworkGraph } from "@/components/network/networkGraph/baseNetworkGraph";
-import { NESTNetworkGraph } from "@/simulators/nest/components/network/networkGraph/nestNetworkGraph";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/baseNetworkGraph";
+import { NESTNetworkGraph } from "@nest/helpers/network/nestNetworkGraph";
 
 export type NetworkGraph = BaseNetworkGraph | NESTNetworkGraph;
 

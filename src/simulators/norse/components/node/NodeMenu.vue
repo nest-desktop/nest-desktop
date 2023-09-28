@@ -146,7 +146,7 @@ import { computed, onMounted, reactive } from "vue";
 
 import ModelDocumentation from "@norse/views/model/ModelDoc.vue";
 
-import { NorseNode } from "./norseNode";
+import { NorseNode } from "@norse/helpers/node/norseNode";
 
 const props = defineProps({
   node: NorseNode,

@@ -29,7 +29,7 @@
 import { computed } from "vue";
 
 import SimulationButton from "@nest/components/simulation/SimulationButton.vue";
-import { NESTProject } from "@nest/components/project/nestProject";
+import { NESTProject } from "@nest/helpers/project/nestProject";
 
 import { useNESTProjectStore } from "@nest/store/project/nestProjectStore";
 const projectStore = useNESTProjectStore();

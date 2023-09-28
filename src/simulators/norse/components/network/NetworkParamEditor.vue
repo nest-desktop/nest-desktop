@@ -34,8 +34,8 @@ import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
 
-import { NorseNetwork } from "./norseNetwork"
-import { NorseNode } from "../node/norseNode";
+import { NorseNetwork } from "@norse/helpers/network/norseNetwork"
+import { NorseNode } from "@norse/helpers/node/norseNode";
 import NodeEditor from "@norse/components/node/NodeEditor.vue";
 
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";

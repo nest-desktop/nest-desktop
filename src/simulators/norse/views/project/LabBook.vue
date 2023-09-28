@@ -11,7 +11,7 @@
     <v-col class="pa-1" cols="12" md="4" sm="6">
       <div class="text-button">Stimulator</div>
       <node-viewer
-        :node="(node as Node)"
+        :node="(node as NorseNode)"
         :key="index"
         v-for="(node, index) in network.nodes.stimulators"
       />
@@ -20,7 +20,7 @@
     <v-col class="pa-1" cols="12" md="4" sm="6">
       <div class="text-button">Neuron</div>
       <node-viewer
-        :node="(node as Node)"
+        :node="(node as NorseNode)"
         :key="index"
         v-for="(node, index) in network.nodes.neurons"
       />
@@ -29,7 +29,7 @@
     <v-col class="pa-1" cols="12" md="4" sm="6">
       <div class="text-button">Recorder</div>
       <node-viewer
-        :node="(node as Node)"
+        :node="(node as NorseNode)"
         :key="index"
         v-for="(node, index) in network.nodes.recorders"
       />
@@ -41,11 +41,11 @@
 import { computed } from "vue";
 
 import { Network } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 
 import NodeViewer from "@norse/components/node/NodeViewer.vue";
 import { useNorseProjectStore } from "@norse/store/project/norseProjectStore";
+import { NorseNode } from "@norse/helpers/node/norseNode";
 
 const projectStore = useNorseProjectStore();
 const network = computed(() => projectStore.project.network as Network);

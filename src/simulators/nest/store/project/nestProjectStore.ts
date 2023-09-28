@@ -2,10 +2,11 @@
 
 import { defineStore } from "pinia";
 
-import { logger as mainLogger } from "@/helpers/logger";
 import router from "@/router";
+import { logger as mainLogger } from "@/helpers/logger";
 
-import { NESTProject } from "@nest/components/project/nestProject";
+import { NESTProject } from "@nest/helpers/project/nestProject";
+
 import { useNESTProjectDBStore } from "./nestProjectDBStore";
 // import { useActivityGraphStore } from "../graph/activityGraphStore";
 

@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { download } from "@/utils/download";
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { NorseProject, NorseProjectProps } from "@norse/components/project/norseProject";
+import { NorseProject, NorseProjectProps } from "@norse/helpers/project/norseProject";
 import { NorseProjectDB } from "./norseProjectDB";
 
 const logger = mainLogger.getSubLogger({ name: "norse project DB store" });

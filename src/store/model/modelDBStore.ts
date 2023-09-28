@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/logger";
 
-import { BaseModel } from "@/components/model/baseModel";
+import { BaseModel } from "@/helpers/model/baseModel";
 import { Model } from "@/types/modelTypes";
 import { ModelDB } from "./modelDB";
 

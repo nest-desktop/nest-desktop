@@ -59,7 +59,8 @@ import { computed } from "vue";
 import RangeSlider from "@/components/controls/RangeSlider.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { NodeParameter } from "@/components/node/nodeParameter";
+
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 const props = defineProps({
   param: NodeParameter,

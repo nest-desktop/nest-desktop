@@ -42,14 +42,15 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { SimulationPropTypes } from "@/types/simulationTypes";
+import { BaseSimulation } from "@/helpers/simulation/baseSimulation";
 
 const props = defineProps({
   simulation: SimulationPropTypes,
   disabled: Boolean,
 });
 
-const simulation = computed(() => props.simulation as Simulation);
+const simulation = computed(() => props.simulation as BaseSimulation);
 
 const state = reactive({
   disabled: false,

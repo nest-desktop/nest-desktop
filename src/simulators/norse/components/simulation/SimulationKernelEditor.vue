@@ -26,7 +26,8 @@ import { computed } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import Card from "@/components/common/Card.vue";
-import { NorseSimulation } from "./norseSimulation";
+
+import { NorseSimulation } from "@norse/helpers/simulation/norseSimulation";
 
 
 const props = defineProps({
