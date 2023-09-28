@@ -62,7 +62,7 @@
             cols="4"
             v-text="'Contact'"
           />
-          <v-col class="text-right" cols="8">
+          <v-col class="text-caption text-right" cols="8">
             <a
               :href="
                 state.contactMailHeader +
@@ -90,58 +90,48 @@
   </div>
 </template>
 
-<script lang="ts">
-import { onBeforeMount, reactive } from '@vue/composition-api';
-import core from '@/core';
+<script lang="ts" setup>
+import { onBeforeMount, reactive } from "vue";
+// import core from '@/core';
 
-import { detect } from 'detect-browser';
-export default {
-  name: 'AppDetails',
-  setup() {
-    const state = reactive({
-      browserName: '',
-      browserVersion: '',
-      clientType: '',
-      contactMailHeader:
-        'mailto:spreizer@uni-trier.de?subject=[NEST Desktop ' +
-        core.app.state.version +
-        ']',
-      contactName: '📧 Sebastian Spreizer',
-      doc: 'https://nest-desktop.readthedocs.io',
-      license: 'MIT License',
-      osType: '',
-      repo: 'https://github.com/nest-desktop/nest-desktop',
-      simulatorVersion: core.app.backends.nestSimulator.state.version.nest,
-      version: core.app.state.version,
-    });
-    const mailText = [
-      '&body=%2D%2D%2D%2D %0D%0APlease do not delete the following lines! %0D%0AClient type: ',
-      '%0D%0ABrowser name: ',
-      '%0D%0ABrowser version: ',
-      '%0D%0ANEST Desktop version: ',
-      '%0D%0ANEST Simulator version: ',
-      '%0D%0AOS type: ',
-      '%0D%0A %2D%2D%2D%2D %0D%0A%0D%0A(your message text...)',
-    ];
+// import { detect } from "detect-browser";
+const state = reactive({
+  browserName: "",
+  browserVersion: "",
+  clientType: "",
+  contactMailHeader:
+    "mailto:spreizer@uni-trier.de?subject=[NEST Desktop "
+    // + core.app.state.version
+    + "]",
+  contactName: "📧 Sebastian Spreizer",
+  doc: "https://nest-desktop.readthedocs.io",
+  license: "MIT License",
+  osType: "",
+  repo: "https://github.com/nest-desktop/nest-desktop",
+  simulatorVersion: 'v3.4', //core.app.backends.nestSimulator.state.version.nest,
+  version: 'dev', // core.app.state.version,
+});
+const mailText = [
+  "&body=%2D%2D%2D%2D %0D%0APlease do not delete the following lines! %0D%0AClient type: ",
+  "%0D%0ABrowser name: ",
+  "%0D%0ABrowser version: ",
+  "%0D%0ANEST Desktop version: ",
+  "%0D%0ANEST Simulator version: ",
+  "%0D%0AOS type: ",
+  "%0D%0A %2D%2D%2D%2D %0D%0A%0D%0A(your message text...)",
+];
 
-    // TODO: change to onRenderTriggered in Vue 3 to catch updates as well
-    onBeforeMount(() => {
-      // Fetch the debugging information
-      const info = detect();
-      if (info) {
-        state.clientType = info.type;
-        state.browserName = info.name;
-        state.browserVersion = info.version;
-        state.osType = info.os;
-      }
-    });
-
-    return {
-      state,
-      mailText,
-    };
-  },
-};
+// TODO: change to onRenderTriggered in Vue 3 to catch updates as well
+onBeforeMount(() => {
+  // Fetch the debugging information
+  // const info = detect();
+  // if (info) {
+  //   state.clientType = info.type;
+  //   state.browserName = info.name;
+  //   state.browserVersion = info.version;
+  //   state.osType = info.os;
+  // }
+});
 </script>
 
 <style>
