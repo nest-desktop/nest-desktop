@@ -9,7 +9,7 @@ import { simulatorItems } from "@/simulators";
 export const useAppStore = defineStore("app-store", {
   state: () => ({
     autoUpdate: false,
-    darkMode: false,
+    darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
     simulator: "nest",
     simulatorVisible: ["nest", "norse"]
   }),
