@@ -74,7 +74,7 @@
     "semver": "~7.5",
     "tslog": "~4.9",
     "typescript": "~5.2",
-    "vite": "~4.4",
+    "vite": "~4.5",
     "vite-plugin-electron": "~0.14",
     "vite-plugin-pwa": "~0.16",
     "vite-plugin-vuetify": "~1.0",
