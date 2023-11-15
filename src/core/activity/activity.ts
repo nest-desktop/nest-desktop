@@ -191,8 +191,7 @@ export class Activity {
    * Update hash.
    */
   updateHash(): void {
-    // this._hash = sha1(JSON.stringify(this._events));
-    this._hash = sha1({ sendersLength: this._events.senders.length });
+    this._hash = sha1(JSON.stringify(this._events));
   }
 
   /**

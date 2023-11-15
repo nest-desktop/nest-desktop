@@ -12,7 +12,6 @@ export class ActivityGraph {
   private _project: Project;
   private _state: UnwrapRef<any>;
 
-
   constructor(project: Project, activityGraph: any = {}) {
     this._project = project;
     this._state = reactive({
