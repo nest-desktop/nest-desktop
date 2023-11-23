@@ -46,7 +46,7 @@
     "vue-codemirror": "~6.1",
     "vue-router": "~4.2",
     "vue-toast-notification": "~3.1",
-    "vuetify": "~3.3",
+    "vuetify": "~3.4",
     "webfontloader": "~1.6"
   },
   "devDependencies": {
@@ -74,7 +74,7 @@
     "sass": "~1.69",
     "semver": "~7.5",
     "tslog": "~4.9",
-    "typescript": "~5.2",
+    "typescript": "~5.3",
     "vite": "~5.0",
     "vite-plugin-electron": "~0.15",
     "vite-plugin-pwa": "~0.17",
