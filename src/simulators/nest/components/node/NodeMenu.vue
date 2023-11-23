@@ -368,8 +368,9 @@ const updateStates = () => {
   state.spatialNode = node.value.spatial.hasPositions;
 };
 
-const updateSynWeights = (value?: string) => {
-  node.value.view.state.synWeights = value || "";
+const updateSynWeights = (value: string | null) => {
+  if (value == null) return;
+  node.value.view.state.synWeights = value;
   node.value.changes();
   networkGraphStore.graph.render();
 };

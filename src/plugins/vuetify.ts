@@ -14,7 +14,6 @@ import "./main.scss";
 // Composables
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import { VDataTable, VDataTableVirtual } from "vuetify/labs/VDataTable";
 import { createVuetify } from "vuetify";
 
 // import { md1, md2, md3 } from "vuetify/blueprints";
@@ -50,8 +49,6 @@ const colors = {
 export const vuetify = createVuetify({
   components: {
     ...components,
-    VDataTable,
-    VDataTableVirtual,
   },
   // blueprint: md2,
   defaults: {
@@ -114,8 +111,5 @@ export function addTheme(colors: any): void {
 }
 
 export function addIconSet(iconSet: any): void {
-  vuetify.icons.sets = Object.assign(
-    vuetify.icons.sets,
-    iconSet
-  );
+  vuetify.icons.sets = Object.assign(vuetify.icons.sets, iconSet);
 }

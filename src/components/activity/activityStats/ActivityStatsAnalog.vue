@@ -46,10 +46,10 @@
     </template>
 
     <template #item.mean="{ item }">
-      {{ toFixed(item.columns.mean) }}
+      {{ toFixed(Number(item.mean)) }}
     </template>
     <template #item.std="{ item }">
-      {{ toFixed(item.columns.std) }}
+      {{ toFixed(Number(item.std)) }}
     </template>
 
     <template #bottom>

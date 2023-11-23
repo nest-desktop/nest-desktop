@@ -59,7 +59,8 @@ const props = defineProps({
 
 const param = computed(() => props.param as ConnectionParameter);
 
-const update = (value: number | number[] | boolean) => {
+const update = (value: number | number[] | boolean | null) => {
+  if (value == null) return;
   param.value.value = value;
   param.value.changes();
 };

@@ -11,13 +11,13 @@
     loadingText="Loading... Please wait"
   >
     <template #item.meanISI="{ item }">
-      {{ toFixed(item.columns.meanISI) }}
+      {{ toFixed(Number(item.meanISI)) }}
     </template>
     <template #item.stdISI="{ item }">
-      {{ toFixed(item.columns.stdISI) }}
+      {{ toFixed(Number(item.stdISI)) }}
     </template>
     <template #item.cvISI="{ item }">
-      {{ toFixed(item.columns.cvISI) }}
+      {{ toFixed(Number(item.cvISI)) }}
     </template>
     <template #bottom>
       <div class="wrapper-table">
