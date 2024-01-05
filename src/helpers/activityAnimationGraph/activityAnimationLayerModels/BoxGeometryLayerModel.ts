@@ -3,7 +3,6 @@
 import {
   BoxGeometry,
   Mesh,
-  MeshBasicMaterial,
   MeshLambertMaterial,
 } from "three";
 
@@ -23,7 +22,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     const geometry: BoxGeometry = new BoxGeometry(scale, scale, scale);
 
     this.layer.state.positions.forEach((position: any) => {
-      const material: MeshBasicMaterial = new MeshLambertMaterial({
+      const material: MeshLambertMaterial = new MeshLambertMaterial({
         color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
