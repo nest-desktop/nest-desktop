@@ -17,7 +17,6 @@ export function getBoolean(value: string | number | boolean): boolean {
     case 1:
     case true:
       return true;
-    default:
-      return false;
   }
+  return false;
 }

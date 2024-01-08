@@ -22,7 +22,7 @@ import { useRoute } from "vue-router";
 
 import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
-import { getParamFromURL } from "@/utils/paramQuery";
+import { getParamFromURL } from "@/helpers/common/paramQuery";
 
 import { useNESTSessionStore } from "../store/sessionStore";
 import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";

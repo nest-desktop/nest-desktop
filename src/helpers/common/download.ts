@@ -1,34 +1,5 @@
 // download.ts
-
-/*
- * Add zero before string numbers.
- */
-export function pad(num: number, size: number = 2): string {
-  let s: string = num + "";
-  while (s.length < size) {
-    s = "0" + s;
-  }
-  return s;
-}
-
-/*
- * Get current datetime.
- */
-export function datetime() {
-  const now: Date = new Date();
-  const date: any[] = [
-    now.getFullYear() - 2000,
-    pad(now.getMonth() + 1),
-    pad(now.getDate()),
-  ];
-  const time: any[] = [
-    pad(now.getHours()),
-    pad(now.getMinutes()),
-    pad(now.getSeconds()),
-  ];
-  const datetime: string = date.join("") + "_" + time.join("");
-  return datetime;
-}
+import moment from "moment";
 
 /*
  * Download data.
@@ -43,9 +14,10 @@ export function download(
     "href",
     `data:text/${format};charset=UTF-8,${encodeURIComponent(data)}`
   );
+  const now = moment().format("YYYYMMDD_HHMMSS");
   element.setAttribute(
     "download",
-    `nest-desktop-${filenameSuffix}-${datetime()}.${format}`
+    `nest-desktop-${filenameSuffix}-${now}.${format}`
   );
   element.style.display = "none";
   document.body.appendChild(element);
@@ -81,7 +53,8 @@ export function downloadSVGImage(svg: any, filename: string): void {
   // Create download link.
   const downloadLink = document.createElement("a");
   downloadLink.href = url;
-  downloadLink.download = `nest_desktop-${filename}-${datetime()}.svg`;
+  const now = moment().format("YYYYMMDD_HHMMSS");
+  downloadLink.download = `nest_desktop-${filename}-${now}.svg`;
   document.body.appendChild(downloadLink);
 
   // Apply download.

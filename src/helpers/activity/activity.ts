@@ -8,7 +8,7 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 import { Node } from "@/types/nodeTypes";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { Project } from "@/types/projectTypes";
-import { download } from "@/utils/download";
+import { download } from "@/helpers/common/download";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 export interface ActivityProps {

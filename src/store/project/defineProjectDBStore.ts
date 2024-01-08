@@ -6,7 +6,8 @@ import { BaseProject, ProjectProps } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
 import { Project } from "@/types/projectTypes";
 import { ProjectDB } from "@/types/projectDBTypes";
-import { download } from "@/utils/download";
+import { download } from "@/helpers/common/download";
+import { getRuntimeConfig } from "@/utils/fetch";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -146,10 +147,9 @@ export function defineProjectDBStore(
         let promises = [];
         if (args.projectAssets) {
           promises = args.projectAssets.map(async (file: string) => {
-            const response = await fetch(
+            const data = getRuntimeConfig(
               `assets/simulators/${args.simulator}/projects/${file}.json`
             );
-            const data = await response.json();
             return db.create(data);
           }) as any[];
         }

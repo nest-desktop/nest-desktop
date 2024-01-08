@@ -6,6 +6,7 @@ import { BaseModel } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import { Model } from "@/types/modelTypes";
 import { ModelDB } from "@/types/modelDBTypes";
+import { getRuntimeConfig } from "@/utils/fetch";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -93,10 +94,9 @@ export function defineModelDBStore(
         let promises = [];
         if (args.modelAssets) {
           promises = args.modelAssets.map(async (file: string) => {
-            const response = await fetch(
+            const data = getRuntimeConfig(
               `assets/simulators/${args.simulator}/models/${file}.json`
             );
-            const data = await response.json();
             db.create(data);
           }) as any[];
         }

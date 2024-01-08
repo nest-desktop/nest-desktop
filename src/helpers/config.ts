@@ -1,5 +1,7 @@
 // config.ts
 
+import { getRuntimeConfig } from "@/utils/fetch";
+
 export class Config {
   private _configName: string;
   private _simulator: string;
@@ -59,11 +61,9 @@ export class Config {
 
   async importConfig(): Promise<any> {
     const path = this._simulator
-      ? `assets/simulators/${this._simulator}/config/${this._configName}.json`
-      : `assets/config/${this._configName}.json`;
-    const response = await fetch(path);
-    const data = await response.json();
-    return data;
+      ? `assets/simulators/${this._simulator}/config/${this._configName}`
+      : `assets/config/${this._configName}`;
+    return getRuntimeConfig(path + ".json");
   }
 
   resetConfig(): void {

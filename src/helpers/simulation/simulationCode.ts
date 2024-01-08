@@ -6,7 +6,7 @@ import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
 import { Simulation } from "@/types/simulationTypes";
-import { download } from "@/utils/download";
+import { download } from "@/helpers/common/download";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 export interface SimulationCodeProps {

@@ -111,7 +111,7 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import { downloadSVGImage } from "@/utils/download";
+import { downloadSVGImage } from "@/helpers/common/download";
 import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
 import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
