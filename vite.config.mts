@@ -138,4 +138,10 @@ export default defineConfig({
   server: {
     port: 54286,
   },
+  test: {
+    coverage: {
+      provider: 'istanbul', // or 'v8',
+      reporter: ['text', 'json', 'html'],
+    },
+  },
 });
