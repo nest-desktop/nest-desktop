@@ -9,15 +9,15 @@
       :items="synapse.models"
       class="pa-1"
       density="compact"
-      hide-details
-      item-title="label"
-      item-value="id"
+      hideDetails
+      itemTitle="label"
+      itemValue="id"
       label="Synapse model"
       v-model="synapse.modelId"
       variant="outlined"
     />
     <div class="d-print-none menu align-center justify-center my-auto mx-1">
-      <v-menu :close-on-content-click="false">
+      <v-menu :closeOnContentClick="false">
         <template #activator="{ props }">
           <v-btn
             color="primary"
@@ -36,7 +36,7 @@
               :label="param.label"
               :value="param.id"
               density="compact"
-              hide-details
+              hideDetails
               v-for="(param, index) in Object.values(synapse.modelParams)"
               v-model="synapse.paramsVisible"
             >

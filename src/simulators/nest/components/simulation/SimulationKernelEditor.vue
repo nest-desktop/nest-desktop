@@ -35,7 +35,7 @@
           :color="props.color"
           @update:modelValue="updateAutoRNGSeed()"
           class="mx-1"
-          hide-details="auto"
+          hideDetails="auto"
           v-bind="options.autoRNGSeedSettings"
           v-model="state.autoRNGSeed"
         />

@@ -8,8 +8,8 @@
       <v-list-item class="param pl-0 pr-1">
         <value-slider
           :color="synapse.connection.source.view.color"
-          :model-value="(synapse.weight as number)"
-          @update:model-value="update"
+          :modelValue="(synapse.weight as number)"
+          @update:modelValue="update"
           v-bind="weightOptions"
         />
 

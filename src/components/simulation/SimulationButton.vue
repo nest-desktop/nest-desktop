@@ -8,17 +8,17 @@
         class="btn-main"
         variant="outlined"
         title="Simulate"
-        prepend-icon="mdi-play"
+        prependIcon="mdi-play"
         v-if="simulation"
       >
-        <span v-if="simulation.code.runSimulation"> Simulate </span>
+        <span v-if="simulation.code.runSimulation">Simulate</span>
         <span v-else>Prepare</span>
       </v-btn>
 
       <v-btn class="btn-append" variant="outlined">
         <v-icon icon="mdi-menu-down" />
 
-        <v-menu :close-on-content-click="false" activator="parent">
+        <v-menu :closeOnContentClick="false" activator="parent">
           <v-list density="compact">
             <v-list-item
               :key="index"
@@ -27,11 +27,11 @@
             >
               <template #prepend="{ isActive }">
                 <v-list-item-action start>
-                  <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
+                  <v-checkbox-btn :modelValue="isActive" />
                 </v-list-item-action>
               </template>
 
-              <v-list-item-title> {{ item.title }} </v-list-item-title>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -52,8 +52,10 @@ const props = defineProps({
 });
 
 const simulation = computed(() => props.simulation as Simulation);
-const disabled = computed(() => props.disabled || simulation.value.state.running || false);
-const loading = computed(() => simulation.value.state.running)
+const disabled = computed(
+  () => props.disabled || simulation.value.state.running || false
+);
+const loading = computed(() => simulation.value.state.running);
 const projectStore = computed(() => props.projectStore);
 
 const state = reactive({

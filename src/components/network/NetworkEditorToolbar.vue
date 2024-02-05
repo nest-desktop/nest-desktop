@@ -70,10 +70,10 @@
       </v-dialog>
       <!--
       <v-text-field
-        class="px-4  "
-        hide-details
-        prepend-inner-icon="mdi-pencil"
-        single-line
+        class="px-4"
+        hideDetails
+        prependInnerIcon="mdi-pencil"
+        singleLine
         v-model="projectStore.state.project.name"
       /> -->
 
@@ -99,8 +99,8 @@
 
       <v-btn
         :color="graph?.workspace.state.showGrid ? 'amber' : 'grey'"
-        @click="() => graph?.workspace.toggleGrid()"
         :icon="graph?.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
+        @click="() => graph?.workspace.toggleGrid()"
         size="small"
         title="Show background grid"
       />

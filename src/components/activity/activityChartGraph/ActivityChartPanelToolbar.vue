@@ -1,9 +1,9 @@
 <template>
   <div class="activityChartPanelToolbar">
-    <v-menu :close-on-content-click="false">
+    <v-menu :closeOnContentClick="false">
       <template #activator="{ props }">
         <v-btn
-          :prepend-icon="panel.model.icon"
+          :prependIcon="panel.model.icon"
           block
           class="justify-start"
           size="x-large"

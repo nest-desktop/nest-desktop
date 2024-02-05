@@ -24,17 +24,17 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://norse.github.io/norse"
-                prepend-icon="mdi-github"
+                prependIcon="mdi-github"
                 target="_blank"
               >
                 https://github.com/norse
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://norse.github.io/norse"
-                prepend-icon="mdi-book-open"
+                prependIcon="mdi-book-open"
                 target="_blank"
               >
                 https://norse.github.io/norse

@@ -8,11 +8,11 @@
           </template>
           <v-list-item
             :key="'analogPanel' + index"
-            :prepend-icon="model.icon"
+            :prependIcon="model.icon"
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsAnalog"
           >
-            <v-list-item-title> {{ model.label }}</v-list-item-title>
+            <v-list-item-title>{{ model.label }}</v-list-item-title>
           </v-list-item>
         </v-list-group>
 
@@ -22,7 +22,7 @@
           </template>
           <v-list-item
             :key="'spikePanel' + index"
-            :prepend-icon="model.icon"
+            :prependIcon="model.icon"
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsSpike"
           >
@@ -40,7 +40,7 @@ import { computed } from "vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
 const props = defineProps({
-   graph: ActivityChartGraph,
+  graph: ActivityChartGraph,
 });
 
 const graph = computed(() => props.graph as ActivityChartGraph);

@@ -1,5 +1,5 @@
 <template>
-  <v-menu :close-on-content-click="false" v-model="state.show">
+  <v-menu :closeOnContentClick="false" v-model="state.show">
     <template #activator="{ props }">
       <v-btn
         color="primary"
@@ -34,16 +34,16 @@
                   'text-red': node.view.state.synWeights === 'inhibitory',
                 }"
                 :indeterminate="!node.view.state.synWeights"
-                :model-value="node.view.state.synWeights"
-                @update:model-value="updateSynWeights"
+                :modelValue="node.view.state.synWeights"
+                @update:modelValue="updateSynWeights"
                 class="pl-2"
                 color="blue"
                 density="compact"
-                false-icon="mdi-minus-circle"
+                falseIcon="mdi-minus-circle"
                 false-value="inhibitory"
-                hide-details
+                hideDetails
                 inset
-                true-icon="mdi-plus-circle"
+                trueIcon="mdi-plus-circle"
                 true-value="excitatory"
               />
             </template>
@@ -77,7 +77,7 @@
                   :color="node.view.color"
                   :value="state[item.value]"
                   dense
-                  hide-details
+                  hideDetails
                 />
               </template> -->
             </template>
@@ -107,7 +107,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prependIcon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -134,7 +134,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prependIcon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -153,7 +153,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prependIcon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -179,7 +179,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prependIcon="mdi-menu-left"
             size="small"
             variant="text"
           >

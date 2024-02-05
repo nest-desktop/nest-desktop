@@ -27,7 +27,7 @@
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4"> License </v-col>
+          <v-col class="font-weight-bold text-left" cols="4">License</v-col>
           <v-col class="text-right" cols="8">
             {{ license }}
           </v-col>
@@ -45,7 +45,7 @@
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4"> Contact </v-col>
+          <v-col class="font-weight-bold text-left" cols="4">Contact</v-col>
           <v-col class="text-caption text-right" cols="8">
             <a :href="mailText" v-text="contactName" />
           </v-col>

@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer location="right" permanent rail rail-width="64">
     <v-tabs
-      :model-value="modelStore.controllerView"
+      :modelValue="modelStore.controllerView"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -18,23 +18,22 @@
         v-for="(item, index) in items"
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
-        <span style="font-size: 9px"> {{ item.id }}</span>
+        <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="modelStore.controllerOpen"
-    permanent
+    :modelValue="modelStore.controllerOpen"
     location="right"
+    permanent
   >
     <v-list>
-      <v-list-item title="Home" value="home"></v-list-item>
-      <v-list-item title="Contacts" value="contacts"></v-list-item>
-      <v-list-item title="Settings" value="settings"></v-list-item>
+      <v-list-item title="Home" value="home" />
+      <v-list-item title="Contacts" value="contacts" />
+      <v-list-item title="Settings" value="settings" />
     </v-list>
   </v-navigation-drawer>
-
 </template>
 
 <script lang="ts" setup>
@@ -44,7 +43,7 @@ import { computed } from "vue";
 // const appStore = useAppStore();
 
 const props = defineProps({
-  store: {required: true, type: Object},
+  store: { required: true, type: Object },
 });
 
 const modelStore = computed(() => props.store);

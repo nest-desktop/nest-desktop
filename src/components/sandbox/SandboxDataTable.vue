@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers as any[]"
     :items="desserts"
-    item-value="name"
+    itemValue="name"
     class="elevation-1 playground-data-table"
   ></v-data-table>
 </template>

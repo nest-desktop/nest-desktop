@@ -32,7 +32,7 @@
         <v-card-text>
           <v-text-field
             label="Project name"
-            append-icon="mdi-pencil-outline"
+            appendIcon="mdi-pencil-outline"
             v-model="state.projectName"
           />
         </v-card-text>

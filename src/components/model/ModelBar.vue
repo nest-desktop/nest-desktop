@@ -5,8 +5,8 @@
 
       <v-tab
         :key="index"
-        :to="tab.to"
         :title="tab.title"
+        :to="tab.to"
         size="small"
         v-for="(tab, index) in tabItems"
       >
@@ -19,11 +19,11 @@
 
     <v-spacer />
 
-    <v-app-bar-title> {{ model.id }} </v-app-bar-title>
+    <v-app-bar-title>{{ model.id }}</v-app-bar-title>
 
     <v-spacer />
 
-    <v-btn variant="outlined"> Simulate </v-btn>
+    <v-btn variant="outlined">Simulate</v-btn>
   </v-app-bar>
 </template>
 

@@ -3,11 +3,11 @@
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
-        @update:model-value="state.menu = true"
+        @update:modelValue="state.menu = true"
         density="compact"
-        hide-details
-        item-title="label"
-        item-value="id"
+        hideDetails
+        itemTitle="label"
+        itemValue="id"
         label="Node model"
         v-model="node.modelId"
         variant="outlined"
@@ -21,7 +21,7 @@
             style="left: 8px; top: 8px"
           >
             <node-avatar
-              :node="node"
+              :node
               @click="node.state.select()"
               size="48px"
             />
@@ -30,7 +30,7 @@
 
         <template #append>
           <div class="d-print-none menu">
-            <v-menu :close-on-content-click="false" v-model="state.menu">
+            <v-menu :closeOnContentClick="false" v-model="state.menu">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
@@ -47,11 +47,11 @@
                     :disabled="node.model.isRecorder"
                     :color="node.view.color"
                     density="compact"
-                    hide-details
+                    hideDetails
                     label="Population size"
                     v-model="node.view.state.showSize"
                   >
-                    <template #append> n: {{ node.size }} </template>
+                    <template #append>n: {{ node.size }}</template>
                   </v-checkbox>
                   <template v-if="node.modelParams">
                     <v-checkbox
@@ -60,7 +60,7 @@
                       :label="param.label"
                       :value="param.id"
                       density="compact"
-                      hide-details
+                      hideDetails
                       v-for="(param, index) in Object.values(node.modelParams)"
                       v-model="node.paramsVisible"
                     >
@@ -111,14 +111,14 @@
           <v-row no-gutters>
             <value-slider
               :color="node.view.color"
-              @update:model-value="node.changes()"
+              @update:modelValue="node.changes()"
               id="n"
               inputLabel="n"
               label="population size"
               v-model="node.size"
             />
 
-            <v-menu :close-on-content-click="false">
+            <v-menu :closeOnContentClick="false">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"

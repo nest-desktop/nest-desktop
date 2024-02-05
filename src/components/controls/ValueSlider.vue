@@ -3,10 +3,10 @@
     :step="props.step"
     @click:append="increment"
     @click:prepend="decrement"
-    append-icon="mdi-plus"
+    appendIcon="mdi-plus"
     class="py-1 value-slider"
-    hide-details="auto"
-    prepend-icon="mdi-minus"
+    hideDetails="auto"
+    prependIcon="mdi-minus"
     style="position: relative"
     v-model="value"
   >
@@ -16,7 +16,7 @@
         :step="props.step"
         :suffix="props.unit"
         density="compact"
-        hide-details
+        hideDetails
         style="width: 70px"
         type="number"
         v-model="value"

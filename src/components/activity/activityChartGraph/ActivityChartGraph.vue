@@ -8,7 +8,7 @@
           <v-select
             :items="state.imageFormats"
             density="compact"
-            hide-details
+            hideDetails
             label="Select image format"
             v-model="state.toImageButtonOptions.format"
             variant="outlined"

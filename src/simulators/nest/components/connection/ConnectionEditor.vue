@@ -68,8 +68,8 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <connection-spec-editor :connection="(connection as NESTConnection)" />
-      <synapse-spec-editor :synapse="(connection.synapse as NESTSynapse)" />
+      <connection-spec-editor :connection />
+      <synapse-spec-editor :synapse />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -89,6 +89,7 @@ const props = defineProps({
 });
 
 const connection = computed(() => props.connection as NESTConnection);
+const synapse = computed(() => connection.value.synapse as NESTSynapse)
 
 const items = [
   {
@@ -97,8 +98,8 @@ const items = [
     title: "Reset connection",
     onClick: () => {
       connection.value.reset();
-      connection.value.synapse.reset();
-      connection.value.synapse.hideAllParams();
+      synapse.value.reset();
+      synapse.value.hideAllParams();
     },
   },
   // {
@@ -135,7 +136,7 @@ const items = [
     icon: "mdi-contrast",
     title: "Inverse synaptic weight",
     onClick: () => {
-      connection.value.synapse.inverseWeight();
+      synapse.value.inverseWeight();
     },
   },
   {

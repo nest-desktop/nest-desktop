@@ -1,6 +1,6 @@
 <template>
   <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
-    <rect id="workspaceHandler" width="100%" height="100%" />
+    <rect height="100%" id="workspaceHandler" width="100%" />
 
     <g id="networkWorkspace">
       <g class="grid no-print" />

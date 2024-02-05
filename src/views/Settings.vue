@@ -6,15 +6,15 @@
           <v-card flat subtitle="Theme">
             <v-card-text>
               <v-radio-group
-                @update:model-value="updateTheme"
+                @update:modelValue="updateTheme"
                 hint="Customize the app with light and dark themes."
-                persistent-hint
+                persistentHint
                 v-model="appStore.state.theme"
               >
                 <v-radio
                   :key="idx"
                   :value="theme.value"
-                  true-icon="mdi-checkbox-marked-circle-outline"
+                  trueIcon="mdi-checkbox-marked-circle-outline"
                   v-for="(theme, idx) in themes"
                 >
                   <template #label>
@@ -32,9 +32,9 @@
                 hint="Developer mode enables new features and functionality within the documentation that are still in development."
                 inset
                 label="Developer mode"
-                false-icon="mdi-close-circle"
-                true-icon="mdi-checkbox-marked-circle"
-                persistent-hint
+                falseIcon="mdi-close-circle"
+                trueIcon="mdi-checkbox-marked-circle"
+                persistentHint
                 v-model="appStore.session.state.devMode"
               />
             </v-card-text>

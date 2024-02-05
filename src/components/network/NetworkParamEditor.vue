@@ -23,7 +23,7 @@
       <div :key="network.nodes.length">
         <div :key="index" v-for="(node, index) in network.nodes.all">
           <node-editor
-            :node="node"
+            :node
             @mouseenter="node.state.focus()"
             @mouseleave="node.nodes.unfocusNode()"
             v-if="node.state.show"

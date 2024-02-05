@@ -4,7 +4,7 @@
     :items="state.items"
     :key="state.activityHash"
     :loading="state.loading"
-    @update:model-value="updateGraph"
+    @update:modelValue="updateGraph"
     class="activityStatsAnalog"
     density="compact"
     fixed-header
@@ -15,31 +15,31 @@
     <template #top>
       <v-select
         :items="activity.state.records"
-        @update:model-value="selected"
+        @update:modelValue="selected"
         density="compact"
-        hide-details
-        item-title="selectTitle"
-        item-value="id"
+        hideDetails
+        itemTitle="selectTitle"
+        itemValue="id"
         v-model="state.selectedRecord" v-if="activity.recorder.model.isMultimeter"
       >
         <!-- <template #selection="{ item }">
       <v-list-item min-width="400px">
         <template #append>
-          <node-record-chip :node-record="item.value" />
+          <node-record-chip :nodeRecord="item.value" />
         </template>
         <span>{{ item.value.labelCapitalize }}</span>
-        <span v-if="item.value.unit"> ({{ item.value.unit }})</span>
+        <span v-if="item.value.unit">({{ item.value.unit }})</span>
       </v-list-item>
     </template>
 
       <template #item="{ item, props: { onClick } }">
       <v-list-item :value="item.value" @click="onClick">
         <template #append>
-          <node-record-chip :node-record="item.value" />
+          <node-record-chip :nodeRecord="item.value" />
         </template>
 
         <span> {{ item.value.labelCapitalize }}</span>
-        <span v-if="item.value.unit"> ({{ item.value.unit }}) </span>
+        <span v-if="item.value.unit">({{ item.value.unit }}) </span>
       </v-list-item>
     </template> -->
       </v-select>

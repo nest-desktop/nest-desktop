@@ -3,11 +3,11 @@
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
-        @update:model-value="state.menu = true"
+        @update:modelValue="state.menu = true"
         density="compact"
-        hide-details
-        item-title="label"
-        item-value="id"
+        hideDetails
+        itemTitle="label"
+        itemValue="id"
         label="Node model"
         v-model="node.modelId"
         variant="outlined"
@@ -20,17 +20,13 @@
             size="large"
             style="left: 8px; top: 8px"
           >
-            <node-avatar
-              :node="node"
-              @click="node.state.select()"
-              size="48px"
-            />
+            <node-avatar :node @click="node.state.select()" size="48px" />
           </v-btn>
         </template>
 
         <template #append>
           <div class="d-print-none menu">
-            <v-menu :close-on-content-click="false" v-model="state.menu">
+            <v-menu :closeOnContentClick="false" v-model="state.menu">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
@@ -47,7 +43,7 @@
                     :disabled="node.model.isRecorder"
                     :color="node.view.color"
                     density="compact"
-                    hide-details
+                    hideDetails
                     label="Population size"
                     v-model="node.view.state.showSize"
                   >
@@ -60,7 +56,7 @@
                       :label="param.label"
                       :value="param.id"
                       density="compact"
-                      hide-details
+                      hideDetails
                       v-for="(param, index) in Object.values(node.modelParams)"
                       v-model="node.paramsVisible"
                     >
@@ -99,7 +95,7 @@
               </v-card>
             </v-menu>
 
-            <node-menu :node="(node as NESTNode)" />
+            <node-menu :node />
           </div>
         </template>
       </v-select>
@@ -111,14 +107,14 @@
           <v-row no-gutters>
             <value-slider
               :color="node.view.color"
-              @update:model-value="node.changes()"
+              @update:modelValue="node.changes()"
               id="n"
               inputLabel="n"
               label="population size"
               v-model="node.size"
             />
 
-            <v-menu :close-on-content-click="false">
+            <v-menu :closeOnContentClick="false">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
@@ -164,11 +160,11 @@
           variant="accordion"
         >
           <connection-editor
+            :connection="(connection as NESTConnection)"
+            :key="index"
             :style="{
               opacity: connection.view.opacity ? 1 : 0.3,
             }"
-            :key="index"
-            :connection="(connection as NESTConnection)"
             @mouseenter="connection.state.focus()"
             @mouseleave="connection.connections.unfocusConnection()"
             v-for="(connection, index) in node.connections"
@@ -186,7 +182,7 @@ import Card from "@/components/common/Card.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
+import { NodePropTypes } from "@/types/nodeTypes";
 
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
@@ -197,7 +193,7 @@ const props = defineProps({
   node: NodePropTypes,
 });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as NESTNode);
 
 const state = reactive({
   menu: false,

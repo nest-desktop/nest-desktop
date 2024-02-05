@@ -41,7 +41,7 @@
       >
         <connection-viewer
           :key="index"
-          :connection="connection"
+          :connection
           v-for="(connection, index) in node.connections"
         />
       </v-expansion-panels>

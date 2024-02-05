@@ -3,27 +3,27 @@
     <v-row no-gutters>
       <range-slider
         :color="param.synapse.connection.source.view.color"
-        :model-value="(param.value as number[])"
-        @update:model-value="update"
+        :modelValue="(param.value as number[])"
+        @update:modelValue="update"
         v-bind="param.options"
         v-if="param.options.variant === 'range'"
       />
       <tick-slider
         :color="param.synapse.connection.source.view.color"
-        :model-value="(param.value as number)"
-        @update:model-value="update"
+        :modelValue="(param.value as number)"
+        @update:modelValue="update"
         v-bind="param.options"
         v-else-if="param.options.variant === 'ticks'"
       />
       <value-slider
         :color="param.synapse.connection.source.view.color"
-        :model-value="(param.value as number)"
-        @update:model-value="update"
+        :modelValue="(param.value as number)"
+        @update:modelValue="update"
         v-bind="param.options"
         v-else
       />
 
-      <v-menu :close-on-content-click="false">
+      <v-menu :closeOnContentClick="false">
         <template #activator="{ props }">
           <v-btn
             class="d-print-none menu align-center justify-center my-auto"

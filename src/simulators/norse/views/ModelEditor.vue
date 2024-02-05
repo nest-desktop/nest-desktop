@@ -11,7 +11,7 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn @click="modelStore.save"> Save </v-btn>
+        <v-btn @click="modelStore.save">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

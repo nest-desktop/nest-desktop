@@ -4,7 +4,7 @@
     location="right"
     permanent
     rail
-    rail-width="64"
+    railWidth="64"
   >
     <v-tabs
       :mandatory="false"
@@ -28,7 +28,7 @@
         "
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
-        <span style="font-size: 9px"> {{ item.id }}</span>
+        <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
 
@@ -46,7 +46,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="projectStore.state.controllerOpen"
+    :modelValue="projectStore.state.controllerOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="projectStore.state.controllerWidth"
     @update:modelValue="dispatchWindowResize"
@@ -82,7 +82,7 @@
       >
         <codemirror
           :extensions="extensions"
-          :model-value="projectJSON"
+          :modelValue="projectJSON"
           disabled
           style="font-size: 0.75rem; width: 100%"
         />

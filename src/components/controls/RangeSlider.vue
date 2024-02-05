@@ -2,7 +2,7 @@
   <v-range-slider
     :step="props.step"
     class="py-2 range-slider align-center"
-    hide-details
+    hideDetails
     strict
     style="position: relative"
     v-model="value"
@@ -13,7 +13,7 @@
         :step="props.step"
         :suffix="props.unit"
         density="compact"
-        hide-details
+        hideDetails
         style="width: 80px"
         type="number"
         v-model="lower"
@@ -26,7 +26,7 @@
         :step="props.step"
         :suffix="props.unit"
         density="compact"
-        hide-details
+        hideDetails
         style="width: 80px"
         type="number"
         v-model="upper"

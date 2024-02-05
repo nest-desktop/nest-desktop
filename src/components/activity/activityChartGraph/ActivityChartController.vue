@@ -1,7 +1,7 @@
 <template>
   <div class="activityChartController">
     <!-- <v-menu
-      :close-on-content-click="false"
+      :closeOnContentClick="false"
       :position-x="state.menu.position.x"
       :position-y="state.menu.position.y"
       :value="state.menu.show"
@@ -20,9 +20,16 @@
 
       <v-spacer />
 
-      <v-menu :close-on-content-click="false">
+      <v-menu :closeOnContentClick="false">
         <template #activator="{ props }">
-          <v-btn prepend-icon="mdi-plus" size="small" v-bind="props" variant="outlined"> Add panel </v-btn>
+          <v-btn
+            prependIcon="mdi-plus"
+            size="small"
+            v-bind="props"
+            variant="outlined"
+          >
+            Add panel
+          </v-btn>
         </template>
 
         <activity-chart-panel-menu-popover
@@ -45,23 +52,23 @@
           <span v-if="panel.model.state.records.length > 0">
             <v-select
               :items="panel.model.state.records"
-              @update:model-value="update(panel)"
+              @update:modelValue="update(panel)"
               attach
               chips
               class="pa-1 pt-3"
               clearable
               density="compact"
-              item-title="id"
-              hide-details
+              itemTitle="id"
+              hideDetails
               label="Recorded events"
               multiple
-              persistent-hint
-              return-object
+              persistentHint
+              returnObject
               v-model="panel.model.state.recordsVisible"
               variant="outlined"
             >
               <template #chip="{ item }">
-                <node-record-chip :node-record="item.value" />
+                <node-record-chip :nodeRecord="item.value" />
               </template>
 
               <!-- <template #prepend-item>
@@ -73,7 +80,7 @@
                 <v-list-item :value="item.value" @click="props.onClick">
                   <template #prepend="{ isSelected }">
                     <!-- <node-avatar :node="item.value.node" /> -->
-                    <v-checkbox-btn :model-value="isSelected" />
+                    <v-checkbox-btn :modelValue="isSelected" />
                   </template>
 
                   {{
@@ -82,7 +89,7 @@
                   }}
 
                   <template #append>
-                    <node-record-chip :node-record="item.value" />
+                    <node-record-chip :nodeRecord="item.value" />
                   </template>
                 </v-list-item>
               </template>

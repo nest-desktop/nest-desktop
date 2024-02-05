@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer class="d-print-none" permanent rail rail-width="64">
     <v-tabs
-      :model-value="navStore.state.view"
+      :modelValue="navStore.state.view"
       :mandatory="false"
       color="primary"
       direction="vertical"

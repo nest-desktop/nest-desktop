@@ -1,37 +1,37 @@
 <template>
   <v-select
     :items="node.recordables"
-    @update:model-value="node.changes()"
+    @update:modelValue="node.changes()"
     attach
     chips
     class="pa-1"
     clearable
     density="compact"
-    hide-details
-    item-title="id"
+    hideDetails
+    itemTitle="id"
     label="Record from"
     multiple
-    persistent-hint
-    return-object
+    persistentHint
+    returnObject
     v-model="node.records"
     variant="outlined"
   >
     <template #chip="{ item }">
-      <node-record-chip :node-record="item.value" />
+      <node-record-chip :nodeRecord="item.value" />
     </template>
 
     <template #item="{ item, props }">
       <v-list-item :value="item.value" @click="props.onClick">
         <template #prepend="{ isSelected }">
-          <v-checkbox-btn :model-value="isSelected" />
+          <v-checkbox-btn :modelValue="isSelected" />
         </template>
 
         <template #append>
-          <node-record-chip :node-record="item.value" />
+          <node-record-chip :nodeRecord="item.value" />
         </template>
 
         {{ item.value.labelCapitalize }}
-        <span v-if="item.value.unit"> ({{ item.value.unit }})</span>
+        <span v-if="item.value.unit">({{ item.value.unit }})</span>
       </v-list-item>
     </template>
   </v-select>

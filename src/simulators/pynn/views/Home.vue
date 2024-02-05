@@ -42,25 +42,25 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="http://neuralensemble.org/PyNN/"
-                prepend-icon="mdi-home"
+                prependIcon="mdi-home"
                 target="_blank"
               >
                 http://neuralensemble.org/PyNN/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://github.com/NeuralEnsemble/PyNN/"
-                prepend-icon="mdi-github"
+                prependIcon="mdi-github"
                 target="_blank"
               >
                 https://github.com/NeuralEnsemble/PyNN/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="http://neuralensemble.org/docs/PyNN/"
-                prepend-icon="mdi-book-open"
+                prependIcon="mdi-book-open"
                 target="_blank"
               >
                 http://neuralensemble.org/docs/PyNN/

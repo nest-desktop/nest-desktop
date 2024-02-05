@@ -22,15 +22,15 @@
               example:
 
               <v-list density="compact">
-                <v-list-item prepend-icon="mdi-numeric-1-circle-outline">
+                <v-list-item prependIcon="mdi-numeric-1-circle-outline">
                   Models of information processing e.g. in the visual or
                   auditory cortex of mammals,
                 </v-list-item>
-                <v-list-item prepend-icon="mdi-numeric-2-circle-outline">
+                <v-list-item prependIcon="mdi-numeric-2-circle-outline">
                   Models of network activity dynamics, e.g. laminar cortical
                   networks or balanced random networks,
                 </v-list-item>
-                <v-list-item prepend-icon="mdi-numeric-3-circle-outline">
+                <v-list-item prependIcon="mdi-numeric-3-circle-outline">
                   Models of learning and plasticity.
                 </v-list-item>
               </v-list>
@@ -43,42 +43,42 @@
           <v-card-text>
             <v-list density="compact">
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://nest-initiative.org/"
-                prepend-icon="mdi-home"
+                prependIcon="mdi-home"
                 target="_blank"
               >
                 https://nest-initiative.org/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://github.com/nest/nest-simulator/"
-                prepend-icon="mdi-github"
+                prependIcon="mdi-github"
                 target="_blank"
               >
                 https://github.com/nest/nest-simulator/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://nest-simulator.readthedocs.io/"
-                prepend-icon="mdi-book-open"
+                prependIcon="mdi-book-open"
                 target="_blank"
               >
                 https://nest-simulator.readthedocs.io/
               </v-list-item>
 
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://twitter.com/NestSimulator"
-                prepend-icon="mdi-twitter"
+                prependIcon="mdi-twitter"
                 target="_blank"
               >
                 https://twitter.com/NestSimulator
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                appendIcon="mdi-open-in-new"
                 href="https://www.ebrains.eu/tools/nest"
-                prepend-icon="mdi-brain"
+                prependIcon="mdi-brain"
                 target="_blank"
               >
                 https://www.ebrains.eu/tools/nest

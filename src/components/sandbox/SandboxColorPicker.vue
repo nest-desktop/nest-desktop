@@ -6,7 +6,7 @@
         :items="colorSchemes"
         density="compact"
         label="Select a color scheme"
-        persistent-hint
+        persistentHint
         v-model="state.colorScheme"
         variant="outlined"
       />

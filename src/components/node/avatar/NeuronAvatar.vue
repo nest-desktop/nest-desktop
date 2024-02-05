@@ -1,12 +1,12 @@
 <template>
   <v-avatar class="neuron" rounded="0">
-    <span class="label" :class="{ 'mt-2': props.weight === 'excitatory' }">
+    <span :class="{ 'mt-2': props.weight === 'excitatory' }" class="label">
       {{ props.label }}
     </span>
     <v-icon
       :color="props.color"
       :icon="`network:neuron${props.weight ? `-${$props.weight}` : ''}`"
-      class="position-absolute icon-size"
+      class="icon-size position-absolute"
     />
   </v-avatar>
 </template>

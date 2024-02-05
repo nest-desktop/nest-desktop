@@ -9,7 +9,7 @@
         title="Read documentation"
       >
         <v-icon icon="mdi-text-box-outline" />
-        <span class="text-no-wrap"> Doc </span>
+        <span class="text-no-wrap">Doc</span>
       </v-tab>
     </template>
   </model-bar>

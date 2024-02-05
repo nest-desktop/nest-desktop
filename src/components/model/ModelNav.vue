@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    :model-value="navState.state.open"
+    :modelValue="navState.state.open"
     :style="{ transition: navState.state.resizing ? 'initial' : '' }"
     :width="navState.state.width"
     permanent
@@ -12,9 +12,9 @@
         class="mx-1"
         clearable
         density="compact"
-        hide-details
+        hideDetails
         placeholder="Search model"
-        prepend-inner-icon="mdi-magnify"
+        prependInnerIcon="mdi-magnify"
         v-model="search"
         variant="outlined"
       />
