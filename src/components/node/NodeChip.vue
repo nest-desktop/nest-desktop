@@ -9,7 +9,7 @@
       <span class="font-weight-bold">{{ node.view.label }}</span>
       <span class="mx-1">{{ node.model.label }}</span>
 
-      <span class="mx-1" v-if="appSessionStore.devMode">
+      <span class="mx-1" v-if="appSessionStore.state.devMode">
         ( {{ node.view.state.position.x.toFixed() }},
         {{ node.view.state.position.y.toFixed() }})
       </span>
@@ -23,7 +23,7 @@ import { computed } from "vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { BaseNode } from "@/helpers/node/node";
 import { NodePropTypes } from "@/types/nodeTypes";
-import { useAppSessionStore } from "@/store/appSessionStore";
+import { useAppSessionStore } from "@/stores/appSessionStore";
 
 const appSessionStore = useAppSessionStore();
 

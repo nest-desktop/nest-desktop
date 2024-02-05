@@ -3,7 +3,7 @@
 import { Node } from "@/types/nodeTypes";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { sum, deviation, max, mean, min } from "@/helpers/common/array";
-import { useAppSessionStore } from "@/store/appSessionStore";
+import { useAppSessionStore } from "@/stores/appSessionStore";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
@@ -181,7 +181,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       mode: "lines",
       showlegend: false,
-      type: appSessionStore.webGL ? "scattergl" : "scatter",
+      type: appSessionStore.state.webGL ? "scattergl" : "scatter",
       visible: this.state.visible,
       x,
       y,
@@ -199,7 +199,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         },
         mode: "lines",
         showlegend: false,
-        type: appSessionStore.webGL ? "scattergl" : "scatter",
+        type: appSessionStore.state.webGL ? "scattergl" : "scatter",
         visible: this.state.visible,
         x: [start, end],
         y: [0.63, 0.63],

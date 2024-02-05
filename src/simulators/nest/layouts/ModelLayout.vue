@@ -28,10 +28,10 @@ import ModelNav from "@/components/model/ModelNav.vue";
 
 import { NESTModel } from "../helpers/model/model";
 
-import { useNESTModelStore } from "../store/model/modelStore";
+import { useNESTModelStore } from "../stores/model/modelStore";
 const modelStore = useNESTModelStore();
 
-import { useNESTModelDBStore } from "../store/model/modelDBStore";
+import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore = useNESTModelDBStore();
 
 const model = computed(() => modelStore.model as NESTModel);

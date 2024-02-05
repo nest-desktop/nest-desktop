@@ -1,9 +1,9 @@
 <template>
   <v-color-picker
-    :hide-canvas="state.hideCanvas"
-    :hide-inputs="state.hideInputs"
-    :hide-sliders="state.hideSliders"
-    :show-swatches="state.showSwatches"
+    :hideCanvas="state.hideCanvas"
+    :hideInputs="state.hideInputs"
+    :hideSliders="state.hideSliders"
+    :showSwatches="state.showSwatches"
     :swatches="state.swatches"
     color="transparent"
     elevation="0"

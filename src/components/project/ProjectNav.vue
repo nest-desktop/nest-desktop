@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer
-    :model-value="navStore.open"
-    :style="{ transition: navStore.resizing ? 'initial' : '' }"
-    :width="navStore.width"
+    :model-value="navStore.state.open"
+    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
+    :width="navStore.state.width"
     @update:modelValue="dispatchWindowResize"
     class="d-print-none"
     permanent
@@ -23,7 +23,7 @@
       />
 
       <v-btn
-        :to="{ name: appStore.simulator + 'ProjectNew' }"
+        :to="{ name: appStore.state.simulator + 'ProjectNew' }"
         icon
         size="small"
         title="Create a new project"
@@ -56,7 +56,7 @@
       <v-list-item
         :key="index"
         :to="{
-          name: appStore.simulator + 'Project',
+          name: appStore.state.simulator + 'Project',
           params: { projectId: project.id },
         }"
         v-for="(project, index) in projects"
@@ -154,10 +154,10 @@ import { truncate } from "@/utils/truncate";
 
 import ProjectMenu from "./ProjectMenu.vue";
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNavStore } from "@/store/navStore";
+import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
 const props = defineProps({
@@ -195,7 +195,7 @@ const projectsMenuItems = [
  * @param e MouseEvent from which the x possition is taken
  */
 const handleSideNavMouseMove = (e: MouseEvent) => {
-  navStore.width = e.clientX - 64;
+  navStore.state.width = e.clientX - 64;
   // window.dispatchEvent(new Event("resize"));
 };
 
@@ -203,7 +203,7 @@ const handleSideNavMouseMove = (e: MouseEvent) => {
  * Handle mouse up on resizing.
  */
 const handleSideNavMouseUp = () => {
-  navStore.resizing = false;
+  navStore.state.resizing = false;
   window.removeEventListener("mousemove", handleSideNavMouseMove);
   window.removeEventListener("mouseup", handleSideNavMouseUp);
   // window.dispatchEvent(new Event("resize"));
@@ -213,7 +213,7 @@ const handleSideNavMouseUp = () => {
  * Resize side nav.
  */
 const resizeSideNav = () => {
-  navStore.resizing = true;
+  navStore.state.resizing = true;
   window.addEventListener("mousemove", handleSideNavMouseMove);
   window.addEventListener("mouseup", handleSideNavMouseUp);
 };

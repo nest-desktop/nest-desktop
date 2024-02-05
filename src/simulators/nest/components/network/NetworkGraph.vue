@@ -76,14 +76,14 @@ import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { NESTNetwork } from "../../helpers/network/network";
 import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
 
-import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps({ network: NESTNetwork });
 const network = computed(() => props.network as NESTNetwork);
 
 const graph = computed(() => {
-  return networkGraphStore.graph as NESTNetworkGraph;
+  return networkGraphStore.state.graph as NESTNetworkGraph;
 });
 
 const networkGraphRef: Ref<null> = ref(null);

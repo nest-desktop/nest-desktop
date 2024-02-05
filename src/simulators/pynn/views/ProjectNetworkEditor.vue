@@ -12,8 +12,8 @@ import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import { Network } from "@/types/networkTypes";
 
-import { usePyNNProjectStore } from "../store/project/projectStore";
+import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore = usePyNNProjectStore();
 
-const network = computed(() => projectStore.project.network as Network);
+const network = computed(() => projectStore.state.project.network as Network);
 </script>

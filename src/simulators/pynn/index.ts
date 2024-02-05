@@ -8,9 +8,9 @@ import { simulatorItems } from "..";
 import pynnRoute from "./routes";
 import { pynnIconSet } from "./components/iconsets";
 
-import { usePyNNModelDBStore } from "./store/model/modelDBStore";
-import { usePyNNProjectDBStore } from "./store/project/projectDBStore";
-import { usePyNNSimulatorStore } from "./store/backends/pynnSimulatorStore";
+import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
+import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
+import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
 
 const _configNames = ["PyNNModel"];
 

@@ -9,7 +9,7 @@ import { openToast } from "@/helpers/common/toast";
 
 import { PyNNProject } from "../project/project";
 import { PyNNSimulationCode } from "./simulationCode";
-import { usePyNNSimulatorStore } from "../../store/backends/pynnSimulatorStore";
+import { usePyNNSimulatorStore } from "../../stores/backends/pynnSimulatorStore";
 
 export interface PyNNSimulationProps extends SimulationProps {}
 
@@ -34,7 +34,7 @@ export class PyNNSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const pynnSimulatorStore = usePyNNSimulatorStore();
-    return pynnSimulatorStore.session.instance
+    return pynnSimulatorStore.axiosInstance()
       .post("exec", {
         source: this.code.script,
         return: "response",

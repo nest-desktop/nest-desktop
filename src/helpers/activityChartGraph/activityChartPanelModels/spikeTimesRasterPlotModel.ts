@@ -1,7 +1,7 @@
 // spikeTimesRasterPlotModel.ts
 
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { useAppSessionStore } from "@/store/appSessionStore";
+import { useAppSessionStore } from "@/stores/appSessionStore";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import {
@@ -68,7 +68,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       modelId: this.id,
       name: "Spikes of " + activity.recorder.view.label,
       showlegend: true,
-      type: appSessionStore.webGL ? "scattergl" : "scatter",
+      type: appSessionStore.state.webGL ? "scattergl" : "scatter",
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,

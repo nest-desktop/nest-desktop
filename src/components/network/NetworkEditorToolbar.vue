@@ -74,7 +74,7 @@
         hide-details
         prepend-inner-icon="mdi-pencil"
         single-line
-        v-model="projectStore.project.name"
+        v-model="projectStore.state.project.name"
       /> -->
 
       <v-btn
@@ -112,7 +112,7 @@
 import { computed, reactive } from "vue";
 
 import { downloadSVGImage } from "@/helpers/common/download";
-import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import { Node } from "@/types/nodeTypes";
@@ -120,7 +120,7 @@ import { Connection } from "@/types/connectionTypes";
 
 const networkGraphStore = useNetworkGraphStore();
 
-const graph = computed(() => networkGraphStore.graph);
+const graph = computed(() => networkGraphStore.state.graph);
 
 const state = reactive({
   dialogDelete: false,

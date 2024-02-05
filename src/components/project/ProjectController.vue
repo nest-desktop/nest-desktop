@@ -8,7 +8,7 @@
   >
     <v-tabs
       :mandatory="false"
-      :model-value="projectStore.controllerView"
+      :modelValue="projectStore.state.controllerView"
       color="primary"
       direction="vertical"
       stacked
@@ -24,7 +24,7 @@
         v-for="(item, index) in controllerItems"
         v-show="
           item.show !== 'dev' ||
-          (item.show === 'dev' && appSessionStore.devMode)
+          (item.show === 'dev' && appSessionStore.state.devMode)
         "
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
@@ -35,7 +35,7 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          @click.stop="projectStore.bottomOpen = !projectStore.bottomOpen"
+          @click.stop="projectStore.state.bottomOpen = !projectStore.state.bottomOpen"
           icon="mdi-xml"
           size="small"
           value="code"
@@ -46,9 +46,9 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="projectStore.controllerOpen"
-    :style="{ transition: navStore.resizing ? 'initial' : '' }"
-    :width="projectStore.controllerWidth"
+    :model-value="projectStore.state.controllerOpen"
+    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
+    :width="projectStore.state.controllerWidth"
     @update:modelValue="dispatchWindowResize"
     class="d-print-none"
     location="right"
@@ -56,8 +56,8 @@
   >
     <div @mousedown="resizeSideController" class="resize-handle left" />
 
-    <div :key="projectStore.projectId">
-      <template v-if="projectStore.controllerView === 'network'">
+    <div :key="projectStore.state.projectId">
+      <template v-if="projectStore.state.controllerView === 'network'">
         <slot name="network">
           <network-param-editor :network="(project.network as Network)">
             <template #nodes>
@@ -67,7 +67,7 @@
         </slot>
       </template>
 
-      <template v-else-if="projectStore.controllerView === 'kernel'">
+      <template v-else-if="projectStore.state.controllerView === 'kernel'">
         <slot name="simulationKernel">
           <simulation-kernel-editor
             :simulation="(project.simulation as Simulation)"
@@ -77,7 +77,7 @@
 
       <template
         v-else-if="
-          appSessionStore.devMode && projectStore.controllerView === 'raw'
+          appSessionStore.state.devMode && projectStore.state.controllerView === 'raw'
         "
       >
         <codemirror
@@ -88,7 +88,7 @@
         />
       </template>
 
-      <template v-else-if="projectStore.controllerView === 'code'">
+      <template v-else-if="projectStore.state.controllerView === 'code'">
         <slot name="simulationCodeEditor">
           <simulation-code-editor
             :simulation="(project.simulation as Simulation)"
@@ -96,22 +96,22 @@
         </slot>
       </template>
 
-      <template v-else-if="projectStore.controllerView === 'activity'">
+      <template v-else-if="projectStore.state.controllerView === 'activity'">
         <activity-chart-controller
           :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
         />
       </template>
 
-      <template v-else-if="projectStore.controllerView === 'stats'">
+      <template v-else-if="projectStore.state.controllerView === 'stats'">
         <activity-stats :activities="(project.activities as Activities)" />
       </template>
     </div>
   </v-navigation-drawer>
 
   <v-bottom-navigation
-    :active="projectStore.bottomOpen"
-    :height="projectStore.bottomNavHeight"
-    :style="{ transition: navStore.resizing ? 'initial' : '' }"
+    :active="projectStore.state.bottomOpen"
+    :height="projectStore.state.bottomNavHeight"
+    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     class="d-print-none"
   >
     <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
@@ -140,10 +140,10 @@ import { Network } from "@/types/networkTypes";
 import { Project } from "@/types/projectTypes";
 import { Simulation } from "@/types/simulationTypes";
 
-import { useAppSessionStore } from "@/store/appSessionStore";
+import { useAppSessionStore } from "@/stores/appSessionStore";
 const appSessionStore = useAppSessionStore();
 
-import { useNavStore } from "@/store/navStore";
+import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
 const props = defineProps({
@@ -151,7 +151,7 @@ const props = defineProps({
 });
 
 const projectStore = computed(() => props.store);
-const project = computed(() => projectStore.value?.project as Project);
+const project = computed(() => projectStore.value?.state.project as Project);
 
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)
@@ -172,7 +172,7 @@ const extensions = [json()];
  * Resize bottom nav.
  */
 const resizeBottomNav = () => {
-  navStore.resizing = true;
+  navStore.state.resizing = true;
   window.addEventListener("mousemove", handleBottomNavMouseMove);
   window.addEventListener("mouseup", handleBottomNavMouseUp);
 };
@@ -182,7 +182,7 @@ const resizeBottomNav = () => {
  * @param e MouseEvent from which the x position is taken
  */
 const handleBottomNavMouseMove = (e: MouseEvent) => {
-  projectStore.value.bottomNavHeight = window.innerHeight - e.clientY;
+  projectStore.value.state.bottomNavHeight = window.innerHeight - e.clientY;
   // window.dispatchEvent(new Event("resize"));
 };
 
@@ -191,7 +191,7 @@ const handleBottomNavMouseMove = (e: MouseEvent) => {
  * @param e MouseEvent from which the x position is taken
  */
 const handleSideControllerMouseMove = (e: MouseEvent) => {
-  projectStore.value.controllerWidth = window.innerWidth - e.clientX - 64;
+  projectStore.value.state.controllerWidth = window.innerWidth - e.clientX - 64;
   // window.dispatchEvent(new Event("resize"));
 };
 
@@ -199,7 +199,7 @@ const handleSideControllerMouseMove = (e: MouseEvent) => {
  * Handle mouse up on resizing.
  */
 const handleSideControllerMouseUp = () => {
-  navStore.resizing = false;
+  navStore.state.resizing = false;
   window.removeEventListener("mousemove", handleSideControllerMouseMove);
   window.removeEventListener("mouseup", handleSideControllerMouseUp);
   // window.dispatchEvent(new Event("resize"));
@@ -209,7 +209,7 @@ const handleSideControllerMouseUp = () => {
  * Handle mouse up on resizing.
  */
 const handleBottomNavMouseUp = () => {
-  navStore.resizing = false;
+  navStore.state.resizing = false;
   window.removeEventListener("mousemove", handleBottomNavMouseMove);
   window.removeEventListener("mouseup", handleBottomNavMouseUp);
   // window.dispatchEvent(new Event("resize"));
@@ -219,7 +219,7 @@ const handleBottomNavMouseUp = () => {
  * Resize side controller.
  */
 const resizeSideController = () => {
-  navStore.resizing = true;
+  navStore.state.resizing = true;
   window.addEventListener("mousemove", handleSideControllerMouseMove);
   window.addEventListener("mouseup", handleSideControllerMouseUp);
 };

@@ -6,7 +6,7 @@ import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 import { NESTProject } from "../project/project";
-import { useInsiteAccessStore } from "../../store/backends/insiteAccessStore";
+import { useInsiteAccessStore } from "../../stores/backends/insiteAccessStore";
 
 const logger = mainLogger.getSubLogger({ name: "insite" });
 
@@ -105,7 +105,7 @@ export class Insite {
     logger.trace("Update simulation time info continuously");
 
     this.simulationTimeIntervalId = window.setInterval(() => {
-      this.insiteAccess.instance
+      this.insiteAccess.axiosInstance()
         .get("nest/simulationTimeInfo/")
         .then((response: any) => {
           if (response === undefined) return;
@@ -188,7 +188,7 @@ export class Insite {
     }
     logger.trace("Get analog signal activities from Insite");
 
-    this.insiteAccess.instance
+    this.insiteAccess.axiosInstance()
       .get("nest/multimeters/")
       .then((response: any) => {
         if (response == null) {
@@ -249,7 +249,7 @@ export class Insite {
 
     const attribute: string = "V_m";
     const path = `nest/multimeters/${activity.recorderUnitId}/attributes/${attribute}/?fromTime=${activity.lastTime}`;
-    this.insiteAccess.instance.get(path).then((response: any) => {
+    this.insiteAccess.axiosInstance().get(path).then((response: any) => {
       if (response == null) {
         return;
       }
@@ -287,7 +287,7 @@ export class Insite {
       return;
     }
     const path = `nest/spikes/?top=${this._state.top}&skip=${this._state.skip}`;
-    this.insiteAccess.instance.get(path).then((response: any) => {
+    this.insiteAccess.axiosInstance().get(path).then((response: any) => {
       if (response == null) {
         return;
       }
@@ -354,7 +354,7 @@ export class Insite {
     logger.trace("Get node IDs from Insite");
 
     const positions: any = {};
-    return this.insiteAccess.instance
+    return this.insiteAccess.axiosInstance()
       .get("nest/nodes/")
       .then((response: any) => {
         if (response == null) {
@@ -385,7 +385,7 @@ export class Insite {
     }
     logger.trace("Get spike activities from Insite");
 
-    this.insiteAccess.instance
+    this.insiteAccess.axiosInstance()
       .get("nest/spikerecorders/")
       .then((response: any) => {
         if (response == null) {
@@ -444,7 +444,7 @@ export class Insite {
     const path = `nest/spikes/?fromTime=${
       activity.lastTime + 0.1
     }&spikedetectorId=${activity.recorderUnitId}`;
-    this.insiteAccess.instance.get(path).then((response: any) => {
+    this.insiteAccess.axiosInstance().get(path).then((response: any) => {
       if (response == null) {
         return;
       }
@@ -478,7 +478,7 @@ export class Insite {
    * Notify whether the simulation is finished.
    */
   simulationEndNotification(): void {
-    this.insiteAccess.instance
+    this.insiteAccess.axiosInstance()
       .get("nest/simulationTimeInfo/")
       .then((response: any) => {
         const simulation = this._project.simulation;

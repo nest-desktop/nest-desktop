@@ -9,7 +9,7 @@ import { openToast } from "@/helpers/common/toast";
 
 import { NorseProject } from "../project/project";
 import { NorseSimulationCode } from "./simulationCode";
-import { useNorseSimulatorStore } from "../../store/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../../stores/backends/norseSimulatorStore";
 
 export interface NorseSimulationProps extends SimulationProps {}
 
@@ -34,7 +34,7 @@ export class NorseSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const norseSimulatorStore = useNorseSimulatorStore();
-    return norseSimulatorStore.session.instance
+    return norseSimulatorStore.axiosInstance()
       .post("exec", {
         source: this.code.script,
         return: "response",

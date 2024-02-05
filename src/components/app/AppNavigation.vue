@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer class="d-print-none" permanent rail rail-width="64">
     <v-tabs
-      :model-value="navStore.view"
+      :model-value="navStore.state.view"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -18,7 +18,7 @@
         height="72"
         minWidth="0"
         v-for="(item, index) in navItems"
-        v-show="item.simulator === appStore.simulator"
+        v-show="item.simulator === appStore.state.simulator"
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.title }}</span>
@@ -48,10 +48,10 @@ import { computed } from "vue";
 // import { useTheme } from "vuetify";
 // const theme = useTheme();
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNavStore } from "@/store/navStore";
+import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
 const props = defineProps(["navItems"]);

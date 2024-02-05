@@ -15,7 +15,7 @@ import { Project } from "@/types/projectTypes";
 import { ProjectState } from "./projectState";
 import { Simulation } from "@/types/simulationTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
-import { useModelDBStore } from "@/store/model/modelDBStore";
+import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 export interface ProjectProps {
   activityGraph?: any;

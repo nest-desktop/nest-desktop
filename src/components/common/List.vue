@@ -27,12 +27,12 @@
 
         <v-list-item
           :key="'sub' + i"
-          v-for="(subitem, i) in item.items"
           :prepend-icon="subitem.icon"
           :title="subitem.title"
           :value="subitem.value"
           class="sublist"
           style="padding-inline-start: 16px !important"
+          v-for="(subitem, i) in item.items"
         />
       </v-list-group>
 

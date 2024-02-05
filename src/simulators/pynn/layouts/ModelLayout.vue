@@ -16,10 +16,10 @@ import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import { PyNNModel } from "../helpers/model/model";
 
-import { usePyNNModelStore } from "../store/model/modelStore";
+import { usePyNNModelStore } from "../stores/model/modelStore";
 const modelStore = usePyNNModelStore();
 
-import { usePyNNModelDBStore } from "../store/model/modelDBStore";
+import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore = usePyNNModelDBStore();
 
 const model = computed(() => modelStore.model as PyNNModel);

@@ -13,9 +13,9 @@ import { computed } from "vue";
 import { ActivityChartGraph as ActivityChartGraphClass } from "@/helpers/activityChartGraph/activityChartGraph";
 import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
 
-import { useNESTProjectStore } from "../store/project/projectStore";
+import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-const graph = computed(() => projectStore.project.activityGraph.activityChartGraph as ActivityChartGraphClass);
+const graph = computed(() => projectStore.state.project.activityGraph.activityChartGraph as ActivityChartGraphClass);
 
 </script>

@@ -1,12 +1,18 @@
 <template>
-  <v-row>
-    <v-col cols="1">
-      <v-checkbox v-model="store.enabled" />
+  <v-row class="mt-1">
+    <v-col class="d-flex justify-center" cols="2">
+      <div>
+        <v-switch
+          inset
+          title="Enable backend"
+          v-model="store.backendConfigStore.state.enabled"
+        />
+      </div>
     </v-col>
-    <v-col cols="11">
+    <v-col cols="10">
       <v-text-field
-        :disabled="!store.enabled"
-        :placeholder="store.defaults.url"
+        :disabled="!store.backendConfigStore.state.enabled"
+        :placeholder="store.backendConfigStore.state.defaults.url"
         :rules="[
           (value) => value.length === 0 || isURL(value) || 'URL is not valid',
         ]"
@@ -15,27 +21,24 @@
         density="compact"
         label="URL of backend"
         persistent-placeholder
-        v-model="store.url"
+        v-model="store.backendConfigStore.state.url"
         variant="outlined"
       >
         <template #append>
           <v-btn @click="store.ping()" variant="outlined">
             <template #append>
-              <v-icon
-                icon="mdi-circle"
-                :color="store.session.isOK ? 'green' : 'red'"
-              />
+              <v-icon icon="mdi-circle" :color="store.isOK ? 'green' : 'red'" />
             </template>
             ping
           </v-btn>
         </template>
 
         <template #details>
-          <div v-if="store.session.isOK && store.session.isValid">
-            {{ store.session.response.data }}
+          <div v-if="store.isOK && store.isValid">
+            {{ store.response.data }}
           </div>
           <div v-else>
-            {{ store.session.error }}
+            {{ store.error }}
           </div>
         </template>
       </v-text-field>
@@ -53,8 +56,11 @@ const store = computed(() => props.store);
 
 const updateOnFocus = (focus: boolean) => {
   if (!focus) {
-    if (store.value.url == null || store.value.url.length === 0) {
-      store.value.reset();
+    if (
+      store.value.backendConfigStore.state.url == null ||
+      store.value.backendConfigStore.state.url.length === 0
+    ) {
+      store.value.backendConfigStore.reset();
     }
     store.value.ping();
   }

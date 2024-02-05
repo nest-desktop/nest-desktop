@@ -6,7 +6,7 @@ import {
   PyNNSimulation,
   PyNNSimulationProps,
 } from "../simulation/simulation";
-import { usePyNNModelDBStore } from "../../store/model/modelDBStore";
+import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface PyNNProjectProps extends ProjectProps {
   simulation?: PyNNSimulationProps;

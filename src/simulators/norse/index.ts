@@ -8,9 +8,9 @@ import { simulatorItems } from "..";
 import norseRoute from "./routes";
 import { norseIconSet } from "./components/iconsets";
 
-import { useNorseModelDBStore } from "./store/model/modelDBStore";
-import { useNorseProjectDBStore } from "./store/project/projectDBStore";
-import { useNorseSimulatorStore } from "./store/backends/norseSimulatorStore";
+import { useNorseModelDBStore } from "./stores/model/modelDBStore";
+import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
+import { useNorseSimulatorStore } from "./stores/backends/norseSimulatorStore";
 
 const _configNames = ["NorseModel"];
 

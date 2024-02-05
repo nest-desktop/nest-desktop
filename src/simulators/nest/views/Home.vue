@@ -91,17 +91,17 @@
       <v-col md="6">
         <v-expansion-panels>
           <v-expansion-panel title="Backend settings">
-            <v-expansion-panel-text class="ma-0 pa-0">
+            <v-expansion-panel-text>
               <v-tabs density="compact" v-model="backendTab">
-                <v-tab value="one">NEST Simulator</v-tab>
-                <v-tab value="two">Insite Access</v-tab>
+                <v-tab value="nest">NEST Simulator</v-tab>
+                <v-tab value="insite">Insite Access</v-tab>
               </v-tabs>
+
               <v-window v-model="backendTab">
-                <v-window-item value="one">
+                <v-window-item value="nest">
                   <backend-settings :store="nestSimulatorStore" />
                 </v-window-item>
-
-                <v-window-item value="two">
+                <v-window-item value="insite">
                   <backend-settings :store="insiteAccessStore" />
                 </v-window-item>
               </v-window>
@@ -123,25 +123,25 @@ import StoreList from "@/components/StoreList.vue";
 
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
-import { useNESTModelDBStore } from "../store/model/modelDBStore";
+import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore = useNESTModelDBStore();
 
-import { useNESTProjectDBStore } from "../store/project/projectDBStore";
+import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
 
-import { useNESTModelStore } from "../store/model/modelStore";
+import { useNESTModelStore } from "../stores/model/modelStore";
 const modelStore = useNESTModelStore();
 
-import { useNESTProjectStore } from "../store/project/projectStore";
+import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
+import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
 const nestSimulatorStore = useNESTSimulatorStore();
 
-import { useInsiteAccessStore } from "../store/backends/insiteAccessStore";
+import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
 const insiteAccessStore = useInsiteAccessStore();
 
 const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
 
-const backendTab = ref("one");
+const backendTab = ref("nest");
 </script>

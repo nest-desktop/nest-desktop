@@ -78,7 +78,6 @@
         </template>
         <v-list-item-title> Settings </v-list-item-title>
       </v-list-item>
-
     </v-list>
   </v-menu>
 
@@ -99,16 +98,22 @@
   <v-spacer />
 
   <v-btn
-    :disabled="!backend.enabled"
+    :disabled="!backend.isEnabled"
     :key="index"
+    :title="backend.URL"
+    @click="() => backend.check()"
     size="x-small"
     v-for="(backend, index) in appStore.currentSimulator.backends"
     variant="text"
   >
-    {{ backend.name }}
+    {{ backend.state.name }}
     <v-icon
       :color="
-        backend.enabled ? (backend.session.isValid ? 'green' : 'red') : ''
+        backend.isEnabled
+          ? backend.isOK && backend.isValid
+            ? 'green'
+            : 'red'
+          : ''
       "
       class="mx-1"
       icon="mdi-circle"
@@ -117,12 +122,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useTheme } from "vuetify";
-const theme = useTheme();
-
 // import { DatabaseService } from "@/helpers/common/database";
 import { simulatorItems } from "@/simulators";
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
+import { onMounted } from "vue";
 
 const appStore = useAppStore();
 
@@ -130,7 +133,7 @@ const settingsItems = [
   {
     icon: "mdi-theme-light-dark",
     id: "theme-light-dark",
-    onClick: () => appStore.toggleDarkMode(theme),
+    // onClick: () => appStore.toggleDarkMode(theme),
     title: "Dark mode",
   },
   {
@@ -151,4 +154,10 @@ const settingsItems = [
   //   },
   // },
 ];
+
+onMounted(() => {
+  Object.values(appStore.currentSimulator.backends).forEach((backend: any) =>
+    backend.check()
+  );
+});
 </script>

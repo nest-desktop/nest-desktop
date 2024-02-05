@@ -40,7 +40,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-// import { useAppStore } from "@/store/appStore";
+// import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
 const props = defineProps({

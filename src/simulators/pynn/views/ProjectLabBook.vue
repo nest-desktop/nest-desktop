@@ -47,8 +47,8 @@ import NodeViewer from "@/components/node/NodeViewer.vue";
 import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
 
-import { usePyNNProjectStore } from "../store/project/projectStore";
+import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore = usePyNNProjectStore();
 
-const network = computed(() => projectStore.project.network as Network);
+const network = computed(() => projectStore.state.project.network as Network);
 </script>

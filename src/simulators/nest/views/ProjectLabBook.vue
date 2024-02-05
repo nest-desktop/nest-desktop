@@ -48,8 +48,8 @@ import NetworkGraph from "../components/network/NetworkGraph.vue";
 import { NESTNetwork } from "../helpers/network/network";
 import { NESTNode } from "../helpers/node/node";
 
-import { useNESTProjectStore } from "../store/project/projectStore";
+import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-const network = computed(() => projectStore.project.network as NESTNetwork);
+const network = computed(() => projectStore.state.project.network as NESTNetwork);
 </script>

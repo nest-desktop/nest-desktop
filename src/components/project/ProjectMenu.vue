@@ -77,7 +77,7 @@ import { computed, reactive } from "vue";
 
 import { Project, ProjectPropTypes } from "@/types/projectTypes";
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useRouter, useRoute } from "vue-router";
@@ -136,7 +136,7 @@ const projectMenuItems = [
       const newProject = projectDBStore.value.duplicate();
       if (!route.path.endsWith(newProject.id)) {
         router.push({
-          name: appStore.simulator + "NetworkEditor",
+          name: appStore.state.simulator + "NetworkEditor",
           params: { projectId: newProject.id },
         });
       }

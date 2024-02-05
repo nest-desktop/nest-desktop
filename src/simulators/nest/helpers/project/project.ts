@@ -8,7 +8,7 @@ import {
   NESTSimulation,
   NESTSimulationProps,
 } from "../simulation/simulation";
-import { useNESTModelDBStore } from "../../store/model/modelDBStore";
+import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface NESTProjectProps extends ProjectProps {
   network?: NESTNetworkProps;

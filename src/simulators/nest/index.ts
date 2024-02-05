@@ -8,10 +8,10 @@ import { simulatorItems } from "..";
 import nestRoute from "./routes";
 import { nestIconSet } from "./components/iconsets";
 
-import { useInsiteAccessStore } from "./store/backends/insiteAccessStore";
-import { useNESTModelDBStore } from "./store/model/modelDBStore";
-import { useNESTProjectDBStore } from "./store/project/projectDBStore";
-import { useNESTSimulatorStore } from "./store/backends/nestSimulatorStore";
+import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
+import { useNESTModelDBStore } from "./stores/model/modelDBStore";
+import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
+import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 
 const _configNames = [
   "NESTConnection",
@@ -34,16 +34,17 @@ export default {
 
     // Init backend NEST Simulator
     const nestSimulatorStore = useNESTSimulatorStore();
-    nestSimulatorStore.update = () => {
+
+    // Customize headers to authenticate on NEST Server.
+    nestSimulatorStore.updateAccessToken = () => {
       // Add token to axios instance header.
-      if (nestSimulatorStore.accessToken) {
-        nestSimulatorStore.session.instance.defaults.headers.common[
+      if (nestSimulatorStore.state.accessToken) {
+        nestSimulatorStore.axiosInstance().defaults.headers.common[
           "NESTServerAuth"
-        ] = nestSimulatorStore.accessToken;
+        ] = nestSimulatorStore.state.accessToken;
       }
-      nestSimulatorStore.init();
     };
-    nestSimulatorStore.update();
+    nestSimulatorStore.init();
 
     // Init backend Insite Access
     const insiteAccessStore = useInsiteAccessStore();

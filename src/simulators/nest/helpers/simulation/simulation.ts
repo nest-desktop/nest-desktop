@@ -6,7 +6,7 @@ import { openToast } from "@/helpers/common/toast";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 
 import { NESTProject } from "../project/project";
-import { useNESTSimulatorStore } from "../../store/backends/nestSimulatorStore";
+import { useNESTSimulatorStore } from "../../stores/backends/nestSimulatorStore";
 
 import {
   NESTSimulationCode,
@@ -40,7 +40,7 @@ export class NESTSimulation extends BaseSimulation {
     return this._project as NESTProject;
   }
 
-  get nestSimulator(): any {
+  get nestSimulator() {
     const nestSimulatorStore = useNESTSimulatorStore();
     return nestSimulatorStore;
   }
@@ -95,7 +95,7 @@ export class NESTSimulation extends BaseSimulation {
   async runSimulation(): Promise<any> {
     this.logger.trace("run simulation");
 
-    return this.nestSimulator.session.instance
+    return this.nestSimulator.axiosInstance()
       .post("exec", {
         source: this.code.script,
         return: "response",
@@ -140,7 +140,7 @@ export class NESTSimulation extends BaseSimulation {
       stepSize: 1,
     };
 
-    return this.nestSimulator.session.instance
+    return this.nestSimulator.axiosInstance()
       .post("exec", { source: this.code.script })
       .then((response: any) => {
         switch (response.status) {

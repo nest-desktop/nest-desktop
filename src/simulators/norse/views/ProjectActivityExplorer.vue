@@ -13,8 +13,8 @@ import { computed } from "vue";
 import { ActivityChartGraph as ActivityChartGraphClass } from "@/helpers/activityChartGraph/activityChartGraph";
 import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
 
-import { useNorseProjectStore } from "../store/project/projectStore";
+import { useNorseProjectStore } from "../stores/project/projectStore";
 const projectStore = useNorseProjectStore();
 
-const graph = computed(() => projectStore.project.activityGraph.activityChartGraph as ActivityChartGraphClass);
+const graph = computed(() => projectStore.state.project.activityGraph.activityChartGraph as ActivityChartGraphClass);
 </script>

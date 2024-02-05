@@ -4,8 +4,8 @@
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNorseModelDBStore } from "../store/model/modelDBStore";
-import { useNorseModelStore } from "../store/model/modelStore";
+import { useNorseModelDBStore } from "../stores/model/modelDBStore";
+import { useNorseModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
   name: "norse model route",

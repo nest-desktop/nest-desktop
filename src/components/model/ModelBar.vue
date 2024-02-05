@@ -32,7 +32,7 @@ import { computed } from "vue";
 
 import { Model, ModelPropTypes } from "@/types/modelTypes";
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const props = defineProps({
@@ -48,7 +48,7 @@ const tabItems = computed(() => [
     label: "Explore",
     title: "Explore activity",
     to: {
-      name: appStore.simulator + "ModelExplorer",
+      name: appStore.state.simulator + "ModelExplorer",
       params: { modelId: model.value.id },
     },
   },
@@ -58,7 +58,7 @@ const tabItems = computed(() => [
     label: "Edit",
     title: "Edit activity",
     to: {
-      name: appStore.simulator + "ModelEditor",
+      name: appStore.state.simulator + "ModelEditor",
       params: { modelId: model.value.id },
     },
   },

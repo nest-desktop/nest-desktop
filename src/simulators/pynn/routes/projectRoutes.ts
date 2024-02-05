@@ -4,8 +4,8 @@
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { usePyNNProjectDBStore } from "../store/project/projectDBStore";
-import { usePyNNProjectStore } from "../store/project/projectStore";
+import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
+import { usePyNNProjectStore } from "../stores/project/projectStore";
 
 const logger = mainLogger.getSubLogger({ name: "project route" });
 
@@ -22,7 +22,7 @@ const projectBeforeEnter = (to: any) => {
   projectStore.loadProject(to.params.projectId);
 
   const path = to.path.split("/");
-  projectStore.view = path[path.length - 1] || "edit";
+  projectStore.state.view = path[path.length - 1] || "edit";
 };
 
 const projectNew = () => {
@@ -31,7 +31,7 @@ const projectNew = () => {
   projectStore.loadProject();
 
   return {
-    path: "/pynn/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/pynn/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
   };
 };
 
@@ -44,7 +44,7 @@ const projectRedirect = (to: any) => {
   }
 
   return {
-    path: "/pynn/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/pynn/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
   };
 };
 

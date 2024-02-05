@@ -4,8 +4,8 @@
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNESTModelDBStore } from "../store/model/modelDBStore";
-import { useNESTModelStore } from "../store/model/modelStore";
+import { useNESTModelDBStore } from "../stores/model/modelDBStore";
+import { useNESTModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
   name: "nest model route",

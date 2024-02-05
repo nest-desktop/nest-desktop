@@ -8,8 +8,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // Store
-import { useAppStore } from "@/store/appStore";
-import { useNavStore } from "@/store/navStore";
+import { useAppStore } from "@/stores/appStore";
+import { useNavStore } from "@/stores/navStore";
 
 const checkSimulator = () => {
   const appStore = useAppStore();
@@ -20,7 +20,7 @@ const checkSimulator = () => {
 
 const closeNav = () => {
   const navStore = useNavStore();
-  navStore.open = false;
+  navStore.state.open = false;
 };
 
 const routes: RouteRecordRaw[] = [

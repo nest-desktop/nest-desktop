@@ -90,19 +90,19 @@ import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
 
-import { usePyNNModelDBStore } from "../store/model/modelDBStore";
+import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore = usePyNNModelDBStore();
 
-import { usePyNNModelStore } from "../store/model/modelStore";
+import { usePyNNModelStore } from "../stores/model/modelStore";
 const modelStore = usePyNNModelStore();
 
-import { usePyNNProjectDBStore } from "../store/project/projectDBStore";
+import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = usePyNNProjectDBStore();
 
-import { usePyNNProjectStore } from "../store/project/projectStore";
+import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore = usePyNNProjectStore();
 
-import { usePyNNSimulatorStore } from "../store/backends/pynnSimulatorStore";
+import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 const pynnSimulatorStore = usePyNNSimulatorStore();
 
 const stores = { modelDBStore, modelStore, projectStore, projectDBStore };

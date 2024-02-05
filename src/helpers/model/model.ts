@@ -10,7 +10,7 @@ import {
   ModelParameterProps,
 } from "@/helpers/model/modelParameter";
 import { logger as mainLogger } from "@/helpers/common/logger";
-// import { useModelDBStore } from "@/store/model/modelDBStore";
+// import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 export interface ModelProps {
   doc?: any;

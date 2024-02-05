@@ -1,14 +1,14 @@
 <template>
   <v-app v-if="nestSessionStore.loading">
     <v-container class="fill-height">
-      <v-progress-circular class="ma-auto" indeterminate color="primary" />
+      <v-progress-circular class="ma-auto" color="primary" indeterminate />
     </v-container>
 
     <app-footer />
   </v-app>
 
   <template v-else>
-    <app-navigation :nav-items="navItems" />
+    <app-navigation :navItems />
 
     <v-main>
       <router-view />
@@ -24,10 +24,10 @@ import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 import { getParamFromURL } from "@/helpers/common/paramQuery";
 
-import { useNESTSessionStore } from "../store/sessionStore";
-import { useNESTSimulatorStore } from "../store/backends/nestSimulatorStore";
-import { useNESTModelStore } from "../store/model/modelStore";
-import { useNESTProjectStore } from "../store/project/projectStore";
+import { useNESTSessionStore } from "../stores/sessionStore";
+import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
+import { useNESTModelStore } from "../stores/model/modelStore";
+import { useNESTProjectStore } from "../stores/project/projectStore";
 
 const modelStore = useNESTModelStore();
 const nestSessionStore = useNESTSessionStore();
@@ -56,13 +56,13 @@ onMounted(() => {
   // Store URL of NEST Server from the query.
   const nestServerURL = getParamFromURL(route, "nest_server_url");
   if (nestServerURL) {
-    nestSimulatorStore.url = nestServerURL;
+    nestSimulatorStore.backendConfigStore.state.url = nestServerURL;
   }
 
   // Store access token for NEST Server from the query.
   const accessToken = getParamFromURL(route, "nest_server_access_token");
   if (accessToken) {
-    nestSimulatorStore.accessToken = accessToken;
+    nestSimulatorStore.state.accessToken = accessToken;
   }
 
   nestSimulatorStore.update();

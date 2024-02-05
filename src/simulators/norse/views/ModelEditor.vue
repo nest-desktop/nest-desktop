@@ -23,7 +23,7 @@ import { Codemirror } from "vue-codemirror";
 
 import { NorseModel } from "../helpers/model/model";
 
-import { useNorseModelStore } from "../store/model/modelStore";
+import { useNorseModelStore } from "../stores/model/modelStore";
 const modelStore = useNorseModelStore();
 
 const model = computed(() => modelStore.model as NorseModel);

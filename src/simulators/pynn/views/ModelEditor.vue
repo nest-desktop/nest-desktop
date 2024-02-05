@@ -23,7 +23,7 @@ import { Codemirror } from "vue-codemirror";
 
 import { PyNNModel } from "../helpers/model/model";
 
-import { usePyNNModelStore } from "../store/model/modelStore";
+import { usePyNNModelStore } from "../stores/model/modelStore";
 const modelStore = usePyNNModelStore();
 
 const model = computed(() => modelStore.model as PyNNModel);

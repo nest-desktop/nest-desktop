@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer
-    :model-value="navState.open"
-    :style="{ transition: navState.resizing ? 'initial' : '' }"
-    :width="navState.width"
+    :model-value="navState.state.open"
+    :style="{ transition: navState.state.resizing ? 'initial' : '' }"
+    :width="navState.state.width"
     permanent
   >
     <div @mousedown="resizeSidebar" class="resize-handle" />
@@ -45,7 +45,7 @@
         :subtitle="model.elementType"
         :title="model.label"
         :to="{
-          name: appStore.simulator + 'Model',
+          name: appStore.state.simulator + 'Model',
           params: { modelId: model.id },
         }"
         v-for="(model, index) in models"
@@ -69,10 +69,10 @@ import { computed, ref } from "vue";
 
 import { Model } from "@/types/modelTypes";
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNavStore } from "@/store/navStore";
+import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
 
 const props = defineProps({
@@ -99,7 +99,7 @@ const menuItems = [
  * @param e MouseEvent from which the x position is taken
  */
 const handleMouseMove = (e: MouseEvent) => {
-  navState.width = e.clientX - 64;
+  navState.state.width = e.clientX - 64;
   // window.dispatchEvent(new Event("resize"));
 };
 
@@ -107,7 +107,7 @@ const handleMouseMove = (e: MouseEvent) => {
  * Handle mouse up on resizing.
  */
 const handleMouseUp = () => {
-  navState.resizing = false;
+  navState.state.resizing = false;
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", handleMouseUp);
   // window.dispatchEvent(new Event("resize"));
@@ -117,7 +117,7 @@ const handleMouseUp = () => {
  * Resize sidebar.
  */
 const resizeSidebar = () => {
-  navState.resizing = true;
+  navState.state.resizing = true;
   window.addEventListener("mousemove", handleMouseMove);
   window.addEventListener("mouseup", handleMouseUp);
 };

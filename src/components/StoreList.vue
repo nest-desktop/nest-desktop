@@ -9,10 +9,10 @@
     <v-window v-model="databaseTab">
       <v-window-item value="one">
         <v-card-subtitle
-          :key="stores.projectStore.projectId"
-          v-if="appStore.session.devMode"
+          :key="stores.projectStore.state.projectId"
+          v-if="appStore.session.state.devMode"
         >
-          Current project: {{ truncate(stores.projectStore.projectId) }}
+          Current project: {{ truncate(stores.projectStore.state.projectId) }}
         </v-card-subtitle>
         <v-list :key="stores.projectDBStore.projects.length" lines="two" nav>
           <v-list-item :to="{ name: simulator + 'ProjectNew' }">
@@ -38,7 +38,7 @@
       <v-window-item value="two">
         <v-card-subtitle
           :key="stores.modelStore.modelId"
-          v-if="appStore.session.devMode"
+          v-if="appStore.session.state.devMode"
         >
           Current model: {{ stores.modelStore.modelId }}
         </v-card-subtitle>
@@ -65,7 +65,7 @@ import { computed, ref } from "vue";
 
 import { truncate } from "@/utils/truncate";
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const props = defineProps([

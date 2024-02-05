@@ -7,8 +7,8 @@ import { computed, watch } from "vue";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
-import { useNESTProjectStore } from "../store/project/projectStore";
-import { useNESTSessionStore } from "../store/sessionStore";
+import { useNESTProjectStore } from "../stores/project/projectStore";
+import { useNESTSessionStore } from "../stores/sessionStore";
 
 const logger = mainLogger.getSubLogger({
   name: "nest project route",
@@ -30,7 +30,7 @@ const projectBeforeEnter = (to: any) => {
   }
 
   const path = to.path.split("/");
-  projectStore.view = path[path.length - 1] || "edit";
+  projectStore.state.view = path[path.length - 1] || "edit";
   logger.trace("enter:", to.path);
 };
 
@@ -40,7 +40,7 @@ const projectNew = () => {
   projectStore.loadProject();
 
   return {
-    path: "/nest/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/nest/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
   };
 };
 
@@ -54,7 +54,7 @@ const projectRedirect = (to: any) => {
   }
 
   return {
-    path: "/nest/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/nest/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
   };
 };
 

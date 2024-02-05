@@ -4,8 +4,8 @@
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNorseProjectDBStore } from "../store/project/projectDBStore";
-import { useNorseProjectStore } from "../store/project/projectStore";
+import { useNorseProjectDBStore } from "../stores/project/projectDBStore";
+import { useNorseProjectStore } from "../stores/project/projectStore";
 
 const logger = mainLogger.getSubLogger({ name: "project route" });
 
@@ -22,7 +22,7 @@ const projectBeforeEnter = (to: any) => {
   projectStore.loadProject(to.params.projectId);
 
   const path = to.path.split("/");
-  projectStore.view = path[path.length - 1] || "edit";
+  projectStore.state.view = path[path.length - 1] || "edit";
 };
 
 const projectNew = () => {
@@ -31,7 +31,7 @@ const projectNew = () => {
   projectStore.loadProject();
 
   return {
-    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/norse/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
   };
 };
 
@@ -44,7 +44,7 @@ const projectRedirect = (to: any) => {
   }
 
   return {
-    path: "/norse/project/" + projectStore.projectId + "/" + projectStore.view,
+    path: "/norse/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
   };
 };
 

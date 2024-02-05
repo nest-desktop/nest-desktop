@@ -1,14 +1,14 @@
 <template>
   <v-app v-if="norseSessionStore.loading">
     <v-container class="fill-height">
-      <v-progress-circular class="ma-auto" indeterminate color="primary" />
+      <v-progress-circular class="ma-auto" color="primary" indeterminate />
     </v-container>
 
     <app-footer />
   </v-app>
 
   <template v-else>
-    <app-navigation :nav-items="navItems" />
+    <app-navigation :navItems />
 
     <v-main>
       <router-view />
@@ -22,9 +22,9 @@ import { onMounted } from "vue";
 import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
-import { useNorseSessionStore } from "../store/sessionStore";
-import { useNorseModelStore } from "../store/model/modelStore";
-import { useNorseProjectStore } from "../store/project/projectStore";
+import { useNorseSessionStore } from "../stores/sessionStore";
+import { useNorseModelStore } from "../stores/model/modelStore";
+import { useNorseProjectStore } from "../stores/project/projectStore";
 
 const modelStore = useNorseModelStore();
 const norseSessionStore = useNorseSessionStore();

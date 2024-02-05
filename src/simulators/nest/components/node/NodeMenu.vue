@@ -198,7 +198,7 @@ import { computed, onMounted, reactive } from "vue";
 import ModelDocumentation from "../../views/ModelDoc.vue";
 import { NESTNode } from "../../helpers/node/node";
 
-import { useNetworkGraphStore } from "@/store/graph/networkGraphStore";
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps({
@@ -372,7 +372,7 @@ const updateSynWeights = (value: string | null) => {
   if (value == null) return;
   node.value.view.state.synWeights = value;
   node.value.changes();
-  networkGraphStore.graph.render();
+  networkGraphStore.state.graph.render();
 };
 
 /**

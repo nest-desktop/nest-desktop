@@ -1,6 +1,6 @@
 // theme.ts
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 
 export function currentBackgroundColor(): string {
   return darkMode() ? "#121212" : "white";

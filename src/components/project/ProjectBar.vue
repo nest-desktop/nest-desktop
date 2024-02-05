@@ -27,7 +27,7 @@
 
     <simulation-button
       class="mx-2"
-      :project-store="projectStore"
+      :projectStore="projectStore"
       :simulation="project.simulation"
       v-if="project"
     />
@@ -40,7 +40,7 @@ import { computed } from "vue";
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
 import { Project, ProjectPropTypes } from "@/types/projectTypes";
 
-import { useAppStore } from "@/store/appStore";
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const props = defineProps({
@@ -58,7 +58,7 @@ const tabItems = computed(() => [
     label: "Editor",
     title: "Network editor",
     to: {
-      name: appStore.simulator + "NetworkEditor",
+      name: appStore.state.simulator + "NetworkEditor",
       params: { projectId: project.value.id },
     },
   },
@@ -68,7 +68,7 @@ const tabItems = computed(() => [
     label: "Explorer",
     title: "Activity explorer",
     to: {
-      name: appStore.simulator + "ActivityExplorer",
+      name: appStore.state.simulator + "ActivityExplorer",
       params: { projectId: project.value.id },
     },
   },
@@ -78,7 +78,7 @@ const tabItems = computed(() => [
     label: "Lab book",
     title: "Lab book",
     to: {
-      name: appStore.simulator + "LabBook",
+      name: appStore.state.simulator + "LabBook",
       params: { projectId: project.value.id },
     },
   },

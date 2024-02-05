@@ -4,8 +4,8 @@
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { usePyNNModelDBStore } from "../store/model/modelDBStore";
-import { usePyNNModelStore } from "../store/model/modelStore";
+import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
+import { usePyNNModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
   name: "pynn model route",

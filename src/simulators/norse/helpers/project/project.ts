@@ -7,7 +7,7 @@ import {
   NorseSimulation,
   NorseSimulationProps,
 } from "../simulation/simulation";
-import { useNorseModelDBStore } from "../../store/model/modelDBStore";
+import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 import { NorseNode } from "../node/node";
 
 export interface NorseProjectProps extends ProjectProps {

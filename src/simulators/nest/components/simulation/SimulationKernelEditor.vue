@@ -68,7 +68,7 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { NESTSimulation } from "../../helpers/simulation/simulation";
 
-import { useNESTProjectStore } from "../../store/project/projectStore";
+import { useNESTProjectStore } from "../../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
 const props = defineProps({
@@ -76,7 +76,7 @@ const props = defineProps({
 });
 
 const simulation = computed(
-  () => projectStore.project.simulation as NESTSimulation
+  () => projectStore.state.project.simulation as NESTSimulation
 );
 
 const options = {

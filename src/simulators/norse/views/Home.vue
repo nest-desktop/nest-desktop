@@ -64,19 +64,19 @@ import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 
-import { useNorseModelDBStore } from "../store/model/modelDBStore";
+import { useNorseModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore = useNorseModelDBStore();
 
-import { useNorseModelStore } from "../store/model/modelStore";
+import { useNorseModelStore } from "../stores/model/modelStore";
 const modelStore = useNorseModelStore();
 
-import { useNorseProjectDBStore } from "../store/project/projectDBStore";
+import { useNorseProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNorseProjectDBStore();
 
-import { useNorseProjectStore } from "../store/project/projectStore";
+import { useNorseProjectStore } from "../stores/project/projectStore";
 const projectStore = useNorseProjectStore();
 
-import { useNorseSimulatorStore } from "../store/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 const norseSimulatorStore = useNorseSimulatorStore();
 
 const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
