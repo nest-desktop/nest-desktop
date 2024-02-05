@@ -2,14 +2,14 @@ version: '3'
 
 services:
   nest-desktop:
-    image: docker-registry.ebrains.eu/nest/nest-desktop:3.2
+    image: docker-registry.ebrains.eu/nest/nest-desktop:3.3
     environment:
       NEST_SIMULATOR_PORT: 52425
     ports:
       - '54286:54286'
 
   nest-simulator:
-    image: docker-registry.ebrains.eu/nest/nest-simulator:3.4
+    image: docker-registry.ebrains.eu/nest/nest-simulator:3.6
     environment:
       NEST_CONTAINER_MODE: 'nest-server'
     ports:
