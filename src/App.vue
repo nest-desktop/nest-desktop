@@ -5,7 +5,8 @@
 <script lang="ts" setup>
 import { onMounted, reactive } from "vue";
 
-import { useAppStore } from "./store/appStore";
+import { useAppStore } from "./stores/appStore";
+const appStore = useAppStore();
 
 // more information on Service Worker updates: https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
 const state = reactive({
@@ -20,10 +21,9 @@ const state = reactive({
  * Else the user can click on button in snackbar to refresh the app.
  */
 const updateAvailable = (event: any) => {
-  console.log('Updates are available.')
+  console.log("Updates are available.");
   state.registration = event.detail;
-  const appStore = useAppStore();
-  if (appStore.autoUpdate) {
+  if (appStore.state.autoUpdate) {
     setTimeout(() => {
       refreshApp();
     }, 1);
@@ -36,7 +36,7 @@ const updateAvailable = (event: any) => {
  * Called when the user accepts the update
  */
 const refreshApp = () => {
-  console.log('Refresh app.')
+  console.log("Refresh app.");
   state.updateExists = false;
   if (state.refreshing) return;
   state.refreshing = true;
