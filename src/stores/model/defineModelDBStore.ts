@@ -94,10 +94,9 @@ export function defineModelDBStore(
         let promises = [];
         if (args.modelAssets) {
           promises = args.modelAssets.map(async (file: string) => {
-            const data = getRuntimeConfig(
+            return getRuntimeConfig(
               `assets/simulators/${args.simulator}/models/${file}.json`
-            );
-            db.create(data);
+            ).then((data) => db.create(data));
           }) as any[];
         }
         return Promise.all(promises);

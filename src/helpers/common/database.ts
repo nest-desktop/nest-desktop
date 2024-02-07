@@ -24,6 +24,7 @@ export class DatabaseService {
     this._url = url;
     this._logger = mainLogger.getSubLogger({
       name: `[${this._url}] database`,
+      minLevel: 3,
     });
 
     this._options = options;

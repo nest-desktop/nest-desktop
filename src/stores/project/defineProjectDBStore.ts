@@ -147,10 +147,9 @@ export function defineProjectDBStore(
         let promises = [];
         if (args.projectAssets) {
           promises = args.projectAssets.map(async (file: string) => {
-            const data = getRuntimeConfig(
+            return getRuntimeConfig(
               `assets/simulators/${args.simulator}/projects/${file}.json`
-            );
-            return db.create(data);
+            ).then((data) => db.create(data));
           }) as any[];
         }
         return Promise.all(promises);
