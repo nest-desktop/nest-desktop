@@ -1,4 +1,4 @@
-// electron.vite.config.js
+// electron.vite.config.cts
 
 export default {
   main: {
