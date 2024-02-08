@@ -20,16 +20,16 @@
     <v-spacer />
 
     <v-app-bar-title>
-      {{ project.name }}
+      {{ projectStore.project.name }}
     </v-app-bar-title>
 
     <v-spacer />
 
     <simulation-button
       class="mx-2"
-      :projectStore="projectStore"
-      :simulation="project.simulation"
-      v-if="project"
+      :projectStore
+      :simulation="(projectStore.project.simulation as Simulation)"
+      v-if="projectStore.project"
     />
   </v-app-bar>
 </template>
@@ -38,17 +38,15 @@
 import { computed } from "vue";
 
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
-import { Project, ProjectPropTypes } from "@/types/projectTypes";
+import { Simulation } from "@/types/simulationTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const props = defineProps({
-  project: ProjectPropTypes,
-  projectStore: Object,
+  projectStore: { required: true, type: Object },
 });
 
-const project = computed(() => props.project as Project);
 const projectStore = computed(() => props.projectStore);
 
 const tabItems = computed(() => [
@@ -59,7 +57,7 @@ const tabItems = computed(() => [
     title: "Network editor",
     to: {
       name: appStore.state.simulator + "NetworkEditor",
-      params: { projectId: project.value.id },
+      params: { projectId: projectStore.value.project.id },
     },
   },
   {
@@ -69,7 +67,7 @@ const tabItems = computed(() => [
     title: "Activity explorer",
     to: {
       name: appStore.state.simulator + "ActivityExplorer",
-      params: { projectId: project.value.id },
+      params: { projectId: projectStore.value.project.id },
     },
   },
   {
@@ -79,7 +77,7 @@ const tabItems = computed(() => [
     title: "Lab book",
     to: {
       name: appStore.state.simulator + "LabBook",
-      params: { projectId: project.value.id },
+      params: { projectId: projectStore.value.project.id },
     },
   },
 ]);

@@ -1,9 +1,9 @@
 <template>
   <project-nav :projectDBStore />
 
-  <project-bar :project="projectStore.project" :projectStore color="blue" />
+  <project-bar :projectStore color="blue" />
 
-  <project-controller :store="projectStore">
+  <project-controller :projectStore>
     <template #simulationKernel>
       <simulation-kernel-editor
         :simulation="(projectStore.project.simulation as NESTSimulation)"

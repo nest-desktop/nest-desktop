@@ -35,7 +35,9 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          @click.stop="projectStore.state.bottomOpen = !projectStore.state.bottomOpen"
+          @click.stop="
+            projectStore.state.bottomOpen = !projectStore.state.bottomOpen
+          "
           icon="mdi-xml"
           size="small"
           value="code"
@@ -77,7 +79,8 @@
 
       <template
         v-else-if="
-          appSessionStore.state.devMode && projectStore.state.controllerView === 'raw'
+          appSessionStore.state.devMode &&
+          projectStore.state.controllerView === 'raw'
         "
       >
         <codemirror
@@ -147,11 +150,11 @@ import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
 const props = defineProps({
-  store: { required: true, type: Object },
+  projectStore: { required: true, type: Object },
 });
 
-const projectStore = computed(() => props.store);
-const project = computed(() => projectStore.value?.state.project as Project);
+const projectStore = computed(() => props.projectStore);
+const project = computed(() => projectStore.value.state.project as Project);
 
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)
