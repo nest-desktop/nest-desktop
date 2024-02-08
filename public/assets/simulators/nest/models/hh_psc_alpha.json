@@ -1,4 +1,5 @@
 {
+  "abbreviation": "hpa",
   "elementType": "neuron",
   "id": "hh_psc_alpha",
   "label": "HH psc alpha",

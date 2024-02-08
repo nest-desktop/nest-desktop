@@ -1,6 +1,7 @@
 {
   "abbreviation": "vm",
   "elementType": "recorder",
+  "favorite": true,
   "id": "voltmeter",
   "label": "voltmeter",
   "params": [

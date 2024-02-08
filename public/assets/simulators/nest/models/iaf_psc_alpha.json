@@ -1,5 +1,7 @@
 {
+  "abbreviation": "ipa",
   "elementType": "neuron",
+  "favorite": true,
   "id": "iaf_psc_alpha",
   "label": "IAF psc alpha",
   "recordables": [

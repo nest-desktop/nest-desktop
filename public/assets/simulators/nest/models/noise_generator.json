@@ -1,6 +1,7 @@
 {
   "abbreviation": "ng",
   "elementType": "stimulator",
+  "favorite": true,
   "id": "noise_generator",
   "label": "noise generator (Gaussian)",
   "recordables": ["I"],

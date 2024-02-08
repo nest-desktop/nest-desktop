@@ -1,5 +1,7 @@
 {
+  "abbreviation": "ica",
   "elementType": "neuron",
+  "favorite": true,
   "id": "iaf_cond_alpha",
   "label": "IAF cond alpha",
   "recordables": ["g_ex", "g_in", "t_ref_remaining", "V_m"],

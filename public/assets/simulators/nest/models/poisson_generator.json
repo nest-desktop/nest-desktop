@@ -1,6 +1,7 @@
 {
   "abbreviation": "pg",
   "elementType": "stimulator",
+  "favorite": true,
   "id": "poisson_generator",
   "label": "Poisson generator",
   "params": [
