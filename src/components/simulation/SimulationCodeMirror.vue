@@ -14,9 +14,10 @@ import { computed } from "vue";
 import { tooltips } from "@codemirror/view";
 // import { autocompletion } from "@codemirror/autocomplete";
 import { python } from "@codemirror/lang-python";
-// import { oneDark } from "@codemirror/theme-one-dark";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { darkMode } from "@/helpers/common/theme";
 
 const props = defineProps({
   simulation: SimulationPropTypes,
@@ -29,8 +30,11 @@ const extensions = [
     position: "absolute",
   }),
   python(),
-  // oneDark,
 ];
+
+if (darkMode()) {
+  extensions.push(oneDark);
+}
 </script>
 
 <style lang="scss">
