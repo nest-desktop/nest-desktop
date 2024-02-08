@@ -4,7 +4,7 @@
       <v-col md="6">
         <v-card>
           <v-card-title>
-            <v-img class="mx-10" :src="nestLogo" />
+            <v-img :src="nestLogo" class="mx-10" />
           </v-card-title>
           <v-card-subtitle>
             Simulator for spiking neural network models
@@ -39,7 +39,7 @@
         </v-card>
 
         <v-card class="mt-2">
-          <v-card-title> References </v-card-title>
+          <v-card-title>References</v-card-title>
           <v-card-text>
             <v-list density="compact">
               <v-list-item
@@ -109,7 +109,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores="stores" simulator="nest" />
+        <store-list :stores simulator="nest" />
       </v-col>
     </v-row>
   </v-container>

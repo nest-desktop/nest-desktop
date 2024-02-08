@@ -2,7 +2,6 @@
   <v-toolbar
     :collapse="state.collapse"
     :key="graph?.network.state.hash"
-    color="transparent"
     density="compact"
     absolute
   >
@@ -38,7 +37,7 @@
     /> -->
 
     <template v-if="!state.collapse">
-      <v-dialog max-width="450" v-model="state.dialogDelete">
+      <v-dialog maxWidth="450" v-model="state.dialogDelete">
         <template #activator="{ props }">
           <v-btn
             :disabled="graph?.network.isEmpty"

@@ -17,7 +17,7 @@ export const useAppStore = defineStore(
       autoUpdate: false,
       theme: "auto",      // auto, light, dark
       simulator: "nest",
-      simulatorVisible: ["nest", "norse"],
+      simulatorVisible: ["nest"],
     });
 
     const session = useAppSessionStore();

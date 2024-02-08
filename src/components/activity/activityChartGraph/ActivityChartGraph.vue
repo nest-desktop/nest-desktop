@@ -1,6 +1,6 @@
 <template>
   <v-layout class="activityGraphLayout" full-height>
-    <v-dialog max-width="300" v-model="state.dialog">
+    <v-dialog maxWidth="300" v-model="state.dialog">
       <v-card>
         <v-card-title>Download plot as image</v-card-title>
 

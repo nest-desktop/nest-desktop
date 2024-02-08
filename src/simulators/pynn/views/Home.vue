@@ -4,7 +4,7 @@
       <v-col md="6">
         <v-card>
           <v-card-title>
-            <v-img class="mx-10" :src="pynnLogo" max-height="400" />
+            <v-img :src="pynnLogo" class="mx-10" maxHeight="400" />
           </v-card-title>
 
           <v-card-subtitle>
@@ -38,7 +38,7 @@
         </v-card>
 
         <v-card class="mt-2">
-          <v-card-title> References </v-card-title>
+          <v-card-title>References</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item
@@ -79,7 +79,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores="stores" simulator="pynn"  />
+        <store-list :stores simulator="pynn"  />
       </v-col>
     </v-row>
   </v-container>

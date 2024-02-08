@@ -294,13 +294,10 @@ export class BaseNetwork extends Config {
   /**
    * Create node component by user interaction.
    */
-  createNode(view: any): void {
+  createNode(model?: string, view?: any): void {
     this._logger.trace("create node");
 
-    this.nodes?.add({
-      model: this._defaultModels[view.elementType],
-      view: view,
-    });
+    this.nodes?.add({ model: model || this._defaultModels[view.elementType], view });
 
     this.changes();
   }

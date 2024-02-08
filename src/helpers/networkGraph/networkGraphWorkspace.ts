@@ -38,6 +38,7 @@ export class NetworkGraphWorkspace extends Config {
 
   constructor(networkGraph: NetworkGraph) {
     super("NetworkGraphWorkspace");
+
     this._selector = select("g#networkWorkspace");
     this._handler = select("rect#workspaceHandler");
     this._networkGraph = networkGraph;

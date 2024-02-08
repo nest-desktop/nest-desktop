@@ -1,6 +1,6 @@
 <template>
   <v-menu>
-    <v-dialog max-width="480" v-model="state.dialog.delete">
+    <v-dialog maxWidth="480" v-model="state.dialog.delete">
       <v-card>
         <v-card-title> Are you sure to delete it? </v-card-title>
 
@@ -25,7 +25,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog max-width="480" v-model="state.dialog.rename">
+    <v-dialog maxWidth="480" v-model="state.dialog.rename">
       <v-card>
         <v-card-title> Rename this project </v-card-title>
 

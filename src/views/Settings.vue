@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height">
     <v-responsive class="align-center">
-      <v-card class="ma-auto my-1" max-width="400">
+      <v-card class="ma-auto my-1" maxWidth="400">
         <v-card flat title="App settings">
           <v-card flat subtitle="Theme">
             <v-card-text>

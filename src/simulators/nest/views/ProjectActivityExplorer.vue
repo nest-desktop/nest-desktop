@@ -4,7 +4,7 @@
     <v-btn icon="mdi-minus"></v-btn>
   </v-toolbar> -->
 
-  <activity-chart-graph :graph="graph" />
+  <activity-chart-graph :graph />
 </template>
 
 <script lang="ts" setup>

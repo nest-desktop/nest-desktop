@@ -36,6 +36,7 @@ export class BaseNetworkGraph {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this.network.project.shortId}] network graph`,
+      minLevel: 3
     });
 
     this._resizeObserver = new ResizeObserver(

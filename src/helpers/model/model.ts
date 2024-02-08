@@ -16,6 +16,7 @@ export interface ModelProps {
   doc?: any;
   abbreviation?: string;
   elementType?: string;
+  favorite?: boolean;
   id?: string;
   label?: string;
   params?: ModelParameterProps[];
@@ -29,6 +30,7 @@ export class BaseModel extends Config {
   private _abbreviation: string;
   private _doc: any; // doc data of the database
   private _elementType: string; // element type of the model
+  private _favorite: boolean = false;
   private _id: string; // model id
   // private _idx: number; // generative
   private _label: string; // model label for view
@@ -58,6 +60,7 @@ export class BaseModel extends Config {
 
     this._label = model.label || "";
     this._abbreviation = model.abbreviation || "";
+    this._favorite = model.favorite || false;
 
     this._state = reactive({
       selected: false,
@@ -80,6 +83,10 @@ export class BaseModel extends Config {
 
   get elementType(): string {
     return this._elementType;
+  }
+
+  get favorite(): boolean {
+    return this._favorite;
   }
 
   get id(): string {
@@ -290,6 +297,10 @@ export class BaseModel extends Config {
       ),
       version: process.env.APP_VERSION,
     };
+
+    if (this._favorite) {
+      model.favorite = true;
+    }
 
     // Add the recordables if provided.
     if (this._recordables.length > 0) {

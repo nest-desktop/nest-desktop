@@ -23,7 +23,7 @@
         v-model="state.selectedRecord" v-if="activity.recorder.model.isMultimeter"
       >
         <!-- <template #selection="{ item }">
-      <v-list-item min-width="400px">
+      <v-list-item minWidth="400px">
         <template #append>
           <node-record-chip :nodeRecord="item.value" />
         </template>

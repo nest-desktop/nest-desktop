@@ -4,7 +4,7 @@
       <v-col md="6">
         <v-card>
           <v-card-title>
-            <v-img class="mx-10" :src="norseLogo" />
+            <v-img :src="norseLogo" class="mx-10" />
           </v-card-title>
           <v-card-subtitle>
             Deep learning with spiking neural networks in PyTorch
@@ -20,7 +20,7 @@
         </v-card>
 
         <v-card class="mt-2">
-          <v-card-title> References </v-card-title>
+          <v-card-title>References</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item
@@ -53,7 +53,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores="stores" simulator="norse"  />
+        <store-list :stores simulator="norse"  />
       </v-col>
     </v-row>
   </v-container>

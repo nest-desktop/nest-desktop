@@ -1,7 +1,7 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
     <network-editor-toolbar />
-    <network-graph :network="(network as NorseNetwork)" />
+    <network-graph :network />
   </v-layout>
 </template>
 

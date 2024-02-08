@@ -71,10 +71,17 @@ export function defineModelDBStore(
         );
       },
       /**
-       * Get models by elementType
+       * Get models by elementType.
        */
       getModelsByElementType(elementType: string): Model[] {
         logger.trace("get model by element type:", elementType);
+        if (elementType === "device") {
+          return this.models.filter(
+            // @ts-ignore
+            (model: Model) =>
+              ["stimulator", "recorder"].includes(model.elementType)
+          );
+        }
         return this.models.filter(
           // @ts-ignore
           (model: Model) => model.elementType === elementType
