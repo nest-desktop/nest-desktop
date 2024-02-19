@@ -160,13 +160,8 @@
           variant="accordion"
         >
           <connection-editor
-            :connection="(connection as NESTConnection)"
+            :connection
             :key="index"
-            :style="{
-              opacity: connection.view.opacity ? 1 : 0.3,
-            }"
-            @mouseenter="connection.state.focus()"
-            @mouseleave="connection.connections.unfocusConnection()"
             v-for="(connection, index) in node.connections"
           />
         </v-expansion-panels>
@@ -186,7 +181,6 @@ import { NodePropTypes } from "@/types/nodeTypes";
 
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
-import { NESTConnection } from "../../helpers/connection/connection";
 import { NESTNode } from "../../helpers/node/node";
 
 const props = defineProps({

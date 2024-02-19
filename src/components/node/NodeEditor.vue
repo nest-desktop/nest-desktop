@@ -164,13 +164,8 @@
           variant="accordion"
         >
           <connection-editor
-            :style="{
-              opacity: connection.view.opacity ? 1 : 0.3,
-            }"
-            :key="index"
             :connection="connection"
-            @mouseenter="connection.state.focus()"
-            @mouseleave="connection.connections.unfocusConnection()"
+            :key="index"
             v-for="(connection, index) in node.connections"
           />
         </v-expansion-panels>

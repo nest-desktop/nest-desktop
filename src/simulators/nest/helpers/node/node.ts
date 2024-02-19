@@ -95,10 +95,7 @@ export class NESTNode extends BaseNode {
   }
 
   override get hasSomeVisibleParams(): boolean {
-    return (
-      this.paramsVisible.length > 0 || this.modelId === "multimeter" // ||
-      // this.nestNetwork.project.simulation.code.runSimulationInsite
-    );
+    return this.paramsVisible.length > 0 || this.modelId === "multimeter";
   }
 
   get model(): NESTModel {
@@ -123,7 +120,7 @@ export class NESTNode extends BaseNode {
     this.modelChanges();
   }
 
-  override get models(): (NESTModel)[] {
+  override get models(): NESTModel[] {
     // Get models of the same element type.
     const elementType: string = this.model.elementType;
     const models: NESTModel[] =

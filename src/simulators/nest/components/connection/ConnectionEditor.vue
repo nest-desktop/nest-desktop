@@ -1,9 +1,10 @@
 <template>
   <v-expansion-panel
-    :readonly="
-      connection.paramsVisible.length === 0 &&
-      connection.synapse.paramsVisible.length === 0
-    "
+    :style="{
+      opacity: connection.view.opacity ? 1 : 0.3,
+    }"
+    @mouseenter="connection.state.focus()"
+    @mouseleave="connection.connections.unfocusConnection()"
     class="node-connection"
     elevation="0"
     rounded="0"
@@ -89,7 +90,7 @@ const props = defineProps({
 });
 
 const connection = computed(() => props.connection as NESTConnection);
-const synapse = computed(() => connection.value.synapse as NESTSynapse)
+const synapse = computed(() => connection.value.synapse as NESTSynapse);
 
 const items = [
   {
@@ -144,7 +145,7 @@ const items = [
     icon: "mdi-trash-can-outline",
     title: "Delete connection",
     onClick: () => {
-      connection.value.remove()
+      connection.value.remove();
       // state.content = "connectionDelete";
     },
     append: true,

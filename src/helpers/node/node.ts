@@ -157,7 +157,7 @@ export class BaseNode extends Config {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0 || this._modelId === "multimeter";
+    return this._paramsVisible.length > 0;
   }
 
   /**

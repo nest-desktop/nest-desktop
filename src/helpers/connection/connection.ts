@@ -18,7 +18,6 @@ import { Node } from "@/types/nodeTypes";
 import { Synapse } from "@/types/synapseTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-
 export interface ConnectionProps {
   params?: ConnectionParameterProps[];
   rule?: string;
@@ -47,7 +46,7 @@ export class BaseConnection extends Config {
     connections: Connections,
     connection: ConnectionProps,
     name: string = "Connection",
-    simulator: string = "",
+    simulator: string = ""
   ) {
     super(name, simulator);
     this._connections = connections;
@@ -85,11 +84,9 @@ export class BaseConnection extends Config {
     return this._rule.value !== "all_to_all";
   }
 
-  // get hasSomeVisibleParams(): boolean {
-  //   return Object.values(this._params).some(
-  //     (param: ConnectionParameter) => param.visible
-  //   );
-  // }
+  get hasSomeVisibleParams(): boolean {
+    return this._paramsVisible.length > 0;
+  }
 
   get idx(): number {
     return this._idx;
@@ -248,7 +245,7 @@ export class BaseConnection extends Config {
   }
 
   newSynapse(synapse?: SynapseProps): Synapse {
-    return new BaseSynapse(this, synapse)
+    return new BaseSynapse(this, synapse);
   }
 
   /**

@@ -1,5 +1,10 @@
 <template>
   <v-expansion-panel
+    :style="{
+      opacity: connection.view.opacity ? 1 : 0.3,
+    }"
+    @mouseenter="connection.state.focus()"
+    @mouseleave="connection.connections.unfocusConnection()"
     class="node-connection"
     elevation="0"
     rounded="0"
@@ -62,8 +67,8 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <connection-spec-editor :connection="(connection as Connection)" />
-      <synapse-spec-editor :synapse="(connection.synapse as Synapse)" />
+      <connection-spec-editor :connection />
+      <synapse-spec-editor :synapse />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -82,6 +87,7 @@ const props = defineProps({
 });
 
 const connection = computed(() => props.connection as Connection);
+const synapse = computed(() => connection.value.synapse as Synapse);
 
 const items = [
   {
