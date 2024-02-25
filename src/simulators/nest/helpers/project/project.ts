@@ -4,15 +4,12 @@ import { BaseProject, ProjectProps } from "@/helpers/project/project";
 
 import { Insite } from "../insite/insite";
 import { NESTNetwork, NESTNetworkProps } from "../network/network";
-import {
-  NESTSimulation,
-  NESTSimulationProps,
-} from "../simulation/simulation";
+import { NESTSimulation, NESTSimulationProps } from "../simulation/simulation";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface NESTProjectProps extends ProjectProps {
   network?: NESTNetworkProps;
-  simulation? : NESTSimulationProps;
+  simulation?: NESTSimulationProps;
 }
 
 export class NESTProject extends BaseProject {

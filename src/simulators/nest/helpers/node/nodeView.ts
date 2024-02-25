@@ -58,20 +58,22 @@ export class NESTNodeView {
         return connection.source.view.color;
       }
     } else if (this._node.model.isRecorder) {
-      const connections: NESTConnection[] = this._node.network.connections.all.filter(
-        (connection: NESTConnection) =>
-          connection.sourceIdx === this._node.idx ||
-          connection.targetIdx === this._node.idx
-      );
+      const connections: NESTConnection[] =
+        this._node.network.connections.all.filter(
+          (connection: NESTConnection) =>
+            connection.sourceIdx === this._node.idx ||
+            connection.targetIdx === this._node.idx
+        );
       if (
         connections.length === 1 &&
         connections[0].sourceIdx !== connections[0].targetIdx
       ) {
         const connection: NESTConnection = connections[0];
-        const node: NESTNode =
-          (connection.sourceIdx === this._node.idx
+        const node: NESTNode = (
+          connection.sourceIdx === this._node.idx
             ? connection.target
-            : connection.source) as NESTNode;
+            : connection.source
+        ) as NESTNode;
         return node.view.color;
       }
     }
@@ -111,7 +113,9 @@ export class NESTNodeView {
         label = "n" + (idx + 1);
         break;
       default:
-        nodes = this._node.nodes.filterByModelId(this._node.modelId) as NESTNode[];
+        nodes = this._node.nodes.filterByModelId(
+          this._node.modelId
+        ) as NESTNode[];
         idx = nodes.indexOf(this._node);
         label =
           this._node.model.abbreviation ||
@@ -126,7 +130,8 @@ export class NESTNodeView {
   }
 
   get opacity(): boolean {
-    return true || (
+    return (
+      true ||
       this._node.nodes.state.selectedNode == null ||
       (this._node.nodes.state.selectedNode != null &&
         this._node.state.isSelected) ||
@@ -177,9 +182,11 @@ export class NESTNodeView {
 
     if (this._node.connectionsNeuronTargets.length === 0) return;
 
-    this._node.connectionsNeuronTargets.forEach((connection: NESTConnection) => {
-      connection.synapse.weightLabel = value;
-    });
+    this._node.connectionsNeuronTargets.forEach(
+      (connection: NESTConnection) => {
+        connection.synapse.weightLabel = value;
+      }
+    );
     this._node.changes();
   }
 

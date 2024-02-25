@@ -69,7 +69,7 @@ export class NESTConnectionParameter extends Parameter {
    * Hide this parameter.
    */
   hide(): void {
-    this.visible = false
+    this.visible = false;
   }
 
   PyNNParamId(): string {

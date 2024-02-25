@@ -16,6 +16,9 @@ import ActivityChartGraph from "@/components/activity/activityChartGraph/Activit
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-const graph = computed(() => projectStore.state.project.activityGraph.activityChartGraph as ActivityChartGraphClass);
-
+const graph = computed(
+  () =>
+    projectStore.state.project.activityGraph
+      .activityChartGraph as ActivityChartGraphClass
+);
 </script>

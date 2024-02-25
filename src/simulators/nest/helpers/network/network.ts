@@ -3,17 +3,13 @@
 import { BaseNetwork } from "@/helpers/network/network";
 import { Node } from "@/types/nodeTypes";
 
-import {
-  NESTConnection,
-  NESTConnectionProps,
-} from "../connection/connection";
+import { NESTConnection, NESTConnectionProps } from "../connection/connection";
 import { NESTConnections } from "../connection/connections";
 import { NESTCopyModel, NESTCopyModelProps } from "../model/copyModel";
 import { NESTCopyModels } from "../model/copyModels";
 import { NESTNode, NESTNodeProps } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
-
 
 export interface NESTNetworkProps {
   models?: NESTCopyModelProps[];
@@ -145,7 +141,9 @@ export class NESTNetwork extends BaseNetwork {
   /**
    * New components component.
    */
-  override newConnections(data: NESTConnectionProps[] | undefined): NESTConnections {
+  override newConnections(
+    data: NESTConnectionProps[] | undefined
+  ): NESTConnections {
     return new NESTConnections(this, data);
   }
 
