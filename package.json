@@ -73,7 +73,7 @@
     "electron": "~29.0",
     "electron-builder": "~24.12",
     "electron-devtools-installer": "~3.2",
-    "eslint": "~8.56",
+    "eslint": "~8.57",
     "eslint-plugin-vue": "~9.22",
     "register-service-worker": "~1.7",
     "sass": "~1.71",
