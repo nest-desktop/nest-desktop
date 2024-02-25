@@ -3,11 +3,11 @@
 import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import router from "@/router";
-
 import { BaseProject } from "@/helpers/project/project";
 import { Project } from "@/types/projectTypes";
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { truncate } from "@/utils/truncate";
 
 import { useProjectDBStore } from "./projectDBStore";
 
@@ -68,7 +68,8 @@ export function defineProjectStore(
      * @param projectId
      */
     const loadProject = (projectId: string = "") => {
-      logger.trace("load project:", projectId?.slice(0, 6));
+      logger.trace("load project:", truncate(projectId || ""));
+      state.projectId = projectId;
       state.project = projectDBStore.getProject(projectId);
       state.projectId = state.project.id;
 
@@ -85,7 +86,7 @@ export function defineProjectStore(
      * Reload the project in the list.
      */
     const reloadProject = (project: Project) => {
-      logger.trace("reload project:", project.id.slice(0, 6));
+      logger.trace("reload project:", truncate(project.id));
       projectDBStore.unloadProject(project.id);
       state.project = projectDBStore.getProject(project.id);
     };
@@ -94,7 +95,7 @@ export function defineProjectStore(
      * Save current project.
      */
     const saveCurrentProject = () => {
-      logger.trace("save project:", state.projectId?.slice(0, 6));
+      logger.trace("save project:", truncate(state.projectId || ""));
       projectDBStore.saveProject(state.projectId);
     };
 
@@ -102,7 +103,7 @@ export function defineProjectStore(
      * Start simulation of the current project.
      */
     const startSimulation = () => {
-      logger.trace("start simulation:", state.projectId?.slice(0, 6));
+      logger.trace("start simulation:", truncate(state.projectId || ""));
       router.push({
         name: args.simulator + "ActivityExplorer",
         params: { projectId: state.projectId },

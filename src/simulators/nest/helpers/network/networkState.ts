@@ -3,6 +3,8 @@
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
+import { truncate } from "@/utils/truncate";
+
 import { NESTNode } from "../node/node";
 import { NESTConnection } from "../connection/connection";
 
@@ -75,12 +77,14 @@ export class NESTNetworkState {
    * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1({
-      nodes: this._network.nodes.all.map((node: NESTNode) => node.state.hash),
-      connections: this._network.connections.all.map(
-        (connection: NESTConnection) => connection.state.hash
-      ),
-    }).slice(0, 6);
+    this._state.hash = truncate(
+      sha1({
+        nodes: this._network.nodes.all.map((node: NESTNode) => node.state.hash),
+        connections: this._network.connections.all.map(
+          (connection: NESTConnection) => connection.state.hash
+        ),
+      })
+    );
     this._network.logger.settings.name = `[${this._network.project.shortId}] network #${this._state.hash}`;
   }
 }

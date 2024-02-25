@@ -8,6 +8,7 @@ import { NodeParameter } from "@/helpers/node/nodeParameter";
 import { truncate } from "@/utils/truncate";
 
 interface NodeStateState {
+  graphHash: string;
   hash: string;
   connectionPanelIdx: number | null;
 }
@@ -20,6 +21,7 @@ export class NodeState {
     this._node = node;
 
     this._state = reactive({
+      graphHash: "",
       hash: "",
       connectionPanelIdx: null,
     });
@@ -37,6 +39,10 @@ export class NodeState {
     if (this._state.connectionPanelIdx != null) {
       this.node.connections[this._state.connectionPanelIdx].state.select();
     }
+  }
+
+  get graphHash(): string {
+    return this._state.graphHash;
   }
 
   get hash(): string {
@@ -78,26 +84,29 @@ export class NodeState {
   }
 
   /**
-   * Focus this node
+   * Focus this node.
    */
   focus(): void {
     this.node.nodes.state.focusedNode = this.node;
   }
 
   /**
-   * Select this node
+   * Select this node.
    */
   select(): void {
     const nodes = this.node.nodes;
     nodes.state.selectedNode = this.isSelected ? null : this.node;
   }
 
+  /**
+   * Update node state.
+   */
   update(): void {
     this.updateHash();
   }
 
   /**
-   * Update hash
+   * Update hash.
    */
   updateHash(): void {
     this._state.hash = truncate(
@@ -108,9 +117,19 @@ export class NodeState {
           param.toJSON()
         ),
         size: this.node.size,
-        simulationTime: this.node.simulation.time,
+        simulationTime: this.node.simulation.time, // why?
       })
-    ) as string;
+    );
+
+    this._state.graphHash = truncate(
+      sha1({
+        color: this.node.view.state.color,
+        idx: this.node.idx,
+        model: this.node.modelId,
+        size: this.node.size,
+      })
+    );
+
     this.node.logger.settings.name = `[${this.node.nodes.network.project.shortId}] node ${this.node.modelId} #${this._state.hash}`;
   }
 }

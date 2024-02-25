@@ -4,10 +4,12 @@ import { sha1 } from "object-hash";
 import { UnwrapRef, reactive } from "vue";
 
 import { Connection } from "@/types/connectionTypes";
+import { truncate } from "@/utils/truncate";
 
 interface ConnectionStateState {
+  graphHash: string;
   hash: string;
-  showRule: boolean,
+  showRule: boolean;
 }
 
 export class ConnectionState {
@@ -18,6 +20,7 @@ export class ConnectionState {
     this._connection = connection;
 
     this._state = reactive({
+      graphHash: "",
       hash: "",
       showRule: false,
     });
@@ -25,6 +28,10 @@ export class ConnectionState {
 
   get connection(): Connection {
     return this._connection as Connection;
+  }
+
+  get graphHash(): string {
+    return this._state.graphHash;
   }
 
   get hash(): string {
@@ -84,12 +91,21 @@ export class ConnectionState {
    * @emits rendering connection graph
    */
   updateHash(): void {
-    this._state.hash = sha1({
-      // color: this.source.view.color,
-      idx: this.connection.idx,
-      sourceModelId: this.connection.source.modelId,
-      targetModelId: this.connection.target.modelId,
-    }).slice(0, 6);
+    this._state.hash = truncate(
+      sha1({
+        // color: this.source.view.color,
+        idx: this.connection.idx,
+        sourceModelId: this.connection.source.modelId,
+        targetModelId: this.connection.target.modelId,
+      })
+    );
+
+    this._state.graphHash = truncate(
+      sha1({
+        idx: this.connection.idx,
+      })
+    );
+
     this.connection.logger.settings.name = `[${this.connection.connections.network.project.shortId}] connection #${this._state.hash}`;
   }
 }

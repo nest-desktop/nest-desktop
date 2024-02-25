@@ -1,16 +1,24 @@
 // networkGraph.ts
 
 import { ILogObj, Logger } from "tslog";
-import { Ref, watch } from "vue";
+import { Ref, UnwrapRef, reactive, watch } from "vue";
 import { Selection, select } from "d3";
 
 import { BaseNode } from "@/helpers/node/node";
+import { Connection } from "@/types/connectionTypes";
 import { ConnectionGraph } from "@/helpers/connectionGraph/connectionGraph";
 import { Network } from "@/types/networkTypes";
 import { NetworkGraphWorkspace } from "@/helpers/networkGraph/networkGraphWorkspace";
+import { Node } from "@/types/nodeTypes";
 import { NodeGraph } from "@/helpers/nodeGraph/nodeGraph";
 import { debounce } from "@/utils/events";
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { sha1 } from "object-hash";
+import { truncate } from "@/utils/truncate";
+
+interface BaseNetworkGraphState {
+  hash: string;
+}
 
 export class BaseNetworkGraph {
   private _config = {
@@ -22,9 +30,10 @@ export class BaseNetworkGraph {
   private _logger: Logger<ILogObj>;
   public _network: Network;
   private _nodeGraph: NodeGraph;
-  private _selector?: Selection<any, any, any, any>;
-  private _workspace: NetworkGraphWorkspace;
   private _resizeObserver: ResizeObserver;
+  private _selector?: Selection<any, any, any, any>;
+  private _state: UnwrapRef<BaseNetworkGraphState>;
+  private _workspace: NetworkGraphWorkspace;
 
   constructor(ref: Ref<null>, network: Network) {
     this._selector = select(ref.value);
@@ -36,7 +45,11 @@ export class BaseNetworkGraph {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this.network.project.shortId}] network graph`,
-      minLevel: 3
+      minLevel: 3,
+    });
+
+    this._state = reactive({
+      hash: "xxx",
     });
 
     this._resizeObserver = new ResizeObserver(
@@ -74,6 +87,10 @@ export class BaseNetworkGraph {
 
   get selector(): Selection<any, any, any, any> | undefined {
     return this._selector;
+  }
+
+  get state(): UnwrapRef<BaseNetworkGraphState> {
+    return this._state;
   }
 
   get workspace(): NetworkGraphWorkspace {
@@ -114,14 +131,25 @@ export class BaseNetworkGraph {
   init(): void {
     this._logger.trace("init");
     this._workspace.init();
+
     watch(
       () => [
         this.network.nodes.state.selectedNode,
         this.network.nodes.state.focusedNode,
         this.network.connections.state.focusedConnection,
+        this._state.hash,
       ],
       () => this.render()
     );
+
+    watch(
+      () => [
+        this.network.nodes.all.length,
+        this.network.connections.all.length,
+      ],
+      () => this.update()
+    );
+
     this.update();
   }
 
@@ -145,5 +173,19 @@ export class BaseNetworkGraph {
     this._workspace.update();
     this._connectionGraph.update();
     this._nodeGraph.update();
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    this._state.hash = truncate(
+      sha1({
+        nodes: this.network.nodes.all.map((node: Node) => node.state.graphHash),
+        connections: this.network.connections.all.map(
+          (connection: Connection) => connection.state.graphHash
+        ),
+      })
+    );
   }
 }

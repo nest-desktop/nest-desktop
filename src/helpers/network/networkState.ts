@@ -6,6 +6,7 @@ import { sha1 } from "object-hash";
 import { Connection } from "@/types/connectionTypes";
 import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
+import { truncate } from "@/utils/truncate";
 
 interface BaseNetworkStateData {
   displayIdx: {
@@ -86,12 +87,14 @@ export class BaseNetworkState {
    * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1({
-      nodes: this.network.nodes.all.map((node: Node) => node.state.hash),
-      connections: this.network.connections.all.map(
-        (connection: Connection) => connection.state.hash
-      ),
-    }).slice(0, 6);
+    this._state.hash = truncate(
+      sha1({
+        nodes: this.network.nodes.all.map((node: Node) => node.state.hash),
+        connections: this.network.connections.all.map(
+          (connection: Connection) => connection.state.hash
+        ),
+      })
+    );
     this.network.logger.settings.name = `[${this.network.project.shortId}] network #${this._state.hash}`;
   }
 }
