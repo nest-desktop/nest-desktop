@@ -4,6 +4,7 @@
       <v-select
         :items="node.models"
         @update:modelValue="state.menu = true"
+        class="text-primary"
         density="compact"
         hideDetails
         itemTitle="label"
@@ -20,15 +21,15 @@
             size="large"
             style="left: 8px; top: 8px"
           >
-            <node-avatar
-              :node
-              @click="node.state.select()"
-              size="48px"
-            />
+            <node-avatar :node @click="node.state.select()" size="48px" />
           </v-btn>
         </template>
 
         <template #append>
+          <div class="d-print-none">
+            <v-chip>{{ node.state.hash }}</v-chip>
+          </div>
+
           <div class="d-print-none menu">
             <v-menu :closeOnContentClick="false" v-model="state.menu">
               <template #activator="{ props }">
@@ -110,7 +111,7 @@
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
             <value-slider
-              :color="node.view.color"
+              :thumbColor="node.view.color"
               @update:modelValue="node.changes()"
               id="n"
               inputLabel="n"

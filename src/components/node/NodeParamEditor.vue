@@ -2,22 +2,22 @@
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
       <range-slider
-        :color="param.node.view.color"
         :modelValue="(param.value as number[])"
+        :thumbColor="param.node.view.color"
         @update:modelValue="update"
         v-bind="param.options"
         v-if="param.options.variant === 'range'"
       />
       <tick-slider
-        :color="param.node.view.color"
         :modelValue="(param.value as number)"
+        :thumbColor="param.node.view.color"
         @update:modelValue="update"
         v-bind="param.options"
         v-else-if="param.options.variant === 'ticks'"
       />
       <value-slider
-        :color="param.node.view.color"
         :modelValue="(param.value as number)"
+        :thumbColor="param.node.view.color"
         @update:modelValue="update"
         v-bind="param.options"
         v-else

@@ -4,11 +4,14 @@
       <v-select
         :items="node.models"
         @update:modelValue="state.menu = true"
+        class="text-primary"
         density="compact"
         hideDetails
         itemTitle="label"
         itemValue="id"
-        label="Node model"
+        :label="
+          'Node model - ' + node.state.hash + ' - ' + node.state.graphHash
+        "
         v-model="node.modelId"
         variant="outlined"
       >
@@ -106,7 +109,7 @@
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
             <value-slider
-              :color="node.view.color"
+              :thumbColor="node.view.color"
               @update:modelValue="node.changes()"
               id="n"
               inputLabel="n"

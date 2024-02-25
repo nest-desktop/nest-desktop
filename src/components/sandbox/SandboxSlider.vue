@@ -24,11 +24,11 @@
             >
               <v-row no-gutters>
                 <slider
-                  :color="sliderItem.color"
                   :options="sliderItem"
+                  :thumbColor="sliderItem.color"
                   v-model="sliderItem.value"
                 />
-                <div style="width:100px">
+                <div style="width: 100px">
                   {{ typeof sliderItem.value }}
                   {{ sliderItem.value }}
                 </div>

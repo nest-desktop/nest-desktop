@@ -10,22 +10,22 @@
       </v-card-title>
 
       <v-card-text>
-        <TickSlider
-          :color="props.color"
+        <tick-slider
+          :thumbColor="props.color"
           class="mx-1 py-1"
           v-bind="options.threadSettings"
           v-model="simulation.kernel.localNumThreads"
         />
 
-        <TickSlider
-          :color="props.color"
+        <tick-slider
+          :thumbColor="props.color"
           class="mx-1 py-1"
           v-bind="options.resolutionSettings"
           v-model="simulation.kernel.resolution"
         />
 
-        <ValueSlider
-          :color="props.color"
+        <value-slider
+          :thumbColor="props.color"
           class="mx-1 py-1"
           v-bind="options.rngSeedSettings"
           v-model="simulation.kernel.rngSeed"
@@ -48,8 +48,8 @@
       </v-card-title>
 
       <v-card-text class="py-0">
-        <ValueSlider
-          :color="props.color"
+        <value-slider
+          :thumbColor="props.color"
           class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"

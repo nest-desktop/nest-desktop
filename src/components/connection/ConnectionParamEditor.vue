@@ -11,8 +11,8 @@
         v-if="param.options.variant === 'checkbox'"
       />
       <value-slider
-        :color="param.connection.source.view.color"
         :modelValue="(param.value as number)"
+        :thumbColor="param.connection.source.view.color"
         @update:modelValue="update"
         v-bind="param.options"
         v-else
