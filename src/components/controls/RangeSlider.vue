@@ -5,6 +5,8 @@
     hideDetails
     strict
     style="position: relative"
+    thumbSize="16"
+    trackSize="2"
     v-model="value"
   >
     <template #prepend>
@@ -92,11 +94,7 @@ watch(
     left: 92px;
     pointer-events: none;
     position: absolute;
-    top: 0;
-  }
-
-  .v-slider-track__background {
-    background-color: rgb(var(--v-theme-secondary)) !important;
+    top: -6px;
   }
 }
 </style>

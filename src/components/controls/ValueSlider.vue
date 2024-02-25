@@ -5,9 +5,12 @@
     @click:prepend="decrement"
     appendIcon="mdi-plus"
     class="py-1 value-slider"
+    color="grey"
     hideDetails="auto"
     prependIcon="mdi-minus"
     style="position: relative"
+    thumbSize="16"
+    trackSize="2"
     v-model="value"
   >
     <template #append>
@@ -17,7 +20,7 @@
         :suffix="props.unit"
         density="compact"
         hideDetails
-        style="width: 70px"
+        style="width: 80px"
         type="number"
         v-model="value"
         variant="underlined"
@@ -81,12 +84,7 @@ const value = computed({
     left: 0;
     pointer-events: none;
     position: absolute;
-    top: 0;
-  }
-
-  .v-slider-track__fill,
-  .v-slider-track__background {
-    background-color: rgb(var(--v-theme-secondary)) !important;
+    top: -6px;
   }
 
   .v-input:hover .v-text-field__suffix {
