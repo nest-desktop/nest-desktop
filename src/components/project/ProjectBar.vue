@@ -49,7 +49,7 @@ const props = defineProps({
 
 const projectStore = computed(() => props.projectStore);
 
-const tabItems = computed(() => [
+const tabItems = [
   {
     icon: "network:network",
     id: "networkEditor",
@@ -57,7 +57,7 @@ const tabItems = computed(() => [
     title: "Network editor",
     to: {
       name: appStore.state.simulator + "NetworkEditor",
-      params: { projectId: projectStore.value.project.id },
+      params: { projectId: projectStore.value.projectId },
     },
   },
   {
@@ -67,7 +67,7 @@ const tabItems = computed(() => [
     title: "Activity explorer",
     to: {
       name: appStore.state.simulator + "ActivityExplorer",
-      params: { projectId: projectStore.value.project.id },
+      params: { projectId: projectStore.value.projectId },
     },
   },
   {
@@ -77,8 +77,8 @@ const tabItems = computed(() => [
     title: "Lab book",
     to: {
       name: appStore.state.simulator + "LabBook",
-      params: { projectId: projectStore.value.project.id },
+      params: { projectId: projectStore.value.projectId },
     },
   },
-]);
+];
 </script>
