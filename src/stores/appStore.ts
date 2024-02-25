@@ -15,7 +15,7 @@ export const useAppStore = defineStore(
     const state = reactive({
       themeInstance: undefined,
       autoUpdate: false,
-      theme: "auto",      // auto, light, dark
+      theme: "auto", // auto, light, dark
       simulator: "nest",
       simulatorVisible: ["nest"],
     });

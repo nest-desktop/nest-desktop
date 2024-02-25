@@ -20,7 +20,6 @@ import { vuetify } from "./vuetify";
 import codeMirror from "./codemirror";
 
 export function registerPlugins(app: App) {
-
   // Load fonts
   loadFonts();
 

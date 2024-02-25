@@ -3,6 +3,7 @@
  */
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { truncate } from "@/utils/truncate";
 
 import { useNorseProjectDBStore } from "../stores/project/projectDBStore";
 import { useNorseProjectStore } from "../stores/project/projectStore";
@@ -31,12 +32,16 @@ const projectNew = () => {
   projectStore.loadProject();
 
   return {
-    path: "/norse/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
+    path:
+      "/norse/project/" +
+      projectStore.state.projectId +
+      "/" +
+      projectStore.state.view,
   };
 };
 
 const projectRedirect = (to: any) => {
-  logger.trace("redirect to project:", to.params.projectId?.slice(0, 6));
+  logger.trace("redirect to project:", truncate(to.params.projectId || ""));
   const projectStore = useNorseProjectStore();
 
   if (to.params.projectId) {
@@ -44,7 +49,11 @@ const projectRedirect = (to: any) => {
   }
 
   return {
-    path: "/norse/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
+    path:
+      "/norse/project/" +
+      projectStore.state.projectId +
+      "/" +
+      projectStore.state.view,
   };
 };
 

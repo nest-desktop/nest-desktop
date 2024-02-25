@@ -1,10 +1,10 @@
 // colorSchemes.ts
 
-import { Config } from '../config';
+import { Config } from "../config";
 
 export class ColorSchemes extends Config {
   constructor() {
-    super('ColorSchemes');
+    super("ColorSchemes");
   }
 
   /**

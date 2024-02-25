@@ -18,9 +18,9 @@ type snackbarType = {
 };
 
 export interface ProjectStateState {
-  changes: boolean,
-  editMode: boolean,
-  hash: string,
+  changes: boolean;
+  editMode: boolean;
+  hash: string;
 }
 
 export class ProjectState {

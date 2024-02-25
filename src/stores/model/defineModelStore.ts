@@ -15,7 +15,6 @@ export function defineModelStore(
     simulator: "base",
   }
 ) {
-
   const logger = mainLogger.getSubLogger({
     name: args.simulator + " model store",
     minLevel: args.loggerMinLevel || 3,

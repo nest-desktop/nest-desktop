@@ -1,6 +1,4 @@
-/**
- * modelRoutes.ts
- */
+// modelRoutes.ts
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 

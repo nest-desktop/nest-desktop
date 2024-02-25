@@ -31,7 +31,9 @@ export function registerSimulators(app: App) {
   const appStore = useAppStore();
 
   // Use simulators
-  appStore.state.simulatorVisible.forEach((id: string) => app.use(simulators[id]));
+  appStore.state.simulatorVisible.forEach((id: string) =>
+    app.use(simulators[id])
+  );
 
   // const hostname = "https://nest-desktop-next.apps-dev.hbp.eu";
   // simulatorItems.nest.backends.nest.url = hostname + "/nest";

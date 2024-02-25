@@ -82,10 +82,7 @@ export class ConnectionGraph {
       .on("mouseover", (_, c: Connection) => {
         c.state.focus();
         // Draw line between selected node and focused connection.
-        if (
-          c.network.nodes.state.selectedNode &&
-          this.state.dragLine
-        ) {
+        if (c.network.nodes.state.selectedNode && this.state.dragLine) {
           this._networkGraph.workspace.dragline.drawPath(
             c.network.nodes.state.selectedNode.view.state.position,
             c.view.markerEndPosition
@@ -102,10 +99,7 @@ export class ConnectionGraph {
         const workspace = this._networkGraph.workspace;
         connection.source.state.focus();
 
-        if (
-          network.nodes.state.selectedNode &&
-          workspace.state.dragLine
-        ) {
+        if (network.nodes.state.selectedNode && workspace.state.dragLine) {
           // Set cursor position of the focused connection.
           workspace.updateCursorPosition(connection.view.centerPosition);
 
@@ -138,47 +132,54 @@ export class ConnectionGraph {
       : 250;
     const t: Transition<any, any, any, any> = transition().duration(duration);
 
-    // @ts-ignore
-    selector.each((connection: BaseConnection, idx: number, elements: any[]) => {
-      const elem = select(elements[idx]);
+    const connections = select("g#connections").selectAll("g.connection");
+    connections
+      .style("color", (c: any) => "var(--node" + c.source.idx + "-color)")
+      .transition(t)
+      .style("opacity", 1);
 
-      elem
-        .selectAll("path")
-        .transition(t)
-        .attr(
-          "d",
-          drawPathNode(
-            connection.source.view.state.position,
-            connection.target.view.state.position,
-            connection.view.connectionGraphOptions
+    selector.each(
+      // @ts-ignore
+      (connection: BaseConnection, idx: number, elements: any[]) => {
+        const elem = select(elements[idx]);
+
+        elem
+          .selectAll("path")
+          .transition(t)
+          .attr(
+            "d",
+            drawPathNode(
+              connection.source.view.state.position,
+              connection.target.view.state.position,
+              connection.view.connectionGraphOptions
+            )
+          );
+
+        elem
+          .select("path.color")
+          .style("stroke", "currentColor")
+          .style(
+            "stroke-width",
+            this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
           )
-        );
+          .style("opacity", connection.view.opacity ? 1 : 0.3)
+          .attr("marker-end", `url(#syn-${connection.idx})`)
+          .style(
+            "stroke-dasharray",
+            connection.view.probabilistic() ? "7.85" : ""
+          );
 
-      elem
-        .select("path.color")
-        .style("stroke", "currentColor")
-        .style(
-          "stroke-width",
-          this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
-        )
-        .style("opacity", connection.view.opacity ? 1 : 0.3)
-        .attr("marker-end", `url(#syn-${connection.idx})`)
-        .style(
-          "stroke-dasharray",
-          connection.view.probabilistic() ? "7.85" : ""
-        );
+        elem.transition(t).delay(duration).style("opacity", 1);
 
-      elem.transition(t).delay(duration).style("opacity", 1);
+        // const pos = connection.view.markerEndPosition;
 
-      // const pos = connection.view.markerEndPosition;
-
-      this._networkGraph.selector
-        ?.selectAll(`#syn-${connection.idx}`)
-        .select("text")
-        .attr("dx", connection.view.toRight ? 8 : -8)
-        .attr("dy", connection.view.toRight ? 3.5 : -4.5)
-        .classed("toLeft", !connection.view.toRight)
-        .text(connection.synapse ? connection.synapse.weight : '');
+        this._networkGraph.selector
+          ?.selectAll(`#syn-${connection.idx}`)
+          .select("text")
+          .attr("dx", connection.view.toRight ? 8 : -8)
+          .attr("dy", connection.view.toRight ? 3.5 : -4.5)
+          .classed("toLeft", !connection.view.toRight)
+          .text(connection.synapse ? connection.synapse.weight : "");
 
         // .style("font-family", "Roboto")
         // .style("font-size", "0.7em", "important")
@@ -186,7 +187,8 @@ export class ConnectionGraph {
         // .style("pointer-events", "none")
         // .style("text-anchor", "middle")
         // .attr("transform", `translate(${pos.x},${pos.y})`);
-    });
+      }
+    );
   }
 
   /**

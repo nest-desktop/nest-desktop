@@ -1,10 +1,6 @@
 // BoxGeometryLayerModel.ts
 
-import {
-  BoxGeometry,
-  Mesh,
-  MeshLambertMaterial,
-} from "three";
+import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";

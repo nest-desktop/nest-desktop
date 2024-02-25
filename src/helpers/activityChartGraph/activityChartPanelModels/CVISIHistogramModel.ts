@@ -1,22 +1,22 @@
 // CVISIHistogramModel.ts
 
-import { currentBackgroundColor } from '@/helpers/common/theme';
-import { SpikeActivity } from '@/helpers/activity/spikeActivity';
+import { currentBackgroundColor } from "@/helpers/common/theme";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
-import { ActivityChartPanel } from '../activityChartPanel';
-import { SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { ActivityChartPanel } from "../activityChartPanel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, model: any = {}) {
     super(panel, model);
-    this.icon = 'mdi-chart-bar';
-    this.id = 'CVISIHistogram';
-    this.label = 'CV of ISI';
+    this.icon = "mdi-chart-bar";
+    this.id = "CVISIHistogram";
+    this.label = "CV of ISI";
     this.panel.xaxis = 3;
     this.params = [
       {
-        variant: 'tickSlider',
-        label: 'bin size',
+        variant: "tickSlider",
+        label: "bin size",
         ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
         value: 0.05,
       },
@@ -41,9 +41,9 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
 
     this.data.push({
       activityIdx: activity.idx,
-      histfunc: 'count',
-      hoverinfo: 'y',
-      legendgroup: 'spikes' + activity.idx,
+      histfunc: "count",
+      hoverinfo: "y",
+      legendgroup: "spikes" + activity.idx,
       marker: {
         color: activity.recorder.view.color,
         line: {
@@ -51,11 +51,11 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
           width: (end - start) / size > 100 ? 0 : 1,
         },
       },
-      name: 'Histogram of CV(ISI) in' + activity.recorder.view.label,
+      name: "Histogram of CV(ISI) in" + activity.recorder.view.label,
       opacity: 0.6,
       showlegend: false,
-      source: 'x+y',
-      type: 'histogram',
+      source: "x+y",
+      type: "histogram",
       visible: this.state.visible,
       x,
       xbins: {
@@ -70,7 +70,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
    * Update layout label for CV_ISI histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = 'CV of ISI';
-    this.panel.layout.yaxis.title = 'Count';
+    this.panel.layout.xaxis.title = "CV of ISI";
+    this.panel.layout.yaxis.title = "Count";
   }
 }

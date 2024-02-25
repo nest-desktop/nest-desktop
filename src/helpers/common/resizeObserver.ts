@@ -13,8 +13,8 @@ export default function useResizeObserver(element: any) {
     if (element.value) {
       resizeObserver = new ResizeObserver((entries) => {
         const entry = entries[0];
-        state.elementHeight = entry.contentRect.height
-        state.elementWidth = entry.contentRect.width
+        state.elementHeight = entry.contentRect.height;
+        state.elementWidth = entry.contentRect.width;
       });
       resizeObserver.observe(element.value);
     }

@@ -51,5 +51,7 @@ import { NESTNode } from "../helpers/node/node";
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-const network = computed(() => projectStore.state.project.network as NESTNetwork);
+const network = computed(
+  () => projectStore.state.project.network as NESTNetwork
+);
 </script>

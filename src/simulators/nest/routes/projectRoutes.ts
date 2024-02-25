@@ -1,6 +1,4 @@
-/**
- * projectRoutes.ts
- */
+// projectRoutes.ts
 
 import { computed, watch } from "vue";
 
@@ -40,12 +38,16 @@ const projectNew = () => {
   projectStore.loadProject();
 
   return {
-    path: "/nest/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
+    path:
+      "/nest/project/" +
+      projectStore.state.projectId +
+      "/" +
+      projectStore.state.view,
   };
 };
 
 const projectRedirect = (to: any) => {
-  logger.trace("redirect to project:", truncate(to.params.projectId));
+  logger.trace("redirect to project:", truncate(to.params.projectId || ""));
 
   const projectStore = useNESTProjectStore();
 
@@ -54,7 +56,11 @@ const projectRedirect = (to: any) => {
   }
 
   return {
-    path: "/nest/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
+    path:
+      "/nest/project/" +
+      projectStore.state.projectId +
+      "/" +
+      projectStore.state.view,
   };
 };
 

@@ -28,7 +28,7 @@ export class NESTSimulationCode extends BaseSimulationCode {
   }
 
   get runSimulationInsite(): boolean {
-    return false
+    return false;
   }
 
   /**

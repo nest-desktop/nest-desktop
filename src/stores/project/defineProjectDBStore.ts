@@ -67,7 +67,7 @@ export function defineProjectDBStore(
        * It pushes new project to the first line of the list.
        */
       addProject(data?: ProjectProps): Project {
-        logger.trace("add project", truncate(data?.id));
+        logger.trace("add project", truncate(data?.id || ""));
         const project = this.newProject(data);
         this.projects.unshift(project);
         return project;

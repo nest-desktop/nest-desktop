@@ -16,7 +16,7 @@ export interface SimulationCodeProps {
 
 interface SimulationCodeState {
   blocks: string[];
-  customBlocks: boolean,
+  customBlocks: boolean;
   templateFilename: string;
   hash: string;
   template?: string;

@@ -30,10 +30,7 @@ export default defineConfig({
           return `assets/${extType}/[name]-[hash][extname]`;
         },
         chunkFileNames: (assetInfo) => {
-          if (
-            assetInfo.facadeModuleId &&
-            assetInfo.facadeModuleId.includes("simulators")
-          ) {
+          if (assetInfo.facadeModuleId && assetInfo.facadeModuleId.includes("simulators")) {
             const path = assetInfo.facadeModuleId.split("/");
             const simulatorIdx = path.indexOf("simulators") + 1;
             return `assets/simulators/${path[simulatorIdx]}/js/[name]-[hash].js`;
@@ -71,8 +68,7 @@ export default defineConfig({
       manifest: {
         name: "NEST Desktop",
         short_name: "NEST Desktop",
-        description:
-          "A web-based application which provides a graphical user interface for NEST Simulator",
+        description: "A web-based application which provides a graphical user interface for NEST Simulator",
         theme_color: "#ffffff",
         icons: [
           {
@@ -124,24 +120,15 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-    extensions: [
-      ".js",
-      ".json",
-      ".jsx",
-      ".mjs",
-      ".mustache",
-      ".ts",
-      ".tsx",
-      ".vue",
-    ],
+    extensions: [".js", ".json", ".jsx", ".mjs", ".mustache", ".ts", ".tsx", ".vue"],
   },
   server: {
     port: 54286,
   },
   test: {
     coverage: {
-      provider: 'istanbul', // or 'v8',
-      reporter: ['text', 'json', 'html'],
+      provider: "istanbul", // or 'v8',
+      reporter: ["text", "json", "html"],
     },
   },
 });

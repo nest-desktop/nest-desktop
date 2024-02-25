@@ -105,7 +105,8 @@ export class Insite {
     logger.trace("Update simulation time info continuously");
 
     this.simulationTimeIntervalId = window.setInterval(() => {
-      this.insiteAccess.axiosInstance()
+      this.insiteAccess
+        .axiosInstance()
         .get("nest/simulationTimeInfo/")
         .then((response: any) => {
           if (response === undefined) return;
@@ -188,7 +189,8 @@ export class Insite {
     }
     logger.trace("Get analog signal activities from Insite");
 
-    this.insiteAccess.axiosInstance()
+    this.insiteAccess
+      .axiosInstance()
       .get("nest/multimeters/")
       .then((response: any) => {
         if (response == null) {
@@ -249,34 +251,37 @@ export class Insite {
 
     const attribute: string = "V_m";
     const path = `nest/multimeters/${activity.recorderUnitId}/attributes/${attribute}/?fromTime=${activity.lastTime}`;
-    this.insiteAccess.axiosInstance().get(path).then((response: any) => {
-      if (response == null) {
-        return;
-      }
+    this.insiteAccess
+      .axiosInstance()
+      .get(path)
+      .then((response: any) => {
+        if (response == null) {
+          return;
+        }
 
-      if (response.status === 202) {
-        setTimeout(() => this.getAnalogSignalsFromRecorder(activity), 100);
-        return;
-      }
+        if (response.status === 202) {
+          setTimeout(() => this.getAnalogSignalsFromRecorder(activity), 100);
+          return;
+        }
 
-      const times: number[] = this.repeat(response.data);
-      const senders: number[] = this.tile(response.data);
-      const activityData: any = {
-        events: {
-          times, // x
-          senders,
-        },
-        nodeIds: response.data.nodeIds, // from insite
-        times: response.data.simulationTimes, // from insite
-      };
-      activityData.events[attribute] = response.data.values;
-      activity.update(activityData);
+        const times: number[] = this.repeat(response.data);
+        const senders: number[] = this.tile(response.data);
+        const activityData: any = {
+          events: {
+            times, // x
+            senders,
+          },
+          nodeIds: response.data.nodeIds, // from insite
+          times: response.data.simulationTimes, // from insite
+        };
+        activityData.events[attribute] = response.data.values;
+        activity.update(activityData);
 
-      // Recursive call after 250ms.
-      setTimeout(() => {
-        this.getAnalogSignalsFromRecorder(activity);
-      }, 250);
-    });
+        // Recursive call after 250ms.
+        setTimeout(() => {
+          this.getAnalogSignalsFromRecorder(activity);
+        }, 250);
+      });
   }
 
   /**
@@ -287,58 +292,61 @@ export class Insite {
       return;
     }
     const path = `nest/spikes/?top=${this._state.top}&skip=${this._state.skip}`;
-    this.insiteAccess.axiosInstance().get(path).then((response: any) => {
-      if (response == null) {
-        return;
-      }
+    this.insiteAccess
+      .axiosInstance()
+      .get(path)
+      .then((response: any) => {
+        if (response == null) {
+          return;
+        }
 
-      if (response.status === 202) {
-        setTimeout(() => this.getAllFirstSpikeActivity(), 100);
-        return;
-      }
+        if (response.status === 202) {
+          setTimeout(() => this.getAllFirstSpikeActivity(), 100);
+          return;
+        }
 
-      const senders = response.data.nodeIds;
-      const times = response.data.simulationTimes;
+        const senders = response.data.nodeIds;
+        const times = response.data.simulationTimes;
 
-      this._state.spikesRequestTimeout =
-        senders.length > 0
-          ? 250
-          : this._state.spikesRequestTimeout >= 5000
-          ? 5000
-          : this._state.spikesRequestTimeout + 250;
+        this._state.spikesRequestTimeout =
+          senders.length > 0
+            ? 250
+            : this._state.spikesRequestTimeout >= 5000
+            ? 5000
+            : this._state.spikesRequestTimeout + 250;
 
-      if (senders == undefined || senders.length === 0) {
-        setTimeout(
-          () => this.getAllFirstSpikeActivity(),
-          this._state.spikesRequestTimeout
-        );
-        return;
-      }
+        if (senders == undefined || senders.length === 0) {
+          setTimeout(
+            () => this.getAllFirstSpikeActivity(),
+            this._state.spikesRequestTimeout
+          );
+          return;
+        }
 
-      // Get spike activities from each spike recorder.
-      this._project.activities.spikes.forEach((activity: SpikeActivity) => {
-        const events: { [key: string]: number[] } = {
-          senders: [],
-          times: [],
-        };
+        // Get spike activities from each spike recorder.
+        this._project.activities.spikes.forEach((activity: SpikeActivity) => {
+          const events: { [key: string]: number[] } = {
+            senders: [],
+            times: [],
+          };
 
-        senders.forEach((senderId: number, idx: number) => {
-          if (activity.nodeIds.includes(senderId)) {
-            events.senders.push(senderId);
-            events.times.push(times[idx]);
-          }
+          senders.forEach((senderId: number, idx: number) => {
+            if (activity.nodeIds.includes(senderId)) {
+              events.senders.push(senderId);
+              events.times.push(times[idx]);
+            }
+          });
+
+          activity.update({
+            events,
+          });
         });
 
-        activity.update({
-          events,
-        });
+        this._state.skip += Math.min(senders.length, this._state.top);
+
+        // Recursive call after timeout.
+        setTimeout(() => this.getAllFirstSpikeActivity(), 250);
       });
-
-      this._state.skip += Math.min(senders.length, this._state.top);
-
-      // Recursive call after timeout.
-      setTimeout(() => this.getAllFirstSpikeActivity(), 250);
-    });
   }
 
   /**
@@ -354,7 +362,8 @@ export class Insite {
     logger.trace("Get node IDs from Insite");
 
     const positions: any = {};
-    return this.insiteAccess.axiosInstance()
+    return this.insiteAccess
+      .axiosInstance()
       .get("nest/nodes/")
       .then((response: any) => {
         if (response == null) {
@@ -385,7 +394,8 @@ export class Insite {
     }
     logger.trace("Get spike activities from Insite");
 
-    this.insiteAccess.axiosInstance()
+    this.insiteAccess
+      .axiosInstance()
       .get("nest/spikerecorders/")
       .then((response: any) => {
         if (response == null) {
@@ -444,28 +454,34 @@ export class Insite {
     const path = `nest/spikes/?fromTime=${
       activity.lastTime + 0.1
     }&spikedetectorId=${activity.recorderUnitId}`;
-    this.insiteAccess.axiosInstance().get(path).then((response: any) => {
-      if (response == null) {
-        return;
-      }
+    this.insiteAccess
+      .axiosInstance()
+      .get(path)
+      .then((response: any) => {
+        if (response == null) {
+          return;
+        }
 
-      if (response.status === 202) {
-        setTimeout(() => this.getSpikeActivityFromEachRecorder(activity), 100);
-        return;
-      }
+        if (response.status === 202) {
+          setTimeout(
+            () => this.getSpikeActivityFromEachRecorder(activity),
+            100
+          );
+          return;
+        }
 
-      activity.update({
-        events: {
-          senders: response.data.nodeIds, // y
-          times: response.data.simulationTimes, // x
-        },
+        activity.update({
+          events: {
+            senders: response.data.nodeIds, // y
+            times: response.data.simulationTimes, // x
+          },
+        });
+
+        // Recursive call after 500ms.
+        setTimeout(() => {
+          this.getSpikeActivityFromEachRecorder(activity);
+        }, 500);
       });
-
-      // Recursive call after 500ms.
-      setTimeout(() => {
-        this.getSpikeActivityFromEachRecorder(activity);
-      }, 500);
-    });
   }
 
   repeat(data: any): number[] {
@@ -478,7 +494,8 @@ export class Insite {
    * Notify whether the simulation is finished.
    */
   simulationEndNotification(): void {
-    this.insiteAccess.axiosInstance()
+    this.insiteAccess
+      .axiosInstance()
       .get("nest/simulationTimeInfo/")
       .then((response: any) => {
         const simulation = this._project.simulation;

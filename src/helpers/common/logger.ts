@@ -13,7 +13,7 @@
 import { Logger, ILogObj } from "tslog";
 
 const logger: Logger<ILogObj> = new Logger({
-    minLevel: 3
+  minLevel: 3,
 });
 
 export { logger };

@@ -3,7 +3,10 @@
 import { pointer } from "d3";
 
 import { Network } from "@/types/networkTypes";
-import { drawPathMouse, drawPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
+import {
+  drawPathMouse,
+  drawPathNode,
+} from "@/helpers/connectionGraph/connectionGraphPath";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
@@ -38,9 +41,10 @@ export class NetworkGraphDragline {
     logger.trace("update");
     if (this.network && this.network.nodes.state.selectedNode != null) {
       const selectedNode = this.network.nodes.state.selectedNode;
-      const sourcePosition: {x: number, y: number} = selectedNode.view.state.position;
+      const sourcePosition: { x: number; y: number } =
+        selectedNode.view.state.position;
       const position: number[] = pointer(e, this._workspace.selector.node());
-      const targetPosition: {x: number, y: number} = {
+      const targetPosition: { x: number; y: number } = {
         x: position[0],
         y: position[1],
       };
@@ -60,7 +64,7 @@ export class NetworkGraphDragline {
    */
   drawPath(
     sourcePos: { x: number; y: number },
-    targetPos: { x: number; y: number },
+    targetPos: { x: number; y: number }
   ): void {
     logger.trace("draw path");
     this._workspace.selector

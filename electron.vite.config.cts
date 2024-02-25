@@ -9,5 +9,5 @@ export default {
   },
   renderer: {
     // vite config options
-  }
-}
+  },
+};

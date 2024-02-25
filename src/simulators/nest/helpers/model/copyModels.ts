@@ -63,7 +63,9 @@ export class NESTCopyModels {
   }
 
   get nodeModels(): NESTCopyModel[] {
-    return this._models.filter((model: NESTCopyModel) => !model.model.isSynapse);
+    return this._models.filter(
+      (model: NESTCopyModel) => !model.model.isSynapse
+    );
   }
 
   get some() {
@@ -198,7 +200,7 @@ export class NESTCopyModels {
    * Update hash.
    */
   updateHash(): void {
-    logger.trace('Update Hash');
+    logger.trace("Update Hash");
     this._state.hash = sha1({
       models: this._models.map(
         (model: NESTCopyModel) => model.toJSON() //TODO node.state.hash

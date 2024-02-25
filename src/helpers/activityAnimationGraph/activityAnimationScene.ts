@@ -14,7 +14,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from "stats.js";
 
 import { darkMode } from "@/helpers/common/theme";

@@ -30,7 +30,7 @@ export function openToast(
         );
       options.duration = 5000;
 
-      $toast.error( message, options );
+      $toast.error(message, options);
       break;
     }
     default: {

@@ -60,9 +60,7 @@ export class ActivityChartPanel {
       visible: true,
     });
 
-    this.selectModel(
-      panel.model ? panel.model.id : "spikeTimesRasterPlot",
-    );
+    this.selectModel(panel.model ? panel.model.id : "spikeTimesRasterPlot");
   }
 
   get graph(): ActivityChartGraph {

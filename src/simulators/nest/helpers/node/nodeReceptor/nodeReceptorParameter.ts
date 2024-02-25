@@ -1,6 +1,9 @@
 // nodeReceptorParameters.ts
 
-import { NodeParameter, NodeParameterProps } from "@/helpers/node/nodeParameter";
+import {
+  NodeParameter,
+  NodeParameterProps,
+} from "@/helpers/node/nodeParameter";
 
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 
@@ -9,7 +12,10 @@ import { NESTNodeReceptor } from "./nodeReceptor";
 export interface NESTNodeReceptorParameterProps extends NodeParameterProps {}
 
 export class NESTNodeReceptorParameter extends NodeParameter {
-  constructor(nodeReceptor: NESTNodeReceptor, param: NESTNodeReceptorParameterProps) {
+  constructor(
+    nodeReceptor: NESTNodeReceptor,
+    param: NESTNodeReceptorParameterProps
+  ) {
     super(nodeReceptor, param);
   }
 

@@ -71,9 +71,7 @@ export class Activity {
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.all.map(
-      (node: Node) => node.model.elementType
-    );
+    return this.recorder.nodes.all.map((node: Node) => node.model.elementType);
   }
 
   get endtime(): number {
@@ -174,7 +172,7 @@ export class Activity {
   }
 
   changes(): void {
-    this.project.changes()
+    this.project.changes();
   }
 
   /**

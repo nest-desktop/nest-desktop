@@ -1,4 +1,4 @@
-import VueCodemirror from 'vue-codemirror';
+import VueCodemirror from "vue-codemirror";
 
 // import 'codemirror/mode/python/python.js';
 // import 'codemirror/addon/selection/active-line.js';

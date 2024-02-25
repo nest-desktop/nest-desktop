@@ -8,15 +8,11 @@ import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { NESTProject } from "../project/project";
 import { useNESTSimulatorStore } from "../../stores/backends/nestSimulatorStore";
 
-import {
-  NESTSimulationCode,
-  NESTSimulationCodeProps,
-} from "./simulationCode";
+import { NESTSimulationCode, NESTSimulationCodeProps } from "./simulationCode";
 import {
   NESTSimulationKernel,
   NESTSimulationKernelProps,
 } from "./simulationKernel";
-
 
 export interface NESTSimulationProps {
   code?: NESTSimulationCodeProps;
@@ -95,7 +91,8 @@ export class NESTSimulation extends BaseSimulation {
   async runSimulation(): Promise<any> {
     this.logger.trace("run simulation");
 
-    return this.nestSimulator.axiosInstance()
+    return this.nestSimulator
+      .axiosInstance()
       .post("exec", {
         source: this.code.script,
         return: "response",
@@ -140,7 +137,8 @@ export class NESTSimulation extends BaseSimulation {
       stepSize: 1,
     };
 
-    return this.nestSimulator.axiosInstance()
+    return this.nestSimulator
+      .axiosInstance()
       .post("exec", { source: this.code.script })
       .then((response: any) => {
         switch (response.status) {
@@ -177,7 +175,7 @@ export class NESTSimulation extends BaseSimulation {
    * @return simulation object
    */
   override toJSON(): NESTSimulationProps {
-    const simulation:NESTSimulationProps = {
+    const simulation: NESTSimulationProps = {
       kernel: this._kernel.toJSON(),
       time: this.time,
     };

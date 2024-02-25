@@ -14,9 +14,9 @@ import { useNavStore } from "@/stores/navStore";
 const checkSimulator = () => {
   const appStore = useAppStore();
   if (!appStore.hasSimulator) {
-    appStore.resetSimulator()
+    appStore.resetSimulator();
   }
-}
+};
 
 const closeNav = () => {
   const navStore = useNavStore();
@@ -64,11 +64,6 @@ const routes: RouteRecordRaw[] = [
         name: "settings",
         component: () => import("@/views/Settings.vue"),
         beforeEnter: closeNav,
-      },
-      {
-        path: "vuetify",
-        name: "vuetify",
-        component: () => import("@/views/Vuetify.vue"),
       },
     ],
   },
