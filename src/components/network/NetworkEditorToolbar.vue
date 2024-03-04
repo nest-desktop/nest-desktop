@@ -5,21 +5,28 @@
     density="compact"
     absolute
   >
-    <v-btn icon size="small" v-if="graph?.network.nodes.state.selectedNode">
+    <v-btn
+      @click="graph?.network.nodes.state.selectedNode.state.select()"
+      icon
+      size="small"
+      v-if="graph?.network.nodes.state.selectedNode"
+    >
       <node-avatar
         :node="(graph?.network.nodes.state.selectedNode as Node)"
-        @click="graph?.network.nodes.state.selectedNode.state.select()"
         size="32px"
       />
     </v-btn>
 
-    <v-spacer />
-
-    <div v-if="graph?.network.connections.state.selectedConnection">
+    <v-btn
+      @click="
+        graph?.network.connections.state.selectedConnection.state.select()
+      "
+      v-if="graph?.network.connections.state.selectedConnection"
+    >
       <connection-avatar
         :connection="(graph?.network.connections.state.selectedConnection as Connection)"
       />
-    </div>
+    </v-btn>
 
     <v-spacer />
 
