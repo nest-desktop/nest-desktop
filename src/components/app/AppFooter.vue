@@ -2,7 +2,7 @@
   <v-footer>
     <v-row justify="center" no-gutters>
       <v-col class="text-center">
-        2023 — <strong>NEST Desktop</strong>
+        2024 — <strong>NEST Desktop</strong>
         <span v-if="appSessionStore.state.devMode">
           — <small>{{ appVersion }}</small>
         </span>
