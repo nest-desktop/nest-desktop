@@ -67,7 +67,7 @@ const update = (value: number) => {
 
 const weightOptions = {
   id: "weight",
-  variant: "valueSlider",
+  component: "valueSlider",
   label: "synaptic weight",
   max: 10,
   min: -10,

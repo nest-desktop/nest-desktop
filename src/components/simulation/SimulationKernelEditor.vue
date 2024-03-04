@@ -38,7 +38,7 @@ const simulation = computed(() => props.simulation as Simulation);
 const options = {
   simulationTimeSettings: {
     id: "time",
-    variant: "valueSlider",
+    component: "valueSlider",
     label: "simulation time",
     max: 2000,
     min: 0,

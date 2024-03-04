@@ -7,7 +7,7 @@
   "params": [
     {
       "id": "interval",
-      "input": "tickSlider",
+      "component": "tickSlider",
       "label": "time interval of recording",
       "rules": [
         [
@@ -16,13 +16,18 @@
           "warning"
         ]
       ],
-      "ticks": [0.01, 0.1, 1, 10],
+      "ticks": [
+        0.01,
+        0.1,
+        1,
+        10
+      ],
       "unit": "ms",
       "value": 1
     },
     {
       "id": "start",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "start time",
       "max": 10000,
       "min": 0,
@@ -32,7 +37,7 @@
     },
     {
       "id": "stop",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "stop time",
       "max": 10000,
       "min": 0,

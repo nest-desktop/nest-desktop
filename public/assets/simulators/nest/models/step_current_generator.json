@@ -3,11 +3,13 @@
   "elementType": "stimulator",
   "id": "step_current_generator",
   "label": "step current generator",
-  "recordables": ["I"],
+  "recordables": [
+    "I"
+  ],
   "params": [
     {
       "id": "amplitude_times",
-      "input": "arrayInput",
+      "component": "arrayInput",
       "label": "times at which current changes",
       "rules": [
         [
@@ -20,7 +22,7 @@
     },
     {
       "id": "amplitude_values",
-      "input": "arrayInput",
+      "component": "arrayInput",
       "label": "amplitudes of step current current",
       "unit": "pA"
     }

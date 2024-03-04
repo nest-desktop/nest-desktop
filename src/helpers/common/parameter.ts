@@ -24,7 +24,7 @@ export interface ParameterProps {
   type?: any;
   unit?: string;
   value?: ParamValueTypes;
-  variant?: string;
+  component?: string;
   visible?: boolean;
 }
 
@@ -44,7 +44,7 @@ export class Parameter extends Config {
   private _type: { [key: string]: any } = { id: "constant" };
   private _unit: string = "";
   private _value: ParamValueTypes = 0; // constant value;
-  private _variant: string = "valueInput";
+  private _component: string = "valueInput";
 
   constructor(param: ParameterProps) {
     super("Parameter");
@@ -142,17 +142,26 @@ export class Parameter extends Config {
     [key: string]: boolean | number | string | (number | string)[];
   } {
     const param = this.modelParam;
-    return {
+
+    const options = {
       id: param.id,
       label: param.label,
-      max: param.max,
-      min: param.min,
-      step: param.step,
-      ticks: param.ticks,
       unit: param.unit,
       defaultValue: param.value,
-      variant: param.variant,
+      component: param.component,
     };
+
+    if (["rangeSlider", "valueSlider"].includes(param.component)) {
+      options.max = param.max;
+      options.min = param.min;
+      options.step = param.step;
+    }
+
+    if (param.component === "tickSlider") {
+      options.tickLabels = param.ticks;
+    }
+
+    return options;
   }
 
   get readonly(): boolean {
@@ -239,12 +248,12 @@ export class Parameter extends Config {
     }
   }
 
-  get variant(): string {
-    return this._variant;
+  get component(): string {
+    return this._component;
   }
 
-  set variant(value: string) {
-    this._variant = value;
+  set component(value: string) {
+    this._component = value;
   }
 
   /**
@@ -421,6 +430,6 @@ export class Parameter extends Config {
     this._step = param.step || 1;
     this._ticks = param.ticks || [];
     this._unit = param.unit || "";
-    this._variant = param.variant || param.input || "valueInput";
+    this._component = param.component || param.input || "valueInput";
   }
 }

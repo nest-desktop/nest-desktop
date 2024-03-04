@@ -1,19 +1,15 @@
 <template>
   <range-slider
     v-bind="props.options"
-    v-if="props.options.variant === 'range'"
+    v-if="props.options.component === 'rangeSlider'"
     v-model="modelValue"
   />
   <tick-slider
     v-bind="props.options"
-    v-else-if="props.options.variant === 'ticks'"
+    v-else-if="props.options.component === 'tickSlider'"
     v-model="modelValue"
   />
-  <value-slider
-    v-bind="props.options"
-    v-else
-    v-model="modelValue"
-  />
+  <value-slider v-bind="props.options" v-else v-model="modelValue" />
 </template>
 
 <script lang="ts" setup>

@@ -6,7 +6,7 @@
   "params": [
     {
       "id": "rate",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "mean firing rate",
       "max": 10000,
       "min": 0,
@@ -16,7 +16,7 @@
     },
     {
       "id": "start",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "start time",
       "max": 1000,
       "min": 0,
@@ -26,7 +26,7 @@
     },
     {
       "id": "stop",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "stop time",
       "max": 1000,
       "min": 0,

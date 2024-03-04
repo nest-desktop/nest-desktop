@@ -18,7 +18,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       selected: [0, 1, 2, 3, 4, 5],
       // {
       //   id: "displayedLines",
-      //   variant: "rangeSlider",
+      //   component: "rangeSlider",
       //   label: "displayed lines",
       //   value: [0, 10],
       //   min: 0,
@@ -26,13 +26,13 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       // },
       // {
       //   id: "averageLine",
-      //   variant: "checkbox",
+      //   component: "checkbox",
       //   label: "average line",
       //   value: false,
       // },
       // {
       //   id: "spikeThreshold",
-      //   variant: "checkbox+valueInput",
+      //   component: "checkbox+valueInput",
       //   label: "spike threshold",
       //   value: -55,
       //   visible: false,

@@ -3,7 +3,7 @@
     "specs": [
       {
         "id": "radius",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "radius",
         "max": 10,
         "min": 0,
@@ -16,7 +16,7 @@
     "specs": [
       {
         "id": "inner_radius",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "inner radius",
         "max": 10,
         "min": 0,
@@ -25,7 +25,7 @@
       },
       {
         "id": "outer_radius",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "outer radius",
         "max": 10,
         "min": 0,
@@ -38,7 +38,7 @@
     "specs": [
       {
         "id": "major_axis",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "major axis",
         "max": 10,
         "min": 0,
@@ -47,7 +47,7 @@
       },
       {
         "id": "minor_axis",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "minor_axis",
         "max": 10,
         "min": 0,
@@ -56,7 +56,7 @@
       },
       {
         "id": "azimuth_angle",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "azimuth angle",
         "max": 360,
         "min": 0,
@@ -65,9 +65,12 @@
       },
       {
         "id": "anchor",
-        "variant": "arrayInput",
+        "component": "arrayInput",
         "label": "anchor",
-        "value": [0, 0]
+        "value": [
+          0,
+          0
+        ]
       }
     ]
   },
@@ -75,19 +78,25 @@
     "specs": [
       {
         "id": "lower_left",
-        "variant": "arrayInput",
+        "component": "arrayInput",
         "label": "lower left",
-        "value": [-0.5, -0.5]
+        "value": [
+          -0.5,
+          -0.5
+        ]
       },
       {
         "id": "upper_right",
-        "variant": "arrayInput",
+        "component": "arrayInput",
         "label": "upper right",
-        "value": [0.5, 0.5]
+        "value": [
+          0.5,
+          0.5
+        ]
       },
       {
         "id": "azimuth_angle",
-        "variant": "valueSlider",
+        "component": "valueSlider",
         "label": "azimuth angle",
         "max": 360,
         "min": 0,

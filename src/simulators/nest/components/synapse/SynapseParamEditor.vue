@@ -6,21 +6,21 @@
         :thumbColor="param.synapse.connection.source.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-if="param.options.variant === 'range'"
+        v-if="param.options.component === 'rangeSlider'"
       />
       <tick-slider
         :modelValue="(param.value as number)"
         :thumbColor="param.synapse.connection.source.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-else-if="param.options.variant === 'ticks'"
+        v-else-if="param.options.component === 'tickSlider'"
       />
       <value-slider
         :modelValue="(param.value as number)"
         :thumbColor="param.synapse.connection.source.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-else
+        v-else-if="param.options.component === 'valueSlider'"
       />
 
       <v-menu :closeOnContentClick="false">

@@ -12,12 +12,16 @@
         {
           "format": "integer",
           "id": "indegree",
-          "variant": "valueSlider",
+          "component": "valueSlider",
           "label": "indegree",
           "max": 100,
           "min": 1,
           "rules": [
-            ["value > 0", "The value must be strictly positive.", "error"]
+            [
+              "value > 0",
+              "The value must be strictly positive.",
+              "error"
+            ]
           ],
           "step": 1,
           "value": 1,
@@ -25,14 +29,14 @@
         },
         {
           "id": "allow_autapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "allow_multapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -46,12 +50,16 @@
         {
           "format": "integer",
           "id": "outdegree",
-          "variant": "valueSlider",
+          "component": "valueSlider",
           "label": "outdegree",
           "max": 100,
           "min": 1,
           "rules": [
-            ["value > 0", "The value must be strictly positive.", "error"]
+            [
+              "value > 0",
+              "The value must be strictly positive.",
+              "error"
+            ]
           ],
           "step": 1,
           "value": 1,
@@ -59,14 +67,14 @@
         },
         {
           "id": "allow_autapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "allow_multapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -80,12 +88,16 @@
         {
           "format": "integer",
           "id": "N",
-          "variant": "valueSlider",
+          "component": "valueSlider",
           "label": "N",
           "max": 1000,
           "min": 1,
           "rules": [
-            ["value > 0", "The value must be strictly positive.", "error"]
+            [
+              "value > 0",
+              "The value must be strictly positive.",
+              "error"
+            ]
           ],
           "step": 1,
           "value": 1,
@@ -93,14 +105,14 @@
         },
         {
           "id": "allow_autapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
           "id": "allow_multapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -119,7 +131,7 @@
         {
           "format": "float",
           "id": "p",
-          "variant": "valueSlider",
+          "component": "valueSlider",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
@@ -136,14 +148,21 @@
         },
         {
           "id": "allow_autapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
+          "id": "allow_multapses",
+          "component": "checkbox",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        },
+        {
           "id": "use_on_source",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "use on source",
           "value": false,
           "visible": false
@@ -156,7 +175,7 @@
       "params": [
         {
           "id": "p",
-          "variant": "valueSlider",
+          "component": "valueSlider",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
@@ -173,7 +192,7 @@
         },
         {
           "id": "allow_autapses",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "allow autapses",
           "readonly": true,
           "value": false,
@@ -181,7 +200,7 @@
         },
         {
           "id": "make_symmetric",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "make symmetric",
           "readonly": true,
           "value": true,
@@ -189,7 +208,7 @@
         },
         {
           "id": "use_on_source",
-          "variant": "checkbox",
+          "component": "checkbox",
           "label": "use on source",
           "value": false,
           "visible": false

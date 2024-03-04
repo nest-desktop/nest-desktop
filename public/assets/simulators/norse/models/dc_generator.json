@@ -4,11 +4,13 @@
   "id": "dc_generator",
   "label": "direct current",
   "codeTemplate": "{{ view.label }} = torch.ones({{ simulation.time }}, {{ size }}) * {{ params.amplitude.value }}",
-  "recordables": ["I"],
+  "recordables": [
+    "I"
+  ],
   "params": [
     {
       "id": "amplitude",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "amplitude of current",
       "max": 10,
       "min": -10,

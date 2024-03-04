@@ -18,7 +18,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         _parent: this,
         _value: "bar",
         id: "plotMode",
-        variant: "select",
+        component: "select",
         items: ["lines", "lines+markers", "markers", "bar"],
         label: "Plot mode",
         get value(): string {
@@ -31,7 +31,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       {
         id: "lineShape",
-        variant: "select",
+        component: "select",
         items: [
           { text: "linear", value: "linear" },
           { text: "spline", value: "spline" },
@@ -46,7 +46,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       {
         id: "spikeRate",
-        variant: "checkbox",
+        component: "checkbox",
         label: "Spikes per seconds (spikes/s)",
         value: false,
       },

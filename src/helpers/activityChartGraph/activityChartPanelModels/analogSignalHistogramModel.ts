@@ -22,7 +22,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     this.params = [
       {
         id: "bins",
-        variant: "tickSlider",
+        component: "tickSlider",
         label: "number of bins",
         ticks: [1, 5, 10, 20, 50, 100, 200],
         value: 50,

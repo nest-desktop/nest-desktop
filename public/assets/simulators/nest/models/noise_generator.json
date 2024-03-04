@@ -4,11 +4,13 @@
   "favorite": true,
   "id": "noise_generator",
   "label": "noise generator (Gaussian)",
-  "recordables": ["I"],
+  "recordables": [
+    "I"
+  ],
   "params": [
     {
       "id": "mean",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "mean value of the noise current",
       "max": 1000,
       "min": -1000,
@@ -18,7 +20,7 @@
     },
     {
       "id": "std",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "standard deviation of noise current",
       "max": 100,
       "min": 0,
@@ -28,7 +30,7 @@
     },
     {
       "id": "start",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "start time",
       "max": 1000,
       "min": 0,
@@ -38,7 +40,7 @@
     },
     {
       "id": "stop",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "stop time",
       "max": 1000,
       "min": 0,

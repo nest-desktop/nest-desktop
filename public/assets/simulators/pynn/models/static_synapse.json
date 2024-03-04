@@ -5,7 +5,7 @@
   "params": [
     {
       "id": "weight",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "synaptic weight",
       "max": 100,
       "min": -100,
@@ -15,7 +15,7 @@
     },
     {
       "id": "delay",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "synaptic delay",
       "max": 100,
       "min": 1,

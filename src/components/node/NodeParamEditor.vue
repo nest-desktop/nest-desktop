@@ -1,26 +1,32 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
+      <array-input
+        :modelValue="(param.value as Number[])"
+        @update:modelValue="update"
+        v-bind="param.options"
+        v-if="param.options.component === 'arrayInput'"
+      />
       <range-slider
         :modelValue="(param.value as number[])"
         :thumbColor="param.node.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-if="param.options.variant === 'range'"
+        v-else-if="param.options.component === 'rangeSlider'"
       />
       <tick-slider
         :modelValue="(param.value as number)"
         :thumbColor="param.node.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-else-if="param.options.variant === 'ticks'"
+        v-else-if="param.options.component === 'tickSlider'"
       />
       <value-slider
         :modelValue="(param.value as number)"
         :thumbColor="param.node.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-else
+        v-else-if="param.options.component === 'valueSlider'"
       />
 
       <v-menu :closeOnContentClick="false">
@@ -56,6 +62,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import ArrayInput from "@/components/controls/ArrayInput.vue";
 import RangeSlider from "@/components/controls/RangeSlider.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";

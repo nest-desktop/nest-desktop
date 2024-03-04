@@ -60,18 +60,18 @@ export class ModelParameter extends Parameter {
   override toJSON(): ModelParameterProps {
     const param: ModelParameterProps = {
       id: this.id,
-      variant: this.variant,
+      component: this.component,
       label: this.label,
       unit: this.unit,
       value: this.value,
       // visible: this.visible as boolean,
     };
 
-    if (this.variant === "valueSlider") {
+    if (this.component === "valueSlider") {
       param.min = this.min;
       param.max = this.max;
       param.step = this.step;
-    } else if (this.variant === "tickSlider") {
+    } else if (this.component === "tickSlider") {
       param.ticks = this.ticks;
     }
 

@@ -4,15 +4,20 @@
     {
       "format": "integer",
       "id": "localNumThreads",
-      "variant": "tickSlider",
+      "component": "tickSlider",
       "label": "local number of threads",
-      "ticks": [1, 2, 4, 8],
+      "ticks": [
+        1,
+        2,
+        4,
+        8
+      ],
       "value": 1
     },
     {
       "format": "integer",
       "id": "rngSeed",
-      "variant": "valueSlider",
+      "component": "valueSlider",
       "label": "seed of random number generator",
       "max": 1000,
       "min": 1,
@@ -21,9 +26,13 @@
     },
     {
       "id": "resolution",
-      "variant": "tickSlider",
+      "component": "tickSlider",
       "label": "time resolution",
-      "ticks": [0.01, 0.1, 1],
+      "ticks": [
+        0.01,
+        0.1,
+        1
+      ],
       "unit": "ms",
       "value": 0.1
     }

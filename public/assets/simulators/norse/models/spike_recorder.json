@@ -6,7 +6,7 @@
   "params": [
     {
       "id": "start",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "start time",
       "max": 10000,
       "min": 0,
@@ -16,7 +16,7 @@
     },
     {
       "id": "stop",
-      "input": "valueSlider",
+      "component": "valueSlider",
       "label": "stop time",
       "max": 10000,
       "min": 0,

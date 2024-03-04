@@ -81,7 +81,7 @@ const simulation = computed(
 
 const options = {
   autoRNGSeedSettings: {
-    variant: "checkbox",
+    component: "checkbox",
     label: "randomize seed",
     rules: [
       (value: boolean) =>
@@ -91,9 +91,9 @@ const options = {
   },
   resolutionSettings: {
     id: "resolution",
-    variant: "tickSlider",
+    component: "tickSlider",
     label: "simulation resolution",
-    ticks: [0.01, 0.1, 1, 10],
+    tickLabels: [0.01, 0.1, 1, 10],
     unit: "ms",
     rules: [
       (value: number) =>
@@ -103,7 +103,7 @@ const options = {
   },
   rngSeedSettings: {
     id: "rng_seed",
-    variant: "valueSlider",
+    component: "valueSlider",
     label: "seed of the random number generator",
     max: 1000,
     min: 1,
@@ -114,7 +114,7 @@ const options = {
   },
   simulationTimeSettings: {
     id: "time",
-    variant: "valueSlider",
+    component: "valueSlider",
     label: "simulation time",
     max: 2000,
     min: 0,
@@ -127,9 +127,9 @@ const options = {
     ],
   },
   threadSettings: {
-    variant: "tickSlider",
+    component: "tickSlider",
     label: "local number of threads",
-    ticks: [1, 2, 4, 8],
+    tickLabels: [1, 2, 4, 8],
   },
 };
 

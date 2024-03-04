@@ -8,14 +8,14 @@
         density="compact"
         hideDetails
         v-bind="param.options"
-        v-if="param.options.variant === 'checkbox'"
+        v-if="param.options.component === 'checkbox'"
       />
       <value-slider
         :modelValue="(param.value as number)"
         :thumbColor="param.connection.source.view.color"
         @update:modelValue="update"
         v-bind="param.options"
-        v-else
+        v-if="param.options.component === 'valueSlider'"
       />
 
       <v-menu :closeOnContentClick="false">

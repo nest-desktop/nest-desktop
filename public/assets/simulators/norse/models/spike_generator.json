@@ -7,7 +7,7 @@
   "params": [
     {
       "id": "spike_times",
-      "input": "arrayInput",
+      "component": "arrayInput",
       "label": "spike times",
       "rules": [
         [
@@ -20,7 +20,7 @@
     },
     {
       "id": "spike_weights",
-      "input": "arrayInput",
+      "component": "arrayInput",
       "label": "weights of spike",
       "unit": "pA"
     }
