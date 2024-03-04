@@ -3,15 +3,15 @@
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
-        @update:modelValue="state.menu = true"
-        class="text-primary"
+        :label="
+          'Node model - ' + node.state.hash + ' - ' + node.state.graphHash
+        "
+        @update:modelValue="openMenu"
+        class="model-select text-primary"
         density="compact"
         hideDetails
         itemTitle="label"
         itemValue="id"
-        :label="
-          'Node model - ' + node.state.hash + ' - ' + node.state.graphHash
-        "
         v-model="node.modelId"
         variant="outlined"
       >
@@ -240,11 +240,23 @@ const items = [
     items: clickMe,
   },
 ];
+
+const openMenu = () => {
+  setTimeout(() => {
+    state.menu = true;
+  }, 1);
+};
 </script>
 
 <style lang="scss">
 .node {
   .node-title {
+    .model-select {
+      .v-label {
+        font-size: 15px;
+      }
+    }
+
     .menu {
       opacity: 0;
     }
