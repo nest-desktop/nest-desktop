@@ -74,6 +74,8 @@ export class NodeView {
 
   set color(value: string) {
     this._state.color = value === "none" || value === "" ? undefined : value;
+
+    this.node.network.updateStyle();
     this.node.network.clean();
   }
 
@@ -194,5 +196,16 @@ export class NodeView {
       color: this.color,
       position: this._state.position,
     });
+  }
+
+  /**
+   * Update element for node color.
+   */
+  updateStyle(): void {
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--node" + this._node.idx + "-color",
+      this._node.view.color
+    );
   }
 }
