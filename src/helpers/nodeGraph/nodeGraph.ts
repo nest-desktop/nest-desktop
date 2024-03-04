@@ -8,7 +8,7 @@ import { NetworkGraph } from "@/types/networkGraphTypes";
 import { Node } from "@/types/nodeTypes";
 import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
-import { currentBackgroundColor } from "@/helpers/common/theme";
+// import { currentBackgroundColor } from "@/helpers/common/theme";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 export class NodeGraph {
@@ -24,6 +24,7 @@ export class NodeGraph {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this._networkGraph.network.project.shortId}] node graph`,
+      minLevel: 3,
     });
   }
 
@@ -32,14 +33,14 @@ export class NodeGraph {
   }
 
   /**
-   * Initialize node graph.
+   * Init node element.
    */
-  init(
+  initNode(
     node: Node,
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
-    this._logger.trace("init");
+    this._logger.trace("init node");
     const elem: Selection<any, any, any, any> = select(elements[idx]);
     elem.selectAll("*").remove();
 
@@ -68,6 +69,51 @@ export class NodeGraph {
   }
 
   /**
+   * Drag node graph.
+   */
+  drag(event: MouseEvent, node: Node): void {
+    this._logger.silly("drag");
+    if (this._networkGraph.workspace.state.dragLine) return;
+
+    node.view.state.position.x = event.x;
+    node.view.state.position.y = event.y;
+    this._networkGraph.render();
+  }
+
+  /**
+   * Render node graph.
+   */
+  render(): void {
+    this._logger.silly("render");
+
+    this._nodeGraphConnector.render();
+    this._nodeGraphShape.render();
+
+    const duration: number = this._networkGraph.workspace.state.dragging
+      ? 0
+      : 250;
+    const t: Transition<any, any, any, any> = transition().duration(duration);
+
+    const nodes = select("g#nodes").selectAll("g.node");
+
+    nodes
+      .transition(t)
+      .style("opacity", 1)
+      .style("color", (n: any) => "var(--node" + n.idx + "-color)")
+      .style("background-color", "rgb(var(--v-theme-background))")
+      .attr(
+        "transform",
+        (n: any) =>
+          `translate(${n.view.state.position.x},${n.view.state.position.y})`
+      );
+
+    nodes
+      .selectAll(".core")
+      .transition(t)
+      .attr("transform", (n: any) => `scale( ${n.state.isFocused ? 1.2 : 1})`);
+  }
+
+  /**
    * Update nodes in network graph.
    *
    * @remarks
@@ -92,7 +138,7 @@ export class NodeGraph {
       .enter()
       .append("g")
       .attr("class", "node")
-      .attr("color", (n: Node) => n.view.color)
+      .style("color", (n: any) => "var(--node" + n.idx + "-color)")
       .attr("idx", (n: Node) => n.idx)
       .attr("weight", (n: Node) => n.view.synWeights as string)
       .attr(
@@ -105,50 +151,10 @@ export class NodeGraph {
       .style("opacity", 0)
       // @ts-ignore
       .call(dragging)
-      .each((n: Node, i: number, e) => this.init(n, i, e));
+      .each((n: Node, i: number, e) => this.initNode(n, i, e));
 
     nodes.exit().remove();
 
     this.render();
-  }
-
-  /**
-   * Drag node graph.
-   */
-  drag(event: MouseEvent, node: Node): void {
-    this._logger.silly("drag");
-    if (this._networkGraph.workspace.state.dragLine) return;
-
-    node.view.state.position.x = event.x;
-    node.view.state.position.y = event.y;
-    this._networkGraph.render();
-  }
-
-  /**
-   * Render node graph.
-   */
-  render(): void {
-    this._logger.silly("render");
-    this._nodeGraphShape.render();
-    this._nodeGraphConnector.render();
-
-    const duration: number = this._networkGraph.workspace.state.dragging
-      ? 0
-      : 250;
-    const t: Transition<any, any, any, any> = transition().duration(duration);
-
-    const nodes = select("g#nodes").selectAll("g.node");
-    nodes
-      .transition(t)
-      .style("opacity", 1)
-      .attr("color", (n: any) => n.view.color)
-      .style("background-color", currentBackgroundColor())
-      .attr(
-        "transform",
-        (n: any) =>
-          `translate(${n.view.state.position.x},${
-            n.view.state.position.y
-          }) scale( ${n.state.isFocused ? 1.2 : 1})`
-      );
   }
 }
