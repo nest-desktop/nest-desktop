@@ -124,7 +124,7 @@
 
       <span v-if="state.content === 'nodeColor'">
         <v-color-picker
-          @update:color="nodeColorChange()"
+          @update:modelValue="nodeColorChange"
           flat
           show-swatches
           elevation="0"
@@ -322,7 +322,12 @@ const items = [
  */
 const nodeColorChange = () => {
   node.value.changes();
-  node.value.nodes.updateRecordsColor();
+  setTimeout(() => {
+    node.value.nodes.updateRecordsColor();
+  }, 1);
+
+  // Render network graph
+  networkGraphStore.state.graph?.updateHash();
 };
 
 /**
