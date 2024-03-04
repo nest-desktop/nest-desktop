@@ -130,6 +130,7 @@
 import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
 import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
@@ -142,6 +143,7 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 import { Network } from "@/types/networkTypes";
 import { Project } from "@/types/projectTypes";
 import { Simulation } from "@/types/simulationTypes";
+import { darkMode } from "@/helpers/common/theme";
 
 import { useAppSessionStore } from "@/stores/appSessionStore";
 const appSessionStore = useAppSessionStore();
@@ -170,6 +172,10 @@ const controllerItems = [
 ];
 
 const extensions = [json()];
+
+if (darkMode()) {
+  extensions.push(oneDark);
+}
 
 /**
  * Resize bottom nav.
