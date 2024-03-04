@@ -9,7 +9,7 @@ import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-const _nodeTypes = [
+const _nodeTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
   { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
   { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
@@ -36,6 +36,7 @@ export class BaseNodes {
 
     this._logger = mainLogger.getSubLogger({
       name: `[${this.network.project.shortId}] nodes`,
+      minLevel: 3,
     });
 
     this._state = reactive({
@@ -97,6 +98,10 @@ export class BaseNodes {
     return this._nodes;
   }
 
+  get nodeTypes(): { icon: string; id: string; title: string }[] {
+    return _nodeTypes;
+  }
+
   /**
    * Get recorders
    */
@@ -131,7 +136,7 @@ export class BaseNodes {
   }
 
   /**
-   * Get stimulators
+   * Get stimulators.
    */
   get stimulators(): Node[] {
     return this.nodes.filter((node: Node) => node.model.isStimulator);
@@ -211,12 +216,14 @@ export class BaseNodes {
     }
   }
 
+  /**
+   * Create new node.
+   *
+   * @param data
+   * @returns BaseNode
+   */
   newNode(data?: NodeProps): Node {
     return new BaseNode(this, data);
-  }
-
-  get nodeTypes() {
-    return _nodeTypes;
   }
 
   /**
@@ -269,10 +276,16 @@ export class BaseNodes {
     return this.nodes.map((node: Node) => node.toJSON());
   }
 
+  /**
+   * Unfocus node.
+   */
   unfocusNode(): void {
     this._state.focusedNode = null;
   }
 
+  /**
+   * Unselect node.
+   */
   unselectNode(): void {
     this._state.selectedNode = null;
   }
@@ -353,6 +366,7 @@ export class BaseNodes {
    * It updates colors in activity chart graph.
    */
   updateRecordsColor(): void {
+    this._logger.trace("update records color");
     this.recorders.forEach((recorder: Node) => {
       recorder.updateRecordsColor();
     });

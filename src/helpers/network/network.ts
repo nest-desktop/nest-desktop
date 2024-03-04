@@ -53,10 +53,7 @@ export class BaseNetwork extends Config {
     this._nodes = this.newNodes(network.nodes);
     this._connections = this.newConnections(network.connections);
 
-    this.updateStates();
-
-    this.clearNetworkHistory();
-    this.nodes.updateRecords();
+    this.init();
   }
 
   get colors(): string[] {
@@ -127,9 +124,11 @@ export class BaseNetwork extends Config {
    * It emits project changes.
    */
   changes(): void {
+    this._logger.trace("changes");
     this._state.updateHash();
     this.commit();
-    this._logger.trace("changes");
+
+    this.updateStyle();
     this.project.changes();
   }
 
@@ -297,7 +296,10 @@ export class BaseNetwork extends Config {
   createNode(model?: string, view?: any): void {
     this._logger.trace("create node");
 
-    this.nodes?.add({ model: model || this._defaultModels[view.elementType], view });
+    this.nodes?.add({
+      model: model || this._defaultModels[view.elementType],
+      view,
+    });
 
     this.changes();
   }
@@ -349,6 +351,18 @@ export class BaseNetwork extends Config {
   getNodeColor(idx: number): string {
     const colors: string[] = this.config.color.cycle;
     return colors[idx % colors.length];
+  }
+
+  /**
+   * Initialize network.
+   */
+  init(): void {
+    this._state.updateHash();
+    this.updateStates();
+    this.updateStyle();
+
+    this.clearNetworkHistory();
+    this.nodes.updateRecords();
   }
 
   /**
@@ -426,6 +440,17 @@ export class BaseNetwork extends Config {
     this.updateStates();
   }
 
+  /**
+   * Update node style, e.g. node color.
+   */
+  updateStyle(): void {
+    this._logger.trace("update node style");
+    this._nodes.all.forEach((node: Node) => node.view.updateStyle());
+  }
+
+  /**
+   * Update node and connection states.
+   */
   updateStates(): void {
     this.nodes.updateStates();
     this.connections.updateStates();

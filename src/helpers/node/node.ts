@@ -312,7 +312,7 @@ export class BaseNode extends Config {
   }
 
   get simulation(): Simulation {
-    return this.nodes.network.project.simulation
+    return this.nodes.network.project.simulation;
   }
 
   get size(): number {
@@ -377,9 +377,9 @@ export class BaseNode extends Config {
    * It emits network changes.
    */
   changes(): void {
+    this._logger.trace("changes");
     this.clean();
     this._state.updateHash();
-    this._logger.trace("changes");
     this.nodes.network.changes();
   }
 
@@ -555,6 +555,9 @@ export class BaseNode extends Config {
     this._records = [...this._records];
   }
 
+  /**
+   * Reset node.
+   */
   reset(): void {}
 
   /**

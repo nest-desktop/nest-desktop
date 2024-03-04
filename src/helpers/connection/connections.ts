@@ -4,7 +4,10 @@ import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { sha1 } from "object-hash";
 
-import { BaseConnection, ConnectionProps } from "@/helpers/connection/connection";
+import {
+  BaseConnection,
+  ConnectionProps,
+} from "@/helpers/connection/connection";
 import { Connection } from "@/types/connectionTypes";
 import { Network } from "@/types/networkTypes";
 import { Node } from "@/types/nodeTypes";
