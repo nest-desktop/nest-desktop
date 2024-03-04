@@ -2,6 +2,7 @@
   <v-range-slider
     :step="props.step"
     class="py-2 range-slider align-center"
+    color="grey"
     hideDetails
     strict
     style="position: relative"
@@ -90,7 +91,13 @@ watch(
 
 <style lang="scss">
 .range-slider {
+  .v-input__append,
+  .v-input__prepend {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+  }
+
   .v-slider__label {
+    font-size: 15px;
     left: 92px;
     pointer-events: none;
     position: absolute;

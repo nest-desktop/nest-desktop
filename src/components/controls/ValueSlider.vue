@@ -75,12 +75,14 @@ const value = computed({
     margin-right: 4px;
   }
 
-  .v-input__prepend,
-  .v-input__append {
-    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+  .v-input__append,
+  .v-input__prepend {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
   }
 
   .v-slider__label {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+    font-size: 15px;
     left: 0;
     pointer-events: none;
     position: absolute;

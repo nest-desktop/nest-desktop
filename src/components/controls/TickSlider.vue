@@ -1,13 +1,14 @@
 <template>
   <v-slider
-    :max="max"
-    :ticks="state.ticks"
+    :max
+    :min="0"
+    :ticks
     @click:append="increment"
     @click:prepend="decrement"
     appendIcon="mdi-plus"
     class="py-3 tick-slider"
-    hideDetails="auto"
-    min="0"
+    color="grey"
+    hideDetails
     prependIcon="mdi-minus"
     showTicks="always"
     step="1"
@@ -19,6 +20,10 @@
     <template #append>
       <div class="unit">{{ props.unit }}</div>
     </template>
+
+    <template #tick-label="{ index }">
+      <div class="label">{{ state.ticks[index] }}</div>
+    </template>
   </v-slider>
 </template>
 
@@ -27,13 +32,13 @@ import { computed, reactive, onMounted, watch } from "vue";
 
 interface Props {
   modelValue: number | string;
-  ticks?: number[];
+  tickLabels: (number | string)[];
   unit?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
-  ticks: () => [0, 100],
+  tickLabels: () => [""],
   unit: "",
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -51,7 +56,9 @@ const tickIdx = computed({
   },
 });
 
-const max = computed(() => props.ticks.length - 1);
+const ticks = computed(() => Object.keys(state.ticks).map(JSON.parse));
+
+const max = computed(() => ticks.value.length - 1);
 
 const decrement = () => {
   if (state.tickIdx <= 0) {
@@ -61,7 +68,7 @@ const decrement = () => {
 };
 
 const increment = () => {
-  if (state.tickIdx >= props.ticks.length - 1) {
+  if (state.tickIdx >= ticks.value.length - 1) {
     return;
   }
   tickIdx.value += 1;
@@ -69,7 +76,7 @@ const increment = () => {
 
 const init = () => {
   state.ticks = {};
-  props.ticks.forEach((value: number | string, index: number) => {
+  props.tickLabels.forEach((value: number | string, index: number) => {
     // @ts-ignore
     state.ticks[index] = value;
   });
@@ -78,7 +85,7 @@ const init = () => {
 
 const update = () => {
   state.tickIdx = 0;
-  props.ticks.forEach((value: number | string, index: number) => {
+  props.tickLabels.forEach((value: number | string, index: number) => {
     if (props.modelValue === value) {
       state.tickIdx = index;
     }
@@ -102,15 +109,26 @@ onMounted(init);
     opacity: 0.6;
   }
 
-  .v-slider__label {
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    top: -6px;
+  .v-input__append,
+  .v-input__prepend,
+  .v-slider-track__ticks {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+  }
+
+  .v-slider-track__ticks {
+    font-size: 13px;
   }
 
   .v-input__details {
     padding-top: 16px;
+  }
+
+  .v-slider__label {
+    font-size: 15px;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: -6px;
   }
 }
 
