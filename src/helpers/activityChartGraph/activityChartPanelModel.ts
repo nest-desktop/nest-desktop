@@ -333,10 +333,15 @@ export abstract class ActivityChartPanelModel {
         ? record.color
         : activity.recorder.view.color || "grey";
 
-      if (data.marker) {
+      if (data.type.includes("scatter")) {
+        if (data.mode.includes("markers")) {
+          data.marker.line.color = color;
+        }
+        if (data.mode.includes("lines")) {
+          data.line.color = color;
+        }
+      } else if (data.mode == "bar" || data.type == "histogram") {
         data.marker.color = color;
-      } else if (data.line) {
-        data.line.color = color;
       }
     });
   }
