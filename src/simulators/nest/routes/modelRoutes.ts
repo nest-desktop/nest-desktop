@@ -18,16 +18,16 @@ const modelBeforeEnter = (to: any) => {
 
   const modelDBStore = useNESTModelDBStore();
   if (modelDBStore.models.length === 0) {
-    nextTick(() => modelBeforeEnter(to), 100);
+    nextTick(() => modelBeforeEnter(to));
     return;
   }
 
   if (to.params.modelId) {
-    modelStore.modelId = to.params.modelId;
+    modelStore.state.modelId = to.params.modelId;
   }
 
   const path = to.path.split("/");
-  modelStore.view = path[path.length - 1] || "doc";
+  modelStore.state.view = path[path.length - 1] || "doc";
 };
 
 const modelRedirect = (to: any) => {
@@ -35,10 +35,13 @@ const modelRedirect = (to: any) => {
   const modelStore = useNESTModelStore();
 
   if (to.params.modelId) {
-    modelStore.modelId = to.params.modelId;
+    modelStore.state.modelId = to.params.modelId;
   }
 
-  return { path: "/nest/model/" + modelStore.modelId + "/" + modelStore.view };
+  return {
+    path:
+      "/nest/model/" + modelStore.state.modelId + "/" + modelStore.state.view,
+  };
 };
 
 export default [

@@ -22,11 +22,11 @@ const modelBeforeEnter = (to: any) => {
   }
 
   if (to.params.modelId) {
-    modelStore.modelId = to.params.modelId;
+    modelStore.state.modelId = to.params.modelId;
   }
 
   const path = to.path.split("/");
-  modelStore.view = path[path.length - 1] || "edit";
+  modelStore.state.view = path[path.length - 1] || "edit";
 };
 
 const modelRedirect = (to: any) => {
@@ -34,10 +34,13 @@ const modelRedirect = (to: any) => {
   const modelStore = usePyNNModelStore();
 
   if (to.params.modelId) {
-    modelStore.modelId = to.params.modelId;
+    modelStore.state.modelId = to.params.modelId;
   }
 
-  return { path: "/pynn/model/" + modelStore.modelId + "/" + modelStore.view };
+  return {
+    path:
+      "/pynn/model/" + modelStore.state.modelId + "/" + modelStore.state.view,
+  };
 };
 
 export default [

@@ -1,5 +1,6 @@
 // defineModelStore.ts
 
+import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { useModelDBStore } from "./modelDBStore";
@@ -20,43 +21,52 @@ export function defineModelStore(
     name: args.simulator + " model store",
   });
 
-  return defineStore(args.simulator + "-model-view", {
-    state: () => ({
+  return defineStore(args.simulator + "-model-view", () => {
+    const state = reactive({
       controllerOpen: false,
       controllerView: "",
       modelId: "",
       view: args.defaultView || "edit",
       width: 320,
-    }),
-    getters: {
-      model: (state) => {
-        const modelDBStore = args.useModelDBStore();
-        return modelDBStore.getModel(state.modelId);
-      },
-    },
-    actions: {
-      init(): void {
-        logger.trace("init");
-        const modelDBStore = args.useModelDBStore();
-        if (modelDBStore.models.length > 0) {
-          const model = modelDBStore.models[0];
-          this.modelId = model.id;
-        }
-      },
-      /**
-       * Save current model to the database.
-       */
-      save(): void {
-        logger.trace("save model");
-        const modelDBStore = args.useModelDBStore();
-        modelDBStore.saveModel(this.model.id);
-      },
-      toggle(item?: any) {
-        if (!this.controllerOpen || this.controllerView === item.id) {
-          this.controllerOpen = !this.controllerOpen;
-        }
-        this.controllerView = this.controllerOpen ? item.id : "";
-      },
-    },
+    });
+
+    const model = computed(() => {
+      const modelDBStore = args.useModelDBStore();
+      return modelDBStore.getModel(state.modelId);
+    });
+
+    /**
+     * Initialize model store.
+     */
+    const init = (): void => {
+      logger.trace("init");
+      const modelDBStore = args.useModelDBStore();
+      if (modelDBStore.models.length > 0) {
+        const model = modelDBStore.models[0];
+        state.modelId = model.id;
+      }
+    };
+
+    /**
+     * Save current model to the database.
+     */
+    const save = (): void => {
+      logger.trace("save model");
+      const modelDBStore = args.useModelDBStore();
+      modelDBStore.saveModel(model.value.id);
+    };
+
+    /**
+     * Toggle controller navigation.
+     * @param item
+     */
+    const toggle = (item?: any): void => {
+      if (!state.controllerOpen || state.controllerView === item.id) {
+        state.controllerOpen = !state.controllerOpen;
+      }
+      state.controllerView = state.controllerOpen ? item.id : "";
+    };
+
+    return { model, init, save, state, toggle };
   });
 }
