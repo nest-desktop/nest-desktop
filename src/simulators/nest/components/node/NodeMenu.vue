@@ -193,7 +193,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive } from "vue";
 
 import ModelDocumentation from "../../views/ModelDoc.vue";
 import { NESTNode } from "../../helpers/node/node";
@@ -322,9 +322,9 @@ const items = [
  */
 const nodeColorChange = () => {
   node.value.changes();
-  setTimeout(() => {
+  nextTick(() => {
     node.value.nodes.updateRecordsColor();
-  }, 1);
+  });
 
   // Render network graph
   networkGraphStore.state.graph?.updateHash();

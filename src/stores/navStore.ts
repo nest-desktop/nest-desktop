@@ -1,6 +1,6 @@
 // navStore.ts
 
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 import { defineStore } from "pinia";
 
 export const useNavStore = defineStore(
@@ -18,9 +18,7 @@ export const useNavStore = defineStore(
         state.open = !state.open;
       }
       state.view = state.open ? navItem.id : "";
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 400);
+      nextTick(() => window.dispatchEvent(new Event("resize")));
     };
     return { state, toggle };
   },

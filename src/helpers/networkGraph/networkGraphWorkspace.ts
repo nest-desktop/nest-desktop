@@ -1,5 +1,6 @@
 // networkGraphWorkspace.ts
 
+import { nextTick } from "vue";
 import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
 
 import { Config } from "@/helpers/config";
@@ -100,10 +101,10 @@ export class NetworkGraphWorkspace extends Config {
   animationOff(): void {
     this.state.dragging = true;
     this._networkGraph.selector?.style("pointer-events", "none");
-    setTimeout(() => {
+    nextTick(() => {
       this.state.dragging = false;
       this._networkGraph.selector?.style("pointer-events", "");
-    }, 1);
+    });
   }
 
   /**

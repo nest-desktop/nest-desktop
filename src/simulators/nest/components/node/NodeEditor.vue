@@ -180,7 +180,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed, nextTick, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
@@ -249,9 +249,9 @@ const items = [
 ];
 
 const openMenu = () => {
-  setTimeout(() => {
+  nextTick(() => {
     state.menu = true;
-  }, 1);
+  });
 };
 </script>
 

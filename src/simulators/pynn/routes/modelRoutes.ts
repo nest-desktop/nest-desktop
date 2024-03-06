@@ -1,6 +1,6 @@
-/**
- * modelRoute.ts
- */
+// modelRoute.ts
+
+import { nextTick } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
@@ -8,6 +8,7 @@ import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
 import { usePyNNModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "pynn model route",
 });
 const modelBeforeEnter = (to: any) => {
@@ -16,7 +17,7 @@ const modelBeforeEnter = (to: any) => {
 
   const modelDBStore = usePyNNModelDBStore();
   if (modelDBStore.models.length === 0) {
-    setTimeout(() => modelBeforeEnter(to), 100);
+    nextTick(() => modelBeforeEnter(to));
     return;
   }
 

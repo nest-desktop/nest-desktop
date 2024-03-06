@@ -2,7 +2,7 @@
 
 import Mustache from "mustache";
 import { ILogObj, Logger } from "tslog";
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, nextTick, reactive } from "vue";
 import { sha1 } from "object-hash";
 
 import { Simulation } from "@/types/simulationTypes";
@@ -49,6 +49,7 @@ export class BaseSimulationCode {
     });
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.simulation.project.shortId}] simulation code`,
     });
 
@@ -185,7 +186,7 @@ export class BaseSimulationCode {
   generate(): void {
     this._logger.trace("generate");
     if (this._state.template) {
-      setTimeout(() => {
+      nextTick(() => {
         this.script = Mustache.render(
           this._state.template || "",
           this.simulation.project

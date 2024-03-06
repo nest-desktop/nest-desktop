@@ -53,7 +53,7 @@ export class NorseProject extends BaseProject {
     //   projectView.config.simulateAfterChange &&
     //   projectView.state.modeIdx === 1
     // ) {
-    //   setTimeout(() => this.startSimulation(), 1);
+    //   nextTick(() => this.startSimulation());
     // }
   }
 

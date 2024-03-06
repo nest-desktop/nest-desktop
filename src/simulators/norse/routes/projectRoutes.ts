@@ -1,6 +1,6 @@
-/**
- * projectRoutes.ts
- */
+// projectRoutes.ts
+
+import { nextTick } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
@@ -8,14 +8,17 @@ import { truncate } from "@/utils/truncate";
 import { useNorseProjectDBStore } from "../stores/project/projectDBStore";
 import { useNorseProjectStore } from "../stores/project/projectStore";
 
-const logger = mainLogger.getSubLogger({ name: "project route" });
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "norse project route",
+});
 
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter project route:", to.path);
 
   const projectDBStore = useNorseProjectDBStore();
   if (projectDBStore.projects.length === 0) {
-    setTimeout(() => projectBeforeEnter(to), 100);
+    nextTick(() => projectBeforeEnter(to));
     return;
   }
 

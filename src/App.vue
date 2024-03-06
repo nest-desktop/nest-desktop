@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from "vue";
+import { nextTick, onMounted, reactive } from "vue";
 
 import { useAppStore } from "./stores/appStore";
 const appStore = useAppStore();
@@ -24,9 +24,7 @@ const updateAvailable = (event: any) => {
   console.log("Updates are available.");
   state.registration = event.detail;
   if (appStore.state.autoUpdate) {
-    setTimeout(() => {
-      refreshApp();
-    }, 1);
+    nextTick(() => refreshApp());
   } else {
     state.updateExists = true;
   }

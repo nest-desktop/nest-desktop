@@ -136,7 +136,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive } from "vue";
 
 import { Node, NodePropTypes } from "@/types/nodeTypes";
 
@@ -228,9 +228,7 @@ const items = [
  */
 const nodeColorChange = () => {
   node.value.changes();
-  setTimeout(() => {
-    node.value.nodes.updateRecordsColor();
-  }, 1);
+  nextTick(() => node.value.nodes.updateRecordsColor());
 };
 
 /**

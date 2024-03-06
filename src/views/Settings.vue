@@ -66,15 +66,16 @@
 </template>
 
 <script lang="ts" setup>
+import { capitalize, nextTick } from "vue";
+
 import AppFooter from "@/components/app/AppFooter.vue";
 import { simulatorNames } from "@/simulators";
 
 import { useAppStore } from "@/stores/appStore";
-import { capitalize } from "vue";
 const appStore = useAppStore();
 
 const updateTheme = () => {
-  setTimeout(() => appStore.updateTheme());
+  nextTick(() => appStore.updateTheme());
 };
 
 const themes = [

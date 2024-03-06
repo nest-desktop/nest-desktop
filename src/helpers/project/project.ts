@@ -1,7 +1,8 @@
 // project.ts
 
-import { v4 as uuidv4 } from "uuid";
 import { ILogObj, Logger } from "tslog";
+import { nextTick } from "vue";
+import { v4 as uuidv4 } from "uuid";
 
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityGraph } from "@/helpers/activity/activityGraph";
@@ -58,6 +59,7 @@ export class BaseProject {
     this._activityGraph = project.activityGraph;
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.shortId}] project`,
     });
 
@@ -213,7 +215,7 @@ export class BaseProject {
     //   projectView.config.simulateAfterChange &&
     //   projectView.state.modeIdx === 1
     // ) {
-    //   setTimeout(() => this.startSimulation(), 1);
+    //   nextTick(() => this.startSimulation());
     // }
   }
 
@@ -291,9 +293,7 @@ export class BaseProject {
     this.clean();
 
     if (generateCode) {
-      setTimeout(() => {
-        this._simulation.code.generate();
-      });
+      nextTick(() => this._simulation.code.generate());
     }
     // Reset network graph.
     this._network.nodes.resetState();

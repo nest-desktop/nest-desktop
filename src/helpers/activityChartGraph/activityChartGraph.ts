@@ -1,7 +1,7 @@
 // activityChartGraph.ts
 
 import { ILogObj, Logger } from "tslog";
-import { UnwrapRef, reactive } from "vue";
+import { UnwrapRef, nextTick, reactive } from "vue";
 import Plotly from "plotly.js-dist-min";
 // @ts-ignore
 import { Partial } from "plotly.js-dist-min";
@@ -167,6 +167,7 @@ export class ActivityChartGraph {
     };
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this._project.shortId}] activity chart graph`,
     });
 
@@ -301,7 +302,7 @@ export class ActivityChartGraph {
 
     // @ts-ignore
     this._state.ref.on("plotly_legendclick", (plot: any) => {
-      setTimeout(() => {
+      nextTick(() => {
         if (plot && plot.data) {
           plot.data.forEach((d: Partial<Plotly.Data>) => {
             const panel = this._panels[d.panelIdx];
@@ -312,7 +313,7 @@ export class ActivityChartGraph {
             }
           });
         }
-      }, 1000);
+      });
     });
   }
 

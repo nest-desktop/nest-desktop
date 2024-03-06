@@ -1,20 +1,23 @@
-/**
- * projectRoutes.ts
- */
+// projectRoutes.ts
+
+import { nextTick } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
 import { usePyNNProjectStore } from "../stores/project/projectStore";
 
-const logger = mainLogger.getSubLogger({ name: "project route" });
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "pynn project route",
+});
 
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter project route:", to.path);
 
   const projectDBStore = usePyNNProjectDBStore();
   if (projectDBStore.projects.length === 0) {
-    setTimeout(() => projectBeforeEnter(to), 100);
+    nextTick(() => projectBeforeEnter(to));
     return;
   }
 
@@ -31,7 +34,11 @@ const projectNew = () => {
   projectStore.loadProject();
 
   return {
-    path: "/pynn/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
+    path:
+      "/pynn/project/" +
+      projectStore.state.projectId +
+      "/" +
+      projectStore.state.view,
   };
 };
 
@@ -44,7 +51,11 @@ const projectRedirect = (to: any) => {
   }
 
   return {
-    path: "/pynn/project/" + projectStore.state.projectId + "/" + projectStore.state.view,
+    path:
+      "/pynn/project/" +
+      projectStore.state.projectId +
+      "/" +
+      projectStore.state.view,
   };
 };
 

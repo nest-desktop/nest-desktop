@@ -1,6 +1,6 @@
-/**
- * modelRoutes.ts
- * */
+// modelRoutes.ts
+
+import { nextTick } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 
@@ -8,6 +8,7 @@ import { useNorseModelDBStore } from "../stores/model/modelDBStore";
 import { useNorseModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "norse model route",
 });
 
@@ -17,7 +18,7 @@ const modelBeforeEnter = (to: any) => {
 
   const modelDBStore = useNorseModelDBStore();
   if (modelDBStore.models.length === 0) {
-    setTimeout(() => modelBeforeEnter(to), 100);
+    nextTick(() => modelBeforeEnter(to));
     return;
   }
 

@@ -1,6 +1,7 @@
 // node.ts
 
 import Mustache from "mustache";
+import { nextTick } from "vue";
 
 import { BaseNode, NodeProps } from "@/helpers/node/node";
 
@@ -92,6 +93,6 @@ export class NorseNode extends BaseNode {
 
     this.state.updateHash();
 
-    setTimeout(() => this.generateCode(), 1);
+    nextTick(() => this.generateCode());
   }
 }

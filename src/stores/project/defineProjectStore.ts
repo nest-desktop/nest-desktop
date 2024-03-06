@@ -1,6 +1,6 @@
 // defineProjectStore.ts
 
-import { computed, reactive } from "vue";
+import { computed, nextTick, reactive } from "vue";
 import { defineStore } from "pinia";
 
 import router from "@/router";
@@ -15,19 +15,19 @@ type Class<T> = new (...args: any) => T;
 
 export function defineProjectStore(
   args: {
-    simulator: string;
-    useProjectDBStore: any;
     Project: Class<Project>;
     loggerMinLevel?: number;
+    simulator: string;
+    useProjectDBStore: any;
   } = {
+    Project: BaseProject,
     simulator: "base",
     useProjectDBStore,
-    Project: BaseProject,
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    name: args.simulator + " project store",
     minLevel: args.loggerMinLevel || 3,
+    name: args.simulator + " project store",
   });
 
   return defineStore(args.simulator + "-project-view", () => {
@@ -121,6 +121,8 @@ export function defineProjectStore(
         state.controllerOpen = !state.controllerOpen;
       }
       state.controllerView = state.controllerOpen ? item.id : "";
+
+      // nextTick(() => window.dispatchEvent(new Event("resize")));
       setTimeout(() => {
         window.dispatchEvent(new Event("resize"));
       }, 400);

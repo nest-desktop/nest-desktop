@@ -1,11 +1,14 @@
 // modelRoutes.ts
 
+import { nextTick } from "vue";
+
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 import { useNESTModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "nest model route",
 });
 
@@ -15,7 +18,7 @@ const modelBeforeEnter = (to: any) => {
 
   const modelDBStore = useNESTModelDBStore();
   if (modelDBStore.models.length === 0) {
-    setTimeout(() => modelBeforeEnter(to), 100);
+    nextTick(() => modelBeforeEnter(to), 100);
     return;
   }
 
