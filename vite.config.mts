@@ -96,25 +96,25 @@ export default defineConfig({
         ],
       },
     }),
-    electron([
-      {
-        entry: "electron/main.ts",
-        onstart: (options) => {
-          // Start Electron App
-          if (process.env["VITE_DEV_ELECTRON_STARTUP"]) {
-            options.startup([".", "--no-sandbox"]); // options.startup()
-          }
-        },
-      },
-      {
-        entry: "electron/preload.ts",
-        onstart(options) {
-          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
-          // instead of restarting the entire Electron App.
-          options.reload();
-        },
-      },
-    ]),
+    // electron([
+    //   {
+    //     entry: "electron/main.ts",
+    //     onstart: (options) => {
+    //       // Start Electron App
+    //       if (process.env["VITE_DEV_ELECTRON_STARTUP"]) {
+    //         options.startup([".", "--no-sandbox"]); // options.startup()
+    //       }
+    //     },
+    //   },
+    //   {
+    //     entry: "electron/preload.ts",
+    //     onstart(options) {
+    //       // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
+    //       // instead of restarting the entire Electron App.
+    //       options.reload();
+    //     },
+    //   },
+    // ]),
   ],
   resolve: {
     alias: {
