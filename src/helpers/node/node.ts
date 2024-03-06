@@ -61,6 +61,7 @@ export class BaseNode extends Config {
     this._idx = this.nodes.all.length;
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.nodes.network.project.shortId}] node`,
     });
 
@@ -548,10 +549,12 @@ export class BaseNode extends Config {
   }
 
   /**
-   * Remove record from the state.
+   * Remove record.
    */
-  removeRecord(record: any): void {
-    this._records.splice(this._records.indexOf(record), 1);
+  removeRecord(recordId: string): void {
+    const recordIds = this._records.map((record: NodeRecord) => record.id);
+    const recordIdx = recordIds.indexOf(recordId);
+    this._records.splice(recordIdx, 1);
     this._records = [...this._records];
   }
 

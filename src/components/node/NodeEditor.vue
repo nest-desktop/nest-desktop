@@ -54,6 +54,7 @@
                   >
                     <template #append>n: {{ node.size }}</template>
                   </v-checkbox>
+
                   <template v-if="node.modelParams">
                     <v-checkbox
                       :color="node.view.color"

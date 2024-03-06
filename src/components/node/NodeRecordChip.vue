@@ -1,16 +1,27 @@
 <template>
-  <v-chip
-    :color="nodeRecord.color"
-    :title="
-      nodeRecord.labelCapitalize +
-      (nodeRecord.unit ? ` (${nodeRecord.unit})` : '')
-    "
-    class="nodeRecordChip"
-    label
-    size="small"
-  >
-    {{ nodeRecord.id }}
-  </v-chip>
+  <v-menu transition="slide-y-transition">
+    <template #activator="{ props }">
+      <v-chip
+        :color="nodeRecord.color"
+        :title="nodeRecord.title"
+        class="nodeRecordChip"
+        label
+        size="small"
+        variant="outlined"
+        v-bind="props"
+      >
+        {{ nodeRecord.id }}
+      </v-chip>
+    </template>
+
+    <v-color-picker
+      @update:modelValue="updateRecordsColor()"
+      flat
+      show-swatches
+      style="border-radius: 0"
+      v-model="nodeRecord.color"
+    />
+  </v-menu>
 </template>
 
 <script lang="ts" setup>
@@ -23,6 +34,13 @@ const props = defineProps({
 });
 
 const nodeRecord = computed(() => props.nodeRecord as NodeRecord);
+
+/**
+ * Triggers when record color is changed.
+ */
+const updateRecordsColor = () => {
+  nodeRecord.value.node.network.project.activityGraph.activityChartGraph.updateRecordsColor();
+};
 </script>
 
 <style lang="scss">

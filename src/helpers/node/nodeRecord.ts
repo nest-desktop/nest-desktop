@@ -92,12 +92,12 @@ export class NodeRecord {
     return this._nodeSize;
   }
 
-  get selectTitle(): string {
-    return this.labelCapitalize + (this.unit ? ` (${this.unit})` : "");
-  }
-
   get times(): number[] {
     return this.node.activity?.events.times || [];
+  }
+
+  get title(): string {
+    return this.labelCapitalize + (this.unit ? ` (${this.unit})` : "");
   }
 
   get unit(): string {
