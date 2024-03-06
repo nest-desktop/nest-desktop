@@ -17,7 +17,7 @@
       <v-tab
         :key="index"
         :value="item.id"
-        @click.stop="projectStore.toggleController(item)"
+        @click="projectStore.toggleController(item)"
         class="justify-center"
         height="72"
         minWidth="0"
@@ -35,11 +35,12 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          @click.stop="
-            projectStore.state.bottomOpen = !projectStore.state.bottomOpen
+          :icon="
+            projectStore.state.bottomOpen
+              ? 'mdi-arrow-expand-down'
+              : 'mdi-arrow-expand-up'
           "
-          icon="mdi-xml"
-          size="small"
+          @click="toggleBottomNav()"
           value="code"
           variant="plain"
         />
@@ -51,12 +52,12 @@
     :modelValue="projectStore.state.controllerOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="projectStore.state.controllerWidth"
-    @update:modelValue="dispatchWindowResize"
+    @update:modelValue="dispatchWindowResize()"
     class="d-print-none"
     location="right"
     permanent
   >
-    <div @mousedown="resizeSideController" class="resize-handle left" />
+    <div @mousedown="(e) => resizeRightNav(e)" class="resize-handle left" />
 
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controllerView === 'network'">
@@ -111,23 +112,25 @@
     </div>
   </v-navigation-drawer>
 
-  <v-bottom-navigation
-    :active="projectStore.state.bottomOpen"
+  <v-navigation-drawer
     :height="projectStore.state.bottomNavHeight"
+    :modelValue="projectStore.state.bottomOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    class="d-print-none"
+    @update:modelValue="dispatchWindowResize()"
+    location="bottom"
   >
-    <div @mousedown="resizeBottomNav" class="resize-handle bottom" />
+    <div @mousedown="(e) => resizeBottomNav(e)" class="resize-handle bottom" />
+
     <slot name="simulationCodeMirror">
       <simulation-code-mirror
         :simulation="(project.simulation as Simulation)"
       />
     </slot>
-  </v-bottom-navigation>
+  </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -177,6 +180,48 @@ if (darkMode()) {
   extensions.push(oneDark);
 }
 
+const dispatchWindowResize = () => {
+  console.log("Dispatch windows resize");
+  // nextTick(() => window.dispatchEvent(new Event("resize")));
+  setTimeout(() => window.dispatchEvent(new Event("resize")), 400);
+};
+
+/**
+ * Handle mouse move on resizing.
+ * @param e MouseEvent from which the x position is taken
+ */
+const handleBottomNavMouseMove = (e: MouseEvent) => {
+  projectStore.value.state.bottomNavHeight = window.innerHeight - e.clientY;
+};
+
+/**
+ * Handle mouse up on resizing.
+ */
+const handleBottomNavMouseUp = () => {
+  navStore.state.resizing = false;
+  window.removeEventListener("mousemove", handleBottomNavMouseMove);
+  window.removeEventListener("mouseup", handleBottomNavMouseUp);
+  dispatchWindowResize();
+};
+
+/**
+ * Handle mouse move on resizing.
+ * @param e MouseEvent from which the x position is taken
+ */
+const handleRightNavMouseMove = (e: MouseEvent) => {
+  projectStore.value.state.controllerWidth = window.innerWidth - e.clientX - 64;
+};
+
+/**
+ * Handle mouse up on resizing.
+ */
+const handleRightNavMouseUp = () => {
+  navStore.state.resizing = false;
+  window.removeEventListener("mousemove", handleRightNavMouseMove);
+  window.removeEventListener("mouseup", handleRightNavMouseUp);
+  dispatchWindowResize();
+};
+
 /**
  * Resize bottom nav.
  */
@@ -187,54 +232,20 @@ const resizeBottomNav = () => {
 };
 
 /**
- * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
- */
-const handleBottomNavMouseMove = (e: MouseEvent) => {
-  projectStore.value.state.bottomNavHeight = window.innerHeight - e.clientY;
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
- * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
- */
-const handleSideControllerMouseMove = (e: MouseEvent) => {
-  projectStore.value.state.controllerWidth = window.innerWidth - e.clientX - 64;
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
- * Handle mouse up on resizing.
- */
-const handleSideControllerMouseUp = () => {
-  navStore.state.resizing = false;
-  window.removeEventListener("mousemove", handleSideControllerMouseMove);
-  window.removeEventListener("mouseup", handleSideControllerMouseUp);
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
- * Handle mouse up on resizing.
- */
-const handleBottomNavMouseUp = () => {
-  navStore.state.resizing = false;
-  window.removeEventListener("mousemove", handleBottomNavMouseMove);
-  window.removeEventListener("mouseup", handleBottomNavMouseUp);
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
  * Resize side controller.
  */
-const resizeSideController = () => {
+const resizeRightNav = () => {
   navStore.state.resizing = true;
-  window.addEventListener("mousemove", handleSideControllerMouseMove);
-  window.addEventListener("mouseup", handleSideControllerMouseUp);
+  window.addEventListener("mousemove", handleRightNavMouseMove);
+  window.addEventListener("mouseup", handleRightNavMouseUp);
 };
 
-const dispatchWindowResize = () => {
-  window.dispatchEvent(new Event("resize"));
+/**
+ * Toggle bottom navigation.
+ */
+const toggleBottomNav = () => {
+  projectStore.value.state.bottomOpen = !projectStore.value.state.bottomOpen;
+  dispatchWindowResize();
 };
 </script>
 
