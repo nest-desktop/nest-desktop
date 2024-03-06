@@ -3,11 +3,10 @@
     :modelValue="navStore.state.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="navStore.state.width"
-    @update:modelValue="dispatchWindowResize"
     class="d-print-none"
     permanent
   >
-    <div @mousedown="resizeSideNav" class="resize-handle" />
+    <div @mousedown="resizeSideNav()" class="resize-handle" />
 
     <v-toolbar class="project-nav" color="transparent" density="compact">
       <v-text-field
@@ -149,8 +148,6 @@
 import { computed, ref } from "vue";
 
 import { Project } from "@/types/projectTypes";
-// @ts-ignore
-import { truncate } from "@/utils/truncate";
 
 import ProjectMenu from "./ProjectMenu.vue";
 
@@ -182,17 +179,13 @@ const projectsMenuItems = [
   { title: "Reset database", icon: "mdi-database-sync-outline" },
 ];
 
-/**
- * Close project.
- */
- const saveProject = (project: Project) => {
-  project.state.state.editMode = false;
-  projectDBStore.value.saveProject(project.id);
+const dispatchWindowResize = () => {
+  window.dispatchEvent(new Event("resize"));
 };
 
 /**
  * Handle mouse move on resizing.
- * @param e MouseEvent from which the x possition is taken
+ * @param e MouseEvent from which the x position is taken
  */
 const handleSideNavMouseMove = (e: MouseEvent) => {
   navStore.state.width = e.clientX - 64;
@@ -206,7 +199,7 @@ const handleSideNavMouseUp = () => {
   navStore.state.resizing = false;
   window.removeEventListener("mousemove", handleSideNavMouseMove);
   window.removeEventListener("mouseup", handleSideNavMouseUp);
-  // window.dispatchEvent(new Event("resize"));
+  dispatchWindowResize();
 };
 
 /**
@@ -218,8 +211,12 @@ const resizeSideNav = () => {
   window.addEventListener("mouseup", handleSideNavMouseUp);
 };
 
-const dispatchWindowResize = () => {
-  window.dispatchEvent(new Event("resize"));
+/**
+ * Save project.
+ */
+const saveProject = (project: Project) => {
+  project.state.state.editMode = false;
+  projectDBStore.value.saveProject(project.id);
 };
 </script>
 
