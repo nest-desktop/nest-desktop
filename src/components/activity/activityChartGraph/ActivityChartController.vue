@@ -53,12 +53,13 @@
             <v-select
               :items="panel.model.state.records"
               @update:modelValue="update(panel)"
-              attach
               chips
+              closableChips
+              :chipsProps="{ variant: 'outlined' }"
               class="pa-1 pt-3"
               clearable
               density="compact"
-              itemTitle="id"
+              itemTitle="title"
               hideDetails
               label="Recorded events"
               multiple
@@ -68,7 +69,7 @@
               variant="outlined"
             >
               <template #chip="{ item }">
-                <node-record-chip :nodeRecord="item.value" />
+                <node-record-chip :nodeRecord="item.raw as NodeRecord" />
               </template>
 
               <!-- <template #prepend-item>
@@ -76,10 +77,10 @@
                 <v-divider />
               </template> -->
 
-              <template #item="{ item, props }">
+              <!-- <template #item="{ item, props }">
                 <v-list-item :value="item.value" @click="props.onClick">
                   <template #prepend="{ isSelected }">
-                    <!-- <node-avatar :node="item.value.node" /> -->
+                    <node-avatar :node="item.value.node" />
                     <v-checkbox-btn :modelValue="isSelected" />
                   </template>
 
@@ -89,10 +90,10 @@
                   }}
 
                   <template #append>
-                    <node-record-chip :nodeRecord="item.value" />
+                    <node-record-chip :nodeRecord="item.raw.value" />
                   </template>
                 </v-list-item>
-              </template>
+              </template> -->
 
               <!-- <template #selection="{ item }">
                 <v-chip
@@ -152,7 +153,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
@@ -165,6 +166,7 @@ import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 // import ParameterEdit from "@/components/parameter/ParameterEdit.vue";
 
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 const props = defineProps({
   graph: ActivityChartGraph,
@@ -226,9 +228,9 @@ const resetPanels = () => {
 // };
 
 const update = (panel: ActivityChartPanel) => {
-  setTimeout(() => {
+  nextTick(() => {
     panel.model.init();
     graph.value.update();
-  }, 1);
+  });
 };
 </script>
