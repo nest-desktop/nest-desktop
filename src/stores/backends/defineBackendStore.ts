@@ -14,8 +14,8 @@ export function defineBackendStore(
   url: string
 ) {
   const logger = mainLogger.getSubLogger({
-    name: name + " backend store",
     minLevel: 3,
+    name: name + " backend store",
   });
 
   const useBackendConfigStore = defineBackendConfigStore(name, url);

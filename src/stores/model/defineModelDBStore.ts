@@ -26,8 +26,8 @@ export function defineModelDBStore(
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    name: args.simulator + " model DB store",
     minLevel: args.loggerMinLevel || 3,
+    name: args.simulator + " model DB store",
   });
 
   const db = new args.ModelDB();

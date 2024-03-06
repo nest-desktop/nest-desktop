@@ -23,8 +23,8 @@ export class NodeGraph {
     this._nodeGraphShape = new NodeGraphShape(networkGraph);
 
     this._logger = mainLogger.getSubLogger({
-      name: `[${this._networkGraph.network.project.shortId}] node graph`,
       minLevel: 3,
+      name: `[${this._networkGraph.network.project.shortId}] node graph`,
     });
   }
 

@@ -44,8 +44,8 @@ export class BaseNetworkGraph {
     this._nodeGraph = new NodeGraph(this);
 
     this._logger = mainLogger.getSubLogger({
-      name: `[${this.network.project.shortId}] network graph`,
       minLevel: 3,
+      name: `[${this.network.project.shortId}] network graph`,
     });
 
     this._state = reactive({

@@ -8,16 +8,16 @@ export function defineModelStore(
   args: {
     defaultView?: string;
     loggerMinLevel?: number;
-    useModelDBStore: any;
     simulator: string;
+    useModelDBStore: any;
   } = {
-    useModelDBStore,
     simulator: "base",
+    useModelDBStore,
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    name: args.simulator + " model store",
     minLevel: args.loggerMinLevel || 3,
+    name: args.simulator + " model store",
   });
 
   return defineStore(args.simulator + "-model-view", {
@@ -51,7 +51,7 @@ export function defineModelStore(
         const modelDBStore = args.useModelDBStore();
         modelDBStore.saveModel(this.model.id);
       },
-      toggle(item: any = null) {
+      toggle(item?: any) {
         if (!this.controllerOpen || this.controllerView === item.id) {
           this.controllerOpen = !this.controllerOpen;
         }

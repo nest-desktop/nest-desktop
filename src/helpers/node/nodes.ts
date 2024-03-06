@@ -35,8 +35,8 @@ export class BaseNodes {
     this._network = network;
 
     this._logger = mainLogger.getSubLogger({
-      name: `[${this.network.project.shortId}] nodes`,
       minLevel: 3,
+      name: `[${this.network.project.shortId}] nodes`,
     });
 
     this._state = reactive({

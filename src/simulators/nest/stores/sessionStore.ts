@@ -1,4 +1,4 @@
-// nestSessionStore.ts
+// sessionStore.ts
 
 import { defineStore } from "pinia";
 

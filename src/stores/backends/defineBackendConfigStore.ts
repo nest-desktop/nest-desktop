@@ -9,8 +9,8 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 
 export function defineBackendConfigStore(name: string, url: string) {
   const logger = mainLogger.getSubLogger({
-    name: name + " backend config store",
     minLevel: 3,
+    name: name + " backend config store",
   });
 
   return defineStore(

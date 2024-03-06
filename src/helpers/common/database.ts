@@ -23,8 +23,8 @@ export class DatabaseService {
   constructor(url: string, options: any = {}) {
     this._url = url;
     this._logger = mainLogger.getSubLogger({
-      name: `[${this._url}] database`,
       minLevel: 3,
+      name: `[${this._url}] database`,
     });
 
     this._options = options;

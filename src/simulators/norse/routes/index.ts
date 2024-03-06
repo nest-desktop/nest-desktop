@@ -1,8 +1,5 @@
-/**
- * index.ts
- */
+/// index.ts
 
-// Composables
 import { RouteRecordRaw } from "vue-router";
 
 import { useAppStore } from "@/stores/appStore";
