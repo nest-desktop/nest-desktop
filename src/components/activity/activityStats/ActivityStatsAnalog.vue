@@ -4,7 +4,7 @@
     :items="state.items"
     :key="state.activityHash"
     :loading="state.loading"
-    @update:modelValue="updateGraph"
+    @update:modelValue="updateGraph()"
     class="activityStatsAnalog"
     density="compact"
     fixed-header
@@ -15,12 +15,13 @@
     <template #top>
       <v-select
         :items="activity.state.records"
-        @update:modelValue="selected"
+        @update:modelValue="selected()"
         density="compact"
         hideDetails
-        itemTitle="selectTitle"
+        itemTitle="title"
         itemValue="id"
-        v-model="state.selectedRecord" v-if="activity.recorder.model.isMultimeter"
+        v-if="activity.recorder.model.isMultimeter"
+        v-model="state.selectedRecord"
       >
         <!-- <template #selection="{ item }">
       <v-list-item minWidth="400px">
@@ -53,10 +54,11 @@
     </template>
 
     <template #bottom>
-      <div class="wrapper-table">
-        <table>
+      <div class="pr-4 wrapper-table">
+        <table class="py-2">
           <tr>
-            <td :key="idx" v-for="(header, idx) in headers">
+            <td style="width: 48px" />
+            <td :key="idx" class="px-2" v-for="(header, idx) in headers">
               <div v-if="header.key === 'id'">Total</div>
               <div v-else-if="['mean', 'std'].includes(header.key)">
                 <span>&#956;</span>
@@ -72,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
 // import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
@@ -118,7 +120,7 @@ const headers = [
 // };
 
 const selected = () => {
-  setTimeout(() => update(), 1);
+  nextTick(() => update());
 };
 
 /**
@@ -153,8 +155,8 @@ const update = () => {
 };
 
 const updateGraph = () => {
-  setTimeout(() => activity.value.chartGraph.update(), 1)
-}
+  nextTick(() => activity.value.chartGraph.update());
+};
 
 const colMean = (key: string) => {
   return mean(state.items.map((item) => item[key]) as number[]);

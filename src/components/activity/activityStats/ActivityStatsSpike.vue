@@ -20,10 +20,10 @@
       {{ toFixed(Number(item.cvISI)) }}
     </template>
     <template #bottom>
-      <div class="wrapper-table">
-        <table class="mx-1 py-2">
+      <div class="pr-4 wrapper-table">
+        <table class="py-2">
           <tr>
-            <td :key="idx" v-for="(header, idx) in headers">
+            <td :key="idx" class="px-2" v-for="(header, idx) in headers">
               <div v-if="header.key === 'id'">Total</div>
               <div v-else-if="header.key === 'count'">
                 <span>&#931;</span>
