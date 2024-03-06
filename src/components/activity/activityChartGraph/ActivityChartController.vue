@@ -1,7 +1,7 @@
 <template>
   <div class="activityChartController">
     <!-- <v-menu
-      :closeOnContentClick="false"
+      :close-on-content-click="false"
       :position-x="state.menu.position.x"
       :position-y="state.menu.position.y"
       :value="state.menu.show"
@@ -20,10 +20,10 @@
 
       <v-spacer />
 
-      <v-menu :closeOnContentClick="false">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
-            prependIcon="mdi-plus"
+            prepend-icon="mdi-plus"
             size="small"
             v-bind="props"
             variant="outlined"
@@ -52,24 +52,24 @@
           <span v-if="panel.model.state.records.length > 0">
             <v-select
               :items="panel.model.state.records"
-              @update:modelValue="update(panel)"
+              @update:model-value="update(panel)"
               chips
-              closableChips
+              closable-chips
               :chipsProps="{ variant: 'outlined' }"
               class="pa-1 pt-3"
               clearable
               density="compact"
-              itemTitle="title"
-              hideDetails
+              item-title="title"
+              hide-details
               label="Recorded events"
               multiple
-              persistentHint
-              returnObject
+              persistent-hint
+              return-object
               v-model="panel.model.state.recordsVisible"
               variant="outlined"
             >
               <template #chip="{ item }">
-                <node-record-chip :nodeRecord="item.raw as NodeRecord" />
+                <NodeRecordChip :nodeRecord="item.raw as NodeRecord" />
               </template>
 
               <!-- <template #prepend-item>
@@ -80,8 +80,8 @@
               <!-- <template #item="{ item, props }">
                 <v-list-item :value="item.value" @click="props.onClick">
                   <template #prepend="{ isSelected }">
-                    <node-avatar :node="item.value.node" />
-                    <v-checkbox-btn :modelValue="isSelected" />
+                    <NodeAvatar :node="item.value.node" />
+                    <v-checkbox-btn :model-value="isSelected" />
                   </template>
 
                   {{

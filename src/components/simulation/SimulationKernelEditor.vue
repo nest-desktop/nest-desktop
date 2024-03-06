@@ -10,8 +10,8 @@
       </v-card-title>
 
       <v-card-text class="py-0">
-        <value-slider
-          :thumbColor="props.color"
+        <ValueSlider
+          :thumb-color="props.color"
           class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"

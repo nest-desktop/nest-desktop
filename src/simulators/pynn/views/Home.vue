@@ -42,25 +42,25 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                appendIcon="mdi-open-in-new"
+                append-icon="mdi-open-in-new"
                 href="http://neuralensemble.org/PyNN/"
-                prependIcon="mdi-home"
+                prepend-icon="mdi-home"
                 target="_blank"
               >
                 http://neuralensemble.org/PyNN/
               </v-list-item>
               <v-list-item
-                appendIcon="mdi-open-in-new"
+                append-icon="mdi-open-in-new"
                 href="https://github.com/NeuralEnsemble/PyNN/"
-                prependIcon="mdi-github"
+                prepend-icon="mdi-github"
                 target="_blank"
               >
                 https://github.com/NeuralEnsemble/PyNN/
               </v-list-item>
               <v-list-item
-                appendIcon="mdi-open-in-new"
+                append-icon="mdi-open-in-new"
                 href="http://neuralensemble.org/docs/PyNN/"
-                prependIcon="mdi-book-open"
+                prepend-icon="mdi-book-open"
                 target="_blank"
               >
                 http://neuralensemble.org/docs/PyNN/
@@ -79,7 +79,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="pynn"  />
+        <store-list :stores simulator="pynn" />
       </v-col>
     </v-row>
   </v-container>
@@ -106,5 +106,4 @@ import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 const pynnSimulatorStore = usePyNNSimulatorStore();
 
 const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
-
 </script>

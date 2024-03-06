@@ -3,22 +3,22 @@
     <v-row no-gutters>
       <v-checkbox
         :color="param.connection.source.view.color"
-        :modelValue="(param.value as boolean)"
-        @update:modelValue="update"
+        :model-value="(param.value as boolean)"
+        @update:model-value="update"
         density="compact"
-        hideDetails
+        hide-details
         v-bind="param.options"
         v-if="param.options.component === 'checkbox'"
       />
-      <value-slider
-        :modelValue="(param.value as number)"
-        :thumbColor="param.connection.source.view.color"
-        @update:modelValue="update"
+      <ValueSlider
+        :model-value="(param.value as number)"
+        :thumb-color="param.connection.source.view.color"
+        @update:model-value="update"
         v-bind="param.options"
         v-if="param.options.component === 'valueSlider'"
       />
 
-      <v-menu :closeOnContentClick="false">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
             color="primary"

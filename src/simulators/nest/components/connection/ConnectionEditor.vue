@@ -16,7 +16,7 @@
       <v-row no-gutters>
         <div style="pointer-events: none">
           <v-btn icon size="small">
-            <node-avatar :node="connection.source" size="32px" />
+            <NodeAvatar :node="connection.source" size="32px" />
           </v-btn>
           <v-btn
             :color="connection.source.view.color"
@@ -25,7 +25,7 @@
             variant="text"
           />
           <v-btn icon size="small">
-            <node-avatar :node="connection.target" size="32px" />
+            <NodeAvatar :node="connection.target" size="32px" />
           </v-btn>
         </div>
 
@@ -69,8 +69,8 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <connection-spec-editor :connection />
-      <synapse-spec-editor :synapse />
+      <ConnectionSpecEditor :connection />
+      <SynapseSpecEditor :synapse />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>

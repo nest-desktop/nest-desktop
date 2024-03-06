@@ -3,11 +3,11 @@
     :step="props.step"
     class="py-2 range-slider align-center"
     color="grey"
-    hideDetails
+    hide-details
     strict
     style="position: relative"
-    thumbSize="16"
-    trackSize="2"
+    thumb-size="16"
+    track-size="2"
     v-model="value"
   >
     <template #prepend>
@@ -16,7 +16,7 @@
         :step="props.step"
         :suffix="props.unit"
         density="compact"
-        hideDetails
+        hide-details
         style="width: 80px"
         type="number"
         v-model="lower"
@@ -29,7 +29,7 @@
         :step="props.step"
         :suffix="props.unit"
         density="compact"
-        hideDetails
+        hide-details
         style="width: 80px"
         type="number"
         v-model="upper"

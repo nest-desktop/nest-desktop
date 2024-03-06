@@ -1,9 +1,9 @@
 <template>
   <div class="activityChartPanelToolbar">
-    <v-menu :closeOnContentClick="false">
+    <v-menu :close-on-content-click="false">
       <template #activator="{ props }">
         <v-btn
-          :prependIcon="panel.model.icon"
+          :prepend-icon="panel.model.icon"
           block
           class="justify-start"
           size="x-large"
@@ -13,7 +13,7 @@
         </v-btn>
       </template>
 
-      <activity-chart-panel-menu-popover
+      <ActivityChartPanelMenuPopover
         :graph="(panel.graph as ActivityChartGraph)"
         @changed="selectModel"
       />

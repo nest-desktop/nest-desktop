@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer class="d-print-none" permanent rail rail-width="64">
     <v-tabs
-      :modelValue="navStore.state.view"
+      :model-value="navStore.state.view"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -16,7 +16,7 @@
         @click.stop="navStore.toggle(item)"
         class="justify-center"
         height="72"
-        minWidth="0"
+        min-width="0"
         v-for="(item, index) in navItems"
         v-show="item.simulator === appStore.state.simulator"
       >

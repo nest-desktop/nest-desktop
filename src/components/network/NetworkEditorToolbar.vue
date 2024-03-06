@@ -11,7 +11,7 @@
       size="small"
       v-if="graph?.network.nodes.state.selectedNode"
     >
-      <node-avatar
+      <NodeAvatar
         :node="(graph?.network.nodes.state.selectedNode as Node)"
         size="32px"
       />
@@ -23,7 +23,7 @@
       "
       v-if="graph?.network.connections.state.selectedConnection"
     >
-      <connection-avatar
+      <ConnectionAvatar
         :connection="(graph?.network.connections.state.selectedConnection as Connection)"
       />
     </v-btn>
@@ -44,7 +44,7 @@
     /> -->
 
     <template v-if="!state.collapse">
-      <v-dialog maxWidth="450" v-model="state.dialogDelete">
+      <v-dialog max-width="450" v-model="state.dialogDelete">
         <template #activator="{ props }">
           <v-btn
             :disabled="graph?.network.isEmpty"
@@ -59,6 +59,7 @@
           <v-card-text>
             Are you sure to delete all elements of this network?
           </v-card-text>
+
           <v-card-actions>
             <v-spacer />
             <v-btn
@@ -77,9 +78,9 @@
       <!--
       <v-text-field
         class="px-4"
-        hideDetails
-        prependInnerIcon="mdi-pencil"
-        singleLine
+        hide-details
+        prepend-inner-icon="mdi-pencil"
+        single-line
         v-model="projectStore.state.project.name"
       /> -->
 

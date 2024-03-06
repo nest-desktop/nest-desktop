@@ -1,6 +1,6 @@
 <template>
   <v-card class="playground-tabs">
-    <v-card-title> Tabs </v-card-title>
+    <v-card-title>Tabs</v-card-title>
     <v-card-text>
       <v-card variant="text">
         <v-tabs v-model="state.tab" grow>

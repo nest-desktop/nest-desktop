@@ -1,14 +1,14 @@
 <template>
   <v-container class="fill-height">
     <v-responsive class="align-center">
-      <v-card class="ma-auto my-1" maxWidth="400">
+      <v-card class="ma-auto my-1" max-width="400">
         <v-card flat title="App settings">
           <v-card flat subtitle="Theme">
             <v-card-text>
               <v-radio-group
-                @update:modelValue="updateTheme"
+                @update:model-value="updateTheme"
                 hint="Customize the app with light and dark themes."
-                persistentHint
+                persistent-hint
                 v-model="appStore.state.theme"
               >
                 <v-radio
@@ -34,7 +34,7 @@
                 label="Developer mode"
                 falseIcon="mdi-close-circle"
                 trueIcon="mdi-checkbox-marked-circle"
-                persistentHint
+                persistent-hint
                 v-model="appStore.session.state.devMode"
               />
             </v-card-text>

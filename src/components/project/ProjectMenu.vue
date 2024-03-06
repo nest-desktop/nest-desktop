@@ -1,6 +1,6 @@
 <template>
   <v-menu>
-    <v-dialog maxWidth="480" v-model="state.dialog.delete">
+    <v-dialog max-width="480" v-model="state.dialog.delete">
       <v-card>
         <v-card-title> Are you sure to delete it? </v-card-title>
 
@@ -25,14 +25,14 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog maxWidth="480" v-model="state.dialog.rename">
+    <v-dialog max-width="480" v-model="state.dialog.rename">
       <v-card>
         <v-card-title> Rename this project </v-card-title>
 
         <v-card-text>
           <v-text-field
             label="Project name"
-            appendIcon="mdi-pencil-outline"
+            append-icon="mdi-pencil-outline"
             v-model="state.projectName"
           />
         </v-card-text>
@@ -86,11 +86,11 @@ const route = useRoute();
 
 const props = defineProps({
   project: ProjectPropTypes,
-  projectDBStore: {required: true, type: Object},
+  projectDBStore: { required: true, type: Object },
 });
 
 const project = computed(() => props.project as Project);
-const projectDBStore = computed(() => props.projectDBStore)
+const projectDBStore = computed(() => props.projectDBStore);
 
 const state = reactive({
   dialog: {

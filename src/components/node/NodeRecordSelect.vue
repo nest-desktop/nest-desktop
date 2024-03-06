@@ -2,28 +2,28 @@
   <div>
     <v-select
       :items="node.recordables"
-      @update:modelValue="node.changes()"
-      baseColor="primary"
+      @update:model-value="node.changes()"
+      base-color="primary"
       chips
       class="pa-1"
       clearable
-      closableChips
+      closable-chips
       color="primary"
       density="compact"
-      hideDetails
-      itemTitle="title"
-      itemValue="groupId"
+      hide-details
+      item-title="title"
+      item-value="groupId"
       label="Record from"
       multiple
-      persistentHint
-      returnObject
+      persistent-hint
+      return-object
       v-model="node.records"
       variant="outlined"
     >
       <template #chip="{ item }">
-        <node-record-chip
+        <NodeRecordChip
           :nodeRecord="item.raw as NodeRecord"
-          @click="(e) => e.preventDefault()"
+          @click.prevent=""
         />
       </template>
     </v-select>

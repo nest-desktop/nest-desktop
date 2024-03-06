@@ -1,5 +1,5 @@
 <template>
-  <v-menu :closeOnContentClick="false" v-model="state.show">
+  <v-menu :close-on-content-click="false" v-model="state.show">
     <template #activator="{ props }">
       <v-btn
         color="primary"
@@ -49,7 +49,7 @@
                   :color="node.view.color"
                   :value="state[item.value]"
                   dense
-                  hideDetails
+                  hide-details
                 />
               </template> -->
             </template>
@@ -79,7 +79,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -90,7 +90,7 @@
 
       <span v-if="state.content === 'nodeColor'">
         <v-color-picker
-          @update:modelValue="nodeColorChange()"
+          @update:model-value="nodeColorChange()"
           flat
           show-swatches
           elevation="0"
@@ -100,7 +100,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -119,7 +119,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >

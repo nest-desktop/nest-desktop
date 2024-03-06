@@ -11,7 +11,7 @@
   <v-menu>
     <template #activator="{ props }">
       <v-btn
-        appendIcon="mdi-menu-down"
+        append-icon="mdi-menu-down"
         rounded="0"
         size="small"
         v-bind="props"
@@ -47,7 +47,7 @@
   <v-menu>
     <template #activator="{ props }">
       <v-btn
-        appendIcon="mdi-menu-down"
+        append-icon="mdi-menu-down"
         rounded="0"
         size="small"
         v-bind="props"
@@ -90,7 +90,7 @@
     size="small"
     target="_blank"
     variant="text"
-    appendIcon="mdi-open-in-new"
+    append-icon="mdi-open-in-new"
   >
     help
   </v-btn>

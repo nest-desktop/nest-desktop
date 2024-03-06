@@ -1,17 +1,17 @@
 <template>
-  <stimulator-avatar
+  <StimulatorAvatar
     :color="node.view.color"
     :label="node.view.label"
     :size="props.size"
     v-if="node.elementType === 'stimulator'"
   />
-  <recorder-avatar
+  <RecorderAvatar
     :color="node.view.color"
     :label="node.view.label"
     :size="props.size"
     v-else-if="node.elementType === 'recorder'"
   />
-  <neuron-avatar
+  <NeuronAvatar
     :color="node.view.color"
     :label="node.view.label"
     :size="props.size"

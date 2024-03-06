@@ -2,23 +2,20 @@
   <card :color="node.view.color" class="node ma-1">
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
-        :itemProps="true"
+        :item-props="true"
         :items="node.models"
         :label="node.model.elementType + ' model'"
-        :menuProps="{
-          closeOnContentClick: true,
-        }"
         class="model-select text-primary"
         density="compact"
-        hideDetails
-        itemTitle="label"
-        itemValue="id"
+        hide-details
+        item-title="label"
+        item-value="id"
         v-model="node.modelId"
         variant="outlined"
       >
         <template #append>
           <div class="d-print-none menu">
-            <v-menu :closeOnContentClick="false" v-model="state.menu">
+            <v-menu :close-on-content-click="false" v-model="state.menu">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
@@ -35,7 +32,7 @@
                     :disabled="node.model.isRecorder"
                     :color="node.view.color"
                     density="compact"
-                    hideDetails
+                    hide-details
                     label="Population size"
                     v-model="node.view.state.showSize"
                   >
@@ -48,7 +45,7 @@
                       :label="param.label"
                       :value="param.id"
                       density="compact"
-                      hideDetails
+                      hide-details
                       v-for="(param, index) in Object.values(node.modelParams)"
                       v-model="node.paramsVisible"
                     >
@@ -87,7 +84,7 @@
               </v-card>
             </v-menu>
 
-            <node-menu :node />
+            <NodeMenu :node />
           </div>
         </template>
 
@@ -114,7 +111,7 @@
             size="large"
             style="left: 8px; top: 8px"
           >
-            <node-avatar :node @click="node.state.select()" size="48px" />
+            <NodeAvatar :node @click="node.state.select()" size="48px" />
           </v-btn>
         </template>
       </v-select>
@@ -124,16 +121,16 @@
       <v-list class="py-0" v-if="node.view.state.showSize">
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
-            <value-slider
+            <ValueSlider
               :thumbColor="node.view.color"
-              @update:modelValue="node.changes()"
+              @update:model-value="node.changes()"
               id="n"
               inputLabel="n"
               label="population size"
               v-model="node.size"
             />
 
-            <v-menu :closeOnContentClick="false">
+            <v-menu :close-on-content-click="false">
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
@@ -164,12 +161,12 @@
 
       <v-list class="py-0" v-if="node.model.isMultimeter">
         <v-list-item>
-          <node-record-select :node />
+          <NodeRecordSelect :node />
         </v-list-item>
       </v-list>
 
       <v-list class="py-0" v-if="node.paramsVisible.length > 0">
-        <node-param-editor
+        <NodeParamEditor
           :key="index"
           :param="node.params[paramId]"
           v-for="(paramId, index) in node.paramsVisible"
@@ -184,7 +181,7 @@
           v-model="node.state.connectionPanelIdx"
           variant="accordion"
         >
-          <connection-editor
+          <ConnectionEditor
             :connection
             :key="index"
             v-for="(connection, index) in node.connections"
@@ -252,7 +249,6 @@ const items = [
 ];
 
 const selectModel = (props: any, openMenu: boolean = false) => {
-  console.log(props.ref);
   node.value.modelId = props.value;
   state.menu = openMenu;
 };

@@ -6,6 +6,7 @@
         <v-tab value="two">Model</v-tab>
       </v-tabs>
     </v-card-title>
+
     <v-window v-model="databaseTab">
       <v-window-item value="one">
         <v-card-subtitle
@@ -35,6 +36,7 @@
           />
         </v-list>
       </v-window-item>
+
       <v-window-item value="two">
         <v-card-subtitle
           :key="stores.modelStore.modelId"
@@ -68,10 +70,7 @@ import { truncate } from "@/utils/truncate";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps([
-  "simulator",
-  "stores",
-]);
+const props = defineProps(["simulator", "stores"]);
 
 const simulator = computed(() => props.simulator);
 const stores = computed(() => props.stores);

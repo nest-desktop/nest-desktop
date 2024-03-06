@@ -8,7 +8,7 @@
           </template>
           <v-list-item
             :key="'analogPanel' + index"
-            :prependIcon="model.icon"
+            :prepend-icon="model.icon"
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsAnalog"
           >
@@ -22,7 +22,7 @@
           </template>
           <v-list-item
             :key="'spikePanel' + index"
-            :prependIcon="model.icon"
+            :prepend-icon="model.icon"
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsSpike"
           >

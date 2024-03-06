@@ -1,6 +1,6 @@
 <template>
   <v-card class="playground-import-json">
-    <v-card-title> Config </v-card-title>
+    <v-card-title>Config</v-card-title>
     <v-card-text>
       <!-- {{ config.configItemName }} -->
       {{ data }}
@@ -11,6 +11,5 @@
 <script lang="ts" setup>
 import data from "./data.json";
 
-console.log(data)
-
+console.log(data);
 </script>

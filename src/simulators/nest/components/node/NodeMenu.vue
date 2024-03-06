@@ -1,5 +1,5 @@
 <template>
-  <v-menu :closeOnContentClick="false" v-model="state.show">
+  <v-menu :close-on-content-click="false" v-model="state.show">
     <template #activator="{ props }">
       <v-btn
         color="primary"
@@ -34,16 +34,16 @@
                   'text-red': node.view.state.synWeights === 'inhibitory',
                 }"
                 :indeterminate="!node.view.state.synWeights"
-                :modelValue="node.view.state.synWeights"
-                @update:modelValue="updateSynWeights"
+                :model-value="node.view.state.synWeights"
+                @update:model-value="updateSynWeights"
                 class="pl-2"
                 color="blue"
                 density="compact"
-                falseIcon="mdi-minus-circle"
+                false-icon="mdi-minus-circle"
                 false-value="inhibitory"
-                hideDetails
+                hide-details
                 inset
-                trueIcon="mdi-plus-circle"
+                true-icon="mdi-plus-circle"
                 true-value="excitatory"
               />
             </template>
@@ -77,7 +77,7 @@
                   :color="node.view.color"
                   :value="state[item.value]"
                   dense
-                  hideDetails
+                  hide-details
                 />
               </template> -->
             </template>
@@ -107,7 +107,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -124,7 +124,7 @@
 
       <span v-if="state.content === 'nodeColor'">
         <v-color-picker
-          @update:modelValue="nodeColorChange"
+          @update:model-value="nodeColorChange"
           flat
           show-swatches
           elevation="0"
@@ -134,7 +134,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -153,7 +153,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -179,7 +179,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prependIcon="mdi-menu-left"
+            prepend-icon="mdi-menu-left"
             size="small"
             variant="text"
           >

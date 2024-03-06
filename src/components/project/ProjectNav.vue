@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    :modelValue="navStore.state.open"
+    :model-value="navStore.state.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="navStore.state.width"
     class="d-print-none"
@@ -13,10 +13,10 @@
         class="mx-1"
         clearable
         density="compact"
-        hideDetails
+        hide-details
         placeholder="Search project"
-        prependInnerIcon="mdi-magnify"
-        singleLine
+        prepend-inner-icon="mdi-magnify"
+        single-line
         v-model="search"
         variant="outlined"
       />
@@ -73,7 +73,7 @@
               size="x-small"
               variant="text"
             />
-            <project-menu :project :projectDBStore />
+            <ProjectMenu :project :projectDBStore />
           </template>
 
           <template v-else>
@@ -104,10 +104,10 @@
         <template #default v-if="project.state?.editMode">
           <v-text-field
             @click.prevent
-            @update:modelValue="project.state.state.changes = true"
+            @update:model-value="project.state.state.changes = true"
             class="pt-2"
             density="compact"
-            hideDetails
+            hide-details
             label="Project name"
             v-model="project.name"
             variant="outlined"

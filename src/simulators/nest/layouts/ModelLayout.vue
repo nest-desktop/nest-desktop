@@ -1,7 +1,7 @@
 <template>
-  <model-nav :store="modelDBStore" />
+  <ModelNav :store="modelDBStore" />
 
-  <model-bar :model="(model as NESTModel)" color="orange">
+  <ModelBar :model color="orange">
     <template #prependTabs>
       <v-tab
         :to="{ name: 'nestModelDoc', params: { modelId: model.id } }"
@@ -12,9 +12,9 @@
         <span class="text-no-wrap">Doc</span>
       </v-tab>
     </template>
-  </model-bar>
+  </ModelBar>
 
-  <model-controller :store="modelStore" />
+  <ModelController :store="modelStore" />
 
   <router-view name="model" />
 </template>

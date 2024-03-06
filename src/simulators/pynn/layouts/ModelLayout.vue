@@ -1,9 +1,9 @@
 <template>
-  <model-nav :store="modelDBStore" />
+  <ModelNav :store="modelDBStore" />
 
-  <model-bar :model="(model as PyNNModel)" color="brown" />
+  <ModelBar :model color="brown" />
 
-  <model-controller :store="modelStore" />
+  <ModelController :store="modelStore" />
 
   <router-view name="model" />
 </template>

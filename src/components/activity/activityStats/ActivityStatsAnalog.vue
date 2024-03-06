@@ -4,7 +4,7 @@
     :items="state.items"
     :key="state.activityHash"
     :loading="state.loading"
-    @update:modelValue="updateGraph()"
+    @update:model-value="updateGraph()"
     class="activityStatsAnalog"
     density="compact"
     fixed-header
@@ -15,16 +15,16 @@
     <template #top>
       <v-select
         :items="activity.state.records"
-        @update:modelValue="selected()"
+        @update:model-value="selected()"
         density="compact"
-        hideDetails
-        itemTitle="title"
-        itemValue="id"
+        hide-details
+        item-title="title"
+        item-value="id"
         v-if="activity.recorder.model.isMultimeter"
         v-model="state.selectedRecord"
       >
         <!-- <template #selection="{ item }">
-      <v-list-item minWidth="400px">
+      <v-list-item min-width="400px">
         <template #append>
           <node-record-chip :nodeRecord="item.value" />
         </template>

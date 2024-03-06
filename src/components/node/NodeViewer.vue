@@ -1,5 +1,5 @@
 <template>
-  <card
+  <Card
     :color="node.view.color"
     class="node my-1"
     rounded="1"
@@ -8,11 +8,7 @@
   >
     <v-card-title>
       <div class="d-flex text-button">
-        <node-avatar
-          :node="node"
-          size="48px"
-          title="Graphical representation"
-        />
+        <NodeAvatar :node="node" size="48px" title="Graphical representation" />
         <div class="ma-auto" title="Node model">{{ node.modelId }}</div>
         <div class="my-auto" title="Population size">{{ node.size }}</div>
       </div>
@@ -20,7 +16,7 @@
 
     <v-card-text class="pa-0">
       <v-list v-if="node.paramsVisible.length > 0">
-        <node-param-viewer
+        <NodeParamViewer
           :key="index"
           :options="node.params[paramId].options"
           :value="node.params[paramId].value"
@@ -39,14 +35,14 @@
         multiple
         variant="accordion"
       >
-        <connection-viewer
+        <ConnectionViewer
           :key="index"
           :connection
           v-for="(connection, index) in node.connections"
         />
       </v-expansion-panels>
     </v-card-actions>
-  </card>
+  </Card>
 </template>
 
 <script lang="ts" setup>

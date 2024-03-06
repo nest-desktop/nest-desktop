@@ -8,7 +8,7 @@
         class="btn-main"
         variant="outlined"
         title="Simulate"
-        prependIcon="mdi-play"
+        prepend-icon="mdi-play"
         v-if="simulation"
       >
         <span v-if="simulation.code.runSimulation">Simulate</span>
@@ -18,7 +18,7 @@
       <v-btn class="btn-append" variant="outlined">
         <v-icon icon="mdi-menu-down" />
 
-        <v-menu :closeOnContentClick="false" activator="parent">
+        <v-menu :close-on-content-click="false" activator="parent">
           <v-list density="compact">
             <v-list-item
               :key="index"
@@ -27,7 +27,7 @@
             >
               <template #prepend="{ isActive }">
                 <v-list-item-action start>
-                  <v-checkbox-btn :modelValue="isActive" />
+                  <v-checkbox-btn :model-value="isActive" />
                 </v-list-item-action>
               </template>
 

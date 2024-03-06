@@ -2,13 +2,12 @@
   <v-data-table
     :headers="headers as any[]"
     :items="desserts"
-    itemValue="name"
+    item-value="name"
     class="elevation-1 playground-data-table"
   ></v-data-table>
 </template>
 
 <script lang="ts" setup>
-
 const headers = [
   {
     title: "Dessert (100g serving)",

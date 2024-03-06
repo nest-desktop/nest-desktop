@@ -4,28 +4,28 @@
       <v-toolbar-title> Simulation kernel editor</v-toolbar-title>
     </v-toolbar>
 
-    <card :color="props.color" class="ma-1">
+    <Card :color="props.color" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation kernel
       </v-card-title>
 
       <v-card-text>
-        <tick-slider
-          :thumbColor="props.color"
+        <TickSlider
+          :thumb-color="props.color"
           class="mx-1 py-1"
           v-bind="options.threadSettings"
           v-model="simulation.kernel.localNumThreads"
         />
 
-        <tick-slider
+        <TickSlider
           :thumbColor="props.color"
           class="mx-1 py-1"
           v-bind="options.resolutionSettings"
           v-model="simulation.kernel.resolution"
         />
 
-        <value-slider
-          :thumbColor="props.color"
+        <ValueSlider
+          :thumb-color="props.color"
           class="mx-1 py-1"
           v-bind="options.rngSeedSettings"
           v-model="simulation.kernel.rngSeed"
@@ -33,29 +33,29 @@
 
         <v-checkbox
           :color="props.color"
-          @update:modelValue="updateAutoRNGSeed()"
+          @update:model-value="updateAutoRNGSeed()"
           class="mx-1"
-          hideDetails="auto"
+          hide-details="auto"
           v-bind="options.autoRNGSeedSettings"
           v-model="state.autoRNGSeed"
         />
       </v-card-text>
-    </card>
+    </Card>
 
-    <card :color="props.color" class="ma-1">
+    <Card :color="props.color" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation
       </v-card-title>
 
       <v-card-text class="py-0">
-        <value-slider
-          :thumbColor="props.color"
+        <ValueSlider
+          :thumb-color="props.color"
           class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"
         />
       </v-card-text>
-    </card>
+    </Card>
   </div>
 </template>
 

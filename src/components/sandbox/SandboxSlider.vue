@@ -23,9 +23,9 @@
               v-for="(sliderItem, index) in state.items"
             >
               <v-row no-gutters>
-                <slider
+                <Slider
                   :options="sliderItem"
-                  :thumbColor="sliderItem.color"
+                  :thumb-color="sliderItem.color"
                   v-model="sliderItem.value"
                 />
                 <div style="width: 100px">

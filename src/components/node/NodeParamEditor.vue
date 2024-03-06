@@ -2,34 +2,34 @@
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
       <array-input
-        :modelValue="(param.value as Number[])"
-        @update:modelValue="update"
+        :model-value="(param.value as Number[])"
+        @update:model-value="update"
         v-bind="param.options"
         v-if="param.options.component === 'arrayInput'"
       />
       <range-slider
-        :modelValue="(param.value as number[])"
+        :model-value="(param.value as number[])"
         :thumbColor="param.node.view.color"
-        @update:modelValue="update"
+        @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'rangeSlider'"
       />
       <tick-slider
-        :modelValue="(param.value as number)"
+        :model-value="(param.value as number)"
         :thumbColor="param.node.view.color"
-        @update:modelValue="update"
+        @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'tickSlider'"
       />
       <value-slider
-        :modelValue="(param.value as number)"
+        :model-value="(param.value as number)"
         :thumbColor="param.node.view.color"
-        @update:modelValue="update"
+        @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'valueSlider'"
       />
 
-      <v-menu :closeOnContentClick="false">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
             color="primary"

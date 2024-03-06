@@ -17,7 +17,7 @@
         >
           <v-expansion-panel-title class="py-0">
             <v-row class="text-button">
-              <node-avatar :node="activity.recorder" />
+              <NodeAvatar :node="activity.recorder" />
               <v-spacer />
               <div>
                 {{ activity.recorder.model.label }}
@@ -30,15 +30,17 @@
             :key="activities.state.hash"
             class="ma-0 pa-0"
           >
-            <activity-stats-spike
-              :activity="activity as SpikeActivity"
+            <ActivityStatsSpike
+              :activity
               :height="state.height"
               v-if="activity.recorder.model.isSpikeRecorder"
             />
 
-            <activity-stats-analog
-              :activity="activity as AnalogSignalActivity"
-              :height="state.height - (activity.recorder.model.isMultimeter ? 60 :  0)"
+            <ActivityStatsAnalog
+              :activity
+              :height="
+                state.height - (activity.recorder.model.isMultimeter ? 60 : 0)
+              "
               v-if="activity.recorder.model.isAnalogRecorder"
             />
           </v-expansion-panel-text>
@@ -53,15 +55,13 @@ import { computed, reactive } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import { Activities } from "@/helpers/activity/activities";
-import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
 
 const props = defineProps({
   activities: Activities,
-})
+});
 
 const activities = computed(() => props.activities as Activities);
 

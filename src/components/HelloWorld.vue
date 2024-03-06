@@ -13,16 +13,12 @@
         <v-col cols="auto">
           <v-btn
             href="https://vuetifyjs.com/components/all/"
-            minWidth="164"
+            min-width="164"
             rel="noopener noreferrer"
             target="_blank"
             variant="text"
           >
-            <v-icon
-              icon="mdi-view-dashboard"
-              size="large"
-              start
-            />
+            <v-icon icon="mdi-view-dashboard" size="large" start />
 
             Components
           </v-btn>
@@ -32,17 +28,13 @@
           <v-btn
             color="primary"
             href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
-            minWidth="228"
+            min-width="228"
             rel="noopener noreferrer"
             size="x-large"
             target="_blank"
             variant="flat"
           >
-            <v-icon
-              icon="mdi-speedometer"
-              size="large"
-              start
-            />
+            <v-icon icon="mdi-speedometer" size="large" start />
 
             Get Started
           </v-btn>
@@ -51,16 +43,12 @@
         <v-col cols="auto">
           <v-btn
             href="https://community.vuetifyjs.com/"
-            minWidth="164"
+            min-width="164"
             rel="noopener noreferrer"
             target="_blank"
             variant="text"
           >
-            <v-icon
-              icon="mdi-account-group"
-              size="large"
-              start
-            />
+            <v-icon icon="mdi-account-group" size="large" start />
 
             Community
           </v-btn>
@@ -71,5 +59,5 @@
 </template>
 
 <script setup lang="ts">
-  //
+//
 </script>

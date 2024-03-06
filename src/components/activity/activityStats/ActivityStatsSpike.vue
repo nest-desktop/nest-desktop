@@ -8,7 +8,7 @@
     class="activityStatsSpike"
     density="compact"
     fixed-header
-    loadingText="Loading... Please wait"
+    loading-text="Loading... Please wait"
   >
     <template #item.meanISI="{ item }">
       {{ toFixed(Number(item.meanISI)) }}

@@ -25,7 +25,7 @@
 
     <v-spacer />
 
-    <simulation-button
+    <SimulationButton
       class="mx-2"
       :projectStore
       :simulation="(projectStore.project.simulation as Simulation)"

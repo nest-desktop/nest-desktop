@@ -8,7 +8,7 @@
   >
     <v-tabs
       :mandatory="false"
-      :modelValue="projectStore.state.controllerView"
+      :model-value="projectStore.state.controllerView"
       color="primary"
       direction="vertical"
       stacked
@@ -21,7 +21,7 @@
         @click.stop="projectStore.toggleController(item)"
         class="justify-center"
         height="72"
-        minWidth="0"
+        min-width="0"
         v-for="(item, index) in controllerItems"
         v-show="
           item.show !== 'dev' ||
@@ -50,7 +50,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :modelValue="projectStore.state.controllerOpen"
+    :model-value="projectStore.state.controllerOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="projectStore.state.controllerWidth"
     class="d-print-none"
@@ -62,17 +62,17 @@
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controllerView === 'network'">
         <slot name="network">
-          <network-param-editor :network="(project.network as Network)">
+          <NetworkParamEditor :network="(project.network as Network)">
             <template #nodes>
               <slot name="nodes" />
             </template>
-          </network-param-editor>
+          </NetworkParamEditor>
         </slot>
       </template>
 
       <template v-else-if="projectStore.state.controllerView === 'kernel'">
         <slot name="simulationKernel">
-          <simulation-kernel-editor
+          <SimulationKernelEditor
             :simulation="(project.simulation as Simulation)"
           />
         </slot>
@@ -86,7 +86,7 @@
       >
         <codemirror
           :extensions="extensions"
-          :modelValue="projectJSON"
+          :model-value="projectJSON"
           disabled
           style="font-size: 0.75rem; width: 100%"
         />
@@ -114,7 +114,7 @@
 
   <v-navigation-drawer
     :height="projectStore.state.bottomNavHeight"
-    :modelValue="projectStore.state.bottomOpen"
+    :model-value="projectStore.state.bottomOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     location="bottom"
   >

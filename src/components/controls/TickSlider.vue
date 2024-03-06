@@ -5,16 +5,16 @@
     :ticks
     @click:append="increment"
     @click:prepend="decrement"
-    appendIcon="mdi-plus"
+    append-icon="mdi-plus"
     class="py-3 tick-slider"
     color="grey"
-    hideDetails
-    prependIcon="mdi-minus"
-    showTicks="always"
+    hide-details
+    prepend-icon="mdi-minus"
+    show-ticks="always"
     step="1"
     style="position: relative"
-    thumbSize="16"
-    trackSize="2"
+    thumb-size="16"
+    track-size="2"
     v-model="tickIdx"
   >
     <template #append>

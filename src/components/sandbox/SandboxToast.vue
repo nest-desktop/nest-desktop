@@ -1,6 +1,6 @@
 <template>
   <v-card class="playground-toast">
-    <v-card-title> Toast </v-card-title>
+    <v-card-title>Toast</v-card-title>
     <v-card-text>
       <v-btn
         :color="type"
@@ -21,4 +21,3 @@ import { openToast } from "@/helpers/common/toast";
 
 const types = ["success", "error", "warning", "info", "default"];
 </script>
-@/helpers/toast

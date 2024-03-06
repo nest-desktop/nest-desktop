@@ -1,29 +1,29 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
-      <range-slider
-        :modelValue="(param.value as number[])"
-        :thumbColor="param.synapse.connection.source.view.color"
-        @update:modelValue="update"
+      <RangeSlider
+        :model-value="(param.value as number[])"
+        :thumb-color="param.synapse.connection.source.view.color"
+        @update:model-value="update"
         v-bind="param.options"
         v-if="param.options.component === 'rangeSlider'"
       />
-      <tick-slider
-        :modelValue="(param.value as number)"
-        :thumbColor="param.synapse.connection.source.view.color"
-        @update:modelValue="update"
+      <TickSlider
+        :model-value="(param.value as number)"
+        :thumb-color="param.synapse.connection.source.view.color"
+        @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'tickSlider'"
       />
-      <value-slider
-        :modelValue="(param.value as number)"
-        :thumbColor="param.synapse.connection.source.view.color"
-        @update:modelValue="update"
+      <ValueSlider
+        :model-value="(param.value as number)"
+        :thumb-color="param.synapse.connection.source.view.color"
+        @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'valueSlider'"
       />
 
-      <v-menu :closeOnContentClick="false">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
             class="d-print-none menu align-center justify-center my-auto"

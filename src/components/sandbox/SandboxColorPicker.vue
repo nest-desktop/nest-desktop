@@ -6,11 +6,11 @@
         :items="colorSchemes"
         density="compact"
         label="Select a color scheme"
-        persistentHint
+        persistent-hint
         v-model="state.colorScheme"
         variant="outlined"
       />
-      <color-picker :colorScheme="state.colorScheme" />
+      <color-picker :color-scheme="state.colorScheme" />
     </v-card-text>
   </v-card>
 </template>

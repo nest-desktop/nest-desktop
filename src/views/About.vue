@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-responsive>
-      <v-card class="ma-auto my-4" flat maxWidth="640px">
+      <v-card class="ma-auto my-4" flat max-width="640px">
         <div class="text-center">
           <v-img
             src="@/assets/img/logo/nest-desktop-logo-light.svg"

@@ -15,7 +15,7 @@
     </template>
 
     <v-color-picker
-      @update:modelValue="updateRecordsColor()"
+      @update:model-value="updateRecordsColor()"
       flat
       show-swatches
       style="border-radius: 0"

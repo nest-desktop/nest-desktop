@@ -24,17 +24,17 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                appendIcon="mdi-open-in-new"
+                append-icon="mdi-open-in-new"
                 href="https://norse.github.io/norse"
-                prependIcon="mdi-github"
+                prepend-icon="mdi-github"
                 target="_blank"
               >
                 https://github.com/norse
               </v-list-item>
               <v-list-item
-                appendIcon="mdi-open-in-new"
+                append-icon="mdi-open-in-new"
                 href="https://norse.github.io/norse"
-                prependIcon="mdi-book-open"
+                prepend-icon="mdi-book-open"
                 target="_blank"
               >
                 https://norse.github.io/norse
@@ -53,7 +53,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="norse"  />
+        <store-list :stores simulator="norse" />
       </v-col>
     </v-row>
   </v-container>

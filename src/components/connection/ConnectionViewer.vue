@@ -2,21 +2,10 @@
   <v-expansion-panel class="node-connection" elevation="0" rounded="0">
     <v-expansion-panel-title style="min-height: 52px; height: 52px">
       <v-row no-gutters>
-        <div style="pointer-events: none">
-          <v-btn icon size="small">
-            <node-avatar :node="connection.source" size="32px" />
-          </v-btn>
-          <v-btn
-            :color="connection.source.view.color"
-            icon="network:synapse-excitatory"
-            size="small"
-            variant="text"
-          />
-          <v-btn icon size="small">
-            <node-avatar :node="connection.target" size="32px" />
-          </v-btn>
-        </div>
+        <ConnectionAvatar :connection />
+
         <v-spacer />
+
         <div class="d-flex justify-center align-center text-grey">
           {{ connection.rule.value }}
         </div>
@@ -43,7 +32,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import ConnectionAvatar from "./ConnectionAvatar.vue";
 import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
 
 const props = defineProps({

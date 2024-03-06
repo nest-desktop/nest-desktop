@@ -4,11 +4,11 @@
       <v-progress-circular class="ma-auto" color="primary" indeterminate />
     </v-container>
 
-    <app-footer />
+    <AppFooter />
   </v-app>
 
   <template v-else>
-    <app-navigation :navItems />
+    <AppNavigation :navItems />
 
     <v-main>
       <router-view />

@@ -1,11 +1,11 @@
 <template>
   <v-textarea
     :rows="1"
-    baseColor="grey"
+    base-color="grey"
     class="ma-1 array-input"
     color="grey"
     density="compact"
-    hideDetails
+    hide-details
     v-model="value"
     variant="outlined"
   >

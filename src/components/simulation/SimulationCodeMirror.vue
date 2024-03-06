@@ -1,6 +1,6 @@
 <template>
   <codemirror
-    :extensions="extensions"
+    :extensions
     ref="codeMirror"
     style="font-size: 0.75rem; width: 100%"
     v-model="simulation.code.script"

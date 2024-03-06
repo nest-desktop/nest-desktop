@@ -5,14 +5,14 @@
       :items="rules"
       class="pa-1"
       density="compact"
-      hideDetails
+      hide-details
       label="Connection rule"
       v-model="connection.rule.value"
       variant="outlined"
     />
 
     <div class="d-print-none menu align-center justify-center my-auto mx-1">
-      <v-menu :closeOnContentClick="false">
+      <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
             :disabled="Object.keys(connection.params).length === 0"
@@ -32,7 +32,7 @@
               :label="param.label"
               :value="param.id"
               density="compact"
-              hideDetails
+              hide-details
               v-for="(param, index) in Object.values(connection.params)"
               v-model="connection.paramsVisible"
             >
@@ -74,7 +74,7 @@
   </v-row>
 
   <v-list density="compact" v-if="connection.paramsVisible.length > 0">
-    <connection-param-editor
+    <ConnectionParamEditor
       :key="index"
       :param="param"
       v-for="(param, index) in connection.filteredParams"

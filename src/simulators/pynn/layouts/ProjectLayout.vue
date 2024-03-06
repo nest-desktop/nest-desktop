@@ -1,9 +1,9 @@
 <template>
-  <project-nav :projectDBStore />
+  <ProjectNav :projectDBStore />
 
-  <project-bar :projectStore color="green" />
+  <ProjectBar :projectStore color="green" />
 
-  <project-controller :projectStore />
+  <ProjectController :projectStore />
 
   <router-view :key="projectStore.state.projectId" name="project" />
 </template>

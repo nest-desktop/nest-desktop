@@ -2,7 +2,7 @@
   <v-list class="list" density="compact" v-model:opened="state.listOpen">
     <v-list-item
       @click="state.listOpen = []"
-      prependIcon="mdi-chevron-left"
+      prepend-icon="mdi-chevron-left"
       v-if="state.listOpen.length > 0"
     >
       {{ state.listOpen[0] }}
@@ -18,7 +18,7 @@
       >
         <template #activator="{ props }">
           <v-list-item
-            :prependIcon="item.icon"
+            :prepend-icon="item.icon"
             :title="item.title"
             v-bind="props"
             v-show="state.listOpen.length == 0"
@@ -27,7 +27,7 @@
 
         <v-list-item
           :key="'sub' + i"
-          :prependIcon="subitem.icon"
+          :prepend-icon="subitem.icon"
           :title="subitem.title"
           :value="subitem.value"
           class="sublist"
@@ -38,7 +38,7 @@
 
       <div v-else>
         <v-list-item
-          :prependIcon="item.icon"
+          :prepend-icon="item.icon"
           :title="item.title"
           :value="item.value"
           v-if="state.listOpen.length == 0"
@@ -66,7 +66,8 @@ const state = reactive({
   }
 
   .sublist {
-    border-left: 2px solid rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
+    border-left: 2px solid
+      rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
     margin-inline-start: 28px !important;
   }
 }

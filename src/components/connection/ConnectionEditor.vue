@@ -14,20 +14,7 @@
       style="min-height: 52px; height: 52px"
     >
       <v-row no-gutters>
-        <div style="pointer-events: none">
-          <v-btn icon size="small">
-            <node-avatar :node="connection.source" size="32px" />
-          </v-btn>
-          <v-btn
-            :color="connection.source.view.color"
-            :icon="connection.synapse.icon"
-            size="small"
-            variant="text"
-          />
-          <v-btn icon size="small">
-            <node-avatar :node="connection.target" size="32px" />
-          </v-btn>
-        </div>
+        <ConnectionAvatar :connection />
 
         <v-spacer />
 
@@ -67,8 +54,8 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <connection-spec-editor :connection />
-      <synapse-spec-editor :synapse />
+      <ConnectionSpecEditor :connection />
+      <SynapseSpecEditor :synapse />
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
@@ -76,8 +63,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import ConnectionAvatar from "./ConnectionAvatar.vue";
 import ConnectionSpecEditor from "@/components/connection/ConnectionSpecEditor.vue";
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import SynapseSpecEditor from "@/components/synapse/SynapseSpecEditor.vue";
 import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
 import { Synapse } from "@/types/synapseTypes";
