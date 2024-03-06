@@ -6,8 +6,8 @@
 
     <v-progress-circular
       class="ma-auto"
-      indeterminate
       color="primary"
+      indeterminate
       v-if="appStore.session.state.loading"
     />
     <router-view v-else />
