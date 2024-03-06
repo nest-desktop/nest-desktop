@@ -3,28 +3,15 @@
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
-        @update:modelValue="state.menu = true"
+        :label="node.model.elementType + ' model'"
         class="text-primary"
         density="compact"
         hideDetails
         itemTitle="label"
         itemValue="id"
-        label="Node model"
         v-model="node.modelId"
         variant="outlined"
       >
-        <template #prepend>
-          <v-btn
-            class="position-absolute"
-            flat
-            icon
-            size="large"
-            style="left: 8px; top: 8px"
-          >
-            <node-avatar :node @click="node.state.select()" size="48px" />
-          </v-btn>
-        </template>
-
         <template #append>
           <div class="d-print-none">
             <v-chip>{{ node.state.hash }}</v-chip>
@@ -101,8 +88,20 @@
               </v-card>
             </v-menu>
 
-            <node-menu :node="node" />
+            <node-menu :node />
           </div>
+        </template>
+
+        <template #prepend>
+          <v-btn
+            class="position-absolute"
+            flat
+            icon
+            size="large"
+            style="left: 8px; top: 8px"
+          >
+            <node-avatar :node @click="node.state.select()" size="48px" />
+          </v-btn>
         </template>
       </v-select>
     </v-card-title>

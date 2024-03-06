@@ -2,11 +2,12 @@
   <card :color="node.view.color" class="node ma-1">
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
+        :itemProps="true"
         :items="node.models"
-        :label="
-          'Node model - ' + node.state.hash + ' - ' + node.state.graphHash
-        "
-        @update:modelValue="openMenu"
+        :label="node.model.elementType + ' model'"
+        :menuProps="{
+          closeOnContentClick: true,
+        }"
         class="model-select text-primary"
         density="compact"
         hideDetails
@@ -15,18 +16,6 @@
         v-model="node.modelId"
         variant="outlined"
       >
-        <template #prepend>
-          <v-btn
-            class="position-absolute"
-            flat
-            icon
-            size="large"
-            style="left: 8px; top: 8px"
-          >
-            <node-avatar :node @click="node.state.select()" size="48px" />
-          </v-btn>
-        </template>
-
         <template #append>
           <div class="d-print-none menu">
             <v-menu :closeOnContentClick="false" v-model="state.menu">
@@ -100,6 +89,33 @@
 
             <node-menu :node />
           </div>
+        </template>
+
+        <template #item="{ props }">
+          <v-list-item @click="selectModel(props)">
+            {{ props.title }}
+
+            <template #append>
+              <v-btn
+                @click.stop="selectModel(props, true)"
+                icon="mdi-order-bool-ascending-variant"
+                size="small"
+                variant="text"
+              />
+            </template>
+          </v-list-item>
+        </template>
+
+        <template #prepend>
+          <v-btn
+            class="position-absolute"
+            flat
+            icon
+            size="large"
+            style="left: 8px; top: 8px"
+          >
+            <node-avatar :node @click="node.state.select()" size="48px" />
+          </v-btn>
         </template>
       </v-select>
     </v-card-title>
@@ -180,7 +196,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, reactive } from "vue";
+import { computed, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
@@ -220,13 +236,6 @@ const cruds = [
   { title: "Delete", icon: "mdi-delete", value: "delete" },
 ];
 
-const clickMe = [
-  { value: "1", title: "Click Me", icon: "mdi-numeric-1" },
-  { value: "2", title: "Click Me", icon: "mdi-numeric-2" },
-  { value: "3", title: "Click Me", icon: "mdi-numeric-3" },
-  { value: "4", title: "Click Me", icon: "mdi-numeric-4" },
-];
-
 const items = [
   {
     value: "parameter",
@@ -240,18 +249,12 @@ const items = [
     icon: "mdi-database-cog-outline",
     items: cruds,
   },
-  {
-    value: "clickMe",
-    title: "clickMe",
-    icon: "mdi-information",
-    items: clickMe,
-  },
 ];
 
-const openMenu = () => {
-  nextTick(() => {
-    state.menu = true;
-  });
+const selectModel = (props: any, openMenu: boolean = false) => {
+  console.log(props.ref);
+  node.value.modelId = props.value;
+  state.menu = openMenu;
 };
 </script>
 
@@ -260,7 +263,7 @@ const openMenu = () => {
   .node-title {
     .model-select {
       .v-label {
-        font-size: 15px;
+        font-size: 13px;
       }
     }
 
