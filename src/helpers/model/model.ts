@@ -51,7 +51,10 @@ export class BaseModel extends Config {
     this._doc = model;
     this._id = model.id || uuidv4();
 
-    this._logger = mainLogger.getSubLogger({ name: `[${this._id}] model` });
+    this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
+      name: `[${this._id}] model`,
+    });
 
     // this._modelDBStore = useModelDBStore();
     // this._idx = this._modelDBStore.models.length;

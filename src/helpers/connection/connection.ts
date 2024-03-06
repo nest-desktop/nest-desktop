@@ -53,6 +53,7 @@ export class BaseConnection extends Config {
     this._idx = this.connections.all.length;
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.connections.network.project.shortId}] connection`,
     });
 

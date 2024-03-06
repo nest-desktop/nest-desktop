@@ -11,7 +11,10 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
-const logger = mainLogger.getSubLogger({ name: "network graph drag line" });
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "network graph drag line",
+});
 
 export class NetworkGraphDragline {
   private _workspace: NetworkGraphWorkspace;

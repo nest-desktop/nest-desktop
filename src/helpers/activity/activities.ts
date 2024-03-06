@@ -38,6 +38,7 @@ export class Activities {
     });
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this._project.shortId}] activities`,
     });
 

@@ -53,6 +53,7 @@ export class Activity {
     });
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.recorder.idx} - ${this.recorder.modelId}] activity`,
     });
 

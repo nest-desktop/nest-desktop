@@ -6,6 +6,7 @@ import { Model } from "@/types/modelTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "model DB",
 });
 

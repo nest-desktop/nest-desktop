@@ -7,6 +7,7 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "project DB",
 });
 

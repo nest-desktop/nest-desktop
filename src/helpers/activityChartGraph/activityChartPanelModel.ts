@@ -10,6 +10,7 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import { ActivityChartPanel } from "./activityChartPanel";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "activity chart panel model",
 });
 

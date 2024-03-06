@@ -9,7 +9,7 @@ import { NESTNetwork } from "../network/network";
 
 import { NESTCopyModel, NESTCopyModelProps } from "./copyModel";
 
-const logger = mainLogger.getSubLogger({ name: "copy model" });
+const logger = mainLogger.getSubLogger({ minLevel: 3, name: "copy model" });
 
 interface NESTCopyModelsState {
   hash: string;

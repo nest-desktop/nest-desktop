@@ -27,6 +27,7 @@ export class ActivityGraph {
     );
     this._activityAnimationGraph = new ActivityAnimationGraph(project);
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `activity graph`,
     });
 

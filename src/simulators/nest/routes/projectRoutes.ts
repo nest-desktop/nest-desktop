@@ -9,6 +9,7 @@ import { useNESTProjectStore } from "../stores/project/projectStore";
 import { useNESTSessionStore } from "../stores/sessionStore";
 
 const logger = mainLogger.getSubLogger({
+  minLevel: 3,
   name: "nest project route",
 });
 

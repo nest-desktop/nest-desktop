@@ -8,7 +8,7 @@ import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { NESTProject } from "../project/project";
 import { useInsiteAccessStore } from "../../stores/backends/insiteAccessStore";
 
-const logger = mainLogger.getSubLogger({ name: "insite" });
+const logger = mainLogger.getSubLogger({ minLevel: 3, name: "insite" });
 
 type activityType = {
   events: any;

@@ -92,6 +92,7 @@ export class NodeGraphShape {
   constructor(networkGraph: NetworkGraph) {
     this._networkGraph = networkGraph;
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this._networkGraph.network.project.shortId}] node graph shape`,
     });
   }

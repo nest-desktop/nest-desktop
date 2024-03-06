@@ -26,6 +26,7 @@ export class BaseSynapse {
     this._connection = connection;
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `synapse`,
     });
 

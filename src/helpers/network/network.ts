@@ -44,6 +44,7 @@ export class BaseNetwork extends Config {
 
     // this._graph = new NetworkGraph(this);
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: "network",
     });
 

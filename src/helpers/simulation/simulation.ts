@@ -39,6 +39,7 @@ export class BaseSimulation extends Config {
     this._project = project;
 
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.project.shortId}] simulation`,
     });
 

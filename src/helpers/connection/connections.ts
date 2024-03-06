@@ -29,6 +29,7 @@ export class BaseConnections {
   constructor(network: Network, connections: ConnectionProps[] = []) {
     this._network = network;
     this._logger = mainLogger.getSubLogger({
+      minLevel: 3,
       name: `[${this.network.project.shortId}] connections`,
     });
 
