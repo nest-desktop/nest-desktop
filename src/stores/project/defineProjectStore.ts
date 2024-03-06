@@ -1,6 +1,6 @@
 // defineProjectStore.ts
 
-import { computed, nextTick, reactive } from "vue";
+import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 
 import router from "@/router";
@@ -123,9 +123,7 @@ export function defineProjectStore(
       state.controllerView = state.controllerOpen ? item.id : "";
 
       // nextTick(() => window.dispatchEvent(new Event("resize")));
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 400);
+      setTimeout(() => window.dispatchEvent(new Event("resize")), 400); // TODO: nextTick doesn't work.
     };
 
     return {
