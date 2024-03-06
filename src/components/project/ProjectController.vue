@@ -16,8 +16,9 @@
     >
       <v-tab
         :key="index"
+        :ripple="false"
         :value="item.id"
-        @click="projectStore.toggleController(item)"
+        @click.stop="projectStore.toggleController(item)"
         class="justify-center"
         height="72"
         minWidth="0"
@@ -40,7 +41,7 @@
               ? 'mdi-arrow-expand-down'
               : 'mdi-arrow-expand-up'
           "
-          @click="toggleBottomNav()"
+          @click.stop="toggleBottomNav()"
           value="code"
           variant="plain"
         />
@@ -52,12 +53,11 @@
     :modelValue="projectStore.state.controllerOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="projectStore.state.controllerWidth"
-    @update:modelValue="dispatchWindowResize()"
     class="d-print-none"
     location="right"
     permanent
   >
-    <div @mousedown="(e) => resizeRightNav(e)" class="resize-handle left" />
+    <div @mousedown="resizeRightNav()" class="resize-handle left" />
 
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controllerView === 'network'">
@@ -116,10 +116,9 @@
     :height="projectStore.state.bottomNavHeight"
     :modelValue="projectStore.state.bottomOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    @update:modelValue="dispatchWindowResize()"
     location="bottom"
   >
-    <div @mousedown="(e) => resizeBottomNav(e)" class="resize-handle bottom" />
+    <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />
 
     <slot name="simulationCodeMirror">
       <simulation-code-mirror
@@ -130,7 +129,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick } from "vue";
+import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -181,9 +180,9 @@ if (darkMode()) {
 }
 
 const dispatchWindowResize = () => {
-  console.log("Dispatch windows resize");
+  // console.log("Dispatch windows resize");
   // nextTick(() => window.dispatchEvent(new Event("resize")));
-  setTimeout(() => window.dispatchEvent(new Event("resize")), 400);
+  setTimeout(() => window.dispatchEvent(new Event("resize")), 400); // TODO: nextTick doesn't work.
 };
 
 /**

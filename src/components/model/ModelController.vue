@@ -10,6 +10,7 @@
     >
       <v-tab
         :key="index"
+        :ripple="false"
         :value="modelStore.controllerOpen ? item.id : null"
         @click.stop="modelStore.toggle(item)"
         class="justify-center"
@@ -28,11 +29,17 @@
     location="right"
     permanent
   >
-    <v-list>
-      <v-list-item title="Home" value="home" />
-      <v-list-item title="Contacts" value="contacts" />
-      <v-list-item title="Settings" value="settings" />
-    </v-list>
+    <template v-if="modelStore.state.controllerView === 'defaults'">
+      <v-list>
+        <v-list-item title="Home" value="home" />
+        <v-list-item title="Contacts" value="contacts" />
+        <v-list-item title="Settings" value="settings" />
+      </v-list>
+    </template>
+
+    <template v-if="modelStore.state.controllerView === 'code'">
+      code
+    </template>
   </v-navigation-drawer>
 </template>
 
