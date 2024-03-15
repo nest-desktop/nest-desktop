@@ -1,13 +1,12 @@
 // networkGraphNodeAddPanel.ts
 import { Arc, Selection, arc } from "d3";
 
-import { darkMode } from "@/helpers/common/theme";
-import { Network } from "@/types/networkTypes";
-
+import { darkMode } from "../common/theme";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { TNetwork } from "@/types/networkTypes";
 
-import { useNESTModelDBStore } from "@/simulators/nest/stores/model/modelDBStore";
-const NESTModelDBStore = useNESTModelDBStore();
+import { useModelDBStore } from "@/stores/model/modelDBStore";
+const modelDBStore = useModelDBStore();
 
 export class NetworkGraphNodeAddPanel {
   private _workspace: NetworkGraphWorkspace;
@@ -30,7 +29,7 @@ export class NetworkGraphNodeAddPanel {
       : "#424242";
   }
 
-  get network(): Network | undefined {
+  get network(): TNetwork | undefined {
     return this._workspace.network;
   }
 
@@ -39,11 +38,11 @@ export class NetworkGraphNodeAddPanel {
   }
 
   get nodeRadius(): number {
-    return this._workspace.networkGraph.config.nodeRadius;
+    return this._workspace.networkGraph.config?.localStorage.nodeRadius;
   }
 
   get strokeWidth(): number {
-    return this._workspace.networkGraph.config.strokeWidth;
+    return this._workspace.networkGraph.config?.localStorage.strokeWidth;
   }
 
   get textColor(): string {
@@ -315,13 +314,13 @@ export class NetworkGraphNodeAddPanel {
       .attr("class", "models")
       .style("display", "none");
 
-    const models = NESTModelDBStore.getModelsByElementType(elementType).map(
-      (model) => ({
+    const models = modelDBStore
+      .getModelsByElementType(elementType)
+      .map((model) => ({
         favorite: model.favorite,
         title: model.id,
         label: model.abbreviation,
-      })
-    );
+      }));
 
     models
       .filter((model) => model.favorite || !favoriteOnly)

@@ -62,7 +62,7 @@
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controllerView === 'network'">
         <slot name="network">
-          <NetworkParamEditor :network="(project.network as Network)">
+          <NetworkParamEditor :network="(project.network as TNetwork)">
             <template #nodes>
               <slot name="nodes" />
             </template>
@@ -73,7 +73,7 @@
       <template v-else-if="projectStore.state.controllerView === 'kernel'">
         <slot name="simulationKernel">
           <SimulationKernelEditor
-            :simulation="(project.simulation as Simulation)"
+            :simulation="(project.simulation as TSimulation)"
           />
         </slot>
       </template>
@@ -95,7 +95,7 @@
       <template v-else-if="projectStore.state.controllerView === 'code'">
         <slot name="simulationCodeEditor">
           <simulation-code-editor
-            :simulation="(project.simulation as Simulation)"
+            :simulation="(project.simulation as TSimulation)"
           />
         </slot>
       </template>
@@ -122,15 +122,16 @@
 
     <slot name="simulationCodeMirror">
       <simulation-code-mirror
-        :simulation="(project.simulation as Simulation)"
+        :simulation="(project.simulation as TSimulation)"
       />
     </slot>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
+import { LanguageSupport } from "@codemirror/language";
+import { computed } from "vue";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 
@@ -142,9 +143,9 @@ import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.v
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { Network } from "@/types/networkTypes";
-import { Project } from "@/types/projectTypes";
-import { Simulation } from "@/types/simulationTypes";
+import { TNetwork } from "@/types/networkTypes";
+import { TProject } from "@/types/projectTypes";
+import { TSimulation } from "@/types/simulationTypes";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppSessionStore } from "@/stores/appSessionStore";
@@ -158,7 +159,7 @@ const props = defineProps({
 });
 
 const projectStore = computed(() => props.projectStore);
-const project = computed(() => projectStore.value.state.project as Project);
+const project = computed(() => projectStore.value.state.project as TProject);
 
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)
@@ -176,7 +177,7 @@ const controllerItems = [
 const extensions = [json()];
 
 if (darkMode()) {
-  extensions.push(oneDark);
+  extensions.push(oneDark as LanguageSupport);
 }
 
 const dispatchWindowResize = () => {

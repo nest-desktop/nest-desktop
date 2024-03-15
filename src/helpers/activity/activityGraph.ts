@@ -1,40 +1,28 @@
 // activityGraph.ts
 
-import { UnwrapRef, reactive } from "vue";
-import { ILogObj, Logger } from "tslog";
+import { ActivityAnimationGraph } from "../activityAnimationGraph/activityAnimationGraph";
+import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
+import { IActivityChartPanelProps } from "../activityChartGraph/activityChartPanel";
+import { BaseObj } from "../common/base";
+import { TProject } from "@/types/projectTypes";
 
-import { ActivityAnimationGraph } from "@/helpers/activityAnimationGraph/activityAnimationGraph";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { ActivityChartPanelProps } from "@/helpers/activityChartGraph/activityChartPanel";
-import { Project } from "@/types/projectTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
-
-export class ActivityGraph {
-  private _project: Project;
+export class ActivityGraph extends BaseObj {
+  private _project: TProject;
   private _activityChartGraph: ActivityChartGraph;
   private _activityAnimationGraph: ActivityAnimationGraph;
-  private _state: UnwrapRef<any>;
-  private _logger: Logger<ILogObj>;
 
   constructor(
-    project: Project,
-    activityGraph?: { panels: ActivityChartPanelProps[] }
+    project: TProject,
+    activityGraph?: { panels: IActivityChartPanelProps[] }
   ) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._project = project;
     this._activityChartGraph = new ActivityChartGraph(
       project,
       activityGraph?.panels
     );
     this._activityAnimationGraph = new ActivityAnimationGraph(project);
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `activity graph`,
-    });
-
-    this._state = reactive({
-      codeHash: "",
-      dataHash: "",
-    });
   }
 
   get activityAnimationGraph(): ActivityAnimationGraph {
@@ -45,12 +33,8 @@ export class ActivityGraph {
     return this._activityChartGraph;
   }
 
-  get project(): Project {
+  get project(): TProject {
     return this._project;
-  }
-
-  get state(): any {
-    return this._state;
   }
 
   /**
@@ -58,7 +42,7 @@ export class ActivityGraph {
    */
   init(): void {
     this.updateHash();
-    this._logger.trace("init");
+    this.logger.trace("init");
 
     this._activityChartGraph.init();
     // this.activityAnimationGraph.init();
@@ -72,7 +56,7 @@ export class ActivityGraph {
    * Serialize for JSON.
    * @return activity graph object
    */
-  toJSON(): { panels: ActivityChartPanelProps[] } {
+  toJSON(): { panels: IActivityChartPanelProps[] } {
     return {
       panels: this._activityChartGraph ? this._activityChartGraph.toJSON() : [],
     };
@@ -82,21 +66,22 @@ export class ActivityGraph {
    * Update activity graph.
    */
   update(): void {
-    // if (this.project.activities.state.hash === this.dataHash) return;
+    // if (this.project.activities.hash === this.dataHash) return;
 
     this._activityChartGraph.update();
     // this.activityAnimationGraph.update();
 
     this.updateHash();
-    this._logger.trace("update");
+    this.logger.trace("update");
   }
 
   /**
-   * Update hash for activity graph.
+   * Update hash.
    */
   updateHash(): void {
-    this._state.codeHash = this.project.simulation.code.state.hash;
-    this._state.dataHash = this.project.activities.state.hash;
-    this._logger.settings.name = `[${this._project.shortId}] activity graph #${this._state.odeHash} #${this._state.dataHash}`;
+    this._updateHash({
+      activities: this.project.activities.hash,
+      code: this.project.simulation.code.hash,
+    });
   }
 }

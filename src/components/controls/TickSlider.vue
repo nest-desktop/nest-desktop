@@ -56,7 +56,9 @@ const tickIdx = computed({
   },
 });
 
-const ticks = computed(() => Object.keys(state.ticks).map(JSON.parse));
+const ticks = computed(() =>
+  Object.keys(state.ticks).map((tick: string) => JSON.parse(tick))
+);
 
 const max = computed(() => ticks.value.length - 1);
 
@@ -130,16 +132,16 @@ onMounted(init);
     position: absolute;
     top: -6px;
   }
-}
 
-.tick-slider:hover {
-  .mdi-minus,
-  .mdi-plus {
-    opacity: 0.6 !important;
-  }
+  &:hover {
+    .mdi-minus,
+    .mdi-plus {
+      opacity: 0.6 !important;
+    }
 
-  .unit {
-    opacity: 0;
+    .unit {
+      opacity: 0;
+    }
   }
 }
 </style>

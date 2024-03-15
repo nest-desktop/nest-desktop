@@ -75,7 +75,7 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import { Project, ProjectPropTypes } from "@/types/projectTypes";
+import { TProject, TProjectProps } from "@/types/projectTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -85,11 +85,11 @@ const router = useRouter();
 const route = useRoute();
 
 const props = defineProps({
-  project: ProjectPropTypes,
+  project: TProjectProps,
   projectDBStore: { required: true, type: Object },
 });
 
-const project = computed(() => props.project as Project);
+const project = computed(() => props.project as TProject);
 const projectDBStore = computed(() => props.projectDBStore);
 
 const state = reactive({

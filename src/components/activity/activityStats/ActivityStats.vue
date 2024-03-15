@@ -1,7 +1,7 @@
 <template>
   <div class="activityStatsViewer">
     <v-toolbar color="transparent" density="compact">
-      <v-toolbar-title> Activity stats </v-toolbar-title>
+      <v-toolbar-title>Activity stats</v-toolbar-title>
     </v-toolbar>
 
     <v-layout class="activityStats ml-1" full-height v-resize="onResize">
@@ -19,25 +19,20 @@
             <v-row class="text-button">
               <NodeAvatar :node="activity.recorder" />
               <v-spacer />
-              <div>
-                {{ activity.recorder.model.label }}
-              </div>
+              {{ activity.recorder.model.label }}
               <v-spacer />
             </v-row>
           </v-expansion-panel-title>
 
-          <v-expansion-panel-text
-            :key="activities.state.hash"
-            class="ma-0 pa-0"
-          >
+          <v-expansion-panel-text :key="activities.hash" class="ma-0 pa-0">
             <ActivityStatsSpike
-              :activity
+              :activity="activity as SpikeActivity"
               :height="state.height"
               v-if="activity.recorder.model.isSpikeRecorder"
             />
 
             <ActivityStatsAnalog
-              :activity
+              :activity="activity as AnalogSignalActivity"
               :height="
                 state.height - (activity.recorder.model.isMultimeter ? 60 : 0)
               "
@@ -53,15 +48,14 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import { Activities } from "@/helpers/activity/activities";
-
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import { Activities } from "@/helpers/activity/activities";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
-const props = defineProps({
-  activities: Activities,
-});
+const props = defineProps({ activities: Activities });
 
 const activities = computed(() => props.activities as Activities);
 

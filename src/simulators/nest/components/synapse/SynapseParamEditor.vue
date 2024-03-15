@@ -61,9 +61,7 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { NESTSynapseParameter } from "@/simulators/nest/helpers/synapse/synapseParameter";
 
-const props = defineProps({
-  param: NESTSynapseParameter,
-});
+const props = defineProps({ param: NESTSynapseParameter });
 
 const param = computed(() => props.param as NESTSynapseParameter);
 
@@ -101,11 +99,11 @@ const items = [
   .menu {
     opacity: 0;
   }
-}
 
-.param:hover {
-  .menu {
-    opacity: 1;
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
   }
 }
 </style>

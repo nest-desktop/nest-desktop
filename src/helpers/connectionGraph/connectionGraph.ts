@@ -2,15 +2,15 @@
 
 import { Selection, Transition, drag, select, transition } from "d3";
 
-import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { Connection } from "@/types/connectionTypes";
-import { NetworkGraph } from "@/types/networkGraphTypes";
-import { drawPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
+import { BaseNetworkGraph } from "../networkGraph/networkGraph";
+import { TConnection } from "@/types/connectionTypes";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { drawPathNode } from "./connectionGraphPath";
 
 export class ConnectionGraph {
-  private _networkGraph: NetworkGraph;
+  private _networkGraph: TNetworkGraph;
 
-  constructor(networkGraph: NetworkGraph) {
+  constructor(networkGraph: TNetworkGraph) {
     this._networkGraph = networkGraph;
   }
 
@@ -23,13 +23,13 @@ export class ConnectionGraph {
   }
 
   get strokeWidth(): number {
-    return this._networkGraph.config.strokeWidth;
+    return this._networkGraph.config?.localStorage.strokeWidth;
   }
 
   /**
    * Drag connection graph by moving its node graphs.
    */
-  drag(event: MouseEvent, connection: Connection): void {
+  drag(event: MouseEvent, connection: TConnection): void {
     if (this.state.dragLine) return;
     const sourceNodePosition = connection.source.view.state.position;
     // @ts-ignore
@@ -50,7 +50,7 @@ export class ConnectionGraph {
    * Initialize a connection graph.
    */
   init(
-    connection: Connection,
+    connection: TConnection,
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
@@ -79,7 +79,7 @@ export class ConnectionGraph {
     //   .append("text");
 
     elem
-      .on("mouseover", (_, c: Connection) => {
+      .on("mouseover", (_, c: TConnection) => {
         c.state.focus();
         // Draw line between selected node and focused connection.
         if (c.network.nodes.state.selectedNode && this.state.dragLine) {
@@ -216,13 +216,13 @@ export class ConnectionGraph {
       .enter()
       .append("g")
       .attr("class", "connection")
-      .attr("color", (c: Connection) => c.source.view.color)
-      .attr("idx", (c: Connection) => c.idx)
-      .attr("hash", (c: Connection) => c.state.shortHash)
+      .attr("color", (c: TConnection) => c.source.view.color)
+      .attr("idx", (c: TConnection) => c.idx)
+      .attr("hash", (c: TConnection) => c.hash)
       .style("opacity", 0)
       // @ts-ignore
       .call(dragging)
-      .each((c: Connection, i: number, e) => this.init(c, i, e));
+      .each((c: TConnection, i: number, e) => this.init(c, i, e));
 
     connections.exit().remove();
 

@@ -2,26 +2,26 @@
 
 import {
   BaseConnection,
-  ConnectionProps,
+  IConnectionProps,
 } from "@/helpers/connection/connection";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
-import { NodeParameterProps } from "@/helpers/node/nodeParameter";
+import { INodeParamProps } from "@/helpers/node/nodeParameter";
 
-import { NESTConnectionMask, NESTConnectionMaskProps } from "./connectionMask";
+import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
 import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
 import { NESTNodeSlice } from "../node/nodeSlice";
-import { NESTSynapse, NESTSynapseProps } from "../synapse/synapse";
+import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
 
-export interface NESTConnectionProps extends ConnectionProps {
-  sourceSlice?: NodeParameterProps[];
-  targetSlice?: NodeParameterProps[];
-  mask?: NESTConnectionMaskProps;
-  synapse?: NESTSynapseProps;
+export interface INESTConnectionProps extends IConnectionProps {
+  sourceSlice?: INodeParamProps[];
+  targetSlice?: INodeParamProps[];
+  mask?: INESTConnectionMaskProps;
+  synapse?: INESTSynapseProps;
 }
 
 export class NESTConnection extends BaseConnection {
@@ -29,13 +29,23 @@ export class NESTConnection extends BaseConnection {
   private _sourceSlice: NESTNodeSlice;
   private _targetSlice: NESTNodeSlice;
 
-  constructor(connections: NESTConnections, connection: NESTConnectionProps) {
-    super(connections, connection, "NESTConnection");
+  constructor(
+    connections: NESTConnections,
+    connectionProps: INESTConnectionProps
+  ) {
+    super(connections, connectionProps, "nest");
 
     this._sourceSlice = new NESTNodeSlice(this.source, []);
-    this._targetSlice = new NESTNodeSlice(this.target, connection.targetSlice);
+    this._targetSlice = new NESTNodeSlice(
+      this.target,
+      connectionProps.targetSlice
+    );
 
-    this._mask = new NESTConnectionMask(this, connection.mask);
+    this._mask = new NESTConnectionMask(this, connectionProps.mask);
+  }
+
+  override get Synapse() {
+    return NESTSynapse;
   }
 
   override get connections(): NESTConnections {
@@ -81,29 +91,21 @@ export class NESTConnection extends BaseConnection {
     return this._targetSlice;
   }
 
-  override newSynapse(synapse: NESTSynapseProps): NESTSynapse {
-    return new NESTSynapse(this, synapse);
-  }
-
   /**
    * Set defaults.
-   *
-   * @remarks
-   * It emits connection changes.
    */
   override reset(): void {
     this.logger.trace("reset");
     this.rule.reset();
-    this.initParameters();
+    this.addParameters();
     this.synapse.modelId = "static_synapse";
     this._mask.unmask();
-    this.changes();
   }
 
   /**
    * Resets all parameters to their default.
    */
-  override resetAllParams(): void {
+  override resetParams(): void {
     const ruleConfig: any = this.getRuleConfig();
 
     // Reset connection parameter.
@@ -121,20 +123,20 @@ export class NESTConnection extends BaseConnection {
 
   /**
    * Serialize for JSON.
-   * @return connection object
+   * @return connection props
    */
-  override toJSON(): NESTConnectionProps {
-    const connection: NESTConnectionProps = {
+  override toJSON(): INESTConnectionProps {
+    const connectionProps: INESTConnectionProps = {
       source: this.sourceIdx,
       target: this.targetIdx,
     };
 
     if (this.rule.value !== "all_to_all") {
-      connection.rule = this.rule.value;
+      connectionProps.rule = this.rule.value;
     }
 
     if (this.paramsVisible.length > 0) {
-      connection.params = this.filteredParams.map(
+      connectionProps.params = this.filteredParams.map(
         (param: ConnectionParameter) => param.toJSON()
       );
     }
@@ -143,21 +145,21 @@ export class NESTConnection extends BaseConnection {
       this.synapse.modelId !== "static_synapse" ||
       this.synapse.paramsVisible.length > 0
     ) {
-      connection.synapse = this._synapse.toJSON();
+      connectionProps.synapse = this._synapse.toJSON();
     }
 
     if (this._sourceSlice.visible) {
-      connection.sourceSlice = this._sourceSlice.toJSON();
+      connectionProps.sourceSlice = this._sourceSlice.toJSON();
     }
 
     if (this._targetSlice.visible) {
-      connection.targetSlice = this._targetSlice.toJSON();
+      connectionProps.targetSlice = this._targetSlice.toJSON();
     }
 
     if (this._mask.hasMask) {
-      connection.mask = this._mask.toJSON();
+      connectionProps.mask = this._mask.toJSON();
     }
 
-    return connection;
+    return connectionProps;
   }
 }

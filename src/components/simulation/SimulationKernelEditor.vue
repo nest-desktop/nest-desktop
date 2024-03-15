@@ -26,14 +26,14 @@ import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
 
 const props = defineProps({
   color: { default: "accent", type: String },
-  simulation: SimulationPropTypes,
+  simulation: TSimulationProps,
 });
 
-const simulation = computed(() => props.simulation as Simulation);
+const simulation = computed(() => props.simulation as TSimulation);
 
 const options = {
   simulationTimeSettings: {

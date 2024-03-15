@@ -138,13 +138,12 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, reactive } from "vue";
 
-import { Node, NodePropTypes } from "@/types/nodeTypes";
+import { INodeProps } from "@/helpers/node/node";
+import { TNode, TNodeProps } from "@/types/nodeTypes";
 
-const props = defineProps({
-  node: NodePropTypes,
-});
+const props = defineProps({ node: TNodeProps });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as TNode);
 
 const state = reactive({
   content: undefined as string | undefined,
@@ -157,7 +156,7 @@ const items = [
     icon: "mdi-restart",
     id: "paramsReset",
     onClick: () => {
-      node.value.resetParameters();
+      node.value.resetParams();
       closeMenu();
     },
     append: false,
@@ -188,10 +187,12 @@ const items = [
     icon: "mdi-content-copy",
     id: "nodeClone",
     onClick: () => {
-      const newNode: any = JSON.parse(JSON.stringify(node.value.toJSON()));
-      newNode.view.position.x += 50;
-      newNode.view.color = undefined;
-      node.value.nodes.add(newNode);
+      const newNodeProps: INodeProps = node.value.clone().toJSON();
+      if (newNodeProps.view) {
+        newNodeProps.view.position.x += 50;
+        newNodeProps.view.color = undefined;
+      }
+      node.value.nodes.add(newNodeProps);
       node.value.changes();
       closeMenu();
     },

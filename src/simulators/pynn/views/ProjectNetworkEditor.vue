@@ -10,10 +10,12 @@ import { computed } from "vue";
 
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
-import { Network } from "@/types/networkTypes";
+import { BaseNetwork } from "@/helpers/network/network";
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore = usePyNNProjectStore();
 
-const network = computed(() => projectStore.state.project.network as Network);
+const network = computed(
+  () => projectStore.state.project.network as BaseNetwork
+);
 </script>

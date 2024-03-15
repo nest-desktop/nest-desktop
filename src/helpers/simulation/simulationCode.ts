@@ -1,24 +1,21 @@
 // simulationCode.ts
 
 import Mustache from "mustache";
-import { ILogObj, Logger } from "tslog";
 import { UnwrapRef, nextTick, reactive } from "vue";
-import { sha1 } from "object-hash";
 
-import { Simulation } from "@/types/simulationTypes";
-import { download } from "@/helpers/common/download";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseObj } from "../common/base";
+import { TSimulation } from "@/types/simulationTypes";
+import { download } from "../common/download";
 
-export interface SimulationCodeProps {
+export interface ISimulationCodeProps {
   blocks?: string[];
   templateFilename?: string;
 }
 
-interface SimulationCodeState {
+interface ISimulationCodeState {
   blocks: string[];
   customBlocks: boolean;
   templateFilename: string;
-  hash: string;
   template?: string;
   script: string;
 }
@@ -32,25 +29,23 @@ const simulationCodeBlocks: string[] = [
   "runSimulation",
 ];
 
-export class BaseSimulationCode {
-  private _logger: Logger<ILogObj>;
-  private _simulation: Simulation; // parent
-  private _state: UnwrapRef<SimulationCodeState>;
+export class BaseSimulationCode extends BaseObj {
+  private _simulation: TSimulation; // parent
+  private _state: UnwrapRef<ISimulationCodeState>;
 
-  constructor(simulation: Simulation, simulationCode?: SimulationCodeProps) {
+  constructor(
+    simulation: TSimulation,
+    simulationCodeProps?: ISimulationCodeProps
+  ) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._simulation = simulation;
     this._state = reactive({
-      blocks: simulationCode?.blocks || simulationCodeBlocks,
+      blocks: simulationCodeProps?.blocks || simulationCodeBlocks,
       customBlocks: false,
-      templateFilename: simulationCode?.templateFilename || "",
+      templateFilename: simulationCodeProps?.templateFilename || "",
       template: "",
-      hash: "",
       script: "",
-    });
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.simulation.project.shortId}] simulation code`,
     });
 
     if (this._state.templateFilename) {
@@ -71,10 +66,6 @@ export class BaseSimulationCode {
     return this._state.blocks.includes("importModules");
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
   get resetKernel(): boolean {
     return this._state.blocks.includes("resetKernel");
   }
@@ -93,30 +84,22 @@ export class BaseSimulationCode {
 
   set script(value: string) {
     this._state.script = value;
-    this._state.hash = sha1(this._state.script);
+    this.updateHash();
   }
 
   get setKernelStatus(): boolean {
     return this._state.blocks.includes("setKernel");
   }
 
-  /**
-   * Returns the first six digits of the SHA-1 project code hash.
-   * @returns 6-digit id value
-   */
-  get shortHash(): string {
-    return this._state.hash ? this._state.hash.slice(0, 6) : "";
-  }
-
-  get simulation(): Simulation {
+  get simulation(): TSimulation {
     return this._simulation;
   }
 
-  get simulationAllTypes(): Simulation {
+  get simulationAllTypes(): TSimulation {
     return this._simulation;
   }
 
-  get state(): UnwrapRef<SimulationCodeState> {
+  get state(): UnwrapRef<ISimulationCodeState> {
     return this._state;
   }
 
@@ -128,14 +111,14 @@ export class BaseSimulationCode {
    * Clean the simulation code.
    */
   clean(): void {
-    this._logger.trace("clean code");
+    this.logger.trace("clean");
   }
 
   /**
    * Export the script to file.
    */
   export(format: string = "py"): void {
-    this._logger.trace("export script to file:", format);
+    this.logger.trace("export script to file:", format);
     let data: string = "";
     if (format === "py") {
       data = this._state.script;
@@ -184,17 +167,15 @@ export class BaseSimulationCode {
    * Renders the script and generates the hash.
    */
   generate(): void {
-    this._logger.trace("generate");
+    this.logger.trace("generate");
     if (this._state.template) {
-      nextTick(() => {
-        this.script = Mustache.render(
-          this._state.template || "",
-          this.simulation.project
-        );
-        this.updateHash();
-      });
+      this.script = Mustache.render(
+        this._state.template || "",
+        this.simulation.project
+      );
+      this.updateHash();
     } else {
-      this.loadTemplate().then(() => this.generate());
+      this.loadTemplate().then(() => nextTick(() => this.generate()));
     }
   }
 
@@ -203,8 +184,19 @@ export class BaseSimulationCode {
    * @return promise
    */
   async importTemplate(): Promise<any> {
-    this._logger.trace("import template:", this._state.templateFilename);
+    this.logger.trace("import template:", this._state.templateFilename);
     return import(`./templates/${this._state.templateFilename}.mustache?raw`);
+  }
+
+  /**
+   * Initialize simulation code component.
+   *
+   * @remarks
+   * It generates simulation code.
+   */
+  init(): void {
+    this.logger.trace("init");
+    this.generate();
   }
 
   /**
@@ -212,7 +204,7 @@ export class BaseSimulationCode {
    * @return promise
    */
   async loadTemplate(): Promise<any> {
-    this._logger.trace("load template:", this._state.templateFilename);
+    this.logger.trace("load template:", this._state.templateFilename);
     return this.importTemplate().then((template) => {
       this._state.template = template.default;
     });
@@ -220,16 +212,18 @@ export class BaseSimulationCode {
 
   /**
    * Serialize for JSON.
-   * @return simulation code object
+   * @return simulation code props
    */
-  toJSON(): SimulationCodeProps {
+  toJSON(): ISimulationCodeProps {
     return { blocks: this._state.blocks };
   }
 
+  /**
+   * Update hash.
+   */
   updateHash(): void {
-    this._state.hash = sha1({
+    this._updateHash({
       script: this._state.script,
-    }).slice(0, 6);
-    this._logger.settings.name = `[${this.simulation.project.shortId}] simulation code #${this._state.hash}`;
+    });
   }
 }

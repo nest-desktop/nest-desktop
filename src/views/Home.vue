@@ -25,14 +25,14 @@
         <v-row>
           <v-col>
             <v-btn
-              :to="{ name: simulator.routerName }"
+              :to="{ name: simulator.id + 'Home' }"
               :key="index"
               class="ma-2"
               size="x-large"
               v-for="(simulator, index) in simulatorItems"
             >
               <template #prepend>
-                <v-icon :icon="simulator.icon" />
+                <v-icon :icon="simulator.id + ':logo'" />
               </template>
               {{ simulator.title }}
             </v-btn>
@@ -46,8 +46,17 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
 import AppFooter from "@/components/app/AppFooter.vue";
-import { simulatorItems } from "@/simulators";
+import { simulators } from "@/simulators";
+
+const simulatorItems = computed(() =>
+  appStore.state.simulatorVisible.map((simulatorId) => simulators[simulatorId])
+);
 </script>
 
 <!-- <style lang="scss">

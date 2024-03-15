@@ -9,7 +9,7 @@ export const useAppSessionStore = defineStore(
     const state = reactive({
       devMode: false,
       loading: false,
-      webGL: false,
+      webGL: true,
     });
     return { state };
   },

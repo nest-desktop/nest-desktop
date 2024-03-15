@@ -3,7 +3,7 @@
 import { BaseSynapse } from "@/helpers/synapse/synapse";
 import { NESTSynapse } from "@/simulators/nest/helpers/synapse/synapse";
 
-export type Synapse = BaseSynapse | NESTSynapse;
+export type TSynapse = BaseSynapse | NESTSynapse;
 
-// for synapse spec editor
-export const SynapsePropTypes = [BaseSynapse, NESTSynapse];
+// for components
+export const TSynapseProps = [BaseSynapse, NESTSynapse];

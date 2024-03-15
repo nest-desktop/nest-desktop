@@ -1,20 +1,21 @@
 // project.ts
 
-import { BaseProject, ProjectProps } from "@/helpers/project/project";
+import { BaseProject, IProjectProps } from "@/helpers/project/project";
 
-import {
-  PyNNSimulation,
-  PyNNSimulationProps,
-} from "../simulation/simulation";
+import { PyNNSimulation, IPyNNSimulationProps } from "../simulation/simulation";
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 
-export interface PyNNProjectProps extends ProjectProps {
-  simulation?: PyNNSimulationProps;
+export interface IPyNNProjectProps extends IProjectProps {
+  simulation?: IPyNNSimulationProps;
 }
 
 export class PyNNProject extends BaseProject {
-  constructor(project: PyNNProjectProps = {}) {
-    super(project);
+  constructor(projectProps: IPyNNProjectProps = {}) {
+    super(projectProps);
+  }
+
+  override get Simulation() {
+    return PyNNSimulation;
   }
 
   /**
@@ -25,22 +26,17 @@ export class PyNNProject extends BaseProject {
    */
   clone(): PyNNProject {
     this.logger.trace("clone");
-    const newProject = new PyNNProject({
+    return new PyNNProject({
       ...this.toJSON(),
       id: undefined,
       updatedAt: "",
     });
-    return newProject;
   }
 
   /**
-   * Initialize store for PyNN.
+   * Initialize model store for PyNN.
    */
-  override initStore(): void {
+  override initModelStore(): void {
     this.modelDBStore = usePyNNModelDBStore();
-  }
-
-  override newSimulation(data?: PyNNSimulationProps): PyNNSimulation {
-    return new PyNNSimulation(this, data);
   }
 }

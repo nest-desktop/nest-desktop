@@ -1,4 +1,4 @@
-import { Config } from "@/helpers/config";
+import { Config } from "@/helpers/common/config";
 
 const _configNames = [
   "ActivityAxisLabels",
@@ -18,6 +18,8 @@ const _configNames = [
 export default {
   install() {
     // Load config files.
-    _configNames.forEach((configName) => new Config(configName));
+    _configNames.forEach(
+      (configName: string) => new Config({ name: configName })
+    );
   },
 };

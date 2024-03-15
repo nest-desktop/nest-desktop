@@ -201,9 +201,7 @@ import { NESTNode } from "../../helpers/node/node";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
-const props = defineProps({
-  node: NESTNode,
-});
+const props = defineProps({ node: NESTNode });
 
 const node = computed(() => props.node as NESTNode);
 
@@ -228,9 +226,9 @@ const items = [
   // },
   {
     icon: "mdi-restart",
-    id: "paramsReset",
+    id: "resetParams",
     onClick: () => {
-      node.value.resetParameters();
+      node.value.resetParams();
       closeMenu();
     },
     append: false,

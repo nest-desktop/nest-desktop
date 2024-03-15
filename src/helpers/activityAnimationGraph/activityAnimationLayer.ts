@@ -2,14 +2,14 @@
 
 import { GridHelper, Group } from "three";
 
-import { Activity } from "@/helpers/activity/activity";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { range } from "@/helpers/common/array";
+import { Activity } from "../activity/activity";
+import { NodeRecord } from "../node/nodeRecord";
+import { range } from "../common/array";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
-import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/BoxGeometryLayerModel";
-import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/SphereGeometryLayerModel";
+import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/boxGeometryLayerModel";
+import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/sphereGeometryLayerModel";
 
 export class ActivityAnimationLayer {
   private _activity: Activity;

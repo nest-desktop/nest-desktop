@@ -18,20 +18,19 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { BaseNode } from "@/helpers/node/node";
-import { NodePropTypes } from "@/types/nodeTypes";
+import { TNode, TNodeProps } from "@/types/nodeTypes";
 import { useAppSessionStore } from "@/stores/appSessionStore";
+import { TNetworkGraph, TNetworkGraphProps } from "@/types/networkGraphTypes";
 
 const appSessionStore = useAppSessionStore();
 
 const props = defineProps({
-  graph: BaseNetworkGraph,
-  node: NodePropTypes,
+  graph: TNetworkGraphProps,
+  node: TNodeProps,
 });
 
-const node = computed(() => props.node as BaseNode);
-const graph = computed(() => props.graph as BaseNetworkGraph);
+const node = computed(() => props.node as TNode);
+const graph = computed(() => props.graph as TNetworkGraph);
 
 const selectNode = () => {
   node.value.state.select();

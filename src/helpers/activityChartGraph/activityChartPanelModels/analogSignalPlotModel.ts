@@ -1,18 +1,25 @@
 // analogSignalPlotModel.ts
 
-import { Node } from "@/types/nodeTypes";
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import {
+  AnalogSignalPanelModel,
+  IAnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
 
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
+export interface IAnalogSignalPlotModelProps
+  extends IAnalogSignalPanelModelProps {}
 
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
-    super(panel, model);
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: IAnalogSignalPlotModelProps = {}
+  ) {
+    super(panel, modelProps);
     this.icon = "mdi-chart-bell-curve-cumulative";
     this.id = "analogSignalPlot";
-    this.panel.xaxis = 1;
+    this.panel.xAxis = 1;
 
     this.params = {
       selected: [0, 1, 2, 3, 4, 5],
@@ -39,42 +46,40 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       // },
     };
 
-    this.initParams(model.params);
+    this.initParams(modelProps.params);
   }
 
   /**
    * Add spike threshold data for membrane potential.
    */
-  addSpikeThresholdLine(record: NodeRecord): void {
-    const thresholds: number[] = record.node.nodes.all
-      .filter((node: Node) => node.modelId.startsWith("iaf"))
-      .map(
-        (target: Node) => (target.getParameter("V_th").value as number) || -55
-      );
-
-    if (thresholds.length > 0) {
-      const line = {
-        color: record.color,
-        dash: "dot",
-        width: 2,
-      };
-
-      this.data.push({
-        activityIdx: record.activity.idx,
-        hoverinfo: "none",
-        legendgroup: record.groupId,
-        line,
-        mode: "lines",
-        opacity: 0.5,
-        recordId: record.id,
-        showlegend: false,
-        type: plotType,
-        visible: this.state.visible,
-        x: [0.1, record.activity.currenttime],
-        y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
-      });
-    }
-  }
+  // addSpikeThresholdLine(record: NodeRecord): void {
+  // const thresholds: number[] = record.node.nodes.all
+  //   .filter((node: Node) => node.modelId.startsWith("iaf"))
+  //   .map(
+  //     (target: Node) => (target.getParameter("V_th").value as number) || -55
+  //   );
+  // if (thresholds.length > 0) {
+  //   const line = {
+  //     color: record.color,
+  //     dash: "dot",
+  //     width: 2,
+  //   };
+  //   this.data.push({
+  //     activityIdx: record.activity.idx,
+  //     hoverinfo: "none",
+  //     legendgroup: record.groupId,
+  //     line,
+  //     mode: "lines",
+  //     opacity: 0.5,
+  //     recordId: record.id,
+  //     showlegend: false,
+  //     type: plotType,
+  //     visible: this.state.visible,
+  //     x: [0.1, record.activity.currentTime],
+  //     y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
+  //   });
+  // }
+  // }
 
   /**
    * Add single line data for analog signal.

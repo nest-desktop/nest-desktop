@@ -1,13 +1,13 @@
 // analogSignalActivity.ts
 
-import { Activity, ActivityProps } from "@/helpers/activity/activity";
-import { Node } from "@/types/nodeTypes";
+import { Activity, IActivityProps } from "./activity";
+import { TNode } from "@/types/nodeTypes";
 
-interface AnalogSignalActivityProps extends ActivityProps {}
+interface IAnalogSignalActivityProps extends IActivityProps {}
 
 export class AnalogSignalActivity extends Activity {
-  constructor(recorder: Node, activity: AnalogSignalActivityProps = {}) {
-    super(recorder, activity);
+  constructor(recorder: TNode, activityProps: IAnalogSignalActivityProps = {}) {
+    super(recorder, activityProps);
   }
 
   /**

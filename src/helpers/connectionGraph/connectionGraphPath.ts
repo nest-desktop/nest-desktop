@@ -15,7 +15,22 @@ export function calcPathNode(
     sweep?: number;
     xAxisRotation?: number;
   } = {}
-): any {
+): {
+  a: number;
+  ax: number;
+  ay: number;
+  dr: number;
+  drx: number;
+  dry: number;
+  largeArc: number;
+  sweep: number;
+  tr: number;
+  x1: number;
+  x2: number;
+  xAxisRotation: number;
+  y2: number;
+  y1: number;
+} {
   const r: number = options.radius || 24;
   const tr: number = r + 10;
 

@@ -12,8 +12,8 @@
       <v-col class="pa-1" cols="12" md="4" sm="6">
         <div class="text-button">Stimulator</div>
         <node-viewer
-          :node="(node as Node)"
           :key="index"
+          :node
           v-for="(node, index) in network.nodes.stimulators"
         />
       </v-col>
@@ -21,8 +21,8 @@
       <v-col class="pa-1" cols="12" md="4" sm="6">
         <div class="text-button">Neuron</div>
         <node-viewer
-          :node="(node as Node)"
           :key="index"
+          :node
           v-for="(node, index) in network.nodes.neurons"
         />
       </v-col>
@@ -30,8 +30,8 @@
       <v-col class="pa-1" cols="12" md="4" sm="6">
         <div class="text-button">Recorder</div>
         <node-viewer
-          :node="(node as Node)"
           :key="index"
+          :node
           v-for="(node, index) in network.nodes.recorders"
         />
       </v-col>
@@ -44,11 +44,12 @@ import { computed } from "vue";
 
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NodeViewer from "@/components/node/NodeViewer.vue";
-import { Network } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
+import { BaseNetwork } from "@/helpers/network/network";
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore = usePyNNProjectStore();
 
-const network = computed(() => projectStore.state.project.network as Network);
+const network = computed(
+  () => projectStore.state.project.network as BaseNetwork
+);
 </script>

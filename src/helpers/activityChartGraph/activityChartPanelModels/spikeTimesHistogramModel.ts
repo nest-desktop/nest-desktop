@@ -1,17 +1,22 @@
 // spikeTimesHistogramModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 
-import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
-    super(panel, model);
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: ISpikeTimesPanelModelProps = {}
+  ) {
+    super(panel, modelProps);
     this.icon = "mdi-chart-bar";
     this.id = "spikeTimesHistogram";
-    this.panel.xaxis = 1;
+    this.panel.xAxis = 1;
     this.params = [
       {
         id: "binSize",
@@ -23,7 +28,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
       },
     ];
 
-    this.initParams(model.params);
+    this.initParams(modelProps.params);
   }
 
   /**

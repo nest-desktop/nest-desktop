@@ -2,11 +2,11 @@
 
 import {
   BaseSimulationCode,
-  SimulationCodeProps,
+  ISimulationCodeProps,
 } from "@/helpers/simulation/simulationCode";
-import { Simulation } from "@/types/simulationTypes";
+import { NorseSimulation } from "./simulation";
 
-export interface NorseSimulationCodeProps extends SimulationCodeProps {}
+export interface INorseSimulationCodeProps extends ISimulationCodeProps {}
 
 const simulationCodeBlocks: string[] = [
   "importModules",
@@ -17,12 +17,14 @@ const simulationCodeBlocks: string[] = [
 
 export class NorseSimulationCode extends BaseSimulationCode {
   constructor(
-    simulation: Simulation,
-    simulationCode: NorseSimulationCodeProps = {}
+    simulation: NorseSimulation,
+    simulationCodeProps: INorseSimulationCodeProps = {}
   ) {
-    simulationCode.blocks = simulationCode?.blocks || simulationCodeBlocks;
-    simulationCode.templateFilename = "norse-master";
-    super(simulation, simulationCode);
+    super(simulation, {
+      blocks: simulationCodeBlocks,
+      ...simulationCodeProps,
+      templateFilename: "norse-master",
+    });
   }
 
   /**

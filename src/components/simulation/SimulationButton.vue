@@ -1,131 +1,71 @@
 <template>
-  <div class="simulationButton">
-    <div class="btn-split text-no-wrap">
-      <v-btn
-        :disabled="disabled"
-        :loading="loading"
-        @click="projectStore?.startSimulation()"
-        class="btn-main"
-        variant="outlined"
-        title="Simulate"
-        prepend-icon="mdi-play"
-        v-if="simulation"
+  <v-btn-group density="compact" divided theme="dark" variant="outlined">
+    <v-btn
+      :disabled="disabled"
+      :loading="loading"
+      @click="projectStore?.startSimulation()"
+      class="border-white"
+      prepend-icon="mdi-play"
+      title="Simulate"
+      v-if="simulation"
+    >
+      <span v-if="simulation.code.runSimulation">Simulate</span>
+      <span v-else>Prepare</span>
+    </v-btn>
+
+    <!-- <v-btn class="border-white pa-2" style="min-width: 0">
+      <v-icon icon="mdi-menu-down" />
+
+      <v-menu
+        :close-on-content-click="false"
+        activator="parent"
+        theme="primary"
       >
-        <span v-if="simulation.code.runSimulation">Simulate</span>
-        <span v-else>Prepare</span>
-      </v-btn>
-
-      <v-btn class="btn-append" variant="outlined">
-        <v-icon icon="mdi-menu-down" />
-
-        <v-menu :close-on-content-click="false" activator="parent">
-          <v-list density="compact">
-            <v-list-item
-              :key="index"
-              @click="item.onClick"
-              v-for="(item, index) in state.items"
-            >
-              <template #prepend="{ isActive }">
-                <v-list-item-action start>
-                  <v-checkbox-btn :model-value="isActive" />
-                </v-list-item-action>
-              </template>
-
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-btn>
-    </div>
-  </div>
+        <v-list density="compact">
+          <v-list-item :key="index" v-for="(itemKey, index) in itemKeys">
+            <v-checkbox-btn
+              :label="state[itemKey].title"
+              v-model="state[itemKey].value"
+            />
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-btn> -->
+  </v-btn-group>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 
-import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
+// import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 const props = defineProps({
   disabled: Boolean,
   projectStore: Object,
-  simulation: SimulationPropTypes,
+  simulation: TSimulationProps,
 });
 
-const simulation = computed(() => props.simulation as Simulation);
+// const itemKeys = [
+//   "simulateAfterChange",
+//   "simulateAfterCheckout",
+//   "simulateAfterLoad",
+// ];
+
+const simulation = computed(() => props.simulation as TSimulation);
 const disabled = computed(
   () => props.disabled || simulation.value.state.running || false
 );
 const loading = computed(() => simulation.value.state.running);
 const projectStore = computed(() => props.projectStore);
 
-const state = reactive({
-  items: [
-    {
-      id: "simulateAfterChange",
-      variant: "checkbox",
-      title: "Simulate after change",
-      value: "simulateAfterChange",
-      show: () => true,
-      onClick: () => {
-        // state.projectConfig.simulateAfterChange =
-        //   !state.projectConfig.simulateAfterChange;
-        // projectView.updateConfig(state.projectConfig);
-      },
-    },
-    {
-      id: "simulateAfterLoad",
-      variant: "checkbox",
-      title: "Simulate after load",
-      value: "simulateAfterLoad",
-      show: () => true,
-      onClick: () => {
-        // state.projectConfig.simulateAfterLoad =
-        //   !state.projectConfig.simulateAfterLoad;
-        // projectView.updateConfig(state.projectConfig);
-      },
-    },
-    {
-      id: "simulateAfterCheckout",
-      variant: "checkbox",
-      title: "Simulate after checkout",
-      value: "simulateAfterCheckout",
-      show: () => true,
-      onClick: () => {
-        // state.projectConfig.simulateAfterCheckout =
-        //   !state.projectConfig.simulateAfterCheckout;
-        // projectView.updateConfig(state.projectConfig);
-      },
-    },
-  ],
-  // project: props.project as Project,
-  // projectConfig: projectView.config,
-});
+// const projectViewStore = useProjectViewStore();
+// const state = projectViewStore.state;
 </script>
 
 <style lang="scss">
-.simulationButton {
-  .btn-split {
-    display: inline-block;
-
-    .btn-main {
-      border-right: none;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .btn-prepend {
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 0;
-      min-width: 35px !important;
-      padding: 0 !important;
-    }
-
-    .btn-append {
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0;
-      min-width: 35px !important;
-      padding: 0 !important;
-    }
-  }
+.border-white {
+  border-color: white !important;
+  border-inline-end-color: white !important;
 }
 </style>

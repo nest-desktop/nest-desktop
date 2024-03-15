@@ -16,7 +16,7 @@
     </v-menu> -->
 
     <v-toolbar color="transparent" density="compact">
-      <v-btn @click="resetPanels" icon="mdi-reload" size="small" />
+      <v-btn @click="resetPanels()" icon="mdi-reload" size="small" />
 
       <v-spacer />
 
@@ -168,9 +168,7 @@ import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
-const props = defineProps({
-  graph: ActivityChartGraph,
-});
+const props = defineProps({ graph: ActivityChartGraph });
 
 const graph = computed(() => props.graph as ActivityChartGraph);
 
@@ -198,7 +196,8 @@ const addPanel = (modelId: string) => {
  * Reset panels.
  */
 const resetPanels = () => {
-  graph.value.init();
+  graph.value.panels = [];
+  graph.value.addPanels();
   graph.value.update();
 };
 

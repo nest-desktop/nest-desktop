@@ -2,23 +2,23 @@
 
 import {
   ActivityChartPanelModel,
-  ActivityChartPanelModelProps,
+  IActivityChartPanelModelProps,
 } from "../activityChartPanelModel";
 import { ActivityChartPanel } from "../activityChartPanel";
 
-export interface SpikeTimesPanelModelProps
-  extends ActivityChartPanelModelProps {}
+export interface ISpikeTimesPanelModelProps
+  extends IActivityChartPanelModelProps {}
 
 export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: SpikeTimesPanelModelProps = {}
+    modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel);
     this.activityType = "spike";
     this.id = "spikeTimesPanelModel";
     this.label = "spike times";
-    model;
+    modelProps; // TODO: check if it is required.
 
     this.init();
   }
@@ -27,14 +27,7 @@ export class SpikeTimesPanelModel extends ActivityChartPanelModel {
    * Initialize panel model.
    */
   override init(): void {
-    this.initActivities();
-  }
-
-  /**
-   * Initialize model for spike activities.
-   */
-  override initActivities(): void {
-    this.activities = this.panel.graph.project.activities.spikes;
+    this.updateActivities();
   }
 
   /**

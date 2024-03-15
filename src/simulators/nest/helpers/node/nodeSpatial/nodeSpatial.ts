@@ -1,29 +1,29 @@
 // nodeSpatial.ts
 
-import { sha1 } from "object-hash";
-
-import { Config } from "@/helpers/config";
+import { BaseObj } from "@/helpers/common/base";
 
 import { FreePositions, FreePositionsProps } from "./freePositions";
 import { GridPositions, GridPositionsProps } from "./gridPositions";
 import { NESTNode } from "../node";
 
-export interface NESTNodeSpatialProps {
+export interface INESTNodeSpatialProps {
   positions?: string;
   specs?: FreePositionsProps | GridPositionsProps;
 }
 
-export class NESTNodeSpatial extends Config {
-  private _hash: string = "";
+export class NESTNodeSpatial extends BaseObj {
   private _node: NESTNode;
   private _positions: FreePositions | GridPositions | undefined;
 
-  constructor(node: NESTNode, spatial?: NESTNodeSpatialProps) {
-    super("NESTNodeSpatial", "nest");
+  constructor(node: NESTNode, nodeSpatialProps?: INESTNodeSpatialProps) {
+    super({
+      config: { name: "NESTNodeSpatial", simulator: "nest" },
+      logger: { settings: { minLevel: 3 } },
+    });
     this._node = node;
 
-    if (spatial) {
-      this.init(spatial);
+    if (nodeSpatialProps) {
+      this.init(nodeSpatialProps);
     }
   }
 
@@ -36,8 +36,11 @@ export class NESTNodeSpatial extends Config {
     return this._positions?.name === "grid";
   }
 
-  get hash(): string {
-    return this._hash;
+  /**
+   * Check if it has positions (free or grid) component.
+   */
+  get hasPositions(): boolean {
+    return this._positions != undefined;
   }
 
   get node(): NESTNode {
@@ -49,43 +52,36 @@ export class NESTNodeSpatial extends Config {
   // }
 
   /**
-   * Update hash of the spatial node.
-   */
-  updateHash(): void {
-    this._hash = sha1(JSON.stringify(this.toJSON()));
-  }
-
-  /**
    * Initialize spatial node.
    */
-  init(spatial: NESTNodeSpatialProps): void {
-    switch (spatial.positions) {
+  init(nodeSpatialProps: INESTNodeSpatialProps): void {
+    switch (nodeSpatialProps.positions) {
       case "free":
-        this._positions = new FreePositions(this, spatial.specs);
+        this._positions = new FreePositions(this, nodeSpatialProps.specs);
         break;
       case "grid":
-        this._positions = new GridPositions(this, spatial.specs);
+        this._positions = new GridPositions(this, nodeSpatialProps.specs);
         break;
     }
-  }
-
-  /**
-   * Check if it has positions (free or grid) component.
-   */
-  get hasPositions(): boolean {
-    return this._positions != undefined;
   }
 
   /**
    * Serialize for JSON.
    * @return spatial object
    */
-  toJSON(): NESTNodeSpatialProps {
-    const spatial: NESTNodeSpatialProps = {};
+  toJSON(): INESTNodeSpatialProps {
+    const nodeSpatialProps: INESTNodeSpatialProps = {};
     if (this._positions != undefined) {
-      spatial.positions = this._positions.name;
-      spatial.specs = this._positions.toJSON();
+      nodeSpatialProps.positions = this._positions.name;
+      nodeSpatialProps.specs = this._positions.toJSON();
     }
-    return spatial;
+    return nodeSpatialProps;
+  }
+
+  /**
+   * Update hash of the spatial node.
+   */
+  updateHash(): void {
+    this._updateHash(this.toJSON());
   }
 }

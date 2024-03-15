@@ -2,10 +2,8 @@
 
 import { useToast } from "vue-toast-notification";
 
-type types = "success" | "info" | "warning" | "error" | "default" | string;
-
-interface optionsProps {
-  type?: types;
+interface IOptionProps {
+  type?: "success" | "info" | "warning" | "error" | "default" | string;
   onClick?: any;
   duration?: number;
 }
@@ -15,26 +13,25 @@ interface optionsProps {
  */
 export function openToast(
   message: string,
-  options: optionsProps = { type: "success" }
+  optionProps: IOptionProps = { type: "success" }
 ) {
   const $toast = useToast();
 
   // Add click event handler to redirect user to the documentation.
-  switch (options.type) {
+  switch (optionProps.type) {
     case "error": {
       message += " -- Click here for details ...";
-      options.onClick = () =>
+      optionProps.onClick = () =>
         window.open(
           "https://nest-desktop.readthedocs.io/en/latest/troubleshootings/index.html#error-messages",
           "_blank"
         );
-      options.duration = 5000;
-
-      $toast.error(message, options);
+      optionProps.duration = 5000;
+      $toast.error(message, optionProps);
       break;
     }
     default: {
-      $toast.open({ message, ...options });
+      $toast.open({ message, ...optionProps });
       break;
     }
   }

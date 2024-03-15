@@ -3,7 +3,7 @@
 import { reactive } from "vue";
 import { defineStore } from "pinia";
 
-import { NetworkGraph } from "@/types/networkGraphTypes";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
 
 export const useNetworkGraphStore = defineStore("network-graph", () => {
   const state = reactive({
@@ -11,7 +11,7 @@ export const useNetworkGraphStore = defineStore("network-graph", () => {
     graph: null as NetworkGraph,
   });
 
-  const mount = (graph: NetworkGraph): void => {
+  const mount = (graph: TNetworkGraph): void => {
     state.graph = graph;
     state.graph.resizeObserver.observe(state.graph.selector?.node().parentNode);
     state.graph.init();

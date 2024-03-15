@@ -39,9 +39,7 @@ import { computed } from "vue";
 
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
-const props = defineProps({
-  graph: ActivityChartGraph,
-});
+const props = defineProps({ graph: ActivityChartGraph });
 
 const graph = computed(() => props.graph as ActivityChartGraph);
 
@@ -62,8 +60,9 @@ const selectModel = (modelId: string) => {
   position: absolute;
   right: 4px;
   top: 0;
-}
-.activityChartPanelToolbar:hover .icons {
-  display: block;
+
+  &:hover .icons {
+    display: block;
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 // nodeReceptor.ts
 
-import { NodeParameterProps } from "@/helpers/node/nodeParameter";
+import { INodeParamProps } from "@/helpers/node/nodeParameter";
 import { NodeView } from "@/helpers/node/nodeView";
 
 import { NESTModelReceptor } from "../../model/modelReceptor/modelReceptor";
@@ -8,12 +8,15 @@ import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelRecep
 import { NESTNodeCompartment } from "../nodeCompartment/nodeCompartment";
 
 import { NESTNode } from "../node";
-import { NESTNodeReceptorParameter } from "./nodeReceptorParameter";
+import {
+  INESTNodeReceptorParamProps,
+  NESTNodeReceptorParameter,
+} from "./nodeReceptorParameter";
 
-export interface NESTNodeReceptorProps {
+export interface INESTNodeReceptorProps {
   compIdx: number;
   id: string;
-  params?: NodeParameterProps[];
+  params?: INodeParamProps[];
   type?: string;
 }
 
@@ -28,20 +31,20 @@ export class NESTNodeReceptor {
   private _params: { [key: string]: NESTNodeReceptorParameter } = {};
   private _paramsVisible: string[] = [];
 
-  constructor(node: NESTNode, nodeReceptor: NESTNodeReceptorProps) {
+  constructor(node: NESTNode, nodeReceptorProps: INESTNodeReceptorProps) {
     this._node = node;
 
-    this._id = nodeReceptor.id;
+    this._id = nodeReceptorProps.id;
     this._idx = this._node.receptors.length;
 
     if (
-      -1 < nodeReceptor.compIdx &&
-      nodeReceptor.compIdx < this._node.compartments.length
+      -1 < nodeReceptorProps.compIdx &&
+      nodeReceptorProps.compIdx < this._node.compartments.length
     ) {
-      this._compartment = this._node.compartments[nodeReceptor.compIdx];
+      this._compartment = this._node.compartments[nodeReceptorProps.compIdx];
     }
 
-    this.initParameters(nodeReceptor);
+    this.initParameters(nodeReceptorProps);
   }
 
   get compartment(): NESTNodeCompartment | undefined {
@@ -183,17 +186,17 @@ export class NESTNodeReceptor {
    * Initialize the parameter components.
    * @param receptor node receptor object
    */
-  initParameters(receptor: NESTNodeReceptorProps): void {
+  initParameters(receptorProps: INESTNodeReceptorProps): void {
     // Update parameters from model or node receptor
     this._params = {};
     const model = this.node.model;
-    if (model && receptor.id) {
-      const modelReceptor = model.receptors[receptor.id];
+    if (model && receptorProps.id) {
+      const modelReceptor = model.receptors[receptorProps.id];
       if (modelReceptor) {
         Object.values(modelReceptor.params).forEach(
           (modelReceptorParam: NESTModelReceptorParameter) => {
-            if (receptor && receptor.params) {
-              const receptorParam = receptor.params.find(
+            if (receptorProps && receptorProps.params) {
+              const receptorParam = receptorProps.params.find(
                 (p: any) => p.id === modelReceptorParam.id
               );
               this.addParameter(receptorParam || modelReceptorParam.toJSON());
@@ -203,8 +206,10 @@ export class NESTNodeReceptor {
           }
         );
       }
-    } else if (receptor.params) {
-      receptor.params.forEach((param: any) => this.addParameter(param));
+    } else if (receptorProps.params) {
+      receptorProps.params.forEach((paramProps: INESTNodeReceptorParamProps) =>
+        this.addParameter(paramProps)
+      );
     }
   }
 
@@ -247,12 +252,12 @@ export class NESTNodeReceptor {
    * Serialize for JSON.
    * @return node object
    */
-  toJSON(): NESTNodeReceptorProps {
+  toJSON(): INESTNodeReceptorProps {
     return {
       compIdx: this._compartment ? this._compartment.idx : -1,
       id: this.id,
-      params: this.filteredParams.map((param: NESTNodeReceptorParameter) =>
-        param.toJSON()
+      params: this.filteredParams.map((paramProps: NESTNodeReceptorParameter) =>
+        paramProps.toJSON()
       ),
     };
   }

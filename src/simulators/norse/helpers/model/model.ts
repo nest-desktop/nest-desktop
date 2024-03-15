@@ -1,20 +1,20 @@
 // model.ts
 
-import { BaseModel, ModelProps } from "@/helpers/model/model";
+import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
-export interface NorseModelProps extends ModelProps {
+export interface INorseModelProps extends IModelProps {
   codeTemplate?: string;
 }
 
 export class NorseModel extends BaseModel {
   private _codeTemplate: string = "";
 
-  constructor(model: NorseModelProps = {}) {
-    super(model, "NorseModel", "norse");
+  constructor(modelProps: INorseModelProps = {}) {
+    super(modelProps, "norse");
 
-    if (model.codeTemplate) {
-      this._codeTemplate = model.codeTemplate;
+    if (modelProps.codeTemplate) {
+      this._codeTemplate = modelProps.codeTemplate;
     }
   }
 
@@ -28,13 +28,18 @@ export class NorseModel extends BaseModel {
 
   /**
    * Clone this model object.
+   * @returns norse model object
    */
   override clone(): NorseModel {
     return new NorseModel({ ...this.toJSON() });
   }
 
-  toJSON(): NorseModelProps {
-    const model: any = {
+  /**
+   * Serialize to JSON.
+   * @returns norse model props
+   */
+  toJSON(): INorseModelProps {
+    const modelProps: INorseModelProps = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
@@ -47,15 +52,15 @@ export class NorseModel extends BaseModel {
 
     // Add the recordables if provided.
     if (this.recordables.length > 0) {
-      model.recordables = this.recordables.map(
+      modelProps.recordables = this.recordables.map(
         (recordable: any) => recordable.id
       );
     }
 
     if (this.codeTemplate) {
-      model.codeTemplate = this.codeTemplate;
+      modelProps.codeTemplate = this.codeTemplate;
     }
 
-    return model;
+    return modelProps;
   }
 }

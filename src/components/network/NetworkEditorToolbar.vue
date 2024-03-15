@@ -1,7 +1,7 @@
 <template>
   <v-toolbar
     :collapse="state.collapse"
-    :key="graph?.network.state.hash"
+    :key="graph?.network.hash"
     density="compact"
     absolute
   >
@@ -12,7 +12,7 @@
       v-if="graph?.network.nodes.state.selectedNode"
     >
       <NodeAvatar
-        :node="(graph?.network.nodes.state.selectedNode as Node)"
+        :node="(graph?.network.nodes.state.selectedNode as TNode)"
         size="32px"
       />
     </v-btn>
@@ -24,7 +24,7 @@
       v-if="graph?.network.connections.state.selectedConnection"
     >
       <ConnectionAvatar
-        :connection="(graph?.network.connections.state.selectedConnection as Connection)"
+        :connection="(graph?.network.connections.state.selectedConnection as TConnection)"
       />
     </v-btn>
 
@@ -118,12 +118,12 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import { downloadSVGImage } from "@/helpers/common/download";
-import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import { Node } from "@/types/nodeTypes";
-import { Connection } from "@/types/connectionTypes";
+import { TConnection } from "@/types/connectionTypes";
+import { TNode } from "@/types/nodeTypes";
+import { downloadSVGImage } from "@/helpers/common/download";
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
 const networkGraphStore = useNetworkGraphStore();
 

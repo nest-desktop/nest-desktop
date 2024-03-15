@@ -1,25 +1,30 @@
 // inputAnalogSignalPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
+import {
+  AnalogSignalPlotModel,
+  IAnalogSignalPlotModelProps,
+} from "./analogSignalPlotModel";
 
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
+  constructor(
+    panel: ActivityChartPanel,
+    model: IAnalogSignalPlotModelProps = {}
+  ) {
     super(panel, model);
     this.icon = "mdi-chart-bell-curve-cumulative";
     this.id = "inputAnalogSignalPlot";
     this.label = "input analog signals";
     this.panel.height = 10;
-    this.panel.xaxis = 1;
+    this.panel.xAxis = 1;
 
-    this.initActivities();
     this.init(model.records);
   }
 
   /**
-   * Initialize plot panel for input signals.
+   * Update activities of input analog signals.
    */
-  override initActivities(): void {
+  override updateActivities(): void {
     this.activities = this.panel.graph.project.activities.inputAnalogSignals;
   }
 }

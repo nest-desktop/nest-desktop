@@ -1,4 +1,4 @@
-// SphereGeometryLayerModel.ts
+// sphereGeometryLayerModel.ts
 
 import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 

@@ -1,16 +1,16 @@
 // model.ts
 
-import { BaseModel, ModelProps } from "@/helpers/model/model";
+import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import {
-  NESTModelCompartmentParameterProps,
+  INESTModelCompartmentParamProps,
   NESTModelCompartmentParameter,
 } from "./modelCompartmentParameter";
 import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
 
-export interface NESTModelProps extends ModelProps {
-  compartmentalParams?: any[];
+export interface INESTModelProps extends IModelProps {
+  compartmentParams?: any[];
   receptors?: any[];
 }
 
@@ -20,8 +20,8 @@ export class NESTModel extends BaseModel {
   private _compartmentParamsVisible: string[] = [];
   private _receptors: { [key: string]: NESTModelReceptor } = {}; // receptor parameters
 
-  constructor(model: ModelProps = {}) {
-    super(model, "NESTModel", "nest");
+  constructor(modelProps: IModelProps = {}) {
+    super(modelProps, "nest");
   }
 
   get compartmentParams(): { [key: string]: NESTModelCompartmentParameter } {
@@ -71,7 +71,7 @@ export class NESTModel extends BaseModel {
    * Add a compartment parameter to the model specifications.
    * @param param parameter object
    */
-  addCompartmentParameter(param: NESTModelCompartmentParameterProps): void {
+  addCompartmentParameter(param: INESTModelCompartmentParamProps): void {
     this._compartmentParams[param.id] = new NESTModelCompartmentParameter(
       this,
       param
@@ -106,8 +106,8 @@ export class NESTModel extends BaseModel {
    * Serialize for JSON.
    * @return model object
    */
-  override toJSON(): ModelProps {
-    const model: any = {
+  override toJSON(): INESTModelProps {
+    const modelProps: INESTModelProps = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
@@ -120,26 +120,26 @@ export class NESTModel extends BaseModel {
 
     // Add the recordables if provided.
     if (this.recordables.length > 0) {
-      model.recordables = this.recordables.map(
+      modelProps.recordables = this.recordables.map(
         (recordable: any) => recordable.id
       );
     }
 
     // Add the compartment parameters if provided.
     if (this._compartmentParams) {
-      model.compartmentParams = Object.values(this._compartmentParams).map(
+      modelProps.compartmentParams = Object.values(this._compartmentParams).map(
         (param: NESTModelCompartmentParameter) => param.toJSON()
       );
     }
 
     // Add the receptors if provided.
     if (this._receptors) {
-      model.receptors = Object.values(this._receptors).map(
+      modelProps.receptors = Object.values(this._receptors).map(
         (receptor: NESTModelReceptor) => receptor.toJSON()
       );
     }
 
-    return model;
+    return modelProps;
   }
 
   /**
@@ -147,7 +147,7 @@ export class NESTModel extends BaseModel {
    * @param model model object
    */
   override update(model: any): void {
-    this.logger.trace("update");
+    this.logger.trace("update", model.id);
 
     // Update the model ID.
     this.id = model.id;

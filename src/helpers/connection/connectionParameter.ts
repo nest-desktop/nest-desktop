@@ -1,24 +1,24 @@
 // connectionParameter.ts
 
-import { Connection } from "@/types/connectionTypes";
-import { Parameter, ParameterProps } from "@/helpers/common/parameter";
+import { Parameter, IParamProps } from "../common/parameter";
+import { TConnection } from "@/types/connectionTypes";
 
-export interface ConnectionParameterProps extends ParameterProps {}
+export interface IConnectionParamProps extends IParamProps {}
 
 export class ConnectionParameter extends Parameter {
-  private _connection: Connection;
+  private _connection: TConnection;
 
-  constructor(connection: Connection, param: ConnectionParameterProps) {
-    super(param);
+  constructor(connection: TConnection, paramProps: IConnectionParamProps) {
+    super(paramProps, { minLevel: 3 });
     this._connection = connection;
   }
 
-  get connection(): Connection {
-    return this._connection as Connection;
+  get connection(): TConnection {
+    return this._connection as TConnection;
   }
 
   get types(): any[] {
-    const types: any[] = this.config.types;
+    const types: any[] = this.config?.localStorage.types;
     return types;
   }
 

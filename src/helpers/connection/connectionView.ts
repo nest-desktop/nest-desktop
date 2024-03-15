@@ -2,8 +2,8 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { Connection } from "@/types/connectionTypes";
-import { calcPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
+import { calcPathNode } from "../connectionGraph/connectionGraphPath";
+import { TConnection } from "@/types/connectionTypes";
 import { randomUniformInt } from "@/helpers/common/random";
 
 interface ConnectionViewState {
@@ -14,10 +14,10 @@ interface ConnectionViewState {
 export class ConnectionView {
   private _colorExcitation = "#595289"; // '#467ab3';
   private _colorInhibition = "#AF143C"; // '#b34846';
-  private _connection: Connection; // parent
+  private _connection: TConnection; // parent
   private _state: UnwrapRef<ConnectionViewState>;
 
-  constructor(connection: Connection) {
+  constructor(connection: TConnection) {
     this._connection = connection;
 
     this._state = reactive({
@@ -81,7 +81,7 @@ export class ConnectionView {
 
   get opacity(): boolean {
     const focusedConnection = this._connection.connections.state
-      .focusedConnection as Connection;
+      .focusedConnection as TConnection;
 
     return (
       this._connection.source.connections.length === 1 ||

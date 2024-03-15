@@ -1,18 +1,23 @@
 // senderSpikeCountPlotModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 
-import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-
 export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
-    super(panel, model);
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: ISpikeTimesPanelModelProps = {}
+  ) {
+    super(panel, modelProps);
     this.icon = "mdi-chart-bell-curve-cumulative";
     this.id = "senderSpikeCountPlot";
     this.label = "spike count in each sender";
-    this.panel.xaxis = 4;
+    this.panel.xAxis = 4;
     this.params = [
       {
         _parent: this,
@@ -52,7 +57,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       },
     ];
 
-    this.initParams(model.params);
+    this.initParams(modelProps.params);
   }
 
   get lineShape(): string {
@@ -85,7 +90,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       counts[sender] = counts[sender] ? counts[sender] + 1 : 1;
     }
 
-    const time = this.spikeRate ? activity.endtime / 1000 : 1;
+    const time = this.spikeRate ? activity.endTime / 1000 : 1;
     const y: number[] = x.map((nodeId: number) =>
       counts[nodeId] ? counts[nodeId] / time : 0
     );

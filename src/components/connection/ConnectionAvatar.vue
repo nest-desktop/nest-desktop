@@ -20,12 +20,10 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
+import { TConnection, TConnectionProps } from "@/types/connectionTypes";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 
-const props = defineProps({
-  connection: ConnectionPropTypes,
-});
+const props = defineProps({ connection: TConnectionProps });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as TConnection);
 </script>

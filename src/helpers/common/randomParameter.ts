@@ -1,17 +1,18 @@
 // randomParameter.ts
 
-import { Config } from "../config";
+import { BaseObj } from "./base";
 
-export class ParameterRandom extends Config {
+export class ParameterRandom extends BaseObj {
   private _defaults: any;
   private _distribution: string;
   private _specs: any;
 
   constructor(random: any) {
-    super("ParameterRandom");
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._defaults = {
       exponential: { beta: 1 },
-      lognormal: { mean: 0, std: 1 },
+      logNormal: { mean: 0, std: 1 },
       normal: { mean: 0, std: 1 },
       uniform: { min: 0, max: 1 },
     };

@@ -82,9 +82,7 @@ import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { deviation, mean } from "@/helpers/common/array";
 import { toFixed } from "@/utils/converter";
 
-const props = defineProps({
-  activity: AnalogSignalActivity,
-});
+const props = defineProps({ activity: AnalogSignalActivity });
 
 const activity = computed(() => props.activity as AnalogSignalActivity);
 
@@ -114,6 +112,10 @@ const headers = [
 //   );
 //   activity.chartGraph?.react();
 // };
+
+const colMean = (key: string) => {
+  return mean(state.items.map((item) => item[key]) as number[]);
+};
 
 // const isActive = (nodeId: number) => {
 //   return activity.state.activeNodeId === nodeId;
@@ -150,7 +152,7 @@ const update = () => {
       };
     });
   }
-  state.activityHash = activity.value.state.hash;
+  state.activityHash = activity.value.hash;
   state.loading = false;
 };
 
@@ -158,16 +160,12 @@ const updateGraph = () => {
   nextTick(() => activity.value.chartGraph.update());
 };
 
-const colMean = (key: string) => {
-  return mean(state.items.map((item) => item[key]) as number[]);
-};
-
 onMounted(() => {
   update();
 });
 
 watch(
-  () => activity.value.state.hash,
+  () => activity.value.hash,
   () => update()
 );
 </script>

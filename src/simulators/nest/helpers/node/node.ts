@@ -1,8 +1,8 @@
 // node.ts
 
 import { Parameter } from "@/helpers/common/parameter";
-import { BaseNode, NodeProps } from "@/helpers/node/node";
-import { NodeRecord, NodeRecordProps } from "@/helpers/node/nodeRecord";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTConnection } from "../connection/connection";
@@ -10,25 +10,24 @@ import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import {
+  INESTNodeCompartmentProps,
   NESTNodeCompartment,
-  NESTNodeCompartmentProps,
 } from "./nodeCompartment/nodeCompartment";
-
-import { NESTNodes } from "./nodes";
 import {
+  INESTNodeReceptorProps,
   NESTNodeReceptor,
-  NESTNodeReceptorProps,
 } from "./nodeReceptor/nodeReceptor";
 import {
+  INESTNodeSpatialProps,
   NESTNodeSpatial,
-  NESTNodeSpatialProps,
 } from "./nodeSpatial/nodeSpatial";
+import { NESTNodes } from "./nodes";
 
-export interface NESTNodeProps extends NodeProps {
-  compartments?: NESTNodeCompartmentProps[];
-  receptors?: NESTNodeReceptorProps[];
-  records?: NodeRecordProps[];
-  spatial?: NESTNodeSpatialProps;
+export interface INESTNodeProps extends INodeProps {
+  compartments?: INESTNodeCompartmentProps[];
+  receptors?: INESTNodeReceptorProps[];
+  records?: INodeRecordProps[];
+  spatial?: INESTNodeSpatialProps;
 }
 
 export class NESTNode extends BaseNode {
@@ -37,10 +36,19 @@ export class NESTNode extends BaseNode {
   private _receptors: NESTNodeReceptor[] = [];
   private _spatial: NESTNodeSpatial;
 
-  constructor(nodes: NESTNodes, node: NESTNodeProps = {}) {
-    super(nodes, node);
+  constructor(nodes: NESTNodes, nodeProps: INESTNodeProps = {}) {
+    super(nodes, nodeProps);
 
-    this._spatial = new NESTNodeSpatial(this, node.spatial);
+    this._spatial = new NESTNodeSpatial(this, nodeProps.spatial);
+
+    this.reset();
+    if (nodeProps.compartments) {
+      this.addCompartments(nodeProps.compartments);
+    }
+
+    if (nodeProps.receptors) {
+      this.addReceptors(nodeProps.receptors);
+    }
   }
 
   get assignedModels(): NESTCopyModel[] {
@@ -55,10 +63,6 @@ export class NESTNode extends BaseNode {
     );
   }
 
-  get compartments(): NESTNodeCompartment[] {
-    return this._compartments;
-  }
-
   get compartmentIndices(): number[] {
     return this._compartments.map(
       (compartment: NESTNodeCompartment) => compartment.idx
@@ -71,6 +75,10 @@ export class NESTNode extends BaseNode {
         (comp: NESTNodeCompartment) => comp.recordables
       ),
     ];
+  }
+
+  get compartments(): NESTNodeCompartment[] {
+    return this._compartments;
   }
 
   override get connections(): NESTConnection[] {
@@ -148,16 +156,16 @@ export class NESTNode extends BaseNode {
     return this._positions;
   }
 
-  get receptors(): NESTNodeReceptor[] {
-    return this._receptors;
-  }
-
   get receptorRecordables(): any[] {
     return [
       ...this._receptors.map(
         (receptor: NESTNodeReceptor) => receptor.recordables
       ),
     ];
+  }
+
+  get receptors(): NESTNodeReceptor[] {
+    return this._receptors;
   }
 
   override get sizeVisible(): boolean {
@@ -176,20 +184,44 @@ export class NESTNode extends BaseNode {
 
   /**
    * Add compartment component.
-   * @param comp - compartment object
+   * @param compartmentProps - node compartment props
    */
-  addCompartment(comp: any = {}): void {
-    const compartment = new NESTNodeCompartment(this, comp);
+  addCompartment(compartmentProps: INESTNodeCompartmentProps): void {
+    const compartment = new NESTNodeCompartment(this, compartmentProps);
     this._compartments.push(compartment);
     compartment.clean();
   }
 
   /**
-   * Add receptor component.
-   * @param receptor - receptor object
+   * Add compartments for the node.
+   * @param compartmentsProps - list of node compartment props
    */
-  addReceptor(receptor: any): void {
-    this._receptors.push(new NESTNodeReceptor(this, receptor));
+  addCompartments(compartmentsProps: INESTNodeCompartmentProps[]): void {
+    this.logger.trace("add compartments");
+    this._compartments = [];
+    compartmentsProps.forEach((compartmentProps: INESTNodeCompartmentProps) =>
+      this.addCompartment(compartmentProps)
+    );
+  }
+
+  /**
+   * Add receptor component.
+   * @param receptorProps - receptor props
+   */
+  addReceptor(receptorProps: any): void {
+    this._receptors.push(new NESTNodeReceptor(this, receptorProps));
+  }
+
+  /**
+   * Add receptors for the node.
+   * @param receptorsProps - list of receptor props
+   */
+  addReceptors(receptorsProps: INESTNodeReceptorProps[]): void {
+    this.logger.trace("add receptors");
+    this._receptors = [];
+    receptorsProps.forEach((receptorProps: INESTNodeReceptorProps) =>
+      this.addReceptor(receptorProps)
+    );
   }
 
   /**
@@ -234,49 +266,6 @@ export class NESTNode extends BaseNode {
   }
 
   /**
-   * Initialize node.
-   */
-  override init(node?: NESTNodeProps): void {
-    this.logger.trace("init");
-
-    this.initParameters(node);
-    this.initCompartments(node);
-    this.initReceptors(node);
-
-    if (this.model.isRecorder) {
-      this.initActivity(node?.activity);
-    }
-
-    this.state.updateHash();
-  }
-
-  /**
-   * Initialize compartments for the node.
-   * @param node - node object
-   */
-  initCompartments(node?: NESTNodeProps): void {
-    this.logger.trace("init compartments");
-    this._compartments = [];
-    if (node && node.compartments) {
-      node.compartments.forEach((compartment: any) =>
-        this.addCompartment(compartment)
-      );
-    }
-  }
-
-  /**
-   * Initialize receptors for the node.
-   * @param node - node object
-   */
-  initReceptors(node?: NESTNodeProps): void {
-    this.logger.trace("init receptors");
-    this._receptors = [];
-    if (node && node.receptors) {
-      node.receptors.forEach((receptor: any) => this.addReceptor(receptor));
-    }
-  }
-
-  /**
    * Remove compartment from the node.
    */
   removeCompartment(compartment: NESTNodeCompartment): void {
@@ -309,7 +298,7 @@ export class NESTNode extends BaseNode {
    * @remarks
    * It emits node changes.
    */
-  override resetParameters(): void {
+  override resetParams(): void {
     this.logger.trace("reset parameters");
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
 
@@ -354,54 +343,54 @@ export class NESTNode extends BaseNode {
 
   /**
    * Serialize for JSON.
-   * @return node object
+   * @return node props
    */
-  override toJSON(): NESTNodeProps {
-    const node: NESTNodeProps = {
+  override toJSON(): INESTNodeProps {
+    const nodeProps: INESTNodeProps = {
       model: this.modelId,
       view: this.view.toJSON(),
     };
 
     if (this.size > 1) {
-      node.size = this.size;
+      nodeProps.size = this.size;
     }
 
     if (this.filteredParams.length > 0) {
-      node.params = this.filteredParams.map((param: NodeParameter) =>
+      nodeProps.params = this.filteredParams.map((param: NodeParameter) =>
         param.toJSON()
       );
     }
 
     // Add annotations if provided.
     if (this.annotations.length > 0) {
-      node.annotations = this.annotations;
+      nodeProps.annotations = this.annotations;
     }
 
     // Add records if this model is multimeter.
     if (this.model.isMultimeter) {
-      node.records = this.records.map((nodeRecord: NodeRecord) =>
+      nodeProps.records = this.records.map((nodeRecord: NodeRecord) =>
         nodeRecord.toJSON()
       );
     }
 
     // Add positions if this node is spatial.
     if (this._spatial.hasPositions) {
-      node.spatial = this._spatial.toJSON();
+      nodeProps.spatial = this._spatial.toJSON();
     }
 
     if (this._compartments.length > 0) {
-      node.compartments = this._compartments.map(
+      nodeProps.compartments = this._compartments.map(
         (compartment: NESTNodeCompartment) => compartment.toJSON()
       );
     }
 
     if (this._receptors.length > 0) {
-      node.receptors = this._receptors.map((receptor: NESTNodeReceptor) =>
+      nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) =>
         receptor.toJSON()
       );
     }
 
-    return node;
+    return nodeProps;
   }
 
   /**
@@ -431,14 +420,14 @@ export class NESTNode extends BaseNode {
         }
       } else if (this.modelId === "voltmeter") {
         recordables.push(
-          this.model.config.recordables.find(
+          this.model.config?.localStorage.recordables.find(
             (record: any) => record.id === "V_m"
           )
         );
       }
     } else if (this.modelId === "weight_recorder") {
       recordables.push(
-        this.model.config.recordables.find(
+        this.model.config?.localStorage.recordables.find(
           (record: any) => record.id === "weights"
         )
       );

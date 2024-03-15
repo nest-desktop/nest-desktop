@@ -1,24 +1,21 @@
-// index.ts
+// pynn/index.ts
 
-import router from "@/router";
-import { Config } from "@/helpers/config";
-import { addIconSet, addTheme } from "@/plugins/vuetify";
-import { simulatorItems } from "..";
+import { ISimulatorProps } from "..";
 
 import pynnRoute from "./routes";
-import { pynnIconSet } from "./components/iconsets";
+import pynnIconSet from "./components/iconSet";
 
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
 import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
 import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
 
-const _configNames = ["PyNNModel"];
-
-export default {
-  install() {
-    // Load config files
-    _configNames.forEach((configName) => new Config(configName, "pynn"));
-
+export const pynn: ISimulatorProps = {
+  backends: {},
+  configNames: ["PyNNModel"],
+  databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
+  iconSet: pynnIconSet,
+  id: "pynn",
+  init: () => {
     // Init stores
     const modelDBStore = usePyNNModelDBStore();
     const projectDBStore = usePyNNProjectDBStore();
@@ -28,27 +25,15 @@ export default {
     const pynnSimulatorStore = usePyNNSimulatorStore();
     pynnSimulatorStore.init();
 
-    // Add theme to vuetify
-    addTheme({
-      "pynn-logo": "#000080",
-      pynn: "0F9959",
-      "pynn-accent": "#e6007e",
-    });
-
-    // Add icon set for vuetify
-    addIconSet({ pynn: pynnIconSet });
-
-    // Add settings for App navigation
-    simulatorItems.pynn = {
-      backends: { pynn: pynnSimulatorStore },
-      databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
-      icon: "pynn:logo",
-      id: "pynn",
-      routerName: "pynnHome",
-      title: "PyNN",
+    pynn.backends = {
+      pynn: pynnSimulatorStore,
     };
-
-    // Add router
-    router.addRoute("appLayout", pynnRoute);
+  },
+  title: "PyNN",
+  route: pynnRoute,
+  theme: {
+    "pynn-accent": "#e6007e",
+    "pynn-logo": "#000080",
+    pynn: "0F9959",
   },
 };

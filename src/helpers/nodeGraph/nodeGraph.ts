@@ -1,34 +1,29 @@
 // nodeGraph.ts
 
-import { ILogObj, Logger } from "tslog";
 import { Selection, Transition, drag, select, transition } from "d3";
 
-import { Network } from "@/types/networkTypes";
-import { NetworkGraph } from "@/types/networkGraphTypes";
-import { Node } from "@/types/nodeTypes";
+import { BaseObj } from "../common/base";
 import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
-// import { currentBackgroundColor } from "@/helpers/common/theme";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { TNetwork } from "@/types/networkTypes";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNode } from "@/types/nodeTypes";
+// import { currentBackgroundColor } from "../common/theme";
 
-export class NodeGraph {
-  private _logger: Logger<ILogObj>;
-  private _networkGraph: NetworkGraph;
+export class NodeGraph extends BaseObj {
+  private _networkGraph: TNetworkGraph;
   private _nodeGraphConnector: NodeGraphConnector;
   private _nodeGraphShape: NodeGraphShape;
 
-  constructor(networkGraph: NetworkGraph) {
+  constructor(networkGraph: TNetworkGraph) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._networkGraph = networkGraph;
     this._nodeGraphConnector = new NodeGraphConnector(networkGraph);
     this._nodeGraphShape = new NodeGraphShape(networkGraph);
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this._networkGraph.network.project.shortId}] node graph`,
-    });
   }
 
-  get network(): Network {
+  get network(): TNetwork {
     return this._networkGraph.network;
   }
 
@@ -36,18 +31,18 @@ export class NodeGraph {
    * Init node element.
    */
   initNode(
-    node: Node,
+    node: TNode,
     idx: number,
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
-    this._logger.trace("init node");
+    this.logger.trace("init node");
     const elem: Selection<any, any, any, any> = select(elements[idx]);
     elem.selectAll("*").remove();
 
     this._nodeGraphConnector.init(elem);
     this._nodeGraphShape.init(elem, node);
 
-    elem.on("mouseover", (_, n: Node) => {
+    elem.on("mouseover", (_, n: TNode) => {
       n.state.focus();
       // Draw line between selected node and focused node.
       if (
@@ -71,8 +66,8 @@ export class NodeGraph {
   /**
    * Drag node graph.
    */
-  drag(event: MouseEvent, node: Node): void {
-    this._logger.silly("drag");
+  drag(event: MouseEvent, node: TNode): void {
+    this.logger.silly("drag");
     if (this._networkGraph.workspace.state.dragLine) return;
 
     node.view.state.position.x = event.x;
@@ -84,7 +79,7 @@ export class NodeGraph {
    * Render node graph.
    */
   render(): void {
-    this._logger.silly("render");
+    this.logger.silly("render");
 
     this._nodeGraphConnector.render();
     this._nodeGraphShape.render();
@@ -120,18 +115,18 @@ export class NodeGraph {
    * This function should be called when nodes is changed.
    */
   update(): void {
-    this._logger.silly("update");
+    this.logger.silly("update");
     if (!this._networkGraph.selector) return;
 
     const nodes: Selection<any, any, any, any> = this._networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
-      .data(this.network.nodes.all, (n: any) => n.state.hash);
+      .data(this.network.nodes.all, (n: any) => n.hash);
 
     const dragging = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       // @ts-ignore
-      .on("drag", (e: MouseEvent, n: Node) => this.drag(e, n))
+      .on("drag", (e: MouseEvent, n: TNode) => this.drag(e, n))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     nodes
@@ -139,11 +134,11 @@ export class NodeGraph {
       .append("g")
       .attr("class", "node")
       .style("color", (n: any) => "var(--node" + n.idx + "-color)")
-      .attr("idx", (n: Node) => n.idx)
-      .attr("weight", (n: Node) => n.view.synWeights as string)
+      .attr("idx", (n: TNode) => n.idx)
+      .attr("weight", (n: TNode) => n.view.synWeights as string)
       .attr(
         "transform",
-        (n: Node) =>
+        (n: TNode) =>
           `translate(${n.view.state.position.x},${
             n.view.state.position.y
           }) scale( ${n.state.isFocused ? 1.2 : 1})`
@@ -151,7 +146,7 @@ export class NodeGraph {
       .style("opacity", 0)
       // @ts-ignore
       .call(dragging)
-      .each((n: Node, i: number, e) => this.initNode(n, i, e));
+      .each((n: TNode, i: number, e) => this.initNode(n, i, e));
 
     nodes.exit().remove();
 

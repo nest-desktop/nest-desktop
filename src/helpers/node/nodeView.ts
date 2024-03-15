@@ -1,21 +1,20 @@
 // nodeView.ts
 
 import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
 
-import { Connection } from "@/types/connectionTypes";
-import { Node } from "@/types/nodeTypes";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
+import { NodeRecord } from "./nodeRecord";
+import { TConnection } from "@/types/connectionTypes";
+import { TNode } from "@/types/nodeTypes";
+import { BaseObj } from "../common/base";
 
-export interface NodeViewProps {
+export interface INodeViewProps {
   position: { x: number; y: number };
   color?: string;
   visible?: boolean;
 }
 
-interface NodeViewState {
+interface INodeViewState {
   color?: string;
-  hash: string;
   label?: string;
   position: { x: number; y: number };
   positions?: number[][];
@@ -24,22 +23,22 @@ interface NodeViewState {
   synWeights?: string;
 }
 
-export class NodeView {
-  private _node: Node; // parent
-  private _state: UnwrapRef<NodeViewState>;
+export class NodeView extends BaseObj {
+  public _node: TNode; // parent
+  private _state: UnwrapRef<INodeViewState>;
 
   constructor(
-    node: Node,
-    view: NodeViewProps = {
+    node: TNode,
+    viewProps: INodeViewProps = {
       position: { x: 0, y: 0 },
       visible: true,
     }
   ) {
-    this._node = node;
+    super({ logger: { settings: { minLevel: 3 } } });
 
+    this._node = node;
     this._state = reactive({
-      ...view,
-      hash: "",
+      ...viewProps,
       label: "",
       positions: [],
       showSize: this.node.size > 1,
@@ -51,9 +50,9 @@ export class NodeView {
     if (this._state.color) {
       return this._state.color;
     } else if (this.node.model.isRecorder) {
-      const connections: Connection[] =
+      const connections: TConnection[] =
         this.node.network.connections.all.filter(
-          (connection: Connection) =>
+          (connection: TConnection) =>
             connection.sourceIdx === this.node.idx ||
             connection.targetIdx === this.node.idx
         );
@@ -61,8 +60,8 @@ export class NodeView {
         connections.length === 1 &&
         connections[0].sourceIdx !== connections[0].targetIdx
       ) {
-        const connection: Connection = connections[0];
-        const node: Node =
+        const connection: TConnection = connections[0];
+        const node: TNode =
           connection.sourceIdx === this.node.idx
             ? connection.target
             : connection.source;
@@ -84,7 +83,7 @@ export class NodeView {
       return this._state.label;
     }
 
-    let nodes: Node[];
+    let nodes: TNode[];
     let idx: number;
     let label: string;
     // let varname: string;
@@ -121,7 +120,7 @@ export class NodeView {
     return label;
   }
 
-  get node(): Node {
+  get node(): TNode {
     return this._node;
   }
 
@@ -135,7 +134,7 @@ export class NodeView {
     );
   }
 
-  get state(): UnwrapRef<NodeViewState> {
+  get state(): UnwrapRef<INodeViewState> {
     return this._state;
   }
 
@@ -176,23 +175,23 @@ export class NodeView {
    * Serialize for JSON.
    * @return node view object
    */
-  toJSON(): NodeViewProps {
-    const nodeView: NodeViewProps = {
+  toJSON(): INodeViewProps {
+    const nodeViewProps: INodeViewProps = {
       position: this._state.position,
     };
 
     if (this._state.color) {
-      nodeView.color = this._state.color;
+      nodeViewProps.color = this._state.color;
     }
 
-    return nodeView;
+    return nodeViewProps;
   }
 
   /**
    * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1({
+    this._updateHash({
       color: this.color,
       position: this._state.position,
     });

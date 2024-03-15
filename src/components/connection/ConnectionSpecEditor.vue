@@ -86,13 +86,11 @@
 import { computed } from "vue";
 
 import ConnectionParamEditor from "@/components/connection/ConnectionParamEditor.vue";
-import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
+import { TConnection, TConnectionProps } from "@/types/connectionTypes";
 
-const props = defineProps({
-  connection: ConnectionPropTypes,
-});
+const props = defineProps({ connection: TConnectionProps });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as TConnection);
 
 const rules = [
   { title: "all to all", value: "all_to_all" },
@@ -127,11 +125,11 @@ const items = [
   .menu {
     opacity: 0;
   }
-}
 
-.conn-spec:hover {
-  .menu {
-    opacity: 1;
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
   }
 }
 </style>

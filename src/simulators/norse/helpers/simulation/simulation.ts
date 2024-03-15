@@ -2,26 +2,26 @@
 
 import {
   BaseSimulation,
-  SimulationProps,
+  ISimulationProps,
 } from "@/helpers/simulation/simulation";
-import { SimulationCodeProps } from "@/helpers/simulation/simulationCode";
 import { openToast } from "@/helpers/common/toast";
 
 import { NorseProject } from "../project/project";
 import { NorseSimulationCode } from "./simulationCode";
 import { useNorseSimulatorStore } from "../../stores/backends/norseSimulatorStore";
 
-export interface NorseSimulationProps extends SimulationProps {}
+export interface INorseSimulationProps extends ISimulationProps {}
 
 export class NorseSimulation extends BaseSimulation {
-  constructor(project: NorseProject, simulation: NorseSimulationProps = {}) {
-    super(project, simulation);
+  constructor(
+    project: NorseProject,
+    simulationProps: INorseSimulationProps = {}
+  ) {
+    super(project, simulationProps);
   }
 
-  override newSimulationCode(
-    simulationCode?: SimulationCodeProps
-  ): NorseSimulationCode {
-    return new NorseSimulationCode(this, simulationCode);
+  override get SimulationCode() {
+    return NorseSimulationCode;
   }
 
   /**
@@ -34,7 +34,8 @@ export class NorseSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const norseSimulatorStore = useNorseSimulatorStore();
-    return norseSimulatorStore.axiosInstance()
+    return norseSimulatorStore
+      .axiosInstance()
       .post("exec", {
         source: this.code.script,
         return: "response",

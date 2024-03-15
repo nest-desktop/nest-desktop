@@ -141,12 +141,12 @@ const state = reactive({
  * Updates when the usage of automatic RNG seed is switched on/off.
  */
 function updateAutoRNGSeed() {
-  simulation.value.kernel.updateConfig({
+  simulation.value.kernel.config?.update({
     autoRNGSeed: state.autoRNGSeed,
   });
 }
 
 onMounted(() => {
-  state.autoRNGSeed = simulation.value.kernel.config.autoRNGSeed;
+  state.autoRNGSeed = simulation.value.kernel.config?.localStorage.autoRNGSeed;
 });
 </script>

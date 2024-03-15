@@ -53,9 +53,7 @@ import { computed } from "vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 
-const props = defineProps({
-  param: ConnectionParameter,
-});
+const props = defineProps({ param: ConnectionParameter });
 
 const param = computed(() => props.param as ConnectionParameter);
 
@@ -94,11 +92,11 @@ const items = [
   .menu {
     opacity: 0;
   }
-}
 
-.param:hover {
-  .menu {
-    opacity: 1;
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
   }
 }
 </style>

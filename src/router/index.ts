@@ -4,7 +4,6 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-// Composables
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // Store

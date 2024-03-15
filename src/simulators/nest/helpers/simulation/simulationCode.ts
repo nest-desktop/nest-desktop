@@ -2,11 +2,11 @@
 
 import {
   BaseSimulationCode,
-  SimulationCodeProps,
+  ISimulationCodeProps,
 } from "@/helpers/simulation/simulationCode";
-import { Simulation } from "@/types/simulationTypes";
+import { NESTSimulation } from "./simulation";
 
-export interface NESTSimulationCodeProps extends SimulationCodeProps {}
+export interface INESTSimulationCodeProps extends ISimulationCodeProps {}
 
 const simulationCodeBlocks: string[] = [
   "importModules",
@@ -19,12 +19,14 @@ const simulationCodeBlocks: string[] = [
 
 export class NESTSimulationCode extends BaseSimulationCode {
   constructor(
-    simulation: Simulation,
-    simulationCode: NESTSimulationCodeProps = {}
+    simulation: NESTSimulation,
+    simulationCodeProps: INESTSimulationCodeProps = {}
   ) {
-    simulationCode.blocks = simulationCode?.blocks || simulationCodeBlocks;
-    simulationCode.templateFilename = "nest-master";
-    super(simulation, simulationCode);
+    super(simulation, {
+      blocks: simulationCodeBlocks,
+      ...simulationCodeProps,
+      templateFilename: "nest-master",
+    });
   }
 
   get runSimulationInsite(): boolean {

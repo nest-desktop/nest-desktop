@@ -1,20 +1,25 @@
 // spikeCountPlotModel.ts
 
-import { Node } from "@/types/nodeTypes";
+import { ActivityChartPanel } from "../activityChartPanel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { TNode } from "@/types/nodeTypes";
 import { sum, deviation, max, mean, min } from "@/helpers/common/array";
 import { useAppSessionStore } from "@/stores/appSessionStore";
 
-import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
-    super(panel, model);
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: ISpikeTimesPanelModelProps = {}
+  ) {
+    super(panel, modelProps);
     this.icon = "mdi-chart-bell-curve-cumulative";
     this.id = "spikeCountPlot";
     this.label = "Spike count";
-    this.panel.xaxis = 1;
+    this.panel.xAxis = 1;
     this.params = [
       {
         id: "binSize",
@@ -64,7 +69,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
     ];
 
-    this.initParams(model.params);
+    this.initParams(modelProps.params);
   }
 
   get binSize(): number {
@@ -135,7 +140,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     const appSessionStore = useAppSessionStore();
 
     const nodeSizeTotal = sum(
-      activity.recorder.nodes.all.map((node: Node) => node.size)
+      activity.recorder.nodes.all.map((node: TNode) => node.size)
     );
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;

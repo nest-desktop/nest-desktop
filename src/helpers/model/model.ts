@@ -1,30 +1,25 @@
 // model.ts
 
-import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
-import { Config } from "@/helpers/config";
-import {
-  ModelParameter,
-  ModelParameterProps,
-} from "@/helpers/model/modelParameter";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseObj } from "../common/base";
+import { IModelParamProps, ModelParameter } from "./modelParameter";
 // import { useModelDBStore } from "@/stores/model/modelDBStore";
 
-export interface ModelProps {
+export interface IModelProps {
   doc?: any;
   abbreviation?: string;
   elementType?: string;
   favorite?: boolean;
   id?: string;
   label?: string;
-  params?: ModelParameterProps[];
+  params?: IModelParamProps[];
   recordables?: any[];
   version?: string;
 }
 
-export class BaseModel extends Config {
+export class BaseModel extends BaseObj {
   private readonly _name = "Model";
 
   private _abbreviation: string;
@@ -34,42 +29,35 @@ export class BaseModel extends Config {
   private _id: string; // model id
   // private _idx: number; // generative
   private _label: string; // model label for view
-  private _logger: Logger<ILogObj>;
   private _params: { [key: string]: ModelParameter } = {}; // model parameters
   private _paramsVisible: string[] = [];
   private _recordables: any[] = []; // recordables for multimeter
   private _state: UnwrapRef<any>;
   // private _modelDBStore;
 
-  constructor(
-    model: ModelProps = {},
-    name: string = "Model",
-    simulator: string = ""
-  ) {
-    super(name, simulator);
-
-    this._doc = model;
-    this._id = model.id || uuidv4();
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this._id}] model`,
+  constructor(modelProps: IModelProps = {}, simulator?: string) {
+    super({
+      config: { simulator },
+      logger: { settings: { minLevel: 3 } },
     });
+
+    this._doc = modelProps;
+    this._id = modelProps.id || uuidv4();
 
     // this._modelDBStore = useModelDBStore();
     // this._idx = this._modelDBStore.models.length;
 
-    this._elementType = model.elementType || "neuron";
+    this._elementType = modelProps.elementType || "neuron";
 
-    this._label = model.label || "";
-    this._abbreviation = model.abbreviation || "";
-    this._favorite = model.favorite || false;
+    this._label = modelProps.label || "";
+    this._abbreviation = modelProps.abbreviation || "";
+    this._favorite = modelProps.favorite || false;
 
     this._state = reactive({
       selected: false,
     });
 
-    this.update(model);
+    this.update(modelProps);
   }
 
   get abbreviation(): string {
@@ -154,10 +142,6 @@ export class BaseModel extends Config {
     this._label = value;
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
   get name(): string {
     return this._name;
   }
@@ -195,8 +179,8 @@ export class BaseModel extends Config {
    * Add a parameter to the model specifications.
    * @param param parameter object
    */
-  addParameter(param: ModelParameterProps): void {
-    this._params[param.id] = new ModelParameter(this, param);
+  addParameter(paramProps: IModelParamProps): void {
+    this._params[paramProps.id] = new ModelParameter(this, paramProps);
   }
 
   /**
@@ -244,7 +228,7 @@ export class BaseModel extends Config {
    * @param value parameter value
    */
   newParameter(paramId: string, value: any): void {
-    this._logger.trace("new parameter:", paramId);
+    this.logger.trace("new parameter:", paramId);
     const param: any = {
       id: paramId,
       label: paramId,
@@ -281,16 +265,16 @@ export class BaseModel extends Config {
    * Save the model object to the database.
    */
   async save(): Promise<any> {
-    this._logger.trace("save");
+    this.logger.trace("save");
     // return this._modelDBStore.saveModel(this._id);
   }
 
   /**
    * Serialize for JSON.
-   * @return model object
+   * @return model props
    */
-  toJSON(): ModelProps {
-    const model: any = {
+  toJSON(): IModelProps {
+    const modelProps: IModelProps = {
       abbreviation: this._abbreviation,
       elementType: this._elementType,
       id: this._id,
@@ -302,17 +286,17 @@ export class BaseModel extends Config {
     };
 
     if (this._favorite) {
-      model.favorite = true;
+      modelProps.favorite = true;
     }
 
     // Add the recordables if provided.
     if (this._recordables.length > 0) {
-      model.recordables = this._recordables.map(
+      modelProps.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );
     }
 
-    return model;
+    return modelProps;
   }
 
   /**
@@ -320,7 +304,7 @@ export class BaseModel extends Config {
    * @param model model object
    */
   update(model: any): void {
-    this._logger.trace("update");
+    this.logger.trace("update:", model.id);
 
     // Update the model ID.
     this._id = model.id;
@@ -340,8 +324,8 @@ export class BaseModel extends Config {
    * Update the model parameters.
    * @param model model object
    */
-  updateParameters(params: ModelParameterProps[]): void {
-    // this._logger.trace("update parameters");
+  updateParameters(params: IModelParamProps[]): void {
+    // this.logger.trace("update parameters");
     this._params = {};
     params.forEach((param) => {
       this.addParameter(param);
@@ -353,8 +337,8 @@ export class BaseModel extends Config {
    * @param model model object
    */
   updateRecordables(model: any): void {
-    this._recordables = this.config.recordables?.filter((recordable: any) =>
-      model.recordables.includes(recordable.id)
+    this._recordables = this.config?.localStorage.recordables?.filter(
+      (recordable: any) => model.recordables.includes(recordable.id)
     );
   }
 }

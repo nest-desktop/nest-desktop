@@ -108,11 +108,11 @@ const items = [
   .menu {
     opacity: 0;
   }
-}
 
-.param:hover {
-  .menu {
-    opacity: 1;
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
   }
 }
 </style>

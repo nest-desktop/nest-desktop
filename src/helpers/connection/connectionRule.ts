@@ -1,6 +1,6 @@
 // connectionRule.ts
 
-import { Connection } from "@/types/connectionTypes";
+import { TConnection } from "@/types/connectionTypes";
 
 enum Rule {
   AllToAll = "all_to_all",
@@ -13,16 +13,16 @@ enum Rule {
 }
 
 export class ConnectionRule {
-  private _connection: Connection; // parent
+  private _connection: TConnection; // parent
   private _value: string;
 
-  constructor(connection: Connection, rule?: string) {
+  constructor(connection: TConnection, rule?: string) {
     this._connection = connection;
     this._value = rule || "all_to_all";
   }
 
-  get connection(): Connection {
-    return this._connection as Connection;
+  get connection(): TConnection {
+    return this._connection as TConnection;
   }
 
   get value(): string {
@@ -31,7 +31,7 @@ export class ConnectionRule {
 
   set value(value: string) {
     this._value = value;
-    this.connection.initParameters();
+    this.connection.addParameters();
     this.connection.changes();
   }
 

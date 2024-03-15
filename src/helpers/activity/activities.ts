@@ -1,32 +1,29 @@
 // activities.ts
 
-import { ILogObj, Logger } from "tslog";
 import { UnwrapRef, reactive } from "vue";
-import { sha1 } from "object-hash";
 
-import { Activity } from "@/helpers/activity/activity";
-import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { Node } from "@/types/nodeTypes";
-import { Project } from "@/types/projectTypes";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { Activity, IActivityProps, IEventProps } from "./activity";
+import { AnalogSignalActivity } from "./analogSignalActivity";
+import { BaseObj } from "../common/base";
+import { SpikeActivity } from "../activity/spikeActivity";
+import { TNode } from "@/types/nodeTypes";
+import { TProject } from "@/types/projectTypes";
 
-interface ActivitiesState {
+interface IActivitiesState {
   activityStatsPanelId: number;
   hasSomeAnalogRecorders: boolean;
   hasSomeEvents: boolean;
   hasSomeSpatialActivities: boolean;
   hasSomeSpikeRecorders: boolean;
-  hash: string;
 }
 
-export class Activities {
-  private _logger: Logger<ILogObj>;
-  private _state: UnwrapRef<ActivitiesState>;
+export class Activities extends BaseObj {
+  private _state: UnwrapRef<IActivitiesState>;
+  public _project: TProject;
 
-  public _project: Project;
+  constructor(project: TProject) {
+    super({ logger: { settings: { minLevel: 3 } } });
 
-  constructor(project: Project) {
     this._project = project;
     this._state = reactive({
       activityStatsPanelId: 0,
@@ -34,12 +31,6 @@ export class Activities {
       hasSomeEvents: false,
       hasSomeSpatialActivities: false,
       hasSomeSpikeRecorders: false,
-      hash: "",
-    });
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this._project.shortId}] activities`,
     });
 
     this.checkRecorders();
@@ -52,7 +43,7 @@ export class Activities {
     // @ts-ignore
     const activities: Activity[] = this._project.network
       ? this.project.network.nodes.recorders.map(
-          (recorder: Node) => recorder.activity
+          (recorder: TNode) => recorder.activity
         )
       : ([] as Activity[]);
 
@@ -72,7 +63,7 @@ export class Activities {
   get analogSignals(): AnalogSignalActivity[] {
     const activities: AnalogSignalActivity[] = this._project.network
       ? this.project.network.nodes.recordersAnalog.map(
-          (recorder: Node) => recorder.activity as AnalogSignalActivity
+          (recorder: TNode) => recorder.activity as AnalogSignalActivity
         )
       : [];
     activities.forEach((activity: Activity, idx: number) => {
@@ -99,7 +90,7 @@ export class Activities {
     );
   }
 
-  get project(): Project {
+  get project(): TProject {
     return this._project;
   }
 
@@ -109,7 +100,7 @@ export class Activities {
   get spikes(): SpikeActivity[] {
     const activities: SpikeActivity[] = this._project.network
       ? this.project.network.nodes.recordersSpike.map(
-          (recorder: Node) => recorder.activity as SpikeActivity
+          (recorder: TNode) => recorder.activity as SpikeActivity
         )
       : [];
     activities.forEach((activity: Activity, idx: number) => {
@@ -118,7 +109,7 @@ export class Activities {
     return activities;
   }
 
-  get state(): UnwrapRef<ActivitiesState> {
+  get state(): UnwrapRef<IActivitiesState> {
     return this._state;
   }
 
@@ -134,7 +125,7 @@ export class Activities {
     // Check if project has activities.
     this.checkActivities();
     this.updateHash();
-    this._logger.trace("changes");
+    this.logger.trace("changes");
 
     // Update activity graph.
     // const activityGraphStore = useActivityGraphStore()
@@ -143,25 +134,10 @@ export class Activities {
   }
 
   /**
-   * Check whether the project has some recorders of each type.
-   */
-  checkRecorders(): void {
-    this._logger.trace("check recorders");
-
-    // Check if the project contains some analog signal recorder.
-    this._state.hasSomeAnalogRecorders =
-      this.project.network.nodes.recordersAnalog.length > 0;
-
-    // Check if the project contains some spike recorder.
-    this._state.hasSomeSpikeRecorders =
-      this.project.network.nodes.recordersSpike.length > 0;
-  }
-
-  /**
    * Check whether the project has some events in activities.
    */
   checkActivities(): void {
-    this._logger.trace("check");
+    this.logger.trace("check");
     const activities: Activity[] = this._project.activities.all;
 
     // Check if it has some activities.
@@ -180,20 +156,38 @@ export class Activities {
   }
 
   /**
+   * Check whether the project has some recorders of each type.
+   */
+  checkRecorders(): void {
+    this.logger.trace("check recorders");
+
+    // Check if the project contains some analog signal recorder.
+    this._state.hasSomeAnalogRecorders =
+      this.project.network.nodes.recordersAnalog.length > 0;
+
+    // Check if the project contains some spike recorder.
+    this._state.hasSomeSpikeRecorders =
+      this.project.network.nodes.recordersSpike.length > 0;
+  }
+
+  // Initialize activities.
+  init(): void {
+    this.checkRecorders();
+  }
+
+  /**
    * Reset activities.
    */
   reset(): void {
-    this._logger.trace("reset");
+    this.logger.trace("reset");
     // Reset activities.
-    this.all.forEach((activity: Activity) => {
-      activity.reset();
-    });
+    this.all.forEach((activity: Activity) => activity.reset());
 
     // Trigger activity changes.
     // this.changes();
   }
 
-  toJSON(): any {
+  toJSON(): IActivityProps[] {
     return this.all.map((activity: Activity) => activity.toJSON());
   }
 
@@ -201,12 +195,12 @@ export class Activities {
    * Update activities in recorder nodes after simulation.
    */
   update(data: any): void {
-    this._logger.trace("update");
-    let activities: any[] = [];
+    this.logger.trace("update");
+    let activities: IActivityProps[] = [];
 
     if (data.events) {
-      activities = data.events.map((events: any) => ({
-        events,
+      activities = data.events.map((eventProps: IEventProps) => ({
+        events: eventProps,
       }));
     } else if (data.activities) {
       activities = data.activities;
@@ -214,27 +208,27 @@ export class Activities {
       activities = data;
     }
 
-    activities.forEach((activity: any) => {
-      if (!activity.nodeIds) {
-        if (activity.events && activity.events.ports) {
-          activity.nodeIds = activity.events.ports.filter(
+    activities.forEach((activityProps: IActivityProps) => {
+      if (!activityProps.nodeIds) {
+        if (activityProps.events && activityProps.events.ports) {
+          activityProps.nodeIds = activityProps.events.ports.filter(
             (value: number, index: number, self: number[]) =>
               self.indexOf(value) === index
           );
         } else {
-          activity.nodeIds = activity.events.senders.filter(
+          activityProps.nodeIds = activityProps.events?.senders.filter(
             (value: number, index: number, self: number[]) =>
               self.indexOf(value) === index
           );
         }
       }
-      activity.nodeIds.sort((a: number, b: number) => a - b);
+      activityProps.nodeIds?.sort((a: number, b: number) => a - b);
     });
 
     // Get node positions.
     if (data.positions) {
-      activities.forEach((activity: any) => {
-        activity.nodePositions = activity.nodeIds.map(
+      activities.forEach((activityProps: IActivityProps) => {
+        activityProps.nodePositions = activityProps.nodeIds?.map(
           (nodeId: number) => data.positions[nodeId]
         );
       });
@@ -250,14 +244,13 @@ export class Activities {
   }
 
   /**
-   * Update hash for activity graph.
+   * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1({
+    this._updateHash({
       activities: this._project.activities.all.map(
-        (activity: Activity) => activity.state.hash
+        (activity: Activity) => activity.hash
       ),
-    }).slice(0, 6);
-    this._logger.settings.name = `[${this._project.shortId}] activities #${this._state.hash}`;
+    });
   }
 }

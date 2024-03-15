@@ -1,15 +1,14 @@
 // analogSignalPanelModel.ts
 
-import { NodeRecord } from "@/helpers/node/nodeRecord";
-
 import {
   ActivityChartPanelModel,
-  ActivityChartPanelModelProps,
+  IActivityChartPanelModelProps,
 } from "../activityChartPanelModel";
 import { ActivityChartPanel } from "../activityChartPanel";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
 
-export interface AnalogSignalPanelModelProps
-  extends ActivityChartPanelModelProps {
+export interface IAnalogSignalPanelModelProps
+  extends IActivityChartPanelModelProps {
   records?: any;
   params?: any[];
 }
@@ -17,14 +16,14 @@ export interface AnalogSignalPanelModelProps
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: AnalogSignalPanelModelProps = {}
+    modelProps: IAnalogSignalPanelModelProps = {}
   ) {
     super(panel);
     this.activityType = "analog";
     this.id = "analogSignalPanelModel";
     this.label = "analog signals";
 
-    this.init(model);
+    this.init(modelProps);
   }
 
   /**
@@ -33,11 +32,12 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
    * @remarks
    * It sets activities and gets records from recorders.
    */
-  override init(model: AnalogSignalPanelModelProps = {}): void {
-    this.initActivities();
+  override init(modelProps: IAnalogSignalPanelModelProps = {}): void {
+    this.updateActivities();
     this.initAnalogRecords();
-    if (model.records) {
-      this.initAnalogRecordsVisible(model.records);
+
+    if (modelProps.records) {
+      this.initAnalogRecordsVisible(modelProps.records);
     }
   }
 
@@ -67,13 +67,6 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
       title = "Multiple records";
     }
     return title;
-  }
-
-  /**
-   * Initialize activity for the panel model.
-   */
-  override initActivities(): void {
-    this.activities = this.panel.graph.project.activities.analogSignals;
   }
 
   /**

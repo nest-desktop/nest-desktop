@@ -1,28 +1,36 @@
 // network.ts
 
 import { BaseNetwork } from "@/helpers/network/network";
-import { Node } from "@/types/nodeTypes";
 
-import { NESTConnection, NESTConnectionProps } from "../connection/connection";
+import { INESTConnectionProps, NESTConnection } from "../connection/connection";
 import { NESTConnections } from "../connection/connections";
-import { NESTCopyModel, NESTCopyModelProps } from "../model/copyModel";
+import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
 import { NESTCopyModels } from "../model/copyModels";
-import { NESTNode, NESTNodeProps } from "../node/node";
+import { INESTNodeProps, NESTNode } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
 
-export interface NESTNetworkProps {
-  models?: NESTCopyModelProps[];
-  nodes?: NESTNodeProps[];
-  connections?: NESTConnectionProps[];
+export interface INESTNetworkProps {
+  models?: INESTCopyModelProps[];
+  nodes?: INESTNodeProps[];
+  connections?: INESTConnectionProps[];
 }
 
 export class NESTNetwork extends BaseNetwork {
   private _modelsCopied: NESTCopyModels; // for nest.CopyModel
 
-  constructor(project: NESTProject, network: NESTNetworkProps = {}) {
-    super(project, network);
-    this._modelsCopied = new NESTCopyModels(this, network.models);
+  constructor(project: NESTProject, networkProps: INESTNetworkProps = {}) {
+    super(project, networkProps);
+
+    this._modelsCopied = new NESTCopyModels(this, networkProps.models);
+  }
+
+  override get Connections() {
+    return NESTConnections;
+  }
+
+  override get Nodes() {
+    return NESTNodes;
   }
 
   override get connections(): NESTConnections {
@@ -60,9 +68,6 @@ export class NESTNetwork extends BaseNetwork {
     this.nodes.clean();
     this.connections.clean();
     this.modelsCopied.clean();
-
-    this.nodes.updateRecords();
-    this.updateStates();
   }
 
   /**
@@ -73,8 +78,6 @@ export class NESTNetwork extends BaseNetwork {
     this.connections.clear();
     this.nodes.clear();
     this.modelsCopied.clear();
-
-    this.updateStates();
   }
 
   /**
@@ -90,7 +93,7 @@ export class NESTNetwork extends BaseNetwork {
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
    */
-  override connectNodes(source: NESTNode, target: Node): void {
+  override connectNodes(source: NESTNode, target: NESTNode): void {
     this.logger.trace("connect nodes");
 
     const connection: NESTConnection = this.connections.add({
@@ -107,7 +110,7 @@ export class NESTNetwork extends BaseNetwork {
 
     // Initialize activity graph.
     if (connection.view.connectRecorder()) {
-      connection.recorder.initActivity();
+      connection.recorder.createActivity();
       // this._project.initActivityGraph();
     }
   }
@@ -132,26 +135,10 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
-   * New nodes component.
-   */
-  override newNodes(data?: NESTNodeProps[] | undefined): NESTNodes {
-    return new NESTNodes(this, data);
-  }
-
-  /**
-   * New components component.
-   */
-  override newConnections(
-    data: NESTConnectionProps[] | undefined
-  ): NESTConnections {
-    return new NESTConnections(this, data);
-  }
-
-  /**
    * Serialize for JSON.
    * @return network object
    */
-  override toJSON(): NESTNetworkProps {
+  override toJSON(): INESTNetworkProps {
     return {
       connections: this.connections.toJSON(),
       models: this.modelsCopied.toJSON(),
@@ -162,15 +149,17 @@ export class NESTNetwork extends BaseNetwork {
   /**
    * Update network component.
    *
-   * @param network - network object
+   * @param network network props
    */
-  override update(network: NESTNetworkProps): void {
+  override update(networkProps: INESTNetworkProps): void {
     this.logger.trace("update");
-    this.modelsCopied.update(network.models);
-    this.nodes.update(network.nodes);
-    this.connections.update(network.connections);
 
-    // Update states.
-    this.updateStates();
+    this.clear();
+
+    this.modelsCopied.update(networkProps.models);
+    this.nodes.update(networkProps.nodes);
+    this.connections.update(networkProps.connections);
+
+    this.nodes.updateRecords();
   }
 }

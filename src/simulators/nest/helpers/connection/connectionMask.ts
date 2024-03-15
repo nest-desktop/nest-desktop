@@ -1,10 +1,10 @@
 // connectionMask.ts
 
-import { Config } from "@/helpers/config";
+import { BaseObj } from "@/helpers/common/base";
 
 import { NESTConnection } from "./connection";
 
-enum MaskType {
+enum EMaskType {
   circular = "circular",
   doughnut = "doughnut",
   elliptical = "elliptical",
@@ -12,19 +12,25 @@ enum MaskType {
   rectangular = "rectangular",
 }
 
-export interface NESTConnectionMaskProps {
-  masktype?: MaskType;
+export interface INESTConnectionMaskProps {
+  masktype?: EMaskType;
   specs: any;
 }
 
-export class NESTConnectionMask extends Config {
+export class NESTConnectionMask extends BaseObj {
   private _connection: NESTConnection;
   private _graph: any;
-  private _masktype: MaskType;
+  private _masktype: EMaskType;
   private _specs: any;
 
-  constructor(connection: NESTConnection, mask?: NESTConnectionMaskProps) {
-    super("NESTConnectionMask", "nest");
+  constructor(
+    connection: NESTConnection,
+    maskProps?: INESTConnectionMaskProps
+  ) {
+    super({
+      config: { name: "NESTConnectionMask", simulator: "nest" },
+      logger: { settings: { minLevel: 3 } },
+    });
     this._connection = connection;
     this._graph = {
       data: [],
@@ -34,8 +40,8 @@ export class NESTConnectionMask extends Config {
       },
       style: { position: "relative", width: "100%", height: "100%" },
     };
-    this._masktype = mask?.masktype || MaskType.none;
-    this._specs = mask?.specs || {};
+    this._masktype = maskProps?.masktype || EMaskType.none;
+    this._specs = maskProps?.specs || {};
   }
 
   get connection(): NESTConnection {
@@ -51,10 +57,10 @@ export class NESTConnectionMask extends Config {
   }
 
   get list(): string[] {
-    return Object.keys(this.config);
+    return Object.keys(this.config?.localStorage);
   }
 
-  get masktype(): MaskType {
+  get masktype(): EMaskType {
     return this._masktype;
   }
 
@@ -62,6 +68,9 @@ export class NESTConnectionMask extends Config {
     return this._specs;
   }
 
+  /**
+   * Draw mask.
+   */
   draw(): void {
     this._graph.layout.shapes = [];
     if (this._masktype == undefined) {
@@ -83,6 +92,9 @@ export class NESTConnectionMask extends Config {
     }
   }
 
+  /**
+   * Draw rectangle.
+   */
   drawRect(): void {
     this._graph.layout.shapes = [
       {
@@ -102,6 +114,9 @@ export class NESTConnectionMask extends Config {
     ];
   }
 
+  /**
+   * Draw circle.
+   */
   drawCircle(): void {
     this._graph.layout.shapes = [
       {
@@ -121,6 +136,9 @@ export class NESTConnectionMask extends Config {
     ];
   }
 
+  /**
+   * Draw doughnut.
+   */
   drawDoughnut(): void {
     this._graph.layout.shapes = [
       {
@@ -178,6 +196,9 @@ export class NESTConnectionMask extends Config {
     ];
   }
 
+  /**
+   * Draw ellipsis.
+   */
   drawEllipsis(): void {
     this._graph.layout.shapes = [
       {
@@ -197,13 +218,17 @@ export class NESTConnectionMask extends Config {
     ];
   }
 
-  select(value: MaskType): void {
+  /**
+   * Select a mask type.
+   * @param value mask type
+   */
+  select(value: EMaskType): void {
     if (value === "none") {
       this.unmask();
     } else {
       this._masktype = value;
       this._specs = {};
-      this.config.data[value].specs.forEach(
+      this.config?.localStorage.data[value].specs.forEach(
         (spec: { id: string; value: any }) => {
           this._specs[spec.id] = spec.value;
         }
@@ -212,15 +237,22 @@ export class NESTConnectionMask extends Config {
     this.draw();
   }
 
-  toJSON(): NESTConnectionMaskProps {
-    const mask: any = {
+  /**
+   * Serialize for JSON.
+   * @return connection mask props
+   */
+  toJSON(): INESTConnectionMaskProps {
+    const maskProps: any = {
       masktype: this._masktype,
       specs: this._specs,
     };
-    return mask;
+    return maskProps;
   }
 
+  /**
+   * Unmask.
+   */
   unmask(): void {
-    this._masktype = MaskType.none;
+    this._masktype = EMaskType.none;
   }
 }

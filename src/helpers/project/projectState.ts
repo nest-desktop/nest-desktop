@@ -1,41 +1,38 @@
 // projectState.ts
 
 import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
 
-import { Project } from "@/types/projectTypes";
+import { TProject } from "@/types/projectTypes";
 
-type actionType = {
+type TAction = {
   onClick: object;
   text: string;
 };
 
-type snackbarType = {
-  actions: actionType[];
+type TSnackbar = {
+  actions: TAction[];
   important: boolean;
   show: boolean;
   text: string;
 };
 
-export interface ProjectStateState {
+export interface IProjectState {
   changes: boolean;
   editMode: boolean;
-  hash: string;
 }
 
 export class ProjectState {
-  private _state: UnwrapRef<ProjectStateState>;
-  private _project: Project;
+  private _state: UnwrapRef<IProjectState>;
+  private _project: TProject;
   private _selected: boolean = false;
-  private _snackbar: snackbarType;
+  private _snackbar: TSnackbar;
 
-  constructor(project: Project) {
+  constructor(project: TProject) {
     this._project = project;
 
     this._state = reactive({
       changes: false,
       editMode: false,
-      hash: "",
     });
 
     this._snackbar = {
@@ -54,10 +51,6 @@ export class ProjectState {
     return this._state.editMode;
   }
 
-  get hash(): string {
-    return this._state.hash;
-  }
-
   get selected(): boolean {
     return this._selected;
   }
@@ -66,11 +59,11 @@ export class ProjectState {
     this._selected = value;
   }
 
-  get snackbar(): snackbarType {
+  get snackbar(): TSnackbar {
     return this._snackbar;
   }
 
-  get state(): UnwrapRef<ProjectStateState> {
+  get state(): UnwrapRef<IProjectState> {
     return this._state;
   }
 
@@ -80,7 +73,7 @@ export class ProjectState {
   checkChanges(): void {
     this._state.changes =
       // this._project.id !== this._project.doc.id ||
-      this._state.hash !== this._project.doc.hash;
+      this._project.hash !== this._project.doc.hash;
   }
 
   /**
@@ -107,26 +100,12 @@ export class ProjectState {
    */
   showSnackbar(
     text: string,
-    actions: actionType[] = [],
+    actions: TAction[] = [],
     important: boolean = false
   ): void {
     this._snackbar.text = text;
     this._snackbar.actions = actions;
     this._snackbar.important = important;
     this._snackbar.show = true;
-  }
-
-  /**
-   * Calculate hash of this component.
-   */
-  updateHash(): void {
-    this._state.hash = sha1({
-      description: this._project.description,
-      id: this._project.id,
-      name: this._project.name,
-      network: this._project.network.toJSON(),
-      simulation: this._project.simulation.toJSON(),
-    }).slice(0, 6);
-    this._project.logger.settings.name = `[${this._project.shortId}] project #${this._state.hash}`;
   }
 }

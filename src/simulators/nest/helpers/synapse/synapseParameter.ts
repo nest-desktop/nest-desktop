@@ -1,16 +1,16 @@
 // synapseParameters.ts
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { Parameter, ParameterProps } from "@/helpers/common/parameter";
+import { Parameter, IParamProps } from "@/helpers/common/parameter";
 import { NESTSynapse } from "./synapse";
 
-export interface SynapseParameterProps extends ParameterProps {}
+export interface ISynapseParamProps extends IParamProps {}
 
 export class NESTSynapseParameter extends Parameter {
   private _synapse: NESTSynapse;
 
-  constructor(synapse: NESTSynapse, param: SynapseParameterProps) {
-    super(param);
+  constructor(synapse: NESTSynapse, paramProps: ISynapseParamProps) {
+    super(paramProps);
     this._synapse = synapse;
   }
 
@@ -26,7 +26,7 @@ export class NESTSynapseParameter extends Parameter {
   }
 
   get types(): any[] {
-    const types: any[] = this.config.types;
+    const types: any[] = this.config?.localStorage.types;
     return !this.synapse.isSpatial
       ? types.filter((type: any) => !type.id.startsWith("spatial"))
       : types;
@@ -66,29 +66,29 @@ export class NESTSynapseParameter extends Parameter {
 
   /**
    * Serialize for JSON.
-   * @return synapse parameter object
+   * @return synapse parameter props
    */
-  override toJSON(): SynapseParameterProps {
-    const param: any = {
+  override toJSON(): ISynapseParamProps {
+    const paramProps: ISynapseParamProps = {
       id: this.id,
       value: this.value,
     };
 
     // Add the value factors if existed.
     if (this.factors.length > 0) {
-      param.factors = this.factors;
+      paramProps.factors = this.factors;
     }
 
     // Add the rules for validation if existed.
     if (this.rules.length > 0) {
-      param.rules = this.rules;
+      paramProps.rules = this.rules;
     }
 
     // Add param type if not constant.
     if (!this.isConstant) {
-      param.type = this.typeToJSON();
+      paramProps.type = this.typeToJSON();
     }
 
-    return param;
+    return paramProps;
   }
 }

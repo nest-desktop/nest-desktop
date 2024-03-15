@@ -1,12 +1,14 @@
 // parameter.ts
 
 import { reactive, UnwrapRef } from "vue";
+import { ILogObj, ISettingsParam } from "tslog";
 
-import { Config } from "../config";
+import { BaseObj } from "./base";
+import { IConfigProps } from "./config";
 
-type ParamValueTypes = boolean | number | string | (number | string)[];
+type TParamValue = boolean | number | string | (number | string)[];
 
-export interface ParameterProps {
+export interface IParamProps {
   disabled?: boolean;
   factors?: any[];
   format?: string;
@@ -23,12 +25,12 @@ export interface ParameterProps {
   ticks?: (number | string)[];
   type?: any;
   unit?: string;
-  value?: ParamValueTypes;
+  value?: TParamValue;
   component?: string;
   visible?: boolean;
 }
 
-export class Parameter extends Config {
+export class Parameter extends BaseObj {
   private _factors: string[] = []; // not functional yet
   private _format: string = "";
   private _id: string = "";
@@ -43,12 +45,20 @@ export class Parameter extends Config {
   private _ticks: (number | string)[] = [];
   private _type: { [key: string]: any } = { id: "constant" };
   private _unit: string = "";
-  private _value: ParamValueTypes = 0; // constant value;
+  private _value: TParamValue = 0; // constant value;
   private _component: string = "valueInput";
 
-  constructor(param: ParameterProps) {
-    super("Parameter");
-    this.update(param);
+  constructor(
+    paramProps: IParamProps,
+    loggerProps?: ISettingsParam<ILogObj>,
+    configProps?: IConfigProps
+  ) {
+    super({
+      config: { name: "Parameter", ...configProps },
+      logger: { settings: { minLevel: 3, ...loggerProps } },
+    });
+
+    this.update(paramProps);
   }
 
   get code(): string {
@@ -92,7 +102,7 @@ export class Parameter extends Config {
 
   get labelInput(): string {
     let label: string = "";
-    label += this.config.rawLabel
+    label += this.config?.localStorage.rawLabel
       ? this.id
       : this.options["label"] || this.options.id;
 
@@ -105,7 +115,9 @@ export class Parameter extends Config {
   get labelRow(): string {
     let label: string = "";
     label += `<span>${
-      this.config.rawLabel ? this.id : this.options["label"] || this.options.id
+      this.config?.localStorage.rawLabel
+        ? this.id
+        : this.options["label"] || this.options.id
     }</span>`;
 
     if (this.options.unit) {
@@ -143,12 +155,22 @@ export class Parameter extends Config {
   } {
     const param = this.modelParam;
 
-    const options = {
+    const options: {
+      component: string;
+      defaultValue: TParamValue;
+      id: string;
+      label: string;
+      max?: number;
+      min?: number;
+      step?: number;
+      tickLabels?: (number | string)[];
+      unit: string;
+    } = {
+      component: param.component,
+      defaultValue: param.value,
       id: param.id,
       label: param.label,
       unit: param.unit,
-      defaultValue: param.value,
-      component: param.component,
     };
 
     if (["rangeSlider", "valueSlider"].includes(param.component)) {
@@ -209,7 +231,9 @@ export class Parameter extends Config {
   }
 
   set typeId(value: string) {
-    this._type = this.config.types.find((type: any) => type.id === value);
+    this._type = this.config?.localStorage.types.find(
+      (type: any) => type.id === value
+    );
   }
 
   get unit(): string {
@@ -220,11 +244,11 @@ export class Parameter extends Config {
     this._unit = value;
   }
 
-  get value(): ParamValueTypes {
+  get value(): TParamValue {
     return this._value;
   }
 
-  set value(value: ParamValueTypes) {
+  set value(value: TParamValue) {
     this._value = value;
   }
 
@@ -257,9 +281,9 @@ export class Parameter extends Config {
   }
 
   /**
-   * Copy paramter component
+   * Copy parameter component
    */
-  override copy(): any {
+  copy(): any {
     return new Parameter(this.toJSON());
   }
 
@@ -371,65 +395,68 @@ export class Parameter extends Config {
 
   /**
    * Serialize for JSON.
-   * @return parameter object
+   * @return parameter props
    */
-  toJSON(): ParameterProps {
-    const param: any = {
+  toJSON(): IParamProps {
+    const paramProps: IParamProps = {
       id: this._id,
       value: this._value,
     };
 
     // Add value factors if existed.
     if (this._factors.length > 0) {
-      param.factors = this._factors;
+      paramProps.factors = this._factors;
     }
 
     // Add rules for validation if existed.
     if (this._rules.length > 0) {
-      param.rules = this._rules;
+      paramProps.rules = this._rules;
     }
 
     // Add param type if not constant.
     if (!this.isConstant) {
-      param.type = this.typeToJSON();
+      paramProps.type = this.typeToJSON();
     }
 
-    return param;
+    return paramProps;
   }
 
   /**
    * Update parameter
-   * @param param parameter props
+   * @param paramProps parameter props
    */
-  update(param: ParameterProps): void {
-    this._id = param.id;
-    this._value = param.value || 0;
+  update(paramProps: IParamProps): void {
+    this._id = paramProps.id;
+    this._value = paramProps.value || 0;
 
     this._state = reactive({
-      visible: param.visible != undefined ? param.visible : false,
-      disabled: param.disabled != undefined ? param.disabled : true,
+      visible: paramProps.visible != undefined ? paramProps.visible : false,
+      disabled: paramProps.disabled != undefined ? paramProps.disabled : true,
     });
 
     // optional param specifications
-    this._rules = param.rules || [];
-    this._factors = param.factors || [];
+    this._rules = paramProps.rules || [];
+    this._factors = paramProps.factors || [];
 
-    if (param.type) {
-      const type = this.config.types.find((t: any) => t.id === param.type.id);
+    if (paramProps.type) {
+      const type = this.config?.localStorage.types.find(
+        (t: any) => t.id === paramProps.type.id
+      );
       if (type != null) {
-        this._type = { ...type, ...param.type };
+        this._type = { ...type, ...paramProps.type };
       }
     }
 
-    this._format = param.format || "";
-    this._items = param.items || [];
-    this._label = param.label || param.id;
-    this._max = param.max || 1;
-    this._min = param.min || 0;
-    this._readonly = param.readonly || false;
-    this._step = param.step || 1;
-    this._ticks = param.ticks || [];
-    this._unit = param.unit || "";
-    this._component = param.component || param.input || "valueInput";
+    this._format = paramProps.format || "";
+    this._items = paramProps.items || [];
+    this._label = paramProps.label || paramProps.id;
+    this._readonly = paramProps.readonly || false;
+
+    this._max = paramProps.max || 1;
+    this._min = paramProps.min || 0;
+    this._step = paramProps.step || 1;
+    this._ticks = paramProps.ticks || [];
+    this._unit = paramProps.unit || "";
+    this._component = paramProps.component || paramProps.input || "valueInput";
   }
 }

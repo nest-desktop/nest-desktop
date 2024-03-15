@@ -4,6 +4,7 @@ import { computed, watch } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
+// import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
 import { useNESTSessionStore } from "../stores/sessionStore";

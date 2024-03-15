@@ -52,13 +52,13 @@
 import { computed } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { Synapse, SynapsePropTypes } from "@/types/synapseTypes";
+import { TSynapse, TSynapseProps } from "@/types/synapseTypes";
 
 const props = defineProps({
-  synapse: SynapsePropTypes,
+  synapse: TSynapseProps,
 });
 
-const synapse = computed(() => props.synapse as Synapse);
+const synapse = computed(() => props.synapse as TSynapse);
 
 const update = (value: number) => {
   synapse.value.weight = value;
@@ -102,11 +102,11 @@ const items = [
   .menu {
     opacity: 0;
   }
-}
 
-.syn-spec:hover {
-  .menu {
-    opacity: 1;
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
   }
 }
 </style>

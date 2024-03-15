@@ -1,58 +1,48 @@
 // simulation.ts
 
 import { reactive, UnwrapRef } from "vue";
-import { ILogObj, Logger } from "tslog";
-import { sha1 } from "object-hash";
 
-import {
-  BaseSimulationCode,
-  SimulationCodeProps,
-} from "@/helpers/simulation/simulationCode";
-import { Config } from "@/helpers/config";
-import { Project } from "@/types/projectTypes";
-import { SimulationCode } from "@/types/simulationCodeTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
-import { openToast } from "@/helpers/common/toast";
+import { BaseObj } from "../common/base";
+import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
+import { TProject } from "@/types/projectTypes";
+import { TSimulationCode } from "@/types/simulationCodeTypes";
+import { openToast } from "../common/toast";
 
-export interface SimulationProps {
-  code?: SimulationCodeProps;
+export interface ISimulationProps {
+  code?: ISimulationCodeProps;
   time?: number;
 }
 
-interface SimulationState {
+interface ISimulationState {
   biologicalTime: number;
-  hash: string;
   running: boolean;
   timeInfo: { [key: string]: number };
 }
 
-export class BaseSimulation extends Config {
-  private _logger: Logger<ILogObj>;
-  private _state: UnwrapRef<SimulationState>;
+export class BaseSimulation extends BaseObj {
+  private _state: UnwrapRef<ISimulationState>;
   private _time: number; // simulation time
 
-  public _code: SimulationCode;
-  public _project: Project; // parent
+  public _code: TSimulationCode;
+  public _project: TProject; // parent
 
-  constructor(project: Project, simulation: SimulationProps = {}) {
-    super("Simulation");
-    this._project = project;
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.project.shortId}] simulation`,
+  constructor(project: TProject, simulationProps: ISimulationProps = {}) {
+    super({
+      config: { name: "Simulation" },
+      logger: { settings: { minLevel: 3 } },
     });
 
+    this._project = project;
+
     // Initialize time.
-    this._time = simulation.time ? simulation.time : 1000;
+    this._time = simulationProps.time ? simulationProps.time : 1000;
 
     // Initialize simulation code.
-    this._code = this.newSimulationCode(simulation.code);
+    this._code = new this.SimulationCode(this, simulationProps.code);
 
     // Initialize simulation state.
     this._state = reactive({
       biologicalTime: 0,
-      hash: "",
       running: false,
       timeInfo: {
         begin: 0,
@@ -63,19 +53,19 @@ export class BaseSimulation extends Config {
     });
   }
 
-  get code(): SimulationCode {
+  get SimulationCode() {
+    return BaseSimulationCode;
+  }
+
+  get code(): TSimulationCode {
     return this._code;
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
-  get project(): Project {
+  get project(): TProject {
     return this._project;
   }
 
-  get state(): UnwrapRef<SimulationState> {
+  get state(): UnwrapRef<ISimulationState> {
     return this._state;
   }
 
@@ -94,10 +84,22 @@ export class BaseSimulation extends Config {
 
   beforeSimulation(): void {}
 
+  /**
+   * Triggers on simulation changes.
+   */
   changes(): void {
     this.updateHash();
-    this._logger.trace("changes");
+    this.logger.trace("changes");
     this.project.changes();
+  }
+
+  /**
+   * Initialize simulation.
+   */
+  init(): void {
+    this.logger.trace("init");
+    this._code.init();
+    this.updateHash();
   }
 
   // /**
@@ -108,22 +110,18 @@ export class BaseSimulation extends Config {
   //  * @remarks It updates simulation codes.
   //  */
   // generateSeed(): void {
-  //   this._logger.trace("generate seed");
+  //   this.logger.trace("generate seed");
   //   if (this._kernel.config.autoRNGSeed) {
   //     this._kernel.rngSeed = Math.round(Math.random() * 1000);
   //     this.changes();
   //   }
   // }
 
-  newSimulationCode(simulationCode?: SimulationCodeProps): SimulationCode {
-    return new BaseSimulationCode(this, simulationCode);
-  }
-
   /**
    * Reset simulation states.
    */
   resetState(): void {
-    this._logger.trace("reset state");
+    this.logger.trace("reset state");
     this._state.biologicalTime = 0;
     this._state.timeInfo = {
       begin: 0,
@@ -140,17 +138,17 @@ export class BaseSimulation extends Config {
    * After the simulation it updates the activities and commits the network.
    */
   async run(): Promise<any> {
-    this._logger.trace("run simulation");
+    this.logger.trace("run simulation");
   }
 
   /**
    * Start simulation.
    *
    * @remarks
-   * It runs the simulation with or without Insite.
+   * It starts the simulation.
    */
   async start(): Promise<any> {
-    this._logger.trace("start");
+    this.logger.trace("start");
     this.resetState();
 
     this.beforeSimulation();
@@ -182,22 +180,24 @@ export class BaseSimulation extends Config {
 
   /**
    * Serialize for JSON.
-   * @return simulation object
+   * @return simulation props
    */
-  toJSON(): SimulationProps {
-    const simulation: SimulationProps = {
+  toJSON(): ISimulationProps {
+    const simulationProps: ISimulationProps = {
       time: this._time,
     };
     if (this.code.state.customBlocks) {
-      simulation.code = this.code.toJSON();
+      simulationProps.code = this.code.toJSON();
     }
-    return simulation;
+    return simulationProps;
   }
 
+  /**
+   * Update hash.
+   */
   updateHash(): void {
-    this._state.hash = sha1({
+    this._updateHash({
       time: this._time,
-    }).slice(0, 6);
-    this._logger.settings.name = `[${this.project.shortId}] simulation #${this._state.hash}`;
+    });
   }
 }

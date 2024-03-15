@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%; height: 100%">
     <v-chip @click="graph.updateHash()" size="small" variant="text">
-      {{ graph?.state.hash }}
+      {{ graph?.hash }}
     </v-chip>
 
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
@@ -11,7 +11,7 @@
         <g class="grid no-print" />
         <g>
           <path
-            :style="{ strokeWidth: graph?.config.strokeWidth }"
+            :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
             fill="none"
@@ -33,13 +33,13 @@
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { Network, NetworkPropTypes } from "@/types/networkTypes";
+import { TNetwork, TNetworkProps } from "@/types/networkTypes";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
-const props = defineProps({ network: NetworkPropTypes });
-const network = computed(() => props.network as Network);
+const props = defineProps({ network: TNetworkProps });
+const network = computed(() => props.network as TNetwork);
 const graph = computed(() => {
   return networkGraphStore.state.graph as BaseNetworkGraph;
 });

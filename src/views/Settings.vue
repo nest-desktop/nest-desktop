@@ -14,11 +14,11 @@
                 <v-radio
                   :key="idx"
                   :value="theme.value"
-                  trueIcon="mdi-checkbox-marked-circle-outline"
+                  true-icon="mdi-checkbox-marked-circle-outline"
                   v-for="(theme, idx) in themes"
                 >
                   <template #label>
-                    <v-icon :icon="theme.icon" class="mr-2"></v-icon>
+                    <v-icon :icon="theme.icon" class="mx-2"></v-icon>
                     {{ capitalize(theme.title) }}
                   </template>
                 </v-radio>
@@ -29,26 +29,43 @@
           <v-card flat subtitle="General">
             <v-card-text>
               <v-switch
-                hint="Developer mode enables new features and functionality within the documentation that are still in development."
-                inset
+                density="compact"
+                false-icon="mdi-close-circle"
+                hint="Developer mode enables features that are still in development."
                 label="Developer mode"
-                falseIcon="mdi-close-circle"
-                trueIcon="mdi-checkbox-marked-circle"
                 persistent-hint
+                true-icon="mdi-checkbox-marked-circle"
                 v-model="appStore.session.state.devMode"
-              />
+              >
+                <template #label="{ label }">
+                  <div class="ma-2">{{ label }}</div>
+                </template>
+              </v-switch>
             </v-card-text>
           </v-card>
 
           <v-card flat subtitle="Simulators">
             <v-card-text>
               <v-select
-                :items="simulatorNames"
+                :items="simulatorItems"
+                chips
                 label="Visible simulators"
-                rounded="0"
                 multiple
+                item-value="id"
                 v-model="appStore.state.simulatorVisible"
-              />
+                variant="outlined"
+              >
+                <template #chip="{ item }">
+                  <v-chip
+                    :prepend-icon="item.value + ':logo'"
+                    color="grey"
+                    label
+                    variant="outlined"
+                  >
+                    {{ item.title }}
+                  </v-chip>
+                </template>
+              </v-select>
             </v-card-text>
           </v-card>
         </v-card>
@@ -66,10 +83,10 @@
 </template>
 
 <script lang="ts" setup>
-import { capitalize, nextTick } from "vue";
+import { capitalize, computed, nextTick } from "vue";
 
 import AppFooter from "@/components/app/AppFooter.vue";
-import { simulatorNames } from "@/simulators";
+import { simulators } from "@/simulators";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -77,6 +94,8 @@ const appStore = useAppStore();
 const updateTheme = () => {
   nextTick(() => appStore.updateTheme());
 };
+
+const simulatorItems = computed(() => Object.values(simulators));
 
 const themes = [
   { icon: "mdi-white-balance-sunny", title: "light", value: "light" },

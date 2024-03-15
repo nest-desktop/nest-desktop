@@ -2,32 +2,33 @@
 
 import { getRuntimeConfig } from "@/utils/fetch";
 
+export interface IConfigProps {
+  name?: string;
+  simulator?: string;
+}
+
 export class Config {
-  private _configName: string;
-  private _simulator: string;
+  private _name?: string;
+  private _simulator?: string;
 
-  constructor(name: string, simulator: string = "") {
-    this._configName = name;
-    this._simulator = simulator;
+  constructor(configProps: IConfigProps) {
+    this._name = configProps.name;
+    this._simulator = configProps.simulator;
 
-    if (!this.isConfigValid) {
-      this.upgradeConfig();
+    if (this._name != undefined && !this.isValid) {
+      this.upgrade();
     }
   }
 
-  get config(): any {
-    return this.localStorage;
-  }
-
   get configItemName(): string {
-    return "nest-desktop-" + this._configName;
+    return "nest-desktop-" + this._name;
   }
 
-  get configName(): string {
-    return this._configName;
+  get name(): string | undefined {
+    return this._name;
   }
 
-  get isConfigValid(): boolean {
+  get isValid(): boolean {
     const storedData = this.localStorage;
     if (process.env.APP_VERSION == undefined || storedData == undefined) {
       return false;
@@ -59,25 +60,25 @@ export class Config {
     return { ...item };
   }
 
-  async importConfig(): Promise<any> {
+  async import(): Promise<any> {
     const path = this._simulator
-      ? `assets/simulators/${this._simulator}/config/${this._configName}`
-      : `assets/config/${this._configName}`;
+      ? `assets/simulators/${this._simulator}/config/${this._name}`
+      : `assets/config/${this._name}`;
     return getRuntimeConfig(path + ".json");
   }
 
-  resetConfig(): void {
+  reset(): void {
     localStorage.removeItem(this.configItemName);
   }
 
-  updateConfig(value: any): void {
+  update(value: any): void {
     const storedData: any = this.localStorage;
     Object.entries(value).forEach((v: any) => (storedData[v[0]] = v[1]));
     this.localStorage = storedData;
   }
 
-  upgradeConfig(): void {
-    this.importConfig().then((importedData) => {
+  upgrade(): void {
+    this.import().then((importedData) => {
       const storedData: any = this.localStorage || {};
       Object.entries(importedData).forEach((entry: any) => {
         if (!(entry[0] in storedData)) {

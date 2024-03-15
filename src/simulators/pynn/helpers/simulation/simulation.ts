@@ -2,26 +2,26 @@
 
 import {
   BaseSimulation,
-  SimulationProps,
+  ISimulationProps,
 } from "@/helpers/simulation/simulation";
-import { SimulationCodeProps } from "@/helpers/simulation/simulationCode";
 import { openToast } from "@/helpers/common/toast";
 
 import { PyNNProject } from "../project/project";
 import { PyNNSimulationCode } from "./simulationCode";
 import { usePyNNSimulatorStore } from "../../stores/backends/pynnSimulatorStore";
 
-export interface PyNNSimulationProps extends SimulationProps {}
+export interface IPyNNSimulationProps extends ISimulationProps {}
 
 export class PyNNSimulation extends BaseSimulation {
-  constructor(project: PyNNProject, simulation: PyNNSimulationProps = {}) {
-    super(project, simulation);
+  constructor(
+    project: PyNNProject,
+    simulationProps: IPyNNSimulationProps = {}
+  ) {
+    super(project, simulationProps);
   }
 
-  override newSimulationCode(
-    simulationCode?: SimulationCodeProps
-  ): PyNNSimulationCode {
-    return new PyNNSimulationCode(this, simulationCode);
+  override get SimulationCode() {
+    return PyNNSimulationCode;
   }
 
   /**
@@ -34,7 +34,8 @@ export class PyNNSimulation extends BaseSimulation {
     this.logger.trace("run simulation");
 
     const pynnSimulatorStore = usePyNNSimulatorStore();
-    return pynnSimulatorStore.axiosInstance()
+    return pynnSimulatorStore
+      .axiosInstance()
       .post("exec", {
         source: this.code.script,
         return: "response",

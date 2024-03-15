@@ -1,16 +1,17 @@
 // nodeParameter.ts
 
-import { ModelParameter } from "@/helpers/model/modelParameter";
-import { NodeParameterTypes } from "@/types/nodeParameterTypes";
-import { Parameter, ParameterProps } from "@/helpers/common/parameter";
+import { ModelParameter } from "../model/modelParameter";
+import { TNodeParameterTypes } from "@/types/nodeParameterTypes";
+import { IParamProps, Parameter } from "../common/parameter";
 
-export interface NodeParameterProps extends ParameterProps {}
+export interface INodeParamProps extends IParamProps {}
 
 export class NodeParameter extends Parameter {
-  public _node: NodeParameterTypes;
+  public _node: TNodeParameterTypes;
 
-  constructor(node: NodeParameterTypes, param: NodeParameterProps) {
-    super(param);
+  constructor(node: TNodeParameterTypes, paramProps: INodeParamProps) {
+    super(paramProps, { minLevel: 3 });
+
     this._node = node;
   }
 
@@ -21,7 +22,7 @@ export class NodeParameter extends Parameter {
     return this.node.model.params[this.id];
   }
 
-  get node(): NodeParameterTypes {
+  get node(): TNodeParameterTypes {
     return this._node;
   }
 
@@ -59,29 +60,29 @@ export class NodeParameter extends Parameter {
 
   /**
    * Serialize for JSON.
-   * @return parameter object
+   * @return parameter props
    */
-  toJSON(): NodeParameterProps {
-    const param: NodeParameterProps = {
+  toJSON(): INodeParamProps {
+    const paramProps: INodeParamProps = {
       id: this.id,
       value: this.value,
     };
 
     // Add value factors if existed.
     if (this.factors.length > 0) {
-      param.factors = this.factors;
+      paramProps.factors = this.factors;
     }
 
     // Add rules for validation if existed.
     if (this.rules.length > 0) {
-      param.rules = this.rules;
+      paramProps.rules = this.rules;
     }
 
     // Add param type if not constant.
     if (!this.isConstant) {
-      param.type = this.typeToJSON();
+      paramProps.type = this.typeToJSON();
     }
 
-    return param;
+    return paramProps;
   }
 }

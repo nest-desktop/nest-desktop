@@ -3,12 +3,15 @@
 import { BaseNodes } from "@/helpers/node/nodes";
 
 import { NESTNetwork } from "../network/network";
-
-import { NESTNode, NESTNodeProps } from "./node";
+import { INESTNodeProps, NESTNode } from "./node";
 
 export class NESTNodes extends BaseNodes {
-  constructor(network: NESTNetwork, nodes?: NESTNodeProps[]) {
-    super(network, nodes);
+  constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
+    super(network, nodesProps);
+  }
+
+  override get Node() {
+    return NESTNode;
   }
 
   override get all(): NESTNode[] {
@@ -86,9 +89,5 @@ export class NESTNodes extends BaseNodes {
    */
   cleanWeightRecorders(): void {
     this.weightRecorders.forEach((node: NESTNode) => node.clean());
-  }
-
-  override newNode(data?: NESTNodeProps): NESTNode {
-    return new NESTNode(this, data);
   }
 }

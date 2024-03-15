@@ -1,37 +1,27 @@
 // connections.ts
 
-import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
 
-import {
-  BaseConnection,
-  ConnectionProps,
-} from "@/helpers/connection/connection";
-import { Connection } from "@/types/connectionTypes";
-import { Network } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseConnection, IConnectionProps } from "./connection";
+import { BaseObj } from "../common/base";
+import { TConnection } from "@/types/connectionTypes";
+import { TNetwork } from "@/types/networkTypes";
+import { TNode } from "@/types/nodeTypes";
 
-interface ConnectionsState {
-  focusedConnection: Connection | null;
-  hash: string;
-  selectedConnection: Connection | null;
+interface IConnectionsState {
+  focusedConnection: TConnection | null;
+  selectedConnection: TConnection | null;
 }
 
-export class BaseConnections {
-  private _logger: Logger<ILogObj>;
-  private _state: UnwrapRef<ConnectionsState>; // reactive state
+export class BaseConnections extends BaseObj {
+  private _state: UnwrapRef<IConnectionsState>; // reactive state
+  public _connections: TConnection[] = [];
+  public _network: TNetwork; // parent
 
-  public _connections: Connection[] = [];
-  public _network: Network; // parent
+  constructor(network: TNetwork, connectionsProps: IConnectionProps[] = []) {
+    super({ logger: { settings: { minLevel: 3 } } });
 
-  constructor(network: Network, connections: ConnectionProps[] = []) {
     this._network = network;
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.network.project.shortId}] connections`,
-    });
 
     this._state = reactive({
       focusedConnection: null,
@@ -39,23 +29,27 @@ export class BaseConnections {
       selectedConnection: null,
     });
 
-    this.init(connections);
+    this.update(connectionsProps);
   }
 
-  get all(): Connection[] {
-    return this._connections as Connection[];
+  get Connection() {
+    return BaseConnection;
   }
 
-  get connections(): Connection[] {
-    return this._connections as Connection[];
+  get all(): TConnection[] {
+    return this._connections as TConnection[];
+  }
+
+  get connections(): TConnection[] {
+    return this._connections as TConnection[];
   }
 
   /**
    * filter connection list without recorders.
    */
-  get connectionsWithoutRecorders(): Connection[] {
+  get connectionsWithoutRecorders(): TConnection[] {
     return this.connections.filter(
-      (connection: Connection) => !connection.view.connectRecorder()
+      (connection: TConnection) => !connection.view.connectRecorder()
     );
   }
 
@@ -66,11 +60,7 @@ export class BaseConnections {
     return this._connections.length;
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
-  get network(): Network {
+  get network(): TNetwork {
     return this._network;
   }
 
@@ -78,22 +68,22 @@ export class BaseConnections {
     return this.connections.some;
   }
 
-  get state(): UnwrapRef<ConnectionsState> {
+  get state(): UnwrapRef<IConnectionsState> {
     return this._state;
   }
 
-  // get visibleConnections(): Connection[] {
+  // get visibleConnections(): TConnection[] {
   //   return this._connections.filter(
-  //     (connection: Connection) => connection.view.state.visible
+  //     (connection: TConnection) => connection.view.state.visible
   //   );
   // }
 
   /**
    * Add connection component to the network.
    */
-  add(data: ConnectionProps): Connection {
-    this._logger.trace("add");
-    const connection: Connection = this.newConnection(data);
+  add(connectionProps: IConnectionProps): TConnection {
+    this.logger.trace("add");
+    const connection: TConnection = new this.Connection(this, connectionProps);
     this._connections.push(connection);
     return connection;
   }
@@ -102,46 +92,33 @@ export class BaseConnections {
    * Clean nodes and connection components.
    */
   clean(): void {
-    this._logger.trace("clean");
-    this.connections.forEach((connection: Connection) => connection.clean());
-
-    this.updateHash();
+    this.logger.trace("clean");
+    this.connections.forEach((connection: TConnection) => connection.clean());
   }
 
   /**
    * Clear connections.
    */
   clear(): void {
-    this._logger.trace("clear");
+    this.logger.trace("clear");
     this.resetState();
     this._connections = [];
   }
 
   /**
-   * Initialize network connections.
+   * Initialize connections.
    */
-  init(connections?: ConnectionProps[]): void {
-    this._logger.trace("init");
-    this.clear();
-
-    if (connections) {
-      this.update(connections);
-    }
-  }
-
-  /**
-   * Create a new connection component.
-   */
-  newConnection(data: ConnectionProps): BaseConnection {
-    return new BaseConnection(this, data);
+  init(): void {
+    this.logger.trace("init");
+    this._connections.forEach((connection: TConnection) => connection.init());
   }
 
   /**
    * Remove connection component from the network.
    *
    */
-  remove(connection: Connection): void {
-    this._logger.trace("remove");
+  remove(connection: TConnection): void {
+    this.logger.trace("remove");
     this.resetState();
 
     // Remove connection from the connection list.
@@ -151,16 +128,16 @@ export class BaseConnections {
   /**
    * Remove connections by the node.
    */
-  removeByNode(node: Node): void {
+  removeByNode(node: TNode): void {
     this.resetState();
 
     this._connections = this.connections.filter(
-      (connection: Connection) =>
+      (connection: TConnection) =>
         connection.source !== node && connection.target !== node
     );
 
     // Update source and target idx in connections
-    this.connections.forEach((connection: Connection) => {
+    this.connections.forEach((connection: TConnection) => {
       if (connection.sourceIdx > node.idx) {
         connection.sourceIdx -= 1;
       }
@@ -180,10 +157,10 @@ export class BaseConnections {
 
   /**
    * Serialize for JSON.
-   * @return connection object
+   * @return connection props
    */
-  toJSON(): ConnectionProps[] {
-    return this.connections.map((connection: Connection) =>
+  toJSON(): IConnectionProps[] {
+    return this.connections.map((connection: TConnection) =>
       connection.toJSON()
     );
   }
@@ -198,20 +175,17 @@ export class BaseConnections {
 
   /**
    * Update connections.
-   *
-   * @param connections - network object
    */
-  update(connections?: ConnectionProps[]): void {
-    if (connections) {
-      connections.forEach((data: ConnectionProps) => this.add(data));
-    }
-    this.clean();
-  }
+  update(connectionsProps?: IConnectionProps[]): void {
+    this.logger.trace("update");
 
-  /**
-   * Update states of all connections.
-   */
-  updateStates(): void {
+    if (connectionsProps) {
+      connectionsProps.forEach((connectionProps: IConnectionProps) =>
+        this.add(connectionProps)
+      );
+    }
+
+    this.clean();
     this.updateHash();
   }
 
@@ -219,12 +193,10 @@ export class BaseConnections {
    * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1({
-      connections: this.connections.map((connection: Connection) => {
-        connection.state.updateHash();
-        return connection.state.hash;
-      }),
+    this._updateHash({
+      connections: this.connections.map(
+        (connection: TConnection) => connection.hash
+      ),
     });
-    this._logger.trace("update hash:", this._state.hash.slice(0, 6));
   }
 }

@@ -21,7 +21,7 @@ export class NESTModelAssignGraph {
   }
 
   get strokeWidth(): number {
-    return this._networkGraph.config.strokeWidth;
+    return this._networkGraph.config?.localStorage.strokeWidth;
   }
 
   /**
@@ -84,7 +84,7 @@ export class NESTModelAssignGraph {
       .append("g")
       .attr("class", "modelAssigned")
       .attr("idx", (c: NESTConnection) => c.idx)
-      .attr("hash", (c: NESTConnection) => c.state.shortHash)
+      .attr("hash", (c: NESTConnection) => c.hash)
       .each((c: NESTConnection, i: number, e) => this.init(c, i, e));
 
     models.exit().remove();

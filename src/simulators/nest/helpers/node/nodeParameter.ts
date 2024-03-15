@@ -1,12 +1,12 @@
 // nodeParameter.ts
 
-import { ParameterProps } from "@/helpers/common/parameter";
+import { IParamProps } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 import { NESTNode } from "./node";
 
 export class NESTNodeParameter extends NodeParameter {
-  constructor(node: NESTNode, param: ParameterProps) {
-    super(node, param);
+  constructor(node: NESTNode, paramProps: IParamProps) {
+    super(node, paramProps);
   }
 
   /**

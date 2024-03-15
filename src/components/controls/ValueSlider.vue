@@ -89,15 +89,17 @@ const value = computed({
     top: -6px;
   }
 
-  .v-input:hover .v-text-field__suffix {
-    display: none;
+  .v-input {
+    &:hover .v-text-field__suffix {
+      display: none;
+    }
   }
-}
 
-.value-slider:hover {
-  .mdi-minus,
-  .mdi-plus {
-    opacity: 0.6 !important;
+  &:hover {
+    .mdi-minus,
+    .mdi-plus {
+      opacity: 0.6 !important;
+    }
   }
 }
 </style>

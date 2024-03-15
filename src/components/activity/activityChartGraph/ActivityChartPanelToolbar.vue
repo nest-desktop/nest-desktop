@@ -64,9 +64,7 @@ import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPa
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 
-const props = defineProps({
-  panel: ActivityChartPanel,
-});
+const props = defineProps({ panel: ActivityChartPanel });
 
 const panel = computed(() => props.panel as ActivityChartPanel);
 
@@ -83,8 +81,9 @@ const selectModel = (modelId: string) => {
   position: absolute;
   right: 4px;
   top: 0;
-}
-.activityChartPanelToolbar:hover .icons {
-  display: block;
+
+  &:hover .icons {
+    display: block;
+  }
 }
 </style>

@@ -3,25 +3,19 @@
 import { reactive, UnwrapRef } from "vue";
 import { Data } from "plotly.js-dist-min";
 
-import { Activity } from "@/helpers/activity/activity";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { logger as mainLogger } from "@/helpers/common/logger";
-
+import { Activity } from "../activity/activity";
 import { ActivityChartPanel } from "./activityChartPanel";
+import { BaseObj } from "../common/base";
+import { NodeRecord } from "../node/nodeRecord";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "activity chart panel model",
-});
-
-export interface ActivityChartPanelModelProps {
+export interface IActivityChartPanelModelProps {
   id?: string;
   markerSize?: number;
   params?: any;
   records?: any;
 }
 
-export abstract class ActivityChartPanelModel {
+export abstract class ActivityChartPanelModel extends BaseObj {
   private _activities: Activity[] = [];
   private _activityType: string = "";
   private _data: Data[] = [];
@@ -33,6 +27,8 @@ export abstract class ActivityChartPanelModel {
   private _state: UnwrapRef<any>;
 
   constructor(panel: ActivityChartPanel) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._id = "activityChart";
     this._panel = panel;
     this._state = reactive({
@@ -156,19 +152,13 @@ export abstract class ActivityChartPanelModel {
   abstract init(): void;
 
   /**
-   * Initialize activities of panel model.
-   *
-   * @remarks
-   * This method will be overwritten in child classes.
-   */
-  abstract initActivities(): void;
-  /**
    * Initialize records from analog activities.
    */
-
   initAnalogRecords(): void {
-    logger.trace("Init analog records");
+    this.logger.trace("init analog records");
+
     this._state.records = [];
+
     this.activities
       .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
       .forEach((activity: Activity) => {
@@ -178,36 +168,36 @@ export abstract class ActivityChartPanelModel {
           });
         }
       });
-    if (this._state.recordsVisible.length === 0) {
-      this._state.recordsVisible = [...this.state.records];
-    }
+
+    this._state.recordsVisible = [...this.state.records];
   }
 
   /**
    * Initialize visible records from analog activities.
    */
   initAnalogRecordsVisible(records: any[] = []): void {
-    logger.trace("Init visible analog records:", records);
+    this.logger.trace("init visible analog records:", records);
+
     if (this._state.records.length === 0) {
       this._state.recordsVisible = [];
       return;
     }
 
-    // if (records.length > 0) {
-    //   this._state.recordsVisible = records
-    //     .filter((record: any) =>
-    //       this._state.records.some(
-    //         (rec: NodeRecord) => rec.groupId === record.groupId
-    //       )
-    //     )
-    //     .map((record: any) => {
-    //       const recordVisible = this._state.records.find(
-    //         (rec: NodeRecord) => rec.groupId === record.groupId
-    //       );
-    //       if (recordVisible != null) recordVisible.color = record.color;
-    //       return recordVisible;
-    //     });
-    // }
+    if (records.length > 0) {
+      this._state.recordsVisible = records
+        .filter((record: any) =>
+          this._state.records.some(
+            (rec: NodeRecord) => rec.groupId === record.groupId
+          )
+        )
+        .map((record: any) => {
+          const recordVisible = this._state.records.find(
+            (rec: NodeRecord) => rec.groupId === record.groupId
+          );
+          if (recordVisible != null) recordVisible.color = record.color;
+          return recordVisible;
+        });
+    }
   }
 
   /**
@@ -239,13 +229,37 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
+   * Serialize for JSON.
+   * @return activity chart panel model props
+   */
+  toJSON(): IActivityChartPanelModelProps {
+    const modelProps: IActivityChartPanelModelProps = {
+      id: this._id,
+      params: {},
+    };
+
+    if (this._params.length > 0) {
+      this._params.forEach((param: any) => {
+        modelProps.params[param.id] = param.value;
+      });
+    }
+
+    if (this._state.recordsVisible.length > 0) {
+      modelProps.records = this._state.recordsVisible.map(
+        (record: NodeRecord) => record.toJSON()
+      );
+    }
+    return modelProps;
+  }
+
+  /**
    * Update panel model.
    *
    * @remarks
    * It requires activity data.
    */
   update(): void {
-    logger.trace("Update");
+    this.logger.trace("Update");
 
     // Update time.
     this.updateTime();
@@ -358,30 +372,6 @@ export abstract class ActivityChartPanelModel {
   }
 
   /**
-   * Serialize for JSON.
-   * @return activity chart panel model object
-   */
-  toJSON(): ActivityChartPanelModelProps {
-    const model: ActivityChartPanelModelProps = {
-      id: this._id,
-      params: {},
-    };
-
-    if (this._params.length > 0) {
-      this._params.forEach((param: any) => {
-        model.params[param.id] = param.value;
-      });
-    }
-
-    if (this._state.recordsVisible.length > 0) {
-      model.records = this._state.recordsVisible.map((record: NodeRecord) =>
-        record.toJSON()
-      );
-    }
-    return model;
-  }
-
-  /**
    * Update time of the panel model.
    *
    * @remarks
@@ -391,7 +381,7 @@ export abstract class ActivityChartPanelModel {
     this._state.time.start = 0;
     this._state.time.end = Math.max(
       this._state.time.end,
-      this._panel.graph.currenttime + 1
+      this._panel.graph.currentTime + 1
     );
   }
 }

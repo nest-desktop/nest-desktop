@@ -1,27 +1,35 @@
 // network.ts
 
-import { BaseNetwork, NetworkProps } from "@/helpers/network/network";
-import { Project } from "@/types/projectTypes";
+import { BaseNetwork, INetworkProps } from "@/helpers/network/network";
 
-import { NorseConnectionProps } from "../connection/connection";
+import { INorseConnectionProps } from "../connection/connection";
 import { NorseConnections } from "../connection/connections";
-import { NorseNodeProps } from "../node/node";
+import { INorseNodeProps } from "../node/node";
 import { NorseNodes } from "../node/nodes";
+import { NorseProject } from "../project/project";
 
-export interface NorseNetworkProps extends NetworkProps {
-  nodes?: NorseNodeProps[];
-  connections?: NorseConnectionProps[];
+export interface INorseNetworkProps extends INetworkProps {
+  nodes?: INorseNodeProps[];
+  connections?: INorseConnectionProps[];
 }
 
 export class NorseNetwork extends BaseNetwork {
-  constructor(project: Project, network: NorseNetworkProps = {}) {
-    super(project, network);
+  constructor(project: NorseProject, networkProps: INorseNetworkProps = {}) {
+    super(project, networkProps);
 
     this.defaultModels = {
       neuron: "LIF",
       recorder: "voltmeter",
       stimulator: "dc_generator",
     };
+  }
+
+  override get Connections() {
+    return NorseConnections;
+  }
+
+  override get Nodes() {
+    return NorseNodes;
   }
 
   override get connections(): NorseConnections {
@@ -32,18 +40,14 @@ export class NorseNetwork extends BaseNetwork {
     return this._nodes as NorseNodes;
   }
 
+  override get project(): NorseProject {
+    return this._project as NorseProject;
+  }
+
   /**
    * Clone norse network component.
    */
   override clone(): NorseNetwork {
     return new NorseNetwork(this.project, { ...this.toJSON() });
-  }
-
-  override newNodes(data?: NorseNodeProps[]): NorseNodes {
-    return new NorseNodes(this, data);
-  }
-
-  override newConnections(data: NorseConnectionProps[]): NorseConnections {
-    return new NorseConnections(this, data);
   }
 }

@@ -1,20 +1,17 @@
 // synapse.ts
 
-import { BaseSynapse, SynapseProps } from "@/helpers/synapse/synapse";
+import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
-import {
-  NESTSynapseParameter,
-  SynapseParameterProps,
-} from "./synapseParameter";
+import { NESTSynapseParameter, ISynapseParamProps } from "./synapseParameter";
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 
-export interface NESTSynapseProps extends SynapseProps {
+export interface INESTSynapseProps extends ISynapseProps {
   receptorIdx?: number;
   model?: string;
-  params?: SynapseParameterProps[];
+  params?: ISynapseParamProps[];
 }
 
 export class NESTSynapse extends BaseSynapse {
@@ -25,14 +22,14 @@ export class NESTSynapse extends BaseSynapse {
   public _model: NESTModel;
   private _receptorIdx: number = 0;
 
-  constructor(connection: NESTConnection, synapse?: NESTSynapseProps) {
-    super(connection, synapse);
+  constructor(connection: NESTConnection, synapseProps?: INESTSynapseProps) {
+    super(connection, synapseProps);
 
-    this._modelId = synapse?.model || "static_synapse";
+    this._modelId = synapseProps?.model || "static_synapse";
     this._model = this.getModel(this._modelId);
-    this._receptorIdx = synapse?.receptorIdx || 0;
+    this._receptorIdx = synapseProps?.receptorIdx || 0;
 
-    this.initParameters(synapse?.params);
+    this.initParameters(synapseProps?.params);
   }
 
   get connection(): NESTConnection {
@@ -187,9 +184,9 @@ export class NESTSynapse extends BaseSynapse {
    * Add model parameter component.
    * @param param - parameter object
    */
-  addParameter(param: SynapseParameterProps): void {
+  addParameter(paramProps: ISynapseParamProps): void {
     // this._logger.trace("add parameter:", param)
-    this._params[param.id] = new NESTSynapseParameter(this, param);
+    this._params[paramProps.id] = new NESTSynapseParameter(this, paramProps);
   }
 
   getModel(modelId: string): NESTModel {
@@ -216,13 +213,15 @@ export class NESTSynapse extends BaseSynapse {
   /**
    * Initialize synapse parameters.
    */
-  initParameters(params?: SynapseParameterProps[]): void {
+  initParameters(paramsProps?: ISynapseParamProps[]): void {
     this.logger.trace("init parameters");
     this._paramsVisible = [];
     this._params = {};
-    if (this.model && params) {
+    if (this.model && paramsProps) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = params?.find((param: any) => param.id === modelParam.id);
+        const param = paramsProps?.find(
+          (param: any) => param.id === modelParam.id
+        );
         this.addParameter(param || modelParam);
         if (param && param.visible !== false) {
           this._paramsVisible.push(modelParam.id);
@@ -232,8 +231,8 @@ export class NESTSynapse extends BaseSynapse {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) =>
         this.addParameter(modelParam)
       );
-    } else if (params) {
-      params.forEach((param: any) => this.addParameter(param));
+    } else if (paramsProps) {
+      paramsProps.forEach((param: any) => this.addParameter(param));
     }
   }
 
@@ -280,24 +279,24 @@ export class NESTSynapse extends BaseSynapse {
 
   /**
    * Serialize for JSON.
-   * @return synapse object
+   * @return synapse props
    */
-  override toJSON(): NESTSynapseProps {
-    const synapse: NESTSynapseProps = {};
+  override toJSON(): INESTSynapseProps {
+    const synapseProps: INESTSynapseProps = {};
 
     if (this.modelId !== "static_synapse") {
-      synapse.model = this.modelId;
+      synapseProps.model = this.modelId;
     }
 
     if (this.filteredParams.length > 0) {
-      synapse.params = this.filteredParams.map((param: NESTSynapseParameter) =>
-        param.toJSON()
+      synapseProps.params = this.filteredParams.map(
+        (param: NESTSynapseParameter) => param.toJSON()
       );
     }
 
     if (this._receptorIdx !== 0) {
-      synapse.receptorIdx = this._receptorIdx;
+      synapseProps.receptorIdx = this._receptorIdx;
     }
-    return synapse;
+    return synapseProps;
   }
 }

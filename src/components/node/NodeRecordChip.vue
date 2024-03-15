@@ -11,6 +11,7 @@
         v-bind="props"
       >
         {{ nodeRecord.id }}
+        <div class="mx-1">{{ nodeRecord.uuid.slice(0, 6) }}</div>
       </v-chip>
     </template>
 
@@ -29,9 +30,7 @@ import { computed } from "vue";
 
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
-const props = defineProps({
-  nodeRecord: NodeRecord,
-});
+const props = defineProps({ nodeRecord: NodeRecord });
 
 const nodeRecord = computed(() => props.nodeRecord as NodeRecord);
 

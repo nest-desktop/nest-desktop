@@ -2,20 +2,20 @@
 
 import { drag, select, Selection, Transition, transition } from "d3";
 
-import { NetworkGraph } from "@/types/networkGraphTypes";
-import { Node } from "@/types/nodeTypes";
-import { darkMode } from "@/helpers/common/theme";
-import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNode } from "@/types/nodeTypes";
+import { darkMode } from "../common/theme";
+import { drawPathMouse } from "../connectionGraph/connectionGraphPath";
 
 export class NodeGraphConnector {
   private _connectorRadius: number = 6;
-  private _networkGraph: NetworkGraph;
+  private _networkGraph: TNetworkGraph;
 
-  constructor(networkGraph: NetworkGraph) {
+  constructor(networkGraph: TNetworkGraph) {
     this._networkGraph = networkGraph;
   }
 
-  get bgcolor(): string {
+  get bgColor(): string {
     if (this._networkGraph.network == undefined) {
       return "white";
     }
@@ -24,11 +24,11 @@ export class NodeGraphConnector {
   }
 
   get nodeRadius(): number {
-    return this._networkGraph.config.nodeRadius;
+    return this._networkGraph.config?.localStorage.nodeRadius;
   }
 
   get strokeWidth(): number {
-    return this._networkGraph.config.strokeWidth;
+    return this._networkGraph.config?.localStorage.strokeWidth;
   }
 
   /**
@@ -58,7 +58,7 @@ export class NodeGraphConnector {
     const dragging = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       // @ts-ignore
-      .on("drag", (e: MouseEvent, n: Node) => this.drag(e, n))
+      .on("drag", (e: MouseEvent, n: TNode) => this.drag(e, n))
       .on("end", (e: MouseEvent) => this.dragEnd(e));
 
     const connectorEnd = connector.append("g").attr("class", "end");
@@ -68,7 +68,7 @@ export class NodeGraphConnector {
       .attr("class", "color")
       .attr("r", "6px")
       .attr("stroke-width", this.strokeWidth)
-      .on("click", (e: MouseEvent, n: Node) => {
+      .on("click", (e: MouseEvent, n: TNode) => {
         this.drag(e, n);
         this.render();
       })
@@ -125,7 +125,7 @@ export class NodeGraphConnector {
   /**
    * Call on dragging.
    */
-  drag(e: MouseEvent, node: Node): void {
+  drag(e: MouseEvent, node: TNode): void {
     if (!node.state.isSelected) {
       node.state.select();
     }
@@ -186,7 +186,7 @@ export class NodeGraphConnector {
           ? 0
           : 1000
       )
-      .style("opacity", (n: Node) =>
+      .style("opacity", (n: TNode) =>
         n.state.isFocused && !connectionDrag ? "1" : "0"
       );
 
@@ -199,7 +199,7 @@ export class NodeGraphConnector {
     connector
       .selectAll("path")
       .transition(t)
-      .attr("d", (n: Node | any) =>
+      .attr("d", (n: TNode | any) =>
         drawPathMouse(
           { x: 0, y: 0 },
           n.state.isFocused && !connectionDrag
@@ -211,14 +211,14 @@ export class NodeGraphConnector {
     connector
       .select(".end")
       .transition(t)
-      .attr("transform", (n: Node) =>
+      .attr("transform", (n: TNode) =>
         n.state.isFocused && !connectionDrag
           ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
           : "translate(0,0)"
       );
 
     connector.selectAll(".color").style("stroke", "currentColor");
-    connector.selectAll("line.bgcolor").attr("stroke", this.bgcolor);
-    connector.select("circle.color").attr("fill", this.bgcolor);
+    connector.selectAll("line.bgcolor").attr("stroke", this.bgColor);
+    connector.select("circle.color").attr("fill", this.bgColor);
   }
 }

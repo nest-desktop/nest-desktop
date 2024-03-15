@@ -1,33 +1,23 @@
 // copyModels.ts
 
-import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
-
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseObj } from "@/helpers/common/base";
 
 import { NESTNetwork } from "../network/network";
+import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 
-import { NESTCopyModel, NESTCopyModelProps } from "./copyModel";
-
-const logger = mainLogger.getSubLogger({ minLevel: 3, name: "copy model" });
-
-interface NESTCopyModelsState {
-  hash: string;
-}
-
-export class NESTCopyModels {
+export class NESTCopyModels extends BaseObj {
   private _models: NESTCopyModel[] = [];
   private _network: NESTNetwork; // parent
-  private _state: UnwrapRef<NESTCopyModelsState>; // reactive state
 
-  constructor(network: NESTNetwork, copyModels: NESTCopyModelProps[] = []) {
+  constructor(
+    network: NESTNetwork,
+    copyModelsProps: INESTCopyModelProps[] = []
+  ) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._network = network;
 
-    this._state = reactive({
-      hash: "",
-    });
-
-    this.init(copyModels);
+    this.init(copyModelsProps);
   }
 
   get all(): NESTCopyModel[] {
@@ -72,10 +62,6 @@ export class NESTCopyModels {
     return this._models.some;
   }
 
-  get state(): UnwrapRef<NESTCopyModelsState> {
-    return this._state;
-  }
-
   get synapseModels(): NESTCopyModel[] {
     return this._models.filter((model: NESTCopyModel) => model.model.isSynapse);
   }
@@ -84,9 +70,9 @@ export class NESTCopyModels {
    * Copy and add a model component to the network based on given model data.
    * @data Data of the model which should be copied and added
    */
-  add(data: NESTCopyModelProps): NESTCopyModel {
-    logger.trace("Add model");
-    const model = new NESTCopyModel(this._network, data);
+  add(modelProps: INESTCopyModelProps): NESTCopyModel {
+    this.logger.trace("Add model");
+    const model = new NESTCopyModel(this._network, modelProps);
     this._models.push(model);
     return model;
   }
@@ -96,12 +82,12 @@ export class NESTCopyModels {
    * @param modelId ID of the model which should be copied adn added
    */
   copy(modelId: string): NESTCopyModel {
-    logger.trace("Copy model");
-    const model: NESTCopyModelProps = {
+    this.logger.trace("Copy model");
+    const modelProps: INESTCopyModelProps = {
       existing: modelId,
       new: modelId + "_copied" + (this._models.length + 1),
     };
-    return this.add(model);
+    return this.add(modelProps);
   }
 
   /**
@@ -116,8 +102,8 @@ export class NESTCopyModels {
    *
    */
   clear(): void {
-    this.resetState();
     this._models = [];
+    this.updateHash();
   }
 
   /**
@@ -154,9 +140,9 @@ export class NESTCopyModels {
   /**
    * Initialize
    */
-  init(models: NESTCopyModelProps[] = []): void {
+  init(modelsProps: INESTCopyModelProps[] = []): void {
     this.clear();
-    this.update(models);
+    this.update(modelsProps);
   }
 
   /**
@@ -164,44 +150,38 @@ export class NESTCopyModels {
    *
    */
   remove(model: NESTCopyModel): void {
-    logger.trace("Delete model");
-    this.resetState();
+    this.logger.trace("Delete model");
 
     // Remove model from the model list.
     this._models.splice(model.idx, 1);
   }
 
-  /*
-   * Reset all states.
-   */
-  resetState(): void {
-    this._state.hash = "";
-  }
-
   /**
    * Serialize for JSON.
-   * @return network object
+   * @return network props
    */
-  toJSON(): NESTCopyModelProps[] {
+  toJSON(): INESTCopyModelProps[] {
     return this._models.map((model: NESTCopyModel) => model.toJSON());
   }
 
   /**
-   * Update network component.
+   * Update copied model component.
    *
-   * @param network - network object
+   * @param model props
    */
-  update(models: NESTCopyModelProps[] = []): void {
-    models.forEach((model: NESTCopyModelProps) => this.add(model));
+  update(modelsProps: INESTCopyModelProps[] = []): void {
+    modelsProps.forEach((modelProps: INESTCopyModelProps) =>
+      this.add(modelProps)
+    );
     this.clean();
+    this.updateHash();
   }
 
   /**
    * Update hash.
    */
   updateHash(): void {
-    logger.trace("Update Hash");
-    this._state.hash = sha1({
+    this._updateHash({
       models: this._models.map(
         (model: NESTCopyModel) => model.toJSON() //TODO node.state.hash
       ),

@@ -9,7 +9,7 @@ import { NESTNodeReceptor } from "@/simulators/nest/helpers/node/nodeReceptor/no
 
 import { NorseNode } from "@/simulators/norse/helpers/node/node";
 
-export type NodeParameterTypes =
+export type TNodeParameterTypes =
   | BaseNode
   | NESTNode
   | NESTCopyModel
@@ -17,7 +17,8 @@ export type NodeParameterTypes =
   | NESTNodeReceptor
   | NorseNode;
 
-export const NodeParameterPropTypes = [
+// for components
+export const TNodeParameterTypesProps = [
   BaseNode,
   NESTNode,
   NESTCopyModel,

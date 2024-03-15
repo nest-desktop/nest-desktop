@@ -1,3 +1,5 @@
+// paramQuery.ts
+
 import { RouteLocationNormalizedLoaded } from "vue-router";
 
 /**

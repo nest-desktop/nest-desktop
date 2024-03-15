@@ -1,14 +1,8 @@
 // modelDB.ts
 
-import { ModelProps } from "@/helpers/model/model";
-import { DatabaseService } from "@/helpers/common/database";
-import { Model } from "@/types/modelTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
-
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "model DB",
-});
+import { IModelProps } from "./model";
+import { DatabaseService } from "../common/database";
+import { TModel } from "@/types/modelTypes";
 
 export class BaseModelDB extends DatabaseService {
   constructor(name: string = "MODEL_STORE") {
@@ -18,8 +12,8 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Create a model in the database.
    */
-  async createModel(model: Model): Promise<Model> {
-    logger.trace("create model", model.id);
+  async createModel(model: TModel): Promise<TModel> {
+    this.logger.trace("create model", model.id);
     const data = model.toJSON();
     return this.create(data).then((res: any) => {
       if (res.ok) {
@@ -32,13 +26,13 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Create multiple models in the database.
    */
-  async addModels(data: ModelProps[]): Promise<ModelProps[]> {
+  async addModels(modelsProps: IModelProps[]): Promise<IModelProps[]> {
     this.logger.trace("add models");
-    const models: Promise<ModelProps>[] = data.map(
-      (model: ModelProps) =>
-        new Promise<ModelProps>((resolve) => {
-          this.create(model).then(() => {
-            resolve(model);
+    const models: Promise<IModelProps>[] = modelsProps.map(
+      (modelProps: IModelProps) =>
+        new Promise<IModelProps>((resolve) => {
+          this.create(modelProps).then(() => {
+            resolve(modelProps);
           });
         })
     );
@@ -48,7 +42,7 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Delete a model in the database.
    */
-  async deleteModel(model: Model | ModelProps | any): Promise<any> {
+  async deleteModel(model: TModel | IModelProps | any): Promise<any> {
     this.logger.trace("delete model:", model.id);
     const modelDocId: string = model.docId || model._id;
     return this.delete(modelDocId);
@@ -57,12 +51,12 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Delete multiple models.
    */
-  async deleteModels(models: (Model | ModelProps)[]): Promise<any> {
-    logger.trace("delete models");
-    const modelDocIds: string[] = models.map(
+  async deleteModels(modelsProps: (TModel | IModelProps)[]): Promise<any> {
+    this.logger.trace("delete models");
+    const modelDocIds: string[] = modelsProps.map(
       (
-        model: Model | ModelProps | any // TODO: any should be removed.
-      ) => model.docId || model.id
+        modelProps: TModel | IModelProps | any // TODO: any should be removed.
+      ) => modelProps.docId || modelProps.id
     );
     return this.deleteBulk(modelDocIds);
   }
@@ -70,18 +64,17 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Import model object to the database.
    */
-  async importModel(model: Model): Promise<any> {
-    console.log("import model:", model.id);
+  async importModel(model: TModel): Promise<any> {
+    this.logger.trace("import model:", model.id);
     return model.docId ? this.updateModel(model) : this.createModel(model);
   }
 
   /**
    * Update a model in the database.
    */
-  async updateModel(model: Model): Promise<Model | undefined> {
+  async updateModel(model: TModel): Promise<TModel | undefined> {
     if (!model.docId) return;
     this.logger.trace("update model:", model.id);
-    logger.trace("update model:", model.id);
     const data = model.toJSON();
     return this.update(model.docId, data).then((res: any) => {
       if (res.ok) {

@@ -19,8 +19,8 @@
       >
         <template #prepend>
           <v-icon
-            :color="appStore.currentSimulator.color"
-            :icon="appStore.currentSimulator.icon"
+            :color="appStore.currentSimulator.id"
+            :icon="appStore.currentSimulator.id + ':logo'"
             style="background-color: white; border-radius: 4px; opacity: 1"
             size="large"
           />
@@ -34,10 +34,10 @@
         :key="index"
         :value="item.id"
         :to="'/' + item.id"
-        v-for="(item, index) in simulatorItems"
+        v-for="(item, index) in simulators"
       >
         <template #prepend>
-          <v-icon :color="item.color" :icon="item.icon" size="small" />
+          <v-icon :color="item.id" :icon="item.id + ':logo'" size="small" />
         </template>
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
@@ -76,7 +76,7 @@
         <template #prepend>
           <v-icon icon="mdi-cogs" size="small" />
         </template>
-        <v-list-item-title> Settings </v-list-item-title>
+        <v-list-item-title>Settings</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -123,7 +123,7 @@
 
 <script lang="ts" setup>
 // import { DatabaseService } from "@/helpers/common/database";
-import { simulatorItems } from "@/simulators";
+import { simulators } from "@/simulators";
 import { useAppStore } from "@/stores/appStore";
 import { onMounted } from "vue";
 

@@ -1,24 +1,26 @@
 // nodeSlice.ts
 
-import { Config } from "@/helpers/config";
-import {
-  NodeParameter,
-  NodeParameterProps,
-} from "@/helpers/node/nodeParameter";
+import { BaseObj } from "@/helpers/common/base";
+
+import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";
 
-export class NESTNodeSlice extends Config {
+export class NESTNodeSlice extends BaseObj {
   private readonly _name = "NESTNodeSlice";
   private _node: NESTNode;
   private _params: { [key: string]: NodeParameter } = {};
   private _visible: boolean = false;
 
-  constructor(node: NESTNode, params: NodeParameterProps[] = []) {
-    super("NESTNodeSlice", "nest");
+  constructor(node: NESTNode, paramsProps: INodeParamProps[] = []) {
+    super({
+      config: { simulator: "nest" },
+      logger: { settings: { minLevel: 3 } },
+    });
+
     this._node = node;
-    this.initParameters(params);
-    this._visible = params.length > 0;
+    this.initParameters(paramsProps);
+    this._visible = paramsProps.length > 0;
   }
 
   /**
@@ -67,15 +69,15 @@ export class NESTNodeSlice extends Config {
   /**
    * Initialize parameters.
    */
-  initParameters(params: NodeParameterProps[] = []): void {
+  initParameters(paramsProps: INodeParamProps[] = []): void {
     this._params = {};
-    this.config.params.forEach((param: NodeParameterProps) => {
-      if (params.length > 0) {
-        const p: NodeParameterProps | undefined = params.find(
-          (p: NodeParameterProps) => p.id === param.id
+    this.config?.localStorage.params.forEach((param: INodeParamProps) => {
+      if (paramsProps.length > 0) {
+        const paramProps: INodeParamProps | undefined = paramsProps.find(
+          (paramProps: INodeParamProps) => paramProps.id === param.id
         );
-        if (p) {
-          param.value = p.value;
+        if (paramProps) {
+          param.value = paramProps.value;
           param.disabled = false;
         }
       }
@@ -91,7 +93,7 @@ export class NESTNodeSlice extends Config {
    * Serialize for JSON.
    * @return node slice object
    */
-  toJSON(): NodeParameterProps[] {
+  toJSON(): INodeParamProps[] {
     return Object.values(this._params)
       .filter((param: NodeParameter) => !param.disabled)
       .map((param: NodeParameter) => {

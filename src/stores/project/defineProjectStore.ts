@@ -5,17 +5,18 @@ import { defineStore } from "pinia";
 
 import router from "@/router";
 import { BaseProject } from "@/helpers/project/project";
-import { Project } from "@/types/projectTypes";
+import { TProject } from "@/types/projectTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useProjectDBStore } from "./projectDBStore";
+import { useProjectViewStore } from "./projectViewStore";
 
 type Class<T> = new (...args: any) => T;
 
 export function defineProjectStore(
   args: {
-    Project: Class<Project>;
+    Project: Class<TProject>;
     loggerMinLevel?: number;
     simulator: string;
     useProjectDBStore: any;
@@ -30,7 +31,7 @@ export function defineProjectStore(
     name: args.simulator + " project store",
   });
 
-  return defineStore(args.simulator + "-project-view", () => {
+  return defineStore(args.simulator + "-project", () => {
     const state = reactive({
       bottomNavHeight: 200,
       bottomOpen: false,
@@ -48,7 +49,6 @@ export function defineProjectStore(
       controllerWidth: 480,
       project: new args.Project(),
       projectId: "",
-      simulateAfterCheckout: false,
       view: "edit",
     });
 
@@ -78,14 +78,23 @@ export function defineProjectStore(
       // const activityGraphStore = useActivityGraphStore();
       // activityGraphStore.init(state.project as Project);
       // activityGraphStore.update();
+
+      const projectViewStore = useProjectViewStore();
+      if (
+        projectViewStore.state.simulateAfterLoad.value &&
+        state.view === "explore" &&
+        state.project.activityGraph.state.codeHash === ""
+      ) {
+        startSimulation();
+      }
     };
 
-    const project = computed(() => state.project as Project);
+    const project = computed(() => state.project as TProject);
 
     /**
      * Reload the project in the list.
      */
-    const reloadProject = (project: Project) => {
+    const reloadProject = (project: TProject) => {
       logger.trace("reload project:", truncate(project.id));
       projectDBStore.unloadProject(project.id);
       state.project = projectDBStore.getProject(project.id);
@@ -104,11 +113,14 @@ export function defineProjectStore(
      */
     const startSimulation = () => {
       logger.trace("start simulation:", truncate(state.projectId || ""));
-      router.push({
-        name: args.simulator + "ActivityExplorer",
-        params: { projectId: state.projectId },
-      });
-      state.project.startSimulation();
+      router
+        .push({
+          name: args.simulator + "ActivityExplorer",
+          params: { projectId: state.projectId },
+        })
+        .then(() => {
+          setTimeout(() => state.project.startSimulation(), 100); // TODO: nextTick doesn't work.
+        });
     };
 
     /**
@@ -122,7 +134,6 @@ export function defineProjectStore(
       }
       state.controllerView = state.controllerOpen ? item.id : "";
 
-      // nextTick(() => window.dispatchEvent(new Event("resize")));
       setTimeout(() => window.dispatchEvent(new Event("resize")), 400); // TODO: nextTick doesn't work.
     };
 

@@ -1,24 +1,23 @@
 // spikeTimesRasterPlotModel.ts
 
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { useAppSessionStore } from "@/stores/appSessionStore";
-
 import { ActivityChartPanel } from "../activityChartPanel";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import {
+  ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
-  SpikeTimesPanelModelProps,
 } from "./spikeTimesPanelModel";
+import { useAppSessionStore } from "@/stores/appSessionStore";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: SpikeTimesPanelModelProps = {}
+    modelProps: ISpikeTimesPanelModelProps = {}
   ) {
-    super(panel, model);
+    super(panel, modelProps);
     this.icon = "mdi-chart-scatter-plot";
     this.id = "spikeTimesRasterPlot";
     this.panel.height = 30;
-    this.panel.xaxis = 1;
+    this.panel.xAxis = 1;
     this.state.height = 5;
   }
 
@@ -35,11 +34,11 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   get markerSize(): number {
     // console.log('marker size')
     if (!this.panel.graph.state.ref) return 100;
-    const d = this.panel.graph.layout.yaxis.domain;
+    const d = this.panel.graph.plotLayout.yaxis.domain;
     const domain = d[1] - d[0];
     // @ts-ignore
     const layoutHeight = this.panel.graph.state.ref._fullLayout.height;
-    const r = this.panel.graph.layout.yaxis.range;
+    const r = this.panel.graph.plotLayout.yaxis.range;
     const range = r[1] - r[0];
     const height = (layoutHeight * domain) / range / 2;
     return Math.min(Math.max(2, height), 100);
@@ -61,9 +60,14 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
           color: activity.recorder.view.color,
           width: 2,
         },
+        color: activity.recorder.view.color,
         size: 5,
         symbol: "line-ns",
       },
+      // marker: {
+      //   color: activity.recorder.view.color,
+      //   size: 3,
+      // },
       mode: "markers",
       modelId: this.id,
       name: "Spikes of " + activity.recorder.view.label,

@@ -2,28 +2,24 @@
 
 import { pointer } from "d3";
 
-import { Network } from "@/types/networkTypes";
+import { BaseObj } from "../common/base";
+import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { TNetwork } from "@/types/networkTypes";
 import {
   drawPathMouse,
   drawPathNode,
-} from "@/helpers/connectionGraph/connectionGraphPath";
-import { logger as mainLogger } from "@/helpers/common/logger";
+} from "../connectionGraph/connectionGraphPath";
 
-import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "network graph drag line",
-});
-
-export class NetworkGraphDragline {
+export class NetworkGraphDragline extends BaseObj {
   private _workspace: NetworkGraphWorkspace;
 
   constructor(networkGraphWorkspace: NetworkGraphWorkspace) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._workspace = networkGraphWorkspace;
   }
 
-  get network(): Network | undefined {
+  get network(): TNetwork | undefined {
     return this._workspace.networkGraph.network;
   }
 
@@ -31,7 +27,7 @@ export class NetworkGraphDragline {
    * Initialize drag line.
    */
   init(e: MouseEvent): void {
-    logger.trace("init");
+    this.logger.trace("init");
     this._workspace.state.dragLine = true;
     this.update(e);
     this._workspace.update();
@@ -41,7 +37,7 @@ export class NetworkGraphDragline {
    * Update drag line.
    */
   update(e: MouseEvent): void {
-    logger.trace("update");
+    this.logger.trace("update");
     if (this.network && this.network.nodes.state.selectedNode != null) {
       const selectedNode = this.network.nodes.state.selectedNode;
       const sourcePosition: { x: number; y: number } =
@@ -58,7 +54,7 @@ export class NetworkGraphDragline {
         .style("stroke", selectedNode.view.color)
         .attr("d", drawPathMouse(sourcePosition, targetPosition));
     } else {
-      logger.warn("No node was selected when dragLine() got executed!");
+      this.logger.warn("No node was selected when dragLine() got executed!");
     }
   }
 
@@ -69,7 +65,7 @@ export class NetworkGraphDragline {
     sourcePos: { x: number; y: number },
     targetPos: { x: number; y: number }
   ): void {
-    logger.trace("draw path");
+    this.logger.trace("draw path");
     this._workspace.selector
       .select(".dragline")
       .style("opacity", 1)
@@ -80,7 +76,7 @@ export class NetworkGraphDragline {
    * Hide drag line.
    */
   hide(): void {
-    logger.trace("hide");
+    this.logger.trace("hide");
     this._workspace.selector
       .select(".dragline")
       .style("opacity", 0)

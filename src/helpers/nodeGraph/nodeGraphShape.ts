@@ -1,11 +1,10 @@
 // nodeGraphShape.ts
 
-import { ILogObj, Logger } from "tslog";
 import { Selection, select } from "d3";
 
-import { NetworkGraph } from "@/types/networkGraphTypes";
-import { Node } from "@/types/nodeTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseObj } from "../common/base";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNode } from "@/types/nodeTypes";
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;
@@ -73,7 +72,7 @@ function getTrianglePoints(radius: number): string {
   return points;
 }
 
-function nodePoints(node: Node, radius: number): string {
+function nodePoints(node: TNode, radius: number): string {
   if (node.model.isStimulator) {
     return getHexagonPoints(radius);
   } else if (node.model.isRecorder) {
@@ -85,28 +84,25 @@ function nodePoints(node: Node, radius: number): string {
   }
 }
 
-export class NodeGraphShape {
-  private _networkGraph: NetworkGraph;
-  private _logger: Logger<ILogObj>;
+export class NodeGraphShape extends BaseObj {
+  private _networkGraph: TNetworkGraph;
 
-  constructor(networkGraph: NetworkGraph) {
+  constructor(networkGraph: TNetworkGraph) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._networkGraph = networkGraph;
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this._networkGraph.network.project.shortId}] node graph shape`,
-    });
   }
 
   get nodeRadius(): number {
-    return this._networkGraph.config.nodeRadius;
+    return this._networkGraph.config?.localStorage.nodeRadius;
   }
 
   get strokeWidth(): number {
-    return this._networkGraph.config.strokeWidth;
+    return this._networkGraph.config?.localStorage.strokeWidth;
   }
 
-  drawShape(selector: Selection<any, any, any, any>, node: Node): void {
-    this._logger.trace("draw shape");
+  drawShape(selector: Selection<any, any, any, any>, node: TNode): void {
+    this.logger.trace("draw shape");
     selector.attr("elementType", node.model.elementType);
     selector.attr("weight", node.view.synWeights);
 
@@ -126,7 +122,7 @@ export class NodeGraphShape {
         .attr("style", "stroke-linejoin: round")
         .attr("stroke", "currentcolor")
         .attr("fill", "white")
-        .attr("points", (n: Node) => nodePoints(n, this.nodeRadius));
+        .attr("points", (n: TNode) => nodePoints(n, this.nodeRadius));
     }
 
     elem
@@ -143,8 +139,8 @@ export class NodeGraphShape {
   /**
    * Initialize a node shape.
    */
-  init(selector: Selection<any, any, any, any>, node: Node): void {
-    this._logger.silly("init");
+  init(selector: Selection<any, any, any, any>, node: TNode): void {
+    this.logger.silly("init");
     const elem: Selection<any, any, any, any> = selector
       .append("g")
       .attr("class", "core");
@@ -189,12 +185,12 @@ export class NodeGraphShape {
    * Render all node shapes.
    */
   render(): void {
-    this._logger.silly("render");
+    this.logger.silly("render");
     const nodes = select("g#nodes").selectAll("g.node");
 
     // Check if neuron has to change its shape.
     //@ts-ignore
-    nodes.each((node: Node, idx: number, elements: any[]) => {
+    nodes.each((node: TNode, idx: number, elements: any[]) => {
       const elem = select(elements[idx]);
 
       if (
@@ -208,7 +204,8 @@ export class NodeGraphShape {
         .select(".shape")
         .style(
           "stroke-width",
-          (node.size > 1 ? 1.5 : 1) * this._networkGraph.config.strokeWidth
+          (node.size > 1 ? 1.5 : 1) *
+            this._networkGraph.config?.localStorage.strokeWidth
         )
         .style("opacity", node.view.opacity ? 1 : 0.6);
 

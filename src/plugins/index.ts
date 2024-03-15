@@ -3,6 +3,7 @@
  *
  * Automatically included in `./src/main.ts`
  */
+
 import type { App } from "vue";
 
 import pinia from "@/stores";

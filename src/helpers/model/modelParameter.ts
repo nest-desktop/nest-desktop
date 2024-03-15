@@ -1,20 +1,20 @@
 // modelParameter.ts
 
-import { Model } from "@/types/modelTypes";
-import { Parameter, ParameterProps } from "@/helpers/common/parameter";
+import { Parameter, IParamProps } from "../common/parameter";
+import { TModel } from "@/types/modelTypes";
 
-export interface ModelParameterProps extends ParameterProps {}
+export interface IModelParamProps extends IParamProps {}
 
 export class ModelParameter extends Parameter {
-  private _parent: Model;
+  private _parent: TModel;
 
-  constructor(model: Model, param: ModelParameterProps) {
-    super(param);
+  constructor(model: TModel, paramProps: IModelParamProps) {
+    super(paramProps, { minLevel: 3 });
     this._parent = model;
   }
 
-  get model(): Model {
-    return this._parent as Model;
+  get model(): TModel {
+    return this._parent as TModel;
   }
 
   /**
@@ -24,7 +24,7 @@ export class ModelParameter extends Parameter {
     return this.model.params[this.id];
   }
 
-  get parent(): Model {
+  get parent(): TModel {
     return this._parent;
   }
 
@@ -57,8 +57,8 @@ export class ModelParameter extends Parameter {
    * Serialize for JSON.
    * @return model parameter object
    */
-  override toJSON(): ModelParameterProps {
-    const param: ModelParameterProps = {
+  override toJSON(): IModelParamProps {
+    const paramProps: IModelParamProps = {
       id: this.id,
       component: this.component,
       label: this.label,
@@ -68,18 +68,18 @@ export class ModelParameter extends Parameter {
     };
 
     if (this.component === "valueSlider") {
-      param.min = this.min;
-      param.max = this.max;
-      param.step = this.step;
+      paramProps.min = this.min;
+      paramProps.max = this.max;
+      paramProps.step = this.step;
     } else if (this.component === "tickSlider") {
-      param.ticks = this.ticks;
+      paramProps.ticks = this.ticks;
     }
 
     // Add rules for validation if existed.
     if (this.rules.length > 0) {
-      param.rules = this.rules;
+      paramProps.rules = this.rules;
     }
 
-    return param;
+    return paramProps;
   }
 }

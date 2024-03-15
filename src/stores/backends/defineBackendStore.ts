@@ -1,12 +1,11 @@
 // defineBackendSessionStore.ts
 
 import axios from "axios";
+import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
-
 import { defineBackendConfigStore } from "./defineBackendConfigStore";
-import { computed, reactive } from "vue";
 
 export function defineBackendStore(
   simulator: string,

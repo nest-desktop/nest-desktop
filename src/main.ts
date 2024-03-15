@@ -1,7 +1,7 @@
 /**
  * main.ts
  *
- * Bootstraps Vuetify and other plugins then mounts the App
+ * Bootstraps Vuetify and other plugins then mounts the App.
  */
 
 // Components
@@ -21,3 +21,18 @@ registerPlugins(app);
 
 // Mount app
 app.mount("#app");
+
+// https://vite-pwa-org.netlify.app/guide/periodic-sw-updates
+
+// import { registerSW } from "virtual:pwa-register";
+
+// const intervalMS = 60 * 60 * 1000;
+
+// const updateSW = registerSW({
+//   onRegistered(r) {
+//     r &&
+//       setInterval(() => {
+//         r.update();
+//       }, intervalMS);
+//   },
+// });

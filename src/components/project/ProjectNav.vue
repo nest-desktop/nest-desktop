@@ -147,7 +147,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import { Project } from "@/types/projectTypes";
+import { TProject } from "@/types/projectTypes";
 
 import ProjectMenu from "./ProjectMenu.vue";
 
@@ -166,7 +166,7 @@ const projectDBStore = computed(() => props.projectDBStore);
 const search = ref("");
 
 const projects = computed(() =>
-  props.projectDBStore.projects.filter((project: Project) =>
+  props.projectDBStore.projects.filter((project: TProject) =>
     project.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );
@@ -214,7 +214,7 @@ const resizeSideNav = () => {
 /**
  * Save project.
  */
-const saveProject = (project: Project) => {
+const saveProject = (project: TProject) => {
   project.state.state.editMode = false;
   projectDBStore.value.saveProject(project.id);
 };

@@ -1,23 +1,31 @@
 // project.ts
 
-import { BaseProject, ProjectProps } from "@/helpers/project/project";
+import { BaseProject, IProjectProps } from "@/helpers/project/project";
 
 import { Insite } from "../insite/insite";
-import { NESTNetwork, NESTNetworkProps } from "../network/network";
-import { NESTSimulation, NESTSimulationProps } from "../simulation/simulation";
+import { INESTNetworkProps, NESTNetwork } from "../network/network";
+import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
-export interface NESTProjectProps extends ProjectProps {
-  network?: NESTNetworkProps;
-  simulation?: NESTSimulationProps;
+export interface INESTProjectProps extends IProjectProps {
+  network?: INESTNetworkProps;
+  simulation?: INESTSimulationProps;
 }
 
 export class NESTProject extends BaseProject {
   private _insite: Insite; // insite
 
-  constructor(project: NESTProjectProps = {}) {
-    super(project);
+  constructor(projectProps: INESTProjectProps = {}) {
+    super(projectProps);
     this._insite = new Insite(this);
+  }
+
+  override get Network() {
+    return NESTNetwork;
+  }
+
+  override get Simulation() {
+    return NESTSimulation;
   }
 
   get insite(): Insite {
@@ -40,26 +48,17 @@ export class NESTProject extends BaseProject {
    */
   override clone(): NESTProject {
     this.logger.trace("clone");
-    const newProject = new NESTProject({
+    return new NESTProject({
       ...this.toJSON(),
       id: undefined,
       updatedAt: "",
     });
-    return newProject;
   }
 
   /**
-   * Initialize store for NEST.
+   * Initialize model store for NEST.
    */
-  override initStore(): void {
+  override initModelStore(): void {
     this.modelDBStore = useNESTModelDBStore();
-  }
-
-  override newNetwork(data?: NESTNetworkProps): NESTNetwork {
-    return new NESTNetwork(this, data);
-  }
-
-  override newSimulation(data?: NESTSimulationProps): NESTSimulation {
-    return new NESTSimulation(this, data);
   }
 }

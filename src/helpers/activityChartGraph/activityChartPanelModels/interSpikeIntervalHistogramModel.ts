@@ -1,19 +1,24 @@
 // interSpikeIntervalHistogramModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 import { max } from "@/helpers/common/array";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-
-import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
-    super(panel, model);
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: ISpikeTimesPanelModelProps = {}
+  ) {
+    super(panel, modelProps);
     this.icon = "mdi-chart-bar";
     this.id = "interSpikeIntervalHistogram";
     this.label = "inter-spike interval";
-    this.panel.xaxis = 2;
+    this.panel.xAxis = 2;
     this.params = [
       {
         id: "binSize",
@@ -26,7 +31,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     ];
     this.state.xaxisType = "linear";
 
-    this.initParams(model.params);
+    this.initParams(modelProps.params);
   }
 
   /**

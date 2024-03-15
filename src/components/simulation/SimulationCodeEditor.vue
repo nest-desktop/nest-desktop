@@ -16,7 +16,7 @@
   </v-toolbar>
 
   <Simulation-code-mirror
-    :simulation="(simulation as Simulation)"
+    :simulation="(simulation as TSimulation)"
     v-if="simulation"
   />
 </template>
@@ -25,15 +25,15 @@
 import { computed } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
-import { Simulation, SimulationPropTypes } from "@/types/simulationTypes";
+import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
 
 import SimulationCodeMirror from "./SimulationCodeMirror.vue";
 
 const props = defineProps({
-  simulation: SimulationPropTypes,
+  simulation: TSimulationProps,
 });
 
-const simulation = computed(() => props.simulation as Simulation);
+const simulation = computed(() => props.simulation as TSimulation);
 
 const codeBlocks = [
   { icon: "mdi-delete-empty", title: "reset" },

@@ -1,13 +1,19 @@
 // connection.ts
 
-import { BaseConnection, ConnectionProps } from "@/helpers/connection/connection";
+import {
+  BaseConnection,
+  IConnectionProps,
+} from "@/helpers/connection/connection";
 
 import { NorseConnections } from "./connections";
 
-export interface NorseConnectionProps extends ConnectionProps {}
+export interface INorseConnectionProps extends IConnectionProps {}
 
 export class NorseConnection extends BaseConnection {
-  constructor(connections: NorseConnections, connection: NorseConnectionProps) {
-    super(connections, connection);
+  constructor(
+    connections: NorseConnections,
+    connectionProps: INorseConnectionProps
+  ) {
+    super(connections, connectionProps);
   }
 }

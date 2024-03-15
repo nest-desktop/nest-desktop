@@ -1,6 +1,6 @@
 // valueGenerator.ts
 
-import { fill, linspace, range } from "./array";
+import { fill, linSpace, range } from "./array";
 import {
   randomUniformIntArray,
   randomUniformFloatArray,
@@ -11,7 +11,7 @@ export class ValueGenerator {
   private _inputs: any = {
     fill: ["value", "size"],
     range: ["start", "end", "step"],
-    linspace: ["start", "end", "size"],
+    linSpace: ["start", "end", "size"],
     randomUniformInt: ["min", "max", "size"],
     randomUniformFloat: ["min", "max", "size"],
     randomNormal: ["mu", "sigma", "size"],
@@ -108,8 +108,8 @@ export class ValueGenerator {
           parseFloat(p.step)
         );
         break;
-      case "linspace":
-        array = linspace(
+      case "linSpace":
+        array = linSpace(
           parseFloat(p.start),
           parseFloat(p.end),
           parseInt(p.size, 0)

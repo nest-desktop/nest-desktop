@@ -3,20 +3,20 @@
 import Mustache from "mustache";
 import { nextTick } from "vue";
 
-import { BaseNode, NodeProps } from "@/helpers/node/node";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
 
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
 import { NorseNodes } from "./nodes";
 import { NorseSimulation } from "../simulation/simulation";
 
-export interface NorseNodeProps extends NodeProps {}
+export interface INorseNodeProps extends INodeProps {}
 
 export class NorseNode extends BaseNode {
   private _code: string = "";
 
-  constructor(nodes: NorseNodes, node: NorseNodeProps = {}) {
-    super(nodes, node);
+  constructor(nodes: NorseNodes, nodeProps: INorseNodeProps = {}) {
+    super(nodes, nodeProps);
   }
 
   get code(): string {
@@ -69,7 +69,7 @@ export class NorseNode extends BaseNode {
 
   override changes(): void {
     this.clean();
-    this.state.updateHash();
+    this.updateHash();
     this.generateCode();
     this.logger.trace("changes");
     this.nodes.network.changes();
@@ -82,16 +82,16 @@ export class NorseNode extends BaseNode {
   /**
    * Initialize node.
    */
-  override init(node?: NodeProps): void {
+  override init(nodeProps?: INodeProps): void {
     this.logger.trace("init");
 
-    this.initParameters(node);
+    this.addParameters(nodeProps?.params);
 
     if (this.model.isRecorder) {
-      this.initActivity(node?.activity);
+      this.createActivity(nodeProps?.activity);
     }
 
-    this.state.updateHash();
+    this.updateHash();
 
     nextTick(() => this.generateCode());
   }

@@ -14,20 +14,7 @@
       style="min-height: 52px; height: 52px"
     >
       <v-row no-gutters>
-        <div style="pointer-events: none">
-          <v-btn icon size="small">
-            <NodeAvatar :node="connection.source" size="32px" />
-          </v-btn>
-          <v-btn
-            :color="connection.source.view.color"
-            :icon="connection.synapse.icon"
-            size="small"
-            variant="text"
-          />
-          <v-btn icon size="small">
-            <NodeAvatar :node="connection.target" size="32px" />
-          </v-btn>
-        </div>
+        <ConnectionAvatar :connection />
 
         <v-spacer />
 
@@ -78,16 +65,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
 import ConnectionSpecEditor from "@/components/connection/ConnectionSpecEditor.vue";
 
 import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
 import { NESTConnection } from "../../helpers/connection/connection";
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 
-const props = defineProps({
-  connection: NESTConnection,
-});
+const props = defineProps({ connection: NESTConnection });
 
 const connection = computed(() => props.connection as NESTConnection);
 const synapse = computed(() => connection.value.synapse as NESTSynapse);
@@ -159,11 +144,11 @@ const items = [
     .menu {
       opacity: 0;
     }
-  }
 
-  .panel-title:hover {
-    .menu {
-      opacity: 1;
+    &:hover {
+      .menu {
+        opacity: 1;
+      }
     }
   }
 

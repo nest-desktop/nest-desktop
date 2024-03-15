@@ -33,13 +33,11 @@
 import { computed } from "vue";
 
 import ConnectionAvatar from "./ConnectionAvatar.vue";
-import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
+import { TConnection, TConnectionProps } from "@/types/connectionTypes";
 
-const props = defineProps({
-  connection: ConnectionPropTypes,
-});
+const props = defineProps({ connection: TConnectionProps });
 
-const connection = computed(() => props.connection as Connection);
+const connection = computed(() => props.connection as TConnection);
 </script>
 
 <style lang="scss">

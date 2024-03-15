@@ -44,9 +44,7 @@ import { DownloadImgopts } from "plotly.js";
 
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
-const props = defineProps({
-  graph: ActivityChartGraph,
-});
+const props = defineProps({ graph: ActivityChartGraph });
 
 const graph = computed(() => props.graph as ActivityChartGraph);
 
@@ -62,6 +60,16 @@ const state = reactive({
   },
 });
 const activityChartGraph = ref(null);
+
+/**
+ * Download image of the current plot.
+ */
+const downloadImage = () => {
+  state.dialog = false;
+  const date: string = new Date().toISOString();
+  state.toImageButtonOptions.filename = `nest_desktop-${graph.value?.project.name}-${date}`;
+  graph.value?.downloadImage(state.toImageButtonOptions as DownloadImgopts);
+};
 
 const init = () => {
   const ref: any = activityChartGraph.value;
@@ -79,30 +87,20 @@ const init = () => {
       graph.value?.restyle();
     });
 
-    if (graph.value?.data) {
+    if (graph.value?.plotData) {
       graph.value.react();
     }
   }
 };
 
-/**
- * Download image of the current plot.
- */
-const downloadImage = () => {
+onBeforeUnmount(() => {
   state.dialog = false;
-  const date: string = new Date().toISOString();
-  state.toImageButtonOptions.filename = `nest_desktop-${graph.value?.project.name}-${date}`;
-  graph.value?.downloadImage(state.toImageButtonOptions as DownloadImgopts);
-};
+  window.removeEventListener("darkmode", () => graph.value?.relayout());
+});
 
 onMounted(() => {
   init();
   window.addEventListener("darkmode", () => graph.value?.relayout());
-});
-
-onBeforeUnmount(() => {
-  state.dialog = false;
-  window.removeEventListener("darkmode", () => graph.value?.relayout());
 });
 
 watch(

@@ -27,11 +27,11 @@ export class NetworkGraphGrid {
     const offset = 10;
     const cellHeight = 25;
     const cellWidth = 25;
-    const nrows = (this.height / cellHeight) * 3;
-    const ncolumns = (this.width / cellWidth) * 3;
+    const nRows = (this.height / cellHeight) * 3;
+    const nColumns = (this.width / cellWidth) * 3;
 
     // Iterate for rows.
-    for (let row = 0; row < nrows - 1; row++) {
+    for (let row = 0; row < nRows - 1; row++) {
       data.push({
         x1: -this.width,
         x2: this.width * 2,
@@ -41,7 +41,7 @@ export class NetworkGraphGrid {
     }
 
     // Iterate for columns.
-    for (let column = 0; column < ncolumns - 1; column++) {
+    for (let column = 0; column < nColumns - 1; column++) {
       data.push({
         x1: offset + column * cellWidth - this.width,
         x2: offset + column * cellWidth - this.width,

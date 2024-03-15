@@ -2,11 +2,12 @@
 
 import {
   BaseSimulationCode,
-  SimulationCodeProps,
+  ISimulationCodeProps,
 } from "@/helpers/simulation/simulationCode";
-import { Simulation } from "@/types/simulationTypes";
 
-export interface PyNNSimulationCodeProps extends SimulationCodeProps {}
+import { PyNNSimulation } from "./simulation";
+
+export interface IPyNNSimulationCodeProps extends ISimulationCodeProps {}
 
 const simulationCodeBlocks: string[] = [
   "importModules",
@@ -17,12 +18,15 @@ const simulationCodeBlocks: string[] = [
 
 export class PyNNSimulationCode extends BaseSimulationCode {
   constructor(
-    simulation: Simulation,
-    simulationCode: PyNNSimulationCodeProps = {}
+    simulation: PyNNSimulation,
+    simulationCodeProps: IPyNNSimulationCodeProps = {}
   ) {
-    simulationCode.blocks = simulationCode?.blocks || simulationCodeBlocks;
-    simulationCode.templateFilename = "pynn-master";
-    super(simulation, simulationCode);
+    simulationCodeProps.templateFilename = "pynn-master";
+    super(simulation, {
+      blocks: simulationCodeBlocks,
+      ...simulationCodeProps,
+      templateFilename: "pynn-master",
+    });
   }
 
   /**

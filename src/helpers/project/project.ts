@@ -1,87 +1,84 @@
 // project.ts
 
-import { ILogObj, Logger } from "tslog";
 import { nextTick } from "vue";
-import { v4 as uuidv4 } from "uuid";
 
-import { Activities } from "@/helpers/activity/activities";
-import { ActivityGraph } from "@/helpers/activity/activityGraph";
-import { BaseNetwork, NetworkProps } from "@/helpers/network/network";
-import {
-  BaseSimulation,
-  SimulationProps,
-} from "@/helpers/simulation/simulation";
-import { Network } from "@/types/networkTypes";
-import { Project } from "@/types/projectTypes";
+import { Activities } from "../activity/activities";
+import { Activity } from "../activity/activity";
+import { ActivityGraph } from "../activity/activityGraph";
+import { BaseNetwork, INetworkProps } from "../network/network";
+import { BaseObj } from "../common/base";
+import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
+import { NetworkRevision } from "../network/networkRevision";
 import { ProjectState } from "./projectState";
-import { Simulation } from "@/types/simulationTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { TNetwork } from "@/types/networkTypes";
+import { TProject } from "@/types/projectTypes";
+import { TSimulation } from "@/types/simulationTypes";
+import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
-export interface ProjectProps {
+export interface IProjectProps {
   activityGraph?: any;
   createdAt?: string;
   description?: string;
   id?: string;
   name?: string;
-  network?: NetworkProps;
-  simulation?: SimulationProps;
+  network?: INetworkProps;
+  simulation?: ISimulationProps;
   updatedAt?: string;
   version?: string;
 }
 
-export class BaseProject {
+export class BaseProject extends BaseObj {
   private _activities: Activities;
   private _activityGraph: ActivityGraph;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc: any; // raw data of the database
   private _id: string; // id of the project
-  private _logger: Logger<ILogObj>;
   private _modelDBStore: any;
   private _name: string; // project name
-  public _network: BaseNetwork; // network of neurons and devices
-  // private _projectStore: any;
-  public _simulation: BaseSimulation; // settings for the simulation
+  private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
+  public _network: TNetwork; // network of neurons and devices
+  public _simulation: BaseSimulation; // settings for the simulation
 
-  constructor(project: ProjectProps = {}) {
-    // Database instance
-    this._doc = project || {};
-    this._id = project.id || uuidv4();
-    this._createdAt = project.createdAt || new Date().toLocaleDateString();
-    this._updatedAt = project.updatedAt;
+  constructor(projectProps: IProjectProps = {}) {
+    super({ logger: { settings: { minLevel: 3 } } });
 
-    // Project metadata
-    this._name = project.name || "undefined project";
-    this._description = project.description || "";
-    this._activityGraph = project.activityGraph;
+    // Database instance.
+    this._doc = projectProps || {};
+    this._id = projectProps.id || this.uuid;
+    this._createdAt = projectProps.createdAt || new Date().toLocaleDateString();
+    this._updatedAt = projectProps.updatedAt;
 
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.shortId}] project`,
-    });
+    // Project metadata.
+    this._name = projectProps.name || "undefined project";
+    this._description = projectProps.description || "";
+    this._activityGraph = projectProps.activityGraph;
 
     // Initialize database.
-    this.initStore();
+    this.initModelStore();
 
-    // Initialize project state.
+    // Construct components.
     this._state = new ProjectState(this);
-
-    // Initialize simulation.
-    this._simulation = this.newSimulation(project.simulation);
-
-    // Initialize network.
-    this._network = this.newNetwork(project.network);
-
-    // Initialize activities.
+    this._simulation = new this.Simulation(this, projectProps.simulation);
+    this._network = new this.Network(this, projectProps.network);
+    this._networkRevision = new NetworkRevision(this);
     this._activities = new Activities(this);
+    this._activityGraph = new ActivityGraph(this, projectProps.activityGraph);
 
-    // Initialize activity graph.
-    this._activityGraph = new ActivityGraph(this, project.activityGraph);
+    // Initialize components.
+    nextTick(() => this.init());
+  }
 
-    this.clean();
+  get Network() {
+    return BaseNetwork;
+  }
+
+  get Simulation() {
+    return BaseSimulation;
   }
 
   get activities(): Activities {
@@ -92,11 +89,11 @@ export class BaseProject {
     return this._activityGraph;
   }
 
-  get baseNetwork(): Network {
+  get baseNetwork(): TNetwork {
     return this._network;
   }
 
-  get baseSimulation(): Simulation {
+  get baseSimulation(): TSimulation {
     return this._simulation;
   }
 
@@ -128,10 +125,6 @@ export class BaseProject {
     return this._id;
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
   get modelDBStore() {
     return this._modelDBStore;
   }
@@ -148,19 +141,18 @@ export class BaseProject {
     this._name = value;
   }
 
-  get network(): Network {
+  get network(): TNetwork {
     return this._network;
   }
 
-  // get projectStore() {
-  //   return this._projectStore;
-  // }
+  /**
+   * Get network revision.
+   */
+  get networkRevision(): NetworkRevision {
+    return this._networkRevision;
+  }
 
-  // get simulateAfterCheckout(): boolean {
-  //   return this._projectStore.simulateAfterCheckout;
-  // }
-
-  get simulation(): Simulation {
+  get simulation(): TSimulation {
     return this._simulation;
   }
 
@@ -169,7 +161,7 @@ export class BaseProject {
    * @returns 6-digit hash value
    */
   get shortId(): string {
-    return this._id ? this._id.slice(0, 6) : "";
+    return this._id ? truncate(this._id) : "";
   }
 
   get state(): ProjectState {
@@ -200,36 +192,63 @@ export class BaseProject {
    * It commits the network in the network history.
    */
   changes(): void {
-    this._state.updateHash();
+    this.updateHash();
     this._state.checkChanges();
 
-    this._logger.trace("changes");
+    this.logger.trace("changes");
     this._activities.checkRecorders();
 
     this._simulation.code.generate();
 
+    this._networkRevision.commit();
+
     // Simulate when the configuration is set
     // and the view mode is activity explorer.
-    // const projectView = this._project.app.project.view;
-    // if (
-    //   projectView.config.simulateAfterChange &&
-    //   projectView.state.modeIdx === 1
-    // ) {
-    //   nextTick(() => this.startSimulation());
-    // }
+    const projectViewStore = useProjectViewStore();
+    if (projectViewStore.state.simulateAfterChange.value) {
+      nextTick(() => this.startSimulation());
+    }
+  }
+
+  /**
+   * Checkout network.
+   */
+  checkoutNetwork(): void {
+    const network = this._networkRevision.load();
+    this._network.update(network);
+    this._network.clean();
+
+    // Generate simulation code.
+    this._simulation.code.generate();
+
+    const projectViewStore = useProjectViewStore();
+    if (projectViewStore.state.simulateAfterCheckout.value) {
+      // Run simulation.
+      nextTick(() => this.startSimulation());
+    } else {
+      // Update activities.
+      this.activities.update(
+        this.activities.all.map((activity: Activity) => activity.toJSON())
+      );
+
+      // Update activities in activity graph.
+      this._activityGraph.activityChartGraph.updateActivities();
+
+      // Update activity graph.
+      this._activityGraph.update();
+    }
   }
 
   /**
    * Clean project.
    *
    * @remarks
-   * Clean project code.
    * Update hash of this project.
    */
   clean(): void {
-    this._logger.trace("clean");
-    this._simulation.code.clean();
-    this._state.updateHash();
+    this.logger.trace("clean");
+
+    this.updateHash();
     this._state.checkChanges();
   }
 
@@ -239,13 +258,10 @@ export class BaseProject {
    * @remarks
    * It generates ne project id and empties updatedAt variable;
    */
-  clone(): Project {
-    this._logger.trace("clone");
-    const newProject = new BaseProject({ ...this.toJSON() });
-    // newProject._id = uuidv4();
-    // newProject._updatedAt = "";
-    // newProject.init();
-    return newProject;
+  clone(): TProject {
+    this.logger.trace("clone");
+
+    return new BaseProject({ ...this.toJSON(), id: undefined, updatedAt: "" });
   }
 
   // /**
@@ -288,42 +304,35 @@ export class BaseProject {
   /**
    * Initialize project.
    */
-  init(generateCode: boolean = true): void {
-    this._logger.trace("init");
+  init(): void {
+    this.logger.trace("init");
+
+    // Initialize network.
+    this.network.init();
+
+    // Initialize network history.
+    this.networkRevision.init();
+
+    // Initialize simulation.
+    this.simulation.init();
+
+    // Initialize activities.
+    this.activities.init();
+
+    // Initialize activity graph.
+    this.activityGraph.init();
+
     this.clean();
-
-    if (generateCode) {
-      nextTick(() => this._simulation.code.generate());
-    }
-    // Reset network graph.
-    this._network.nodes.resetState();
-
-    // Commit network in history.
-    this.network.commit();
   }
 
   /**
-   * Initialize activity graph.
+   * Initialize model store.
+   *
+   * @remarks
+   * It will be overridden by simulator components.
    */
-  initActivityGraph(): void {
-    this._logger.trace("init activity graph");
-    this._activityGraph.init();
-  }
-
-  /**
-   * Initialize store.
-   */
-  initStore(): void {
+  initModelStore(): void {
     this._modelDBStore = useModelDBStore();
-    // this._projectStore = useProjectStore();
-  }
-
-  newNetwork(data?: NetworkProps): Network {
-    return new BaseNetwork(this, data);
-  }
-
-  newSimulation(data?: SimulationProps): Simulation {
-    return new BaseSimulation(this, data);
   }
 
   // /**
@@ -346,7 +355,7 @@ export class BaseProject {
    * Start simulation.
    */
   startSimulation(): void {
-    this._logger.trace("start simulation");
+    this.logger.trace("start simulation");
     this._network.clean();
 
     // Reset activities and activity graphs.
@@ -366,7 +375,7 @@ export class BaseProject {
       this.activities.update(response.data.data);
 
       // Commit network for the history.
-      this.network.commit();
+      this.networkRevision.commit();
     });
   }
 
@@ -382,8 +391,8 @@ export class BaseProject {
    * Serialize for JSON.
    * @return project object
    */
-  toJSON(): ProjectProps {
-    const project: ProjectProps = {
+  toJSON(): IProjectProps {
+    const projectProps: IProjectProps = {
       // activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
@@ -394,7 +403,7 @@ export class BaseProject {
       updatedAt: this._updatedAt,
       version: process.env.APP_VERSION as string,
     };
-    return project;
+    return projectProps;
   }
 
   // /**
@@ -404,4 +413,17 @@ export class BaseProject {
   //   this._logger.trace("unload");
   //   return this._projectStore.db.unloadProject(this.id);
   // }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    this._updateHash({
+      description: this._description,
+      id: this._id,
+      name: this._name,
+      network: this._network.hash,
+      simulation: this._simulation.hash,
+    });
+  }
 }

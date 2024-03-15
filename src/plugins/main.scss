@@ -1,16 +1,16 @@
-@use 'vuetify' with (
+@use "vuetify" with (
   $utilities: false,
-  $color-pack: false,
+  $color-pack: false
 );
 
 // Hide menu icon for list item.
 .list-item-menu {
   opacity: 0 !important;
-}
 
-// Show menu icon when mouse over list item.
-.v-list-item:hover .list-item-menu {
-  opacity: 1 !important;
+  // Show menu icon when mouse over list item.
+  &:hover .list-item-menu {
+    opacity: 1 !important;
+  }
 }
 
 .rotate-90 {

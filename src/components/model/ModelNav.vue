@@ -67,7 +67,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 
-import { Model } from "@/types/modelTypes";
+import { TModel } from "@/types/modelTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -82,7 +82,7 @@ const props = defineProps({
 const search = ref("");
 
 const models = computed(() =>
-  props.store.models.filter((model: Model) =>
+  props.store.models.filter((model: TModel) =>
     model.label.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );

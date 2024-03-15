@@ -1,20 +1,20 @@
 // model.ts
 
-import { BaseModel, ModelProps } from "@/helpers/model/model";
+import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
-export interface PyNNModelProps extends ModelProps {
+export interface IPyNNModelProps extends IModelProps {
   codeTemplate?: string;
 }
 
 export class PyNNModel extends BaseModel {
   private _codeTemplate: string = "";
 
-  constructor(model: PyNNModelProps = {}) {
-    super(model, "PyNNModel", "pynn");
+  constructor(modelProps: IPyNNModelProps = {}) {
+    super(modelProps, "pynn");
 
-    if (model.codeTemplate) {
-      this._codeTemplate = model.codeTemplate;
+    if (modelProps.codeTemplate) {
+      this._codeTemplate = modelProps.codeTemplate;
     }
   }
 
@@ -33,8 +33,8 @@ export class PyNNModel extends BaseModel {
     return new PyNNModel({ ...this.toJSON() });
   }
 
-  toJSON(): PyNNModelProps {
-    const model: any = {
+  toJSON(): IPyNNModelProps {
+    const modelProps: IPyNNModelProps = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
@@ -47,15 +47,15 @@ export class PyNNModel extends BaseModel {
 
     // Add the recordables if provided.
     if (this.recordables.length > 0) {
-      model.recordables = this.recordables.map(
+      modelProps.recordables = this.recordables.map(
         (recordable: any) => recordable.id
       );
     }
 
     if (this.codeTemplate) {
-      model.codeTemplate = this.codeTemplate;
+      modelProps.codeTemplate = this.codeTemplate;
     }
 
-    return model;
+    return modelProps;
   }
 }

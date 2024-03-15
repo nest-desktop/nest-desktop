@@ -1,16 +1,16 @@
 // simulationKernel.ts
 
-import { Config } from "@/helpers/config";
+import { BaseObj } from "@/helpers/common/base";
 
 import { NESTSimulation } from "./simulation";
 
-export interface NESTSimulationKernelProps {
+export interface INESTSimulationKernelProps {
   resolution?: number;
   localNumThreads?: number;
   rngSeed?: number;
 }
 
-export class NESTSimulationKernel extends Config {
+export class NESTSimulationKernel extends BaseObj {
   private _localNumThreads: number; // number of threads
   private _resolution: number; // time resolution of simulation steps
   private _simulation: NESTSimulation; // parent
@@ -18,13 +18,18 @@ export class NESTSimulationKernel extends Config {
 
   constructor(
     simulation: NESTSimulation,
-    kernel: NESTSimulationKernelProps = {}
+    kernelProps: INESTSimulationKernelProps = {}
   ) {
-    super("NESTSimulationKernel", "nest");
+    super({
+      config: { simulator: "nest" },
+      logger: { settings: { minLevel: 3 } },
+    });
+
     this._simulation = simulation;
-    this._resolution = kernel.resolution || 0.1;
-    this._localNumThreads = kernel.localNumThreads || 1;
-    this._rngSeed = kernel.rngSeed || 0;
+
+    this._resolution = kernelProps.resolution || 0.1;
+    this._localNumThreads = kernelProps.localNumThreads || 1;
+    this._rngSeed = kernelProps.rngSeed || 0;
   }
 
   get localNumThreads(): number {
@@ -60,9 +65,9 @@ export class NESTSimulationKernel extends Config {
 
   /**
    * Serialize for JSON.
-   * @return simulation kernel object
+   * @return simulation kernel props
    */
-  toJSON(): NESTSimulationKernelProps {
+  toJSON(): INESTSimulationKernelProps {
     return {
       localNumThreads: this._localNumThreads,
       resolution: this._resolution,

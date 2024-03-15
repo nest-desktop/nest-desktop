@@ -1,24 +1,23 @@
 // analogSignalHistogramModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
+import {
+  AnalogSignalPanelModel,
+  IAnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 import { max, min } from "@/helpers/common/array";
 
-import { ActivityChartPanel } from "../activityChartPanel";
-import {
-  AnalogSignalPanelModel,
-  AnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
-
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: AnalogSignalPanelModelProps = {}
+    model: IAnalogSignalPanelModelProps = {}
   ) {
     super(panel, model);
     this.icon = "mdi-chart-bar";
     this.id = "analogSignalHistogram";
-    this.panel.xaxis = 2;
+    this.panel.xAxis = 2;
     this.params = [
       {
         id: "bins",
@@ -108,7 +107,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       type: "histogram",
       visible: this.state.visible,
       x: record.values,
-      xaxis: "x" + this.panel.xaxis,
+      xaxis: "x" + this.panel.xAxis,
       xbins: {
         end,
         size,

@@ -1,10 +1,11 @@
 // nodeRecord.ts
 
-import { Activity } from "@/helpers/activity/activity";
-import { Node } from "@/types/nodeTypes";
-import { max, min } from "@/helpers/common/array";
+import { Activity } from "../activity/activity";
+import { BaseObj } from "../common/base";
+import { TNode } from "@/types/nodeTypes";
+import { max, min } from "../common/array";
 
-export interface NodeRecordProps {
+export interface INodeRecordProps {
   id: string;
   color: string;
   groupId: string;
@@ -12,7 +13,7 @@ export interface NodeRecordProps {
   unit?: string;
 }
 
-export class NodeRecord {
+export class NodeRecord extends BaseObj {
   // private _activity: Activity;
   private _color: string = "blue";
   private _colorMap = {
@@ -24,17 +25,19 @@ export class NodeRecord {
   private _groupId: string = "0";
   private _id: string;
   private _label: string;
-  private _node: Node;
+  private _node: TNode;
   private _nodeSize: number = 0;
   private _unit: string;
 
-  constructor(node: Node, record: NodeRecordProps) {
+  constructor(node: TNode, nodeRecordProps: INodeRecordProps) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._node = node;
     // this._activity = node.activity;
 
-    this._id = record.id;
-    this._label = record.label || "";
-    this._unit = record.unit || "";
+    this._id = nodeRecordProps.id;
+    this._label = nodeRecordProps.label || "";
+    this._unit = nodeRecordProps.unit || "";
 
     this.updateGroupID();
     this.updateColor();
@@ -80,7 +83,7 @@ export class NodeRecord {
     return this._label.charAt(0).toUpperCase() + this._label.slice(1);
   }
 
-  get node(): Node {
+  get node(): TNode {
     return this._node;
   }
 
@@ -117,7 +120,7 @@ export class NodeRecord {
     return (value - min) / (max - min);
   }
 
-  toJSON(): NodeRecordProps {
+  toJSON(): INodeRecordProps {
     return {
       id: this._id,
       color: this._color,
@@ -129,6 +132,7 @@ export class NodeRecord {
    * Update node record.
    */
   update(): void {
+    this.logger.trace("update");
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
     this.updateGroupID();
     this.updateState();

@@ -1,5 +1,10 @@
 <template>
-  <card :color="node.view.color" class="node ma-1">
+  <card
+    :color="node.view.color"
+    @mouseenter="node.state.focus()"
+    @mouseleave="node.nodes.unfocusNode()"
+    class="node ma-1"
+  >
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :items="node.models"
@@ -14,7 +19,7 @@
       >
         <template #append>
           <div class="d-print-none">
-            <v-chip>{{ node.state.hash }}</v-chip>
+            <v-chip>{{ node.hash }}</v-chip>
           </div>
 
           <div class="d-print-none menu">
@@ -111,10 +116,10 @@
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
             <value-slider
-              :thumbColor="node.view.color"
+              :thumb-color="node.view.color"
               @update:model-value="node.changes()"
               id="n"
-              inputLabel="n"
+              input-label="n"
               label="population size"
               v-model="node.size"
             />
@@ -165,7 +170,7 @@
           variant="accordion"
         >
           <connection-editor
-            :connection="connection"
+            :connection
             :key="index"
             v-for="(connection, index) in node.connections"
           />
@@ -183,15 +188,13 @@ import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
+import { TNode, TNodeProps } from "@/types/nodeTypes";
 
 import NodeMenu from "./NodeMenu.vue";
 
-const props = defineProps({
-  node: NodePropTypes,
-});
+const props = defineProps({ node: TNodeProps });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as TNode);
 
 const state = reactive({
   menu: false,
@@ -249,11 +252,11 @@ const items = [
     .menu {
       opacity: 0;
     }
-  }
 
-  .node-title:hover {
-    .menu {
-      opacity: 1;
+    &:hover {
+      .menu {
+        opacity: 1;
+      }
     }
   }
 

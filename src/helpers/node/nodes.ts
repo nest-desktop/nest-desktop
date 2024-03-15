@@ -1,13 +1,11 @@
 // nodes.ts
 
-import { ILogObj, Logger } from "tslog";
 import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
 
-import { BaseNode, NodeProps } from "@/helpers/node/node";
-import { Network } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseNode, INodeProps } from "./node";
+import { BaseObj } from "../common/base";
+import { TNetwork } from "@/types/networkTypes";
+import { TNode } from "@/types/nodeTypes";
 
 const _nodeTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi-all-inclusive", id: "all", title: "all" },
@@ -16,41 +14,38 @@ const _nodeTypes: { icon: string; id: string; title: string }[] = [
   { icon: "network:recorder", id: "recorder", title: "recorder" },
 ];
 
-interface NodesState {
+interface INodesState {
   annotations: { [key: string]: string }[];
   elementTypeIdx: number;
-  focusedNode: Node | null;
-  hash: string;
-  selectedNode: Node | null;
+  focusedNode: TNode | null;
+  selectedNode: TNode | null;
 }
 
-export class BaseNodes {
-  private _logger: Logger<ILogObj>;
-  private _state: UnwrapRef<NodesState>; //reactive state
+export class BaseNodes extends BaseObj {
+  private _state: UnwrapRef<INodesState>; //reactive state
+  public _network: TNetwork; // parent
+  public _nodes: TNode[] = [];
 
-  public _network: Network; // parent
-  public _nodes: Node[] = [];
+  constructor(network: TNetwork, nodesProps?: INodeProps[]) {
+    super({ logger: { settings: { minLevel: 3 } } });
 
-  constructor(network: Network, nodes?: NodeProps[]) {
     this._network = network;
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.network.project.shortId}] nodes`,
-    });
 
     this._state = reactive({
       annotations: [],
       elementTypeIdx: 0,
       focusedNode: null,
-      hash: "",
       selectedNode: null,
     });
 
-    this.init(nodes);
+    this.update(nodesProps);
   }
 
-  get all(): Node[] {
+  get Node() {
+    return BaseNode;
+  }
+
+  get all(): TNode[] {
     return this._nodes;
   }
 
@@ -62,14 +57,14 @@ export class BaseNodes {
    * Some recorders for analog signals
    */
   get hasSomeAnalogRecorder(): boolean {
-    return this.nodes.some((node: Node) => node.model.isAnalogRecorder);
+    return this.nodes.some((node: TNode) => node.model.isAnalogRecorder);
   }
 
   /**
    * Some spike recorders
    */
   get hasSomeSpikeRecorder(): boolean {
-    return this.nodes.some((node: Node) => node.model.isSpikeRecorder);
+    return this.nodes.some((node: TNode) => node.model.isSpikeRecorder);
   }
 
   get isAnyNodeSelected(): boolean {
@@ -83,18 +78,18 @@ export class BaseNodes {
     return this._nodes.length;
   }
 
-  get network(): Network {
+  get network(): TNetwork {
     return this._network;
   }
 
   /**
    * Get neurons
    */
-  get neurons(): Node[] {
-    return this.nodes.filter((node: Node) => node.model.isNeuron);
+  get neurons(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isNeuron);
   }
 
-  get nodes(): Node[] {
+  get nodes(): TNode[] {
     return this._nodes;
   }
 
@@ -105,25 +100,25 @@ export class BaseNodes {
   /**
    * Get recorders
    */
-  get recorders(): Node[] {
-    return this.nodes.filter((node: Node) => node.model.isRecorder);
+  get recorders(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isRecorder);
   }
 
   /**
    * Get recorders for analog signals
    */
-  get recordersAnalog(): Node[] {
-    return this.nodes.filter((node: Node) => node.model.isAnalogRecorder);
+  get recordersAnalog(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isAnalogRecorder);
   }
 
   /**
    * Get recorders
    */
-  get recordersSpike(): Node[] {
-    return this.nodes.filter((node: Node) => node.model.isSpikeRecorder);
+  get recordersSpike(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isSpikeRecorder);
   }
 
-  // set selectedNode(node: Node | null) {
+  // set selectedNode(node: TNode | null) {
   //   this._state.selectedNode = this._state.selectedNode !== node ? node : null;
   // }
 
@@ -131,15 +126,15 @@ export class BaseNodes {
   //   return this._nodes.some;
   // }
 
-  get state(): UnwrapRef<NodesState> {
+  get state(): UnwrapRef<INodesState> {
     return this._state;
   }
 
   /**
    * Get stimulators.
    */
-  get stimulators(): Node[] {
-    return this.nodes.filter((node: Node) => node.model.isStimulator);
+  get stimulators(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isStimulator);
   }
 
   /**
@@ -148,8 +143,8 @@ export class BaseNodes {
   get userDict(): { [key: string]: string[] } {
     const userDict: { [key: string]: string[] } = {};
     this.nodes
-      .filter((node: Node) => node.annotations.length > 0)
-      .forEach((node: Node) => {
+      .filter((node: TNode) => node.annotations.length > 0)
+      .forEach((node: TNode) => {
         const nodeLabel = node.view.label;
         node.annotations.forEach((annotation: string) => {
           if (annotation in userDict) {
@@ -165,18 +160,18 @@ export class BaseNodes {
   /**
    * Get visible nodes.
    */
-  get visibleNodes(): Node[] {
-    return this.nodes.filter((node: Node) => node.view.state.visible);
+  get visibleNodes(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.view.state.visible);
   }
 
   /**
    * Add node component.
    *
-   * @param data node props
+   * @param nodeProps node props
    */
-  add(data: NodeProps): Node {
-    this._logger.trace("add node:", data.model);
-    const node = this.newNode(data);
+  add(nodeProps: INodeProps): TNode {
+    this.logger.trace("add node:", nodeProps.model);
+    const node = new this.Node(this, nodeProps);
     this._nodes.push(node);
     return node;
   }
@@ -185,7 +180,7 @@ export class BaseNodes {
    * Clean nodes and connection components.
    */
   clean(): void {
-    this.nodes.forEach((node: Node) => node.clean());
+    this.nodes.forEach((node: TNode) => node.clean());
   }
 
   /**
@@ -201,37 +196,25 @@ export class BaseNodes {
    * @param modelId string
    * @returns Array of Node
    */
-  filterByModelId(modelId: string): Node[] {
-    return this.nodes.filter((node: Node) => node.modelId === modelId);
+  filterByModelId(modelId: string): TNode[] {
+    return this.nodes.filter((node: TNode) => node.modelId === modelId);
   }
 
   /**
    * Initialize nodes.
    */
-  init(nodes?: NodeProps[]): void {
-    this.clear();
-
-    if (nodes) {
-      this.update(nodes);
-    }
-  }
-
-  /**
-   * Create new node.
-   *
-   * @param data
-   * @returns BaseNode
-   */
-  newNode(data?: NodeProps): Node {
-    return new BaseNode(this, data);
+  init(): void {
+    this.logger.trace("init");
+    this._nodes.forEach((node: TNode) => node.init());
+    this.updateRecords();
   }
 
   /**
    * Remove node component from the network.
    *
    */
-  remove(node: Node): void {
-    this._logger.trace("remove node:", node.modelId);
+  remove(node: TNode): void {
+    this.logger.trace("remove node:", node.modelId);
     this.resetState();
 
     // Remove node from the node list.
@@ -241,14 +224,12 @@ export class BaseNodes {
   /*
    * Reset all states.
    */
-  resetState(): void {
-    this._state.hash = "";
-  }
+  resetState(): void {}
 
   /**
    * Show node in list.
    */
-  showNode(node: Node): boolean {
+  showNode(node: TNode): boolean {
     const elementTypeIdx = this._state.elementTypeIdx;
 
     if (elementTypeIdx === 4) {
@@ -272,8 +253,8 @@ export class BaseNodes {
    * Serialize for JSON.
    * @return network object
    */
-  toJSON(): NodeProps[] {
-    return this.nodes.map((node: Node) => node.toJSON());
+  toJSON(): INodeProps[] {
+    return this.nodes.map((node: TNode) => node.toJSON());
   }
 
   /**
@@ -293,14 +274,17 @@ export class BaseNodes {
   /**
    * Update network component.
    *
-   * @param network - network object
+   * @param networkProps network props
    */
-  update(nodes?: NodeProps[]): void {
-    this._logger.trace("update nodes");
-    if (nodes) {
-      nodes.forEach((data: NodeProps) => this.add(data));
+  update(nodesProps?: INodeProps[]): void {
+    this.logger.trace("update");
+
+    if (nodesProps) {
+      nodesProps.forEach((nodeProps: INodeProps) => this.add(nodeProps));
     }
+
     this.clean();
+    this.updateHash();
   }
 
   /**
@@ -311,8 +295,8 @@ export class BaseNodes {
 
     const nodeAnnotationsDict: { [key: string]: string[] } = {};
     this.nodes
-      .filter((node: Node) => node.annotations.length > 0)
-      .forEach((node: Node) => {
+      .filter((node: TNode) => node.annotations.length > 0)
+      .forEach((node: TNode) => {
         const nodeLabel = node.view.label;
         node.annotations.forEach((annotation: string) => {
           if (annotation in nodeAnnotationsDict) {
@@ -340,10 +324,9 @@ export class BaseNodes {
    * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1({
-      nodes: this.nodes.map((node: Node) => node.state.hash),
-    }).slice(0, 6);
-    this._logger.settings.name = `[${this.network.project.shortId}] nodes #${this._state.hash}`;
+    this._updateHash({
+      nodes: this.nodes.map((node: TNode) => node.hash),
+    });
   }
 
   /**
@@ -353,10 +336,10 @@ export class BaseNodes {
    * It should be called after network created.
    */
   updateRecords(): void {
-    this._logger.trace("update records");
+    this.logger.trace("update records");
     this.recorders
-      .filter((recorder: Node) => recorder.model.isAnalogRecorder)
-      .forEach((recorder: Node) => recorder.updateRecords());
+      .filter((recorder: TNode) => recorder.model.isAnalogRecorder)
+      .forEach((recorder: TNode) => recorder.updateRecords());
   }
 
   /**
@@ -366,8 +349,8 @@ export class BaseNodes {
    * It updates colors in activity chart graph.
    */
   updateRecordsColor(): void {
-    this._logger.trace("update records color");
-    this.recorders.forEach((recorder: Node) => {
+    this.logger.trace("update records color");
+    this.recorders.forEach((recorder: TNode) => {
       recorder.updateRecordsColor();
     });
 
@@ -380,8 +363,6 @@ export class BaseNodes {
    * Update states.
    */
   updateStates(): void {
-    this.nodes.forEach((node: Node) => node.state.update());
-
     this.updateAnnotations();
     this.updateHash();
   }

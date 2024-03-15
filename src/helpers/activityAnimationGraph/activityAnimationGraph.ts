@@ -2,12 +2,11 @@
 
 import { Group } from "three";
 
-import { Activity } from "@/helpers/activity/activity";
-import { BaseProject } from "@/helpers/project/project";
-import { Project } from "@/types/projectTypes";
-
+import { Activity } from "../activity/activity";
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
+import { BaseProject } from "../project/project";
+import { TProject } from "@/types/projectTypes";
 
 export class ActivityAnimationGraph {
   private _config: any = {
@@ -23,14 +22,14 @@ export class ActivityAnimationGraph {
   };
 
   private _layers: ActivityAnimationLayer[] = [];
-  private _project: Project;
+  private _project: TProject;
   private _scene?: ActivityAnimationScene;
   private _state: any = {
     frameIdx: 0,
     nSamples: 0,
   };
 
-  constructor(project: Project) {
+  constructor(project: TProject) {
     this._project = project;
   }
 
@@ -60,7 +59,7 @@ export class ActivityAnimationGraph {
    * @remarks
    * It runs without checking activities.
    */
-  init(project: Project): void {
+  init(project: TProject): void {
     this._project = project;
     this._layers = [];
   }

@@ -20,7 +20,6 @@
 
         <div class="d-flex flex-column justify-center align-center text-grey">
           <div>{{ connection.rule.value }}</div>
-          <div v-if="connection.view.connectOnlyNeurons()"></div>
         </div>
 
         <v-spacer />
@@ -66,15 +65,13 @@ import { computed } from "vue";
 import ConnectionAvatar from "./ConnectionAvatar.vue";
 import ConnectionSpecEditor from "@/components/connection/ConnectionSpecEditor.vue";
 import SynapseSpecEditor from "@/components/synapse/SynapseSpecEditor.vue";
-import { Connection, ConnectionPropTypes } from "@/types/connectionTypes";
-import { Synapse } from "@/types/synapseTypes";
+import { TConnection, TConnectionProps } from "@/types/connectionTypes";
+import { TSynapse } from "@/types/synapseTypes";
 
-const props = defineProps({
-  connection: ConnectionPropTypes,
-});
+const props = defineProps({ connection: TConnectionProps });
 
-const connection = computed(() => props.connection as Connection);
-const synapse = computed(() => connection.value.synapse as Synapse);
+const connection = computed(() => props.connection as TConnection);
+const synapse = computed(() => connection.value.synapse as TSynapse);
 
 const items = [
   {
@@ -142,11 +139,11 @@ const items = [
     .menu {
       opacity: 0;
     }
-  }
 
-  .panel-title:hover {
-    .menu {
-      opacity: 1;
+    &:hover {
+      .menu {
+        opacity: 1;
+      }
     }
   }
 

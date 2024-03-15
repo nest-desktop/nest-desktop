@@ -90,9 +90,7 @@ const networkGraphStore = useNetworkGraphStore();
 const props = defineProps({ network: NESTNetwork });
 const network = computed(() => props.network as NESTNetwork);
 
-const graph = computed(() => {
-  return networkGraphStore.state.graph;
-});
+const graph = computed(() => networkGraphStore.state.graph);
 
 const networkGraphRef: Ref<null> = ref(null);
 

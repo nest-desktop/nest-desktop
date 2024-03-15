@@ -2,20 +2,20 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { sum } from "@/helpers/common/array";
-
 import {
   ActivityChartPanelModel,
-  ActivityChartPanelModelProps,
+  IActivityChartPanelModelProps,
 } from "./activityChartPanelModel";
 import { ActivityChartGraph } from "./activityChartGraph";
+import { BaseObj } from "../common/base";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
+import { sum } from "../common/array";
 
-export interface ActivityChartPanelProps {
-  model?: ActivityChartPanelModelProps;
+export interface IActivityChartPanelProps {
+  model?: IActivityChartPanelModelProps;
 }
 
-interface ActivityChartPanelLayoutProps {
+interface IActivityChartPanelLayoutProps {
   xaxis: { anchor?: string; showgrid: boolean; title: string; type?: string };
   yaxis: {
     domain?: number[];
@@ -25,18 +25,18 @@ interface ActivityChartPanelLayoutProps {
   };
 }
 
-interface ActivityChartPanelState {
+interface IActivityChartPanelState {
   initialized: boolean;
   visible: boolean;
 }
 
 export const plotType = "scatter"; // TODO: Production did not found webgl (use "scattergl")
 
-export class ActivityChartPanel {
+export class ActivityChartPanel extends BaseObj {
   // private static readonly _name = 'ActivityGraphPanel';
   // private _activities: Activity[] = [];
   private _graph: ActivityChartGraph; // parent
-  private _layout: ActivityChartPanelLayoutProps = {
+  private _layout: IActivityChartPanelLayoutProps = {
     xaxis: {
       showgrid: true,
       title: "",
@@ -48,10 +48,15 @@ export class ActivityChartPanel {
     },
   };
   private _model: ActivityChartPanelModel;
-  private _state: UnwrapRef<ActivityChartPanelState>;
-  private _xaxis = 1;
+  private _state: UnwrapRef<IActivityChartPanelState>;
+  private _xAxis = 1;
 
-  constructor(graph: ActivityChartGraph, panel: ActivityChartPanelProps = {}) {
+  constructor(
+    graph: ActivityChartGraph,
+    panelProps: IActivityChartPanelProps = {}
+  ) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._graph = graph;
     this._model = new SpikeTimesRasterPlotModel(this);
 
@@ -60,7 +65,9 @@ export class ActivityChartPanel {
       visible: true,
     });
 
-    this.selectModel(panel.model ? panel.model.id : "spikeTimesRasterPlot");
+    this.selectModel(
+      panelProps.model ? panelProps.model.id : "spikeTimesRasterPlot"
+    );
   }
 
   get graph(): ActivityChartGraph {
@@ -79,7 +86,7 @@ export class ActivityChartPanel {
     return this.graph.panels.indexOf(this);
   }
 
-  get layout(): ActivityChartPanelLayoutProps {
+  get layout(): IActivityChartPanelLayoutProps {
     return this._layout;
   }
 
@@ -91,19 +98,19 @@ export class ActivityChartPanel {
     return [];
   }
 
-  get state(): UnwrapRef<ActivityChartPanelState> {
+  get state(): UnwrapRef<IActivityChartPanelState> {
     return this._state;
   }
 
-  get xaxis(): number {
-    return this._xaxis;
+  get xAxis(): number {
+    return this._xAxis;
   }
 
-  set xaxis(value: number) {
-    this._xaxis = value;
+  set xAxis(value: number) {
+    this._xAxis = value;
   }
 
-  get yaxis(): number {
+  get yAxis(): number {
     return this.graph.panelsVisible.indexOf(this) + 1;
   }
 
@@ -136,22 +143,23 @@ export class ActivityChartPanel {
 
   selectModel(
     modelId: string = "spikeTimesRasterPlot",
-    modelSpec: ActivityChartPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ): void {
     if (modelId) {
-      const model: ActivityChartPanelModelProps | undefined =
+      const model: IActivityChartPanelModelProps | undefined =
         this._graph.models.find(
-          (model: ActivityChartPanelModelProps) => model.id === modelId
+          (modelProps: IActivityChartPanelModelProps) =>
+            modelProps.id === modelId
         );
       if (model) {
         // @ts-ignore
-        this._model = new model.component(this, modelSpec);
+        this._model = new model.component(this, modelProps);
         this._state.initialized = true;
       }
     }
 
     if (!this._state.initialized) {
-      this._model = new SpikeTimesRasterPlotModel(this, modelSpec);
+      this._model = new SpikeTimesRasterPlotModel(this, modelProps);
       this._state.initialized = true;
     }
   }
@@ -165,7 +173,7 @@ export class ActivityChartPanel {
    * Serialize for JSON.
    * @return activity chart panel object
    */
-  toJSON(): ActivityChartPanelProps {
+  toJSON(): IActivityChartPanelProps {
     return { model: this._model.toJSON() };
   }
 
@@ -179,21 +187,21 @@ export class ActivityChartPanel {
     );
     const heightTotal: number = sum(heights);
     heights.reverse();
-    const heightCumsum: number[] = heights.map(
+    const heightCumSum: number[] = heights.map(
       (
         (sum: number) => (value: number) =>
           (sum += value)
       )(0)
     );
-    const steps = heightCumsum.map((h: number) => h / heightTotal);
+    const steps = heightCumSum.map((h: number) => h / heightTotal);
     steps.unshift(0);
     steps.reverse();
-    const margin: number = this.xaxis === 1 ? 0.02 : 0.07;
+    const margin: number = this.xAxis === 1 ? 0.02 : 0.07;
     const domain: number[] = [
-      steps[this.yaxis],
-      steps[this.yaxis - 1] - margin,
+      steps[this.yAxis],
+      steps[this.yAxis - 1] - margin,
     ];
     this.layout.yaxis.domain = domain;
-    this.layout.xaxis.anchor = "y" + this.yaxis;
+    this.layout.xaxis.anchor = "y" + this.yAxis;
   }
 }

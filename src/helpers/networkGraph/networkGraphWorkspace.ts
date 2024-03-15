@@ -3,21 +3,20 @@
 import { nextTick } from "vue";
 import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
 
-import { Config } from "@/helpers/config";
-import { Network } from "@/types/networkTypes";
-import { NetworkGraph } from "@/types/networkGraphTypes";
-import { Node } from "@/types/nodeTypes";
-
+import { BaseObj } from "../common/base";
 import { NetworkGraphDragline } from "./networkGraphDragline";
 import { NetworkGraphGrid } from "./networkGraphGrid";
 import { NetworkGraphNodeAddPanel } from "./networkGraphNodeAddPanel";
 import { NetworkGraphZoom } from "./networkGraphZoom";
+import { TNetwork } from "@/types/networkTypes";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNode } from "@/types/nodeTypes";
 
-export class NetworkGraphWorkspace extends Config {
+export class NetworkGraphWorkspace extends BaseObj {
   private _dragline: NetworkGraphDragline;
   private _grid: NetworkGraphGrid;
   private _handler: Selection<any, any, any, any>;
-  private _networkGraph: NetworkGraph;
+  private _networkGraph: TNetworkGraph;
   private _nodeAddPanel: NetworkGraphNodeAddPanel;
   private _selector: Selection<any, any, any, any>;
   private _size: any = {
@@ -37,8 +36,11 @@ export class NetworkGraphWorkspace extends Config {
   };
   private _zoom: NetworkGraphZoom;
 
-  constructor(networkGraph: NetworkGraph) {
-    super("NetworkGraphWorkspace");
+  constructor(networkGraph: TNetworkGraph) {
+    super({
+      config: { name: "NetworkGraphWorkspace" },
+      logger: { settings: { minLevel: 3 } },
+    });
 
     this._selector = select("g#networkWorkspace");
     this._handler = select("rect#workspaceHandler");
@@ -63,11 +65,11 @@ export class NetworkGraphWorkspace extends Config {
     return this._grid;
   }
 
-  get network(): Network | undefined {
+  get network(): TNetwork | undefined {
     return this._networkGraph.network;
   }
 
-  get networkGraph(): NetworkGraph {
+  get networkGraph(): TNetworkGraph {
     return this._networkGraph;
   }
 
@@ -117,7 +119,7 @@ export class NetworkGraphWorkspace extends Config {
 
     const X: number[] = [];
     const Y: number[] = [];
-    this.network.nodes.all.forEach((node: Node) => {
+    this.network.nodes.all.forEach((node: TNode) => {
       X.push(node.view.state.position.x);
       Y.push(node.view.state.position.y);
     });
@@ -155,12 +157,12 @@ export class NetworkGraphWorkspace extends Config {
       })
       .on("click", () => {
         this.reset();
-        this.network?.state.unSelectAll();
+        this.network?.state.unselectAll();
         this.update();
       })
       .on("contextmenu", (e: MouseEvent) => {
         e.preventDefault();
-        this.network?.state.unSelectAll();
+        this.network?.state.unselectAll();
         const position: number[] = pointer(e, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
         this._nodeAddPanel.open();
@@ -195,7 +197,9 @@ export class NetworkGraphWorkspace extends Config {
    * Toggle center of network graph.
    */
   toggleCenterNetwork(): void {
-    this.updateConfig({ centerNetwork: !this.config.centerNetwork });
+    this.config?.update({
+      centerNetwork: !this.config?.localStorage.centerNetwork,
+    });
     this.updateState();
     this.updateTransform();
   }
@@ -204,7 +208,9 @@ export class NetworkGraphWorkspace extends Config {
    * Toggle center of selected.
    */
   toggleCenterSelected(): void {
-    this.updateConfig({ centerSelected: !this.config.centerSelected });
+    this.config?.update({
+      centerSelected: !this.config?.localStorage.centerSelected,
+    });
     this.updateState();
     this.updateTransform();
   }
@@ -213,8 +219,8 @@ export class NetworkGraphWorkspace extends Config {
    * Toggle grid graph.
    */
   toggleGrid(): void {
-    this.updateConfig({
-      showGrid: !this.config.showGrid,
+    this.config?.update({
+      showGrid: !this.config?.localStorage.showGrid,
     });
     this.update();
   }
@@ -240,9 +246,10 @@ export class NetworkGraphWorkspace extends Config {
    * Update state from config.
    */
   updateState(): void {
-    this._state.centerNetwork = this.config.centerNetwork;
-    this._state.centerSelected = this.config.centerSelected;
-    this._state.showGrid = this.config.showGrid;
+    const localStorage = this.config?.localStorage;
+    this._state.centerNetwork = localStorage.centerNetwork;
+    this._state.centerSelected = localStorage.centerSelected;
+    this._state.showGrid = localStorage.showGrid;
   }
 
   /**

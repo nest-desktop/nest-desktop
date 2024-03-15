@@ -1,11 +1,11 @@
 // appStore.ts
 
-import { defineStore } from "pinia";
 import { ThemeInstance } from "vuetify";
-
-import { useAppSessionStore } from "./appSessionStore";
-import { simulatorItems } from "@/simulators";
 import { computed, reactive } from "vue";
+import { defineStore } from "pinia";
+
+import { simulators } from "@/simulators";
+import { useAppSessionStore } from "./appSessionStore";
 
 export const useAppStore = defineStore(
   "app-store",
@@ -22,7 +22,7 @@ export const useAppStore = defineStore(
 
     const session = useAppSessionStore();
 
-    const currentSimulator = computed(() => simulatorItems[state.simulator]);
+    const currentSimulator = computed(() => simulators[state.simulator]);
 
     const darkMode = computed((): boolean => {
       const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -32,7 +32,7 @@ export const useAppStore = defineStore(
     });
 
     const hasSimulator = computed((): boolean => {
-      const simulatorIds = Object.keys(simulatorItems);
+      const simulatorIds = Object.keys(simulators);
       return simulatorIds.includes(state.simulator);
     });
 
@@ -48,7 +48,7 @@ export const useAppStore = defineStore(
     };
 
     const resetSimulator = (): void => {
-      state.simulator = Object.keys(simulatorItems)[0];
+      state.simulator = Object.keys(simulators)[0];
     };
 
     const updateTheme = (): void => {

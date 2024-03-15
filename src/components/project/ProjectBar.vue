@@ -25,10 +25,12 @@
 
     <v-spacer />
 
+    <NetworkHistory :project="projectStore.project as TProject" />
+
     <SimulationButton
       class="mx-2"
       :projectStore
-      :simulation="(projectStore.project.simulation as Simulation)"
+      :simulation="projectStore.project.simulation as TSimulation"
       v-if="projectStore.project"
     />
   </v-app-bar>
@@ -37,8 +39,10 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import NetworkHistory from "@/components/network/NetworkHistory.vue";
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
-import { Simulation } from "@/types/simulationTypes";
+import { TProject } from "@/types/projectTypes";
+import { TSimulation } from "@/types/simulationTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -69,6 +73,7 @@ const tabItems = [
       name: appStore.state.simulator + "ActivityExplorer",
       params: { projectId: projectStore.value.projectId },
     },
+    menu: true,
   },
   {
     icon: "mdi-book-open-outline",

@@ -35,11 +35,9 @@ import { computed } from "vue";
 
 import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { Node, NodePropTypes } from "@/types/nodeTypes";
+import { TNode, TNodeProps } from "@/types/nodeTypes";
 
-const props = defineProps({
-  node: NodePropTypes,
-});
+const props = defineProps({ node: TNodeProps });
 
-const node = computed(() => props.node as Node);
+const node = computed(() => props.node as TNode);
 </script>

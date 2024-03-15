@@ -5,7 +5,7 @@ import { NESTSimulationCode } from "@/simulators/nest/helpers/simulation/simulat
 import { NorseSimulationCode } from "@/simulators/norse/helpers/simulation/simulationCode";
 import { PyNNSimulationCode } from "@/simulators/pynn/helpers/simulation/simulationCode";
 
-export type SimulationCode =
+export type TSimulationCode =
   | BaseSimulationCode
   | NESTSimulationCode
   | NorseSimulationCode

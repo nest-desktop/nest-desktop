@@ -1,36 +1,32 @@
 // connection.ts
 
-import { ILogObj, Logger } from "tslog";
-
-import { BaseSynapse, SynapseProps } from "@/helpers/synapse/synapse";
-import { Config } from "@/helpers/config";
-import { Connection } from "@/types/connectionTypes";
+import { BaseObj } from "../common/base";
+import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import {
   ConnectionParameter,
-  ConnectionParameterProps,
-} from "@/helpers/connection/connectionParameter";
-import { ConnectionRule } from "@/helpers/connection/connectionRule";
-import { ConnectionState } from "@/helpers/connection/connectionState";
-import { ConnectionView } from "@/helpers/connection/connectionView";
-import { Connections } from "@/types/connectionsTypes";
-import { Network } from "@/types/networkTypes";
-import { Node } from "@/types/nodeTypes";
-import { Synapse } from "@/types/synapseTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
+  IConnectionParamProps,
+} from "./connectionParameter";
+import { ConnectionRule } from "./connectionRule";
+import { ConnectionState } from "./connectionState";
+import { ConnectionView } from "./connectionView";
+import { TConnection } from "@/types/connectionTypes";
+import { TConnections } from "@/types/connectionsTypes";
+import { TNetwork } from "@/types/networkTypes";
+import { TNode } from "@/types/nodeTypes";
+import { TSynapse } from "@/types/synapseTypes";
 
-export interface ConnectionProps {
-  params?: ConnectionParameterProps[];
+export interface IConnectionProps {
+  params?: IConnectionParamProps[];
   rule?: string;
   source: number;
-  synapse?: SynapseProps;
+  synapse?: ISynapseProps;
   target: number;
 }
 
-export class BaseConnection extends Config {
+export class BaseConnection extends BaseObj {
   private readonly _name = "Connection";
 
   private _idx: number; // generative
-  private _logger: Logger<ILogObj>;
   private _params: { [key: string]: ConnectionParameter } = {};
   private _paramsVisible: string[] = [];
   private _rule: ConnectionRule;
@@ -39,38 +35,37 @@ export class BaseConnection extends Config {
   private _targetIdx: number; // Node index
   private _view: ConnectionView;
 
-  public _connections: Connections; // parent
-  public _synapse: Synapse;
+  public _connections: TConnections; // parent
+  public _synapse: TSynapse;
 
   constructor(
-    connections: Connections,
-    connection: ConnectionProps,
-    name: string = "Connection",
+    connections: TConnections,
+    connectionProps: IConnectionProps,
     simulator: string = ""
   ) {
-    super(name, simulator);
+    super({ config: { simulator }, logger: { settings: { minLevel: 3 } } });
+
     this._connections = connections;
     this._idx = this.connections.all.length;
-
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.connections.network.project.shortId}] connection`,
-    });
 
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
 
-    this._sourceIdx = connection.source;
-    this._targetIdx = connection.target;
+    this._sourceIdx = connectionProps.source;
+    this._targetIdx = connectionProps.target;
 
-    this._rule = new ConnectionRule(this, connection.rule);
+    this._rule = new ConnectionRule(this, connectionProps.rule);
 
-    this.initParameters(connection.params);
+    this.addParameters(connectionProps.params);
 
-    this._synapse = this.newSynapse(connection.synapse);
+    this._synapse = new this.Synapse(this, connectionProps.synapse);
   }
 
-  get connections(): Connections {
+  get Synapse() {
+    return BaseSynapse;
+  }
+
+  get connections(): TConnections {
     return this._connections;
   }
 
@@ -93,20 +88,20 @@ export class BaseConnection extends Config {
     return this._idx;
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
   get name(): string {
     return this._name;
   }
 
-  get network(): Network {
+  get network(): TNetwork {
     return this.connections.network;
   }
 
   get params(): { [key: string]: ConnectionParameter } {
     return this._params;
+  }
+
+  get paramsAll(): ConnectionParameter[] {
+    return Object.values(this._params);
   }
 
   get paramsVisible(): string[] {
@@ -118,11 +113,11 @@ export class BaseConnection extends Config {
     this.changes();
   }
 
-  get parent(): Connections {
+  get parent(): TConnections {
     return this._connections;
   }
 
-  get recorder(): Node {
+  get recorder(): TNode {
     return this.source.model.isRecorder ? this.source : this.target;
   }
 
@@ -130,12 +125,12 @@ export class BaseConnection extends Config {
     return this._rule;
   }
 
-  get source(): Node {
-    const nodes = this.connections.network.nodes.all as Node[];
+  get source(): TNode {
+    const nodes = this.connections.network.nodes.all as TNode[];
     return nodes[this._sourceIdx];
   }
 
-  set source(node: Node) {
+  set source(node: TNode) {
     this._sourceIdx = node.idx;
   }
 
@@ -151,15 +146,15 @@ export class BaseConnection extends Config {
     return this._state;
   }
 
-  get synapse(): Synapse {
+  get synapse(): TSynapse {
     return this._synapse;
   }
 
-  get target(): Node {
+  get target(): TNode {
     return this.network.nodes.all[this._targetIdx];
   }
 
-  set target(node: Node) {
+  set target(node: TNode) {
     this._targetIdx = node.idx;
   }
 
@@ -178,51 +173,22 @@ export class BaseConnection extends Config {
   /**
    * Add connection parameter.
    */
-  addParameter(param: ConnectionParameterProps): void {
-    this._params[param.id] = new ConnectionParameter(this, param);
+  addParameter(paramProps: IConnectionParamProps): void {
+    this._params[paramProps.id] = new ConnectionParameter(this, paramProps);
   }
 
   /**
-   * Observer for connection changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * Add connection parameters.
    */
-  changes(): void {
-    this._state.updateHash();
-    this._logger.trace("changes");
-    this.connections.network.changes();
-  }
-
-  /**
-   * Clean this component.
-   */
-  clean(): void {
-    const connections = this.connections.all as Connection[];
-    this._idx = connections.indexOf(this);
-  }
-
-  // /**
-  //  * Sets all params to invisible.
-  //  */
-  // hideAllParams(): void {
-  //   Object.values(this._params).forEach(
-  //     (param: ConnectionParameter) => (param.visible = false)
-  //   );
-  // }
-
-  /**
-   * Initialize parameters.
-   */
-  initParameters(params: ConnectionParameterProps[] = []): void {
-    this._logger.trace("init parameter");
+  addParameters(paramProps: IConnectionParamProps[] = []): void {
+    this.logger.trace("init parameter");
     this._paramsVisible = [];
     this._params = {};
     const ruleConfig: any = this.getRuleConfig();
-    ruleConfig.params.forEach((param: ConnectionParameterProps) => {
-      if (params != null) {
-        const p: ConnectionParameterProps | undefined = params.find(
-          (p: ConnectionParameterProps) => p.id === param.id
+    ruleConfig.params.forEach((param: IConnectionParamProps) => {
+      if (paramProps != null) {
+        const p: IConnectionParamProps | undefined = paramProps.find(
+          (p: IConnectionParamProps) => p.id === param.id
         );
         if (p != null) {
           param.value = p.value;
@@ -239,14 +205,48 @@ export class BaseConnection extends Config {
   }
 
   /**
+   * Observer for connection changes.
+   *
+   * @remarks
+   * It emits network changes.
+   */
+  changes(): void {
+    this.updateHash();
+    this.logger.trace("changes");
+    this.connections.network.changes();
+  }
+
+  /**
+   * Clean this component.
+   */
+  clean(): void {
+    const connections = this.connections.all as TConnection[];
+    this._idx = connections.indexOf(this);
+  }
+
+  // /**
+  //  * Sets all params to invisible.
+  //  */
+  // hideAllParams(): void {
+  //   Object.values(this._params).forEach(
+  //     (param: ConnectionParameter) => (param.visible = false)
+  //   );
+  // }
+
+  init(): void {
+    this.logger.trace("init");
+    this.reset();
+    this.synapse.init();
+    this.update();
+  }
+
+  /**
    * Get all parameter of the rule.
    */
   getRuleConfig(): any {
-    return this.config.rules.find((r: any) => r.value === this._rule.value);
-  }
-
-  newSynapse(synapse?: SynapseProps): Synapse {
-    return new BaseSynapse(this, synapse);
+    return this.config?.localStorage.rules.find(
+      (r: any) => r.value === this._rule.value
+    );
   }
 
   /**
@@ -256,7 +256,7 @@ export class BaseConnection extends Config {
    * It emits connection changes.
    */
   reverse(): void {
-    this._logger.trace("reverse");
+    this.logger.trace("reverse");
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
 
     // Trigger connection change.
@@ -264,8 +264,7 @@ export class BaseConnection extends Config {
 
     // Initialize activity graph.
     if (this._view.connectRecorder()) {
-      this.recorder.initActivity();
-      // this.network.project.initActivityGraph();
+      this.recorder.createActivity();
     }
   }
 
@@ -276,20 +275,19 @@ export class BaseConnection extends Config {
    * It emits connection changes.
    */
   reset(): void {
-    this._logger.trace("reset");
+    this.logger.trace("reset");
     this._rule.reset();
-    this.initParameters();
-    this.changes();
+    this.resetParams();
   }
 
   /**
-   * Resets all parameters to their default.
+   * Resets parameters to their default.
    */
-  resetAllParams(): void {
+  resetParams(): void {
     const ruleConfig: any = this.getRuleConfig();
 
     // Reset connection parameter.
-    Object.values(this._params).forEach((param: ConnectionParameter) => {
+    this.paramsAll.forEach((param: ConnectionParameter) => {
       param.reset();
       const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
       param.value = p.value;
@@ -316,22 +314,45 @@ export class BaseConnection extends Config {
    * Serialize for JSON.
    * @return connection object
    */
-  toJSON(): ConnectionProps {
-    const connection: ConnectionProps = {
+  toJSON(): IConnectionProps {
+    const connectionProps: IConnectionProps = {
       source: this._sourceIdx,
       target: this._targetIdx,
     };
 
     if (this._rule.value !== "all_to_all") {
-      connection.rule = this._rule.value;
+      connectionProps.rule = this._rule.value;
     }
 
     if (this._paramsVisible.length > 0) {
-      connection.params = this.filteredParams.map(
+      connectionProps.params = this.filteredParams.map(
         (param: ConnectionParameter) => param.toJSON()
       );
     }
 
-    return connection;
+    return connectionProps;
+  }
+
+  /**
+   * Update connection.
+   */
+  update(): void {
+    this.clean();
+    this.updateHash();
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    this._updateHash({
+      idx: this.idx,
+      params: this.paramsAll.map((param: ConnectionParameter) =>
+        param.toJSON()
+      ),
+      synapse: this.synapse.hash,
+      sourceModelId: this.source.modelId,
+      targetModelId: this.target.modelId,
+    });
   }
 }

@@ -1,18 +1,23 @@
 // CVISIHistogramModel.ts
 
-import { currentBackgroundColor } from "@/helpers/common/theme";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-
 import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { currentBackgroundColor } from "@/helpers/common/theme";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
-    super(panel, model);
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: ISpikeTimesPanelModelProps = {}
+  ) {
+    super(panel, modelProps);
     this.icon = "mdi-chart-bar";
     this.id = "CVISIHistogram";
     this.label = "CV of ISI";
-    this.panel.xaxis = 3;
+    this.panel.xAxis = 3;
     this.params = [
       {
         component: "tickSlider",
@@ -22,7 +27,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
       },
     ];
 
-    this.initParams(model.params);
+    this.initParams(modelProps.params);
   }
 
   /**

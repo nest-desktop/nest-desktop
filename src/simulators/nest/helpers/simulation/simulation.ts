@@ -1,31 +1,35 @@
 // simulation.ts
 
-import { sha1 } from "object-hash";
-
 import { openToast } from "@/helpers/common/toast";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 
 import { NESTProject } from "../project/project";
+import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
+import {
+  INESTSimulationKernelProps,
+  NESTSimulationKernel,
+} from "./simulationKernel";
 import { useNESTSimulatorStore } from "../../stores/backends/nestSimulatorStore";
 
-import { NESTSimulationCode, NESTSimulationCodeProps } from "./simulationCode";
-import {
-  NESTSimulationKernel,
-  NESTSimulationKernelProps,
-} from "./simulationKernel";
-
-export interface NESTSimulationProps {
-  code?: NESTSimulationCodeProps;
-  kernel?: NESTSimulationKernelProps;
+export interface INESTSimulationProps {
+  code?: INESTSimulationCodeProps;
+  kernel?: INESTSimulationKernelProps;
   time?: number;
 }
 
 export class NESTSimulation extends BaseSimulation {
   private _kernel: NESTSimulationKernel; // simulation kernel
 
-  constructor(project: NESTProject, simulation: NESTSimulationProps = {}) {
-    super(project, simulation);
-    this._kernel = new NESTSimulationKernel(this, simulation.kernel);
+  constructor(
+    project: NESTProject,
+    simulationProps: INESTSimulationProps = {}
+  ) {
+    super(project, simulationProps);
+    this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
+  }
+
+  override get SimulationCode() {
+    return NESTSimulationCode;
   }
 
   override get code(): NESTSimulationCode {
@@ -57,16 +61,10 @@ export class NESTSimulation extends BaseSimulation {
    */
   generateSeed(): void {
     this.logger.trace("generate seed");
-    if (this._kernel.config.autoRNGSeed) {
+    if (this._kernel.config?.localStorage.autoRNGSeed) {
       this._kernel.rngSeed = Math.round(Math.random() * 1000);
       this.changes();
     }
-  }
-
-  newSimulationCode(
-    simulationCode?: NESTSimulationCodeProps
-  ): NESTSimulationCode {
-    return new NESTSimulationCode(this, simulationCode);
   }
 
   /**
@@ -174,22 +172,24 @@ export class NESTSimulation extends BaseSimulation {
    * Serialize for JSON.
    * @return simulation object
    */
-  override toJSON(): NESTSimulationProps {
-    const simulation: NESTSimulationProps = {
+  override toJSON(): INESTSimulationProps {
+    const simulationProps: INESTSimulationProps = {
       kernel: this._kernel.toJSON(),
       time: this.time,
     };
     if (this.code.state.customBlocks) {
-      simulation.code = this.code.toJSON();
+      simulationProps.code = this.code.toJSON();
     }
-    return simulation;
+    return simulationProps;
   }
 
+  /**
+   * Update hash.
+   */
   override updateHash(): void {
-    this.state.hash = sha1({
+    this._updateHash({
       kernel: this._kernel.toJSON(),
       time: this.time,
-    }).slice(0, 6);
-    this.logger.settings.name = `[${this.project.shortId}] simulation #${this.state.hash}`;
+    });
   }
 }

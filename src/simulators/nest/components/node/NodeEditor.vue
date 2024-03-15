@@ -1,5 +1,10 @@
 <template>
-  <card :color="node.view.color" class="node ma-1">
+  <card
+    :color="node.view.color"
+    @mouseenter="node.state.focus()"
+    @mouseleave="node.nodes.unfocusNode()"
+    class="node ma-1"
+  >
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
         :item-props="true"
@@ -122,10 +127,10 @@
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
             <ValueSlider
-              :thumbColor="node.view.color"
+              :thumb-color="node.view.color"
               @update:model-value="node.changes()"
               id="n"
-              inputLabel="n"
+              input-label="n"
               label="population size"
               v-model="node.size"
             />
@@ -200,15 +205,12 @@ import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { NodePropTypes } from "@/types/nodeTypes";
 
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
 import { NESTNode } from "../../helpers/node/node";
 
-const props = defineProps({
-  node: NodePropTypes,
-});
+const props = defineProps({ node: NESTNode });
 
 const node = computed(() => props.node as NESTNode);
 
@@ -266,11 +268,11 @@ const selectModel = (props: any, openMenu: boolean = false) => {
     .menu {
       opacity: 0;
     }
-  }
 
-  .node-title:hover {
-    .menu {
-      opacity: 1;
+    &:hover {
+      .menu {
+        opacity: 1;
+      }
     }
   }
 

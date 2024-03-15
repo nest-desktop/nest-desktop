@@ -5,14 +5,14 @@ import { NESTSimulation } from "@/simulators/nest/helpers/simulation/simulation"
 import { NorseSimulation } from "@/simulators/norse/helpers/simulation/simulation";
 import { PyNNSimulation } from "@/simulators/pynn/helpers/simulation/simulation";
 
-export type Simulation =
+export type TSimulation =
   | BaseSimulation
   | NESTSimulation
   | NorseSimulation
   | PyNNSimulation;
 
-// for simulation button
-export const SimulationPropTypes = [
+// for components
+export const TSimulationProps = [
   BaseSimulation,
   NESTSimulation,
   NorseSimulation,

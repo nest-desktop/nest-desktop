@@ -1,22 +1,22 @@
 // modelReceptor.ts
 
+import { BaseObj } from "@/helpers/common/base";
 import { NESTModel } from "../model";
 import {
+  INESTModelReceptorParamProps,
   NESTModelReceptorParameter,
-  NESTModelReceptorParameterProps,
 } from "./modelReceptorParameter";
 
-export interface NESTModelReceptorProps {
+export interface INESTModelReceptorProps {
   id: string;
   label: string;
-  params?: NESTModelReceptorParameterProps[];
+  params?: INESTModelReceptorParamProps[];
   recordables?: string[];
 }
 
-export class NESTModelReceptor {
+export class NESTModelReceptor extends BaseObj {
   private readonly _name = "ModelReceptor";
 
-  private _hash: string = "";
   private _id: string;
   private _label: string;
   private _model: NESTModel; // parent
@@ -24,22 +24,20 @@ export class NESTModelReceptor {
   private _paramsVisible: string[] = [];
   private _recordables: any[] = []; // recordables for multimeter
 
-  constructor(model: NESTModel, modelReceptor: NESTModelReceptorProps) {
+  constructor(model: NESTModel, modelReceptorProps: INESTModelReceptorProps) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._model = model;
 
-    this._id = modelReceptor.id;
-    this._label = modelReceptor.label;
+    this._id = modelReceptorProps.id;
+    this._label = modelReceptorProps.label;
 
-    this.updateParameters(modelReceptor);
-    this.updateRecordables(modelReceptor);
+    this.updateParameters(modelReceptorProps);
+    this.updateRecordables(modelReceptorProps);
   }
 
   get filteredParams(): NESTModelReceptorParameter[] {
     return this._paramsVisible.map((paramId) => this._params[paramId]);
-  }
-
-  get hash(): string {
-    return this._hash;
   }
 
   get id(): string {
@@ -84,19 +82,14 @@ export class NESTModelReceptor {
   }
 
   /**
-   * Returns the first six digits of the SHA-1 model hash.
-   * @returns 6-digit hash value
-   */
-  get shortHash(): string {
-    return this._hash ? this._hash.slice(0, 6) : "";
-  }
-
-  /**
    * Add a parameter component.
    * @param param - parameter object
    */
-  addParameter(param: NESTModelReceptorParameterProps): void {
-    this._params[param.id] = new NESTModelReceptorParameter(this, param);
+  addParameter(paramProps: INESTModelReceptorParamProps): void {
+    this._params[paramProps.id] = new NESTModelReceptorParameter(
+      this,
+      paramProps
+    );
   }
 
   /**
@@ -175,10 +168,10 @@ export class NESTModelReceptor {
 
   /**
    * Serialize for JSON.
-   * @return model object
+   * @return receptor props
    */
-  toJSON(): NESTModelReceptorProps {
-    const receptor: NESTModelReceptorProps = {
+  toJSON(): INESTModelReceptorProps {
+    const receptorProps: INESTModelReceptorProps = {
       id: this._id,
       label: this._label,
       params: this.filteredParams.map((param: NESTModelReceptorParameter) =>
@@ -188,33 +181,42 @@ export class NESTModelReceptor {
 
     // Add recordables if provided.
     if (this._recordables.length > 0) {
-      receptor.recordables = this._recordables.map(
+      receptorProps.recordables = this._recordables.map(
         (recordable: any) => recordable.id
       );
     }
 
-    return receptor;
+    return receptorProps;
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    this._updateHash(this.toJSON());
   }
 
   /**
    * Update a parameter.
    */
-  updateParameter(param: NESTModelReceptorParameterProps): void {
-    this._params[param.id].update(param);
+  updateParameter(paramProps: INESTModelReceptorParamProps): void {
+    this._params[paramProps.id].update(paramProps);
   }
 
   /**
    * Update model parameters.
    */
-  updateParameters(modelReceptor: NESTModelReceptorProps): void {
-    if (modelReceptor.params) {
-      modelReceptor.params.forEach((param: any) => {
-        if (this.getParameter(param.id)) {
-          this.updateParameter(param);
-        } else {
-          this.addParameter(param);
+  updateParameters(modelReceptorProps: INESTModelReceptorProps): void {
+    if (modelReceptorProps.params) {
+      modelReceptorProps.params.forEach(
+        (paramProps: INESTModelReceptorParamProps) => {
+          if (this.getParameter(paramProps.id)) {
+            this.updateParameter(paramProps);
+          } else {
+            this.addParameter(paramProps);
+          }
         }
-      });
+      );
     }
   }
 
@@ -223,7 +225,7 @@ export class NESTModelReceptor {
    */
   updateRecordables(model: any): void {
     if (model.recordables) {
-      this._recordables = this._model.config.recordables.filter(
+      this._recordables = this._model.config?.localStorage.recordables.filter(
         (recordable: any) => model.recordables.includes(recordable.id)
       );
     }

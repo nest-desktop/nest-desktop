@@ -31,9 +31,9 @@ export function extent(values: number[]): number[] {
 }
 
 /**
- * Create an array of linear-spaced values in a speficic array length.
+ * Create an array of linear-spaced values in a specific array length.
  */
-export function linspace(start: number, end: number, size: number): number[] {
+export function linSpace(start: number, end: number, size: number): number[] {
   const step: number = (end - start) / (size - 1);
   return range(start, end + step, step);
 }

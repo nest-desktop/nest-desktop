@@ -74,6 +74,14 @@ const headers = [
   { title: "cv (ISI)", key: "cvISI" },
 ];
 
+const colMean = (key: string): number => {
+  return mean(state.items.map((item: any) => item[key]));
+};
+
+const colSum = (key: string): number => {
+  return sum(state.items.map((item: any) => item[key]));
+};
+
 /**
  * Update stats of spike activity.
  */
@@ -114,16 +122,8 @@ const update = () => {
       };
     });
   }
-  state.activityHash = activity.value.state.hash;
+  state.activityHash = activity.value.hash;
   state.loading = false;
-};
-
-const colSum = (key: string): number => {
-  return sum(state.items.map((item: any) => item[key]));
-};
-
-const colMean = (key: string): number => {
-  return mean(state.items.map((item: any) => item[key]));
 };
 
 onMounted(() => {
@@ -131,7 +131,7 @@ onMounted(() => {
 });
 
 watch(
-  () => activity.value.state.hash,
+  () => activity.value.hash,
   () => update()
 );
 </script>

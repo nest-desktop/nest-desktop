@@ -1,4 +1,4 @@
-// BoxGeometryLayerModel.ts
+// boxGeometryLayerModel.ts
 
 import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
 

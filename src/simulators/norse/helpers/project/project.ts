@@ -1,23 +1,33 @@
 // project.ts
 
-import { BaseProject, ProjectProps } from "@/helpers/project/project";
+import { BaseProject, IProjectProps } from "@/helpers/project/project";
 
-import { NorseNetwork, NorseNetworkProps } from "../network/network";
+import { NorseNetwork, INorseNetworkProps } from "../network/network";
+import { NorseNode } from "../node/node";
 import {
   NorseSimulation,
-  NorseSimulationProps,
+  INorseSimulationProps,
 } from "../simulation/simulation";
+import { nextTick } from "vue";
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
-import { NorseNode } from "../node/node";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
-export interface NorseProjectProps extends ProjectProps {
-  network?: NorseNetworkProps;
-  simulation?: NorseSimulationProps;
+export interface INorseProjectProps extends IProjectProps {
+  network?: INorseNetworkProps;
+  simulation?: INorseSimulationProps;
 }
 
 export class NorseProject extends BaseProject {
-  constructor(project: NorseProjectProps = {}) {
-    super(project);
+  constructor(projectProps: INorseProjectProps = {}) {
+    super(projectProps);
+  }
+
+  override get Network() {
+    return NorseNetwork;
+  }
+
+  override get Simulation() {
+    return NorseSimulation;
   }
 
   override get network(): NorseNetwork {
@@ -37,7 +47,7 @@ export class NorseProject extends BaseProject {
    * It commits the network in the network history.
    */
   override changes(): void {
-    this.state.updateHash();
+    this.updateHash();
     this.state.checkChanges();
 
     this.logger.trace("changes");
@@ -46,15 +56,14 @@ export class NorseProject extends BaseProject {
     this.network.nodes.all.forEach((node: NorseNode) => node.generateCode());
     this._simulation.code.generate();
 
+    this.networkRevision.commit();
+
     // Simulate when the configuration is set
     // and the view mode is activity explorer.
-    // const projectView = this._project.app.project.view;
-    // if (
-    //   projectView.config.simulateAfterChange &&
-    //   projectView.state.modeIdx === 1
-    // ) {
-    //   nextTick(() => this.startSimulation());
-    // }
+    const projectViewStore = useProjectViewStore();
+    if (projectViewStore.state.simulateAfterChange.value) {
+      nextTick(() => this.startSimulation());
+    }
   }
 
   /**
@@ -65,26 +74,17 @@ export class NorseProject extends BaseProject {
    */
   clone(): NorseProject {
     this.logger.trace("clone");
-    const newProject = new NorseProject({
+    return new NorseProject({
       ...this.toJSON(),
       id: undefined,
       updatedAt: "",
     });
-    return newProject;
   }
 
   /**
-   * Initialize store for Norse.
+   * Initialize model store for Norse.
    */
-  override initStore(): void {
+  override initModelStore(): void {
     this.modelDBStore = useNorseModelDBStore();
-  }
-
-  override newNetwork(data?: NorseNetworkProps): NorseNetwork {
-    return new NorseNetwork(this, data);
-  }
-
-  override newSimulation(data?: NorseSimulationProps): NorseSimulation {
-    return new NorseSimulation(this, data);
   }
 }

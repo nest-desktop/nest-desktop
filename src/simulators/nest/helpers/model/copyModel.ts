@@ -3,25 +3,24 @@
 import { reactive, UnwrapRef } from "vue";
 import { Parameter } from "@/helpers/common/parameter";
 import {
+  IModelParamProps,
   ModelParameter,
-  ModelParameterProps,
 } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
-import { NESTNetwork } from "../network/network";
-import { NESTNode } from "../node/node";
-
 import { NESTModel } from "./model";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTNetwork } from "../network/network";
+import { NESTNode } from "../node/node";
 
-export interface NESTCopyModelProps {
+export interface INESTCopyModelProps {
   existing: string;
   new: string;
-  params?: ModelParameterProps[];
+  params?: IModelParamProps[];
 }
 
-interface NESTCopyModelState {
+interface INESTCopyModelState {
   visible: boolean;
 }
 
@@ -34,22 +33,22 @@ export class NESTCopyModel {
   private _newModelId: string;
   private _params: { [key: string]: ModelParameter } = {};
   private _paramsVisible: string[] = [];
-  private _state: UnwrapRef<NESTCopyModelState>;
+  private _state: UnwrapRef<INESTCopyModelState>;
 
   constructor(
     network: NESTNetwork,
-    model: NESTCopyModelProps = { existing: "", new: "" }
+    modelProps: INESTCopyModelProps = { existing: "", new: "" }
   ) {
     this._network = network;
-    this._existingModelId = model.existing;
-    this._newModelId = model.new;
+    this._existingModelId = modelProps.existing;
+    this._newModelId = modelProps.new;
 
     this._idx = this.network.modelsCopied.length;
     this._state = reactive({
       visible: true,
     });
 
-    this.initParameters(model);
+    this.initParameters(modelProps);
   }
 
   get abbreviation(): string {
@@ -57,7 +56,7 @@ export class NESTCopyModel {
   }
 
   get config(): { [key: string]: string } {
-    return this.model.config;
+    return this.model.config?.localStorage;
   }
 
   get compartmentParams(): { [key: string]: NESTModelCompartmentParameter } {
@@ -264,7 +263,7 @@ export class NESTCopyModel {
     return NaN;
   }
 
-  get state(): UnwrapRef<NESTCopyModelState> {
+  get state(): UnwrapRef<INESTCopyModelState> {
     return this._state;
   }
 
@@ -437,7 +436,7 @@ export class NESTCopyModel {
    * Serialize for JSON.
    * @return model object
    */
-  toJSON(): NESTCopyModelProps {
+  toJSON(): INESTCopyModelProps {
     return {
       existing: this._existingModelId,
       new: this._newModelId,

@@ -3,6 +3,7 @@
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { NESTNetworkGraph } from "@/simulators/nest/helpers/network/networkGraph";
 
-export type NetworkGraph = BaseNetworkGraph | NESTNetworkGraph;
+export type TNetworkGraph = BaseNetworkGraph | NESTNetworkGraph;
 
-export const NetworkGraphTypes = [BaseNetworkGraph, NESTNetworkGraph];
+// for components
+export const TNetworkGraphProps = [BaseNetworkGraph, NESTNetworkGraph];

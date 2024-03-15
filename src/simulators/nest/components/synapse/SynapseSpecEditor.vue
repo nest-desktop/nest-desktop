@@ -91,9 +91,7 @@ import { computed } from "vue";
 import SynapseParamEditor from "./SynapseParamEditor.vue";
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 
-const props = defineProps({
-  synapse: NESTSynapse,
-});
+const props = defineProps({ synapse: NESTSynapse });
 
 const synapse = computed(() => props.synapse as NESTSynapse);
 
@@ -123,11 +121,11 @@ const items = [
   .menu {
     opacity: 0;
   }
-}
 
-.syn-spec:hover {
-  .menu {
-    opacity: 1;
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
   }
 }
 </style>

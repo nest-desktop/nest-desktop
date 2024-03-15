@@ -1,43 +1,27 @@
 // synapse.ts
 
-import { UnwrapRef, reactive } from "vue";
-import { ILogObj, Logger } from "tslog";
+import { BaseObj } from "../common/base";
+import { TConnection } from "@/types/connectionTypes";
 
-import { Connection } from "@/types/connectionTypes";
-import { logger as mainLogger } from "@/helpers/common/logger";
-
-interface SynapseState {
-  hash: string;
-}
-
-export interface SynapseProps {
+export interface ISynapseProps {
   weight?: number;
 }
 
-export class BaseSynapse {
+export class BaseSynapse extends BaseObj {
   private readonly _name = "Synapse";
-  private _logger: Logger<ILogObj>;
-  private _state: UnwrapRef<SynapseState>;
   private _weight: number;
 
-  public _connection: Connection; // parent
+  public _connection: TConnection; // parent
 
-  constructor(connection: Connection, synapse?: SynapseProps) {
+  constructor(connection: TConnection, synapseProps?: ISynapseProps) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._connection = connection;
 
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `synapse`,
-    });
-
-    this._state = reactive({
-      hash: "",
-    });
-
-    this._weight = synapse?.weight || 1;
+    this._weight = synapseProps?.weight || 1;
   }
 
-  get connection(): Connection {
+  get connection(): TConnection {
     return this._connection;
   }
 
@@ -58,16 +42,8 @@ export class BaseSynapse {
     return false;
   }
 
-  get logger(): Logger<ILogObj> {
-    return this._logger;
-  }
-
   get name(): string {
     return this._name;
-  }
-
-  get state(): UnwrapRef<SynapseState> {
-    return this._state;
   }
 
   get weight(): number {
@@ -106,15 +82,24 @@ export class BaseSynapse {
    * It emits connection changes.
    */
   changes(): void {
-    // this.updateHash()
+    this.logger.trace("changes");
+    this.updateHash();
     this.connection.changes();
+  }
+
+  /**
+   * Initialize synapse.
+   */
+  init(): void {
+    this.logger.trace("init");
+    this.updateHash();
   }
 
   /**
    * Inverse synaptic weight.
    */
   inverseWeight(): void {
-    this._logger.trace("inverse weight");
+    this.logger.trace("inverse weight");
     this.weight = -1 * this.weight;
     this.connection.changes();
   }
@@ -130,13 +115,17 @@ export class BaseSynapse {
    * Serialize for JSON.
    * @return synapse object
    */
-  toJSON(): SynapseProps {
-    const synapse: SynapseProps = {};
+  toJSON(): ISynapseProps {
+    const synapseProps: ISynapseProps = {};
 
     if (this.weight !== 1) {
-      synapse.weight = this.weight;
+      synapseProps.weight = this.weight;
     }
 
-    return synapse;
+    return synapseProps;
+  }
+
+  updateHash(): void {
+    this._updateHash(this.toJSON());
   }
 }

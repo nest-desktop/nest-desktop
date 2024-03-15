@@ -1,18 +1,17 @@
 // nodeCompartment.ts
 
-import { NodeParameterProps } from "@/helpers/node/nodeParameter";
+import { INodeParamProps } from "@/helpers/node/nodeParameter";
 import { NodeView } from "@/helpers/node/nodeView";
 
+import { NESTModel } from "../../model/model";
 import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";
 import { NESTNode } from "../node";
-import { NESTNodeReceptor } from "../nodeReceptor/nodeReceptor";
-import { NESTModel } from "../../model/model";
-
 import { NESTNodeCompartmentParameter } from "./nodeCompartmentParameter";
+import { NESTNodeReceptor } from "../nodeReceptor/nodeReceptor";
 
-export interface NESTNodeCompartmentProps {
+export interface INESTNodeCompartmentProps {
   parentIdx: number;
-  params?: NodeParameterProps[];
+  params?: INodeParamProps[];
   label?: string;
 }
 
@@ -27,14 +26,14 @@ export class NESTNodeCompartment {
   private _paramsVisible: string[] = [];
   private _parentIdx: number;
 
-  constructor(node: any, comp: NESTNodeCompartmentProps) {
+  constructor(node: NESTNode, nodeCompartmentProps: INESTNodeCompartmentProps) {
     this._node = node;
     this._idx = this._node.compartments.length;
 
-    this._parentIdx = comp.parentIdx;
-    this._label = comp.label;
+    this._parentIdx = nodeCompartmentProps.parentIdx;
+    this._label = nodeCompartmentProps.label;
 
-    this.initParameters(comp);
+    this.initParameters(nodeCompartmentProps);
   }
 
   get filteredParams(): NESTNodeCompartmentParameter[] {
@@ -177,8 +176,11 @@ export class NESTNodeCompartment {
    * Add a parameter component.
    * @param param - parameter object
    */
-  addParameter(param: NodeParameterProps): void {
-    this._params[param.id] = new NESTNodeCompartmentParameter(this, param);
+  addParameter(paramProps: INodeParamProps): void {
+    this._params[paramProps.id] = new NESTNodeCompartmentParameter(
+      this,
+      paramProps
+    );
   }
 
   /**
@@ -251,8 +253,8 @@ export class NESTNodeCompartment {
         }
       );
     } else if ("params" in comp) {
-      comp.params.forEach((param: NodeParameterProps) =>
-        this.addParameter(param)
+      comp.params.forEach((paramProps: INodeParamProps) =>
+        this.addParameter(paramProps)
       );
     }
   }
@@ -295,10 +297,10 @@ export class NESTNodeCompartment {
 
   /**
    * Serialize for JSON.
-   * @return node object
+   * @return node props
    */
-  toJSON(): NESTNodeCompartmentProps {
-    const comp: NESTNodeCompartmentProps = {
+  toJSON(): INESTNodeCompartmentProps {
+    const nodeCompartmentProps: INESTNodeCompartmentProps = {
       parentIdx: this._parentIdx,
       params: this.filteredParams.map((param: NESTNodeCompartmentParameter) =>
         param.toJSON()
@@ -306,9 +308,9 @@ export class NESTNodeCompartment {
     };
 
     if (this._label) {
-      comp.label = this._label;
+      nodeCompartmentProps.label = this._label;
     }
 
-    return comp;
+    return nodeCompartmentProps;
   }
 }

@@ -1,18 +1,23 @@
 //senderMeanISIPlotModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 
-import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-
 export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, model: any = {}) {
+  constructor(
+    panel: ActivityChartPanel,
+    model: ISpikeTimesPanelModelProps = {}
+  ) {
     super(panel, model);
     this.icon = "mdi-chart-bell-curve-cumulative";
     this.id = "senderMeanISIPlot";
     this.label = "mean ISI in each sender";
-    this.panel.xaxis = 4;
+    this.panel.xAxis = 4;
     this.params = [
       {
         _parent: this,

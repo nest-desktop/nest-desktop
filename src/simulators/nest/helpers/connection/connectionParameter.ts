@@ -1,10 +1,10 @@
 // connectionParameter.ts
 
-import { Parameter, ParameterProps } from "@/helpers/common/parameter";
+import { IParamProps, Parameter } from "@/helpers/common/parameter";
 
 import { NESTConnection } from "./connection";
 
-export interface NESTConnectionParameterProps extends ParameterProps {}
+export interface INESTConnectionParamProps extends IParamProps {}
 
 const PyNNParamIds: { [key: string]: string } = {
   N: "n",
@@ -16,8 +16,11 @@ const PyNNParamIds: { [key: string]: string } = {
 export class NESTConnectionParameter extends Parameter {
   private _connection: NESTConnection;
 
-  constructor(connection: NESTConnection, param: NESTConnectionParameterProps) {
-    super(param);
+  constructor(
+    connection: NESTConnection,
+    paramProps: INESTConnectionParamProps
+  ) {
+    super(paramProps);
     this._connection = connection;
   }
 
@@ -34,7 +37,7 @@ export class NESTConnectionParameter extends Parameter {
   }
 
   get types(): any[] {
-    const types: any[] = this.config.types;
+    const types: any[] = this.config?.localStorage.types;
     return !this.isSpatial
       ? types.filter((type: any) => !type.id.startsWith("spatial"))
       : types;

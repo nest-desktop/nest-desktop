@@ -1,70 +1,62 @@
 // activity.ts
 
-import { ILogObj, Logger } from "tslog";
-import { reactive, UnwrapRef } from "vue";
-import { sha1 } from "object-hash";
+import { UnwrapRef, reactive } from "vue";
 
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { Node } from "@/types/nodeTypes";
+import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
+import { BaseObj } from "../common/base";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { Project } from "@/types/projectTypes";
-import { download } from "@/helpers/common/download";
-import { logger as mainLogger } from "@/helpers/common/logger";
+import { TNode } from "@/types/nodeTypes";
+import { TProject } from "@/types/projectTypes";
+import { download } from "../common/download";
 
-export interface ActivityProps {
-  events?: EventProps;
+export interface IActivityProps {
+  events?: IEventProps;
   nodeIds?: number[];
   nodePositions?: number[][];
   recorderUnitId?: number;
 }
 
-interface activityState {
+interface IActivityState {
   activeNodeId: number | undefined;
   fromTime: number;
-  hash: string;
   records: NodeRecord[];
   selected: number[];
 }
 
-export interface EventProps {
+export interface IEventProps {
   [key: string]: number[];
 }
 
-export class Activity {
-  private _events: EventProps = {};
+export class Activity extends BaseObj {
+  private _events: IEventProps = {};
   private _idx: number = 0; // generative
-  private _logger: Logger<ILogObj>;
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
-  private _recorder: Node; // parent
+  private _recorder: TNode; // parent
   private _recorderUnitId: number = -1;
-  private _state: UnwrapRef<activityState>;
+  private _state: UnwrapRef<IActivityState>;
 
-  constructor(recorder: Node, activity: ActivityProps = {}) {
+  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._recorder = recorder;
     this._state = reactive({
       activeNodeId: undefined,
       fromTime: 0,
-      hash: "",
       records: [],
-      selected: activity.nodeIds?.slice(0, 10) || [
+      selected: activityProps.nodeIds?.slice(0, 10) || [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
       ],
     });
 
-    this._logger = mainLogger.getSubLogger({
-      minLevel: 3,
-      name: `[${this.recorder.idx} - ${this.recorder.modelId}] activity`,
-    });
-
-    this.init(activity);
+    this.init(activityProps);
   }
 
   get chartGraph(): ActivityChartGraph {
     return this.project.activityGraph.activityChartGraph;
   }
 
-  get currenttime(): number {
+  get currentTime(): number {
     const simulationState = this.recorder.network.project.simulation.state;
     return simulationState.timeInfo.current > 0
       ? simulationState.timeInfo.current
@@ -72,18 +64,18 @@ export class Activity {
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.all.map((node: Node) => node.model.elementType);
+    return this.recorder.nodes.all.map((node: TNode) => node.model.elementType);
   }
 
-  get endtime(): number {
+  get endTime(): number {
     return this.recorder.network.project.simulation.state.biologicalTime;
   }
 
-  get events(): EventProps {
+  get events(): IEventProps {
     return this._events;
   }
 
-  set events(value: EventProps) {
+  set events(value: IEventProps) {
     this._events = value;
   }
 
@@ -148,11 +140,11 @@ export class Activity {
     this._nodePositions = value;
   }
 
-  get project(): Project {
+  get project(): TProject {
     return this.recorder.network.project;
   }
 
-  get recorder(): Node {
+  get recorder(): TNode {
     return this._recorder;
   }
 
@@ -164,7 +156,7 @@ export class Activity {
     this._recorderUnitId = value;
   }
 
-  get state(): UnwrapRef<activityState> {
+  get state(): UnwrapRef<IActivityState> {
     return this._state;
   }
 
@@ -187,7 +179,7 @@ export class Activity {
    * Export activity (node indices, positions and events).
    */
   export(): void {
-    this._logger.trace("export activity");
+    this.logger.trace("export activity");
     download(JSON.stringify(this.toJSON()), "activity");
   }
 
@@ -195,7 +187,7 @@ export class Activity {
    * Export events to file in json format.
    */
   exportEvents(): void {
-    this._logger.trace("export events");
+    this.logger.trace("export events");
     download(JSON.stringify(this._events), "events");
   }
 
@@ -203,7 +195,7 @@ export class Activity {
    * Export events to file in csv format.
    */
   exportEventsCSV(): void {
-    this._logger.trace("export events to csv");
+    this.logger.trace("export events to csv");
     const eventKeys = ["senders", "times"];
     Object.keys(this._events).forEach((eventKey: string) => {
       if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);
@@ -227,8 +219,8 @@ export class Activity {
    *
    * Overwrites events.
    */
-  init(activity: ActivityProps = {}): void {
-    this._logger.trace("init");
+  init(activity: IActivityProps = {}): void {
+    this.logger.trace("init");
     this.reset();
     this.events = activity.events || { senders: [], times: [] };
     this.nodeIds = activity.nodeIds || [];
@@ -245,15 +237,15 @@ export class Activity {
    *
    * Extends events.
    */
-  update(activity: ActivityProps): void {
-    this._logger.trace("update");
+  update(activity: IActivityProps): void {
+    this.logger.trace("update");
     if (activity.events == undefined) return;
 
     this.updateEvents(activity.events);
     this.postUpdate(activity);
   }
 
-  postUpdate(activity: ActivityProps): void {
+  postUpdate(activity: IActivityProps): void {
     activity;
   }
 
@@ -261,7 +253,7 @@ export class Activity {
    * Reset activity.
    */
   reset(): void {
-    this._logger.trace("reset");
+    this.logger.trace("reset");
     this._events = {};
     this._nodeIds = [];
     this._nodePositions = [];
@@ -272,7 +264,7 @@ export class Activity {
    * Serialize for JSON.
    * @return activity object
    */
-  toJSON(): ActivityProps {
+  toJSON(): IActivityProps {
     return {
       events: this._events,
       nodeIds: this._nodeIds,
@@ -284,7 +276,7 @@ export class Activity {
    * Update events.
    */
   updateEvents(events: { [key: string]: number[] }): void {
-    this._logger.trace("update events");
+    this.logger.trace("update events");
     if (events == undefined) return;
     let updated = false;
 
@@ -308,7 +300,6 @@ export class Activity {
    * Update hash.
    */
   updateHash(): void {
-    this._state.hash = sha1(this.toJSON()).slice(0, 6);
-    this._logger.settings.name = `[${this.recorder.modelId}] activity #${this._state.hash}`;
+    this._updateHash(this.toJSON());
   }
 }
