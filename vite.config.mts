@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue";
 
 // Vite plugins
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-import electron from "vite-plugin-electron";
+// import electron from "vite-plugin-electron";
 import { VitePWA } from "vite-plugin-pwa";
 
 // Utilities
