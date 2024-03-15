@@ -1,7 +1,7 @@
 // defineProjectStore.ts
 
 import { computed, reactive } from "vue";
-import { defineStore } from "pinia";
+import { Store, defineStore } from "pinia";
 
 import router from "@/router";
 import { BaseProject } from "@/helpers/project/project";
@@ -19,7 +19,7 @@ export function defineProjectStore(
     Project: Class<TProject>;
     loggerMinLevel?: number;
     simulator: string;
-    useProjectDBStore: any;
+    useProjectDBStore: Store<any, any>;
   } = {
     Project: BaseProject,
     simulator: "base",
@@ -82,8 +82,7 @@ export function defineProjectStore(
       const projectViewStore = useProjectViewStore();
       if (
         projectViewStore.state.simulateAfterLoad.value &&
-        state.view === "explore" &&
-        state.project.activityGraph.state.codeHash === ""
+        state.view === "explore"
       ) {
         startSimulation();
       }

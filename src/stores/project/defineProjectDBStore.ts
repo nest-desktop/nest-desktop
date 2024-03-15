@@ -38,26 +38,29 @@ export function defineProjectDBStore(
       tryImports: 3,
       initialized: true,
       numLoaded: 0,
-      projects: [] as (TProject | any)[], // TODO: any should be removed.
+      projects: [] as (IProjectProps | TProject | any)[], // TODO: any should be removed.
       searchTerm: "",
     }),
     getters: {
       db: () => db,
-      filteredProjects(): TProject[] {
+      filteredProjects(): (IProjectProps | TProject)[] {
         if (this.searchTerm === "" || this.searchTerm == null) {
           return this.projects;
         } else {
-          return this.projects.filter(
-            (project: TProject) =>
-              project.name
-                .toLowerCase()
-                .indexOf(this.searchTerm.toLowerCase()) > -1
-          );
+          return this.projects.filter((project: IProjectProps | TProject) => {
+            if (project.name) {
+              return (
+                project.name
+                  .toLowerCase()
+                  .indexOf(this.searchTerm.toLowerCase()) !== -1
+              );
+            }
+          });
         }
       },
       projectIds(): (string | undefined)[] {
         return this.projects.map(
-          (projects: TProject | IProjectProps) => projects.id
+          (project: TProject | IProjectProps) => project.id
         );
       },
     },
@@ -77,11 +80,10 @@ export function defineProjectDBStore(
       /**
        * Delete project in database and then update the list.
        */
-      deleteProject(projects: TProject | IProjectProps | any): void {
-        // TODO: any should be removed.
-        logger.trace("delete project:", truncate(projects.id));
-        db.deleteProject(projects).then(() => {
-          this.removeFromList(projects.id);
+      deleteProject(project: TProject): void {
+        logger.trace("delete project:", truncate(project.id));
+        db.deleteProject(project).then(() => {
+          this.removeFromList(project.id);
         });
       },
       /**
@@ -107,10 +109,10 @@ export function defineProjectDBStore(
       /**
        * Find project from the list.
        */
-      findProject(projectId: string): TProject | IProjectProps | undefined {
+      findProject(projectId: string): TProject | IProjectProps {
         logger.trace("find project:", truncate(projectId));
         return this.projects.find(
-          (project: TProject | IProjectProps | any) => project.id === projectId
+          (project: TProject | IProjectProps) => project.id === projectId
         );
       },
       /**
@@ -137,22 +139,22 @@ export function defineProjectDBStore(
       /**
        * Import projects the update list.
        */
-      importProjects(projects: any[]): void {
+      importProjects(projects: IProjectProps[]): void {
         logger.trace("import projects");
         db.createProjects(projects).then(() => this.updateList());
       },
       /**
        * Import multiple projects from assets and add them to the database.
        */
-      async importProjectsFromAssets(): Promise<any> {
+      async importProjectsFromAssets(): Promise<IProjectProps[]> {
         logger.trace("import projects from assets");
-        let promises = [];
+        let promises: Promise<IProjectProps>[] = [];
         if (args.projectAssets) {
           promises = args.projectAssets.map(async (file: string) => {
             return getRuntimeConfig(
               `assets/simulators/${args.simulator}/projects/${file}.json`
             ).then((data) => db.create(data));
-          }) as any[];
+          });
         }
         return Promise.all(promises);
       },
@@ -171,8 +173,8 @@ export function defineProjectDBStore(
           }
         });
       },
-      isProjectLoaded(project: TProject | IProjectProps | any) {
-        return project.doc != undefined;
+      isProjectLoaded(project: TProject | IProjectProps) {
+        return project instanceof BaseProject;
       },
       /**
        * Load a project in the list.
@@ -187,7 +189,9 @@ export function defineProjectDBStore(
 
         // @ts-ignore
         if (!project.docId) {
-          const projectIds = this.projects.map((project: any) => project.id);
+          const projectIds = this.projects.map(
+            (project: IProjectProps | TProject) => project.id
+          );
           const projectIdx = projectIds.indexOf(projectId);
 
           if (projectIdx === -1) {
@@ -221,7 +225,7 @@ export function defineProjectDBStore(
         logger.trace("remove project from the list:", truncate(projectId));
 
         const idx: number = this.projects
-          .map((project: TProject | IProjectProps) => project.id)
+          .map((project: IProjectProps | TProject) => project.id)
           .indexOf(projectId);
 
         if (idx !== -1) {
@@ -258,7 +262,7 @@ export function defineProjectDBStore(
         logger.trace("update list");
 
         this.projects = [];
-        return db.list("", true).then((projects: any[]) => {
+        return db.list("", true).then((projects: IProjectProps[]) => {
           this.projects = projects;
           this.initialized = true;
         });

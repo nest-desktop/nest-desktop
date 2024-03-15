@@ -20,8 +20,6 @@ export const useAppStore = defineStore(
       simulatorVisible: ["nest"],
     });
 
-    const session = useAppSessionStore();
-
     const currentSimulator = computed(() => simulators[state.simulator]);
 
     const darkMode = computed((): boolean => {
@@ -51,6 +49,14 @@ export const useAppStore = defineStore(
       state.simulator = Object.keys(simulators)[0];
     };
 
+    const session = useAppSessionStore();
+
+    const simulatorItems = computed(() =>
+      state.simulatorVisible.map(
+        (simulatorId: string) => simulators[simulatorId]
+      )
+    );
+
     const updateTheme = (): void => {
       if (themeInstance == null) return;
 
@@ -78,6 +84,7 @@ export const useAppStore = defineStore(
       init,
       resetSimulator,
       session,
+      simulatorItems,
       state,
       updateTheme,
     };

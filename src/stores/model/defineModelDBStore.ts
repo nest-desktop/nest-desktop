@@ -1,5 +1,6 @@
 // defineModelDBStore.ts
 
+import { UnwrapRef } from "vue";
 import { defineStore } from "pinia";
 
 import { BaseModel, IModelProps } from "@/helpers/model/model";
@@ -9,12 +10,11 @@ import { TModelDB } from "@/types/modelDBTypes";
 import { getRuntimeConfig } from "@/utils/fetch";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
-import { UnwrapRef } from "vue";
 
-type Class<T> = new (...args: any) => T;
+type Class<T> = new (...props: any) => T;
 
 export function defineModelDBStore(
-  args: {
+  props: {
     Model: Class<TModel>;
     ModelDB: Class<TModelDB>;
     loggerMinLevel?: number;
@@ -27,13 +27,13 @@ export function defineModelDBStore(
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    minLevel: args.loggerMinLevel || 3,
-    name: args.simulator + " model DB store",
+    minLevel: props.loggerMinLevel || 3,
+    name: props.simulator + " model DB store",
   });
 
-  const db = new args.ModelDB();
+  const db = new props.ModelDB();
 
-  return defineStore(args.simulator + "-model-db", {
+  return defineStore(props.simulator + "-model-db", {
     state: () => ({
       tryImports: 3,
       models: [] as TModel[],
@@ -47,7 +47,7 @@ export function defineModelDBStore(
       /**
        * Delete model object from the database and then list model.
        */
-      async deleteModel(modelId: string): Promise<any> {
+      async deleteModel(modelId: string): Promise<void> {
         logger.trace("delete model:", modelId);
         return db.deleteModel(modelId).then(() => {
           this.updateList();
@@ -57,18 +57,19 @@ export function defineModelDBStore(
        * Find model from the list.
        */
       findModel(modelId: string): TModel | undefined {
-        logger.trace("find model:", truncate(modelId));
+        logger.trace("find model:", modelId);
         // @ts-ignore
-        return this.models.find((model: Model | any) => model.id === modelId);
+        return this.models.find((model: TModel) => model.id === modelId);
       },
       /**
        * Get model from the model list.
        */
       getModel(modelId: string): TModel | undefined {
-        logger.trace("get model:", truncate(modelId));
+        logger.trace("get model:", modelId);
         return (
           // @ts-ignore
-          this.findModel(modelId) || new args.Model({ id: modelId, params: [] })
+          this.findModel(modelId) ||
+          new props.Model({ id: modelId, params: [] })
         );
       },
       /**
@@ -88,27 +89,29 @@ export function defineModelDBStore(
        * Check if model list has model.
        */
       hasModel(modelId: string): boolean {
-        return this.models.some((model: any) => model.id === modelId);
+        return this.models.some(
+          (model: UnwrapRef<TModel>) => model.id === modelId
+        );
       },
       /**
        * Import multiple models from assets and add them to the database.
        */
       async importModelsFromAssets(): Promise<IModelProps[]> {
         logger.trace("import models from assets");
-        let promises = [];
-        if (args.modelAssets) {
-          promises = args.modelAssets.map(async (file: string) => {
+        let promises: Promise<IModelProps>[] = [];
+        if (props.modelAssets) {
+          promises = props.modelAssets.map(async (file: string) => {
             return getRuntimeConfig(
-              `assets/simulators/${args.simulator}/models/${file}.json`
+              `assets/simulators/${props.simulator}/models/${file}.json`
             ).then((modelProps: IModelProps) => db.create(modelProps));
-          }) as any[];
+          });
         }
         return Promise.all(promises);
       },
       /**
        * Initialize model db.
        */
-      async init(): Promise<any> {
+      async init(): Promise<void> {
         logger.trace("init");
         return db.count().then(async (count: number) => {
           logger.debug("models in DB:", count);
@@ -123,14 +126,14 @@ export function defineModelDBStore(
       /**
        * Reset database and then initialize.
        */
-      async resetDatabase(): Promise<any> {
+      async resetDatabase(): Promise<void> {
         logger.trace("reset database");
         await db.reset().then(() => this.init());
       },
       /**
        * Save model object to the database.
        */
-      async saveModel(modelId: string): Promise<any> {
+      async saveModel(modelId: string): Promise<void> {
         logger.trace("save model:", truncate(modelId));
         const model = this.findModel(modelId);
         if (!model) return;
@@ -139,13 +142,13 @@ export function defineModelDBStore(
       /**
        * Update model list from the database.
        */
-      async updateList(): Promise<any> {
-        logger.trace("update list");
+      async updateList(): Promise<void> {
+        logger.debug("update list");
         this.models = [];
         return db.list("id").then((modelsProps: IModelProps[]) => {
           // this.models = models;
           modelsProps.forEach((modelProps: IModelProps) => {
-            const model = new args.Model(modelProps) as TModel;
+            const model = new props.Model(modelProps) as TModel;
             this.models.push(model);
           });
         });

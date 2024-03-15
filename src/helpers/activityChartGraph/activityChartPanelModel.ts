@@ -350,6 +350,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
       if (data.type.includes("scatter")) {
         if (data.mode.includes("markers")) {
+          data.marker.color = color;
           data.marker.line.color = color;
         }
         if (data.mode.includes("lines")) {

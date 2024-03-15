@@ -1,21 +1,22 @@
 // networkGraphNodeAddPanel.ts
 import { Arc, Selection, arc } from "d3";
 
-import { darkMode } from "../common/theme";
+import { BaseObj } from "../common/base";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { TModel } from "@/types/modelTypes";
 import { TNetwork } from "@/types/networkTypes";
-
-import { useModelDBStore } from "@/stores/model/modelDBStore";
-const modelDBStore = useModelDBStore();
-
-export class NetworkGraphNodeAddPanel {
-  private _workspace: NetworkGraphWorkspace;
-  private _selector: Selection<any, any, any, any>;
+import { darkMode } from "../common/theme";
+export class NetworkGraphNodeAddPanel extends BaseObj {
   private _elementTypes: string[] = ["recorder", "neuron", "stimulator"];
+  private _selector: Selection<any, any, any, any>;
+  private _workspace: NetworkGraphWorkspace;
 
   constructor(networkGraphWorkspace: NetworkGraphWorkspace) {
+    super({ logger: { settings: { minLevel: 3 } } });
+
     this._workspace = networkGraphWorkspace;
     this._selector = this._workspace.selector.select("g#nodeAddPanel");
+
     this.init();
   }
 
@@ -54,7 +55,6 @@ export class NetworkGraphNodeAddPanel {
    */
   close(): void {
     this._selector.style("display", "none");
-    this.init();
   }
 
   /**
@@ -222,6 +222,7 @@ export class NetworkGraphNodeAddPanel {
    * Initialize panel to add node.
    */
   init(): void {
+    this.logger.trace("init");
     this._selector.style("display", "none");
     this._selector.selectAll("*").remove();
 
@@ -248,11 +249,10 @@ export class NetworkGraphNodeAddPanel {
         elementType,
         ""
       );
-
       this.updateModelMenu(elementType);
-      this.update();
     });
 
+    this.update();
     // this.drawTooltip();
   }
 
@@ -260,6 +260,7 @@ export class NetworkGraphNodeAddPanel {
    * Open panel.
    */
   open(): void {
+    this.logger.trace("open");
     this._selector
       .style("display", "block")
       .attr(
@@ -267,7 +268,8 @@ export class NetworkGraphNodeAddPanel {
         () => `translate(${this.position.x},${this.position.y})`
       )
       .style("opacity", "0.8");
-    this.update();
+
+    this.updateColor();
   }
 
   /**
@@ -286,12 +288,7 @@ export class NetworkGraphNodeAddPanel {
    * Update color of node add panel.
    */
   update(): void {
-    this._selector
-      .selectAll(".color")
-      .attr("fill", this.network ? this.color : "grey");
-
-    this._selector.selectAll(".bgcolor").attr("fill", this.bgColor);
-    this._selector.selectAll(".textcolor").attr("fill", this.textColor);
+    this.logger.trace("update");
 
     // if (this._workspace.state.elementType) {
     //   const tooltipHeight = 16;
@@ -302,10 +299,21 @@ export class NetworkGraphNodeAddPanel {
     // }
   }
 
+  updateColor(): void {
+    this.logger.trace("update color");
+    this._selector
+      .selectAll(".color")
+      .attr("fill", this.network ? this.color : "grey");
+
+    this._selector.selectAll(".bgcolor").attr("fill", this.bgColor);
+    this._selector.selectAll(".textcolor").attr("fill", this.textColor);
+  }
+
   /**
    * Update model menu.
    */
   updateModelMenu(elementType: string, favoriteOnly: boolean = true): void {
+    this.logger.trace("update model menu");
     const panel = this._selector.select("." + elementType);
     panel.select(".models").remove();
 
@@ -314,17 +322,17 @@ export class NetworkGraphNodeAddPanel {
       .attr("class", "models")
       .style("display", "none");
 
-    const models = modelDBStore
+    const models = this.network?.project.modelDBStore
       .getModelsByElementType(elementType)
-      .map((model) => ({
+      .map((model: TModel) => ({
         favorite: model.favorite,
         title: model.id,
         label: model.abbreviation,
       }));
 
     models
-      .filter((model) => model.favorite || !favoriteOnly)
-      .forEach((model, modelIdx) =>
+      .filter((model: TModel) => model.favorite || !favoriteOnly)
+      .forEach((model: TModel, modelIdx: number) =>
         this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model)
       );
 
@@ -336,7 +344,7 @@ export class NetworkGraphNodeAddPanel {
       }
 
       this.updateModelMenu(elementType, false);
-      this.update();
+      this.updateColor();
       panel.select(".models").style("display", "block");
 
       // this._workspace.animationOff();

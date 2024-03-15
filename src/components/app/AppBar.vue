@@ -34,7 +34,7 @@
         :key="index"
         :value="item.id"
         :to="'/' + item.id"
-        v-for="(item, index) in simulators"
+        v-for="(item, index) in appStore.simulatorItems"
       >
         <template #prepend>
           <v-icon :color="item.id" :icon="item.id + ':logo'" size="small" />
@@ -123,9 +123,8 @@
 
 <script lang="ts" setup>
 // import { DatabaseService } from "@/helpers/common/database";
-import { simulators } from "@/simulators";
-import { useAppStore } from "@/stores/appStore";
 import { onMounted } from "vue";
+import { useAppStore } from "@/stores/appStore";
 
 const appStore = useAppStore();
 

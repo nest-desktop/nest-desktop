@@ -29,7 +29,7 @@
               :key="index"
               class="ma-2"
               size="x-large"
-              v-for="(simulator, index) in simulatorItems"
+              v-for="(simulator, index) in appStore.simulatorItems"
             >
               <template #prepend>
                 <v-icon :icon="simulator.id + ':logo'" />
@@ -46,17 +46,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import AppFooter from "@/components/app/AppFooter.vue";
-import { simulators } from "@/simulators";
-
-const simulatorItems = computed(() =>
-  appStore.state.simulatorVisible.map((simulatorId) => simulators[simulatorId])
-);
 </script>
 
 <!-- <style lang="scss">
