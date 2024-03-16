@@ -1,6 +1,7 @@
 // connection.ts
 
 import { BaseObj } from "../common/base";
+import { IConfigProps } from "../common/config";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import {
   ConnectionParameter,
@@ -41,9 +42,12 @@ export class BaseConnection extends BaseObj {
   constructor(
     connections: TConnections,
     connectionProps: IConnectionProps,
-    simulator: string = ""
+    configProps?: IConfigProps
   ) {
-    super({ config: { simulator }, logger: { settings: { minLevel: 3 } } });
+    super({
+      config: { name: "Connection", ...configProps },
+      logger: { settings: { minLevel: 3 } },
+    });
 
     this._connections = connections;
     this._idx = this.connections.all.length;

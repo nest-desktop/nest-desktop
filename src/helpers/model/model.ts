@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { BaseObj } from "../common/base";
 import { IModelParamProps, ModelParameter } from "./modelParameter";
+import { IConfigProps } from "../common/config";
 // import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 export interface IModelProps {
@@ -35,9 +36,9 @@ export class BaseModel extends BaseObj {
   private _state: UnwrapRef<any>;
   // private _modelDBStore;
 
-  constructor(modelProps: IModelProps = {}, simulator?: string) {
+  constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
     super({
-      config: { simulator },
+      config: { name: "Model", ...configProps },
       logger: { settings: { minLevel: 3 } },
     });
 

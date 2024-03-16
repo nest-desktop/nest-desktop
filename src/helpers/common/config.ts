@@ -3,7 +3,7 @@
 import { getRuntimeConfig } from "@/utils/fetch";
 
 export interface IConfigProps {
-  name?: string;
+  name: string;
   simulator?: string;
 }
 

@@ -14,7 +14,7 @@ export class NESTNodeSlice extends BaseObj {
 
   constructor(node: NESTNode, paramsProps: INodeParamProps[] = []) {
     super({
-      config: { simulator: "nest" },
+      config: { name: "NESTNodeSlice", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },
     });
 

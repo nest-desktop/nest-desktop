@@ -21,7 +21,7 @@ export class NESTModel extends BaseModel {
   private _receptors: { [key: string]: NESTModelReceptor } = {}; // receptor parameters
 
   constructor(modelProps: IModelProps = {}) {
-    super(modelProps, "nest");
+    super(modelProps, { name: "NESTModel", simulator: "nest" });
   }
 
   get compartmentParams(): { [key: string]: NESTModelCompartmentParameter } {

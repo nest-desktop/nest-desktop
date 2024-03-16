@@ -21,7 +21,7 @@ export class NESTSimulationKernel extends BaseObj {
     kernelProps: INESTSimulationKernelProps = {}
   ) {
     super({
-      config: { simulator: "nest" },
+      config: { name: "NESTSimulationKernel", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },
     });
 

@@ -33,7 +33,10 @@ export class NESTConnection extends BaseConnection {
     connections: NESTConnections,
     connectionProps: INESTConnectionProps
   ) {
-    super(connections, connectionProps, "nest");
+    super(connections, connectionProps, {
+      name: "NESTConnection",
+      simulator: "nest",
+    });
 
     this._sourceSlice = new NESTNodeSlice(this.source, []);
     this._targetSlice = new NESTNodeSlice(

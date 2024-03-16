@@ -7,6 +7,7 @@ const _configNames = [
   "ColorSchemes",
   "Connection",
   "Network",
+  "NetworkGraph",
   "NetworkGraphWorkspace",
   "Node",
   "Parameter",

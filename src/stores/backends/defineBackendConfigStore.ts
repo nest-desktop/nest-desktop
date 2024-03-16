@@ -28,12 +28,17 @@ export function defineBackendConfigStore(name: string, url: string) {
       const loadConfig = async (simulator: string): Promise<void> => {
         logger.trace("load config");
         return getRuntimeConfig(
-          `/assets/simulators/${simulator}/config/backends.json`
+          `assets/simulators/${simulator}/config/backends.json`
         )
           .then((data) => {
             const config = data[name];
             const baseURL =
-              window.location.protocol + "//" + window.location.hostname;
+              (window.location.protocol.includes("http")
+                ? window.location.protocol
+                : "http:") +
+              "//" +
+              (window.location.hostname || "localhost");
+
             if (config.port) {
               state.url = baseURL + ":" + config.port;
             } else if (config.path) {
