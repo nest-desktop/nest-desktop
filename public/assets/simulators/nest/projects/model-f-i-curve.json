@@ -15,22 +15,36 @@
       {
         "model": {
           "id": "senderMeanISIPlot",
-          "params": { "plotMode": "lines", "lineShape": "linear" }
+          "params": {
+            "plotMode": "lines",
+            "lineShape": "linear"
+          }
         }
       }
     ]
   },
   "network": {
     "connections": [
-      { "rule": "one_to_one", "source": 1, "target": 0 },
-      { "rule": "all_to_all", "source": 0, "target": 2 }
+      {
+        "rule": "one_to_one",
+        "source": 1,
+        "target": 0
+      },
+      {
+        "rule": "all_to_all",
+        "source": 0,
+        "target": 2
+      }
     ],
     "nodes": [
       {
         "model": "iaf_psc_alpha",
         "size": 1000,
         "view": {
-          "position": { "x": 25, "y": 25 }
+          "position": {
+            "x": 25,
+            "y": 25
+          }
         }
       },
       {
@@ -42,28 +56,47 @@
             "type": {
               "id": "numpy.arange",
               "specs": [
-                { "id": "start", "value": 1 },
-                { "id": "stop", "value": 1001 },
-                { "id": "step", "value": 1 }
+                {
+                  "id": "start",
+                  "value": 1
+                },
+                {
+                  "id": "stop",
+                  "value": 1001
+                },
+                {
+                  "id": "step",
+                  "value": 1
+                }
               ]
             }
           }
         ],
         "size": 1000,
         "view": {
-          "position": { "x": 175, "y": 75 }
+          "position": {
+            "x": 175,
+            "y": 75
+          }
         }
       },
       {
         "model": "spike_recorder",
         "view": {
-          "position": { "x": 325, "y": 25 }
+          "position": {
+            "x": 325,
+            "y": 25
+          }
         }
       }
     ]
   },
   "simulation": {
-    "kernel": { "localNumThreads": 1, "resolution": 0.1, "rngSeed": 1 },
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 0.1,
+      "rngSeed": 1
+    },
     "time": 1000
   },
   "version": "3.2.0"

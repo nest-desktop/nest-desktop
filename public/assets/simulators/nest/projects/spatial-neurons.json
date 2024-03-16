@@ -4,9 +4,17 @@
     "nodes": [
       {
         "model": "poisson_generator",
-        "params": [{ "id": "rate", "value": 6500 }],
+        "params": [
+          {
+            "id": "rate",
+            "value": 6500
+          }
+        ],
         "view": {
-          "position": { "x": 25, "y": 25 }
+          "position": {
+            "x": 25,
+            "y": 25
+          }
         }
       },
       {
@@ -16,20 +24,32 @@
         "spatial": {
           "positions": "free",
           "specs": {
-            "center": [0, 0],
-            "extent": [1, 1],
+            "center": [
+              0,
+              0
+            ],
+            "extent": [
+              1,
+              1
+            ],
             "edgeWrap": false,
             "numDimensions": 2
           }
         },
         "view": {
-          "position": { "x": 175, "y": 75 }
+          "position": {
+            "x": 175,
+            "y": 75
+          }
         }
       },
       {
         "model": "voltmeter",
         "view": {
-          "position": { "x": 325, "y": 25 }
+          "position": {
+            "x": 325,
+            "y": 25
+          }
         }
       }
     ],
@@ -38,14 +58,26 @@
         "source": 0,
         "target": 1,
         "synapse": {
-          "params": [{ "id": "weight", "value": 10 }]
+          "params": [
+            {
+              "id": "weight",
+              "value": 10
+            }
+          ]
         }
       },
-      { "source": 2, "target": 1 }
+      {
+        "source": 2,
+        "target": 1
+      }
     ]
   },
   "simulation": {
-    "kernel": { "localNumThreads": 1, "resolution": 1, "rngSeed": 1 },
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 1,
+      "rngSeed": 1
+    },
     "time": 1000
   },
   "version": "3.2.0"

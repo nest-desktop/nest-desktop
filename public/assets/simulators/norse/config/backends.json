@@ -1,6 +1,6 @@
 {
   "norse": {
-    "port": "11428",
+    "port": 11428,
     "enabled": false
   }
 }

@@ -1,6 +1,6 @@
 {
   "pynn": {
-    "port": "91198",
+    "port": 91198,
     "enabled": false
   }
 }
