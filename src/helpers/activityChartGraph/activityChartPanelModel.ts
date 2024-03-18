@@ -7,6 +7,7 @@ import { Activity } from "../activity/activity";
 import { ActivityChartPanel } from "./activityChartPanel";
 import { BaseObj } from "../common/base";
 import { NodeRecord } from "../node/nodeRecord";
+import { currentBackgroundColor } from "../common/theme";
 
 export interface IActivityChartPanelModelProps {
   id?: string;
@@ -321,6 +322,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this._state.records.forEach((record: NodeRecord) => record.update());
   }
 
+  /**
+   * Update data.
+   */
   updateData(): void {
     this.data = [];
     this.activities.forEach((activity: Activity) => {
@@ -329,7 +333,18 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   }
 
   /**
-   * Update color for records.
+   * Update background color.
+   */
+  updateBackgroundColor(): void {
+    this._data.forEach((data: any) => {
+      if (data.type === "histogram") {
+        data.marker.line.color = currentBackgroundColor();
+      }
+    });
+  }
+
+  /**
+   * Update color of records.
    */
   updateRecordsColor(): void {
     this._data.forEach((data: any) => {

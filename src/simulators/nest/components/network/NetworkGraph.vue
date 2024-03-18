@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%; height: 100%">
     <v-chip @click="graph.updateHash()" size="small" variant="text">
-      {{ graph?.state.hash }}
+      {{ graph?.hash }}
     </v-chip>
 
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
@@ -11,7 +11,7 @@
         <g class="grid no-print" />
         <g>
           <path
-            :style="{ strokeWidth: graph?.config.strokeWidth }"
+            :style="{ strokeWidth: graph?.config.localStorage.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
             fill="none"
@@ -28,7 +28,7 @@
               v-for="(connection, index) of graph?.network.connections.all"
             >
               <marker
-                :key="connection.state.hash"
+                :key="connection.hash"
                 :id="'syn-' + index"
                 markerHeight="8"
                 markerWidth="16"

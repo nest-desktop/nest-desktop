@@ -180,7 +180,7 @@ export class ActivityChartPanel extends BaseObj {
   /**
    * Update layout of the panel.
    */
-  updatePanelLayout(): void {
+  updateLayout(): void {
     const panels: ActivityChartPanel[] = this.graph.panelsVisible;
     const heights: number[] = panels.map(
       (panel: ActivityChartPanel) => panel.layout.yaxis.height

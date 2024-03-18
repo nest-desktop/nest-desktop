@@ -93,14 +93,16 @@ const init = () => {
   }
 };
 
+const relayout = () => graph.value?.relayout();
+
 onBeforeUnmount(() => {
   state.dialog = false;
-  window.removeEventListener("darkmode", () => graph.value?.relayout());
+  window.removeEventListener("relayout", relayout);
 });
 
 onMounted(() => {
   init();
-  window.addEventListener("darkmode", () => graph.value?.relayout());
+  window.addEventListener("relayout", relayout);
 });
 
 watch(

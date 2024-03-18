@@ -72,7 +72,7 @@ import { useNESTProjectStore } from "../../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
 const props = defineProps({
-  color: { default: "accent", type: String },
+  color: { default: "primary", type: String },
 });
 
 const simulation = computed(

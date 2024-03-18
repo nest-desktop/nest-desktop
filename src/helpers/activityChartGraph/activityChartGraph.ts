@@ -368,7 +368,7 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Relayout plots to new updates.
+   * Relayout plots to new theme.
    */
   relayout(): void {
     if (!this._state.ref) return;
@@ -447,11 +447,7 @@ export class ActivityChartGraph extends BaseObj {
     this.updatePanelModels();
     // this.updateLayoutColor();
 
-    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      panel.model.activities; // TODO: check if it is required.
-      this.gatherData(panel);
-      this.updateLayoutPanel(panel);
-    });
+    this.updateVisiblePanelsData();
 
     this.react();
     this.restyle();
@@ -471,6 +467,10 @@ export class ActivityChartGraph extends BaseObj {
    * Update the theme color of the chart graph.
    */
   updateThemeColor(): void {
+    this._panels.forEach((panel: ActivityChartPanel) =>
+      panel.model.updateBackgroundColor()
+    );
+
     this._plotLayout.font.color = currentColor();
     this._plotLayout.paper_bgcolor = currentBackgroundColor();
     this._plotLayout.plot_bgcolor = currentBackgroundColor();
@@ -487,6 +487,17 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
+   * Update data in visible panels.
+   */
+  updateVisiblePanelsData(): void {
+    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
+      panel.model.activities; // TODO: check if it is required.
+      this.gatherData(panel);
+      this.updateLayoutPanel(panel);
+    });
+  }
+
+  /**
    * Update panel models.
    */
   updatePanelModels(): void {
@@ -494,7 +505,7 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Update records color.
+   * Update color of records.
    *
    * @remarks
    * It renders new updates in activity plots.
@@ -511,7 +522,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   updateVisiblePanelsLayout(): void {
     this.panelsVisible.forEach((panel: ActivityChartPanel) =>
-      panel.updatePanelLayout()
+      panel.updateLayout()
     );
   }
 }

@@ -12,8 +12,8 @@
     <template #activator="{ props }">
       <v-btn
         append-icon="mdi-menu-down"
-        rounded="0"
-        size="small"
+        class="mx-1px"
+        size="x-small"
         v-bind="props"
         variant="text"
       >
@@ -48,8 +48,8 @@
     <template #activator="{ props }">
       <v-btn
         append-icon="mdi-menu-down"
-        rounded="0"
-        size="small"
+        class="mx-1px"
+        size="x-small"
         v-bind="props"
         variant="text"
       >
@@ -70,8 +70,6 @@
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
 
-      <v-divider />
-
       <v-list-item :to="{ name: 'settings' }">
         <template #prepend>
           <v-icon icon="mdi-cogs" size="small" />
@@ -81,13 +79,12 @@
     </v-list>
   </v-menu>
 
-  <v-btn :to="{ name: 'about' }" rounded="0" size="small" variant="text">
-    about
-  </v-btn>
+  <v-btn :to="{ name: 'about' }" size="x-small" variant="text"> about </v-btn>
+
   <v-btn
+    class="mx-1px"
     href="https://nest-desktop.readthedocs.io"
-    rounded="0"
-    size="small"
+    size="x-small"
     target="_blank"
     variant="text"
     append-icon="mdi-open-in-new"
@@ -95,7 +92,19 @@
     help
   </v-btn>
 
+  <v-divider class="mx-1" vertical />
+
+  <v-btn
+    @click="appStore.toggleTheme()"
+    size="x-small"
+    :icon="appStore.state.themeIcon"
+    variant="text"
+    title="Toggle theme"
+  />
+
   <v-spacer />
+
+  <v-divider class="mx-1" vertical />
 
   <v-btn
     :disabled="!backend.isEnabled"
@@ -130,12 +139,6 @@ const appStore = useAppStore();
 
 const settingsItems = [
   {
-    icon: "mdi-theme-light-dark",
-    id: "theme-light-dark",
-    // onClick: () => appStore.toggleDarkMode(theme),
-    title: "Dark mode",
-  },
-  {
     icon: "mdi-cog-refresh-outline",
     id: "clearConfig",
     onClick: () => localStorage.clear(),
@@ -160,3 +163,10 @@ onMounted(() => {
   );
 });
 </script>
+
+<style lang="scss">
+.mx-1px {
+  margin-left: 1px;
+  margin-right: 1px;
+}
+</style>

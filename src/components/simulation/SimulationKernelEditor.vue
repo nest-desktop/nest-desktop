@@ -29,7 +29,7 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
 
 const props = defineProps({
-  color: { default: "accent", type: String },
+  color: { default: "primary", type: String },
   simulation: TSimulationProps,
 });
 

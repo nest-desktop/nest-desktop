@@ -183,7 +183,7 @@ export class NESTCopyModels extends BaseObj {
   updateHash(): void {
     this._updateHash({
       models: this._models.map(
-        (model: NESTCopyModel) => model.toJSON() //TODO node.state.hash
+        (model: NESTCopyModel) => model.toJSON() //TODO node.hash
       ),
     });
   }

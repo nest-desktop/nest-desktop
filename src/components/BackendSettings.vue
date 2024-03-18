@@ -12,6 +12,7 @@
     <v-col cols="10">
       <v-text-field
         :disabled="!store.backendConfigStore.state.enabled"
+        :hide-details="store.state.response.data.length === 0"
         :placeholder="store.backendConfigStore.state.defaults.url"
         :rules="[
           (value) => value.length === 0 || isURL(value) || 'URL is not valid',
@@ -34,12 +35,14 @@
         </template>
 
         <template #details>
-          <div v-if="store.isOK && store.isValid">
-            {{ store.response.data }}
-          </div>
-          <div v-else>
-            {{ store.error }}
-          </div>
+          <span v-if="store.isOK && store.isValid">
+            Response:
+            {{ store.state.response.data }}
+          </span>
+          <span v-else>
+            Error:
+            {{ store.state.error }}
+          </span>
         </template>
       </v-text-field>
     </v-col>

@@ -16,7 +16,12 @@
     </v-menu> -->
 
     <v-toolbar color="transparent" density="compact">
-      <v-btn @click="resetPanels()" icon="mdi-reload" size="small" />
+      <v-btn
+        @click="resetPanels()"
+        icon="mdi-reload"
+        size="x-small"
+        variant="outlined"
+      />
 
       <v-spacer />
 

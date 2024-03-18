@@ -1,23 +1,9 @@
 <template>
   <div class="activityChartPanelToolbar">
-    <v-menu :close-on-content-click="false">
-      <template #activator="{ props }">
-        <v-btn
-          :prepend-icon="panel.model.icon"
-          block
-          class="justify-start"
-          size="x-large"
-          v-bind="props"
-        >
-          {{ panel.model?.label }}
-        </v-btn>
-      </template>
+    <v-icon class="ma-3" size="small">{{ panel.model.icon }}</v-icon>
+    {{ panel.model?.label }}
 
-      <ActivityChartPanelMenuPopover
-        :graph="(panel.graph as ActivityChartGraph)"
-        @changed="selectModel"
-      />
-    </v-menu>
+    <v-spacer />
 
     <span class="icons">
       <v-btn
@@ -52,6 +38,23 @@
         size="x-small"
         variant="text"
       />
+
+      <v-menu :close-on-content-click="false">
+        <template #activator="{ props }">
+          <v-btn
+            icon="mdi-dots-vertical"
+            color="primary"
+            size="x-small"
+            v-bind="props"
+            variant="text"
+          />
+        </template>
+
+        <ActivityChartPanelMenuPopover
+          :graph="(panel.graph as ActivityChartGraph)"
+          @changed="selectModel"
+        />
+      </v-menu>
     </span>
   </div>
 </template>
@@ -75,12 +78,14 @@ const selectModel = (modelId: string) => {
 </script>
 
 <style lang="scss">
-.activityChartPanelToolbar .icons {
-  display: none;
-  line-height: 48px;
-  position: absolute;
-  right: 4px;
-  top: 0;
+.activityChartPanelToolbar {
+  .icons {
+    display: none;
+    line-height: 48px;
+    position: absolute;
+    right: 4px;
+    top: 0;
+  }
 
   &:hover .icons {
     display: block;
