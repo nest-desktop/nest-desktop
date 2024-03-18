@@ -112,9 +112,9 @@
     </div>
   </v-navigation-drawer>
 
-  <v-navigation-drawer
+  <v-bottom-navigation
+    :active="projectStore.state.bottomOpen"
     :height="projectStore.state.bottomNavHeight"
-    :model-value="projectStore.state.bottomOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     location="bottom"
   >
@@ -125,7 +125,7 @@
         :simulation="(project.simulation as TSimulation)"
       />
     </slot>
-  </v-navigation-drawer>
+  </v-bottom-navigation>
 </template>
 
 <script lang="ts" setup>
