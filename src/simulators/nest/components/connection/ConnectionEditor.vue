@@ -31,7 +31,7 @@
           <template #activator="{ props }">
             <v-btn
               color="primary"
-              icon="mdi-dots-vertical"
+              icon="mdi:mdi-dots-vertical"
               size="small"
               variant="text"
               v-bind="props"
@@ -80,7 +80,7 @@ const synapse = computed(() => connection.value.synapse as NESTSynapse);
 const items = [
   {
     id: "connectionReset",
-    icon: "mdi-restart",
+    icon: "mdi:mdi-restart",
     title: "Reset connection",
     onClick: () => {
       connection.value.reset();
@@ -90,7 +90,7 @@ const items = [
   },
   // {
   //   id: "sourceSlice",
-  //   icon: "mdi-code-brackets",
+  //   icon: "mdi:mdi-code-brackets",
   //   title: "Toggle source slicing",
   //   onClick: () => {
   //     connection.value.sourceSlice.toggleVisible();
@@ -100,7 +100,7 @@ const items = [
   // },
   // {
   //   id: "targetSlice",
-  //   icon: "mdi-code-brackets",
+  //   icon: "mdi:mdi-code-brackets",
   //   title: "Toggle target slicing",
   //   onClick: () => {
   //     connection.value.targetSlice.toggleVisible();
@@ -110,7 +110,7 @@ const items = [
   // },
   {
     id: "connectionReverse",
-    icon: "mdi-rotate-3d-variant",
+    icon: "mdi:mdi-rotate-3d-variant",
     title: "Reverse connection",
     onClick: () => {
       connection.value.reverse();
@@ -119,7 +119,7 @@ const items = [
   },
   {
     id: "weightInverse",
-    icon: "mdi-contrast",
+    icon: "mdi:mdi-contrast",
     title: "Inverse synaptic weight",
     onClick: () => {
       synapse.value.inverseWeight();
@@ -127,7 +127,7 @@ const items = [
   },
   {
     id: "connectionDelete",
-    icon: "mdi-trash-can-outline",
+    icon: "mdi:mdi-trash-can-outline",
     title: "Delete connection",
     onClick: () => {
       connection.value.remove();

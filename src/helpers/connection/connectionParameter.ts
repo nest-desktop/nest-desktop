@@ -1,6 +1,6 @@
 // connectionParameter.ts
 
-import { Parameter, IParamProps } from "../common/parameter";
+import { Parameter, IParamProps, IParamType } from "../common/parameter";
 import { TConnection } from "@/types/connectionTypes";
 
 export interface IConnectionParamProps extends IParamProps {}
@@ -17,8 +17,8 @@ export class ConnectionParameter extends Parameter {
     return this._connection as TConnection;
   }
 
-  get types(): any[] {
-    const types: any[] = this.config?.localStorage.types;
+  get types(): IParamType[] {
+    const types: IParamType[] = this.config?.localStorage.types;
     return types;
   }
 

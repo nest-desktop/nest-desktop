@@ -1,15 +1,15 @@
 <template>
   <v-toolbar
-    :collapse="state.collapse"
     :key="graph?.network.hash"
+    :collapse="state.collapse"
     density="compact"
     absolute
   >
     <v-btn
-      @click="graph?.network.nodes.state.selectedNode.state.select()"
+      v-if="graph?.network.nodes.state.selectedNode"
       icon
       size="small"
-      v-if="graph?.network.nodes.state.selectedNode"
+      @click="graph?.network.nodes.state.selectedNode.state.select()"
     >
       <NodeAvatar
         :node="(graph?.network.nodes.state.selectedNode as TNode)"
@@ -18,10 +18,10 @@
     </v-btn>
 
     <v-btn
+      v-if="graph?.network.connections.state.selectedConnection"
       @click="
         graph?.network.connections.state.selectedConnection.state.select()
       "
-      v-if="graph?.network.connections.state.selectedConnection"
     >
       <ConnectionAvatar
         :connection="(graph?.network.connections.state.selectedConnection as TConnection)"
@@ -31,7 +31,7 @@
     <v-spacer />
 
     <v-btn
-      icon="mdi-camera"
+      icon="mdi:mdi-camera"
       size="small"
       title="Export network graph"
       @click="downloadNetworkGraph"
@@ -39,16 +39,19 @@
 
     <!-- <v-btn
       @click="state.collapse = !state.collapse"
-      icon="mdi-tools"
+      icon="mdi:mdi-tools"
       size="small"
     /> -->
 
     <template v-if="!state.collapse">
-      <v-dialog max-width="450" v-model="state.dialogDelete">
+      <v-dialog
+        v-model="state.dialogDelete"
+        max-width="450"
+      >
         <template #activator="{ props }">
           <v-btn
             :disabled="graph?.network.isEmpty"
-            icon="mdi-trash-can-outline"
+            icon="mdi:mdi-trash-can-outline"
             size="small"
             title="Delete all network elements"
             v-bind="props"
@@ -63,13 +66,17 @@
           <v-card-actions>
             <v-spacer />
             <v-btn
-              @click="state.dialogDelete = false"
               size="small"
               variant="outlined"
+              @click="state.dialogDelete = false"
             >
               close
             </v-btn>
-            <v-btn @click="deleteNetwork" size="small" variant="outlined">
+            <v-btn
+              size="small"
+              variant="outlined"
+              @click="deleteNetwork"
+            >
               delete
             </v-btn>
           </v-card-actions>
@@ -79,7 +86,7 @@
       <v-text-field
         class="px-4"
         hide-details
-        prepend-inner-icon="mdi-pencil"
+        prepend-inner-icon="mdi:mdi-pencil"
         single-line
         v-model="projectStore.state.project.name"
       /> -->
@@ -88,28 +95,30 @@
         :color="graph?.workspace.state.centerSelected ? 'amber' : 'grey'"
         :icon="
           graph?.workspace.state.centerSelected
-            ? 'mdi-image-filter-center-focus'
-            : 'mdi-image-filter-center-focus-strong-outline'
+            ? 'mdi:mdi-image-filter-center-focus'
+            : 'mdi:mdi-image-filter-center-focus-strong-outline'
         "
-        @click="() => graph?.workspace.toggleCenterSelected()"
         size="small"
         title="Auto-center currently selected element"
+        @click="() => graph?.workspace.toggleCenterSelected()"
       />
 
       <v-btn
         :color="graph?.workspace.state.centerNetwork ? 'amber' : 'grey'"
-        @click="() => graph?.workspace.toggleCenterNetwork()"
-        icon="mdi-focus-field"
+        icon="mdi:mdi-focus-field"
         size="small"
         title="Auto-center whole network graph"
+        @click="() => graph?.workspace.toggleCenterNetwork()"
       />
 
       <v-btn
         :color="graph?.workspace.state.showGrid ? 'amber' : 'grey'"
-        :icon="graph?.workspace.state.showGrid ? 'mdi-grid' : 'mdi-grid-off'"
-        @click="() => graph?.workspace.toggleGrid()"
+        :icon="
+          graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'
+        "
         size="small"
         title="Show background grid"
+        @click="() => graph?.workspace.toggleGrid()"
       />
     </template>
   </v-toolbar>

@@ -1,14 +1,18 @@
 <template>
   <v-app v-if="nestSessionStore.loading">
     <v-container class="fill-height">
-      <v-progress-circular class="ma-auto" color="primary" indeterminate />
+      <v-progress-circular
+        class="ma-auto"
+        color="primary"
+        indeterminate
+      />
     </v-container>
 
     <AppFooter />
   </v-app>
 
   <template v-else>
-    <AppNavigation :navItems />
+    <AppNavigation :nav-items />
 
     <v-main>
       <router-view />
@@ -24,15 +28,16 @@ import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 import { getParamFromURL } from "@/helpers/common/paramQuery";
 
-import { useNESTSessionStore } from "../stores/sessionStore";
-import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
 import { useNESTModelStore } from "../stores/model/modelStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
+import { useNESTSessionStore } from "../stores/sessionStore";
+import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
 
 const modelStore = useNESTModelStore();
 const nestSessionStore = useNESTSessionStore();
 const nestSimulatorStore = useNESTSimulatorStore();
 const projectStore = useNESTProjectStore();
+
 const route = useRoute();
 
 const navItems = [
@@ -53,22 +58,31 @@ const navItems = [
 ];
 
 onMounted(() => {
+  let changed = false;
+
   // Store URL of NEST Server from the query.
   const nestServerURL = getParamFromURL(route, "nest_server_url");
   if (nestServerURL) {
     nestSimulatorStore.backendConfigStore.state.url = nestServerURL;
+    changed = true;
   }
 
   // Store access token for NEST Server from the query.
   const accessToken = getParamFromURL(route, "nest_server_access_token");
   if (accessToken) {
     nestSimulatorStore.state.accessToken = accessToken;
+    changed = true;
   }
 
-  nestSimulatorStore.update();
+  if (changed) {
+    nestSimulatorStore.update();
+  }
 
+  // Initialize project and model stores.
   modelStore.init();
   projectStore.init();
+
+  // Loading off.
   nestSessionStore.loading = false;
 });
 </script>

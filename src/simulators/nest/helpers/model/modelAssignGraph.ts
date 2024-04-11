@@ -3,6 +3,7 @@
 import { Selection, select } from "d3";
 
 import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
+import { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "./copyModel";
@@ -16,7 +17,7 @@ export class NESTModelAssignGraph {
     this._networkGraph = networkGraph;
   }
 
-  get state(): any {
+  get state(): INetworkGraphWorkspaceState {
     return this._networkGraph.workspace.state;
   }
 
@@ -76,7 +77,7 @@ export class NESTModelAssignGraph {
       .selectAll("g.modelAssigned")
       .data(
         this._networkGraph.network.connections.recordedByWeightRecorder,
-        (c: any) => c.hash
+        (c: NESTConnection | any) => c.hash // TODO: Better type
       );
 
     models

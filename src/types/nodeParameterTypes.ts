@@ -1,15 +1,27 @@
 // nodeParameterTypes.ts
 
-import { BaseNode } from "@/helpers/node/node";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
 
-import { NESTCopyModel } from "@/simulators/nest/helpers/model/copyModel";
-import { NESTNode } from "@/simulators/nest/helpers/node/node";
-import { NESTNodeCompartment } from "@/simulators/nest/helpers/node/nodeCompartment/nodeCompartment";
-import { NESTNodeReceptor } from "@/simulators/nest/helpers/node/nodeReceptor/nodeReceptor";
+import {
+  INESTCopyModelProps,
+  NESTCopyModel,
+} from "@/simulators/nest/helpers/model/copyModel";
+import { INESTNodeProps, NESTNode } from "@/simulators/nest/helpers/node/node";
+import {
+  INESTNodeCompartmentProps,
+  NESTNodeCompartment,
+} from "@/simulators/nest/helpers/node/nodeCompartment/nodeCompartment";
+import {
+  INESTNodeReceptorProps,
+  NESTNodeReceptor,
+} from "@/simulators/nest/helpers/node/nodeReceptor/nodeReceptor";
 
-import { NorseNode } from "@/simulators/norse/helpers/node/node";
+import {
+  INorseNodeProps,
+  NorseNode,
+} from "@/simulators/norse/helpers/node/node";
 
-export type TNodeParameterTypes =
+export type TNodeParameter =
   | BaseNode
   | NESTNode
   | NESTCopyModel
@@ -17,8 +29,15 @@ export type TNodeParameterTypes =
   | NESTNodeReceptor
   | NorseNode;
 
-// for components
-export const TNodeParameterTypesProps = [
+export type TNodeParameterComponentProps =
+  | INodeProps
+  | INESTNodeProps
+  | INESTCopyModelProps
+  | INESTNodeCompartmentProps
+  | INESTNodeReceptorProps
+  | INorseNodeProps;
+
+export const NodeParameterComponentProps = [
   BaseNode,
   NESTNode,
   NESTCopyModel,

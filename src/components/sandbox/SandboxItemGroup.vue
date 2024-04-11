@@ -5,7 +5,12 @@
       <v-item-group selected-class="bg-primary">
         <v-container>
           <v-row>
-            <v-col v-for="n in 3" :key="n" cols="12" md="4">
+            <v-col
+              v-for="n in 3"
+              :key="n"
+              cols="12"
+              md="4"
+            >
               <v-item v-slot="{ isSelected, selectedClass }">
                 <v-card
                   :class="['d-flex align-center', selectedClass]"
@@ -26,7 +31,12 @@
       <v-item-group multiple>
         <v-container>
           <v-row>
-            <v-col v-for="n in 6" :key="n" cols="12" md="2">
+            <v-col
+              v-for="n in 6"
+              :key="n"
+              cols="12"
+              md="2"
+            >
               <v-item v-slot="{ isSelected }">
                 <v-card
                   :color="isSelected ? 'primary' : ''"

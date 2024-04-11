@@ -3,12 +3,12 @@
     <v-card-title>Toast</v-card-title>
     <v-card-text>
       <v-btn
-        :color="type"
+        v-for="(type, index) in types"
         :key="index"
-        @click="openToast(`${type} message`, { type })"
+        :color="type"
         class="mx-1"
         variant="tonal"
-        v-for="(type, index) in types"
+        @click="openToast(`${type} message`, { type })"
       >
         {{ type }}
       </v-btn>

@@ -1,13 +1,25 @@
 // connectionTypes.ts
 
-import { BaseConnection } from "@/helpers/connection/connection";
-import { NESTConnection } from "@/simulators/nest/helpers/connection/connection";
-import { NorseConnection } from "@/simulators/norse/helpers/connection/connection";
+import {
+  BaseConnection,
+  IConnectionProps,
+} from "@/helpers/connection/connection";
+import {
+  INESTConnectionProps,
+  NESTConnection,
+} from "@/simulators/nest/helpers/connection/connection";
+import {
+  INorseConnectionProps,
+  NorseConnection,
+} from "@/simulators/norse/helpers/connection/connection";
 
 export type TConnection = BaseConnection | NESTConnection | NorseConnection;
+export type TConnectionProps =
+  | IConnectionProps
+  | INESTConnectionProps
+  | INorseConnectionProps;
 
-// for components
-export const TConnectionProps = [
+export const ConnectionComponentProps = [
   BaseConnection,
   NESTConnection,
   NorseConnection,

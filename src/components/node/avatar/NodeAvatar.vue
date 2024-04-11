@@ -23,14 +23,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TNode, TNodeProps } from "@/types/nodeTypes";
+import { NodeComponentProps, TNode } from "@/types/nodeTypes";
 
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";
 import StimulatorAvatar from "./StimulatorAvatar.vue";
 
 const props = defineProps({
-  node: TNodeProps,
+  node: NodeComponentProps,
   size: { type: String, default: "40px" },
 });
 

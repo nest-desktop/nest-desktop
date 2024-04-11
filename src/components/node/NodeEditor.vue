@@ -27,7 +27,7 @@
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
-                  icon="mdi-order-bool-ascending-variant"
+                  icon="mdi:mdi-order-bool-ascending-variant"
                   size="small"
                   v-bind="props"
                   variant="text"
@@ -129,7 +129,7 @@
                 <v-btn
                   color="primary"
                   class="d-print-none menu align-center justify-center my-auto"
-                  icon="mdi-dots-vertical"
+                  icon="mdi:mdi-dots-vertical"
                   size="x-small"
                   v-bind="props"
                   variant="text"
@@ -188,11 +188,11 @@ import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TNode, TNodeProps } from "@/types/nodeTypes";
+import { NodeComponentProps, TNode } from "@/types/nodeTypes";
 
 import NodeMenu from "./NodeMenu.vue";
 
-const props = defineProps({ node: TNodeProps });
+const props = defineProps({ node: NodeComponentProps });
 
 const node = computed(() => props.node as TNode);
 
@@ -204,43 +204,43 @@ const state = reactive({
 const admins = [
   {
     title: "Management",
-    icon: "mdi-account-multiple-outline",
+    icon: "mdi:mdi-account-multiple-outline",
     value: "management",
   },
-  { title: "Settings", icon: "mdi-cog-outline", value: "settings" },
+  { title: "Settings", icon: "mdi:mdi-cog-outline", value: "settings" },
 ];
 
 const cruds = [
-  { title: "Create", icon: "mdi-plus-outline", value: "create" },
-  { title: "Read", icon: "mdi-file-outline", value: "read" },
-  { title: "Update", icon: "mdi-update", value: "update" },
-  { title: "Delete", icon: "mdi-delete", value: "delete" },
+  { title: "Create", icon: "mdi:mdi-plus-outline", value: "create" },
+  { title: "Read", icon: "mdi:mdi-file-outline", value: "read" },
+  { title: "Update", icon: "mdi:mdi-update", value: "update" },
+  { title: "Delete", icon: "mdi:mdi-delete", value: "delete" },
 ];
 
 const clickMe = [
-  { value: "1", title: "Click Me", icon: "mdi-numeric-1" },
-  { value: "2", title: "Click Me", icon: "mdi-numeric-2" },
-  { value: "3", title: "Click Me", icon: "mdi-numeric-3" },
-  { value: "4", title: "Click Me", icon: "mdi-numeric-4" },
+  { value: "1", title: "Click Me", icon: "mdi:mdi-numeric-1" },
+  { value: "2", title: "Click Me", icon: "mdi:mdi-numeric-2" },
+  { value: "3", title: "Click Me", icon: "mdi:mdi-numeric-3" },
+  { value: "4", title: "Click Me", icon: "mdi:mdi-numeric-4" },
 ];
 
 const items = [
   {
     value: "parameter",
     title: "parameter",
-    icon: "mdi-account-circle",
+    icon: "mdi:mdi-account-circle",
     items: admins,
   },
   {
     value: "actions",
     title: "actions",
-    icon: "mdi-database-cog-outline",
+    icon: "mdi:mdi-database-cog-outline",
     items: cruds,
   },
   {
     value: "clickMe",
     title: "clickMe",
-    icon: "mdi-information",
+    icon: "mdi:mdi-information",
     items: clickMe,
   },
 ];

@@ -1,11 +1,15 @@
 // activityAnimationLayerModel.ts
 
-import { Group, Mesh } from "three";
+import { Group, Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
 
-import { ActivityAnimationLayer } from "./activityAnimationLayer";
+import {
+  ActivityAnimationLayer,
+  IActivityAnimationLayerConfig,
+  IActivityAnimationLayerFrame,
+} from "./activityAnimationLayer";
 
 export class ActivityAnimationLayerModel {
-  private _graphGroup: Group;
+  private _graphGroup: Group<any>;
   private _layer: ActivityAnimationLayer;
 
   constructor(layer: ActivityAnimationLayer) {
@@ -15,11 +19,11 @@ export class ActivityAnimationLayerModel {
     this.initGraph();
   }
 
-  get graphGroup(): Group {
+  get graphGroup(): Group<any> {
     return this._graphGroup;
   }
 
-  set graphGroup(value: Group) {
+  set graphGroup(value: Group<any>) {
     this._graphGroup = value;
   }
 
@@ -42,7 +46,7 @@ export class ActivityAnimationLayerModel {
   /**
    * Render layer model.
    */
-  render(frame: any): void {
+  render(frame: IActivityAnimationLayerFrame): void {
     this.resetObjects();
     if (frame.senders == null) return;
     if (this._layer.activity.recorder.model.isSpikeRecorder) {
@@ -59,7 +63,7 @@ export class ActivityAnimationLayerModel {
     const trail = this.layer.config.trail;
     if (trail.length > 0) {
       for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
-        const frame: any =
+        const frame: IActivityAnimationLayerFrame =
           this.layer.frames[this.layer.graph.state.frameIdx - trailIdx];
         if (frame) {
           this.updateObjects(frame, trailIdx);
@@ -90,18 +94,22 @@ export class ActivityAnimationLayerModel {
   /**
    * Update graph objects.
    */
-  updateObjects(frame: any, trailIdx?: number): void {
+  updateObjects(frame: IActivityAnimationLayerFrame, trailIdx?: number): void {
     this._layer.state.reset = false;
-    const trail: any = this.layer.config.trail;
-    const object: any = this.layer.config.object;
+    const config: IActivityAnimationLayerConfig = this.layer.config;
 
-    const ratio: number = trailIdx != null ? trailIdx / (trail.length + 1) : 0;
+    const ratio: number =
+      trailIdx != null ? trailIdx / (config.trail.length + 1) : 0;
     const opacity: number =
-      trailIdx != null ? (trail.fading ? 1 - ratio : 1) : object.opacity;
+      trailIdx != null
+        ? config.trail.fading
+          ? 1 - ratio
+          : 1
+        : config.object.opacity;
 
-    const size: number = object.size;
+    const size: number = config.object.size;
     let scale: number;
-    switch (trail.mode) {
+    switch (config.trail.mode) {
       case "growing":
         scale = (1 + ratio) * size;
         break;
@@ -113,11 +121,13 @@ export class ActivityAnimationLayerModel {
     }
 
     const record = this.layer.state.record;
+    if (!record) return;
+
     const values = record != null && record.id in frame ? frame[record.id] : [];
-    frame.senders.forEach((sender: number, senderIdx: number) => {
+    frame.senders?.forEach((sender: number, senderIdx: number) => {
       let color: string;
       let height: number;
-      if (values.length === frame.senders.length) {
+      if (values.length === frame.senders?.length) {
         const valueNormed = record.normalize(values[senderIdx]);
         color = record.valueColor(valueNormed);
         height = valueNormed * size;
@@ -127,7 +137,9 @@ export class ActivityAnimationLayerModel {
       }
 
       // @ts-ignore
-      const mesh: Mesh = this._graphGroup.children[sender];
+      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> =
+        this._graphGroup.children[sender];
+
       this.updateMesh(mesh, {
         color,
         height,
@@ -140,13 +152,23 @@ export class ActivityAnimationLayerModel {
   /**
    * Update mesh objects.
    */
-  updateMesh(mesh: Mesh, options: any = {}): void {
-    // @ts-ignore
-    mesh.material.color.set(options.color);
-    // @ts-ignore
-    mesh.material.opacity = options.opacity;
+  updateMesh(
+    mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>,
+    options?: {
+      color?: string;
+      height?: number;
+      opacity?: number;
+      scale?: number;
+    }
+  ): void {
+    mesh.material.color.set(options?.color || "000000");
+    mesh.material.opacity = options?.opacity || 1;
     const position = mesh.userData.position;
     mesh.position.set(position.x, position.y, position.z);
-    mesh.scale.set(options.scale, options.scale, options.scale);
+    mesh.scale.set(
+      options?.scale || 1,
+      options?.scale || 1,
+      options?.scale || 1
+    );
   }
 }

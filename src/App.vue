@@ -1,19 +1,9 @@
 <template>
-  <v-snackbar
-    :timeout="0"
-    :value="state.updateExists"
-    bottom
-    color="primary"
-    right
-  >
-    An update is available.
-    <v-btn @click="refreshApp" variant="text">Update</v-btn>
-  </v-snackbar>
-
   <router-view />
 </template>
 
 <script lang="ts" setup>
+import { confirmDialog } from "vuetify3-dialog";
 import { nextTick, onMounted, reactive } from "vue";
 
 import { useAppStore } from "./stores/appStore";
@@ -26,23 +16,27 @@ const appStore = useAppStore();
 
 const state = reactive({
   refreshing: false,
-  registration: null,
-  updateExists: false,
 });
 
 /**
  * Register if an update is available.
- * When autoUpdate is enabled, it refreshes the app.
- * Else the user can click on button in snackbar to refresh the app.
+ * When autoUpdate is enabled, it automatically refreshes the app.
+ * Otherwise the user has to confirm to refresh app.
  */
-// @ts-ignore
-const updateAvailable = (event: any) => {
-  console.log("Updates are available.");
-  state.registration = event.detail;
+const updateAvailable = (event: { detail: ServiceWorkerRegistration }) => {
+  console.log("Updates are available:", event.detail);
+
   if (appStore.state.autoUpdate) {
     nextTick(() => refreshApp());
   } else {
-    state.updateExists = true;
+    confirmDialog({
+      title: "Info",
+      text: "An update is available. Confirm to refresh the app.",
+    }).then((answer) => {
+      if (answer) {
+        refreshApp();
+      }
+    });
   }
 };
 
@@ -51,7 +45,7 @@ const updateAvailable = (event: any) => {
  */
 const refreshApp = () => {
   console.log("Refresh app.");
-  state.updateExists = false;
+
   if (state.refreshing) return;
   state.refreshing = true;
   // Actual reloading of the page
@@ -60,9 +54,13 @@ const refreshApp = () => {
 
 onMounted(() => {
   // Check if new updates existed.
-  document.addEventListener("swUpdated", updateAvailable, {
-    once: true,
-  });
+  document.addEventListener(
+    "swUpdated",
+    ((e: CustomEvent) => updateAvailable(e)) as EventListener,
+    {
+      once: true,
+    }
+  );
 });
 </script>
 

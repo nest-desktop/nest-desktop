@@ -18,7 +18,7 @@
     <v-toolbar color="transparent" density="compact">
       <v-btn
         @click="resetPanels()"
-        icon="mdi-reload"
+        icon="mdi:mdi-reload"
         size="x-small"
         variant="outlined"
       />
@@ -28,7 +28,7 @@
       <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
-            prepend-icon="mdi-plus"
+            prepend-icon="mdi:mdi-plus"
             size="small"
             v-bind="props"
             variant="outlined"

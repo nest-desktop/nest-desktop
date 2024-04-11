@@ -3,33 +3,38 @@
     :extensions
     ref="codeMirror"
     style="font-size: 0.75rem; width: 100%"
-    v-model="simulation.code.script"
     v-if="simulation"
+    v-model="simulation.code.script"
   />
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { tooltips } from "@codemirror/view";
-// import { autocompletion } from "@codemirror/autocomplete";
-import { python } from "@codemirror/lang-python";
+import { Compartment } from "@codemirror/state";
+import { autocompletion } from "@codemirror/autocomplete";
+import { basicSetup } from "codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { python } from "@codemirror/lang-python";
 
-import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
+let language = new Compartment();
+
+import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
 import { darkMode } from "@/helpers/common/theme";
 
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
 const props = defineProps({
-  simulation: TSimulationProps,
+  simulation: SimulationComponentProps,
 });
 
 const simulation = computed(() => props.simulation as TSimulation);
 
 const extensions = [
-  tooltips({
-    position: "absolute",
-  }),
-  python(),
+  basicSetup,
+  language.of(python()),
+  autocompletion({ override: appStore.currentSimulator.autocomplete }),
 ];
 
 if (darkMode()) {

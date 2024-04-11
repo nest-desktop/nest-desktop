@@ -21,7 +21,7 @@
         <template #activator="{ props }">
           <v-btn
             color="primary"
-            icon="mdi-order-bool-ascending-variant"
+            icon="mdi:mdi-order-bool-ascending-variant"
             size="small"
             v-bind="props"
             variant="text"
@@ -53,7 +53,7 @@
         <template #activator="{ props }">
           <v-btn
             color="primary"
-            icon="mdi-dots-vertical"
+            icon="mdi:mdi-dots-vertical"
             size="small"
             variant="text"
             v-bind="props"
@@ -98,7 +98,7 @@ const synapse = computed(() => props.synapse as NESTSynapse);
 const items = [
   {
     id: "paramsReset",
-    icon: "mdi-restart",
+    icon: "mdi:mdi-restart",
     title: "Reset synapse params",
     onClick: () => {
       synapse.value.reset();
@@ -107,7 +107,7 @@ const items = [
   },
   {
     id: "weightInverse",
-    icon: "mdi-contrast",
+    icon: "mdi:mdi-contrast",
     title: "Inverse synaptic weight",
     onClick: () => {
       synapse.value.inverseWeight();

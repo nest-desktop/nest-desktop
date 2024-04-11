@@ -2,15 +2,15 @@
 /// will do filtering based on context).
 const completions = [
   {
-    apply: "nest.spatial.free",
+    apply: "nest.spatial.free(",
     info: "nest.spatial.free(pos, extent=None, edge_wrap=False, num_dimensions=None)",
-    label: "nest.spatial.free()",
+    label: "nest.spatial.free(",
     type: "function",
   },
   {
-    apply: "nest.spatial.grid",
+    apply: "nest.spatial.grid(",
     info: "nest.spatial.grid(shape, center=None, extent=None, edge_wrap=False)",
-    label: "nest.spatial.grid()",
+    label: "nest.spatial.grid(",
     type: "function",
   },
 ];

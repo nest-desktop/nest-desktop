@@ -1,15 +1,15 @@
 // nodeParameter.ts
 
 import { ModelParameter } from "../model/modelParameter";
-import { TNodeParameterTypes } from "@/types/nodeParameterTypes";
+import { TNodeParameter } from "@/types/nodeParameterTypes";
 import { IParamProps, Parameter } from "../common/parameter";
 
 export interface INodeParamProps extends IParamProps {}
 
 export class NodeParameter extends Parameter {
-  public _node: TNodeParameterTypes;
+  public _node: TNodeParameter;
 
-  constructor(node: TNodeParameterTypes, paramProps: INodeParamProps) {
+  constructor(node: TNodeParameter, paramProps: INodeParamProps) {
     super(paramProps, { minLevel: 3 });
 
     this._node = node;
@@ -22,7 +22,7 @@ export class NodeParameter extends Parameter {
     return this.node.model.params[this.id];
   }
 
-  get node(): TNodeParameterTypes {
+  get node(): TNodeParameter {
     return this._node;
   }
 

@@ -194,21 +194,29 @@ export class Activities extends BaseObj {
   /**
    * Update activities in recorder nodes after simulation.
    */
-  update(data: any): void {
+  update(
+    data:
+      | IActivityProps[]
+      | {
+          activities: IActivityProps[];
+          events: IEventProps[];
+          positions: { [key: string]: number[] };
+        }
+  ): void {
     this.logger.trace("update");
-    let activities: IActivityProps[] = [];
+    let activitiesProps: IActivityProps[] = [];
 
-    if (data.events) {
-      activities = data.events.map((eventProps: IEventProps) => ({
+    if ("events" in data) {
+      activitiesProps = data.events.map((eventProps: IEventProps) => ({
         events: eventProps,
       }));
-    } else if (data.activities) {
-      activities = data.activities;
+    } else if ("activities" in data) {
+      activitiesProps = data.activities as IActivityProps[];
     } else {
-      activities = data;
+      activitiesProps = data;
     }
 
-    activities.forEach((activityProps: IActivityProps) => {
+    activitiesProps.forEach((activityProps: IActivityProps) => {
       if (!activityProps.nodeIds) {
         if (activityProps.events && activityProps.events.ports) {
           activityProps.nodeIds = activityProps.events.ports.filter(
@@ -226,17 +234,17 @@ export class Activities extends BaseObj {
     });
 
     // Get node positions.
-    if (data.positions) {
-      activities.forEach((activityProps: IActivityProps) => {
+    if ("positions" in data) {
+      activitiesProps.forEach((activityProps: IActivityProps) => {
         activityProps.nodePositions = activityProps.nodeIds?.map(
-          (nodeId: number) => data.positions[nodeId]
+          (nodeId: number) => data.positions[nodeId] as number[]
         );
       });
     }
 
     // Initialize recorded activities.
     this.all.forEach((activity: Activity, idx: number) => {
-      activity.init(activities[idx]);
+      activity.init(activitiesProps[idx]);
     });
 
     // Trigger activity changes.

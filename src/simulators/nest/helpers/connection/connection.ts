@@ -4,7 +4,10 @@ import {
   BaseConnection,
   IConnectionProps,
 } from "@/helpers/connection/connection";
-import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
+import {
+  ConnectionParameter,
+  IConnectionParamProps,
+} from "@/helpers/connection/connectionParameter";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
 
 import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
@@ -16,6 +19,7 @@ import { NESTNode } from "../node/node";
 import { NESTNodeSlice } from "../node/nodeSlice";
 import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
+import { IConnectionRuleConfig } from "@/helpers/connection/connectionRule";
 
 export interface INESTConnectionProps extends IConnectionProps {
   sourceSlice?: INodeParamProps[];
@@ -109,13 +113,19 @@ export class NESTConnection extends BaseConnection {
    * Resets all parameters to their default.
    */
   override resetParams(): void {
-    const ruleConfig: any = this.getRuleConfig();
+    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
 
     // Reset connection parameter.
     Object.values(this.params).forEach((param: ConnectionParameter) => {
       param.reset();
-      const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
-      param.value = p.value;
+
+      const p = ruleConfig.params.find(
+        (p: IConnectionParamProps) => p.id === param.id
+      );
+
+      if (p?.value) {
+        param.value = p.value;
+      }
     });
 
     // Reset synapse parameter.

@@ -147,8 +147,10 @@ export class ConnectionView {
       return 0;
     }
 
-    const source: any = this._connection.source.view.state.position;
-    const target: any = this._connection.target.view.state.position;
+    const source: { x: number; y: number } =
+      this._connection.source.view.state.position;
+    const target: { x: number; y: number } =
+      this._connection.target.view.state.position;
     const x1: number = source.x;
     const y1: number = source.y;
     const x2: number = target.x;

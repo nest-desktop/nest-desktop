@@ -1,7 +1,9 @@
 // simulation.ts
 
-import { openToast } from "@/helpers/common/toast";
+import { AxiosError, AxiosResponse } from "axios";
+
 import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { notifyError } from "@/helpers/common/dialog";
 
 import { NESTProject } from "../project/project";
 import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
@@ -73,7 +75,7 @@ export class NESTSimulation extends BaseSimulation {
    * @remarks
    * It runs the simulation with or without Insite.
    */
-  override async run(): Promise<any> {
+  override async run(): Promise<AxiosResponse<any, { data: any }> | void> {
     this.logger.trace("run simulation");
     return this.code.runSimulationInsite
       ? this.runWithInsite()
@@ -86,7 +88,7 @@ export class NESTSimulation extends BaseSimulation {
    * @remarks
    * After the simulation it updates the activities and commits the network.
    */
-  async runSimulation(): Promise<any> {
+  async runSimulation(): Promise<AxiosResponse<any, { data: any }>> {
     this.logger.trace("run simulation");
 
     return this.nestSimulator
@@ -95,29 +97,40 @@ export class NESTSimulation extends BaseSimulation {
         source: this.code.script,
         return: "response",
       })
-      .then((response: any) => {
-        let data: any;
-        switch (response.status) {
-          case 0:
-            openToast("Failed to find NEST Simulator.", { type: "error" });
-            break;
-          case 200:
-            if (response.data.data == null) {
-              break;
+      .then(
+        (
+          response: AxiosResponse<
+            any,
+            {
+              data: {
+                events: any[];
+                biological_time: number;
+              };
+              status: number;
             }
-            data = response.data.data;
+          >
+        ) => {
+          if (response.data.data == null) {
+            return response;
+          }
 
-            // Get biological time
-            this.state.biologicalTime =
-              data.biological_time != null ? data.biological_time : this.time;
+          let data: {
+            events: any[];
+            biological_time: number;
+          };
+          switch (response.status) {
+            case 200:
+              data = response.data.data;
 
-            break;
-          default:
-            openToast(response.data, { type: "error" });
-            break;
+              // Get biological time
+              this.state.biologicalTime =
+                data.biological_time != null ? data.biological_time : this.time;
+
+              break;
+          }
+          return response;
         }
-        return response;
-      });
+      );
   }
 
   /**
@@ -126,7 +139,10 @@ export class NESTSimulation extends BaseSimulation {
    * @remarks
    * During the simulation it gets and updates activities.
    */
-  private async runWithInsite(): Promise<any> {
+  private async runWithInsite(): Promise<AxiosResponse<
+    any,
+    { data: any }
+  > | void> {
     this.logger.trace("run simulation with Insite");
     this.state.timeInfo = {
       begin: 0,
@@ -138,33 +154,25 @@ export class NESTSimulation extends BaseSimulation {
     return this.nestSimulator
       .axiosInstance()
       .post("exec", { source: this.code.script })
-      .then((response: any) => {
+      .then((response: AxiosResponse<any, { data: any; status: number }>) => {
         switch (response.status) {
-          case 0:
-            openToast(
-              "Failed to perform simulation (NEST Simulator is not running).",
-              { type: "error" }
-            );
-            this.project.insite.cancelAllIntervals();
-            break;
           case 200:
             if (this.code.runSimulation) {
               this.project.insite.simulationEndNotification();
             }
             break;
           default:
-            openToast(response.responseText, { type: "error" });
+            notifyError("Failed to find NEST simulation instance.");
             this.project.insite.cancelAllIntervals();
             break;
         }
         return response;
       })
-      .catch((error: any) => {
+      .catch((error: AxiosError<any, { response: { data: any } }>) => {
         this.project.insite.cancelAllIntervals();
-        if ("response" in error && error.response.data != undefined) {
-          openToast(error.response.data, { type: "error" });
+        if ("response" in error && error.response?.data != undefined) {
+          notifyError(error.response.data);
         }
-        return error;
       });
   }
 

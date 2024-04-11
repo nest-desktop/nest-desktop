@@ -1,11 +1,29 @@
 // modelTypes.ts
 
-import { BaseModel } from "@/helpers/model/model";
-import { NESTModel } from "@/simulators/nest/helpers/model/model";
-import { NorseModel } from "@/simulators/norse/helpers/model/model";
-import { PyNNModel } from "@/simulators/pynn/helpers/model/model";
+import { BaseModel, IModelProps } from "@/helpers/model/model";
+import {
+  INESTModelProps,
+  NESTModel,
+} from "@/simulators/nest/helpers/model/model";
+import {
+  INorseModelProps,
+  NorseModel,
+} from "@/simulators/norse/helpers/model/model";
+import {
+  IPyNNModelProps,
+  PyNNModel,
+} from "@/simulators/pynn/helpers/model/model";
 
 export type TModel = BaseModel | NESTModel | NorseModel | PyNNModel;
+export type TModelProps =
+  | IModelProps
+  | INESTModelProps
+  | INorseModelProps
+  | IPyNNModelProps;
 
-// for components
-export const TModelProps = [BaseModel, NESTModel, NorseModel, PyNNModel];
+export const ModelComponentProps = [
+  BaseModel,
+  NESTModel,
+  NorseModel,
+  PyNNModel,
+];

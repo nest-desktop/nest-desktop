@@ -10,7 +10,7 @@ export interface IPyNNModelProps extends IModelProps {
 export class PyNNModel extends BaseModel {
   private _codeTemplate: string = "";
 
-  constructor(modelProps: IPyNNModelProps = {}) {
+  constructor(modelProps: IPyNNModelProps) {
     super(modelProps, { name: "PyNNModel", simulator: "pynn" });
 
     if (modelProps.codeTemplate) {

@@ -13,22 +13,17 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { debounce } from "@/utils/events";
 
-interface BaseNetworkGraphState {
+interface IBaseNetworkGraphState {
   hash: string;
 }
 
 export class BaseNetworkGraph extends BaseObj {
-  // private _config = {
-  //   nodeRadius: 24,
-  //   strokeWidth: 3,
-  //   transparentWorkspace: true,
-  // };
   private _connectionGraph: ConnectionGraph;
   public _network: TNetwork;
   private _nodeGraph: NodeGraph;
   private _resizeObserver: ResizeObserver;
   private _selector?: Selection<any, any, any, any>;
-  private _state: UnwrapRef<BaseNetworkGraphState>;
+  private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
 
   constructor(ref: Ref<null>, network: TNetwork) {
@@ -55,10 +50,6 @@ export class BaseNetworkGraph extends BaseObj {
     );
   }
 
-  // get config(): any {
-  //   return this._config;
-  // }
-
   get connectionGraph(): ConnectionGraph {
     return this._connectionGraph;
   }
@@ -81,7 +72,7 @@ export class BaseNetworkGraph extends BaseObj {
     return this._selector;
   }
 
-  get state(): UnwrapRef<BaseNetworkGraphState> {
+  get state(): UnwrapRef<IBaseNetworkGraphState> {
     return this._state;
   }
 

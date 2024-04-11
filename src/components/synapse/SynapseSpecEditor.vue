@@ -21,7 +21,7 @@
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
-                  icon="mdi-dots-vertical"
+                  icon="mdi:mdi-dots-vertical"
                   size="small"
                   variant="text"
                   v-bind="props"
@@ -52,10 +52,10 @@
 import { computed } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TSynapse, TSynapseProps } from "@/types/synapseTypes";
+import { SynapseComponentProps, TSynapse } from "@/types/synapseTypes";
 
 const props = defineProps({
-  synapse: TSynapseProps,
+  synapse: SynapseComponentProps,
 });
 
 const synapse = computed(() => props.synapse as TSynapse);
@@ -79,7 +79,7 @@ const weightOptions = {
 const items = [
   {
     id: "paramsReset",
-    icon: "mdi-restart",
+    icon: "mdi:mdi-restart",
     title: "Reset synaptic weight",
     onClick: () => {
       synapse.value.reset();
@@ -88,7 +88,7 @@ const items = [
   },
   {
     id: "weightInverse",
-    icon: "mdi-contrast",
+    icon: "mdi:mdi-contrast",
     title: "Inverse synaptic weight",
     onClick: () => {
       synapse.value.inverseWeight();

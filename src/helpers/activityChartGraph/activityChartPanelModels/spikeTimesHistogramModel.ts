@@ -14,7 +14,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bar";
+    this.icon = "mdi:mdi-chart-bar";
     this.id = "spikeTimesHistogram";
     this.panel.xAxis = 1;
     this.params = [

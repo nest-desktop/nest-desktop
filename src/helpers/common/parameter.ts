@@ -6,7 +6,20 @@ import { ILogObj, ISettingsParam } from "tslog";
 import { BaseObj } from "./base";
 import { IConfigProps } from "./config";
 
-type TParamValue = boolean | number | string | (number | string)[];
+export type TParamValue = boolean | number | string | (number | string)[];
+interface IParamTypeSpec {
+  default?: number;
+  id?: string;
+  optional?: boolean;
+  label?: string;
+  value: TParamValue;
+}
+export interface IParamType {
+  icon?: string;
+  id: string;
+  label?: string;
+  specs?: IParamTypeSpec[];
+}
 
 export interface IParamProps {
   disabled?: boolean;
@@ -23,11 +36,16 @@ export interface IParamProps {
   rules?: string[][];
   step?: number;
   ticks?: (number | string)[];
-  type?: any;
+  type?: IParamType;
   unit?: string;
   value?: TParamValue;
   component?: string;
   visible?: boolean;
+}
+
+interface IParamState {
+  disabled: boolean;
+  visible: boolean;
 }
 
 export class Parameter extends BaseObj {
@@ -40,10 +58,10 @@ export class Parameter extends BaseObj {
   private _min: number = 0;
   private _readonly: boolean = false;
   private _rules: string[][] = [];
-  private _state: UnwrapRef<any>;
+  private _state: UnwrapRef<IParamState>;
   private _step: number = 1;
   private _ticks: (number | string)[] = [];
-  private _type: { [key: string]: any } = { id: "constant" };
+  private _type: IParamType = { id: "constant" };
   private _unit: string = "";
   private _value: TParamValue = 0; // constant value;
   private _component: string = "valueInput";
@@ -56,6 +74,11 @@ export class Parameter extends BaseObj {
     super({
       config: { name: "Parameter", ...configProps },
       logger: { settings: { minLevel: 3, ...loggerProps } },
+    });
+
+    this._state = reactive({
+      visible: false,
+      disabled: true,
     });
 
     this.update(paramProps);
@@ -194,7 +217,7 @@ export class Parameter extends BaseObj {
     return this._rules;
   }
 
-  get specs(): any[] {
+  get specs(): IParamTypeSpec[] {
     if (this._type.id === "constant") {
       return [{ label: this.label, value: this._value }];
     } else {
@@ -202,7 +225,7 @@ export class Parameter extends BaseObj {
     }
   }
 
-  get state(): UnwrapRef<any> {
+  get state(): UnwrapRef<IParamState> {
     return this._state;
   }
 
@@ -222,7 +245,7 @@ export class Parameter extends BaseObj {
     this._ticks = value;
   }
 
-  get type(): any {
+  get type(): IParamType {
     return this._type;
   }
 
@@ -232,7 +255,7 @@ export class Parameter extends BaseObj {
 
   set typeId(value: string) {
     this._type = this.config?.localStorage.types.find(
-      (type: any) => type.id === value
+      (type: IParamType) => type.id === value
     );
   }
 
@@ -283,7 +306,7 @@ export class Parameter extends BaseObj {
   /**
    * Copy parameter component
    */
-  copy(): any {
+  copy(): Parameter {
     return new Parameter(this.toJSON());
   }
 
@@ -350,13 +373,16 @@ export class Parameter extends BaseObj {
       }
     } else if (this._type.id.startsWith("numpy")) {
       const specs: string = this.specs
-        .filter((spec: any) => !(spec.optional && spec.value === spec.default))
-        .map((spec: any) => spec.value)
+        .filter(
+          (spec: IParamTypeSpec) =>
+            !(spec.optional && spec.value === spec.default)
+        )
+        .map((spec: IParamTypeSpec) => spec.value)
         .join(", ");
       value = `${this._type.id}(${specs})`;
     } else if (this._type.id === "spatial.distance") {
       // Distance-dependent linear function.
-      const specs: any[] = this.specs;
+      const specs: IParamTypeSpec[] = this.specs;
       value = "";
       value += specs[0].value !== 1 ? `${specs[0].value} * ` : "";
       value += `nest.${this._type.id}`;
@@ -364,13 +390,13 @@ export class Parameter extends BaseObj {
     } else if (this._type.id.startsWith("spatial")) {
       // Spatial distribution.
       const specs: string = this.specs
-        .map((spec: any) => spec.value)
+        .map((spec: IParamTypeSpec) => spec.value)
         .join(", ");
       value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
       const specs: string = this.specs
-        .map((spec: any) => spec.value)
+        .map((spec: IParamTypeSpec) => spec.value)
         .join(", ");
       value = `nest.${this._type.id}(${specs})`;
     }
@@ -379,18 +405,21 @@ export class Parameter extends BaseObj {
 
   /**
    * Serialize parameter type for JSON.
-   * @return parameter type object
+   * @return parameter type props
    */
-  typeToJSON(): any {
-    const specs = this._type.specs.map((spec: any) => ({
-      id: spec.id,
-      value: Number(spec.value),
-    }));
-
-    return {
+  typeToJSON(): IParamType {
+    const paramType: IParamType = {
       id: this._type.id,
-      specs,
     };
+
+    if (this._type.specs) {
+      paramType.specs = this._type.specs.map((spec: IParamTypeSpec) => ({
+        id: spec.id,
+        value: Number(spec.value),
+      }));
+    }
+
+    return paramType;
   }
 
   /**
@@ -429,10 +458,10 @@ export class Parameter extends BaseObj {
     this._id = paramProps.id;
     this._value = paramProps.value || 0;
 
-    this._state = reactive({
-      visible: paramProps.visible != undefined ? paramProps.visible : false,
-      disabled: paramProps.disabled != undefined ? paramProps.disabled : true,
-    });
+    this._state.visible =
+      paramProps.visible != undefined ? paramProps.visible : false;
+    this._state.disabled =
+      paramProps.disabled != undefined ? paramProps.disabled : true;
 
     // optional param specifications
     this._rules = paramProps.rules || [];
@@ -440,7 +469,7 @@ export class Parameter extends BaseObj {
 
     if (paramProps.type) {
       const type = this.config?.localStorage.types.find(
-        (t: any) => t.id === paramProps.type.id
+        (t: IParamType) => t.id === paramProps.type?.id
       );
       if (type != null) {
         this._type = { ...type, ...paramProps.type };

@@ -15,7 +15,9 @@
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-        <h2 class="text-h2">NEST Desktop</h2>
+        <h2 class="text-h2">
+          NEST Desktop
+        </h2>
       </div>
 
       <div style="height: 60px" />
@@ -25,11 +27,11 @@
         <v-row>
           <v-col>
             <v-btn
-              :to="{ name: simulator.id + 'Home' }"
+              v-for="(simulator, index) in appStore.simulatorItems"
               :key="index"
+              :to="{ name: simulator.id + 'Home' }"
               class="ma-2"
               size="x-large"
-              v-for="(simulator, index) in appStore.simulatorItems"
             >
               <template #prepend>
                 <v-icon :icon="simulator.id + ':logo'" />

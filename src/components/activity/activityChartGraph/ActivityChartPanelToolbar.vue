@@ -7,7 +7,7 @@
 
     <span class="icons">
       <v-btn
-        :icon="panel.state.visible ? 'mdi-eye' : 'mdi-eye-off'"
+        :icon="panel.state.visible ? 'mdi:mdi-eye' : 'mdi:mdi-eye-off'"
         @click="panel.toggleVisible()"
         class="mx-1"
         right
@@ -17,7 +17,7 @@
       <v-btn
         @click="panel.decreaseHeight()"
         class="mx-1"
-        icon="mdi-minus"
+        icon="mdi:mdi-minus"
         right
         size="x-small"
         variant="text"
@@ -25,7 +25,7 @@
       <v-btn
         @click="panel.increaseHeight()"
         class="mx-1"
-        icon="mdi-plus"
+        icon="mdi:mdi-plus"
         right
         size="x-small"
         variant="text"
@@ -33,7 +33,7 @@
       <v-btn
         @click="panel.remove()"
         class="mx-1"
-        icon="mdi-trash-can-outline"
+        icon="mdi:mdi-trash-can-outline"
         right
         size="x-small"
         variant="text"
@@ -42,7 +42,7 @@
       <v-menu :close-on-content-click="false">
         <template #activator="{ props }">
           <v-btn
-            icon="mdi-dots-vertical"
+            icon="mdi:mdi-dots-vertical"
             color="primary"
             size="x-small"
             v-bind="props"

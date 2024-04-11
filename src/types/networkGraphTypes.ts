@@ -5,5 +5,4 @@ import { NESTNetworkGraph } from "@/simulators/nest/helpers/network/networkGraph
 
 export type TNetworkGraph = BaseNetworkGraph | NESTNetworkGraph;
 
-// for components
-export const TNetworkGraphProps = [BaseNetworkGraph, NESTNetworkGraph];
+export const NetworkGraphComponentProps = [BaseNetworkGraph, NESTNetworkGraph];

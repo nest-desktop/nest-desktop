@@ -1,5 +1,9 @@
 <template>
-  <svg width="75" height="121" viewBox="0 0 75 121">
+  <svg
+    width="75"
+    height="121"
+    viewBox="0 0 75 121"
+  >
     <defs />
     <g>
       <path

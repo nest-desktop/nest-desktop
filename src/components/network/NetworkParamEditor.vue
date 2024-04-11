@@ -18,7 +18,7 @@
 
       <v-spacer />
 
-      <v-btn icon="mdi-dots-vertical" size="small" />
+      <v-btn icon="mdi:mdi-dots-vertical" size="small" />
     </v-toolbar>
 
     <slot name="nodes">
@@ -37,10 +37,10 @@ import { computed } from "vue";
 import IconBtn from "@/components/common/IconBtn.vue";
 
 import NodeEditor from "@/components/node/NodeEditor.vue";
-import { TNetwork, TNetworkProps } from "@/types/networkTypes";
+import { TNetwork, NetworkComponentProps } from "@/types/networkTypes";
 
 const props = defineProps({
-  network: TNetworkProps,
+  network: NetworkComponentProps,
 });
 const network = computed(() => props.network as TNetwork);
 </script>

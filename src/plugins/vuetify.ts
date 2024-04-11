@@ -18,7 +18,7 @@ import { createVuetify } from "vuetify";
 
 // import { md1, md2, md3 } from "vuetify/blueprints";
 
-import { mdi } from "vuetify/iconsets/mdi";
+import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { custom } from "@/components/iconsets/common";
 import { network } from "@/components/iconsets/network";
 
@@ -89,16 +89,17 @@ export const vuetify = createVuetify({
     },
   },
   icons: {
+    aliases,
     defaultSet: "mdi",
     sets: {
-      mdi,
       custom,
+      mdi: mdi,
       network,
     },
   },
 });
 
-export function addTheme(colors: any): void {
+export function addTheme(colors: { [key: string]: string }): void {
   vuetify.theme.themes.value.light.colors = Object.assign(
     vuetify.theme.themes.value.light.colors,
     colors
@@ -110,6 +111,6 @@ export function addTheme(colors: any): void {
   );
 }
 
-export function addIconSet(iconSet: any): void {
+export function addIconSet(iconSet: { [key: string]: Object }): void {
   vuetify.icons.sets = Object.assign(vuetify.icons.sets, iconSet);
 }

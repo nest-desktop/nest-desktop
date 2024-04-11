@@ -14,7 +14,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
     model: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, model);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "senderMeanISIPlot";
     this.label = "mean ISI in each sender";
     this.panel.xAxis = 4;

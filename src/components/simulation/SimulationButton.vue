@@ -5,7 +5,7 @@
       :loading="loading"
       @click="projectStore?.startSimulation()"
       class="border-white"
-      prepend-icon="mdi-play"
+      prepend-icon="mdi:mdi-play"
       title="Simulate"
       v-if="simulation"
     >
@@ -14,7 +14,7 @@
     </v-btn>
 
     <!-- <v-btn class="border-white pa-2" style="min-width: 0">
-      <v-icon icon="mdi-menu-down" />
+      <v-icon icon="mdi:mdi-menu-down" />
 
       <v-menu
         :close-on-content-click="false"
@@ -37,13 +37,13 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
+import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 const props = defineProps({
   disabled: Boolean,
   projectStore: Object,
-  simulation: TSimulationProps,
+  simulation: SimulationComponentProps,
 });
 
 // const itemKeys = [

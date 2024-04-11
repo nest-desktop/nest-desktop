@@ -1,9 +1,12 @@
 <template>
-  <ProjectNav :projectDBStore />
+  <ProjectNav :project-d-b-store />
 
-  <ProjectBar :projectStore color="blue" />
+  <ProjectBar
+    :project-store
+    color="nest-project"
+  />
 
-  <ProjectController :projectStore>
+  <ProjectController :project-store>
     <template #simulationKernel>
       <SimulationKernelEditor
         :simulation="(projectStore.project.simulation as NESTSimulation)"
@@ -13,21 +16,24 @@
     <template #nodes>
       <div :key="projectStore.project.network.nodes.length">
         <div
-          :key="index"
           v-for="(node, index) in projectStore.project.network.nodes.all"
+          :key="index"
         >
           <NodeEditor
+            v-if="node.state.show"
             :node="(node as NESTNode)"
             @mouseenter="node.state.focus()"
             @mouseleave="node.nodes.unfocusNode()"
-            v-if="node.state.show"
           />
         </div>
       </div>
     </template>
   </ProjectController>
 
-  <router-view :key="projectStore.state.projectId" name="project" />
+  <router-view
+    :key="projectStore.state.projectId"
+    name="project"
+  />
 </template>
 
 <script lang="ts" setup>

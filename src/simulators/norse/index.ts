@@ -2,14 +2,16 @@
 
 import { ISimulatorProps } from "..";
 
-import norseRoute from "./routes";
 import norseIconSet from "./components/iconSet";
+import norseRoute from "./routes";
+import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 
 import { useNorseModelDBStore } from "./stores/model/modelDBStore";
 import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
 import { useNorseSimulatorStore } from "./stores/backends/norseSimulatorStore";
 
 export const norse: ISimulatorProps = {
+  autocomplete: [norseTorchCompletions],
   backends: {},
   configNames: ["NorseModel"],
   databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
@@ -23,7 +25,6 @@ export const norse: ISimulatorProps = {
 
     // Init backend Norse Simulator.
     const norseSimulatorStore = useNorseSimulatorStore();
-    norseSimulatorStore.init();
 
     norse.backends = {
       norse: norseSimulatorStore,
@@ -33,7 +34,8 @@ export const norse: ISimulatorProps = {
   route: norseRoute,
   theme: {
     "norse-accent": "#e6007e",
+    "norse-green": "#0F9959",
     "norse-logo": "#000080",
-    norse: "0F9959",
+    norse: "#e6007e",
   },
 };

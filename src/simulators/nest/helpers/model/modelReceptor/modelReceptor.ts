@@ -1,12 +1,14 @@
 // modelReceptor.ts
 
 import { BaseObj } from "@/helpers/common/base";
-import { NESTModel } from "../model";
+import { IModelProps } from "@/helpers/model/model";
+import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+
 import {
   INESTModelReceptorParamProps,
   NESTModelReceptorParameter,
 } from "./modelReceptorParameter";
-
+import { NESTModel } from "../model";
 export interface INESTModelReceptorProps {
   id: string;
   label: string;
@@ -22,7 +24,7 @@ export class NESTModelReceptor extends BaseObj {
   private _model: NESTModel; // parent
   private _params: { [key: string]: NESTModelReceptorParameter } = {};
   private _paramsVisible: string[] = [];
-  private _recordables: any[] = []; // recordables for multimeter
+  private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
   constructor(model: NESTModel, modelReceptorProps: INESTModelReceptorProps) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -77,7 +79,7 @@ export class NESTModelReceptor extends BaseObj {
     this.changes();
   }
 
-  get recordables(): any[] {
+  get recordables(): INodeRecordProps[] {
     return this._recordables;
   }
 
@@ -182,7 +184,7 @@ export class NESTModelReceptor extends BaseObj {
     // Add recordables if provided.
     if (this._recordables.length > 0) {
       receptorProps.recordables = this._recordables.map(
-        (recordable: any) => recordable.id
+        (recordable: INodeRecordProps) => recordable.id
       );
     }
 
@@ -223,10 +225,11 @@ export class NESTModelReceptor extends BaseObj {
   /**
    * Update the recordables from the config.
    */
-  updateRecordables(model: any): void {
-    if (model.recordables) {
+  updateRecordables(modelProps: IModelProps): void {
+    if (modelProps.recordables) {
       this._recordables = this._model.config?.localStorage.recordables.filter(
-        (recordable: any) => model.recordables.includes(recordable.id)
+        (recordable: INodeRecordProps) =>
+          modelProps?.recordables?.includes(recordable.id)
       );
     }
   }

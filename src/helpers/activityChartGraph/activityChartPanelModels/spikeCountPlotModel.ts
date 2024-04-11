@@ -16,7 +16,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "spikeCountPlot";
     this.label = "Spike count";
     this.panel.xAxis = 1;

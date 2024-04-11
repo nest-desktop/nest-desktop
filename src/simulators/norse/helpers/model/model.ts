@@ -10,7 +10,7 @@ export interface INorseModelProps extends IModelProps {
 export class NorseModel extends BaseModel {
   private _codeTemplate: string = "";
 
-  constructor(modelProps: INorseModelProps = {}) {
+  constructor(modelProps: INorseModelProps) {
     super(modelProps, { name: "NorseModel", simulator: "norse" });
 
     if (modelProps.codeTemplate) {

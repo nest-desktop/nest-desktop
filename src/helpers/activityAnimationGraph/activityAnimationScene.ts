@@ -17,19 +17,33 @@ import {
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from "stats.js";
 
-import { ActivityAnimationGraph } from "./activityAnimationGraph";
+import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
 import { darkMode } from "../common/theme";
+
+interface ICameraConfig {
+  position: IPosition;
+  control: boolean;
+  distance: number;
+  rotation: {
+    theta: number;
+    speed: number;
+  };
+}
+
+interface IActivityAnimationSceneConfig {
+  camera: ICameraConfig;
+}
 
 export class ActivityAnimationScene {
   private _animationFrameIdx: number;
   private _camera: PerspectiveCamera;
   private _clippingPlanes: Plane[] = [];
   private _clock: Clock;
-  private _config: any;
+  private _config: IActivityAnimationSceneConfig;
   private _controls: OrbitControls;
   private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
-  private _layerGraphGroup?: Group;
+  private _layerGraphGroup?: Group<any>;
   private _ref: any;
   private _renderer: WebGLRenderer;
   private _scene: Scene;
@@ -75,7 +89,7 @@ export class ActivityAnimationScene {
     return this._camera;
   }
 
-  get config(): any {
+  get config(): IActivityAnimationSceneConfig {
     return this._config;
   }
 
@@ -83,7 +97,7 @@ export class ActivityAnimationScene {
     return this._controls;
   }
 
-  get layerGraphGroup(): Group | undefined {
+  get layerGraphGroup(): Group<any> | undefined {
     return this._layerGraphGroup;
   }
 
@@ -120,8 +134,8 @@ export class ActivityAnimationScene {
   /**
    * Create and return lights group in init.
    */
-  createLights(): Group {
-    const lightGroup: Group = new Group();
+  createLights(): Group<any> {
+    const lightGroup: Group<any> = new Group();
 
     const directionalLight = new DirectionalLight(0xffffff, 1);
     directionalLight.position.set(1, 1, 0.5).normalize();
@@ -136,12 +150,12 @@ export class ActivityAnimationScene {
   /**
    * Create and return plane helper in init.
    */
-  createPlaneHelpers(): Group {
+  createPlaneHelpers(): Group<any> {
     this._clippingPlanes.push(new Plane(new Vector3(-1, 0, 0), 1));
     this._clippingPlanes.push(new Plane(new Vector3(0, -1, 0), 1));
     this._clippingPlanes.push(new Plane(new Vector3(0, 0, -1), 1));
 
-    const helpers: Group = new Group();
+    const helpers: Group<any> = new Group();
     helpers.add(new PlaneHelper(this._clippingPlanes[0], 2, 0xff0000));
     helpers.add(new PlaneHelper(this._clippingPlanes[1], 2, 0x00ff00));
     helpers.add(new PlaneHelper(this._clippingPlanes[2], 2, 0x0000ff));
@@ -200,7 +214,7 @@ export class ActivityAnimationScene {
     }
 
     // Update camera.
-    const camera: any = this._config.camera;
+    const camera: ICameraConfig = this._config.camera;
     if (camera.control) {
       if (camera.rotation.speed > 0) {
         this.moveCamera();
@@ -227,11 +241,11 @@ export class ActivityAnimationScene {
    * Move camera in render.
    */
   moveCamera(): void {
-    const camera: any = this._config.camera;
+    const camera: ICameraConfig = this._config.camera;
     camera.rotation.theta += camera.rotation.speed;
     camera.rotation.theta = camera.rotation.theta % 360;
     const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
-    const position: any = this._config.camera.position;
+    const position: IPosition = this._config.camera.position;
     position.x =
       camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
     position.z =
@@ -243,7 +257,7 @@ export class ActivityAnimationScene {
    * Update camera position in init and in render.
    */
   setCameraPosition(): void {
-    const position: any = this._config.camera.position;
+    const position: IPosition = this._config.camera.position;
     this._camera.position.set(position.x, position.y, position.z);
     this._camera.lookAt(this._scene.position);
   }

@@ -4,6 +4,7 @@ import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
+import { IPosition } from "../activityAnimationGraph";
 
 export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {
@@ -17,12 +18,15 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     const scale = 0.01;
     const geometry: BoxGeometry = new BoxGeometry(scale, scale, scale);
 
-    this.layer.state.positions.forEach((position: any) => {
+    this.layer.state.positions.forEach((position: IPosition) => {
       const material: MeshLambertMaterial = new MeshLambertMaterial({
         color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
-      const mesh: Mesh = new Mesh(geometry, material);
+      const mesh: Mesh<any, MeshLambertMaterial, any> = new Mesh(
+        geometry,
+        material
+      );
       mesh.userData.position = position;
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);
@@ -37,10 +41,11 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
   /**
    * Update mesh object.
    */
-  override updateMesh(mesh: Mesh, options: any = {}): void {
-    // @ts-ignore
+  override updateMesh(
+    mesh: Mesh<any, MeshLambertMaterial, any>,
+    options: any = {}
+  ): void {
     mesh.material.color.set(options.color);
-    // @ts-ignore
     mesh.material.opacity = options.opacity;
     mesh.scale.set(options.scale, options.scale, options.scale);
     mesh.position.setY(mesh.userData.position.y);

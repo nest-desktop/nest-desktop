@@ -1,11 +1,17 @@
 <template>
-  <ProjectNav :projectDBStore />
+  <ProjectNav :project-d-b-store />
 
-  <ProjectBar :projectStore color="green" />
+  <ProjectBar
+    :project-store
+    color="green"
+  />
 
-  <ProjectController :projectStore />
+  <ProjectController :project-store />
 
-  <router-view :key="projectStore.state.projectId" name="project" />
+  <router-view
+    :key="projectStore.state.projectId"
+    name="project"
+  />
 </template>
 
 <script lang="ts" setup>

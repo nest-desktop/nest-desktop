@@ -2,27 +2,27 @@
 /// will do filtering based on context).
 const completions = [
   {
-    apply: "nest.spatial_distributions.exponential",
+    apply: "nest.spatial_distributions.exponential(",
     info: "nest.spatial_distributions.exponential(x, beta=1.0)",
-    label: "nest.spatial_distributions.exponential()",
+    label: "nest.spatial_distributions.exponential(",
     type: "function",
   },
   {
-    apply: "nest.spatial_distributions.gamma",
+    apply: "nest.spatial_distributions.gamma(",
     info: "nest.spatial_distributions.gamma(x, kappa=1.0, theta=1.0)",
-    label: "nest.spatial_distributions.gamma()",
+    label: "nest.spatial_distributions.gamma(",
     type: "function",
   },
   {
-    apply: "nest.spatial_distributions.gaussian",
+    apply: "nest.spatial_distributions.gaussian(",
     info: "nest.spatial_distributions.gaussian(x, mean=0.0, std=1.0)",
-    label: "nest.spatial_distributions.gaussian()",
+    label: "nest.spatial_distributions.gaussian(",
     type: "function",
   },
   {
-    apply: "nest.spatial_distributions.gaussian2D",
+    apply: "nest.spatial_distributions.gaussian2D(",
     info: "nest.spatial_distributions.gaussian2D(x, y, mean_x=0.0, mean_y=0.0, std_x=1.0, std_y=1.0, rho=0.0)",
-    label: "nest.spatial_distributions.gaussian2D()",
+    label: "nest.spatial_distributions.gaussian2D(",
     type: "function",
   },
 ];

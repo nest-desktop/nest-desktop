@@ -1,107 +1,110 @@
-// Our list of completions (can be static, since the editor
-/// will do filtering based on context).
+// nestCompletion.ts
+
+import { CompletionContext } from "@codemirror/autocomplete";
+
+// Our list of completions (can be static, since the editor will do filtering based on context).
 const completions = [
   {
-    apply: "nest.Connect",
+    apply: "nest.Connect(",
     info: "nest.Connect(pre, post, conn_spec=None, syn_spec=None, return_synapsecollection=False)",
-    label: "nest.Connect()",
+    label: "nest.Connect(",
     type: "function",
   },
   {
-    apply: "nest.CopyModel",
+    apply: "nest.CopyModel(",
     info: "nest.CopyModel(existing, new, params=None)",
-    label: "nest.CopyModel()",
+    label: "nest.CopyModel(",
     type: "function",
   },
   {
-    apply: "nest.Create",
+    apply: "nest.Create(",
     info: "nest.Create(model, n=1, params=None, positions=None)",
-    label: "nest.Create()",
+    label: "nest.Create(",
     type: "function",
   },
   {
-    apply: "nest.GetConnections",
+    apply: "nest.GetConnections(",
     info: "nest.GetConnections(source=None, target=None, synapse_model=None, synapse_label=None",
-    label: "nest.GetConnections()",
+    label: "nest.GetConnections(",
     type: "function",
   },
   {
-    apply: "nest.GetDefaults",
+    apply: "nest.GetDefaults(",
     info: "nest.GetDefaults(model, keys=None, output='')",
-    label: "nest.GetDefaults()",
+    label: "nest.GetDefaults(",
     type: "function",
   },
   {
-    apply: "nest.GetKernelStatus",
+    apply: "nest.GetKernelStatus(",
     info: "nest.GetKernelStatus(keys=None)",
-    label: "nest.GetKernelStatus()",
+    label: "nest.GetKernelStatus(",
     type: "function",
   },
   {
-    apply: "nest.GetNodes",
+    apply: "nest.GetNodes(",
     info: "nest.GetNodes(properties={}, local_only=False)",
-    label: "nest.GetNodes()",
+    label: "nest.GetNodes(",
     type: "function",
   },
   {
-    apply: "nest.GetPosition",
+    apply: "nest.GetPosition(",
     info: "nest.GetPosition(nodes)",
-    label: "nest.GetPosition()",
+    label: "nest.GetPosition(",
     type: "function",
   },
   {
-    apply: "nest.GetStatus",
+    apply: "nest.GetStatus(",
     info: "nest.GetStatus(nodes, keys=None, output='')",
-    label: "nest.GetStatus()",
+    label: "nest.GetStatus(",
     type: "function",
   },
   {
-    apply: "nest.Install",
+    apply: "nest.Install(",
     info: "nest.Install(module_name)",
-    label: "nest.Install()",
+    label: "nest.Install(",
     type: "function",
   },
   {
-    apply: "nest.Models",
+    apply: "nest.Models()",
     info: "nest.Models()",
     label: "nest.Models()",
     type: "function",
   },
   {
-    apply: "nest.ResetKernel",
+    apply: "nest.ResetKernel()",
     info: "nest.ResetKernel()",
     label: "nest.ResetKernel()",
     type: "function",
   },
   {
-    apply: "nest.SetDefaults",
+    apply: "nest.SetDefaults(",
     info: "nest.SetDefaults(model, params, val=None)",
-    label: "nest.SetDefaults()",
+    label: "nest.SetDefaults(",
     type: "function",
   },
   {
-    apply: "nest.SetKernelStatus",
+    apply: "nest.SetKernelStatus(",
     info: "nest.SetKernelStatus(params)",
-    label: "nest.SetKernelStatus()",
+    label: "nest.SetKernelStatus(",
     type: "function",
   },
   {
-    apply: "nest.SetStatus",
+    apply: "nest.SetStatus(",
     info: "nest.SetStatus(object, params, val=None)",
-    label: "nest.SetStatus()",
+    label: "nest.SetStatus(",
     type: "function",
   },
   {
-    apply: "nest.Simulate",
+    apply: "nest.Simulate(",
     info: "nest.Simulate(t)",
-    label: "nest.Simulate()",
+    label: "nest.Simulate(",
     type: "function",
   },
   { label: "nest.biological_time", info: "float", type: "variable" },
   {
-    apply: "nest.get",
+    apply: "nest.get(",
     info: "nest.get(*args)",
-    label: "nest.get()",
+    label: "nest.get(",
     type: "function",
   },
   { label: "nest.local_num_threads", info: "int", type: "variable" },
@@ -110,9 +113,9 @@ const completions = [
   { label: "nest.resolution", info: "float", type: "variable" },
   { label: "nest.rng_seed", info: "int", type: "variable" },
   {
-    apply: "nest.set",
+    apply: "nest.set(",
     info: "nest.set(**kwargs)",
-    label: "nest.set()",
+    label: "nest.set(",
     type: "function",
   },
   { label: "nest.spatial", type: "class" },
@@ -121,7 +124,7 @@ const completions = [
   { label: "nest.userdict", info: "dict", type: "variable" },
 ];
 
-export function nestCompletions(context: any) {
+export function nestCompletions(context: CompletionContext) {
   const before = context.matchBefore(/nest\.\w*/);
   // If completion wasn't explicitly started and there
   // is no word before the cursor, don't open completions.

@@ -15,7 +15,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     model: IAnalogSignalPanelModelProps = {}
   ) {
     super(panel, model);
-    this.icon = "mdi-chart-bar";
+    this.icon = "mdi:mdi-chart-bar";
     this.id = "analogSignalHistogram";
     this.panel.xAxis = 2;
     this.params = [

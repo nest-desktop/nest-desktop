@@ -16,7 +16,7 @@ const modelBeforeEnter = (to: any) => {
   const modelStore = usePyNNModelStore();
 
   const modelDBStore = usePyNNModelDBStore();
-  if (modelDBStore.models.length === 0) {
+  if (modelDBStore.state.models.length === 0) {
     nextTick(() => modelBeforeEnter(to));
     return;
   }

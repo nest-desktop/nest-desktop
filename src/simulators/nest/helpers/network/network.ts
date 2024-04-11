@@ -9,11 +9,19 @@ import { NESTCopyModels } from "../model/copyModels";
 import { INESTNodeProps, NESTNode } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
+import { TNetworkProps } from "@/types/networkTypes";
 
 export interface INESTNetworkProps {
   models?: INESTCopyModelProps[];
   nodes?: INESTNodeProps[];
   connections?: INESTConnectionProps[];
+}
+
+// https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
+export function IsNESTNetworkProps(
+  networkProps: TNetworkProps
+): networkProps is INESTNetworkProps {
+  return (networkProps as INESTNetworkProps).models != undefined;
 }
 
 export class NESTNetwork extends BaseNetwork {
@@ -48,6 +56,10 @@ export class NESTNetwork extends BaseNetwork {
   /**
    * Get copied models
    */
+  get models(): NESTCopyModels {
+    return this._modelsCopied;
+  }
+
   get modelsCopied(): NESTCopyModels {
     return this._modelsCopied;
   }
@@ -132,6 +144,20 @@ export class NESTNetwork extends BaseNetwork {
 
     // Initialize activity graph.
     // this._project.initActivityGraph();
+  }
+
+  /**
+   * Initialize network.
+   */
+  override init(): void {
+    this.logger.trace("init");
+
+    this.modelsCopied.init();
+    this.nodes.init();
+    this.connections.init();
+
+    this.updateStyle();
+    this.updateHash();
   }
 
   /**

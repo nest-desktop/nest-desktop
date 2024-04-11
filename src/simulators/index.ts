@@ -19,6 +19,7 @@ import { norse } from "./norse";
 import { pynn } from "./pynn";
 
 export interface ISimulatorProps {
+  autocomplete: any[];
   backends: { [key: string]: Store<any, any> };
   configNames: string[];
   databases: string[];

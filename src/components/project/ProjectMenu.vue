@@ -19,7 +19,7 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="closeDialog()" size="small">close </v-btn>
+          <v-btn @click="closeDialog()" size="small">close</v-btn>
           <v-btn @click="deleteProject" size="small">save</v-btn>
         </v-card-actions>
       </v-card>
@@ -32,7 +32,7 @@
         <v-card-text>
           <v-text-field
             label="Project name"
-            append-icon="mdi-pencil-outline"
+            append-icon="mdi:mdi-pencil-outline"
             v-model="state.projectName"
           />
         </v-card-text>
@@ -49,7 +49,7 @@
       <v-btn
         @click.prevent
         class="list-item-menu"
-        icon="mdi-dots-vertical"
+        icon="mdi:mdi-dots-vertical"
         size="x-small"
         v-bind="props"
         variant="text"
@@ -75,7 +75,7 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import { TProject, TProjectProps } from "@/types/projectTypes";
+import { ProjectComponentProps, TProject } from "@/types/projectTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -85,7 +85,7 @@ const router = useRouter();
 const route = useRoute();
 
 const props = defineProps({
-  project: TProjectProps,
+  project: ProjectComponentProps,
   projectDBStore: { required: true, type: Object },
 });
 
@@ -102,36 +102,35 @@ const state = reactive({
 
 const projectMenuItems = [
   {
-    title: "Rename",
-    icon: "mdi-pencil",
+    icon: "mdi:mdi-pencil",
     onClick: () => {
       project.value.state.state.editMode = true;
       // project.state.checkChanges();
     },
+    title: "Rename",
   },
   {
-    title: "Save",
-    icon: "mdi-content-save-outline",
+    icon: "mdi:mdi-content-save-outline",
     onClick: () => projectDBStore.value.saveProject(project.value.id),
+    title: "Save",
   },
   {
-    icon: "mdi-reload",
-    title: "Reload",
+    icon: "mdi:mdi-reload",
     onClick: () => {
       projectDBStore.value.reloadProject(project.value.id);
     },
+    title: "Reload",
   },
   {
-    icon: "mdi-power",
-    title: "Unload",
+    icon: "mdi:mdi-power",
     onClick: () => {
       projectDBStore.value.unloadProject(project.value.id);
     },
+    title: "Unload",
   },
   {
+    icon: "mdi:mdi-content-duplicate",
     id: "projectDuplicate",
-    icon: "mdi-content-duplicate",
-    title: "Duplicate",
     onClick: () => {
       const newProject = projectDBStore.value.duplicate();
       if (!route.path.endsWith(newProject.id)) {
@@ -141,16 +140,17 @@ const projectMenuItems = [
         });
       }
     },
+    title: "Duplicate",
   },
   {
-    title: "Download",
-    icon: "mdi-download",
+    icon: "mdi:mdi-download",
     onClick: () => projectDBStore.value.exportProject(project.value.id),
+    title: "Download",
   },
   {
-    title: "Delete",
-    icon: "mdi-trash-can-outline",
+    icon: "mdi:mdi-trash-can-outline",
     onClick: () => projectDBStore.value.delete(project.value.id),
+    title: "Delete",
   },
 ];
 

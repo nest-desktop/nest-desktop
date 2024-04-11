@@ -75,13 +75,13 @@ const items: {
 }[] = [
   // {
   //   click: toggleWebGL,
-  //   icon: "mdi-google-downasaur",
+  //   icon: "mdi:mdi-google-downasaur",
   //   id: "webgl",
   //   title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
   //   color: appStore.webGL ? "green" : "red",
   // },
   // {
-  //   icon: "mdi-slide",
+  //   icon: "mdi:mdi-slide",
   //   id: "sandbox",
   //   title: "sandbox",
   //   to: "/sandbox/",
@@ -89,18 +89,18 @@ const items: {
   // {
   //   click: toggleDevMode,
   //   color: appStore.session.devMode ? "green" : "red",
-  //   icon: "mdi-developer-board",
+  //   icon: "mdi:mdi-developer-board",
   //   id: "theme-light-dark",
   //   title: "Toggle dev mode",
   // },
   // {
   //   click: () => appStore.toggleDarkMode(theme),
-  //   icon: "mdi-theme-light-dark",
+  //   icon: "mdi:mdi-theme-light-dark",
   //   id: "theme-light-dark",
   //   title: "Toggle dark mode",
   // },
   // {
-  //   icon: "mdi-cogs",
+  //   icon: "mdi:mdi-cogs",
   //   id: "settings",
   //   text: "settings",
   //   title: "settings",
@@ -108,13 +108,13 @@ const items: {
   // },
   // {
   //   href: "https://nest-desktop.readthedocs.io",
-  //   icon: "mdi-help-circle-outline",
+  //   icon: "mdi:mdi-help-circle-outline",
   //   id: "help",
   //   text: "help",
   //   title: "help",
   // },
   // {
-  //   icon: "mdi-information-variant",
+  //   icon: "mdi:mdi-information-variant",
   //   id: "about",
   //   text: "about",
   //   title: "about",

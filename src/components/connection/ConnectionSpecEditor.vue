@@ -17,7 +17,7 @@
           <v-btn
             :disabled="Object.keys(connection.params).length === 0"
             color="primary"
-            icon="mdi-order-bool-ascending-variant"
+            icon="mdi:mdi-order-bool-ascending-variant"
             size="small"
             v-bind="props"
             variant="text"
@@ -49,7 +49,7 @@
         <template #activator="{ props }">
           <v-btn
             color="primary"
-            icon="mdi-dots-vertical"
+            icon="mdi:mdi-dots-vertical"
             size="small"
             variant="text"
             v-bind="props"
@@ -86,9 +86,9 @@
 import { computed } from "vue";
 
 import ConnectionParamEditor from "@/components/connection/ConnectionParamEditor.vue";
-import { TConnection, TConnectionProps } from "@/types/connectionTypes";
+import { ConnectionComponentProps, TConnection } from "@/types/connectionTypes";
 
-const props = defineProps({ connection: TConnectionProps });
+const props = defineProps({ connection: ConnectionComponentProps });
 
 const connection = computed(() => props.connection as TConnection);
 
@@ -103,7 +103,7 @@ const rules = [
 const items = [
   {
     id: "connectionReset",
-    icon: "mdi-restart",
+    icon: "mdi:mdi-restart",
     title: "Reset connection",
     onClick: () => {
       connection.value.reset();
@@ -111,7 +111,7 @@ const items = [
   },
   {
     id: "connectionReverse",
-    icon: "mdi-rotate-3d-variant",
+    icon: "mdi:mdi-rotate-3d-variant",
     title: "Reverse connection",
     onClick: () => {
       connection.value.reverse();

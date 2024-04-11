@@ -1,6 +1,12 @@
 <template>
-  <v-avatar class="neuron" rounded="0">
-    <span :class="{ 'mt-2': props.weight === 'excitatory' }" class="label">
+  <v-avatar
+    class="neuron"
+    rounded="0"
+  >
+    <span
+      :class="{ 'mt-2': props.weight === 'excitatory' }"
+      class="label"
+    >
       {{ props.label }}
     </span>
     <v-icon

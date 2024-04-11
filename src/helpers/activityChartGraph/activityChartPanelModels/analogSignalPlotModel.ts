@@ -17,7 +17,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     modelProps: IAnalogSignalPlotModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "analogSignalPlot";
     this.panel.xAxis = 1;
 

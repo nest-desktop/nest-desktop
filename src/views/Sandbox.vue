@@ -37,7 +37,7 @@ const props = defineProps({
 
 const currentComponent = ref("");
 
-const components: any = {
+const components: { [key: string]: Object } = {
   alert: SandboxAlert,
   button: SandboxButton,
   buttonToggle: SandboxButtonToggle,

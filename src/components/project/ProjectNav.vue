@@ -15,7 +15,7 @@
         density="compact"
         hide-details
         placeholder="Search project"
-        prepend-inner-icon="mdi-magnify"
+        prepend-inner-icon="mdi:mdi-magnify"
         single-line
         v-model="search"
         variant="outlined"
@@ -27,12 +27,12 @@
         size="small"
         title="Create a new project"
       >
-        <v-icon icon="mdi-plus" />
+        <v-icon icon="mdi:mdi-plus" />
       </v-btn>
 
       <v-menu>
         <template #activator="{ props }">
-          <v-btn icon="mdi-dots-vertical" size="small" v-bind="props" />
+          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
         </template>
 
         <v-list density="compact">
@@ -67,8 +67,8 @@
               :disabled="!project.state?.changes && !project.state?.editMode"
               :icon="
                 project.state?.changes
-                  ? 'mdi-content-save-edit-outline'
-                  : 'mdi-content-save-check-outline'
+                  ? 'mdi:mdi-content-save-edit-outline'
+                  : 'mdi:mdi-content-save-check-outline'
               "
               size="x-small"
               variant="text"
@@ -82,7 +82,7 @@
                 <v-btn
                   @click.prevent
                   class="list-item-menu"
-                  icon="mdi-dots-vertical"
+                  icon="mdi:mdi-dots-vertical"
                   size="x-small"
                   v-bind="props"
                   variant="text"
@@ -92,7 +92,7 @@
               <v-list density="compact">
                 <v-list-item @click="projectDBStore.deleteProject(project)">
                   <template #prepend>
-                    <v-icon icon="mdi-trash-can-outline" />
+                    <v-icon icon="mdi:mdi-trash-can-outline" />
                   </template>
                   <v-list-item-title>Delete</v-list-item-title>
                 </v-list-item>
@@ -166,17 +166,17 @@ const projectDBStore = computed(() => props.projectDBStore);
 const search = ref("");
 
 const projects = computed(() =>
-  props.projectDBStore.projects.filter((project: TProject) =>
+  props.projectDBStore.state.projects.filter((project: TProject) =>
     project.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );
 
 const projectsMenuItems = [
-  { title: "Upload", icon: "mdi-upload" },
-  { title: "Download", icon: "mdi-download" },
-  { title: "Delete", icon: "mdi-trash-can-outline" },
-  { title: "Reload list", icon: "mdi-reload" },
-  { title: "Reset database", icon: "mdi-database-sync-outline" },
+  { title: "Import", icon: "mdi:mdi-import" },
+  { title: "Export", icon: "mdi:mdi-export" },
+  { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
+  { title: "Reload list", icon: "mdi:mdi-reload" },
+  { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];
 
 const dispatchWindowResize = () => {

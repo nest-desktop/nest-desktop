@@ -16,7 +16,7 @@ export const useAppStore = defineStore(
       themeInstance: undefined,
       autoUpdate: false,
       theme: "auto", // auto, light, dark
-      themeIcon: "mdi-system",
+      themeIcon: "mdi:mdi-system",
       simulator: "nest",
       simulatorVisible: ["nest"],
     });
@@ -69,8 +69,8 @@ export const useAppStore = defineStore(
 
       state.themeIcon =
         state.theme === "auto"
-          ? "mdi-desktop-tower-monitor"
-          : "mdi-theme-light-dark";
+          ? "mdi:mdi-desktop-tower-monitor"
+          : "mdi:mdi-theme-light-dark";
 
       const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
       const themeValue =

@@ -4,7 +4,11 @@
       <v-col md="6">
         <v-card>
           <v-card-title>
-            <v-img :src="pynnLogo" class="mx-10" maxHeight="400" />
+            <v-img
+              :src="pynnLogo"
+              class="mx-10"
+              max-height="400"
+            />
           </v-card-title>
 
           <v-card-subtitle>
@@ -42,25 +46,25 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="http://neuralensemble.org/PyNN/"
-                prepend-icon="mdi-home"
+                prepend-icon="mdi:mdi-home"
                 target="_blank"
               >
                 http://neuralensemble.org/PyNN/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://github.com/NeuralEnsemble/PyNN/"
-                prepend-icon="mdi-github"
+                prepend-icon="mdi:mdi-github"
                 target="_blank"
               >
                 https://github.com/NeuralEnsemble/PyNN/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="http://neuralensemble.org/docs/PyNN/"
-                prepend-icon="mdi-book-open"
+                prepend-icon="mdi:mdi-book-open"
                 target="_blank"
               >
                 http://neuralensemble.org/docs/PyNN/
@@ -79,7 +83,10 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="pynn" />
+        <store-list
+          :stores
+          simulator="pynn"
+        />
       </v-col>
     </v-row>
   </v-container>

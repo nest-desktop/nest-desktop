@@ -1,11 +1,18 @@
 // copyModel.ts
 
+import { Store } from "pinia";
 import { reactive, UnwrapRef } from "vue";
-import { Parameter } from "@/helpers/common/parameter";
+
+import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import {
   IModelParamProps,
   ModelParameter,
 } from "@/helpers/model/modelParameter";
+import {
+  IParamProps,
+  Parameter,
+  TParamValue,
+} from "@/helpers/common/parameter";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTModel } from "./model";
@@ -13,6 +20,7 @@ import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
+import { NESTCopyModels } from "./copyModels";
 
 export interface INESTCopyModelProps {
   existing: string;
@@ -29,21 +37,21 @@ export class NESTCopyModel {
 
   private _existingModelId: string;
   private _idx: number;
-  private _network: NESTNetwork;
+  private _copyModels: NESTCopyModels;
   private _newModelId: string;
   private _params: { [key: string]: ModelParameter } = {};
   private _paramsVisible: string[] = [];
   private _state: UnwrapRef<INESTCopyModelState>;
 
   constructor(
-    network: NESTNetwork,
+    copyModels: NESTCopyModels,
     modelProps: INESTCopyModelProps = { existing: "", new: "" }
   ) {
-    this._network = network;
+    this._copyModels = copyModels;
     this._existingModelId = modelProps.existing;
     this._newModelId = modelProps.new;
 
-    this._idx = this.network.modelsCopied.length;
+    this._idx = this._copyModels.all.length;
     this._state = reactive({
       visible: true,
     });
@@ -64,7 +72,7 @@ export class NESTCopyModel {
   }
 
   get connections(): NESTConnection[] {
-    return this._network.connections.all.filter(
+    return this.network.connections.all.filter(
       (connection: NESTConnection) =>
         connection.synapse.modelId === this._newModelId
     );
@@ -98,6 +106,10 @@ export class NESTCopyModel {
   //     (param: ModelParameter) => param.visible
   //   );
   // }
+
+  get copyModels(): NESTCopyModels {
+    return this._copyModels;
+  }
 
   get hasWeightRecorderParam(): boolean {
     return "weight_recorder" in this._params;
@@ -186,12 +198,12 @@ export class NESTCopyModel {
     return this.modelDBStore.getModel(this._existingModelId);
   }
 
-  get modelDBStore(): any {
-    return this._network.project.modelDBStore;
+  get modelDBStore(): Store<any, any> {
+    return this.network.project.modelDBStore;
   }
 
   get models(): NESTModel[] {
-    return this.modelDBStore.models as NESTModel[];
+    return this.modelDBStore.state.models as NESTModel[];
   }
 
   get name(): string {
@@ -199,7 +211,7 @@ export class NESTCopyModel {
   }
 
   get network(): NESTNetwork {
-    return this._network;
+    return this._copyModels.network;
   }
 
   get newModelId(): string {
@@ -212,7 +224,7 @@ export class NESTCopyModel {
    */
   set newModelId(value: string) {
     const nodes = this.nodes;
-    const connections = this._network.connections.all.filter(
+    const connections = this.network.connections.all.filter(
       (connection: NESTConnection) =>
         connection.synapse.modelId === this._newModelId
     );
@@ -225,7 +237,7 @@ export class NESTCopyModel {
   }
 
   get nodes(): NESTNode[] {
-    return this._network.nodes.all.filter(
+    return this.network.nodes.all.filter(
       (node: NESTNode) => node.modelId === this._newModelId
     );
   }
@@ -255,7 +267,7 @@ export class NESTCopyModel {
     return this.model.receptors;
   }
 
-  get recordables(): any[] {
+  get recordables(): INodeRecordProps[] {
     return this.model.recordables;
   }
 
@@ -273,32 +285,32 @@ export class NESTCopyModel {
 
   get weightRecorder(): NESTNode | undefined {
     if (!this.hasWeightRecorderParam) {
-      return new NESTNode(this._network.nodes);
+      return new NESTNode(this.network.nodes);
     }
 
     // Get weight recorder parameter.
     const weightRecorderParam = this._params.weight_recorder;
 
     // Return weight recorder node.
-    return this._network.nodes.weightRecorders.find(
+    return this.network.nodes.weightRecorders.find(
       (node: NESTNode) => node.view.label === weightRecorderParam.value
     );
   }
 
   /**
    * Add model parameter component.
-   * @param param - parameter object
+   * @param paramProps - parameter props
    */
-  addParameter(param: any): void {
-    this._params[param.id] = new ModelParameter(this.model, param);
+  addParameter(paramProps: IParamProps): void {
+    this._params[paramProps.id] = new ModelParameter(this.model, paramProps);
   }
 
   // /**
   //  * Add parameter component.
-  //  * @param param - parameter object
+  //  * @param param - parameter props
   //  */
-  // addParameter(param: any): void {
-  //   const parameter = new Parameter(this, param);
+  // addParameter(paramProps: IParamProps): void {
+  //   const parameter = new Parameter(this, paramProps);
   //   parameter.visible = true;
   //   this._params.push(parameter);
   // }
@@ -307,27 +319,27 @@ export class NESTCopyModel {
    * Add parameter component.
    * @param param - parameter object
    */
-  addWeightRecorderParameter(param: any): void {
+  addWeightRecorderParameter(param: { value: TParamValue }): void {
     this.addParameter({
       id: "weight_recorder",
-      variant: "select",
-      label: "weight recorder",
-      items: this._network.nodes.weightRecorders.map(
+      items: this.network.nodes.weightRecorders.map(
         (recorder: NESTNode) => recorder.view.label
       ),
+      component: "select",
+      label: "weight recorder",
       value: param.value,
       visible: true,
     });
   }
 
   clean(): void {
-    this._idx = this._network.modelsCopied.all.indexOf(this);
+    this._idx = this._copyModels.all.indexOf(this);
 
-    const weightRecorderParam: any = this._params.weight_recorder;
+    const weightRecorderParam: ModelParameter = this._params.weight_recorder;
 
     // Update weight recorder list to select.
     if (weightRecorderParam) {
-      weightRecorderParam.items = this._network.nodes.weightRecorders.map(
+      weightRecorderParam.items = this.network.nodes.weightRecorders.map(
         (recorder: NESTNode) => recorder.view.label
       );
     }
@@ -344,33 +356,38 @@ export class NESTCopyModel {
    * Initialize parameter components.
    * @param model - model object
    */
-  initParameters(model: any = null): void {
+  initParameters(modelProps?: INESTCopyModelProps): void {
     // Update parameters from model
     this._params = {};
-    if (this.model && model && "params" in model) {
+    if (this.model && modelProps && "params" in modelProps) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = model.params.find((p: any) => p.id === modelParam.id);
+        const param = modelProps.params?.find(
+          (paramProps: IParamProps) => paramProps.id === modelParam.id
+        );
         this.addParameter(param || modelParam.toJSON());
       });
     } else if (this.model) {
       Object.values(this.model.params).forEach((param: ModelParameter) =>
         this.addParameter(param.toJSON())
       );
-    } else if ("params" in model) {
-      model.params.forEach((param: any) => this.addParameter(param));
+    } else if (modelProps && "params" in modelProps) {
+      modelProps.params?.forEach((paramProps: IParamProps) =>
+        this.addParameter(paramProps)
+      );
     }
 
     if (this.model.isSynapse) {
-      const weightRecorders = this._network.nodes.weightRecorders.map(
+      const weightRecorders = this.network.nodes.weightRecorders.map(
         (recorder: NESTNode) => recorder.view.label
       );
-      let weightRecorder: string = weightRecorders[weightRecorders.length - 1];
+      let weightRecorder: TParamValue =
+        weightRecorders[weightRecorders.length - 1];
 
-      if (model && "params" in model) {
-        const weightRecorderParam = model.params.find(
-          (param: Parameter) => param.id === "weight_recorder"
+      if (modelProps && "params" in modelProps) {
+        const weightRecorderParam = modelProps.params?.find(
+          (paramProps: IParamProps) => paramProps.id === "weight_recorder"
         );
-        if (weightRecorderParam) {
+        if (weightRecorderParam && weightRecorderParam.value) {
           weightRecorder = weightRecorderParam.value;
         }
       }
@@ -397,7 +414,7 @@ export class NESTCopyModel {
    * It emits network changes.
    */
   changes(): void {
-    this._network.changes();
+    this.network.changes();
   }
 
   /**
@@ -407,11 +424,11 @@ export class NESTCopyModel {
    * It removes model component of the network.
    */
   remove(): void {
-    this._network.nodes.all
+    this.network.nodes.all
       .filter((node: NESTNode) => node.modelId === this.newModelId)
       .forEach((node: NESTNode) => (node.modelId = this._existingModelId));
 
-    this._network.connections.all
+    this.network.connections.all
       .filter(
         (connection: NESTConnection) =>
           connection.synapse.modelId === this.newModelId
@@ -421,7 +438,7 @@ export class NESTCopyModel {
           (connection.synapse.modelId = this._existingModelId)
       );
 
-    this._network.deleteModel(this);
+    this.network.deleteModel(this);
     this.clean();
   }
 

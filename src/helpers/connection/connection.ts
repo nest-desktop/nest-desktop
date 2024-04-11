@@ -7,7 +7,7 @@ import {
   ConnectionParameter,
   IConnectionParamProps,
 } from "./connectionParameter";
-import { ConnectionRule } from "./connectionRule";
+import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
 import { TConnection } from "@/types/connectionTypes";
@@ -188,7 +188,7 @@ export class BaseConnection extends BaseObj {
     this.logger.trace("init parameter");
     this._paramsVisible = [];
     this._params = {};
-    const ruleConfig: any = this.getRuleConfig();
+    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
     ruleConfig.params.forEach((param: IConnectionParamProps) => {
       if (paramProps != null) {
         const p: IConnectionParamProps | undefined = paramProps.find(
@@ -247,9 +247,9 @@ export class BaseConnection extends BaseObj {
   /**
    * Get all parameter of the rule.
    */
-  getRuleConfig(): any {
+  getRuleConfig(): IConnectionRuleConfig {
     return this.config?.localStorage.rules.find(
-      (r: any) => r.value === this._rule.value
+      (r: IConnectionRuleConfig) => r.value === this._rule.value
     );
   }
 
@@ -288,13 +288,19 @@ export class BaseConnection extends BaseObj {
    * Resets parameters to their default.
    */
   resetParams(): void {
-    const ruleConfig: any = this.getRuleConfig();
+    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
 
     // Reset connection parameter.
     this.paramsAll.forEach((param: ConnectionParameter) => {
       param.reset();
-      const p: any = ruleConfig.params.find((p: any) => p.id === param.id);
-      param.value = p.value;
+
+      const p = ruleConfig.params.find(
+        (p: IConnectionParamProps) => p.id === param.id
+      );
+
+      if (p?.value) {
+        param.value = p.value;
+      }
     });
   }
 

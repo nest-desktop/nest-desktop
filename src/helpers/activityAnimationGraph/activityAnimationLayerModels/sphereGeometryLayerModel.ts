@@ -4,6 +4,7 @@ import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
+import { IPosition } from "../activityAnimationGraph";
 
 export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {
@@ -17,13 +18,15 @@ export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
     const scale = 0.01;
     const geometry: SphereGeometry = new SphereGeometry(scale / 2);
 
-    this.layer.state.positions.forEach((position: any) => {
+    this.layer.state.positions.forEach((position: IPosition) => {
       const material: MeshBasicMaterial = new MeshBasicMaterial({
         color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
-      const mesh: Mesh = new Mesh(geometry, material);
-
+      const mesh: Mesh<any, MeshBasicMaterial, any> = new Mesh(
+        geometry,
+        material
+      );
       mesh.userData.position = position;
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);

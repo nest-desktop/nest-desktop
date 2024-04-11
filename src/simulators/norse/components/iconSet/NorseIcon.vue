@@ -1,7 +1,12 @@
 <template>
-  <svg height="99.439674" width="99.899597" viewBox="0 0 99.899608 99.439673">
+  <svg
+    height="99.439674"
+    width="99.899597"
+    viewBox="0 0 99.899608 99.439673"
+  >
     <g
-     transform="translate(-3.4962307,68.657005)">
+      transform="translate(-3.4962307,68.657005)"
+    >
       <g>
         <g
           aria-label="/"

@@ -6,21 +6,22 @@ import { IActivityChartPanelProps } from "../activityChartGraph/activityChartPan
 import { BaseObj } from "../common/base";
 import { TProject } from "@/types/projectTypes";
 
+export interface IActivityGraphProps {
+  panels: IActivityChartPanelProps[];
+}
+
 export class ActivityGraph extends BaseObj {
   private _project: TProject;
   private _activityChartGraph: ActivityChartGraph;
   private _activityAnimationGraph: ActivityAnimationGraph;
 
-  constructor(
-    project: TProject,
-    activityGraph?: { panels: IActivityChartPanelProps[] }
-  ) {
+  constructor(project: TProject, activityGraphProps?: IActivityGraphProps) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._project = project;
     this._activityChartGraph = new ActivityChartGraph(
       project,
-      activityGraph?.panels
+      activityGraphProps?.panels
     );
     this._activityAnimationGraph = new ActivityAnimationGraph(project);
   }

@@ -15,6 +15,8 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 import { TSimulation } from "@/types/simulationTypes";
+import { Store } from "pinia";
+import { onlyUnique } from "../common/array";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -193,7 +195,7 @@ export class BaseNode extends BaseObj {
     this.modelChanges();
   }
 
-  get modelDBStore(): any {
+  get modelDBStore(): Store<any, any> {
     return this.nodes.network.project.modelDBStore;
   }
 
@@ -619,7 +621,7 @@ export class BaseNode extends BaseObj {
    */
   updateRecords(): void {
     this.logger.trace("update records");
-    let recordables: any[] = [];
+    let recordables: INodeRecordProps[] = [];
     // Initialize recordables.
     if (this.connections.length > 0) {
       if (this.model.isMultimeter) {
@@ -627,38 +629,42 @@ export class BaseNode extends BaseObj {
           return [...target.model.recordables];
         });
         if (recordablesNodes.length > 0) {
-          const recordablesPooled: any[] = recordablesNodes.flat();
-          recordables = [...new Set(recordablesPooled)];
-          recordables.sort((a: any, b: any) => a.id - b.id);
+          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
+          recordables = recordablesPooled.filter(onlyUnique);
+          recordables.sort();
         }
       } else if (this._modelId === "voltmeter") {
         recordables.push(
           this.model.config?.localStorage.recordables.find(
-            (record: any) => record.id === "V_m"
+            (record: INodeRecordProps) => record.id === "V_m"
           )
         );
       }
     }
 
     let recordableIds: string[];
-    recordableIds = recordables.map((record: any) => record.id);
+    recordableIds = recordables.map((record: INodeRecordProps) => record.id);
     this._recordables = [
       ...this._recordables.filter((record: NodeRecord) =>
         recordableIds.includes(record.id)
       ),
     ];
 
-    recordableIds = this._recordables.map((record: any) => record.id);
+    recordableIds = this._recordables.map(
+      (record: INodeRecordProps) => record.id
+    );
     recordables
-      .filter((record: any) => !recordableIds.includes(record.id))
-      .forEach((record: any) => {
+      .filter((record: INodeRecordProps) => !recordableIds.includes(record.id))
+      .forEach((record: INodeRecordProps) => {
         this._recordables.push(new NodeRecord(this, record));
       });
 
     // Initialize selected records.
     if (this._doc.records != null) {
       // Load record from stored nodes.
-      const recordIds = this._doc.records.map((record: any) => record.id);
+      const recordIds = this._doc.records.map(
+        (record: INodeRecordProps) => record.id
+      );
       this._records = [
         ...this._recordables.filter((record: NodeRecord) =>
           recordIds.includes(record.id)
@@ -681,9 +687,9 @@ export class BaseNode extends BaseObj {
   // /**
   //  * Update receptor component.
   //  * @param receptorOld - node receptor object
-  //  * @param receptorNew - receptor object
+  //  * @param receptorNew - node receptor props
   //  */
-  // updateReceptor(receptorOld: NodeReceptor, receptorNew: any): void {
+  // updateReceptor(receptorOld: NodeReceptor, receptorNew: INodeReceptorProps): void {
   //   receptorNew.compIdx = receptorOld.compartment.idx;
   //   const receptorIdx = this._receptors.indexOf(receptorOld);
   //   this._receptors[receptorIdx] = new NodeReceptor(this, receptorNew);

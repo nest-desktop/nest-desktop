@@ -6,14 +6,46 @@ import { Activity } from "../activity/activity";
 import { NodeRecord } from "../node/nodeRecord";
 import { range } from "../common/array";
 
-import { ActivityAnimationGraph } from "./activityAnimationGraph";
+import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
 import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/boxGeometryLayerModel";
 import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/sphereGeometryLayerModel";
 
+export interface IActivityAnimationLayerConfig {
+  object: {
+    flatHeight: boolean;
+    flyingBoxes: boolean;
+    opacity: number;
+    size: number;
+  };
+  trail: { fading: boolean; length: number; mode: string };
+}
+
+export interface IActivityAnimationLayerFrame {
+  [key: string]: number[];
+  senders: number[];
+}
+
+interface IActivityAnimationLayerModel {
+  component: any;
+  id: string;
+  label: string;
+}
+
+interface IActivityAnimationLayerState {
+  layout: { extent: number[][] };
+  modelSelected?: IActivityAnimationLayerModel;
+  ndim: number;
+  positions: IPosition[];
+  record?: NodeRecord;
+  records: NodeRecord[];
+  reset: boolean;
+  visible: boolean;
+}
+
 export class ActivityAnimationLayer {
   private _activity: Activity;
-  private _config: any = {
+  private _config: IActivityAnimationLayerConfig = {
     object: {
       flatHeight: false,
       flyingBoxes: false,
@@ -26,11 +58,11 @@ export class ActivityAnimationLayer {
       mode: "off",
     },
   };
-  private _frames: any[] = [];
+  private _frames: IActivityAnimationLayerFrame[] = [];
   private _graph: ActivityAnimationGraph;
   private _graphGroup?: Group;
   private _model?: ActivityAnimationLayerModel;
-  private _models: any[] = [
+  private _models: IActivityAnimationLayerModel[] = [
     {
       component: BoxGeometryLayerModel,
       id: "BoxGeometryLayerModel",
@@ -42,8 +74,8 @@ export class ActivityAnimationLayer {
       label: "sphere geometry",
     },
   ];
-  private _offset: any = { x: 0, y: 0, z: 0 };
-  private _state: any = {
+  private _offset: IPosition = { x: 0, y: 0, z: 0 };
+  private _state: IActivityAnimationLayerState = {
     layout: {
       extent: [
         [-1, 0],
@@ -73,15 +105,15 @@ export class ActivityAnimationLayer {
     return this._graph.config.grid.divisions;
   }
 
-  get config(): any {
+  get config(): IActivityAnimationLayerConfig {
     return this._config;
   }
 
-  get frame(): any {
+  get frame(): IActivityAnimationLayerFrame {
     return this.frames[this._graph.state.frameIdx] || {};
   }
 
-  get frames(): any[] {
+  get frames(): IActivityAnimationLayerFrame[] {
     return this._frames;
   }
 
@@ -89,7 +121,7 @@ export class ActivityAnimationLayer {
     return this._graph;
   }
 
-  get graphGroup(): Group | undefined {
+  get graphGroup(): Group<any> | undefined {
     return this._graphGroup;
   }
 
@@ -97,35 +129,35 @@ export class ActivityAnimationLayer {
     return this._model;
   }
 
-  get modelSelected(): any {
+  get modelSelected(): IActivityAnimationLayerModel | undefined {
     return this._state.modelSelected;
   }
 
-  set modelSelected(value: any) {
+  set modelSelected(value: IActivityAnimationLayerModel) {
     this._state.modelSelected = value;
     this.init();
     this._graph.updateScene();
   }
 
-  get models(): any[] {
+  get models(): IActivityAnimationLayerModel[] {
     return this._models;
   }
 
-  get offset(): any[] {
+  get offset(): IPosition {
     return this._offset;
   }
 
-  get state(): any {
+  get state(): IActivityAnimationLayerState {
     return this._state;
   }
 
   /**
    * Get binned positions for histogram.
    */
-  get positionsBinned(): any[] {
+  get positionsBinned(): { x: number; z: number }[] {
     const X: number[] = this.interval(-0.5, 0.5, this.bins);
     const Z: number[] = this.interval(-0.5, 0.5, this.bins);
-    const positions: any[] = [];
+    const positions: { x: number; z: number }[] = [];
     X.forEach((x: number) => {
       Z.forEach((z: number) => {
         positions.push({ x, z });
@@ -203,9 +235,9 @@ export class ActivityAnimationLayer {
    * @remarks
    * returns a group of GridHelpers
    */
-  createGrids(divisions: number = 2): Group {
-    const grid: Group = new Group();
-    const scale: any = { x: 1, y: 1, z: 1 };
+  createGrids(divisions: number = 2): Group<any> {
+    const grid: Group<any> = new Group();
+    const scale: IPosition = { x: 1, y: 1, z: 1 };
 
     if (this._state.ndim === 3) {
       const gridX: GridHelper = new GridHelper(1, divisions);
@@ -251,7 +283,7 @@ export class ActivityAnimationLayer {
     // Add empty frames if not existed.
     this._frames = [];
     for (let i = 0; i < this._graph.state.nSamples; i++) {
-      this._frames.push({});
+      this._frames.push({ senders: [] });
     }
   }
 
@@ -278,7 +310,7 @@ export class ActivityAnimationLayer {
     );
 
     // Add empty data (from individual recorder) in each frame.
-    this._frames.forEach((frame: any) => {
+    this._frames.forEach((frame: IActivityAnimationLayerFrame) => {
       Object.keys(events).forEach((eventKey: string) => {
         frame[eventKey] = [];
       });
@@ -288,7 +320,7 @@ export class ActivityAnimationLayer {
     const sampleRate: number = this._graph.config.frames.sampleRate;
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);
-      const frame: any = this._frames[frameIdx - 1];
+      const frame: IActivityAnimationLayerFrame = this._frames[frameIdx - 1];
       if (frame == null) {
         return;
       }

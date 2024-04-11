@@ -17,7 +17,7 @@ const modelBeforeEnter = (to: any) => {
   const modelStore = useNorseModelStore();
 
   const modelDBStore = useNorseModelDBStore();
-  if (modelDBStore.models.length === 0) {
+  if (modelDBStore.state.models.length === 0) {
     nextTick(() => modelBeforeEnter(to));
     return;
   }

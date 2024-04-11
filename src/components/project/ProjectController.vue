@@ -38,8 +38,8 @@
         <v-btn
           :icon="
             projectStore.state.bottomOpen
-              ? 'mdi-arrow-expand-down'
-              : 'mdi-arrow-expand-up'
+              ? 'mdi:mdi-arrow-expand-down'
+              : 'mdi:mdi-arrow-expand-up'
           "
           @click.stop="toggleBottomNav()"
           value="code"
@@ -167,11 +167,11 @@ const projectJSON = computed(() =>
 
 const controllerItems = [
   { id: "network", icon: "network:network", title: "Edit network" },
-  { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
-  { id: "raw", icon: "mdi-code-json", show: "dev" },
-  { id: "code", icon: "mdi-xml" },
-  { id: "activity", icon: "mdi-border-style" },
-  { id: "stats", icon: "mdi-table-large" },
+  { id: "kernel", icon: "mdi:mdi-engine-outline", title: "Edit kernel" },
+  { id: "raw", icon: "mdi:mdi-code-json", show: "dev" },
+  { id: "code", icon: "mdi:mdi-xml" },
+  { id: "activity", icon: "mdi:mdi-border-style" },
+  { id: "stats", icon: "mdi:mdi-table-large" },
 ];
 
 const extensions = [json()];

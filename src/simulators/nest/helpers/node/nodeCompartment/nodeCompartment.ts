@@ -1,13 +1,18 @@
 // nodeCompartment.ts
 
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
+import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NodeView } from "@/helpers/node/nodeView";
+import { TParamValue } from "@/helpers/common/parameter";
 
+import {
+  INESTNodeReceptorProps,
+  NESTNodeReceptor,
+} from "../nodeReceptor/nodeReceptor";
 import { NESTModel } from "../../model/model";
 import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";
 import { NESTNode } from "../node";
 import { NESTNodeCompartmentParameter } from "./nodeCompartmentParameter";
-import { NESTNodeReceptor } from "../nodeReceptor/nodeReceptor";
 
 export interface INESTNodeCompartmentProps {
   parentIdx: number;
@@ -144,11 +149,15 @@ export class NESTNodeCompartment {
     );
   }
 
-  get recordables(): any[] {
-    const recordables = this._node.model.recordables.map((recordable: any) => ({
-      ...recordable,
-    }));
-    recordables.forEach((recordable: any) => (recordable.id += this._idx));
+  get recordables(): INodeRecordProps[] {
+    const recordables = this._node.model.recordables.map(
+      (recordable: INodeRecordProps) => ({
+        ...recordable,
+      })
+    );
+    recordables.forEach(
+      (recordable: INodeRecordProps) => (recordable.id += this._idx)
+    );
     return recordables;
   }
 
@@ -167,9 +176,9 @@ export class NESTNodeCompartment {
   /**
    * Add a receptor to the node compartment.
    */
-  addReceptor(receptor: any): void {
-    receptor.compIdx = this._idx;
-    this._node.addReceptor(receptor);
+  addReceptor(receptorProps: INESTNodeReceptorProps): void {
+    receptorProps.compIdx = this._idx;
+    this._node.addReceptor(receptorProps);
   }
 
   /**
@@ -204,9 +213,9 @@ export class NESTNodeCompartment {
   /**
    * Get the parameter component.
    * @param paramId - parameter ID
-   * @return parameter component
+   * @return parameter value
    */
-  getParameter(paramId: string): any {
+  getParameter(paramId: string): TParamValue | undefined {
     if (this.hasParameter(paramId)) {
       return this._params[paramId].value;
     }
@@ -233,18 +242,18 @@ export class NESTNodeCompartment {
 
   /**
    * Initialize the parameter components.
-   * @param comp - node compartment object
+   * @param compProps - node compartment props
    */
-  initParameters(comp: any = null): void {
+  initParameters(compProps?: INESTNodeCompartmentProps): void {
     // Update parameters from model or node compartment
     this._params = {};
     const model = this.model;
     if (model) {
       Object.values(model.compartmentParams).forEach(
         (modelParam: NESTModelCompartmentParameter) => {
-          if (comp && "params" in comp) {
-            const compartmentParam = comp.params.find(
-              (p: any) => p.id === modelParam.id
+          if (compProps && "params" in compProps) {
+            const compartmentParam = compProps?.params?.find(
+              (p: INodeParamProps) => p.id === modelParam.id
             );
             this.addParameter(compartmentParam || modelParam.toJSON());
           } else {
@@ -252,8 +261,8 @@ export class NESTNodeCompartment {
           }
         }
       );
-    } else if ("params" in comp) {
-      comp.params.forEach((paramProps: INodeParamProps) =>
+    } else {
+      compProps?.params?.forEach((paramProps: INodeParamProps) =>
         this.addParameter(paramProps)
       );
     }

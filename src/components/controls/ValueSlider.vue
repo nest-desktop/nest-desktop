@@ -1,20 +1,21 @@
 <template>
   <v-slider
+    v-model="value"
     :step="props.step"
-    @click:append="increment"
-    @click:prepend="decrement"
-    append-icon="mdi-plus"
+    append-icon="mdi:mdi-plus"
     class="py-1 value-slider"
     color="grey"
     hide-details="auto"
-    prepend-icon="mdi-minus"
+    prepend-icon="mdi:mdi-minus"
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    v-model="value"
+    @click:append="increment"
+    @click:prepend="decrement"
   >
     <template #append>
       <v-text-field
+        v-model="value"
         :label="props.id"
         :step="props.step"
         :suffix="props.unit"
@@ -22,7 +23,6 @@
         hide-details
         style="width: 80px"
         type="number"
-        v-model="value"
         variant="underlined"
       />
     </template>

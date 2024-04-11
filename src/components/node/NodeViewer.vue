@@ -52,9 +52,9 @@ import Card from "@/components/common/Card.vue";
 import ConnectionViewer from "@/components/connection/ConnectionViewer.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import NodeParamViewer from "@/components/node/NodeParamViewer.vue";
-import { TNode, TNodeProps } from "@/types/nodeTypes";
+import { NodeComponentProps, TNode } from "@/types/nodeTypes";
 
-const props = defineProps({ node: TNodeProps });
+const props = defineProps({ node: NodeComponentProps });
 
 const node = computed(() => props.node as TNode);
 </script>

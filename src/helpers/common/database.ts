@@ -8,11 +8,40 @@ import { v4 as uuidv4 } from "uuid";
 import { truncate } from "@/utils/truncate";
 import { BaseObj } from "./base";
 
+export interface IDoc {
+  _deleted?: boolean;
+  _id?: string;
+  _rev?: string;
+  _revisions?: {
+    start: number;
+    ids: string[];
+  };
+  createdAt?: string;
+  id?: string;
+  updatedAt?: string;
+  version?: string;
+  [key: string]: any;
+}
+
+export interface IRes {
+  id: string;
+  ok: boolean;
+  rev: string;
+  rows: { doc: IDoc }[];
+  total_rows: number;
+}
+
+interface IErr {
+  stack: string;
+}
+
+interface IOptions {}
+
 export class DatabaseService extends BaseObj {
   // @ts-ignore
   private _db: PouchDB;
-  private _options: any;
-  private _state: any = {
+  private _options: IOptions;
+  private _state: { ready: boolean; valid: boolean; version: string } = {
     ready: false,
     valid: false,
     version: "",
@@ -21,7 +50,7 @@ export class DatabaseService extends BaseObj {
 
   constructor(
     url: string,
-    options?: any,
+    options?: IOptions,
     loggerSettings?: ISettingsParam<ILogObj>
   ) {
     super({ logger: { settings: { minLevel: 3, ...loggerSettings } } });
@@ -42,7 +71,7 @@ export class DatabaseService extends BaseObj {
     return this._db;
   }
 
-  get state(): any {
+  get state(): { ready: boolean; valid: boolean; version: string } {
     return this._state;
   }
 
@@ -54,46 +83,50 @@ export class DatabaseService extends BaseObj {
     return this._state.valid;
   }
 
-  count(): any {
+  async count(): Promise<number> {
     this.logger.silly("count");
     return this._db
       .allDocs()
-      .then((result: any) => result.total_rows)
-      .catch((err: any) => this.logger.error("Get all docs:", err.stack));
+      .then((res: IRes) => res.total_rows)
+      .catch((err: IErr) => this.logger.error("Get all docs:", err.stack));
   }
 
-  async destroy(): Promise<any> {
+  async destroy(): Promise<IDoc> {
     return this._db
       .destroy()
-      .catch((err: any) => this.logger.error("Destroy db:", err.stack));
+      .catch((err: IErr) => this.logger.error("Destroy db:", err.stack));
   }
 
-  list(sortedBy: string = "", reverse: boolean = false): any {
+  async list(sortedBy: string = "", reverse: boolean = false): Promise<IDoc[]> {
     this.logger.trace("list");
     return this._db
       .allDocs({ include_docs: true })
-      .then((res: any) => {
-        const docs: any[] = res.rows.map((row: any) => row.doc);
+      .then((res: IRes) => {
+        const docs: IDoc[] = res.rows.map((row: { doc: IDoc }) => row.doc);
         if (sortedBy) {
-          docs.sort((a: any, b: any) => a[sortedBy].localeCompare(b[sortedBy]));
+          docs.sort((a: IDoc, b: IDoc) => {
+            const aValue = a[sortedBy] as string;
+            const bValue = b[sortedBy] as string;
+            return aValue.localeCompare(bValue);
+          });
         }
         if (reverse) {
           docs.reverse();
         }
         return docs;
       })
-      .catch((err: any) => this.logger.error("Get all docs:", err.stack));
+      .catch((err: IErr) => this.logger.error("Get all docs:", err.stack));
   }
 
-  async reset(): Promise<any> {
+  async reset(): Promise<IDoc | void> {
     this.logger.trace("reset");
     return this.destroy().then(() => {
       this._db = new PouchDB(this._url, this._options);
     });
   }
 
-  clean(data: any): void {
-    data.version = process.env.APP_VERSION;
+  clean(data: IDoc): void {
+    data.version = process.env.APP_VERSION as string;
     if (!data.id) {
       data.id = uuidv4();
     }
@@ -101,98 +134,99 @@ export class DatabaseService extends BaseObj {
 
   // CRUD - Create, Read, Update, Delete
 
-  create(data: any): any {
+  async create(data: IDoc): Promise<IRes> {
     this.logger.trace("create");
     this.clean(data);
-    data.createdAt = new Date();
+    data.createdAt = new Date().toISOString();
     return this._db
       .post(data)
-      .catch((err: any) => this.logger.error("Post doc:", err.stack));
+      .catch((err: IErr) => this.logger.error("Post doc:", err.stack));
   }
 
-  read(id: string, rev: string = ""): any {
+  async read(id: string, rev: string = ""): Promise<IRes> {
     this.logger.trace("read:", truncate(id));
     return this._db
       .get(id, { rev })
-      .then((doc: any) => doc)
-      .catch((err: any) => this.logger.error("Get doc:", err.stack));
+      .catch((err: IErr) => this.logger.error("Get doc:", err.stack));
   }
 
-  update(id: string, data: any): any {
+  async update(id: string, data: IDoc): Promise<IRes> {
     this.logger.trace("update:", truncate(id));
     this.clean(data);
     return this._db
       .get(id)
-      .then((doc: any) => {
-        data.updatedAt = new Date();
-        const keys: string[] = Object.keys(data);
-        keys
+      .then((doc: IDoc) => {
+        data.updatedAt = new Date().toISOString();
+
+        Object.keys(data)
           .filter((key: string) => !key.startsWith("_"))
           .forEach((key: string) => (doc[key] = data[key]));
+
         return this._db
           .put(doc)
-          .catch((err: any) => this.logger.error("Put doc:", err.stack));
+          .catch((err: IErr) => this.logger.error("Put doc:", err.stack));
       })
-      .catch((err: any) => {
+      .catch((err: IErr) => {
         this.logger.error("Get doc:", err.stack);
         // return this.create(data);
       });
   }
 
-  delete(id: string): any {
+  async delete(id: string): Promise<IRes> {
     this.logger.trace("delete:", truncate(id));
     return this._db
       .get(id)
-      .then((doc: any) =>
+      .then((doc: IDoc) =>
         this._db
           .remove(doc)
-          .catch((err: any) => this.logger.error("Remove doc:", err.stack))
+          .catch((err: IErr) => this.logger.error("Remove doc:", err.stack))
       )
-      .catch((err: any) => this.logger.error("Get doc:", err.stack));
+      .catch((err: IErr) => this.logger.error("Get doc:", err.stack));
   }
 
-  deleteBulk(ids: string[]): any {
-    return this.list().then((docs: any[]) => {
+  async deleteBulk(ids: string[]): Promise<IDoc[]> {
+    return this.list().then((docs: IDoc[]) => {
       docs
-        .filter((doc: any) => ids.includes(doc._id))
-        .forEach((doc: any) => (doc._deleted = true));
+        .filter((doc: IDoc) => ids.includes(doc._id as string))
+        .forEach((doc: IDoc) => (doc._deleted = true));
       return this._db
         .bulkDocs(docs)
-        .catch((err: any) => this.logger.error("Bulk docs:", err.stack));
+        .catch((err: IErr) => this.logger.error("Bulk docs:", err.stack));
     });
   }
 
-  revisions(id: string): any {
+  async revisions(id: string): Promise<IDoc | void> {
     return this._db
       .get(id, { revs: true })
-      .then((doc: any) =>
-        doc._revisions.ids.map(
-          (revId: string, idx: number) =>
-            doc._revisions.start - idx + "-" + revId
-        )
+      .then((doc: IDoc) =>
+        doc._revisions
+          ? doc._revisions.ids.map((revId: string, idx: number) =>
+              doc._revisions ? doc._revisions.start - idx + "-" + revId : ""
+            )
+          : []
       )
-      .catch((err: any) => this.logger.error("Get doc:", err.stack));
+      .catch((err: IErr) => this.logger.error("Get doc:", err.stack));
   }
 
   // Version
 
-  getVersion(): any {
+  async getVersion(): Promise<string> {
     return this._db
       .get("_local/version")
-      .then((doc: any) => doc.version)
-      .catch((err: any) => {
+      .then((doc: IDoc) => doc.version)
+      .catch((err: IErr) => {
         console.log(err);
         this.logger.error("Get version:", err.stack);
       });
   }
 
-  setVersion(): any {
+  async setVersion(): Promise<string> {
     return this._db
       .put({
         _id: "_local/version",
         version: process.env.APP_VERSION,
       })
-      .catch((err: any) => this.logger.error("Set version:", err.stack));
+      .catch((err: IErr) => this.logger.error("Set version:", err.stack));
   }
 
   checkVersion(): void {
@@ -203,7 +237,7 @@ export class DatabaseService extends BaseObj {
           major(dbVersion) === major(appVersion) &&
           minor(dbVersion) === minor(appVersion);
       })
-      .catch((err: any) => {
+      .catch((err: IErr) => {
         this.logger.error("Get version:", err.stack);
         this.setVersion().then(() => this.checkVersion());
       });

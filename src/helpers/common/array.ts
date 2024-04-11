@@ -68,13 +68,15 @@ export function fill(value: number, size: number): number[] {
 
 /**
  * Remove duplicated values in an array.
+ *
+ * https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
  */
 export function onlyUnique(
-  values: number[],
+  value: Object | number | string,
   index: number,
-  value: any
+  array: (Object | number | string)[]
 ): boolean {
-  return value.indexOf(values) === index;
+  return array.indexOf(value) === index;
 }
 
 /**

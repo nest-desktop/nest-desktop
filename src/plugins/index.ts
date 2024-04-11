@@ -16,9 +16,10 @@ import { registerSimulators } from "@/simulators";
 import { loadFonts } from "./webfontloader";
 
 // Plugins
-import configs from "./configs";
-import { vuetify } from "./vuetify";
 import codeMirror from "./codemirror";
+import configs from "./configs";
+import { Vuetify3Dialog } from "vuetify3-dialog";
+import { vuetify } from "./vuetify";
 
 export function registerPlugins(app: App) {
   // Load fonts
@@ -33,11 +34,22 @@ export function registerPlugins(app: App) {
   // Register simulators
   registerSimulators(app);
 
+  // Use router
+  app.use(router);
+
   // Use vuetify
   app.use(vuetify);
 
-  // Use router
-  app.use(router);
+  // Use vuetify 3 dialog
+  app.use(Vuetify3Dialog, {
+    vuetify,
+    defaults: {
+      notify: {
+        location: "top",
+        timeout: 2000,
+      },
+    },
+  });
 
   // Use codemirror
   app.use(codeMirror);

@@ -3,6 +3,7 @@
 import { Selection, Transition, drag, select, transition } from "d3";
 
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
+import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
 import { TConnection } from "@/types/connectionTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { drawPathNode } from "./connectionGraphPath";
@@ -18,7 +19,7 @@ export class ConnectionGraph {
     return this._networkGraph as BaseNetworkGraph;
   }
 
-  get state(): any {
+  get state(): INetworkGraphWorkspaceState {
     return this._networkGraph.workspace.state;
   }
 

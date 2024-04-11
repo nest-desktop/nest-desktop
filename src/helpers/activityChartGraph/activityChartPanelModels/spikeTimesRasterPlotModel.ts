@@ -14,7 +14,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-scatter-plot";
+    this.icon = "mdi:mdi-chart-scatter-plot";
     this.id = "spikeTimesRasterPlot";
     this.panel.height = 30;
     this.panel.xAxis = 1;

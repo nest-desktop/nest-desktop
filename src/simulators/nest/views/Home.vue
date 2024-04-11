@@ -3,12 +3,15 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-card-title>
-            <v-img :src="nestLogo" class="mx-10" />
-          </v-card-title>
-          <v-card-subtitle>
+          <v-img
+            :src="nestLogo"
+            class="mx-10"
+          />
+
+          <v-card-subtitle class="mt-4">
             Simulator for spiking neural network models
           </v-card-subtitle>
+
           <v-card-text>
             <div class="text-justify">
               NEST is a simulator for spiking neural network models that focuses
@@ -22,15 +25,15 @@
               example:
 
               <v-list density="compact">
-                <v-list-item prepend-icon="mdi-numeric-1-circle-outline">
+                <v-list-item prepend-icon="mdi:mdi-numeric-1-circle-outline">
                   Models of information processing e.g. in the visual or
                   auditory cortex of mammals,
                 </v-list-item>
-                <v-list-item prepend-icon="mdi-numeric-2-circle-outline">
+                <v-list-item prepend-icon="mdi:mdi-numeric-2-circle-outline">
                   Models of network activity dynamics, e.g. laminar cortical
                   networks or balanced random networks,
                 </v-list-item>
-                <v-list-item prepend-icon="mdi-numeric-3-circle-outline">
+                <v-list-item prepend-icon="mdi:mdi-numeric-3-circle-outline">
                   Models of learning and plasticity.
                 </v-list-item>
               </v-list>
@@ -38,47 +41,49 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2">
-          <v-card-title>References</v-card-title>
+        <v-card
+          class="mt-2"
+          title="References"
+        >
           <v-card-text>
             <v-list density="compact">
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://nest-initiative.org/"
-                prepend-icon="mdi-home"
+                prepend-icon="mdi:mdi-home"
                 target="_blank"
               >
                 https://nest-initiative.org/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://github.com/nest/nest-simulator/"
-                prepend-icon="mdi-github"
+                prepend-icon="mdi:mdi-github"
                 target="_blank"
               >
                 https://github.com/nest/nest-simulator/
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://nest-simulator.readthedocs.io/"
-                prepend-icon="mdi-book-open"
+                prepend-icon="mdi:mdi-book-open"
                 target="_blank"
               >
                 https://nest-simulator.readthedocs.io/
               </v-list-item>
 
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://twitter.com/NestSimulator"
-                prepend-icon="mdi-twitter"
+                prepend-icon="mdi:mdi-twitter"
                 target="_blank"
               >
                 https://twitter.com/NestSimulator
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://www.ebrains.eu/tools/nest"
-                prepend-icon="mdi-brain"
+                prepend-icon="mdi:mdi-brain"
                 target="_blank"
               >
                 https://www.ebrains.eu/tools/nest
@@ -92,24 +97,46 @@
         <v-expansion-panels>
           <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
-              <v-tabs density="compact" v-model="backendTab">
-                <v-tab value="nest">NEST Simulator</v-tab>
-                <v-tab value="insite">Insite Access</v-tab>
-              </v-tabs>
+              <div class="d-flex flex-row">
+                <v-tabs
+                  v-model="backendTab"
+                  density="compact"
+                  direction="vertical"
+                >
+                  <v-tab
+                    direction="vertical"
+                    value="nest"
+                  >
+                    NEST Simulator
+                  </v-tab>
+                  <v-tab
+                    direction="vertical"
+                    value="insite"
+                  >
+                    Insite Access
+                  </v-tab>
+                </v-tabs>
 
-              <v-window v-model="backendTab">
-                <v-window-item value="nest">
-                  <backend-settings :store="nestSimulatorStore" />
-                </v-window-item>
-                <v-window-item value="insite">
-                  <backend-settings :store="insiteAccessStore" />
-                </v-window-item>
-              </v-window>
+                <v-window
+                  v-model="backendTab"
+                  class="mx-2 w-100"
+                >
+                  <v-window-item value="nest">
+                    <backend-settings :store="nestSimulatorStore" />
+                  </v-window-item>
+                  <v-window-item value="insite">
+                    <backend-settings :store="insiteAccessStore" />
+                  </v-window-item>
+                </v-window>
+              </div>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="nest" />
+        <store-list
+          :stores
+          simulator="nest"
+        />
       </v-col>
     </v-row>
   </v-container>

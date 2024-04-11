@@ -12,7 +12,7 @@ export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
     model: IAnalogSignalPlotModelProps = {}
   ) {
     super(panel, model);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "inputAnalogSignalPlot";
     this.label = "input analog signals";
     this.panel.height = 10;

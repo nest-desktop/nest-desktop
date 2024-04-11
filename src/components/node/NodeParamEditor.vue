@@ -34,7 +34,7 @@
           <v-btn
             color="primary"
             class="menu align-center justify-center my-auto"
-            icon="mdi-dots-vertical"
+            icon="mdi:mdi-dots-vertical"
             size="x-small"
             v-bind="props"
             variant="text"
@@ -82,7 +82,7 @@ const update = (value: number | number[]) => {
 const items = [
   {
     title: "Set default value",
-    icon: "mdi-reload",
+    icon: "mdi:mdi-reload",
     onclick: () => {
       param.value.reset();
       param.value.changes();
@@ -90,7 +90,7 @@ const items = [
   },
   {
     title: "Hide parameter",
-    icon: "mdi-eye-off-outline",
+    icon: "mdi:mdi-eye-off-outline",
     onclick: () => {
       param.value.hide();
       param.value.changes();

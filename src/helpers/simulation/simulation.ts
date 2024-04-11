@@ -1,12 +1,22 @@
 // simulation.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
+import { UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "../common/base";
 import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
 import { TProject } from "@/types/projectTypes";
 import { TSimulationCode } from "@/types/simulationCodeTypes";
-import { openToast } from "../common/toast";
+import { notifyError, notifySuccess } from "@/helpers/common/dialog";
+
+export interface IResponseProps {
+  data: Object | string;
+  config: Object;
+  headers: AxiosHeaders;
+  request: XMLHttpRequest;
+  status: number;
+  statusText: string;
+}
 
 export interface ISimulationProps {
   code?: ISimulationCodeProps;
@@ -147,30 +157,47 @@ export class BaseSimulation extends BaseObj {
    * @remarks
    * It starts the simulation.
    */
-  async start(): Promise<any> {
+  async start(): Promise<AxiosResponse<any, any> | void> {
     this.logger.trace("start");
-    this.resetState();
 
+    this.resetState();
     this.beforeSimulation();
 
     this._state.running = true;
     return this.run()
-      .catch((error: any) => {
-        if ("response" in error && error.response.data != undefined) {
+      .then((response: AxiosResponse<any, any>) => {
+        switch (response.status) {
+          case 0:
+            notifyError("Failed to find Simulator.");
+            break;
+          case 200:
+            notifySuccess("Simulation finished.");
+            break;
+          case 400:
+            if (typeof response.data === "string") {
+              notifyError(response.data);
+            }
+            break;
+          default:
+            break;
+        }
+        return response;
+      })
+      .catch((error: AxiosError<any, any>) => {
+        if ("response" in error && error.response?.data != undefined) {
           // The request made and the server responded.
-          openToast(error.response.data, { type: "error" });
+          if (typeof error.response.data === "string") {
+            notifyError(error.response.data);
+          }
         } else if ("request" in error) {
           // The request was made but no response was received.
-          openToast(
-            "Failed to perform simulation (Simulator backend is not running).",
-            { type: "error" }
+          notifyError(
+            "Failed to perform simulation (Simulator backend is not running)."
           );
         } else if ("message" in error && error.message != undefined) {
           // Something happened in setting up the request
           // that triggered an error.
-          openToast(error.message, { type: "error" });
-        } else {
-          openToast(error, { type: "error" });
+          notifyError(error.message);
         }
       })
       .finally(() => {

@@ -14,7 +14,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bar";
+    this.icon = "mdi:mdi-chart-bar";
     this.id = "CVISIHistogram";
     this.label = "CV of ISI";
     this.panel.xAxis = 3;

@@ -14,7 +14,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "senderCVISIPlot";
     this.label = "CV of ISI in each sender";
     this.panel.xAxis = 4;

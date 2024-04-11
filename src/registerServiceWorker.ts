@@ -21,7 +21,7 @@ export function registerServiceWorker() {
     updatefound() {
       console.log("New content is downloading.");
     },
-    updated(registration) {
+    updated(registration: ServiceWorkerRegistration) {
       console.log("New content is available; please refresh.");
       document.dispatchEvent(
         new CustomEvent("swUpdated", { detail: registration })

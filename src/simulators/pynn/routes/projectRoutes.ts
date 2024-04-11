@@ -16,7 +16,7 @@ const projectBeforeEnter = (to: any) => {
   logger.trace("before enter project route:", to.path);
 
   const projectDBStore = usePyNNProjectDBStore();
-  if (projectDBStore.projects.length === 0) {
+  if (projectDBStore.state.projects.length === 0) {
     nextTick(() => projectBeforeEnter(to));
     return;
   }

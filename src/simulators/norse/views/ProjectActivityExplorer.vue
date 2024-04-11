@@ -1,7 +1,7 @@
 <template>
   <!-- <v-toolbar density="compact">
-    <v-btn icon="mdi-plus"></v-btn>
-    <v-btn icon="mdi-minus"></v-btn>
+    <v-btn icon="mdi:mdi-plus"></v-btn>
+    <v-btn icon="mdi:mdi-minus"></v-btn>
   </v-toolbar> -->
 
   <activity-chart-graph :graph />
@@ -16,5 +16,9 @@ import ActivityChartGraph from "@/components/activity/activityChartGraph/Activit
 import { useNorseProjectStore } from "../stores/project/projectStore";
 const projectStore = useNorseProjectStore();
 
-const graph = computed(() => projectStore.state.project.activityGraph.activityChartGraph as ActivityChartGraphClass);
+const graph = computed(
+  () =>
+    projectStore.state.project.activityGraph
+      .activityChartGraph as ActivityChartGraphClass
+);
 </script>

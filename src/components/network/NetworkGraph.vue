@@ -33,12 +33,12 @@
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { TNetwork, TNetworkProps } from "@/types/networkTypes";
+import { TNetwork, NetworkComponentProps } from "@/types/networkTypes";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
-const props = defineProps({ network: TNetworkProps });
+const props = defineProps({ network: NetworkComponentProps });
 const network = computed(() => props.network as TNetwork);
 const graph = computed(() => {
   return networkGraphStore.state.graph as BaseNetworkGraph;

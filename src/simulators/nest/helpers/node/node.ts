@@ -22,6 +22,7 @@ import {
   NESTNodeSpatial,
 } from "./nodeSpatial/nodeSpatial";
 import { NESTNodes } from "./nodes";
+import { onlyUnique } from "@/helpers/common/array";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -69,12 +70,13 @@ export class NESTNode extends BaseNode {
     );
   }
 
-  get compartmentRecordables(): any[] {
-    return [
+  get compartmentRecordables(): INodeRecordProps[] {
+    const recordables = [
       ...this._compartments.map(
         (comp: NESTNodeCompartment) => comp.recordables
       ),
     ];
+    return recordables.flat();
   }
 
   get compartments(): NESTNodeCompartment[] {
@@ -156,12 +158,13 @@ export class NESTNode extends BaseNode {
     return this._positions;
   }
 
-  get receptorRecordables(): any[] {
-    return [
+  get receptorRecordables(): INodeRecordProps[] {
+    const recordables = [
       ...this._receptors.map(
         (receptor: NESTNodeReceptor) => receptor.recordables
       ),
     ];
+    return recordables.flat();
   }
 
   get receptors(): NESTNodeReceptor[] {
@@ -208,7 +211,7 @@ export class NESTNode extends BaseNode {
    * Add receptor component.
    * @param receptorProps - receptor props
    */
-  addReceptor(receptorProps: any): void {
+  addReceptor(receptorProps: INESTNodeReceptorProps): void {
     this._receptors.push(new NESTNodeReceptor(this, receptorProps));
   }
 
@@ -401,57 +404,70 @@ export class NESTNode extends BaseNode {
    */
   override updateRecords(): void {
     this.logger.trace("update records");
-    let recordables: any[] = [];
+    let recordables: INodeRecordProps[] = [];
+
     // Initialize recordables.
     if (this.connections.length > 0) {
       if (this.model.isMultimeter) {
         const recordablesNodes = this.targetNodes.map((target: NESTNode) => {
-          return target.modelId === "cm_default"
-            ? [
-                ...target.compartmentRecordables,
-                ...target.receptorRecordables,
-              ].flat()
-            : [...target.model.recordables];
+          return (
+            target.modelId === "cm_default"
+              ? [
+                  ...target.compartmentRecordables,
+                  ...target.receptorRecordables,
+                ]
+              : [...target.model.recordables]
+          ).flat();
         });
+
         if (recordablesNodes.length > 0) {
-          const recordablesPooled: any[] = recordablesNodes.flat();
-          recordables = [...new Set(recordablesPooled)];
-          recordables.sort((a: any, b: any) => a.id - b.id);
+          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
+          recordables = recordablesPooled.filter(onlyUnique);
+          recordables.sort((a: { id: any }, b: { id: any }) => a.id - b.id);
         }
       } else if (this.modelId === "voltmeter") {
         recordables.push(
           this.model.config?.localStorage.recordables.find(
-            (record: any) => record.id === "V_m"
+            (recordProps: INodeRecordProps) => recordProps.id === "V_m"
           )
         );
       }
     } else if (this.modelId === "weight_recorder") {
       recordables.push(
         this.model.config?.localStorage.recordables.find(
-          (record: any) => record.id === "weights"
+          (recordProps: INodeRecordProps) => recordProps.id === "weights"
         )
       );
     }
 
     let recordableIds: string[];
-    recordableIds = recordables.map((record: any) => record.id);
+    recordableIds = recordables.map(
+      (recordProps: INodeRecordProps) => recordProps.id
+    );
     this.recordables = [
       ...this.recordables.filter((record: NodeRecord) =>
         recordableIds.includes(record.id)
       ),
     ];
 
-    recordableIds = this.recordables.map((record: any) => record.id);
+    recordableIds = this.recordables.map(
+      (recordProps: INodeRecordProps) => recordProps.id
+    );
     recordables
-      .filter((record: any) => !recordableIds.includes(record.id))
-      .forEach((record: any) => {
-        this.recordables.push(new NodeRecord(this, record));
+      .filter(
+        (recordProps: INodeRecordProps) =>
+          !recordableIds.includes(recordProps.id)
+      )
+      .forEach((recordProps: INodeRecordProps) => {
+        this.recordables.push(new NodeRecord(this, recordProps));
       });
 
     // Initialize selected records.
     if (this.doc.records != null) {
       // Load record from stored nodes.
-      const recordIds = this.doc.records.map((record: any) => record.id);
+      const recordIds = this.doc.records.map(
+        (recordProps: INodeRecordProps) => recordProps.id
+      );
       this.records = [
         ...this.recordables.filter((record: NodeRecord) =>
           recordIds.includes(record.id)
@@ -476,7 +492,7 @@ export class NESTNode extends BaseNode {
   //  * @param receptorOld - node receptor object
   //  * @param receptorNew - receptor object
   //  */
-  // updateReceptor(receptorOld: NodeReceptor, receptorNew: any): void {
+  // updateReceptor(receptorOld: NodeReceptor, receptorNew: INodeReceptorProps): void {
   //   receptorNew.compIdx = receptorOld.compartment.idx;
   //   const receptorIdx = this._receptors.indexOf(receptorOld);
   //   this._receptors[receptorIdx] = new NodeReceptor(this, receptorNew);

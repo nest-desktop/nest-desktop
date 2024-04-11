@@ -2,12 +2,21 @@
 
 import { BaseObj } from "./base";
 
-export class ParameterRandom extends BaseObj {
-  private _defaults: any;
-  private _distribution: string;
-  private _specs: any;
+interface IParameterRandomProps {
+  distribution: string;
+  specs: {
+    [key: string]: number;
+  };
+}
 
-  constructor(random: any) {
+export class ParameterRandom extends BaseObj {
+  private _defaults: { [key: string]: { [key: string]: number } };
+  private _distribution: string;
+  private _specs: {
+    [key: string]: number | string;
+  };
+
+  constructor(randomProps: IParameterRandomProps) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._defaults = {
@@ -16,11 +25,11 @@ export class ParameterRandom extends BaseObj {
       normal: { mean: 0, std: 1 },
       uniform: { min: 0, max: 1 },
     };
-    this._distribution = random.distribution || "uniform";
-    this._specs = random.specs || this._defaults[random.distribution];
+    this._distribution = randomProps.distribution || "uniform";
+    this._specs = randomProps.specs || this._defaults[randomProps.distribution];
   }
 
-  get defaults(): any {
+  get defaults(): { [key: string]: { [key: string]: number } } {
     return this._defaults;
   }
 
@@ -28,7 +37,9 @@ export class ParameterRandom extends BaseObj {
     return this._distribution;
   }
 
-  get specs(): any {
+  get specs(): {
+    [key: string]: number | string;
+  } {
     return this._specs;
   }
 
@@ -36,11 +47,11 @@ export class ParameterRandom extends BaseObj {
    * Serialize for JSON.
    * @return random parameter object
    */
-  toJSON(): any {
-    const specs: any = {};
+  toJSON(): IParameterRandomProps {
+    const specs: { [key: string]: number } = {};
     Object.keys(this._defaults[this._distribution]).map((param: string) => {
       if (param in this._specs) {
-        specs[param] = parseFloat(this._specs[param]);
+        specs[param] = parseFloat(this._specs[param] as string);
       }
     });
     return {

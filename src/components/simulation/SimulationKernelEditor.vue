@@ -26,11 +26,11 @@ import { computed } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
+import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
 
 const props = defineProps({
   color: { default: "primary", type: String },
-  simulation: TSimulationProps,
+  simulation: SimulationComponentProps,
 });
 
 const simulation = computed(() => props.simulation as TSimulation);

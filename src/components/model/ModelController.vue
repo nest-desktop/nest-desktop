@@ -1,5 +1,10 @@
 <template>
-  <v-navigation-drawer location="right" permanent rail rail-width="64">
+  <v-navigation-drawer
+    location="right"
+    permanent
+    rail
+    rail-width="64"
+  >
     <v-tabs
       :model-value="modelStore.controllerView"
       :mandatory="false"
@@ -9,16 +14,20 @@
       width="64"
     >
       <v-tab
+        v-for="(item, index) in items"
         :key="index"
         :ripple="false"
         :value="modelStore.controllerOpen ? item.id : null"
-        @click.stop="modelStore.toggle(item)"
         class="justify-center"
         height="72"
         min-width="0"
-        v-for="(item, index) in items"
+        @click.stop="modelStore.toggle(item)"
       >
-        <v-icon :icon="item.icon" class="ma-1" size="large" />
+        <v-icon
+          :icon="item.icon"
+          class="ma-1"
+          size="large"
+        />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
@@ -58,10 +67,10 @@ const modelStore = computed(() => props.store);
 const items = [
   {
     id: "defaults",
-    icon: "mdi-format-list-numbered-rtl",
+    icon: "mdi:mdi-format-list-numbered-rtl",
     title: "View defaults",
   },
-  { id: "model", icon: "mdi-tune-variant", title: "Edit model" },
-  { id: "code", icon: "mdi-xml" },
+  { id: "model", icon: "mdi:mdi-tune-variant", title: "Edit model" },
+  { id: "code", icon: "mdi:mdi-xml" },
 ];
 </script>

@@ -8,8 +8,9 @@ import { TNode } from "@/types/nodeTypes";
 import { BaseObj } from "../common/base";
 
 export interface INodeViewProps {
-  position: { x: number; y: number };
   color?: string;
+  elementType?: string;
+  position: { x: number; y: number };
   visible?: boolean;
 }
 

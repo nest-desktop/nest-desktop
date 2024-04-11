@@ -1,6 +1,7 @@
 // connectionRule.ts
 
 import { TConnection } from "@/types/connectionTypes";
+import { IConnectionParamProps } from "./connectionParameter";
 
 enum Rule {
   AllToAll = "all_to_all",
@@ -10,6 +11,12 @@ enum Rule {
   OneToOne = "one_to_one",
   PairwiseBernoulli = "pairwise_bernoulli",
   symmetricPairwiseBernoulli = "symmetric_pairwise_bernoulli",
+}
+
+export interface IConnectionRuleConfig {
+  value: string;
+  label: string;
+  params: IConnectionParamProps[];
 }
 
 export class ConnectionRule {

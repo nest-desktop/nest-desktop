@@ -4,6 +4,12 @@ import { Selection } from "d3";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
+interface INetworkGraphGridData {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+}
 export class NetworkGraphGrid {
   private _workspace: NetworkGraphWorkspace;
 
@@ -22,7 +28,7 @@ export class NetworkGraphGrid {
   /**
    * Get data for grid graph.
    */
-  data(): Array<any> {
+  data(): INetworkGraphGridData[] {
     const data = new Array();
     const offset = 10;
     const cellHeight = 25;
@@ -68,10 +74,10 @@ export class NetworkGraphGrid {
       .attr("stroke", "rgba(128,128,128,0.12)")
       .style("pointer-events", "none")
       .merge(gridLines)
-      .attr("x1", (d: any) => d.x1)
-      .attr("x2", (d: any) => d.x2)
-      .attr("y1", (d: any) => d.y1)
-      .attr("y2", (d: any) => d.y2)
+      .attr("x1", (d: INetworkGraphGridData) => d.x1)
+      .attr("x2", (d: INetworkGraphGridData) => d.x2)
+      .attr("y1", (d: INetworkGraphGridData) => d.y1)
+      .attr("y2", (d: INetworkGraphGridData) => d.y2)
       .style("opacity", this._workspace.state.showGrid ? 1 : 0);
 
     gridLines.exit().remove();

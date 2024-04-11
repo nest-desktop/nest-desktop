@@ -8,8 +8,31 @@ import { ActivityAnimationScene } from "./activityAnimationScene";
 import { BaseProject } from "../project/project";
 import { TProject } from "@/types/projectTypes";
 
+interface IActivityAnimationGraphConfig {
+  frames: {
+    rate: number;
+    sampleRate: number;
+    speed: number;
+    windowSize: number;
+  };
+  grid: {
+    divisions: number;
+  };
+}
+
+interface IActivityAnimationGraphState {
+  frameIdx: number;
+  nSamples: number;
+}
+
+export interface IPosition {
+  x: number;
+  y: number;
+  z: number;
+}
+
 export class ActivityAnimationGraph {
-  private _config: any = {
+  private _config: IActivityAnimationGraphConfig = {
     frames: {
       rate: 24,
       sampleRate: 1,
@@ -24,7 +47,7 @@ export class ActivityAnimationGraph {
   private _layers: ActivityAnimationLayer[] = [];
   private _project: TProject;
   private _scene?: ActivityAnimationScene;
-  private _state: any = {
+  private _state: IActivityAnimationGraphState = {
     frameIdx: 0,
     nSamples: 0,
   };
@@ -33,11 +56,11 @@ export class ActivityAnimationGraph {
     this._project = project;
   }
 
-  get config(): any {
+  get config(): IActivityAnimationGraphConfig {
     return this._config;
   }
 
-  get layers(): any[] {
+  get layers(): ActivityAnimationLayer[] {
     return this._layers;
   }
 
@@ -49,7 +72,7 @@ export class ActivityAnimationGraph {
     return this._scene;
   }
 
-  get state(): any {
+  get state(): IActivityAnimationGraphState {
     return this._state;
   }
 
@@ -93,7 +116,7 @@ export class ActivityAnimationGraph {
   /**
    * Add layer groups to the parent group.
    */
-  addLayersToGroup(group: Group): void {
+  addLayersToGroup(group: Group<any>): void {
     this._layers.forEach((layer: ActivityAnimationLayer) => {
       if (layer.graphGroup) {
         group.add(layer.graphGroup);
@@ -113,7 +136,13 @@ export class ActivityAnimationGraph {
    * Update frame index.
    */
   updateFrameIdx(): void {
-    const frames: any = this._config.frames;
+    const frames: {
+      rate: number;
+      sampleRate: number;
+      speed: number;
+      windowSize: number;
+    } = this._config.frames;
+
     if (this._state.nSamples === 0 || Number.isNaN(this.state.frameIdx)) {
       this.state.frameIdx = 0;
     } else {

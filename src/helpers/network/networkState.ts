@@ -15,27 +15,30 @@ interface INetworkState {
 export class NetworkState {
   private _icons = {
     all: {
-      off: "mdi-checkbox-blank-outline",
-      on: "mdi-checkbox-marked-outline",
-      tab: "mdi-all-inclusive",
+      off: "mdi:mdi-checkbox-blank-outline",
+      on: "mdi:mdi-checkbox-marked-outline",
+      tab: "mdi:mdi-all-inclusive",
     },
     model: { tab: "$copyModel" },
     neuron: {
-      off: "mdi-alpha-n-box-outline",
-      on: "mdi-alpha-n-box",
-      tab: "mdi-shape-outline",
+      off: "mdi:mdi-alpha-n-box-outline",
+      on: "mdi:mdi-alpha-n-box",
+      tab: "mdi:mdi-shape-outline",
     },
     recorder: {
-      off: "mdi-alpha-r-box-outline",
-      on: "mdi-alpha-r-box",
+      off: "mdi:mdi-alpha-r-box-outline",
+      on: "mdi:mdi-alpha-r-box",
       tab: "$recorder",
     },
     stimulator: {
-      off: "mdi-alpha-s-box-outline",
-      on: "mdi-alpha-s-box",
+      off: "mdi:mdi-alpha-s-box-outline",
+      on: "mdi:mdi-alpha-s-box",
       tab: "$stimulator",
     },
-    synapse: { off: "mdi-alpha-s-circle-outline", on: "mdi-alpha-s-circle" },
+    synapse: {
+      off: "mdi:mdi-alpha-s-circle-outline",
+      on: "mdi:mdi-alpha-s-circle",
+    },
   };
   private _network: TNetwork; // parent
   private _state: UnwrapRef<INetworkState>;

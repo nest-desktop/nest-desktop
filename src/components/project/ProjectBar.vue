@@ -1,20 +1,24 @@
 <template>
-  <v-app-bar class="d-print-none" height="48" flat>
+  <v-app-bar
+    class="d-print-none"
+    height="48"
+    flat
+  >
     <v-tabs stacked>
-      <slot name="prependTabs"></slot>
+      <slot name="prependTabs" />
 
       <v-tab
+        v-for="(tab, index) in tabItems"
         :key="index"
         :to="tab.to"
         :title="tab.title"
         size="small"
-        v-for="(tab, index) in tabItems"
       >
         <v-icon :icon="tab.icon" />
         <span class="text-no-wrap">{{ tab.label }}</span>
       </v-tab>
 
-      <slot name="appendTabs"></slot>
+      <slot name="appendTabs" />
     </v-tabs>
 
     <v-spacer />
@@ -28,10 +32,10 @@
     <NetworkHistory :project="projectStore.project as TProject" />
 
     <SimulationButton
-      class="mx-2"
-      :projectStore
-      :simulation="projectStore.project.simulation as TSimulation"
       v-if="projectStore.project"
+      class="mx-2"
+      :project-store
+      :simulation="projectStore.project.simulation as TSimulation"
     />
   </v-app-bar>
 </template>
@@ -65,7 +69,7 @@ const tabItems = [
     },
   },
   {
-    icon: "mdi-border-style",
+    icon: "mdi:mdi-border-style",
     id: "activityExplorer",
     label: "Explorer",
     title: "Activity explorer",
@@ -76,7 +80,7 @@ const tabItems = [
     menu: true,
   },
   {
-    icon: "mdi-book-open-outline",
+    icon: "mdi:mdi-book-open-outline",
     id: "labBook",
     label: "Lab book",
     title: "Lab book",

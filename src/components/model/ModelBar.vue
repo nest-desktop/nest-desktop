@@ -30,18 +30,18 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TModel, TModelProps } from "@/types/modelTypes";
+import { ModelComponentProps, TModel } from "@/types/modelTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps({ model: TModelProps });
+const props = defineProps({ model: ModelComponentProps });
 
 const model = computed(() => props.model as TModel);
 
 const tabItems = computed(() => [
   {
-    icon: "mdi-chart-scatter-plot",
+    icon: "mdi:mdi-chart-scatter-plot",
     id: "modelExplorer",
     label: "Explore",
     title: "Explore activity",
@@ -51,7 +51,7 @@ const tabItems = computed(() => [
     },
   },
   {
-    icon: "mdi-pencil",
+    icon: "mdi:mdi-pencil",
     id: "modelEditor",
     label: "Edit",
     title: "Edit activity",

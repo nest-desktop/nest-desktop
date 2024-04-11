@@ -24,7 +24,7 @@
               <template #activator="{ props }">
                 <v-btn
                   color="primary"
-                  icon="mdi-order-bool-ascending-variant"
+                  icon="mdi:mdi-order-bool-ascending-variant"
                   size="small"
                   v-bind="props"
                   variant="text"
@@ -100,7 +100,7 @@
             <template #append>
               <v-btn
                 @click.stop="selectModel(props, true)"
-                icon="mdi-order-bool-ascending-variant"
+                icon="mdi:mdi-order-bool-ascending-variant"
                 size="small"
                 variant="text"
               />
@@ -140,7 +140,7 @@
                 <v-btn
                   color="primary"
                   class="d-print-none menu align-center justify-center my-auto"
-                  icon="mdi-dots-vertical"
+                  icon="mdi:mdi-dots-vertical"
                   size="x-small"
                   v-bind="props"
                   variant="text"
@@ -222,30 +222,30 @@ const state = reactive({
 const admins = [
   {
     title: "Management",
-    icon: "mdi-account-multiple-outline",
+    icon: "mdi:mdi-account-multiple-outline",
     value: "management",
   },
-  { title: "Settings", icon: "mdi-cog-outline", value: "settings" },
+  { title: "Settings", icon: "mdi:mdi-cog-outline", value: "settings" },
 ];
 
 const cruds = [
-  { title: "Create", icon: "mdi-plus-outline", value: "create" },
-  { title: "Read", icon: "mdi-file-outline", value: "read" },
-  { title: "Update", icon: "mdi-update", value: "update" },
-  { title: "Delete", icon: "mdi-delete", value: "delete" },
+  { title: "Create", icon: "mdi:mdi-plus-outline", value: "create" },
+  { title: "Read", icon: "mdi:mdi-file-outline", value: "read" },
+  { title: "Update", icon: "mdi:mdi-update", value: "update" },
+  { title: "Delete", icon: "mdi:mdi-delete", value: "delete" },
 ];
 
 const items = [
   {
     value: "parameter",
     title: "parameter",
-    icon: "mdi-account-circle",
+    icon: "mdi:mdi-account-circle",
     items: admins,
   },
   {
     value: "actions",
     title: "actions",
-    icon: "mdi-database-cog-outline",
+    icon: "mdi:mdi-database-cog-outline",
     items: cruds,
   },
 ];

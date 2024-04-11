@@ -4,7 +4,10 @@
       <v-col md="6">
         <v-card>
           <v-card-title>
-            <v-img :src="norseLogo" class="mx-10" />
+            <v-img
+              :src="norseLogo"
+              class="mx-10"
+            />
           </v-card-title>
           <v-card-subtitle>
             Deep learning with spiking neural networks in PyTorch
@@ -24,17 +27,17 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://norse.github.io/norse"
-                prepend-icon="mdi-github"
+                prepend-icon="mdi:mdi-github"
                 target="_blank"
               >
                 https://github.com/norse
               </v-list-item>
               <v-list-item
-                append-icon="mdi-open-in-new"
+                append-icon="mdi:mdi-open-in-new"
                 href="https://norse.github.io/norse"
-                prepend-icon="mdi-book-open"
+                prepend-icon="mdi:mdi-book-open"
                 target="_blank"
               >
                 https://norse.github.io/norse
@@ -53,7 +56,10 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="norse" />
+        <store-list
+          :stores
+          simulator="norse"
+        />
       </v-col>
     </v-row>
   </v-container>

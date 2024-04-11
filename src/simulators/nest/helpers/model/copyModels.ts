@@ -16,8 +16,7 @@ export class NESTCopyModels extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._network = network;
-
-    this.init(copyModelsProps);
+    this.update(copyModelsProps);
   }
 
   get all(): NESTCopyModel[] {
@@ -29,14 +28,14 @@ export class NESTCopyModels extends BaseObj {
   }
 
   /**
-   * Check if the network has any node models.
+   * Check if the network has some node models.
    */
   get hasNodeModels(): boolean {
     return this._models.some((model: NESTCopyModel) => !model.model.isSynapse);
   }
 
   /**
-   * Check if the network has any synapse models.
+   * Check if the network has some synapse models.
    */
   get hasSynapseModels(): boolean {
     return this._models.some((model: NESTCopyModel) => model.model.isSynapse);
@@ -50,6 +49,10 @@ export class NESTCopyModels extends BaseObj {
     return this._models.filter(
       (model: NESTCopyModel) => model.hasWeightRecorderParam
     );
+  }
+
+  get network(): NESTNetwork {
+    return this._network;
   }
 
   get nodeModels(): NESTCopyModel[] {
@@ -72,7 +75,7 @@ export class NESTCopyModels extends BaseObj {
    */
   add(modelProps: INESTCopyModelProps): NESTCopyModel {
     this.logger.trace("Add model");
-    const model = new NESTCopyModel(this._network, modelProps);
+    const model = new NESTCopyModel(this, modelProps);
     this._models.push(model);
     return model;
   }
@@ -129,7 +132,7 @@ export class NESTCopyModels extends BaseObj {
   getModelById(modelId: string): NESTCopyModel {
     return (
       this._models.find((model: NESTCopyModel) => model.id === modelId) ||
-      new NESTCopyModel(this._network, {
+      new NESTCopyModel(this, {
         existing: modelId,
         new: modelId + "_copied" + (this._models.length + 1),
         params: [],
@@ -138,11 +141,11 @@ export class NESTCopyModels extends BaseObj {
   }
 
   /**
-   * Initialize
+   * Initialize copy models.
    */
-  init(modelsProps: INESTCopyModelProps[] = []): void {
-    this.clear();
-    this.update(modelsProps);
+  init(): void {
+    this.clean();
+    this.updateHash();
   }
 
   /**
@@ -173,8 +176,6 @@ export class NESTCopyModels extends BaseObj {
     modelsProps.forEach((modelProps: INESTCopyModelProps) =>
       this.add(modelProps)
     );
-    this.clean();
-    this.updateHash();
   }
 
   /**

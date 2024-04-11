@@ -2,15 +2,25 @@
 
 import { ISimulatorProps } from "..";
 
-import nestRoute from "./routes";
 import nestIconSet from "./components/iconSet";
+import nestRoute from "./routes";
 
 import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
 import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
+import { nestCompletions } from "./codemirror/nestCompletion";
+import { nestRandomCompletions } from "./codemirror/nestRandomCompletion";
+import { nestSpatialCompletions } from "./codemirror/nestSpatialCompletion";
+import { nestSpatialDistributionsCompletions } from "./codemirror/nestSpatialDistributionsCompletion";
 
 export const nest: ISimulatorProps = {
+  autocomplete: [
+    nestCompletions,
+    nestRandomCompletions,
+    nestSpatialCompletions,
+    nestSpatialDistributionsCompletions,
+  ],
   backends: {},
   configNames: [
     "NESTConnection",
@@ -41,10 +51,9 @@ export const nest: ISimulatorProps = {
         ] = nestSimulatorStore.state.accessToken;
       }
     };
-    nestSimulatorStore.init();
+
     // Init backend Insite Access.
     const insiteAccessStore = useInsiteAccessStore();
-    insiteAccessStore.init();
 
     nest.backends = {
       insite: insiteAccessStore,
@@ -55,5 +64,7 @@ export const nest: ISimulatorProps = {
   route: nestRoute,
   theme: {
     nest: "ff6633",
+    "nest-model": "ff6633",
+    "nest-project": "1281b3",
   },
 };

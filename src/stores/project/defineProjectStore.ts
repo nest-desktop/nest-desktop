@@ -38,11 +38,11 @@ export function defineProjectStore(
       code: "print('hello world!')",
       controllerItems: [
         { id: "network", icon: "nest:network", title: "Edit network" },
-        { id: "kernel", icon: "mdi-engine-outline", title: "Edit kernel" },
-        { id: "raw", icon: "mdi-code-json" },
-        { id: "code", icon: "mdi-xml" },
-        { id: "activity", icon: "mdi-border-style" },
-        { id: "stats", icon: "mdi-table-large" },
+        { id: "kernel", icon: "mdi:mdi-engine-outline", title: "Edit kernel" },
+        { id: "raw", icon: "mdi:mdi-code-json" },
+        { id: "code", icon: "mdi:mdi-xml" },
+        { id: "activity", icon: "mdi:mdi-border-style" },
+        { id: "stats", icon: "mdi:mdi-table-large" },
       ],
       controllerOpen: false,
       controllerView: "",
@@ -56,8 +56,8 @@ export function defineProjectStore(
 
     const init = () => {
       logger.trace("init");
-      if (projectDBStore.projects.length > 0) {
-        const firstProject = projectDBStore.projects[0];
+      if (projectDBStore.state.projects.length > 0) {
+        const firstProject = projectDBStore.state.projects[0];
         state.projectId = firstProject.id;
         state.project = projectDBStore.getProject(firstProject.id);
       }

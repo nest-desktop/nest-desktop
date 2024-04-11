@@ -1,5 +1,8 @@
 <template>
-  <v-avatar class="stimulator" rounded="0">
+  <v-avatar
+    class="stimulator"
+    rounded="0"
+  >
     <span class="label">
       {{ props.label }}
     </span>

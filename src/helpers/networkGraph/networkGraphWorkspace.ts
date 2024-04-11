@@ -12,6 +12,18 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
 
+export interface INetworkGraphWorkspaceState {
+  centerNetwork: boolean;
+  centerSelected: boolean;
+  connected: boolean;
+  cursorPosition: { x: number; y: number };
+  dragLine: boolean;
+  dragging: boolean;
+  keyCode: number;
+  showGrid: boolean;
+  transforming: boolean;
+}
+
 export class NetworkGraphWorkspace extends BaseObj {
   private _dragline: NetworkGraphDragline;
   private _grid: NetworkGraphGrid;
@@ -19,18 +31,18 @@ export class NetworkGraphWorkspace extends BaseObj {
   private _networkGraph: TNetworkGraph;
   private _nodeAddPanel: NetworkGraphNodeAddPanel;
   private _selector: Selection<any, any, any, any>;
-  private _size: any = {
-    width: 800,
+  private _size: { height: number; width: number } = {
     height: 600,
+    width: 800,
   };
-  private _state: any = {
+  private _state: INetworkGraphWorkspaceState = {
     centerNetwork: false,
     centerSelected: false,
     connected: false,
     cursorPosition: { x: 0, y: 0 },
     dragLine: false,
     dragging: false,
-    keyCode: undefined,
+    keyCode: -1,
     showGrid: false,
     transforming: false,
   };
@@ -81,7 +93,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._selector;
   }
 
-  get state(): any {
+  get state(): INetworkGraphWorkspaceState {
     return this._state;
   }
 
@@ -89,7 +101,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._handler;
   }
 
-  get size(): any {
+  get size(): { height: number; width: number } {
     return this._size;
   }
 
@@ -135,15 +147,15 @@ export class NetworkGraphWorkspace extends BaseObj {
     this.initTransform();
 
     select("body")
-      .on("keyup", (event: any) => {
-        this._state.keyCode = null;
+      .on("keyup", (event: { keyCode: number }) => {
+        this._state.keyCode = -1;
         if (event.keyCode === 27) {
           // Reset workspace when user pressed escape.
           this.reset();
           this.update();
         }
       })
-      .on("keydown", (event: any) => {
+      .on("keydown", (event: { keyCode: number }) => {
         this._state.keyCode = event.keyCode;
       });
 
@@ -237,7 +249,9 @@ export class NetworkGraphWorkspace extends BaseObj {
   /**
    * Update cursor position.
    */
-  updateCursorPosition(position: any = { x: 0, y: 0 }): void {
+  updateCursorPosition(
+    position: { x: number; y: number } = { x: 0, y: 0 }
+  ): void {
     this._state.cursorPosition.x = position.x;
     this._state.cursorPosition.y = position.y;
   }
@@ -269,11 +283,13 @@ export class NetworkGraphWorkspace extends BaseObj {
 
     const nodes = this.network.nodes;
     if (this._state.centerSelected && nodes.state.selectedNode) {
-      const nodePosition: any = nodes.state.selectedNode.view.state.position;
+      const nodePosition: { x: number; y: number } =
+        nodes.state.selectedNode.view.state.position;
       x = nodePosition.x;
       y = nodePosition.y;
     } else if (this._state.centerNetwork && nodes.all.length > 0) {
-      const networkCenterPos: any = this.centerNetworkPos();
+      const networkCenterPos: { x: number; y: number } =
+        this.centerNetworkPos();
       x = networkCenterPos.x;
       y = networkCenterPos.y;
     }

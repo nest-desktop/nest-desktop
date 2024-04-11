@@ -12,7 +12,7 @@ export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
     modelProps: IAnalogSignalPlotModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "neuronAnalogSignalPlot";
     this.label = "neuron analog signals";
     this.panel.height = 20;

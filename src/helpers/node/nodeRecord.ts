@@ -13,10 +13,17 @@ export interface INodeRecordProps {
   unit?: string;
 }
 
+interface IColorMap {
+  min: number;
+  max: number;
+  reverse: boolean;
+  scale: string;
+}
+
 export class NodeRecord extends BaseObj {
   // private _activity: Activity;
   private _color: string = "blue";
-  private _colorMap = {
+  private _colorMap: IColorMap = {
     max: -55,
     min: -70,
     reverse: false,
@@ -55,7 +62,7 @@ export class NodeRecord extends BaseObj {
     this._color = value;
   }
 
-  get colorMap(): any {
+  get colorMap(): IColorMap {
     return this._colorMap;
   }
 

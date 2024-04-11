@@ -1,6 +1,6 @@
 // connectionParameter.ts
 
-import { IParamProps, Parameter } from "@/helpers/common/parameter";
+import { IParamProps, IParamType, Parameter } from "@/helpers/common/parameter";
 
 import { NESTConnection } from "./connection";
 
@@ -36,10 +36,10 @@ export class NESTConnectionParameter extends Parameter {
     return this._connection.isBothSpatial;
   }
 
-  get types(): any[] {
-    const types: any[] = this.config?.localStorage.types;
+  get types(): IParamType[] {
+    const types: IParamType[] = this.config?.localStorage.types;
     return !this.isSpatial
-      ? types.filter((type: any) => !type.id.startsWith("spatial"))
+      ? types.filter((type: IParamType) => !type.id.startsWith("spatial"))
       : types;
   }
 

@@ -3,7 +3,7 @@
     <template #activator="{ props }">
       <v-btn
         color="primary"
-        icon="mdi-dots-vertical"
+        icon="mdi:mdi-dots-vertical"
         size="small"
         v-bind="props"
         variant="text"
@@ -23,7 +23,7 @@
         <v-list density="compact">
           <v-list-item v-if="!node.model.isRecorder">
             <template #prepend>
-              <v-icon icon="mdi-contrast" />
+              <v-icon icon="mdi:mdi-contrast" />
             </template>
 
             <v-list-item-title>Set all synaptic weights</v-list-item-title>
@@ -37,13 +37,13 @@
                 :model-value="node.view.state.synWeights"
                 @update:model-value="updateSynWeights"
                 class="pl-2"
-                color="blue"
+                color="nest-project"
                 density="compact"
-                false-icon="mdi-minus-circle"
+                false-icon="mdi:mdi-minus-circle"
                 false-value="inhibitory"
                 hide-details
                 inset
-                true-icon="mdi-plus-circle"
+                true-icon="mdi:mdi-plus-circle"
                 true-value="excitatory"
               />
             </template>
@@ -62,7 +62,7 @@
 
             <template #append>
               <template v-if="item.append">
-                <v-icon icon="mdi-menu-right" size="small" />
+                <v-icon icon="mdi:mdi-menu-right" size="small" />
               </template>
 
               <!-- <template v-if="item.input === 'checkbox'">
@@ -90,14 +90,14 @@
           <v-list dense>
             <v-list-item @click="exportEvents('json')">
               <template #prepend>
-                <v-icon icon="mdi-code-json" />
+                <v-icon icon="mdi:mdi-code-json" />
               </template>
               <v-list-item-title>Export events to JSON file</v-list-item-title>
             </v-list-item>
 
             <v-list-item @click="exportEvents('csv')">
               <template #prepend>
-                <v-icon icon="mdi-file-delimited-outline" />
+                <v-icon icon="mdi:mdi-file-delimited-outline" />
               </template>
               <v-list-item-title>Export events to CSV file</v-list-item-title>
             </v-list-item>
@@ -107,7 +107,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prepend-icon="mdi:mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -134,7 +134,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prepend-icon="mdi:mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -153,7 +153,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prepend-icon="mdi:mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -179,7 +179,7 @@
         <v-card-actions>
           <v-btn
             @click="backMenu"
-            prepend-icon="mdi-menu-left"
+            prepend-icon="mdi:mdi-menu-left"
             size="small"
             variant="text"
           >
@@ -214,7 +214,7 @@ const state = reactive({
 
 const items = [
   // {
-  //   icon: "mdi-pencil",
+  //   icon: "mdi:mdi-pencil",
   //   id: "paramEdit",
   //   onClick: () => {
   //     state.content = "nodeParamEdit";
@@ -225,7 +225,7 @@ const items = [
   //   title: "Edit parameters",
   // },
   {
-    icon: "mdi-restart",
+    icon: "mdi:mdi-restart",
     id: "resetParams",
     onClick: () => {
       node.value.resetParams();
@@ -236,7 +236,7 @@ const items = [
     title: "Reset all parameters",
   },
   {
-    icon: "mdi-axis-arrow",
+    icon: "mdi:mdi-axis-arrow",
     id: "nodeSpatial",
     input: "switch",
     onClick: () => {
@@ -247,7 +247,7 @@ const items = [
     value: "spatialNode",
   },
   {
-    icon: "mdi-format-color-fill",
+    icon: "mdi:mdi-format-color-fill",
     id: "nodeColor",
     onClick: () => {
       state.content = "nodeColor";
@@ -258,7 +258,7 @@ const items = [
     title: "Colorize node",
   },
   {
-    icon: "mdi-information-outline",
+    icon: "mdi:mdi-information-outline",
     id: "modelDoc",
     onClick: () => {
       state.dialog = true;
@@ -267,7 +267,7 @@ const items = [
     title: "Model documentation",
   },
   {
-    icon: "mdi-content-copy",
+    icon: "mdi:mdi-content-copy",
     id: "nodeClone",
     onClick: () => {
       const newNode: any = JSON.parse(JSON.stringify(node.value.toJSON()));
@@ -291,7 +291,7 @@ const items = [
   //   title: "Set synaptic weights",
   // },
   {
-    icon: "mdi-download",
+    icon: "mdi:mdi-download",
     id: "eventsExport",
     onClick: () => {
       state.content = "eventsExport";
@@ -304,7 +304,7 @@ const items = [
     append: true,
   },
   {
-    icon: "mdi-trash-can-outline",
+    icon: "mdi:mdi-trash-can-outline",
     id: "nodeDelete",
     onClick: () => {
       state.content = "nodeDelete";

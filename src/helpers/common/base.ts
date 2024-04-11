@@ -61,7 +61,7 @@ export class BaseObj {
   /**
    * Update hash.
    */
-  _updateHash(object: any): void {
+  _updateHash(object: Object): void {
     this._logger.trace("update hash");
     this._hash = truncate(sha1(object));
     this.updateLoggerName("#" + this.hash);

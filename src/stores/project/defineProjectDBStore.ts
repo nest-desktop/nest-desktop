@@ -2,19 +2,20 @@
 
 import { defineStore } from "pinia";
 
-import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { BaseProject } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { TProject } from "@/types/projectTypes";
+import { TProject, TProjectProps } from "@/types/projectTypes";
 import { TProjectDB } from "@/types/projectDBTypes";
 import { download } from "@/helpers/common/download";
 import { getRuntimeConfig } from "@/utils/fetch";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
+import { reactive } from "vue";
 
-type Class<T> = new (...args: any) => T;
+type Class<T> = new (...props: any) => T;
 
 export function defineProjectDBStore(
-  args: {
+  props: {
     Project: Class<TProject>;
     ProjectDB: Class<TProjectDB>;
     loggerMinLevel?: number;
@@ -27,246 +28,330 @@ export function defineProjectDBStore(
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    minLevel: args.loggerMinLevel || 3,
-    name: args.simulator + " project DB store",
+    minLevel: props.loggerMinLevel || 3,
+    name: props.simulator + " project DB store",
   });
 
-  const db = new args.ProjectDB();
+  const db = new props.ProjectDB();
+  const Project = props.Project;
 
-  return defineStore(args.simulator + "-project-db", {
-    state: () => ({
+  // @ts-ignore
+  type TProject = props.Project;
+
+  return defineStore(props.simulator + "-project-db", () => {
+    const state = reactive({
       tryImports: 3,
       initialized: true,
       numLoaded: 0,
-      projects: [] as (IProjectProps | TProject | any)[], // TODO: any should be removed.
+      projects: [] as (TProject | TProjectProps)[],
       searchTerm: "",
-    }),
-    getters: {
-      db: () => db,
-      filteredProjects(): (IProjectProps | TProject)[] {
-        if (this.searchTerm === "" || this.searchTerm == null) {
-          return this.projects;
-        } else {
-          return this.projects.filter((project: IProjectProps | TProject) => {
-            if (project.name) {
-              return (
-                project.name
-                  .toLowerCase()
-                  .indexOf(this.searchTerm.toLowerCase()) !== -1
-              );
-            }
-          });
-        }
-      },
-      projectIds(): (string | undefined)[] {
-        return this.projects.map(
-          (project: TProject | IProjectProps) => project.id
-        );
-      },
-    },
-    actions: {
-      /**
-       * Add this new project to the list.
-       *
-       * @remarks
-       * It pushes new project to the first line of the list.
-       */
-      addProject(projectProps?: IProjectProps): TProject {
-        logger.trace("add project:", truncate(projectProps?.id || ""));
-        const project = this.newProject(projectProps);
-        this.projects.unshift(project);
-        return project;
-      },
-      /**
-       * Delete project in database and then update the list.
-       */
-      deleteProject(project: TProject): void {
-        logger.trace("delete project:", truncate(project.id));
-        db.deleteProject(project).then(() => {
-          this.removeFromList(project.id);
-        });
-      },
-      /**
-       * Delete projects and then update the list.
-       */
-      deleteProjects(projects: (TProject | IProjectProps)[]): void {
-        if (projects.length === 0) return;
-        logger.trace("delete projects");
-        db.deleteProjects(projects).then(() => this.updateList());
-      },
-      /**
-       * Export project from the list.
-       */
-      exportProject(projectId: string, withActivities: boolean = false): void {
-        logger.trace("export project:", truncate(projectId));
-        const project = this.findProject(projectId) as TProject;
-        const projectData: any = project.toJSON();
-        if (withActivities) {
-          projectData.activities = project.activities.toJSON();
-        }
-        download(JSON.stringify(projectData), "project");
-      },
-      /**
-       * Find project from the list.
-       */
-      findProject(projectId: string): TProject | IProjectProps {
-        logger.trace("find project:", truncate(projectId));
-        return this.projects.find(
-          (project: TProject | IProjectProps) => project.id === projectId
-        );
-      },
-      /**
-       * Get project from the list.
-       */
-      getProject(projectId: string = ""): TProject {
-        logger.trace("get project:", truncate(projectId));
-        let project;
-        if (!projectId || !this.hasProjectId(projectId)) {
-          project = this.addProject();
-        } else {
-          project = this.findProject(projectId);
+    });
 
-          if (!this.isProjectLoaded(project)) {
-            this.loadProject(projectId);
-            project = this.findProject(projectId) as TProject;
-          }
-        }
-        return project as TProject;
-      },
-      hasProjectId(projectId: string): boolean {
-        return this.projectIds.includes(projectId);
-      },
-      /**
-       * Import projects the update list.
-       */
-      importProjects(projects: IProjectProps[]): void {
-        logger.trace("import projects");
-        db.createProjects(projects).then(() => this.updateList());
-      },
-      /**
-       * Import multiple projects from assets and add them to the database.
-       */
-      async importProjectsFromAssets(): Promise<IProjectProps[]> {
-        logger.trace("import projects from assets");
-        let promises: Promise<IProjectProps>[] = [];
-        if (args.projectAssets) {
-          promises = args.projectAssets.map(async (file: string) => {
-            return getRuntimeConfig(
-              `assets/simulators/${args.simulator}/projects/${file}.json`
-            ).then((data) => db.create(data));
-          });
-        }
-        return Promise.all(promises);
-      },
-      /**
-       * Initialize projects DB.
-       */
-      async init(): Promise<void> {
-        logger.trace("init project db store");
-        return db.count().then(async (count: number) => {
-          logger.debug("projects in DB:", count);
-          if (count === 0 && this.tryImports > 0) {
-            this.tryImports -= 1;
-            this.importProjectsFromAssets().then(() => this.init());
-          } else {
-            return this.updateList();
+    /**
+     * Add this new project to the list.
+     * @param projectProps project props
+     *
+     * @remarks
+     * It pushes new project to the first line of the list.
+     */
+    const addProject = (projectProps?: TProjectProps): TProject => {
+      logger.trace("add project:", truncate(projectProps?.id || ""));
+      const project = newProject(projectProps);
+      state.projects.unshift(project);
+      return project;
+    };
+
+    /**
+     * Delete project in database and then update the list.
+     * @param project project object
+     */
+    const deleteProject = (project: TProject): void => {
+      logger.trace("delete project:", truncate(project.id));
+      db.deleteProject(project).then(() => {
+        removeFromList(project.id);
+      });
+    };
+
+    /**
+     * Delete projects and then update the list.
+     * @param projects project objects or props
+     */
+    const deleteProjects = (projects: (TProject | TProjectProps)[]): void => {
+      if (projects.length === 0) return;
+      logger.trace("delete projects");
+      db.deleteProjects(projects).then(() => updateList());
+    };
+
+    /**
+     * Export project from the list.
+     * @param projectId project ID
+     */
+    const exportProject = (
+      projectId: string,
+      withActivities: boolean = false
+    ): void => {
+      logger.trace("export project:", truncate(projectId));
+      const project = findProject(projectId) as TProject;
+      const projectData: any = project.toJSON();
+      if (withActivities) {
+        projectData.activities = project.activities.toJSON();
+      }
+      download(JSON.stringify(projectData), "project");
+    };
+
+    /**
+     * Find project from the list.
+     * @param projectId project ID
+     */
+    const findProject = (
+      projectId: string
+    ): TProject | TProjectProps | undefined => {
+      logger.trace("find project:", truncate(projectId));
+      return state.projects.find(
+        (project: TProject | TProjectProps) => project.id === projectId
+      );
+    };
+
+    /**
+     * Get filtered projects.
+     * @returns project list.
+     */
+    const filteredProjects = (): (TProject | TProjectProps)[] => {
+      if (state.searchTerm === "" || state.searchTerm == null) {
+        return state.projects;
+      } else {
+        return state.projects.filter((project: TProject | TProjectProps) => {
+          if (project.name) {
+            return (
+              project.name
+                .toLowerCase()
+                .indexOf(state.searchTerm.toLowerCase()) !== -1
+            );
           }
         });
-      },
-      isProjectLoaded(project: TProject | IProjectProps) {
-        return project instanceof BaseProject;
-      },
-      /**
-       * Load a project in the list.
-       */
-      loadProject(projectId: string): TProject | undefined {
-        logger.trace("load project:", truncate(projectId));
+      }
+    };
 
-        let project = this.findProject(projectId);
-        if (project == undefined) {
+    /**
+     * Get project from the list.
+     * @param projectId project ID
+     * @returns project object
+     */
+    const getProject = (projectId: string = ""): TProject => {
+      logger.trace("get project:", truncate(projectId));
+      let project: TProject | TProjectProps | undefined;
+
+      if (!projectId || !hasProjectId(projectId)) {
+        project = addProject();
+      } else {
+        project = findProject(projectId);
+
+        if (project && !isProjectLoaded(project)) {
+          loadProject(projectId);
+          project = findProject(projectId) as TProject;
+        }
+      }
+      return project;
+    };
+
+    const getProjectIds = (): (string | undefined)[] =>
+      state.projects.map((project: TProject | TProjectProps) => project.id);
+
+    /**
+     * Check if the store has project.
+     * @param projectId project ID
+     * @returns boolean
+     */
+    const hasProjectId = (projectId: string): boolean =>
+      getProjectIds().includes(projectId);
+
+    /**
+     * Import projects the update list.
+     * @param projectProps project props
+     */
+    const importProjects = (projectsProps: TProjectProps[]): void => {
+      logger.trace("import projects");
+      db.createProjects(projectsProps).then(() => updateList());
+    };
+
+    /**
+     * Import multiple projects from assets and add them to the database.
+     */
+    const importProjectsFromAssets = async (): Promise<TProjectProps[]> => {
+      logger.trace("import projects from assets");
+      let promises: Promise<TProjectProps>[] = [];
+      if (props.projectAssets) {
+        promises = props.projectAssets.map(async (file: string) => {
+          return getRuntimeConfig(
+            `assets/simulators/${props.simulator}/projects/${file}.json`
+          ).then((data) => db.create(data));
+        });
+      }
+      return Promise.all(promises);
+    };
+
+    /**
+     * Initialize projects DB.
+     */
+    const init = (): void => {
+      logger.trace("init project db store");
+      db.count().then(async (count: number) => {
+        logger.debug("projects in DB:", count);
+        if (count === 0 && state.tryImports > 0) {
+          state.tryImports -= 1;
+          importProjectsFromAssets().then(() => init());
+        } else {
+          return updateList();
+        }
+      });
+    };
+
+    const isProjectLoaded = (project: TProject | TProjectProps): boolean => {
+      return project instanceof BaseProject;
+    };
+
+    /**
+     * Load a project in the list.
+     * @param projectId project ID
+     * @returns
+     */
+    const loadProject = (projectId: string): TProject | undefined => {
+      logger.trace("load project:", truncate(projectId));
+
+      let project = findProject(projectId);
+      if (project == undefined) {
+        return;
+      }
+
+      if (!project.docId) {
+        const projectIds = state.projects.map(
+          (project: TProject | TProjectProps) => project.id
+        );
+        const projectIdx = projectIds.indexOf(projectId);
+
+        if (projectIdx === -1) {
           return;
         }
 
-        // @ts-ignore
-        if (!project.docId) {
-          const projectIds = this.projects.map(
-            (project: IProjectProps | TProject) => project.id
-          );
-          const projectIdx = projectIds.indexOf(projectId);
+        project = new Project(project);
+        state.projects[projectIdx] = project;
+        state.numLoaded += 1;
+      }
 
-          if (projectIdx === -1) {
-            return;
-          }
+      return project;
+    };
 
-          project = new args.Project(project);
-          this.projects[projectIdx] = project;
-          this.numLoaded += 1;
-        }
+    /**
+     * Create new project.
+     * @param projectsProps project props
+     * @returns project object
+     */
+    const newProject = (projectsProps?: TProjectProps): TProject =>
+      new Project(projectsProps);
 
-        // @ts-ignore
-        return project;
-      },
-      newProject(projsProps?: IProjectProps): TProject {
-        return new args.Project(projsProps);
-      },
-      /**
-       * Reload the project in the list.
-       */
-      reloadProject(projectId: string): void {
-        logger.trace("reload project:", truncate(projectId));
+    /**
+     * Reload the project in the list.
+     * @param projectId project ID
+     */
+    const reloadProject = (projectId: string): void => {
+      logger.trace("reload project:", truncate(projectId));
 
-        this.unloadProject(projectId);
-        this.loadProject(projectId);
-      },
-      /**
-       * Remove project from the list.
-       */
-      removeFromList(projectId: string): void {
-        logger.trace("remove project from the list:", truncate(projectId));
+      unloadProject(projectId);
+      loadProject(projectId);
+    };
 
-        const idx: number = this.projects
-          .map((project: IProjectProps | TProject) => project.id)
-          .indexOf(projectId);
+    /**
+     * Remove project from the list.
+     * @param projectId project ID
+     */
+    const removeFromList = (projectId: string): void => {
+      logger.trace("remove project from the list:", truncate(projectId));
 
-        if (idx !== -1) {
-          // Remove project from the project list.
-          this.projects.splice(idx, 1);
-        }
-      },
-      /*
-       * Save project from the list.
-       */
-      async saveProject(projectId: string): Promise<void> {
-        logger.trace("save project:", truncate(projectId));
+      const idx: number = state.projects
+        .map((project: TProject | TProjectProps) => project.id)
+        .indexOf(projectId);
 
-        const project = this.findProject(projectId) as TProject;
-        return db.importProject(project);
-      },
-      /**
-       * Unload the project in the list.
-       */
-      unloadProject(projectId: string): void {
-        logger.trace("Unload project:", projectId);
+      if (idx !== -1) {
+        // Remove project from the project list.
+        state.projects.splice(idx, 1);
+      }
+    };
 
-        const project = this.findProject(projectId) as TProject;
-        if (this.isProjectLoaded(project) && project != undefined) {
-          const projectIdx: number = this.projectIds.indexOf(projectId);
-          this.projects[projectIdx] = project.doc;
-          this.numLoaded -= 1;
-        }
-      },
-      /**
-       * Update project list from the database.
-       */
-      async updateList(): Promise<void> {
-        logger.trace("update list");
+    /**
+     * Save project from the list.
+     * @param projectId project ID
+     */
+    const saveProject = (projectId: string): void => {
+      logger.trace("save project:", truncate(projectId));
 
-        this.projects = [];
-        return db.list("", true).then((projects: IProjectProps[]) => {
-          this.projects = projects;
-          this.initialized = true;
-        });
-      },
-    },
+      const project = findProject(projectId) as TProject;
+      db.importProject(project);
+    };
+
+    /**
+     * Unload the project in the list.
+     * @param projectId project ID
+     */
+    const unloadProject = (projectId: string): void => {
+      logger.trace("Unload project:", projectId);
+
+      const project = findProject(projectId) as TProject;
+      if (isProjectLoaded(project) && project != undefined) {
+        const projectIdx: number = getProjectIds().indexOf(projectId);
+        state.projects[projectIdx] = project.doc;
+        state.numLoaded -= 1;
+      }
+    };
+
+    /**
+     * Update project list from the database.
+     */
+    const updateList = async (): Promise<void> => {
+      logger.trace("update list");
+
+      state.projects = [];
+      return db.list("", true).then((projectsProps: TProjectProps[]) => {
+        state.projects = projectsProps as TProjectProps[];
+        state.initialized = true;
+      });
+    };
+
+    /**
+     * Validate project props.
+     * @param projectProps project props
+     */
+    const validateProject = (projectProps: TProjectProps): boolean => {
+      try {
+        new Project(projectProps);
+        return true;
+      } catch (e) {
+        logger.error(e);
+        return false;
+      }
+    };
+
+    return {
+      addProject,
+      deleteProject,
+      deleteProjects,
+      exportProject,
+      filteredProjects,
+      findProject,
+      getProject,
+      getProjectIds,
+      importProjects,
+      importProjectsFromAssets,
+      init,
+      isProjectLoaded,
+      loadProject,
+      newProject,
+      reloadProject,
+      removeFromList,
+      saveProject,
+      state,
+      unloadProject,
+      updateList,
+      validateProject,
+    };
   });
 }

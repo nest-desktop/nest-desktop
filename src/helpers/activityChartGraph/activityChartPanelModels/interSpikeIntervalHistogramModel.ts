@@ -15,7 +15,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bar";
+    this.icon = "mdi:mdi-chart-bar";
     this.id = "interSpikeIntervalHistogram";
     this.label = "inter-spike interval";
     this.panel.xAxis = 2;

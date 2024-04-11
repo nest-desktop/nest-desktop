@@ -1,10 +1,13 @@
 // nodeTypes.ts
 
-import { BaseNode } from "@/helpers/node/node";
-import { NESTNode } from "@/simulators/nest/helpers/node/node";
-import { NorseNode } from "@/simulators/norse/helpers/node/node";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { INESTNodeProps, NESTNode } from "@/simulators/nest/helpers/node/node";
+import {
+  INorseNodeProps,
+  NorseNode,
+} from "@/simulators/norse/helpers/node/node";
 
 export type TNode = BaseNode | NESTNode | NorseNode;
+export type TNodeProps = INodeProps | INESTNodeProps | INorseNodeProps;
 
-// for components
-export const TNodeProps = [BaseNode, NESTNode, NorseNode];
+export const NodeComponentProps = [BaseNode, NESTNode, NorseNode];

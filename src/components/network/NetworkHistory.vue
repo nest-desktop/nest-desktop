@@ -3,7 +3,7 @@
     <!-- <v-btn
       :disabled="countBefore <= 0"
       @click="project.networkRevision.oldest()"
-      icon="mdi-page-first"
+      icon="mdi:mdi-page-first"
       title="load oldest network"
     /> -->
 
@@ -44,7 +44,7 @@
     <!-- <v-btn
       :disabled="countAfter <= 0"
       @click="project.networkRevision.newest()"
-      icon="mdi-page-last"
+      icon="mdi:mdi-page-last"
       title="load newest network"
     /> -->
   </v-btn-group>
@@ -53,9 +53,9 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TProject, TProjectProps } from "@/types/projectTypes";
+import { ProjectComponentProps, TProject } from "@/types/projectTypes";
 
-const props = defineProps({ project: TProjectProps });
+const props = defineProps({ project: ProjectComponentProps });
 const project = computed(() => props.project as TProject);
 
 /**

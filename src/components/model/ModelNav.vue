@@ -14,14 +14,14 @@
         density="compact"
         hide-details
         placeholder="Search model"
-        prepend-inner-icon="mdi-magnify"
+        prepend-inner-icon="mdi:mdi-magnify"
         v-model="search"
         variant="outlined"
       />
 
       <v-menu>
         <template #activator="{ props }">
-          <v-btn icon="mdi-dots-vertical" size="small" v-bind="props" />
+          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
         </template>
 
         <v-list density="compact">
@@ -54,7 +54,7 @@
           <v-btn
             @click.stop="(e: MouseEvent) => e.preventDefault()"
             class="list-item-menu"
-            icon="mdi-dots-vertical"
+            icon="mdi:mdi-dots-vertical"
             size="x-small"
             variant="text"
           />
@@ -88,10 +88,10 @@ const models = computed(() =>
 );
 
 const menuItems = [
-  { title: "Upload", icon: "mdi-upload" },
-  { title: "Download", icon: "mdi-download" },
-  { title: "Reload", icon: "mdi-reload" },
-  { title: "Delete", icon: "mdi-trash-can-outline" },
+  { title: "Upload", icon: "mdi:mdi-upload" },
+  { title: "Download", icon: "mdi:mdi-download" },
+  { title: "Reload", icon: "mdi:mdi-reload" },
+  { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
 ];
 
 /**

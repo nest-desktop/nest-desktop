@@ -1,10 +1,19 @@
 // networkTypes.ts
 
-import { BaseNetwork } from "@/helpers/network/network";
-import { NESTNetwork } from "@/simulators/nest/helpers/network/network";
-import { NorseNetwork } from "@/simulators/norse/helpers/network/network";
+import { BaseNetwork, INetworkProps } from "@/helpers/network/network";
+import {
+  INESTNetworkProps,
+  NESTNetwork,
+} from "@/simulators/nest/helpers/network/network";
+import {
+  INorseNetworkProps,
+  NorseNetwork,
+} from "@/simulators/norse/helpers/network/network";
 
 export type TNetwork = BaseNetwork | NESTNetwork | NorseNetwork;
+export type TNetworkProps =
+  | INetworkProps
+  | INESTNetworkProps
+  | INorseNetworkProps;
 
-// for components
-export const TNetworkProps = [BaseNetwork, NESTNetwork, NorseNetwork];
+export const NetworkComponentProps = [BaseNetwork, NESTNetwork, NorseNetwork];

@@ -28,7 +28,10 @@
         <template #append>
           <v-btn @click="store.ping()" variant="outlined">
             <template #append>
-              <v-icon icon="mdi-circle" :color="store.isOK ? 'green' : 'red'" />
+              <v-icon
+                icon="mdi:mdi-circle"
+                :color="store.isOK ? 'green' : 'red'"
+              />
             </template>
             ping
           </v-btn>

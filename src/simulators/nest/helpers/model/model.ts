@@ -1,17 +1,24 @@
 // model.ts
 
+import { v4 as uuidv4 } from "uuid";
+
 import { BaseModel, IModelProps } from "@/helpers/model/model";
+import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import {
   INESTModelCompartmentParamProps,
   NESTModelCompartmentParameter,
 } from "./modelCompartmentParameter";
-import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import {
+  INESTModelReceptorProps,
+  NESTModelReceptor,
+} from "./modelReceptor/modelReceptor";
+import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
 export interface INESTModelProps extends IModelProps {
-  compartmentParams?: any[];
-  receptors?: any[];
+  compartmentParams?: IParamProps[];
+  receptors?: INESTModelReceptorProps[];
 }
 
 export class NESTModel extends BaseModel {
@@ -20,7 +27,7 @@ export class NESTModel extends BaseModel {
   private _compartmentParamsVisible: string[] = [];
   private _receptors: { [key: string]: NESTModelReceptor } = {}; // receptor parameters
 
-  constructor(modelProps: IModelProps = {}) {
+  constructor(modelProps: INESTModelProps) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
   }
 
@@ -88,7 +95,7 @@ export class NESTModel extends BaseModel {
   /**
    * Get parameter defaults of a model from NEST Simulator.
    */
-  // async fetchDefaults(): Promise<any> {
+  // async fetchDefaults(): Promise<AxiosResponse<any,any>> {
   //   return this._app.backends.nestSimulator.instance.post("api/GetDefaults", {
   //     model: this._id,
   //   });
@@ -121,7 +128,7 @@ export class NESTModel extends BaseModel {
     // Add the recordables if provided.
     if (this.recordables.length > 0) {
       modelProps.recordables = this.recordables.map(
-        (recordable: any) => recordable.id
+        (recordable: INodeRecordProps) => recordable.id
       );
     }
 
@@ -146,63 +153,68 @@ export class NESTModel extends BaseModel {
    * Update  a parameter.
    * @param model model object
    */
-  override update(model: any): void {
-    this.logger.trace("update", model.id);
+  override update(modelProps: INESTModelProps): void {
+    this.logger.trace("update", modelProps.id);
 
     // Update the model ID.
-    this.id = model.id;
+    this.id = modelProps.id || uuidv4();
 
     // Update the model recordables.
-    if (model.recordables) {
-      this.updateRecordables(model);
+    if (modelProps.recordables) {
+      this.updateRecordables(modelProps);
     }
 
     // Update the model parameters.
-    if (model.params) {
-      this.updateParameters(model.params);
+    if (modelProps.params) {
+      this.updateParameters(modelProps.params);
     }
 
     // Update the model compartment parameters.
-    if (model.compartmentParams) {
-      this.updateCompartmentParameters(model);
+    if (modelProps.compartmentParams) {
+      this.updateCompartmentParameters(modelProps.compartmentParams);
     }
 
     // Update the model receptors.
-    if (model.receptors) {
-      this.updateReceptors(model);
+    if (modelProps.receptors) {
+      this.updateReceptors(modelProps.receptors);
     }
   }
 
   /**
    * Update model compartment parameters.
-   * @param model model object
+   * @param compartmentParamsProps compartmental model props
    */
-  updateCompartmentParameters(compartmentParams: any): void {
+  updateCompartmentParameters(compartmentParamsProps: IParamProps[]): void {
     this._compartmentParams = {};
-    Object.values(compartmentParams).forEach((param: any) => {
-      this.addCompartmentParameter(param);
+    Object.values(compartmentParamsProps).forEach((paramProps: IParamProps) => {
+      this.addCompartmentParameter(paramProps);
     });
   }
 
   /**
    * Update the compartment parameter.
-   * @param param parameter object
+   * @param paramProps parameter props
    */
-  updateCompartmentParameter(param: any): void {
-    this._compartmentParams[param.id] = new NESTModelCompartmentParameter(
+  updateCompartmentParameter(paramProps: IParamProps): void {
+    this._compartmentParams[paramProps.id] = new NESTModelCompartmentParameter(
       this,
-      param
+      paramProps
     );
   }
 
   /**
    * Update the model receptors.
-   * @param model model object
+   * @param receptorsProps model props
    */
-  updateReceptors(receptors: any[]): void {
+  updateReceptors(receptorsProps: INESTModelReceptorProps[]): void {
     this._receptors = {};
-    Object.values(receptors).forEach((receptor: any) => {
-      this._receptors[receptor.id] = new NESTModelReceptor(this, receptor);
-    });
+    Object.values(receptorsProps).forEach(
+      (receptorProps: INESTModelReceptorProps) => {
+        this._receptors[receptorProps.id] = new NESTModelReceptor(
+          this,
+          receptorProps
+        );
+      }
+    );
   }
 }

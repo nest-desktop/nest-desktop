@@ -1,9 +1,12 @@
 // synapseTypes.ts
 
-import { BaseSynapse } from "@/helpers/synapse/synapse";
-import { NESTSynapse } from "@/simulators/nest/helpers/synapse/synapse";
+import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
+import {
+  INESTSynapseProps,
+  NESTSynapse,
+} from "@/simulators/nest/helpers/synapse/synapse";
 
 export type TSynapse = BaseSynapse | NESTSynapse;
+export type TSynapseProps = ISynapseProps | INESTSynapseProps;
 
-// for components
-export const TSynapseProps = [BaseSynapse, NESTSynapse];
+export const SynapseComponentProps = [BaseSynapse, NESTSynapse];

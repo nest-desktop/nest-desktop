@@ -8,10 +8,16 @@ export const useAppSessionStore = defineStore(
   () => {
     const state = reactive({
       devMode: false,
+      logsOpen: false,
+      requestLogs: [] as { date: string; text: string; type: string }[],
       loading: false,
       webGL: true,
     });
-    return { state };
+
+    const clearLogs = () => {
+      state.requestLogs = [];
+    };
+    return { clearLogs, state };
   },
   {
     persist: {

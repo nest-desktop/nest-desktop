@@ -3,11 +3,11 @@
     <v-card-title>Color picker</v-card-title>
     <v-card-text>
       <v-select
+        v-model="state.colorScheme"
         :items="colorSchemes"
         density="compact"
         label="Select a color scheme"
         persistent-hint
-        v-model="state.colorScheme"
         variant="outlined"
       />
       <color-picker :color-scheme="state.colorScheme" />

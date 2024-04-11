@@ -13,7 +13,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     modelProps: ISpikeTimesPanelModelProps = {}
   ) {
     super(panel, modelProps);
-    this.icon = "mdi-chart-bell-curve-cumulative";
+    this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "FICurvePlot";
     this.label = "F-I curve";
     this.panel.height = 30;

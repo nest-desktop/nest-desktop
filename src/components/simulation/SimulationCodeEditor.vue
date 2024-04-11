@@ -11,36 +11,51 @@
       </icon-btn>
     </v-btn-toggle>
     <v-spacer />
-    <v-btn icon="mdi-download" size="small" />
-    <v-btn icon="mdi-dots-vertical" size="small" />
+    <v-btn icon="mdi:mdi-download" size="small" />
+    <v-btn icon="mdi:mdi-dots-vertical" size="small" />
   </v-toolbar>
 
+  <v-btn
+    :icon="state.disabled ? 'mdi:mdi-pencil-off' : 'mdi:mdi-pencil'"
+    @click="state.disabled = !state.disabled"
+    class="ma-2"
+    size="small"
+    style="position: absolute; right: 10px; z-index: 10"
+    title="Edit mode"
+    variant="outlined"
+  />
+
   <Simulation-code-mirror
+    :disabled="state.disabled"
     :simulation="(simulation as TSimulation)"
     v-if="simulation"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
-import { TSimulation, TSimulationProps } from "@/types/simulationTypes";
+import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
 
 import SimulationCodeMirror from "./SimulationCodeMirror.vue";
 
 const props = defineProps({
-  simulation: TSimulationProps,
+  simulation: SimulationComponentProps,
+});
+
+const state = reactive({
+  disabled: true,
 });
 
 const simulation = computed(() => props.simulation as TSimulation);
 
 const codeBlocks = [
-  { icon: "mdi-delete-empty", title: "reset" },
-  // { icon: "mdi-arrow-down", title: "insite" },
-  // { icon: "mdi-engine-outline", title: "kernel" },
-  { icon: "mdi-shape", title: "create" },
+  { icon: "mdi:mdi-delete-empty", title: "reset" },
+  // { icon: "mdi:mdi-arrow-down", title: "insite" },
+  // { icon: "mdi:mdi-engine-outline", title: "kernel" },
+  { icon: "mdi:mdi-shape", title: "create" },
   { icon: "network:network", title: "connect" },
-  { icon: "mdi-play", title: "simulate" },
+  { icon: "mdi:mdi-play", title: "simulate" },
 ];
 </script>

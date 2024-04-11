@@ -36,3 +36,7 @@ export function openToast(
     }
   }
 }
+
+export function openError(message: string) {
+  openToast(message, { type: "error" });
+}

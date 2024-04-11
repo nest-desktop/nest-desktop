@@ -33,9 +33,9 @@
 import { computed } from "vue";
 
 import ConnectionAvatar from "./ConnectionAvatar.vue";
-import { TConnection, TConnectionProps } from "@/types/connectionTypes";
+import { ConnectionComponentProps, TConnection } from "@/types/connectionTypes";
 
-const props = defineProps({ connection: TConnectionProps });
+const props = defineProps({ connection: ConnectionComponentProps });
 
 const connection = computed(() => props.connection as TConnection);
 </script>

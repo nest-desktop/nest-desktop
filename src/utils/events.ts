@@ -12,14 +12,14 @@ export function throttle(callback: object, interval: number = 300) {
     enableCall = false;
     // @ts-ignore
     timer = setTimeout(() => callback.apply(this, args), delay);
-    setTimeout(() => enableCall = true, interval);
+    setTimeout(() => (enableCall = true), interval);
   };
 }
 
 export function debounce(callback: object, interval: number = 100) {
   let debounceTimeoutId: any;
 
-  return function(...args: any) {
+  return function (...args: any) {
     clearTimeout(debounceTimeoutId);
     // @ts-ignore
     debounceTimeoutId = setTimeout(() => callback.apply(this, args), interval);

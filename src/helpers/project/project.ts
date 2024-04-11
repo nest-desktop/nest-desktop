@@ -4,12 +4,14 @@ import { nextTick } from "vue";
 
 import { Activities } from "../activity/activities";
 import { Activity } from "../activity/activity";
-import { ActivityGraph } from "../activity/activityGraph";
+import { ActivityGraph, IActivityGraphProps } from "../activity/activityGraph";
 import { BaseNetwork, INetworkProps } from "../network/network";
 import { BaseObj } from "../common/base";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
+import { IDoc } from "../common/database";
 import { NetworkRevision } from "../network/networkRevision";
 import { ProjectState } from "./projectState";
+import { Store } from "pinia";
 import { TNetwork } from "@/types/networkTypes";
 import { TProject } from "@/types/projectTypes";
 import { TSimulation } from "@/types/simulationTypes";
@@ -17,16 +19,12 @@ import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
-export interface IProjectProps {
-  activityGraph?: any;
-  createdAt?: string;
+export interface IProjectProps extends IDoc {
+  activityGraph?: IActivityGraphProps;
   description?: string;
-  id?: string;
   name?: string;
   network?: INetworkProps;
   simulation?: ISimulationProps;
-  updatedAt?: string;
-  version?: string;
 }
 
 export class BaseProject extends BaseObj {
@@ -36,7 +34,7 @@ export class BaseProject extends BaseObj {
   private _description: string; // description about the project
   private _doc: any; // raw data of the database
   private _id: string; // id of the project
-  private _modelDBStore: any;
+  private _modelDBStore: Store<any, any>;
   private _name: string; // project name
   private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
@@ -56,7 +54,6 @@ export class BaseProject extends BaseObj {
     // Project metadata.
     this._name = projectProps.name || "undefined project";
     this._description = projectProps.description || "";
-    this._activityGraph = projectProps.activityGraph;
 
     // Initialize database.
     this.initModelStore();
@@ -118,7 +115,7 @@ export class BaseProject extends BaseObj {
   }
 
   get docId(): string | undefined {
-    return this._doc ? this._doc._id : undefined;
+    return this._doc?._id;
   }
 
   get id(): string {
@@ -261,7 +258,7 @@ export class BaseProject extends BaseObj {
   clone(): TProject {
     this.logger.trace("clone");
 
-    return new BaseProject({ ...this.toJSON(), id: undefined, updatedAt: "" });
+    return new BaseProject({ ...this.toJSON(), id: "", updatedAt: "" });
   }
 
   // /**

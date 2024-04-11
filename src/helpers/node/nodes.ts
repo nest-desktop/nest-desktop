@@ -8,7 +8,7 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 
 const _nodeTypes: { icon: string; id: string; title: string }[] = [
-  { icon: "mdi-all-inclusive", id: "all", title: "all" },
+  { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
   { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
   { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
   { icon: "network:recorder", id: "recorder", title: "recorder" },
@@ -49,7 +49,7 @@ export class BaseNodes extends BaseObj {
     return this._nodes;
   }
 
-  get annotations(): any {
+  get annotations(): { [key: string]: string }[] {
     return this._state.annotations;
   }
 

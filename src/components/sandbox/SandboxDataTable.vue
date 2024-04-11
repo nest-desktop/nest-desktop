@@ -4,7 +4,7 @@
     :items="desserts"
     item-value="name"
     class="elevation-1 playground-data-table"
-  ></v-data-table>
+  />
 </template>
 
 <script lang="ts" setup>

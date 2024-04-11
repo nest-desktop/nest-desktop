@@ -5,6 +5,7 @@ import { BaseNodes } from "../node/nodes";
 import { BaseObj } from "@/helpers/common/base";
 import { IConnectionProps } from "../connection/connection";
 import { INodeProps } from "../node/node";
+import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
 import { TConnection } from "@/types/connectionTypes";
 import { TConnections } from "@/types/connectionsTypes";
@@ -60,7 +61,8 @@ export class BaseNetwork extends BaseObj {
   }
 
   set colors(value: string[]) {
-    const color: any = this.config?.localStorage.color;
+    const color: { cycle: string[]; scheme: string } =
+      this.config?.localStorage.color;
     color.cycle = value;
     this.config?.localStorage.update({ color });
   }
@@ -69,7 +71,7 @@ export class BaseNetwork extends BaseObj {
     return this._connections;
   }
 
-  set defaultModels(value: any) {
+  set defaultModels(value: { [key: string]: string }) {
     this._defaultModels = value;
   }
 
@@ -162,11 +164,11 @@ export class BaseNetwork extends BaseObj {
   /**
    * Create node component by user interaction.
    */
-  createNode(model?: string, view?: any): void {
+  createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
 
     this.nodes?.add({
-      model: model || this._defaultModels[view.elementType],
+      model: model || this._defaultModels[view?.elementType || "neuron"],
       view,
     });
 

@@ -5,7 +5,7 @@ import { h } from "vue";
 import type { IconProps } from "vuetify";
 import norseIcon from "./NorseIcon.vue";
 
-const norseSvgNameToComponent: any = {
+const norseSvgNameToComponent: { [key: string]: Object } = {
   logo: norseIcon,
 };
 

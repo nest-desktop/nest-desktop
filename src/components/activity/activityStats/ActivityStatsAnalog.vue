@@ -1,6 +1,6 @@
 <template>
   <v-data-table-virtual
-    :headers="(headers as any)"
+    :headers
     :items="state.items"
     :key="state.activityHash"
     :loading="state.loading"
@@ -90,14 +90,12 @@ const state = reactive({
   activityHash: "",
   items: [] as { [key: string]: number | string }[],
   loading: false,
-  // @ts-ignore
   selectedRecord: "",
 });
 
 const headers = [
   {
     title: "ID",
-    align: "start",
     key: "id",
   },
   { title: "Mean", key: "mean" },
@@ -137,8 +135,8 @@ const update = () => {
   }
 
   if (activity.value && state.selectedRecord) {
-    const activityData: any[] = activity.value.events[state.selectedRecord];
-    const data: any[] = Object.create(null);
+    const activityData: number[] = activity.value.events[state.selectedRecord];
+    const data: number[][] = Object.create(null);
     activity.value.nodeIds.forEach((id) => (data[id] = []));
     activity.value.events.senders.forEach((sender: number, idx: number) => {
       data[sender].push(activityData[idx]);

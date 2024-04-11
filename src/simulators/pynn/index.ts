@@ -2,14 +2,15 @@
 
 import { ISimulatorProps } from "..";
 
-import pynnRoute from "./routes";
 import pynnIconSet from "./components/iconSet";
+import pynnRoute from "./routes";
 
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
 import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
 import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
 
 export const pynn: ISimulatorProps = {
+  autocomplete: [],
   backends: {},
   configNames: ["PyNNModel"],
   databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],
@@ -34,6 +35,6 @@ export const pynn: ISimulatorProps = {
   theme: {
     "pynn-accent": "#e6007e",
     "pynn-logo": "#000080",
-    pynn: "0F9959",
+    pynn: "#0F9959",
   },
 };

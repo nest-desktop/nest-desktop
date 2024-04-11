@@ -1,47 +1,54 @@
 <template>
-  <v-list class="list" density="compact" v-model:opened="state.listOpen">
+  <v-list
+    v-model:opened="state.listOpen"
+    class="list"
+    density="compact"
+  >
     <v-list-item
-      @click="state.listOpen = []"
-      prepend-icon="mdi-chevron-left"
       v-if="state.listOpen.length > 0"
+      prepend-icon="mdi:mdi-chevron-left"
+      @click="state.listOpen = []"
     >
       {{ state.listOpen[0] }}
     </v-list-item>
 
-    <div :key="index" v-for="(item, index) in items">
+    <div
+      v-for="(item, index) in items"
+      :key="index"
+    >
       <v-list-group
+        v-if="'items' in item"
         :value="item.value"
         class="no-expand-transition"
-        collapse-icon="mdi-chevron-left"
-        expand-icon="mdi-chevron-right"
-        v-if="'items' in item"
+        collapse-icon="mdi:mdi-chevron-left"
+        expand-icon="mdi:mdi-chevron-right"
       >
         <template #activator="{ props }">
           <v-list-item
+            v-show="state.listOpen.length == 0"
             :prepend-icon="item.icon"
             :title="item.title"
             v-bind="props"
-            v-show="state.listOpen.length == 0"
           />
         </template>
 
         <v-list-item
+          v-for="(subitem, i) in item.items"
           :key="'sub' + i"
           :prepend-icon="subitem.icon"
           :title="subitem.title"
           :value="subitem.value"
           class="sublist"
           style="padding-inline-start: 16px !important"
-          v-for="(subitem, i) in item.items"
         />
       </v-list-group>
 
       <div v-else>
         <v-list-item
+          v-if="state.listOpen.length == 0"
           :prepend-icon="item.icon"
           :title="item.title"
           :value="item.value"
-          v-if="state.listOpen.length == 0"
         />
       </div>
     </div>

@@ -5,7 +5,7 @@ import { h } from "vue";
 import type { IconProps } from "vuetify";
 import pynnIcon from "./PyNNIcon.vue";
 
-const pynnSvgNameToComponent: any = {
+const pynnSvgNameToComponent: { [key: string]: Object } = {
   logo: pynnIcon,
 };
 

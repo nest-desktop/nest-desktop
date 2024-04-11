@@ -115,7 +115,7 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Remove connection component from the network.
-   *
+   * @param connection connection object
    */
   remove(connection: TConnection): void {
     this.logger.trace("remove");

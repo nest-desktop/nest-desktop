@@ -1,30 +1,35 @@
 // model.ts
 
-import { reactive, UnwrapRef } from "vue";
+// import { Store } from "pinia";
+import { UnwrapRef, reactive } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { BaseObj } from "../common/base";
-import { IModelParamProps, ModelParameter } from "./modelParameter";
 import { IConfigProps } from "../common/config";
+import { IDoc } from "../common/database";
+import { IModelParamProps, ModelParameter } from "./modelParameter";
+import { INodeRecordProps } from "../node/nodeRecord";
+import { IParamProps } from "../common/parameter";
 // import { useModelDBStore } from "@/stores/model/modelDBStore";
 
-export interface IModelProps {
-  doc?: any;
+export interface IModelProps extends IDoc {
   abbreviation?: string;
   elementType?: string;
   favorite?: boolean;
-  id?: string;
   label?: string;
   params?: IModelParamProps[];
-  recordables?: any[];
-  version?: string;
+  recordables?: string[];
+}
+
+interface IModelState {
+  selected: boolean;
 }
 
 export class BaseModel extends BaseObj {
   private readonly _name = "Model";
 
   private _abbreviation: string;
-  private _doc: any; // doc data of the database
+  private _doc: IModelProps; // doc data of the database
   private _elementType: string; // element type of the model
   private _favorite: boolean = false;
   private _id: string; // model id
@@ -32,11 +37,10 @@ export class BaseModel extends BaseObj {
   private _label: string; // model label for view
   private _params: { [key: string]: ModelParameter } = {}; // model parameters
   private _paramsVisible: string[] = [];
-  private _recordables: any[] = []; // recordables for multimeter
-  private _state: UnwrapRef<any>;
-  // private _modelDBStore;
+  private _recordables: INodeRecordProps[] = []; // recordables for multimeter
+  private _state: UnwrapRef<IModelState>;
 
-  constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
+  constructor(modelProps: IModelProps, configProps?: IConfigProps) {
     super({
       config: { name: "Model", ...configProps },
       logger: { settings: { minLevel: 3 } },
@@ -45,8 +49,7 @@ export class BaseModel extends BaseObj {
     this._doc = modelProps;
     this._id = modelProps.id || uuidv4();
 
-    // this._modelDBStore = useModelDBStore();
-    // this._idx = this._modelDBStore.models.length;
+    // this._idx = this._modelDBStore.state.models.length;
 
     this._elementType = modelProps.elementType || "neuron";
 
@@ -65,12 +68,12 @@ export class BaseModel extends BaseObj {
     return this._abbreviation;
   }
 
-  get doc(): any {
+  get doc(): IModelProps {
     return this._doc;
   }
 
-  get docId(): string {
-    return this._doc ? this._doc._id : undefined;
+  get docId(): string | undefined {
+    return this._doc.id;
   }
 
   get elementType(): string {
@@ -164,11 +167,11 @@ export class BaseModel extends BaseObj {
     this.changes();
   }
 
-  get recordables(): any[] {
+  get recordables(): INodeRecordProps[] {
     return this._recordables;
   }
 
-  get state(): UnwrapRef<any> {
+  get state(): UnwrapRef<IModelState> {
     return this._state;
   }
 
@@ -178,7 +181,7 @@ export class BaseModel extends BaseObj {
 
   /**
    * Add a parameter to the model specifications.
-   * @param param parameter object
+   * @param paramProps parameter
    */
   addParameter(paramProps: IModelParamProps): void {
     this._params[paramProps.id] = new ModelParameter(this, paramProps);
@@ -188,7 +191,7 @@ export class BaseModel extends BaseObj {
    * Clean the model index.
    */
   clean(): void {
-    // this._idx = this._modelDBStore.models.indexOf(this);
+    // this._idx = this._modelDBStore.state.models.indexOf(this);
   }
 
   /**
@@ -214,12 +217,13 @@ export class BaseModel extends BaseObj {
     return paramId in this._params;
   }
 
-  /**
-   * Delete the model object from model list.
-   */
-  async delete(): Promise<any> {
-    // return this._modelDBStore.deleteModel(this.docId);
-  }
+  // /**
+  //  * Delete the model object from model list.
+  //  */
+  // async delete(): Promise<void> {
+  //   const modelDBStore: Store<any, any> = useModelDBStore();
+  //   return modelDBStore.deleteModel(this.docId);
+  // }
 
   changes(): void {}
 
@@ -228,23 +232,22 @@ export class BaseModel extends BaseObj {
    * @param paramId ID of the parameter
    * @param value parameter value
    */
-  newParameter(paramId: string, value: any): void {
+  newParameter(paramId: string, value: number | number[]): void {
     this.logger.trace("new parameter:", paramId);
-    const param: any = {
+    const paramProps: IParamProps = {
+      component: "valueSlider",
       id: paramId,
       label: paramId,
-      value,
-      level: 1,
-      component: "valueSlider",
-      min: 0,
       max: 100,
+      min: 0,
       step: 1,
+      value,
     };
     if (Array.isArray(value)) {
-      param.component = "arrayInput";
+      paramProps.component = "arrayInput";
     }
-    this.addParameter(param);
-    // this._params.sort((a: any, b: any) => a.id - b.id);
+    this.addParameter(paramProps);
+    // this._params.sort();
   }
 
   /**
@@ -265,7 +268,7 @@ export class BaseModel extends BaseObj {
   /**
    * Save the model object to the database.
    */
-  async save(): Promise<any> {
+  async save(): Promise<void> {
     this.logger.trace("save");
     // return this._modelDBStore.saveModel(this._id);
   }
@@ -293,7 +296,7 @@ export class BaseModel extends BaseObj {
     // Add the recordables if provided.
     if (this._recordables.length > 0) {
       modelProps.recordables = this._recordables.map(
-        (recordable: any) => recordable.id
+        (recordable: INodeRecordProps) => recordable.id
       );
     }
 
@@ -304,11 +307,11 @@ export class BaseModel extends BaseObj {
    * Update  a parameter.
    * @param model model object
    */
-  update(model: any): void {
+  update(model: IModelProps): void {
     this.logger.trace("update:", model.id);
 
     // Update the model ID.
-    this._id = model.id;
+    this._id = model.id || uuidv4();
 
     // Update the model recordables.
     if (model.recordables) {
@@ -337,9 +340,10 @@ export class BaseModel extends BaseObj {
    * Update recordables from the config.
    * @param model model object
    */
-  updateRecordables(model: any): void {
+  updateRecordables(model: IModelProps): void {
     this._recordables = this.config?.localStorage.recordables?.filter(
-      (recordable: any) => model.recordables.includes(recordable.id)
+      (recordable: INodeRecordProps) =>
+        model.recordables?.includes(recordable.id)
     );
   }
 }

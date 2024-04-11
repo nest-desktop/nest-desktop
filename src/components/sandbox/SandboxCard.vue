@@ -3,9 +3,9 @@
     <v-card-title> Card </v-card-title>
     <v-card-text>
       <card
-        :color="card.color"
-        :key="index"
         v-for="(card, index) in cards"
+        :key="index"
+        :color="card.color"
       >
         <v-card-title>
           {{ card.title }}
@@ -13,7 +13,10 @@
 
         <v-card-text>
           <v-list>
-            <v-list-item :key="index" v-for="(item, index) in card.items">
+            <v-list-item
+              v-for="(item, index) in card.items"
+              :key="index"
+            >
               {{ item.title }}
             </v-list-item>
           </v-list>

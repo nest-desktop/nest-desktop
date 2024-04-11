@@ -1,14 +1,14 @@
 <template>
   <ModelNav :store="modelDBStore" />
 
-  <ModelBar :model color="orange">
+  <ModelBar :model color="nest-model">
     <template #prependTabs>
       <v-tab
         :to="{ name: 'nestModelDoc', params: { modelId: model.id } }"
         size="small"
         title="Read documentation"
       >
-        <v-icon icon="mdi-text-box-outline" />
+        <v-icon icon="mdi:mdi-text-box-outline" />
         <span class="text-no-wrap">Doc</span>
       </v-tab>
     </template>

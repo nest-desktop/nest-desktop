@@ -34,7 +34,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     return this._workspace.network;
   }
 
-  get position(): any {
+  get position(): {x: number; y: number} {
     return this._workspace.state.cursorPosition;
   }
 
@@ -135,7 +135,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     panel: Selection<any, any, any, any>,
     idx: number,
     elementType: string,
-    model: any
+    model: TModel
   ): Selection<any, any, any, any> {
     const layer = Math.floor(idx / 3);
     const idxOffset = this._elementTypes.indexOf(elementType) * 3 + layer * 6;
@@ -149,7 +149,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       idx + idxOffset,
       9,
       "model",
-      model.title,
+      model.id,
       model.label
     );
 
@@ -163,7 +163,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
       this._workspace.animationOff();
 
-      this.network.createNode(model.title, {
+      this.network.createNode(model.label, {
         elementType,
         position: Object.assign({}, this.position),
       });

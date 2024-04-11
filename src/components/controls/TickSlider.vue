@@ -5,11 +5,11 @@
     :ticks
     @click:append="increment"
     @click:prepend="decrement"
-    append-icon="mdi-plus"
+    append-icon="mdi:mdi-plus"
     class="py-3 tick-slider"
     color="grey"
     hide-details
-    prepend-icon="mdi-minus"
+    prepend-icon="mdi:mdi-minus"
     show-ticks="always"
     step="1"
     style="position: relative"
