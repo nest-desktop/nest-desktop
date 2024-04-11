@@ -2,7 +2,7 @@
   <v-dialog max-width="1280">
     <template #activator="{ props: activatorProps }">
       <v-btn
-        icon="mdi-import"
+        icon="mdi:mdi-import"
         style="min-width: 40px"
         title="Open dialog to import"
         v-bind="activatorProps"
@@ -13,7 +13,7 @@
       <v-card>
         <v-toolbar color="transparent" density="compact">
           <span class="mx-2 font-weight-bold">
-            <v-icon icon="mdi-import" size="small" />
+            <v-icon icon="mdi:mdi-import" size="small" />
             Import
           </span>
 
@@ -57,7 +57,7 @@
               flat
               hide-details
               item-title="path"
-              prepend-icon="mdi-github"
+              prepend-icon="mdi:mdi-github"
               return-object
               v-model="state.githubSelectedTree"
               variant="outlined"
@@ -80,7 +80,7 @@
             <v-btn
               @click="fetchProps()"
               flat
-              prepend-icon="mdi-download"
+              prepend-icon="mdi:mdi-download"
               variant="outlined"
             >
               Fetch
@@ -103,7 +103,7 @@
                 <v-btn
                   @upload="loadProjectsFromDrive"
                   flat
-                  prepend-icon="mdi-upload"
+                  prepend-icon="mdi:mdi-upload"
                   variant="outlined"
                 >
                   Upload
@@ -121,7 +121,7 @@
               full-width
               hide-details
               label="URL"
-              prepend-icon="mdi-web"
+              prepend-icon="mdi:mdi-web"
               title="Please enter the project's URL"
               v-model="state.url"
               variant="outlined"
@@ -130,7 +130,7 @@
                 <v-btn
                   @click="fetchProps()"
                   flat
-                  prepend-icon="mdi-download"
+                  prepend-icon="mdi:mdi-download"
                   variant="outlined"
                 >
                   Fetch
@@ -145,7 +145,7 @@
 
           <v-btn
             @click="isActive.value = false"
-            icon="mdi-close"
+            icon="mdi:mdi-close"
             size="small"
           />
         </v-toolbar>
@@ -206,7 +206,7 @@
                 isActive.value = false;
               }
             "
-            prepend-icon="mdi-import"
+            prepend-icon="mdi:mdi-import"
             size="small"
             text="import selected"
             variant="outlined"
@@ -214,7 +214,7 @@
 
           <v-btn
             @click="state.items = []"
-            prepend-icon="mdi-delete-empty-outline"
+            prepend-icon="mdi:mdi-delete-empty-outline"
             size="small"
             text="Clear"
             variant="outlined"
@@ -315,17 +315,17 @@ const groups = [
 
 const sources = [
   {
-    icon: "mdi-paperclip",
+    icon: "mdi:mdi-paperclip",
     title: "Import from drive",
     value: "drive",
   },
   {
-    icon: "mdi-github",
+    icon: "mdi:mdi-github",
     title: "Import from GitHub",
     value: "github",
   },
   {
-    icon: "mdi-web",
+    icon: "mdi:mdi-web",
     title: "Import from URL",
     value: "url",
   },

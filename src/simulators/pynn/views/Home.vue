@@ -3,13 +3,7 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-card-title>
-            <v-img
-              :src="pynnLogo"
-              class="mx-10"
-              max-height="400"
-            />
-          </v-card-title>
+          <v-img :src="pynnLogo" class="ma-2 mx-10" max-height="400" />
 
           <v-card-subtitle>
             An integration layer for neural simulation
@@ -83,10 +77,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list
-          :stores
-          simulator="pynn"
-        />
+        <store-list :stores simulator="pynn" />
       </v-col>
     </v-row>
   </v-container>

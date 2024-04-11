@@ -3,10 +3,7 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-img
-            :src="nestLogo"
-            class="mx-10"
-          />
+          <v-img :src="nestLogo" class="ma-2 mx-10" />
 
           <v-card-subtitle class="mt-4">
             Simulator for spiking neural network models
@@ -41,10 +38,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card
-          class="mt-2"
-          title="References"
-        >
+        <v-card class="mt-2" title="References">
           <v-card-text>
             <v-list density="compact">
               <v-list-item
@@ -103,24 +97,15 @@
                   density="compact"
                   direction="vertical"
                 >
-                  <v-tab
-                    direction="vertical"
-                    value="nest"
-                  >
+                  <v-tab direction="vertical" value="nest">
                     NEST Simulator
                   </v-tab>
-                  <v-tab
-                    direction="vertical"
-                    value="insite"
-                  >
+                  <v-tab direction="vertical" value="insite">
                     Insite Access
                   </v-tab>
                 </v-tabs>
 
-                <v-window
-                  v-model="backendTab"
-                  class="mx-2 w-100"
-                >
+                <v-window v-model="backendTab" class="mx-2 w-100">
                   <v-window-item value="nest">
                     <backend-settings :store="nestSimulatorStore" />
                   </v-window-item>
@@ -133,10 +118,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list
-          :stores
-          simulator="nest"
-        />
+        <store-list :stores simulator="nest" />
       </v-col>
     </v-row>
   </v-container>

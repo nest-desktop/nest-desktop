@@ -37,11 +37,7 @@
         :to="'/' + item.id"
       >
         <template #prepend>
-          <v-icon
-            :color="item.id"
-            :icon="item.id + ':logo'"
-            size="small"
-          />
+          <v-icon :color="item.id" :icon="item.id + ':logo'" size="small" />
         </template>
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
@@ -69,33 +65,21 @@
         @click="item.onClick"
       >
         <template #prepend>
-          <v-icon
-            :icon="item.icon"
-            size="small"
-          />
+          <v-icon :icon="item.icon" size="small" />
         </template>
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
 
       <v-list-item :to="{ name: 'settings' }">
         <template #prepend>
-          <v-icon
-            icon="mdi:mdi-cogs"
-            size="small"
-          />
+          <v-icon icon="mdi:mdi-cogs" size="small" />
         </template>
         <v-list-item-title>Settings</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
 
-  <v-btn
-    :to="{ name: 'about' }"
-    size="x-small"
-    variant="text"
-  >
-    about
-  </v-btn>
+  <v-btn :to="{ name: 'about' }" size="x-small" variant="text"> about </v-btn>
 
   <v-btn
     class="mx-1px"
@@ -108,10 +92,7 @@
     help
   </v-btn>
 
-  <v-divider
-    class="mx-1"
-    vertical
-  />
+  <v-divider class="mx-1" vertical />
 
   <v-btn
     size="x-small"
@@ -123,10 +104,7 @@
 
   <v-spacer />
 
-  <v-divider
-    class="mx-1"
-    vertical
-  />
+  <v-divider class="mx-1" vertical />
 
   <v-btn
     v-for="(backend, index) in appStore.currentSimulator.backends"
@@ -151,13 +129,10 @@
     />
   </v-btn>
 
-  <v-divider
-    class="mx-1"
-    vertical
-  />
+  <v-divider class="mx-1" vertical />
 
   <v-btn
-    icon="mdi-menu-open"
+    icon="mdi:mdi-menu-open"
     size="x-small"
     variant="text"
     title="Open request logs"

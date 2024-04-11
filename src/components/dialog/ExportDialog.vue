@@ -2,7 +2,7 @@
   <v-dialog max-width="1280">
     <template #activator="{ props: activatorProps }">
       <v-btn
-        icon="mdi-export"
+        icon="mdi:mdi-export"
         style="min-width: 40px"
         title="Open dialog to export"
         v-bind="activatorProps"
@@ -13,7 +13,7 @@
       <v-card>
         <v-toolbar color="transparent" density="compact">
           <span class="mx-2 font-weight-bold">
-            <v-icon icon="mdi-export" size="small" />
+            <v-icon icon="mdi:mdi-export" size="small" />
             Export
           </span>
 
@@ -21,7 +21,7 @@
 
           <v-btn
             @click="isActive.value = false"
-            icon="mdi-close"
+            icon="mdi:mdi-close"
             size="small"
           />
         </v-toolbar>
@@ -53,7 +53,7 @@
                 isActive.value = false;
               }
             "
-            prepend-icon="mdi-export"
+            prepend-icon="mdi:mdi-export"
             size="small"
             text="export selected"
             variant="outlined"
@@ -61,7 +61,7 @@
 
           <v-btn
             @click="state.items = []"
-            prepend-icon="mdi-delete-empty-outline"
+            prepend-icon="mdi:mdi-delete-empty-outline"
             size="small"
             text="Clear"
             variant="outlined"

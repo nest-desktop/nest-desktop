@@ -3,15 +3,12 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-card-title>
-            <v-img
-              :src="norseLogo"
-              class="mx-10"
-            />
-          </v-card-title>
+          <v-img :src="norseLogo" class="ma-2 mx-10" />
+
           <v-card-subtitle>
             Deep learning with spiking neural networks in PyTorch
           </v-card-subtitle>
+
           <v-card-text>
             Norse aims to exploit the advantages of bio-inspired neural
             components, which are sparse and event-driven - a fundamental
@@ -56,10 +53,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list
-          :stores
-          simulator="norse"
-        />
+        <store-list :stores simulator="norse" />
       </v-col>
     </v-row>
   </v-container>

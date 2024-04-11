@@ -1,10 +1,6 @@
 <template :key="theme.name.value">
   <v-app>
-    <v-system-bar
-      class="d-print-none"
-      color="systembar"
-      flat
-    >
+    <v-system-bar class="d-print-none" color="systembar" flat>
       <app-bar />
     </v-system-bar>
 
@@ -14,21 +10,17 @@
       temporary
       width="400"
     >
-      <v-toolbar
-        color="transparent"
-        density="compact"
-        title="Request logs"
-      >
+      <v-toolbar color="transparent" density="compact" title="Request logs">
         <v-spacer />
 
         <v-btn
-          icon="mdi-playlist-remove"
+          icon="mdi:mdi-playlist-remove"
           size="small"
           title="Clear all logs"
           @click="appSessionStore.clearLogs()"
         />
         <v-btn
-          icon="mdi-menu-close"
+          icon="mdi:mdi-menu-close"
           size="small"
           title="Close request logs"
           @click="appSessionStore.state.logsOpen = false"
@@ -39,14 +31,8 @@
           v-for="(log, index) in appSessionStore.state.requestLogs"
           :key="index"
         >
-          <v-card
-            :color="log.type"
-            variant="tonal"
-          >
-            <v-toolbar
-              color="transparent"
-              density="compact"
-            >
+          <v-card :color="log.type" variant="tonal">
+            <v-toolbar color="transparent" density="compact">
               <v-toolbar-title class="text-subtitle-1">
                 {{ log.date }}
               </v-toolbar-title>
@@ -54,7 +40,7 @@
               <v-spacer />
 
               <v-btn
-                icon="mdi-close"
+                icon="mdi:mdi-close"
                 size="small"
                 variant="text"
                 @click="appSessionStore.state.requestLogs.splice(index, 1)"
