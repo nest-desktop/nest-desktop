@@ -135,3 +135,6 @@ __pycache__
 # Electron-builder output
 /release
 /dist-electron
+
+# PWA
+/dev-dist
