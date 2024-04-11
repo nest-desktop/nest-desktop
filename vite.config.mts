@@ -56,20 +56,24 @@ export default defineConfig({
       autoImport: true,
     }),
     VitePWA({
-      registerType: "autoUpdate",
-      workbox: {
-        globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
-        maximumFileSizeToCacheInBytes: 6000000,
-        // Don't fallback on document based (e.g. `/some-page`) requests
-        // Even though this says `null` by default, I had to set this specifically to `null` to make it work
-        navigateFallback: null,
+      devOptions: {
+        enabled: true,
+        type: "module",
       },
-      includeAssets: ["favicon.ico", "pwa-192x192.png", "pwa-512x512.png"],
+      includeAssets: [
+        "favicon.ico",
+        "apple-touch-icon-180x180.png",
+        "maskable-icon-512x512.png",
+        "pwa-64x64.png",
+        "pwa-192x192.png",
+        "pwa-512x512.png",
+      ],
       manifest: {
         name: "NEST Desktop",
         short_name: "NEST Desktop",
         description: "A web-based application which provides a graphical user interface for NEST Simulator",
         theme_color: "#ffffff",
+        start_url: "/",
         icons: [
           {
             src: "pwa-64x64.png",
@@ -95,14 +99,22 @@ export default defineConfig({
           },
         ],
       },
+      registerType: "autoUpdate",
+      workbox: {
+        globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
+        maximumFileSizeToCacheInBytes: 6000000,
+        // Don't fallback on document based (e.g. `/some-page`) requests
+        // Even though this says `null` by default, I had to set this specifically to `null` to make it work
+        navigateFallback: null,
+      },
     }),
     electron([
       {
         entry: "electron/main.ts",
-        onstart: (options) => {
+        onstart(options) {
           // Start Electron App
-          if (process.env["VITE_DEV_ELECTRON_STARTUP"]) {
-            options.startup([".", "--no-sandbox"]); // options.startup()
+          if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
+            options.startup([".", "--no-sandbox"]);
           }
         },
       },
