@@ -82,7 +82,7 @@ const props = defineProps({
 const search = ref("");
 
 const models = computed(() =>
-  props.store.models.filter((model: TModel) =>
+  props.store.state.models.filter((model: TModel) =>
     model.label.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );
