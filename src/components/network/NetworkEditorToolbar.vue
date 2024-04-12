@@ -44,44 +44,14 @@
     /> -->
 
     <template v-if="!state.collapse">
-      <v-dialog
-        v-model="state.dialogDelete"
-        max-width="450"
-      >
-        <template #activator="{ props }">
-          <v-btn
-            :disabled="graph?.network.isEmpty"
-            icon="mdi:mdi-trash-can-outline"
-            size="small"
-            title="Delete all network elements"
-            v-bind="props"
-          />
-        </template>
+      <v-btn
+        :disabled="graph?.network.isEmpty"
+        @click="emptyNetwork()"
+        icon="mdi:mdi-trash-can-outline"
+        size="small"
+        title="Delete all network elements"
+      />
 
-        <v-card>
-          <v-card-text>
-            Are you sure to delete all elements of this network?
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer />
-            <v-btn
-              size="small"
-              variant="outlined"
-              @click="state.dialogDelete = false"
-            >
-              close
-            </v-btn>
-            <v-btn
-              size="small"
-              variant="outlined"
-              @click="deleteNetwork"
-            >
-              delete
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
       <!--
       <v-text-field
         class="px-4"
@@ -126,6 +96,7 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
@@ -145,11 +116,21 @@ const state = reactive({
 });
 
 /**
- * Delete network.
+ * Empty network.
  */
-const deleteNetwork = () => {
-  graph.value?.network.clear();
-  state.dialogDelete = false;
+const emptyNetwork = () => {
+  createDialog({
+    title: "Empty network?",
+    text: "Are you sure to delete all elements of this network?",
+    buttons: [
+      { title: "no", key: "no" },
+      { title: "yes", key: "yes" },
+    ],
+  }).then((answer: string) => {
+    if (answer === "yes") {
+      graph.value?.network.clear();
+    }
+  });
 };
 
 /**

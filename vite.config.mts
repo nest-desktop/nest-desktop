@@ -20,7 +20,7 @@ export default defineConfig({
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo: any) => {
+        assetFileNames: (assetInfo: { name: string }) => {
           let extType = assetInfo.name.split(".").at(1);
           if (/png|svg/.test(extType)) {
             extType = "img";
@@ -29,13 +29,19 @@ export default defineConfig({
           }
           return `assets/${extType}/[name]-[hash][extname]`;
         },
-        chunkFileNames: (assetInfo) => {
+        chunkFileNames: (assetInfo: { facadeModuleId: string; name: string }) => {
+          const name =
+            assetInfo.name?.endsWith(".vue_vue_type_style_index_0_lang") ||
+            assetInfo.name?.endsWith(".vue_vue_type_script_setup_true_lang")
+              ? assetInfo.name.split(".")[0]
+              : assetInfo.name;
+
           if (assetInfo.facadeModuleId && assetInfo.facadeModuleId.includes("simulators")) {
             const path = assetInfo.facadeModuleId.split("/");
             const simulatorIdx = path.indexOf("simulators") + 1;
-            return `assets/simulators/${path[simulatorIdx]}/js/[name]-[hash].js`;
+            return `assets/simulators/${path[simulatorIdx]}/js/${name}-[hash].js`;
           }
-          return "assets/js/[name]-[hash].js";
+          return `assets/js/${name}-[hash].js`;
         },
         entryFileNames: "assets/js/[name]-[hash].js",
       },

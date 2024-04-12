@@ -1,8 +1,16 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <v-chip @click="graph.updateHash()" size="small" variant="text">
+    <v-chip @click="graph?.updateHash()" size="small" variant="text">
       {{ graph?.hash }}
     </v-chip>
+
+    <div style="width: 320px">
+      <NodeMenu
+        activator="parent"
+        v-bind="graph?.state.nodeMenu"
+        v-if="graph?.state.nodeMenu.node"
+      />
+    </div>
 
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
       <rect height="100%" id="workspaceHandler" width="100%" />
@@ -32,6 +40,7 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
+import NodeMenu from "@/components/node/NodeMenu.vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TNetwork, NetworkComponentProps } from "@/types/networkTypes";
 
@@ -39,10 +48,9 @@ import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps({ network: NetworkComponentProps });
+
 const network = computed(() => props.network as TNetwork);
-const graph = computed(() => {
-  return networkGraphStore.state.graph as BaseNetworkGraph;
-});
+const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
 const networkGraphRef: Ref<null> = ref(null);
 

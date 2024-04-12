@@ -8,9 +8,10 @@ export const useAppSessionStore = defineStore(
   () => {
     const state = reactive({
       devMode: false,
+      filterTag: "",
+      loading: false,
       logsOpen: false,
       requestLogs: [] as { date: string; text: string; type: string }[],
-      loading: false,
       webGL: true,
     });
 

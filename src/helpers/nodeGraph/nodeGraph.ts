@@ -1,5 +1,6 @@
 // nodeGraph.ts
 
+import { nextTick } from "vue";
 import { Selection, Transition, drag, select, transition } from "d3";
 
 import { BaseObj } from "../common/base";
@@ -60,6 +61,21 @@ export class NodeGraph extends BaseObj {
 
     elem.on("mouseout", () => {
       this.network.nodes.unfocusNode();
+    });
+
+    /**
+     * Trigger node menu on right mouse click.
+     */
+    elem.on("contextmenu", (e: MouseEvent, n: TNode) => {
+      e.preventDefault();
+      this._networkGraph.workspace.reset();
+
+      this._networkGraph.state.nodeMenu.node = n;
+      this._networkGraph.state.nodeMenu.offset = [e.clientX, e.clientY];
+      nextTick(() => {
+        this._networkGraph.state.nodeMenu.modelValue = true;
+        console.log(this._networkGraph.state.nodeMenu);
+      });
     });
   }
 

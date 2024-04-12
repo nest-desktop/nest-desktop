@@ -89,7 +89,10 @@
               </v-card>
             </v-menu>
 
-            <NodeMenu :node />
+            <v-btn color="primary" icon size="small" variant="text">
+              <v-icon icon="mdi:mdi-dots-vertical" />
+              <NodeMenu :node activator="parent" />
+            </v-btn>
           </div>
         </template>
 

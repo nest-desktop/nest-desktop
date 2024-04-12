@@ -1,8 +1,16 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <v-chip @click="graph.updateHash()" size="small" variant="text">
+    <v-chip @click="graph?.updateHash()" size="small" variant="text">
       {{ graph?.hash }}
     </v-chip>
+
+    <div style="width: 320px">
+      <NodeMenu
+        activator="parent"
+        v-bind="graph?.state.nodeMenu"
+        v-if="graph?.state.nodeMenu.node"
+      />
+    </div>
 
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
       <rect id="workspaceHandler" width="100%" height="100%" />
@@ -11,7 +19,7 @@
         <g class="grid no-print" />
         <g>
           <path
-            :style="{ strokeWidth: graph?.config.localStorage.strokeWidth }"
+            :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }"
             class="dragline"
             d="M0,0L0,0"
             fill="none"
@@ -81,6 +89,7 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
+import NodeMenu from "../node/NodeMenu.vue";
 import { NESTNetwork } from "../../helpers/network/network";
 import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
 
@@ -90,7 +99,7 @@ const networkGraphStore = useNetworkGraphStore();
 const props = defineProps({ network: NESTNetwork });
 const network = computed(() => props.network as NESTNetwork);
 
-const graph = computed(() => networkGraphStore.state.graph);
+const graph = computed(() => networkGraphStore.state.graph as NESTNetworkGraph);
 
 const networkGraphRef: Ref<null> = ref(null);
 

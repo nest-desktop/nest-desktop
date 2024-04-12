@@ -93,7 +93,10 @@
               </v-card>
             </v-menu>
 
-            <NodeMenu :node />
+            <v-btn color="primary" icon size="small" variant="text">
+              <v-icon icon="mdi:mdi-dots-vertical" />
+              <NodeMenu :node activator="parent" />
+            </v-btn>
           </div>
         </template>
 
@@ -183,14 +186,13 @@
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 
-import Card from "@/components/common/Card.vue";
-import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import NodeParamEditor from "@/components/node/NodeParamEditor.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { NodeComponentProps, TNode } from "@/types/nodeTypes";
-
+import Card from "../common/Card.vue";
+import ConnectionEditor from "../connection/ConnectionEditor.vue";
+import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
+import NodeParamEditor from "./NodeParamEditor.vue";
+import ValueSlider from "../controls/ValueSlider.vue";
+import { NodeComponentProps, TNode } from "@/types/nodeTypes";
 
 const props = defineProps({ node: NodeComponentProps });
 

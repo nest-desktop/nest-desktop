@@ -16,6 +16,7 @@ const _nodeTypes: { icon: string; id: string; title: string }[] = [
 
 interface INodesState {
   annotations: { [key: string]: string }[];
+  contextMenu: boolean;
   elementTypeIdx: number;
   focusedNode: TNode | null;
   selectedNode: TNode | null;
@@ -33,6 +34,7 @@ export class BaseNodes extends BaseObj {
 
     this._state = reactive({
       annotations: [],
+      contextMenu: false,
       elementTypeIdx: 0,
       focusedNode: null,
       selectedNode: null,

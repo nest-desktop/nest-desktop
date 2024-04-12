@@ -174,6 +174,7 @@ export class NetworkGraphWorkspace extends BaseObj {
       })
       .on("contextmenu", (e: MouseEvent) => {
         e.preventDefault();
+        this.reset();
         this.network?.state.unselectAll();
         const position: number[] = pointer(e, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
@@ -201,6 +202,7 @@ export class NetworkGraphWorkspace extends BaseObj {
    */
   reset(): void {
     this._handler.style("cursor", "default");
+    this._networkGraph.reset();
     this._nodeAddPanel.close();
     this._dragline.hide();
   }

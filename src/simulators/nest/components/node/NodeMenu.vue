@@ -1,15 +1,5 @@
 <template>
   <v-menu :close-on-content-click="false" v-model="state.show">
-    <template #activator="{ props }">
-      <v-btn
-        color="primary"
-        icon="mdi:mdi-dots-vertical"
-        size="small"
-        v-bind="props"
-        variant="text"
-      />
-    </template>
-
     <v-card flat style="min-width: 300px">
       <!-- <v-card-title class="pa-0">
         <v-row no-gutters>
@@ -194,6 +184,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, reactive } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import ModelDocumentation from "../../views/ModelDoc.vue";
 import { NESTNode } from "../../helpers/node/node";
@@ -307,11 +298,21 @@ const items = [
     icon: "mdi:mdi-trash-can-outline",
     id: "nodeDelete",
     onClick: () => {
-      state.content = "nodeDelete";
+      createDialog({
+        title: "Delete node?",
+        text: "Are you sure to delete node?",
+        buttons: [
+          { title: "no", key: "no" },
+          { title: "yes", key: "yes" },
+        ],
+      }).then((answer: string) => {
+        if (answer === "yes") {
+          node.value.remove();
+        }
+      });
     },
     show: () => true,
     title: "Delete node",
-    append: true,
   },
 ];
 
@@ -368,6 +369,8 @@ const exportEvents = (format: string = "json") => {
  * Update states.
  */
 const updateStates = () => {
+  if (!node.value) return;
+
   state.spatialNode = node.value.spatial.hasPositions;
 };
 

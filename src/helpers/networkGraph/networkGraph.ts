@@ -15,6 +15,11 @@ import { debounce } from "@/utils/events";
 
 interface IBaseNetworkGraphState {
   hash: string;
+  nodeMenu: {
+    modelValue: boolean;
+    node: null | TNode;
+    offset: number[];
+  };
 }
 
 export class BaseNetworkGraph extends BaseObj {
@@ -41,6 +46,11 @@ export class BaseNetworkGraph extends BaseObj {
 
     this._state = reactive({
       hash: "",
+      nodeMenu: {
+        modelValue: false,
+        node: null,
+        offset: [0, 0],
+      },
     });
 
     this._resizeObserver = new ResizeObserver(
@@ -143,6 +153,12 @@ export class BaseNetworkGraph extends BaseObj {
     this.logger.silly("render");
     this._connectionGraph.render();
     this._nodeGraph.render();
+  }
+
+  reset(): void {
+    this._state.nodeMenu.modelValue = false;
+    this._state.nodeMenu.offset = [0, 0];
+    this._state.nodeMenu.node = null;
   }
 
   /**
