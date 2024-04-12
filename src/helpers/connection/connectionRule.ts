@@ -42,6 +42,9 @@ export class ConnectionRule {
     this.connection.changes();
   }
 
+  /**
+   * Reset connection rule.
+   */
   reset(): void {
     this._value = Rule.AllToAll;
   }

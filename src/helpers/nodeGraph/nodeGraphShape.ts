@@ -101,6 +101,11 @@ export class NodeGraphShape extends BaseObj {
     return this._networkGraph.config?.localStorage.strokeWidth;
   }
 
+  /**
+   * Draw node shape.
+   * @param selector
+   * @param node
+   */
   drawShape(selector: Selection<any, any, any, any>, node: TNode): void {
     this.logger.trace("draw shape");
     selector.attr("elementType", node.model.elementType);
@@ -138,6 +143,8 @@ export class NodeGraphShape extends BaseObj {
 
   /**
    * Initialize a node shape.
+   * @param selector
+   * @param node
    */
   init(selector: Selection<any, any, any, any>, node: TNode): void {
     this.logger.silly("init");

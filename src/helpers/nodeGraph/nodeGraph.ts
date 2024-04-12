@@ -30,6 +30,9 @@ export class NodeGraph extends BaseObj {
 
   /**
    * Init node element.
+   * @param node
+   * @param idx
+   * @param elements
    */
   initNode(
     node: TNode,
@@ -66,21 +69,20 @@ export class NodeGraph extends BaseObj {
     /**
      * Trigger node menu on right mouse click.
      */
-    elem.on("contextmenu", (e: MouseEvent, n: TNode) => {
-      e.preventDefault();
+    elem.on("contextmenu", (event: MouseEvent, n: TNode) => {
+      event.preventDefault();
       this._networkGraph.workspace.reset();
 
       this._networkGraph.state.nodeMenu.node = n;
-      this._networkGraph.state.nodeMenu.offset = [e.clientX, e.clientY];
-      nextTick(() => {
-        this._networkGraph.state.nodeMenu.modelValue = true;
-        console.log(this._networkGraph.state.nodeMenu);
-      });
+      this._networkGraph.state.nodeMenu.offset = [event.clientX, event.clientY];
+      nextTick(() => (this._networkGraph.state.nodeMenu.modelValue = true));
     });
   }
 
   /**
    * Drag node graph.
+   * @param event
+   * @param node
    */
   drag(event: MouseEvent, node: TNode): void {
     this.logger.silly("drag");
@@ -128,7 +130,7 @@ export class NodeGraph extends BaseObj {
    * Update nodes in network graph.
    *
    * @remarks
-   * This function should be called when nodes is changed.
+   * This function should be called when nodes are changed.
    */
   update(): void {
     this.logger.silly("update");

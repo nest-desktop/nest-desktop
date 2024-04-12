@@ -89,8 +89,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Calculate simple histogram
-   *
+   * Calculate simple histogram.
    * @param data
    * @param min
    * @param max
@@ -134,6 +133,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   /**
    * Add data of spike times for histogram panel.
    * TODO: Improve checks (div-0-error, ...).
+   * @param activity spike activity object
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

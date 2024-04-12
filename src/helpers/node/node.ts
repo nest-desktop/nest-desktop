@@ -182,12 +182,12 @@ export class BaseNode extends BaseObj {
 
   /**
    * Set model.
+   * @param model - node model
    *
    * @remarks
    * It initializes parameters and activity components.
    * It triggers node changes.
    *
-   * @param model - node model
    */
   set model(model: TModel) {
     this._modelId = model.id;
@@ -205,8 +205,6 @@ export class BaseNode extends BaseObj {
 
   /**
    * Set model ID.
-   *
-   * @param value - id of the model
    */
   set modelId(value: string) {
     this.model = this.getModel(value);
@@ -350,7 +348,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Add parameter component.
-   * @param param - parameter props
+   * @param paramProps - parameter props
    */
   addParameter(paramProps: INodeParamProps): void {
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
@@ -422,6 +420,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Create activity for the recorder.
+   * @param activityProps
    */
   createActivity(activityProps?: IActivityProps): void {
     this.logger.trace("init activity");

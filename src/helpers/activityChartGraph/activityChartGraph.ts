@@ -234,9 +234,9 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Add panel.
+   * @param panelProps
    */
   addPanel(
-    // @ts-ignore
     panelProps: IActivityChartPanelProps = {
       model: { id: "spikeTimesRasterPlot" },
     }
@@ -247,6 +247,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Add panels.
+   * @param panelsProps
    */
   addPanels(panelsProps?: IActivityChartPanelProps[]): void {
     this.logger.trace("add panels");
@@ -268,6 +269,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Download image of the activity chart graph.
+   * @param options
    */
   downloadImage(options: Plotly.DownloadImgopts): void {
     this.logger.trace("download Image:", options);
@@ -285,6 +287,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Gather data for the chart graph.
+   * @param panel
    */
   gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: Partial<Plotly.Data>) => {
@@ -343,6 +346,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Create new Plot of the DOM reference.
+   * @param ref
    */
   newPlot(ref: Plotly.Root): void {
     this.logger.trace("new plot");
@@ -379,6 +383,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Remove panel.
+   * @param panel
    */
   removePanel(panel: ActivityChartPanel): void {
     this._panels = this._panels.filter((p: ActivityChartPanel) => p !== panel);
@@ -400,7 +405,7 @@ export class ActivityChartGraph extends BaseObj {
   /**
    * Restyle marker height of spike times raster plot
    */
-  restyleMarkerHeightSpikeTimesRasterPlot() {
+  restyleMarkerHeightSpikeTimesRasterPlot(): void {
     if (!this._state.ref) return;
 
     const dataSpikeTimeRasterPlot = this._plotData.filter(
@@ -478,6 +483,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Update the layout of the chart graph from each panel.
+   * @param panel
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
     this._plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] =

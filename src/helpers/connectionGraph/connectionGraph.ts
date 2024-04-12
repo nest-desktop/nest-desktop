@@ -29,6 +29,8 @@ export class ConnectionGraph {
 
   /**
    * Drag connection graph by moving its node graphs.
+   * @param event mouse event
+   * @param connection connection object
    */
   drag(event: MouseEvent, connection: TConnection): void {
     if (this.state.dragLine) return;
@@ -49,6 +51,9 @@ export class ConnectionGraph {
 
   /**
    * Initialize a connection graph.
+   * @param connection connection object
+   * @param idx index of elements
+   * @param elements elements
    */
   init(
     connection: TConnection,
@@ -196,7 +201,7 @@ export class ConnectionGraph {
    * Update connections in network graph.
    *
    * @remarks
-   * This function should be called when connections in the network are changed.
+   * This function should be called when connections are changed.
    */
   update(): void {
     if (!this._networkGraph.selector) return;

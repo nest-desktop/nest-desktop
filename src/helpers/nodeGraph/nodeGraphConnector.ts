@@ -33,6 +33,7 @@ export class NodeGraphConnector {
 
   /**
    * Initialize a node connector.
+   * @param selector
    */
   init(selector: Selection<any, any, any, any>): void {
     const connector: Selection<any, any, any, any> = selector
@@ -124,19 +125,22 @@ export class NodeGraphConnector {
 
   /**
    * Call on dragging.
+   * @param event
+   * @param node
    */
-  drag(e: MouseEvent, node: TNode): void {
+  drag(event: MouseEvent, node: TNode): void {
     if (!node.state.isSelected) {
       node.state.select();
     }
     this._networkGraph.workspace.reset();
-    this._networkGraph.workspace.dragline.init(e);
+    this._networkGraph.workspace.dragline.init(event);
   }
 
   /**
    * Call on drag end.
+   * @param event
    */
-  dragEnd(e: MouseEvent): void {
+  dragEnd(event: MouseEvent): void {
     // this._networkGraph.workspace.dragline.hide();
     // this._networkGraph.workspace.state.dragLine = false;
 
@@ -160,7 +164,7 @@ export class NodeGraphConnector {
       network.nodes.resetState();
     }
 
-    this._networkGraph.dragEnd(e);
+    this._networkGraph.dragEnd(event);
   }
 
   /**
@@ -191,7 +195,7 @@ export class NodeGraphConnector {
       );
 
     // Connector animation.
-    const connectorEndPos: any = {
+    const connectorEndPos: { x: number; y: number } = {
       x: this.nodeRadius + 8,
       y: this.nodeRadius + 12,
     };
@@ -199,13 +203,17 @@ export class NodeGraphConnector {
     connector
       .selectAll("path")
       .transition(t)
-      .attr("d", (n: TNode | any) =>
-        drawPathMouse(
-          { x: 0, y: 0 },
-          n.state.isFocused && !connectionDrag
-            ? connectorEndPos
-            : { x: 0, y: 0 }
-        )
+      .attr(
+        "d",
+        (
+          n: TNode | any // TODO: no any!
+        ) =>
+          drawPathMouse(
+            { x: 0, y: 0 },
+            n.state.isFocused && !connectionDrag
+              ? connectorEndPos
+              : { x: 0, y: 0 }
+          )
       );
 
     connector

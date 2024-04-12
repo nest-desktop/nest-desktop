@@ -34,7 +34,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     return this._workspace.network;
   }
 
-  get position(): {x: number; y: number} {
+  get position(): { x: number; y: number } {
     return this._workspace.state.cursorPosition;
   }
 
@@ -59,10 +59,14 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
   /**
    * Draw arc frame.
+   * @param classFrame
    * @param idx number
-   * @param sections number
    * @param label string
-   * @returns Selection
+   * @param radius
+   * @param sections number
+   * @param selector
+   * @param title
+   * @returns selection
    */
   drawArcFrame(
     selector: Selection<any, any, any, any>,
@@ -131,6 +135,14 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     return panel;
   }
 
+  /**
+   * Draw model menu item.
+   * @param panel
+   * @param idx
+   * @param elementType
+   * @param model
+   * @returns selection
+   */
   drawModelMenuItem(
     panel: Selection<any, any, any, any>,
     idx: number,
@@ -299,6 +311,9 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     // }
   }
 
+  /**
+   * Update color.
+   */
   updateColor(): void {
     this.logger.trace("update color");
     this._selector
@@ -311,6 +326,8 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
   /**
    * Update model menu.
+   * @param elementType
+   * @param favoriteOnly
    */
   updateModelMenu(elementType: string, favoriteOnly: boolean = true): void {
     this.logger.trace("update model menu");

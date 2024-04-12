@@ -33,6 +33,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
 
   /**
    * Add data of spike times for histogram panel.
+   * @param activity spike activity object
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

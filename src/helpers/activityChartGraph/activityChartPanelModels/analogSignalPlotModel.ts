@@ -83,6 +83,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add single line data for analog signal.
+   * @param record node record object
    */
   addSingleLine(record: NodeRecord): void {
     if (!record.hasEvent) {
@@ -112,6 +113,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add multiple lines data for analog signals.
+   * @param record node record object
    */
   addMultipleLines(record: NodeRecord): void {
     if (!record.hasEvent || record.activity.state.selected?.length === 0)
@@ -149,6 +151,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add average line for analog signals.
+   * @param record node record object
    */
   addAverageLine(record: NodeRecord): void {
     if (!record.hasEvent || record.activity.state.selected?.length === 0)
@@ -210,6 +213,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add active line for analog signals.
+   * @param record node record object
    *
    * @remarks will be updated in `updateActiveMarker`.
    */
@@ -310,7 +314,8 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Update active marker for analog signals.
-   **/
+   * @param record node record object
+   */
   override updateActiveMarker(record?: NodeRecord): void {
     const plotData = this.data[this.data.length - 1];
     plotData.visible = false;

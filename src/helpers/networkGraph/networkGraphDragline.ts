@@ -25,24 +25,30 @@ export class NetworkGraphDragline extends BaseObj {
 
   /**
    * Initialize drag line.
+   * @param event
    */
-  init(e: MouseEvent): void {
+  init(event: MouseEvent): void {
     this.logger.trace("init");
     this._workspace.state.dragLine = true;
-    this.update(e);
+    this.update(event);
     this._workspace.update();
   }
 
   /**
    * Update drag line.
+   * @param event
    */
-  update(e: MouseEvent): void {
+  update(event: MouseEvent): void {
     this.logger.trace("update");
     if (this.network && this.network.nodes.state.selectedNode != null) {
       const selectedNode = this.network.nodes.state.selectedNode;
+
       const sourcePosition: { x: number; y: number } =
         selectedNode.view.state.position;
-      const position: number[] = pointer(e, this._workspace.selector.node());
+      const position: number[] = pointer(
+        event,
+        this._workspace.selector.node()
+      );
       const targetPosition: { x: number; y: number } = {
         x: position[0],
         y: position[1],
@@ -60,6 +66,8 @@ export class NetworkGraphDragline extends BaseObj {
 
   /**
    * Draw path of the drag line.
+   * @param sourcePos
+   * @param targetPos
    */
   drawPath(
     sourcePos: { x: number; y: number },

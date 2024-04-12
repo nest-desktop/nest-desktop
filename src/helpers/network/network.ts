@@ -140,6 +140,8 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Connect node components by user interaction.
+   * @param source node object
+   * @param target node object
    *
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
@@ -163,6 +165,8 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Create node component by user interaction.
+   * @param model model name of default models
+   * @param view
    */
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
@@ -177,6 +181,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Delete connection component from the network.
+   * @param connection connection object
    *
    * @remarks
    * It emits network changes.
@@ -193,6 +198,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Delete node component from the network.
+   * @param node
    *
    * @remarks
    * It emits network changes.
@@ -212,6 +218,8 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Get node color.
+   * @param idx
+   * @returns node color name
    */
   getNodeColor(idx: number): string {
     const colors: string[] = this.config?.localStorage.color.cycle;
@@ -244,7 +252,6 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Update network component.
-   *
    * @param networkProps - network props
    */
   update(networkProps: INetworkProps): void {

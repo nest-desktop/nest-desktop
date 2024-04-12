@@ -160,11 +160,11 @@ export class NetworkGraphWorkspace extends BaseObj {
       });
 
     this._handler
-      .on("mousemove", (e: MouseEvent) => {
-        const position: number[] = pointer(e, this._selector.node());
+      .on("mousemove", (event: MouseEvent) => {
+        const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
         if (this._state.dragLine) {
-          this._dragline.update(e);
+          this._dragline.update(event);
         }
       })
       .on("click", () => {
@@ -172,11 +172,12 @@ export class NetworkGraphWorkspace extends BaseObj {
         this.network?.state.unselectAll();
         this.update();
       })
-      .on("contextmenu", (e: MouseEvent) => {
-        e.preventDefault();
+      .on("contextmenu", (event: MouseEvent) => {
+        event.preventDefault();
         this.reset();
+
         this.network?.state.unselectAll();
-        const position: number[] = pointer(e, this._selector.node());
+        const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
         this._nodeAddPanel.open();
       })
@@ -250,6 +251,7 @@ export class NetworkGraphWorkspace extends BaseObj {
 
   /**
    * Update cursor position.
+   * @param position
    */
   updateCursorPosition(
     position: { x: number; y: number } = { x: 0, y: 0 }

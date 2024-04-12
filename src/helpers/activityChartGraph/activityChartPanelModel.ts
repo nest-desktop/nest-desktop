@@ -121,6 +121,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Add data of this activity graph panel.
+   * @param activity
    *
    * @remarks
    * It requires activity data.
@@ -132,6 +133,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Capitalize axis label.
+   * @param text
+   * @returns string
    */
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -139,6 +142,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Get activity from the project.
+   * @param idx
+   * @returns activity object
    */
   getActivity(idx: number): Activity {
     return this._panel.graph.project.activities.all[idx];
@@ -175,6 +180,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Initialize visible records from analog activities.
+   * @param records
    */
   initAnalogRecordsVisible(records: any[] = []): void {
     this.logger.trace("init visible analog records:", records);
@@ -203,6 +209,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Initialize params for controller.
+   * @param params
    */
   initParams(params: any = {}): void {
     Object.keys(this._params)
@@ -214,6 +221,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Remove record from the state.
+   * @param record
    */
   removeRecord(record: NodeRecord): void {
     this._state.recordsVisible.splice(
@@ -280,7 +288,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update active marker.
-   **/
+   * @param record
+   */
   updateActiveMarker(record?: NodeRecord): void {
     record;
   }
@@ -379,6 +388,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update layout label.
+   * @param records
    *
    * @remarks
    * It is a replacement for abstract component.

@@ -176,6 +176,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Add connection parameter.
+   * @param paramProps
    */
   addParameter(paramProps: IConnectionParamProps): void {
     this._params[paramProps.id] = new ConnectionParameter(this, paramProps);
@@ -183,6 +184,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Add connection parameters.
+   * @param paramProps
    */
   addParameters(paramProps: IConnectionParamProps[] = []): void {
     this.logger.trace("init parameter");
@@ -237,6 +239,9 @@ export class BaseConnection extends BaseObj {
   //   );
   // }
 
+  /**
+   * Initialize connection.
+   */
   init(): void {
     this.logger.trace("init");
     this.reset();
@@ -322,7 +327,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return connection object
+   * @return connection props
    */
   toJSON(): IConnectionProps {
     const connectionProps: IConnectionProps = {

@@ -80,6 +80,8 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Add connection component to the network.
+   * @param connectionProps connection props
+   * @returns connection object
    */
   add(connectionProps: IConnectionProps): TConnection {
     this.logger.trace("add");
@@ -127,6 +129,7 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Remove connections by the node.
+   * @param node node object
    */
   removeByNode(node: TNode): void {
     this.resetState();
@@ -175,6 +178,7 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Update connections.
+   * @param connectionsProps connection props
    */
   update(connectionsProps?: IConnectionProps[]): void {
     this.logger.trace("update");

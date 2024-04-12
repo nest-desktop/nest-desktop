@@ -121,6 +121,9 @@ export class ActivityChartPanel extends BaseObj {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
+  /**
+   * Decrease panel height.
+   */
   decreaseHeight(): void {
     if (this.height === 1) {
       return;
@@ -129,6 +132,9 @@ export class ActivityChartPanel extends BaseObj {
     this._graph.update();
   }
 
+  /**
+   * Increase panel height.
+   */
   increaseHeight(): void {
     this.height += 1;
     this._graph.update();
@@ -141,6 +147,11 @@ export class ActivityChartPanel extends BaseObj {
     this._graph.removePanel(this);
   }
 
+  /**
+   * Select panel model.
+   * @param modelId
+   * @param modelProps
+   */
   selectModel(
     modelId: string = "spikeTimesRasterPlot",
     modelProps: IActivityChartPanelModelProps = {}
@@ -164,6 +175,9 @@ export class ActivityChartPanel extends BaseObj {
     }
   }
 
+  /**
+   * Toggle panel visibility.
+   */
   toggleVisible(): void {
     this._state.visible = !this._state.visible;
     this._graph.update();

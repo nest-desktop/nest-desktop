@@ -32,6 +32,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
 
   /**
    * Add data of CV of ISI for histogram panel.
+   * @param activity spike activity object
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

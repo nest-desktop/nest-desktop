@@ -68,6 +68,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
 
   /**
    * Add data of CV of ISI in each sender for histogram panel.
+   * @param activity spike activity object
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

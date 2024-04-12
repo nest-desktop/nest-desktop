@@ -28,6 +28,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
 
   /**
    * Initialize panel model for analog signals.
+   * @param modelProps
    *
    * @remarks
    * It sets activities and gets records from recorders.

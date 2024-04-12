@@ -92,6 +92,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   /**
    * Call on drag start.
+   * @param event
    */
   dragStart(event: any): void {
     this._workspace.state.dragging = true;
@@ -103,6 +104,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   /**
    * Call on drag end.
+   * @param event
    */
   dragEnd(event: any): void {
     this._workspace.state.dragging = false;
@@ -155,6 +157,9 @@ export class BaseNetworkGraph extends BaseObj {
     this._nodeGraph.render();
   }
 
+  /**
+   * Reset state of network graph.
+   */
   reset(): void {
     this._state.nodeMenu.modelValue = false;
     this._state.nodeMenu.offset = [0, 0];

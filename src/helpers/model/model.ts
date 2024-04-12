@@ -181,7 +181,7 @@ export class BaseModel extends BaseObj {
 
   /**
    * Add a parameter to the model specifications.
-   * @param paramProps parameter
+   * @param paramProps parameter props
    */
   addParameter(paramProps: IModelParamProps): void {
     this._params[paramProps.id] = new ModelParameter(this, paramProps);
@@ -305,28 +305,28 @@ export class BaseModel extends BaseObj {
 
   /**
    * Update  a parameter.
-   * @param model model object
+   * @param modelProps model object
    */
-  update(model: IModelProps): void {
-    this.logger.trace("update:", model.id);
+  update(modelProps: IModelProps): void {
+    this.logger.trace("update:", modelProps.id);
 
     // Update the model ID.
-    this._id = model.id || uuidv4();
+    this._id = modelProps.id || uuidv4();
 
     // Update the model recordables.
-    if (model.recordables) {
-      this.updateRecordables(model);
+    if (modelProps.recordables) {
+      this.updateRecordables(modelProps);
     }
 
     // Update the model parameters.
-    if (model.params) {
-      this.updateParameters(model.params);
+    if (modelProps.params) {
+      this.updateParameters(modelProps.params);
     }
   }
 
   /**
    * Update the model parameters.
-   * @param model model object
+   * @param params parameter props
    */
   updateParameters(params: IModelParamProps[]): void {
     // this.logger.trace("update parameters");
@@ -338,12 +338,12 @@ export class BaseModel extends BaseObj {
 
   /**
    * Update recordables from the config.
-   * @param model model object
+   * @param modelProps model props
    */
-  updateRecordables(model: IModelProps): void {
+  updateRecordables(modelProps: IModelProps): void {
     this._recordables = this.config?.localStorage.recordables?.filter(
       (recordable: INodeRecordProps) =>
-        model.recordables?.includes(recordable.id)
+        modelProps.recordables?.includes(recordable.id)
     );
   }
 }
