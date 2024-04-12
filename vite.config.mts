@@ -31,8 +31,8 @@ export default defineConfig({
         },
         chunkFileNames: (assetInfo: { facadeModuleId: string; name: string }) => {
           const name =
-            assetInfo.name?.endsWith(".vue_vue_type_style_index_0_lang") ||
-            assetInfo.name?.endsWith(".vue_vue_type_script_setup_true_lang")
+            assetInfo.name.endsWith(".vue_vue_type_style_index_0_lang") ||
+            assetInfo.name.endsWith(".vue_vue_type_script_setup_true_lang")
               ? assetInfo.name.split(".")[0]
               : assetInfo.name;
 
@@ -142,11 +142,5 @@ export default defineConfig({
   },
   server: {
     port: 54286,
-  },
-  test: {
-    coverage: {
-      provider: "istanbul", // or 'v8',
-      reporter: ["text", "json", "html"],
-    },
   },
 });
