@@ -75,7 +75,7 @@ export class NodeGraph extends BaseObj {
 
       this._networkGraph.state.nodeMenu.node = n;
       this._networkGraph.state.nodeMenu.offset = [event.clientX, event.clientY];
-      nextTick(() => (this._networkGraph.state.nodeMenu.modelValue = true));
+      nextTick(() => (this._networkGraph.state.nodeMenu.open = true));
     });
   }
 

@@ -1,5 +1,9 @@
 <template>
-  <v-menu :close-on-content-click="false" v-model="state.show">
+  <v-menu
+    :close-on-content-click="false"
+    activator="parent"
+    v-model="state.show"
+  >
     <v-card flat style="min-width: 300px">
       <!-- <v-card-title class="pa-0">
         <v-row no-gutters>
@@ -132,7 +136,9 @@ import { createDialog } from "vuetify3-dialog";
 import { INodeProps } from "@/helpers/node/node";
 import { NodeComponentProps, TNode } from "@/types/nodeTypes";
 
-const props = defineProps({ node: NodeComponentProps });
+const props = defineProps({
+  node: { required: true, type: NodeComponentProps },
+});
 
 const node = computed(() => props.node as TNode);
 

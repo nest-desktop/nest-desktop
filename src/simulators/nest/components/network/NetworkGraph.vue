@@ -6,8 +6,9 @@
 
     <div style="width: 320px">
       <NodeMenu
-        activator="parent"
-        v-bind="graph?.state.nodeMenu"
+        :model-value="graph?.state.nodeMenu.open"
+        :node="graph?.state.nodeMenu.node as NESTNode"
+        :offset="graph?.state.nodeMenu.offset"
         v-if="graph?.state.nodeMenu.node"
       />
     </div>
@@ -92,6 +93,7 @@ import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 import NodeMenu from "../node/NodeMenu.vue";
 import { NESTNetwork } from "../../helpers/network/network";
 import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
+import { NESTNode } from "../../helpers/node/node";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

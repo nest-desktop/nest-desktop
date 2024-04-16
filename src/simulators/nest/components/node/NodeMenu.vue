@@ -1,5 +1,9 @@
 <template>
-  <v-menu :close-on-content-click="false" v-model="state.show">
+  <v-menu
+    :close-on-content-click="false"
+    activator="parent"
+    v-model="state.show"
+  >
     <v-card flat style="min-width: 300px">
       <!-- <v-card-title class="pa-0">
         <v-row no-gutters>
@@ -192,7 +196,7 @@ import { NESTNode } from "../../helpers/node/node";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
-const props = defineProps({ node: NESTNode });
+const props = defineProps({ node: { required: true, type: NESTNode } });
 
 const node = computed(() => props.node as NESTNode);
 

@@ -91,7 +91,7 @@
 
             <v-btn color="primary" icon size="small" variant="text">
               <v-icon icon="mdi:mdi-dots-vertical" />
-              <NodeMenu :node activator="parent" />
+              <NodeMenu :node />
             </v-btn>
           </div>
         </template>
