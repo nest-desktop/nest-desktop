@@ -30,7 +30,7 @@ interface IActivityChartPanelState {
   visible: boolean;
 }
 
-export const plotType = "scatter"; // TODO: Production did not found webgl (use "scattergl")
+export const plotType = "scattergl"; // TODO: Production did not found webgl (use "scattergl")
 
 export class ActivityChartPanel extends BaseObj {
   // private static readonly _name = 'ActivityGraphPanel';

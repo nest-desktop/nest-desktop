@@ -100,6 +100,22 @@
           </div>
         </template>
 
+        <template #item="{ props }">
+          <v-list-item @click="select(props)" class="node-model-item">
+            {{ props.title }}
+
+            <template #append>
+              <v-btn
+                @click.stop="select(props, () => (state.menu = true))"
+                class="icon"
+                icon="mdi:mdi-menu-right"
+                size="small"
+                variant="text"
+              />
+            </template>
+          </v-list-item>
+        </template>
+
         <template #prepend>
           <v-btn
             class="position-absolute"
@@ -110,6 +126,23 @@
           >
             <NodeAvatar :node @click="node.state.select()" size="48px" />
           </v-btn>
+        </template>
+
+        <template #prepend-item v-if="state.elementType">
+          <v-list-item
+            @click="
+              () => {
+                state.elementType = '';
+                state.items = elementTypes;
+              }
+            "
+          >
+            Other element types
+
+            <template #prepend>
+              <v-icon icon="mdi:mdi-menu-left" />
+            </template>
+          </v-list-item>
         </template>
       </v-select>
     </v-card-title>
@@ -141,14 +174,14 @@
 
               <v-list density="compact">
                 <v-list-item
-                  :key="index"
                   :icon="item.icon"
-                  v-for="(item, index) in items"
+                  :key="index"
+                  :title="item.title"
+                  v-for="(item, index) in popItems"
                 >
                   <template #prepend>
-                    <v-icon :icon="item.icon" />
+                    <v-icon :class="item.iconClass" :icon="item.icon" />
                   </template>
-                  {{ item.title }}
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -188,7 +221,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
 
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
@@ -197,59 +230,56 @@ import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { NodeComponentProps, TNode } from "@/types/nodeTypes";
+import { TModel } from "@/types/modelTypes";
 
 const props = defineProps({ node: NodeComponentProps });
 
 const node = computed(() => props.node as TNode);
 
 const state = reactive({
+  elementType: "",
+  items: [] as (TModel | { title: string; value: string })[],
   menu: false,
   panelIdx: null,
 });
 
-const admins = [
-  {
-    title: "Management",
-    icon: "mdi:mdi-account-multiple-outline",
-    value: "management",
-  },
-  { title: "Settings", icon: "mdi:mdi-cog-outline", value: "settings" },
+const elementTypes = [
+  { title: "neuron", value: "neuron" },
+  { title: "recorder", value: "recorder" },
+  { title: "stimulator", value: "stimulator" },
 ];
 
-const cruds = [
-  { title: "Create", icon: "mdi:mdi-plus-outline", value: "create" },
-  { title: "Read", icon: "mdi:mdi-file-outline", value: "read" },
-  { title: "Update", icon: "mdi:mdi-update", value: "update" },
-  { title: "Delete", icon: "mdi:mdi-delete", value: "delete" },
+const popItems = [
+  {
+    icon: "mdi:mdi-reload",
+    iconClass: "mdi-flip-h",
+    onClick: () => {
+      node.value.size = 1;
+    },
+    title: "Set default size",
+  },
 ];
 
-const clickMe = [
-  { value: "1", title: "Click Me", icon: "mdi:mdi-numeric-1" },
-  { value: "2", title: "Click Me", icon: "mdi:mdi-numeric-2" },
-  { value: "3", title: "Click Me", icon: "mdi:mdi-numeric-3" },
-  { value: "4", title: "Click Me", icon: "mdi:mdi-numeric-4" },
-];
+const select = (props: any, callback?: () => void) => {
+  if (["neuron", "recorder", "stimulator"].includes(props.value)) {
+    state.elementType = props.value;
+    state.items =
+      node.value.network.project.modelDBStore.getModelsByElementType(
+        props.value
+      );
+  } else {
+    node.value.modelId = props.value;
+  }
 
-const items = [
-  {
-    value: "parameter",
-    title: "parameter",
-    icon: "mdi:mdi-account-circle",
-    items: admins,
-  },
-  {
-    value: "actions",
-    title: "actions",
-    icon: "mdi:mdi-database-cog-outline",
-    items: cruds,
-  },
-  {
-    value: "clickMe",
-    title: "clickMe",
-    icon: "mdi:mdi-information",
-    items: clickMe,
-  },
-];
+  if (callback) {
+    callback();
+  }
+};
+
+onMounted(() => {
+  state.items = node.value.models;
+  state.elementType = node.value.elementType;
+});
 </script>
 
 <style lang="scss">
@@ -277,6 +307,18 @@ const items = [
   .v-input__prepend,
   .v-input__append {
     padding-top: 0 !important;
+  }
+}
+
+.node-model-item {
+  .icon {
+    display: none;
+  }
+
+  &:hover {
+    .icon {
+      display: block;
+    }
   }
 }
 </style>

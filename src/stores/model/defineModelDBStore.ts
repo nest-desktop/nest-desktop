@@ -28,7 +28,7 @@ export function defineModelDBStore(
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 1,
+    minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " model DB store",
   });
 

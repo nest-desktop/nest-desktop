@@ -135,7 +135,8 @@ export function defineProjectStore(
           params: { projectId: state.projectId },
         })
         .then(() => {
-          setTimeout(() => state.project.startSimulation(), 100); // TODO: nextTick doesn't work.
+          // TODO: nextTick doesn't work.
+          setTimeout(() => state.project.startSimulation(), 100);
         });
     };
 
@@ -150,8 +151,6 @@ export function defineProjectStore(
         state.controllerOpen = !state.controllerOpen;
       }
       state.controllerView = state.controllerOpen ? item.id : "";
-
-      setTimeout(() => window.dispatchEvent(new Event("resize")), 400); // TODO: nextTick doesn't work.
     };
 
     return {

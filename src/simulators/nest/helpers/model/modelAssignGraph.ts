@@ -77,7 +77,7 @@ export class NESTModelAssignGraph {
       .selectAll("g.modelAssigned")
       .data(
         this._networkGraph.network.connections.recordedByWeightRecorder,
-        (c: NESTConnection | any) => c.hash // TODO: Better type
+        (c: NESTConnection | any) => c.hash // TODO: no any!
       );
 
     models

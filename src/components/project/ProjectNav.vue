@@ -3,6 +3,7 @@
     :model-value="navStore.state.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="navStore.state.width"
+    @transitionend="dispatchWindowResize()"
     class="d-print-none"
     permanent
   >
@@ -145,10 +146,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 
 import { TProject } from "@/types/projectTypes";
-
 import ProjectMenu from "./ProjectMenu.vue";
 
 import { useAppStore } from "@/stores/appStore";
@@ -180,7 +180,7 @@ const projectsMenuItems = [
 ];
 
 const dispatchWindowResize = () => {
-  window.dispatchEvent(new Event("resize"));
+  nextTick(() => window.dispatchEvent(new Event("resize")));
 };
 
 /**

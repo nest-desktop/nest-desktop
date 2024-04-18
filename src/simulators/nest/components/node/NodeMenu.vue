@@ -45,15 +45,11 @@
 
           <v-list-item
             :key="index"
+            :title="item.title"
             @click="item.onClick"
             v-for="(item, index) in items"
             v-show="item.show()"
           >
-            <template #prepend>
-              <v-icon :icon="item.icon" />
-            </template>
-            <v-list-item-title> {{ item.title }}</v-list-item-title>
-
             <template #append>
               <template v-if="item.append">
                 <v-icon icon="mdi:mdi-menu-right" size="small" />
@@ -74,6 +70,10 @@
                   hide-details
                 />
               </template> -->
+            </template>
+
+            <template #prepend>
+              <v-icon :class="item.iconClass" :icon="item.icon" />
             </template>
           </v-list-item>
         </v-list>
@@ -220,7 +220,8 @@ const items = [
   //   title: "Edit parameters",
   // },
   {
-    icon: "mdi:mdi-restart",
+    icon: "mdi:mdi-reload",
+    iconClass: "mdi-flip-h",
     id: "resetParams",
     onClick: () => {
       node.value.resetParams();
@@ -232,6 +233,7 @@ const items = [
   },
   {
     icon: "mdi:mdi-axis-arrow",
+    iconClass: "",
     id: "nodeSpatial",
     input: "switch",
     onClick: () => {
@@ -243,6 +245,7 @@ const items = [
   },
   {
     icon: "mdi:mdi-format-color-fill",
+    iconClass: "",
     id: "nodeColor",
     onClick: () => {
       state.content = "nodeColor";
@@ -254,6 +257,7 @@ const items = [
   },
   {
     icon: "mdi:mdi-information-outline",
+    iconClass: "",
     id: "modelDoc",
     onClick: () => {
       state.dialog = true;
@@ -263,6 +267,7 @@ const items = [
   },
   {
     icon: "mdi:mdi-content-copy",
+    iconClass: "",
     id: "nodeClone",
     onClick: () => {
       const newNode: any = JSON.parse(JSON.stringify(node.value.toJSON()));
@@ -287,6 +292,7 @@ const items = [
   // },
   {
     icon: "mdi:mdi-download",
+    iconClass: "",
     id: "eventsExport",
     onClick: () => {
       state.content = "eventsExport";
@@ -300,6 +306,7 @@ const items = [
   },
   {
     icon: "mdi:mdi-trash-can-outline",
+    iconClass: "",
     id: "nodeDelete",
     onClick: () => {
       createDialog({

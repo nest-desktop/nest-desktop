@@ -18,7 +18,6 @@ export const useNavStore = defineStore(
         state.open = !state.open;
       }
       state.view = state.open ? navItem.id : "";
-      setTimeout(() => window.dispatchEvent(new Event("resize")), 400); // TODO: nextTick doesn't work.
     };
     return { state, toggle };
   },

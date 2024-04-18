@@ -3,6 +3,7 @@
     :model-value="navState.state.open"
     :style="{ transition: navState.state.resizing ? 'initial' : '' }"
     :width="navState.state.width"
+    @transitionend="dispatchWindowResize()"
     permanent
   >
     <div @mousedown="resizeSidebar" class="resize-handle" />
@@ -65,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 
 import { TModel } from "@/types/modelTypes";
 
@@ -93,6 +94,10 @@ const menuItems = [
   { title: "Reload", icon: "mdi:mdi-reload" },
   { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
 ];
+
+const dispatchWindowResize = () => {
+  nextTick(() => window.dispatchEvent(new Event("resize")));
+};
 
 /**
  * Handle mouse move on resizing.

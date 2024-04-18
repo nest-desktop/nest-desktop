@@ -499,7 +499,8 @@ export class Insite {
             }
           );
 
-          // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
+          // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
+          // TODO: check in the future
           activities.sort((a: IActivityProps, b: IActivityProps) =>
             a.recorderUnitId && b.recorderUnitId
               ? a.recorderUnitId - b.recorderUnitId

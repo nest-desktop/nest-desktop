@@ -44,14 +44,13 @@
         <v-list density="compact">
           <v-list-item
             :key="index"
-            :icon="item.icon"
-            @click="item.onclick"
+            :title="item.title"
+            @click="item.onClick()"
             v-for="(item, index) in items"
           >
             <template #prepend>
-              <v-icon :icon="item.icon" />
+              <v-icon :class="item.iconClass" :icon="item.icon" />
             </template>
-            {{ item.title }}
           </v-list-item>
         </v-list>
       </v-menu>
@@ -81,20 +80,22 @@ const update = (value: number | number[]) => {
 
 const items = [
   {
-    title: "Set default value",
     icon: "mdi:mdi-reload",
-    onclick: () => {
+    iconClass: "mdi-flip-h",
+    onClick: () => {
       param.value.reset();
       param.value.changes();
     },
+    title: "Set default value",
   },
   {
-    title: "Hide parameter",
     icon: "mdi:mdi-eye-off-outline",
-    onclick: () => {
+    iconClass: "",
+    onClick: () => {
       param.value.hide();
       param.value.changes();
     },
+    title: "Hide parameter",
   },
 ];
 </script>

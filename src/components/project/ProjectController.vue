@@ -53,6 +53,7 @@
     :model-value="projectStore.state.controllerOpen"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="projectStore.state.controllerWidth"
+    @transitionend="dispatchWindowResize()"
     class="d-print-none"
     location="right"
     permanent
@@ -131,7 +132,7 @@
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
 import { LanguageSupport } from "@codemirror/language";
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 
@@ -182,13 +183,12 @@ if (darkMode()) {
 
 const dispatchWindowResize = () => {
   // console.log("Dispatch windows resize");
-  // nextTick(() => window.dispatchEvent(new Event("resize")));
-  setTimeout(() => window.dispatchEvent(new Event("resize")), 400); // TODO: nextTick doesn't work.
+  nextTick(() => window.dispatchEvent(new Event("resize")));
 };
 
 /**
  * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
+ * @param e MouseEvent from which the y position is taken
  */
 const handleBottomNavMouseMove = (e: MouseEvent) => {
   projectStore.value.state.bottomNavHeight = window.innerHeight - e.clientY;
