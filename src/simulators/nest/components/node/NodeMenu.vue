@@ -191,7 +191,7 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import ModelDocumentation from "../../views/ModelDoc.vue";
-import { NESTNode } from "../../helpers/node/node";
+import { INESTNodeProps, NESTNode } from "../../helpers/node/node";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
@@ -270,9 +270,13 @@ const items = [
     iconClass: "",
     id: "nodeClone",
     onClick: () => {
-      const newNode: any = JSON.parse(JSON.stringify(node.value.toJSON()));
-      newNode.view.position.x += 50;
-      newNode.view.color = undefined;
+      const newNode: INESTNodeProps = JSON.parse(
+        JSON.stringify(node.value.toJSON())
+      );
+      if (newNode.view) {
+        newNode.view.position.x += 50;
+        newNode.view.color = undefined;
+      }
       node.value.nodes.add(newNode);
       node.value.changes();
       closeMenu();

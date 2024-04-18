@@ -269,15 +269,15 @@ const popItems = [
   },
 ];
 
-const select = (props: any, callback?: () => void) => {
-  if (["neuron", "recorder", "stimulator"].includes(props.value)) {
-    state.elementType = props.value;
+const select = (props: Record<string, unknown>, callback?: () => void) => {
+  if (["neuron", "recorder", "stimulator"].includes(props.value as string)) {
+    state.elementType = props.value as string;
     state.items =
       node.value.network.project.modelDBStore.getModelsByElementType(
         props.value
       );
   } else {
-    node.value.modelId = props.value;
+    node.value.modelId = props.value as string;
   }
 
   if (callback) {

@@ -1,7 +1,7 @@
 // defineModelStore.ts
 
 import { computed, reactive } from "vue";
-import { defineStore } from "pinia";
+import { Store, defineStore } from "pinia";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { useModelDBStore } from "./modelDBStore";
@@ -11,7 +11,7 @@ export function defineModelStore(
     defaultView?: string;
     loggerMinLevel?: number;
     simulator: string;
-    useModelDBStore: any;
+    useModelDBStore: Store<any, any>;
   } = {
     simulator: "base",
     useModelDBStore,
@@ -61,11 +61,11 @@ export function defineModelStore(
      * Toggle controller navigation.
      * @param item
      */
-    const toggle = (item?: any): void => {
-      if (!state.controllerOpen || state.controllerView === item.id) {
+    const toggle = (item?: { id: string }): void => {
+      if (!state.controllerOpen || state.controllerView === item?.id) {
         state.controllerOpen = !state.controllerOpen;
       }
-      state.controllerView = state.controllerOpen ? item.id : "";
+      state.controllerView = state.controllerOpen ? (item?.id as string) : "";
     };
 
     return { model, init, save, state, toggle };

@@ -107,7 +107,7 @@ export function defineProjectDBStore(
       logger.trace("export project:", truncate(projectId));
 
       const project = findProject(projectId) as TProject;
-      const projectData: any = project.toJSON();
+      const projectData: TProjectProps = project.toJSON();
       if (withActivities) {
         projectData.activities = project.activities.toJSON();
       }

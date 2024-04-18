@@ -32,7 +32,7 @@
           :icon="item.icon"
           :key="index"
           :title="item.title"
-          @click.stop="item.click ? item.click() : undefined"
+          @click.stop="item.onClick ? item.onClick() : undefined"
           size="small"
           v-for="(item, index) in items"
           variant="plain"
@@ -67,16 +67,18 @@ const navItems = computed(() => props.navItems);
 // };
 
 const items: {
-  click: any;
   color?: string;
+  href?: string;
   icon: string;
   id: string;
+  onClick?: () => void;
   title: string;
+  to?: string;
 }[] = [
   // {
-  //   click: toggleWebGL,
   //   icon: "mdi:mdi-google-downasaur",
   //   id: "webgl",
+  //   onClick: toggleWebGL,
   //   title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
   //   color: appStore.webGL ? "green" : "red",
   // },
@@ -87,16 +89,16 @@ const items: {
   //   to: "/sandbox/",
   // },
   // {
-  //   click: toggleDevMode,
   //   color: appStore.session.devMode ? "green" : "red",
   //   icon: "mdi:mdi-developer-board",
+  //   onClick: toggleDevMode,
   //   id: "theme-light-dark",
   //   title: "Toggle dev mode",
   // },
   // {
-  //   click: () => appStore.toggleDarkMode(theme),
   //   icon: "mdi:mdi-theme-light-dark",
   //   id: "theme-light-dark",
+  //   onClick: () => appStore.toggleDarkMode(theme),
   //   title: "Toggle dark mode",
   // },
   // {

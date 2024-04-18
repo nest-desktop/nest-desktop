@@ -350,7 +350,9 @@ const githubRawURL = (group?: string) =>
 /**
  * Add and validate props.
  */
-const addProps = (dataRaw: any) => {
+const addProps = (
+  dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProjectProps)[]
+) => {
   if (dataRaw == undefined) return;
 
   const dataProps: (TModelProps | TProjectProps)[] = Array.isArray(dataRaw)
@@ -561,8 +563,8 @@ const loadProjectsFromDrive = (files: File[]) => {
   if (files.length === 0) return;
   const fileReader = new FileReader();
   fileReader.readAsText(files[0]);
-  fileReader.addEventListener("load", (event: any) =>
-    addProps(JSON.parse(event.target.result as string))
+  fileReader.addEventListener("load", (event: ProgressEvent<FileReader>) =>
+    addProps(JSON.parse(event.target?.result as string))
   );
 };
 
