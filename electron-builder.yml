@@ -12,8 +12,8 @@ icon: icons/icon.png
 linux:
   category: Education;Science
   target:
-    # - AppImage
-    - deb
+    - AppImage
+    # - deb
     # - snap
 productName: nest-desktop
 directories:

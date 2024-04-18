@@ -10,9 +10,9 @@
       "label": "fixed indegree",
       "params": [
         {
+          "component": "valueSlider",
           "format": "integer",
           "id": "indegree",
-          "component": "valueSlider",
           "label": "indegree",
           "max": 100,
           "min": 1,
@@ -28,15 +28,15 @@
           "visible": true
         },
         {
-          "id": "allow_autapses",
           "component": "checkbox",
+          "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
-          "id": "allow_multapses",
           "component": "checkbox",
+          "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -48,9 +48,9 @@
       "label": "fixed outdegree",
       "params": [
         {
+          "component": "valueSlider",
           "format": "integer",
           "id": "outdegree",
-          "component": "valueSlider",
           "label": "outdegree",
           "max": 100,
           "min": 1,
@@ -66,15 +66,15 @@
           "visible": true
         },
         {
-          "id": "allow_autapses",
           "component": "checkbox",
+          "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
-          "id": "allow_multapses",
           "component": "checkbox",
+          "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -86,9 +86,9 @@
       "label": "fixed total number",
       "params": [
         {
+          "component": "valueSlider",
           "format": "integer",
           "id": "N",
-          "component": "valueSlider",
           "label": "N",
           "max": 1000,
           "min": 1,
@@ -104,15 +104,15 @@
           "visible": true
         },
         {
-          "id": "allow_autapses",
           "component": "checkbox",
+          "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
-          "id": "allow_multapses",
           "component": "checkbox",
+          "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
           "visible": false
@@ -129,9 +129,9 @@
       "label": "pairwise Bernoulli",
       "params": [
         {
+          "component": "valueSlider",
           "format": "float",
           "id": "p",
-          "component": "valueSlider",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
@@ -147,22 +147,60 @@
           "visible": true
         },
         {
-          "id": "allow_autapses",
           "component": "checkbox",
+          "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
           "visible": false
         },
         {
-          "id": "allow_multapses",
           "component": "checkbox",
+          "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
           "visible": false
         },
         {
-          "id": "use_on_source",
           "component": "checkbox",
+          "id": "use_on_source",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "pairwise_poisson",
+      "label": "pairwise Poisson",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "float",
+          "id": "pairwise_avg_num_conns",
+          "label": "pairwise_avg_num_conns",
+          "max": 1.0,
+          "min": 0.01,
+          "rules": [
+            [
+              "0 < value",
+              "The value must be positive",
+              "error"
+            ]
+          ],
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "use_on_source",
           "label": "use on source",
           "value": false,
           "visible": false
@@ -174,8 +212,9 @@
       "label": "symmetric pairwise Bernoulli",
       "params": [
         {
-          "id": "p",
           "component": "valueSlider",
+          "format": "float",
+          "id": "p",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
@@ -191,24 +230,24 @@
           "visible": true
         },
         {
-          "id": "allow_autapses",
           "component": "checkbox",
+          "id": "allow_autapses",
           "label": "allow autapses",
           "readonly": true,
           "value": false,
           "visible": true
         },
         {
-          "id": "make_symmetric",
           "component": "checkbox",
+          "id": "make_symmetric",
           "label": "make symmetric",
           "readonly": true,
           "value": true,
           "visible": true
         },
         {
-          "id": "use_on_source",
           "component": "checkbox",
+          "id": "use_on_source",
           "label": "use on source",
           "value": false,
           "visible": false
