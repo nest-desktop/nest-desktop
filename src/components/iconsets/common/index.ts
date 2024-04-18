@@ -4,14 +4,14 @@ import type { IconSet, IconProps } from "vuetify";
 import diceMultipleOutlineIcon from "./DiceMultipleOutlineIcon.vue";
 import dotsGridIcon from "./DotsGridIcon.vue";
 
-const customSvgNameToComponent: any = {
+const customSvgNameToComponent: { [key: string]: any } = {
   diceMultipleOutlineIcon,
-  dotsGridIcon
+  dotsGridIcon,
 };
 
 const custom: IconSet = {
-  // @ts-ignore
-  component: (props: IconProps) => h(customSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(customSvgNameToComponent[props.icon as string]),
 };
 
-export { custom /* aliases */ };
+export { custom };

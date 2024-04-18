@@ -43,10 +43,11 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(["update:modelValue"]);
 
-const state: { tickIdx: number; ticks: Record<number, string> } = reactive({
-  tickIdx: 0,
-  ticks: {},
-});
+const state: { tickIdx: number; ticks: { [key: string]: number | string } } =
+  reactive({
+    tickIdx: 0,
+    ticks: {},
+  });
 
 const tickIdx = computed({
   get: () => state.tickIdx,
@@ -79,7 +80,6 @@ const increment = () => {
 const init = () => {
   state.ticks = {};
   props.tickLabels.forEach((value: number | string, index: number) => {
-    // @ts-ignore
     state.ticks[index] = value;
   });
   update();

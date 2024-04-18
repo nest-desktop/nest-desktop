@@ -10,12 +10,12 @@ const simulatorSvgNameToComponent: any = {
   arbor,
   nest,
   norse,
-  pynn
+  pynn,
 };
 
 const simulator: IconSet = {
-  // @ts-ignore
-  component: (props: IconProps) => h(simulatorSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(simulatorSvgNameToComponent[props.icon as string]),
 };
 
-export { simulator /* aliases */ };
+export { simulator };

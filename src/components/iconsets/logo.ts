@@ -6,13 +6,13 @@ import type { IconSet, IconProps } from "vuetify";
 
 import ebrainsLogo from "@/assets/img/logo/ebrains-logo.svg";
 
-const customSvgNameToComponent: any = {
+const customSvgNameToComponent: { [key: string]: any } = {
   ebrainsLogo,
 };
 
 const logo: IconSet = {
-  // @ts-ignore
-  component: (props: IconProps) => h(customSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(customSvgNameToComponent[props.icon as string]),
 };
 
-export { logo /* aliases */ };
+export { logo };

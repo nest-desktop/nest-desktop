@@ -6,17 +6,17 @@ import type { IconSet, IconProps } from "vuetify";
 
 import connection from "./connections/ConnectionIcon.vue";
 import networkIcon from "./NetworkIcon.vue";
-import neuronShape from "./nodes/NeuronShapeIcon.vue";
+import neuron from "./nodes/NeuronIcon.vue";
 import neuronExcitatory from "./nodes/NeuronExcitatoryIcon.vue";
 import neuronInhibitory from "./nodes/NeuronInhibitoryIcon.vue";
-import neuron from "./nodes/NeuronIcon.vue";
+import neuronShape from "./nodes/NeuronShapeIcon.vue";
 import recorder from "./nodes/RecorderIcon.vue";
 import stimulator from "./nodes/StimulatorIcon.vue";
 import synapseExcitatory from "./connections/SynapseExcitatoryIcon.vue";
 import synapseInhibitory from "./connections/SynapseInhibitoryIcon.vue";
 import synapseRecorder from "./connections/SynapseRecorderIcon.vue";
 
-const networkSvgNameToComponent: any = {
+const networkSvgNameToComponent: { [key: string]: any } = {
   neuron,
   "neuron-shape": neuronShape,
   "neuron-mixed": neuron,
@@ -32,8 +32,8 @@ const networkSvgNameToComponent: any = {
 };
 
 const network: IconSet = {
-  // @ts-ignore
-  component: (props: IconProps) => h(networkSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(networkSvgNameToComponent[props.icon as string]),
 };
 
-export { network /* aliases */ };
+export { network };

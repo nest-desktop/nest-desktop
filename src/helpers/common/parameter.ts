@@ -179,7 +179,7 @@ export class Parameter extends BaseObj {
     const param = this.modelParam;
 
     const options: {
-      component: string;
+      component?: string;
       defaultValue: TParamValue;
       id: string;
       label: string;
@@ -189,7 +189,7 @@ export class Parameter extends BaseObj {
       tickLabels?: (number | string)[];
       unit: string;
     } = {
-      component: param.component,
+      component: param.component || "valueInput",
       defaultValue: param.value,
       id: param.id,
       label: param.label,
@@ -340,9 +340,32 @@ export class Parameter extends BaseObj {
     return Number(value).toFixed(fractionDigits);
   }
 
-  toggleDisabled(): void {
-    this._state.disabled = !this._state.disabled;
-    this.changes();
+  /**
+   * Serialize for JSON.
+   * @return parameter props
+   */
+  toJSON(): IParamProps {
+    const paramProps: IParamProps = {
+      id: this._id,
+      value: this._value,
+    };
+
+    // Add value factors if existed.
+    if (this._factors.length > 0) {
+      paramProps.factors = this._factors;
+    }
+
+    // Add rules for validation if existed.
+    if (this._rules.length > 0) {
+      paramProps.rules = this._rules;
+    }
+
+    // Add param type if not constant.
+    if (!this.isConstant) {
+      paramProps.type = this.typeToJSON();
+    }
+
+    return paramProps;
   }
 
   /**
@@ -404,6 +427,14 @@ export class Parameter extends BaseObj {
   }
 
   /**
+   * Toggle disabled state.
+   */
+  toggleDisabled(): void {
+    this._state.disabled = !this._state.disabled;
+    this.changes();
+  }
+
+  /**
    * Serialize parameter type for JSON.
    * @return parameter type props
    */
@@ -420,34 +451,6 @@ export class Parameter extends BaseObj {
     }
 
     return paramType;
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return parameter props
-   */
-  toJSON(): IParamProps {
-    const paramProps: IParamProps = {
-      id: this._id,
-      value: this._value,
-    };
-
-    // Add value factors if existed.
-    if (this._factors.length > 0) {
-      paramProps.factors = this._factors;
-    }
-
-    // Add rules for validation if existed.
-    if (this._rules.length > 0) {
-      paramProps.rules = this._rules;
-    }
-
-    // Add param type if not constant.
-    if (!this.isConstant) {
-      paramProps.type = this.typeToJSON();
-    }
-
-    return paramProps;
   }
 
   /**

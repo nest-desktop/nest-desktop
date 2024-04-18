@@ -1,4 +1,4 @@
-// activityChartPanelModel.ts - 20 anys
+// activityChartPanelModel.ts
 
 import { reactive, UnwrapRef } from "vue";
 import { Data } from "plotly.js-dist-min";
@@ -6,14 +6,46 @@ import { Data } from "plotly.js-dist-min";
 import { Activity } from "../activity/activity";
 import { ActivityChartPanel } from "./activityChartPanel";
 import { BaseObj } from "../common/base";
-import { NodeRecord } from "../node/nodeRecord";
+import { NodeRecord, INodeRecordProps } from "../node/nodeRecord";
 import { currentBackgroundColor } from "../common/theme";
+import { TParamValue } from "../common/parameter";
+
+interface IActivityChartPanelModelParamProps {
+  _parent?: ActivityChartPanelModel;
+  _value?: string;
+  component: string;
+  id: string;
+  items?: string[] | { [key: string]: string }[];
+  label: string;
+  selected?: number[];
+  show?: boolean;
+  ticks?: number[];
+  unit?: string;
+  value: TParamValue;
+}
 
 export interface IActivityChartPanelModelProps {
   id?: string;
   markerSize?: number;
-  params?: any;
-  records?: any;
+  params?: { [key: string]: TParamValue };
+  records?: INodeRecordProps[];
+}
+
+interface IActivityChartPanelModelState {
+  height: number;
+  histogram: {
+    end: number;
+    start: number;
+  };
+  records: NodeRecord[];
+  recordsVisible: NodeRecord[];
+  time: {
+    end: number;
+    start: number;
+  };
+  visible: boolean;
+  visibleThreshold: string;
+  xaxisType: "linear" | "log";
 }
 
 export abstract class ActivityChartPanelModel extends BaseObj {
@@ -24,8 +56,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _id: string = "";
   private _label: string = "";
   private _panel: ActivityChartPanel; // parent
-  private _params: { [key: string]: any } = {};
-  private _state: UnwrapRef<any>;
+  private _params: IActivityChartPanelModelParamProps[] = [];
+  private _state: UnwrapRef<IActivityChartPanelModelState>;
 
   constructor(panel: ActivityChartPanel) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -33,18 +65,20 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this._id = "activityChart";
     this._panel = panel;
     this._state = reactive({
+      height: 1,
       histogram: {
         end: -1e100,
         start: 1e100,
       },
-      records: [],
-      recordsVisible: [],
+      records: [] as NodeRecord[],
+      recordsVisible: [] as NodeRecord[],
       time: {
         end: 0,
         start: 0,
       },
       visible: true,
       visibleThreshold: "legendonly",
+      xaxisType: "linear",
     });
   }
 
@@ -107,15 +141,23 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     return this._panel;
   }
 
-  get params(): { [key: string]: any } {
+  get params(): IActivityChartPanelModelParamProps[] {
     return this._params;
   }
 
-  set params(value: { [key: string]: any }) {
+  set params(value: IActivityChartPanelModelParamProps[]) {
     this._params = value;
   }
 
-  get state(): UnwrapRef<any> {
+  get records(): NodeRecord[] {
+    return this._state.records as NodeRecord[];
+  }
+
+  get recordsVisible(): NodeRecord[] {
+    return this._state.recordsVisible as NodeRecord[];
+  }
+
+  get state(): UnwrapRef<IActivityChartPanelModelState> {
     return this._state;
   }
 
@@ -163,77 +205,74 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   initAnalogRecords(): void {
     this.logger.trace("init analog records");
 
-    this._state.records = [];
+    this._state.records = [] as NodeRecord[];
 
     this.activities
       .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
       .forEach((activity: Activity) => {
         if (activity.recorder.records) {
           activity.recorder.records.forEach((record: NodeRecord) => {
-            this._state.records.push(record);
+            this.records.push(record);
           });
         }
       });
 
-    this._state.recordsVisible = [...this.state.records];
+    this._state.recordsVisible = [...this.records] as NodeRecord[];
   }
 
   /**
    * Initialize visible records from analog activities.
-   * @param records
+   * @param recordsProps node records props
    */
-  initAnalogRecordsVisible(records: any[] = []): void {
-    this.logger.trace("init visible analog records:", records);
+  initAnalogRecordsVisible(recordsProps: INodeRecordProps[] = []): void {
+    this.logger.trace("init visible analog records:", recordsProps);
 
-    if (this._state.records.length === 0) {
-      this._state.recordsVisible = [];
+    if (this.records.length === 0) {
+      this._state.recordsVisible = [] as NodeRecord[];
       return;
     }
 
-    if (records.length > 0) {
-      this._state.recordsVisible = records
-        .filter((record: any) =>
-          this._state.records.some(
-            (rec: NodeRecord) => rec.groupId === record.groupId
+    if (recordsProps.length > 0) {
+      this._state.recordsVisible = recordsProps
+        .filter((recordProps: INodeRecordProps) =>
+          this.records.some(
+            (rec: NodeRecord) => rec.groupId === recordProps.groupId
           )
         )
-        .map((record: any) => {
-          const recordVisible = this._state.records.find(
-            (rec: NodeRecord) => rec.groupId === record.groupId
+        .map((recordProps: INodeRecordProps) => {
+          const recordVisible = this.records.find(
+            (rec: NodeRecord) => rec.groupId === recordProps.groupId
           );
-          if (recordVisible != null) recordVisible.color = record.color;
-          return recordVisible;
-        });
+          if (recordVisible != null) recordVisible.color = recordProps.color;
+          return recordVisible as NodeRecord;
+        }) as NodeRecord[];
     }
   }
 
   /**
    * Initialize params for controller.
-   * @param params
+   * @param paramsProps parameter props
    */
-  initParams(params: any = {}): void {
-    Object.keys(this._params)
-      .filter((paramKey: string) => params[paramKey])
-      .forEach((paramKey: string) => {
-        this.params[paramKey] = params[paramKey];
-      });
+  initParams(paramsProps: { [key: string]: TParamValue } = {}): void {
+    this._params.forEach((param: IActivityChartPanelModelParamProps) => {
+      if (paramsProps.hasOwnProperty(param.id)) {
+        param.value = paramsProps[param.id];
+      }
+    });
   }
 
   /**
    * Remove record from the state.
-   * @param record
+   * @param record node record objects
    */
   removeRecord(record: NodeRecord): void {
-    this._state.recordsVisible.splice(
-      this._state.recordsVisible.indexOf(record),
-      1
-    );
+    this.recordsVisible.splice(this.recordsVisible.indexOf(record), 1);
   }
 
   /**
    * Reset activity panel model.
    */
-  reset(): any {
+  reset(): void {
     this.data = [];
   }
 
@@ -244,18 +283,21 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   toJSON(): IActivityChartPanelModelProps {
     const modelProps: IActivityChartPanelModelProps = {
       id: this._id,
-      params: {},
+      params: {} as { [key: string]: TParamValue },
     };
 
-    if (this._params.length > 0) {
-      this._params.forEach((param: any) => {
-        modelProps.params[param.id] = param.value;
+    if (modelProps.params && this._params.length > 0) {
+      this._params.forEach((param: IActivityChartPanelModelParamProps) => {
+        const params = modelProps.params;
+        if (params) {
+          params[param.id] = param.value;
+        }
       });
     }
 
     if (this._state.recordsVisible.length > 0) {
-      modelProps.records = this._state.recordsVisible.map(
-        (record: NodeRecord) => record.toJSON()
+      modelProps.records = this.recordsVisible.map((record: NodeRecord) =>
+        record.toJSON()
       );
     }
     return modelProps;
@@ -306,13 +348,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateAnalogRecords(): void {
     // Remove old records from other recorder.
-    this._state.records = this._state.records.filter(
-      (panelRecord: NodeRecord) => {
-        return panelRecord.node.records.some(
-          (record: NodeRecord) => record.groupId === panelRecord.groupId
-        );
-      }
-    );
+    this._state.records = this.records.filter((panelRecord: NodeRecord) => {
+      return panelRecord.node.records.some(
+        (record: NodeRecord) => record.groupId === panelRecord.groupId
+      );
+    }) as NodeRecord[];
 
     // Add new records from current recorder.
     this._activities
@@ -320,15 +360,15 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       .forEach((activity: Activity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
-            if (!this._state.records.includes(record)) {
-              this._state.records.push(record);
+            if (!this.records.includes(record)) {
+              this.records.push(record);
             }
           });
         }
       });
 
     // Update records.
-    this._state.records.forEach((record: NodeRecord) => record.update());
+    this.records.forEach((record: NodeRecord) => record.update());
   }
 
   /**
@@ -362,7 +402,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       }
 
       const activity = this.getActivity(data.activityIdx);
-      const record = this._state.recordsVisible.find(
+      const record = this.recordsVisible.find(
         (record: NodeRecord) =>
           record.id === data.recordId &&
           record.activity.idx === data.activityIdx
@@ -393,7 +433,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @remarks
    * It is a replacement for abstract component.
    */
-  updateLayoutLabel(records?: any): void {
+  updateLayoutLabel(records?: NodeRecord[]): void {
     records;
   }
 

@@ -2,7 +2,7 @@
 
 import { UnwrapRef, nextTick, reactive } from "vue";
 import Plotly from "plotly.js-dist-min";
-// @ts-ignore
+// @ts-ignore - Module '"plotly.js-dist-min"' has no exported member 'Partial'.
 import { Partial } from "plotly.js-dist-min";
 
 import {
@@ -320,7 +320,7 @@ export class ActivityChartGraph extends BaseObj {
     this.logger.trace("init events");
     if (!this._state.ref) return;
 
-    // @ts-ignore
+    // @ts-ignore - Property 'on' does not exist on type 'Root'. Property 'on' does not exist on type 'string'.
     this._state.ref.on("plotly_legendclick", (plot: any) => {
       nextTick(() => {
         if (plot && plot.data) {
@@ -413,8 +413,11 @@ export class ActivityChartGraph extends BaseObj {
     );
 
     const markerSizes = dataSpikeTimeRasterPlot.map(
-      // @ts-ignore
-      (d: Partial<Plotly.Data>) => this._panels[d.panelIdx].model.markerSize
+      (d: Partial<Plotly.Data>) => {
+        const model = this._panels[d.panelIdx]
+          .model as SpikeTimesRasterPlotModel;
+        return model.markerSize;
+      }
     );
     const update = {
       "marker.size": markerSizes,

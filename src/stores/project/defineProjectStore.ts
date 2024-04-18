@@ -54,8 +54,12 @@ export function defineProjectStore(
 
     const projectDBStore = args.useProjectDBStore();
 
+    /**
+     * Initialize project store.
+     */
     const init = () => {
       logger.trace("init");
+
       if (projectDBStore.state.projects.length > 0) {
         const firstProject = projectDBStore.state.projects[0];
         state.projectId = firstProject.id;
@@ -64,11 +68,20 @@ export function defineProjectStore(
     };
 
     /**
+     * Check if the project is selected.
+     * @param projectId project ID
+     * @returns boolean
+     */
+    const isProjectSelected = (projectId: string): boolean =>
+      state.projectId === projectId;
+
+    /**
      * Load current project from store.
-     * @param projectId
+     * @param projectId project ID
      */
     const loadProject = (projectId: string = "") => {
       logger.trace("load project:", truncate(projectId || ""));
+
       state.projectId = projectId;
       state.project = projectDBStore.getProject(projectId);
       state.projectId = state.project.id;
@@ -92,9 +105,11 @@ export function defineProjectStore(
 
     /**
      * Reload the project in the list.
+     * @param project project object
      */
     const reloadProject = (project: TProject) => {
       logger.trace("reload project:", truncate(project.id));
+
       projectDBStore.unloadProject(project.id);
       state.project = projectDBStore.getProject(project.id);
     };
@@ -104,6 +119,7 @@ export function defineProjectStore(
      */
     const saveCurrentProject = () => {
       logger.trace("save project:", truncate(state.projectId || ""));
+
       projectDBStore.saveProject(state.projectId);
     };
 
@@ -112,6 +128,7 @@ export function defineProjectStore(
      */
     const startSimulation = () => {
       logger.trace("start simulation:", truncate(state.projectId || ""));
+
       router
         .push({
           name: args.simulator + "ActivityExplorer",
@@ -126,8 +143,9 @@ export function defineProjectStore(
      * Toggle navigation drawer.
      * @param item
      */
-    const toggleController = (item?: any) => {
+    const toggleController = (item: { id: string }) => {
       logger.trace("toggle controller:", item.id);
+
       if (!state.controllerOpen || state.controllerView === item.id) {
         state.controllerOpen = !state.controllerOpen;
       }
@@ -138,6 +156,7 @@ export function defineProjectStore(
 
     return {
       init,
+      isProjectSelected,
       loadProject,
       project,
       reloadProject,

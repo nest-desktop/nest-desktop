@@ -18,7 +18,7 @@ export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
     this.panel.height = 20;
     this.panel.xAxis = 1;
 
-    this.init(modelProps.records);
+    this.init(modelProps);
   }
 
   /**

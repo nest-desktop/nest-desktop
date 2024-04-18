@@ -104,7 +104,7 @@ export class NodeGraphShape extends BaseObj {
   /**
    * Draw node shape.
    * @param selector
-   * @param node
+   * @param node node object
    */
   drawShape(selector: Selection<any, any, any, any>, node: TNode): void {
     this.logger.trace("draw shape");
@@ -144,7 +144,7 @@ export class NodeGraphShape extends BaseObj {
   /**
    * Initialize a node shape.
    * @param selector
-   * @param node
+   * @param node node object
    */
   init(selector: Selection<any, any, any, any>, node: TNode): void {
     this.logger.silly("init");
@@ -167,8 +167,11 @@ export class NodeGraphShape extends BaseObj {
         );
 
         this._networkGraph.workspace.animationOff();
-        // @ts-ignore
-        this._networkGraph.network.connectNodes(nodes.state.selectedNode, node);
+
+        this._networkGraph.network.connectNodes(
+          nodes.state.selectedNode.idx,
+          node.idx
+        );
         this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {
@@ -193,11 +196,11 @@ export class NodeGraphShape extends BaseObj {
    */
   render(): void {
     this.logger.silly("render");
-    const nodes = select("g#nodes").selectAll("g.node");
+    const nodes: Selection<any, any, any, any> =
+      select("g#nodes").selectAll("g.node");
 
     // Check if neuron has to change its shape.
-    //@ts-ignore
-    nodes.each((node: TNode, idx: number, elements: any[]) => {
+    nodes.each((node: TNode, idx: number, elements: any) => {
       const elem = select(elements[idx]);
 
       if (

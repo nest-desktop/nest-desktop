@@ -1,7 +1,14 @@
 // nodeGraph.ts
 
 import { nextTick } from "vue";
-import { Selection, Transition, drag, select, transition } from "d3";
+import {
+  DragBehavior,
+  Selection,
+  Transition,
+  drag,
+  select,
+  transition,
+} from "d3";
 
 import { BaseObj } from "../common/base";
 import { NodeGraphConnector } from "./nodeGraphConnector";
@@ -29,10 +36,24 @@ export class NodeGraph extends BaseObj {
   }
 
   /**
+   * Drag node graph.
+   * @param event mouse event
+   * @param node node object
+   */
+  drag(event: MouseEvent, node: TNode): void {
+    this.logger.silly("drag");
+    if (this._networkGraph.workspace.state.dragLine) return;
+
+    node.view.state.position.x = event.x;
+    node.view.state.position.y = event.y;
+    this._networkGraph.render();
+  }
+
+  /**
    * Init node element.
-   * @param node
-   * @param idx
-   * @param elements
+   * @param node node object
+   * @param idx index of the elements
+   * @param elements SVG elements
    */
   initNode(
     node: TNode,
@@ -77,20 +98,6 @@ export class NodeGraph extends BaseObj {
       this._networkGraph.state.nodeMenu.offset = [event.clientX, event.clientY];
       nextTick(() => (this._networkGraph.state.nodeMenu.open = true));
     });
-  }
-
-  /**
-   * Drag node graph.
-   * @param event
-   * @param node
-   */
-  drag(event: MouseEvent, node: TNode): void {
-    this.logger.silly("drag");
-    if (this._networkGraph.workspace.state.dragLine) return;
-
-    node.view.state.position.x = event.x;
-    node.view.state.position.y = event.y;
-    this._networkGraph.render();
   }
 
   /**
@@ -141,10 +148,11 @@ export class NodeGraph extends BaseObj {
       .selectAll("g.node")
       .data(this.network.nodes.all, (n: any) => n.hash);
 
-    const dragging = drag()
+    const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      // @ts-ignore
-      .on("drag", (e: MouseEvent, n: TNode) => this.drag(e, n))
+      .on("drag", (e: MouseEvent, n: TNode | unknown) =>
+        this.drag(e, n as TNode)
+      )
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     nodes
@@ -162,8 +170,7 @@ export class NodeGraph extends BaseObj {
           }) scale( ${n.state.isFocused ? 1.2 : 1})`
       )
       .style("opacity", 0)
-      // @ts-ignore
-      .call(dragging)
+      .call(dragging, null)
       .each((n: TNode, i: number, e) => this.initNode(n, i, e));
 
     nodes.exit().remove();

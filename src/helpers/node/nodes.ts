@@ -253,7 +253,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return network object
+   * @return network props
    */
   toJSON(): INodeProps[] {
     return this.nodes.map((node: TNode) => node.toJSON());

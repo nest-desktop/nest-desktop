@@ -10,6 +10,6 @@ const pynnSvgNameToComponent: { [key: string]: Object } = {
 };
 
 export default {
-  // @ts-ignore
-  component: (props: IconProps) => h(pynnSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(pynnSvgNameToComponent[props.icon as string]),
 };

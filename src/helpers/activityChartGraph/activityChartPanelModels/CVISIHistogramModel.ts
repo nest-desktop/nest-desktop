@@ -21,6 +21,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     this.params = [
       {
         component: "tickSlider",
+        id: "binSize",
         label: "bin size",
         ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
         value: 0.05,
@@ -39,7 +40,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
 
     const start = 0;
     const end = 5;
-    const size = this.params[0].value;
+    const size = this.params[0].value as number;
     const isi: number[][] = activity.ISI();
     const x: number[] = isi.map(
       (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)

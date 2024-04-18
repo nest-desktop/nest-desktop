@@ -156,7 +156,11 @@
         </v-list-item>
       </v-list>
 
-      <v-list class="py-0" v-if="node.paramsVisible.length > 0">
+      <v-list
+        :key="node.modelId"
+        class="py-0"
+        v-if="node.paramsVisible.length > 0"
+      >
         <NodeParamEditor
           :key="index"
           :param="node.params[paramId]"

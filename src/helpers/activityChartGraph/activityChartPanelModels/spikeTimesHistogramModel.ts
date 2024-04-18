@@ -41,7 +41,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     const x: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
-    const size: number = this.params[0].value;
+    const size: number = this.params[0].value as number;
 
     this.data.push({
       activityIdx: activity.idx,

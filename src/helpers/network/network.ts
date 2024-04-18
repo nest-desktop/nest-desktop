@@ -140,18 +140,18 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Connect node components by user interaction.
-   * @param source node object
-   * @param target node object
+   * @param sourceIdx node index
+   * @param targetIdx node index
    *
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
    */
-  connectNodes(source: TNode, target: TNode): void {
+  connectNodes(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
     const connection: TConnection | undefined = this.connections.add({
-      source: source.idx,
-      target: target.idx,
+      source: sourceIdx,
+      target: targetIdx,
     });
 
     // Trigger network change.

@@ -10,6 +10,6 @@ const norseSvgNameToComponent: { [key: string]: Object } = {
 };
 
 export default {
-  // @ts-ignore
-  component: (props: IconProps) => h(norseSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(norseSvgNameToComponent[props.icon as string]),
 };

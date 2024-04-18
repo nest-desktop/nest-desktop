@@ -8,10 +8,7 @@ import { ActivityChartPanel } from "../activityChartPanel";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 export interface IAnalogSignalPanelModelProps
-  extends IActivityChartPanelModelProps {
-  records?: any;
-  params?: any[];
-}
+  extends IActivityChartPanelModelProps {}
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(
@@ -44,7 +41,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
 
   get axisTitle(): string {
     let title = "";
-    const records = this.state.recordsVisible;
+    const records = this.recordsVisible;
     const uniqueRecords = new Set(
       records.map((record: NodeRecord) => record.id)
     );

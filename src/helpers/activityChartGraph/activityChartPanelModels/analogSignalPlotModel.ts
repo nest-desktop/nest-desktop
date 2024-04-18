@@ -21,30 +21,21 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.id = "analogSignalPlot";
     this.panel.xAxis = 1;
 
-    this.params = {
-      selected: [0, 1, 2, 3, 4, 5],
-      // {
-      //   id: "displayedLines",
-      //   component: "rangeSlider",
-      //   label: "displayed lines",
-      //   value: [0, 10],
-      //   min: 0,
-      //   max: 100,
-      // },
-      // {
-      //   id: "averageLine",
-      //   component: "checkbox",
-      //   label: "average line",
-      //   value: false,
-      // },
-      // {
-      //   id: "spikeThreshold",
-      //   component: "checkbox+valueInput",
-      //   label: "spike threshold",
-      //   value: -55,
-      //   visible: false,
-      // },
-    };
+    this.params = [
+      {
+        id: "averageLine",
+        component: "checkbox",
+        label: "average line",
+        value: false,
+      },
+      {
+        id: "spikeThreshold",
+        component: "checkbox+valueInput",
+        label: "spike threshold",
+        value: -55,
+        show: false,
+      },
+    ];
 
     this.initParams(modelProps.params);
   }
@@ -279,14 +270,14 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   override update(): void {
     this.data = [];
-    if (this.state.recordsVisible.length === 0) {
+    if (this.recordsVisible.length === 0) {
       return;
     }
 
     this.updateAnalogRecords();
     this.updateTime();
 
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
+    this.recordsVisible.forEach((record: NodeRecord) => {
       // if (record.id === "V_m" && this.params.spikeThreshold?.visible) {
       //   // Add spike threshold for membrane potential.
       //   this.addSpikeThresholdLine(record);
@@ -300,7 +291,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         this.addMultipleLines(record);
 
         // Add average line for the population.
-        if (this.params.averageLine) {
+        if (this.params[0].value as boolean) {
           this.addAverageLine(record);
         }
       }
@@ -330,7 +321,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return;
     }
 
-    const nodeIds = this.state.recordsVisible
+    const nodeIds = this.recordsVisible
       .map((record: NodeRecord) => record.activity.nodeIds)
       .flat();
 
@@ -339,7 +330,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return;
     }
 
-    const recordIds = this.state.recordsVisible.map(
+    const recordIds = this.recordsVisible.map(
       (record: NodeRecord) => record.id
     );
 

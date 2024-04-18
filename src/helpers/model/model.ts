@@ -1,7 +1,5 @@
 // model.ts
 
-// import { Store } from "pinia";
-import { UnwrapRef, reactive } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 import { BaseObj } from "../common/base";
@@ -10,7 +8,6 @@ import { IDoc } from "../common/database";
 import { IModelParamProps, ModelParameter } from "./modelParameter";
 import { INodeRecordProps } from "../node/nodeRecord";
 import { IParamProps } from "../common/parameter";
-// import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 export interface IModelProps extends IDoc {
   abbreviation?: string;
@@ -21,10 +18,6 @@ export interface IModelProps extends IDoc {
   recordables?: string[];
 }
 
-interface IModelState {
-  selected: boolean;
-}
-
 export class BaseModel extends BaseObj {
   private readonly _name = "Model";
 
@@ -33,12 +26,10 @@ export class BaseModel extends BaseObj {
   private _elementType: string; // element type of the model
   private _favorite: boolean = false;
   private _id: string; // model id
-  // private _idx: number; // generative
   private _label: string; // model label for view
   private _params: { [key: string]: ModelParameter } = {}; // model parameters
   private _paramsVisible: string[] = [];
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
-  private _state: UnwrapRef<IModelState>;
 
   constructor(modelProps: IModelProps, configProps?: IConfigProps) {
     super({
@@ -49,17 +40,11 @@ export class BaseModel extends BaseObj {
     this._doc = modelProps;
     this._id = modelProps.id || uuidv4();
 
-    // this._idx = this._modelDBStore.state.models.length;
-
     this._elementType = modelProps.elementType || "neuron";
 
     this._label = modelProps.label || "";
     this._abbreviation = modelProps.abbreviation || "";
     this._favorite = modelProps.favorite || false;
-
-    this._state = reactive({
-      selected: false,
-    });
 
     this.update(modelProps);
   }
@@ -91,10 +76,6 @@ export class BaseModel extends BaseObj {
   set id(value: string) {
     this._id = value;
   }
-
-  // get idx(): number {
-  //   return this._idx;
-  // }
 
   /**
    * Check if the model is an analog recorder.
@@ -171,10 +152,6 @@ export class BaseModel extends BaseObj {
     return this._recordables;
   }
 
-  get state(): UnwrapRef<IModelState> {
-    return this._state;
-  }
-
   get value(): string {
     return this.id;
   }
@@ -217,14 +194,6 @@ export class BaseModel extends BaseObj {
     return paramId in this._params;
   }
 
-  // /**
-  //  * Delete the model object from model list.
-  //  */
-  // async delete(): Promise<void> {
-  //   const modelDBStore: Store<any, any> = useModelDBStore();
-  //   return modelDBStore.deleteModel(this.docId);
-  // }
-
   changes(): void {}
 
   /**
@@ -252,25 +221,10 @@ export class BaseModel extends BaseObj {
 
   /**
    * Remove a parameter.
-   * @param paramId ID of the parameter
+   * @param paramId parameter ID
    */
   removeParameter(paramId: string): void {
     delete this._params[paramId];
-  }
-
-  /**
-   * Reset the state of this model.
-   */
-  resetState(): void {
-    this._state.selected = false;
-  }
-
-  /**
-   * Save the model object to the database.
-   */
-  async save(): Promise<void> {
-    this.logger.trace("save");
-    // return this._modelDBStore.saveModel(this._id);
   }
 
   /**
@@ -326,13 +280,14 @@ export class BaseModel extends BaseObj {
 
   /**
    * Update the model parameters.
-   * @param params parameter props
+   * @param modelParams model parameter props
    */
-  updateParameters(params: IModelParamProps[]): void {
-    // this.logger.trace("update parameters");
+  updateParameters(modelParamsProps: IModelParamProps[]): void {
+    this.logger.trace("update model parameters");
+
     this._params = {};
-    params.forEach((param) => {
-      this.addParameter(param);
+    modelParamsProps.forEach((modelParamProps: IModelParamProps) => {
+      this.addParameter(modelParamProps);
     });
   }
 

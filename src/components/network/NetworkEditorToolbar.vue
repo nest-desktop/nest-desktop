@@ -1,15 +1,15 @@
 <template>
   <v-toolbar
-    :key="graph?.network.hash"
     :collapse="state.collapse"
-    density="compact"
+    :key="graph?.network.hash"
     absolute
+    density="compact"
   >
     <v-btn
-      v-if="graph?.network.nodes.state.selectedNode"
+      @click="graph?.network.nodes.state.selectedNode?.state.select()"
       icon
       size="small"
-      @click="graph?.network.nodes.state.selectedNode.state.select()"
+      v-if="graph?.network.nodes.state.selectedNode"
     >
       <NodeAvatar
         :node="(graph?.network.nodes.state.selectedNode as TNode)"
@@ -18,10 +18,10 @@
     </v-btn>
 
     <v-btn
-      v-if="graph?.network.connections.state.selectedConnection"
       @click="
-        graph?.network.connections.state.selectedConnection.state.select()
+        graph?.network.connections.state.selectedConnection?.state.select()
       "
+      v-if="graph?.network.connections.state.selectedConnection"
     >
       <ConnectionAvatar
         :connection="(graph?.network.connections.state.selectedConnection as TConnection)"
@@ -31,10 +31,10 @@
     <v-spacer />
 
     <v-btn
+      @click="downloadNetworkGraph"
       icon="mdi:mdi-camera"
       size="small"
       title="Export network graph"
-      @click="downloadNetworkGraph"
     />
 
     <!-- <v-btn
@@ -68,17 +68,17 @@
             ? 'mdi:mdi-image-filter-center-focus'
             : 'mdi:mdi-image-filter-center-focus-strong-outline'
         "
+        @click="() => graph?.workspace.toggleCenterSelected()"
         size="small"
         title="Auto-center currently selected element"
-        @click="() => graph?.workspace.toggleCenterSelected()"
       />
 
       <v-btn
         :color="graph?.workspace.state.centerNetwork ? 'amber' : 'grey'"
+        @click="() => graph?.workspace.toggleCenterNetwork()"
         icon="mdi:mdi-focus-field"
         size="small"
         title="Auto-center whole network graph"
-        @click="() => graph?.workspace.toggleCenterNetwork()"
       />
 
       <v-btn
@@ -86,9 +86,9 @@
         :icon="
           graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'
         "
+        @click="() => graph?.workspace.toggleGrid()"
         size="small"
         title="Show background grid"
-        @click="() => graph?.workspace.toggleGrid()"
       />
     </template>
   </v-toolbar>
@@ -110,9 +110,9 @@ const networkGraphStore = useNetworkGraphStore();
 const graph = computed(() => networkGraphStore.state.graph);
 
 const state = reactive({
+  collapse: false,
   dialogDelete: false,
   dialogDownload: false,
-  collapse: false,
 });
 
 /**
@@ -120,12 +120,12 @@ const state = reactive({
  */
 const emptyNetwork = () => {
   createDialog({
-    title: "Empty network?",
-    text: "Are you sure to delete all elements of this network?",
     buttons: [
       { title: "no", key: "no" },
       { title: "yes", key: "yes" },
     ],
+    text: "Are you sure to delete all elements of this network?",
+    title: "Empty network?",
   }).then((answer: string) => {
     if (answer === "yes") {
       graph.value?.network.clear();
@@ -137,7 +137,8 @@ const emptyNetwork = () => {
  * Download network graph as svg.
  */
 const downloadNetworkGraph = () => {
-  if (!graph.value.selector) return;
+  if (!graph.value?.selector) return;
+
   downloadSVGImage(
     graph.value?.selector.node(),
     graph.value?.network.project.name

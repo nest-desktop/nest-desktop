@@ -36,7 +36,8 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     if (!this.panel.graph.state.ref) return 100;
     const d = this.panel.graph.plotLayout.yaxis.domain;
     const domain = d[1] - d[0];
-    // @ts-ignore
+
+    // @ts-ignore - Property '_fullLayout' does not exist on type 'Root'.
     const layoutHeight = this.panel.graph.state.ref._fullLayout.height;
     const r = this.panel.graph.plotLayout.yaxis.range;
     const range = r[1] - r[0];

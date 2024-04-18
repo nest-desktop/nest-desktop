@@ -28,14 +28,14 @@ export function defineModelDBStore(
   }
 ) {
   const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 3,
+    minLevel: props.loggerMinLevel || 1,
     name: props.simulator + " model DB store",
   });
 
   const db = new props.ModelDB();
   const Model = props.Model;
 
-  //@ts-ignore
+  // @ts-ignore - reason: cannot find the namespace props.
   type TModel = props.Model;
 
   return defineStore(props.simulator + "-model-db", () => {
@@ -51,6 +51,7 @@ export function defineModelDBStore(
      */
     const deleteModel = async (modelId: string): Promise<void> => {
       logger.trace("delete model:", modelId);
+
       return db.deleteModel(modelId).then(() => updateList());
     };
 
@@ -61,6 +62,7 @@ export function defineModelDBStore(
      */
     const findModel = (modelId: string): TModel | undefined => {
       logger.trace("find model:", modelId);
+
       return state.models.find((model: TModel) => model.id === modelId);
     };
 
@@ -70,6 +72,7 @@ export function defineModelDBStore(
      */
     const getModel = (modelId: string): TModel | undefined => {
       logger.trace("get model:", modelId);
+
       return findModel(modelId) || newModel({ id: modelId });
     };
 
@@ -81,6 +84,7 @@ export function defineModelDBStore(
       elementType: string
     ): UnwrapRef<TModel[]> => {
       logger.trace("get model by element type:", elementType);
+
       return state.models.filter((model: UnwrapRef<TModel>) => {
         if (elementType === "device") {
           return ["stimulator", "recorder"].includes(model.elementType);
@@ -113,6 +117,7 @@ export function defineModelDBStore(
      */
     const importModels = (modelsProps: TModelProps[]): void => {
       logger.trace("import models");
+
       db.createModels(modelsProps).then(() => updateList());
     };
 
@@ -121,6 +126,7 @@ export function defineModelDBStore(
      */
     const importModelsFromAssets = async (): Promise<TModelProps[]> => {
       logger.trace("import models from assets");
+
       let promises: Promise<TModelProps>[] = [];
       if (props.modelAssets) {
         promises = props.modelAssets.map(async (file: string) => {
@@ -137,6 +143,7 @@ export function defineModelDBStore(
      */
     const init = (): void => {
       logger.trace("init");
+
       db.count().then(async (count: number) => {
         logger.debug("models in DB:", count);
         if (count === 0 && state.tryImports > 0) {
@@ -162,6 +169,7 @@ export function defineModelDBStore(
      */
     const resetDatabase = (): void => {
       logger.trace("reset database");
+
       db.reset().then(() => init());
     };
 
@@ -171,6 +179,7 @@ export function defineModelDBStore(
      */
     const saveModel = async (modelId: string): Promise<TModelProps | void> => {
       logger.trace("save model:", truncate(modelId));
+
       const model = findModel(modelId);
       if (!model) return;
       return db.importModel(model);
@@ -181,6 +190,7 @@ export function defineModelDBStore(
      */
     const updateList = (): void => {
       logger.debug("update list");
+
       state.models = [];
       db.list("id").then((modelsProps: TModelProps[]) => {
         modelsProps.forEach((modelProps: TModelProps) => {

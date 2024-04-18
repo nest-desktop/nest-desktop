@@ -1,6 +1,13 @@
 // activityAnimationLayerModel.ts
 
-import { Group, Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
+import {
+  Group,
+  Mesh,
+  MeshBasicMaterial,
+  MeshLambertMaterial,
+  Object3D,
+  Object3DEventMap,
+} from "three";
 
 import {
   ActivityAnimationLayer,
@@ -81,8 +88,9 @@ export class ActivityAnimationLayerModel {
     }
 
     const scale: number = this._layer.config.object.size;
-    this._graphGroup.children.forEach((mesh) => {
-      // @ts-ignore
+    this._graphGroup.children.forEach((child: Object3D<Object3DEventMap>) => {
+      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> =
+        child as Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
       mesh.material.opacity = 0;
       const position = mesh.userData.position;
       mesh.position.set(position.x, -1, position.z);
@@ -136,9 +144,12 @@ export class ActivityAnimationLayerModel {
         height = size;
       }
 
-      // @ts-ignore
-      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> =
-        this._graphGroup.children[sender];
+      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> = this
+        ._graphGroup.children[sender] as Mesh<
+        any,
+        MeshBasicMaterial | MeshLambertMaterial,
+        any
+      >;
 
       this.updateMesh(mesh, {
         color,

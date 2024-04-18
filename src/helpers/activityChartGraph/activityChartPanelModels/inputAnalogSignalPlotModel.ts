@@ -9,16 +9,16 @@ import {
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
   constructor(
     panel: ActivityChartPanel,
-    model: IAnalogSignalPlotModelProps = {}
+    modelProps: IAnalogSignalPlotModelProps = {}
   ) {
-    super(panel, model);
+    super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "inputAnalogSignalPlot";
     this.label = "input analog signals";
     this.panel.height = 10;
     this.panel.xAxis = 1;
 
-    this.init(model.records);
+    this.init(modelProps);
   }
 
   /**

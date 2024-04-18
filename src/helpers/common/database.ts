@@ -38,7 +38,7 @@ interface IErr {
 interface IOptions {}
 
 export class DatabaseService extends BaseObj {
-  // @ts-ignore
+  // @ts-ignore - Cannot use namespace 'PouchDB' as a type.
   private _db: PouchDB;
   private _options: IOptions;
   private _state: { ready: boolean; valid: boolean; version: string } = {
@@ -66,7 +66,7 @@ export class DatabaseService extends BaseObj {
     this._state.ready = true;
   }
 
-  // @ts-ignore
+  // @ts-ignore - Cannot use namespace 'PouchDB' as a type.
   get db(): PouchDB {
     return this._db;
   }

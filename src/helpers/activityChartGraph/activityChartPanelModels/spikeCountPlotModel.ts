@@ -43,12 +43,18 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         ],
         label: "Normalization",
         get value(): string {
-          return this._value;
+          return this._value as string;
         },
         set value(value: string) {
           this._value = value;
-          this._parent.params[2].show = value.startsWith("lower-upper");
-          this._parent.params[3].show = value.startsWith("lower-upper");
+          const paramLower = this._parent?.params[2];
+          if (paramLower) {
+            paramLower.show = value.startsWith("lower-upper");
+          }
+          const paramUpper = this._parent?.params[3];
+          if (paramUpper) {
+            paramUpper.show = value.startsWith("lower-upper");
+          }
         },
       },
       {
@@ -73,19 +79,19 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   }
 
   get binSize(): number {
-    return this.params[0].value;
+    return this.params[0].value as number;
   }
 
   get horizontalLine(): string {
-    return this.params[3].value;
+    return this.params[3].value as string;
   }
 
   get lowerUpperBinSize(): number {
-    return this.params[2].value;
+    return this.params[2].value as number;
   }
 
   get normalization(): string {
-    return this.params[1].value;
+    return this.params[1].value as string;
   }
 
   /**
@@ -217,7 +223,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = "Time [ms]";
-    const ytitle = this.params[1].value;
+    const ytitle = this.params[1].value as string;
     this.panel.layout.yaxis.title =
       ytitle == "off"
         ? "Spike count"

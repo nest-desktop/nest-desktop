@@ -46,9 +46,7 @@ export class NorseNode extends BaseNode {
    * @param model - node model
    */
   override set model(model: NorseModel) {
-    this._modelId = model.id;
     this._model = model;
-    this.modelChanges();
   }
 
   override get nodes(): NorseNodes {

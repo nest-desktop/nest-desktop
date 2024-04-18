@@ -37,17 +37,19 @@ export class Activities extends BaseObj {
   }
 
   /**
-   * Get a list of activities.
+   * Get all activities.
    */
   get all(): Activity[] {
-    // @ts-ignore
-    const activities: Activity[] = this._project.network
-      ? this.project.network.nodes.recorders.map(
-          (recorder: TNode) => recorder.activity
-        )
-      : ([] as Activity[]);
+    let activities = [] as Activity[];
 
-    if (activities) {
+    if (this.project.network) {
+      activities = this.project.network.nodes.recorders.map(
+        (recorder: TNode) => recorder.activity as Activity
+      );
+    }
+
+    // Update activity idx.
+    if (activities.length > 0) {
       activities.forEach((activity: Activity, idx: number) => {
         if (activity) {
           activity.idx = idx;

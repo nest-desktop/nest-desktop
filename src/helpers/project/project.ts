@@ -55,7 +55,7 @@ export class BaseProject extends BaseObj {
     this._name = projectProps.name || "undefined project";
     this._description = projectProps.description || "";
 
-    // Initialize database.
+    // Initialize model database.
     this.initModelStore();
 
     // Construct components.
@@ -155,7 +155,7 @@ export class BaseProject extends BaseObj {
 
   /**
    * Returns the first six digits of the project ID.
-   * @returns 6-digit hash value
+   * @returns 6-digit id value
    */
   get shortId(): string {
     return this._id ? truncate(this._id) : "";
@@ -172,13 +172,6 @@ export class BaseProject extends BaseObj {
   set updatedAt(value: string) {
     this._updatedAt = value;
   }
-
-  // /**
-  //  * Is the current project selected?
-  //  */
-  // get isSelected(): boolean {
-  //   return this.id === this._projectStore.projectId;
-  // }
 
   /**
    * Observer for network changes
@@ -199,8 +192,7 @@ export class BaseProject extends BaseObj {
 
     this._networkRevision.commit();
 
-    // Simulate when the configuration is set
-    // and the view mode is activity explorer.
+    // Simulate when the configuration is set and the view mode is activity explorer.
     const projectViewStore = useProjectViewStore();
     if (projectViewStore.state.simulateAfterChange.value) {
       nextTick(() => this.startSimulation());
@@ -261,43 +253,6 @@ export class BaseProject extends BaseObj {
     return new BaseProject({ ...this.toJSON(), id: "", updatedAt: "" });
   }
 
-  // /**
-  //  * Clone this current project and add it to the list.
-  //  *
-  //  * @remarks
-  //  * It pushes new project to the first line of the list.
-  //  */
-  // duplicate(): Project {
-  //   this._logger.trace("duplicate");
-  //   const newProject: BaseProject = this.clone();
-  //   this._projectStore.addProject(newProject);
-  //   return newProject;
-  // }
-
-  // /**
-  //  * Delete this project from the list and database.
-  //  */
-  // async delete(): Promise<any> {
-  //   this._logger.trace("delete");
-  //   return this._projectStore.db.removeProject(this);
-  // }
-
-  // /**
-  //  * Export this project.
-  //  */
-  // export(): void {
-  //   this._logger.trace("export");
-  //   this._projectStore.db.exportProject(this.id);
-  // }
-
-  // /**
-  //  * Export this project and activities.
-  //  */
-  // exportWithActivities(): void {
-  //   this._logger.trace("export with activities");
-  //   this._projectStore.db.exportProject(this.id, true);
-  // }
-
   /**
    * Initialize project.
    */
@@ -332,22 +287,6 @@ export class BaseProject extends BaseObj {
     this._modelDBStore = useModelDBStore();
   }
 
-  // /**
-  //  * Reload this project.
-  //  */
-  // async reload(): Promise<any> {
-  //   this._logger.trace("reload");
-  //   return this._projectStore.db.reloadProject(this._id);
-  // }
-
-  // /**
-  //  * Save the current project.
-  //  */
-  // save(): void {
-  //   this._state.state.editMode = false;
-  //   this._projectStore.db.saveProject(this);
-  // }
-
   /**
    * Start simulation.
    */
@@ -376,17 +315,9 @@ export class BaseProject extends BaseObj {
     });
   }
 
-  /*
-   * Activities
-   */
-
-  /**
-   * Serialization
-   */
-
   /**
    * Serialize for JSON.
-   * @return project object
+   * @return project props
    */
   toJSON(): IProjectProps {
     const projectProps: IProjectProps = {
@@ -402,14 +333,6 @@ export class BaseProject extends BaseObj {
     };
     return projectProps;
   }
-
-  // /**
-  //  * Unload this project.
-  //  */
-  // async unload(): Promise<any> {
-  //   this._logger.trace("unload");
-  //   return this._projectStore.db.unloadProject(this.id);
-  // }
 
   /**
    * Update hash.

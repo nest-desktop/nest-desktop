@@ -1,6 +1,13 @@
 // connectionGraph.ts
 
-import { Selection, Transition, drag, select, transition } from "d3";
+import {
+  DragBehavior,
+  Selection,
+  Transition,
+  drag,
+  select,
+  transition,
+} from "d3";
 
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
@@ -33,18 +40,20 @@ export class ConnectionGraph {
    * @param connection connection object
    */
   drag(event: MouseEvent, connection: TConnection): void {
-    if (this.state.dragLine) return;
-    const sourceNodePosition = connection.source.view.state.position;
-    // @ts-ignore
-    sourceNodePosition.x += event.dx;
-    // @ts-ignore
-    sourceNodePosition.y += event.dy;
+    if (this.state.dragLine || !connection) return;
+
+    // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+    const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
+
+    if (connection.hasOwnProperty("source")) {
+      const sourceNodePosition = connection.source.view.state.position;
+      sourceNodePosition.x += pos.x;
+      sourceNodePosition.y += pos.y;
+    }
 
     const targetNodePosition = connection.target.view.state.position;
-    // @ts-ignore
-    targetNodePosition.x += event.dx;
-    // @ts-ignore
-    targetNodePosition.y += event.dy;
+    targetNodePosition.x += pos.x;
+    targetNodePosition.y += pos.y;
 
     this._networkGraph.render();
   }
@@ -52,8 +61,8 @@ export class ConnectionGraph {
   /**
    * Initialize a connection graph.
    * @param connection connection object
-   * @param idx index of elements
-   * @param elements elements
+   * @param idx index of the element
+   * @param elements SVG elements
    */
   init(
     connection: TConnection,
@@ -144,57 +153,57 @@ export class ConnectionGraph {
       .transition(t)
       .style("opacity", 1);
 
-    selector.each(
-      // @ts-ignore
-      (connection: BaseConnection, idx: number, elements: any[]) => {
-        const elem = select(elements[idx]);
+    // @ts-ignore - Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
+    // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
+    // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
+    selector.each((connection: TConnection, idx: number, elements: any[]) => {
+      const elem = select(elements[idx]);
 
-        elem
-          .selectAll("path")
-          .transition(t)
-          .attr(
-            "d",
-            drawPathNode(
-              connection.source.view.state.position,
-              connection.target.view.state.position,
-              connection.view.connectionGraphOptions
-            )
-          );
-
-        elem
-          .select("path.color")
-          .style("stroke", "currentColor")
-          .style(
-            "stroke-width",
-            this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
+      elem
+        .selectAll("path")
+        .transition(t)
+        .attr(
+          "d",
+          drawPathNode(
+            connection.source.view.state.position,
+            connection.target.view.state.position,
+            connection.view.connectionGraphOptions
           )
-          .style("opacity", connection.view.opacity ? 1 : 0.3)
-          .attr("marker-end", `url(#syn-${connection.idx})`)
-          .style(
-            "stroke-dasharray",
-            connection.view.probabilistic() ? "7.85" : ""
-          );
+        );
 
-        elem.transition(t).delay(duration).style("opacity", 1);
+      elem
+        .select("path.color")
+        .style("stroke", "currentColor")
+        .style(
+          "stroke-width",
+          this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
+        )
+        .style("opacity", connection.view.opacity ? 1 : 0.3)
+        .attr("marker-end", `url(#syn-${connection.idx})`)
+        .style(
+          "stroke-dasharray",
+          connection.view.probabilistic() ? "7.85" : ""
+        );
 
-        // const pos = connection.view.markerEndPosition;
+      elem.transition(t).delay(duration).style("opacity", 1);
 
-        this._networkGraph.selector
-          ?.selectAll(`#syn-${connection.idx}`)
-          .select("text")
-          .attr("dx", connection.view.toRight ? 8 : -8)
-          .attr("dy", connection.view.toRight ? 3.5 : -4.5)
-          .classed("toLeft", !connection.view.toRight)
-          .text(connection.synapse ? connection.synapse.weight : "");
+      // const pos = connection.view.markerEndPosition;
 
-        // .style("font-family", "Roboto")
-        // .style("font-size", "0.7em", "important")
-        // .style("font-weight", "900")
-        // .style("pointer-events", "none")
-        // .style("text-anchor", "middle")
-        // .attr("transform", `translate(${pos.x},${pos.y})`);
-      }
-    );
+      this._networkGraph.selector
+        ?.selectAll(`#syn-${connection.idx}`)
+        .select("text")
+        .attr("dx", connection.view.toRight ? 8 : -8)
+        .attr("dy", connection.view.toRight ? 3.5 : -4.5)
+        .classed("toLeft", !connection.view.toRight)
+        .text(connection.synapse ? connection.synapse.weight : "");
+
+      // .style("font-family", "Roboto")
+      // .style("font-size", "0.7em", "important")
+      // .style("font-weight", "900")
+      // .style("pointer-events", "none")
+      // .style("text-anchor", "middle")
+      // .attr("transform", `translate(${pos.x},${pos.y})`);
+    });
   }
 
   /**
@@ -212,10 +221,11 @@ export class ConnectionGraph {
         .selectAll("g.connection")
         .data(this.networkGraph.network.connections.all);
 
-    const dragging = drag()
+    const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      // @ts-ignore
-      .on("drag", (e: MouseEvent, c: Connection) => this.drag(e, c))
+      .on("drag", (e: MouseEvent, c: TConnection | unknown) =>
+        this.drag(e, c as TConnection)
+      )
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     connections
@@ -226,8 +236,7 @@ export class ConnectionGraph {
       .attr("idx", (c: TConnection) => c.idx)
       .attr("hash", (c: TConnection) => c.hash)
       .style("opacity", 0)
-      // @ts-ignore
-      .call(dragging)
+      .call(dragging, null)
       .each((c: TConnection, i: number, e) => this.init(c, i, e));
 
     connections.exit().remove();

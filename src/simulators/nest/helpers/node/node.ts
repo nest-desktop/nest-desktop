@@ -125,9 +125,7 @@ export class NESTNode extends BaseNode {
    * @param model - node model
    */
   override set model(model: NESTModel) {
-    this._modelId = model.id;
     this._model = model;
-    this.modelChanges();
   }
 
   override get models(): NESTModel[] {

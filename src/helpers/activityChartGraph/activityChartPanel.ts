@@ -163,7 +163,7 @@ export class ActivityChartPanel extends BaseObj {
             modelProps.id === modelId
         );
       if (model) {
-        // @ts-ignore
+        // @ts-ignore - Property 'component' does not exist on type 'IActivityChartPanelModelProps'.
         this._model = new model.component(this, modelProps);
         this._state.initialized = true;
       }

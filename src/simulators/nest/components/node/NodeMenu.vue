@@ -378,11 +378,17 @@ const updateStates = () => {
   state.spatialNode = node.value.spatial.hasPositions;
 };
 
+/**
+ * Update synaptic weights.
+ *
+ * @param value string
+ */
 const updateSynWeights = (value: string | null) => {
   if (value == null) return;
+
   node.value.view.state.synWeights = value;
   node.value.changes();
-  networkGraphStore.state.graph.render();
+  networkGraphStore.state.graph?.render();
 };
 
 /**

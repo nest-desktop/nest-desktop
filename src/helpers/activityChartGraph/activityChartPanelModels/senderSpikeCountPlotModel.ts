@@ -27,11 +27,14 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         items: ["lines", "lines+markers", "markers", "bar"],
         label: "Plot mode",
         get value(): string {
-          return this._value;
+          return this._value as string;
         },
         set value(value: string) {
           this._value = value;
-          this._parent.params[1].show = value.includes("lines");
+          const param = this._parent?.params[1];
+          if (param) {
+            param.show = value.includes("lines");
+          }
         },
       },
       {
@@ -61,11 +64,11 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   }
 
   get lineShape(): string {
-    return this.params[1].value;
+    return this.params[1].value as string;
   }
 
   get plotMode(): string {
-    return this.params[0].value;
+    return this.params[0].value as string;
   }
 
   get plotType(): string {
@@ -73,7 +76,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   }
 
   get spikeRate(): boolean {
-    return this.params[2].value;
+    return this.params[2].value as boolean;
   }
 
   /**

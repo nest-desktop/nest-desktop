@@ -54,7 +54,6 @@ const modelRef: UnwrapRef<{ lower: number; upper: number }> = reactive({
   upper: 1,
 });
 
-// @ts-ignore
 const value = computed({
   get: () => [modelRef.lower, modelRef.upper],
   set: (value) => {

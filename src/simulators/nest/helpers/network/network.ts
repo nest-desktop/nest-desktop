@@ -6,7 +6,7 @@ import { INESTConnectionProps, NESTConnection } from "../connection/connection";
 import { NESTConnections } from "../connection/connections";
 import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
 import { NESTCopyModels } from "../model/copyModels";
-import { INESTNodeProps, NESTNode } from "../node/node";
+import { INESTNodeProps } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
 import { TNetworkProps } from "@/types/networkTypes";
@@ -105,14 +105,15 @@ export class NESTNetwork extends BaseNetwork {
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
    */
-  override connectNodes(source: NESTNode, target: NESTNode): void {
+  override connectNodes(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
     const connection: NESTConnection = this.connections.add({
-      source: source.idx,
-      target: target.idx,
+      source: sourceIdx,
+      target: targetIdx,
     });
 
+    const source = this.nodes.all[sourceIdx];
     if (source.view.state.synWeights) {
       connection.synapse.weightLabel = source.view.state.synWeights;
     }

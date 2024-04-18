@@ -32,8 +32,7 @@ export class BaseNode extends BaseObj {
   private readonly _name = "Node";
 
   private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
-    // @ts-ignore
-    undefined as Activity;
+    undefined;
   private _annotations: string[] = [];
   private _doc: INodeProps;
   private _idx: number; // generative
@@ -186,13 +185,11 @@ export class BaseNode extends BaseObj {
    *
    * @remarks
    * It initializes parameters and activity components.
-   * It triggers node changes.
+   * It triggers node model changes.
    *
    */
   set model(model: TModel) {
-    this._modelId = model.id;
     this._model = model;
-    this.modelChanges();
   }
 
   get modelDBStore(): Store<any, any> {
@@ -207,7 +204,10 @@ export class BaseNode extends BaseObj {
    * Set model ID.
    */
   set modelId(value: string) {
+    this._modelId = value as string;
     this.model = this.getModel(value);
+    this.updateParamsFromModel();
+    this.modelChanges();
   }
 
   get modelParams(): { [key: string]: ModelParameter } {
@@ -216,11 +216,7 @@ export class BaseNode extends BaseObj {
 
   get models(): TModel[] {
     // Get models of the same element type.
-    const elementType: string = this.model.elementType;
-    const models: TModel[] =
-      this.modelDBStore.getModelsByElementType(elementType);
-
-    return models;
+    return this.modelDBStore.getModelsByElementType(this.model.elementType);
   }
 
   get n(): number {
@@ -436,11 +432,21 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Empty parameters
+   */
+  emptyParams(): void {
+    this._params = {};
+    this._paramsVisible = [];
+  }
+
+  /**
    * Get model.
    */
   getModel(modelId: string): TModel {
     this.logger.trace("get model:", modelId);
-    return this.modelDBStore.getModel(modelId);
+    const model = this.modelDBStore.getModel(modelId);
+    console.log(model);
+    return model;
   }
 
   /**
@@ -557,7 +563,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return node object
+   * @return node props
    */
   toJSON(): INodeProps {
     const nodeProps: INodeProps = {
@@ -703,5 +709,15 @@ export class BaseNode extends BaseObj {
     this._recordables.forEach((record: NodeRecord) => {
       record.color = color;
     });
+  }
+
+  /**
+   * Update params from node model.
+   */
+  updateParamsFromModel(): void {
+    this.emptyParams();
+    const paramProps = this.model.toJSON().params;
+    this.addParameters(paramProps);
+    this._paramsVisible = [];
   }
 }

@@ -224,7 +224,6 @@ export class ActivityAnimationLayer {
     this._graphGroup.userData.layer = this;
     this._graphGroup.add(this.createGrids(this.bins));
     if (this._model) {
-      // @ts-ignore
       this._graphGroup.add(this._model.graphGroup);
     }
   }

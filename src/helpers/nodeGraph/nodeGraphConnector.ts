@@ -1,6 +1,13 @@
 // nodeGraphConnector.ts
 
-import { drag, select, Selection, Transition, transition } from "d3";
+import {
+  drag,
+  DragBehavior,
+  select,
+  Selection,
+  Transition,
+  transition,
+} from "d3";
 
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
@@ -32,6 +39,49 @@ export class NodeGraphConnector {
   }
 
   /**
+   * Call on dragging.
+   * @param event mouse event
+   * @param node node object
+   */
+  drag(event: MouseEvent, node: TNode): void {
+    if (!node.state.isSelected) {
+      node.state.select();
+    }
+    this._networkGraph.workspace.reset();
+    this._networkGraph.workspace.dragline.init(event);
+  }
+
+  /**
+   * Call on drag end.
+   * @param event mouse event
+   */
+  dragEnd(event: MouseEvent): void {
+    // this._networkGraph.workspace.dragline.hide();
+    // this._networkGraph.workspace.state.dragLine = false;
+
+    const network = this._networkGraph.network;
+    const workspace = this._networkGraph.workspace;
+
+    if (
+      network.nodes.state.selectedNode &&
+      network.nodes.state.focusedNode &&
+      workspace.state.dragLine
+    ) {
+      this._networkGraph.network.connectNodes(
+        network.nodes.state.selectedNode.idx,
+        network.nodes.state.focusedNode.idx
+      );
+    }
+
+    if (!workspace.altPressed) {
+      workspace.reset();
+      network.nodes.resetState();
+    }
+
+    this._networkGraph.dragEnd(event);
+  }
+
+  /**
    * Initialize a node connector.
    * @param selector
    */
@@ -56,10 +106,11 @@ export class NodeGraphConnector {
       .attr("fill", "none")
       .attr("stroke-width", this.strokeWidth);
 
-    const dragging = drag()
+    const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      // @ts-ignore
-      .on("drag", (e: MouseEvent, n: TNode) => this.drag(e, n))
+      .on("drag", (e: MouseEvent, n: TNode | unknown) =>
+        this.drag(e, n as TNode)
+      )
       .on("end", (e: MouseEvent) => this.dragEnd(e));
 
     const connectorEnd = connector.append("g").attr("class", "end");
@@ -73,8 +124,7 @@ export class NodeGraphConnector {
         this.drag(e, n);
         this.render();
       })
-      // @ts-ignore
-      .call(dragging);
+      .call(dragging, null);
 
     // Connector plus symbol made of lines (white lines for spacing):
     // hline white
@@ -121,50 +171,6 @@ export class NodeGraphConnector {
       .attr("y1", -(5 / 3) * this._connectorRadius)
       .attr("y2", -(5 / 12) * this._connectorRadius)
       .style("pointer-events", "none");
-  }
-
-  /**
-   * Call on dragging.
-   * @param event
-   * @param node
-   */
-  drag(event: MouseEvent, node: TNode): void {
-    if (!node.state.isSelected) {
-      node.state.select();
-    }
-    this._networkGraph.workspace.reset();
-    this._networkGraph.workspace.dragline.init(event);
-  }
-
-  /**
-   * Call on drag end.
-   * @param event
-   */
-  dragEnd(event: MouseEvent): void {
-    // this._networkGraph.workspace.dragline.hide();
-    // this._networkGraph.workspace.state.dragLine = false;
-
-    const network = this._networkGraph.network;
-    const workspace = this._networkGraph.workspace;
-
-    if (
-      network.nodes.state.selectedNode &&
-      network.nodes.state.focusedNode &&
-      workspace.state.dragLine
-    ) {
-      this._networkGraph.network.connectNodes(
-        // @ts-ignore
-        network.nodes.state.selectedNode,
-        network.nodes.state.focusedNode
-      );
-    }
-
-    if (!workspace.altPressed) {
-      workspace.reset();
-      network.nodes.resetState();
-    }
-
-    this._networkGraph.dragEnd(event);
   }
 
   /**

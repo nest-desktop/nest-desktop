@@ -40,15 +40,15 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   override addData(): void {
     this.data = [];
 
-    if (this.state.recordsVisible.length === 0) {
+    if (this.recordsVisible.length === 0) {
       return;
     }
 
-    this.state.recordsVisible.forEach((record: NodeRecord) => {
+    this.recordsVisible.forEach((record: NodeRecord) => {
       this.updateHistogramRange(record.values);
     });
 
-    this.state.recordsVisible.forEach((record: NodeRecord) =>
+    this.recordsVisible.forEach((record: NodeRecord) =>
       this.updateEventData(record)
     );
   }
@@ -85,7 +85,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
 
     const start: number = this.state.histogram.start;
     const end: number = this.state.histogram.end + 1;
-    const size: number = (end - start) / this.params[0].value;
+    const size: number = (end - start) / (this.params[0].value as number);
 
     this.data.push({
       activityIdx: record.activity.idx,
@@ -96,7 +96,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
         color: record.color,
         line: {
           color: currentBackgroundColor(),
-          width: this.params[0].value > 100 ? 0 : 1,
+          width: (this.params[0].value as number) > 100 ? 0 : 1,
         },
       },
       name: "Histogram of " + record.nodeLabel,

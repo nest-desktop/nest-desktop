@@ -1,5 +1,7 @@
 // nodeRecord.ts
 
+import * as d3 from "d3";
+
 import { Activity } from "../activity/activity";
 import { BaseObj } from "../common/base";
 import { TNode } from "@/types/nodeTypes";
@@ -177,8 +179,10 @@ export class NodeRecord extends BaseObj {
    * RGB color for a value in range [0 - 1].
    */
   valueColor(value: number): string {
-    // @ts-ignore
-    const colorScale = d3[`interpolate${this._colorMap.scale}`];
+    const colorMap: string = `interpolate${this._colorMap.scale}`;
+    // @ts-ignore - Element implicitly has an 'any' type because expression of type 'string' can't be used to index type
+    // 'typeof import("./node_modules/@types/d3/index")'.
+    const colorScale = d3[colorMap];
     return colorScale(this._colorMap.reverse ? 1 - value : value);
   }
 }

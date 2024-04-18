@@ -7,12 +7,12 @@ import type { IconProps } from "vuetify";
 import nestIcon from "./NESTIcon.vue";
 import copyModelIcon from "./CopyModelIcon.vue";
 
-const nestSvgNameToComponent: {[key: string]: Object} = {
+const nestSvgNameToComponent: { [key: string]: Object } = {
   logo: nestIcon,
   copyModel: copyModelIcon,
 };
 
 export default {
-  // @ts-ignore
-  component: (props: IconProps) => h(nestSvgNameToComponent[props.icon]),
+  component: (props: IconProps) =>
+    h(nestSvgNameToComponent[props.icon as string]),
 };

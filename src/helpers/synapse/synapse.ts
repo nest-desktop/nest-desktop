@@ -113,7 +113,7 @@ export class BaseSynapse extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return synapse object
+   * @return synapse props
    */
   toJSON(): ISynapseProps {
     const synapseProps: ISynapseProps = {};

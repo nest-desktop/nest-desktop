@@ -35,13 +35,13 @@ export function defineProjectDBStore(
   const db = new props.ProjectDB();
   const Project = props.Project;
 
-  // @ts-ignore
+  // @ts-ignore - Cannot find namespace 'props'.
   type TProject = props.Project;
 
   return defineStore(props.simulator + "-project-db", () => {
     const state = reactive({
       tryImports: 3,
-      initialized: true,
+      initialized: false,
       numLoaded: 0,
       projects: [] as (TProject | TProjectProps)[],
       searchTerm: "",
@@ -56,6 +56,7 @@ export function defineProjectDBStore(
      */
     const addProject = (projectProps?: TProjectProps): TProject => {
       logger.trace("add project:", truncate(projectProps?.id || ""));
+
       const project = newProject(projectProps);
       state.projects.unshift(project);
       return project;
@@ -67,6 +68,7 @@ export function defineProjectDBStore(
      */
     const deleteProject = (project: TProject): void => {
       logger.trace("delete project:", truncate(project.id));
+
       db.deleteProject(project).then(() => {
         removeFromList(project.id);
       });
@@ -83,6 +85,18 @@ export function defineProjectDBStore(
     };
 
     /**
+     * Clone this current project and add it to the list.
+     *
+     * @remarks
+     * It pushes new project to the first line of the list.
+     */
+    const duplicateProject = (project: TProject): void => {
+      logger.trace("duplicate project");
+
+      addProject(project.toJSON());
+    };
+
+    /**
      * Export project from the list.
      * @param projectId project ID
      */
@@ -91,6 +105,7 @@ export function defineProjectDBStore(
       withActivities: boolean = false
     ): void => {
       logger.trace("export project:", truncate(projectId));
+
       const project = findProject(projectId) as TProject;
       const projectData: any = project.toJSON();
       if (withActivities) {
@@ -107,6 +122,7 @@ export function defineProjectDBStore(
       projectId: string
     ): TProject | TProjectProps | undefined => {
       logger.trace("find project:", truncate(projectId));
+
       return state.projects.find(
         (project: TProject | TProjectProps) => project.id === projectId
       );
@@ -139,6 +155,7 @@ export function defineProjectDBStore(
      */
     const getProject = (projectId: string = ""): TProject => {
       logger.trace("get project:", truncate(projectId));
+
       let project: TProject | TProjectProps | undefined;
 
       if (!projectId || !hasProjectId(projectId)) {
@@ -171,6 +188,7 @@ export function defineProjectDBStore(
      */
     const importProjects = (projectsProps: TProjectProps[]): void => {
       logger.trace("import projects");
+
       db.createProjects(projectsProps).then(() => updateList());
     };
 
@@ -179,6 +197,7 @@ export function defineProjectDBStore(
      */
     const importProjectsFromAssets = async (): Promise<TProjectProps[]> => {
       logger.trace("import projects from assets");
+
       let promises: Promise<TProjectProps>[] = [];
       if (props.projectAssets) {
         promises = props.projectAssets.map(async (file: string) => {
@@ -195,6 +214,7 @@ export function defineProjectDBStore(
      */
     const init = (): void => {
       logger.trace("init project db store");
+
       db.count().then(async (count: number) => {
         logger.debug("projects in DB:", count);
         if (count === 0 && state.tryImports > 0) {
@@ -219,9 +239,7 @@ export function defineProjectDBStore(
       logger.trace("load project:", truncate(projectId));
 
       let project = findProject(projectId);
-      if (project == undefined) {
-        return;
-      }
+      if (project == undefined) return;
 
       if (!project.docId) {
         const projectIds = state.projects.map(
@@ -229,9 +247,7 @@ export function defineProjectDBStore(
         );
         const projectIdx = projectIds.indexOf(projectId);
 
-        if (projectIdx === -1) {
-          return;
-        }
+        if (projectIdx === -1) return;
 
         project = new Project(project);
         state.projects[projectIdx] = project;
@@ -334,6 +350,7 @@ export function defineProjectDBStore(
       addProject,
       deleteProject,
       deleteProjects,
+      duplicateProject,
       exportProject,
       filteredProjects,
       findProject,
