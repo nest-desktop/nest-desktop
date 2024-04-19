@@ -1,6 +1,6 @@
 // copyModel.ts
 
-import { Store } from "pinia";
+import { StateTree, Store } from "pinia";
 import { reactive, UnwrapRef } from "vue";
 
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
@@ -198,7 +198,7 @@ export class NESTCopyModel {
     return this.modelDBStore.getModel(this._existingModelId);
   }
 
-  get modelDBStore(): Store<any, any> {
+  get modelDBStore(): Store<string, StateTree> {
     return this.network.project.modelDBStore;
   }
 

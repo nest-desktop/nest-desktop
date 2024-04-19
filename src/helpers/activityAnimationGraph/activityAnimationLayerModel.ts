@@ -16,7 +16,7 @@ import {
 } from "./activityAnimationLayer";
 
 export class ActivityAnimationLayerModel {
-  private _graphGroup: Group<any>;
+  private _graphGroup: Group<Object3DEventMap>;
   private _layer: ActivityAnimationLayer;
 
   constructor(layer: ActivityAnimationLayer) {
@@ -26,11 +26,11 @@ export class ActivityAnimationLayerModel {
     this.initGraph();
   }
 
-  get graphGroup(): Group<any> {
+  get graphGroup(): Group<Object3DEventMap> {
     return this._graphGroup;
   }
 
-  set graphGroup(value: Group<any>) {
+  set graphGroup(value: Group<Object3DEventMap>) {
     this._graphGroup = value;
   }
 

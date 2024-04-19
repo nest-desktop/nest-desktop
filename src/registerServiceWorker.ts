@@ -8,8 +8,7 @@ export function registerServiceWorker() {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
       console.log(
-        "App is being served from cache by a service worker.\n" +
-          "For more details, visit https://goo.gl/AFskqB"
+        "App is being served from cache by a service worker.\nFor more details, visit https://goo.gl/AFskqB"
       );
     },
     registered() {
@@ -32,7 +31,7 @@ export function registerServiceWorker() {
         "No internet connection found. App is running in offline mode."
       );
     },
-    error(error) {
+    error(error: Error) {
       console.error("Error during service worker registration:", error);
     },
   });

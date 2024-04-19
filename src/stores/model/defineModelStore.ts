@@ -11,7 +11,7 @@ export function defineModelStore(
     defaultView?: string;
     loggerMinLevel?: number;
     simulator: string;
-    useModelDBStore: Store<any, any>;
+    useModelDBStore: Store<string, any>;
   } = {
     simulator: "base",
     useModelDBStore,

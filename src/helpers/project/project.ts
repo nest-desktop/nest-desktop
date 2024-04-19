@@ -34,7 +34,7 @@ export class BaseProject extends BaseObj {
   private _description: string; // description about the project
   private _doc: any; // raw data of the database
   private _id: string; // id of the project
-  private _modelDBStore: Store<any, any>;
+  private _modelDBStore: Store<string, any>;
   private _name: string; // project name
   private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
@@ -122,7 +122,7 @@ export class BaseProject extends BaseObj {
     return this._id;
   }
 
-  get modelDBStore() {
+  get modelDBStore(): Store<string, any> {
     return this._modelDBStore;
   }
 

@@ -51,14 +51,22 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
       if (record.unit) {
         title += ` [${record.unit}]`;
       }
-    } else if (records.every((event: any) => event.id.includes("ct_"))) {
+    } else if (
+      records.every((record: NodeRecord) => record.id.includes("ct_"))
+    ) {
       title = "Channel activation";
-    } else if (records.every((event: any) => event.id.includes("g_"))) {
+    } else if (
+      records.every((record: NodeRecord) => record.id.includes("g_"))
+    ) {
       title = "Conductance [nS]";
-    } else if (records.every((event: any) => event.id.includes("I_syn_"))) {
+    } else if (
+      records.every((record: NodeRecord) => record.id.includes("I_syn_"))
+    ) {
       title = "Total synaptic current [pA]";
     } else if (
-      records.every((event: any) => event.id.includes("weighted_spikes_"))
+      records.every((record: NodeRecord) =>
+        record.id.includes("weighted_spikes_")
+      )
     ) {
       title = "Weighted incoming spikes";
     } else {

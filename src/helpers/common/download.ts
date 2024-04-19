@@ -10,7 +10,7 @@ export function download(
   filenameSuffix: string = "",
   format: string = "json"
 ) {
-  const element: any = document.createElement("a");
+  const element: HTMLAnchorElement = document.createElement("a");
   element.setAttribute(
     "href",
     `data:text/${format};charset=UTF-8,${encodeURIComponent(data)}`
@@ -29,7 +29,7 @@ export function download(
 /**
  * Download svg image.
  */
-export function downloadSVGImage(svg: any, filename: string): void {
+export function downloadSVGImage(svg: Node, filename: string): void {
   // Get svg source.
   const serializer = new XMLSerializer();
   let source = serializer.serializeToString(svg);

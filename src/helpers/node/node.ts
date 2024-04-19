@@ -15,7 +15,7 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 import { TSimulation } from "@/types/simulationTypes";
-import { Store } from "pinia";
+import { StateTree, Store } from "pinia";
 import { onlyUnique } from "../common/array";
 
 export interface INodeProps {
@@ -192,7 +192,7 @@ export class BaseNode extends BaseObj {
     this._model = model;
   }
 
-  get modelDBStore(): Store<any, any> {
+  get modelDBStore(): Store<string, StateTree> {
     return this.nodes.network.project.modelDBStore;
   }
 

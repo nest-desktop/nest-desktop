@@ -19,7 +19,7 @@ export function defineProjectStore(
     Project: Class<TProject>;
     loggerMinLevel?: number;
     simulator: string;
-    useProjectDBStore: Store<any, any>;
+    useProjectDBStore: Store<string, any>;
   } = {
     Project: BaseProject,
     simulator: "base",

@@ -43,22 +43,33 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
    */
   override updateMesh(
     mesh: Mesh<any, MeshLambertMaterial, any>,
-    options: any = {}
+    options: {
+      color?: string;
+      height?: number;
+      opacity?: number;
+      scale?: number;
+    } = {}
   ): void {
-    mesh.material.color.set(options.color);
-    mesh.material.opacity = options.opacity;
-    mesh.scale.set(options.scale, options.scale, options.scale);
+    const color = options.color || "black";
+    const height = options.height || 1;
+    const opacity = options.opacity || 1;
+    const scale = options.scale || 1;
+
+    mesh.material.color.set(color);
+    mesh.material.opacity = opacity;
+    mesh.scale.set(scale, scale, scale);
     mesh.position.setY(mesh.userData.position.y);
+
     if (this.layer.config.object.flatHeight) {
       mesh.scale.setY(0.5);
       if (this.layer.config.object.flyingBoxes) {
-        mesh.position.setY(options.height * 0.01);
+        mesh.position.setY(height * 0.01);
       }
     } else {
       if (this.layer.activity.recorder.model.isAnalogRecorder) {
-        mesh.scale.setY(options.height);
+        mesh.scale.setY(height);
       }
-      mesh.position.setY(mesh.userData.position.y + options.height / 200);
+      mesh.position.setY(mesh.userData.position.y + height / 200);
     }
   }
 }

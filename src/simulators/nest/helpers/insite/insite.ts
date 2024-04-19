@@ -1,7 +1,7 @@
 // insite.ts
 
 import { AxiosResponse } from "axios";
-import { Store } from "pinia";
+import { StateTree, Store } from "pinia";
 
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { IActivityProps } from "@/helpers/activity/activity";
@@ -64,7 +64,7 @@ export class Insite {
     };
   }
 
-  get insiteAccess(): Store<any, any> {
+  get insiteAccess(): Store<string, StateTree> {
     const insiteAccessStore = useInsiteAccessStore();
     return insiteAccessStore;
   }

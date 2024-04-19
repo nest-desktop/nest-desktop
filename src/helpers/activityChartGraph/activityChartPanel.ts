@@ -1,4 +1,4 @@
-// activityChartPanel.ts - 7 anys
+// activityChartPanel.ts
 
 import { UnwrapRef, reactive } from "vue";
 
@@ -92,10 +92,6 @@ export class ActivityChartPanel extends BaseObj {
 
   get model(): ActivityChartPanelModel {
     return this._model;
-  }
-
-  get params(): any[] {
-    return [];
   }
 
   get state(): UnwrapRef<IActivityChartPanelState> {

@@ -7,7 +7,7 @@
 import { App } from "vue";
 import { IconSet } from "vuetify";
 import { RouteRecordRaw } from "vue-router";
-import { Store } from "pinia";
+import { StateTree, Store } from "pinia";
 
 import router from "@/router";
 import { addTheme, addIconSet } from "@/plugins/vuetify";
@@ -20,7 +20,7 @@ import { pynn } from "./pynn";
 
 export interface ISimulatorProps {
   autocomplete: any[];
-  backends: { [key: string]: Store<any, any> };
+  backends: { [key: string]: Store<string, StateTree> };
   configNames: string[];
   databases: string[];
   iconSet: IconSet;

@@ -1,8 +1,8 @@
 // activityAnimationLayer.ts
 
-import { GridHelper, Group } from "three";
+import { GridHelper, Group, Object3DEventMap } from "three";
 
-import { Activity } from "../activity/activity";
+import { Activity, IEventProps } from "../activity/activity";
 import { NodeRecord } from "../node/nodeRecord";
 import { range } from "../common/array";
 
@@ -60,7 +60,7 @@ export class ActivityAnimationLayer {
   };
   private _frames: IActivityAnimationLayerFrame[] = [];
   private _graph: ActivityAnimationGraph;
-  private _graphGroup?: Group;
+  private _graphGroup?: Group<Object3DEventMap>;
   private _model?: ActivityAnimationLayerModel;
   private _models: IActivityAnimationLayerModel[] = [
     {
@@ -121,7 +121,7 @@ export class ActivityAnimationLayer {
     return this._graph;
   }
 
-  get graphGroup(): Group<any> | undefined {
+  get graphGroup(): Group<Object3DEventMap> | undefined {
     return this._graphGroup;
   }
 
@@ -234,8 +234,8 @@ export class ActivityAnimationLayer {
    * @remarks
    * returns a group of GridHelpers
    */
-  createGrids(divisions: number = 2): Group<any> {
-    const grid: Group<any> = new Group();
+  createGrids(divisions: number = 2): Group<Object3DEventMap> {
+    const grid: Group<Object3DEventMap> = new Group();
     const scale: IPosition = { x: 1, y: 1, z: 1 };
 
     if (this._state.ndim === 3) {
@@ -293,7 +293,7 @@ export class ActivityAnimationLayer {
    * It requires activity events.
    */
   updateFrames(): void {
-    const events: any = Object.assign({}, this._activity.events);
+    const events: IEventProps = Object.assign({}, this._activity.events);
     if (events.senders == null) {
       return;
     }
