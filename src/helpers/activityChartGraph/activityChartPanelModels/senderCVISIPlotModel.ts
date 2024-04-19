@@ -1,6 +1,7 @@
 // senderSCISIPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
@@ -106,7 +107,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
       visible: this.state.visible,
       x,
       y,
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**

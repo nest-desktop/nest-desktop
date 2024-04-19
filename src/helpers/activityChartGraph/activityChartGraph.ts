@@ -22,6 +22,7 @@ import { SpikeTimesHistogramModel } from "./activityChartPanelModels/spikeTimesH
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
 import { TProject } from "@/types/projectTypes";
 import { currentBackgroundColor, currentColor } from "../common/theme";
+import { IActivityChartPanelModelData } from "./activityChartPanelModel";
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
 
@@ -290,7 +291,7 @@ export class ActivityChartGraph extends BaseObj {
    * @param panel
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: Partial<Plotly.Data>) => {
+    panel.model.data.forEach((data: Partial<IActivityChartPanelModelData>) => {
       data.dataIdx = this._plotData.length;
       data.panelIdx = panel.idx;
       data.xaxis = "x" + panel.xAxis;

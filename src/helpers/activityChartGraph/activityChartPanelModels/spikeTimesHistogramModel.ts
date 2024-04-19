@@ -1,6 +1,7 @@
 // spikeTimesHistogramModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
@@ -67,7 +68,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         size,
         start,
       },
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**

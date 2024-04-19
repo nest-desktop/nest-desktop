@@ -1,11 +1,12 @@
 // senderSpikeCountPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 
 export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
@@ -122,7 +123,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       visible: this.state.visible,
       x,
       y,
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**

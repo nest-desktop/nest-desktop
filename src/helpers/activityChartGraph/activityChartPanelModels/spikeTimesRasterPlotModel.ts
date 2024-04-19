@@ -1,11 +1,12 @@
 // spikeTimesRasterPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
+import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { useAppSessionStore } from "@/stores/appSessionStore";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
@@ -78,7 +79,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**

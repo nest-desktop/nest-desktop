@@ -157,7 +157,7 @@ export class ConnectionGraph {
     // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
     // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
     selector.each((connection: TConnection, idx: number, elements: any[]) => {
-      const elem = select(elements[idx]);
+      const elem: Selection<any, any, any, any> = select(elements[idx]);
 
       elem
         .selectAll("path")

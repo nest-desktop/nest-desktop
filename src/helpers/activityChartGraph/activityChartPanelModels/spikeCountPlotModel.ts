@@ -1,6 +1,7 @@
 // spikeCountPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
@@ -196,7 +197,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       visible: this.state.visible,
       x,
       y,
-    });
+    } as IActivityChartPanelModelData);
 
     if (this.horizontalLine) {
       this.data.push({
@@ -214,7 +215,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         visible: this.state.visible,
         x: [start, end],
         y: [0.63, 0.63],
-      });
+      } as IActivityChartPanelModelData);
     }
   }
 

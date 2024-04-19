@@ -1,6 +1,7 @@
 // analogSignalHistogramModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   AnalogSignalPanelModel,
   IAnalogSignalPanelModelProps,
@@ -113,7 +114,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
         size,
         start,
       },
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**

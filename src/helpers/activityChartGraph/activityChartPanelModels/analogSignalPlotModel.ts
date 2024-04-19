@@ -7,9 +7,16 @@ import {
 } from "./analogSignalPanelModel";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 
 export interface IAnalogSignalPlotModelProps
   extends IAnalogSignalPanelModelProps {}
+
+interface IDataPoints {
+  name: string;
+  x: number[];
+  y: number[];
+}
 
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   constructor(
@@ -68,7 +75,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   //     visible: this.state.visible,
   //     x: [0.1, record.activity.currentTime],
   //     y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
-  //   });
+  //   } as IActivityChartPanelModelData);
   // }
   // }
 
@@ -99,7 +106,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       visible: this.state.visible,
       x: record.times,
       y: record.values,
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**
@@ -111,9 +118,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return;
 
     const nodeIds: number[] = record.activity.state.selected;
-    const data: any[] = this.createGraphDataPoints(nodeIds, record);
+    const data: IDataPoints[] = this.createGraphDataPoints(nodeIds, record);
 
-    data.forEach((d: any, idx: number) => {
+    data.forEach((d: IDataPoints, idx: number) => {
       const line = {
         color: record.color,
         width: 1.5,
@@ -136,7 +143,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         x: d.x,
         y: d.y,
         // y: d.y.map(y => y+= 15*idx),
-      });
+      } as IActivityChartPanelModelData);
     });
   }
 
@@ -151,11 +158,11 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     const nodeIds: number[] = record.activity.state.selected; //record.activity.nodeIds.slice(
     // ...this.params[0].value
     // );
-    const data: any[] = this.createGraphDataPoints(nodeIds, record);
+    const data: IDataPoints[] = this.createGraphDataPoints(nodeIds, record);
 
-    const x: any[] = data[0].x;
-    const y: any[] = x.map((_: any, i: number) => {
-      const yi: any[] = [];
+    const x: number[] = data[0].x;
+    const y: number[] = x.map((_: number, i: number) => {
+      const yi: number[] = [];
       nodeIds.forEach((_: number, idx: number) => yi.push(data[idx].y[i]));
       const sum: number = yi.reduce((a: number, b: number) => a + b);
       const avg: number = sum / nodeIds.length;
@@ -179,7 +186,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       visible: this.state.visible,
       x,
       y,
-    });
+    } as IActivityChartPanelModelData);
 
     const line = {
       color: record.color,
@@ -199,7 +206,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       visible: this.state.visible,
       x,
       y,
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**
@@ -236,12 +243,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record Array of NodeRecords (containing the events)
    * @returns Array containing x, y and name value for every data point
    */
-  createGraphDataPoints(
-    nodeIds: number[],
-    record: NodeRecord
-  ): { x: number[]; y: number[]; name: string }[] {
+  createGraphDataPoints(nodeIds: number[], record: NodeRecord): IDataPoints[] {
     if (!nodeIds || nodeIds.length === 0) return [];
-    const data: any[] = nodeIds.map(() => ({ x: [], y: [], name: "" }));
+    const data: IDataPoints[] = nodeIds.map(() => ({ name: "", x: [], y: [] }));
 
     let senders: number[];
     if ("ports" in record.activity.events) {
@@ -256,7 +260,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         return;
       }
       data[senderIdx].x.push(record.times[idx]);
-      data[senderIdx].y.push(record.values[idx]);
+      data[senderIdx].y.push(record.values[idx] as number);
       data[senderIdx].name = record.id + " of " + record.nodeLabel;
     });
     return data;
@@ -339,7 +343,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return;
     }
 
-    const data: any = this.createGraphDataPoints(
+    const data: { x: number[]; y: number[] } = this.createGraphDataPoints(
       [record.activity.state.activeNodeId],
       record
     )[0];

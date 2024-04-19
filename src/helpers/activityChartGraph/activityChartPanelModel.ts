@@ -1,7 +1,6 @@
 // activityChartPanelModel.ts
 
 import { reactive, UnwrapRef } from "vue";
-import { Data } from "plotly.js-dist-min";
 
 import { Activity } from "../activity/activity";
 import { ActivityChartPanel } from "./activityChartPanel";
@@ -9,6 +8,50 @@ import { BaseObj } from "../common/base";
 import { NodeRecord, INodeRecordProps } from "../node/nodeRecord";
 import { currentBackgroundColor } from "../common/theme";
 import { TParamValue } from "../common/parameter";
+
+export interface IActivityChartPanelModelData {
+  activityIdx: number;
+  class?: string;
+  dataIdx?: number;
+  histfunc?: string;
+  hoverinfo: string;
+  legendgroup: string;
+  line: {
+    color?: string;
+    dash?: string;
+    shape?: string;
+    width?: number;
+  };
+  marker?: {
+    color: string;
+    line?: {
+      color: string;
+      width: number;
+    };
+    size?: number;
+    symbol?: string;
+  };
+  mode: string;
+  modelId?: string;
+  name?: string;
+  nodeId?: number;
+  opacity?: number;
+  panelIdx?: number;
+  recordId: string;
+  showlegend: boolean;
+  source?: string;
+  type: string;
+  visible: boolean;
+  x: number[];
+  xaxis?: string;
+  xbins?: {
+    end: number;
+    size: number;
+    start: number;
+  };
+  y: number[];
+  yaxis?: string;
+}
 
 interface IActivityChartPanelModelParamProps {
   _parent?: ActivityChartPanelModel;
@@ -51,7 +94,7 @@ interface IActivityChartPanelModelState {
 export abstract class ActivityChartPanelModel extends BaseObj {
   private _activities: Activity[] = [];
   private _activityType: string = "";
-  private _data: Data[] = [];
+  private _data: IActivityChartPanelModelData[] = [];
   private _icon: string = "";
   private _id: string = "";
   private _label: string = "";
@@ -98,11 +141,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this._activityType = value;
   }
 
-  get data(): any[] {
+  get data(): IActivityChartPanelModelData[] {
     return this._data;
   }
 
-  set data(value: any[]) {
+  set data(value: IActivityChartPanelModelData[]) {
     this._data = value;
   }
 
@@ -385,8 +428,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Update background color.
    */
   updateBackgroundColor(): void {
-    this._data.forEach((data: any) => {
-      if (data.type === "histogram") {
+    this._data.forEach((data: IActivityChartPanelModelData) => {
+      if (data.marker && data.marker.line && data.type === "histogram") {
         data.marker.line.color = currentBackgroundColor();
       }
     });
@@ -396,7 +439,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Update color of records.
    */
   updateRecordsColor(): void {
-    this._data.forEach((data: any) => {
+    this._data.forEach((data: IActivityChartPanelModelData) => {
       if (data.class === "background") {
         return;
       }
@@ -413,14 +456,17 @@ export abstract class ActivityChartPanelModel extends BaseObj {
         : activity.recorder.view.color || "grey";
 
       if (data.type.includes("scatter")) {
-        if (data.mode.includes("markers")) {
+        if (data.marker && data.marker.line && data.mode.includes("markers")) {
           data.marker.color = color;
           data.marker.line.color = color;
         }
-        if (data.mode.includes("lines")) {
+        if (data.line && data.mode.includes("lines")) {
           data.line.color = color;
         }
-      } else if (data.mode == "bar" || data.type == "histogram") {
+      } else if (
+        data.marker &&
+        (data.mode == "bar" || data.type == "histogram")
+      ) {
         data.marker.color = color;
       }
     });

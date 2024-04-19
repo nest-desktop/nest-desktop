@@ -48,6 +48,7 @@ export class Config {
         return JSON.parse(dataJSON);
       }
     }
+    return {};
   }
 
   set localStorage(value: any) {

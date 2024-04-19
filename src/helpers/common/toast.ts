@@ -4,7 +4,7 @@ import { useToast } from "vue-toast-notification";
 
 interface IOptionProps {
   type?: "success" | "info" | "warning" | "error" | "default" | string;
-  onClick?: any;
+  onClick?: () => void;
   duration?: number;
 }
 

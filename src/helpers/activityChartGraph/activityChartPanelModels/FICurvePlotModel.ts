@@ -1,6 +1,7 @@
 // FICurvePlotModel.ts
 
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
@@ -42,7 +43,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,
-    });
+    } as IActivityChartPanelModelData);
   }
 
   /**
