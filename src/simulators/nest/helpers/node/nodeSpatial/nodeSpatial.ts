@@ -47,9 +47,9 @@ export class NESTNodeSpatial extends BaseObj {
     return this._node;
   }
 
-  // get positions(): FreePositions | GridPositions | undefined {
-  //   return this._positions;
-  // }
+  get positions(): FreePositions | GridPositions | undefined {
+    return this._positions;
+  }
 
   /**
    * Initialize spatial node.
