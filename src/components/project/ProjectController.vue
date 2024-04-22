@@ -28,7 +28,12 @@
           (item.show === 'dev' && appSessionStore.state.devMode)
         "
       >
-        <v-icon :icon="item.icon" class="ma-1" size="large" />
+        <v-icon
+          :icon="item.icon"
+          :class="item.iconClass"
+          class="ma-1"
+          size="large"
+        />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
@@ -117,6 +122,7 @@
     :active="projectStore.state.bottomOpen"
     :height="projectStore.state.bottomNavHeight"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
+    @transitionend="dispatchWindowResize()"
     location="bottom"
   >
     <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />
@@ -167,12 +173,32 @@ const projectJSON = computed(() =>
 );
 
 const controllerItems = [
-  { id: "network", icon: "network:network", title: "Edit network" },
-  { id: "kernel", icon: "mdi:mdi-engine-outline", title: "Edit kernel" },
-  { id: "raw", icon: "mdi:mdi-code-json", show: "dev" },
-  { id: "code", icon: "mdi:mdi-xml" },
-  { id: "activity", icon: "mdi:mdi-border-style" },
-  { id: "stats", icon: "mdi:mdi-table-large" },
+  {
+    id: "network",
+    icon: "network:network",
+    iconClass: "",
+    title: "Edit network",
+  },
+  {
+    id: "kernel",
+    icon: "mdi:mdi-engine-outline",
+    iconClass: "",
+    title: "Edit kernel",
+  },
+  { id: "raw", icon: "mdi:mdi-code-json", iconClass: "", show: "dev" },
+  { id: "code", icon: "mdi:mdi-xml", iconClass: "", title: "Edit code" },
+  {
+    id: "activity",
+    icon: "mdi:mdi-border-style",
+    iconClass: "mdi-flip-v",
+    title: "Configure activity",
+  },
+  {
+    id: "stats",
+    icon: "mdi:mdi-table-large",
+    iconClass: "",
+    title: "View statistics",
+  },
 ];
 
 const extensions = [json()];
@@ -245,7 +271,6 @@ const resizeRightNav = () => {
  */
 const toggleBottomNav = () => {
   projectStore.value.state.bottomOpen = !projectStore.value.state.bottomOpen;
-  dispatchWindowResize();
 };
 </script>
 

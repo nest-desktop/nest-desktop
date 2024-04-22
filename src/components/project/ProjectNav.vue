@@ -53,94 +53,110 @@
     </v-toolbar>
 
     <v-list :key="projects.length" density="compact" lines="two" nav>
-      <v-list-item
-        :key="index"
-        :to="{
-          name: appStore.state.simulator + 'Project',
-          params: { projectId: project.id },
-        }"
-        v-for="(project, index) in projects"
-      >
-        <template #append>
-          <template v-if="project.doc">
-            <v-btn
-              @click.prevent="saveProject(project)"
-              :disabled="!project.state?.changes && !project.state?.editMode"
-              :icon="
-                project.state?.changes
-                  ? 'mdi:mdi-content-save-edit-outline'
-                  : 'mdi:mdi-content-save-check-outline'
-              "
-              size="x-small"
-              variant="text"
-            />
-            <ProjectMenu :project :projectDBStore />
-          </template>
-
-          <template v-else>
-            <v-menu>
-              <template #activator="{ props }">
+      <template v-for="(project, index) in projects">
+        <v-hover v-slot="{ isHovering, props }">
+          <v-list-item
+            :key="index"
+            :to="{
+              name: appStore.state.simulator + 'Project',
+              params: { projectId: project.id },
+            }"
+            v-bind="props"
+          >
+            <template #append>
+              <template v-if="project.doc">
                 <v-btn
-                  @click.prevent
-                  class="list-item-menu"
-                  icon="mdi:mdi-dots-vertical"
+                  @click.prevent="saveProject(project)"
+                  :disabled="
+                    !project.state?.changes && !project.state?.editMode
+                  "
+                  :icon="
+                    project.state?.changes
+                      ? 'mdi:mdi-content-save-edit-outline'
+                      : 'mdi:mdi-content-save-check-outline'
+                  "
                   size="x-small"
-                  v-bind="props"
                   variant="text"
                 />
+
+                <v-btn
+                  :color="isHovering ? 'primary' : 'transparent'"
+                  @click.prevent
+                  icon
+                  size="x-small"
+                  variant="text"
+                >
+                  <v-icon icon="mdi:mdi-dots-vertical" />
+                  <ProjectMenu :project :projectDBStore />
+                </v-btn>
               </template>
 
-              <v-list density="compact">
-                <v-list-item @click="projectDBStore.deleteProject(project)">
-                  <template #prepend>
-                    <v-icon icon="mdi:mdi-trash-can-outline" />
-                  </template>
-                  <v-list-item-title>Delete</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </template>
-        </template>
+              <template v-else>
+                <v-btn
+                  :color="isHovering ? 'primary' : 'transparent'"
+                  @click.prevent
+                  icon
+                  size="x-small"
+                  variant="text"
+                >
+                  <v-icon icon="mdi:mdi-dots-vertical" />
+                  <v-menu activator="parent">
+                    <v-list density="compact">
+                      <v-list-item
+                        @click="projectDBStore.deleteProject(project)"
+                      >
+                        <template #prepend>
+                          <v-icon icon="mdi:mdi-trash-can-outline" />
+                        </template>
+                        <v-list-item-title>Delete</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </v-btn>
+              </template>
+            </template>
 
-        <template #default v-if="project.state?.editMode">
-          <v-text-field
-            @click.prevent
-            @update:model-value="project.state.state.changes = true"
-            class="pt-2"
-            density="compact"
-            hide-details
-            label="Project name"
-            v-model="project.name"
-            variant="outlined"
-            autofocused
-          />
-        </template>
+            <template #default v-if="project.state?.editMode">
+              <v-text-field
+                @click.prevent
+                @update:model-value="project.state.state.changes = true"
+                class="pt-2"
+                density="compact"
+                hide-details
+                label="Project name"
+                v-model="project.name"
+                variant="outlined"
+                autofocused
+              />
+            </template>
 
-        <template #default v-else-if="appStore.session.devMode">
-          <v-list-item-title>
-            {{ project.name }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            <span class="mx-1" v-if="project.id">
-              {{ truncate(project.id) }}
-            </span>
-            <span class="mx-1" v-if="project.doc">
-              {{ truncate(project.docId) }}
-            </span>
-          </v-list-item-subtitle>
-        </template>
+            <template #default v-else-if="appStore.session.devMode">
+              <v-list-item-title>
+                {{ project.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                <span class="mx-1" v-if="project.id">
+                  {{ truncate(project.id) }}
+                </span>
+                <span class="mx-1" v-if="project.doc">
+                  {{ truncate(project.docId) }}
+                </span>
+              </v-list-item-subtitle>
+            </template>
 
-        <template #default v-else>
-          <v-list-item-title>
-            {{ project.name }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ project.network.nodes.length }} nodes,
-            {{ project.network.connections.length }}
-            connections
-          </v-list-item-subtitle>
-        </template>
-      </v-list-item>
+            <template #default v-else>
+              <v-list-item-title>
+                {{ project.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ project.network.nodes.length }} nodes,
+                {{ project.network.connections.length }}
+                connections
+              </v-list-item-subtitle>
+            </template>
+          </v-list-item>
+        </v-hover>
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>

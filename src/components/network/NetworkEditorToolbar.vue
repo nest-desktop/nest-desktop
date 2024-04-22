@@ -140,7 +140,7 @@ const downloadNetworkGraph = () => {
   if (!graph.value?.selector) return;
 
   downloadSVGImage(
-    graph.value?.selector.node(),
+    graph.value?.selector.node() as Node,
     graph.value?.network.project.name
   );
   state.dialogDownload = false;

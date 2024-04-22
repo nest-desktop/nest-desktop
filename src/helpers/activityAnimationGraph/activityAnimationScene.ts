@@ -7,6 +7,7 @@ import {
   Color,
   DirectionalLight,
   Group,
+  Object3DEventMap,
   PerspectiveCamera,
   Plane,
   PlaneHelper,
@@ -43,7 +44,7 @@ export class ActivityAnimationScene {
   private _controls: OrbitControls;
   private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
-  private _layerGraphGroup?: Group<any>;
+  private _layerGraphGroup?: Group<Object3DEventMap>;
   private _ref: any;
   private _renderer: WebGLRenderer;
   private _scene: Scene;
@@ -97,7 +98,7 @@ export class ActivityAnimationScene {
     return this._controls;
   }
 
-  get layerGraphGroup(): Group<any> | undefined {
+  get layerGraphGroup(): Group<Object3DEventMap> | undefined {
     return this._layerGraphGroup;
   }
 
@@ -134,8 +135,8 @@ export class ActivityAnimationScene {
   /**
    * Create and return lights group in init.
    */
-  createLights(): Group<any> {
-    const lightGroup: Group<any> = new Group();
+  createLights(): Group<Object3DEventMap> {
+    const lightGroup: Group<Object3DEventMap> = new Group();
 
     const directionalLight = new DirectionalLight(0xffffff, 1);
     directionalLight.position.set(1, 1, 0.5).normalize();
@@ -150,12 +151,12 @@ export class ActivityAnimationScene {
   /**
    * Create and return plane helper in init.
    */
-  createPlaneHelpers(): Group<any> {
+  createPlaneHelpers(): Group<Object3DEventMap> {
     this._clippingPlanes.push(new Plane(new Vector3(-1, 0, 0), 1));
     this._clippingPlanes.push(new Plane(new Vector3(0, -1, 0), 1));
     this._clippingPlanes.push(new Plane(new Vector3(0, 0, -1), 1));
 
-    const helpers: Group<any> = new Group();
+    const helpers: Group<Object3DEventMap> = new Group();
     helpers.add(new PlaneHelper(this._clippingPlanes[0], 2, 0xff0000));
     helpers.add(new PlaneHelper(this._clippingPlanes[1], 2, 0x00ff00));
     helpers.add(new PlaneHelper(this._clippingPlanes[2], 2, 0x0000ff));

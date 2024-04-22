@@ -27,11 +27,11 @@ export class BaseNetworkGraph extends BaseObj {
   public _network: TNetwork;
   private _nodeGraph: NodeGraph;
   private _resizeObserver: ResizeObserver;
-  private _selector?: Selection<any, any, any, any>;
+  private _selector: Selection<HTMLElement | null, any, null, undefined>;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
 
-  constructor(ref: Ref<null>, network: TNetwork) {
+  constructor(ref: Ref<HTMLElement | null>, network: TNetwork) {
     super({
       config: { name: "NetworkGraph" },
       logger: { settings: { minLevel: 3 } },
@@ -78,7 +78,7 @@ export class BaseNetworkGraph extends BaseObj {
     return this._resizeObserver;
   }
 
-  get selector(): Selection<any, any, any, any> | undefined {
+  get selector(): Selection<HTMLElement | null, any, null, undefined> {
     return this._selector;
   }
 

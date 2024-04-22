@@ -54,7 +54,7 @@ const props = defineProps({ network: NetworkComponentProps });
 const network = computed(() => props.network as TNetwork);
 const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
-const networkGraphRef: Ref<null> = ref(null);
+const networkGraphRef: Ref<HTMLElement | null> = ref<HTMLElement | null>(null);
 
 onMounted(() => {
   networkGraphStore.mount(new BaseNetworkGraph(networkGraphRef, network.value));

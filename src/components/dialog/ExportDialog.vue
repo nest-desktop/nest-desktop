@@ -60,10 +60,10 @@
           />
 
           <v-btn
-            @click="state.items = []"
-            prepend-icon="mdi:mdi-delete-empty-outline"
+            @click="update()"
+            prepend-icon="mdi:mdi-reload"
             size="small"
-            text="Clear"
+            text="Reload"
             variant="outlined"
           />
 
@@ -84,6 +84,7 @@ import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
+import { download } from "@/helpers/common/download";
 
 import { TModel } from "@/types/modelTypes";
 import { TProject } from "@/types/projectTypes";
@@ -107,7 +108,7 @@ const projectDBStore = computed(() => props.projectDBStore);
 
 const state = reactive({
   items: [] as IExportProps[],
-  selected: [],
+  selected: [] as IExportProps[],
 });
 
 const headers = [
@@ -118,9 +119,22 @@ const headers = [
 /**
  * Export selected.
  */
-const exportSelected = () => {};
+const exportSelected = () => {
+  download(
+    JSON.stringify(
+      state.selected.map((selected: IExportProps) => selected.props)
+    )
+  );
+  state.selected = [] as IExportProps[];
+};
 
-onMounted(() => {
+/**
+ * Update list item.
+ */
+const update = (): void => {
+  state.selected = [] as IExportProps[];
+  state.items = [] as IExportProps[];
+
   modelDBStore.value.state.models.forEach((model: TModel) => {
     state.items.push({
       group: "model",
@@ -138,5 +152,9 @@ onMounted(() => {
       });
     }
   );
+};
+
+onMounted(() => {
+  update();
 });
 </script>

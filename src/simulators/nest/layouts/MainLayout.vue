@@ -1,11 +1,7 @@
 <template>
   <v-app v-if="nestSessionStore.loading">
     <v-container class="fill-height">
-      <v-progress-circular
-        class="ma-auto"
-        color="primary"
-        indeterminate
-      />
+      <v-progress-circular class="ma-auto" color="primary" indeterminate />
     </v-container>
 
     <AppFooter />
@@ -42,10 +38,10 @@ const route = useRoute();
 
 const navItems = [
   {
-    icon: "network:network",
+    icon: "mdi:mdi-tools",
     id: "nestProject",
     simulator: "nest",
-    title: "Project",
+    title: "Sandbox",
     to: { name: "nestProjectRoot" },
   },
   {

@@ -1,5 +1,5 @@
 <template>
-  <v-menu>
+  <v-menu activator="parent">
     <v-dialog max-width="480" v-model="state.dialog.delete">
       <v-card>
         <v-card-title> Are you sure to delete it? </v-card-title>
@@ -44,17 +44,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <template #activator="{ props }">
-      <v-btn
-        @click.prevent
-        class="list-item-menu"
-        icon="mdi:mdi-dots-vertical"
-        size="x-small"
-        v-bind="props"
-        variant="text"
-      />
-    </template>
 
     <v-list density="compact">
       <v-list-item

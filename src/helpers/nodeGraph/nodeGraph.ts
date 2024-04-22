@@ -16,7 +16,7 @@ import { NodeGraphShape } from "./nodeGraphShape";
 import { TNetwork } from "@/types/networkTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
-// import { currentBackgroundColor } from "../common/theme";
+import { BaseNode } from "../node/node";
 
 export class NodeGraph extends BaseObj {
   private _networkGraph: TNetworkGraph;
@@ -61,7 +61,7 @@ export class NodeGraph extends BaseObj {
     elements: SVGGElement[] | ArrayLike<SVGGElement>
   ): void {
     this.logger.trace("init node");
-    const elem: Selection<any, any, any, any> = select(elements[idx]);
+    const elem: Selection<any, any, null, undefined> = select(elements[idx]);
     elem.selectAll("*").remove();
 
     this._nodeGraphConnector.init(elem);
@@ -112,25 +112,29 @@ export class NodeGraph extends BaseObj {
     const duration: number = this._networkGraph.workspace.state.dragging
       ? 0
       : 250;
-    const t: Transition<any, any, any, any> = transition().duration(duration);
+    const t: Transition<any, any, null, undefined> =
+      transition().duration(duration);
 
     const nodes = select("g#nodes").selectAll("g.node");
 
     nodes
       .transition(t)
       .style("opacity", 1)
-      .style("color", (n: any) => "var(--node" + n.idx + "-color)")
+      .style("color", (n: TNode | any) => "var(--node" + n.idx + "-color)")
       .style("background-color", "rgb(var(--v-theme-background))")
       .attr(
         "transform",
-        (n: any) =>
+        (n: TNode | any) =>
           `translate(${n.view.state.position.x},${n.view.state.position.y})`
       );
 
     nodes
       .selectAll(".core")
       .transition(t)
-      .attr("transform", (n: any) => `scale( ${n.state.isFocused ? 1.2 : 1})`);
+      .attr(
+        "transform",
+        (n: TNode | any) => `scale( ${n.state.isFocused ? 1.2 : 1})`
+      );
   }
 
   /**
@@ -143,12 +147,15 @@ export class NodeGraph extends BaseObj {
     this.logger.silly("update");
     if (!this._networkGraph.selector) return;
 
-    const nodes: Selection<any, any, any, any> = this._networkGraph.selector
-      .select("g#nodes")
-      .selectAll("g.node")
-      .data(this.network.nodes.all, (n: any) => n.hash);
+    const nodes: Selection<any, any, any, undefined> =
+      this._networkGraph.selector
+        .select("g#nodes")
+        .selectAll("g.node")
+        .data(this.network.nodes.all, (n: TNode | unknown) =>
+          n instanceof BaseNode ? n.hash : ""
+        );
 
-    const dragging: DragBehavior<any, unknown, unknown> = drag()
+    const dragging: DragBehavior<any, any, any> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, n: TNode | unknown) =>
         this.drag(e, n as TNode)
@@ -159,7 +166,7 @@ export class NodeGraph extends BaseObj {
       .enter()
       .append("g")
       .attr("class", "node")
-      .style("color", (n: any) => "var(--node" + n.idx + "-color)")
+      .style("color", (n: TNode) => "var(--node" + n.idx + "-color)")
       .attr("idx", (n: TNode) => n.idx)
       .attr("weight", (n: TNode) => n.view.synWeights as string)
       .attr(

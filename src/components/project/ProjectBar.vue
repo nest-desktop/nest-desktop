@@ -1,9 +1,5 @@
 <template>
-  <v-app-bar
-    class="d-print-none"
-    height="48"
-    flat
-  >
+  <v-app-bar class="d-print-none" height="48" flat>
     <v-tabs stacked>
       <slot name="prependTabs" />
 
@@ -14,7 +10,7 @@
         :title="tab.title"
         size="small"
       >
-        <v-icon :icon="tab.icon" />
+        <v-icon :class="tab.iconClass" :icon="tab.icon" />
         <span class="text-no-wrap">{{ tab.label }}</span>
       </v-tab>
 
@@ -60,6 +56,7 @@ const projectStore = computed(() => props.projectStore);
 const tabItems = [
   {
     icon: "network:network",
+    iconClass: "",
     id: "networkEditor",
     label: "Editor",
     title: "Network editor",
@@ -70,6 +67,7 @@ const tabItems = [
   },
   {
     icon: "mdi:mdi-border-style",
+    iconClass: "mdi-flip-v",
     id: "activityExplorer",
     label: "Explorer",
     title: "Activity explorer",
@@ -81,6 +79,7 @@ const tabItems = [
   },
   {
     icon: "mdi:mdi-book-open-outline",
+    iconClass: "",
     id: "labBook",
     label: "Lab book",
     title: "Lab book",
