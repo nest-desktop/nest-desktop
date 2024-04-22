@@ -9,8 +9,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import { Compartment } from "@codemirror/state";
 import { autocompletion } from "@codemirror/autocomplete";
 import { basicSetup } from "codemirror";
@@ -19,17 +17,13 @@ import { python } from "@codemirror/lang-python";
 
 let language = new Compartment();
 
-import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types/simulationTypes";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps({
-  simulation: SimulationComponentProps,
-});
-
-const simulation = computed(() => props.simulation as TSimulation);
+defineProps<{ simulation: TSimulation }>();
 
 const extensions = [
   basicSetup,

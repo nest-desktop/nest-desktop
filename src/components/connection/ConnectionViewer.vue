@@ -30,14 +30,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import ConnectionAvatar from "./ConnectionAvatar.vue";
-import { ConnectionComponentProps, TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types/connectionTypes";
 
-const props = defineProps({ connection: ConnectionComponentProps });
-
-const connection = computed(() => props.connection as TConnection);
+defineProps<{ connection: TConnection }>();
 </script>
 
 <style lang="scss">

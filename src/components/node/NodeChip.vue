@@ -18,22 +18,18 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import {
-  NetworkGraphComponentProps,
-  TNetworkGraph,
-} from "@/types/networkGraphTypes";
-import { NodeComponentProps, TNode } from "@/types/nodeTypes";
+import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNode } from "@/types/nodeTypes";
 
 import { useAppSessionStore } from "@/stores/appSessionStore";
 const appSessionStore = useAppSessionStore();
 
-const props = defineProps({
-  graph: NetworkGraphComponentProps,
-  node: NodeComponentProps,
-});
-
-const node = computed(() => props.node as TNode);
-const graph = computed(() => props.graph as TNetworkGraph);
+const props = defineProps<{
+  graph: TNetworkGraph;
+  node: TNode;
+}>();
+const graph = computed(() => props.graph);
+const node = computed(() => props.node);
 
 const selectNode = () => {
   node.value.state.select();

@@ -53,10 +53,10 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ProjectComponentProps, TProject } from "@/types/projectTypes";
+import { TProject } from "@/types/projectTypes";
 
-const props = defineProps({ project: ProjectComponentProps });
-const project = computed(() => props.project as TProject);
+const props = defineProps<{ project: TProject }>();
+const project = computed(() => props.project);
 
 /**
  * Count networks before the current.

@@ -52,7 +52,6 @@ const props = defineProps({
   activity: SpikeActivity,
   height: { default: 500, type: Number },
 });
-
 const activity = computed(() => props.activity as SpikeActivity);
 
 const state = reactive({

@@ -28,10 +28,3 @@ export type TSimulationProps =
   | INESTSimulationProps
   | INorseSimulationProps
   | IPyNNSimulationProps;
-
-export const SimulationComponentProps = [
-  BaseSimulation,
-  NESTSimulation,
-  NorseSimulation,
-  PyNNSimulation,
-];

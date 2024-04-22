@@ -37,10 +37,10 @@ import { computed } from "vue";
 import IconBtn from "@/components/common/IconBtn.vue";
 
 import NodeEditor from "@/components/node/NodeEditor.vue";
-import { TNetwork, NetworkComponentProps } from "@/types/networkTypes";
+import { TNetwork } from "@/types/networkTypes";
 
-const props = defineProps({
-  network: NetworkComponentProps,
-});
-const network = computed(() => props.network as TNetwork);
+const props = defineProps<{
+  network: TNetwork;
+}>();
+const network = computed(() => props.network);
 </script>

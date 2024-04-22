@@ -20,10 +20,3 @@ export type TModelProps =
   | INESTModelProps
   | INorseModelProps
   | IPyNNModelProps;
-
-export const ModelComponentProps = [
-  BaseModel,
-  NESTModel,
-  NorseModel,
-  PyNNModel,
-];

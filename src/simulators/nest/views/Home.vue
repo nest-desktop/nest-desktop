@@ -118,7 +118,13 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="nest" />
+        <StoreList
+          :modelDBStore
+          :modelStore
+          :projectStore
+          :projectDBStore
+          simulator="nest"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -129,7 +135,6 @@ import { ref } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
-
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
@@ -149,8 +154,6 @@ const nestSimulatorStore = useNESTSimulatorStore();
 
 import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
 const insiteAccessStore = useInsiteAccessStore();
-
-const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
 
 const backendTab = ref("nest");
 </script>

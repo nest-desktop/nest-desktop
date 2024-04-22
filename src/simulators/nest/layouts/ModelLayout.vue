@@ -1,5 +1,5 @@
 <template>
-  <ModelNav :store="modelDBStore" />
+  <ModelNav :modelDBStore />
 
   <ModelBar :model color="nest-model">
     <template #prependTabs>
@@ -14,7 +14,7 @@
     </template>
   </ModelBar>
 
-  <ModelController :store="modelStore" />
+  <ModelController :modelStore />
 
   <router-view name="model" />
 </template>

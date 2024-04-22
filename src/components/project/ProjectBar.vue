@@ -25,32 +25,28 @@
 
     <v-spacer />
 
-    <NetworkHistory :project="projectStore.project as TProject" />
+    <NetworkHistory :project="projectStore.project" />
 
     <SimulationButton
       v-if="projectStore.project"
       class="mx-2"
       :project-store
-      :simulation="projectStore.project.simulation as TSimulation"
+      :simulation="projectStore.project.simulation"
     />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
+import { Store } from "pinia";
 import { computed } from "vue";
 
 import NetworkHistory from "@/components/network/NetworkHistory.vue";
 import SimulationButton from "@/components/simulation/SimulationButton.vue";
-import { TProject } from "@/types/projectTypes";
-import { TSimulation } from "@/types/simulationTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps({
-  projectStore: { required: true, type: Object },
-});
-
+const props = defineProps<{ projectStore: Store<any, any> }>();
 const projectStore = computed(() => props.projectStore);
 
 const tabItems = [

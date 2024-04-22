@@ -17,9 +17,11 @@ export const useNetworkGraphStore = defineStore("network-graph", () => {
     state.graph.resizeObserver.observe(state.graph.selector?.node().parentNode);
     state.graph.init();
   };
+
   const unmount = (): void => {
     state.graph?.resizeObserver.disconnect();
     state.graph = null;
   };
+
   return { mount, state, unmount };
 });

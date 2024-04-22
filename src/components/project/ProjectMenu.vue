@@ -63,8 +63,9 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
+import { Store } from "pinia";
 
-import { ProjectComponentProps, TProject } from "@/types/projectTypes";
+import { TProject } from "@/types/projectTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -73,12 +74,12 @@ import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
-const props = defineProps({
-  project: ProjectComponentProps,
-  projectDBStore: { required: true, type: Object },
-});
+const props = defineProps<{
+  project: TProject;
+  projectDBStore: Store<any, any>;
+}>();
 
-const project = computed(() => props.project as TProject);
+const project = computed(() => props.project);
 const projectDBStore = computed(() => props.projectDBStore);
 
 const state = reactive({

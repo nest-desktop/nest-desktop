@@ -30,14 +30,13 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ModelComponentProps, TModel } from "@/types/modelTypes";
+import { TModel } from "@/types/modelTypes";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps({ model: ModelComponentProps });
-
-const model = computed(() => props.model as TModel);
+const props = defineProps<{ model: TModel }>();
+const model = computed(() => props.model);
 
 const tabItems = computed(() => [
   {

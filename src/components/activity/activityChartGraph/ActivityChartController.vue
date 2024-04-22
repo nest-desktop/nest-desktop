@@ -173,9 +173,8 @@ import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
-const props = defineProps({ graph: ActivityChartGraph });
-
-const graph = computed(() => props.graph as ActivityChartGraph);
+const props = defineProps<{ graph: ActivityChartGraph }>();
+const graph = computed(() => props.graph);
 
 // const state = reactive({
 //   color: "#9e9e9e",

@@ -1,9 +1,5 @@
 <template>
-  <v-list
-    v-model:opened="state.listOpen"
-    class="list"
-    density="compact"
-  >
+  <v-list v-model:opened="state.listOpen" class="list" density="compact">
     <v-list-item
       v-if="state.listOpen.length > 0"
       prepend-icon="mdi:mdi-chevron-left"
@@ -12,10 +8,7 @@
       {{ state.listOpen[0] }}
     </v-list-item>
 
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-    >
+    <div v-for="(item, index) in items" :key="index">
       <v-list-group
         v-if="'items' in item"
         :value="item.value"

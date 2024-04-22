@@ -1,13 +1,10 @@
 <template>
-  <v-avatar
-    class="recorder"
-    rounded="0"
-  >
+  <v-avatar class="recorder" rounded="0">
     <span class="label">
-      {{ props.label }}
+      {{ label }}
     </span>
     <v-icon
-      :color="props.color"
+      :color="color"
       icon="network:recorder"
       class="position-absolute icon-size"
     />
@@ -15,7 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(["color", "label"]);
+defineProps({
+  color: String,
+  label: String,
+});
 </script>
 
 <style lang="scss">

@@ -70,12 +70,10 @@ import ConnectionSpecEditor from "@/components/connection/ConnectionSpecEditor.v
 
 import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
 import { NESTConnection } from "../../helpers/connection/connection";
-import { NESTSynapse } from "../../helpers/synapse/synapse";
 
-const props = defineProps({ connection: NESTConnection });
-
-const connection = computed(() => props.connection as NESTConnection);
-const synapse = computed(() => connection.value.synapse as NESTSynapse);
+const props = defineProps<{ connection: NESTConnection }>();
+const connection = computed(() => props.connection);
+const synapse = computed(() => connection.value.synapse);
 
 const items = [
   {

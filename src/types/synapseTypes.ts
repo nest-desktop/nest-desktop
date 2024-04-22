@@ -8,5 +8,3 @@ import {
 
 export type TSynapse = BaseSynapse | NESTSynapse;
 export type TSynapseProps = ISynapseProps | INESTSynapseProps;
-
-export const SynapseComponentProps = [BaseSynapse, NESTSynapse];

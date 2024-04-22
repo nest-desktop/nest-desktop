@@ -1,9 +1,9 @@
 <template>
-  <ModelNav :store="modelDBStore" />
+  <ModelNav :modelDBStore />
 
   <ModelBar :model color="brown" />
 
-  <ModelController :store="modelStore" />
+  <ModelController :modelStore />
 
   <router-view name="model" />
 </template>

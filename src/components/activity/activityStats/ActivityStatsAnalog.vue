@@ -82,9 +82,8 @@ import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { deviation, mean } from "@/helpers/common/array";
 import { toFixed } from "@/utils/converter";
 
-const props = defineProps({ activity: AnalogSignalActivity });
-
-const activity = computed(() => props.activity as AnalogSignalActivity);
+const props = defineProps<{ activity: AnalogSignalActivity }>();
+const activity = computed(() => props.activity);
 
 const state = reactive({
   activityHash: "",

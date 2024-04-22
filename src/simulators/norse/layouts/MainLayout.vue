@@ -1,18 +1,14 @@
 <template>
   <v-app v-if="norseSessionStore.loading">
     <v-container class="fill-height">
-      <v-progress-circular
-        class="ma-auto"
-        color="primary"
-        indeterminate
-      />
+      <v-progress-circular class="ma-auto" color="primary" indeterminate />
     </v-container>
 
-    <app-footer />
+    <AppFooter />
   </v-app>
 
   <template v-else>
-    <app-navigation :nav-items />
+    <AppNavigation :nav-items />
 
     <v-main>
       <router-view />

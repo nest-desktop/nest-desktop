@@ -39,8 +39,7 @@ import { computed } from "vue";
 
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
-const props = defineProps({ graph: ActivityChartGraph });
-
+const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph as ActivityChartGraph);
 
 const emit = defineEmits(["changed"]);

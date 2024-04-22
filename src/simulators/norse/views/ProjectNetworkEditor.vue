@@ -1,7 +1,7 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
-    <network-editor-toolbar />
-    <network-graph :network />
+    <NetworkEditorToolbar />
+    <NetworkGraph :network />
   </v-layout>
 </template>
 
@@ -16,5 +16,7 @@ import { NorseNetwork } from "../helpers/network/network";
 import { useNorseProjectStore } from "../stores/project/projectStore";
 const projectStore = useNorseProjectStore();
 
-const network = computed(() => projectStore.state.project.network as NorseNetwork);
+const network = computed(
+  () => projectStore.state.project.network as NorseNetwork
+);
 </script>

@@ -53,15 +53,8 @@ import { computed } from "vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 
-const props = defineProps({ param: ConnectionParameter });
-
+const props = defineProps<{ param: ConnectionParameter }>();
 const param = computed(() => props.param as ConnectionParameter);
-
-const update = (value: number | number[] | boolean | null) => {
-  if (value == null) return;
-  param.value.value = value;
-  param.value.changes();
-};
 
 const items = [
   {
@@ -81,6 +74,12 @@ const items = [
     },
   },
 ];
+
+const update = (value: number | number[] | boolean | null) => {
+  if (value == null) return;
+  param.value.value = value;
+  param.value.changes();
+};
 </script>
 
 <style lang="scss">

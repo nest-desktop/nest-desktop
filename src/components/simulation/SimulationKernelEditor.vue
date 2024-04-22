@@ -4,14 +4,14 @@
       <v-toolbar-title>Simulation kernel editor</v-toolbar-title>
     </v-toolbar>
 
-    <card :color="props.color" class="ma-1">
+    <card :color="props.color || 'primary'" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation
       </v-card-title>
 
       <v-card-text class="py-0">
         <ValueSlider
-          :thumb-color="props.color"
+          :thumb-color="props.color || 'primary'"
           class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"
@@ -22,18 +22,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import Card from "@/components/common/Card.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types/simulationTypes";
 
-const props = defineProps({
-  color: { default: "primary", type: String },
-  simulation: SimulationComponentProps,
-});
-
-const simulation = computed(() => props.simulation as TSimulation);
+const props = defineProps<{
+  color?: string;
+  simulation: TSimulation;
+}>();
 
 const options = {
   simulationTimeSettings: {

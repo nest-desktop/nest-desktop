@@ -20,10 +20,3 @@ export type TProjectProps =
   | INESTProjectProps
   | INorseProjectProps
   | IPyNNProjectProps;
-
-export const ProjectComponentProps = [
-  BaseProject,
-  NESTProject,
-  NorseProject,
-  PyNNProject,
-];

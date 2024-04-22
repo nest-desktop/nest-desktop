@@ -52,13 +52,10 @@
 import { computed } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { SynapseComponentProps, TSynapse } from "@/types/synapseTypes";
+import { TSynapse } from "@/types/synapseTypes";
 
-const props = defineProps({
-  synapse: SynapseComponentProps,
-});
-
-const synapse = computed(() => props.synapse as TSynapse);
+const props = defineProps<{ synapse: TSynapse }>();
+const synapse = computed(() => props.synapse);
 
 const update = (value: number) => {
   synapse.value.weight = value;

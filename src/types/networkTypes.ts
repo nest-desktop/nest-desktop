@@ -15,5 +15,3 @@ export type TNetworkProps =
   | INetworkProps
   | INESTNetworkProps
   | INorseNetworkProps;
-
-export const NetworkComponentProps = [BaseNetwork, NESTNetwork, NorseNetwork];

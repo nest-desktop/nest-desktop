@@ -71,9 +71,7 @@ import { NESTSimulation } from "../../helpers/simulation/simulation";
 import { useNESTProjectStore } from "../../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-const props = defineProps({
-  color: { default: "primary", type: String },
-});
+const props = defineProps({ color: { default: "primary", type: String } });
 
 const simulation = computed(
   () => projectStore.state.project.simulation as NESTSimulation

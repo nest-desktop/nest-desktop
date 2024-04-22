@@ -55,9 +55,8 @@ import { Activities } from "@/helpers/activity/activities";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
-const props = defineProps({ activities: Activities });
-
-const activities = computed(() => props.activities as Activities);
+const props = defineProps<{ activities: Activities }>();
+const activities = computed(() => props.activities);
 
 const state = reactive({
   height: 700,

@@ -30,9 +30,8 @@ import { computed } from "vue";
 
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
-const props = defineProps({ nodeRecord: NodeRecord });
-
-const nodeRecord = computed(() => props.nodeRecord as NodeRecord);
+const props = defineProps<{ nodeRecord: NodeRecord }>();
+const nodeRecord = computed(() => props.nodeRecord);
 
 /**
  * Triggers when record color is changed.

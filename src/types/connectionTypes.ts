@@ -18,9 +18,3 @@ export type TConnectionProps =
   | IConnectionProps
   | INESTConnectionProps
   | INorseConnectionProps;
-
-export const ConnectionComponentProps = [
-  BaseConnection,
-  NESTConnection,
-  NorseConnection,
-];

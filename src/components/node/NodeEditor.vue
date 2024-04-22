@@ -229,12 +229,11 @@ import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { NodeComponentProps, TNode } from "@/types/nodeTypes";
 import { TModel } from "@/types/modelTypes";
+import { TNode } from "@/types/nodeTypes";
 
-const props = defineProps({ node: NodeComponentProps });
-
-const node = computed(() => props.node as TNode);
+const props = defineProps<{ node: TNode }>();
+const node = computed(() => props.node);
 
 const state = reactive({
   elementType: "",

@@ -163,6 +163,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, ref } from "vue";
+import { Store } from "pinia";
 
 import { TProject } from "@/types/projectTypes";
 import ProjectMenu from "./ProjectMenu.vue";
@@ -173,19 +174,15 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const props = defineProps({
-  projectDBStore: { required: true, type: Object },
-});
-
+const props = defineProps<{ projectDBStore: Store<any, any> }>();
 const projectDBStore = computed(() => props.projectDBStore);
-
-const search = ref("");
-
 const projects = computed(() =>
   props.projectDBStore.state.projects.filter((project: TProject) =>
     project.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );
+
+const search = ref("");
 
 const projectsMenuItems = [
   { title: "Import", icon: "mdi:mdi-import" },

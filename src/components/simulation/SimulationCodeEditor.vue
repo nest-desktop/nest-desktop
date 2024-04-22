@@ -27,28 +27,24 @@
 
   <Simulation-code-mirror
     :disabled="state.disabled"
-    :simulation="(simulation as TSimulation)"
+    :simulation="simulation"
     v-if="simulation"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 
 import IconBtn from "@/components/common/IconBtn.vue";
-import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types/simulationTypes";
 
 import SimulationCodeMirror from "./SimulationCodeMirror.vue";
 
-const props = defineProps({
-  simulation: SimulationComponentProps,
-});
+defineProps<{ simulation: TSimulation }>();
 
 const state = reactive({
   disabled: true,
 });
-
-const simulation = computed(() => props.simulation as TSimulation);
 
 const codeBlocks = [
   { icon: "mdi:mdi-delete-empty", title: "reset" },

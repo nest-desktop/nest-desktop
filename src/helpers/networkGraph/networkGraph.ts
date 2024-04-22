@@ -27,7 +27,7 @@ export class BaseNetworkGraph extends BaseObj {
   public _network: TNetwork;
   private _nodeGraph: NodeGraph;
   private _resizeObserver: ResizeObserver;
-  private _selector: Selection<HTMLElement | null, any, null, undefined>;
+  private _selector: Selection<any, any, null, undefined>;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
 
@@ -78,7 +78,7 @@ export class BaseNetworkGraph extends BaseObj {
     return this._resizeObserver;
   }
 
-  get selector(): Selection<HTMLElement | null, any, null, undefined> {
+  get selector(): Selection<any, any, null, undefined> {
     return this._selector;
   }
 

@@ -134,13 +134,10 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { INodeProps } from "@/helpers/node/node";
-import { NodeComponentProps, TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types/nodeTypes";
 
-const props = defineProps({
-  node: { required: true, type: NodeComponentProps },
-});
-
-const node = computed(() => props.node as TNode);
+const props = defineProps<{ node: TNode }>();
+const node = computed(() => props.node);
 
 const state = reactive({
   content: undefined as string | undefined,

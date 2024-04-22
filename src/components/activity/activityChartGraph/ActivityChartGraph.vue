@@ -44,9 +44,8 @@ import { DownloadImgopts } from "plotly.js";
 
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
-const props = defineProps({ graph: ActivityChartGraph });
-
-const graph = computed(() => props.graph as ActivityChartGraph);
+const props = defineProps<{ graph: ActivityChartGraph }>();
+const graph = computed(() => props.graph);
 
 const state = reactive({
   dialog: false,

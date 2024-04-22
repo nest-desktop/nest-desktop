@@ -1,9 +1,9 @@
 <template>
-  <model-nav :store="modelDBStore" />
+  <ModelNav :modelDBStore />
 
-  <model-bar :model="(model as NorseModel)" color="rosa" />
+  <ModelBar :model color="rosa" />
 
-  <model-controller :store="modelStore" />
+  <ModelController :modelStore />
 
   <router-view name="model" />
 </template>

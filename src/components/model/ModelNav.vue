@@ -66,6 +66,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Store } from "pinia";
 import { computed, nextTick, ref } from "vue";
 
 import { TModel } from "@/types/modelTypes";
@@ -76,17 +77,14 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
 
-const props = defineProps({
-  store: { required: true, type: Object },
-});
-
-const search = ref("");
-
+const props = defineProps<{ modelDBStore: Store<any, any> }>();
 const models = computed(() =>
-  props.store.state.models.filter((model: TModel) =>
+  props.modelDBStore.state.models.filter((model: TModel) =>
     model.label.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
   )
 );
+
+const search = ref("");
 
 const menuItems = [
   { title: "Upload", icon: "mdi:mdi-upload" },

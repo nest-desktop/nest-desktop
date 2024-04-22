@@ -98,8 +98,8 @@ import { NESTNode } from "../../helpers/node/node";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
-const props = defineProps({ network: NESTNetwork });
-const network = computed(() => props.network as NESTNetwork);
+const props = defineProps<{ network: NESTNetwork }>();
+const network = computed(() => props.network);
 
 const graph = computed(() => networkGraphStore.state.graph as NESTNetworkGraph);
 

@@ -9,5 +9,3 @@ import {
 
 export type TNode = BaseNode | NESTNode | NorseNode;
 export type TNodeProps = INodeProps | INESTNodeProps | INorseNodeProps;
-
-export const NodeComponentProps = [BaseNode, NESTNode, NorseNode];

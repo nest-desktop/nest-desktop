@@ -68,7 +68,7 @@
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controllerView === 'network'">
         <slot name="network">
-          <NetworkParamEditor :network="(project.network as TNetwork)">
+          <NetworkParamEditor :network="project.network">
             <template #nodes>
               <slot name="nodes" />
             </template>
@@ -78,9 +78,7 @@
 
       <template v-else-if="projectStore.state.controllerView === 'kernel'">
         <slot name="simulationKernel">
-          <SimulationKernelEditor
-            :simulation="(project.simulation as TSimulation)"
-          />
+          <SimulationKernelEditor :simulation="project.simulation" />
         </slot>
       </template>
 
@@ -100,20 +98,18 @@
 
       <template v-else-if="projectStore.state.controllerView === 'code'">
         <slot name="simulationCodeEditor">
-          <simulation-code-editor
-            :simulation="(project.simulation as TSimulation)"
-          />
+          <simulation-code-editor :simulation="project.simulation" />
         </slot>
       </template>
 
       <template v-else-if="projectStore.state.controllerView === 'activity'">
         <activity-chart-controller
-          :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
+          :graph="project.activityGraph.activityChartGraph"
         />
       </template>
 
       <template v-else-if="projectStore.state.controllerView === 'stats'">
-        <activity-stats :activities="(project.activities as Activities)" />
+        <activity-stats :activities="project.activities" />
       </template>
     </div>
   </v-navigation-drawer>
@@ -128,9 +124,7 @@
     <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />
 
     <slot name="simulationCodeMirror">
-      <simulation-code-mirror
-        :simulation="(project.simulation as TSimulation)"
-      />
+      <simulation-code-mirror :simulation="project.simulation" />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -138,6 +132,7 @@
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
 import { LanguageSupport } from "@codemirror/language";
+import { Store } from "pinia";
 import { computed, nextTick } from "vue";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -148,11 +143,6 @@ import NetworkParamEditor from "@/components/network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
-import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { TNetwork } from "@/types/networkTypes";
-import { TProject } from "@/types/projectTypes";
-import { TSimulation } from "@/types/simulationTypes";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppSessionStore } from "@/stores/appSessionStore";
@@ -161,12 +151,9 @@ const appSessionStore = useAppSessionStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const props = defineProps({
-  projectStore: { required: true, type: Object },
-});
-
+const props = defineProps<{ projectStore: Store<any, any> }>();
 const projectStore = computed(() => props.projectStore);
-const project = computed(() => projectStore.value.state.project as TProject);
+const project = computed(() => projectStore.value.state.project);
 
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)

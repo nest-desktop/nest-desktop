@@ -67,9 +67,8 @@ import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPa
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 
-const props = defineProps({ panel: ActivityChartPanel });
-
-const panel = computed(() => props.panel as ActivityChartPanel);
+const props = defineProps<{ panel: ActivityChartPanel }>();
+const panel = computed(() => props.panel);
 
 const selectModel = (modelId: string) => {
   panel.value.selectModel(modelId);

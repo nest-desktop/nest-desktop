@@ -1,18 +1,14 @@
 <template>
   <v-btn class="icon-btn d-flex flex-column">
     <template #prepend>
-      <v-icon
-        :icon="props.icon"
-        class="ma-1"
-        size="large"
-      />
+      <v-icon :icon="props.icon" class="ma-1" size="large" />
     </template>
     <slot />
   </v-btn>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(["icon"]);
+const props = defineProps<{ icon: string }>();
 </script>
 
 <style lang="scss">

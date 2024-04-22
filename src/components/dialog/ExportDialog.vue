@@ -80,14 +80,14 @@
 </template>
 
 <script lang="ts" setup>
+import { Store } from "pinia";
 import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
-import { download } from "@/helpers/common/download";
-
 import { TModel } from "@/types/modelTypes";
 import { TProject } from "@/types/projectTypes";
+import { download } from "@/helpers/common/download";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
@@ -98,11 +98,10 @@ interface IExportProps {
   props: IModelProps | IProjectProps;
 }
 
-const props = defineProps({
-  modelDBStore: { required: true, type: Object },
-  projectDBStore: { required: true, type: Object },
-});
-
+const props = defineProps<{
+  modelDBStore: Store<any, any>;
+  projectDBStore: Store<any, any>;
+}>();
 const modelDBStore = computed(() => props.modelDBStore);
 const projectDBStore = computed(() => props.projectDBStore);
 

@@ -36,12 +36,3 @@ export type TNodeParameterComponentProps =
   | INESTNodeCompartmentProps
   | INESTNodeReceptorProps
   | INorseNodeProps;
-
-export const NodeParameterComponentProps = [
-  BaseNode,
-  NESTNode,
-  NESTCopyModel,
-  NESTNodeCompartment,
-  NESTNodeReceptor,
-  NorseNode,
-];

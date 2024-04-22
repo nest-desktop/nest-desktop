@@ -77,7 +77,13 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="pynn" />
+        <StoreList
+          :modelDBStore
+          :modelStore
+          :projectStore
+          :projectDBStore
+          simulator="pynn"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -102,6 +108,4 @@ const projectStore = usePyNNProjectStore();
 
 import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 const pynnSimulatorStore = usePyNNSimulatorStore();
-
-const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
 </script>

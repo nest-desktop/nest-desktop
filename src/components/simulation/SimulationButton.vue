@@ -35,29 +35,30 @@
 </template>
 
 <script lang="ts" setup>
+import { Store } from "pinia";
 import { computed } from "vue";
 
-import { SimulationComponentProps, TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types/simulationTypes";
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
-const props = defineProps({
-  disabled: Boolean,
-  projectStore: Object,
-  simulation: SimulationComponentProps,
-});
+const props = defineProps<{
+  disabled?: boolean;
+  projectStore: Store<any, any>;
+  simulation: TSimulation;
+}>();
+
+const simulation = computed(() => props.simulation);
+const disabled = computed(
+  () => props.disabled || simulation.value.state.running || false
+);
+const loading = computed(() => simulation.value.state.running);
+const projectStore = computed(() => props.projectStore);
 
 // const itemKeys = [
 //   "simulateAfterChange",
 //   "simulateAfterCheckout",
 //   "simulateAfterLoad",
 // ];
-
-const simulation = computed(() => props.simulation as TSimulation);
-const disabled = computed(
-  () => props.disabled || simulation.value.state.running || false
-);
-const loading = computed(() => simulation.value.state.running);
-const projectStore = computed(() => props.projectStore);
 
 // const projectViewStore = useProjectViewStore();
 // const state = projectViewStore.state;

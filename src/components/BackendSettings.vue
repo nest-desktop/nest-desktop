@@ -29,8 +29,8 @@
           <v-btn @click="store.ping()" variant="outlined">
             <template #append>
               <v-icon
-                icon="mdi:mdi-circle"
                 :color="store.isOK ? 'green' : 'red'"
+                icon="mdi:mdi-circle"
               />
             </template>
             ping
@@ -53,11 +53,12 @@
 </template>
 
 <script lang="ts" setup>
+import { Store } from "pinia";
 import { computed } from "vue";
 
 import { isURL } from "@/utils/urls";
 
-const props = defineProps(["store"]);
+const props = defineProps<{ store: Store<any, any> }>();
 const store = computed(() => props.store);
 
 const updateOnFocus = (focus: boolean) => {

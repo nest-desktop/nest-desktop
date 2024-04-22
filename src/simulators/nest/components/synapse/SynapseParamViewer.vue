@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(["options", "value"]);
+const props = defineProps<{ options?: any; value?: any }>();
 </script>
 
 <style lang="scss">

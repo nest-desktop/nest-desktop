@@ -1,10 +1,5 @@
 <template>
-  <v-navigation-drawer
-    location="right"
-    permanent
-    rail
-    rail-width="64"
-  >
+  <v-navigation-drawer location="right" permanent rail rail-width="64">
     <v-tabs
       :model-value="modelStore.controllerView"
       :mandatory="false"
@@ -23,11 +18,7 @@
         min-width="0"
         @click.stop="modelStore.toggle(item)"
       >
-        <v-icon
-          :icon="item.icon"
-          class="ma-1"
-          size="large"
-        />
+        <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
@@ -53,16 +44,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { Store } from "pinia";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
-const props = defineProps({
-  store: { required: true, type: Object },
-});
-
-const modelStore = computed(() => props.store);
+defineProps<{ modelStore: Store<any, any> }>();
 
 const items = [
   {

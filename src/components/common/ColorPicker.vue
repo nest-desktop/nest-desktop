@@ -17,9 +17,9 @@
 <script lang="ts" setup>
 import { onMounted, reactive, watch } from "vue";
 
-const props = defineProps(["colorScheme"]);
+const props = defineProps<{ colorScheme: string }>();
 
-const colorSchemes: {[key: string]: string[][]} = {
+const colorSchemes: { [key: string]: string[][] } = {
   category10: [
     ["#1f77b4"],
     ["#ff7f0e"],

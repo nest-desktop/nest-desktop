@@ -67,11 +67,8 @@ import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
-const props = defineProps({
-  param: NodeParameter,
-});
-
-const param = computed(() => props.param as NodeParameter);
+const props = defineProps<{ param: NodeParameter }>();
+const param = computed(() => props.param);
 
 const update = (value: number | number[]) => {
   param.value.value = value;

@@ -91,9 +91,8 @@ import { computed } from "vue";
 import SynapseParamEditor from "./SynapseParamEditor.vue";
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 
-const props = defineProps({ synapse: NESTSynapse });
-
-const synapse = computed(() => props.synapse as NESTSynapse);
+const props = defineProps<{ synapse: NESTSynapse }>();
+const synapse = computed(() => props.synapse);
 
 const items = [
   {

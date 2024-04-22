@@ -242,6 +242,7 @@ import { IsNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 import { INodeProps } from "@/helpers/node/node";
 import { TModelProps } from "@/types/modelTypes";
 import { TNetworkProps } from "@/types/networkTypes";
+import { Store } from "pinia";
 import { TProjectProps } from "@/types/projectTypes";
 
 // import { useAppStore } from "@/stores/appStore";
@@ -263,11 +264,10 @@ interface IGithubTree {
   url: string;
 }
 
-const props = defineProps({
-  modelDBStore: { required: true, type: Object },
-  projectDBStore: { required: true, type: Object },
-});
-
+const props = defineProps<{
+  modelDBStore: Store<any, any>;
+  projectDBStore: Store<any, any>;
+}>();
 const modelDBStore = computed(() => props.modelDBStore);
 const projectDBStore = computed(() => props.projectDBStore);
 

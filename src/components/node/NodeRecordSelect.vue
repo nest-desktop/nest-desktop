@@ -21,23 +21,16 @@
       variant="outlined"
     >
       <template #chip="{ item }">
-        <NodeRecordChip
-          :nodeRecord="item.raw as NodeRecord"
-          @click.prevent=""
-        />
+        <NodeRecordChip :nodeRecord="item.raw as NodeRecord" @click.prevent />
       </template>
     </v-select>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { NodeComponentProps, TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types/nodeTypes";
 
-const props = defineProps({ node: NodeComponentProps });
-
-const node = computed(() => props.node as TNode);
+defineProps<{ node: TNode }>();
 </script>

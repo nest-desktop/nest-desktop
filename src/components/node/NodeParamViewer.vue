@@ -1,17 +1,17 @@
 <template>
   <v-list-item class="paramViewer">
     <v-row no-gutters>
-      <span class="text-medium-emphasis">{{ props.options.label }}</span>
+      <span class="text-medium-emphasis">{{ options.label }}</span>
       <v-spacer />
-      {{ props.options.id }}:
-      {{ props.value }}
-      {{ props.options.unit }}
+      {{ options.id }}:
+      {{ value }}
+      {{ options.unit }}
     </v-row>
   </v-list-item>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(["options", "value"]);
+defineProps(["options", "value"]);
 </script>
 
 <style lang="scss">

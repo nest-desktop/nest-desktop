@@ -86,11 +86,10 @@
 import { computed } from "vue";
 
 import ConnectionParamEditor from "@/components/connection/ConnectionParamEditor.vue";
-import { ConnectionComponentProps, TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types/connectionTypes";
 
-const props = defineProps({ connection: ConnectionComponentProps });
-
-const connection = computed(() => props.connection as TConnection);
+const props = defineProps<{ connection: TConnection }>();
+const connection = computed(() => props.connection);
 
 const rules = [
   { title: "all to all", value: "all_to_all" },

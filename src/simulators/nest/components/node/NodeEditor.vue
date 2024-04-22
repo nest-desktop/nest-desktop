@@ -233,9 +233,8 @@ import NodeMenu from "./NodeMenu.vue";
 import { NESTNode } from "../../helpers/node/node";
 import { NESTModel } from "../../helpers/model/model";
 
-const props = defineProps({ node: NESTNode });
-
-const node = computed(() => props.node as NESTNode);
+const props = defineProps<{ node: NESTNode }>();
+const node = computed(() => props.node);
 
 const state = reactive({
   menu: false,

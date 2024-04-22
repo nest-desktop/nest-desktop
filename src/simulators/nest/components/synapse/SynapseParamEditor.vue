@@ -61,9 +61,8 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { NESTSynapseParameter } from "@/simulators/nest/helpers/synapse/synapseParameter";
 
-const props = defineProps({ param: NESTSynapseParameter });
-
-const param = computed(() => props.param as NESTSynapseParameter);
+const props = defineProps<{ param: NESTSynapseParameter }>();
+const param = computed(() => props.param);
 
 const update = (value: number | number[]) => {
   param.value.value = value;

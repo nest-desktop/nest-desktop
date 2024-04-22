@@ -53,7 +53,13 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <store-list :stores simulator="norse" />
+        <StoreList
+          :modelDBStore
+          :modelStore
+          :projectStore
+          :projectDBStore
+          simulator="norse"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -78,6 +84,4 @@ const projectStore = useNorseProjectStore();
 
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 const norseSimulatorStore = useNorseSimulatorStore();
-
-const stores = { modelDBStore, modelStore, projectStore, projectDBStore };
 </script>
