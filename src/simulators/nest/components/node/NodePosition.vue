@@ -1,163 +1,166 @@
 <template>
-  <div class="NodePosition">
-    <v-card flat height="40" rounded="0">
-      <v-card-text class="px-2" style="padding: 10px 0">
-        <NodePositionTitle :key="node.spatial.hash" :spatial="node.spatial" />
-      </v-card-text>
+  <v-expansion-panels v-if="node.spatial.positions">
+    <v-expansion-panel density="compact" elevation="0" flat rounded="0">
+      <v-expansion-panel-title class="expansion-panel-title">
+        <NodePositionTitle
+          :key="node.spatial.hash"
+          :nodeSpatial="node.spatial"
+        />
+      </v-expansion-panel-title>
 
-      <v-menu
-        :close-on-content-click="false"
-        activator="parent"
-        v-if="node.spatial.positions"
-      >
-        <v-card tile style="width: 315px">
-          <v-card-subtitle>
-            <NodePositionTitle
-              :key="node.spatial.hash"
-              :spatial="node.spatial"
-            />
-          </v-card-subtitle>
+      <v-expansion-panel-text>
+        <v-select
+          :items="state.positions"
+          @update:model-value="initPositions()"
+          density="compact"
+          hide-details
+          v-model="state.selectedPositions"
+          variant="outlined"
+        />
 
-          <v-card-text class="py-0">
-            <v-select
-              :items="state.positions"
-              @change="initPositions()"
-              class="ma-0 pa-0"
-              hide-details
-              item-text="name"
-              item-value="id"
-              v-model="state.selectedPositions"
-            />
+        <v-switch
+          inset
+          max="3"
+          min="2"
+          true-icon="mdi:mdi-numeric-3"
+          false-icon="mdi:mdi-numeric-2"
+          show-ticks="always"
+          step="1"
+          @update:model-value="
+            (value) => (node.spatial.positions.numDimensions = value ? 3 : 2)
+          "
+          v-model="state.numDimensions"
+          label="number of dimensions"
+        >
+        </v-switch>
 
-            <v-row class="mt-1">
-              <v-col cols="8" v-text="'number of dimensions'" />
-              <v-col class="py-0" cols="4">
-                <v-slider
-                  :tick-labels="[2, 3]"
-                  max="3"
-                  min="2"
-                  ticks="always"
-                  v-model="node.spatial.positions.numDimensions"
-                />
-              </v-col>
-            </v-row>
+        <span v-if="node.spatial.positions.name === 'free'">
+          <ValueSlider
+            :thumb-color="node.view.color"
+            @update:model-value="node.changes()"
+            id="n"
+            input-label="n"
+            label="population size"
+            v-model="node.size"
+          />
+        </span>
 
-            <span v-if="node.spatial.positions.name === 'free'">
-              <ParameterEdit
-                :color="node.view.color"
-                :options="state.sizeOptions"
-                :value.sync="node.size"
+        <span v-if="node.spatial.positions.name === 'grid'">
+          <v-row>
+            <v-col class="ma-auto" cols="3">shape</v-col>
+            <v-spacer />
+            <v-col
+              :key="idx"
+              cols="3"
+              v-for="(item, idx) of node.spatial.positions.shape"
+            >
+              <v-text-field
+                :label="
+                  (node.spatial.positions.numDimensions === 2
+                    ? ['rows', 'columns']
+                    : ['x', 'y', 'z'])[idx]
+                "
+                :min="1"
+                :model-value="item"
+                @update:model-value="
+                  (value) =>
+                    (node.spatial.positions.shape[idx] = parseInt(value))
+                "
+                density="compact"
+                hide-details
+                type="number"
+                variant="outlined"
               />
-            </span>
+            </v-col>
+          </v-row>
 
-            <span v-if="node.spatial.positions.name === 'grid'">
-              <v-row class="mt-1">
-                <v-col class="ma-auto" cols="3">shape</v-col>
-                <v-spacer />
-                <v-col
-                  :key="idx"
-                  class="py-1"
-                  cols="3"
-                  v-for="(item, idx) of node.spatial.positions.shape"
-                >
-                  <v-text-field
-                    :label="
-                      (node.spatial.positions.numDimensions === 2
-                        ? ['rows', 'columns']
-                        : ['x', 'y', 'z'])[idx]
-                    "
-                    :min="1"
-                    :value="item"
-                    hide-details
-                    type="number"
-                  />
-                </v-col>
-              </v-row>
+          <v-row>
+            <v-col class="ma-auto" cols="3">center</v-col>
+            <v-spacer />
+            <v-col
+              :key="idx"
+              cols="3"
+              v-for="(item, idx) of node.spatial.positions.center"
+            >
+              <v-text-field
+                :label="['x', 'y', 'z'][idx]"
+                :model-value="item"
+                :step="0.1"
+                @update:model-value="
+                  (value) =>
+                    (node.spatial.positions.center[idx] = parseFloat(value))
+                "
+                density="compact"
+                hide-details
+                type="number"
+                variant="outlined"
+              />
+            </v-col>
+          </v-row>
+        </span>
 
-              <v-row class="mt-1">
-                <v-col class="ma-auto" cols="3">center</v-col>
-                <v-spacer />
-                <v-col
-                  :key="idx"
-                  class="py-1"
-                  cols="3"
-                  v-for="(item, idx) of node.spatial.positions.center"
-                >
-                  <v-text-field
-                    :label="['x', 'y', 'z'][idx]"
-                    :step="0.1"
-                    :value="item"
-                    hide-details
-                    type="number"
-                  />
-                </v-col>
-              </v-row>
-            </span>
-
-            <v-row class="mt-1">
-              <v-col class="ma-auto" cols="3">extent</v-col>
-              <v-spacer />
-              <v-col
-                :key="idx"
-                class="py-1"
-                cols="3"
-                v-for="(item, idx) of node.spatial.positions.extent"
-              >
-                <v-text-field
-                  :label="['x', 'y', 'z'][idx]"
-                  :min="0"
-                  :step="0.1"
-                  :value="item"
-                  hide-details
-                  type="number"
-                />
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col class="py-0">
-                <v-checkbox
-                  class="ma-0"
-                  color="accent"
-                  label="Edge wrap"
-                  v-model="node.spatial.positions.edgeWrap"
-                />
-              </v-col>
-            </v-row>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              @click="updatePositions"
-              outlined
-              small
-              v-text="'Update positions'"
+        <v-row>
+          <v-col class="ma-auto" cols="3" title="">extent</v-col>
+          <v-spacer />
+          <v-col
+            :key="idx"
+            cols="3"
+            v-for="(item, idx) of node.spatial.positions.extent"
+          >
+            <v-text-field
+              :label="['x', 'y', 'z'][idx]"
+              :min="0"
+              :model-value="item"
+              :step="0.1"
+              @update:model-value="
+                (value) =>
+                  (node.spatial.positions.extent[idx] = parseFloat(value))
+              "
+              density="compact"
+              hide-details
+              type="number"
+              variant="outlined"
             />
-            <!-- <v-spacer />
-          <v-btn :title="state.node.spatial.positions.pos" icon>
-            <v-icon v-text="'mdi-map-outline'" />
-          </v-btn> -->
-          </v-card-actions>
-        </v-card>
-      </v-menu>
-    </v-card>
-  </div>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col class="py-0">
+            <v-checkbox
+              class="ma-0"
+              color="accent"
+              label="Edge wrap"
+              v-model="node.spatial.positions.edgeWrap"
+            />
+          </v-col>
+        </v-row>
+        <v-btn @click="updatePositions()" size="small" variant="outlined">
+          Update positions
+        </v-btn>
+        <!-- <v-spacer />
+        <v-btn :title="state.node.spatial.positions.pos" icon>
+          <v-icon v-text="'mdi-map-outline'" />
+        </v-btn> -->
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive } from "vue";
 
-import ParameterEdit from "@/components/parameter/ParameterEdit.vue";
-import NodePositionTitle from "@/components/node/NodePositionTitle.vue";
+import NodePositionTitle from "./NodePositionTitle.vue";
+import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { NESTNode } from "../../helpers/node/node";
 
 const props = defineProps<{ node: NESTNode }>();
 const node = computed(() => props.node);
 
 const state = reactive({
+  numDimensions: false,
   positions: [
-    { id: "free", name: "Free positions" },
-    { id: "grid", name: "Grid positions" },
+    { title: "Free positions", value: "free" },
+    { title: "Grid positions", value: "grid" },
   ],
   selectedPositions: "free",
   sizeOptions: {
@@ -177,15 +180,15 @@ const state = reactive({
 });
 
 const initPositions = () => {
-  const specs: any = node.value.spatial.positions?.toJSON();
-  node.value.spatial.init({
-    positions: state.selectedPositions,
-    specs: specs,
+  nextTick(() => {
+    node.value.spatial.init({
+      positions: state.selectedPositions,
+    });
   });
 };
 
 const updatePositions = () => {
-  // state.node.spatial.positions.generate();
+  // node.value.spatial.positions?.generate();
   node.value.changes();
 };
 

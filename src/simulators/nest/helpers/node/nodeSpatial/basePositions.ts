@@ -2,7 +2,7 @@
 
 import { NESTNodeSpatial } from "./nodeSpatial";
 
-export interface BasePositionsProps {
+export interface IBasePositionsProps {
   edgeWrap?: boolean;
   extent?: number[];
   numDimensions: number;
@@ -11,19 +11,16 @@ export interface BasePositionsProps {
 
 export class BasePositions {
   private _edgeWrap: boolean = false;
-  private _extent: number[] = [1, 1];
-  private _numDimensions: number = 2;
+  public _numDimensions: number = 2;
   private _pos: number[][] = [];
   private _spatial: NESTNodeSpatial;
 
-  constructor(spatial: NESTNodeSpatial, positionProps?: BasePositionsProps) {
+  constructor(spatial: NESTNodeSpatial, positionProps?: IBasePositionsProps) {
     this._spatial = spatial;
 
     if (positionProps) {
       this._pos = positionProps.pos || [];
       this._numDimensions = positionProps.numDimensions || 2;
-      this._extent =
-        positionProps.extent || new Array(this._numDimensions).fill(1);
       this._edgeWrap = positionProps.edgeWrap || false;
     }
   }
@@ -40,21 +37,12 @@ export class BasePositions {
     this._edgeWrap = value;
   }
 
-  get extent(): number[] {
-    return this._extent;
-  }
-
-  set extent(value: number[]) {
-    this._extent = value;
-  }
-
   get numDimensions(): number {
     return this._numDimensions;
   }
 
   set numDimensions(value: number) {
     this._numDimensions = value;
-    this._extent = new Array(this._numDimensions).fill(1);
   }
 
   get pos(): number[][] {
@@ -104,13 +92,6 @@ export class BasePositions {
    * Generate the Python code for free (i.e. non-grid) positions.
    */
   toPythonCode(): string {
-    // import('./templates/freePositions.mustache').then((template) => {
-    //   console.log(template)
-    // })
-    // const template = require(`./freePositions.mustache`);
-
-    // const rendered = Mustache.render(template, this);
-    // return rendered;
     return "";
   }
 
@@ -118,10 +99,9 @@ export class BasePositions {
    * Serialize for JSON.
    * @return positions props
    */
-  toJSON(): BasePositionsProps {
+  toJSON(): IBasePositionsProps {
     return {
       edgeWrap: this._edgeWrap,
-      extent: this._extent,
       numDimensions: this._numDimensions,
       pos: this._pos,
     };

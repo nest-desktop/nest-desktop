@@ -183,7 +183,7 @@ export class BaseSimulationCode extends BaseObj {
    * Import template from the file.
    * @return promise
    */
-  async importTemplate(): Promise<any> {
+  async importTemplate(): Promise<{ default: string }> {
     this.logger.trace("import template:", this._state.templateFilename);
     return import(`./templates/${this._state.templateFilename}.mustache?raw`);
   }
@@ -201,11 +201,10 @@ export class BaseSimulationCode extends BaseObj {
 
   /**
    * Load template.
-   * @return promise
    */
-  async loadTemplate(): Promise<any> {
+  async loadTemplate(): Promise<void> {
     this.logger.trace("load template:", this._state.templateFilename);
-    return this.importTemplate().then((template) => {
+    return this.importTemplate().then((template: { default: string }) => {
       this._state.template = template.default;
     });
   }

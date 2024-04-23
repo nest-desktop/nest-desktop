@@ -2,13 +2,13 @@
 
 import { BaseObj } from "@/helpers/common/base";
 
-import { FreePositions, FreePositionsProps } from "./freePositions";
-import { GridPositions, GridPositionsProps } from "./gridPositions";
+import { FreePositions, IFreePositionsProps } from "./freePositions";
+import { GridPositions, IGridPositionsProps } from "./gridPositions";
 import { NESTNode } from "../node";
 
 export interface INESTNodeSpatialProps {
   positions?: string;
-  specs?: FreePositionsProps | GridPositionsProps;
+  specs?: IFreePositionsProps | IGridPositionsProps;
 }
 
 export class NESTNodeSpatial extends BaseObj {
@@ -28,8 +28,7 @@ export class NESTNodeSpatial extends BaseObj {
   }
 
   get code(): string {
-    // return this.positions ? this.positions.toPythonCode() : '';
-    return "";
+    return this.positions ? this.positions.toPythonCode() : "";
   }
 
   get hasGridPositions(): boolean {
@@ -61,6 +60,9 @@ export class NESTNodeSpatial extends BaseObj {
         break;
       case "grid":
         this._positions = new GridPositions(this, nodeSpatialProps.specs);
+        break;
+      default:
+        this._positions = undefined;
         break;
     }
   }

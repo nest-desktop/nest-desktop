@@ -9,10 +9,7 @@
     elevation="0"
     rounded="0"
   >
-    <v-expansion-panel-title
-      class="panel-title"
-      style="min-height: 52px; height: 52px"
-    >
+    <v-expansion-panel-title class="expansion-panel-title">
       <v-row no-gutters>
         <ConnectionAvatar :connection />
 
@@ -138,18 +135,6 @@ const items = [
 
 <style lang="scss">
 .node-connection {
-  .panel-title {
-    .menu {
-      opacity: 0;
-    }
-
-    &:hover {
-      .menu {
-        opacity: 1;
-      }
-    }
-  }
-
   .v-expansion-panel-text__wrapper {
     padding: 0;
   }

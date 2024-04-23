@@ -1,6 +1,4 @@
-{{ #posExisted }}{{ posAsString }}{{ /posExisted }}{{ ^posExisted }}
-  nest.spatial.free(
-    nest.random.uniform(-0.5, 0.5),
+{{ #posExisted }}{{ posAsString }}{{ /posExisted }}{{ ^posExisted }}nest.spatial.free(
+    nest.random.uniform({{ min }}, {{ max }}),
     num_dimensions={{ numDimensions }}
-  )
-{{ /posExisted }}
+  ){{ /posExisted }}

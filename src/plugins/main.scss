@@ -2,3 +2,18 @@
   $utilities: false,
   $color-pack: false
 );
+
+.expansion-panel-title {
+  height: 52px;
+  min-height: 52px;
+
+  .menu {
+    opacity: 0;
+  }
+
+  &:hover {
+    .menu {
+      opacity: 1;
+    }
+  }
+}

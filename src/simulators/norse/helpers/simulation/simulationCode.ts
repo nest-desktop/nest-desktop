@@ -31,7 +31,7 @@ export class NorseSimulationCode extends BaseSimulationCode {
    * Import template from the file.
    * @return promise
    */
-  override async importTemplate(): Promise<any> {
+  override async importTemplate(): Promise<{ default: string }> {
     this.logger.trace("import template:", this.state.templateFilename);
     return import(`./templates/${this.state.templateFilename}.mustache?raw`);
   }

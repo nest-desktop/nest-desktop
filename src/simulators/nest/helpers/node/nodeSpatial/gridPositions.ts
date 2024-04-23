@@ -4,22 +4,25 @@ import { range } from "@/helpers/common/array";
 import { round } from "@/utils/converter";
 
 import { NESTNodeSpatial } from "./nodeSpatial";
-import { BasePositions, BasePositionsProps } from "./basePositions";
+import { BasePositions, IBasePositionsProps } from "./basePositions";
 
-export interface GridPositionsProps extends BasePositionsProps {
+export interface IGridPositionsProps extends IBasePositionsProps {
   center?: number[];
   shape?: number[];
 }
 
 export class GridPositions extends BasePositions {
   private readonly _name: string = "grid";
+  private _extent: number[] = [1, 1];
   private _center: number[] = [0, 0];
   private _shape: number[] = [1, 1];
 
-  constructor(spatial: NESTNodeSpatial, positionProps?: GridPositionsProps) {
+  constructor(spatial: NESTNodeSpatial, positionProps?: IGridPositionsProps) {
     super(spatial, positionProps);
 
     if (positionProps) {
+      this._extent =
+        positionProps.extent || new Array(this._numDimensions).fill(1);
       this._center =
         positionProps.center || new Array(this.numDimensions).fill(0);
       this._shape =
@@ -35,15 +38,23 @@ export class GridPositions extends BasePositions {
     this._center = value;
   }
 
+  get extent(): number[] {
+    return this._extent;
+  }
+
+  set extent(value: number[]) {
+    this._extent = value;
+  }
+
   get name(): string {
     return this._name;
   }
 
   override set numDimensions(value: number) {
-    this.numDimensions = value;
-    this.center = new Array(this.numDimensions).fill(0);
-    this.extent = new Array(this.numDimensions).fill(1);
-    this.shape = new Array(this.numDimensions).fill(1);
+    this._numDimensions = value;
+    this.center = new Array(value).fill(0);
+    this.extent = new Array(value).fill(1);
+    this.shape = new Array(value).fill(1);
   }
 
   override get shape(): number[] {
@@ -80,14 +91,14 @@ export class GridPositions extends BasePositions {
    * Generate the Python code for grid positions, i.e. non-free positions.
    */
   override toPythonCode(): string {
-    return `nest.spatial.grid(${JSON.stringify(this._shape)})`;
+    return `nest.spatial.grid(${JSON.stringify(this._shape)})\n`;
   }
 
   /**
    * Serialize for JSON.
    * @return grid positions props
    */
-  override toJSON(): GridPositionsProps {
+  override toJSON(): IGridPositionsProps {
     return {
       center: this._center,
       edgeWrap: this.edgeWrap,

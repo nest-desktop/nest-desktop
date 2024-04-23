@@ -19,7 +19,7 @@ import { IconSet, createVuetify } from "vuetify";
 // import { md1, md2, md3 } from "vuetify/blueprints";
 
 import { aliases, mdi } from "vuetify/iconsets/mdi";
-import { custom } from "@/components/iconsets/common";
+import { custom } from "@/components/iconsets/custom";
 import { network } from "@/components/iconsets/network";
 
 const colors = {

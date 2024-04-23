@@ -239,7 +239,7 @@ const items = [
       node.value.toggleSpatial();
     },
     show: () => !node.value.model.isRecorder,
-    title: "Spatial node",
+    title: "Toggle spatial mode",
     value: "spatialNode",
   },
   {
