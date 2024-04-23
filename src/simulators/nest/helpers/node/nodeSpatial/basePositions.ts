@@ -4,8 +4,7 @@ import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IBasePositionsProps {
   edgeWrap?: boolean;
-  extent?: number[];
-  numDimensions: number;
+  numDimensions?: number;
   pos?: number[][];
 }
 
@@ -17,12 +16,7 @@ export class BasePositions {
 
   constructor(spatial: NESTNodeSpatial, positionProps?: IBasePositionsProps) {
     this._spatial = spatial;
-
-    if (positionProps) {
-      this._pos = positionProps.pos || [];
-      this._numDimensions = positionProps.numDimensions || 2;
-      this._edgeWrap = positionProps.edgeWrap || false;
-    }
+    this.update(positionProps);
   }
 
   get center(): number[] {
@@ -35,6 +29,10 @@ export class BasePositions {
 
   set edgeWrap(value: boolean) {
     this._edgeWrap = value;
+  }
+
+  get extent(): number[] {
+    return [];
   }
 
   get numDimensions(): number {
@@ -105,5 +103,19 @@ export class BasePositions {
       numDimensions: this._numDimensions,
       pos: this._pos,
     };
+  }
+
+  update(positionProps?: IBasePositionsProps) {
+    if (positionProps?.pos) {
+      this._pos = positionProps.pos;
+    }
+
+    if (positionProps?.numDimensions) {
+      this._numDimensions = positionProps.numDimensions;
+    }
+
+    if (positionProps?.edgeWrap) {
+      this._edgeWrap = positionProps.edgeWrap;
+    }
   }
 }

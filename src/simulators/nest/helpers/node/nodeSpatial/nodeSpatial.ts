@@ -67,6 +67,10 @@ export class NESTNodeSpatial extends BaseObj {
     }
   }
 
+  changes(): void {
+    this._node.changes();
+  }
+
   /**
    * Serialize for JSON.
    * @return spatial object
@@ -78,6 +82,12 @@ export class NESTNodeSpatial extends BaseObj {
       nodeSpatialProps.specs = this._positions.toJSON();
     }
     return nodeSpatialProps;
+  }
+
+  updatePositionParams(
+    positionProps: IFreePositionsProps | IGridPositionsProps
+  ): void {
+    this._positions?.update(positionProps);
   }
 
   /**

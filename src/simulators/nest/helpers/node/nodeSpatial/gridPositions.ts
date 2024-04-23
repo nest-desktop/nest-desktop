@@ -8,6 +8,7 @@ import { BasePositions, IBasePositionsProps } from "./basePositions";
 
 export interface IGridPositionsProps extends IBasePositionsProps {
   center?: number[];
+  extent?: number[];
   shape?: number[];
 }
 
@@ -19,15 +20,7 @@ export class GridPositions extends BasePositions {
 
   constructor(spatial: NESTNodeSpatial, positionProps?: IGridPositionsProps) {
     super(spatial, positionProps);
-
-    if (positionProps) {
-      this._extent =
-        positionProps.extent || new Array(this._numDimensions).fill(1);
-      this._center =
-        positionProps.center || new Array(this.numDimensions).fill(0);
-      this._shape =
-        positionProps.shape || new Array(this.numDimensions).fill(1);
-    }
+    this.update(positionProps);
   }
 
   override get center(): number[] {
@@ -106,5 +99,19 @@ export class GridPositions extends BasePositions {
       numDimensions: this.numDimensions,
       shape: this._shape,
     };
+  }
+
+  override update(positionProps?: IGridPositionsProps) {
+    if (positionProps?.center) {
+      this.center = positionProps.center;
+    }
+
+    if (positionProps?.extent) {
+      this.extent = positionProps.extent;
+    }
+
+    if (positionProps?.shape) {
+      this.shape = positionProps.shape;
+    }
   }
 }

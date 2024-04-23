@@ -148,7 +148,10 @@
       <v-list class="py-0" v-if="node.view.state.showSize">
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
-            <NodePosition :node v-if="node.spatial.hasPositions" />
+            <NodePosition
+              :nodeSpatial="node.spatial"
+              v-if="node.spatial.hasPositions"
+            />
             <template v-else>
               <ValueSlider
                 :thumb-color="node.view.color"
