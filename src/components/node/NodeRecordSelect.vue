@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
+import NodeRecordChip from "./NodeRecordChip.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { TNode } from "@/types/nodeTypes";
 

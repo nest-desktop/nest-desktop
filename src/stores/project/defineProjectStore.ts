@@ -101,7 +101,7 @@ export function defineProjectStore(
       }
     };
 
-    const project = computed(() => state.project as TProject);
+    const project = computed(() => state.project);
 
     /**
      * Reload the project in the list.

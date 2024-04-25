@@ -93,28 +93,6 @@ export class NESTConnectionMask extends BaseObj {
   }
 
   /**
-   * Draw rectangle.
-   */
-  drawRect(): void {
-    this._graph.layout.shapes = [
-      {
-        type: "rect",
-        xref: "x",
-        yref: "y",
-        x0: this._specs.lower_left[0],
-        y0: this._specs.lower_left[1],
-        x1: this._specs.upper_right[0],
-        y1: this._specs.upper_right[1],
-        opacity: 0.2,
-        fillcolor: "blue",
-        line: {
-          color: "blue",
-        },
-      },
-    ];
-  }
-
-  /**
    * Draw circle.
    */
   drawCircle(): void {
@@ -209,6 +187,28 @@ export class NESTConnectionMask extends BaseObj {
         y0: (-1 * this._specs.minor_axis) / 2,
         x1: this._specs.major_axis / 2,
         y1: this._specs.minor_axis / 2,
+        opacity: 0.2,
+        fillcolor: "blue",
+        line: {
+          color: "blue",
+        },
+      },
+    ];
+  }
+
+  /**
+   * Draw rectangle.
+   */
+  drawRect(): void {
+    this._graph.layout.shapes = [
+      {
+        type: "rect",
+        xref: "x",
+        yref: "y",
+        x0: this._specs.lower_left[0],
+        y0: this._specs.lower_left[1],
+        x1: this._specs.upper_right[0],
+        y1: this._specs.upper_right[1],
         opacity: 0.2,
         fillcolor: "blue",
         line: {

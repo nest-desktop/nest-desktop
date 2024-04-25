@@ -50,7 +50,7 @@ import { computed, reactive } from "vue";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";

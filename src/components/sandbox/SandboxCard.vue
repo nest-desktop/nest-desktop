@@ -1,27 +1,20 @@
 <template>
   <v-card class="playground-card">
-    <v-card-title> Card </v-card-title>
+    <v-card-title>Card</v-card-title>
     <v-card-text>
-      <card
-        v-for="(card, index) in cards"
-        :key="index"
-        :color="card.color"
-      >
+      <Card v-for="(card, index) in cards" :key="index" :color="card.color">
         <v-card-title>
           {{ card.title }}
         </v-card-title>
 
         <v-card-text>
           <v-list>
-            <v-list-item
-              v-for="(item, index) in card.items"
-              :key="index"
-            >
+            <v-list-item v-for="(item, index) in card.items" :key="index">
               {{ item.title }}
             </v-list-item>
           </v-list>
         </v-card-text>
-      </card>
+      </Card>
     </v-card-text>
   </v-card>
 </template>

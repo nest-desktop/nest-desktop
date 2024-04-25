@@ -98,8 +98,8 @@
 import { computed, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import ConnectionAvatar from "@/components/connection/ConnectionAvatar.vue";
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import ConnectionAvatar from "../connection/ConnectionAvatar.vue";
+import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 import { TConnection } from "@/types/connectionTypes";
 import { TNode } from "@/types/nodeTypes";
 import { downloadSVGImage } from "@/helpers/common/download";

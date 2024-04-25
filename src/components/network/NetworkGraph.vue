@@ -41,7 +41,7 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import NodeMenu from "@/components/node/NodeMenu.vue";
+import NodeMenu from "../node/NodeMenu.vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";

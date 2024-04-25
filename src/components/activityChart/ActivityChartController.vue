@@ -160,17 +160,13 @@
 <script lang="ts" setup>
 import { computed, nextTick } from "vue";
 
-import Card from "@/components/common/Card.vue";
-import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
+import Card from "../common/Card.vue";
+import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
+import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
+import NodeRecordChip from "../node/NodeRecordChip.vue";
+// import ParameterEdit from "../parameter/ParameterEdit.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
-
-import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
-// import ActivityChartPanelMenuPopover from "@/components/activity/activityChart/ActivityChartPanelMenuPopover.vue";
-// import ActivityChartPanelToolbar from "@/components/activity/activityChart/ActivityChartPanelToolbar.vue";
-// import ParameterEdit from "@/components/parameter/ParameterEdit.vue";
-
-import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();

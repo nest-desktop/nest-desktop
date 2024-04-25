@@ -4,7 +4,7 @@
       <v-toolbar-title>Simulation kernel editor</v-toolbar-title>
     </v-toolbar>
 
-    <card :color="props.color || 'primary'" class="ma-1">
+    <Card :color="props.color || 'primary'" class="ma-1">
       <v-card-title class="pa-0 text-center text-button">
         Simulation
       </v-card-title>
@@ -17,13 +17,13 @@
           v-model="simulation.time"
         />
       </v-card-text>
-    </card>
+    </Card>
   </div>
 </template>
 
 <script lang="ts" setup>
-import Card from "@/components/common/Card.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
+import Card from "../common/Card.vue";
+import ValueSlider from "../controls/ValueSlider.vue";
 import { TSimulation } from "@/types/simulationTypes";
 
 const props = defineProps<{

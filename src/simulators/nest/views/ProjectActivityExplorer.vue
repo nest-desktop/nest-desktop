@@ -18,8 +18,8 @@
 import { computed, ref } from "vue";
 
 import { NESTActivityGraph } from "../helpers/activity/activityGraph";
-import ActivityAnimationGraph from "../components/activity/ActivityAnimationGraph.vue";
-import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
+import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";
+import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();

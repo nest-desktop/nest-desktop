@@ -76,7 +76,7 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
-// import NodeRecordChip from "@/components/node/NodeRecordChip.vue";
+// import NodeRecordChip from "../node/NodeRecordChip.vue";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 // import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { deviation, mean } from "@/helpers/common/array";

@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import ColorPicker from "@/components/common/ColorPicker.vue";
+import ColorPicker from "../common/ColorPicker.vue";
 
 const state = reactive({
   colorScheme: "category10",

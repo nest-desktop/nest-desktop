@@ -4,7 +4,10 @@ import { nextTick } from "vue";
 
 import { Activities } from "../activity/activities";
 import { Activity } from "../activity/activity";
-import { ActivityGraph, IActivityGraphProps } from "../activity/activityGraph";
+import {
+  BaseActivityGraph,
+  IBaseActivityGraphProps,
+} from "../activity/activityGraph";
 import { BaseNetwork, INetworkProps } from "../network/network";
 import { BaseObj } from "../common/base";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
@@ -12,6 +15,7 @@ import { IDoc } from "../common/database";
 import { NetworkRevision } from "../network/networkRevision";
 import { ProjectState } from "./projectState";
 import { Store } from "pinia";
+import { TActivityGraph } from "@/types/activityGraphTypes";
 import { TNetwork } from "@/types/networkTypes";
 import { TProject } from "@/types/projectTypes";
 import { TSimulation } from "@/types/simulationTypes";
@@ -20,7 +24,7 @@ import { useModelDBStore } from "@/stores/model/modelDBStore";
 import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 export interface IProjectProps extends IDoc {
-  activityGraph?: IActivityGraphProps;
+  activityGraph?: IBaseActivityGraphProps;
   description?: string;
   name?: string;
   network?: INetworkProps;
@@ -29,7 +33,6 @@ export interface IProjectProps extends IDoc {
 
 export class BaseProject extends BaseObj {
   private _activities: Activities;
-  private _activityGraph: ActivityGraph;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc: any; // raw data of the database
@@ -39,6 +42,7 @@ export class BaseProject extends BaseObj {
   private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
+  public _activityGraph: TActivityGraph; // activity graph
   public _network: TNetwork; // network of neurons and devices
   public _simulation: BaseSimulation; // settings for the simulation
 
@@ -64,10 +68,17 @@ export class BaseProject extends BaseObj {
     this._network = new this.Network(this, projectProps.network);
     this._networkRevision = new NetworkRevision(this);
     this._activities = new Activities(this);
-    this._activityGraph = new ActivityGraph(this, projectProps.activityGraph);
+    this._activityGraph = new this.ActivityGraph(
+      this,
+      projectProps.activityGraph
+    );
 
     // Initialize components.
     nextTick(() => this.init());
+  }
+
+  get ActivityGraph() {
+    return BaseActivityGraph;
   }
 
   get Network() {
@@ -82,7 +93,7 @@ export class BaseProject extends BaseObj {
     return this._activities;
   }
 
-  get activityGraph() {
+  get activityGraph(): TActivityGraph {
     return this._activityGraph;
   }
 

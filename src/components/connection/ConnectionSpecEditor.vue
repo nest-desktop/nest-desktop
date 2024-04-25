@@ -85,7 +85,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from "@/components/connection/ConnectionParamEditor.vue";
+import ConnectionParamEditor from "./ConnectionParamEditor.vue";
 import { TConnection } from "@/types/connectionTypes";
 
 const props = defineProps<{ connection: TConnection }>();

@@ -87,8 +87,8 @@
 import { Store } from "pinia";
 import { ref } from "vue";
 
-import ExportDialog from "@/components/dialog/ExportDialog.vue";
-import ImportDialog from "@/components/dialog/ImportDialog.vue";
+import ExportDialog from "./dialog/ExportDialog.vue";
+import ImportDialog from "./dialog/ImportDialog.vue";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "@/stores/appStore";

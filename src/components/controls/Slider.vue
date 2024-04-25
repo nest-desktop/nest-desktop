@@ -9,19 +9,15 @@
     v-bind="props.options"
     v-model="modelValue"
   />
-  <ValueSlider
-    v-else
-    v-bind="props.options"
-    v-model="modelValue"
-  />
+  <ValueSlider v-else v-bind="props.options" v-model="modelValue" />
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import RangeSlider from "@/components/controls/RangeSlider.vue";
-import TickSlider from "@/components/controls/TickSlider.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
+import RangeSlider from "./RangeSlider.vue";
+import TickSlider from "./TickSlider.vue";
+import ValueSlider from "./ValueSlider.vue";
 
 const props = defineProps(["modelValue", "options"]);
 const emit = defineEmits(["update:modelValue"]);

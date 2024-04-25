@@ -98,18 +98,20 @@
 
       <template v-else-if="projectStore.state.controllerView === 'code'">
         <slot name="simulationCodeEditor">
-          <simulation-code-editor :simulation="project.simulation" />
+          <SimulationCodeEditor :simulation="project.simulation" />
         </slot>
       </template>
 
       <template v-else-if="projectStore.state.controllerView === 'activity'">
-        <activity-chart-controller
-          :graph="project.activityGraph.activityChartGraph"
-        />
+        <slot name="activityController">
+          <ActivityChartController
+            :graph="project.activityGraph.activityChartGraph"
+          />
+        </slot>
       </template>
 
       <template v-else-if="projectStore.state.controllerView === 'stats'">
-        <activity-stats :activities="project.activities" />
+        <ActivityStats :activities="project.activities" />
       </template>
     </div>
   </v-navigation-drawer>
@@ -124,7 +126,7 @@
     <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />
 
     <slot name="simulationCodeMirror">
-      <simulation-code-mirror :simulation="project.simulation" />
+      <SimulationCodeMirror :simulation="project.simulation" />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -137,11 +139,11 @@ import { computed, nextTick } from "vue";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 
-import ActivityChartController from "@/components/activity/activityChartGraph/ActivityChartController.vue";
-import ActivityStats from "@/components/activity/activityStats/ActivityStats.vue";
-import NetworkParamEditor from "@/components/network/NetworkParamEditor.vue";
-import SimulationCodeEditor from "@/components/simulation/SimulationCodeEditor.vue";
-import SimulationCodeMirror from "@/components/simulation/SimulationCodeMirror.vue";
+import ActivityChartController from "../activityChart/ActivityChartController.vue";
+import ActivityStats from "../activityStats/ActivityStats.vue";
+import NetworkParamEditor from "../network/NetworkParamEditor.vue";
+import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
+import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { darkMode } from "@/helpers/common/theme";
 

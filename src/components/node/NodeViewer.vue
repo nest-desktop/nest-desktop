@@ -46,10 +46,10 @@
 </template>
 
 <script lang="ts" setup>
-import Card from "@/components/common/Card.vue";
-import ConnectionViewer from "@/components/connection/ConnectionViewer.vue";
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
-import NodeParamViewer from "@/components/node/NodeParamViewer.vue";
+import Card from "../common/Card.vue";
+import ConnectionViewer from "../connection/ConnectionViewer.vue";
+import NodeAvatar from "./avatar/NodeAvatar.vue";
+import NodeParamViewer from "./NodeParamViewer.vue";
 import { TNode } from "@/types/nodeTypes";
 
 defineProps<{ node: TNode }>();

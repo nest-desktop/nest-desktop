@@ -4,16 +4,9 @@
       <v-row no-gutters>
         Slider
         <v-spacer />
-        <v-tabs
-          v-model="state.tab"
-          density="compact"
-        >
-          <v-tab value="components">
-            Components
-          </v-tab>
-          <v-tab value="values">
-            Values
-          </v-tab>
+        <v-tabs v-model="state.tab" density="compact">
+          <v-tab value="components"> Components </v-tab>
+          <v-tab value="values"> Values </v-tab>
         </v-tabs>
       </v-row>
     </v-card-title>
@@ -58,7 +51,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import Slider from "@/components/controls/Slider.vue";
+import Slider from "../controls/Slider.vue";
 
 const state = reactive({
   tab: "components",

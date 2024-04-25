@@ -35,10 +35,9 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import IconBtn from "@/components/common/IconBtn.vue";
-import { TSimulation } from "@/types/simulationTypes";
-
+import IconBtn from "../common/IconBtn.vue";
 import SimulationCodeMirror from "./SimulationCodeMirror.vue";
+import { TSimulation } from "@/types/simulationTypes";
 
 defineProps<{ simulation: TSimulation }>();
 

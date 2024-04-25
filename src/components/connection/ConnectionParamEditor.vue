@@ -50,7 +50,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ValueSlider from "@/components/controls/ValueSlider.vue";
+import ValueSlider from "../controls/ValueSlider.vue";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 
 const props = defineProps<{ param: ConnectionParameter }>();

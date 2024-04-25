@@ -40,8 +40,8 @@
 import { Store } from "pinia";
 import { computed } from "vue";
 
-import NetworkHistory from "@/components/network/NetworkHistory.vue";
-import SimulationButton from "@/components/simulation/SimulationButton.vue";
+import NetworkHistory from "../network/NetworkHistory.vue";
+import SimulationButton from "../simulation/SimulationButton.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

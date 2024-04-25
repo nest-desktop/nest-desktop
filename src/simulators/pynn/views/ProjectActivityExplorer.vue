@@ -4,21 +4,19 @@
     <v-btn icon="mdi:mdi-minus"></v-btn>
   </v-toolbar> -->
 
-  <activityChartGraph :graph />
+  <ActivityChartGraph :graph="graph.activityChartGraph" />
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ActivityChartGraph as ActivityChartGraphClass } from "@/helpers/activityChartGraph/activityChartGraph";
-import ActivityChartGraph from "@/components/activity/activityChartGraph/ActivityChartGraph.vue";
+import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
+import { BaseActivityGraph } from "@/helpers/activity/activityGraph";
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore = usePyNNProjectStore();
 
 const graph = computed(
-  () =>
-    projectStore.state.project.activityGraph
-      .activityChartGraph as ActivityChartGraphClass
+  () => projectStore.state.project.activityGraph as BaseActivityGraph
 );
 </script>

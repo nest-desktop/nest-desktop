@@ -21,7 +21,7 @@
 import { computed } from "vue";
 
 import { TConnection } from "@/types/connectionTypes";
-import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
+import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 
 const props = defineProps<{ connection: TConnection }>();
 const connection = computed(() => props.connection);

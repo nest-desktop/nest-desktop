@@ -25,11 +25,11 @@ export class FreePositions extends BasePositions {
   }
 
   get min(): number {
-    return 0;
+    return -0.5;
   }
 
   get max(): number {
-    return 1;
+    return 0.5;
   }
 
   get name(): string {

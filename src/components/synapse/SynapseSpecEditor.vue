@@ -51,7 +51,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ValueSlider from "@/components/controls/ValueSlider.vue";
+import ValueSlider from "../controls/ValueSlider.vue";
 import { TSynapse } from "@/types/synapseTypes";
 
 const props = defineProps<{ synapse: TSynapse }>();

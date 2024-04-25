@@ -120,13 +120,13 @@
               <v-text-field
                 @click.prevent
                 @update:model-value="project.state.state.changes = true"
+                autofocused
                 class="pt-2"
                 density="compact"
                 hide-details
                 label="Project name"
                 v-model="project.name"
                 variant="outlined"
-                autofocused
               />
             </template>
 
@@ -150,8 +150,7 @@
               </v-list-item-title>
               <v-list-item-subtitle>
                 {{ project.network.nodes.length }} nodes,
-                {{ project.network.connections.length }}
-                connections
+                {{ project.network.connections.length }} connections
               </v-list-item-subtitle>
             </template>
           </v-list-item>

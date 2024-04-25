@@ -34,9 +34,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import IconBtn from "@/components/common/IconBtn.vue";
-
-import NodeEditor from "@/components/node/NodeEditor.vue";
+import IconBtn from "../common/IconBtn.vue";
+import NodeEditor from "../node/NodeEditor.vue";
 import { TNetwork } from "@/types/networkTypes";
 
 const props = defineProps<{

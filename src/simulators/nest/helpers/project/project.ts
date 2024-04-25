@@ -2,9 +2,10 @@
 
 import { BaseProject, IProjectProps } from "@/helpers/project/project";
 
-import { Insite } from "../insite/insite";
 import { INESTNetworkProps, NESTNetwork } from "../network/network";
 import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
+import { Insite } from "../insite/insite";
+import { NESTActivityGraph } from "../activity/activityGraph";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INESTProjectProps extends IProjectProps {
@@ -20,12 +21,20 @@ export class NESTProject extends BaseProject {
     this._insite = new Insite(this);
   }
 
+  override get ActivityGraph() {
+    return NESTActivityGraph;
+  }
+
   override get Network() {
     return NESTNetwork;
   }
 
   override get Simulation() {
     return NESTSimulation;
+  }
+
+  override get activityGraph(): NESTActivityGraph {
+    return this._activityGraph as NESTActivityGraph;
   }
 
   get insite(): Insite {
