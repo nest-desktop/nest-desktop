@@ -1,7 +1,23 @@
 <template>
   <ProjectNav :projectDBStore />
 
-  <ProjectBar :projectStore color="nest-project" />
+  <ProjectBar :projectStore color="nest-project">
+    <template #tabs>
+      <v-tab
+        v-for="(tab, index) in tabItems"
+        :key="index"
+        :to="{
+          name: 'nest' + tab.to.name,
+          params: { projectId: projectStore.state.projectId },
+        }"
+        :title="tab.title"
+        size="small"
+      >
+        <v-icon :class="tab.iconClass" :icon="tab.icon" />
+        <span class="text-no-wrap">{{ tab.label }}</span>
+      </v-tab>
+    </template>
+  </ProjectBar>
 
   <ProjectController :projectStore>
     <template #activityController>
@@ -54,5 +70,38 @@ const projectStore = useNESTProjectStore();
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
 
-const project = computed(() => projectStore.project as NESTProject);
+const project = computed(() => projectStore.state.project as NESTProject);
+
+const tabItems = [
+  {
+    icon: "network:network",
+    iconClass: "",
+    id: "networkEditor",
+    label: "Editor",
+    title: "NEST Network editor",
+    to: {
+      name: "NetworkEditor",
+    },
+  },
+  {
+    icon: "mdi:mdi-border-style",
+    iconClass: "mdi-flip-v",
+    id: "activityExplorer",
+    label: "Explorer",
+    title: "Activity explorer",
+    to: {
+      name: "ActivityExplorer",
+    },
+  },
+  {
+    icon: "mdi:mdi-book-open-outline",
+    iconClass: "",
+    id: "labBook",
+    label: "Lab book",
+    title: "Lab book",
+    to: {
+      name: "LabBook",
+    },
+  },
+];
 </script>

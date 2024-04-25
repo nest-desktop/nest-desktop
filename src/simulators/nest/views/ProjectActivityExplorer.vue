@@ -24,7 +24,7 @@ import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vu
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
-const view = ref("spatial");
+const view = ref("abstract");
 
 const graph = computed(
   () => projectStore.state.project.activityGraph as NESTActivityGraph

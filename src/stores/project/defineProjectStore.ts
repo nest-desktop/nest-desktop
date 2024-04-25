@@ -1,6 +1,6 @@
 // defineProjectStore.ts
 
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import { Store, defineStore } from "pinia";
 
 import router from "@/router";
@@ -101,8 +101,6 @@ export function defineProjectStore(
       }
     };
 
-    const project = computed(() => state.project);
-
     /**
      * Reload the project in the list.
      * @param project project object
@@ -157,7 +155,6 @@ export function defineProjectStore(
       init,
       isProjectSelected,
       loadProject,
-      project,
       reloadProject,
       saveCurrentProject,
       startSimulation,
