@@ -25,7 +25,7 @@ export const notifyError = (text: string) => {
     text,
     type: "error",
   });
-  // _notifyError(text);
+  _notifyError(text);
 };
 
 export const notifyInfo = (text: string) => {
@@ -35,7 +35,7 @@ export const notifyInfo = (text: string) => {
     text,
     type: "info",
   });
-  // _notifyInfo(text);
+  _notifyInfo(text);
 };
 
 export const notifySuccess = (text: string) => {
@@ -45,7 +45,7 @@ export const notifySuccess = (text: string) => {
     text,
     type: "success",
   });
-  // _notifySuccess(text);
+  _notifySuccess(text);
 };
 
 export const notifyWarning = (text: string) => {
@@ -55,5 +55,5 @@ export const notifyWarning = (text: string) => {
     text,
     type: "warning",
   });
-  // _notifyWarning(text);
+  _notifyWarning(text);
 };

@@ -1,5 +1,5 @@
 <template>
-  <card
+  <Card
     :color="node.view.color"
     @mouseenter="node.state.focus()"
     @mouseleave="node.nodes.unfocusNode()"
@@ -217,7 +217,7 @@
         </v-expansion-panels>
       </v-row>
     </v-card-actions>
-  </card>
+  </Card>
 </template>
 
 <script lang="ts" setup>
