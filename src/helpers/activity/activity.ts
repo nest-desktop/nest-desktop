@@ -219,31 +219,19 @@ export class Activity extends BaseObj {
    *
    * Overwrites events.
    */
-  init(activity: IActivityProps = {}): void {
+  init(activityProps: IActivityProps = {}): void {
     this.logger.trace("init");
+
     this.reset();
-    this.events = activity.events || { senders: [], times: [] };
-    this.nodeIds = activity.nodeIds || [];
-    this.nodePositions = activity.nodePositions || [];
-    this.recorderUnitId = activity.recorderUnitId || -1;
+    this.events = activityProps.events || { senders: [], times: [] };
+    this.nodeIds = activityProps.nodeIds || [];
+    this.nodePositions = activityProps.nodePositions || [];
+    this.recorderUnitId = activityProps.recorderUnitId || -1;
     this.updateHash();
     this.postInit();
   }
 
   postInit(): void {}
-
-  /**
-   * Update activity.
-   *
-   * Extends events.
-   */
-  update(activity: IActivityProps): void {
-    this.logger.trace("update");
-    if (activity.events == undefined) return;
-
-    this.updateEvents(activity.events);
-    this.postUpdate(activity);
-  }
 
   postUpdate(activity: IActivityProps): void {
     activity;
@@ -254,6 +242,7 @@ export class Activity extends BaseObj {
    */
   reset(): void {
     this.logger.trace("reset");
+
     this._events = {};
     this._nodeIds = [];
     this._nodePositions = [];
@@ -273,10 +262,25 @@ export class Activity extends BaseObj {
   }
 
   /**
+   * Update activity.
+   *
+   * Extends events.
+   */
+  update(activityProps: IActivityProps): void {
+    this.logger.trace("update");
+
+    if (activityProps.events == undefined) return;
+
+    this.updateEvents(activityProps.events);
+    this.postUpdate(activityProps);
+  }
+
+  /**
    * Update events.
    */
   updateEvents(events: { [key: string]: number[] }): void {
     this.logger.trace("update events");
+
     if (events == undefined) return;
     let updated = false;
 

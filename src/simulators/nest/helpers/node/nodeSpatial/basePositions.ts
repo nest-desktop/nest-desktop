@@ -23,6 +23,13 @@ export class BasePositions {
     return [];
   }
 
+  /**
+   * Get rendered Python code.
+   */
+  get code(): string {
+    return "";
+  }
+
   get edgeWrap(): boolean {
     return this._edgeWrap;
   }
@@ -84,13 +91,6 @@ export class BasePositions {
    */
   _(n: number = 1): string {
     return "\n" + "  ".repeat(n);
-  }
-
-  /**
-   * Generate the Python code for free (i.e. non-grid) positions.
-   */
-  toPythonCode(): string {
-    return "";
   }
 
   /**

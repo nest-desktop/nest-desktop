@@ -214,6 +214,7 @@ export class BaseProject extends BaseObj {
    * Checkout network.
    */
   checkoutNetwork(): void {
+    this.logger.trace("checkout network");
     const network = this._networkRevision.load();
     this._network.update(network);
     this._network.clean();

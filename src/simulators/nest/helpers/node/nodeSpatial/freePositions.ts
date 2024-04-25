@@ -12,16 +12,18 @@ export interface IFreePositionsProps extends IBasePositionsProps {}
 
 export class FreePositions extends BasePositions {
   private readonly _name: string = "free";
-  private _codeTemplate: string = "";
+  private _codeTemplate: string =
+    "{{ #posExisted }}{{ posAsString }}{{ /posExisted }}{{ ^posExisted }}nest.spatial.free(\n\t\tnest.random.uniform({{ min }}, {{ max }}),\n\t\tnum_dimensions={{ numDimensions }}\n\t)\n{{ /posExisted }}";
 
   constructor(spatial: NESTNodeSpatial, positionProps?: IFreePositionsProps) {
     super(spatial, positionProps);
+  }
 
-    import("./templates/freePositions.mustache?raw").then(
-      (template: { default: string }) => {
-        this._codeTemplate = template.default;
-      }
-    );
+  /**
+   * Generate the Python code for free (i.e. non-grid) positions.
+   */
+  override get code(): string {
+    return mustache.render(this._codeTemplate, this);
   }
 
   get min(): number {
@@ -50,12 +52,5 @@ export class FreePositions extends BasePositions {
         return [round(x), round(y)];
       }
     });
-  }
-
-  /**
-   * Generate the Python code for free (i.e. non-grid) positions.
-   */
-  override toPythonCode(): string {
-    return mustache.render(this._codeTemplate, this);
   }
 }

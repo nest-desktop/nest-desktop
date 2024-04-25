@@ -31,6 +31,13 @@ export class GridPositions extends BasePositions {
     this._center = value;
   }
 
+  /**
+   * Generate the Python code for grid positions, i.e. non-free positions.
+   */
+  override get code(): string {
+    return `nest.spatial.grid(${JSON.stringify(this._shape)})\n`;
+  }
+
   get extent(): number[] {
     return this._extent;
   }
@@ -78,13 +85,6 @@ export class GridPositions extends BasePositions {
     const step: number = (max - min) / size / 2;
     const rangeData: number[] = range(min, max, step);
     return rangeData.filter((_: number, i: number) => i % 2 === 1);
-  }
-
-  /**
-   * Generate the Python code for grid positions, i.e. non-free positions.
-   */
-  override toPythonCode(): string {
-    return `nest.spatial.grid(${JSON.stringify(this._shape)})\n`;
   }
 
   /**

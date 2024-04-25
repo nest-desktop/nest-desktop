@@ -23,12 +23,19 @@ export class NESTNodeSpatial extends BaseObj {
     this._node = node;
 
     if (nodeSpatialProps) {
-      this.init(nodeSpatialProps);
+      switch (nodeSpatialProps.positions) {
+        case "free":
+          this._positions = new FreePositions(this, nodeSpatialProps.specs);
+          break;
+        case "grid":
+          this._positions = new GridPositions(this, nodeSpatialProps.specs);
+          break;
+      }
     }
   }
 
   get code(): string {
-    return this.positions ? this.positions.toPythonCode() : "";
+    return this.positions ? this.positions.code : "";
   }
 
   get hasGridPositions(): boolean {
@@ -60,9 +67,6 @@ export class NESTNodeSpatial extends BaseObj {
         break;
       case "grid":
         this._positions = new GridPositions(this, nodeSpatialProps.specs);
-        break;
-      default:
-        this._positions = undefined;
         break;
     }
   }
