@@ -19,7 +19,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from "stats.js";
 
 import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
-import { darkMode } from "../common/theme";
+import { darkMode } from "../../../../helpers/common/theme";
 
 interface ICameraConfig {
   position: IPosition;
@@ -103,100 +103,6 @@ export class ActivityAnimationScene {
   }
 
   /**
-   * Initialize animation scene.
-   */
-  init(): void {
-    this.setCameraPosition();
-    this._scene.add(this._camera);
-    this._scene.add(new AxesHelper(0.1));
-    this._scene.add(this.createLights());
-    this._scene.add(this.createPlaneHelpers());
-
-    this._renderer.setPixelRatio(window.devicePixelRatio);
-    this.resize();
-    window.addEventListener("resize", () => this.resize());
-
-    // Append dom element in container.
-    this._ref.appendChild(this._renderer.domElement);
-
-    // this._controls.rotateSpeed = 1;
-    // this._controls.zoomSpeed = 1.2;
-    // this._controls.enableKeys = false;
-
-    if (this._useStats) {
-      this._stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-      document.body.appendChild(this._stats.dom);
-    }
-
-    this.update();
-    this.animate();
-  }
-
-  /**
-   * Create and return lights group in init.
-   */
-  createLights(): Group<Object3DEventMap> {
-    const lightGroup: Group<Object3DEventMap> = new Group();
-
-    const directionalLight = new DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, 0.5).normalize();
-    lightGroup.add(directionalLight);
-
-    const ambientLight = new AmbientLight(0x505050);
-    lightGroup.add(ambientLight);
-
-    return lightGroup;
-  }
-
-  /**
-   * Create and return plane helper in init.
-   */
-  createPlaneHelpers(): Group<Object3DEventMap> {
-    this._clippingPlanes.push(new Plane(new Vector3(-1, 0, 0), 1));
-    this._clippingPlanes.push(new Plane(new Vector3(0, -1, 0), 1));
-    this._clippingPlanes.push(new Plane(new Vector3(0, 0, -1), 1));
-
-    const helpers: Group<Object3DEventMap> = new Group();
-    helpers.add(new PlaneHelper(this._clippingPlanes[0], 2, 0xff0000));
-    helpers.add(new PlaneHelper(this._clippingPlanes[1], 2, 0x00ff00));
-    helpers.add(new PlaneHelper(this._clippingPlanes[2], 2, 0x0000ff));
-    helpers.visible = false;
-    return helpers;
-  }
-
-  /**
-   * Resize renderer with aspect in init.
-   */
-  resize(): void {
-    this._camera.aspect = this._ref.clientWidth / this._ref.clientHeight;
-    this._camera.updateProjectionMatrix();
-    this._renderer.setSize(this._ref.clientWidth, this._ref.clientHeight);
-    this._renderer.render(this._scene, this._camera);
-  }
-
-  /**
-   * Update animation scene.
-   */
-  update(): void {
-    this.updateSceneBackground();
-    if (this._layerGraphGroup) {
-      this._scene.remove(this._layerGraphGroup);
-    }
-    this._layerGraphGroup = new Group();
-    this._graph.addLayersToGroup(this._layerGraphGroup);
-    this._scene.add(this._layerGraphGroup);
-  }
-
-  /**
-   * Update scene background.
-   */
-  updateSceneBackground(): void {
-    this._scene.background = darkMode()
-      ? new Color(0x121212)
-      : new Color(0xfefefe);
-  }
-
-  /**
    * Animate scene.
    */
   animate(): void {
@@ -239,28 +145,35 @@ export class ActivityAnimationScene {
   }
 
   /**
-   * Move camera in render.
+   * Create and return lights group in init.
    */
-  moveCamera(): void {
-    const camera: ICameraConfig = this._config.camera;
-    camera.rotation.theta += camera.rotation.speed;
-    camera.rotation.theta = camera.rotation.theta % 360;
-    const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
-    const position: IPosition = this._config.camera.position;
-    position.x =
-      camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
-    position.z =
-      camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
-    this._camera.lookAt(this._scene.position);
+  createLights(): Group<Object3DEventMap> {
+    const lightGroup: Group<Object3DEventMap> = new Group();
+
+    const directionalLight = new DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 0.5).normalize();
+    lightGroup.add(directionalLight);
+
+    const ambientLight = new AmbientLight(0x505050);
+    lightGroup.add(ambientLight);
+
+    return lightGroup;
   }
 
   /**
-   * Update camera position in init and in render.
+   * Create and return plane helper in init.
    */
-  setCameraPosition(): void {
-    const position: IPosition = this._config.camera.position;
-    this._camera.position.set(position.x, position.y, position.z);
-    this._camera.lookAt(this._scene.position);
+  createPlaneHelpers(): Group<Object3DEventMap> {
+    this._clippingPlanes.push(new Plane(new Vector3(-1, 0, 0), 1));
+    this._clippingPlanes.push(new Plane(new Vector3(0, -1, 0), 1));
+    this._clippingPlanes.push(new Plane(new Vector3(0, 0, -1), 1));
+
+    const helpers: Group<Object3DEventMap> = new Group();
+    helpers.add(new PlaneHelper(this._clippingPlanes[0], 2, 0xff0000));
+    helpers.add(new PlaneHelper(this._clippingPlanes[1], 2, 0x00ff00));
+    helpers.add(new PlaneHelper(this._clippingPlanes[2], 2, 0x0000ff));
+    helpers.visible = false;
+    return helpers;
   }
 
   /**
@@ -294,5 +207,92 @@ export class ActivityAnimationScene {
    */
   enableCameraControl(): void {
     this._config.camera.control = false;
+  }
+
+  /**
+   * Initialize animation scene.
+   */
+  init(): void {
+    this.setCameraPosition();
+    this._scene.add(this._camera);
+    this._scene.add(new AxesHelper(0.1));
+    this._scene.add(this.createLights());
+    this._scene.add(this.createPlaneHelpers());
+
+    this._renderer.setPixelRatio(window.devicePixelRatio);
+    this.resize();
+    window.addEventListener("resize", () => this.resize());
+
+    // Append dom element in container.
+    this._ref.appendChild(this._renderer.domElement);
+
+    // this._controls.rotateSpeed = 1;
+    // this._controls.zoomSpeed = 1.2;
+    // this._controls.enableKeys = false;
+
+    if (this._useStats) {
+      this._stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+      document.body.appendChild(this._stats.dom);
+    }
+
+    this.update();
+    this.animate();
+  }
+
+  /**
+   * Move camera in render.
+   */
+  moveCamera(): void {
+    const camera: ICameraConfig = this._config.camera;
+    camera.rotation.theta += camera.rotation.speed;
+    camera.rotation.theta = camera.rotation.theta % 360;
+    const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
+    const position: IPosition = this._config.camera.position;
+    position.x =
+      camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
+    position.z =
+      camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
+    this._camera.lookAt(this._scene.position);
+  }
+
+  /**
+   * Resize renderer with aspect in init.
+   */
+  resize(): void {
+    this._camera.aspect = this._ref.clientWidth / this._ref.clientHeight;
+    this._camera.updateProjectionMatrix();
+    this._renderer.setSize(this._ref.clientWidth, this._ref.clientHeight);
+    this._renderer.render(this._scene, this._camera);
+  }
+
+  /**
+   * Update camera position in init and in render.
+   */
+  setCameraPosition(): void {
+    const position: IPosition = this._config.camera.position;
+    this._camera.position.set(position.x, position.y, position.z);
+    this._camera.lookAt(this._scene.position);
+  }
+
+  /**
+   * Update animation scene.
+   */
+  update(): void {
+    this.updateSceneBackground();
+    if (this._layerGraphGroup) {
+      this._scene.remove(this._layerGraphGroup);
+    }
+    this._layerGraphGroup = new Group();
+    this._graph.addLayersToGroup(this._layerGraphGroup);
+    this._scene.add(this._layerGraphGroup);
+  }
+
+  /**
+   * Update scene background.
+   */
+  updateSceneBackground(): void {
+    this._scene.background = darkMode()
+      ? new Color(0x121212)
+      : new Color(0xfefefe);
   }
 }

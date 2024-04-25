@@ -2,10 +2,10 @@
 
 import { Group } from "three";
 
-import { Activity } from "../activity/activity";
+import { Activity } from "../../../../helpers/activity/activity";
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
-import { BaseProject } from "../project/project";
+import { BaseProject } from "../../../../helpers/project/project";
 import { TProject } from "@/types/projectTypes";
 
 interface IActivityAnimationGraphConfig {
@@ -77,14 +77,106 @@ export class ActivityAnimationGraph {
   }
 
   /**
+   * Add layer groups to the parent group.
+   */
+  addLayersToGroup(group: Group<any>): void {
+    this._layers.forEach((layer: ActivityAnimationLayer) => {
+      if (layer.graphGroup) {
+        group.add(layer.graphGroup);
+      }
+    });
+  }
+
+  /**
+   * Decrease frame speed by 1.
+   */
+  decrementFrameSpeed(): void {
+    this._config.frames.speed -= 1;
+  }
+
+  /**
+   * Destroy animation scene.
+   */
+  destroyScene(): void {
+    if (!this._scene) return;
+
+    this._scene.destroy();
+  }
+
+  /**
+   * Increase frame speed by 1.
+   */
+  incrementFrameSpeed(): void {
+    this._config.frames.speed += 1;
+  }
+
+  /**
    * Initialize activity graph for animation.
    *
    * @remarks
    * It runs without checking activities.
    */
-  init(project: TProject): void {
-    this._project = project;
+  init(): void {
     this._layers = [];
+  }
+
+  /**
+   * Initialize animation scene.
+   *
+   * @remarks
+   * It should be initialized in the vue component is mounted.
+   */
+  initScene(ref: any): void {
+    this.destroyScene();
+    this._scene = new ActivityAnimationScene(this, ref);
+    this.updateScene();
+  }
+
+  /**
+   * Pause frame animation.
+   */
+  pauseFrameAnimation(): void {
+    this._config.frames.speed = 0;
+  }
+
+  /**
+   * Play frame animation backward.
+   */
+  playBackwardFrameAnimation(): void {
+    this._config.frames.speed = -1;
+  }
+
+  /**
+   * Play frame animation.
+   */
+  playFrameAnimation(): void {
+    this._config.frames.speed = 1;
+  }
+
+  /**
+   * Render frames of activity layers.
+   */
+  renderFrameLayers(): void {
+    this._layers.forEach((layer: ActivityAnimationLayer) => {
+      layer.renderFrame();
+    });
+  }
+
+  /**
+   * Move one frame forward in the animation.
+   */
+  stepForwardFrame(): void {
+    this.pauseFrameAnimation();
+    this._state.frameIdx = (this._state.frameIdx + 1) % this._state.nSamples;
+  }
+
+  /**
+   * Go back one frame in the animation.
+   */
+  stepBackwardFrame(): void {
+    this.pauseFrameAnimation();
+    this._state.frameIdx =
+      (this._state.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
   }
 
   /**
@@ -109,19 +201,7 @@ export class ActivityAnimationGraph {
       }
       this._layers[position].init();
     });
-
     this.updateScene();
-  }
-
-  /**
-   * Add layer groups to the parent group.
-   */
-  addLayersToGroup(group: Group<any>): void {
-    this._layers.forEach((layer: ActivityAnimationLayer) => {
-      if (layer.graphGroup) {
-        group.add(layer.graphGroup);
-      }
-    });
   }
 
   /**
@@ -155,79 +235,6 @@ export class ActivityAnimationGraph {
   }
 
   /**
-   * Render frames of activity layers.
-   */
-  renderFrameLayers(): void {
-    this._layers.forEach((layer: ActivityAnimationLayer) => {
-      layer.renderFrame();
-    });
-  }
-
-  /**
-   * Move one frame forward in the animation.
-   */
-  stepForwardFrame(): void {
-    this.pauseFrameAnimation();
-    this._state.frameIdx = (this._state.frameIdx + 1) % this._state.nSamples;
-  }
-
-  /**
-   * Go back one frame in the animation.
-   */
-  stepBackwardFrame(): void {
-    this.pauseFrameAnimation();
-    this._state.frameIdx =
-      (this._state.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
-  }
-
-  /**
-   * Increase frame speed by 1.
-   */
-  incrementFrameSpeed(): void {
-    this._config.frames.speed += 1;
-  }
-
-  /**
-   * Decrease frame speed by 1.
-   */
-  decrementFrameSpeed(): void {
-    this._config.frames.speed -= 1;
-  }
-
-  /**
-   * Pause frame animation.
-   */
-  pauseFrameAnimation(): void {
-    this._config.frames.speed = 0;
-  }
-
-  /**
-   * Play frame animation.
-   */
-  playFrameAnimation(): void {
-    this._config.frames.speed = 1;
-  }
-
-  /**
-   * Play frame animation backward.
-   */
-  playBackwardFrameAnimation(): void {
-    this._config.frames.speed = -1;
-  }
-
-  /**
-   * Initialize animation scene.
-   *
-   * @remarks
-   * It should be initialized in the vue component is mounted.
-   */
-  initScene(ref: any): void {
-    this.destroyScene();
-    this._scene = new ActivityAnimationScene(this, ref);
-    this.updateScene();
-  }
-
-  /**
    * Update animation scene.
    */
   updateScene(): void {
@@ -241,14 +248,5 @@ export class ActivityAnimationGraph {
 
       this._scene.camera.layers.enable(layer.activity.idx + 1);
     });
-  }
-
-  /**
-   * Destroy animation scene.
-   */
-  destroyScene(): void {
-    if (!this._scene) return;
-
-    this._scene.destroy();
   }
 }

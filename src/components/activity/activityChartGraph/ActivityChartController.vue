@@ -46,7 +46,7 @@
 
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
     <div :key="'panel' + index" v-for="(panel, index) in graph.panels">
-      <card color="primary" class="mx-1">
+      <Card class="mx-1" color="primary">
         <v-card-title class="pa-0">
           <activity-chart-panel-toolbar
             :panel="(panel as ActivityChartPanel)"
@@ -151,7 +151,7 @@
                     v-for="(param, index) of panel.model.params"
                   /> -->
         </v-card-text>
-      </card>
+      </Card>
     </div>
     <!-- </draggable> -->
   </div>

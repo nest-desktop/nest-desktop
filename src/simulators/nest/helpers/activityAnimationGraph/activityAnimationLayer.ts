@@ -2,9 +2,9 @@
 
 import { GridHelper, Group, Object3DEventMap } from "three";
 
-import { Activity, IEventProps } from "../activity/activity";
-import { NodeRecord } from "../node/nodeRecord";
-import { range } from "../common/array";
+import { Activity, IEventProps } from "../../../../helpers/activity/activity";
+import { NodeRecord } from "../../../../helpers/node/nodeRecord";
+import { range } from "../../../../helpers/common/array";
 
 import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
@@ -147,10 +147,6 @@ export class ActivityAnimationLayer {
     return this._offset;
   }
 
-  get state(): IActivityAnimationLayerState {
-    return this._state;
-  }
-
   /**
    * Get binned positions for histogram.
    */
@@ -164,6 +160,51 @@ export class ActivityAnimationLayer {
       });
     });
     return positions;
+  }
+
+  get state(): IActivityAnimationLayerState {
+    return this._state;
+  }
+
+  /**
+   * Add empty frames.
+   */
+  addEmptyFrames(): void {
+    // Add empty frames if not existed.
+    this._frames = [];
+    for (let i = 0; i < this._graph.state.nSamples; i++) {
+      this._frames.push({ senders: [] });
+    }
+  }
+
+  /**
+   * Create grids.
+   *
+   * @remarks
+   * returns a group of GridHelpers
+   */
+  createGrids(divisions: number = 2): Group<Object3DEventMap> {
+    const grid: Group<Object3DEventMap> = new Group();
+    const scale: IPosition = { x: 1, y: 1, z: 1 };
+
+    if (this._state.ndim === 3) {
+      const gridX: GridHelper = new GridHelper(1, divisions);
+      gridX.geometry.rotateZ(Math.PI / 2);
+      gridX.position.x = -scale.x / 2;
+      grid.add(gridX);
+    }
+
+    const gridY: GridHelper = new GridHelper(1, divisions);
+    gridY.position.y = this._state.ndim === 2 ? 0 : -scale.y / 2;
+    grid.add(gridY);
+
+    if (this._state.ndim === 3) {
+      const gridZ: GridHelper = new GridHelper(1, divisions);
+      gridZ.geometry.rotateX(Math.PI / 2);
+      gridZ.position.z = -scale.z / 2;
+      grid.add(gridZ);
+    }
+    return grid;
   }
 
   /**
@@ -207,16 +248,6 @@ export class ActivityAnimationLayer {
   }
 
   /**
-   * Initialize geometry model for activity layer.
-   */
-  initModel(): void {
-    if (this._state.modelSelected == null) {
-      this._state.modelSelected = this._models[0];
-    }
-    this._model = new this._state.modelSelected.component(this);
-  }
-
-  /**
    * Initialize graph.
    */
   initGraph(): void {
@@ -229,33 +260,13 @@ export class ActivityAnimationLayer {
   }
 
   /**
-   * Create grids.
-   *
-   * @remarks
-   * returns a group of GridHelpers
+   * Initialize geometry model for activity layer.
    */
-  createGrids(divisions: number = 2): Group<Object3DEventMap> {
-    const grid: Group<Object3DEventMap> = new Group();
-    const scale: IPosition = { x: 1, y: 1, z: 1 };
-
-    if (this._state.ndim === 3) {
-      const gridX: GridHelper = new GridHelper(1, divisions);
-      gridX.geometry.rotateZ(Math.PI / 2);
-      gridX.position.x = -scale.x / 2;
-      grid.add(gridX);
+  initModel(): void {
+    if (this._state.modelSelected == null) {
+      this._state.modelSelected = this._models[1]; // sphere geometry
     }
-
-    const gridY: GridHelper = new GridHelper(1, divisions);
-    gridY.position.y = this._state.ndim === 2 ? 0 : -scale.y / 2;
-    grid.add(gridY);
-
-    if (this._state.ndim === 3) {
-      const gridZ: GridHelper = new GridHelper(1, divisions);
-      gridZ.geometry.rotateX(Math.PI / 2);
-      gridZ.position.z = -scale.z / 2;
-      grid.add(gridZ);
-    }
-    return grid;
+    this._model = new this._state.modelSelected.component(this);
   }
 
   /**
@@ -276,13 +287,15 @@ export class ActivityAnimationLayer {
   }
 
   /**
-   * Add empty frames.
+   * Render frame of activity.
    */
-  addEmptyFrames(): void {
-    // Add empty frames if not existed.
-    this._frames = [];
-    for (let i = 0; i < this._graph.state.nSamples; i++) {
-      this._frames.push({ senders: [] });
+  renderFrame(): void {
+    if (this._model == undefined) return;
+
+    if (this._state.visible) {
+      this._model.render(this.frame);
+    } else if (!this._state.reset) {
+      this._model.resetObjects();
     }
   }
 
@@ -294,9 +307,7 @@ export class ActivityAnimationLayer {
    */
   updateFrames(): void {
     const events: IEventProps = Object.assign({}, this._activity.events);
-    if (events.senders == null) {
-      return;
-    }
+    if (events.senders == null) return;
 
     // Update records of analog signals.
     if (this._activity.recorder.model.isAnalogRecorder) {
@@ -320,29 +331,12 @@ export class ActivityAnimationLayer {
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);
       const frame: IActivityAnimationLayerFrame = this._frames[frameIdx - 1];
-      if (frame == null) {
-        return;
-      }
+      if (frame == null) return;
 
       Object.keys(events).forEach((eventKey: string) => {
         frame[eventKey].push(events[eventKey][idx]);
       });
       this._frames[frameIdx - 1] = frame;
     });
-  }
-
-  /**
-   * Render frame of activity.
-   */
-  renderFrame(): void {
-    if (this._model == undefined) {
-      return;
-    }
-
-    if (this._state.visible) {
-      this._model.render(this.frame);
-    } else if (!this._state.reset) {
-      this._model.resetObjects();
-    }
   }
 }

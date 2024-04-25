@@ -14,12 +14,21 @@ import {
   IActivityAnimationLayerConfig,
   IActivityAnimationLayerFrame,
 } from "./activityAnimationLayer";
+import { BaseObj } from "@/helpers/common/base";
 
-export class ActivityAnimationLayerModel {
+export class ActivityAnimationLayerModel extends BaseObj {
   private _graphGroup: Group<Object3DEventMap>;
   private _layer: ActivityAnimationLayer;
 
   constructor(layer: ActivityAnimationLayer) {
+    super({
+      logger: {
+        settings: {
+          minLevel: 3,
+        },
+      },
+    });
+
     this._layer = layer;
     this._graphGroup = new Group();
 
@@ -39,6 +48,11 @@ export class ActivityAnimationLayerModel {
   }
 
   /**
+   * Add graph for layer model.
+   */
+  addGraph(): void {}
+
+  /**
    * Initialize graph for layer model.
    */
   initGraph(): void {
@@ -46,19 +60,19 @@ export class ActivityAnimationLayerModel {
   }
 
   /**
-   * Add graph for layer model.
-   */
-  addGraph(): void {}
-
-  /**
    * Render layer model.
    */
   render(frame: IActivityAnimationLayerFrame): void {
+    this.logger.trace("render");
+
     this.resetObjects();
+
     if (frame.senders == null) return;
+
     if (this._layer.activity.recorder.model.isSpikeRecorder) {
       this.renderTrails();
     }
+
     if (frame.senders.length === 0) return;
     this.updateObjects(frame);
   }
@@ -83,15 +97,14 @@ export class ActivityAnimationLayerModel {
    * Reset graph objects.
    */
   resetObjects(): void {
-    if (this._graphGroup == undefined) {
-      return;
-    }
+    if (this._graphGroup == undefined) return;
 
     const scale: number = this._layer.config.object.size;
     this._graphGroup.children.forEach((child: Object3D<Object3DEventMap>) => {
       const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> =
         child as Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
-      mesh.material.opacity = 0;
+
+      mesh.material.opacity = 0.0;
       const position = mesh.userData.position;
       mesh.position.set(position.x, -1, position.z);
       mesh.scale.set(scale, scale, scale);
@@ -100,9 +113,36 @@ export class ActivityAnimationLayerModel {
   }
 
   /**
+   * Update mesh objects.
+   */
+  updateMesh(
+    mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>,
+    options?: {
+      color?: string;
+      height?: number;
+      opacity?: number;
+      scale?: number;
+    }
+  ): void {
+    this.logger.trace("update mesh");
+
+    const color = options?.color || "0x000000";
+    const opacity = options?.opacity || 1;
+    const scale = options?.scale || 0.01;
+    const position = mesh.userData.position;
+
+    mesh.material.color.set(color);
+    mesh.material.opacity = opacity;
+    mesh.position.set(position.x, position.y, position.z);
+    mesh.scale.set(scale, scale, scale);
+  }
+
+  /**
    * Update graph objects.
    */
   updateObjects(frame: IActivityAnimationLayerFrame, trailIdx?: number): void {
+    this.logger.trace("update objects");
+
     this._layer.state.reset = false;
     const config: IActivityAnimationLayerConfig = this.layer.config;
 
@@ -129,15 +169,13 @@ export class ActivityAnimationLayerModel {
     }
 
     const record = this.layer.state.record;
-    if (!record) return;
-
     const values = record != null && record.id in frame ? frame[record.id] : [];
     frame.senders?.forEach((sender: number, senderIdx: number) => {
       let color: string;
       let height: number;
-      if (values.length === frame.senders?.length) {
+      if (record && values.length === frame.senders?.length) {
         const valueNormed = record.normalize(values[senderIdx]);
-        color = record.valueColor(valueNormed);
+        color = record?.valueColor(valueNormed);
         height = valueNormed * size;
       } else {
         color = this.layer.activity.recorder.view.color;
@@ -151,35 +189,14 @@ export class ActivityAnimationLayerModel {
         any
       >;
 
-      this.updateMesh(mesh, {
+      const options = {
         color,
         height,
         opacity,
         scale,
-      });
-    });
-  }
+      };
 
-  /**
-   * Update mesh objects.
-   */
-  updateMesh(
-    mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>,
-    options?: {
-      color?: string;
-      height?: number;
-      opacity?: number;
-      scale?: number;
-    }
-  ): void {
-    mesh.material.color.set(options?.color || "000000");
-    mesh.material.opacity = options?.opacity || 1;
-    const position = mesh.userData.position;
-    mesh.position.set(position.x, position.y, position.z);
-    mesh.scale.set(
-      options?.scale || 1,
-      options?.scale || 1,
-      options?.scale || 1
-    );
+      this.updateMesh(mesh, options);
+    });
   }
 }

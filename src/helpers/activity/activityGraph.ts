@@ -1,21 +1,19 @@
 // activityGraph.ts
 
-import { ActivityAnimationGraph } from "../activityAnimationGraph/activityAnimationGraph";
 import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
 import { IActivityChartPanelProps } from "../activityChartGraph/activityChartPanel";
 import { BaseObj } from "../common/base";
 import { TProject } from "@/types/projectTypes";
 
-export interface IActivityGraphProps {
+export interface IBaseActivityGraphProps {
   panels: IActivityChartPanelProps[];
 }
 
-export class ActivityGraph extends BaseObj {
+export class BaseActivityGraph extends BaseObj {
   private _project: TProject;
   private _activityChartGraph: ActivityChartGraph;
-  private _activityAnimationGraph: ActivityAnimationGraph;
 
-  constructor(project: TProject, activityGraphProps?: IActivityGraphProps) {
+  constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._project = project;
@@ -23,11 +21,6 @@ export class ActivityGraph extends BaseObj {
       project,
       activityGraphProps?.panels
     );
-    this._activityAnimationGraph = new ActivityAnimationGraph(project);
-  }
-
-  get activityAnimationGraph(): ActivityAnimationGraph {
-    return this._activityAnimationGraph;
   }
 
   get activityChartGraph(): ActivityChartGraph {
@@ -46,7 +39,6 @@ export class ActivityGraph extends BaseObj {
     this.logger.trace("init");
 
     this._activityChartGraph.init();
-    // this.activityAnimationGraph.init();
 
     if (this._project.activities.state.hasSomeEvents) {
       this.update();
@@ -70,7 +62,6 @@ export class ActivityGraph extends BaseObj {
     // if (this.project.activities.hash === this.dataHash) return;
 
     this._activityChartGraph.update();
-    // this.activityAnimationGraph.update();
 
     this.updateHash();
     this.logger.trace("update");

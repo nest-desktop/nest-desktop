@@ -50,15 +50,17 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
       scale?: number;
     } = {}
   ): void {
-    const color = options.color || "black";
+    this.logger.trace("update mesh");
+    const color = options.color || "0x000000";
     const height = options.height || 1;
     const opacity = options.opacity || 1;
-    const scale = options.scale || 1;
+    const scale = options.scale || 0.01;
+    const position = mesh.userData.position.y;
 
     mesh.material.color.set(color);
     mesh.material.opacity = opacity;
     mesh.scale.set(scale, scale, scale);
-    mesh.position.setY(mesh.userData.position.y);
+    mesh.position.setY(position.y);
 
     if (this.layer.config.object.flatHeight) {
       mesh.scale.setY(0.5);
