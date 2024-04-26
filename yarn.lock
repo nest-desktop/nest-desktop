@@ -8200,9 +8200,9 @@ text-table@^0.2.0:
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
 three@~0.164:
-  version "0.164.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.164.0.tgz#1477b2c77f7eedbd21764063de6fd4c2c1dc833e"
-  integrity sha512-bmfVMlDUSiqjR3LxLmIpJRQc4R1z75F/kR9OgJnlI2eVeOyyGkSpjzkLD85WWEKXM9pq5TuUWztf3rKH7P1Fdw==
+  version "0.164.1"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.164.1.tgz#b742f76bd8dfd3736ba0d86a12dfddb73c5cdcc0"
+  integrity sha512-iC/hUBbl1vzFny7f5GtqzVXYjMJKaTPxiCxXfrvVdBi1Sf+jhd1CAkitiFwC7mIBFCo3MrDLJG97yisoaWig0w==
 
 through2@3.0.2:
   version "3.0.2"
