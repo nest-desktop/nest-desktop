@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panels v-if="nodeSpatial.positions" variant="accordion">
-    <v-expansion-panel density="compact" elevation="0" flat rounded="0">
+    <v-expansion-panel density="compact" elevation="0" tile>
       <v-expansion-panel-title class="expansion-panel-title">
         <NodePositionTitle :key="nodeSpatial.hash" :nodeSpatial="nodeSpatial" />
       </v-expansion-panel-title>

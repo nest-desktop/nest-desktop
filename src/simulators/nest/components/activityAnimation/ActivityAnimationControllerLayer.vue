@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel elevation="1" tile>
+  <v-expansion-panel density="compact" elevation="1" tile>
     <v-expansion-panel-title>
       <v-row class="text-button">
         <NodeAvatar :node="layer.activity.recorder" />
