@@ -5,7 +5,6 @@
     </v-toolbar>
 
     <v-layout class="activityStats ml-1" full-height v-resize="onResize">
-      <!-- <v-subheader v-text="'Activity statistics'" /> -->
       <v-expansion-panels
         mandatory
         v-model="activities.state.activityStatsPanelId"
@@ -73,11 +72,3 @@ const onResize = () => {
     (activities.value.all.length - 1) * 48; // other closed expansion panel
 };
 </script>
-
-<style lang="scss">
-.activityStats {
-  .v-expansion-panel-text__wrapper {
-    padding: 8px 0 0 0;
-  }
-}
-</style>

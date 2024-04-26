@@ -1,13 +1,13 @@
 // activityAnimationLayer.ts
 
-import { GridHelper, Group, Object3DEventMap } from "three";
+import { GridHelper, Group, Object3DEventMap, Vector3 } from "three";
 import { UnwrapRef, reactive } from "vue";
 
 import { Activity, IEventProps } from "@/helpers/activity/activity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { range } from "@/helpers/common/array";
 
-import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
+import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
 import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/boxGeometryLayerModel";
 import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/sphereGeometryLayerModel";
@@ -19,8 +19,8 @@ export interface IActivityAnimationLayerFrame {
 
 interface IActivityAnimationLayerModel {
   component: any;
-  id: string;
-  label: string;
+  title: string;
+  value: string;
 }
 export interface IActivityAnimationLayerState {
   layout: { extent: number[][] };
@@ -32,7 +32,7 @@ export interface IActivityAnimationLayerState {
     opacity: number;
     size: number;
   };
-  positions: IPosition[];
+  positions: Vector3[];
   record?: NodeRecord;
   records: NodeRecord[];
   reset: boolean;
@@ -49,16 +49,16 @@ export class ActivityAnimationLayer {
   private _models: IActivityAnimationLayerModel[] = [
     {
       component: BoxGeometryLayerModel,
-      id: "BoxGeometryLayerModel",
-      label: "box geometry",
+      title: "box geometry",
+      value: "BoxGeometryLayerModel",
     },
     {
       component: SphereGeometryLayerModel,
-      id: "SphereGeometryLayerModel",
-      label: "sphere geometry",
+      title: "sphere geometry",
+      value: "SphereGeometryLayerModel",
     },
   ];
-  private _offset: IPosition = { x: 0, y: 0, z: 0 };
+  private _offset: Vector3 = new Vector3(0, 0, 0);
   private _state: UnwrapRef<IActivityAnimationLayerState> = reactive({
     layout: {
       extent: [
@@ -75,7 +75,7 @@ export class ActivityAnimationLayer {
       opacity: 1,
       size: 4,
     },
-    positions: [] as IPosition[],
+    positions: [] as Vector3[],
     record: undefined,
     records: [] as NodeRecord[],
     reset: false,
@@ -134,7 +134,7 @@ export class ActivityAnimationLayer {
     return this._models;
   }
 
-  get offset(): IPosition {
+  get offset(): Vector3 {
     return this._offset;
   }
 
@@ -175,7 +175,7 @@ export class ActivityAnimationLayer {
    */
   createGrids(divisions: number = 2): Group<Object3DEventMap> {
     const grid: Group<Object3DEventMap> = new Group();
-    const scale: IPosition = { x: 1, y: 1, z: 1 };
+    const scale = new Vector3(1, 1, 1);
 
     if (this._state.ndim === 3) {
       const gridX: GridHelper = new GridHelper(1, divisions);
@@ -204,11 +204,12 @@ export class ActivityAnimationLayer {
     if (this._activity.nodePositions.length > 0) {
       this._state.ndim = this._activity.nodePositions[0].length;
       this._state.positions = this._activity.nodePositions.map(
-        (pos: number[]) => ({
-          x: pos[0],
-          y: pos.length === 3 ? pos[1] : 0,
-          z: pos.length === 3 ? pos[2] : pos[1],
-        })
+        (pos: number[]) =>
+          new Vector3(
+            pos[0],
+            pos.length === 3 ? pos[1] : 0,
+            pos.length === 3 ? pos[2] : pos[1]
+          )
       );
     }
 

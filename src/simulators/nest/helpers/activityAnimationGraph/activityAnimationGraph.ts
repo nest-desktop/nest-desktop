@@ -24,12 +24,6 @@ interface IActivityAnimationGraphState {
   nSamples: number;
 }
 
-export interface IPosition {
-  x: number;
-  y: number;
-  z: number;
-}
-
 export class ActivityAnimationGraph {
   private _layers: ActivityAnimationLayer[] = [];
   private _project: TProject;
@@ -164,6 +158,20 @@ export class ActivityAnimationGraph {
   }
 
   /**
+   * Set first frame.
+   */
+  setFirstFrame(): void {
+    this.frameIdx = 0;
+  }
+
+  /**
+   * Set last frame.
+   */
+  setLastFrame(): void {
+    this.frameIdx = this._state.nSamples - 1;
+  }
+
+  /**
    * Move one frame forward in the animation.
    */
   stepForwardFrame(): void {
@@ -219,7 +227,7 @@ export class ActivityAnimationGraph {
     const currentFrameIdx = this.frameIdx;
 
     if (this._state.nSamples === 0 || Number.isNaN(currentFrameIdx)) {
-      this.frameIdx = 0;
+      this.setFirstFrame();
     } else {
       this.frameIdx =
         (currentFrameIdx +

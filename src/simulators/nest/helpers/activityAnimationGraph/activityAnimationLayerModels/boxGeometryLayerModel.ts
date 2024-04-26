@@ -1,10 +1,9 @@
 // boxGeometryLayerModel.ts
 
-import { BoxGeometry, Mesh, MeshLambertMaterial } from "three";
+import { BoxGeometry, Mesh, MeshLambertMaterial, Vector3 } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
-import { IPosition } from "../activityAnimationGraph";
 
 export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {
@@ -18,7 +17,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     const scale = 0.01;
     const geometry: BoxGeometry = new BoxGeometry(scale, scale, scale);
 
-    this.layer.state.positions.forEach((position: IPosition) => {
+    this.layer.state.positions.forEach((position: Vector3) => {
       const material: MeshLambertMaterial = new MeshLambertMaterial({
         color: this.layer.activity.recorder.view.color,
         transparent: true,

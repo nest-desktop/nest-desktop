@@ -16,7 +16,7 @@ onBeforeUnmount(() => props.graph.destroyScene());
 
 <style>
 .activityAnimationGraph {
-  height: calc(100vh - 48px - 24px);
+  height: calc(100vh - 48px - 25px);
   width: 100%;
 }
 </style>

@@ -20,11 +20,12 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { UnwrapRef, reactive } from "vue";
 
 import { darkMode } from "@/helpers/common/theme";
+import { useAppSessionStore } from "@/stores/appSessionStore";
 
-import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
+import { ActivityAnimationGraph } from "./activityAnimationGraph";
 
 interface ICameraState {
-  position: IPosition;
+  position: Vector3;
   control: boolean;
   distance: number;
   rotation: {
@@ -51,7 +52,7 @@ export class ActivityAnimationScene {
   private _scene: Scene;
   private _state: UnwrapRef<IActivityAnimationSceneState>;
   private _stats: Stats;
-  private _useStats = true;
+  private _useStats = false;
 
   constructor(graph: ActivityAnimationGraph, ref: any) {
     this._graph = graph;
@@ -65,11 +66,7 @@ export class ActivityAnimationScene {
           theta: 0,
           speed: 0,
         },
-        position: {
-          x: 16,
-          y: 8,
-          z: 8,
-        },
+        position: new Vector3(16, 8, 8),
       },
     });
 
@@ -84,6 +81,9 @@ export class ActivityAnimationScene {
     this.updateSceneBackground();
 
     this._stats = new Stats();
+
+    const appSessionStore = useAppSessionStore();
+    this._useStats = appSessionStore.state.devMode;
 
     this.init();
   }
@@ -253,7 +253,7 @@ export class ActivityAnimationScene {
     camera.rotation.theta += camera.rotation.speed;
     camera.rotation.theta = camera.rotation.theta % 360;
     const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
-    const position: IPosition = this._state.camera.position;
+    const position: Vector3 = this._state.camera.position;
     position.x =
       camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
     position.z =
@@ -283,7 +283,7 @@ export class ActivityAnimationScene {
    * Update camera position in init and in render.
    */
   setCameraPosition(): void {
-    const position: IPosition = this._state.camera.position;
+    const position: Vector3 = this._state.camera.position;
     this._camera.position.set(position.x, position.y, position.z);
     this._camera.lookAt(this._scene.position);
   }

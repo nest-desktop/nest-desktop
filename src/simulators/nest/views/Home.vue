@@ -88,7 +88,7 @@
       </v-col>
 
       <v-col md="6">
-        <v-expansion-panels>
+        <v-expansion-panels variant="accordion">
           <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
               <div class="d-flex flex-row">

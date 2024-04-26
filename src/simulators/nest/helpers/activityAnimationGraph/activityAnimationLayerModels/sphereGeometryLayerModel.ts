@@ -1,10 +1,9 @@
 // sphereGeometryLayerModel.ts
 
-import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
+import { Mesh, MeshBasicMaterial, SphereGeometry, Vector3 } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
-import { IPosition } from "../activityAnimationGraph";
 
 export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {
@@ -18,7 +17,7 @@ export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
     const scale = 0.01;
     const geometry: SphereGeometry = new SphereGeometry(scale / 2);
 
-    this.layer.state.positions.forEach((position: IPosition) => {
+    this.layer.state.positions.forEach((position: Vector3) => {
       const material: MeshBasicMaterial = new MeshBasicMaterial({
         color: this.layer.activity.recorder.view.color,
         transparent: true,

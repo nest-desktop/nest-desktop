@@ -1,41 +1,33 @@
 <template>
-  <Card>
-    <v-card-title class="pa-0">
-      <v-btn
-        :color="layer.activity.recorder.view.color"
-        :height="48"
-        :ripple="false"
-        @click="() => (layer.state.visible = !layer.state.visible)"
-        block
-        rounded="0"
-      >
-        <v-row>
-          <v-col cols="3">{{ layer.activity.recorder.view.label }}</v-col>
-          <v-col cols="7">{{ layer.activity.recorder.model.label }}</v-col>
-          <v-col cols="2">
-            <v-icon
-              :icon="layer.state.visible ? 'mdi-eye' : 'mdi-eye-off'"
-              class="mx-1"
-              right
-              size="small"
-            />
-          </v-col>
-        </v-row>
-      </v-btn>
-    </v-card-title>
+  <v-expansion-panel elevation="1" tile>
+    <v-expansion-panel-title>
+      <v-row class="text-button">
+        <NodeAvatar :node="layer.activity.recorder" />
+        <v-spacer />
+        {{ layer.activity.recorder.model.label }}
+        <v-spacer />
+      </v-row>
 
-    <v-card-text class="px-1 py-0" v-if="layer.state.visible">
+      <template #actions>
+        <v-icon
+          @click.stop="() => (layer.state.visible = !layer.state.visible)"
+          :icon="layer.state.visible ? 'mdi-eye' : 'mdi-eye-off'"
+        />
+      </template>
+    </v-expansion-panel-title>
+
+    <v-expansion-panel-text class="px-1 py-0">
       <v-card flat tile>
         <v-select
           :items="layer.models"
-          class="px-0 my-0"
+          class="my-2"
+          density="compact"
           hide-details
-          item-text="label"
-          item-value="id"
           label="Select geometry model"
           prepend-inner-icon="mdi-shape"
           return-object
           v-model="layer.modelSelected"
+          variant="outlined"
         />
       </v-card>
 
@@ -188,41 +180,46 @@
 
       <v-card
         flat
-        subtitle="Trail"
+        title="Trail"
         v-if="layer.activity.recorder.model.isSpikeRecorder"
       >
-        <v-card-text>
-          <v-row>
-            <v-col class="pa-0">
-              <ValueSlider
-                :max="layer.graph.state.frames.sampleRate * 50"
-                :min="0"
-                :step="layer.graph.state.frames.sampleRate"
-                label="Trail length"
-                v-model="layer.state.trail.length"
-              />
-            </v-col>
-          </v-row>
+        <v-list>
+          <v-list-item>
+            <ValueSlider
+              :max="layer.graph.state.frames.sampleRate * 50"
+              :min="0"
+              :step="layer.graph.state.frames.sampleRate"
+              label="Trail length"
+              v-model="layer.state.trail.length"
+            />
+          </v-list-item>
 
-          <v-checkbox
-            hide-details
-            label="Trail fading"
-            v-model="layer.state.trail.fading"
-          />
+          <v-list-item>
+            <v-checkbox
+              hide-details
+              label="Trail fading"
+              v-model="layer.state.trail.fading"
+            />
+          </v-list-item>
 
-          <v-select
-            :items="['off', 'growing', 'shrinking']"
-            hide-details
-            label="Trail mode"
-            v-model="layer.state.trail.mode"
-          />
-        </v-card-text>
+          <v-list-item>
+            <v-select
+              :items="['off', 'growing', 'shrinking']"
+              class="mt-2"
+              density="compact"
+              hide-details
+              label="Trail mode"
+              v-model="layer.state.trail.mode"
+              variant="outlined"
+            />
+          </v-list-item>
+        </v-list>
       </v-card>
 
       <v-card
         flat
         subtitle="Box style"
-        v-if="layer.modelSelected?.label.includes('box')"
+        v-if="layer.modelSelected?.value.includes('box')"
       >
         <v-card-text class="py-0">
           <v-checkbox
@@ -240,12 +237,12 @@
           />
         </v-card-text>
       </v-card>
-    </v-card-text>
-  </Card>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
 </template>
 
 <script lang="ts" setup>
-import Card from "@/components/common/Card.vue";
+import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { ActivityAnimationLayer } from "../../helpers/activityAnimationGraph/activityAnimationLayer";

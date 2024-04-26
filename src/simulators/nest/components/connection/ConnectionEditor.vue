@@ -132,11 +132,3 @@ const items = [
   },
 ];
 </script>
-
-<style lang="scss">
-.node-connection {
-  .v-expansion-panel-text__wrapper {
-    padding: 0;
-  }
-}
-</style>

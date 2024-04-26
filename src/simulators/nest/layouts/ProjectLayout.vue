@@ -85,10 +85,20 @@
         :graph="project.activityGraph.activityChartGraph"
         v-if="projectStore.state.tab.activityView === 'abstract'"
       />
-      <ActivityAnimationController
-        :graph="project.activityGraph.activityAnimationGraph"
-        v-else-if="projectStore.state.tab.activityView === 'spatial'"
-      />
+      <template v-else-if="projectStore.state.tab.activityView === 'spatial'">
+        <ActivityAnimationController
+          :graph="project.activityGraph.activityAnimationGraph"
+        />
+
+        <v-expansion-panels>
+          <ActivityAnimationControllerLayer
+            :key="index"
+            :layer
+            v-for="(layer, index) in project.activityGraph
+              .activityAnimationGraph.layers"
+          />
+        </v-expansion-panels>
+      </template>
     </template>
 
     <template #simulationKernel>
@@ -121,6 +131,7 @@ import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
+import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
 import NodeEditor from "../components/node/NodeEditor.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
 import { NESTNode } from "../helpers/node/node";

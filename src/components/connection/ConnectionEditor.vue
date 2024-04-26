@@ -130,23 +130,3 @@ const items = [
   },
 ];
 </script>
-
-<style lang="scss">
-.node-connection {
-  .panel-title {
-    .menu {
-      opacity: 0;
-    }
-
-    &:hover {
-      .menu {
-        opacity: 1;
-      }
-    }
-  }
-
-  .v-expansion-panel-text__wrapper {
-    padding: 0;
-  }
-}
-</style>
