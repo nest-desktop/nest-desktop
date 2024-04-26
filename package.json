@@ -44,7 +44,7 @@
     "pouchdb-upsert": "~2.2",
     "roboto-fontface": "*",
     "stats.js": "~0.17",
-    "three": "~0.163",
+    "three": "~0.164",
     "uuid": "~9.0",
     "vue": "~3.4",
     "vue-codemirror": "~6.1",
