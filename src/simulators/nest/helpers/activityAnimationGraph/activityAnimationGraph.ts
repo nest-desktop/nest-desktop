@@ -1,27 +1,26 @@
 // activityAnimationGraph.ts
 
 import { Group } from "three";
+import { UnwrapRef, reactive } from "vue";
 
-import { Activity } from "../../../../helpers/activity/activity";
-import { ActivityAnimationLayer } from "./activityAnimationLayer";
-import { ActivityAnimationScene } from "./activityAnimationScene";
-import { BaseProject } from "../../../../helpers/project/project";
+import { Activity } from "@/helpers/activity/activity";
+import { BaseProject } from "@/helpers/project/project";
 import { TProject } from "@/types/projectTypes";
 
-interface IActivityAnimationGraphConfig {
+import { ActivityAnimationLayer } from "./activityAnimationLayer";
+import { ActivityAnimationScene } from "./activityAnimationScene";
+
+interface IActivityAnimationGraphState {
   frames: {
     rate: number;
     sampleRate: number;
     speed: number;
     windowSize: number;
   };
+  frameIdx: number;
   grid: {
     divisions: number;
   };
-}
-
-interface IActivityAnimationGraphState {
-  frameIdx: number;
   nSamples: number;
 }
 
@@ -32,32 +31,34 @@ export interface IPosition {
 }
 
 export class ActivityAnimationGraph {
-  private _config: IActivityAnimationGraphConfig = {
+  private _layers: ActivityAnimationLayer[] = [];
+  private _project: TProject;
+  private _scene?: ActivityAnimationScene;
+  private _state: UnwrapRef<IActivityAnimationGraphState> = reactive({
     frames: {
       rate: 24,
       sampleRate: 1,
       speed: 1,
       windowSize: 1,
     },
+    frameIdx: 0,
     grid: {
       divisions: 10,
     },
-  };
-
-  private _layers: ActivityAnimationLayer[] = [];
-  private _project: TProject;
-  private _scene?: ActivityAnimationScene;
-  private _state: IActivityAnimationGraphState = {
-    frameIdx: 0,
     nSamples: 0,
-  };
+  });
 
   constructor(project: TProject) {
     this._project = project;
   }
 
-  get config(): IActivityAnimationGraphConfig {
-    return this._config;
+  get frameIdx(): number {
+    return this._state.frameIdx;
+  }
+
+  set frameIdx(value: number) {
+    this._state.frameIdx = value;
+    this.renderFrameLayers();
   }
 
   get layers(): ActivityAnimationLayer[] {
@@ -72,7 +73,7 @@ export class ActivityAnimationGraph {
     return this._scene;
   }
 
-  get state(): IActivityAnimationGraphState {
+  get state(): UnwrapRef<IActivityAnimationGraphState> {
     return this._state;
   }
 
@@ -91,7 +92,7 @@ export class ActivityAnimationGraph {
    * Decrease frame speed by 1.
    */
   decrementFrameSpeed(): void {
-    this._config.frames.speed -= 1;
+    this._state.frames.speed -= 1;
   }
 
   /**
@@ -107,7 +108,7 @@ export class ActivityAnimationGraph {
    * Increase frame speed by 1.
    */
   incrementFrameSpeed(): void {
-    this._config.frames.speed += 1;
+    this._state.frames.speed += 1;
   }
 
   /**
@@ -136,21 +137,21 @@ export class ActivityAnimationGraph {
    * Pause frame animation.
    */
   pauseFrameAnimation(): void {
-    this._config.frames.speed = 0;
+    this._state.frames.speed = 0;
   }
 
   /**
    * Play frame animation backward.
    */
   playBackwardFrameAnimation(): void {
-    this._config.frames.speed = -1;
+    this._state.frames.speed = -1;
   }
 
   /**
    * Play frame animation.
    */
   playFrameAnimation(): void {
-    this._config.frames.speed = 1;
+    this._state.frames.speed = 1;
   }
 
   /**
@@ -167,7 +168,7 @@ export class ActivityAnimationGraph {
    */
   stepForwardFrame(): void {
     this.pauseFrameAnimation();
-    this._state.frameIdx = (this._state.frameIdx + 1) % this._state.nSamples;
+    this.frameIdx = (this.frameIdx + 1) % this._state.nSamples;
   }
 
   /**
@@ -175,8 +176,8 @@ export class ActivityAnimationGraph {
    */
   stepBackwardFrame(): void {
     this.pauseFrameAnimation();
-    this._state.frameIdx =
-      (this._state.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
+    this.frameIdx =
+      (this.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
   }
 
   /**
@@ -188,7 +189,7 @@ export class ActivityAnimationGraph {
   update(): void {
     this._state.nSamples =
       this.project.simulation.state.biologicalTime *
-      this._config.frames.sampleRate;
+      this._state.frames.sampleRate;
 
     // Update activity layers and frames.
     this.project.activities.all.forEach((activity: Activity) => {
@@ -205,29 +206,23 @@ export class ActivityAnimationGraph {
   }
 
   /**
-   * Update frame of activity layers.
+   * Update frame.
    */
   updateFrame(): void {
-    this.updateFrameIdx();
-    this.renderFrameLayers();
-  }
-
-  /**
-   * Update frame index.
-   */
-  updateFrameIdx(): void {
     const frames: {
       rate: number;
       sampleRate: number;
       speed: number;
       windowSize: number;
-    } = this._config.frames;
+    } = this._state.frames;
 
-    if (this._state.nSamples === 0 || Number.isNaN(this.state.frameIdx)) {
-      this.state.frameIdx = 0;
+    const currentFrameIdx = this.frameIdx;
+
+    if (this._state.nSamples === 0 || Number.isNaN(currentFrameIdx)) {
+      this.frameIdx = 0;
     } else {
-      this._state.frameIdx =
-        (this._state.frameIdx +
+      this.frameIdx =
+        (currentFrameIdx +
           frames.speed * frames.windowSize +
           this._state.nSamples) %
         this._state.nSamples;

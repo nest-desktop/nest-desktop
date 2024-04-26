@@ -1,5 +1,6 @@
 // activityAnimationScene.ts
 
+import Stats from "stats.js";
 import {
   AmbientLight,
   AxesHelper,
@@ -16,12 +17,13 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import Stats from "stats.js";
+import { UnwrapRef, reactive } from "vue";
+
+import { darkMode } from "@/helpers/common/theme";
 
 import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
-import { darkMode } from "../../../../helpers/common/theme";
 
-interface ICameraConfig {
+interface ICameraState {
   position: IPosition;
   control: boolean;
   distance: number;
@@ -31,16 +33,15 @@ interface ICameraConfig {
   };
 }
 
-interface IActivityAnimationSceneConfig {
-  camera: ICameraConfig;
+interface IActivityAnimationSceneState {
+  camera: ICameraState;
 }
 
 export class ActivityAnimationScene {
-  private _animationFrameIdx: number;
+  private _animationFrameId: number;
   private _camera: PerspectiveCamera;
   private _clippingPlanes: Plane[] = [];
   private _clock: Clock;
-  private _config: IActivityAnimationSceneConfig;
   private _controls: OrbitControls;
   private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
@@ -48,14 +49,15 @@ export class ActivityAnimationScene {
   private _ref: any;
   private _renderer: WebGLRenderer;
   private _scene: Scene;
+  private _state: UnwrapRef<IActivityAnimationSceneState>;
   private _stats: Stats;
-  private _useStats = false;
+  private _useStats = true;
 
   constructor(graph: ActivityAnimationGraph, ref: any) {
     this._graph = graph;
     this._ref = ref;
 
-    this._config = {
+    this._state = reactive({
       camera: {
         control: false,
         distance: 12,
@@ -69,9 +71,9 @@ export class ActivityAnimationScene {
           z: 8,
         },
       },
-    };
+    });
 
-    this._animationFrameIdx = -1;
+    this._animationFrameId = -1;
     this._camera = new PerspectiveCamera(5, 1, 1, 10000);
     this._renderer = new WebGLRenderer({
       antialias: true,
@@ -90,10 +92,6 @@ export class ActivityAnimationScene {
     return this._camera;
   }
 
-  get config(): IActivityAnimationSceneConfig {
-    return this._config;
-  }
-
   get controls(): OrbitControls {
     return this._controls;
   }
@@ -102,15 +100,19 @@ export class ActivityAnimationScene {
     return this._layerGraphGroup;
   }
 
+  get state(): IActivityAnimationSceneState {
+    return this._state;
+  }
+
   /**
    * Animate scene.
    */
   animate(): void {
-    this._animationFrameIdx = requestAnimationFrame(() => this.animate());
+    this._animationFrameId = requestAnimationFrame(() => this.animate());
 
     // Cumulate interval for frame rate.
     this._delta += this._clock.getDelta();
-    const interval: number = 1 / this._graph.config.frames.rate;
+    const interval: number = 1 / this._graph.state.frames.rate;
 
     // Render only in fixed frame rate or lower.
     if (this._delta <= interval) return;
@@ -121,7 +123,7 @@ export class ActivityAnimationScene {
     }
 
     // Update camera.
-    const camera: ICameraConfig = this._config.camera;
+    const camera: ICameraState = this._state.camera;
     if (camera.control) {
       if (camera.rotation.speed > 0) {
         this.moveCamera();
@@ -129,11 +131,13 @@ export class ActivityAnimationScene {
       this.setCameraPosition();
     }
 
-    // Update frame of the activity graph.
-    this._graph.updateFrame();
+    if (this._graph.state.frames.speed !== 0) {
+      // Update frame of the activity graph.
+      this._graph.updateFrame();
+    }
 
     // Render scene.
-    this._renderer.render(this._scene, this._camera);
+    this.render();
 
     // End time step for stats.
     if (this._stats) {
@@ -180,13 +184,16 @@ export class ActivityAnimationScene {
    * Destroy animation scene.
    */
   destroy(): void {
-    cancelAnimationFrame(this._animationFrameIdx);
+    cancelAnimationFrame(this._animationFrameId);
+
     if (this._ref.firstChild === this._renderer.domElement) {
       this._ref.removeChild(this._renderer.domElement);
     }
+
     if (document.body.lastChild === this._stats.dom) {
       document.body.removeChild(this._stats.dom);
     }
+
     // https://stackoverflow.com/questions/21548247/clean-up-threejs-webgl-contexts
     // TODO: It shows message in the debug:
     // WebGL context was lost. three.module.js:23546
@@ -198,15 +205,15 @@ export class ActivityAnimationScene {
    * Disable camera control.
    */
   disableCameraControl(): void {
-    this._config.camera.rotation.theta = 0;
-    this._config.camera.control = true;
+    this._state.camera.rotation.theta = 0;
+    this._state.camera.control = true;
   }
 
   /**
    * Enable camera control.
    */
   enableCameraControl(): void {
-    this._config.camera.control = false;
+    this._state.camera.control = false;
   }
 
   /**
@@ -226,9 +233,8 @@ export class ActivityAnimationScene {
     // Append dom element in container.
     this._ref.appendChild(this._renderer.domElement);
 
-    // this._controls.rotateSpeed = 1;
-    // this._controls.zoomSpeed = 1.2;
-    // this._controls.enableKeys = false;
+    // this._state.camera.rotation.speed = 1;
+    // this._state.camera.control = false;
 
     if (this._useStats) {
       this._stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -243,16 +249,23 @@ export class ActivityAnimationScene {
    * Move camera in render.
    */
   moveCamera(): void {
-    const camera: ICameraConfig = this._config.camera;
+    const camera: ICameraState = this._state.camera;
     camera.rotation.theta += camera.rotation.speed;
     camera.rotation.theta = camera.rotation.theta % 360;
     const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
-    const position: IPosition = this._config.camera.position;
+    const position: IPosition = this._state.camera.position;
     position.x =
       camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
     position.z =
       camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
     this._camera.lookAt(this._scene.position);
+  }
+
+  /**
+   * Render scene and camera.
+   */
+  render(): void {
+    this._renderer.render(this._scene, this._camera);
   }
 
   /**
@@ -262,14 +275,15 @@ export class ActivityAnimationScene {
     this._camera.aspect = this._ref.clientWidth / this._ref.clientHeight;
     this._camera.updateProjectionMatrix();
     this._renderer.setSize(this._ref.clientWidth, this._ref.clientHeight);
-    this._renderer.render(this._scene, this._camera);
+
+    this.render();
   }
 
   /**
    * Update camera position in init and in render.
    */
   setCameraPosition(): void {
-    const position: IPosition = this._config.camera.position;
+    const position: IPosition = this._state.camera.position;
     this._camera.position.set(position.x, position.y, position.z);
     this._camera.lookAt(this._scene.position);
   }

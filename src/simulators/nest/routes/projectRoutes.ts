@@ -30,7 +30,10 @@ const projectBeforeEnter = (to: any) => {
   }
 
   const path = to.path.split("/");
-  projectStore.state.view = path[path.length - 1] || "edit";
+  projectStore.state.tab.view = path[path.length - 1] || "edit";
+  if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
+    projectStore.state.tab.activityView = "abstract";
+  }
   logger.trace("enter:", to.path);
 };
 
@@ -44,7 +47,7 @@ const projectNew = () => {
       "/nest/project/" +
       projectStore.state.projectId +
       "/" +
-      projectStore.state.view,
+      projectStore.state.tab.view,
   };
 };
 
@@ -57,12 +60,16 @@ const projectRedirect = (to: any) => {
     projectStore.loadProject(to.params.projectId);
   }
 
+  if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
+    projectStore.state.tab.activityView = "abstract";
+  }
+
   return {
     path:
       "/nest/project/" +
       projectStore.state.projectId +
       "/" +
-      projectStore.state.view,
+      projectStore.state.tab.view,
   };
 };
 

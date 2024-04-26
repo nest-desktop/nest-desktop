@@ -51,7 +51,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     } = {}
   ): void {
     this.logger.trace("update mesh");
-    const color = options.color || "0x000000";
+    const color = options.color || 0x000000;
     const height = options.height || 1;
     const opacity = options.opacity || 1;
     const scale = options.scale || 0.01;
@@ -62,9 +62,9 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     mesh.scale.set(scale, scale, scale);
     mesh.position.setY(position.y);
 
-    if (this.layer.config.object.flatHeight) {
+    if (this.layer.state.object.flatHeight) {
       mesh.scale.setY(0.5);
-      if (this.layer.config.object.flyingBoxes) {
+      if (this.layer.state.object.flyingBoxes) {
         mesh.position.setY(height * 0.01);
       }
     } else {

@@ -172,7 +172,7 @@
             :max="10"
             :min="1"
             :step="0.1"
-            :value="layer.config.object.size"
+            :value="layer.state.object.size"
             label="Object size"
           />
 
@@ -180,7 +180,7 @@
             :max="1"
             :min="0"
             :step="0.01"
-            :value="layer.config.object.opacity"
+            :value="layer.state.object.opacity"
             label="Object opacity"
           />
         </v-card-text>
@@ -195,11 +195,11 @@
           <v-row>
             <v-col class="pa-0">
               <ValueSlider
-                :max="layer.graph.config.frames.sampleRate * 50"
+                :max="layer.graph.state.frames.sampleRate * 50"
                 :min="0"
-                :step="layer.graph.config.frames.sampleRate"
+                :step="layer.graph.state.frames.sampleRate"
                 label="Trail length"
-                v-model="layer.config.trail.length"
+                v-model="layer.state.trail.length"
               />
             </v-col>
           </v-row>
@@ -207,14 +207,14 @@
           <v-checkbox
             hide-details
             label="Trail fading"
-            v-model="layer.config.trail.fading"
+            v-model="layer.state.trail.fading"
           />
 
           <v-select
             :items="['off', 'growing', 'shrinking']"
             hide-details
             label="Trail mode"
-            v-model="layer.config.trail.mode"
+            v-model="layer.state.trail.mode"
           />
         </v-card-text>
       </v-card>
@@ -229,14 +229,14 @@
             hide-details
             density="compact"
             label="Flatten height"
-            v-model="layer.config.object.flatHeight"
+            v-model="layer.state.object.flatHeight"
           />
 
           <v-checkbox
             hide-details
             density="compact"
             label="Flying planes"
-            v-model="layer.config.object.flyingBoxes"
+            v-model="layer.state.object.flyingBoxes"
           />
         </v-card-text>
       </v-card>

@@ -9,12 +9,12 @@ import {
   Object3DEventMap,
 } from "three";
 
+import { BaseObj } from "@/helpers/common/base";
+
 import {
   ActivityAnimationLayer,
-  IActivityAnimationLayerConfig,
   IActivityAnimationLayerFrame,
 } from "./activityAnimationLayer";
-import { BaseObj } from "@/helpers/common/base";
 
 export class ActivityAnimationLayerModel extends BaseObj {
   private _graphGroup: Group<Object3DEventMap>;
@@ -81,7 +81,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
    * Render trails.
    */
   renderTrails(): void {
-    const trail = this.layer.config.trail;
+    const trail = this.layer.state.trail;
     if (trail.length > 0) {
       for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
         const frame: IActivityAnimationLayerFrame =
@@ -99,7 +99,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
   resetObjects(): void {
     if (this._graphGroup == undefined) return;
 
-    const scale: number = this._layer.config.object.size;
+    const scale: number = this._layer.state.object.size;
     this._graphGroup.children.forEach((child: Object3D<Object3DEventMap>) => {
       const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> =
         child as Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
@@ -126,7 +126,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
   ): void {
     this.logger.trace("update mesh");
 
-    const color = options?.color || "0x000000";
+    const color = options?.color || 0x000000;
     const opacity = options?.opacity || 1;
     const scale = options?.scale || 0.01;
     const position = mesh.userData.position;
@@ -144,20 +144,20 @@ export class ActivityAnimationLayerModel extends BaseObj {
     this.logger.trace("update objects");
 
     this._layer.state.reset = false;
-    const config: IActivityAnimationLayerConfig = this.layer.config;
+    const state = this.layer.state;
 
     const ratio: number =
-      trailIdx != null ? trailIdx / (config.trail.length + 1) : 0;
+      trailIdx != null ? trailIdx / (state.trail.length + 1) : 0;
     const opacity: number =
       trailIdx != null
-        ? config.trail.fading
+        ? state.trail.fading
           ? 1 - ratio
           : 1
-        : config.object.opacity;
+        : state.object.opacity;
 
-    const size: number = config.object.size;
+    const size: number = state.object.size;
     let scale: number;
-    switch (config.trail.mode) {
+    switch (state.trail.mode) {
       case "growing":
         scale = (1 + ratio) * size;
         break;

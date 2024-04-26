@@ -4,17 +4,77 @@
   <ProjectBar :projectStore color="nest-project">
     <template #tabs>
       <v-tab
-        v-for="(tab, index) in tabItems"
-        :key="index"
         :to="{
-          name: 'nest' + tab.to.name,
+          name: 'nestNetworkEditor',
           params: { projectId: projectStore.state.projectId },
         }"
-        :title="tab.title"
+        title="Network Editor"
         size="small"
+        stacked
+        value="edit"
       >
-        <v-icon :class="tab.iconClass" :icon="tab.icon" />
-        <span class="text-no-wrap">{{ tab.label }}</span>
+        <v-icon icon="network:network" />
+        Editor
+      </v-tab>
+
+      <v-tab
+        :to="{
+          name: 'nestActivityExplorer',
+          params: { projectId: projectStore.state.projectId },
+        }"
+        title="Activity Explorer"
+        size="small"
+        stacked
+        value="explore"
+      >
+        <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
+        Explorer
+      </v-tab>
+
+      <v-btn
+        :disabled="!project.network.nodes.hasSomeSpatialNodes"
+        height="100%"
+        rounded="0"
+        variant="plain"
+        width="32"
+        style="min-width: 32px"
+      >
+        <v-icon icon="mdi:mdi-menu-down" />
+
+        <v-menu activator="parent">
+          <v-list density="compact">
+            <v-list-item
+              @click="() => (projectStore.state.tab.activityView = 'abstract')"
+            >
+              <template #prepend>
+                <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
+              </template>
+              abstract
+            </v-list-item>
+            <v-list-item
+              @click="() => (projectStore.state.tab.activityView = 'spatial')"
+              prepend-icon="mdi:mdi-axis-arrow"
+            >
+              spatial
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+
+      <v-divider vertical />
+
+      <v-tab
+        :to="{
+          name: 'nestLabBook',
+          params: { projectId: projectStore.state.projectId },
+        }"
+        title="Lab Book"
+        size="small"
+        stacked
+        value="lab"
+      >
+        <v-icon icon="mdi:mdi-book-open-outline" />
+        Lab Book
       </v-tab>
     </template>
   </ProjectBar>
@@ -23,9 +83,11 @@
     <template #activityController>
       <ActivityChartController
         :graph="project.activityGraph.activityChartGraph"
+        v-if="projectStore.state.tab.activityView === 'abstract'"
       />
       <ActivityAnimationController
         :graph="project.activityGraph.activityAnimationGraph"
+        v-else-if="projectStore.state.tab.activityView === 'spatial'"
       />
     </template>
 
@@ -71,37 +133,4 @@ import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
 
 const project = computed(() => projectStore.state.project as NESTProject);
-
-const tabItems = [
-  {
-    icon: "network:network",
-    iconClass: "",
-    id: "networkEditor",
-    label: "Editor",
-    title: "NEST Network editor",
-    to: {
-      name: "NetworkEditor",
-    },
-  },
-  {
-    icon: "mdi:mdi-border-style",
-    iconClass: "mdi-flip-v",
-    id: "activityExplorer",
-    label: "Explorer",
-    title: "Activity explorer",
-    to: {
-      name: "ActivityExplorer",
-    },
-  },
-  {
-    icon: "mdi:mdi-book-open-outline",
-    iconClass: "",
-    id: "labBook",
-    label: "Lab book",
-    title: "Lab book",
-    to: {
-      name: "LabBook",
-    },
-  },
-];
 </script>

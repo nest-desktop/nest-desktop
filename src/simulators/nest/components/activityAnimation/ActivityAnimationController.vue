@@ -7,7 +7,7 @@
         >
           <v-btn-toggle @click.stop mandatory variant="text">
             <v-btn
-              :color="graph.config.frames.speed < -1 ? 'orange' : 'primary'"
+              :color="graph.state.frames.speed < -1 ? 'orange' : 'primary'"
               @click="graph.decrementFrameSpeed()"
               icon
               title="speed down"
@@ -15,7 +15,7 @@
               <v-icon class="mdi-rotate-180" icon="mdi:mdi-fast-forward" />
             </v-btn>
             <v-btn
-              :color="graph.config.frames.speed === -1 ? 'orange' : 'primary'"
+              :color="graph.state.frames.speed === -1 ? 'orange' : 'primary'"
               @click="graph.playBackwardFrameAnimation()"
               icon
               title="play backward"
@@ -28,7 +28,7 @@
               title="step backward"
             />
             <v-btn
-              :color="graph.config.frames.speed === 0 ? 'orange' : 'primary'"
+              :color="graph.state.frames.speed === 0 ? 'orange' : 'primary'"
               @click="graph.pauseFrameAnimation()"
               icon="mdi:mdi-pause"
               title="pause"
@@ -39,13 +39,13 @@
               title="step forward"
             />
             <v-btn
-              :color="graph.config.frames.speed === 1 ? 'orange' : 'primary'"
+              :color="graph.state.frames.speed === 1 ? 'orange' : 'primary'"
               @click="graph.playFrameAnimation()"
               icon="mdi:mdi-play"
               title="play forward"
             />
             <v-btn
-              :color="graph.config.frames.speed > 1 ? 'orange' : 'primary'"
+              :color="graph.state.frames.speed > 1 ? 'orange' : 'primary'"
               @click="graph.incrementFrameSpeed()"
               icon="mdi-fast-forward"
               title="speed up"
@@ -60,10 +60,10 @@
                 :disabled="graph.state.nSamples === 0"
                 :max="graph.state.nSamples"
                 :min="0"
-                :readonly="graph.config.frames.speed !== 0"
+                :readonly="graph.state.frames.speed !== 0"
                 unit="ms"
                 label="Current time"
-                v-model="graph.state.frameIdx"
+                v-model="graph.frameIdx"
               />
             </v-list-item>
 
@@ -73,7 +73,7 @@
                 :min="1"
                 label="Frame rate"
                 unit="fps"
-                v-model="graph.config.frames.rate"
+                v-model="graph.state.frames.rate"
               />
             </v-list-item>
 
@@ -82,7 +82,7 @@
                 :max="20"
                 :min="1"
                 label="Grid divisions"
-                v-model="graph.config.grid.divisions"
+                v-model="graph.state.grid.divisions"
               />
             </v-list-item>
           </v-list>

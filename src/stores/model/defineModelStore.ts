@@ -24,8 +24,10 @@ export function defineModelStore(
 
   return defineStore(args.simulator + "-model-view", () => {
     const state = reactive({
-      controllerOpen: false,
-      controllerView: "",
+      controller: {
+        open: false,
+        view: "",
+      },
       modelId: "",
       view: args.defaultView || "edit",
       width: 320,
@@ -62,10 +64,10 @@ export function defineModelStore(
      * @param item
      */
     const toggle = (item?: { id: string }): void => {
-      if (!state.controllerOpen || state.controllerView === item?.id) {
-        state.controllerOpen = !state.controllerOpen;
+      if (!state.controller.open || state.controller.view === item?.id) {
+        state.controller.open = !state.controller.open;
       }
-      state.controllerView = state.controllerOpen ? (item?.id as string) : "";
+      state.controller.view = state.controller.open ? (item?.id as string) : "";
     };
 
     return { model, init, save, state, toggle };

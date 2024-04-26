@@ -26,7 +26,7 @@ const projectBeforeEnter = (to: any) => {
   projectStore.loadProject(to.params.projectId);
 
   const path = to.path.split("/");
-  projectStore.state.view = path[path.length - 1] || "edit";
+  projectStore.state.tab.view = path[path.length - 1] || "edit";
 };
 
 const projectNew = () => {
@@ -39,7 +39,7 @@ const projectNew = () => {
       "/norse/project/" +
       projectStore.state.projectId +
       "/" +
-      projectStore.state.view,
+      projectStore.state.tab.view,
   };
 };
 
@@ -56,7 +56,7 @@ const projectRedirect = (to: any) => {
       "/norse/project/" +
       projectStore.state.projectId +
       "/" +
-      projectStore.state.view,
+      projectStore.state.tab.view,
   };
 };
 

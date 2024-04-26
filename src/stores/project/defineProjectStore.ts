@@ -25,7 +25,7 @@ export function defineProjectStore(
     simulator: "base",
     useProjectDBStore,
   }
-) {
+): Store<any, any> {
   const logger = mainLogger.getSubLogger({
     minLevel: args.loggerMinLevel || 3,
     name: args.simulator + " project store",
@@ -33,23 +33,22 @@ export function defineProjectStore(
 
   return defineStore(args.simulator + "-project", () => {
     const state = reactive({
-      bottomNavHeight: 200,
-      bottomOpen: false,
+      bottomNav: {
+        height: 200,
+        active: false,
+      },
       code: "print('hello world!')",
-      controllerItems: [
-        { id: "network", icon: "nest:network", title: "Edit network" },
-        { id: "kernel", icon: "mdi:mdi-engine-outline", title: "Edit kernel" },
-        { id: "raw", icon: "mdi:mdi-code-json" },
-        { id: "code", icon: "mdi:mdi-xml" },
-        { id: "activity", icon: "mdi:mdi-border-style" },
-        { id: "stats", icon: "mdi:mdi-table-large" },
-      ],
-      controllerOpen: false,
-      controllerView: "",
-      controllerWidth: 480,
+      controller: {
+        open: false,
+        view: "",
+        width: 480,
+      },
       project: new args.Project(),
       projectId: "",
-      view: "edit",
+      tab: {
+        activityView: "abstract",
+        view: "edit",
+      },
     });
 
     const projectDBStore = args.useProjectDBStore();
@@ -57,7 +56,7 @@ export function defineProjectStore(
     /**
      * Initialize project store.
      */
-    const init = () => {
+    const init = (): void => {
       logger.trace("init");
 
       if (projectDBStore.state.projects.length > 0) {
@@ -79,7 +78,7 @@ export function defineProjectStore(
      * Load current project from store.
      * @param projectId project ID
      */
-    const loadProject = (projectId: string = "") => {
+    const loadProject = (projectId: string = ""): void => {
       logger.trace("load project:", truncate(projectId || ""));
 
       state.projectId = projectId;
@@ -95,7 +94,7 @@ export function defineProjectStore(
       const projectViewStore = useProjectViewStore();
       if (
         projectViewStore.state.simulateAfterLoad.value &&
-        state.view === "explore"
+        state.tab.view === "explore"
       ) {
         startSimulation();
       }
@@ -105,7 +104,7 @@ export function defineProjectStore(
      * Reload the project in the list.
      * @param project project object
      */
-    const reloadProject = (project: TProject) => {
+    const reloadProject = (project: TProject): void => {
       logger.trace("reload project:", truncate(project.id));
 
       projectDBStore.unloadProject(project.id);
@@ -115,7 +114,7 @@ export function defineProjectStore(
     /**
      * Save current project.
      */
-    const saveCurrentProject = () => {
+    const saveCurrentProject = (): void => {
       logger.trace("save project:", truncate(state.projectId || ""));
 
       projectDBStore.saveProject(state.projectId);
@@ -124,7 +123,7 @@ export function defineProjectStore(
     /**
      * Start simulation of the current project.
      */
-    const startSimulation = () => {
+    const startSimulation = (): void => {
       logger.trace("start simulation:", truncate(state.projectId || ""));
 
       router
@@ -142,13 +141,13 @@ export function defineProjectStore(
      * Toggle navigation drawer.
      * @param item
      */
-    const toggleController = (item: { id: string }) => {
+    const toggleController = (item: { id: string }): void => {
       logger.trace("toggle controller:", item.id);
 
-      if (!state.controllerOpen || state.controllerView === item.id) {
-        state.controllerOpen = !state.controllerOpen;
+      if (!state.controller.open || state.controller.view === item.id) {
+        state.controller.open = !state.controller.open;
       }
-      state.controllerView = state.controllerOpen ? item.id : "";
+      state.controller.view = state.controller.open ? item.id : "";
     };
 
     return {

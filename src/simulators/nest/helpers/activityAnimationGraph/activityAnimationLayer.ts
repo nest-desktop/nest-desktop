@@ -1,25 +1,16 @@
 // activityAnimationLayer.ts
 
 import { GridHelper, Group, Object3DEventMap } from "three";
+import { UnwrapRef, reactive } from "vue";
 
-import { Activity, IEventProps } from "../../../../helpers/activity/activity";
-import { NodeRecord } from "../../../../helpers/node/nodeRecord";
-import { range } from "../../../../helpers/common/array";
+import { Activity, IEventProps } from "@/helpers/activity/activity";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
+import { range } from "@/helpers/common/array";
 
 import { ActivityAnimationGraph, IPosition } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
 import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/boxGeometryLayerModel";
 import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/sphereGeometryLayerModel";
-
-export interface IActivityAnimationLayerConfig {
-  object: {
-    flatHeight: boolean;
-    flyingBoxes: boolean;
-    opacity: number;
-    size: number;
-  };
-  trail: { fading: boolean; length: number; mode: string };
-}
 
 export interface IActivityAnimationLayerFrame {
   [key: string]: number[];
@@ -31,33 +22,26 @@ interface IActivityAnimationLayerModel {
   id: string;
   label: string;
 }
-
-interface IActivityAnimationLayerState {
+export interface IActivityAnimationLayerState {
   layout: { extent: number[][] };
   modelSelected?: IActivityAnimationLayerModel;
   ndim: number;
+  object: {
+    flatHeight: boolean;
+    flyingBoxes: boolean;
+    opacity: number;
+    size: number;
+  };
   positions: IPosition[];
   record?: NodeRecord;
   records: NodeRecord[];
   reset: boolean;
+  trail: { fading: boolean; length: number; mode: string };
   visible: boolean;
 }
 
 export class ActivityAnimationLayer {
   private _activity: Activity;
-  private _config: IActivityAnimationLayerConfig = {
-    object: {
-      flatHeight: false,
-      flyingBoxes: false,
-      opacity: 1,
-      size: 4,
-    },
-    trail: {
-      fading: false,
-      length: 0,
-      mode: "off",
-    },
-  };
   private _frames: IActivityAnimationLayerFrame[] = [];
   private _graph: ActivityAnimationGraph;
   private _graphGroup?: Group<Object3DEventMap>;
@@ -75,7 +59,7 @@ export class ActivityAnimationLayer {
     },
   ];
   private _offset: IPosition = { x: 0, y: 0, z: 0 };
-  private _state: IActivityAnimationLayerState = {
+  private _state: UnwrapRef<IActivityAnimationLayerState> = reactive({
     layout: {
       extent: [
         [-1, 0],
@@ -85,12 +69,23 @@ export class ActivityAnimationLayer {
     },
     modelSelected: undefined,
     ndim: -1,
-    positions: [],
+    object: {
+      flatHeight: false,
+      flyingBoxes: false,
+      opacity: 1,
+      size: 4,
+    },
+    positions: [] as IPosition[],
     record: undefined,
-    records: [],
+    records: [] as NodeRecord[],
     reset: false,
+    trail: {
+      fading: false,
+      length: 0,
+      mode: "off",
+    },
     visible: true,
-  };
+  });
 
   constructor(graph: ActivityAnimationGraph, activity: Activity) {
     this._graph = graph;
@@ -102,11 +97,7 @@ export class ActivityAnimationLayer {
   }
 
   get bins(): number {
-    return this._graph.config.grid.divisions;
-  }
-
-  get config(): IActivityAnimationLayerConfig {
-    return this._config;
+    return this._graph.state.grid.divisions;
   }
 
   get frame(): IActivityAnimationLayerFrame {
@@ -162,7 +153,7 @@ export class ActivityAnimationLayer {
     return positions;
   }
 
-  get state(): IActivityAnimationLayerState {
+  get state(): UnwrapRef<IActivityAnimationLayerState> {
     return this._state;
   }
 
@@ -170,7 +161,6 @@ export class ActivityAnimationLayer {
    * Add empty frames.
    */
   addEmptyFrames(): void {
-    // Add empty frames if not existed.
     this._frames = [];
     for (let i = 0; i < this._graph.state.nSamples; i++) {
       this._frames.push({ senders: [] });
@@ -234,14 +224,16 @@ export class ActivityAnimationLayer {
   initAnalogRecords(): void {
     if (!this._activity.recorder.model.isAnalogRecorder) return;
 
-    this._state.records = [];
+    this._state.records = [] as NodeRecord[];
     if (this._activity.recorder.records == null) return;
+
     this._activity.recorder.records.forEach((record: NodeRecord) => {
-      this._state.records.push(record);
+      this._state.records.push(record as NodeRecord);
     });
+
     if (this._state.record == null) {
       const record = this._state.records.find(
-        (record: NodeRecord) => record.id === "V_m"
+        (record: { id: string }) => record.id === "V_m"
       );
       this._state.record = record != null ? record : this._state.records[0];
     }
@@ -311,7 +303,8 @@ export class ActivityAnimationLayer {
 
     // Update records of analog signals.
     if (this._activity.recorder.model.isAnalogRecorder) {
-      this._state.records.forEach((record: NodeRecord) => record.update());
+      const records = this._state.records as NodeRecord[];
+      records.forEach((record: NodeRecord) => record.update());
     }
 
     // Collect senders based on events.
@@ -327,7 +320,7 @@ export class ActivityAnimationLayer {
     });
 
     // Push values in data frames.
-    const sampleRate: number = this._graph.config.frames.sampleRate;
+    const sampleRate: number = this._graph.state.frames.sampleRate;
     events.times.forEach((time: number, idx: number) => {
       const frameIdx: number = Math.floor(time * sampleRate);
       const frame: IActivityAnimationLayerFrame = this._frames[frameIdx - 1];

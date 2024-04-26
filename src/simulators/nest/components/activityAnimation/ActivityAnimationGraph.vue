@@ -8,11 +8,9 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
 
 const props = defineProps<{ graph: ActivityAnimationGraph }>();
-
 const activityAnimationGraph = ref(null);
 
 onMounted(() => props.graph.initScene(activityAnimationGraph.value));
-
 onBeforeUnmount(() => props.graph.destroyScene());
 </script>
 

@@ -8,7 +8,7 @@
   >
     <v-tabs
       :mandatory="false"
-      :model-value="projectStore.state.controllerView"
+      :model-value="projectStore.state.controller.view"
       color="primary"
       direction="vertical"
       stacked
@@ -29,8 +29,8 @@
         "
       >
         <v-icon
-          :icon="item.icon"
-          :class="item.iconClass"
+          :icon="item.icon.icon"
+          :class="item.icon.class"
           class="ma-1"
           size="large"
         />
@@ -42,7 +42,7 @@
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
           :icon="
-            projectStore.state.bottomOpen
+            projectStore.state.bottomNav.active
               ? 'mdi:mdi-arrow-expand-down'
               : 'mdi:mdi-arrow-expand-up'
           "
@@ -55,9 +55,9 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="projectStore.state.controllerOpen"
+    :model-value="projectStore.state.controller.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    :width="projectStore.state.controllerWidth"
+    :width="projectStore.state.controller.width"
     @transitionend="dispatchWindowResize()"
     class="d-print-none"
     location="right"
@@ -66,7 +66,7 @@
     <div @mousedown="resizeRightNav()" class="resize-handle left" />
 
     <div :key="projectStore.state.projectId">
-      <template v-if="projectStore.state.controllerView === 'network'">
+      <template v-if="projectStore.state.controller.view === 'network'">
         <slot name="network">
           <NetworkParamEditor :network="project.network">
             <template #nodes>
@@ -76,7 +76,7 @@
         </slot>
       </template>
 
-      <template v-else-if="projectStore.state.controllerView === 'kernel'">
+      <template v-else-if="projectStore.state.controller.view === 'kernel'">
         <slot name="simulationKernel">
           <SimulationKernelEditor :simulation="project.simulation" />
         </slot>
@@ -85,7 +85,7 @@
       <template
         v-else-if="
           appSessionStore.state.devMode &&
-          projectStore.state.controllerView === 'raw'
+          projectStore.state.controller.view === 'raw'
         "
       >
         <codemirror
@@ -96,13 +96,13 @@
         />
       </template>
 
-      <template v-else-if="projectStore.state.controllerView === 'code'">
+      <template v-else-if="projectStore.state.controller.view === 'code'">
         <slot name="simulationCodeEditor">
           <SimulationCodeEditor :simulation="project.simulation" />
         </slot>
       </template>
 
-      <template v-else-if="projectStore.state.controllerView === 'activity'">
+      <template v-else-if="projectStore.state.controller.view === 'activity'">
         <slot name="activityController">
           <ActivityChartController
             :graph="project.activityGraph.activityChartGraph"
@@ -110,15 +110,15 @@
         </slot>
       </template>
 
-      <template v-else-if="projectStore.state.controllerView === 'stats'">
+      <template v-else-if="projectStore.state.controller.view === 'stats'">
         <ActivityStats :activities="project.activities" />
       </template>
     </div>
   </v-navigation-drawer>
 
   <v-bottom-navigation
-    :active="projectStore.state.bottomOpen"
-    :height="projectStore.state.bottomNavHeight"
+    :active="projectStore.state.bottomNav.active"
+    :height="projectStore.state.bottomNav.height"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     @transitionend="dispatchWindowResize()"
     location="bottom"
@@ -164,28 +164,44 @@ const projectJSON = computed(() =>
 const controllerItems = [
   {
     id: "network",
-    icon: "network:network",
-    iconClass: "",
+    icon: {
+      icon: "network:network",
+      class: "",
+    },
     title: "Edit network",
   },
   {
     id: "kernel",
-    icon: "mdi:mdi-engine-outline",
-    iconClass: "",
+    icon: {
+      icon: "mdi:mdi-engine-outline",
+      class: "",
+    },
     title: "Edit kernel",
   },
-  { id: "raw", icon: "mdi:mdi-code-json", iconClass: "", show: "dev" },
-  { id: "code", icon: "mdi:mdi-xml", iconClass: "", title: "Edit code" },
+  {
+    id: "raw",
+    icon: {
+      icon: "mdi:mdi-code-json",
+      class: "",
+    },
+    show: "dev",
+    title: "View raw data",
+  },
+  { id: "code", icon: { icon: "mdi:mdi-xml", class: "" }, title: "Edit code" },
   {
     id: "activity",
-    icon: "mdi:mdi-border-style",
-    iconClass: "mdi-flip-v",
+    icon: {
+      icon: "mdi:mdi-border-style",
+      class: "mdi-flip-v",
+    },
     title: "Configure activity",
   },
   {
     id: "stats",
-    icon: "mdi:mdi-table-large",
-    iconClass: "",
+    icon: {
+      icon: "mdi:mdi-table-large",
+      class: "",
+    },
     title: "View statistics",
   },
 ];
@@ -206,7 +222,7 @@ const dispatchWindowResize = () => {
  * @param e MouseEvent from which the y position is taken
  */
 const handleBottomNavMouseMove = (e: MouseEvent) => {
-  projectStore.value.state.bottomNavHeight = window.innerHeight - e.clientY;
+  projectStore.value.state.bottomNav.height = window.innerHeight - e.clientY;
 };
 
 /**
@@ -224,7 +240,8 @@ const handleBottomNavMouseUp = () => {
  * @param e MouseEvent from which the x position is taken
  */
 const handleRightNavMouseMove = (e: MouseEvent) => {
-  projectStore.value.state.controllerWidth = window.innerWidth - e.clientX - 64;
+  projectStore.value.state.controller.width =
+    window.innerWidth - e.clientX - 64;
 };
 
 /**
@@ -259,7 +276,8 @@ const resizeRightNav = () => {
  * Toggle bottom navigation.
  */
 const toggleBottomNav = () => {
-  projectStore.value.state.bottomOpen = !projectStore.value.state.bottomOpen;
+  projectStore.value.state.bottomNav.active =
+    !projectStore.value.state.bottomNav.active;
 };
 </script>
 

@@ -6,6 +6,7 @@ import { BaseNode, INodeProps } from "./node";
 import { BaseObj } from "../common/base";
 import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
+import { NESTActivityGraph } from "@/simulators/nest/helpers/activity/activityGraph";
 
 const _nodeTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
@@ -356,8 +357,15 @@ export class BaseNodes extends BaseObj {
       recorder.updateRecordsColor();
     });
 
-    if (this.network.project.activityGraph.activityChartGraph) {
-      this.network.project.activityGraph.activityChartGraph.updateRecordsColor();
+    const activityGraph = this.network.project
+      .activityGraph as NESTActivityGraph;
+
+    if (activityGraph.activityChartGraph) {
+      activityGraph.activityChartGraph.updateRecordsColor();
+    }
+
+    if (activityGraph.activityAnimationGraph) {
+      activityGraph.activityAnimationGraph.renderFrameLayers();
     }
   }
 
