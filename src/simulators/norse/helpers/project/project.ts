@@ -53,7 +53,7 @@ export class NorseProject extends BaseProject {
     this.logger.trace("changes");
     this.activities.checkRecorders();
 
-    this.network.nodes.all.forEach((node: NorseNode) => node.generateCode());
+    this.network.nodes.nodes.forEach((node: NorseNode) => node.generateCode());
     this._simulation.code.generate();
 
     this.networkRevision.commit();

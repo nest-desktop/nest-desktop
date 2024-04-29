@@ -38,12 +38,6 @@ export class NorseNode extends BaseNode {
 
   /**
    * Set model.
-   *
-   * @remarks
-   * It initializes parameters and activity components.
-   * It triggers node changes.
-   *
-   * @param model - node model
    */
   override set model(model: NorseModel) {
     this._model = model;
@@ -59,7 +53,7 @@ export class NorseNode extends BaseNode {
 
   /**
    * Clone this node component.
-   * @return cloned node component
+   * @return norse node object
    */
   override clone(): NorseNode {
     return new NorseNode(this.nodes, { ...this.toJSON() });
@@ -80,17 +74,10 @@ export class NorseNode extends BaseNode {
   /**
    * Initialize node.
    */
-  override init(nodeProps?: INodeProps): void {
+  override init(): void {
     this.logger.trace("init");
 
-    this.addParameters(nodeProps?.params);
-
-    if (this.model.isRecorder) {
-      this.createActivity(nodeProps?.activity);
-    }
-
-    this.updateHash();
-
+    this.update();
     nextTick(() => this.generateCode());
   }
 }

@@ -1,6 +1,8 @@
 // nodes.ts
 
 import { BaseNodes } from "@/helpers/node/nodes";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNode } from "@/types/nodeTypes";
 
 import { NorseNetwork } from "../network/network";
 import { NorseNode, INorseNodeProps } from "./node";
@@ -14,7 +16,9 @@ export class NorseNodes extends BaseNodes {
     return NorseNode;
   }
 
-  override get all(): NorseNode[] {
-    return this._nodes as NorseNode[];
+  override get nodes(): NorseNode[] {
+    return this._nodes.filter(
+      (node: TNode | NodeGroup) => node.constructor.name !== "NodeGroup"
+    ) as NorseNode[];
   }
 }
