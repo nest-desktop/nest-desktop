@@ -3,21 +3,21 @@
     <v-row no-gutters>
       <RangeSlider
         :model-value="(param.value as number[])"
-        :thumb-color="param.synapse.connection.source.view.color"
+        :thumb-color="param.synapse.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-if="param.options.component === 'rangeSlider'"
       />
       <TickSlider
         :model-value="(param.value as number)"
-        :thumb-color="param.synapse.connection.source.view.color"
+        :thumb-color="param.synapse.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'tickSlider'"
       />
       <ValueSlider
         :model-value="(param.value as number)"
-        :thumb-color="param.synapse.connection.source.view.color"
+        :thumb-color="param.synapse.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'valueSlider'"

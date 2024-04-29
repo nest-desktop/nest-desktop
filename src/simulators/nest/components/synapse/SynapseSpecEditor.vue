@@ -31,7 +31,7 @@
         <v-card>
           <v-card-text>
             <v-checkbox
-              :color="synapse.connection.source.view.color"
+              :color="synapse.connection.sourceNode.view.color"
               :key="index"
               :label="param.label"
               :value="param.id"

@@ -92,7 +92,8 @@ export class NESTNode extends BaseNode {
   override get connectionsNeuronTargets(): NESTConnection[] {
     return this.network.connections.all.filter(
       (connection: NESTConnection) =>
-        connection.sourceIdx === this.idx && connection.target.model.isNeuron
+        connection.sourceIdx === this.idx &&
+        connection.targetNode.model.isNeuron
     );
   }
 
@@ -117,12 +118,6 @@ export class NESTNode extends BaseNode {
 
   /**
    * Set model.
-   *
-   * @remarks
-   * It initializes parameters and activity components.
-   * It triggers node changes.
-   *
-   * @param model - node model
    */
   override set model(model: NESTModel) {
     this._model = model;
@@ -180,7 +175,7 @@ export class NESTNode extends BaseNode {
   override get targetNodes(): NESTNode[] {
     return this.network.connections.all
       .filter((connection: NESTConnection) => connection.sourceIdx === this.idx)
-      .map((connection: NESTConnection) => connection.target);
+      .map((connection: NESTConnection) => connection.targetNode);
   }
 
   /**
@@ -227,7 +222,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Clone this node component.
-   * @return cloned node component
+   * @return nest node object
    */
   override clone(): NESTNode {
     return new NESTNode(this.nodes, { ...this.toJSON() });

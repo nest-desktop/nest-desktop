@@ -276,7 +276,7 @@ const items = [
         newNode.view.position.x += 50;
         newNode.view.color = undefined;
       }
-      node.value.nodes.add(newNode);
+      node.value.nodes.addNode(newNode);
       node.value.changes();
       closeMenu();
     },

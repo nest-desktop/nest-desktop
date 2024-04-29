@@ -145,7 +145,7 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   get receptorIndices(): number[] {
-    return this.connection.target.receptors?.map((_, idx: number) => idx);
+    return this.connection.targetNode.receptors?.map((_, idx: number) => idx);
   }
 
   get params(): { [key: string]: NESTSynapseParameter } {
@@ -163,8 +163,8 @@ export class NESTSynapse extends BaseSynapse {
 
   get showReceptorType(): boolean {
     return (
-      !this.connection.source.model.isRecorder &&
-      this.connection.target.receptors.length > 0
+      !this.connection.sourceNode.model.isRecorder &&
+      this.connection.targetNode.receptors.length > 0
     );
   }
 

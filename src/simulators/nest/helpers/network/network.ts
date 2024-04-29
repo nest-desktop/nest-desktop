@@ -113,7 +113,7 @@ export class NESTNetwork extends BaseNetwork {
       target: targetIdx,
     });
 
-    const source = this.nodes.all[sourceIdx];
+    const source = this.nodes.nodes[sourceIdx];
     if (source.view.state.synWeights) {
       connection.synapse.weightLabel = source.view.state.synWeights;
     }

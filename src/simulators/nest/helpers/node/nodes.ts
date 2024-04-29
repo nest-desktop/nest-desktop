@@ -4,6 +4,9 @@ import { BaseNodes } from "@/helpers/node/nodes";
 
 import { NESTNetwork } from "../network/network";
 import { INESTNodeProps, NESTNode } from "./node";
+import { NESTActivityGraph } from "../activity/activityGraph";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNode } from "@/types/nodeTypes";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
@@ -12,10 +15,6 @@ export class NESTNodes extends BaseNodes {
 
   override get Node() {
     return NESTNode;
-  }
-
-  override get all(): NESTNode[] {
-    return this.nodes;
   }
 
   /**
@@ -55,7 +54,9 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get nodes(): NESTNode[] {
-    return this._nodes as NESTNode[];
+    return this._nodes.filter(
+      (node: TNode | NodeGroup) => node.constructor.name !== "NodeGroup"
+    ) as NESTNode[];
   }
 
   override get recorders(): NESTNode[] {
@@ -89,5 +90,29 @@ export class NESTNodes extends BaseNodes {
    */
   cleanWeightRecorders(): void {
     this.weightRecorders.forEach((node: NESTNode) => node.clean());
+  }
+
+  /**
+   * Update records color of recorders.
+   *
+   * @remarks
+   * It updates colors in activity chart graph and in activity animation graph.
+   */
+  override updateRecordsColor(): void {
+    this.logger.trace("update records color");
+    this.recorders.forEach((recorder: NESTNode) => {
+      recorder.updateRecordsColor();
+    });
+
+    const activityGraph = this.network.project
+      .activityGraph as NESTActivityGraph;
+
+    if (activityGraph.activityChartGraph) {
+      activityGraph.activityChartGraph.updateRecordsColor();
+    }
+
+    if (activityGraph.activityAnimationGraph) {
+      activityGraph.activityAnimationGraph.renderFrameLayers();
+    }
   }
 }

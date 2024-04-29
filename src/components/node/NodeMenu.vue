@@ -190,7 +190,7 @@ const items = [
         newNodeProps.view.position.x += 50;
         newNodeProps.view.color = undefined;
       }
-      node.value.nodes.add(newNodeProps);
+      node.value.nodes.addNode(newNodeProps);
       node.value.changes();
       closeMenu();
     },

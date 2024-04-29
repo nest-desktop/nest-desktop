@@ -8,7 +8,7 @@
       <v-list-item class="param pl-0 pr-1">
         <ValueSlider
           :model-value="(synapse.weight as number)"
-          :thumbColor="synapse.connection.source.view.color"
+          :thumbColor="synapse.connection.sourceNode.view.color"
           @update:model-value="update"
           v-bind="weightOptions"
         />

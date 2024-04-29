@@ -46,12 +46,12 @@ export class ConnectionGraph {
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     if (connection.hasOwnProperty("source")) {
-      const sourceNodePosition = connection.source.view.state.position;
+      const sourceNodePosition = connection.sourceNode.view.state.position;
       sourceNodePosition.x += pos.x;
       sourceNodePosition.y += pos.y;
     }
 
-    const targetNodePosition = connection.target.view.state.position;
+    const targetNodePosition = connection.targetNode.view.state.position;
     targetNodePosition.x += pos.x;
     targetNodePosition.y += pos.y;
 
@@ -112,7 +112,7 @@ export class ConnectionGraph {
       .on("click", () => {
         const network = this._networkGraph.network;
         const workspace = this._networkGraph.workspace;
-        connection.source.state.focus();
+        connection.sourceNode.state.focus();
 
         if (network.nodes.state.selectedNode && workspace.state.dragLine) {
           // Set cursor position of the focused connection.
@@ -165,8 +165,8 @@ export class ConnectionGraph {
         .attr(
           "d",
           drawPathNode(
-            connection.source.view.state.position,
-            connection.target.view.state.position,
+            connection.sourceNode.view.state.position,
+            connection.targetNode.view.state.position,
             connection.view.connectionGraphOptions
           )
         );
@@ -232,7 +232,7 @@ export class ConnectionGraph {
       .enter()
       .append("g")
       .attr("class", "connection")
-      .attr("color", (c: TConnection) => c.source.view.color)
+      .attr("color", (c: TConnection) => c.sourceNode.view.color)
       .attr("idx", (c: TConnection) => c.idx)
       .attr("hash", (c: TConnection) => c.hash)
       .style("opacity", 0)

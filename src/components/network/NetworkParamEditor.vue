@@ -23,7 +23,7 @@
 
     <slot name="nodes">
       <div :key="network.nodes.length">
-        <div :key="index" v-for="(node, index) in network.nodes.all">
+        <div :key="index" v-for="(node, index) in network.nodes.nodes">
           <NodeEditor :node v-if="node.state.show" />
         </div>
       </div>

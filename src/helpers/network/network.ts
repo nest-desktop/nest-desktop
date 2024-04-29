@@ -13,6 +13,7 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 import { TProject } from "@/types/projectTypes";
+import { NodeGroup } from "../node/nodeGroup";
 
 export interface INetworkProps {
   nodes?: INodeProps[];
@@ -171,7 +172,7 @@ export class BaseNetwork extends BaseObj {
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
 
-    this.nodes?.add({
+    this.nodes?.addNode({
       model: model || this._defaultModels[view?.elementType || "neuron"],
       view,
     });
@@ -268,7 +269,7 @@ export class BaseNetwork extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      nodes: this.nodes.all.map((node: TNode) => node.hash),
+      nodes: this.nodes.all.map((node: TNode | NodeGroup) => node.hash),
       connections: this.connections.all.map(
         (connection: TConnection) => connection.hash
       ),
@@ -280,6 +281,6 @@ export class BaseNetwork extends BaseObj {
    */
   updateStyle(): void {
     this.logger.trace("update node style");
-    this._nodes.all.forEach((node: TNode) => node.view.updateStyle());
+    this._nodes.nodes.forEach((node: TNode) => node.view.updateStyle());
   }
 }

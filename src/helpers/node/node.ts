@@ -17,6 +17,7 @@ import { TNodes } from "@/types/nodesTypes";
 import { TSimulation } from "@/types/simulationTypes";
 import { StateTree, Store } from "pinia";
 import { onlyUnique } from "../common/array";
+import { NodeGroup } from "./nodeGroup";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -29,8 +30,6 @@ export interface INodeProps {
 }
 
 export class BaseNode extends BaseObj {
-  private readonly _name = "Node";
-
   private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
     undefined;
   private _annotations: string[] = [];
@@ -39,7 +38,7 @@ export class BaseNode extends BaseObj {
   private _params: { [key: string]: NodeParameter } = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
-  private _records: NodeRecord[] = []; // only for multimeter
+  private _records: NodeRecord[] = [];
   private _size: number;
   private _state: NodeState;
   private _view: NodeView;
@@ -49,7 +48,7 @@ export class BaseNode extends BaseObj {
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
+    super({ config: { name: "Node" }, logger: { settings: { minLevel: 1 } } });
 
     this._nodes = nodes;
     this._idx = this.nodes.all.length;
@@ -69,6 +68,8 @@ export class BaseNode extends BaseObj {
     if (this.model.isRecorder) {
       this.createActivity(nodeProps?.activity);
     }
+
+    console.log(this);
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity | undefined {
@@ -103,22 +104,25 @@ export class BaseNode extends BaseObj {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
         (connection.sourceIdx === this._idx &&
-          connection.target.model.isNeuron) ||
-        (connection.targetIdx === this._idx && connection.source.model.isNeuron)
+          connection.targetNode.model.isNeuron) ||
+        (connection.targetIdx === this._idx &&
+          connection.sourceNode.model.isNeuron)
     );
   }
 
   get connectionsNeuronSources(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        connection.targetIdx === this._idx && connection.source.model.isNeuron
+        connection.targetIdx === this._idx &&
+        connection.sourceNode.model.isNeuron
     );
   }
 
   get connectionsNeuronTargets(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        connection.sourceIdx === this._idx && connection.target.model.isNeuron
+        connection.sourceIdx === this._idx &&
+        connection.targetNode.model.isNeuron
     );
   }
 
@@ -126,7 +130,7 @@ export class BaseNode extends BaseObj {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
         connection.targetIdx === this._idx &&
-        connection.source.model.isStimulator
+        connection.sourceNode.model.isStimulator
     );
   }
 
@@ -223,10 +227,6 @@ export class BaseNode extends BaseObj {
     return this._size;
   }
 
-  get name(): string {
-    return this._name;
-  }
-
   get network(): TNetwork {
     return this.nodes.network;
   }
@@ -315,7 +315,7 @@ export class BaseNode extends BaseObj {
   get sourceNodes(): TNode[] {
     return this.network.connections.all
       .filter((connection: TConnection) => connection.targetIdx === this._idx)
-      .map((connection: TConnection) => connection.source);
+      .map((connection: TConnection) => connection.sourceNode);
   }
 
   get state(): NodeState {
@@ -325,7 +325,7 @@ export class BaseNode extends BaseObj {
   get targetNodes(): TNode[] {
     return this.network.connections.all
       .filter((connection: TConnection) => connection.sourceIdx === this._idx)
-      .map((connection: TConnection) => connection.target);
+      .map((connection: TConnection) => connection.targetNode);
   }
 
   get view(): NodeView {
@@ -334,7 +334,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Add annotation to the list.
-   * @param text - string
+   * @param text string
    */
   addAnnotation(text: string): void {
     if (this._annotations.indexOf(text) !== -1) return;
@@ -344,10 +344,17 @@ export class BaseNode extends BaseObj {
 
   /**
    * Add parameter component.
-   * @param paramProps - parameter props
+   * @param paramProps parameter props
+   * @param visible boolean
    */
-  addParameter(paramProps: INodeParamProps): void {
+  addParameter(paramProps: INodeParamProps, visible: boolean = false): void {
+    console.log(paramProps, visible);
+
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
+
+    if (visible) {
+      this._paramsVisible.push(paramProps.id);
+    }
   }
 
   /**
@@ -356,22 +363,22 @@ export class BaseNode extends BaseObj {
    */
   addParameters(paramsProps?: INodeParamProps[]): void {
     this.logger.trace("add parameters");
-    this._paramsVisible = [];
-    this._params = {};
+
+    this.emptyParams();
     if (this.model) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
+      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
           const nodeParamProps = paramsProps.find(
             (paramProps: INodeParamProps) => paramProps.id === modelParam.id
           );
           if (nodeParamProps) {
-            this.addParameter({
-              ...nodeParamProps,
-              ...modelParam,
-            });
-            if (nodeParamProps.visible !== false) {
-              this._paramsVisible.push(nodeParamProps.id);
-            }
+            this.addParameter(
+              {
+                ...nodeParamProps,
+                ...modelParam,
+              },
+              true
+            );
           } else {
             this.addParameter(modelParam);
           }
@@ -380,7 +387,9 @@ export class BaseNode extends BaseObj {
         }
       });
     } else if (paramsProps) {
-      paramsProps.forEach((param: INodeParamProps) => this.addParameter(param));
+      paramsProps.forEach((param: INodeParamProps) =>
+        this.addParameter(param, true)
+      );
     }
   }
 
@@ -401,7 +410,7 @@ export class BaseNode extends BaseObj {
    * Clean node component.
    */
   clean(): void {
-    const nodes = this.nodes.all as TNode[];
+    const nodes = this.nodes.all as (TNode | NodeGroup)[];
     this._idx = nodes.indexOf(this);
     this.view.clean();
   }
@@ -416,7 +425,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Create activity for the recorder.
-   * @param activityProps
+   * @param activityProps activity props
    */
   createActivity(activityProps?: IActivityProps): void {
     this.logger.trace("init activity");
@@ -445,13 +454,12 @@ export class BaseNode extends BaseObj {
   getModel(modelId: string): TModel {
     this.logger.trace("get model:", modelId);
     const model = this.modelDBStore.getModel(modelId);
-    console.log(model);
     return model;
   }
 
   /**
    * Get parameter component.
-   * @param paramId - parameter ID
+   * @param paramId parameter ID
    * @return parameter component
    */
   getParameter(paramId: string): NodeParameter {
@@ -460,7 +468,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Check if node has parameter component.
-   * @param paramId - parameter ID
+   * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
     return Object.keys(this._params).some(
@@ -470,9 +478,10 @@ export class BaseNode extends BaseObj {
 
   /**
    * Check if node has params.
+   * @param nodeProps node props
    */
-  hasParameters(node: INodeProps): boolean {
-    return "params" in node;
+  hasParameters(nodeProps: INodeProps): boolean {
+    return "params" in nodeProps;
   }
 
   /**
@@ -488,7 +497,6 @@ export class BaseNode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.reset();
     this.update();
   }
 
@@ -517,7 +525,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Remove annotation from the list.
-   * @param text - string
+   * @param text string
    */
   removeAnnotation(text: string): void {
     if (this._annotations.indexOf(text) === -1) return;
@@ -527,6 +535,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Remove record.
+   * @param recordId string
    */
   removeRecord(recordId: string): void {
     const recordIds = this._records.map((record: NodeRecord) => record.id);
@@ -540,7 +549,7 @@ export class BaseNode extends BaseObj {
    */
   reset(): void {
     this.logger.trace("reset");
-    this.resetParams();
+    // this.resetParams();
   }
 
   /**

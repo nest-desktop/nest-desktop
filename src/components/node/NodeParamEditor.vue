@@ -9,21 +9,21 @@
       />
       <RangeSlider
         :model-value="(param.value as number[])"
-        :thumbColor="param.node.view.color"
+        :thumb-color="param.node.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'rangeSlider'"
       />
       <TickSlider
         :model-value="(param.value as number)"
-        :thumbColor="param.node.view.color"
+        :thumb-color="param.node.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'tickSlider'"
       />
       <ValueSlider
         :model-value="(param.value as number)"
-        :thumbColor="param.node.view.color"
+        :thumb-color="param.node.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'valueSlider'"

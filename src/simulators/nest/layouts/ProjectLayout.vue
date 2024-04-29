@@ -107,7 +107,7 @@
 
     <template #nodes>
       <div :key="project.network.nodes.length">
-        <div :key="index" v-for="(node, index) in project.network.nodes.all">
+        <div :key="index" v-for="(node, index) in project.network.nodes.nodes">
           <NodeEditor
             :node="(node as NESTNode)"
             @mouseenter="node.state.focus()"

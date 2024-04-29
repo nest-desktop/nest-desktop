@@ -34,10 +34,10 @@ export class Config {
       return false;
     }
     const appVersion: string[] = process.env.APP_VERSION.split(".");
-    const configVersion: string[] = storedData.version.split(".");
-    return (
-      appVersion[0] === configVersion[0] && appVersion[1] === configVersion[1]
-    );
+    const configVersion: string[] = storedData.version?.split(".");
+    return configVersion
+      ? appVersion[0] === configVersion[0] && appVersion[1] === configVersion[1]
+      : false;
   }
 
   get localStorage(): any {

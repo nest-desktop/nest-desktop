@@ -2,6 +2,7 @@
 
 import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
+import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import {
   ConnectionParameter,
@@ -122,15 +123,15 @@ export class BaseConnection extends BaseObj {
   }
 
   get recorder(): TNode {
-    return this.source.model.isRecorder ? this.source : this.target;
+    return this.sourceNode.model.isRecorder ? this.sourceNode : this.targetNode;
   }
 
   get rule(): ConnectionRule {
     return this._rule;
   }
 
-  get source(): TNode {
-    const nodes = this.connections.network.nodes.all as TNode[];
+  get source(): TNode | NodeGroup {
+    const nodes = this.connections.network.nodes.all;
     return nodes[this._sourceIdx];
   }
 
@@ -146,6 +147,15 @@ export class BaseConnection extends BaseObj {
     this._sourceIdx = value;
   }
 
+  get sourceNode(): TNode {
+    const nodes = this.connections.network.nodes.nodes;
+    return nodes[this._sourceIdx];
+  }
+
+  set sourceNode(node: TNode) {
+    this._sourceIdx = node.idx;
+  }
+
   get state(): ConnectionState {
     return this._state;
   }
@@ -154,7 +164,7 @@ export class BaseConnection extends BaseObj {
     return this._synapse;
   }
 
-  get target(): TNode {
+  get target(): TNode | NodeGroup {
     return this.network.nodes.all[this._targetIdx];
   }
 
@@ -168,6 +178,14 @@ export class BaseConnection extends BaseObj {
 
   set targetIdx(value: number) {
     this._targetIdx = value;
+  }
+
+  get targetNode(): TNode {
+    return this.network.nodes.nodes[this._targetIdx];
+  }
+
+  set targetNode(node: TNode) {
+    this._targetIdx = node.idx;
   }
 
   get view(): ConnectionView {
@@ -366,8 +384,8 @@ export class BaseConnection extends BaseObj {
         param.toJSON()
       ),
       synapse: this.synapse.hash,
-      sourceModelId: this.source.modelId,
-      targetModelId: this.target.modelId,
+      sourceModelId: this.sourceNode.modelId,
+      targetModelId: this.targetNode.modelId,
     });
   }
 }

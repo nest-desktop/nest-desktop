@@ -42,9 +42,9 @@ export class NESTConnection extends BaseConnection {
       simulator: "nest",
     });
 
-    this._sourceSlice = new NESTNodeSlice(this.source, []);
+    this._sourceSlice = new NESTNodeSlice(this.sourceNode, []);
     this._targetSlice = new NESTNodeSlice(
-      this.target,
+      this.targetNode,
       connectionProps.targetSlice
     );
 
@@ -63,7 +63,10 @@ export class NESTConnection extends BaseConnection {
    * Check if source and target nodes has positions.
    */
   get isBothSpatial(): boolean {
-    return this.source.spatial.hasPositions && this.target.spatial.hasPositions;
+    return (
+      this.sourceNode.spatial.hasPositions &&
+      this.targetNode.spatial.hasPositions
+    );
   }
 
   get mask(): NESTConnectionMask {
@@ -78,8 +81,8 @@ export class NESTConnection extends BaseConnection {
     return this.connections.network;
   }
 
-  override get source(): NESTNode {
-    return this.network.nodes.all[this.sourceIdx];
+  override get sourceNode(): NESTNode {
+    return this.network.nodes.nodes[this.sourceIdx];
   }
 
   get sourceSlice(): NESTNodeSlice {
@@ -90,8 +93,8 @@ export class NESTConnection extends BaseConnection {
     return this._synapse as NESTSynapse;
   }
 
-  override get target(): NESTNode {
-    return this.network.nodes.all[this.targetIdx];
+  override get targetNode(): NESTNode {
+    return this.network.nodes.nodes[this.targetIdx];
   }
 
   get targetSlice(): NESTNodeSlice {

@@ -1,18 +1,18 @@
 <template>
   <div style="pointer-events: none">
     <v-btn icon size="small">
-      <NodeAvatar :node="connection.source" size="32px" />
+      <NodeAvatar :node="connection.sourceNode" size="32px" />
     </v-btn>
 
     <v-btn
-      :color="connection.source.view.color"
+      :color="connection.sourceNode.view.color"
       :icon="connection.synapse.icon"
       size="small"
       variant="text"
     />
 
     <v-btn icon size="small">
-      <NodeAvatar :node="connection.target" size="32px" />
+      <NodeAvatar :node="connection.targetNode" size="32px" />
     </v-btn>
   </div>
 </template>

@@ -1,7 +1,9 @@
 <template>
   <v-row class="conn-spec mx-1" no-gutters>
     <v-select
-      :disabled="connection.source.size === 1 && connection.target.size === 1"
+      :disabled="
+        connection.sourceNode.size === 1 && connection.targetNode.size === 1
+      "
       :items="rules"
       class="pa-1"
       density="compact"
@@ -27,7 +29,7 @@
         <v-card>
           <v-card-text>
             <v-checkbox
-              :color="connection.source.view.color"
+              :color="connection.sourceNode.view.color"
               :key="index"
               :label="param.label"
               :value="param.id"

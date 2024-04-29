@@ -237,7 +237,7 @@ export class NESTCopyModel {
   }
 
   get nodes(): NESTNode[] {
-    return this.network.nodes.all.filter(
+    return this.network.nodes.nodes.filter(
       (node: NESTNode) => node.modelId === this._newModelId
     );
   }
@@ -424,7 +424,7 @@ export class NESTCopyModel {
    * It removes model component of the network.
    */
   remove(): void {
-    this.network.nodes.all
+    this.network.nodes.nodes
       .filter((node: NESTNode) => node.modelId === this.newModelId)
       .forEach((node: NESTNode) => (node.modelId = this._existingModelId));
 

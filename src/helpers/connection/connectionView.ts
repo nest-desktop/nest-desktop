@@ -26,8 +26,8 @@ export class ConnectionView {
   }
 
   get centerPosition(): { x: number; y: number } {
-    const p0 = this._connection.source.view.state.position;
-    const p1 = this._connection.target.view.state.position;
+    const p0 = this._connection.sourceNode.view.state.position;
+    const p1 = this._connection.targetNode.view.state.position;
     return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
   }
 
@@ -49,8 +49,8 @@ export class ConnectionView {
   } {
     return {
       ellipticalArc:
-        this._connection.source.state.isSelected &&
-        this._connection.source.connections.length > 1
+        this._connection.sourceNode.state.isSelected &&
+        this._connection.sourceNode.connections.length > 1
           ? 1
           : 10,
       sweep: this._connection.idx % 2,
@@ -73,8 +73,8 @@ export class ConnectionView {
   }
 
   get markerEndPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.state.position;
-    const target = this._connection.target.view.state.position;
+    const source = this._connection.sourceNode.view.state.position;
+    const target = this._connection.targetNode.view.state.position;
     const path = calcPathNode(source, target, this.connectionGraphOptions);
     return { x: path.x2, y: path.y2 };
   }
@@ -84,8 +84,8 @@ export class ConnectionView {
       .focusedConnection as TConnection;
 
     return (
-      this._connection.source.connections.length === 1 ||
-      focusedConnection?.source !== this._connection.source ||
+      this._connection.sourceNode.connections.length === 1 ||
+      focusedConnection?.sourceNode !== this._connection.sourceNode ||
       this._connection._connections.state.focusedConnection == null ||
       this._connection.state.isFocused ||
       this._connection.state.isSelected
@@ -93,7 +93,7 @@ export class ConnectionView {
   }
 
   get pathCentroidPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.state.position;
+    const source = this._connection.sourceNode.view.state.position;
     const target = this._connection.view.markerEndPosition;
     const path = calcPathNode(source, target, this.connectionGraphOptions);
     const x2 = path.x1 + Math.cos(0) * path.tr;
@@ -107,8 +107,8 @@ export class ConnectionView {
 
   get toRight(): boolean {
     return (
-      this._connection.source.view.state.position.x <
-      this._connection.target.view.state.position.x
+      this._connection.sourceNode.view.state.position.x <
+      this._connection.targetNode.view.state.position.x
     );
   }
 
@@ -117,8 +117,8 @@ export class ConnectionView {
    */
   connectOnlyNeurons(): boolean {
     return (
-      this._connection.source.model.isNeuron &&
-      this._connection.target.model.isNeuron
+      this._connection.sourceNode.model.isNeuron &&
+      this._connection.targetNode.model.isNeuron
     );
   }
 
@@ -127,8 +127,8 @@ export class ConnectionView {
    */
   connectRecorder(): boolean {
     return (
-      this._connection.source.model.isRecorder ||
-      this._connection.target.model.isRecorder
+      this._connection.sourceNode.model.isRecorder ||
+      this._connection.targetNode.model.isRecorder
     );
   }
 
@@ -136,21 +136,21 @@ export class ConnectionView {
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.target.model.isSpikeRecorder;
+    return this._connection.targetNode.model.isSpikeRecorder;
   }
 
   /**
    * Calculate the distance of connected nodes.
    */
   distance(): number {
-    if (this._connection.source === this._connection.target) {
+    if (this._connection.sourceNode === this._connection.targetNode) {
       return 0;
     }
 
     const source: { x: number; y: number } =
-      this._connection.source.view.state.position;
+      this._connection.sourceNode.view.state.position;
     const target: { x: number; y: number } =
-      this._connection.target.view.state.position;
+      this._connection.targetNode.view.state.position;
     const x1: number = source.x;
     const y1: number = source.y;
     const x2: number = target.x;

@@ -332,5 +332,6 @@ export class ActivityAnimationLayer {
       });
       this._frames[frameIdx - 1] = frame;
     });
+    console.log(this._frames.map((frame) => frame.times.length));
   }
 }

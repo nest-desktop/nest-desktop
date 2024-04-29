@@ -147,7 +147,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     const appSessionStore = useAppSessionStore();
 
     const nodeSizeTotal = sum(
-      activity.recorder.nodes.all.map((node: TNode) => node.size)
+      activity.recorder.nodes.nodes.map((node: TNode) => node.size)
     );
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;

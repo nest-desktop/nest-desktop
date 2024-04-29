@@ -64,8 +64,8 @@ export class NodeView extends BaseObj {
         const connection: TConnection = connections[0];
         const node: TNode =
           connection.sourceIdx === this.node.idx
-            ? connection.target
-            : connection.source;
+            ? connection.targetNode
+            : connection.sourceNode;
         return node.view.color;
       }
     }
@@ -102,7 +102,7 @@ export class NodeView extends BaseObj {
       //   label = varname + (idx + 1);
       //   break;
       case undefined:
-        nodes = this.node.nodes.all;
+        nodes = this.node.nodes.nodes;
         idx = nodes.indexOf(this._node);
         label = "n" + (idx + 1);
         break;

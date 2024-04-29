@@ -244,10 +244,10 @@ const props = defineProps<{ node: NESTNode }>();
 const node = computed(() => props.node);
 
 const state = reactive({
+  elementType: "",
+  items: [] as (NESTModel | { title: string; value: string })[],
   menu: false,
   panelIdx: null,
-  items: [] as (NESTModel | { title: string; value: string })[],
-  elementType: "",
 });
 
 const elementTypes = [

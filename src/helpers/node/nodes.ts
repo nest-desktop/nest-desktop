@@ -4,9 +4,10 @@ import { reactive, UnwrapRef } from "vue";
 
 import { BaseNode, INodeProps } from "./node";
 import { BaseObj } from "../common/base";
+import { NodeGroup } from "./nodeGroup";
+import { TActivityGraph } from "@/types/activityGraphTypes";
 import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
-import { NESTActivityGraph } from "@/simulators/nest/helpers/activity/activityGraph";
 
 const _nodeTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
@@ -26,7 +27,7 @@ interface INodesState {
 export class BaseNodes extends BaseObj {
   private _state: UnwrapRef<INodesState>; //reactive state
   public _network: TNetwork; // parent
-  public _nodes: TNode[] = [];
+  public _nodes: (TNode | NodeGroup)[] = [];
 
   constructor(network: TNetwork, nodesProps?: INodeProps[]) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -48,7 +49,7 @@ export class BaseNodes extends BaseObj {
     return BaseNode;
   }
 
-  get all(): TNode[] {
+  get all(): (TNode | NodeGroup)[] {
     return this._nodes;
   }
 
@@ -93,7 +94,15 @@ export class BaseNodes extends BaseObj {
   }
 
   get nodes(): TNode[] {
-    return this._nodes;
+    return this._nodes.filter(
+      (node: TNode | NodeGroup) => node.constructor.name !== "NodeGroup"
+    ) as TNode[];
+  }
+
+  get nodeGroups(): NodeGroup[] {
+    return this._nodes.filter(
+      (node: TNode | NodeGroup) => node.constructor.name === "NodeGroup"
+    ) as NodeGroup[];
   }
 
   get nodeTypes(): { icon: string; id: string; title: string }[] {
@@ -169,10 +178,9 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Add node component.
-   *
    * @param nodeProps node props
    */
-  add(nodeProps: INodeProps): TNode {
+  addNode(nodeProps: INodeProps): TNode {
     this.logger.trace("add node:", nodeProps.model);
     const node = new this.Node(this, nodeProps);
     this._nodes.push(node);
@@ -208,7 +216,7 @@ export class BaseNodes extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
-    this._nodes.forEach((node: TNode) => node.init());
+    this.nodes.forEach((node: TNode) => node.init());
     this.updateRecords();
   }
 
@@ -283,7 +291,7 @@ export class BaseNodes extends BaseObj {
     this.logger.trace("update");
 
     if (nodesProps) {
-      nodesProps.forEach((nodeProps: INodeProps) => this.add(nodeProps));
+      nodesProps.forEach((nodeProps: INodeProps) => this.addNode(nodeProps));
     }
 
     this.clean();
@@ -357,15 +365,10 @@ export class BaseNodes extends BaseObj {
       recorder.updateRecordsColor();
     });
 
-    const activityGraph = this.network.project
-      .activityGraph as NESTActivityGraph;
+    const activityGraph = this.network.project.activityGraph as TActivityGraph;
 
     if (activityGraph.activityChartGraph) {
       activityGraph.activityChartGraph.updateRecordsColor();
-    }
-
-    if (activityGraph.activityAnimationGraph) {
-      activityGraph.activityAnimationGraph.renderFrameLayers();
     }
   }
 

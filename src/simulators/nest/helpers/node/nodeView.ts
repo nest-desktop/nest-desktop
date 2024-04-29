@@ -23,7 +23,7 @@ export class NESTNodeView extends NodeView {
       const models = this.node.assignedModels;
       if (models.length === 1) {
         const connection = models[0].connections[0];
-        return connection.source.view.color;
+        return connection.sourceNode.view.color;
       }
     } else if (this.node.model.isRecorder) {
       const connections: NESTConnection[] =

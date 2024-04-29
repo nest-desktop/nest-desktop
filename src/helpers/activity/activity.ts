@@ -64,7 +64,9 @@ export class Activity extends BaseObj {
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.all.map((node: TNode) => node.model.elementType);
+    return this.recorder.nodes.nodes.map(
+      (node: TNode) => node.model.elementType
+    );
   }
 
   get endTime(): number {
