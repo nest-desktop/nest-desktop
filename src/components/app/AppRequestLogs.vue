@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-model="appSessionStore.state.logsOpen"
+    v-model="appStore.state.logsOpen"
     location="right"
     temporary
     width="400"
@@ -10,7 +10,7 @@
         <v-btn-toggle
           class="mx-2"
           density="compact"
-          v-model="appSessionStore.state.filterTag"
+          v-model="appStore.state.filterTag"
           variant="outlined"
         >
           <v-btn
@@ -35,13 +35,13 @@
           icon="mdi:mdi-playlist-remove"
           size="small"
           title="Clear all logs"
-          @click="appSessionStore.clearLogs()"
+          @click="appStore.clearLogs()"
         />
         <v-btn
           icon="mdi:mdi-menu-close"
           size="small"
           title="Close request logs"
-          @click="appSessionStore.state.logsOpen = false"
+          @click="appStore.state.logsOpen = false"
         />
       </template>
     </v-toolbar>
@@ -53,18 +53,18 @@
         density="compact"
         variant="outlined"
         text="Show all logs"
-        v-if="appSessionStore.state.filterTag"
-        @click="appSessionStore.state.filterTag = ''"
+        v-if="appStore.state.filterTag"
+        @click="appStore.state.filterTag = ''"
       />
     </div>
 
     <v-list density="compact">
       <v-list-item
-        v-for="(log, index) in appSessionStore.state.requestLogs"
+        v-for="(log, index) in appStore.state.requestLogs"
         :key="index"
         v-show="
-          appSessionStore.state.filterTag
-            ? log.type === appSessionStore.state.filterTag
+          appStore.state.filterTag
+            ? log.type === appStore.state.filterTag
             : true
         "
       >
@@ -82,7 +82,7 @@
               <v-btn
                 icon="mdi:mdi-close"
                 size="small"
-                @click="appSessionStore.state.requestLogs.splice(index, 1)"
+                @click="appStore.state.requestLogs.splice(index, 1)"
               />
             </template>
           </v-toolbar>
@@ -97,8 +97,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useAppSessionStore } from "@/stores/appSessionStore";
-const appSessionStore = useAppSessionStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 const icons: { [key: string]: string } = {
   error: "mdi:mdi-alert-circle-outline",

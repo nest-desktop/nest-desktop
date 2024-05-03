@@ -39,7 +39,8 @@ export class NESTNodes extends BaseNodes {
   }
 
   get isWeightRecorderSelected(): boolean {
-    const selectedNode = this.state.selectedNode as NESTNode;
+    const selectedNode = this.network.connections.state
+      .selectedNode as NESTNode;
     return selectedNode ? selectedNode.model.isWeightRecorder : false;
   }
 
@@ -54,8 +55,8 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get nodes(): NESTNode[] {
-    return this._nodes.filter(
-      (node: TNode | NodeGroup) => node.constructor.name !== "NodeGroup"
+    return this._items.filter(
+      (node: TNode | NodeGroup) => !node.isGroup
     ) as NESTNode[];
   }
 

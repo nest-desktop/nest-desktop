@@ -30,7 +30,7 @@
     <v-window v-model="databaseTab">
       <v-window-item value="project">
         <v-card-subtitle
-          v-if="appStore.session.state.devMode"
+          v-if="appStore.state.devMode"
           :key="projectStore.state.projectId"
         >
           Current project: {{ truncate(projectStore.state.projectId) }}
@@ -59,7 +59,7 @@
 
       <v-window-item value="model">
         <v-card-subtitle
-          v-if="appStore.session.state.devMode"
+          v-if="appStore.state.devMode"
           :key="modelStore.modelId"
         >
           Current model: {{ modelStore.modelId }}

@@ -21,13 +21,13 @@ interface INodesState {
   contextMenu: boolean;
   elementTypeIdx: number;
   focusedNode: TNode | null;
-  selectedNode: TNode | null;
+  selectedNodes: TNode[];
 }
 
 export class BaseNodes extends BaseObj {
   private _state: UnwrapRef<INodesState>; //reactive state
+  public _items: (TNode | NodeGroup)[] = [];
   public _network: TNetwork; // parent
-  public _nodes: (TNode | NodeGroup)[] = [];
 
   constructor(network: TNetwork, nodesProps?: INodeProps[]) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -39,7 +39,7 @@ export class BaseNodes extends BaseObj {
       contextMenu: false,
       elementTypeIdx: 0,
       focusedNode: null,
-      selectedNode: null,
+      selectedNodes: [] as TNode[],
     });
 
     this.update(nodesProps);
@@ -50,7 +50,7 @@ export class BaseNodes extends BaseObj {
   }
 
   get all(): (TNode | NodeGroup)[] {
-    return this._nodes;
+    return this._items;
   }
 
   get annotations(): { [key: string]: string }[] {
@@ -58,28 +58,31 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
-   * Some recorders for analog signals
+   * Check if it has any selected nodes (n > 1).
+   */
+  get hasAnySelectedNodes(): boolean {
+    return this._state.selectedNodes.length > 1;
+  }
+
+  /**
+   * Check if it contains some recorders for analog signals.
    */
   get hasSomeAnalogRecorder(): boolean {
     return this.nodes.some((node: TNode) => node.model.isAnalogRecorder);
   }
 
   /**
-   * Some spike recorders
+   * Check if it contains some spike recorders.
    */
   get hasSomeSpikeRecorder(): boolean {
     return this.nodes.some((node: TNode) => node.model.isSpikeRecorder);
-  }
-
-  get isAnyNodeSelected(): boolean {
-    return this._state.selectedNode != null;
   }
 
   /**
    * Get length of nodes list.
    */
   get length(): number {
-    return this._nodes.length;
+    return this._items.length;
   }
 
   get network(): TNetwork {
@@ -94,14 +97,14 @@ export class BaseNodes extends BaseObj {
   }
 
   get nodes(): TNode[] {
-    return this._nodes.filter(
-      (node: TNode | NodeGroup) => node.constructor.name !== "NodeGroup"
+    return this._items.filter(
+      (node: TNode | NodeGroup) => !node.isGroup
     ) as TNode[];
   }
 
   get nodeGroups(): NodeGroup[] {
-    return this._nodes.filter(
-      (node: TNode | NodeGroup) => node.constructor.name === "NodeGroup"
+    return this._items.filter(
+      (node: TNode | NodeGroup) => node.isGroup
     ) as NodeGroup[];
   }
 
@@ -183,7 +186,7 @@ export class BaseNodes extends BaseObj {
   addNode(nodeProps: INodeProps): TNode {
     this.logger.trace("add node:", nodeProps.model);
     const node = new this.Node(this, nodeProps);
-    this._nodes.push(node);
+    this._items.push(node);
     return node;
   }
 
@@ -199,7 +202,7 @@ export class BaseNodes extends BaseObj {
    */
   clear(): void {
     this.resetState();
-    this._nodes = [];
+    this._items = [];
   }
 
   /**
@@ -209,6 +212,16 @@ export class BaseNodes extends BaseObj {
    */
   filterByModelId(modelId: string): TNode[] {
     return this.nodes.filter((node: TNode) => node.modelId === modelId);
+  }
+
+  /**
+   * Group selected nodes.
+   */
+  groupSelected(): void {
+    const nodeGroup = new NodeGroup(this, this._state.selectedNodes as TNode[]);
+    this._items.push(nodeGroup);
+    this.unselectNodes();
+    this._network.changes();
   }
 
   /**
@@ -229,7 +242,7 @@ export class BaseNodes extends BaseObj {
     this.resetState();
 
     // Remove node from the node list.
-    this._nodes.splice(node.idx, 1);
+    this._items.splice(node.idx, 1);
   }
 
   /*
@@ -245,9 +258,12 @@ export class BaseNodes extends BaseObj {
 
     if (elementTypeIdx === 4) {
       return false;
-    } else if (this._state.selectedNode) {
+    } else if (this._state.selectedNodes.length > 0) {
       // selected view
-      return node.state.isSelected;
+      return this._state.selectedNodes.includes(node);
+      // } else if (this._state.selectedNode) {
+      //   // selected view
+      //   return this._state.selectedNode === node;
     } else if (elementTypeIdx === 0) {
       // all view
       return true;
@@ -269,6 +285,21 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
+   * Toggle node selection
+   * @param node node object
+   */
+  toggleNodeSelection(node: TNode) {
+    var index = this._state.selectedNodes.indexOf(node);
+    if (index === -1) {
+      this._state.selectedNodes.push(node);
+      this._state.selectedNodes.sort();
+    } else {
+      this._state.selectedNodes.splice(index, 1);
+    }
+    this.state.selectedNodes.sort();
+  }
+
+  /**
    * Unfocus node.
    */
   unfocusNode(): void {
@@ -278,8 +309,8 @@ export class BaseNodes extends BaseObj {
   /**
    * Unselect node.
    */
-  unselectNode(): void {
-    this._state.selectedNode = null;
+  unselectNodes(): void {
+    this._state.selectedNodes = [];
   }
 
   /**

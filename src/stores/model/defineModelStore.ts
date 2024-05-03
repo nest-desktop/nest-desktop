@@ -45,8 +45,7 @@ export function defineModelStore(
       logger.trace("init");
       const modelDBStore = args.useModelDBStore();
       if (modelDBStore.state.models.length > 0) {
-        const model = modelDBStore.getRecentModelId();
-        state.modelId = model.id;
+        state.modelId = modelDBStore.getRecentModelId();
       }
     };
 

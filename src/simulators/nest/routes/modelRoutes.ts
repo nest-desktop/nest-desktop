@@ -31,7 +31,7 @@ const modelBeforeEnter = (to: any) => {
 };
 
 const modelRedirect = (to: any) => {
-  logger.trace("Redirect to model:", to.params.modelId);
+  logger.trace("redirect to model:", to.params.modelId);
   const modelStore = useNESTModelStore();
 
   if (to.params.modelId) {

@@ -559,10 +559,12 @@ const importSelectedProjects = () => {
 /**
  * Load projects from drive.
  */
-const loadProjectsFromDrive = (files: File[]) => {
-  if (files.length === 0) return;
+const loadProjectsFromDrive = (files: File | File[]) => {
+  const file = Array.isArray(files) ? files[0] : files;
+  if (!file) return;
+
   const fileReader = new FileReader();
-  fileReader.readAsText(files[0]);
+  fileReader.readAsText(file);
   fileReader.addEventListener("load", (event: ProgressEvent<FileReader>) =>
     addProps(JSON.parse(event.target?.result as string))
   );

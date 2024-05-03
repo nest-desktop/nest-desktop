@@ -5,7 +5,6 @@ import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 
 import { simulators } from "@/simulators";
-import { useAppSessionStore } from "./appSessionStore";
 
 export const useAppStore = defineStore(
   "app-store",
@@ -13,13 +12,22 @@ export const useAppStore = defineStore(
     let themeInstance: ThemeInstance;
 
     const state = reactive({
-      themeInstance: undefined,
       autoUpdate: false,
-      theme: "auto", // auto, light, dark
-      themeIcon: "mdi:mdi-system",
+      devMode: false,
+      filterTag: "",
+      loading: false,
+      logsOpen: false,
+      requestLogs: [] as { date: string; text: string; type: string }[],
       simulator: "nest",
       simulatorVisible: ["nest"],
+      theme: "auto", // auto, light, dark
+      themeIcon: "mdi:mdi-system",
+      webGL: true,
     });
+
+    const clearLogs = () => {
+      state.requestLogs = [];
+    };
 
     const currentSimulator = computed(() => simulators[state.simulator]);
 
@@ -49,8 +57,6 @@ export const useAppStore = defineStore(
     const resetSimulator = (): void => {
       state.simulator = Object.keys(simulators)[0];
     };
-
-    const session = useAppSessionStore();
 
     const simulatorItems = computed(() =>
       state.simulatorVisible.map(
@@ -92,12 +98,12 @@ export const useAppStore = defineStore(
     };
 
     return {
+      clearLogs,
       currentSimulator,
       darkMode,
       hasSimulator,
       init,
       resetSimulator,
-      session,
       simulatorItems,
       state,
       toggleTheme,
@@ -105,6 +111,21 @@ export const useAppStore = defineStore(
     };
   },
   {
-    persist: true,
+    persist: [
+      {
+        paths: [
+          "state.autoUpdate",
+          "state.theme",
+          "state.themeIcon",
+          "state.simulator",
+          "state.simulatorVisible",
+        ],
+        storage: localStorage,
+      },
+      {
+        paths: ["state.devMode", "state.webGL"],
+        storage: sessionStorage,
+      },
+    ],
   }
 );

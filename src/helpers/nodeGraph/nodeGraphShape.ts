@@ -156,9 +156,10 @@ export class NodeGraphShape extends BaseObj {
 
     elem.on("click", (e: MouseEvent) => {
       const nodes = this._networkGraph.network.nodes;
+      const connections = this._networkGraph.network.connections;
 
       if (
-        nodes.state.selectedNode &&
+        connections.state.selectedNode &&
         this._networkGraph.workspace.state.dragLine
       ) {
         // Set cursor position of the focused node.
@@ -169,22 +170,24 @@ export class NodeGraphShape extends BaseObj {
         this._networkGraph.workspace.animationOff();
 
         this._networkGraph.network.connectNodes(
-          nodes.state.selectedNode.idx,
+          connections.state.selectedNode.idx,
           node.idx
         );
         this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {
-          nodes.unselectNode();
+          connections.state.selectedNode = null;
           this._networkGraph.workspace.reset();
           this._networkGraph.workspace.update();
         }
       } else if (this._networkGraph.workspace.altPressed) {
-        node.state.select();
+        node.state.selectForConnection();
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
+      } else if (this._networkGraph.workspace.ctrlPressed) {
+        nodes.toggleNodeSelection(node);
       } else {
-        node.state.select();
+        nodes.state.selectedNodes = [node];
       }
     });
 

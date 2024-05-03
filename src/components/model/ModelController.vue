@@ -1,18 +1,17 @@
 <template>
-  <v-navigation-drawer location="right" permanent rail rail-width="64">
+  <v-navigation-drawer location="right" permanent rail>
     <v-tabs
-      :model-value="modelStore.controller.view"
+      :model-value="modelStore.state.controller.view"
       :mandatory="false"
       color="primary"
       direction="vertical"
       stacked
-      width="64"
     >
       <v-tab
         v-for="(item, index) in items"
         :key="index"
         :ripple="false"
-        :value="modelStore.controller.open ? item.id : null"
+        :value="modelStore.state.controller.open ? item.id : null"
         class="justify-center"
         height="72"
         min-width="0"
@@ -25,7 +24,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="modelStore.controller.open"
+    :model-value="modelStore.state.controller.open"
     location="right"
     permanent
   >

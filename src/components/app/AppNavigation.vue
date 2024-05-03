@@ -1,12 +1,11 @@
 <template>
-  <v-navigation-drawer class="d-print-none" permanent rail rail-width="64">
+  <v-navigation-drawer class="d-print-none" permanent rail>
     <v-tabs
       :model-value="navStore.state.view"
       :mandatory="false"
       color="primary"
       direction="vertical"
       stacked
-      width="64"
     >
       <v-tab
         :key="index"
@@ -58,12 +57,7 @@ const props = defineProps(["navItems"]);
 const navItems = computed(() => props.navItems);
 
 // const toggleDevMode = () => {
-//   appStore.session.devMode = !appStore.session.devMode;
-// };
-
-// const toggleWebGL = () => {
-//   appStore.webGL = !appStore.webGL;
-//   console.log(appStore.webGL);
+//   appStore.devMode = !appStore.devMode;
 // };
 
 const items: {
@@ -89,7 +83,7 @@ const items: {
   //   to: "/sandbox/",
   // },
   // {
-  //   color: appStore.session.devMode ? "green" : "red",
+  //   color: appStore.devMode ? "green" : "red",
   //   icon: "mdi:mdi-developer-board",
   //   onClick: toggleDevMode,
   //   id: "theme-light-dark",

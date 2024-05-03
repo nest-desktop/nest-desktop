@@ -25,7 +25,7 @@ export class NetworkGraphDragline extends BaseObj {
 
   /**
    * Initialize drag line.
-   * @param event
+   * @param event mouse event
    */
   init(event: MouseEvent): void {
     this.logger.trace("init");
@@ -36,12 +36,12 @@ export class NetworkGraphDragline extends BaseObj {
 
   /**
    * Update drag line.
-   * @param event
+   * @param event mouse event
    */
   update(event: MouseEvent): void {
     this.logger.trace("update");
-    if (this.network && this.network.nodes.state.selectedNode != null) {
-      const selectedNode = this.network.nodes.state.selectedNode;
+    if (this.network && this.network.connections.state.selectedNode != null) {
+      const selectedNode = this.network.connections.state.selectedNode;
 
       const sourcePosition: { x: number; y: number } =
         selectedNode.view.state.position;
@@ -56,6 +56,7 @@ export class NetworkGraphDragline extends BaseObj {
 
       this._workspace.selector
         .select(".dragline")
+        .select("path")
         .style("opacity", 0.5)
         .style("stroke", selectedNode.view.color)
         .attr("d", drawPathMouse(sourcePosition, targetPosition));
@@ -76,6 +77,8 @@ export class NetworkGraphDragline extends BaseObj {
     this.logger.trace("draw path");
     this._workspace.selector
       .select(".dragline")
+      .select("path")
+
       .style("opacity", 1)
       .attr("d", drawPathNode(sourcePos, targetPos));
   }
@@ -87,6 +90,8 @@ export class NetworkGraphDragline extends BaseObj {
     this.logger.trace("hide");
     this._workspace.selector
       .select(".dragline")
+      .select("path")
+
       .style("opacity", 0)
       .attr("d", "M0,0L0,0");
     this._workspace.state.dragLine = false;

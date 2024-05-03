@@ -24,9 +24,11 @@ export class NESTNetworkGraph extends BaseNetworkGraph {
    */
   render(): void {
     this.logger.silly("render");
+
     this._modelAssignGraph.render();
     this.connectionGraph.render();
     this.nodeGraph.render();
+    this.nodeGroupGraph.render();
   }
 
   /**
@@ -37,9 +39,11 @@ export class NESTNetworkGraph extends BaseNetworkGraph {
    */
   update(): void {
     this.logger.silly("update");
+
     this.workspace.update();
     this._modelAssignGraph.update();
     this.connectionGraph.update();
     this.nodeGraph.update();
+    this.nodeGroupGraph.update();
   }
 }

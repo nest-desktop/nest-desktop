@@ -20,7 +20,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { UnwrapRef, reactive } from "vue";
 
 import { darkMode } from "@/helpers/common/theme";
-import { useAppSessionStore } from "@/stores/appSessionStore";
+import { useAppStore } from "@/stores/appStore";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 
@@ -82,8 +82,8 @@ export class ActivityAnimationScene {
 
     this._stats = new Stats();
 
-    const appSessionStore = useAppSessionStore();
-    this._useStats = appSessionStore.state.devMode;
+    const appStore = useAppStore();
+    this._useStats = appStore.state.devMode;
 
     this.init();
   }

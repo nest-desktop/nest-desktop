@@ -4,7 +4,6 @@
     location="right"
     permanent
     rail
-    railWidth="64"
   >
     <v-tabs
       :mandatory="false"
@@ -12,7 +11,6 @@
       color="primary"
       direction="vertical"
       stacked
-      width="64"
     >
       <v-tab
         :key="index"
@@ -24,8 +22,7 @@
         min-width="0"
         v-for="(item, index) in controllerItems"
         v-show="
-          item.show !== 'dev' ||
-          (item.show === 'dev' && appSessionStore.state.devMode)
+          item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
         "
       >
         <v-icon
@@ -84,8 +81,7 @@
 
       <template
         v-else-if="
-          appSessionStore.state.devMode &&
-          projectStore.state.controller.view === 'raw'
+          appStore.state.devMode && projectStore.state.controller.view === 'raw'
         "
       >
         <codemirror
@@ -147,8 +143,8 @@ import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { darkMode } from "@/helpers/common/theme";
 
-import { useAppSessionStore } from "@/stores/appSessionStore";
-const appSessionStore = useAppSessionStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
@@ -213,7 +209,6 @@ if (darkMode()) {
 }
 
 const dispatchWindowResize = () => {
-  // console.log("Dispatch windows resize");
   nextTick(() => window.dispatchEvent(new Event("resize")));
 };
 

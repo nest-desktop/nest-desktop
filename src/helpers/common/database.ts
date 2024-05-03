@@ -215,7 +215,6 @@ export class DatabaseService extends BaseObj {
       .get("_local/version")
       .then((doc: IDoc) => doc.version)
       .catch((err: IErr) => {
-        console.log(err);
         this.logger.error("Get version:", err.stack);
       });
   }

@@ -69,6 +69,10 @@ export class NetworkGraphWorkspace extends BaseObj {
     return [18, 225].includes(this._state.keyCode);
   }
 
+  get ctrlPressed(): boolean {
+    return [17].includes(this._state.keyCode);
+  }
+
   get dragline(): NetworkGraphDragline {
     return this._dragline;
   }
@@ -103,6 +107,10 @@ export class NetworkGraphWorkspace extends BaseObj {
 
   get size(): { height: number; width: number } {
     return this._size;
+  }
+
+  get shiftPressed(): boolean {
+    return [16].includes(this._state.keyCode);
   }
 
   get zoom(): NetworkGraphZoom {
@@ -170,13 +178,14 @@ export class NetworkGraphWorkspace extends BaseObj {
       .on("click", () => {
         this.reset();
         this.network?.state.unselectAll();
+
         this.update();
       })
       .on("contextmenu", (event: MouseEvent) => {
         event.preventDefault();
         this.reset();
-
         this.network?.state.unselectAll();
+
         const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
         this._nodeAddPanel.open();
@@ -286,9 +295,10 @@ export class NetworkGraphWorkspace extends BaseObj {
       y: number = 0;
 
     const nodes = this.network.nodes;
-    if (this._state.centerSelected && nodes.state.selectedNode) {
+    const connections = this.network.connections;
+    if (this._state.centerSelected && connections.state.selectedNode) {
       const nodePosition: { x: number; y: number } =
-        nodes.state.selectedNode.view.state.position;
+        connections.state.selectedNode.view.state.position;
       x = nodePosition.x;
       y = nodePosition.y;
     } else if (this._state.centerNetwork && nodes.all.length > 0) {

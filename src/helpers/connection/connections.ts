@@ -11,6 +11,7 @@ import { TNode } from "@/types/nodeTypes";
 interface IConnectionsState {
   focusedConnection: TConnection | null;
   selectedConnection: TConnection | null;
+  selectedNode: TNode | null;
 }
 
 export class BaseConnections extends BaseObj {
@@ -27,6 +28,7 @@ export class BaseConnections extends BaseObj {
       focusedConnection: null,
       hash: "",
       selectedConnection: null,
+      selectedNode: null,
     });
 
     this.update(connectionsProps);
@@ -174,6 +176,11 @@ export class BaseConnections extends BaseObj {
 
   unselectConnection(): void {
     this._state.selectedConnection = null;
+  }
+
+  unselectAll(): void {
+    this._state.selectedConnection = null;
+    this._state.selectedNode = null;
   }
 
   /**

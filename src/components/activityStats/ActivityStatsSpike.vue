@@ -85,7 +85,6 @@ const colSum = (key: string): number => {
  * Update stats of spike activity.
  */
 const update = () => {
-  // console.log("Update stats of spike activity");
   state.loading = true;
   state.items = [];
 

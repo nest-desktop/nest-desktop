@@ -126,12 +126,14 @@ export class NodeView extends BaseObj {
   }
 
   get opacity(): boolean {
+    const connections = this.node.nodes.network.connections;
+    const nodes = this.node.nodes;
     return (
       true ||
-      this.node.nodes.state.selectedNode == null ||
-      (this.node.nodes.state.selectedNode != null &&
-        this.node.state.isSelected) ||
-      (this.node.nodes.state.focusedNode != null && this.node.state.isFocused)
+      connections.state.selectedNode == null ||
+      (connections.state.selectedNode != null &&
+        this.node.state.isSelectedForConnection) ||
+      (nodes.state.focusedNode != null && this.node.state.isFocused)
     );
   }
 
@@ -203,9 +205,6 @@ export class NodeView extends BaseObj {
    */
   updateStyle(): void {
     const root = document.documentElement;
-    root.style.setProperty(
-      "--node" + this._node.idx + "-color",
-      this._node.view.color
-    );
+    root.style.setProperty("--node" + this._node.idx + "-color", this.color);
   }
 }

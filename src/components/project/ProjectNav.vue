@@ -130,7 +130,7 @@
               />
             </template>
 
-            <template #default v-else-if="appStore.session.devMode">
+            <template #default v-else-if="appStore.state.devMode">
               <v-list-item-title>
                 {{ project.name }}
               </v-list-item-title>
@@ -164,8 +164,10 @@
 import { computed, nextTick, ref } from "vue";
 import { Store } from "pinia";
 
-import { TProject } from "@/types/projectTypes";
 import ProjectMenu from "./ProjectMenu.vue";
+import { TProject } from "@/types/projectTypes";
+// @ts-ignore - 'truncate' is declared but its value is never read.
+import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

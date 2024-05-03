@@ -1,6 +1,6 @@
 // norseSimulatorStore.ts
 
-import { defineBackendStore } from "@/stores/backends/defineBackendStore";
+import { defineBackendStore } from "@/stores/defineBackendStore";
 
 export const useNorseSimulatorStore = defineBackendStore(
   "norse",

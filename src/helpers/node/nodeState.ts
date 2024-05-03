@@ -43,7 +43,16 @@ export class NodeState {
    * Check if this node is selected.
    */
   get isSelected(): boolean {
-    return this.node.nodes.state.selectedNode === this.node;
+    return this._node.nodes.state.selectedNodes.includes(this._node);
+  }
+
+  /**
+   * Check if this node is selected for connection.
+   */
+  get isSelectedForConnection(): boolean {
+    return (
+      this._node.nodes.network.connections.state.selectedNode === this._node
+    );
   }
 
   get node(): TNode {
@@ -69,7 +78,15 @@ export class NodeState {
    * Select this node.
    */
   select(): void {
-    const nodes = this.node.nodes;
-    nodes.state.selectedNode = this.isSelected ? null : this.node;
+    this.node.nodes.toggleNodeSelection(this.node);
+  }
+
+  /**
+   * Select this node as source for connection.
+   */
+  selectForConnection(): void {
+    const connectionsState = this.node.nodes.network.connections.state;
+    const isSelected = connectionsState.selectedNode === this.node;
+    connectionsState.selectedNode = isSelected ? null : this.node;
   }
 }

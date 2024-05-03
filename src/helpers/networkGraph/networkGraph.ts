@@ -12,6 +12,7 @@ import { TConnection } from "@/types/connectionTypes";
 import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { debounce } from "@/utils/events";
+import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
 
 interface IBaseNetworkGraphState {
   hash: string;
@@ -26,6 +27,7 @@ export class BaseNetworkGraph extends BaseObj {
   private _connectionGraph: ConnectionGraph;
   public _network: TNetwork;
   private _nodeGraph: NodeGraph;
+  private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: Selection<any, any, null, undefined>;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
@@ -43,6 +45,7 @@ export class BaseNetworkGraph extends BaseObj {
     this._workspace = new NetworkGraphWorkspace(this);
     this._connectionGraph = new ConnectionGraph(this);
     this._nodeGraph = new NodeGraph(this);
+    this._nodeGroupGraph = new NodeGroupGraph(this);
 
     this._state = reactive({
       hash: "",
@@ -74,6 +77,10 @@ export class BaseNetworkGraph extends BaseObj {
     return this._nodeGraph;
   }
 
+  get nodeGroupGraph(): NodeGroupGraph {
+    return this._nodeGroupGraph;
+  }
+
   get resizeObserver(): ResizeObserver {
     return this._resizeObserver;
   }
@@ -92,7 +99,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   /**
    * Call on drag start.
-   * @param event
+   * @param event mouse event
    */
   dragStart(event: MouseEvent | any): void {
     this._workspace.state.dragging = true;
@@ -104,7 +111,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   /**
    * Call on drag end.
-   * @param event
+   * @param event mouse event
    */
   dragEnd(event: MouseEvent | any): void {
     this._workspace.state.dragging = false;
@@ -117,6 +124,7 @@ export class BaseNetworkGraph extends BaseObj {
     if (this.network) {
       this.network.clean();
     }
+
     this._workspace.updateTransform();
   }
 
@@ -126,12 +134,13 @@ export class BaseNetworkGraph extends BaseObj {
   init(): void {
     this.logger.trace("init");
     this._workspace.init();
+    this.update();
 
     watch(
       () => [
-        this.network.nodes.state.selectedNode,
         this.network.nodes.state.focusedNode,
         this.network.connections.state.focusedConnection,
+        this.network.connections.state.selectedNode,
         this.hash,
       ],
       () => this.render()
@@ -144,8 +153,6 @@ export class BaseNetworkGraph extends BaseObj {
       ],
       () => this.update()
     );
-
-    this.update();
   }
 
   /**
@@ -153,8 +160,10 @@ export class BaseNetworkGraph extends BaseObj {
    */
   render(): void {
     this.logger.silly("render");
+
     this._connectionGraph.render();
     this._nodeGraph.render();
+    this._nodeGroupGraph.render();
   }
 
   /**
@@ -174,9 +183,11 @@ export class BaseNetworkGraph extends BaseObj {
    */
   update(): void {
     this.logger.silly("update");
+
     this._workspace.update();
     this._connectionGraph.update();
     this._nodeGraph.update();
+    this._nodeGroupGraph.update();
   }
 
   /**

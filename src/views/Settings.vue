@@ -1,18 +1,9 @@
 <template>
   <v-container class="fill-height">
     <v-responsive class="align-center">
-      <v-card
-        class="ma-auto my-1"
-        max-width="400"
-      >
-        <v-card
-          flat
-          title="App settings"
-        >
-          <v-card
-            flat
-            subtitle="Theme"
-          >
+      <v-card class="ma-auto my-1" max-width="400">
+        <v-card flat title="App settings">
+          <v-card flat subtitle="Theme">
             <v-card-text>
               <v-radio-group
                 v-model="appStore.state.theme"
@@ -27,10 +18,7 @@
                   true-icon="mdi:mdi-checkbox-marked-circle-outline"
                 >
                   <template #label>
-                    <v-icon
-                      :icon="theme.icon"
-                      class="mx-2"
-                    />
+                    <v-icon :icon="theme.icon" class="mx-2" />
                     {{ capitalize(theme.title) }}
                   </template>
                 </v-radio>
@@ -38,13 +26,10 @@
             </v-card-text>
           </v-card>
 
-          <v-card
-            flat
-            subtitle="General"
-          >
+          <v-card flat subtitle="General">
             <v-card-text>
               <v-switch
-                v-model="appStore.session.state.devMode"
+                v-model="appStore.state.devMode"
                 density="compact"
                 false-icon="mdi:mdi-close-circle"
                 hint="Developer mode enables features that are still in development."
@@ -61,10 +46,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card
-            flat
-            subtitle="Simulators"
-          >
+          <v-card flat subtitle="Simulators">
             <v-card-text>
               <v-select
                 v-model="appStore.state.simulatorVisible"

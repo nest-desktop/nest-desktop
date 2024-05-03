@@ -8,7 +8,7 @@
     <span class="font-weight-bold">{{ node.view.label }}</span>
     <span class="mx-1">{{ node.model.label }}</span>
 
-    <span class="mx-1" v-if="appSessionStore.state.devMode">
+    <span class="mx-1" v-if="appStore.state.devMode">
       ({{ node.view.state.position.x.toFixed() }},
       {{ node.view.state.position.y.toFixed() }})
     </span>
@@ -21,8 +21,8 @@ import { computed } from "vue";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
 
-import { useAppSessionStore } from "@/stores/appSessionStore";
-const appSessionStore = useAppSessionStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 const props = defineProps<{
   graph: TNetworkGraph;

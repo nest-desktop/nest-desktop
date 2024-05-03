@@ -7,7 +7,7 @@ import {
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { useAppSessionStore } from "@/stores/appSessionStore";
+import { useAppStore } from "@/stores/appStore";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -33,7 +33,6 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * @return height (fixed value between 2 and 100)
    */
   get markerSize(): number {
-    // console.log('marker size')
     if (!this.panel.graph.state.ref) return 100;
     const d = this.panel.graph.plotLayout.yaxis.domain;
     const domain = d[1] - d[0];
@@ -52,7 +51,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
-    const appSessionStore = useAppSessionStore();
+    const appStore = useAppStore();
 
     this.data.push({
       activityIdx: activity.idx,
@@ -75,7 +74,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
       modelId: this.id,
       name: "Spikes of " + activity.recorder.view.label,
       showlegend: true,
-      type: appSessionStore.state.webGL ? "scattergl" : "scatter",
+      type: appStore.state.webGL ? "scattergl" : "scatter",
       visible: this.state.visible,
       x: activity.events.times,
       y: activity.events.senders,

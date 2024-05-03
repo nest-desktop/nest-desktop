@@ -10,6 +10,4 @@
 
 <script lang="ts" setup>
 import data from "./data.json";
-
-console.log(data);
 </script>

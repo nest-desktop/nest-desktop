@@ -1,11 +1,11 @@
 // nodeGraphConnector.ts
 
 import {
-  drag,
   DragBehavior,
-  select,
   Selection,
   Transition,
+  drag,
+  select,
   transition,
 } from "d3";
 
@@ -45,7 +45,7 @@ export class NodeGraphConnector {
    */
   drag(event: MouseEvent, node: TNode): void {
     if (!node.state.isSelected) {
-      node.state.select();
+      node.state.selectForConnection();
     }
     this._networkGraph.workspace.reset();
     this._networkGraph.workspace.dragline.init(event);
@@ -63,12 +63,12 @@ export class NodeGraphConnector {
     const workspace = this._networkGraph.workspace;
 
     if (
-      network.nodes.state.selectedNode &&
+      network.connections.state.selectedNode &&
       network.nodes.state.focusedNode &&
       workspace.state.dragLine
     ) {
       this._networkGraph.network.connectNodes(
-        network.nodes.state.selectedNode.idx,
+        network.connections.state.selectedNode.idx,
         network.nodes.state.focusedNode.idx
       );
     }

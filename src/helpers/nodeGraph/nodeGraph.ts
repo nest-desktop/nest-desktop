@@ -71,10 +71,10 @@ export class NodeGraph extends BaseObj {
       n.state.focus();
       // Draw line between selected node and focused node.
       if (
-        n.nodes.state.selectedNode &&
+        n.nodes.network.connections.state.selectedNode &&
         this._networkGraph.workspace.state.dragLine
       ) {
-        const selectedNode = n.nodes.state.selectedNode;
+        const selectedNode = n.nodes.network.connections.state.selectedNode;
         const sourcePos = selectedNode.view.state.position;
         this._networkGraph.workspace.dragline.drawPath(
           sourcePos,
@@ -151,7 +151,7 @@ export class NodeGraph extends BaseObj {
       this._networkGraph.selector
         .select("g#nodes")
         .selectAll("g.node")
-        .data(this.network.nodes.all, (n: TNode | unknown) =>
+        .data(this.network.nodes.nodes, (n: TNode | unknown) =>
           n instanceof BaseNode ? n.hash : ""
         );
 

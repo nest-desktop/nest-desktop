@@ -7,7 +7,7 @@ import { truncate } from "@/utils/truncate";
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
-import { useNESTSessionStore } from "../stores/sessionStore";
+import { useNESTStore } from "../stores/nestStore";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
@@ -17,11 +17,11 @@ const logger = mainLogger.getSubLogger({
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
-  const nestSessionStore = useNESTSessionStore();
+  const nestStore = useNESTStore();
   const projectStore = useNESTProjectStore();
 
   if (to.params.projectId) {
-    const loading = computed(() => nestSessionStore.loading);
+    const loading = computed(() => nestStore.state.loading);
     watch(loading, (state) => {
       if (!state) {
         projectStore.loadProject(to.params.projectId);

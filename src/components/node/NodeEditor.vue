@@ -4,6 +4,7 @@
     @mouseenter="node.state.focus()"
     @mouseleave="node.nodes.unfocusNode()"
     class="node ma-1"
+    v-if="node.state.show"
   >
     <v-card-title class="node-title mt-2 ml-10">
       <v-select

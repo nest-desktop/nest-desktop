@@ -171,7 +171,6 @@ export class BaseNetwork extends BaseObj {
    */
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
-
     this.nodes?.addNode({
       model: model || this._defaultModels[view?.elementType || "neuron"],
       view,

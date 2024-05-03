@@ -17,7 +17,6 @@ import { TNodes } from "@/types/nodesTypes";
 import { TSimulation } from "@/types/simulationTypes";
 import { StateTree, Store } from "pinia";
 import { onlyUnique } from "../common/array";
-import { NodeGroup } from "./nodeGroup";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -34,7 +33,6 @@ export class BaseNode extends BaseObj {
     undefined;
   private _annotations: string[] = [];
   private _doc: INodeProps;
-  private _idx: number; // generative
   private _params: { [key: string]: NodeParameter } = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
@@ -48,12 +46,11 @@ export class BaseNode extends BaseObj {
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 1 } } });
+    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
 
     this._nodes = nodes;
-    this._idx = this.nodes.all.length;
 
-    this._modelId = nodeProps.model || "iaf_psc_alpha";
+    this._modelId = nodeProps.model || "";
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
     this._doc = nodeProps;
@@ -68,8 +65,6 @@ export class BaseNode extends BaseObj {
     if (this.model.isRecorder) {
       this.createActivity(nodeProps?.activity);
     }
-
-    console.log(this);
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity | undefined {
@@ -96,16 +91,16 @@ export class BaseNode extends BaseObj {
 
   get connections(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) => connection.sourceIdx === this._idx
+      (connection: TConnection) => connection.sourceIdx === this.idx
     );
   }
 
   get connectionsNeurons(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        (connection.sourceIdx === this._idx &&
+        (connection.sourceIdx === this.idx &&
           connection.targetNode.model.isNeuron) ||
-        (connection.targetIdx === this._idx &&
+        (connection.targetIdx === this.idx &&
           connection.sourceNode.model.isNeuron)
     );
   }
@@ -113,7 +108,7 @@ export class BaseNode extends BaseObj {
   get connectionsNeuronSources(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        connection.targetIdx === this._idx &&
+        connection.targetIdx === this.idx &&
         connection.sourceNode.model.isNeuron
     );
   }
@@ -121,7 +116,7 @@ export class BaseNode extends BaseObj {
   get connectionsNeuronTargets(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        connection.sourceIdx === this._idx &&
+        connection.sourceIdx === this.idx &&
         connection.targetNode.model.isNeuron
     );
   }
@@ -129,7 +124,7 @@ export class BaseNode extends BaseObj {
   get connectionsStimulatorSources(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        connection.targetIdx === this._idx &&
+        connection.targetIdx === this.idx &&
         connection.sourceNode.model.isStimulator
     );
   }
@@ -161,6 +156,10 @@ export class BaseNode extends BaseObj {
     return this.model.isNeuron && this._view.synWeights === "excitatory";
   }
 
+  get isGroup(): boolean {
+    return false;
+  }
+
   /**
    * Check if it is an inhibitory neuron.
    */
@@ -169,7 +168,7 @@ export class BaseNode extends BaseObj {
   }
 
   get idx(): number {
-    return this._idx;
+    return this._nodes.all.indexOf(this);
   }
 
   get label(): string {
@@ -233,6 +232,11 @@ export class BaseNode extends BaseObj {
 
   get nodes(): TNodes {
     return this._nodes;
+  }
+
+  get nodeIdx(): number {
+    // @ts-ignore - Argument of type 'this' is not assignable to parameter of type '(TNode & NESTNode) & NorseNode'.
+    return this._nodes.nodes.indexOf(this);
   }
 
   get params(): { [key: string]: NodeParameter } {
@@ -314,7 +318,7 @@ export class BaseNode extends BaseObj {
 
   get sourceNodes(): TNode[] {
     return this.network.connections.all
-      .filter((connection: TConnection) => connection.targetIdx === this._idx)
+      .filter((connection: TConnection) => connection.targetIdx === this.idx)
       .map((connection: TConnection) => connection.sourceNode);
   }
 
@@ -324,7 +328,7 @@ export class BaseNode extends BaseObj {
 
   get targetNodes(): TNode[] {
     return this.network.connections.all
-      .filter((connection: TConnection) => connection.sourceIdx === this._idx)
+      .filter((connection: TConnection) => connection.sourceIdx === this.idx)
       .map((connection: TConnection) => connection.targetNode);
   }
 
@@ -348,8 +352,6 @@ export class BaseNode extends BaseObj {
    * @param visible boolean
    */
   addParameter(paramProps: INodeParamProps, visible: boolean = false): void {
-    console.log(paramProps, visible);
-
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
 
     if (visible) {
@@ -410,8 +412,6 @@ export class BaseNode extends BaseObj {
    * Clean node component.
    */
   clean(): void {
-    const nodes = this.nodes.all as (TNode | NodeGroup)[];
-    this._idx = nodes.indexOf(this);
     this.view.clean();
   }
 
@@ -620,7 +620,7 @@ export class BaseNode extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      idx: this._idx,
+      idx: this.idx,
       model: this._modelId,
       params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
       size: this._size,

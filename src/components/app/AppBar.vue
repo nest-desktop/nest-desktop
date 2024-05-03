@@ -21,8 +21,8 @@
           <v-icon
             :color="appStore.currentSimulator.id"
             :icon="appStore.currentSimulator.id + ':logo'"
-            style="background-color: white; border-radius: 4px; opacity: 1"
             size="large"
+            style="background-color: white; border-radius: 4px; opacity: 1"
           />
         </template>
         {{ appStore.currentSimulator.title }}
@@ -59,10 +59,10 @@
 
     <v-list density="compact">
       <v-list-item
-        v-for="(item, index) in settingsItems"
         :key="index"
         :value="item.id"
         @click="item.onClick"
+        v-for="(item, index) in settingsItems"
       >
         <template #prepend>
           <v-icon :icon="item.icon" size="small" />
@@ -82,12 +82,12 @@
   <v-btn :to="{ name: 'about' }" size="x-small" variant="text">about</v-btn>
 
   <v-btn
+    append-icon="mdi:mdi-open-in-new"
     class="mx-1px"
     href="https://nest-desktop.readthedocs.io"
     size="x-small"
     target="_blank"
     variant="text"
-    append-icon="mdi:mdi-open-in-new"
   >
     help
   </v-btn>
@@ -95,11 +95,11 @@
   <v-divider class="mx-1" vertical />
 
   <v-btn
-    size="x-small"
     :icon="appStore.state.themeIcon"
-    variant="text"
-    title="Toggle theme"
     @click="appStore.toggleTheme()"
+    size="x-small"
+    title="Toggle theme"
+    variant="text"
   />
 
   <v-spacer />
@@ -107,18 +107,18 @@
   <v-divider class="mx-1" vertical />
 
   <v-btn
-    v-for="(backend, index) in appStore.currentSimulator.backends"
+    :disabled="!backend.state.enabled"
     :key="index"
-    :disabled="!backend.isEnabled"
-    :title="backend.URL"
-    size="x-small"
-    variant="text"
+    :title="backend.state.url"
     @click="backend.check()"
+    size="x-small"
+    v-for="(backend, index) in appStore.currentSimulator.backends"
+    variant="text"
   >
     {{ backend.state.name }}
     <v-icon
       :color="
-        backend.isEnabled
+        backend.state.enabled
           ? backend.isOK && backend.isValid
             ? 'green'
             : 'red'
@@ -132,11 +132,11 @@
   <v-divider class="mx-1" vertical />
 
   <v-btn
+    @click="appStore.state.logsOpen = !appStore.state.logsOpen"
     icon="mdi:mdi-menu-open"
     size="x-small"
-    variant="text"
     title="Open request logs"
-    @click="appSessionStore.state.logsOpen = !appSessionStore.state.logsOpen"
+    variant="text"
   />
 </template>
 
@@ -145,9 +145,6 @@
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
-
-import { useAppSessionStore } from "@/stores/appSessionStore";
-const appSessionStore = useAppSessionStore();
 
 const settingsItems = [
   {

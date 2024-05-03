@@ -18,14 +18,6 @@
 
       <g id="networkWorkspace">
         <g class="grid no-print" />
-        <g>
-          <path
-            :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }"
-            class="dragline"
-            d="M0,0L0,0"
-            fill="none"
-          />
-        </g>
 
         <g id="network">
           <g :key="graph?.network.connections.all.length" class="synMarker">
@@ -74,6 +66,16 @@
                 <text dx="8" dy="5" />
               </marker>
             </defs>
+          </g>
+
+          <g id="nodeGroups" />
+
+          <g class="dragline">
+            <path
+              :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }"
+              d="M0,0L0,0"
+              fill="none"
+            />
           </g>
 
           <g id="modelAssigned" />
@@ -162,6 +164,10 @@ onBeforeUnmount(() => {
       pointer-events: none;
       text-transform: uppercase !important;
     }
+  }
+
+  .nodeGroup path {
+    cursor: pointer;
   }
 }
 </style>

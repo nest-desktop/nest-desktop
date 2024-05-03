@@ -107,12 +107,11 @@
 
     <template #nodes>
       <div :key="project.network.nodes.length">
-        <div :key="index" v-for="(node, index) in project.network.nodes.nodes">
-          <NodeEditor
-            :node="(node as NESTNode)"
-            @mouseenter="node.state.focus()"
-            @mouseleave="node.nodes.unfocusNode()"
-            v-if="node.state.show"
+        <div :key="index" v-for="(node, index) in project.network.nodes.all">
+          <NodeEditor :node="(node as NESTNode)" v-if="!node.isGroup" />
+          <NodeGroup
+            :nodeGroup="(node as TNodeGroup)"
+            v-else-if="node.isGroup"
           />
         </div>
       </div>
@@ -126,9 +125,11 @@
 import { computed } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
+import NodeGroup from "@/components/node/NodeGroup.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
+import { NodeGroup as TNodeGroup } from "@/helpers/node/nodeGroup";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";

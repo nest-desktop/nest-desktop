@@ -7,7 +7,7 @@
     <app-request-logs />
 
     <v-progress-circular
-      v-if="appStore.session.state.loading"
+      v-if="appStore.state.loading"
       class="ma-auto"
       color="primary"
       indeterminate

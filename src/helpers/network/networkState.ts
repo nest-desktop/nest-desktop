@@ -74,7 +74,7 @@ export class NetworkState {
    * Unselect all nodes and connections.
    */
   unselectAll(): void {
-    this._network.nodes.unselectNode();
-    this._network.connections.unselectConnection();
+    this._network.connections.unselectAll();
+    this._network.nodes.unselectNodes();
   }
 }

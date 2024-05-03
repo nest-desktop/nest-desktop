@@ -1,4 +1,5 @@
 // networkGraphNodeAddPanel.ts
+
 import { Arc, Selection, arc } from "d3";
 
 import { BaseObj } from "../common/base";
@@ -6,6 +7,13 @@ import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { TModel } from "@/types/modelTypes";
 import { TNetwork } from "@/types/networkTypes";
 import { darkMode } from "../common/theme";
+
+interface IModelProps {
+  favorite: string;
+  label: string;
+  title: string;
+}
+
 export class NetworkGraphNodeAddPanel extends BaseObj {
   private _elementTypes: string[] = ["recorder", "neuron", "stimulator"];
   private _selector: Selection<any, any, any, any>;
@@ -103,16 +111,11 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       .on("mouseover", () => {
         panel.select(".menuItem").attr("fill-opacity", "0.9");
         panel.select(".label").style("fill", darkMode() ? "#121212" : "white");
-
-        // this.showTooltip(label);
         panel.select(".models").style("display", "block");
       })
       .on("mouseout", () => {
-        // this.hideTooltip();
-
         panel.select(".menuItem").attr("fill-opacity", "0.5");
         panel.select(".label").style("fill", darkMode() ? "white" : "#121212");
-
         panel.select(".models").style("display", "none");
       });
 
@@ -147,7 +150,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     panel: Selection<any, any, any, any>,
     idx: number,
     elementType: string,
-    model: TModel
+    model: IModelProps
   ): Selection<any, any, any, any> {
     const layer = Math.floor(idx / 3);
     const idxOffset = this._elementTypes.indexOf(elementType) * 3 + layer * 6;
@@ -161,7 +164,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       idx + idxOffset,
       9,
       "model",
-      model.id,
+      model.title,
       model.label
     );
 
@@ -170,12 +173,10 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       if (this.network == undefined) {
         return;
       }
-      // this._workspace.state.elementType = elementType;
-      // this.update();
 
       this._workspace.animationOff();
 
-      this.network.createNode(model.label, {
+      this.network.createNode(model.title, {
         elementType,
         position: Object.assign({}, this.position),
       });
@@ -183,51 +184,8 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       this._workspace.networkGraph.update();
       this._workspace.networkGraph.workspace.updateTransform();
     });
+
     return modelPanel;
-  }
-
-  /**
-   * Draw tooltip.
-   */
-  drawTooltip(): void {
-    const tooltipHeight = 16;
-    const tooltipOffset = 5 + tooltipHeight / 2 + this.nodeRadius * 2;
-
-    const tooltip = this._selector
-      .append("g")
-      .attr("class", "tooltip")
-      .attr("transform", "translate(0, -" + tooltipOffset + ")")
-      .style("visibility", "hidden");
-
-    tooltip
-      .append("rect")
-      .attr("class", "bgcolor")
-      .attr("height", tooltipHeight + "px")
-      .attr("width", "0")
-      .style("stroke", "grey")
-      .style("transform", "translate(-50%, -50%)")
-      .style("transform-box", "fill-box");
-
-    tooltip
-      .append("text")
-      .attr("class", "label textcolor text-button")
-      .attr("dominant-baseline", "middle")
-      .attr("dy", 1)
-      .style("font-size", "0.7em", "important")
-      .style("font-weight", "900")
-      .style("pointer-events", "none")
-      .style("text-anchor", "middle");
-  }
-
-  /**
-   * Hide tooltip.
-   */
-  hideTooltip(): void {
-    this._selector
-      .select("g.tooltip")
-      .style("visibility", "hidden")
-      .select("text.label")
-      .text("");
   }
 
   /**
@@ -265,7 +223,6 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     });
 
     this.update();
-    // this.drawTooltip();
   }
 
   /**
@@ -285,30 +242,10 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   }
 
   /**
-   * Show tooltip.
-   * @param label string
-   */
-  showTooltip(label: string): void {
-    const tooltip = this._selector
-      .select("g.tooltip")
-      .style("visibility", "visible");
-    tooltip.select("rect").attr("width", 8 + label.length * 8 + "px");
-    tooltip.select("text.label").text(tooltip.attr("data-label"));
-  }
-
-  /**
    * Update color of node add panel.
    */
   update(): void {
     this.logger.trace("update");
-
-    // if (this._workspace.state.elementType) {
-    //   const tooltipHeight = 16;
-    //   const tooltipOffset = 5 + tooltipHeight / 2 + this.nodeRadius * 3;
-    //   this._selector
-    //     .select(".tooltip")
-    //     .attr("transform", "translate(0, -" + tooltipOffset + ")");
-    // }
   }
 
   /**
@@ -339,7 +276,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       .attr("class", "models")
       .style("display", "none");
 
-    const models = this.network?.project.modelDBStore
+    const models: IModelProps[] = this.network?.project.modelDBStore
       .getModelsByElementType(elementType)
       .map((model: TModel) => ({
         favorite: model.favorite,
@@ -348,14 +285,13 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       }));
 
     models
-      .filter((model: TModel) => model.favorite || !favoriteOnly)
-      .forEach((model: TModel, modelIdx: number) =>
+      .filter((model: IModelProps) => model.favorite || !favoriteOnly)
+      .forEach((model: IModelProps, modelIdx: number) =>
         this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model)
       );
 
     // Select default model by element type.
     panel.select(".menuItem").on("mouseup", () => {
-      // this.close();
       if (this.network == undefined) {
         return;
       }
@@ -363,16 +299,6 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       this.updateModelMenu(elementType, false);
       this.updateColor();
       panel.select(".models").style("display", "block");
-
-      // this._workspace.animationOff();
-
-      // this.network.createNode(undefined, {
-      //   elementType,
-      //   position: Object.assign({}, this.position),
-      // });
-
-      // this._workspace.networkGraph.update();
-      // this._workspace.networkGraph.workspace.updateTransform();
     });
   }
 }

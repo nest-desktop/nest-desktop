@@ -45,11 +45,9 @@ export class ConnectionGraph {
     // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
-    if (connection.hasOwnProperty("source")) {
-      const sourceNodePosition = connection.sourceNode.view.state.position;
-      sourceNodePosition.x += pos.x;
-      sourceNodePosition.y += pos.y;
-    }
+    const sourceNodePosition = connection.sourceNode.view.state.position;
+    sourceNodePosition.x += pos.x;
+    sourceNodePosition.y += pos.y;
 
     const targetNodePosition = connection.targetNode.view.state.position;
     targetNodePosition.x += pos.x;
@@ -97,9 +95,9 @@ export class ConnectionGraph {
       .on("mouseover", (_, c: TConnection) => {
         c.state.focus();
         // Draw line between selected node and focused connection.
-        if (c.network.nodes.state.selectedNode && this.state.dragLine) {
+        if (c.network.connections.state.selectedNode && this.state.dragLine) {
           this._networkGraph.workspace.dragline.drawPath(
-            c.network.nodes.state.selectedNode.view.state.position,
+            c.network.connections.state.selectedNode.view.state.position,
             c.view.markerEndPosition
           );
         }
@@ -114,7 +112,10 @@ export class ConnectionGraph {
         const workspace = this._networkGraph.workspace;
         connection.sourceNode.state.focus();
 
-        if (network.nodes.state.selectedNode && workspace.state.dragLine) {
+        if (
+          network.connections.state.selectedNode &&
+          workspace.state.dragLine
+        ) {
           // Set cursor position of the focused connection.
           workspace.updateCursorPosition(connection.view.centerPosition);
 
@@ -126,7 +127,7 @@ export class ConnectionGraph {
           // connection.synapse.changes();
 
           // Update record colors of the weight recorder.
-          network.nodes.state.selectedNode.updateRecordsColor();
+          network.connections.state.selectedNode.updateRecordsColor();
         } else {
           connection.state.select();
         }

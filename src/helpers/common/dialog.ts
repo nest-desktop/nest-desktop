@@ -7,7 +7,7 @@ import {
   notifyWarning as _notifyWarning,
 } from "vuetify3-dialog";
 
-import { useAppSessionStore } from "@/stores/appSessionStore";
+import { useAppStore } from "@/stores/appStore";
 
 const now = () =>
   new Date().toLocaleString("en-US", {
@@ -19,8 +19,8 @@ const now = () =>
   });
 
 export const notifyError = (text: string) => {
-  const appSessionStore = useAppSessionStore();
-  appSessionStore.state.requestLogs.unshift({
+  const appStore = useAppStore();
+  appStore.state.requestLogs.unshift({
     date: now(),
     text,
     type: "error",
@@ -29,8 +29,8 @@ export const notifyError = (text: string) => {
 };
 
 export const notifyInfo = (text: string) => {
-  const appSessionStore = useAppSessionStore();
-  appSessionStore.state.requestLogs.unshift({
+  const appStore = useAppStore();
+  appStore.state.requestLogs.unshift({
     date: now(),
     text,
     type: "info",
@@ -39,8 +39,8 @@ export const notifyInfo = (text: string) => {
 };
 
 export const notifySuccess = (text: string) => {
-  const appSessionStore = useAppSessionStore();
-  appSessionStore.state.requestLogs.unshift({
+  const appStore = useAppStore();
+  appStore.state.requestLogs.unshift({
     date: now(),
     text,
     type: "success",
@@ -49,8 +49,8 @@ export const notifySuccess = (text: string) => {
 };
 
 export const notifyWarning = (text: string) => {
-  const appSessionStore = useAppSessionStore();
-  appSessionStore.state.requestLogs.unshift({
+  const appStore = useAppStore();
+  appStore.state.requestLogs.unshift({
     date: now(),
     text,
     type: "warning",

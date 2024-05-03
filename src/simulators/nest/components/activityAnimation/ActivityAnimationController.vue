@@ -1,5 +1,5 @@
 <template>
-  <Card class="mx-1" color="primary">
+  <Card class="ma-1" color="primary">
     <v-expansion-panels class="pa-0" variant="accordion">
       <v-expansion-panel density="compact">
         <v-expansion-panel-title

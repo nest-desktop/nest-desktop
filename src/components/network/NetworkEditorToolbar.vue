@@ -6,26 +6,20 @@
     density="compact"
   >
     <v-btn
-      @click="graph?.network.nodes.state.selectedNode?.state.select()"
-      icon
+      @click="groupSelectedNodes()"
+      icon="mdi:mdi-select-group"
       size="small"
-      v-if="graph?.network.nodes.state.selectedNode"
-    >
-      <NodeAvatar
-        :node="(graph?.network.nodes.state.selectedNode as TNode)"
-        size="32px"
-      />
-    </v-btn>
+      :disabled="!graph?.network.nodes.hasAnySelectedNodes"
+    />
 
     <v-btn
-      @click="
-        graph?.network.connections.state.selectedConnection?.state.select()
-      "
-      v-if="graph?.network.connections.state.selectedConnection"
+      @click="graph?.network.nodes.toggleNodeSelection(node as TNode)"
+      :key="index"
+      icon
+      size="small"
+      v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
     >
-      <ConnectionAvatar
-        :connection="(graph?.network.connections.state.selectedConnection as TConnection)"
-      />
+      <NodeAvatar :node="node as TNode" size="32" />
     </v-btn>
 
     <v-spacer />
@@ -98,9 +92,7 @@
 import { computed, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import ConnectionAvatar from "../connection/ConnectionAvatar.vue";
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
-import { TConnection } from "@/types/connectionTypes";
 import { TNode } from "@/types/nodeTypes";
 import { downloadSVGImage } from "@/helpers/common/download";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
@@ -114,6 +106,19 @@ const state = reactive({
   dialogDelete: false,
   dialogDownload: false,
 });
+
+/**
+ * Download network graph as svg.
+ */
+const downloadNetworkGraph = () => {
+  if (!graph.value?.selector) return;
+
+  downloadSVGImage(
+    graph.value?.selector.node() as Node,
+    graph.value?.network.project.name
+  );
+  state.dialogDownload = false;
+};
 
 /**
  * Empty network.
@@ -133,17 +138,11 @@ const emptyNetwork = () => {
   });
 };
 
-/**
- * Download network graph as svg.
- */
-const downloadNetworkGraph = () => {
-  if (!graph.value?.selector) return;
-
-  downloadSVGImage(
-    graph.value?.selector.node() as Node,
-    graph.value?.network.project.name
-  );
-  state.dialogDownload = false;
+const groupSelectedNodes = () => {
+  if (graph && graph.value) {
+    graph.value.network.nodes.groupSelected();
+    graph.value.nodeGroupGraph.update();
+  }
 };
 </script>
 

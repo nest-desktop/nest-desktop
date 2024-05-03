@@ -9,7 +9,7 @@ import {
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { TNode } from "@/types/nodeTypes";
 import { sum, deviation, max, mean, min } from "@/helpers/common/array";
-import { useAppSessionStore } from "@/stores/appSessionStore";
+import { useAppStore } from "@/stores/appStore";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -144,7 +144,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
-    const appSessionStore = useAppSessionStore();
+    const appStore = useAppStore();
 
     const nodeSizeTotal = sum(
       activity.recorder.nodes.nodes.map((node: TNode) => node.size)
@@ -193,7 +193,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       mode: "lines",
       showlegend: false,
-      type: appSessionStore.state.webGL ? "scattergl" : "scatter",
+      type: appStore.state.webGL ? "scattergl" : "scatter",
       visible: this.state.visible,
       x,
       y,
@@ -211,7 +211,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         },
         mode: "lines",
         showlegend: false,
-        type: appSessionStore.state.webGL ? "scattergl" : "scatter",
+        type: appStore.state.webGL ? "scattergl" : "scatter",
         visible: this.state.visible,
         x: [start, end],
         y: [0.63, 0.63],
