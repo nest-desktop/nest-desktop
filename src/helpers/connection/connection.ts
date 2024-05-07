@@ -132,8 +132,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get source(): NodeGroup | TNode {
-    const nodes = this.connections.network.nodes.all;
-    return nodes[this._sourceIdx];
+    return this.connections.network.nodes.all[this._sourceIdx];
   }
 
   set source(node: TNode) {
@@ -149,8 +148,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get sourceNode(): TNode {
-    const nodes = this.connections.network.nodes.nodeItems;
-    return nodes[this._sourceIdx];
+    return this.connections.network.nodes.all[this._sourceIdx] as TNode;
   }
 
   set sourceNode(node: TNode) {
@@ -182,7 +180,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get targetNode(): TNode {
-    return this.network.nodes.nodeItems[this._targetIdx];
+    return this.network.nodes.all[this._targetIdx] as TNode;
   }
 
   set targetNode(node: TNode) {

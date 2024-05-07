@@ -160,15 +160,29 @@ export class BaseNode extends BaseObj {
     return false;
   }
 
-  get isNode(): boolean {
-    return true;
-  }
-
   /**
    * Check if it is an inhibitory neuron.
    */
   get isInhibitoryNeuron(): boolean {
     return this.model.isNeuron && this._view.synWeights === "inhibitory";
+  }
+
+  get isNode(): boolean {
+    return true;
+  }
+
+  /**
+   * Check if this node is selected.
+   */
+  get isSelected(): boolean {
+    return this.nodes.state.selectedNodes.includes(this);
+  }
+
+  /**
+   * Check if this node is selected for connection.
+   */
+  get isSelectedForConnection(): boolean {
+    return this.nodes.network.connections.state.selectedNode === this;
   }
 
   get idx(): number {

@@ -11,8 +11,8 @@
               :key="index"
               v-for="(connection, index) in project.network.connections.all"
             >
-              {{ connection.sourceNode.view.label }} ->
-              {{ connection.targetNode.view.label }}
+              {{ connection.source.view.label }} ->
+              {{ connection.target.view.label }}
             </v-list-item>
           </v-list>
         </v-card-text>

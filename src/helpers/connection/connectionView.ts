@@ -49,8 +49,8 @@ export class ConnectionView {
   } {
     return {
       ellipticalArc:
-        this._connection.sourceNode.state.isSelected &&
-        this._connection.sourceNode.connections.length > 1
+        this._connection.source.isSelected &&
+        this._connection.source.connections.length > 1
           ? 1
           : 10,
       sweep: this._connection.idx % 2,
@@ -116,9 +116,11 @@ export class ConnectionView {
    * Check if it is connected by neurons only.
    */
   connectOnlyNeurons(): boolean {
+    const sourceNode = this._connection.sourceNode;
+    const targetNode = this._connection.targetNode;
     return (
-      this._connection.sourceNode.model.isNeuron &&
-      this._connection.targetNode.model.isNeuron
+      (sourceNode.isNode ? sourceNode.model.isNeuron : false) &&
+      (targetNode.isNode ? targetNode.model.isNeuron : false)
     );
   }
 
@@ -126,9 +128,11 @@ export class ConnectionView {
    * Check if it is connected to any recorder.
    */
   connectRecorder(): boolean {
+    const sourceNode = this._connection.sourceNode;
+    const targetNode = this._connection.targetNode;
     return (
-      this._connection.sourceNode.model.isRecorder ||
-      this._connection.targetNode.model.isRecorder
+      (sourceNode.isNode ? sourceNode.model.isRecorder : false) ||
+      (targetNode.isNode ? targetNode.model.isRecorder : false)
     );
   }
 
@@ -136,7 +140,9 @@ export class ConnectionView {
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.targetNode.model.isSpikeRecorder;
+    return this._connection.targetNode.isNode
+      ? this._connection.targetNode.model.isSpikeRecorder
+      : false;
   }
 
   /**

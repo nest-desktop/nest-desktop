@@ -5,14 +5,15 @@ import { BaseObj } from "@/helpers/common/base";
 import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 export class NESTNodeSlice extends BaseObj {
   private readonly _name = "NESTNodeSlice";
-  private _node: NESTNode;
+  private _node: NESTNode | NodeGroup;
   private _params: { [key: string]: NodeParameter } = {};
   private _visible: boolean = false;
 
-  constructor(node: NESTNode, paramsProps: INodeParamProps[] = []) {
+  constructor(node: NESTNode | NodeGroup, paramsProps: INodeParamProps[] = []) {
     super({
       config: { name: "NESTNodeSlice", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },
@@ -50,8 +51,16 @@ export class NESTNodeSlice extends BaseObj {
     return `[${indices.join(":")}]`;
   }
 
-  get node(): NESTNode {
+  get node(): NESTNode | NodeGroup {
     return this._node;
+  }
+
+  get nodeGroup(): NodeGroup {
+    return this._node as NodeGroup;
+  }
+
+  get nodeItem(): NESTNode {
+    return this._node as NESTNode;
   }
 
   get visible(): boolean {
@@ -81,7 +90,7 @@ export class NESTNodeSlice extends BaseObj {
           param.disabled = false;
         }
       }
-      this._params[param.id] = new NodeParameter(this._node, param);
+      this._params[param.id] = new NodeParameter(this.nodeItem, param);
     });
   }
 
@@ -109,7 +118,7 @@ export class NESTNodeSlice extends BaseObj {
    */
   update(): void {
     if (this._node.isNode && this._params.stop.disabled) {
-      this._params.stop.value = this._node.size;
+      this._params.stop.value = this.nodeItem.size;
     }
   }
 }

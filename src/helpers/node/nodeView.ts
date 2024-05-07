@@ -132,7 +132,7 @@ export class NodeView extends BaseObj {
       true ||
       connections.state.selectedNode == null ||
       (connections.state.selectedNode != null &&
-        this.node.state.isSelectedForConnection) ||
+        this.node.isSelectedForConnection) ||
       (nodes.state.focusedNode != null && this.node.state.isFocused)
     );
   }

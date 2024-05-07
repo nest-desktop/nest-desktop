@@ -39,22 +39,6 @@ export class NodeState {
     return this.node.nodes.state.focusedNode === this.node;
   }
 
-  /**
-   * Check if this node is selected.
-   */
-  get isSelected(): boolean {
-    return this._node.nodes.state.selectedNodes.includes(this._node);
-  }
-
-  /**
-   * Check if this node is selected for connection.
-   */
-  get isSelectedForConnection(): boolean {
-    return (
-      this._node.nodes.network.connections.state.selectedNode === this._node
-    );
-  }
-
   get node(): TNode {
     return this._node;
   }

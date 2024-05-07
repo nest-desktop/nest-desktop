@@ -114,9 +114,12 @@ export class NESTNetwork extends BaseNetwork {
       target: targetIdx,
     });
 
-    const source = this.nodes.nodeItems[sourceIdx];
-    if (source.view.state.synWeights) {
-      connection.synapse.weightLabel = source.view.state.synWeights;
+    if (
+      connection.sourceNode.isNode &&
+      connection.sourceNode.view.state.synWeights
+    ) {
+      connection.synapse.weightLabel =
+        connection.sourceNode.view.state.synWeights;
     }
 
     // Trigger network change.

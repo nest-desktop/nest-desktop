@@ -20,6 +20,7 @@ import { NESTNodeSlice } from "../node/nodeSlice";
 import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
 import { IConnectionRuleConfig } from "@/helpers/connection/connectionRule";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 export interface INESTConnectionProps extends IConnectionProps {
   sourceSlice?: INodeParamProps[];
@@ -42,9 +43,9 @@ export class NESTConnection extends BaseConnection {
       simulator: "nest",
     });
 
-    this._sourceSlice = new NESTNodeSlice(this.sourceNode, []);
+    this._sourceSlice = new NESTNodeSlice(this.source, []);
     this._targetSlice = new NESTNodeSlice(
-      this.targetNode,
+      this.target,
       connectionProps.targetSlice
     );
 
@@ -81,8 +82,14 @@ export class NESTConnection extends BaseConnection {
     return this.connections.network;
   }
 
+  override get source(): NESTNode | NodeGroup {
+    return this.connections.network.nodes.all[this.sourceIdx] as
+      | NESTNode
+      | NodeGroup;
+  }
+
   override get sourceNode(): NESTNode {
-    return this.network.nodes.nodeItems[this.sourceIdx];
+    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode;
   }
 
   get sourceSlice(): NESTNodeSlice {
@@ -93,8 +100,14 @@ export class NESTConnection extends BaseConnection {
     return this._synapse as NESTSynapse;
   }
 
+  override get target(): NESTNode | NodeGroup {
+    return this.connections.network.nodes.all[this.targetIdx] as
+      | NESTNode
+      | NodeGroup;
+  }
+
   override get targetNode(): NESTNode {
-    return this.network.nodes.nodeItems[this.targetIdx];
+    return this.connections.network.nodes.all[this.targetIdx] as NESTNode;
   }
 
   get targetSlice(): NESTNodeSlice {

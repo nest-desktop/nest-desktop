@@ -39,11 +39,31 @@
         </v-btn>
       </v-row>
     </v-card-title>
+
+    <v-card-actions
+      style="min-height: 40px"
+      v-if="nodeGroup.connections.length > 0"
+    >
+      <v-row>
+        <v-expansion-panels
+          :key="nodeGroup.connections.length"
+          v-model="nodeGroup.state.connectionPanelIdx"
+          variant="accordion"
+        >
+          <ConnectionEditor
+            :connection
+            :key="index"
+            v-for="(connection, index) in nodeGroup.connections"
+          />
+        </v-expansion-panels>
+      </v-row>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts" setup>
 import { NodeGroup } from "@/helpers/node/nodeGroup";
+import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeGroupMenu from "./NodeGroupMenu.vue";
 
