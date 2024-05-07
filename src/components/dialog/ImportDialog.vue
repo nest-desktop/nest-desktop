@@ -237,12 +237,13 @@ import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
 import { INESTCopyModelProps } from "@/simulators/nest/helpers/model/copyModel";
-import { IsNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
+import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 
+import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
+import { Store } from "pinia";
 import { TModelProps } from "@/types/modelTypes";
 import { TNetworkProps } from "@/types/networkTypes";
-import { Store } from "pinia";
 import { TProjectProps } from "@/types/projectTypes";
 
 // import { useAppStore } from "@/stores/appStore";
@@ -389,7 +390,7 @@ const addProps = (
         const networkProps = projectProps.network as TNetworkProps;
 
         // Get model Ids from copied models if not installed in NEST Desktop.
-        if (networkProps && IsNESTNetworkProps(networkProps)) {
+        if (networkProps && isNESTNetworkProps(networkProps)) {
           networkProps.models?.forEach((modelProps: INESTCopyModelProps) => {
             if (!modelProps.existing) return;
 
@@ -403,16 +404,20 @@ const addProps = (
         }
 
         // Get model Ids from node models if not installed in NEST Desktop.
-        networkProps.nodes?.forEach((nodeProps: INodeProps) => {
-          if (!nodeProps.model) return;
+        networkProps.nodes?.forEach(
+          (nodeProps: INodeProps | INodeGroupProps) => {
+            if (!("model" in nodeProps)) return;
 
-          if (
-            !modelDBStore.value.hasModel(nodeProps.model) &&
-            !modelIds.includes(nodeProps.model)
-          ) {
-            modelIds.push(nodeProps.model);
+            const nodeItemProps = nodeProps as INodeProps;
+            if (
+              nodeItemProps.model &&
+              !modelDBStore.value.hasModel(nodeItemProps.model) &&
+              !modelIds.includes(nodeItemProps.model)
+            ) {
+              modelIds.push(nodeItemProps.model);
+            }
           }
-        });
+        );
 
         axios
           .get(githubRawURL("models") + `index.json`)

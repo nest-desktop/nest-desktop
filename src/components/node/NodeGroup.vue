@@ -1,10 +1,21 @@
 <template>
-  <v-card :color="nodeGroup.view.color" class="ma-1" variant="tonal">
+  <v-card
+    :color="nodeGroup.view.color"
+    class="ma-1"
+    variant="tonal"
+    v-if="nodeGroup.show"
+  >
     <v-card-title>
+      <v-btn @click.stop="nodeGroup.select()" class="mx-1 btn-avatar" flat icon>
+        <NodeAvatar :node="nodeGroup" size="48px" />
+      </v-btn>
+
+      <v-divider class="mx-3" inset vertical />
+
       <v-btn
         :key="index"
-        @click="node.state.select()"
-        class="btn-avatar"
+        @click.stop="node.select()"
+        class="mx-1 btn-avatar"
         flat
         icon
         v-for="(node, index) in nodeGroup.nodes"

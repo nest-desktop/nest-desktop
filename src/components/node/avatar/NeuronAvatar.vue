@@ -1,7 +1,7 @@
 <template>
   <v-avatar class="neuron" rounded="0">
     <span :class="{ 'mt-2': weight === 'excitatory' }" class="label">
-      {{ label }}
+      {{ text }}
     </span>
     <v-icon
       :color="color"
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 defineProps({
   color: { type: String, default: "primary" },
-  label: { type: String, default: "" },
+  text: { type: String, default: "" },
   weight: { type: String, default: "" },
 });
 </script>

@@ -181,7 +181,7 @@ export class NodeGraphShape extends BaseObj {
           this._networkGraph.workspace.update();
         }
       } else if (this._networkGraph.workspace.altPressed) {
-        node.state.selectForConnection();
+        node.selectForConnection();
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
       } else if (this._networkGraph.workspace.ctrlPressed) {

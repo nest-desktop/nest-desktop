@@ -4,6 +4,7 @@
 
 import { BaseObj } from "../common/base";
 import { INetworkProps } from "./network";
+import { INodeProps } from "../node/node";
 import { TNode } from "@/types/nodeTypes";
 import { TProject } from "@/types/projectTypes";
 
@@ -95,7 +96,7 @@ export class NetworkRevision extends BaseObj {
     if (currentNetwork.nodes != null || currentNetwork.nodes != undefined) {
       // Add activity to recorder nodes only if hashes is matched.
       this._project.network.nodes.recorders.forEach((node: TNode) => {
-        const nodes = currentNetwork.nodes;
+        const nodes = currentNetwork.nodes as INodeProps[];
         if (nodes) {
           nodes[node.idx].activity = node.activity?.toJSON();
         }

@@ -45,7 +45,7 @@ export class NodeGraphConnector {
    */
   drag(event: MouseEvent, node: TNode): void {
     if (!node.state.isSelected) {
-      node.state.selectForConnection();
+      node.selectForConnection();
     }
     this._networkGraph.workspace.reset();
     this._networkGraph.workspace.dragline.init(event);

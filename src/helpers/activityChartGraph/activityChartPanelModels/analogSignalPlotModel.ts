@@ -51,7 +51,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Add spike threshold data for membrane potential.
    */
   // addSpikeThresholdLine(record: NodeRecord): void {
-  // const thresholds: number[] = record.node.nodes.all
+  // const thresholds: number[] = record.node.nodes.nodeItems
   //   .filter((node: Node) => node.modelId.startsWith("iaf"))
   //   .map(
   //     (target: Node) => (target.getParameter("V_th").value as number) || -55

@@ -101,20 +101,20 @@
       </template>
     </template>
 
-    <template #simulationKernel>
-      <SimulationKernelEditor :simulation="project.simulation" />
-    </template>
-
     <template #nodes>
       <div :key="project.network.nodes.length">
         <div :key="index" v-for="(node, index) in project.network.nodes.all">
-          <NodeEditor :node="(node as NESTNode)" v-if="!node.isGroup" />
+          <NodeEditor :node="(node as NESTNode)" v-if="node.isNode" />
           <NodeGroup
             :nodeGroup="(node as TNodeGroup)"
             v-else-if="node.isGroup"
           />
         </div>
       </div>
+    </template>
+
+    <template #simulationKernel>
+      <SimulationKernelEditor :simulation="project.simulation" />
     </template>
   </ProjectController>
 

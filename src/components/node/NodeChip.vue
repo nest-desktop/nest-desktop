@@ -32,7 +32,7 @@ const graph = computed(() => props.graph);
 const node = computed(() => props.node);
 
 const selectNode = () => {
-  node.value.state.select();
+  node.value.select();
   graph.value.update();
 };
 </script>

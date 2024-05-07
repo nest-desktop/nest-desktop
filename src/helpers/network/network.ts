@@ -4,6 +4,7 @@ import { BaseConnections } from "../connection/connections";
 import { BaseNodes } from "../node/nodes";
 import { BaseObj } from "@/helpers/common/base";
 import { IConnectionProps } from "../connection/connection";
+import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
@@ -13,10 +14,9 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 import { TProject } from "@/types/projectTypes";
-import { NodeGroup } from "../node/nodeGroup";
 
 export interface INetworkProps {
-  nodes?: INodeProps[];
+  nodes?: (INodeProps | INodeGroupProps)[];
   connections?: IConnectionProps[];
 }
 
@@ -171,7 +171,7 @@ export class BaseNetwork extends BaseObj {
    */
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
-    this.nodes?.addNode({
+    this.nodes.addNode({
       model: model || this._defaultModels[view?.elementType || "neuron"],
       view,
     });
@@ -268,7 +268,7 @@ export class BaseNetwork extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      nodes: this.nodes.all.map((node: TNode | NodeGroup) => node.hash),
+      nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
       connections: this.connections.all.map(
         (connection: TConnection) => connection.hash
       ),
@@ -280,6 +280,6 @@ export class BaseNetwork extends BaseObj {
    */
   updateStyle(): void {
     this.logger.trace("update node style");
-    this._nodes.nodes.forEach((node: TNode) => node.view.updateStyle());
+    this._nodes.nodeItems.forEach((node: TNode) => node.view.updateStyle());
   }
 }

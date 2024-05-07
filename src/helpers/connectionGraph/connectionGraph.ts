@@ -14,6 +14,7 @@ import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspa
 import { TConnection } from "@/types/connectionTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { drawPathNode } from "./connectionGraphPath";
+import { BaseConnection } from "../connection/connection";
 
 export class ConnectionGraph {
   private _networkGraph: TNetworkGraph;
@@ -220,7 +221,11 @@ export class ConnectionGraph {
       this._networkGraph.selector
         .select("g#connections")
         .selectAll("g.connection")
-        .data(this.networkGraph.network.connections.all);
+        .data(
+          this.networkGraph.network.connections.all,
+          (c: TConnection | unknown) =>
+            c instanceof BaseConnection ? c.hash : ""
+        );
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

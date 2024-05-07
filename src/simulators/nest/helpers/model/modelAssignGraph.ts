@@ -9,6 +9,7 @@ import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "./copyModel";
 import { NESTNetworkGraph } from "../network/networkGraph";
 import { NESTNode } from "../node/node";
+import { BaseConnection } from "@/helpers/connection/connection";
 
 export class NESTModelAssignGraph {
   private _networkGraph: NESTNetworkGraph;
@@ -77,7 +78,8 @@ export class NESTModelAssignGraph {
       .selectAll("g.modelAssigned")
       .data(
         this._networkGraph.network.connections.recordedByWeightRecorder,
-        (c: NESTConnection | any) => c.hash // TODO: no any!
+        (c: NESTConnection | unknown) =>
+          c instanceof BaseConnection ? c.hash : ""
       );
 
     models

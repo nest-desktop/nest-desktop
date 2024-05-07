@@ -19,7 +19,7 @@
       size="small"
       v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
     >
-      <NodeAvatar :node="node as TNode" size="32" />
+      <NodeAvatar :node="(node as TNode)" :size="32" />
     </v-btn>
 
     <v-spacer />

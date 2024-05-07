@@ -1,7 +1,7 @@
 <template>
   <v-avatar class="stimulator" rounded="0">
     <span class="label">
-      {{ label }}
+      {{ text }}
     </span>
     <v-icon
       :color="color"
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 defineProps({
   color: String,
-  label: String,
+  text: String,
 });
 </script>
 

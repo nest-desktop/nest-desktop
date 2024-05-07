@@ -1,57 +1,132 @@
 // nodeGroup.ts
 
+import { TNetwork } from "@/types/networkTypes";
 import { BaseObj } from "../common/base";
 import { NodeGroupView } from "./nodeGroupView";
 import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 
+export interface INodeGroupProps {
+  nodes: number[];
+}
+
 export class NodeGroup extends BaseObj {
   private _parent: TNodes;
 
-  private _nodes: (TNode | NodeGroup)[] = [];
+  private _nodes: (NodeGroup | TNode)[] = [];
   private _view: NodeGroupView;
 
-  constructor(parent: TNodes, nodes: TNode[]) {
+  constructor(parent: TNodes, nodeGroupProps: INodeGroupProps) {
     super();
     this._parent = parent;
-    this._nodes = [...nodes];
+    this._nodes = nodeGroupProps.nodes.map(
+      (idx: number) => this._parent.nodes[idx]
+    );
 
     this._view = new NodeGroupView(this);
+
+    this.updateHash();
   }
 
-  get all(): (TNode | NodeGroup)[] {
+  get all(): (NodeGroup | TNode)[] {
     return this._nodes;
   }
 
+  get elementType(): string {
+    return "group";
+  }
+
   get idx(): number {
-    return this._parent.nodeGroups.indexOf(this);
+    return this._parent.all.indexOf(this);
   }
 
   get isGroup(): boolean {
     return true;
   }
 
-  get nodes(): TNode[] {
-    return this._nodes.filter(
-      (node: TNode | NodeGroup) => node.constructor.name !== "NodeGroup"
-    ) as TNode[];
+  get isNode(): boolean {
+    return false;
+  }
+
+  get network(): TNetwork {
+    return this._parent.network;
   }
 
   get nodeGroups(): NodeGroup[] {
     return this._nodes.filter(
-      (node: TNode | NodeGroup) => node.constructor.name === "NodeGroup"
+      (node: NodeGroup | TNode) => node.isGroup
     ) as NodeGroup[];
   }
 
-  get parent(): TNodes {
+  get nodeItems(): TNode[] {
+    return this._nodes.filter(
+      (node: NodeGroup | TNode) => node.isNode
+    ) as TNode[];
+  }
+
+  get nodeItemsDeep(): TNode[] {
+    return [
+      ...new Set(
+        this.nodes
+          .map((node: NodeGroup | TNode) => {
+            if (node.isGroup) {
+              const nodeGroup = node as NodeGroup;
+              return nodeGroup.nodeItemsDeep as TNode[];
+            }
+            return node as TNode;
+          })
+          .flat()
+      ),
+    ];
+  }
+
+  get nodes(): (NodeGroup | TNode)[] {
+    return this._nodes;
+  }
+
+  get parent(): NodeGroup | TNodes {
     return this._parent;
   }
 
   get toCode(): string {
-    return this.nodes.map((node: TNode) => node.view.label).join(" + ");
+    return this.nodes
+      .map((node: NodeGroup | TNode) => node.view.label)
+      .join(" + ");
   }
 
   get view(): NodeGroupView {
     return this._view;
+  }
+
+  /**
+   * Select this node group.
+   */
+  select(): void {
+    this._parent.toggleNodeSelection(this);
+  }
+
+  get show(): boolean {
+    return this._parent.showNode(this);
+  }
+
+  toJSON(): INodeGroupProps {
+    return {
+      nodes: this.nodes.map((node: NodeGroup | TNode) => node.idx),
+    };
+  }
+
+  /**
+   * Update node.
+   */
+  update(): void {
+    this.updateHash();
+  }
+
+  /**
+   * Update hash.
+   */
+
+  updateHash(): void {
+    this._updateHash(this.toJSON());
   }
 }

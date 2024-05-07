@@ -139,7 +139,7 @@ export class NetworkGraphWorkspace extends BaseObj {
 
     const X: number[] = [];
     const Y: number[] = [];
-    this.network.nodes.nodes.forEach((node: TNode) => {
+    this.network.nodes.nodeItems.forEach((node: TNode) => {
       X.push(node.view.state.position.x);
       Y.push(node.view.state.position.y);
     });

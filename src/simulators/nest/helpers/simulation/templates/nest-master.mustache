@@ -40,7 +40,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ #isGroup }}
 {{ view.label }} = {{ toCode }}
 {{ /isGroup }}
-{{ ^isGroup }}
+{{ #isNode }}
 {{ view.label }} = nest.Create("{{ modelId }}"{{ #sizeVisible }}, {{ n }}{{ /sizeVisible }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
@@ -55,7 +55,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /model.isRecorder }}
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }},
   positions={{ &spatial.code }}{{ /spatial.positions }})
-{{ /isGroup }}
+{{ /isNode }}
 {{ /network.nodes.all }}
 {{ #network.hasSomeNodeCompartments }}
 

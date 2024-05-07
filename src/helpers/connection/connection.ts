@@ -130,7 +130,7 @@ export class BaseConnection extends BaseObj {
     return this._rule;
   }
 
-  get source(): TNode | NodeGroup {
+  get source(): NodeGroup | TNode {
     const nodes = this.connections.network.nodes.all;
     return nodes[this._sourceIdx];
   }
@@ -148,7 +148,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get sourceNode(): TNode {
-    const nodes = this.connections.network.nodes.nodes;
+    const nodes = this.connections.network.nodes.nodeItems;
     return nodes[this._sourceIdx];
   }
 
@@ -164,7 +164,7 @@ export class BaseConnection extends BaseObj {
     return this._synapse;
   }
 
-  get target(): TNode | NodeGroup {
+  get target(): NodeGroup | TNode {
     return this.network.nodes.all[this._targetIdx];
   }
 
@@ -181,7 +181,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get targetNode(): TNode {
-    return this.network.nodes.nodes[this._targetIdx];
+    return this.network.nodes.nodeItems[this._targetIdx];
   }
 
   set targetNode(node: TNode) {

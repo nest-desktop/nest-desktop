@@ -3,22 +3,23 @@
 import { BaseNetwork } from "@/helpers/network/network";
 
 import { INESTConnectionProps, NESTConnection } from "../connection/connection";
-import { NESTConnections } from "../connection/connections";
 import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
-import { NESTCopyModels } from "../model/copyModels";
 import { INESTNodeProps } from "../node/node";
+import { INodeGroupProps } from "@/helpers/node/nodeGroup";
+import { NESTConnections } from "../connection/connections";
+import { NESTCopyModels } from "../model/copyModels";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
 import { TNetworkProps } from "@/types/networkTypes";
 
 export interface INESTNetworkProps {
   models?: INESTCopyModelProps[];
-  nodes?: INESTNodeProps[];
+  nodes?: (INESTNodeProps | INodeGroupProps)[];
   connections?: INESTConnectionProps[];
 }
 
 // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
-export function IsNESTNetworkProps(
+export function isNESTNetworkProps(
   networkProps: TNetworkProps
 ): networkProps is INESTNetworkProps {
   return (networkProps as INESTNetworkProps).models != undefined;
@@ -113,7 +114,7 @@ export class NESTNetwork extends BaseNetwork {
       target: targetIdx,
     });
 
-    const source = this.nodes.nodes[sourceIdx];
+    const source = this.nodes.nodeItems[sourceIdx];
     if (source.view.state.synWeights) {
       connection.synapse.weightLabel = source.view.state.synWeights;
     }

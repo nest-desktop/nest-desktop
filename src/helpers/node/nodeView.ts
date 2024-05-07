@@ -102,7 +102,7 @@ export class NodeView extends BaseObj {
       //   label = varname + (idx + 1);
       //   break;
       case undefined:
-        nodes = this.node.nodes.nodes;
+        nodes = this.node.nodes.nodeItems;
         idx = nodes.indexOf(this._node);
         label = "n" + (idx + 1);
         break;

@@ -4,7 +4,7 @@
     @mouseenter="node.state.focus()"
     @mouseleave="node.nodes.unfocusNode()"
     class="node ma-1"
-    v-if="node.state.show"
+    v-if="node.show"
   >
     <v-card-title class="node-title mt-2 ml-10">
       <v-select
@@ -122,7 +122,7 @@
             size="large"
             style="left: 8px; top: 8px"
           >
-            <NodeAvatar :node @click="node.state.select()" size="48px" />
+            <NodeAvatar :node @click="node.select()" size="48px" />
           </v-btn>
         </template>
 

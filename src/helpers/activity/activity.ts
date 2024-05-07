@@ -64,7 +64,7 @@ export class Activity extends BaseObj {
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.nodes.map(
+    return this.recorder.nodes.nodeItems.map(
       (node: TNode) => node.model.elementType
     );
   }

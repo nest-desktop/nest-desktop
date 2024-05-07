@@ -9,95 +9,9 @@ import { NodeGroup } from "../node/nodeGroup";
 import { TNode } from "@/types/nodeTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNetwork } from "@/types/networkTypes";
+import { nextTick } from "vue";
 
-export class NodeGroupGraph {
-  private _networkGraph: TNetworkGraph;
-
-  constructor(networkGraph: TNetworkGraph) {
-    this._networkGraph = networkGraph;
-  }
-
-  get network(): TNetwork {
-    return this._networkGraph.network;
-  }
-
-  /**
-   * Drag connection graph by moving its node graphs.
-   * @param event mouse event
-   * @param connection connection object
-   */
-  drag(event: MouseEvent, nodeGroup: NodeGroup): void {
-    // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
-    const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
-
-    nodeGroup.nodes.forEach((node: TNode) => {
-      const nodePosition = node.view.state.position;
-      nodePosition.x += pos.x;
-      nodePosition.y += pos.y;
-    });
-
-    this._networkGraph.render();
-  }
-
-  render(): void {
-    this._networkGraph.selector
-      .selectAll(".nodeGroup")
-      .selectAll("path")
-      .attr("d", (nodeGroup: NodeGroup | any) => {
-        if (nodeGroup.nodes.length < 2) return "";
-        const polygon = polygonGenerator(nodeGroup.nodes);
-        return "M" + polygon.join("L") + "Z";
-      });
-  }
-
-  update(): void {
-    const nodeGroups = this._networkGraph.selector
-      .select("#nodeGroups")
-      .selectAll(".nodeGroup")
-      .data(this.network.nodes.nodeGroups);
-
-    // const dragging: DragBehavior<any, unknown, unknown> = drag()
-    //   .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-    //   .on("drag", (event: MouseEvent): void => {
-    //     // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
-    //     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
-
-    //     console.log(pos);
-
-    //     // drawNodeGroups(nodeGroups);
-    //   })
-    //   .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
-
-    const dragging: DragBehavior<any, unknown, unknown> = drag()
-      .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: NodeGroup | unknown) =>
-        this.drag(e, n as NodeGroup)
-      )
-      .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
-
-    nodeGroups
-      .enter()
-      .append("g")
-      .style("cursor-events", "none")
-      .attr("class", "nodeGroup")
-      .append("path")
-      .attr("fill", (d) => d.view.color)
-      .attr("stroke", (d) => d.view.color)
-      .style("stroke-linejoin", "round")
-      .attr("stroke-width", 64)
-      .style("opacity", 0.12);
-
-    // @ts-ignore - Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
-    // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
-    nodeGroups.call(dragging, null);
-
-    nodeGroups.exit().remove();
-
-    this.render();
-  }
-}
-
-var polygonGenerator = (nodes: TNode[]): [number, number][] => {
+const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
     node.view.state.position.x,
     node.view.state.position.y,
@@ -129,3 +43,90 @@ var polygonGenerator = (nodes: TNode[]): [number, number][] => {
   // Get positions of outer points.
   return polygonHull(nodeCoords) as [number, number][];
 };
+
+export class NodeGroupGraph {
+  private _networkGraph: TNetworkGraph;
+
+  constructor(networkGraph: TNetworkGraph) {
+    this._networkGraph = networkGraph;
+  }
+
+  get network(): TNetwork {
+    return this._networkGraph.network;
+  }
+
+  /**
+   * Drag connection graph by moving its node graphs.
+   * @param event mouse event
+   * @param connection connection object
+   */
+  drag(event: MouseEvent, nodeGroup: NodeGroup): void {
+    // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+    const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
+
+    nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+      const nodePosition = node.view.state.position;
+      nodePosition.x += pos.x;
+      nodePosition.y += pos.y;
+    });
+
+    this._networkGraph.render();
+  }
+
+  render(): void {
+    this._networkGraph.selector
+      .selectAll(".nodeGroup")
+      .selectAll("path")
+      .attr("d", (nodeGroup: NodeGroup | any) => {
+        if (nodeGroup.nodeItemsDeep.length < 2) return "";
+        const polygon = polygonGenerator(nodeGroup.nodeItemsDeep);
+        return "M" + polygon.join("L") + "Z";
+      });
+  }
+
+  update(): void {
+    const nodeGroups = this._networkGraph.selector
+      .select("#nodeGroups")
+      .selectAll(".nodeGroup")
+      .data(
+        this.network.nodes.nodeGroups.toReversed(),
+        (n: NodeGroup | unknown) => (n instanceof NodeGroup ? n.hash : "")
+      );
+
+    const dragging: DragBehavior<any, unknown, unknown> = drag()
+      .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
+      .on("drag", (e: MouseEvent, n: NodeGroup | unknown) =>
+        this.drag(e, n as NodeGroup)
+      )
+      .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
+
+    nodeGroups
+      .enter()
+      .append("g")
+      .style("cursor-events", "none")
+      .attr("class", "nodeGroup")
+      .append("path")
+      .attr("fill", (d) => d.view.color)
+      .attr("stroke", (d) => d.view.color)
+      .style("stroke-linejoin", "round")
+      .attr("stroke-width", 64)
+      .style("opacity", 0.12);
+
+    nodeGroups.on("click", (_, node) => {
+      const nodes = this._networkGraph.network.nodes;
+      if (this._networkGraph.workspace.ctrlPressed) {
+        nodes.toggleNodeSelection(node);
+      } else {
+        nodes.state.selectedNodes = [node];
+      }
+    });
+
+    // @ts-ignore - Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
+    // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
+    nodeGroups.call(dragging, null);
+
+    nodeGroups.exit().remove();
+
+    nextTick(() => this.render());
+  }
+}

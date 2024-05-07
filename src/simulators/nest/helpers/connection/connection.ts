@@ -82,7 +82,7 @@ export class NESTConnection extends BaseConnection {
   }
 
   override get sourceNode(): NESTNode {
-    return this.network.nodes.nodes[this.sourceIdx];
+    return this.network.nodes.nodeItems[this.sourceIdx];
   }
 
   get sourceSlice(): NESTNodeSlice {
@@ -94,7 +94,7 @@ export class NESTConnection extends BaseConnection {
   }
 
   override get targetNode(): NESTNode {
-    return this.network.nodes.nodes[this.targetIdx];
+    return this.network.nodes.nodeItems[this.targetIdx];
   }
 
   get targetSlice(): NESTNodeSlice {

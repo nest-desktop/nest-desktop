@@ -59,10 +59,6 @@ export class NodeState {
     return this._node;
   }
 
-  get show(): boolean {
-    return this._node.nodes.showNode(this._node);
-  }
-
   get state(): UnwrapRef<INodeState> {
     return this._state;
   }
@@ -72,21 +68,5 @@ export class NodeState {
    */
   focus(): void {
     this.node.nodes.state.focusedNode = this.node;
-  }
-
-  /**
-   * Select this node.
-   */
-  select(): void {
-    this.node.nodes.toggleNodeSelection(this.node);
-  }
-
-  /**
-   * Select this node as source for connection.
-   */
-  selectForConnection(): void {
-    const connectionsState = this.node.nodes.network.connections.state;
-    const isSelected = connectionsState.selectedNode === this.node;
-    connectionsState.selectedNode = isSelected ? null : this.node;
   }
 }

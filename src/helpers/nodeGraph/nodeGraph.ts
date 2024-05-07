@@ -151,7 +151,7 @@ export class NodeGraph extends BaseObj {
       this._networkGraph.selector
         .select("g#nodes")
         .selectAll("g.node")
-        .data(this.network.nodes.nodes, (n: TNode | unknown) =>
+        .data(this.network.nodes.nodeItems, (n: TNode | unknown) =>
           n instanceof BaseNode ? n.hash : ""
         );
 

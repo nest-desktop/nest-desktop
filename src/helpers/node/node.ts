@@ -160,6 +160,10 @@ export class BaseNode extends BaseObj {
     return false;
   }
 
+  get isNode(): boolean {
+    return true;
+  }
+
   /**
    * Check if it is an inhibitory neuron.
    */
@@ -561,6 +565,26 @@ export class BaseNode extends BaseObj {
   resetParams(): void {
     this.logger.trace("reset parameters");
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
+  }
+
+  /**
+   * Select this node.
+   */
+  select(): void {
+    this._nodes.toggleNodeSelection(this);
+  }
+
+  /**
+   * Select this node as source for connection.
+   */
+  selectForConnection(): void {
+    const connectionsState = this._nodes.network.connections.state;
+    const isSelected = connectionsState.selectedNode === this;
+    connectionsState.selectedNode = isSelected ? null : this;
+  }
+
+  get show(): boolean {
+    return this._nodes.showNode(this);
   }
 
   /**
