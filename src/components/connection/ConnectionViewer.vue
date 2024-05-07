@@ -1,6 +1,6 @@
 <template>
-  <v-expansion-panel class="node-connection" elevation="0" rounded="0">
-    <v-expansion-panel-title style="min-height: 52px; height: 52px">
+  <v-expansion-panel elevation="0" rounded="0">
+    <v-expansion-panel-title class="expansion-panel-title">
       <v-row no-gutters>
         <ConnectionAvatar :connection />
 
@@ -13,7 +13,7 @@
       </v-row>
     </v-expansion-panel-title>
     <v-expansion-panel-text class="pa-0">
-      <v-card variant="flat" class="ma-0">
+      <v-card class="ma-0" variant="flat">
         <v-card-text>
           <v-list>
             <v-list-item
@@ -35,27 +35,3 @@ import { TConnection } from "@/types/connectionTypes";
 
 defineProps<{ connection: TConnection }>();
 </script>
-
-<style lang="scss">
-.node-connection {
-  .v-expansion-panel-text__wrapper {
-    padding: 0;
-  }
-
-  .icon-size-1x {
-    --v-icon-size-multiplier: 1;
-  }
-
-  .icon-size-1-8x {
-    --v-icon-size-multiplier: 1.8;
-  }
-
-  .icon-size-2x {
-    --v-icon-size-multiplier: 2;
-  }
-
-  .icon-size-3x {
-    --v-icon-size-multiplier: 3;
-  }
-}
-</style>

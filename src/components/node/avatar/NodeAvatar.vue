@@ -22,6 +22,7 @@
     :color="nodeGroup.view.color"
     :size="size || 40"
     :text="nodeGroup.view.label"
+    class="node"
     v-else
     variant="tonal"
   />
@@ -45,3 +46,11 @@ const props = defineProps<{
 const node = computed(() => props.node as TNode);
 const nodeGroup = computed(() => props.node as NodeGroup);
 </script>
+
+<style lang="scss">
+.node {
+  font-weight: 800;
+  font-size: 0.85em;
+  z-index: 1;
+}
+</style>

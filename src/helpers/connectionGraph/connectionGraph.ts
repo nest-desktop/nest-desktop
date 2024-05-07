@@ -46,11 +46,11 @@ export class ConnectionGraph {
     // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
-    const sourceNodePosition = connection.sourceNode.view.state.position;
+    const sourceNodePosition = connection.source.view.position;
     sourceNodePosition.x += pos.x;
     sourceNodePosition.y += pos.y;
 
-    const targetNodePosition = connection.targetNode.view.state.position;
+    const targetNodePosition = connection.target.view.position;
     targetNodePosition.x += pos.x;
     targetNodePosition.y += pos.y;
 
@@ -98,7 +98,7 @@ export class ConnectionGraph {
         // Draw line between selected node and focused connection.
         if (c.network.connections.state.selectedNode && this.state.dragLine) {
           this._networkGraph.workspace.dragline.drawPath(
-            c.network.connections.state.selectedNode.view.state.position,
+            c.network.connections.state.selectedNode.view.position,
             c.view.markerEndPosition
           );
         }
@@ -167,8 +167,8 @@ export class ConnectionGraph {
         .attr(
           "d",
           drawPathNode(
-            connection.sourceNode.view.state.position,
-            connection.targetNode.view.state.position,
+            connection.source.view.position,
+            connection.target.view.position,
             connection.view.connectionGraphOptions
           )
         );

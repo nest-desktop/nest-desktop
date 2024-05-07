@@ -137,6 +137,10 @@ export class NodeView extends BaseObj {
     );
   }
 
+  get position(): { x: number; y: number } {
+    return this._state.position;
+  }
+
   get state(): UnwrapRef<INodeViewState> {
     return this._state;
   }

@@ -2,6 +2,7 @@
 
 import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
+import { IParamProps } from "../common/parameter";
 import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import {
@@ -378,14 +379,28 @@ export class BaseConnection extends BaseObj {
    * Update hash.
    */
   updateHash(): void {
-    this._updateHash({
+    const hashProps: {
+      idx: number;
+      params: IParamProps[];
+      synapse: string;
+      sourceModelId?: string;
+      targetModelId?: string;
+    } = {
       idx: this.idx,
       params: this.paramsAll.map((param: ConnectionParameter) =>
         param.toJSON()
       ),
       synapse: this.synapse.hash,
-      sourceModelId: this.sourceNode.modelId,
-      targetModelId: this.targetNode.modelId,
-    });
+    };
+
+    if (this.source.isNode) {
+      hashProps.sourceModelId = this.sourceNode.modelId;
+    }
+
+    if (this.target.isNode) {
+      hashProps.targetModelId = this.targetNode.modelId;
+    }
+
+    this._updateHash(hashProps);
   }
 }

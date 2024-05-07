@@ -11,8 +11,10 @@ export interface INodeGroupViewProps {
 }
 
 interface INodeGroupViewState {
+  centroid: { x: number; y: number };
   color?: string;
-  label?: string;
+  label: string;
+  margin: number;
   visible?: boolean;
 }
 
@@ -31,7 +33,9 @@ export class NodeGroupView extends BaseObj {
     this._nodeGroup = nodeGroup;
     this._state = reactive({
       ...viewProps,
+      centroid: { x: 0, y: 0 },
       label: "",
+      margin: 1,
     });
   }
 
@@ -65,6 +69,10 @@ export class NodeGroupView extends BaseObj {
 
   get nodeGroup(): NodeGroup {
     return this._nodeGroup;
+  }
+
+  get position(): { x: number; y: number } {
+    return this._state.centroid;
   }
 
   get state(): UnwrapRef<INodeGroupViewState> {

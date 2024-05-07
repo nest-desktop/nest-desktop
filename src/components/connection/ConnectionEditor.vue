@@ -5,12 +5,11 @@
     }"
     @mouseenter="connection.state.focus()"
     @mouseleave="connection.connections.unfocusConnection()"
-    class="node-connection"
     elevation="0"
     rounded="0"
   >
     <v-expansion-panel-title
-      class="panel-title"
+      class="expansion-panel-title"
       style="min-height: 52px; height: 52px"
     >
       <v-row no-gutters>
@@ -31,6 +30,7 @@
               icon="mdi:mdi-dots-vertical"
               size="small"
               variant="text"
+              class="menu"
               v-bind="props"
             />
           </template>

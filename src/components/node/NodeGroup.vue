@@ -1,42 +1,42 @@
 <template>
   <v-card
     :color="nodeGroup.view.color"
-    class="ma-1"
-    variant="tonal"
+    class="node-group ma-1"
+    variant="outlined"
     v-if="nodeGroup.show"
   >
-    <v-card-title class="node-title">
+    <v-card-title class="node-group-title">
       <v-row no-gutters>
-        <v-btn
-          @click.stop="nodeGroup.select()"
-          class="mx-1 btn-avatar"
-          flat
-          icon
-        >
+        <v-btn @click.stop="nodeGroup.select()" class="mx-1" flat icon>
           <NodeAvatar :node="nodeGroup" size="48px" />
         </v-btn>
 
-        <v-divider class="mx-3" inset vertical />
+        <v-divider inset vertical />
 
-        <v-btn
-          :key="index"
-          @click.stop="node.select()"
-          class="mx-1 btn-avatar"
-          flat
-          icon
-          v-for="(node, index) in nodeGroup.nodes"
-        >
-          <NodeAvatar :node size="48px" />
-        </v-btn>
+        <v-btn-group class="mx-4" multiple rounded="xl" variant="outlined">
+          <v-btn
+            :key="index"
+            @click.stop="node.select()"
+            class="btn-avatar px-0"
+            size="small"
+            v-for="(node, index) in nodeGroup.nodes"
+          >
+            <NodeAvatar :node size="32px" />
+          </v-btn>
+        </v-btn-group>
 
         <v-spacer />
 
-        <div class="d-print-none menu">
-          <v-btn color="primary" icon variant="text">
-            <v-icon icon="mdi:mdi-dots-vertical" />
-            <NodeGroupMenu :nodeGroup />
-          </v-btn>
-        </div>
+        <v-btn
+          class="menu d-print-none ma-auto"
+          color="primary"
+          icon
+          size="small"
+          variant="text"
+        >
+          <v-icon icon="mdi:mdi-dots-vertical" />
+          <NodeGroupMenu :nodeGroup />
+        </v-btn>
       </v-row>
     </v-card-title>
   </v-card>
@@ -50,9 +50,23 @@ import NodeGroupMenu from "./NodeGroupMenu.vue";
 defineProps<{ nodeGroup: NodeGroup }>();
 </script>
 
-<style>
+<style lang="scss">
 .btn-avatar {
   position: relative;
   z-index: 1;
+}
+
+.node-group {
+  .node-group-title {
+    .menu {
+      opacity: 0;
+    }
+
+    &:hover {
+      .menu {
+        opacity: 1;
+      }
+    }
+  }
 }
 </style>

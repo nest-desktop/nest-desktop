@@ -3,7 +3,7 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, drag, polygonHull } from "d3";
+import { DragBehavior, drag, polygonCentroid, polygonHull } from "d3";
 
 import { NodeGroup } from "../node/nodeGroup";
 import { TNode } from "@/types/nodeTypes";
@@ -74,14 +74,30 @@ export class NodeGroupGraph {
   }
 
   render(): void {
-    this._networkGraph.selector
-      .selectAll(".nodeGroup")
-      .selectAll("path")
-      .attr("d", (nodeGroup: NodeGroup | any) => {
-        if (nodeGroup.nodeItemsDeep.length < 2) return "";
-        const polygon = polygonGenerator(nodeGroup.nodeItemsDeep);
-        return "M" + polygon.join("L") + "Z";
-      });
+    const nodeGroups = this._networkGraph.selector.selectAll(".nodeGroup");
+
+    nodeGroups.selectAll("path").attr("d", (nodeGroup: NodeGroup | any) => {
+      if (nodeGroup.nodeItemsDeep.length < 2) return "";
+      const polygon = polygonGenerator(nodeGroup.nodeItemsDeep);
+      const centroid = polygonCentroid(polygon);
+      nodeGroup.view.state.centroid.x = centroid[0];
+      nodeGroup.view.state.centroid.y = centroid[1];
+      return (
+        "M" +
+        polygon
+          .map((point) => [point[0] - centroid[0], point[1] - centroid[1]])
+          .join("L") +
+        "Z"
+      );
+    });
+
+    nextTick(() =>
+      nodeGroups.attr(
+        "transform",
+        (n: NodeGroup | any) =>
+          `translate(${n.view.state.centroid.x},${n.view.state.centroid.y}) scale(${n.view.state.margin})`
+      )
+    );
   }
 
   update(): void {
@@ -100,24 +116,77 @@ export class NodeGroupGraph {
       )
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
-    nodeGroups
+    const g = nodeGroups
       .enter()
       .append("g")
       .style("cursor-events", "none")
-      .attr("class", "nodeGroup")
-      .append("path")
+      .attr("class", "nodeGroup");
+
+    g.append("text")
+      .attr("dy", "0.5em")
+      .attr("letter-spacing", 1.5)
+      .style("font-family", "Roboto, sans-serif", "important")
+      .style("font-size", "0.85rem", "important")
+      .style("font-weight", "800")
+      .style("pointer-events", "none")
+      .style("text-anchor", "middle")
+      .style("text-transform", "uppercase", "important")
+      .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
+      .text((n: NodeGroup) => n.view.label);
+
+    g.append("path")
       .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
       .style("stroke", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
       .style("stroke-linejoin", "round")
       .attr("stroke-width", 64)
       .style("opacity", 0.12);
 
-    nodeGroups.on("click", (_, node) => {
+    nodeGroups.on("mouseover", (_, n: NodeGroup) => {
+      // n.state.focus();
+      // Draw line between selected node and focused node.
+      if (
+        n.parent.network.connections.state.selectedNode &&
+        this._networkGraph.workspace.state.dragLine
+      ) {
+        const selectedNode = n.parent.network.connections.state.selectedNode;
+        const sourcePos = selectedNode.view.state.position;
+        this._networkGraph.workspace.dragline.drawPath(
+          sourcePos,
+          n.view.state.centroid
+        );
+      }
+    });
+
+    nodeGroups.on("click", (_, nodeGroup: NodeGroup) => {
       const nodes = this._networkGraph.network.nodes;
-      if (this._networkGraph.workspace.ctrlPressed) {
-        nodes.toggleNodeSelection(node);
+      const connections = this._networkGraph.network.connections;
+
+      if (
+        connections.state.selectedNode &&
+        this._networkGraph.workspace.state.dragLine
+      ) {
+        // Set cursor position of the focused node.
+        this._networkGraph.workspace.updateCursorPosition(
+          nodeGroup.view.state.centroid
+        );
+
+        this._networkGraph.workspace.animationOff();
+
+        this._networkGraph.network.connectNodes(
+          connections.state.selectedNode.idx,
+          nodeGroup.idx
+        );
+        this._networkGraph.update();
+
+        if (!this._networkGraph.workspace.altPressed) {
+          connections.state.selectedNode = null;
+          this._networkGraph.workspace.reset();
+          this._networkGraph.workspace.update();
+        }
+      } else if (this._networkGraph.workspace.ctrlPressed) {
+        nodes.toggleNodeSelection(nodeGroup);
       } else {
-        nodes.state.selectedNodes = [node];
+        nodes.state.selectedNodes = [nodeGroup];
       }
     });
 

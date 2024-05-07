@@ -5,7 +5,6 @@
     }"
     @mouseenter="connection.state.focus()"
     @mouseleave="connection.connections.unfocusConnection()"
-    class="node-connection"
     elevation="0"
     rounded="0"
   >
@@ -27,6 +26,7 @@
         <v-menu>
           <template #activator="{ props }">
             <v-btn
+              class="menu"
               color="primary"
               icon="mdi:mdi-dots-vertical"
               size="small"

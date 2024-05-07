@@ -1,7 +1,7 @@
 <template>
   <div style="pointer-events: none">
     <v-btn icon size="small">
-      <NodeAvatar :node="connection.sourceNode" :size="32" />
+      <NodeAvatar :node="connection.source" :size="32" />
     </v-btn>
 
     <v-btn
@@ -12,7 +12,7 @@
     />
 
     <v-btn icon size="small">
-      <NodeAvatar :node="connection.targetNode" :size="32" />
+      <NodeAvatar :node="connection.target" :size="32" />
     </v-btn>
   </div>
 </template>
