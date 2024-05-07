@@ -44,6 +44,9 @@ export class NodeGroupView extends BaseObj {
 
   set color(value: string) {
     this._state.color = value === "none" || value === "" ? undefined : value;
+
+    this._nodeGroup.network.updateStyle();
+    this._nodeGroup.network.clean();
   }
 
   get idx(): number {

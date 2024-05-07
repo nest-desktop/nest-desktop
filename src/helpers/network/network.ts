@@ -203,11 +203,14 @@ export class BaseNetwork extends BaseObj {
    * @remarks
    * It emits network changes.
    */
-  deleteNode(node: TNode): void {
+  deleteNode(node: NodeGroup | TNode): void {
     this.logger.trace("delete node");
 
     // Remove connection from the list.
     this.connections.removeByNode(node);
+
+    // Remove node in node groups
+    this.nodes.removeInNodeGroups(node);
 
     // Remove node from the list.
     this.nodes.remove(node);
@@ -280,6 +283,8 @@ export class BaseNetwork extends BaseObj {
    */
   updateStyle(): void {
     this.logger.trace("update node style");
-    this._nodes.nodeItems.forEach((node: TNode) => node.view.updateStyle());
+    this._nodes.all.forEach((node: NodeGroup | TNode) =>
+      node.view.updateStyle()
+    );
   }
 }

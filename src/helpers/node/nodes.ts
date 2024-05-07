@@ -254,12 +254,24 @@ export class BaseNodes extends BaseObj {
    * Remove node component from the network.
    *
    */
-  remove(node: TNode): void {
-    this.logger.trace("remove node:", node.modelId);
-    this.resetState();
+  remove(node: NodeGroup | TNode): void {
+    this.logger.trace("remove node");
+    this._network.state.unselectAll();
 
     // Remove node from the node list.
     this._nodes.splice(node.idx, 1);
+  }
+
+  /**
+   * Remove node in the node groups.
+   * @param node node object
+   */
+  removeInNodeGroups(node: NodeGroup | TNode): void {
+    this.resetState();
+
+    this.nodeGroups.forEach((nodeGroup: NodeGroup) =>
+      nodeGroup.removeNode(node)
+    );
   }
 
   /*

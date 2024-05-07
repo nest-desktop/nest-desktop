@@ -99,6 +99,37 @@ export class NodeGroup extends BaseObj {
   }
 
   /**
+   * Observer for node group changes.
+   *
+   * @remarks
+   * It emits network changes.
+   */
+  changes(): void {
+    this.logger.trace("changes");
+
+    this.update();
+    this.parent.network.changes();
+  }
+
+  /**
+   * Delete node group.
+   *
+   * @remarks
+   * It removes node group component of the network.
+   */
+  remove(): void {
+    this.network.deleteNode(this);
+  }
+
+  /**
+   * Remove node item or group
+   * @param node node object
+   */
+  removeNode(node: NodeGroup | TNode): void {
+    this._nodes = this._nodes.filter((n: NodeGroup | TNode) => n !== node);
+  }
+
+  /**
    * Select this node group.
    */
   select(): void {

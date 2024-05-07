@@ -106,8 +106,8 @@ export class NodeGroupGraph {
       .style("cursor-events", "none")
       .attr("class", "nodeGroup")
       .append("path")
-      .attr("fill", (d) => d.view.color)
-      .attr("stroke", (d) => d.view.color)
+      .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
+      .style("stroke", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
       .style("stroke-linejoin", "round")
       .attr("stroke-width", 64)
       .style("opacity", 0.12);
