@@ -111,7 +111,7 @@ export class ConnectionGraph {
       .on("click", () => {
         const network = this._networkGraph.network;
         const workspace = this._networkGraph.workspace;
-        connection.sourceNode.state.focus();
+        connection.sourceNode.view.focus();
 
         if (
           network.connections.state.selectedNode &&

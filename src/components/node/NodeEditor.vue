@@ -1,7 +1,7 @@
 <template>
   <Card
     :color="node.view.color"
-    @mouseenter="node.state.focus()"
+    @mouseenter="node.view.focus()"
     @mouseleave="node.nodes.unfocusNode()"
     class="node ma-1"
     v-if="node.show"
@@ -207,7 +207,7 @@
       <v-row>
         <v-expansion-panels
           :key="node.connections.length"
-          v-model="node.state.connectionPanelIdx"
+          v-model="node.view.connectionPanelIdx"
           variant="accordion"
         >
           <connection-editor

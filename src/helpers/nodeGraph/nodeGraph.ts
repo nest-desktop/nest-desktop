@@ -68,7 +68,7 @@ export class NodeGraph extends BaseObj {
     this._nodeGraphShape.init(elem, node);
 
     elem.on("mouseover", (_, n: TNode) => {
-      n.state.focus();
+      n.view.focus();
       // Draw line between selected node and focused node.
       if (
         n.nodes.network.connections.state.selectedNode &&
@@ -133,7 +133,7 @@ export class NodeGraph extends BaseObj {
       .transition(t)
       .attr(
         "transform",
-        (n: TNode | any) => `scale( ${n.state.isFocused ? 1.2 : 1})`
+        (n: TNode | any) => `scale( ${n.view.isFocused ? 1.2 : 1})`
       );
   }
 
@@ -174,7 +174,7 @@ export class NodeGraph extends BaseObj {
         (n: TNode) =>
           `translate(${n.view.state.position.x},${
             n.view.state.position.y
-          }) scale( ${n.state.isFocused ? 1.2 : 1})`
+          }) scale( ${n.view.isFocused ? 1.2 : 1})`
       )
       .style("opacity", 0)
       .call(dragging, null)

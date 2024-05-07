@@ -13,6 +13,7 @@ export interface INodeGroupViewProps {
 interface INodeGroupViewState {
   centroid: { x: number; y: number };
   color?: string;
+  connectionPanelIdx: number | null;
   label: string;
   margin: number;
   visible?: boolean;
@@ -33,6 +34,7 @@ export class NodeGroupView extends BaseObj {
     this._nodeGroup = nodeGroup;
     this._state = reactive({
       ...viewProps,
+      connectionPanelIdx: null,
       centroid: { x: 0, y: 0 },
       label: "",
       margin: 1,
@@ -53,9 +55,28 @@ export class NodeGroupView extends BaseObj {
     this._nodeGroup.network.clean();
   }
 
+  get connectionPanelIdx(): number | null {
+    return this._state.connectionPanelIdx;
+  }
+
+  set connectionPanelIdx(value: number | null) {
+    this._state.connectionPanelIdx = value;
+
+    if (this._state.connectionPanelIdx != null) {
+      this.nodeGroup.connections[this._state.connectionPanelIdx].state.select();
+    }
+  }
+
   get idx(): number {
     const nodeGroups = this.nodeGroup.parent.nodeGroups;
     return nodeGroups.indexOf(this._nodeGroup);
+  }
+
+  /**
+   * Check if this node group is focused.
+   */
+  get isFocused(): boolean {
+    return this.nodeGroup.parentNodes.state.focusedNode === this.nodeGroup;
   }
 
   get label(): string {
@@ -83,6 +104,13 @@ export class NodeGroupView extends BaseObj {
    * Clean node.
    */
   clean(): void {}
+
+  /**
+   * Focus this node.
+   */
+  focus(): void {
+    this.nodeGroup.parentNodes.state.focusedNode = this.nodeGroup;
+  }
 
   /**
    * Serialize for JSON.

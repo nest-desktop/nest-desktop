@@ -15,7 +15,7 @@
         <v-spacer />
 
         <div class="d-flex flex-column justify-center align-center text-grey">
-          <div>{{ connection.rule.value }}</div>
+          {{ connection.rule.value }}
           <div v-if="connection.view.connectOnlyNeurons()">
             {{ connection.synapse.modelId }}
           </div>

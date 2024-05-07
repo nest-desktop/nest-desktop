@@ -1,12 +1,13 @@
 // node.ts
 
+import { StateTree, Store } from "pinia";
+
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { BaseObj } from "../common/base";
 import { ModelParameter } from "../model/modelParameter";
 import { INodeParamProps, NodeParameter } from "./nodeParameter";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
-import { NodeState } from "./nodeState";
 import { INodeViewProps, NodeView } from "./nodeView";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { TConnection } from "@/types/connectionTypes";
@@ -15,7 +16,6 @@ import { TNetwork } from "@/types/networkTypes";
 import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 import { TSimulation } from "@/types/simulationTypes";
-import { StateTree, Store } from "pinia";
 import { onlyUnique } from "../common/array";
 
 export interface INodeProps {
@@ -38,7 +38,6 @@ export class BaseNode extends BaseObj {
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = [];
   private _size: number;
-  private _state: NodeState;
   private _view: NodeView;
 
   public _modelId: string;
@@ -57,8 +56,6 @@ export class BaseNode extends BaseObj {
 
     this._model = this.getModel(this._modelId);
     this._view = new NodeView(this, nodeProps.view);
-
-    this._state = new NodeState(this);
 
     this.addParameters(nodeProps.params);
 
@@ -338,10 +335,6 @@ export class BaseNode extends BaseObj {
     return this.network.connections.all
       .filter((connection: TConnection) => connection.targetIdx === this.idx)
       .map((connection: TConnection) => connection.sourceNode);
-  }
-
-  get state(): NodeState {
-    return this._state;
   }
 
   get targetNodes(): TNode[] {

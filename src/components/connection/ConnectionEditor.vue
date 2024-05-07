@@ -8,17 +8,14 @@
     elevation="0"
     rounded="0"
   >
-    <v-expansion-panel-title
-      class="expansion-panel-title"
-      style="min-height: 52px; height: 52px"
-    >
+    <v-expansion-panel-title class="expansion-panel-title">
       <v-row no-gutters>
         <ConnectionAvatar :connection />
 
         <v-spacer />
 
         <div class="d-flex flex-column justify-center align-center text-grey">
-          <div>{{ connection.rule.value }}</div>
+          {{ connection.rule.value }}
         </div>
 
         <v-spacer />

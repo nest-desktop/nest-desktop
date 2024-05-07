@@ -1,7 +1,5 @@
 // nodeGroup.ts
 
-import { UnwrapRef, reactive } from "vue";
-
 import { TNetwork } from "@/types/networkTypes";
 import { BaseObj } from "../common/base";
 import { NodeGroupView } from "./nodeGroupView";
@@ -13,14 +11,9 @@ export interface INodeGroupProps {
   nodes: number[];
 }
 
-interface INodeGroupState {
-  connectionPanelIdx: number | null;
-}
-
 export class NodeGroup extends BaseObj {
   private _parent: TNodes;
   private _nodes: (NodeGroup | TNode)[] = [];
-  private _state: UnwrapRef<INodeGroupState>;
   private _view: NodeGroupView;
 
   constructor(parent: TNodes, nodeGroupProps: INodeGroupProps) {
@@ -30,9 +23,6 @@ export class NodeGroup extends BaseObj {
       (idx: number) => this._parent.nodes[idx]
     );
 
-    this._state = reactive({
-      connectionPanelIdx: null,
-    });
     this._view = new NodeGroupView(this);
 
     this.updateHash();
@@ -113,10 +103,6 @@ export class NodeGroup extends BaseObj {
 
   get parentNodes(): TNodes {
     return this._parent as TNodes;
-  }
-
-  get state(): UnwrapRef<INodeGroupState> {
-    return this._state;
   }
 
   get toCode(): string {

@@ -32,6 +32,7 @@ export function calcPathNode(
   y1: number;
 } {
   const r: number = options.radius || 24;
+  const sr: number = r + 10;
   const tr: number = r + 10;
 
   // Defaults for normal edge.
@@ -40,7 +41,7 @@ export function calcPathNode(
   let largeArc = options.largeArc || 0; // 1 or 0
   let sweep = options.sweep || 0; // 1; // 1 or 0
 
-  const x1: number = source.x;
+  let x1: number = source.x;
   let y1: number = source.y;
 
   let x2: number = target.x;
@@ -86,6 +87,9 @@ export function calcPathNode(
     ay =
       a -
       (Math.pow(-1, sweep) * Math.sin(degToRad(xAxisRotation))) / ellipticalArc;
+
+    x1 = x1 + Math.cos(ax) * sr;
+    y1 = y1 + Math.sin(ay) * sr;
 
     x2 = x2 - Math.cos(ax) * tr;
     y2 = y2 - Math.sin(ay) * tr;

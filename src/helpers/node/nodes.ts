@@ -21,7 +21,7 @@ interface INodesState {
   annotations: { [key: string]: string }[];
   contextMenu: boolean;
   elementTypeIdx: number;
-  focusedNode: TNode | null;
+  focusedNode: NodeGroup | TNode | null;
   selectedNodes: (NodeGroup | TNode)[];
 }
 

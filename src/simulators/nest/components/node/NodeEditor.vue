@@ -1,9 +1,9 @@
 <template>
   <Card
     :color="node.view.color"
-    @mouseenter="node.state.focus()"
+    @mouseenter="node.view.focus()"
     @mouseleave="node.nodes.unfocusNode()"
-    class="node ma-1"
+    class="ma-1"
     v-if="node.show"
   >
     <v-card-title class="node-title mt-2 ml-10">
@@ -212,7 +212,7 @@
       <v-row>
         <v-expansion-panels
           :key="node.connections.length"
-          v-model="node.state.connectionPanelIdx"
+          v-model="node.view.connectionPanelIdx"
           variant="accordion"
         >
           <ConnectionEditor
@@ -299,37 +299,35 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.node {
-  .node-title {
-    .model-select {
-      .v-label {
-        font-size: 13px;
-      }
+.node-title {
+  .model-select {
+    .v-label {
+      font-size: 13px;
     }
+  }
 
+  .menu {
+    opacity: 0;
+  }
+
+  &:hover {
     .menu {
-      opacity: 0;
-    }
-
-    &:hover {
-      .menu {
-        opacity: 1;
-      }
+      opacity: 1;
     }
   }
+}
 
-  .v-list {
+.v-list {
+  overflow: visible;
+
+  .v-list-item__content {
     overflow: visible;
-
-    .v-list-item__content {
-      overflow: visible;
-    }
   }
+}
 
-  .v-input__prepend,
-  .v-input__append {
-    padding-top: 0 !important;
-  }
+.v-input__prepend,
+.v-input__append {
+  padding-top: 0 !important;
 }
 
 .node-model-item {

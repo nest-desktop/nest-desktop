@@ -16,12 +16,13 @@ export interface INodeViewProps {
 
 interface INodeViewState {
   color?: string;
+  connectionPanelIdx: number | null;
   label?: string;
   position: { x: number; y: number };
   positions?: number[][];
   showSize: boolean;
-  visible?: boolean;
   synWeights?: string;
+  visible?: boolean;
 }
 
 export class NodeView extends BaseObj {
@@ -40,6 +41,7 @@ export class NodeView extends BaseObj {
     this._node = node;
     this._state = reactive({
       ...viewProps,
+      connectionPanelIdx: null,
       label: "",
       positions: [],
       showSize: this.node.size > 1,
@@ -77,6 +79,25 @@ export class NodeView extends BaseObj {
 
     this.node.network.updateStyle();
     this.node.network.clean();
+  }
+
+  get connectionPanelIdx(): number | null {
+    return this._state.connectionPanelIdx;
+  }
+
+  set connectionPanelIdx(value: number | null) {
+    this._state.connectionPanelIdx = value;
+
+    if (this._state.connectionPanelIdx != null) {
+      this.node.connections[this._state.connectionPanelIdx].state.select();
+    }
+  }
+
+  /**
+   * Check if this node is focused.
+   */
+  get isFocused(): boolean {
+    return this.node.nodes.state.focusedNode === this.node;
   }
 
   get label(): string {
@@ -133,7 +154,7 @@ export class NodeView extends BaseObj {
       connections.state.selectedNode == null ||
       (connections.state.selectedNode != null &&
         this.node.isSelectedForConnection) ||
-      (nodes.state.focusedNode != null && this.node.state.isFocused)
+      (nodes.state.focusedNode != null && this.isFocused)
     );
   }
 
@@ -156,6 +177,13 @@ export class NodeView extends BaseObj {
    * Clean node.
    */
   clean(): void {}
+
+  /**
+   * Focus this node.
+   */
+  focus(): void {
+    this.node.nodes.state.focusedNode = this.node;
+  }
 
   /**
    * Get the record label.
