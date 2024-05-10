@@ -42,12 +42,30 @@ export class NodeGroup extends BaseObj {
     return "group";
   }
 
+  get spatial(): { hasPosition: boolean } {
+    return { hasPosition: false };
+  }
+
   get idx(): number {
     return this._parent.all.indexOf(this);
   }
 
+  /**
+   * Check if it is an excitatory neuron.
+   */
+  get isExcitatoryNeuron(): boolean {
+    return this._view.synWeights === "excitatory";
+  }
+
   get isGroup(): boolean {
     return true;
+  }
+
+  /**
+   * Check if it is an inhibitory neuron.
+   */
+  get isInhibitoryNeuron(): boolean {
+    return this._view.synWeights === "inhibitory";
   }
 
   get isNode(): boolean {
@@ -59,6 +77,17 @@ export class NodeGroup extends BaseObj {
    */
   get isSelected(): boolean {
     return this.parentNodes.state.selectedNodes.includes(this);
+  }
+
+  /**
+   * Check if this node is selected for connection.
+   */
+  get isSelectedForConnection(): boolean {
+    return this.parentNodes.network.connections.state.selectedNode === this;
+  }
+
+  get model(): boolean {
+    return false;
   }
 
   get network(): TNetwork {
@@ -105,6 +134,14 @@ export class NodeGroup extends BaseObj {
     return this._parent as TNodes;
   }
 
+  get show(): boolean {
+    return this._parent.showNode(this);
+  }
+
+  get size(): number {
+    return 0;
+  }
+
   get toCode(): string {
     return this.nodes
       .map((node: NodeGroup | TNode) => node.view.label)
@@ -126,6 +163,20 @@ export class NodeGroup extends BaseObj {
 
     this.update();
     this.parent.network.changes();
+  }
+
+  /**
+   * Clean node group.
+   */
+  clean(): void {}
+
+  /**
+   * Initialize node group.
+   */
+  init(): void {
+    this.logger.trace("init");
+
+    this.update();
   }
 
   /**
@@ -153,10 +204,19 @@ export class NodeGroup extends BaseObj {
     this._parent.toggleNodeSelection(this);
   }
 
-  get show(): boolean {
-    return this._parent.showNode(this);
+  /**
+   * Select this node as source for connection.
+   */
+  selectForConnection(): void {
+    const connectionsState = this._parent.network.connections.state;
+    const isSelected = connectionsState.selectedNode === this;
+    connectionsState.selectedNode = isSelected ? null : this;
   }
 
+  /**
+   * Serialize for JSON.
+   * @return node group props
+   */
   toJSON(): INodeGroupProps {
     return {
       nodes: this.nodes.map((node: NodeGroup | TNode) => node.idx),

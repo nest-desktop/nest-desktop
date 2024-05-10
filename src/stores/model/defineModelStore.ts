@@ -43,6 +43,7 @@ export function defineModelStore(
      */
     const init = (): void => {
       logger.trace("init");
+
       const modelDBStore = args.useModelDBStore();
       if (modelDBStore.state.models.length > 0) {
         state.modelId = modelDBStore.getRecentModelId();
@@ -54,6 +55,7 @@ export function defineModelStore(
      */
     const save = (): void => {
       logger.trace("save model");
+
       const modelDBStore = args.useModelDBStore();
       modelDBStore.saveModel(model.value.id);
     };

@@ -47,6 +47,7 @@ export function defineBackendStore(
       const check = (): void => {
         if (state.enabled === false) return;
         logger.trace("check");
+
         ping();
       };
 
@@ -151,6 +152,7 @@ export function defineBackendStore(
        */
       const update = (): void => {
         logger.trace("update");
+
         updateInstance();
         check();
       };
@@ -160,6 +162,7 @@ export function defineBackendStore(
        */
       const updateURL = (): void => {
         logger.trace("update URL");
+
         axiosInstance.defaults.baseURL = state.url;
       };
 

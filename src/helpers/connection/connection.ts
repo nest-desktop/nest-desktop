@@ -205,6 +205,7 @@ export class BaseConnection extends BaseObj {
    */
   addParameters(paramProps: IConnectionParamProps[] = []): void {
     this.logger.trace("init parameter");
+
     this._paramsVisible = [];
     this._params = {};
     const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
@@ -236,6 +237,7 @@ export class BaseConnection extends BaseObj {
   changes(): void {
     this.updateHash();
     this.logger.trace("changes");
+
     this.connections.network.changes();
   }
 
@@ -261,6 +263,7 @@ export class BaseConnection extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this.reset();
     this.synapse.init();
     this.update();
@@ -283,6 +286,7 @@ export class BaseConnection extends BaseObj {
    */
   reverse(): void {
     this.logger.trace("reverse");
+
     [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
 
     // Trigger connection change.
@@ -302,6 +306,7 @@ export class BaseConnection extends BaseObj {
    */
   reset(): void {
     this.logger.trace("reset");
+
     this._rule.reset();
     this.resetParams();
   }

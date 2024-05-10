@@ -51,6 +51,7 @@ export class BaseModelDB extends DatabaseService {
 
   async deleteModel(modelId: string): Promise<IModelProps> {
     this.logger.trace("delete model:", modelId);
+
     return this.delete(modelId);
   }
 
@@ -88,6 +89,7 @@ export class BaseModelDB extends DatabaseService {
   async updateModel(model: TModel): Promise<IModelProps | void> {
     if (!model.docId) return;
     this.logger.trace("update model:", model.id);
+
     const data = model.toJSON();
     return this.update(model.docId, data as IDoc).then((res: IRes) => {
       if (res.ok) {

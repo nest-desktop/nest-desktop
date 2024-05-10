@@ -64,6 +64,7 @@ export class NorseNode extends BaseNode {
     this.updateHash();
     this.generateCode();
     this.logger.trace("changes");
+
     this.nodes.network.changes();
   }
 

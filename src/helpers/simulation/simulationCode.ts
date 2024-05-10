@@ -119,6 +119,7 @@ export class BaseSimulationCode extends BaseObj {
    */
   export(format: string = "py"): void {
     this.logger.trace("export script to file:", format);
+
     let data: string = "";
     if (format === "py") {
       data = this._state.script;
@@ -168,6 +169,7 @@ export class BaseSimulationCode extends BaseObj {
    */
   generate(): void {
     this.logger.trace("generate");
+
     if (this._state.template) {
       this.script = Mustache.render(
         this._state.template || "",
@@ -185,6 +187,7 @@ export class BaseSimulationCode extends BaseObj {
    */
   async importTemplate(): Promise<{ default: string }> {
     this.logger.trace("import template:", this._state.templateFilename);
+
     return import(`./templates/${this._state.templateFilename}.mustache?raw`);
   }
 
@@ -196,6 +199,7 @@ export class BaseSimulationCode extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this.generate();
   }
 
@@ -204,6 +208,7 @@ export class BaseSimulationCode extends BaseObj {
    */
   async loadTemplate(): Promise<void> {
     this.logger.trace("load template:", this._state.templateFilename);
+
     return this.importTemplate().then((template: { default: string }) => {
       this._state.template = template.default;
     });

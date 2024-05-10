@@ -109,6 +109,7 @@ export class BaseNetwork extends BaseObj {
    */
   changes(): void {
     this.logger.trace("changes");
+
     this.updateStyle();
     this.updateHash();
     this.project.changes();
@@ -119,6 +120,7 @@ export class BaseNetwork extends BaseObj {
    */
   clean(): void {
     this.logger.trace("clean");
+
     this.nodes.clean();
     this.connections.clean();
   }
@@ -128,6 +130,7 @@ export class BaseNetwork extends BaseObj {
    */
   clear(): void {
     this.logger.trace("clear");
+
     this.connections.clear();
     this.nodes.clear();
   }
@@ -171,6 +174,7 @@ export class BaseNetwork extends BaseObj {
    */
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
+
     this.nodes.addNode({
       model: model || this._defaultModels[view?.elementType || "neuron"],
       view,
@@ -283,6 +287,7 @@ export class BaseNetwork extends BaseObj {
    */
   updateStyle(): void {
     this.logger.trace("update node style");
+
     this._nodes.all.forEach((node: NodeGroup | TNode) =>
       node.view.updateStyle()
     );

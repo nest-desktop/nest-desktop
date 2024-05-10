@@ -376,7 +376,7 @@ export class NESTCopyModel {
       );
     }
 
-    if (this.model.isSynapse) {
+    if (this.isSynapse) {
       const weightRecorders = this.network.nodes.weightRecorders.map(
         (recorder: NESTNode) => recorder.view.label
       );

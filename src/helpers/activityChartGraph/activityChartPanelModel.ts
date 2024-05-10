@@ -353,7 +353,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * It requires activity data.
    */
   update(): void {
-    this.logger.trace("Update");
+    this.logger.trace("update");
 
     // Update time.
     this.updateTime();

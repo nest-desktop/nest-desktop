@@ -15,6 +15,7 @@ export class BaseProjectDB extends DatabaseService {
    */
   async createProject(project: TProject): Promise<void> {
     this.logger.trace("create project:", truncate(project.id));
+
     const data = project.toJSON();
     return this.create(data as IDoc).then((res: IRes) => {
       if (res.ok) {
@@ -29,6 +30,7 @@ export class BaseProjectDB extends DatabaseService {
    */
   async createProjects(projectsProps: TProjectProps[]): Promise<boolean> {
     this.logger.trace("create projects");
+
     const projects: Promise<TProjectProps>[] = projectsProps.map(
       (projectProps: TProjectProps) =>
         new Promise<TProjectProps>((resolve) => {
@@ -47,6 +49,7 @@ export class BaseProjectDB extends DatabaseService {
    */
   deleteProject(project: TProject | TProjectProps): Promise<IRes> {
     this.logger.trace("delete project:", truncate(project.id as string));
+
     const projectId: string = (
       project instanceof BaseProject ? project.docId : project._id
     ) as string;
@@ -60,6 +63,7 @@ export class BaseProjectDB extends DatabaseService {
     projects: (TProject | TProjectProps)[]
   ): Promise<IDoc[]> {
     this.logger.trace("delete projects");
+
     const projectDocIds: string[] = projects.map(
       (project: TProject | TProjectProps) =>
         (project instanceof BaseProject ? project.docId : project._id) as string
@@ -72,6 +76,7 @@ export class BaseProjectDB extends DatabaseService {
    */
   importProject(project: TProject): void {
     this.logger.trace("import project:", truncate(project.id as string));
+
     project.docId ? this.updateProject(project) : this.createProject(project);
   }
 
@@ -81,6 +86,7 @@ export class BaseProjectDB extends DatabaseService {
   updateProject(project: TProject): void {
     if (!project.docId) return;
     this.logger.trace("update project:", truncate(project.id));
+
     const data: TProjectProps = project.toJSON();
     this.update(project.docId, data as IDoc).then((res: IRes) => {
       if (res.ok) {

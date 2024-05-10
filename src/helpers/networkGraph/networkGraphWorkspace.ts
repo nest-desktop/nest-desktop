@@ -140,8 +140,8 @@ export class NetworkGraphWorkspace extends BaseObj {
     const X: number[] = [];
     const Y: number[] = [];
     this.network.nodes.nodeItems.forEach((node: TNode) => {
-      X.push(node.view.state.position.x);
-      Y.push(node.view.state.position.y);
+      X.push(node.view.position.x);
+      Y.push(node.view.position.y);
     });
     const x: number = ((min(X) || 0) + (max(X) || 1)) / 2;
     const y: number = ((min(Y) || 0) + (max(Y) || 1)) / 2;
@@ -298,7 +298,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     const connections = this.network.connections;
     if (this._state.centerSelected && connections.state.selectedNode) {
       const nodePosition: { x: number; y: number } =
-        connections.state.selectedNode.view.state.position;
+        connections.state.selectedNode.view.position;
       x = nodePosition.x;
       y = nodePosition.y;
     } else if (this._state.centerNetwork && nodes.all.length > 0) {

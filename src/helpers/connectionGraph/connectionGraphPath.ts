@@ -32,7 +32,7 @@ export function calcPathNode(
   y1: number;
 } {
   const r: number = options.radius || 24;
-  const sr: number = r + 10;
+  const sr: number = r - 2;
   const tr: number = r + 10;
 
   // Defaults for normal edge.
@@ -137,7 +137,7 @@ export function drawPathNode(
 }
 
 /**
- * Draw SVG path to Mouse.
+ * Draw SVG path to mouse.
  */
 export function drawPathMouse(
   source: { x: number; y: number },

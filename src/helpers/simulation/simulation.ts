@@ -100,6 +100,7 @@ export class BaseSimulation extends BaseObj {
   changes(): void {
     this.updateHash();
     this.logger.trace("changes");
+
     this.project.changes();
   }
 
@@ -108,6 +109,7 @@ export class BaseSimulation extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this._code.init();
     this.updateHash();
   }
@@ -121,6 +123,7 @@ export class BaseSimulation extends BaseObj {
   //  */
   // generateSeed(): void {
   //   this.logger.trace("generate seed");
+
   //   if (this._kernel.config.autoRNGSeed) {
   //     this._kernel.rngSeed = Math.round(Math.random() * 1000);
   //     this.changes();
@@ -132,6 +135,7 @@ export class BaseSimulation extends BaseObj {
    */
   resetState(): void {
     this.logger.trace("reset state");
+
     this._state.biologicalTime = 0;
     this._state.timeInfo = {
       begin: 0,

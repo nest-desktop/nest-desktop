@@ -194,6 +194,7 @@ export class NESTNode extends BaseNode {
    */
   addCompartments(compartmentsProps: INESTNodeCompartmentProps[]): void {
     this.logger.trace("add compartments");
+
     this._compartments = [];
     compartmentsProps.forEach((compartmentProps: INESTNodeCompartmentProps) =>
       this.addCompartment(compartmentProps)
@@ -214,6 +215,7 @@ export class NESTNode extends BaseNode {
    */
   addReceptors(receptorsProps: INESTNodeReceptorProps[]): void {
     this.logger.trace("add receptors");
+
     this._receptors = [];
     receptorsProps.forEach((receptorProps: INESTNodeReceptorProps) =>
       this.addReceptor(receptorProps)
@@ -233,6 +235,7 @@ export class NESTNode extends BaseNode {
    */
   override getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
+
     // if (
     //   this.network.modelsCopied?.some(
     //     (model: NESTCopyModel) => model.id === modelId
@@ -296,6 +299,7 @@ export class NESTNode extends BaseNode {
    */
   override resetParams(): void {
     this.logger.trace("reset parameters");
+
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
 
     if (this.modelId === "cm_default") {
@@ -397,6 +401,7 @@ export class NESTNode extends BaseNode {
    */
   override updateRecords(): void {
     this.logger.trace("update records");
+
     let recordables: INodeRecordProps[] = [];
 
     // Initialize recordables.

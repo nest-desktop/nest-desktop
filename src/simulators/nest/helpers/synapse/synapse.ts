@@ -191,6 +191,7 @@ export class NESTSynapse extends BaseSynapse {
 
   getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
+
     // if (
     //   this.connection.network.modelsCopied?.synapseModels.some(
     //     (model: NESTCopyModel) => model.id === modelId
@@ -215,6 +216,7 @@ export class NESTSynapse extends BaseSynapse {
    */
   initParameters(paramsProps?: ISynapseParamProps[]): void {
     this.logger.trace("init parameters");
+
     this._paramsVisible = [];
     this._params = {};
     if (this.model && paramsProps) {
@@ -241,6 +243,7 @@ export class NESTSynapse extends BaseSynapse {
    */
   inverseWeight(): void {
     this.logger.trace("inverse weight");
+
     const weight: NESTSynapseParameter = this._params.weight;
     if (typeof weight.value === "number") {
       weight.visible = true;

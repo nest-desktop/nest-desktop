@@ -140,6 +140,7 @@ export class Activities extends BaseObj {
    */
   checkActivities(): void {
     this.logger.trace("check");
+
     const activities: Activity[] = this._project.activities.all;
 
     // Check if it has some activities.
@@ -182,6 +183,7 @@ export class Activities extends BaseObj {
    */
   reset(): void {
     this.logger.trace("reset");
+
     // Reset activities.
     this.all.forEach((activity: Activity) => activity.reset());
 
@@ -206,6 +208,7 @@ export class Activities extends BaseObj {
         }
   ): void {
     this.logger.trace("update");
+
     let activitiesProps: IActivityProps[] = [];
 
     if ("events" in data) {

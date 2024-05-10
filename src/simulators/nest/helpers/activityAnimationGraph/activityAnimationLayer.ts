@@ -223,7 +223,7 @@ export class ActivityAnimationLayer {
    * Initialize records from analog activities.
    */
   initAnalogRecords(): void {
-    if (!this._activity.recorder.model.isAnalogRecorder) return;
+    if (!this._activity.recorder.model?.isAnalogRecorder) return;
 
     this._state.records = [] as NodeRecord[];
     if (this._activity.recorder.records == null) return;
@@ -303,7 +303,7 @@ export class ActivityAnimationLayer {
     if (events.senders == null) return;
 
     // Update records of analog signals.
-    if (this._activity.recorder.model.isAnalogRecorder) {
+    if (this._activity.recorder.model?.isAnalogRecorder) {
       const records = this._state.records as NodeRecord[];
       records.forEach((record: NodeRecord) => record.update());
     }

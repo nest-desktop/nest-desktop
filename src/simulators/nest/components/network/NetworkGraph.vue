@@ -68,8 +68,6 @@
             </defs>
           </g>
 
-          <g id="nodeGroups" />
-
           <g class="dragline">
             <path
               :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }"
@@ -78,6 +76,7 @@
             />
           </g>
 
+          <g id="nodeGroups" />
           <g id="modelAssigned" />
           <g id="connections" />
           <g id="nodes" />
@@ -151,14 +150,13 @@ onBeforeUnmount(() => {
     pointer-events: none;
   }
 
-  .node {
+  .node:not(.nodeGroup) {
     .shape {
       cursor: pointer;
       fill: rgb(var(--v-theme-background));
     }
 
     text {
-      fill: rgb(var(--v-border-color));
       font-size: 12px;
       opacity: var(--v-medium-emphasis-opacity);
       pointer-events: none;
@@ -166,8 +164,13 @@ onBeforeUnmount(() => {
     }
   }
 
-  .nodeGroup path {
-    cursor: pointer;
+  .nodeGroup {
+    text {
+      opacity: 1;
+    }
+    path {
+      cursor: pointer;
+    }
   }
 }
 </style>

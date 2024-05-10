@@ -105,6 +105,7 @@ export class NESTNodes extends BaseNodes {
    */
   override updateRecordsColor(): void {
     this.logger.trace("update records color");
+
     this.recorders.forEach((recorder: NESTNode) => {
       recorder.updateRecordsColor();
     });

@@ -9,17 +9,20 @@ import {
   transition,
 } from "d3";
 
+import { BaseConnection } from "../connection/connection";
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
+import { BaseObj } from "../common/base";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
 import { TConnection } from "@/types/connectionTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNode } from "@/types/nodeTypes";
 import { drawPathNode } from "./connectionGraphPath";
-import { BaseConnection } from "../connection/connection";
 
-export class ConnectionGraph {
+export class ConnectionGraph extends BaseObj {
   private _networkGraph: TNetworkGraph;
 
   constructor(networkGraph: TNetworkGraph) {
+    super({ logger: { settings: { minLevel: 3 } } });
     this._networkGraph = networkGraph;
   }
 
@@ -128,7 +131,11 @@ export class ConnectionGraph {
           // connection.synapse.changes();
 
           // Update record colors of the weight recorder.
-          network.connections.state.selectedNode.updateRecordsColor();
+          if (network.connections.state.selectedNode.isNode) {
+            const selectedNode = network.connections.state
+              .selectedNode as TNode;
+            selectedNode.updateRecordsColor();
+          }
         } else {
           connection.state.select();
         }
@@ -139,6 +146,8 @@ export class ConnectionGraph {
    * Render connection graphs.
    */
   render(): void {
+    this.logger.trace("render");
+
     select("g#connections").style("pointer-events", () =>
       this._networkGraph.workspace.state.dragLine ? "none" : ""
     );
@@ -151,7 +160,10 @@ export class ConnectionGraph {
 
     const connections = select("g#connections").selectAll("g.connection");
     connections
-      .style("color", (c: any) => "var(--node" + c.source.idx + "-color)")
+      .style(
+        "color",
+        (c: TConnection | any) => "var(--node" + c.source.idx + "-color)"
+      )
       .transition(t)
       .style("opacity", 1);
 

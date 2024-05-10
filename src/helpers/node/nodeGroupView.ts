@@ -92,12 +92,31 @@ export class NodeGroupView extends BaseObj {
     return this._nodeGroup;
   }
 
+  get opacity(): boolean {
+    const connections = this.nodeGroup.parent.network.connections;
+    const nodes = this.nodeGroup.parentNodes;
+    return (
+      true ||
+      connections.state.selectedNode == null ||
+      (connections.state.selectedNode != null &&
+        this.nodeGroup.isSelectedForConnection) ||
+      (nodes.state.focusedNode != null && this.isFocused)
+    );
+  }
+
   get position(): { x: number; y: number } {
     return this._state.centroid;
   }
 
   get state(): UnwrapRef<INodeGroupViewState> {
     return this._state;
+  }
+
+  /**
+   * Get term based on synapse weight.
+   */
+  get synWeights(): string {
+    return "excitatory";
   }
 
   /**

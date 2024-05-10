@@ -12,7 +12,7 @@ import { TNode } from "@/types/nodeTypes";
 interface IConnectionsState {
   focusedConnection: TConnection | null;
   selectedConnection: TConnection | null;
-  selectedNode: TNode | null;
+  selectedNode: NodeGroup | TNode | null;
 }
 
 export class BaseConnections extends BaseObj {
@@ -88,6 +88,7 @@ export class BaseConnections extends BaseObj {
    */
   add(connectionProps: IConnectionProps): TConnection {
     this.logger.trace("add");
+
     const connection: TConnection = new this.Connection(this, connectionProps);
     this._connections.push(connection);
     return connection;
@@ -98,6 +99,7 @@ export class BaseConnections extends BaseObj {
    */
   clean(): void {
     this.logger.trace("clean");
+
     this.connections.forEach((connection: TConnection) => connection.clean());
   }
 
@@ -106,6 +108,7 @@ export class BaseConnections extends BaseObj {
    */
   clear(): void {
     this.logger.trace("clear");
+
     this.resetState();
     this._connections = [];
   }
@@ -115,6 +118,7 @@ export class BaseConnections extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this._connections.forEach((connection: TConnection) => connection.init());
   }
 
@@ -124,6 +128,7 @@ export class BaseConnections extends BaseObj {
    */
   remove(connection: TConnection): void {
     this.logger.trace("remove");
+
     this.resetState();
 
     // Remove connection from the connection list.

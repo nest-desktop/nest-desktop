@@ -93,7 +93,7 @@ export class Activity extends BaseObj {
    */
   get hasInputAnalogData(): boolean {
     return (
-      this.recorder.model.isAnalogRecorder &&
+      this.recorder.model?.isAnalogRecorder &&
       this.elementTypes.includes("stimulator")
     );
   }
@@ -103,7 +103,7 @@ export class Activity extends BaseObj {
    */
   get hasNeuronAnalogData(): boolean {
     return (
-      this.recorder.model.isAnalogRecorder &&
+      this.recorder.model?.isAnalogRecorder &&
       this.elementTypes.includes("neuron")
     );
   }
@@ -182,6 +182,7 @@ export class Activity extends BaseObj {
    */
   export(): void {
     this.logger.trace("export activity");
+
     download(JSON.stringify(this.toJSON()), "activity");
   }
 
@@ -190,6 +191,7 @@ export class Activity extends BaseObj {
    */
   exportEvents(): void {
     this.logger.trace("export events");
+
     download(JSON.stringify(this._events), "events");
   }
 
@@ -198,6 +200,7 @@ export class Activity extends BaseObj {
    */
   exportEventsCSV(): void {
     this.logger.trace("export events to csv");
+
     const eventKeys = ["senders", "times"];
     Object.keys(this._events).forEach((eventKey: string) => {
       if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);

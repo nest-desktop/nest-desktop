@@ -57,6 +57,7 @@ export class NESTProject extends BaseProject {
    */
   override clone(): NESTProject {
     this.logger.trace("clone");
+
     return new NESTProject({
       ...this.toJSON(),
       id: undefined,

@@ -39,6 +39,7 @@ const projectBeforeEnter = (to: any) => {
 
 const projectNew = () => {
   logger.trace("create a new nest project");
+
   const projectStore = useNESTProjectStore();
   projectStore.loadProject();
 

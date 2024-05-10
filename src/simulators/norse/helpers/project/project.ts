@@ -76,6 +76,7 @@ export class NorseProject extends BaseProject {
    */
   clone(): NorseProject {
     this.logger.trace("clone");
+
     return new NorseProject({
       ...this.toJSON(),
       id: undefined,

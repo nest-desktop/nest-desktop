@@ -39,6 +39,7 @@ export class NESTSimulationCode extends BaseSimulationCode {
    */
   override async importTemplate(): Promise<{ default: string }> {
     this.logger.trace("import template:", this.state.templateFilename);
+
     return import(`./templates/${this.state.templateFilename}.mustache?raw`);
   }
 }

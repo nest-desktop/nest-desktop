@@ -9,20 +9,16 @@ import {
   transition,
 } from "d3";
 
-import { NodeGroup } from "../node/nodeGroup";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
 import { darkMode } from "../common/theme";
 import { drawPathMouse } from "../connectionGraph/connectionGraphPath";
-import { BaseObj } from "../common/base";
 
-export class NodeGraphConnector extends BaseObj {
+export class NodeGroupGraphConnector {
   private _connectorRadius: number = 6;
   private _networkGraph: TNetworkGraph;
 
   constructor(networkGraph: TNetworkGraph) {
-    super({ logger: { settings: { minLevel: 3 } } });
-
     this._networkGraph = networkGraph;
   }
 
@@ -45,11 +41,11 @@ export class NodeGraphConnector extends BaseObj {
   /**
    * Call on dragging.
    * @param event mouse event
-   * @param node node or node group object
+   * @param nodeGroup node group object
    */
-  drag(event: MouseEvent, node: NodeGroup | TNode): void {
-    if (!node.isSelected) {
-      node.selectForConnection();
+  drag(event: MouseEvent, nodeGroup: TNode): void {
+    if (!nodeGroup.isSelected) {
+      nodeGroup.selectForConnection();
     }
     this._networkGraph.workspace.reset();
     this._networkGraph.workspace.dragline.init(event);
@@ -86,12 +82,10 @@ export class NodeGraphConnector extends BaseObj {
   }
 
   /**
-   * Initialize a node connector.
+   * Initialize a node group connector.
    * @param selector
    */
   init(selector: Selection<any, any, any, any>): void {
-    this.logger.trace("init");
-
     const connector: Selection<any, any, any, any> = selector
       .append("g")
       .attr("class", "connector")
@@ -114,8 +108,8 @@ export class NodeGraphConnector extends BaseObj {
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: NodeGroup | TNode | unknown) =>
-        this.drag(e, n as NodeGroup | TNode)
+      .on("drag", (e: MouseEvent, n: TNode | unknown) =>
+        this.drag(e, n as TNode)
       )
       .on("end", (e: MouseEvent) => this.dragEnd(e));
 
@@ -126,7 +120,7 @@ export class NodeGraphConnector extends BaseObj {
       .attr("class", "color")
       .attr("r", "6px")
       .attr("stroke-width", this.strokeWidth)
-      .on("click", (e: MouseEvent, n: NodeGroup | TNode) => {
+      .on("click", (e: MouseEvent, n: TNode) => {
         this.drag(e, n);
         this.render();
       })
@@ -144,7 +138,6 @@ export class NodeGraphConnector extends BaseObj {
       .attr("y1", -(13 / 12) * this._connectorRadius)
       .attr("y2", -(13 / 12) * this._connectorRadius)
       .style("pointer-events", "none");
-
     // vline white
     // coordinates with current config: x1: 35, y1: 21.5, x2: 35, y2: 31
     connectorEnd
@@ -156,7 +149,6 @@ export class NodeGraphConnector extends BaseObj {
       .attr("y1", -(21 / 12) * this._connectorRadius)
       .attr("y2", -(1 / 6) * this._connectorRadius)
       .style("pointer-events", "none");
-
     // hline colored
     // coordinates with current config: x1: 31.5, y1: 25.5, x2: 38.5, y2: 25.5
     connectorEnd
@@ -168,7 +160,6 @@ export class NodeGraphConnector extends BaseObj {
       .attr("y1", -(13 / 12) * this._connectorRadius)
       .attr("y2", -(13 / 12) * this._connectorRadius)
       .style("pointer-events", "none");
-
     // vline colored
     // coordinates with current config: x1: 35, y1: 22, x2: 35, y2: 29.5
     connectorEnd
@@ -183,13 +174,11 @@ export class NodeGraphConnector extends BaseObj {
   }
 
   /**
-   * Render all node connectors.
+   * Render all node group connectors.
    */
   render(): void {
-    this.logger.trace("render");
-
-    const connector: Selection<any, any, any, any> = select("g#nodes")
-      .selectAll("g.node")
+    const connector: Selection<any, any, any, any> = select("g#nodeGroups")
+      .selectAll("g.nodeGroup")
       .selectAll("g.connector");
 
     const workspace = this._networkGraph.workspace;
@@ -207,7 +196,7 @@ export class NodeGraphConnector extends BaseObj {
           ? 0
           : 1000
       )
-      .style("opacity", (n: NodeGroup | TNode) =>
+      .style("opacity", (n: TNode) =>
         n.view.isFocused && !connectionDrag ? "1" : "0"
       );
 
@@ -223,7 +212,7 @@ export class NodeGraphConnector extends BaseObj {
       .attr(
         "d",
         (
-          n: NodeGroup | TNode | any // TODO: no any!
+          n: TNode | any // TODO: no any!
         ) =>
           drawPathMouse(
             { x: 0, y: 0 },
@@ -236,13 +225,13 @@ export class NodeGraphConnector extends BaseObj {
     connector
       .select(".end")
       .transition(t)
-      .attr("transform", (n: NodeGroup | TNode) =>
+      .attr("transform", (n: TNode) =>
         n.view.isFocused && !connectionDrag
           ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
           : "translate(0,0)"
       );
 
-    connector.selectAll(".color").style("stroke", "currentcolor");
+    connector.selectAll(".color").style("stroke", "currentColor");
     connector.selectAll("line.bgcolor").attr("stroke", this.bgColor);
     connector.select("circle.color").attr("fill", this.bgColor);
   }

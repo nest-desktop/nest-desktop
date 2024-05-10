@@ -142,6 +142,7 @@ export class NodeRecord extends BaseObj {
    */
   update(): void {
     this.logger.trace("update");
+
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
     this.updateGroupID();
     this.updateState();

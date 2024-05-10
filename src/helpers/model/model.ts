@@ -203,6 +203,7 @@ export class BaseModel extends BaseObj {
    */
   newParameter(paramId: string, value: number | number[]): void {
     this.logger.trace("new parameter:", paramId);
+
     const paramProps: IParamProps = {
       component: "valueSlider",
       id: paramId,

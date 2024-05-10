@@ -301,9 +301,9 @@ const items = [
       state.content = "eventsExport";
     },
     show: () =>
+      node.value.model.isRecorder &&
       node.value.activity &&
-      node.value.activity.hasEvents &&
-      node.value.model.isRecorder,
+      node.value.activity.hasEvents,
     title: "Export events",
     append: true,
   },

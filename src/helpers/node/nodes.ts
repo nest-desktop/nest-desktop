@@ -189,6 +189,7 @@ export class BaseNodes extends BaseObj {
    */
   addNode(nodeProps: INodeProps): TNode {
     this.logger.trace("add node:", nodeProps.model);
+
     const node = new this.Node(this, nodeProps);
     this._nodes.push(node);
     return node;
@@ -200,6 +201,7 @@ export class BaseNodes extends BaseObj {
    */
   addNodeGroup(nodeGroupProps: INodeGroupProps): NodeGroup {
     this.logger.trace("add node group");
+
     const nodeGroup = new NodeGroup(this, nodeGroupProps);
     this._nodes.push(nodeGroup);
     return nodeGroup;
@@ -246,6 +248,7 @@ export class BaseNodes extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this.nodeItems.forEach((node: TNode) => node.init());
     this.updateRecords();
   }
@@ -256,6 +259,7 @@ export class BaseNodes extends BaseObj {
    */
   remove(node: NodeGroup | TNode): void {
     this.logger.trace("remove node");
+
     this._network.state.unselectAll();
 
     // Remove node from the node list.
@@ -409,6 +413,7 @@ export class BaseNodes extends BaseObj {
    */
   updateRecords(): void {
     this.logger.trace("update records");
+
     this.recorders
       .filter((recorder: TNode) => recorder.model.isAnalogRecorder)
       .forEach((recorder: TNode) => recorder.updateRecords());
@@ -422,6 +427,7 @@ export class BaseNodes extends BaseObj {
    */
   updateRecordsColor(): void {
     this.logger.trace("update records color");
+
     this.recorders.forEach((recorder: TNode) => {
       recorder.updateRecordsColor();
     });

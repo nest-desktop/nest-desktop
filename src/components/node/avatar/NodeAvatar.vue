@@ -22,7 +22,7 @@
     :color="nodeGroup.view.color"
     :size="size || 40"
     :text="nodeGroup.view.label"
-    class="node"
+    class="node-avatar"
     v-else
     variant="tonal"
   />
@@ -48,7 +48,7 @@ const nodeGroup = computed(() => props.node as NodeGroup);
 </script>
 
 <style lang="scss">
-.node {
+.node-avatar {
   font-weight: 800;
   font-size: 0.85em;
   z-index: 1;

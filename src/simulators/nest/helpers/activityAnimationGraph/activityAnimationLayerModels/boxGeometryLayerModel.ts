@@ -50,6 +50,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
     } = {}
   ): void {
     this.logger.trace("update mesh");
+
     const color = options.color || 0x000000;
     const height = options.height || 1;
     const opacity = options.opacity || 1;

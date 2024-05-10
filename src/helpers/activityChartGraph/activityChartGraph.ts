@@ -243,6 +243,7 @@ export class ActivityChartGraph extends BaseObj {
     }
   ): void {
     this.logger.trace("add panel:", panelProps.model?.id);
+
     this._panels.push(new ActivityChartPanel(this, panelProps));
   }
 
@@ -274,6 +275,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   downloadImage(options: Plotly.DownloadImgopts): void {
     this.logger.trace("download Image:", options);
+
     if (!this._state.gd) return;
 
     Plotly.downloadImage(this._state.gd, options);
@@ -319,6 +321,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   initEvents(): void {
     this.logger.trace("init events");
+
     if (!this._state.ref) return;
 
     // @ts-ignore - Property 'on' does not exist on type 'Root'. Property 'on' does not exist on type 'string'.
@@ -351,6 +354,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   newPlot(ref: Plotly.Root): void {
     this.logger.trace("new plot");
+
     this._state.ref = ref;
 
     Plotly.newPlot(
@@ -369,6 +373,7 @@ export class ActivityChartGraph extends BaseObj {
   react(): void {
     if (!this._state.ref) return;
     this.logger.trace("react");
+
     Plotly.react(this._state.ref, this._plotData, this._plotLayout);
   }
 
@@ -378,6 +383,7 @@ export class ActivityChartGraph extends BaseObj {
   relayout(): void {
     if (!this._state.ref) return;
     this.logger.trace("relayout");
+
     this.updateThemeColor();
     Plotly.relayout(this._state.ref, this._plotLayout);
   }
@@ -448,6 +454,7 @@ export class ActivityChartGraph extends BaseObj {
   update(): void {
     if (!this._state.ref) return;
     this.logger.trace("update");
+
     this.empty();
 
     this._project.activities.checkActivities();

@@ -31,6 +31,7 @@ const projectBeforeEnter = (to: any) => {
 
 const projectNew = () => {
   logger.trace("create a new norse project");
+
   const projectStore = useNorseProjectStore();
   projectStore.loadProject();
 
@@ -45,6 +46,7 @@ const projectNew = () => {
 
 const projectRedirect = (to: any) => {
   logger.trace("redirect to project:", truncate(to.params.projectId || ""));
+
   const projectStore = useNorseProjectStore();
 
   if (to.params.projectId) {

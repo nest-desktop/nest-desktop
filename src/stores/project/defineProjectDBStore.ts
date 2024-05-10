@@ -81,6 +81,7 @@ export function defineProjectDBStore(
     const deleteProjects = (projects: (TProject | TProjectProps)[]): void => {
       if (projects.length === 0) return;
       logger.trace("delete projects");
+
       db.deleteProjects(projects).then(() => updateList());
     };
 

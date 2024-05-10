@@ -85,6 +85,7 @@ export class DatabaseService extends BaseObj {
 
   async count(): Promise<number> {
     this.logger.silly("count");
+
     return this._db
       .allDocs()
       .then((res: IRes) => res.total_rows)
@@ -99,6 +100,7 @@ export class DatabaseService extends BaseObj {
 
   async list(sortedBy: string = "", reverse: boolean = false): Promise<IDoc[]> {
     this.logger.trace("list");
+
     return this._db
       .allDocs({ include_docs: true })
       .then((res: IRes) => {
@@ -120,6 +122,7 @@ export class DatabaseService extends BaseObj {
 
   async reset(): Promise<IDoc | void> {
     this.logger.trace("reset");
+
     return this.destroy().then(() => {
       this._db = new PouchDB(this._url, this._options);
     });
@@ -136,6 +139,7 @@ export class DatabaseService extends BaseObj {
 
   async create(data: IDoc): Promise<IRes> {
     this.logger.trace("create");
+
     this.clean(data);
     data.createdAt = new Date().toISOString();
     return this._db
@@ -145,6 +149,7 @@ export class DatabaseService extends BaseObj {
 
   async read(id: string, rev: string = ""): Promise<IRes> {
     this.logger.trace("read:", truncate(id));
+
     return this._db
       .get(id, { rev })
       .catch((err: IErr) => this.logger.error("Get doc:", err.stack));
@@ -152,6 +157,7 @@ export class DatabaseService extends BaseObj {
 
   async update(id: string, data: IDoc): Promise<IRes> {
     this.logger.trace("update:", truncate(id));
+
     this.clean(data);
     return this._db
       .get(id)
@@ -174,6 +180,7 @@ export class DatabaseService extends BaseObj {
 
   async delete(id: string): Promise<IRes> {
     this.logger.trace("delete:", truncate(id));
+
     return this._db
       .get(id)
       .then((doc: IDoc) =>

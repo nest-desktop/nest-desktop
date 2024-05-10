@@ -133,6 +133,7 @@ export class BaseNetworkGraph extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this._workspace.init();
     this.update();
 

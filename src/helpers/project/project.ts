@@ -197,6 +197,7 @@ export class BaseProject extends BaseObj {
     this._state.checkChanges();
 
     this.logger.trace("changes");
+
     this._activities.checkRecorders();
 
     this._simulation.code.generate();
@@ -215,6 +216,7 @@ export class BaseProject extends BaseObj {
    */
   checkoutNetwork(): void {
     this.logger.trace("checkout network");
+
     const network = this._networkRevision.load();
     this._network.update(network);
     this._network.clean();
@@ -304,6 +306,7 @@ export class BaseProject extends BaseObj {
    */
   startSimulation(): void {
     this.logger.trace("start simulation");
+
     this._network.clean();
 
     // Reset activities and activity graphs.

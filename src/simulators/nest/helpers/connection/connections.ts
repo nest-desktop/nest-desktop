@@ -44,6 +44,7 @@ export class NESTConnections extends BaseConnections {
    */
   override add(connectionProps: INESTConnectionProps): NESTConnection {
     this.logger.trace("add");
+
     const connection: NESTConnection = new this.Connection(
       this,
       connectionProps
@@ -58,6 +59,7 @@ export class NESTConnections extends BaseConnections {
    */
   override clean(): void {
     this.logger.trace("clean");
+
     this.all.forEach((connection: NESTConnection) => connection.clean());
 
     this.all.forEach((connection: NESTConnection) => {

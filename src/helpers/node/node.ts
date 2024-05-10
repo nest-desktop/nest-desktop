@@ -311,6 +311,10 @@ export class BaseNode extends BaseObj {
     );
   }
 
+  get show(): boolean {
+    return this._nodes.showNode(this);
+  }
+
   get simulation(): TSimulation {
     return this.nodes.network.project.simulation;
   }
@@ -440,9 +444,8 @@ export class BaseNode extends BaseObj {
    */
   createActivity(activityProps?: IActivityProps): void {
     this.logger.trace("init activity");
-    if (!this.model.isRecorder) {
-      return;
-    }
+
+    if (!this.model.isRecorder) return;
 
     if (this.model.isSpikeRecorder) {
       this._activity = new SpikeActivity(this, activityProps);
@@ -464,6 +467,7 @@ export class BaseNode extends BaseObj {
    */
   getModel(modelId: string): TModel {
     this.logger.trace("get model:", modelId);
+
     const model = this.modelDBStore.getModel(modelId);
     return model;
   }
@@ -560,6 +564,7 @@ export class BaseNode extends BaseObj {
    */
   reset(): void {
     this.logger.trace("reset");
+
     // this.resetParams();
   }
 
@@ -571,6 +576,7 @@ export class BaseNode extends BaseObj {
    */
   resetParams(): void {
     this.logger.trace("reset parameters");
+
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
   }
 
@@ -588,10 +594,6 @@ export class BaseNode extends BaseObj {
     const connectionsState = this._nodes.network.connections.state;
     const isSelected = connectionsState.selectedNode === this;
     connectionsState.selectedNode = isSelected ? null : this;
-  }
-
-  get show(): boolean {
-    return this._nodes.showNode(this);
   }
 
   /**
@@ -666,6 +668,7 @@ export class BaseNode extends BaseObj {
    */
   updateRecords(): void {
     this.logger.trace("update records");
+
     let recordables: INodeRecordProps[] = [];
     // Initialize recordables.
     if (this.connections.length > 0) {

@@ -193,6 +193,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this._selector.style("display", "none");
     this._selector.selectAll("*").remove();
 
@@ -230,6 +231,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    */
   open(): void {
     this.logger.trace("open");
+
     this._selector
       .style("display", "block")
       .attr(
@@ -253,6 +255,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    */
   updateColor(): void {
     this.logger.trace("update color");
+
     this._selector
       .selectAll(".color")
       .attr("fill", this.network ? this.color : "grey");
@@ -268,6 +271,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    */
   updateModelMenu(elementType: string, favoriteOnly: boolean = true): void {
     this.logger.trace("update model menu");
+
     const panel = this._selector.select("." + elementType);
     panel.select(".models").remove();
 

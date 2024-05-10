@@ -26,6 +26,7 @@ export class PyNNProject extends BaseProject {
    */
   clone(): PyNNProject {
     this.logger.trace("clone");
+
     return new PyNNProject({
       ...this.toJSON(),
       id: undefined,

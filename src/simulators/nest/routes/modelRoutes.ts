@@ -14,6 +14,7 @@ const logger = mainLogger.getSubLogger({
 
 const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
+
   const modelStore = useNESTModelStore();
 
   const modelDBStore = useNESTModelDBStore();
@@ -32,6 +33,7 @@ const modelBeforeEnter = (to: any) => {
 
 const modelRedirect = (to: any) => {
   logger.trace("redirect to model:", to.params.modelId);
+
   const modelStore = useNESTModelStore();
 
   if (to.params.modelId) {

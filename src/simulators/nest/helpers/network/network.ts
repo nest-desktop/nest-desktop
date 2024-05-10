@@ -78,6 +78,7 @@ export class NESTNetwork extends BaseNetwork {
    */
   override clean(): void {
     this.logger.trace("clean");
+
     this.nodes.clean();
     this.connections.clean();
     this.modelsCopied.clean();
@@ -88,6 +89,7 @@ export class NESTNetwork extends BaseNetwork {
    */
   override clear(): void {
     this.logger.trace("clear");
+
     this.connections.clear();
     this.nodes.clear();
     this.modelsCopied.clear();

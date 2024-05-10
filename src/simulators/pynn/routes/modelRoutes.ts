@@ -13,6 +13,7 @@ const logger = mainLogger.getSubLogger({
 });
 const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
+
   const modelStore = usePyNNModelStore();
 
   const modelDBStore = usePyNNModelDBStore();
@@ -31,6 +32,7 @@ const modelBeforeEnter = (to: any) => {
 
 const modelRedirect = (to: any) => {
   logger.trace("Redirect to model:", to.params.modelId);
+
   const modelStore = usePyNNModelStore();
 
   if (to.params.modelId) {

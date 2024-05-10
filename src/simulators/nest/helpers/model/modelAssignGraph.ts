@@ -115,7 +115,7 @@ export class NESTModelAssignGraph {
           .attr(
             "d",
             drawPathMouse(
-              weightRecorder.view.state.position,
+              weightRecorder.view.position,
               connection.view.markerEndPosition
             )
           )

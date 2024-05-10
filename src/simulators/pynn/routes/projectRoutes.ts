@@ -3,6 +3,7 @@
 import { nextTick } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { truncate } from "@/utils/truncate";
 
 import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
 import { usePyNNProjectStore } from "../stores/project/projectStore";
@@ -30,6 +31,7 @@ const projectBeforeEnter = (to: any) => {
 
 const projectNew = () => {
   logger.trace("create a new pynn project");
+
   const projectStore = usePyNNProjectStore();
   projectStore.loadProject();
 
@@ -43,7 +45,8 @@ const projectNew = () => {
 };
 
 const projectRedirect = (to: any) => {
-  logger.trace("redirect to project:", to.params.projectId?.slice(0, 6));
+  logger.trace("redirect to project:", truncate(to.params.projectId || ""));
+
   const projectStore = usePyNNProjectStore();
 
   if (to.params.projectId) {

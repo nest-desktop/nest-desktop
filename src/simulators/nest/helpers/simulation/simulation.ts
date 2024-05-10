@@ -53,6 +53,7 @@ export class NESTSimulation extends BaseSimulation {
 
   override beforeSimulation(): void {
     this.logger.trace("before simulation");
+
     this.generateSeed();
   }
 
@@ -63,6 +64,7 @@ export class NESTSimulation extends BaseSimulation {
    */
   generateSeed(): void {
     this.logger.trace("generate seed");
+
     if (this._kernel.config?.localStorage.autoRNGSeed) {
       this._kernel.rngSeed = Math.round(Math.random() * 1000);
       this.changes();
@@ -77,6 +79,7 @@ export class NESTSimulation extends BaseSimulation {
    */
   override async run(): Promise<AxiosResponse<any, { data: any }> | void> {
     this.logger.trace("run simulation");
+
     return this.code.runSimulationInsite
       ? this.runWithInsite()
       : this.runSimulation();
@@ -144,6 +147,7 @@ export class NESTSimulation extends BaseSimulation {
     { data: any }
   > | void> {
     this.logger.trace("run simulation with Insite");
+
     this.state.timeInfo = {
       begin: 0,
       current: 0,

@@ -3,24 +3,31 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, drag, polygonCentroid, polygonHull } from "d3";
+import {
+  DragBehavior,
+  Selection,
+  drag,
+  polygonCentroid,
+  polygonHull,
+  select,
+} from "d3";
 
 import { NodeGroup } from "../node/nodeGroup";
+import { NodeGroupGraphConnector } from "./nodeGroupGraphConnector";
 import { TNode } from "@/types/nodeTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNetwork } from "@/types/networkTypes";
-import { nextTick } from "vue";
 
 const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
-    node.view.state.position.x,
-    node.view.state.position.y,
+    node.view.position.x,
+    node.view.position.y,
   ]);
 
   // The two additional points will be sufficient for the convex hull algorithm.
   if (nodes.length == 2) {
-    const pos1 = nodes[0].view.state.position;
-    const pos2 = nodes[1].view.state.position;
+    const pos1 = nodes[0].view.position;
+    const pos2 = nodes[1].view.position;
 
     // [dx, dy] is the direction vector of the line.
     var dx = pos2.x - pos1.x;
@@ -46,9 +53,12 @@ const polygonGenerator = (nodes: TNode[]): [number, number][] => {
 
 export class NodeGroupGraph {
   private _networkGraph: TNetworkGraph;
+  private _nodeGroupGraphConnector: NodeGroupGraphConnector;
 
   constructor(networkGraph: TNetworkGraph) {
     this._networkGraph = networkGraph;
+
+    this._nodeGroupGraphConnector = new NodeGroupGraphConnector(networkGraph);
   }
 
   get network(): TNetwork {
@@ -65,7 +75,7 @@ export class NodeGroupGraph {
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-      const nodePosition = node.view.state.position;
+      const nodePosition = node.view.position;
       nodePosition.x += pos.x;
       nodePosition.y += pos.y;
     });
@@ -73,8 +83,21 @@ export class NodeGroupGraph {
     this._networkGraph.render();
   }
 
+  /**
+   * Initialize node group graph.
+   * @param idx
+   * @param elements
+   */
+  init(idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
+    const elem: Selection<any, any, null, undefined> = select(elements[idx]);
+    this._nodeGroupGraphConnector.init(elem);
+  }
+
+  /**
+   * Render node group graph.
+   */
   render(): void {
-    const nodeGroups = this._networkGraph.selector.selectAll(".nodeGroup");
+    const nodeGroups = this._networkGraph.selector.selectAll(".nodeGroupArea");
 
     nodeGroups.selectAll("path").attr("d", (nodeGroup: NodeGroup | any) => {
       if (nodeGroup.nodeItemsDeep.length < 2) return "";
@@ -91,19 +114,22 @@ export class NodeGroupGraph {
       );
     });
 
-    nextTick(() =>
-      nodeGroups.attr(
-        "transform",
-        (n: NodeGroup | any) =>
-          `translate(${n.view.state.centroid.x},${n.view.state.centroid.y}) scale(${n.view.state.margin})`
-      )
+    this._nodeGroupGraphConnector.render();
+
+    nodeGroups.attr(
+      "transform",
+      (n: NodeGroup | any) =>
+        `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`
     );
   }
 
+  /**
+   * Update node group graph.
+   */
   update(): void {
-    const nodeGroups = this._networkGraph.selector
+    const elem = this._networkGraph.selector
       .select("#nodeGroups")
-      .selectAll(".nodeGroup")
+      .selectAll(".nodeGroupArea")
       .data(
         this.network.nodes.nodeGroups.toReversed(),
         (n: NodeGroup | unknown) => (n instanceof NodeGroup ? n.hash : "")
@@ -116,23 +142,11 @@ export class NodeGroupGraph {
       )
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
-    const g = nodeGroups
+    const g = elem
       .enter()
       .append("g")
       .style("cursor-events", "none")
-      .attr("class", "nodeGroup");
-
-    g.append("text")
-      .attr("dy", "0.5em")
-      .attr("letter-spacing", 1.5)
-      .style("font-family", "Roboto, sans-serif", "important")
-      .style("font-size", "0.85rem", "important")
-      .style("font-weight", "800")
-      .style("pointer-events", "none")
-      .style("text-anchor", "middle")
-      .style("text-transform", "uppercase", "important")
-      .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
-      .text((n: NodeGroup) => n.view.label);
+      .attr("class", "nodeGroupArea");
 
     g.append("path")
       .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
@@ -141,15 +155,30 @@ export class NodeGroupGraph {
       .attr("stroke-width", 64)
       .style("opacity", 0.12);
 
-    nodeGroups.on("mouseover", (_, n: NodeGroup) => {
-      // n.state.focus();
+    // g.append("circle").attr("r", 20).attr("fill", "white");
+
+    // g.append("text")
+    //   .attr("dy", "0.5em")
+    //   .attr("letter-spacing", 1.5)
+    //   .style("font-family", "Roboto, sans-serif", "important")
+    //   .style("font-size", "0.85rem", "important")
+    //   .style("font-weight", "800")
+    //   .style("pointer-events", "none")
+    //   .style("text-anchor", "middle")
+    //   .style("text-transform", "uppercase", "important")
+    //   .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
+    //   .text((n: NodeGroup) => n.view.label);
+
+    elem.on("mouseover", (_, n: NodeGroup) => {
+      n.view.focus();
+
       // Draw line between selected node and focused node.
       if (
         n.parent.network.connections.state.selectedNode &&
         this._networkGraph.workspace.state.dragLine
       ) {
         const selectedNode = n.parent.network.connections.state.selectedNode;
-        const sourcePos = selectedNode.view.state.position;
+        const sourcePos = selectedNode.view.position;
         this._networkGraph.workspace.dragline.drawPath(
           sourcePos,
           n.view.state.centroid
@@ -157,7 +186,11 @@ export class NodeGroupGraph {
       }
     });
 
-    nodeGroups.on("click", (_, nodeGroup: NodeGroup) => {
+    elem.on("mouseout", () => {
+      this.network.nodes.unfocusNode();
+    });
+
+    elem.on("click", (e, nodeGroup: NodeGroup) => {
       const nodes = this._networkGraph.network.nodes;
       const connections = this._networkGraph.network.connections;
 
@@ -183,6 +216,10 @@ export class NodeGroupGraph {
           this._networkGraph.workspace.reset();
           this._networkGraph.workspace.update();
         }
+      } else if (this._networkGraph.workspace.altPressed) {
+        nodeGroup.selectForConnection();
+        this._networkGraph.workspace.reset();
+        this._networkGraph.workspace.dragline.init(e);
       } else if (this._networkGraph.workspace.ctrlPressed) {
         nodes.toggleNodeSelection(nodeGroup);
       } else {
@@ -192,10 +229,10 @@ export class NodeGroupGraph {
 
     // @ts-ignore - Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
     // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
-    nodeGroups.call(dragging, null);
+    elem.call(dragging, null);
 
-    nodeGroups.exit().remove();
+    elem.exit().remove();
 
-    nextTick(() => this.render());
+    this.render();
   }
 }

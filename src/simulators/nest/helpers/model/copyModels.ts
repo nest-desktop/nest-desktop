@@ -31,14 +31,14 @@ export class NESTCopyModels extends BaseObj {
    * Check if the network has some node models.
    */
   get hasNodeModels(): boolean {
-    return this._models.some((model: NESTCopyModel) => !model.model.isSynapse);
+    return this._models.some((model: NESTCopyModel) => !model.isSynapse);
   }
 
   /**
    * Check if the network has some synapse models.
    */
   get hasSynapseModels(): boolean {
-    return this._models.some((model: NESTCopyModel) => model.model.isSynapse);
+    return this._models.some((model: NESTCopyModel) => model.isSynapse);
   }
 
   get length(): number {
@@ -75,6 +75,7 @@ export class NESTCopyModels extends BaseObj {
    */
   add(modelProps: INESTCopyModelProps): NESTCopyModel {
     this.logger.trace("Add model");
+
     const model = new NESTCopyModel(this, modelProps);
     this._models.push(model);
     return model;
@@ -86,6 +87,7 @@ export class NESTCopyModels extends BaseObj {
    */
   copy(modelId: string): NESTCopyModel {
     this.logger.trace("Copy model");
+
     const modelProps: INESTCopyModelProps = {
       existing: modelId,
       new: modelId + "_copied" + (this._models.length + 1),

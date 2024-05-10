@@ -83,6 +83,7 @@ export class BaseSynapse extends BaseObj {
    */
   changes(): void {
     this.logger.trace("changes");
+
     this.updateHash();
     this.connection.changes();
   }
@@ -92,6 +93,7 @@ export class BaseSynapse extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
     this.updateHash();
   }
 
@@ -100,6 +102,7 @@ export class BaseSynapse extends BaseObj {
    */
   inverseWeight(): void {
     this.logger.trace("inverse weight");
+
     this.weight = -1 * this.weight;
     this.connection.changes();
   }
