@@ -211,7 +211,7 @@ export class BaseNodes extends BaseObj {
    * Clean nodes and connection components.
    */
   clean(): void {
-    this.nodeItems.forEach((node: TNode) => node.clean());
+    this.nodes.forEach((node: NodeGroup | TNode) => node.clean());
   }
 
   /**

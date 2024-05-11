@@ -98,6 +98,17 @@ export class BaseConnection extends BaseObj {
     return this._name;
   }
 
+  get nodeGroups(): NodeGroup[] {
+    return this.network.nodes.nodeGroups.filter((nodeGroup: NodeGroup) => {
+      const nodes = nodeGroup.nodeItemsDeep;
+      return (
+        [this.sourceNodeGroup, this.targetNodeGroup].includes(nodeGroup) ||
+        nodes.includes(this.sourceNode) ||
+        nodes.includes(this.targetNode)
+      );
+    });
+  }
+
   get network(): TNetwork {
     return this.connections.network;
   }
@@ -155,6 +166,10 @@ export class BaseConnection extends BaseObj {
     this._sourceIdx = node.idx;
   }
 
+  get sourceNodeGroup(): NodeGroup {
+    return this.connections.network.nodes.all[this._sourceIdx] as NodeGroup;
+  }
+
   get state(): ConnectionState {
     return this._state;
   }
@@ -185,6 +200,10 @@ export class BaseConnection extends BaseObj {
 
   set targetNode(node: TNode) {
     this._targetIdx = node.idx;
+  }
+
+  get targetNodeGroup(): NodeGroup {
+    return this.connections.network.nodes.all[this._targetIdx] as NodeGroup;
   }
 
   get view(): ConnectionView {

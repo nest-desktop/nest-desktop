@@ -168,7 +168,9 @@ export class NodeGroup extends BaseObj {
   /**
    * Clean node group.
    */
-  clean(): void {}
+  clean(): void {
+    this.view.updateCentroid();
+  }
 
   /**
    * Initialize node group.
@@ -227,6 +229,7 @@ export class NodeGroup extends BaseObj {
    * Update node.
    */
   update(): void {
+    this.view.updateCentroid();
     this.updateHash();
   }
 

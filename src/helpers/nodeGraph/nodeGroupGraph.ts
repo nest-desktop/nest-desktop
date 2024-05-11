@@ -3,14 +3,7 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import {
-  DragBehavior,
-  Selection,
-  drag,
-  polygonCentroid,
-  polygonHull,
-  select,
-} from "d3";
+import { DragBehavior, Selection, drag, polygonHull, select } from "d3";
 
 import { NodeGroup } from "../node/nodeGroup";
 import { NodeGroupGraphConnector } from "./nodeGroupGraphConnector";
@@ -18,7 +11,7 @@ import { TNode } from "@/types/nodeTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNetwork } from "@/types/networkTypes";
 
-const polygonGenerator = (nodes: TNode[]): [number, number][] => {
+export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
     node.view.position.x,
     node.view.position.y,
@@ -68,7 +61,7 @@ export class NodeGroupGraph {
   /**
    * Drag connection graph by moving its node graphs.
    * @param event mouse event
-   * @param connection connection object
+   * @param nodeGroup node group object
    */
   drag(event: MouseEvent, nodeGroup: NodeGroup): void {
     // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
@@ -79,6 +72,7 @@ export class NodeGroupGraph {
       nodePosition.x += pos.x;
       nodePosition.y += pos.y;
     });
+    nodeGroup.view.updateCentroid();
 
     this._networkGraph.render();
   }
@@ -99,20 +93,20 @@ export class NodeGroupGraph {
   render(): void {
     const nodeGroups = this._networkGraph.selector.selectAll(".nodeGroupArea");
 
-    nodeGroups.selectAll("path").attr("d", (nodeGroup: NodeGroup | any) => {
-      if (nodeGroup.nodeItemsDeep.length < 2) return "";
-      const polygon = polygonGenerator(nodeGroup.nodeItemsDeep);
-      const centroid = polygonCentroid(polygon);
-      nodeGroup.view.state.centroid.x = centroid[0];
-      nodeGroup.view.state.centroid.y = centroid[1];
-      return (
-        "M" +
-        polygon
-          .map((point) => [point[0] - centroid[0], point[1] - centroid[1]])
-          .join("L") +
-        "Z"
+    nodeGroups
+      .selectAll("path")
+      .attr(
+        "d",
+        (nodeGroup: NodeGroup | any) =>
+          "M" +
+          nodeGroup.view.state.polygon
+            .map((point: [number, number]) => [
+              point[0] - nodeGroup.view.position.x,
+              point[1] - nodeGroup.view.position.y,
+            ])
+            .join("L") +
+          "Z"
       );
-    });
 
     this._nodeGroupGraphConnector.render();
 

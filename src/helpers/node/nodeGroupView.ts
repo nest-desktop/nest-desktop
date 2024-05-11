@@ -4,6 +4,8 @@ import { reactive, UnwrapRef } from "vue";
 
 import { BaseObj } from "../common/base";
 import { NodeGroup } from "./nodeGroup";
+import { polygonCentroid } from "d3";
+import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
 
 export interface INodeGroupViewProps {
   color?: string;
@@ -17,6 +19,7 @@ interface INodeGroupViewState {
   label: string;
   margin: number;
   visible?: boolean;
+  polygon: [number, number][];
 }
 
 export class NodeGroupView extends BaseObj {
@@ -38,7 +41,10 @@ export class NodeGroupView extends BaseObj {
       centroid: { x: 0, y: 0 },
       label: "",
       margin: 1,
+      polygon: [],
     });
+
+    this.updateCentroid();
   }
 
   get color(): string {
@@ -143,6 +149,18 @@ export class NodeGroupView extends BaseObj {
     }
 
     return nodeGroupViewProps;
+  }
+
+  /**
+   * Update centroid.
+   */
+  updateCentroid(): void {
+    const polygon = polygonGenerator(this.nodeGroup.nodeItemsDeep);
+    this.state.polygon = polygon;
+
+    const centroid = polygonCentroid(polygon);
+    this.state.centroid.x = centroid[0];
+    this.state.centroid.y = centroid[1];
   }
 
   /**

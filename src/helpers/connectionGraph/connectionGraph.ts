@@ -13,6 +13,7 @@ import { BaseConnection } from "../connection/connection";
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
 import { BaseObj } from "../common/base";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
+import { NodeGroup } from "../node/nodeGroup";
 import { TConnection } from "@/types/connectionTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
@@ -49,13 +50,33 @@ export class ConnectionGraph extends BaseObj {
     // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
-    const sourceNodePosition = connection.source.view.position;
-    sourceNodePosition.x += pos.x;
-    sourceNodePosition.y += pos.y;
+    if (connection.source.isNode) {
+      const sourceNodePosition = connection.sourceNode.view.position;
+      sourceNodePosition.x += pos.x;
+      sourceNodePosition.y += pos.y;
+    } else {
+      connection.sourceNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+        const nodePosition = node.view.position;
+        nodePosition.x += pos.x;
+        nodePosition.y += pos.y;
+      });
+    }
 
-    const targetNodePosition = connection.target.view.position;
-    targetNodePosition.x += pos.x;
-    targetNodePosition.y += pos.y;
+    if (connection.target.isNode) {
+      const targetNodePosition = connection.target.view.position;
+      targetNodePosition.x += pos.x;
+      targetNodePosition.y += pos.y;
+    } else {
+      connection.targetNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+        const nodePosition = node.view.position;
+        nodePosition.x += pos.x;
+        nodePosition.y += pos.y;
+      });
+    }
+
+    connection.nodeGroups.forEach((nodeGroup: NodeGroup) =>
+      nodeGroup.view.updateCentroid()
+    );
 
     this._networkGraph.render();
   }

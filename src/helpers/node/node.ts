@@ -17,6 +17,7 @@ import { TNode } from "@/types/nodeTypes";
 import { TNodes } from "@/types/nodesTypes";
 import { TSimulation } from "@/types/simulationTypes";
 import { onlyUnique } from "../common/array";
+import { NodeGroup } from "./nodeGroup";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -247,6 +248,12 @@ export class BaseNode extends BaseObj {
 
   get nodes(): TNodes {
     return this._nodes;
+  }
+
+  get nodeGroups(): NodeGroup[] {
+    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) =>
+      nodeGroup.nodeItemsDeep.includes(this)
+    );
   }
 
   get nodeIdx(): number {

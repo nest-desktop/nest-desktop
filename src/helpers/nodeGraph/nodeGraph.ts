@@ -46,8 +46,27 @@ export class NodeGraph extends BaseObj {
 
     if (this._networkGraph.workspace.state.dragLine) return;
 
-    node.view.position.x = event.x;
-    node.view.position.y = event.y;
+    if (node.isGroup) {
+      const nodeGroup = node as NodeGroup;
+
+      // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+      const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
+
+      nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+        const nodePosition = node.view.position;
+        nodePosition.x += pos.x;
+        nodePosition.y += pos.y;
+      });
+      nodeGroup.view.updateCentroid();
+    } else {
+      node.view.position.x = event.x;
+      node.view.position.y = event.y;
+
+      node.nodeGroups.forEach((nodeGroup: NodeGroup) =>
+        nodeGroup.view.updateCentroid()
+      );
+    }
+
     this._networkGraph.render();
   }
 
