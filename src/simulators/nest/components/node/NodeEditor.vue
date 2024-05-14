@@ -162,34 +162,36 @@
                 label="population size"
                 v-model="node.size"
               />
-
-              <v-menu>
-                <template #activator="{ props }">
-                  <v-btn
-                    color="primary"
-                    class="d-print-none menu align-center justify-center my-auto"
-                    icon="mdi:mdi-dots-vertical"
-                    size="x-small"
-                    variant="text"
-                    v-bind="props"
-                  />
-                </template>
-
-                <v-list density="compact">
-                  <v-list-item
-                    :key="index"
-                    :title="item.title"
-                    @click="item.onClick()"
-                    v-for="(item, index) in popItems"
-                  >
-                    <template #prepend>
-                      <v-icon :class="item.iconClass" :icon="item.icon" />
-                    </template>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
             </template>
           </v-row>
+
+          <template #append>
+            <v-menu>
+              <template #activator="{ props }">
+                <v-btn
+                  color="primary"
+                  class="d-print-none menu align-center justify-center my-auto"
+                  icon="mdi:mdi-dots-vertical"
+                  size="x-small"
+                  variant="text"
+                  v-bind="props"
+                />
+              </template>
+
+              <v-list density="compact">
+                <v-list-item
+                  :key="index"
+                  :title="item.title"
+                  @click="item.onClick()"
+                  v-for="(item, index) in popItems"
+                >
+                  <template #prepend>
+                    <v-icon :class="item.iconClass" :icon="item.icon" />
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
         </v-list-item>
       </v-list>
 

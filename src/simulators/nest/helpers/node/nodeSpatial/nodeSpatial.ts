@@ -68,6 +68,9 @@ export class NESTNodeSpatial extends BaseObj {
       case "grid":
         this._positions = new GridPositions(this, nodeSpatialProps.specs);
         break;
+      default:
+        this._positions = undefined;
+        break;
     }
   }
 

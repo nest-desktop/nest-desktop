@@ -208,7 +208,6 @@ export class NodeGraphShape extends BaseObj {
    */
   render(): void {
     this.logger.silly("render");
-
     const nodes: Selection<any, any, any, any> =
       select("g#nodes").selectAll("g.node");
 

@@ -9,12 +9,12 @@ import {
   transition,
 } from "d3";
 
+import { BaseObj } from "../common/base";
 import { NodeGroup } from "../node/nodeGroup";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
 import { darkMode } from "../common/theme";
 import { drawPathMouse } from "../connectionGraph/connectionGraphPath";
-import { BaseObj } from "../common/base";
 
 export class NodeGraphConnector extends BaseObj {
   private _connectorRadius: number = 6;
@@ -48,9 +48,7 @@ export class NodeGraphConnector extends BaseObj {
    * @param node node or node group object
    */
   drag(event: MouseEvent, node: NodeGroup | TNode): void {
-    if (!node.isSelected) {
-      node.selectForConnection();
-    }
+    node.selectForConnection();
     this._networkGraph.workspace.reset();
     this._networkGraph.workspace.dragline.init(event);
   }

@@ -32,6 +32,7 @@ export function calcPathNode(
   y1: number;
 } {
   const r: number = options.radius || 24;
+
   const sr: number = r - 2;
   const tr: number = r + 10;
 
@@ -81,18 +82,15 @@ export function calcPathNode(
     // a = Math.abs(dx) > Math.abs(dy) ? Math.atan2(0, dx) : Math.atan2(dy, 0);
 
     a = Math.atan2(dy, dx);
-    ax =
-      a -
-      (Math.pow(-1, sweep) * Math.cos(degToRad(xAxisRotation))) / ellipticalArc;
-    ay =
-      a -
-      (Math.pow(-1, sweep) * Math.sin(degToRad(xAxisRotation))) / ellipticalArc;
 
-    x1 = x1 + Math.cos(ax) * sr;
-    y1 = y1 + Math.sin(ay) * sr;
+    ax = Math.pow(-1, sweep) * Math.cos(degToRad(xAxisRotation));
+    ay = Math.pow(-1, sweep) * Math.sin(degToRad(xAxisRotation));
 
-    x2 = x2 - Math.cos(ax) * tr;
-    y2 = y2 - Math.sin(ay) * tr;
+    x1 = x1 + Math.cos(a + ax / ellipticalArc / 2) * sr;
+    y1 = y1 + Math.sin(a + ay / ellipticalArc / 2) * sr;
+
+    x2 = x2 - Math.cos(a - ax / ellipticalArc / 2) * tr;
+    y2 = y2 - Math.sin(a - ay / ellipticalArc / 2) * tr;
   }
 
   return {

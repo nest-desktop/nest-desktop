@@ -3,10 +3,12 @@ import type { IconSet, IconProps } from "vuetify";
 
 import diceMultipleOutlineIcon from "./DiceMultipleOutlineIcon.vue";
 import dotsGridIcon from "./DotsGridIcon.vue";
+import sliderIcon from "./SliderIcon.vue";
 
 const customSvgNameToComponent: { [key: string]: any } = {
   diceMultipleOutlineIcon,
   dotsGridIcon,
+  sliderIcon,
 };
 
 const custom: IconSet = {

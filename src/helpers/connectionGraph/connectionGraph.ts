@@ -9,7 +9,6 @@ import {
   transition,
 } from "d3";
 
-import { BaseConnection } from "../connection/connection";
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
 import { BaseObj } from "../common/base";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
@@ -119,6 +118,7 @@ export class ConnectionGraph extends BaseObj {
     elem
       .on("mouseover", (_, c: TConnection) => {
         c.state.focus();
+
         // Draw line between selected node and focused connection.
         if (c.network.connections.state.selectedNode && this.state.dragLine) {
           this._networkGraph.workspace.dragline.drawPath(
@@ -256,8 +256,7 @@ export class ConnectionGraph extends BaseObj {
         .selectAll("g.connection")
         .data(
           this.networkGraph.network.connections.all,
-          (c: TConnection | unknown) =>
-            c instanceof BaseConnection ? c.hash : ""
+          (c: TConnection | any) => c.hash
         );
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()

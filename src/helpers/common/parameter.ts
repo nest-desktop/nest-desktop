@@ -6,19 +6,16 @@ import { ILogObj, ISettingsParam } from "tslog";
 import { BaseObj } from "./base";
 import { IConfigProps } from "./config";
 
-export type TParamValue = boolean | number | string | (number | string)[];
-interface IParamTypeSpec {
-  default?: number;
-  id?: string;
-  optional?: boolean;
-  label?: string;
-  value: TParamValue;
-}
-export interface IParamType {
-  icon?: string;
+interface IParamOptions {
+  component?: string;
+  defaultValue: TParamValue;
   id: string;
-  label?: string;
-  specs?: IParamTypeSpec[];
+  label: string;
+  max?: number;
+  min?: number;
+  step?: number;
+  tickLabels?: (number | string)[];
+  unit: string;
 }
 
 export interface IParamProps {
@@ -45,8 +42,25 @@ export interface IParamProps {
 
 interface IParamState {
   disabled: boolean;
+  random: boolean;
   visible: boolean;
 }
+export interface IParamType {
+  icon?: string;
+  id: string;
+  label?: string;
+  specs?: IParamTypeSpec[];
+}
+
+export interface IParamTypeSpec {
+  default?: number;
+  id?: string;
+  optional?: boolean;
+  label?: string;
+  value: TParamValue;
+}
+
+export type TParamValue = boolean | number | string | (number | string)[];
 
 export class Parameter extends BaseObj {
   private _factors: string[] = []; // not functional yet
@@ -78,6 +92,7 @@ export class Parameter extends BaseObj {
 
     this._state = reactive({
       visible: false,
+      random: false,
       disabled: true,
     });
 
@@ -173,9 +188,7 @@ export class Parameter extends BaseObj {
     return this;
   }
 
-  get options(): {
-    [key: string]: boolean | number | string | (number | string)[];
-  } {
+  get options(): IParamOptions {
     const param = this.modelParam;
 
     const options: {
@@ -257,6 +270,16 @@ export class Parameter extends BaseObj {
     this._type = this.config?.localStorage.types.find(
       (type: IParamType) => type.id === value
     );
+
+    if (!this.isConstant) {
+      this.specs.forEach(
+        (p: IParamTypeSpec) => (p.value = parseFloat(p.value as string))
+      );
+    }
+  }
+
+  get types(): IParamType[] {
+    return this.config?.localStorage.types || [];
   }
 
   get unit(): string {

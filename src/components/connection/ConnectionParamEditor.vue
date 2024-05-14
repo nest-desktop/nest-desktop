@@ -1,6 +1,8 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
+      <ParameterSpecMenu :param v-if="param.state.random" />
+
       <v-checkbox
         :color="param.connection.sourceNode.view.color"
         :model-value="(param.value as boolean)"
@@ -10,6 +12,7 @@
         v-bind="param.options"
         v-if="param.options.component === 'checkbox'"
       />
+
       <ValueSlider
         :model-value="(param.value as number)"
         :thumb-color="param.connection.sourceNode.view.color"
@@ -17,8 +20,10 @@
         v-bind="param.options"
         v-if="param.options.component === 'valueSlider'"
       />
+    </v-row>
 
-      <v-menu :close-on-content-click="false">
+    <template #append>
+      <v-menu>
         <template #activator="{ props }">
           <v-btn
             color="primary"
@@ -43,13 +48,14 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </v-row>
+    </template>
   </v-list-item>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import ParameterSpecMenu from "../parameter/ParameterSpecMenu.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 
@@ -57,6 +63,14 @@ const props = defineProps<{ param: ConnectionParameter }>();
 const param = computed(() => props.param as ConnectionParameter);
 
 const items = [
+  {
+    icon: "custom:diceMultipleOutlineIcon",
+    onClick: () => {
+      param.value.state.random = !param.value.state.random;
+      param.value.changes();
+    },
+    title: "Toggle view",
+  },
   {
     title: "Set default value",
     icon: "mdi:mdi-reload",

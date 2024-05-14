@@ -61,7 +61,6 @@ export class BaseConnection extends BaseObj {
     this._targetIdx = connectionProps.target;
 
     this._rule = new ConnectionRule(this, connectionProps.rule);
-
     this.addParameters(connectionProps.params);
 
     this._synapse = new this.Synapse(this, connectionProps.synapse);
@@ -283,7 +282,6 @@ export class BaseConnection extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.reset();
     this.synapse.init();
     this.update();
   }

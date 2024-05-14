@@ -598,9 +598,7 @@ export class BaseNode extends BaseObj {
    * Select this node as source for connection.
    */
   selectForConnection(): void {
-    const connectionsState = this._nodes.network.connections.state;
-    const isSelected = connectionsState.selectedNode === this;
-    connectionsState.selectedNode = isSelected ? null : this;
+    this._nodes.network.connections.state.selectedNode = this;
   }
 
   /**

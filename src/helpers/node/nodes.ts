@@ -192,6 +192,8 @@ export class BaseNodes extends BaseObj {
 
     const node = new this.Node(this, nodeProps);
     this._nodes.push(node);
+
+    node.updateHash();
     return node;
   }
 
@@ -204,6 +206,8 @@ export class BaseNodes extends BaseObj {
 
     const nodeGroup = new NodeGroup(this, nodeGroupProps);
     this._nodes.push(nodeGroup);
+
+    nodeGroup.updateHash();
     return nodeGroup;
   }
 

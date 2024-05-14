@@ -16,7 +16,6 @@ import { NodeGraphShape } from "./nodeGraphShape";
 import { TNetwork } from "@/types/networkTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNode } from "@/types/nodeTypes";
-import { BaseNode } from "../node/node";
 import { NodeGroup } from "../node/nodeGroup";
 
 export class NodeGraph extends BaseObj {
@@ -178,9 +177,7 @@ export class NodeGraph extends BaseObj {
       this._networkGraph.selector
         .select("g#nodes")
         .selectAll("g.node")
-        .data(this.network.nodes.nodes, (n: NodeGroup | TNode | unknown) =>
-          n instanceof BaseNode ? n.hash : ""
-        );
+        .data(this.network.nodes.all, (n: NodeGroup | TNode | any) => n.hash);
 
     const dragging: DragBehavior<any, any, any> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

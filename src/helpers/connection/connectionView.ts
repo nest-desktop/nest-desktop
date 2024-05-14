@@ -52,7 +52,7 @@ export class ConnectionView {
         this._connection.source.isSelected &&
         this._connection.source.connections.length > 1
           ? 1
-          : 10,
+          : 5,
       sweep: this._connection.idx % 2,
       xAxisRotation: this._state.xAxisRotation,
     };

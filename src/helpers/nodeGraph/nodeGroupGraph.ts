@@ -3,10 +3,9 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, Selection, drag, polygonHull, select } from "d3";
+import { DragBehavior, drag, polygonHull } from "d3";
 
 import { NodeGroup } from "../node/nodeGroup";
-import { NodeGroupGraphConnector } from "./nodeGroupGraphConnector";
 import { TNode } from "@/types/nodeTypes";
 import { TNetworkGraph } from "@/types/networkGraphTypes";
 import { TNetwork } from "@/types/networkTypes";
@@ -46,12 +45,9 @@ export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
 
 export class NodeGroupGraph {
   private _networkGraph: TNetworkGraph;
-  private _nodeGroupGraphConnector: NodeGroupGraphConnector;
 
   constructor(networkGraph: TNetworkGraph) {
     this._networkGraph = networkGraph;
-
-    this._nodeGroupGraphConnector = new NodeGroupGraphConnector(networkGraph);
   }
 
   get network(): TNetwork {
@@ -79,13 +75,8 @@ export class NodeGroupGraph {
 
   /**
    * Initialize node group graph.
-   * @param idx
-   * @param elements
    */
-  init(idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
-    const elem: Selection<any, any, null, undefined> = select(elements[idx]);
-    this._nodeGroupGraphConnector.init(elem);
-  }
+  init(): void {}
 
   /**
    * Render node group graph.
@@ -107,8 +98,6 @@ export class NodeGroupGraph {
             .join("L") +
           "Z"
       );
-
-    this._nodeGroupGraphConnector.render();
 
     nodeGroups.attr(
       "transform",
