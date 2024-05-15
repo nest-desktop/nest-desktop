@@ -10,6 +10,9 @@ process.env.PUBLIC = app.isPackaged
 import { join } from "path";
 import { BrowserWindow, app } from "electron";
 
+// https://github.com/electron/electron/issues/32760
+app.disableHardwareAcceleration();
+
 let win: BrowserWindow | null;
 const preload = join(__dirname, "./preload.js");
 const url = process.env["VITE_DEV_SERVER_URL"];
