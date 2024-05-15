@@ -1034,9 +1034,9 @@
     style-mod "^4.0.0"
 
 "@codemirror/lint@^6.0.0":
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/@codemirror/lint/-/lint-6.7.0.tgz#b252169512f826d5d742f1d82b478d53548c9ba6"
-  integrity sha512-LTLOL2nT41ADNSCCCCw8Q/UmdAFzB23OUYSjsHTdsVaH0XEo+orhuqbDNWzrzodm14w6FOxqxpmy4LF8Lixqjw==
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/@codemirror/lint/-/lint-6.7.1.tgz#bed4b3a38785678efbe683efe0e61d8ccf478d58"
+  integrity sha512-rELba6QJD20/bNXWP/cKTGLrwVEcpa2ViwULCV03ONcY1Je85++7sczVRUlnE4TJMjatx3IJTz6HX4NXi+moXw==
   dependencies:
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
@@ -2184,9 +2184,9 @@
   integrity sha512-PLwiVvTBg59tGFL/8VpcGvqOu3L4OuveNvPi0EYbWchRdEVP++yRUXJPFl+CApKEq13017/4Nf7aQ5lTtHUNsA==
 
 "@types/node@*", "@types/node@^20.9.0", "@types/node@~20.12":
-  version "20.12.11"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.11.tgz#c4ef00d3507000d17690643278a60dc55a9dc9be"
-  integrity sha512-vDg9PZ/zi+Nqp6boSOT7plNuthRugEKixDv5sFTIpkE89MmNtEArAShI4mxuX2+UrLEe9pxC1vm2cjm9YlWbJw==
+  version "20.12.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.12.tgz#7cbecdf902085cec634fdb362172dfe12b8f2050"
+  integrity sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3546,9 +3546,9 @@ convert-source-map@^2.0.0:
   integrity sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==
 
 core-js-compat@^3.31.0, core-js-compat@^3.36.1:
-  version "3.37.0"
-  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.37.0.tgz#d9570e544163779bb4dff1031c7972f44918dc73"
-  integrity sha512-vYq4L+T8aS5UuFg4UwDhc7YNRWVeVZwltad9C/jV3R2LgVOpS9BDr7l/WL6BN0dbV3k1XejPTHqqEzJgsa0frA==
+  version "3.37.1"
+  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.37.1.tgz#c844310c7852f4bdf49b8d339730b97e17ff09ee"
+  integrity sha512-9TNiImhKvQqSUkOvk/mMRZzOANTiEVC7WaBNhHcKM7x+/5E1l5NvsysR19zuDQScE8k+kfQXWRN3AtS/eOSHpg==
   dependencies:
     browserslist "^4.23.0"
 
@@ -4320,14 +4320,14 @@ electron-publish@24.13.1:
     mime "^2.5.2"
 
 electron-to-chromium@^1.4.668:
-  version "1.4.766"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.766.tgz#09fa302a4d0201e6aafc4da815d6b40e93b75c8d"
-  integrity sha512-QkqagkSWWIngOO+f/DkMtTfzX/hpESMljeYzwZvOzmk2G6oEiG1JxE2hVXY6/XoVXMkILaJ6ASUnrMPiEA7x9A==
+  version "1.4.769"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.769.tgz#c2e82091525e2d9dbcc2b8f66cdb0466ec8ebdf4"
+  integrity sha512-bZu7p623NEA2rHTc9K1vykl57ektSPQYFFqQir8BOYf6EKOB+yIsbFB9Kpm7Cgt6tsLr9sRkqfqSZUw7LP1XxQ==
 
 electron@~30.0:
-  version "30.0.4"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-30.0.4.tgz#7e3982c48ba346fba6a68481e0104bd635e3d9c3"
-  integrity sha512-z8tGQeiVM6CHj0t8PKWVhAB4FZTRNN0vSrd1jA4edX1aOjBztddk4d0Gyw91pQb4arIVf2RGPu0hYbHG2+vDcA==
+  version "30.0.5"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-30.0.5.tgz#cbd28681b974f9d8ada987bf7070cde232d01a91"
+  integrity sha512-+a7PjcAq2HrfF1l+Ez8n0W9YeZIam7E9ERHEGs+L2dqKu7qxk8GNSEFoBEPCpLI00p/fc0d76L9IcLCQJdNFqA==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^20.9.0"
@@ -6851,7 +6851,7 @@ pick-by-alias@^1.2.0:
   resolved "https://registry.yarnpkg.com/pick-by-alias/-/pick-by-alias-1.2.0.tgz#5f7cb2b1f21a6e1e884a0c87855aa4a37361107b"
   integrity sha512-ESj2+eBxhGrcA1azgHs7lARG5+5iLakc/6nlfbpjcLl00HuuUOIuORhYXN4D1HfvMSKuVtFQjAlnwi1JHEeDIw==
 
-picocolors@^1.0.0:
+picocolors@^1.0.0, picocolors@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.1.tgz#a8ad579b571952f0e5d25892de5445bcfe25aaa1"
   integrity sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==
@@ -8551,12 +8551,12 @@ upath@^2.0.1:
   integrity sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w==
 
 update-browserslist-db@^1.0.13:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/update-browserslist-db/-/update-browserslist-db-1.0.15.tgz#60ed9f8cba4a728b7ecf7356f641a31e3a691d97"
-  integrity sha512-K9HWH62x3/EalU1U6sjSZiylm9C8tgq2mSvshZpqc7QE69RaA2qjhkW2HlNA0tFpEbtyFz7HTqbSdN4MSwUodA==
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/update-browserslist-db/-/update-browserslist-db-1.0.16.tgz#f6d489ed90fb2f07d67784eb3f53d7891f736356"
+  integrity sha512-KVbTxlBYlckhF5wgfyZXTWnMn7MMZjMu9XG8bPlliUOP9ThaF4QnhP8qrjrH7DRzHfSk0oQv1wToW+iA5GajEQ==
   dependencies:
     escalade "^3.1.2"
-    picocolors "^1.0.0"
+    picocolors "^1.0.1"
 
 update-diff@^1.1.0:
   version "1.1.0"
@@ -8579,9 +8579,9 @@ url-parse@^1.5.3:
     requires-port "^1.0.0"
 
 utf8-byte-length@^1.0.1:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/utf8-byte-length/-/utf8-byte-length-1.0.4.tgz#f45f150c4c66eee968186505ab93fcbb8ad6bf61"
-  integrity sha512-4+wkEYLBbWxqTahEsWrhxepcoVOJ+1z5PGIjPZxRkytcdSUaNjIjBM7Xn8E+pdSuV7SzvWovBFA54FO0JSoqhA==
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/utf8-byte-length/-/utf8-byte-length-1.0.5.tgz#f9f63910d15536ee2b2d5dd4665389715eac5c1e"
+  integrity sha512-Xn0w3MtiQ6zoz2vFyUVruaCL53O/DwUvkEeOvj+uulMm0BkUGYWmBYVyElqZaSLhY6ZD0ulfU3aBra2aVT4xfA==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
@@ -8768,9 +8768,9 @@ vuetify3-dialog@~1.4:
   integrity sha512-ioYdSHGP7oyabo5+lKz6DNcqBOBDlIEWpQkcK2MUBKnK0EipzJu5/jQsph8+foOhSRyMxQwgVGukVTyhFgM66Q==
 
 vuetify@~3.6:
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.6.5.tgz#d190d0d64592f858582f4cb6310bac69f74627b5"
-  integrity sha512-YrHTM1vb7UllAtfH9tWfTo1wYMjyCSybu4WtXrfMRpMwAaZWgfrMmqD/4Tc+0KqDsDsYMXaYs0nJ6HtdMJZbyA==
+  version "3.6.6"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.6.6.tgz#05954117664f3a2a1188bc8bb9a1f47f899e29f1"
+  integrity sha512-7RkL0kuLsVUbc0YCwhPhVq54gSFKt5xv+SOrF01dxwJz7Ke3tAbvO616WhhQIfS78h1q/Ev952WJj5jpsdK58g==
 
 vuvuzela@1.0.3:
   version "1.0.3"
