@@ -2,11 +2,11 @@
 
 import { UnwrapRef, reactive } from "vue";
 
+import { NodeRecord } from "@/helpers/node/nodeRecord";
+import { TNode, TProject } from "@/types";
+
 import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { TNode } from "@/types/nodeTypes";
-import { TProject } from "@/types/projectTypes";
 import { download } from "../common/download";
 
 export interface IActivityProps {

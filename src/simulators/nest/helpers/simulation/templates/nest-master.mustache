@@ -23,17 +23,17 @@ nest.SetKernelStatus({
 })
 {{ /simulation.code.setKernelStatus }}
 {{ #simulation.code.createNodes }}
-{{ #network.hasNodeModels }}
+{{ #network.modelsCopied.hasNodeModels }}
 
 # Copy node models
-{{ #network.nodeModels }}
+{{ #network.modelsCopied.nodeModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
-{{ /network.nodeModels }}
-{{ /network.hasNodeModels }}
+{{ /network.modelsCopied.nodeModels }}
+{{ /network.modelsCopied.hasNodeModels }}
 
 # Create nodes
 {{ #network.nodes.all }}
@@ -91,17 +91,17 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /network.hasSomeNodeReceptors }}
 {{ /simulation.code.createNodes }}
 {{ #simulation.code.connectNodes }}
-{{ #network.hasSynapseModels }}
+{{ #network.modelsCopied.hasSynapseModels }}
 
 # Copy synapse models
-{{ #network.synapseModels }}
+{{ #network.modelsCopied.synapseModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
-{{ /network.synapseModels }}
-{{ /network.hasSynapseModels }}
+{{ /network.modelsCopied.synapseModels }}
+{{ /network.modelsCopied.hasSynapseModels }}
 
 # Connect nodes
 {{ #network.connections.all }}

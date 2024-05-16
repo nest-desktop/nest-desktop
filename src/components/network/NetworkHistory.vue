@@ -53,7 +53,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TProject } from "@/types/projectTypes";
+import { TProject } from "@/types";
 
 const props = defineProps<{ project: TProject }>();
 const project = computed(() => props.project);

@@ -1,8 +1,9 @@
 // nodeParameter.ts
 
-import { ModelParameter } from "../model/modelParameter";
-import { TNodeParameter } from "@/types/nodeParameterTypes";
+import { TNodeParameter } from "@/types";
+
 import { IParamProps, Parameter } from "../common/parameter";
+import { ModelParameter } from "../model/modelParameter";
 
 export interface INodeParamProps extends IParamProps {}
 

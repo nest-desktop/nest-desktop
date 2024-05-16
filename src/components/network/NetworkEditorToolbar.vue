@@ -93,7 +93,7 @@ import { computed, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
-import { TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types";
 import { downloadSVGImage } from "@/helpers/common/download";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 

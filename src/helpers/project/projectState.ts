@@ -1,8 +1,8 @@
 // projectState.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
-import { TProject } from "@/types/projectTypes";
+import { TProject } from "@/types";
 
 export interface IProjectState {
   changes: boolean;

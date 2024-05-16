@@ -1,7 +1,8 @@
 // synapse.ts
 
+import { TConnection } from "@/types";
+
 import { BaseObj } from "../common/base";
-import { TConnection } from "@/types/connectionTypes";
 
 export interface ISynapseProps {
   weight?: number;

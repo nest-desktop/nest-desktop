@@ -50,7 +50,7 @@ import Card from "../common/Card.vue";
 import ConnectionViewer from "../connection/ConnectionViewer.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeParamViewer from "./NodeParamViewer.vue";
-import { TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types";
 
 defineProps<{ node: TNode }>();
 </script>

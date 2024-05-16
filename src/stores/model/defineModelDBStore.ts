@@ -1,16 +1,15 @@
 // defineModelDBStore.ts
 
-import { UnwrapRef, reactive } from "vue";
 import { defineStore } from "pinia";
+import { UnwrapRef, reactive } from "vue";
 
+import { IDoc } from "@/helpers/common/database";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseModel } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
-import { TModel, TModelProps } from "@/types/modelTypes";
-import { TModelDB } from "@/types/modelDBTypes";
+import { TModel, TModelDB, TModelProps } from "@/types";
 import { getRuntimeConfig } from "@/utils/fetch";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
-import { IDoc } from "@/helpers/common/database";
 
 type Class<T> = new (...props: any) => T;
 

@@ -1,0 +1,124 @@
+<template>
+  <v-menu
+    :close-on-content-click="false"
+    activator="parent"
+    v-model="state.show"
+  >
+    <v-card flat style="min-width: 300px">
+      <!-- <v-card-title class="pa-0">
+        <v-row no-gutters>
+          <v-col cols="12">
+            <NodeModelSelect :node="node" />
+          </v-col>
+        </v-row>
+      </v-card-title> -->
+
+      <span v-if="state.content == undefined">
+        <v-list density="compact">
+          <v-list-item
+            :key="index"
+            :title="item.title"
+            @click="item.onClick"
+            v-for="(item, index) in items"
+            v-show="item.show()"
+          >
+            <template #append>
+              <template v-if="item.append">
+                <v-icon icon="mdi:mdi-menu-right" size="small" />
+              </template>
+
+              <!-- <template v-if="item.input === 'checkbox'">
+                <v-checkbox
+                  :color="node.view.color"
+                  :input-value="state[item.value]"
+                />
+              </template>
+
+              <template v-if="item.input === 'switch'">
+                <v-switch
+                  :color="node.view.color"
+                  :value="state[item.value]"
+                  dense
+                  hide-details
+                />
+              </template> -->
+            </template>
+
+            <template #prepend>
+              <v-icon :class="item.iconClass" :icon="item.icon" />
+            </template>
+          </v-list-item>
+        </v-list>
+      </span>
+
+      <span>
+        <v-dialog :value="state.dialog" width="80%">
+          <ModelDocumentation :id="model.existingModelId" />
+        </v-dialog>
+      </span>
+    </v-card>
+  </v-menu>
+</template>
+
+<script lang="ts" setup>
+import { computed, reactive } from "vue";
+import { createDialog } from "vuetify3-dialog";
+
+import ModelDocumentation from "../../views/ModelDoc.vue";
+import { NESTCopyModel } from "../../helpers/model/copyModel";
+
+const props = defineProps<{ model: NESTCopyModel }>();
+const model = computed(() => props.model);
+
+const state = reactive({
+  content: undefined as string | undefined,
+  dialog: false,
+  show: false,
+  spatialNode: false,
+});
+
+const items = [
+  {
+    icon: "mdi:mdi-reload",
+    iconClass: "mdi-flip-h",
+    id: "resetParams",
+    onClick: () => {
+      model.value.resetParams();
+    },
+    append: false,
+    show: () => true,
+    title: "Reset all parameters",
+  },
+  {
+    icon: "mdi:mdi-information-outline",
+    iconClass: "",
+    id: "modelDoc",
+    onClick: () => {
+      state.dialog = true;
+    },
+    show: () => model.value.existingModelId !== "voltmeter",
+    title: "Model documentation",
+  },
+  {
+    icon: "mdi:mdi-trash-can-outline",
+    iconClass: "",
+    id: "copyModelDelete",
+    onClick: () => {
+      createDialog({
+        title: "Delete copied model?",
+        text: "Are you sure to delete copied model?",
+        buttons: [
+          { title: "no", key: "no" },
+          { title: "yes", key: "yes" },
+        ],
+      }).then((answer: string) => {
+        if (answer === "yes") {
+          model.value.remove();
+        }
+      });
+    },
+    show: () => true,
+    title: "Delete copied model",
+  },
+];
+</script>

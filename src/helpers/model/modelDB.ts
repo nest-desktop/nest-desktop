@@ -1,8 +1,8 @@
 // modelDB.ts
 
-import { IModelProps } from "./model";
+import { TModel, TModelProps } from "@/types";
+
 import { DatabaseService, IDoc, IRes } from "../common/database";
-import { TModel } from "@/types/modelTypes";
 
 export class BaseModelDB extends DatabaseService {
   constructor(name: string = "MODEL_STORE") {
@@ -14,7 +14,7 @@ export class BaseModelDB extends DatabaseService {
    * @param model model object
    * @returns
    */
-  async createModel(model: TModel): Promise<IModelProps | void> {
+  async createModel(model: TModel): Promise<TModelProps | void> {
     this.logger.trace("create model", model.id);
 
     const data = model.toJSON();
@@ -29,12 +29,12 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Create multiple models in the database.
    */
-  async createModels(modelsProps: IModelProps[]): Promise<IModelProps[]> {
+  async createModels(modelsProps: TModelProps[]): Promise<TModelProps[]> {
     this.logger.trace("add models");
 
-    const models: Promise<IModelProps>[] = modelsProps.map(
-      (modelProps: IModelProps) =>
-        new Promise<IModelProps>((resolve) => {
+    const models: Promise<TModelProps>[] = modelsProps.map(
+      (modelProps: TModelProps) =>
+        new Promise<TModelProps>((resolve) => {
           this.create(modelProps as IDoc).then(() => {
             resolve(modelProps);
           });
@@ -49,7 +49,7 @@ export class BaseModelDB extends DatabaseService {
    * @returns
    */
 
-  async deleteModel(modelId: string): Promise<IModelProps> {
+  async deleteModel(modelId: string): Promise<TModelProps> {
     this.logger.trace("delete model:", modelId);
 
     return this.delete(modelId);
@@ -60,10 +60,10 @@ export class BaseModelDB extends DatabaseService {
    * @param models model objects
    * @returns
    */
-  async deleteModels(models: (TModel | IModelProps)[]): Promise<IDoc[]> {
+  async deleteModels(models: (TModel | TModelProps)[]): Promise<IDoc[]> {
     this.logger.trace("delete models");
 
-    const modelDocIds: string[] = models.map((model: TModel | IModelProps) => {
+    const modelDocIds: string[] = models.map((model: TModel | TModelProps) => {
       const modelDocId: string = model.docId || model.id;
       return modelDocId;
     });
@@ -75,7 +75,7 @@ export class BaseModelDB extends DatabaseService {
    * @param model model object
    * @returns
    */
-  async importModel(model: TModel): Promise<IModelProps | void> {
+  async importModel(model: TModel): Promise<TModelProps | void> {
     this.logger.trace("import model:", model.id);
 
     return model.docId ? this.updateModel(model) : this.createModel(model);
@@ -86,7 +86,7 @@ export class BaseModelDB extends DatabaseService {
    * @param model model object
    * @returns
    */
-  async updateModel(model: TModel): Promise<IModelProps | void> {
+  async updateModel(model: TModel): Promise<TModelProps | void> {
     if (!model.docId) return;
     this.logger.trace("update model:", model.id);
 

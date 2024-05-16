@@ -8,18 +8,18 @@ import {
   ConnectionParameter,
   IConnectionParamProps,
 } from "@/helpers/connection/connectionParameter";
+import { IConnectionRuleConfig } from "@/helpers/connection/connectionRule";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
 
 import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
+import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
 import { NESTNodeSlice } from "../node/nodeSlice";
-import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
-import { IConnectionRuleConfig } from "@/helpers/connection/connectionRule";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 export interface INESTConnectionProps extends IConnectionProps {

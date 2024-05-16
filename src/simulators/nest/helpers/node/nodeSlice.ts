@@ -1,7 +1,6 @@
 // nodeSlice.ts
 
 import { BaseObj } from "@/helpers/common/base";
-
 import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";

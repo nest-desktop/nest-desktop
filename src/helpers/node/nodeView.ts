@@ -1,11 +1,11 @@
 // nodeView.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
-import { NodeRecord } from "./nodeRecord";
-import { TConnection } from "@/types/connectionTypes";
-import { TNode } from "@/types/nodeTypes";
+import { TConnection, TNode } from "@/types";
+
 import { BaseObj } from "../common/base";
+import { NodeRecord } from "./nodeRecord";
 
 export interface INodeViewProps {
   color?: string;

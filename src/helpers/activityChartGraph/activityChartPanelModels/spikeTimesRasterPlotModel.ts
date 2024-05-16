@@ -1,13 +1,14 @@
 // spikeTimesRasterPlotModel.ts
 
+import { useAppStore } from "@/stores/appStore";
+
+import { SpikeActivity } from "../../activity/spikeActivity";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { useAppStore } from "@/stores/appStore";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(

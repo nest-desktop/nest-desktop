@@ -1,9 +1,9 @@
 // networkGraphStore.ts
 
-import { UnwrapRef, reactive } from "vue";
 import { defineStore } from "pinia";
+import { UnwrapRef, reactive } from "vue";
 
-import { TNetworkGraph } from "@/types/networkGraphTypes";
+import { TNetworkGraph } from "@/types";
 
 export const useNetworkGraphStore = defineStore("network-graph", () => {
   const state: UnwrapRef<{

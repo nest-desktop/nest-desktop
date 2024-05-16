@@ -1,7 +1,7 @@
 // parameter.ts
 
-import { reactive, UnwrapRef } from "vue";
 import { ILogObj, ISettingsParam } from "tslog";
+import { UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "./base";
 import { IConfigProps } from "./config";

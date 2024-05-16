@@ -1,8 +1,8 @@
 // networkState.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
-import { TNetwork } from "@/types/networkTypes";
+import { TNetwork } from "@/types";
 
 interface INetworkState {
   displayIdx: {
@@ -10,6 +10,7 @@ interface INetworkState {
     models: number[];
     nodes: number[];
   };
+  elementTypeIdx: number;
 }
 
 export class NetworkState {
@@ -19,7 +20,7 @@ export class NetworkState {
       on: "mdi:mdi-checkbox-marked-outline",
       tab: "mdi:mdi-all-inclusive",
     },
-    model: { tab: "$copyModel" },
+    model: { tab: "nest:copy-model" },
     neuron: {
       off: "mdi:mdi-alpha-n-box-outline",
       on: "mdi:mdi-alpha-n-box",
@@ -28,12 +29,12 @@ export class NetworkState {
     recorder: {
       off: "mdi:mdi-alpha-r-box-outline",
       on: "mdi:mdi-alpha-r-box",
-      tab: "$recorder",
+      tab: "network:recorder",
     },
     stimulator: {
       off: "mdi:mdi-alpha-s-box-outline",
       on: "mdi:mdi-alpha-s-box",
-      tab: "$stimulator",
+      tab: "network:stimulator",
     },
     synapse: {
       off: "mdi:mdi-alpha-s-circle-outline",
@@ -51,7 +52,12 @@ export class NetworkState {
         models: [],
         nodes: [],
       },
+      elementTypeIdx: 0,
     });
+  }
+
+  get elementTypeIdx(): number {
+    return this._state.elementTypeIdx;
   }
 
   get icons(): { [key: string]: { [key: string]: string } } {

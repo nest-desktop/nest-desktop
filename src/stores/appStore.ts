@@ -1,8 +1,8 @@
 // appStore.ts
 
-import { ThemeInstance } from "vuetify";
-import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
+import { computed, reactive } from "vue";
+import { ThemeInstance } from "vuetify";
 
 import { simulators } from "@/simulators";
 

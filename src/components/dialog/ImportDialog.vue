@@ -234,6 +234,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Store } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
@@ -242,10 +243,7 @@ import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
-import { Store } from "pinia";
-import { TModelProps } from "@/types/modelTypes";
-import { TNetworkProps } from "@/types/networkTypes";
-import { TProjectProps } from "@/types/projectTypes";
+import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();

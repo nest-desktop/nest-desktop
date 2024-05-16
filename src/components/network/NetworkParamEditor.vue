@@ -2,25 +2,27 @@
   <div class="networkParamEditor">
     <v-toolbar color="transparent" density="compact">
       <v-btn-toggle
-        class="mx-1"
+        class="ma-2"
         mandatory
-        v-model="network.nodes.state.elementTypeIdx"
+        v-model="network.state.state.elementTypeIdx"
+        variant="text"
       >
-        <icon-btn
+        <IconBtn
           :icon="item.icon"
           :key="index"
+          :title="item.title"
           @click="network.nodes.unselectNodes()"
           size="x-small"
-          v-for="(item, index) in network.nodes.nodeTypes"
-        >
-          {{ item.title }}
-        </icon-btn>
+          v-for="(item, index) in network.elementTypes"
+        />
       </v-btn-toggle>
 
       <v-spacer />
 
       <v-btn icon="mdi:mdi-dots-vertical" size="small" />
     </v-toolbar>
+
+    <slot name="model" />
 
     <slot name="nodes">
       <div :key="network.nodes.length">
@@ -37,17 +39,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import IconBtn from "../common/IconBtn.vue";
 import NodeEditor from "../node/NodeEditor.vue";
 import NodeGroup from "../node/NodeGroup.vue";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
 import { NodeGroup as TNodeGroup } from "@/helpers/node/nodeGroup";
+import { TNetwork, TNode } from "@/types";
 
-const props = defineProps<{
-  network: TNetwork;
-}>();
-const network = computed(() => props.network);
+defineProps<{ network: TNetwork }>();
 </script>

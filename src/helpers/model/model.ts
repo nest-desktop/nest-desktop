@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
 import { IDoc } from "../common/database";
-import { IModelParamProps, ModelParameter } from "./modelParameter";
-import { INodeRecordProps } from "../node/nodeRecord";
 import { IParamProps } from "../common/parameter";
+import { INodeRecordProps } from "../node/nodeRecord";
+import { IModelParamProps, ModelParameter } from "./modelParameter";
 
 export interface IModelProps extends IDoc {
   abbreviation?: string;
@@ -19,8 +19,6 @@ export interface IModelProps extends IDoc {
 }
 
 export class BaseModel extends BaseObj {
-  private readonly _name = "Model";
-
   private _abbreviation: string;
   private _doc: IModelProps; // doc data of the database
   private _elementType: string; // element type of the model
@@ -125,10 +123,6 @@ export class BaseModel extends BaseObj {
 
   set label(value: string) {
     this._label = value;
-  }
-
-  get name(): string {
-    return this._name;
   }
 
   get params(): { [key: string]: ModelParameter } {

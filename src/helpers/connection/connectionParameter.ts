@@ -1,7 +1,8 @@
 // connectionParameter.ts
 
-import { Parameter, IParamProps, IParamType } from "../common/parameter";
-import { TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types";
+
+import { IParamProps, IParamType, Parameter } from "../common/parameter";
 
 export interface IConnectionParamProps extends IParamProps {}
 

@@ -2,22 +2,25 @@
 
 import { StateTree, Store } from "pinia";
 
+import {
+  TConnection,
+  TModel,
+  TNetwork,
+  TNode,
+  TNodes,
+  TSimulation,
+} from "@/types";
+
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
+import { SpikeActivity } from "../activity/spikeActivity";
+import { onlyUnique } from "../common/array";
 import { BaseObj } from "../common/base";
 import { ModelParameter } from "../model/modelParameter";
+import { NodeGroup } from "./nodeGroup";
 import { INodeParamProps, NodeParameter } from "./nodeParameter";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
 import { INodeViewProps, NodeView } from "./nodeView";
-import { SpikeActivity } from "../activity/spikeActivity";
-import { TConnection } from "@/types/connectionTypes";
-import { TModel } from "@/types/modelTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
-import { TNodes } from "@/types/nodesTypes";
-import { TSimulation } from "@/types/simulationTypes";
-import { onlyUnique } from "../common/array";
-import { NodeGroup } from "./nodeGroup";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -42,20 +45,17 @@ export class BaseNode extends BaseObj {
   private _view: NodeView;
 
   public _modelId: string;
-  public _model: TModel;
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
     super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
 
     this._nodes = nodes;
-
     this._modelId = nodeProps.model || "";
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
     this._doc = nodeProps;
 
-    this._model = this.getModel(this._modelId);
     this._view = new NodeView(this, nodeProps.view);
 
     this.addParameters(nodeProps.params);
@@ -191,24 +191,8 @@ export class BaseNode extends BaseObj {
     return this._view.label;
   }
 
-  get model(): TModel {
-    if (this._model?.id !== this._modelId) {
-      this._model = this.getModel(this._modelId);
-    }
-    return this._model;
-  }
-
-  /**
-   * Set model.
-   * @param model - node model
-   *
-   * @remarks
-   * It initializes parameters and activity components.
-   * It triggers node model changes.
-   *
-   */
-  set model(model: TModel) {
-    this._model = model;
+  get model(): TModel | any {
+    return this.getModel(this._modelId);
   }
 
   get modelDBStore(): Store<string, StateTree> {
@@ -224,7 +208,7 @@ export class BaseNode extends BaseObj {
    */
   set modelId(value: string) {
     this._modelId = value as string;
-    this.model = this.getModel(value);
+
     this.updateParamsFromModel();
     this.modelChanges();
   }
@@ -233,7 +217,7 @@ export class BaseNode extends BaseObj {
     return this.model.params;
   }
 
-  get models(): TModel[] {
+  get models(): (TModel | any)[] {
     // Get models of the same element type.
     return this.modelDBStore.getModelsByElementType(this.model.elementType);
   }
@@ -441,7 +425,7 @@ export class BaseNode extends BaseObj {
    * Clone this node component.
    * @return cloned node component
    */
-  clone(): BaseNode {
+  clone(): TNode {
     return new BaseNode(this.nodes, { ...this.toJSON() });
   }
 

@@ -9,13 +9,12 @@ import {
   transition,
 } from "d3";
 
-import { BaseNetworkGraph } from "../networkGraph/networkGraph";
+import { TConnection, TNetworkGraph, TNode } from "@/types";
+
 import { BaseObj } from "../common/base";
+import { BaseNetworkGraph } from "../networkGraph/networkGraph";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
 import { NodeGroup } from "../node/nodeGroup";
-import { TConnection } from "@/types/connectionTypes";
-import { TNetworkGraph } from "@/types/networkGraphTypes";
-import { TNode } from "@/types/nodeTypes";
 import { drawPathNode } from "./connectionGraphPath";
 
 export class ConnectionGraph extends BaseObj {

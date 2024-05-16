@@ -2,7 +2,7 @@
 
 import { BaseNodes } from "@/helpers/node/nodes";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types";
 
 import { NorseNetwork } from "../network/network";
 import { NorseNode, INorseNodeProps } from "./node";

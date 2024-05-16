@@ -1,22 +1,31 @@
 // network.ts
 
 import { BaseNetwork } from "@/helpers/network/network";
+import { INodeGroupProps } from "@/helpers/node/nodeGroup";
+import { TNetworkProps } from "@/types";
 
 import { INESTConnectionProps, NESTConnection } from "../connection/connection";
-import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
-import { INESTNodeProps } from "../node/node";
-import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { NESTConnections } from "../connection/connections";
+import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
 import { NESTCopyModels } from "../model/copyModels";
+import { INESTNodeProps } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
-import { TNetworkProps } from "@/types/networkTypes";
 
 export interface INESTNetworkProps {
   models?: INESTCopyModelProps[];
   nodes?: (INESTNodeProps | INodeGroupProps)[];
   connections?: INESTConnectionProps[];
 }
+
+const _elementTypes: { icon: string; id: string; title: string }[] = [
+  { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
+  { icon: "mdi:mdi-select-group", id: "group", title: "group" },
+  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "network:recorder", id: "recorder", title: "recorder" },
+  { icon: "nest:copy-model", id: "model", title: "model" },
+];
 
 // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
 export function isNESTNetworkProps(
@@ -30,6 +39,7 @@ export class NESTNetwork extends BaseNetwork {
 
   constructor(project: NESTProject, networkProps: INESTNetworkProps = {}) {
     super(project, networkProps);
+    this._project = project;
 
     this._modelsCopied = new NESTCopyModels(this, networkProps.models);
   }
@@ -44,6 +54,10 @@ export class NESTNetwork extends BaseNetwork {
 
   override get connections(): NESTConnections {
     return this._connections as NESTConnections;
+  }
+
+  override get elementTypes() {
+    return _elementTypes;
   }
 
   override get isEmpty(): boolean {

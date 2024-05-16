@@ -69,7 +69,7 @@
 import { Store } from "pinia";
 import { computed, nextTick, ref } from "vue";
 
-import { TModel } from "@/types/modelTypes";
+import { TModel } from "@/types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

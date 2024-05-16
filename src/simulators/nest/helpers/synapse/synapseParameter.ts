@@ -2,6 +2,7 @@
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { Parameter, IParamProps } from "@/helpers/common/parameter";
+
 import { NESTSynapse } from "./synapse";
 
 export interface ISynapseParamProps extends IParamProps {}

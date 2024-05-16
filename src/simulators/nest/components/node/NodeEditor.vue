@@ -240,6 +240,7 @@ import ValueSlider from "@/components/controls/ValueSlider.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodePosition from "./NodePosition.vue";
+import { NESTCopyModel } from "../../helpers/model/copyModel";
 import { NESTModel } from "../../helpers/model/model";
 import { NESTNode } from "../../helpers/node/node";
 
@@ -248,7 +249,7 @@ const node = computed(() => props.node);
 
 const state = reactive({
   elementType: "",
-  items: [] as (NESTModel | { title: string; value: string })[],
+  items: [] as (NESTCopyModel | NESTModel | any)[],
   menu: false,
   panelIdx: null,
 });

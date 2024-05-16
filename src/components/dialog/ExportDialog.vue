@@ -85,8 +85,7 @@ import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
-import { TModel } from "@/types/modelTypes";
-import { TProject } from "@/types/projectTypes";
+import { TModel, TProject } from "@/types";
 import { download } from "@/helpers/common/download";
 
 // import { useAppStore } from "@/stores/appStore";

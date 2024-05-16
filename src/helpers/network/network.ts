@@ -1,24 +1,35 @@
 // network.ts
 
-import { BaseConnections } from "../connection/connections";
-import { BaseNodes } from "../node/nodes";
-import { BaseObj } from "@/helpers/common/base";
+import {
+  TConnection,
+  TConnections,
+  TNetwork,
+  TNode,
+  TNodes,
+  TProject,
+} from "@/types";
+
+import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
-import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
+import { BaseConnections } from "../connection/connections";
 import { INodeProps } from "../node/node";
+import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
 import { INodeViewProps } from "../node/nodeView";
+import { BaseNodes } from "../node/nodes";
 import { NetworkState } from "./networkState";
-import { TConnection } from "@/types/connectionTypes";
-import { TConnections } from "@/types/connectionsTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
-import { TNodes } from "@/types/nodesTypes";
-import { TProject } from "@/types/projectTypes";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
   connections?: IConnectionProps[];
 }
+
+const _elementTypes: { icon: string; id: string; title: string }[] = [
+  { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
+  { icon: "mdi:mdi-select-group", id: "group", title: "group" },
+  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "network:recorder", id: "recorder", title: "recorder" },
+];
 
 export class BaseNetwork extends BaseObj {
   private _state: NetworkState; // network state
@@ -76,6 +87,10 @@ export class BaseNetwork extends BaseObj {
     this._defaultModels = value;
   }
 
+  get elementTypes() {
+    return _elementTypes;
+  }
+
   // get graph(): NetworkGraph {
   //   return this._graph;
   // }
@@ -84,9 +99,6 @@ export class BaseNetwork extends BaseObj {
     return this.nodes.all.length === 0 && this.connections.all.length === 0;
   }
 
-  /**
-   * Get nodes
-   */
   get nodes(): TNodes {
     return this._nodes;
   }

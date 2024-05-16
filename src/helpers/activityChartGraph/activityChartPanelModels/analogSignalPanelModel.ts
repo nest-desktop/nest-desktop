@@ -1,11 +1,11 @@
 // analogSignalPanelModel.ts
 
+import { NodeRecord } from "../../node/nodeRecord";
+import { ActivityChartPanel } from "../activityChartPanel";
 import {
   ActivityChartPanelModel,
   IActivityChartPanelModelProps,
 } from "../activityChartPanelModel";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 export interface IAnalogSignalPanelModelProps
   extends IActivityChartPanelModelProps {}

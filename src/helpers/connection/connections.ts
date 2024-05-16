@@ -1,13 +1,12 @@
 // connections.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
-import { BaseConnection, IConnectionProps } from "./connection";
+import { TConnection, TNetwork, TNode } from "@/types";
+
 import { BaseObj } from "../common/base";
 import { NodeGroup } from "../node/nodeGroup";
-import { TConnection } from "@/types/connectionTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
+import { BaseConnection, IConnectionProps } from "./connection";
 
 interface IConnectionsState {
   focusedConnection: TConnection | null;

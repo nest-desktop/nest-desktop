@@ -65,7 +65,7 @@
 import { computed, reactive } from "vue";
 import { Store } from "pinia";
 
-import { TProject } from "@/types/projectTypes";
+import { TProject } from "@/types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

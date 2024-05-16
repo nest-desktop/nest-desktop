@@ -66,9 +66,8 @@
       <template v-if="projectStore.state.controller.view === 'network'">
         <slot name="network">
           <NetworkParamEditor :network="project.network">
-            <template #nodes>
-              <slot name="nodes" />
-            </template>
+            <template #model><slot name="model" /></template>
+            <template #nodes><slot name="nodes" /></template>
           </NetworkParamEditor>
         </slot>
       </template>

@@ -1,9 +1,10 @@
 // node.ts
 
+import { onlyUnique } from "@/helpers/common/array";
 import { Parameter } from "@/helpers/common/parameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
+import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
@@ -22,7 +23,6 @@ import {
   NESTNodeSpatial,
 } from "./nodeSpatial/nodeSpatial";
 import { NESTNodes } from "./nodes";
-import { onlyUnique } from "@/helpers/common/array";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -36,13 +36,16 @@ export class NESTNode extends BaseNode {
   private _positions: number[][] = [];
   private _receptors: NESTNodeReceptor[] = [];
   private _spatial: NESTNodeSpatial;
+  private _model: NESTModel;
 
   constructor(nodes: NESTNodes, nodeProps: INESTNodeProps = {}) {
     super(nodes, nodeProps);
 
+    this._model = this.getModel(this._modelId);
     this._spatial = new NESTNodeSpatial(this, nodeProps.spatial);
 
     this.reset();
+
     if (nodeProps.compartments) {
       this.addCompartments(nodeProps.compartments);
     }
@@ -109,34 +112,42 @@ export class NESTNode extends BaseNode {
     return this.paramsVisible.length > 0 || this.modelId === "multimeter";
   }
 
-  get model(): NESTModel {
+  override get model(): NESTModel {
     if (this._model?.id !== this.modelId) {
       this._model = this.getModel(this.modelId);
     }
-    return this._model as NESTModel;
+    return this._model;
+  }
+
+  override get modelId(): string {
+    return this._modelId;
   }
 
   /**
-   * Set model.
+   * Set model ID.
    */
-  override set model(model: NESTModel) {
-    this._model = model;
+  override set modelId(value: string) {
+    this._modelId = value as string;
+    this._model = this.getModel(value);
+
+    this.updateParamsFromModel();
+    this.modelChanges();
   }
 
-  override get models(): NESTModel[] {
+  override get models(): (NESTCopyModel | NESTModel)[] {
     // Get models of the same element type.
     const elementType: string = this.model.elementType;
     const models: NESTModel[] =
       this.modelDBStore.getModelsByElementType(elementType);
 
-    // // Get copied models.
-    // const modelsCopied: NESTCopyModel[] =
-    //   this.network.modelsCopied.filterByElementType(elementType);
+    // Get copied models.
+    const modelsCopied: NESTCopyModel[] =
+      this.network.modelsCopied.filterByElementType(elementType);
 
-    // const filteredModels = [...models, ...modelsCopied];
-    // filteredModels.sort();
+    const modelsAll = [...models, ...modelsCopied];
+    modelsAll.sort();
 
-    return models;
+    return modelsAll;
   }
 
   override get network(): NESTNetwork {
@@ -237,15 +248,14 @@ export class NESTNode extends BaseNode {
     this.logger.trace("get model:", modelId);
 
     // if (
-    //   this.network.modelsCopied?.some(
+    //   this.network.modelsCopied?.all?.some(
     //     (model: NESTCopyModel) => model.id === modelId
     //   )
     // ) {
-    //   return this.network.modelsCopied.getModelById(modelId);
+    //   return this.network.modelsCopied.getModelById(modelId) as NESTCopyModel;
     // } else {
-    //   return this.network.project.modelStore.getModel(modelId);
+    return this.modelDBStore.getModel(modelId) as NESTModel;
     // }
-    return this.modelDBStore.getModel(modelId);
   }
 
   /**

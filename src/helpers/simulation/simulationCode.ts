@@ -3,8 +3,9 @@
 import Mustache from "mustache";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
+import { TSimulation } from "@/types";
+
 import { BaseObj } from "../common/base";
-import { TSimulation } from "@/types/simulationTypes";
 import { download } from "../common/download";
 
 export interface ISimulationCodeProps {

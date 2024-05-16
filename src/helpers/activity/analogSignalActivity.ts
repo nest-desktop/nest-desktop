@@ -1,7 +1,8 @@
 // analogSignalActivity.ts
 
+import { TNode } from "@/types";
+
 import { Activity, IActivityProps } from "./activity";
-import { TNode } from "@/types/nodeTypes";
 
 interface IAnalogSignalActivityProps extends IActivityProps {}
 

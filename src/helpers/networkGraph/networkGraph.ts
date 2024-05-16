@@ -1,18 +1,17 @@
 // networkGraph.ts
 
-import { Ref, UnwrapRef, reactive, watch } from "vue";
 import { Selection, select } from "d3";
+import { Ref, UnwrapRef, reactive, watch } from "vue";
 
-import { BaseNode } from "../node/node";
+import { TConnection, TNetwork, TNode } from "@/types";
+import { debounce } from "@/utils/events";
+
 import { BaseObj } from "../common/base";
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
-import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { BaseNode } from "../node/node";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
-import { TConnection } from "@/types/connectionTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
-import { debounce } from "@/utils/events";
 import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
+import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 interface IBaseNetworkGraphState {
   hash: string;

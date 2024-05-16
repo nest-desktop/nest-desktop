@@ -1,11 +1,12 @@
 // database.ts
 
 import PouchDB from "pouchdb";
-import { ILogObj, ISettingsParam } from "tslog";
 import { major, minor } from "semver";
+import { ILogObj, ISettingsParam } from "tslog";
 import { v4 as uuidv4 } from "uuid";
 
 import { truncate } from "@/utils/truncate";
+
 import { BaseObj } from "./base";
 
 export interface IDoc {

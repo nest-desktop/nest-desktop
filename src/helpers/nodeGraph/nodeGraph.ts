@@ -1,6 +1,5 @@
 // nodeGraph.ts
 
-import { nextTick } from "vue";
 import {
   DragBehavior,
   Selection,
@@ -9,14 +8,14 @@ import {
   select,
   transition,
 } from "d3";
+import { nextTick } from "vue";
+
+import { TNetwork, TNetworkGraph, TNode } from "@/types";
 
 import { BaseObj } from "../common/base";
+import { NodeGroup } from "../node/nodeGroup";
 import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
-import { TNetwork } from "@/types/networkTypes";
-import { TNetworkGraph } from "@/types/networkGraphTypes";
-import { TNode } from "@/types/nodeTypes";
-import { NodeGroup } from "../node/nodeGroup";
 
 export class NodeGraph extends BaseObj {
   private _networkGraph: TNetworkGraph;

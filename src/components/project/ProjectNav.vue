@@ -165,7 +165,7 @@ import { computed, nextTick, ref } from "vue";
 import { Store } from "pinia";
 
 import ProjectMenu from "./ProjectMenu.vue";
-import { TProject } from "@/types/projectTypes";
+import { TProject } from "@/types";
 // @ts-ignore - 'truncate' is declared but its value is never read.
 import { truncate } from "@/utils/truncate";
 

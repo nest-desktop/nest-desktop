@@ -2,9 +2,10 @@
 
 import { UnwrapRef, reactive } from "vue";
 
+import { TConnection } from "@/types";
+
+import { randomUniformInt } from "../common/random";
 import { calcPathNode } from "../connectionGraph/connectionGraphPath";
-import { TConnection } from "@/types/connectionTypes";
-import { randomUniformInt } from "@/helpers/common/random";
 
 interface ConnectionViewState {
   xAxisRotation: number;

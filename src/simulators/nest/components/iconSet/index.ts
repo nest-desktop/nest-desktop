@@ -9,7 +9,7 @@ import copyModelIcon from "./CopyModelIcon.vue";
 
 const nestSvgNameToComponent: { [key: string]: Object } = {
   logo: nestIcon,
-  copyModel: copyModelIcon,
+  "copy-model": copyModelIcon,
 };
 
 export default {

@@ -33,10 +33,7 @@ interface INESTCopyModelState {
 }
 
 export class NESTCopyModel {
-  private readonly _name = "CopyModel";
-
   private _existingModelId: string;
-  private _idx: number;
   private _copyModels: NESTCopyModels;
   private _newModelId: string;
   private _params: { [key: string]: ModelParameter } = {};
@@ -51,7 +48,6 @@ export class NESTCopyModel {
     this._existingModelId = modelProps.existing;
     this._newModelId = modelProps.new;
 
-    this._idx = this._copyModels.all.length;
     this._state = reactive({
       visible: true,
     });
@@ -95,17 +91,15 @@ export class NESTCopyModel {
     const renameNew = this.newModelId.includes(this._existingModelId);
     this._existingModelId = value;
     if (renameNew) {
-      this.newModelId = value + "_copied" + (this._idx + 1);
+      this.newModelId = value + "_copied" + (this.idx + 1);
     }
     this.initParameters();
     this.changes();
   }
 
-  // get hasSomeVisibleParams(): boolean {
-  //   return Object.values(this._params).some(
-  //     (param: ModelParameter) => param.visible
-  //   );
-  // }
+  get hasSomeVisibleParams(): boolean {
+    return this._paramsVisible.length > 0;
+  }
 
   get copyModels(): NESTCopyModels {
     return this._copyModels;
@@ -138,6 +132,13 @@ export class NESTCopyModel {
    */
   get isNeuron(): boolean {
     return this.elementType === "neuron";
+  }
+
+  /**
+   * Check if the model is a node.
+   */
+  get isNode(): boolean {
+    return ["neuron", "recorder", "stimulator"].includes(this.elementType);
   }
 
   /**
@@ -176,7 +177,7 @@ export class NESTCopyModel {
   }
 
   get idx(): number {
-    return this._idx;
+    return this._copyModels.all.indexOf(this);
   }
 
   get filteredParams(): ModelParameter[] {
@@ -204,10 +205,6 @@ export class NESTCopyModel {
 
   get models(): NESTModel[] {
     return this.modelDBStore.state.models as NESTModel[];
-  }
-
-  get name(): string {
-    return this._name;
   }
 
   get network(): NESTNetwork {
@@ -271,6 +268,10 @@ export class NESTCopyModel {
     return this.model.recordables;
   }
 
+  get show(): boolean {
+    return this._copyModels.showModel(this) || true; // TODO
+  }
+
   get size(): number {
     return NaN;
   }
@@ -305,16 +306,6 @@ export class NESTCopyModel {
     this._params[paramProps.id] = new ModelParameter(this.model, paramProps);
   }
 
-  // /**
-  //  * Add parameter component.
-  //  * @param param - parameter props
-  //  */
-  // addParameter(paramProps: IParamProps): void {
-  //   const parameter = new Parameter(this, paramProps);
-  //   parameter.visible = true;
-  //   this._params.push(parameter);
-  // }
-
   /**
    * Add parameter component.
    * @param param - parameter object
@@ -333,8 +324,6 @@ export class NESTCopyModel {
   }
 
   clean(): void {
-    this._idx = this._copyModels.all.indexOf(this);
-
     const weightRecorderParam: ModelParameter = this._params.weight_recorder;
 
     // Update weight recorder list to select.
@@ -442,9 +431,16 @@ export class NESTCopyModel {
     this.clean();
   }
 
-  // /**
-  //  * Sets all params to visible.
-  //  */
+  /**
+   * Reset all parameters.
+   */
+  resetParams(): void {
+    this.paramsAll.forEach((param: ModelParameter) => param.reset());
+  }
+
+  /**
+   * Sets all params to visible.
+   */
   showAllParams(): void {
     this.paramsAll.forEach((param: ModelParameter) => (param.visible = true));
   }

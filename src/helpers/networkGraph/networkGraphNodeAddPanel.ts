@@ -2,11 +2,11 @@
 
 import { Arc, Selection, arc } from "d3";
 
+import { TModel, TNetwork } from "@/types";
+
 import { BaseObj } from "../common/base";
-import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { TModel } from "@/types/modelTypes";
-import { TNetwork } from "@/types/networkTypes";
 import { darkMode } from "../common/theme";
+import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 interface IModelProps {
   favorite: string;

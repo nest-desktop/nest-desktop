@@ -4,15 +4,15 @@ import { ISimulatorProps } from "..";
 
 import nestIconSet from "./components/iconSet";
 import nestRoute from "./routes";
-
-import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
-import { useNESTModelDBStore } from "./stores/model/modelDBStore";
-import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
-import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
+import types from "./helpers/types";
 import { nestCompletions } from "./codemirror/nestCompletion";
 import { nestRandomCompletions } from "./codemirror/nestRandomCompletion";
 import { nestSpatialCompletions } from "./codemirror/nestSpatialCompletion";
 import { nestSpatialDistributionsCompletions } from "./codemirror/nestSpatialDistributionsCompletion";
+import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
+import { useNESTModelDBStore } from "./stores/model/modelDBStore";
+import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
+import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 
 export const nest: ISimulatorProps = {
   autocomplete: [
@@ -60,11 +60,12 @@ export const nest: ISimulatorProps = {
       nest: nestSimulatorStore,
     };
   },
-  title: "NEST",
   route: nestRoute,
+  title: "NEST",
   theme: {
     nest: "ff6633",
     "nest-model": "ff6633",
     "nest-project": "1281b3",
   },
+  types,
 };

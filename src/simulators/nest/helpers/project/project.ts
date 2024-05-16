@@ -2,11 +2,11 @@
 
 import { BaseProject, IProjectProps } from "@/helpers/project/project";
 
+import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
+import { NESTActivityGraph } from "../activity/activityGraph";
+import { Insite } from "../insite/insite";
 import { INESTNetworkProps, NESTNetwork } from "../network/network";
 import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
-import { Insite } from "../insite/insite";
-import { NESTActivityGraph } from "../activity/activityGraph";
-import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INESTProjectProps extends IProjectProps {
   network?: INESTNetworkProps;
@@ -14,7 +14,7 @@ export interface INESTProjectProps extends IProjectProps {
 }
 
 export class NESTProject extends BaseProject {
-  private _insite: Insite; // insite
+  private _insite: Insite;
 
   constructor(projectProps: INESTProjectProps = {}) {
     super(projectProps);

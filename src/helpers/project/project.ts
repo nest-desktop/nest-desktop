@@ -1,6 +1,12 @@
 // project.ts
 
+import { Store } from "pinia";
 import { nextTick } from "vue";
+
+import { useModelDBStore } from "@/stores/model/modelDBStore";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
+import { TActivityGraph, TNetwork, TProject, TSimulation } from "@/types";
+import { truncate } from "@/utils/truncate";
 
 import { Activities } from "../activity/activities";
 import { Activity } from "../activity/activity";
@@ -8,20 +14,12 @@ import {
   BaseActivityGraph,
   IBaseActivityGraphProps,
 } from "../activity/activityGraph";
-import { BaseNetwork, INetworkProps } from "../network/network";
 import { BaseObj } from "../common/base";
-import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { IDoc } from "../common/database";
+import { BaseNetwork, INetworkProps } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
+import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { ProjectState } from "./projectState";
-import { Store } from "pinia";
-import { TActivityGraph } from "@/types/activityGraphTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TProject } from "@/types/projectTypes";
-import { TSimulation } from "@/types/simulationTypes";
-import { truncate } from "@/utils/truncate";
-import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 export interface IProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -44,7 +42,7 @@ export class BaseProject extends BaseObj {
   private _updatedAt: string | undefined; // when is it updated in database
   public _activityGraph: TActivityGraph; // activity graph
   public _network: TNetwork; // network of neurons and devices
-  public _simulation: BaseSimulation; // settings for the simulation
+  public _simulation: TSimulation; // settings for the simulation
 
   constructor(projectProps: IProjectProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -66,6 +64,7 @@ export class BaseProject extends BaseObj {
     this._state = new ProjectState(this);
     this._simulation = new this.Simulation(this, projectProps.simulation);
     this._network = new this.Network(this, projectProps.network);
+
     this._networkRevision = new NetworkRevision(this);
     this._activities = new Activities(this);
     this._activityGraph = new this.ActivityGraph(
@@ -97,11 +96,11 @@ export class BaseProject extends BaseObj {
     return this._activityGraph;
   }
 
-  get baseNetwork(): TNetwork {
-    return this._network;
+  get baseNetwork(): BaseNetwork {
+    return this._network as BaseNetwork;
   }
 
-  get baseSimulation(): TSimulation {
+  get baseSimulation(): BaseSimulation {
     return this._simulation;
   }
 
@@ -218,8 +217,8 @@ export class BaseProject extends BaseObj {
     this.logger.trace("checkout network");
 
     const network = this._networkRevision.load();
-    this._network.update(network);
-    this._network.clean();
+    this.network.update(network);
+    this.network.clean();
 
     // Generate simulation code.
     this._simulation.code.generate();

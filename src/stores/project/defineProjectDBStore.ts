@@ -1,16 +1,15 @@
 // defineProjectDBStore.ts
 
 import { defineStore } from "pinia";
+import { reactive } from "vue";
 
+import { download } from "@/helpers/common/download";
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseProject } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { TProject, TProjectProps } from "@/types/projectTypes";
-import { TProjectDB } from "@/types/projectDBTypes";
-import { download } from "@/helpers/common/download";
+import { TProject, TProjectDB, TProjectProps } from "@/types";
 import { getRuntimeConfig } from "@/utils/fetch";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
-import { reactive } from "vue";
 
 type Class<T> = new (...props: any) => T;
 

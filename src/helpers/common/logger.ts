@@ -10,7 +10,7 @@
 // 5 - error
 // 6 - fatal
 
-import { Logger, ILogObj } from "tslog";
+import { ILogObj, Logger } from "tslog";
 
 const logger: Logger<ILogObj> = new Logger({
   minLevel: 3,

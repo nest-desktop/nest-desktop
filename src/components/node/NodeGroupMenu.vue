@@ -84,7 +84,7 @@ import { computed, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { INodeGroupProps, NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNodes } from "@/types/nodesTypes";
+import { TNodes } from "@/types";
 
 const props = defineProps<{ nodeGroup: NodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);

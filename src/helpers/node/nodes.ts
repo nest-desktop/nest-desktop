@@ -1,26 +1,16 @@
 // nodes.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
-import { BaseNode, INodeProps } from "./node";
+import { TActivityGraph, TNetwork, TNode } from "@/types";
+
 import { BaseObj } from "../common/base";
+import { BaseNode, INodeProps } from "./node";
 import { INodeGroupProps, NodeGroup } from "./nodeGroup";
-import { TActivityGraph } from "@/types/activityGraphTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
-
-const _nodeTypes: { icon: string; id: string; title: string }[] = [
-  { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
-  { icon: "mdi:mdi-select-group", id: "group", title: "group" },
-  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "network:recorder", id: "recorder", title: "recorder" },
-];
 
 interface INodesState {
   annotations: { [key: string]: string }[];
   contextMenu: boolean;
-  elementTypeIdx: number;
   focusedNode: NodeGroup | TNode | null;
   selectedNodes: (NodeGroup | TNode)[];
 }
@@ -41,7 +31,6 @@ export class BaseNodes extends BaseObj {
     this._state = reactive({
       annotations: [],
       contextMenu: false,
-      elementTypeIdx: 0,
       focusedNode: null,
       selectedNodes: [] as (NodeGroup | TNode)[],
     });
@@ -112,10 +101,6 @@ export class BaseNodes extends BaseObj {
     ) as TNode[];
   }
 
-  get nodeTypes(): { icon: string; id: string; title: string }[] {
-    return _nodeTypes;
-  }
-
   get nodes(): (NodeGroup | TNode)[] {
     return this._nodes;
   }
@@ -139,6 +124,20 @@ export class BaseNodes extends BaseObj {
    */
   get recordersSpike(): TNode[] {
     return this.nodeItems.filter((node: TNode) => node.model.isSpikeRecorder);
+  }
+
+  get selectedNodeGroups(): NodeGroup[] {
+    const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
+    return selectedNodes.filter(
+      (node: NodeGroup | TNode) => node.isGroup
+    ) as NodeGroup[];
+  }
+
+  get selectedNodeItems(): TNode[] {
+    const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
+    return selectedNodes.filter(
+      (node: NodeGroup | TNode) => node.isNode
+    ) as TNode[];
   }
 
   // set selectedNode(node: TNode | null) {
@@ -291,14 +290,14 @@ export class BaseNodes extends BaseObj {
    * Show node in list.
    */
   showNode(node: NodeGroup | TNode): boolean {
-    const elementTypeIdx = this._state.elementTypeIdx;
+    const elementTypeIdx = this._network.state.elementTypeIdx;
 
     if (this._state.selectedNodes.length > 0) {
       // selected view
       return this._state.selectedNodes.includes(node);
     } else if (elementTypeIdx > 0) {
       // element type view
-      return _nodeTypes[elementTypeIdx].id === node.elementType;
+      return this._network.elementTypes[elementTypeIdx].id === node.elementType;
     } else if (this._network.state.state.displayIdx.nodes.length > 0) {
       // custom view
       return this._network.state.state.displayIdx.nodes.includes(node.idx);
@@ -321,7 +320,7 @@ export class BaseNodes extends BaseObj {
    * @param node node or node group object
    */
   toggleNodeSelection(node: NodeGroup | TNode) {
-    this._state.elementTypeIdx = 0;
+    this._network.state.state.elementTypeIdx = 0;
 
     var index = this._state.selectedNodes.indexOf(node);
     if (index === -1) {

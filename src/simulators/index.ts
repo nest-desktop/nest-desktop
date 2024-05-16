@@ -20,18 +20,19 @@ import { pynn } from "./pynn";
 
 export interface ISimulatorProps {
   autocomplete: any[];
-  backends: { [key: string]: Store<string, StateTree> };
+  backends: Record<string, Store<string, StateTree>>;
   configNames: string[];
   databases: string[];
   iconSet: IconSet;
   id: string;
   init: () => void;
   route: RouteRecordRaw;
-  theme: { [key: string]: string };
+  theme: Record<string, string>;
   title: string;
+  types: Record<string, any>;
 }
 
-export const simulators: { [key: string]: ISimulatorProps } = {
+export const simulators: Record<string, ISimulatorProps> = {
   nest,
   norse,
   pynn,

@@ -85,7 +85,7 @@ const update = (value: number | number[]) => {
 
 const items = [
   {
-    icon: "custom:diceMultipleOutlineIcon",
+    icon: "custom:dice-multiple-outline",
     onClick: () => {
       param.value.state.random = !param.value.state.random;
       param.value.changes();

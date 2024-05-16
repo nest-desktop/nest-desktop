@@ -17,7 +17,7 @@ import { python } from "@codemirror/lang-python";
 
 let language = new Compartment();
 
-import { TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";

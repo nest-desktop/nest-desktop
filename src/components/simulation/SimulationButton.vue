@@ -38,7 +38,7 @@
 import { Store } from "pinia";
 import { computed } from "vue";
 
-import { TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types";
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 const props = defineProps<{

@@ -1,18 +1,21 @@
 // activityChartGraph.ts
 
-import { UnwrapRef, nextTick, reactive } from "vue";
-import Plotly from "plotly.js-dist-min";
 // @ts-ignore - Module '"plotly.js-dist-min"' has no exported member 'Partial'.
-import { Partial } from "plotly.js-dist-min";
+import Plotly, { Partial } from "plotly.js-dist-min";
+import { UnwrapRef, nextTick, reactive } from "vue";
 
+import { TProject } from "@/types";
+
+import { BaseObj } from "../common/base";
+import { currentBackgroundColor, currentColor } from "../common/theme";
 import {
   ActivityChartPanel,
   IActivityChartPanelProps,
 } from "./activityChartPanel";
+import { IActivityChartPanelModelData } from "./activityChartPanelModel";
+import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
-import { BaseObj } from "../common/base";
-import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
 import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";
@@ -20,9 +23,7 @@ import { SenderSpikeCountPlotModel } from "./activityChartPanelModels/senderSpik
 import { SpikeCountPlotModel } from "./activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
-import { TProject } from "@/types/projectTypes";
-import { currentBackgroundColor, currentColor } from "../common/theme";
-import { IActivityChartPanelModelData } from "./activityChartPanelModel";
+
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
 

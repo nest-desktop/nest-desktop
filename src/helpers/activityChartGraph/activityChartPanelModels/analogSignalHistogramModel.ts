@@ -1,14 +1,14 @@
 // analogSignalHistogramModel.ts
 
+import { max, min } from "../../common/array";
+import { currentBackgroundColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   AnalogSignalPanelModel,
   IAnalogSignalPanelModelProps,
 } from "./analogSignalPanelModel";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { currentBackgroundColor } from "@/helpers/common/theme";
-import { max, min } from "@/helpers/common/array";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(

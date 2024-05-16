@@ -101,6 +101,41 @@
       </template>
     </template>
 
+    <template #model>
+      <span v-if="project.network.state.elementTypeIdx === 5">
+        <v-select
+          :items="project.modelDBStore.state.models"
+          class="ma-1"
+          density="compact"
+          flat
+          hide-details
+          item-title="label"
+          item-value="id"
+          label="Existing model"
+          prepend-icon="mdi:mdi-plus"
+          v-model="model"
+          variant="outlined"
+        >
+          <template #append>
+            <v-btn
+              :disabled="model.length === 0"
+              @click="copyModel()"
+              text="copy"
+              variant="outlined"
+            />
+          </template>
+        </v-select>
+      </span>
+
+      <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
+        <CopyModelEditor
+          :key="index"
+          :model="(model as NESTCopyModel)"
+          v-for="(model, index) of project.network.modelsCopied.all"
+        />
+      </span>
+    </template>
+
     <template #nodes>
       <div :key="project.network.nodes.length">
         <div :key="index" v-for="(node, index) in project.network.nodes.all">
@@ -122,7 +157,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
@@ -133,8 +168,10 @@ import { NodeGroup as TNodeGroup } from "@/helpers/node/nodeGroup";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
+import CopyModelEditor from "../components/model/CopyModelEditor.vue";
 import NodeEditor from "../components/node/NodeEditor.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
+import { NESTCopyModel } from "../helpers/model/copyModel";
 import { NESTNode } from "../helpers/node/node";
 import { NESTProject } from "../helpers/project/project";
 
@@ -145,4 +182,14 @@ import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
 
 const project = computed(() => projectStore.state.project as NESTProject);
+
+const model = ref("");
+
+/**
+ * Copy model.
+ */
+const copyModel = () => {
+  project.value.network.modelsCopied.copy(model.value);
+  project.value.network.changes();
+};
 </script>

@@ -2,7 +2,7 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types";
 
 interface IConnectionState {
   showRule: boolean;

@@ -2,10 +2,11 @@
 
 import * as d3 from "d3";
 
+import { TNode } from "@/types";
+
 import { Activity } from "../activity/activity";
-import { BaseObj } from "../common/base";
-import { TNode } from "@/types/nodeTypes";
 import { max, min } from "../common/array";
+import { BaseObj } from "../common/base";
 
 export interface INodeRecordProps {
   id: string;

@@ -2,12 +2,12 @@
 
 import { UnwrapRef, reactive } from "vue";
 
+import { TNode, TProject } from "@/types";
+
+import { SpikeActivity } from "../activity/spikeActivity";
+import { BaseObj } from "../common/base";
 import { Activity, IActivityProps, IEventProps } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
-import { BaseObj } from "../common/base";
-import { SpikeActivity } from "../activity/spikeActivity";
-import { TNode } from "@/types/nodeTypes";
-import { TProject } from "@/types/projectTypes";
 
 interface IActivitiesState {
   activityStatsPanelId: number;

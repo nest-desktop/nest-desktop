@@ -2,8 +2,8 @@
 
 import {
   notifyError as _notifyError,
-  notifySuccess as _notifySuccess,
   notifyInfo as _notifyInfo,
+  notifySuccess as _notifySuccess,
   notifyWarning as _notifyWarning,
 } from "vuetify3-dialog";
 

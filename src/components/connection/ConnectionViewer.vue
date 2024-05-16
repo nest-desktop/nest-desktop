@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import ConnectionAvatar from "./ConnectionAvatar.vue";
-import { TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types";
 
 defineProps<{ connection: TConnection }>();
 </script>

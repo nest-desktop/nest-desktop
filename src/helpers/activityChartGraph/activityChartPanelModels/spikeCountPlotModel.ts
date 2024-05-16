@@ -1,15 +1,16 @@
 // spikeCountPlotModel.ts
 
+import { useAppStore } from "@/stores/appStore";
+import { TNode } from "@/types";
+
+import { SpikeActivity } from "../../activity/spikeActivity";
+import { deviation, max, mean, min, sum } from "../../common/array";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { TNode } from "@/types/nodeTypes";
-import { sum, deviation, max, mean, min } from "@/helpers/common/array";
-import { useAppStore } from "@/stores/appStore";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(

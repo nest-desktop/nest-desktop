@@ -1,9 +1,10 @@
 // nodeView.ts
 
+import { INodeViewProps, NodeView } from "@/helpers/node/nodeView";
+
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTNode } from "./node";
-import { INodeViewProps, NodeView } from "@/helpers/node/nodeView";
 
 export class NESTNodeView extends NodeView {
   constructor(

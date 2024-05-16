@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types";
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 
 const props = defineProps<{ connection: TConnection }>();

@@ -4,16 +4,19 @@ import {
   BaseActivityGraph,
   IBaseActivityGraphProps,
 } from "@/helpers/activity/activityGraph";
-import { TProject } from "@/types/projectTypes";
 
 import { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
+import { NESTProject } from "../project/project";
 
 export interface INESTActivityGraphProps extends IBaseActivityGraphProps {}
 
 export class NESTActivityGraph extends BaseActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;
 
-  constructor(project: TProject, activityGraphProps?: INESTActivityGraphProps) {
+  constructor(
+    project: NESTProject,
+    activityGraphProps?: INESTActivityGraphProps
+  ) {
     super(project, activityGraphProps);
 
     this._activityAnimationGraph = new ActivityAnimationGraph(project);

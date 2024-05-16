@@ -1,16 +1,15 @@
 // networkGraphWorkspace.ts
 
-import { nextTick } from "vue";
 import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
+import { nextTick } from "vue";
+
+import { TNetwork, TNetworkGraph, TNode } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NetworkGraphDragline } from "./networkGraphDragline";
 import { NetworkGraphGrid } from "./networkGraphGrid";
 import { NetworkGraphNodeAddPanel } from "./networkGraphNodeAddPanel";
 import { NetworkGraphZoom } from "./networkGraphZoom";
-import { TNetwork } from "@/types/networkTypes";
-import { TNetworkGraph } from "@/types/networkGraphTypes";
-import { TNode } from "@/types/nodeTypes";
 
 export interface INetworkGraphWorkspaceState {
   centerNetwork: boolean;

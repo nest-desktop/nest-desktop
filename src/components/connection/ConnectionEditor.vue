@@ -62,7 +62,7 @@ import { computed } from "vue";
 import ConnectionAvatar from "./ConnectionAvatar.vue";
 import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
 import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
-import { TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types";
 
 const props = defineProps<{ connection: TConnection }>();
 const connection = computed(() => props.connection);

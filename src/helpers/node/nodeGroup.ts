@@ -1,11 +1,9 @@
 // nodeGroup.ts
 
-import { TNetwork } from "@/types/networkTypes";
+import { TConnection, TNetwork, TNode, TNodes } from "@/types";
+
 import { BaseObj } from "../common/base";
 import { NodeGroupView } from "./nodeGroupView";
-import { TNode } from "@/types/nodeTypes";
-import { TNodes } from "@/types/nodesTypes";
-import { TConnection } from "@/types/connectionTypes";
 
 export interface INodeGroupProps {
   nodes: number[];

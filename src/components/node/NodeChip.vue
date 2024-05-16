@@ -18,8 +18,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TNetworkGraph } from "@/types/networkGraphTypes";
-import { TNode } from "@/types/nodeTypes";
+import { TNetworkGraph, TNode } from "@/types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

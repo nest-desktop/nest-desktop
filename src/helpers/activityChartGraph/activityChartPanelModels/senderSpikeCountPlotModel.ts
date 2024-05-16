@@ -1,13 +1,13 @@
 // senderSpikeCountPlotModel.ts
 
+import { SpikeActivity } from "../../activity/spikeActivity";
+import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { currentBackgroundColor } from "@/helpers/common/theme";
 
 export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(

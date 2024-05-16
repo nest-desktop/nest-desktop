@@ -32,7 +32,7 @@
 import { computed } from "vue";
 
 import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types";
 
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";

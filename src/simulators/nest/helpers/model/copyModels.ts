@@ -1,9 +1,10 @@
 // copyModels.ts
 
 import { BaseObj } from "@/helpers/common/base";
+// import { TNode } from "@/types";
 
-import { NESTNetwork } from "../network/network";
 import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
+import { NESTNetwork } from "../network/network";
 
 export class NESTCopyModels extends BaseObj {
   private _models: NESTCopyModel[] = [];
@@ -31,7 +32,7 @@ export class NESTCopyModels extends BaseObj {
    * Check if the network has some node models.
    */
   get hasNodeModels(): boolean {
-    return this._models.some((model: NESTCopyModel) => !model.isSynapse);
+    return this._models.some((model: NESTCopyModel) => model.isNode);
   }
 
   /**
@@ -56,9 +57,7 @@ export class NESTCopyModels extends BaseObj {
   }
 
   get nodeModels(): NESTCopyModel[] {
-    return this._models.filter(
-      (model: NESTCopyModel) => !model.model.isSynapse
-    );
+    return this._models.filter((model: NESTCopyModel) => model.isNode);
   }
 
   get some() {
@@ -66,7 +65,7 @@ export class NESTCopyModels extends BaseObj {
   }
 
   get synapseModels(): NESTCopyModel[] {
-    return this._models.filter((model: NESTCopyModel) => model.model.isSynapse);
+    return this._models.filter((model: NESTCopyModel) => model.isSynapse);
   }
 
   /**
@@ -159,6 +158,33 @@ export class NESTCopyModels extends BaseObj {
 
     // Remove model from the model list.
     this._models.splice(model.idx, 1);
+  }
+
+  /**
+   * Show model in list.
+   */
+  showModel(model: NESTCopyModel): boolean {
+    const elementTypeIdx = this._network.state.elementTypeIdx;
+
+    // if (this._network.nodes.state.selectedNodes.length > 0) {
+    //   // selected view
+    //   const models = this._network.nodes.selectedNodeItems.map(
+    //     (node: TNode) => node.model as NESTCopyModel
+    //   );
+    //   return models.includes(model);
+    // } else
+    if (elementTypeIdx > 0) {
+      // element type view
+      return (
+        this._network.elementTypes[elementTypeIdx].id === model.elementType
+      );
+    } else if (this._network.state.state.displayIdx.nodes.length > 0) {
+      // custom view
+      return this._network.state.state.displayIdx.nodes.includes(model.idx);
+    } else {
+      // all view
+      return true;
+    }
   }
 
   /**

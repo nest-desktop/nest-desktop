@@ -1,8 +1,9 @@
 // projectDB.ts
 
-import { DatabaseService, IDoc, IRes } from "../common/database";
-import { TProject, TProjectProps } from "@/types/projectTypes";
+import { TProject, TProjectProps } from "@/types";
 import { truncate } from "@/utils/truncate";
+
+import { DatabaseService, IDoc, IRes } from "../common/database";
 import { BaseProject } from "./project";
 
 export class BaseProjectDB extends DatabaseService {

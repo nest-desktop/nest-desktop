@@ -1,6 +1,7 @@
 // connectionRule.ts
 
-import { TConnection } from "@/types/connectionTypes";
+import { TConnection } from "@/types";
+
 import { IConnectionParamProps } from "./connectionParameter";
 
 enum Rule {

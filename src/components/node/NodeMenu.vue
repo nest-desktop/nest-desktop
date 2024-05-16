@@ -115,7 +115,7 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { INodeProps } from "@/helpers/node/node";
-import { TNode } from "@/types/nodeTypes";
+import { TNode } from "@/types";
 
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);

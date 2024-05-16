@@ -2,9 +2,9 @@
 
 import { fill, linSpace, range } from "./array";
 import {
-  randomUniformIntArray,
-  randomUniformFloatArray,
   randomNormalArray,
+  randomUniformFloatArray,
+  randomUniformIntArray,
 } from "./random";
 
 interface IValueGeneratorOption {

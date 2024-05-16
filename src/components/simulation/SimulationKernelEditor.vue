@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import Card from "../common/Card.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types";
 
 const props = defineProps<{
   color?: string;

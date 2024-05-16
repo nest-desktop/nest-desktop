@@ -1,5 +1,7 @@
 // connection.ts
 
+import { TConnection, TConnections, TNetwork, TNode, TSynapse } from "@/types";
+
 import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
 import { IParamProps } from "../common/parameter";
@@ -12,11 +14,6 @@ import {
 import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
-import { TConnection } from "@/types/connectionTypes";
-import { TConnections } from "@/types/connectionsTypes";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
-import { TSynapse } from "@/types/synapseTypes";
 
 export interface IConnectionProps {
   params?: IConnectionParamProps[];

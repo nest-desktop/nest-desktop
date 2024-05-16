@@ -2,14 +2,14 @@
 
 import { UnwrapRef, reactive } from "vue";
 
+import { sum } from "../common/array";
+import { BaseObj } from "../common/base";
+import { ActivityChartGraph } from "./activityChartGraph";
 import {
   ActivityChartPanelModel,
   IActivityChartPanelModelProps,
 } from "./activityChartPanelModel";
-import { ActivityChartGraph } from "./activityChartGraph";
-import { BaseObj } from "../common/base";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
-import { sum } from "../common/array";
 
 export interface IActivityChartPanelProps {
   model?: IActivityChartPanelModelProps;

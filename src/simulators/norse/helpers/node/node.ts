@@ -14,9 +14,11 @@ export interface INorseNodeProps extends INodeProps {}
 
 export class NorseNode extends BaseNode {
   private _code: string = "";
+  private _model: NorseModel;
 
   constructor(nodes: NorseNodes, nodeProps: INorseNodeProps = {}) {
     super(nodes, nodeProps);
+    this._model = this.getModel(this._modelId);
   }
 
   get code(): string {
@@ -31,16 +33,20 @@ export class NorseNode extends BaseNode {
 
   override get model(): NorseModel {
     if (this._model?.id !== this.modelId) {
-      this._model = this.getModel(this.modelId) as NorseModel;
+      this._model = this.getModel(this.modelId);
     }
     return this._model as NorseModel;
   }
 
   /**
-   * Set model.
+   * Set model ID.
    */
-  override set model(model: NorseModel) {
-    this._model = model;
+  override set modelId(value: string) {
+    this._modelId = value as string;
+    this._model = this.getModel(value);
+
+    this.updateParamsFromModel();
+    this.modelChanges();
   }
 
   override get nodes(): NorseNodes {
@@ -70,6 +76,15 @@ export class NorseNode extends BaseNode {
 
   generateCode(): void {
     this._code = Mustache.render(this.model.codeTemplate, this);
+  }
+
+  /**
+   * Get Norse model.
+   */
+  override getModel(modelId: string): NorseModel {
+    this.logger.trace("get model:", modelId);
+
+    return this.modelDBStore.getModel(modelId) as NorseModel;
   }
 
   /**

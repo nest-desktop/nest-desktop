@@ -1,13 +1,13 @@
 // analogSignalPlotModel.ts
 
+import { currentBackgroundColor, currentColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   AnalogSignalPanelModel,
   IAnalogSignalPanelModelProps,
 } from "./analogSignalPanelModel";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 
 export interface IAnalogSignalPlotModelProps
   extends IAnalogSignalPanelModelProps {}

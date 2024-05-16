@@ -230,15 +230,14 @@ import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { TModel } from "@/types/modelTypes";
-import { TNode } from "@/types/nodeTypes";
+import { TModel, TNode } from "@/types";
 
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);
 
 const state = reactive({
   elementType: "",
-  items: [] as (TModel | { title: string; value: string })[],
+  items: [] as (TModel | any)[],
   menu: false,
   panelIdx: null,
 });

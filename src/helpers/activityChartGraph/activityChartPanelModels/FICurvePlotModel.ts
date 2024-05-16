@@ -1,12 +1,12 @@
 // FICurvePlotModel.ts
 
+import { SpikeActivity } from "../../activity/spikeActivity";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {
   ISpikeTimesPanelModelProps,
   SpikeTimesPanelModel,
 } from "./spikeTimesPanelModel";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(

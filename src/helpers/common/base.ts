@@ -10,12 +10,13 @@
 // 5 - error
 // 6 - fatal
 
-import { Logger, ILogObj, ISettingsParam } from "tslog";
 import { sha1 } from "object-hash";
+import { ILogObj, ISettingsParam, Logger } from "tslog";
 import { v4 as uuidv4 } from "uuid";
 
-import { Config } from "./config";
 import { truncate } from "@/utils/truncate";
+
+import { Config } from "./config";
 
 export class BaseObj {
   private _config?: Config;

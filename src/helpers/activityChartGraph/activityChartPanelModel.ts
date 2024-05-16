@@ -1,13 +1,13 @@
 // activityChartPanelModel.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
 import { Activity } from "../activity/activity";
-import { ActivityChartPanel } from "./activityChartPanel";
 import { BaseObj } from "../common/base";
-import { NodeRecord, INodeRecordProps } from "../node/nodeRecord";
-import { currentBackgroundColor } from "../common/theme";
 import { TParamValue } from "../common/parameter";
+import { currentBackgroundColor } from "../common/theme";
+import { INodeRecordProps, NodeRecord } from "../node/nodeRecord";
+import { ActivityChartPanel } from "./activityChartPanel";
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;

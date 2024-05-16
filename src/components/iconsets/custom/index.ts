@@ -6,9 +6,9 @@ import dotsGridIcon from "./DotsGridIcon.vue";
 import sliderIcon from "./SliderIcon.vue";
 
 const customSvgNameToComponent: { [key: string]: any } = {
-  diceMultipleOutlineIcon,
-  dotsGridIcon,
-  sliderIcon,
+  "dice-multiple-outline": diceMultipleOutlineIcon,
+  "dots-grid": dotsGridIcon,
+  slider: sliderIcon,
 };
 
 const custom: IconSet = {

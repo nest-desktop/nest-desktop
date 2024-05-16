@@ -4,11 +4,10 @@ import { Group } from "three";
 import { UnwrapRef, reactive } from "vue";
 
 import { Activity } from "@/helpers/activity/activity";
-import { BaseProject } from "@/helpers/project/project";
-import { TProject } from "@/types/projectTypes";
 
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
+import { NESTProject } from "../project/project";
 
 interface IActivityAnimationGraphState {
   frames: {
@@ -26,7 +25,7 @@ interface IActivityAnimationGraphState {
 
 export class ActivityAnimationGraph {
   private _layers: ActivityAnimationLayer[] = [];
-  private _project: TProject;
+  private _project: NESTProject;
   private _scene?: ActivityAnimationScene;
   private _state: UnwrapRef<IActivityAnimationGraphState> = reactive({
     frames: {
@@ -42,7 +41,7 @@ export class ActivityAnimationGraph {
     nSamples: 0,
   });
 
-  constructor(project: TProject) {
+  constructor(project: NESTProject) {
     this._project = project;
   }
 
@@ -59,8 +58,8 @@ export class ActivityAnimationGraph {
     return this._layers;
   }
 
-  get project(): BaseProject {
-    return this._project as BaseProject;
+  get project(): NESTProject {
+    return this._project as NESTProject;
   }
 
   get scene(): ActivityAnimationScene | undefined {

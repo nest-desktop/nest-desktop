@@ -1,7 +1,8 @@
 // spikeActivity.ts
 
+import { TNode } from "@/types";
+
 import { Activity, IActivityProps, IEventProps } from "./activity";
-import { TNode } from "@/types/nodeTypes";
 
 interface ISpikeActivityProps extends IActivityProps {}
 

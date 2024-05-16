@@ -13,8 +13,8 @@
       <v-icon
         :icon="
           nodeSpatial.positions?.name === 'grid'
-            ? 'custom:dotsGridIcon'
-            : 'custom:diceMultipleOutlineIcon'
+            ? 'custom:dots-grid'
+            : 'custom:dice-multiple-outline'
         "
       />
     </v-chip>

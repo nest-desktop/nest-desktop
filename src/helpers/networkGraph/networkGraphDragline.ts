@@ -2,13 +2,14 @@
 
 import { pointer } from "d3";
 
+import { TNetwork } from "@/types";
+
 import { BaseObj } from "../common/base";
-import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { TNetwork } from "@/types/networkTypes";
 import {
   drawPathMouse,
   drawPathNode,
 } from "../connectionGraph/connectionGraphPath";
+import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 export class NetworkGraphDragline extends BaseObj {
   private _workspace: NetworkGraphWorkspace;

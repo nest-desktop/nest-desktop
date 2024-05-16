@@ -1,11 +1,11 @@
 // nodeGroupView.ts
 
-import { reactive, UnwrapRef } from "vue";
+import { polygonCentroid } from "d3";
+import { UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "../common/base";
-import { NodeGroup } from "./nodeGroup";
-import { polygonCentroid } from "d3";
 import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
+import { NodeGroup } from "./nodeGroup";
 
 export interface INodeGroupViewProps {
   color?: string;

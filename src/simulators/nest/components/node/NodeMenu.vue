@@ -141,25 +141,6 @@
         </v-card-actions>
       </span>
 
-      <span v-if="state.content === 'nodeDelete'">
-        <v-card-title>Are you sure to delete this node?</v-card-title>
-
-        <v-card-actions>
-          <v-btn
-            @click="backMenu"
-            prepend-icon="mdi:mdi-menu-left"
-            size="small"
-            variant="text"
-          >
-            back
-          </v-btn>
-          <v-spacer />
-          <v-btn @click="deleteNode" size="small" variant="outlined">
-            delete
-          </v-btn>
-        </v-card-actions>
-      </span>
-
       <span v-if="state.content === 'synWeights'">
         <v-switch
           :key="index"
@@ -349,14 +330,6 @@ const nodeColorChange = () => {
 const resetColor = () => {
   node.value.view.color = "";
   nodeColorChange();
-};
-
-/**
- * Delete node.
- */
-const deleteNode = () => {
-  node.value.remove();
-  closeMenu();
 };
 
 // /**

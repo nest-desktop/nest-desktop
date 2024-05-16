@@ -9,12 +9,12 @@ import {
   transition,
 } from "d3";
 
+import { TNetworkGraph, TNode } from "@/types";
+
 import { BaseObj } from "../common/base";
-import { NodeGroup } from "../node/nodeGroup";
-import { TNetworkGraph } from "@/types/networkGraphTypes";
-import { TNode } from "@/types/nodeTypes";
 import { darkMode } from "../common/theme";
 import { drawPathMouse } from "../connectionGraph/connectionGraphPath";
+import { NodeGroup } from "../node/nodeGroup";
 
 export class NodeGraphConnector extends BaseObj {
   private _connectorRadius: number = 6;

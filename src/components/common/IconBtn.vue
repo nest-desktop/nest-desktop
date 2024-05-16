@@ -3,12 +3,12 @@
     <template #prepend>
       <v-icon :icon="props.icon" class="ma-1" size="large" />
     </template>
-    <slot />
+    {{ title }}
   </v-btn>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{ icon: string }>();
+const props = defineProps<{ icon: string; title: string }>();
 </script>
 
 <style lang="scss">

@@ -3,11 +3,11 @@
 import { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { UnwrapRef, reactive } from "vue";
 
+import { TProject, TSimulationCode } from "@/types";
+
 import { BaseObj } from "../common/base";
+import { notifyError, notifySuccess } from "../common/dialog";
 import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
-import { TProject } from "@/types/projectTypes";
-import { TSimulationCode } from "@/types/simulationCodeTypes";
-import { notifyError, notifySuccess } from "@/helpers/common/dialog";
 
 export interface IResponseProps {
   data: Object | string;

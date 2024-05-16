@@ -5,10 +5,9 @@
 
 import { DragBehavior, drag, polygonHull } from "d3";
 
+import { TNetwork, TNetworkGraph, TNode } from "@/types";
+
 import { NodeGroup } from "../node/nodeGroup";
-import { TNode } from "@/types/nodeTypes";
-import { TNetworkGraph } from "@/types/networkGraphTypes";
-import { TNetwork } from "@/types/networkTypes";
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
@@ -152,7 +151,7 @@ export class NodeGroupGraph {
     //   .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
     //   .text((n: NodeGroup) => n.view.label);
 
-    elem.on("mouseover", (_, n: NodeGroup) => {
+    elem.on("mouseover", (_: MouseEvent, n: NodeGroup) => {
       n.view.focus();
 
       // Draw line between selected node and focused node.
@@ -173,7 +172,7 @@ export class NodeGroupGraph {
       this.network.nodes.unfocusNode();
     });
 
-    elem.on("click", (e, nodeGroup: NodeGroup) => {
+    elem.on("click", (e: MouseEvent, nodeGroup: NodeGroup) => {
       const nodes = this._networkGraph.network.nodes;
       const connections = this._networkGraph.network.connections;
 

@@ -92,8 +92,7 @@ import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import NodeMenu from "../node/NodeMenu.vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { TNetwork } from "@/types/networkTypes";
-import { TNode } from "@/types/nodeTypes";
+import { TNetwork, TNode } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

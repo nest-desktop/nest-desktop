@@ -1,12 +1,12 @@
 // defineProjectStore.ts
 
-import { reactive } from "vue";
 import { Store, defineStore } from "pinia";
+import { reactive } from "vue";
 
-import router from "@/router";
-import { BaseProject } from "@/helpers/project/project";
-import { TProject } from "@/types/projectTypes";
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { BaseProject } from "@/helpers/project/project";
+import router from "@/router";
+import { TProject } from "@/types";
 import { truncate } from "@/utils/truncate";
 
 import { useProjectDBStore } from "./projectDBStore";

@@ -1,12 +1,11 @@
 // nodes.ts
 
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { BaseNodes } from "@/helpers/node/nodes";
 
+import { NESTActivityGraph } from "../activity/activityGraph";
 import { NESTNetwork } from "../network/network";
 import { INESTNodeProps, NESTNode } from "./node";
-import { NESTActivityGraph } from "../activity/activityGraph";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNode } from "@/types/nodeTypes";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
@@ -56,9 +55,13 @@ export class NESTNodes extends BaseNodes {
     ) as NESTNode[];
   }
 
+  override get nodes(): (NodeGroup | NESTNode)[] {
+    return this._nodes as (NodeGroup | NESTNode)[];
+  }
+
   override get nodeItems(): NESTNode[] {
-    return this._nodes.filter(
-      (node: NodeGroup | TNode) => node.isNode
+    return this.nodes.filter(
+      (node: NodeGroup | NESTNode) => node.isNode
     ) as NESTNode[];
   }
 

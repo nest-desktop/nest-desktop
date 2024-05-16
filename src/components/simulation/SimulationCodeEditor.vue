@@ -1,14 +1,13 @@
 <template>
   <v-toolbar color="transparent" density="compact">
     <v-btn-toggle class="mx-1" color="blue" multiple rounded="0" variant="text">
-      <icon-btn
+      <IconBtn
         :icon="item.icon"
         :key="index"
+        :title="item.title"
         size="x-small"
         v-for="(item, index) in codeBlocks"
-      >
-        {{ item.title }}
-      </icon-btn>
+      />
     </v-btn-toggle>
     <v-spacer />
     <v-btn icon="mdi:mdi-download" size="small" />
@@ -37,7 +36,7 @@ import { reactive } from "vue";
 
 import IconBtn from "../common/IconBtn.vue";
 import SimulationCodeMirror from "./SimulationCodeMirror.vue";
-import { TSimulation } from "@/types/simulationTypes";
+import { TSimulation } from "@/types";
 
 defineProps<{ simulation: TSimulation }>();
 

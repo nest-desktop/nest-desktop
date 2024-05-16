@@ -1,7 +1,8 @@
 // modelParameter.ts
 
-import { Parameter, IParamProps } from "../common/parameter";
-import { TModel } from "@/types/modelTypes";
+import { TModel } from "@/types";
+
+import { IParamProps, Parameter } from "../common/parameter";
 
 export interface IModelParamProps extends IParamProps {}
 
@@ -44,6 +45,13 @@ export class ModelParameter extends Parameter {
   }
 
   /**
+   * Hide this parameter.
+   */
+  hide(): void {
+    this.visible = false;
+  }
+
+  /**
    * Observer for parameter changes.
    *
    * @remarks
@@ -51,6 +59,13 @@ export class ModelParameter extends Parameter {
    */
   override changes(): void {
     this._parent.changes();
+  }
+
+  /**
+   * Show this parameter.
+   */
+  show(): void {
+    this.visible = true;
   }
 
   /**
