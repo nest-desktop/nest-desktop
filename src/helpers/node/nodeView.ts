@@ -11,6 +11,7 @@ export interface INodeViewProps {
   color?: string;
   elementType?: string;
   position: { x: number; y: number };
+  synWeights?: string;
   visible?: boolean;
 }
 
@@ -40,12 +41,12 @@ export class NodeView extends BaseObj {
 
     this._node = node;
     this._state = reactive({
-      ...viewProps,
       connectionPanelIdx: null,
       label: "",
       positions: [],
       showSize: this.node.size > 1,
       synWeights: "",
+      ...viewProps,
     });
   }
 
@@ -170,7 +171,7 @@ export class NodeView extends BaseObj {
    * Get term based on synapse weight.
    */
   get synWeights(): string {
-    return "excitatory";
+    return this._state.synWeights || "excitatory";
   }
 
   /**
@@ -214,6 +215,10 @@ export class NodeView extends BaseObj {
     const nodeViewProps: INodeViewProps = {
       position: this._state.position,
     };
+
+    if (this._state.synWeights) {
+      nodeViewProps.synWeights = this._state.synWeights;
+    }
 
     if (this._state.color) {
       nodeViewProps.color = this._state.color;

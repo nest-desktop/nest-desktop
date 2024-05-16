@@ -25,8 +25,8 @@ export class NESTSimulationCode extends BaseSimulationCode {
   ) {
     super(simulation, {
       blocks: simulationCodeBlocks,
-      ...simulationCodeProps,
       templateFilename: "nest-master",
+      ...simulationCodeProps,
     });
   }
 
