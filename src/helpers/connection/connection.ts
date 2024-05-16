@@ -27,7 +27,7 @@ export class BaseConnection extends BaseObj {
   private readonly _name = "Connection";
 
   private _idx: number; // generative
-  private _params: { [key: string]: ConnectionParameter } = {};
+  private _params: Record<string, ConnectionParameter> = {};
   private _paramsVisible: string[] = [];
   private _rule: ConnectionRule;
   private _sourceIdx: number; // Node index
@@ -109,7 +109,7 @@ export class BaseConnection extends BaseObj {
     return this.connections.network;
   }
 
-  get params(): { [key: string]: ConnectionParameter } {
+  get params(): Record<string, ConnectionParameter> {
     return this._params;
   }
 

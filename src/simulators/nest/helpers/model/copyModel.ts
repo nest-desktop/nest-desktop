@@ -1,26 +1,26 @@
 // copyModel.ts
 
 import { StateTree, Store } from "pinia";
-import { reactive, UnwrapRef } from "vue";
+import { UnwrapRef, reactive } from "vue";
 
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import {
-  IModelParamProps,
-  ModelParameter,
-} from "@/helpers/model/modelParameter";
 import {
   IParamProps,
   Parameter,
   TParamValue,
 } from "@/helpers/common/parameter";
+import {
+  IModelParamProps,
+  ModelParameter,
+} from "@/helpers/model/modelParameter";
+import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
 import { NESTConnection } from "../connection/connection";
-import { NESTModel } from "./model";
-import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
-import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
 import { NESTCopyModels } from "./copyModels";
+import { NESTModel } from "./model";
+import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
+import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
 
 export interface INESTCopyModelProps {
   existing: string;
@@ -36,7 +36,7 @@ export class NESTCopyModel {
   private _existingModelId: string;
   private _copyModels: NESTCopyModels;
   private _newModelId: string;
-  private _params: { [key: string]: ModelParameter } = {};
+  private _params: Record<string, ModelParameter> = {};
   private _paramsVisible: string[] = [];
   private _state: UnwrapRef<INESTCopyModelState>;
 
@@ -59,11 +59,11 @@ export class NESTCopyModel {
     return this.model.abbreviation;
   }
 
-  get config(): { [key: string]: string } {
+  get config(): Record<string, string> {
     return this.model.config?.localStorage;
   }
 
-  get compartmentParams(): { [key: string]: NESTModelCompartmentParameter } {
+  get compartmentParams(): Record<string, NESTModelCompartmentParameter> {
     return this.model.compartmentParams;
   }
 
@@ -239,11 +239,11 @@ export class NESTCopyModel {
     );
   }
 
-  get params(): { [key: string]: ModelParameter } {
+  get params(): Record<string, ModelParameter> {
     return this._params;
   }
 
-  set params(values: { [key: string]: ModelParameter }) {
+  set params(values: Record<string, ModelParameter>) {
     this._params = { ...this._params, ...values };
   }
 
@@ -260,7 +260,7 @@ export class NESTCopyModel {
     this.changes();
   }
 
-  get receptors(): { [key: string]: NESTModelReceptor } {
+  get receptors(): Record<string, NESTModelReceptor> {
     return this.model.receptors;
   }
 

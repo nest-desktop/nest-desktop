@@ -4,11 +4,12 @@ import { BaseObj } from "@/helpers/common/base";
 import { IModelProps } from "@/helpers/model/model";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
+import { NESTModel } from "../model";
 import {
   INESTModelReceptorParamProps,
   NESTModelReceptorParameter,
 } from "./modelReceptorParameter";
-import { NESTModel } from "../model";
+
 export interface INESTModelReceptorProps {
   id: string;
   label: string;
@@ -22,7 +23,7 @@ export class NESTModelReceptor extends BaseObj {
   private _id: string;
   private _label: string;
   private _model: NESTModel; // parent
-  private _params: { [key: string]: NESTModelReceptorParameter } = {};
+  private _params: Record<string, NESTModelReceptorParameter> = {};
   private _paramsVisible: string[] = [];
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
@@ -58,11 +59,11 @@ export class NESTModelReceptor extends BaseObj {
     return this._model;
   }
 
-  get params(): { [key: string]: NESTModelReceptorParameter } {
+  get params(): Record<string, NESTModelReceptorParameter> {
     return this._params;
   }
 
-  set params(values: { [key: string]: NESTModelReceptorParameter }) {
+  set params(values: Record<string, NESTModelReceptorParameter>) {
     this._params = values;
   }
 

@@ -10,7 +10,7 @@ interface IParameterRandomProps {
 }
 
 export class ParameterRandom extends BaseObj {
-  private _defaults: { [key: string]: { [key: string]: number } };
+  private _defaults: Record<string, Record<string, number>>;
   private _distribution: string;
   private _specs: {
     [key: string]: number | string;
@@ -29,7 +29,7 @@ export class ParameterRandom extends BaseObj {
     this._specs = randomProps.specs || this._defaults[randomProps.distribution];
   }
 
-  get defaults(): { [key: string]: { [key: string]: number } } {
+  get defaults(): Record<string, Record<string, number>> {
     return this._defaults;
   }
 
@@ -48,7 +48,7 @@ export class ParameterRandom extends BaseObj {
    * @return random parameter object
    */
   toJSON(): IParameterRandomProps {
-    const specs: { [key: string]: number } = {};
+    const specs: Record<string, number> = {};
     Object.keys(this._defaults[this._distribution]).map((param: string) => {
       if (param in this._specs) {
         specs[param] = parseFloat(this._specs[param] as string);

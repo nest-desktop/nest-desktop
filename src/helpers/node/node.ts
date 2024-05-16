@@ -37,7 +37,7 @@ export class BaseNode extends BaseObj {
     undefined;
   private _annotations: string[] = [];
   private _doc: INodeProps;
-  private _params: { [key: string]: NodeParameter } = {};
+  private _params: Record<string, NodeParameter> = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = [];
@@ -213,7 +213,7 @@ export class BaseNode extends BaseObj {
     this.modelChanges();
   }
 
-  get modelParams(): { [key: string]: ModelParameter } {
+  get modelParams(): Record<string, ModelParameter> {
     return this.model.params;
   }
 
@@ -245,11 +245,11 @@ export class BaseNode extends BaseObj {
     return this._nodes.nodes.indexOf(this);
   }
 
-  get params(): { [key: string]: NodeParameter } {
+  get params(): Record<string, NodeParameter> {
     return this._params;
   }
 
-  set params(values: { [key: string]: NodeParameter }) {
+  set params(values: Record<string, NodeParameter>) {
     Object.values(values).forEach((value: NodeParameter) => {
       this._params[value.id] = new NodeParameter(this, value);
     });

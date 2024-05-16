@@ -2,10 +2,11 @@
 // https://stackoverflow.com/questions/73795753/how-to-import-custom-svg-icons-in-vuetify-3
 
 import { h } from "vue";
-import type { IconProps } from "vuetify";
+
 import pynnIcon from "./PyNNIcon.vue";
 
-const pynnSvgNameToComponent: { [key: string]: Object } = {
+import type { IconProps } from "vuetify";
+const pynnSvgNameToComponent: Record<string, Object> = {
   logo: pynnIcon,
 };
 

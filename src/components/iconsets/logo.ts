@@ -2,11 +2,12 @@
 // https://stackoverflow.com/questions/73795753/how-to-import-custom-svg-icons-in-vuetify-3
 
 import { h } from "vue";
-import type { IconSet, IconProps } from "vuetify";
 
 import ebrainsLogo from "@/assets/img/logo/ebrains-logo.svg";
 
-const customSvgNameToComponent: { [key: string]: any } = {
+import type { IconSet, IconProps } from "vuetify";
+
+const customSvgNameToComponent: Record<string, any> = {
   ebrainsLogo,
 };
 

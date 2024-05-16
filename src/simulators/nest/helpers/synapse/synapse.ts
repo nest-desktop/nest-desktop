@@ -1,12 +1,12 @@
 // synapse.ts
 
-import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
 import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
 
-import { NESTSynapseParameter, ISynapseParamProps } from "./synapseParameter";
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
+import { ISynapseParamProps, NESTSynapseParameter } from "./synapseParameter";
 
 export interface INESTSynapseProps extends ISynapseProps {
   receptorIdx?: number;
@@ -16,7 +16,7 @@ export interface INESTSynapseProps extends ISynapseProps {
 
 export class NESTSynapse extends BaseSynapse {
   private _paramsVisible: string[] = [];
-  private _params: { [key: string]: NESTSynapseParameter } = {};
+  private _params: Record<string, NESTSynapseParameter> = {};
 
   private _modelId: string;
   public _model: NESTModel;
@@ -118,7 +118,7 @@ export class NESTSynapse extends BaseSynapse {
     this._modelId = value;
   }
 
-  get modelParams(): { [key: string]: ModelParameter } {
+  get modelParams(): Record<string, ModelParameter> {
     return this.model.params;
   }
 
@@ -148,7 +148,7 @@ export class NESTSynapse extends BaseSynapse {
     return this.connection.targetNode.receptors?.map((_, idx: number) => idx);
   }
 
-  get params(): { [key: string]: NESTSynapseParameter } {
+  get params(): Record<string, NESTSynapseParameter> {
     return this._params;
   }
 

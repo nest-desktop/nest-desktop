@@ -1,18 +1,18 @@
 // nodeReceptor.ts
 
+import { IParamProps, TParamValue } from "@/helpers/common/parameter";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import { IParamProps, TParamValue } from "@/helpers/common/parameter";
 import { NodeView } from "@/helpers/node/nodeView";
 
-import {
-  INESTNodeReceptorParamProps,
-  NESTNodeReceptorParameter,
-} from "./nodeReceptorParameter";
 import { NESTModelReceptor } from "../../model/modelReceptor/modelReceptor";
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { NESTNode } from "../node";
 import { NESTNodeCompartment } from "../nodeCompartment/nodeCompartment";
+import {
+  INESTNodeReceptorParamProps,
+  NESTNodeReceptorParameter,
+} from "./nodeReceptorParameter";
 
 export interface INESTNodeReceptorProps {
   compIdx: number;
@@ -29,7 +29,7 @@ export class NESTNodeReceptor {
   private _id: string = "";
   private _idx: number; // generative
   private _node: NESTNode; // parent
-  private _params: { [key: string]: NESTNodeReceptorParameter } = {};
+  private _params: Record<string, NESTNodeReceptorParameter> = {};
   private _paramsVisible: string[] = [];
 
   constructor(node: NESTNode, nodeReceptorProps: INESTNodeReceptorProps) {
@@ -92,11 +92,11 @@ export class NESTNodeReceptor {
     return this._node;
   }
 
-  get params(): { [key: string]: NESTNodeReceptorParameter } {
+  get params(): Record<string, NESTNodeReceptorParameter> {
     return this._params;
   }
 
-  set params(values: { [key: string]: NESTNodeReceptorParameter }) {
+  set params(values: Record<string, NESTNodeReceptorParameter>) {
     this._params = values;
   }
 

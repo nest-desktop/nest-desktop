@@ -37,7 +37,7 @@ const props = defineProps({
 
 const currentComponent = ref("");
 
-const components: { [key: string]: Object } = {
+const components: Record<string, Object> = {
   alert: SandboxAlert,
   button: SandboxButton,
   buttonToggle: SandboxButtonToggle,

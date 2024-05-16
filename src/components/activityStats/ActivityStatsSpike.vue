@@ -56,7 +56,7 @@ const activity = computed(() => props.activity as SpikeActivity);
 
 const state = reactive({
   activityHash: "",
-  items: [] as { [key: string]: number }[],
+  items: [] as Record<string, number>[],
   loading: false,
   search: "",
 });
@@ -74,11 +74,11 @@ const headers = [
 ];
 
 const colMean = (key: string): number => {
-  return mean(state.items.map((item: { [key: string]: number }) => item[key]));
+  return mean(state.items.map((item: Record<string, number>) => item[key]));
 };
 
 const colSum = (key: string): number => {
-  return sum(state.items.map((item: { [key: string]: number }) => item[key]));
+  return sum(state.items.map((item: Record<string, number>) => item[key]));
 };
 
 /**

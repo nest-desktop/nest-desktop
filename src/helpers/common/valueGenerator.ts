@@ -15,7 +15,7 @@ interface IValueGeneratorOption {
 }
 
 export class ValueGenerator {
-  private _inputs: { [key: string]: string[] } = {
+  private _inputs: Record<string, string[]> = {
     fill: ["value", "size"],
     range: ["start", "end", "step"],
     linSpace: ["start", "end", "size"],
@@ -36,7 +36,7 @@ export class ValueGenerator {
     { id: "step", label: "step", value: 1, visible: false },
     { id: "size", label: "size", value: 1, visible: true },
   ];
-  private _params: { [key: string]: number | string } = {
+  private _params: Record<string, number | string> = {
     value: 0,
     start: 0,
     end: 1,
@@ -57,7 +57,7 @@ export class ValueGenerator {
     return this._options;
   }
 
-  get params(): { [key: string]: number | string } {
+  get params(): Record<string, number | string> {
     return this._params;
   }
 
@@ -102,7 +102,7 @@ export class ValueGenerator {
   /**
    * Generate values in an array.
    */
-  generate(d?: { [key: string]: number }): number[] {
+  generate(d?: Record<string, number>): number[] {
     const p = d || this._params;
     let array: number[] = [];
     switch (this._type) {

@@ -2,9 +2,10 @@
 
 import { v4 as uuidv4 } from "uuid";
 
-import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { IParamProps } from "@/helpers/common/parameter";
+import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
+import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
 import {
   INESTModelCompartmentParamProps,
@@ -14,7 +15,6 @@ import {
   INESTModelReceptorProps,
   NESTModelReceptor,
 } from "./modelReceptor/modelReceptor";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
 export interface INESTModelProps extends IModelProps {
   compartmentParams?: IParamProps[];
@@ -22,16 +22,16 @@ export interface INESTModelProps extends IModelProps {
 }
 
 export class NESTModel extends BaseModel {
-  private _compartmentParams: { [key: string]: NESTModelCompartmentParameter } =
+  private _compartmentParams: Record<string, NESTModelCompartmentParameter> =
     {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
-  private _receptors: { [key: string]: NESTModelReceptor } = {}; // receptor parameters
+  private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
 
   constructor(modelProps: INESTModelProps) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
   }
 
-  get compartmentParams(): { [key: string]: NESTModelCompartmentParameter } {
+  get compartmentParams(): Record<string, NESTModelCompartmentParameter> {
     return this._compartmentParams;
   }
 
@@ -66,7 +66,7 @@ export class NESTModel extends BaseModel {
     return this.id === "weight_recorder";
   }
 
-  get receptors(): { [key: string]: NESTModelReceptor } {
+  get receptors(): Record<string, NESTModelReceptor> {
     return this._receptors;
   }
 

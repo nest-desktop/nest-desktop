@@ -100,7 +100,7 @@
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const icons: { [key: string]: string } = {
+const icons: Record<string, string> = {
   error: "mdi:mdi-alert-circle-outline",
   success: "mdi:mdi-check-circle-outline",
 };

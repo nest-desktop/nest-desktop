@@ -422,7 +422,7 @@ const addProps = (
           .get(githubRawURL("models") + `index.json`)
           .then(
             (
-              response: AxiosResponse<any, { data: { [key: string]: string } }>
+              response: AxiosResponse<any, { data: Record<string, string> }>
             ) => {
               if (!response.data) return;
 

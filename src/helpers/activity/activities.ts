@@ -204,7 +204,7 @@ export class Activities extends BaseObj {
       | {
           activities: IActivityProps[];
           events: IEventProps[];
-          positions: { [key: string]: number[] };
+          positions: Record<string, number[]>;
         }
   ): void {
     this.logger.trace("update");

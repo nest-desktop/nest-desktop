@@ -60,7 +60,7 @@ export class NetworkState {
     return this._state.elementTypeIdx;
   }
 
-  get icons(): { [key: string]: { [key: string]: string } } {
+  get icons(): Record<string, Record<string, string>> {
     return this._icons;
   }
 

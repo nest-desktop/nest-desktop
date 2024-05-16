@@ -8,17 +8,15 @@
 import "vue-toast-notification/dist/theme-sugar.css";
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
-
 import "./main.scss";
 
+import { IconSet, createVuetify } from "vuetify";
 // Composables
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import { IconSet, createVuetify } from "vuetify";
-
 // import { md1, md2, md3 } from "vuetify/blueprints";
-
 import { aliases, mdi } from "vuetify/iconsets/mdi";
+
 import { custom } from "@/components/iconsets/custom";
 import { network } from "@/components/iconsets/network";
 
@@ -99,7 +97,7 @@ export const vuetify = createVuetify({
   },
 });
 
-export function addTheme(colors: { [key: string]: string }): void {
+export function addTheme(colors: Record<string, string>): void {
   vuetify.theme.themes.value.light.colors = Object.assign(
     vuetify.theme.themes.value.light.colors,
     colors
@@ -111,6 +109,6 @@ export function addTheme(colors: { [key: string]: string }): void {
   );
 }
 
-export function addIconSet(iconSet: { [key: string]: Object }): void {
+export function addIconSet(iconSet: Record<string, Object>): void {
   vuetify.icons.sets = Object.assign(vuetify.icons.sets, iconSet);
 }

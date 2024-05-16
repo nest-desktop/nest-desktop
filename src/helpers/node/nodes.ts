@@ -9,7 +9,7 @@ import { BaseNode, INodeProps } from "./node";
 import { INodeGroupProps, NodeGroup } from "./nodeGroup";
 
 interface INodesState {
-  annotations: { [key: string]: string }[];
+  annotations: Record<string, string>[];
   contextMenu: boolean;
   focusedNode: NodeGroup | TNode | null;
   selectedNodes: (NodeGroup | TNode)[];
@@ -46,7 +46,7 @@ export class BaseNodes extends BaseObj {
     return this._nodes;
   }
 
-  get annotations(): { [key: string]: string }[] {
+  get annotations(): Record<string, string>[] {
     return this._state.annotations;
   }
 
@@ -158,8 +158,8 @@ export class BaseNodes extends BaseObj {
   /**
    * Get user dict from node annotations.
    */
-  get userDict(): { [key: string]: string[] } {
-    const userDict: { [key: string]: string[] } = {};
+  get userDict(): Record<string, string[]> {
+    const userDict: Record<string, string[]> = {};
     this.nodeItems
       .filter((node: TNode) => node.annotations.length > 0)
       .forEach((node: TNode) => {
@@ -372,7 +372,7 @@ export class BaseNodes extends BaseObj {
   updateAnnotations(): void {
     this._state.annotations = [];
 
-    const nodeAnnotationsDict: { [key: string]: string[] } = {};
+    const nodeAnnotationsDict: Record<string, string[]> = {};
     this.nodeItems
       .filter((node: TNode) => node.annotations.length > 0)
       .forEach((node: TNode) => {

@@ -58,7 +58,7 @@ interface IActivityChartPanelModelParamProps {
   _value?: string;
   component: string;
   id: string;
-  items?: string[] | { [key: string]: string }[];
+  items?: string[] | Record<string, string>[];
   label: string;
   selected?: number[];
   show?: boolean;
@@ -70,7 +70,7 @@ interface IActivityChartPanelModelParamProps {
 export interface IActivityChartPanelModelProps {
   id?: string;
   markerSize?: number;
-  params?: { [key: string]: TParamValue };
+  params?: Record<string, TParamValue>;
   records?: INodeRecordProps[];
 }
 
@@ -296,7 +296,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Initialize params for controller.
    * @param paramsProps parameter props
    */
-  initParams(paramsProps: { [key: string]: TParamValue } = {}): void {
+  initParams(paramsProps: Record<string, TParamValue> = {}): void {
     this._params.forEach((param: IActivityChartPanelModelParamProps) => {
       if (paramsProps.hasOwnProperty(param.id)) {
         param.value = paramsProps[param.id];
@@ -326,7 +326,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   toJSON(): IActivityChartPanelModelProps {
     const modelProps: IActivityChartPanelModelProps = {
       id: this._id,
-      params: {} as { [key: string]: TParamValue },
+      params: {} as Record<string, TParamValue>,
     };
 
     if (modelProps.params && this._params.length > 0) {

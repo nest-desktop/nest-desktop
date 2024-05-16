@@ -36,7 +36,7 @@ type variantTypes =
   | "tonal"
   | undefined;
 
-const buttons: { [key: string]: string }[][] = [
+const buttons: Record<string, string>[][] = [
   [
     { text: "blue", color: "blue" },
     { text: "orange", color: "orange" },
@@ -78,7 +78,7 @@ const buttons: { [key: string]: string }[][] = [
   ],
 ];
 
-const update = (button: { [key: string]: string }) => {
+const update = (button: Record<string, string>) => {
   if (button.color) {
     state.color = button.color;
   }

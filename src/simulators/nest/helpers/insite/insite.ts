@@ -3,14 +3,14 @@
 import { AxiosResponse } from "axios";
 import { StateTree, Store } from "pinia";
 
-import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { IActivityProps } from "@/helpers/activity/activity";
+import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { notifySuccess } from "@/helpers/common/dialog";
+import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { NESTProject } from "../project/project";
 import { useInsiteAccessStore } from "../../stores/backends/insiteAccessStore";
+import { NESTProject } from "../project/project";
 
 const logger = mainLogger.getSubLogger({ minLevel: 3, name: "insite" });
 
@@ -239,7 +239,7 @@ export class Insite {
 
           const activities: IActivityProps[] = response.data.map(
             (data: IInsiteMultimeterResponseData) => {
-              const events: { [key: string]: (number | string)[] } = {
+              const events: Record<string, (number | string)[]> = {
                 times: [],
                 senders: [],
               };
@@ -385,7 +385,7 @@ export class Insite {
 
           // Get spike activities from each spike recorder.
           this._project.activities.spikes.forEach((activity: SpikeActivity) => {
-            const events: { [key: string]: number[] } = {
+            const events: Record<string, number[]> = {
               senders: [],
               times: [],
             };

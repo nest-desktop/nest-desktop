@@ -25,7 +25,7 @@ export class BaseModel extends BaseObj {
   private _favorite: boolean = false;
   private _id: string; // model id
   private _label: string; // model label for view
-  private _params: { [key: string]: ModelParameter } = {}; // model parameters
+  private _params: Record<string, ModelParameter> = {}; // model parameters
   private _paramsVisible: string[] = [];
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
@@ -125,7 +125,7 @@ export class BaseModel extends BaseObj {
     this._label = value;
   }
 
-  get params(): { [key: string]: ModelParameter } {
+  get params(): Record<string, ModelParameter> {
     return this._params;
   }
 

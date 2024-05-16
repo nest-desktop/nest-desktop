@@ -87,7 +87,7 @@ const activity = computed(() => props.activity);
 
 const state = reactive({
   activityHash: "",
-  items: [] as { [key: string]: number | string }[],
+  items: [] as Record<string, number | string>[],
   loading: false,
   selectedRecord: "",
 });

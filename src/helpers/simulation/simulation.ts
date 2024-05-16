@@ -26,7 +26,7 @@ export interface ISimulationProps {
 interface ISimulationState {
   biologicalTime: number;
   running: boolean;
-  timeInfo: { [key: string]: number };
+  timeInfo: Record<string, number>;
 }
 
 export class BaseSimulation extends BaseObj {

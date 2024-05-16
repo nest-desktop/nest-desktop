@@ -1,17 +1,17 @@
 // nodeCompartment.ts
 
+import { TParamValue } from "@/helpers/common/parameter";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NodeView } from "@/helpers/node/nodeView";
-import { TParamValue } from "@/helpers/common/parameter";
 
+import { NESTModel } from "../../model/model";
+import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";
+import { NESTNode } from "../node";
 import {
   INESTNodeReceptorProps,
   NESTNodeReceptor,
 } from "../nodeReceptor/nodeReceptor";
-import { NESTModel } from "../../model/model";
-import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";
-import { NESTNode } from "../node";
 import { NESTNodeCompartmentParameter } from "./nodeCompartmentParameter";
 
 export interface INESTNodeCompartmentProps {
@@ -27,7 +27,7 @@ export class NESTNodeCompartment {
   private _hash: string = "";
   private _label: string | undefined;
   private _node: NESTNode; // parent
-  private _params: { [key: string]: NESTNodeCompartmentParameter } = {};
+  private _params: Record<string, NESTNodeCompartmentParameter> = {};
   private _paramsVisible: string[] = [];
   private _parentIdx: number;
 
@@ -107,11 +107,11 @@ export class NESTNodeCompartment {
     return this._node;
   }
 
-  get params(): { [key: string]: NESTNodeCompartmentParameter } {
+  get params(): Record<string, NESTNodeCompartmentParameter> {
     return this._params;
   }
 
-  set params(values: { [key: string]: NESTNodeCompartmentParameter }) {
+  set params(values: Record<string, NESTNodeCompartmentParameter>) {
     this._params = values;
   }
 

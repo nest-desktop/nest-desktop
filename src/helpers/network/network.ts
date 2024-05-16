@@ -39,7 +39,7 @@ export class BaseNetwork extends BaseObj {
   public _project: TProject; // parent
   // private _graph: NetworkGraph;
 
-  private _defaultModels: { [key: string]: string } = {
+  private _defaultModels: Record<string, string> = {
     neuron: "iaf_psc_alpha",
     recorder: "voltmeter",
     stimulator: "dc_generator",
@@ -83,7 +83,7 @@ export class BaseNetwork extends BaseObj {
     return this._connections;
   }
 
-  set defaultModels(value: { [key: string]: string }) {
+  set defaultModels(value: Record<string, string>) {
     this._defaultModels = value;
   }
 

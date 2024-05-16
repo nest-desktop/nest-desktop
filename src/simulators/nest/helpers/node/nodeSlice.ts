@@ -1,15 +1,15 @@
 // nodeSlice.ts
 
 import { BaseObj } from "@/helpers/common/base";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 export class NESTNodeSlice extends BaseObj {
   private readonly _name = "NESTNodeSlice";
   private _node: NESTNode | NodeGroup;
-  private _params: { [key: string]: NodeParameter } = {};
+  private _params: Record<string, NodeParameter> = {};
   private _visible: boolean = false;
 
   constructor(node: NESTNode | NodeGroup, paramsProps: INodeParamProps[] = []) {
@@ -70,7 +70,7 @@ export class NESTNodeSlice extends BaseObj {
     return this._name;
   }
 
-  get params(): { [key: string]: NodeParameter } {
+  get params(): Record<string, NodeParameter> {
     return this._params;
   }
 

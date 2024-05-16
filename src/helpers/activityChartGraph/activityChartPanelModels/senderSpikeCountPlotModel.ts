@@ -90,7 +90,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
     const x: number[] = activity.nodeIds;
     const senders: number[] = activity.events.senders;
 
-    const counts: { [key: string]: number } = {};
+    const counts: Record<string, number> = {};
     for (const sender of senders) {
       counts[sender] = counts[sender] ? counts[sender] + 1 : 1;
     }

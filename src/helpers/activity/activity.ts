@@ -283,7 +283,7 @@ export class Activity extends BaseObj {
   /**
    * Update events.
    */
-  updateEvents(events: { [key: string]: number[] }): void {
+  updateEvents(events: Record<string, number[]>): void {
     this.logger.trace("update events");
 
     if (events == undefined) return;

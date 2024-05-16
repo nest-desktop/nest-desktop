@@ -6,7 +6,7 @@ import { NESTConnection } from "./connection";
 
 export interface INESTConnectionParamProps extends IParamProps {}
 
-const PyNNParamIds: { [key: string]: string } = {
+const PyNNParamIds: Record<string, string> = {
   N: "n",
   indegree: "n",
   outdegree: "n",
