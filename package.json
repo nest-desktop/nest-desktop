@@ -16,7 +16,7 @@
     "coverage": "vitest run --coverage",
     "dev": "vite",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
-    "lint": "eslint . --fix",
+    "lint": "eslint .",
     "postinstall": "electron-builder install-app-deps",
     "preview": "vite preview",
     "test": "vitest"
