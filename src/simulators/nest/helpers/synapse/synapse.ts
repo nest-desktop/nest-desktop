@@ -15,17 +15,17 @@ export interface INESTSynapseProps extends ISynapseProps {
 }
 
 export class NESTSynapse extends BaseSynapse {
-  private _paramsVisible: string[] = [];
-  private _params: Record<string, NESTSynapseParameter> = {};
-
   private _modelId: string;
-  public _model: NESTModel;
+  private _params: Record<string, NESTSynapseParameter> = {};
+  private _paramsVisible: string[] = [];
   private _receptorIdx: number = 0;
+  public _model: NESTModel;
 
   constructor(connection: NESTConnection, synapseProps?: INESTSynapseProps) {
     super(connection, synapseProps);
 
     this._modelId = synapseProps?.model || "static_synapse";
+
     this._model = this.getModel(this._modelId);
     this._receptorIdx = synapseProps?.receptorIdx || 0;
 
@@ -192,15 +192,6 @@ export class NESTSynapse extends BaseSynapse {
   getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
 
-    // if (
-    //   this.connection.network.modelsCopied?.synapseModels.some(
-    //     (model: NESTCopyModel) => model.id === modelId
-    //   )
-    // ) {
-    //   return this.connection.network.modelsCopied.getModelById(modelId);
-    // } else {
-    //   return this.connection.network.project.modelStore.getModel(modelId);
-    // }
     return this.modelDBStore.getModel(modelId);
   }
 

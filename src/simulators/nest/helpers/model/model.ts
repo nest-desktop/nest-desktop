@@ -76,7 +76,7 @@ export class NESTModel extends BaseModel {
 
   /**
    * Add a compartment parameter to the model specifications.
-   * @param param parameter object
+   * @param param parameter props
    */
   addCompartmentParameter(param: INESTModelCompartmentParamProps): void {
     this._compartmentParams[param.id] = new NESTModelCompartmentParameter(
@@ -86,7 +86,7 @@ export class NESTModel extends BaseModel {
   }
 
   /**
-   * Clone this model object.
+   * Clone NEST model object.
    */
   override clone(): NESTModel {
     return new NESTModel({ ...this.toJSON() });
@@ -111,7 +111,7 @@ export class NESTModel extends BaseModel {
 
   /**
    * Serialize for JSON.
-   * @return model object
+   * @return NEST model props
    */
   override toJSON(): INESTModelProps {
     const modelProps: INESTModelProps = {
@@ -151,7 +151,7 @@ export class NESTModel extends BaseModel {
 
   /**
    * Update  a parameter.
-   * @param model model object
+   * @param model NEST model props
    */
   override update(modelProps: INESTModelProps): void {
     this.logger.trace("update", modelProps.id);

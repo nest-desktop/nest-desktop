@@ -16,6 +16,7 @@ import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { onlyUnique } from "../common/array";
 import { BaseObj } from "../common/base";
+import { BaseModel } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeGroup } from "./nodeGroup";
 import { INodeParamProps, NodeParameter } from "./nodeParameter";
@@ -31,7 +32,7 @@ export interface INodeProps {
   size?: number;
   view?: INodeViewProps;
 }
-
+// export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
 export class BaseNode extends BaseObj {
   private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
     undefined;
@@ -43,7 +44,7 @@ export class BaseNode extends BaseObj {
   private _records: NodeRecord[] = [];
   private _size: number;
   private _view: NodeView;
-
+  public _model: TModel | undefined;
   public _modelId: string;
   public _nodes: TNodes; // parent
 
@@ -57,8 +58,7 @@ export class BaseNode extends BaseObj {
     this._doc = nodeProps;
 
     this._view = new NodeView(this, nodeProps.view);
-
-    this.addParameters(nodeProps.params);
+    this.loadModel(nodeProps.params);
 
     if (this.model.isRecorder) {
       this.createActivity(nodeProps?.activity);
@@ -191,8 +191,11 @@ export class BaseNode extends BaseObj {
     return this._view.label;
   }
 
-  get model(): TModel | any {
-    return this.getModel(this._modelId);
+  get model(): BaseModel {
+    if (this._model?.id !== this._modelId) {
+      this._model = this.getModel(this._modelId);
+    }
+    return this._model as BaseModel;
   }
 
   get modelDBStore(): Store<string, StateTree> {
@@ -207,9 +210,9 @@ export class BaseNode extends BaseObj {
    * Set model ID.
    */
   set modelId(value: string) {
-    this._modelId = value as string;
+    this._modelId = value;
 
-    this.updateParamsFromModel();
+    this.loadModel();
     this.modelChanges();
   }
 
@@ -219,7 +222,7 @@ export class BaseNode extends BaseObj {
 
   get models(): (TModel | any)[] {
     // Get models of the same element type.
-    return this.modelDBStore.getModelsByElementType(this.model.elementType);
+    return this.modelDBStore.getModelsByElementType(this.elementType);
   }
 
   get n(): number {
@@ -373,8 +376,9 @@ export class BaseNode extends BaseObj {
     this.logger.trace("add parameters");
 
     this.emptyParams();
-    if (this.model) {
-      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
+
+    if (this._model) {
+      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
           const nodeParamProps = paramsProps.find(
             (paramProps: INodeParamProps) => paramProps.id === modelParam.id
@@ -459,8 +463,7 @@ export class BaseNode extends BaseObj {
   getModel(modelId: string): TModel {
     this.logger.trace("get model:", modelId);
 
-    const model = this.modelDBStore.getModel(modelId);
-    return model;
+    return this.modelDBStore.getModel(modelId);
   }
 
   /**
@@ -503,7 +506,18 @@ export class BaseNode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
+    this.loadModel();
     this.update();
+  }
+
+  /**
+   * Load model.
+   */
+  loadModel(paramsProps?: INodeParamProps[]): void {
+    this.logger.trace("load model:", this._modelId);
+
+    this._model = this.getModel(this._modelId);
+    this.addParameters(paramsProps);
   }
 
   /**
@@ -515,7 +529,7 @@ export class BaseNode extends BaseObj {
   modelChanges(): void {
     this.logger.trace("model change");
 
-    this.init();
+    // this.init();
     this.nodes.network.changes();
   }
 
@@ -721,18 +735,6 @@ export class BaseNode extends BaseObj {
     }
   }
 
-  // /**
-  //  * Update receptor component.
-  //  * @param receptorOld - node receptor object
-  //  * @param receptorNew - node receptor props
-  //  */
-  // updateReceptor(receptorOld: NodeReceptor, receptorNew: INodeReceptorProps): void {
-  //   receptorNew.compIdx = receptorOld.compartment.idx;
-  //   const receptorIdx = this._receptors.indexOf(receptorOld);
-  //   this._receptors[receptorIdx] = new NodeReceptor(this, receptorNew);
-  //   this._receptors = [...this._receptors];
-  // }
-
   /**
    * Update record colors.
    */
@@ -741,15 +743,5 @@ export class BaseNode extends BaseObj {
     this._recordables.forEach((record: NodeRecord) => {
       record.color = color;
     });
-  }
-
-  /**
-   * Update params from node model.
-   */
-  updateParamsFromModel(): void {
-    this.emptyParams();
-    const paramProps = this.model.toJSON().params;
-    this.addParameters(paramProps);
-    this._paramsVisible = [];
   }
 }

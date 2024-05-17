@@ -2,14 +2,14 @@
   <v-card class="playground-card">
     <v-card-title>Card</v-card-title>
     <v-card-text>
-      <Card v-for="(card, index) in cards" :key="index" :color="card.color">
+      <Card :color="card.color" :key="index" v-for="(card, index) in cards">
         <v-card-title>
           {{ card.title }}
         </v-card-title>
 
         <v-card-text>
           <v-list>
-            <v-list-item v-for="(item, index) in card.items" :key="index">
+            <v-list-item :key="index" v-for="(item, index) in card.items">
               {{ item.title }}
             </v-list-item>
           </v-list>

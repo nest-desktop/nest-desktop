@@ -255,7 +255,7 @@ export class ConnectionGraph extends BaseObj {
         .selectAll("g.connection")
         .data(
           this.networkGraph.network.connections.all,
-          (c: TConnection | any) => c.hash
+          (c: TConnection | any) => c.uuid
         );
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()

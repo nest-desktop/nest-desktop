@@ -2,8 +2,9 @@
 
 import { onlyUnique } from "@/helpers/common/array";
 import { Parameter } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { NodeParameter } from "@/helpers/node/nodeParameter";
+import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 
 import { NESTConnection } from "../connection/connection";
@@ -31,17 +32,17 @@ export interface INESTNodeProps extends INodeProps {
   spatial?: INESTNodeSpatialProps;
 }
 
+// export class NESTNode extends BaseNode<NESTModel> {
 export class NESTNode extends BaseNode {
   private _compartments: NESTNodeCompartment[] = [];
+  private _modelCopied: NESTCopyModel | undefined;
   private _positions: number[][] = [];
   private _receptors: NESTNodeReceptor[] = [];
   private _spatial: NESTNodeSpatial;
-  private _model: NESTModel;
 
   constructor(nodes: NESTNodes, nodeProps: INESTNodeProps = {}) {
     super(nodes, nodeProps);
 
-    this._model = this.getModel(this._modelId);
     this._spatial = new NESTNodeSpatial(this, nodeProps.spatial);
 
     this.reset();
@@ -100,6 +101,10 @@ export class NESTNode extends BaseNode {
     );
   }
 
+  override get elementType(): string {
+    return this.model.elementType;
+  }
+
   get hasCompartments(): boolean {
     return this._compartments.length > 0;
   }
@@ -113,10 +118,20 @@ export class NESTNode extends BaseNode {
   }
 
   override get model(): NESTModel {
-    if (this._model?.id !== this.modelId) {
-      this._model = this.getModel(this.modelId);
+    if (!this._model) {
+      this._model = this.getModel(this._modelId);
+    } else if (this._modelCopied) {
+      // TODO: find better condition.
+      this._model = this.getModel(this._modelCopied.existingModelId);
+    } else if (this._model.id !== this._modelId) {
+      this._model = this.getModel(this._modelId);
     }
-    return this._model;
+
+    return this._model as NESTModel;
+  }
+
+  get modelCopied(): NESTCopyModel | undefined {
+    return this._modelCopied;
   }
 
   override get modelId(): string {
@@ -127,27 +142,29 @@ export class NESTNode extends BaseNode {
    * Set model ID.
    */
   override set modelId(value: string) {
-    this._modelId = value as string;
-    this._model = this.getModel(value);
+    this._modelId = value;
 
-    this.updateParamsFromModel();
+    this.loadModel();
     this.modelChanges();
   }
 
-  override get models(): (NESTCopyModel | NESTModel)[] {
+  override get modelParams(): Record<string, ModelParameter> {
+    return this.model.params;
+  }
+
+  override get models(): NESTModel[] {
     // Get models of the same element type.
     const elementType: string = this.model.elementType;
+
     const models: NESTModel[] =
       this.modelDBStore.getModelsByElementType(elementType);
 
+    return models;
+  }
+
+  get modelsCopied(): NESTCopyModel[] {
     // Get copied models.
-    const modelsCopied: NESTCopyModel[] =
-      this.network.modelsCopied.filterByElementType(elementType);
-
-    const modelsAll = [...models, ...modelsCopied];
-    modelsAll.sort();
-
-    return modelsAll;
+    return this.network.modelsCopied.all as NESTCopyModel[];
   }
 
   override get network(): NESTNetwork {
@@ -246,16 +263,7 @@ export class NESTNode extends BaseNode {
    */
   override getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
-
-    // if (
-    //   this.network.modelsCopied?.all?.some(
-    //     (model: NESTCopyModel) => model.id === modelId
-    //   )
-    // ) {
-    //   return this.network.modelsCopied.getModelById(modelId) as NESTCopyModel;
-    // } else {
     return this.modelDBStore.getModel(modelId) as NESTModel;
-    // }
   }
 
   /**
@@ -272,6 +280,26 @@ export class NESTNode extends BaseNode {
         receptor.hideAllParams()
       );
     }
+  }
+
+  /**
+   * Load model.
+   */
+  override loadModel(paramsProps?: INodeParamProps[]): void {
+    this.logger.trace("load model:", this._modelId);
+
+    if (
+      this.network.modelsCopied &&
+      this.network.modelsCopied.findByModelId(this._modelId)
+    ) {
+      this._modelCopied = this.network.modelsCopied.getModel(this._modelId);
+      this._model = this.getModel(this._modelCopied.existingModelId);
+    } else {
+      this._modelCopied = undefined;
+      this._model = this.getModel(this._modelId);
+    }
+
+    this.addParameters(paramsProps);
   }
 
   /**

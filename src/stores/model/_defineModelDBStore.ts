@@ -13,7 +13,7 @@ import { truncate } from "@/utils/truncate";
 
 type Class<T> = new (...props: any) => T;
 
-export function defineModelDBStore(
+export function defineModelDBStore<Model extends BaseModel>(
   props: {
     Model: Class<TModel>;
     ModelDB: Class<TModelDB>;
@@ -32,8 +32,6 @@ export function defineModelDBStore(
   });
 
   const db = new props.ModelDB();
-  // @ts-ignore - Cannot find namespace 'props'.
-  type Model = props.Model;
 
   return defineStore(props.simulator + "-model-db", () => {
     const state: UnwrapRef<{ tryImports: number; models: Model[] }> = reactive({

@@ -22,6 +22,7 @@ const modelAssets = [
   "voltmeter",
 ];
 
+// export const usePyNNModelDBStore = defineModelDBStore<PyNNModel>({
 export const usePyNNModelDBStore = defineModelDBStore({
   Model: PyNNModel,
   ModelDB: PyNNModelDB,

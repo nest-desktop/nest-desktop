@@ -111,7 +111,7 @@ export class NodeView extends BaseObj {
     let label: string;
     // let varname: string;
 
-    switch (this.node.model.elementType) {
+    switch (this.node.elementType) {
       case "neuron":
         nodes = this.node.nodes.neurons;
         idx = nodes.indexOf(this._node);

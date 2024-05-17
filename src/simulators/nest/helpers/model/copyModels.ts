@@ -1,10 +1,10 @@
 // copyModels.ts
 
 import { BaseObj } from "@/helpers/common/base";
-// import { TNode } from "@/types";
 
-import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 import { NESTNetwork } from "../network/network";
+// import { TNode } from "@/types";
+import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 
 export class NESTCopyModels extends BaseObj {
   private _models: NESTCopyModel[] = [];
@@ -58,10 +58,6 @@ export class NESTCopyModels extends BaseObj {
 
   get nodeModels(): NESTCopyModel[] {
     return this._models.filter((model: NESTCopyModel) => model.isNode);
-  }
-
-  get some() {
-    return this._models.some;
   }
 
   get synapseModels(): NESTCopyModel[] {
@@ -118,11 +114,23 @@ export class NESTCopyModels extends BaseObj {
       return this._models;
     }
     return this._models.filter(
-      (model: NESTCopyModel) => model.model.elementType === elementType
+      (model: NESTCopyModel) => model.elementType === elementType
     );
   }
 
-  findBySynapseModelId(modelId: string): NESTCopyModel | undefined {
+  /**
+   * Filter models by general element type.
+   */
+  filterByGeneralElementType(elementType: string = ""): NESTCopyModel[] {
+    if (elementType) {
+      return this._models;
+    }
+    return this._models.filter(
+      (model: NESTCopyModel) => model.elementTypeGeneral === elementType
+    );
+  }
+
+  findByModelId(modelId: string): NESTCopyModel | undefined {
     return this._models.find((model: NESTCopyModel) => model.id === modelId);
   }
 
@@ -130,7 +138,7 @@ export class NESTCopyModels extends BaseObj {
    * Get a model from the model list by ID.
    * @param modelId ID of the model
    */
-  getModelById(modelId: string): NESTCopyModel {
+  getModel(modelId: string): NESTCopyModel {
     return (
       this._models.find((model: NESTCopyModel) => model.id === modelId) ||
       new NESTCopyModel(this, {
@@ -139,6 +147,13 @@ export class NESTCopyModels extends BaseObj {
         params: [],
       })
     );
+  }
+
+  /**
+   * Check if the network has some node models.
+   */
+  hasModel(modelId: string): boolean {
+    return this._models.some((model: NESTCopyModel) => model.id === modelId);
   }
 
   /**

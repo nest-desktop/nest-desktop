@@ -5,8 +5,8 @@
     </span>
     <v-icon
       :color="color"
-      icon="network:recorder"
       class="position-absolute icon-size"
+      icon="network:recorder"
     />
   </v-avatar>
 </template>

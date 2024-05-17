@@ -1,7 +1,7 @@
 <template>
   <ProjectNav :projectDBStore />
 
-  <ProjectBar :projectStore color="green" />
+  <ProjectBar :project-store color="green" />
 
   <ProjectController :projectStore />
 

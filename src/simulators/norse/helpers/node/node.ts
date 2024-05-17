@@ -7,18 +7,17 @@ import { BaseNode, INodeProps } from "@/helpers/node/node";
 
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
-import { NorseNodes } from "./nodes";
 import { NorseSimulation } from "../simulation/simulation";
+import { NorseNodes } from "./nodes";
 
 export interface INorseNodeProps extends INodeProps {}
 
+// export class NorseNode extends BaseNode<NorseModel> {
 export class NorseNode extends BaseNode {
   private _code: string = "";
-  private _model: NorseModel;
 
   constructor(nodes: NorseNodes, nodeProps: INorseNodeProps = {}) {
     super(nodes, nodeProps);
-    this._model = this.getModel(this._modelId);
   }
 
   get code(): string {
@@ -38,17 +37,6 @@ export class NorseNode extends BaseNode {
     return this._model as NorseModel;
   }
 
-  /**
-   * Set model ID.
-   */
-  override set modelId(value: string) {
-    this._modelId = value as string;
-    this._model = this.getModel(value);
-
-    this.updateParamsFromModel();
-    this.modelChanges();
-  }
-
   override get nodes(): NorseNodes {
     return this._nodes as NorseNodes;
   }
@@ -65,6 +53,12 @@ export class NorseNode extends BaseNode {
     return new NorseNode(this.nodes, { ...this.toJSON() });
   }
 
+  /**
+   * Observer for node changes.
+   *
+   * @remarks
+   * It emits network changes.
+   */
   override changes(): void {
     this.clean();
     this.updateHash();
@@ -74,17 +68,11 @@ export class NorseNode extends BaseNode {
     this.nodes.network.changes();
   }
 
+  /**
+   * Generate code.
+   */
   generateCode(): void {
     this._code = Mustache.render(this.model.codeTemplate, this);
-  }
-
-  /**
-   * Get Norse model.
-   */
-  override getModel(modelId: string): NorseModel {
-    this.logger.trace("get model:", modelId);
-
-    return this.modelDBStore.getModel(modelId) as NorseModel;
   }
 
   /**

@@ -114,7 +114,7 @@ export class NodeGroupGraph {
       .selectAll(".nodeGroupArea")
       .data(
         this.network.nodes.nodeGroups.toReversed(),
-        (n: NodeGroup | unknown) => (n instanceof NodeGroup ? n.hash : "")
+        (n: NodeGroup | unknown) => (n instanceof NodeGroup ? n.uuid : "")
       );
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()

@@ -255,6 +255,7 @@ const state = reactive({
 });
 
 const elementTypes = [
+  { title: "copied model", value: "copied" },
   { title: "neuron", value: "neuron" },
   { title: "recorder", value: "recorder" },
   { title: "stimulator", value: "stimulator" },
@@ -280,12 +281,21 @@ const popItems = [
 ];
 
 const select = (props: Record<string, unknown>, callback?: () => void) => {
-  if (["neuron", "recorder", "stimulator"].includes(props.value as string)) {
+  if (
+    ["neuron", "recorder", "stimulator", "copied"].includes(
+      props.value as string
+    )
+  ) {
     state.elementType = props.value as string;
-    state.items =
-      node.value.network.project.modelDBStore.getModelsByElementType(
-        props.value
-      );
+    if (props.value === "copied") {
+      state.items =
+        node.value.network.modelsCopied.filterByGeneralElementType("node");
+    } else {
+      state.items =
+        node.value.network.project.modelDBStore.getModelsByElementType(
+          props.value
+        );
+    }
   } else {
     node.value.modelId = props.value as string;
   }

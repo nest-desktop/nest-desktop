@@ -5,8 +5,8 @@
     </span>
     <v-icon
       :color="color"
-      icon="network:stimulator"
       class="position-absolute icon-size"
+      icon="network:stimulator"
     />
   </v-avatar>
 </template>

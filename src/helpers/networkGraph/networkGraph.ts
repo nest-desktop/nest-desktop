@@ -124,7 +124,7 @@ export class BaseNetworkGraph extends BaseObj {
       this.network.clean();
     }
 
-    this._workspace.updateTransform();
+    this._workspace?.updateTransform();
   }
 
   /**
@@ -133,7 +133,7 @@ export class BaseNetworkGraph extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this._workspace.init();
+    this._workspace?.init();
     this.update();
 
     watch(
@@ -185,6 +185,7 @@ export class BaseNetworkGraph extends BaseObj {
     this.logger.silly("update");
 
     this._workspace.update();
+
     this._connectionGraph.update();
     this._nodeGraph.update();
     this._nodeGroupGraph.update();

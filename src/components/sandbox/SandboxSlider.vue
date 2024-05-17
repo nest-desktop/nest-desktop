@@ -4,7 +4,7 @@
       <v-row no-gutters>
         Slider
         <v-spacer />
-        <v-tabs v-model="state.tab" density="compact">
+        <v-tabs density="compact" v-model="state.tab">
           <v-tab value="components"> Components </v-tab>
           <v-tab value="values"> Values </v-tab>
         </v-tabs>
@@ -19,14 +19,14 @@
         >
           <v-list>
             <v-list-item
-              v-for="(sliderItem, index) in state.items"
               :key="index"
+              v-for="(sliderItem, index) in state.items"
             >
               <v-row no-gutters>
                 <Slider
-                  v-model="sliderItem.value"
                   :options="sliderItem"
                   :thumb-color="sliderItem.color"
+                  v-model="sliderItem.value"
                 />
                 <div style="width: 100px">
                   {{ typeof sliderItem.value }}

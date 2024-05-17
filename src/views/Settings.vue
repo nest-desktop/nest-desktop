@@ -6,16 +6,16 @@
           <v-card flat subtitle="Theme">
             <v-card-text>
               <v-radio-group
-                v-model="appStore.state.theme"
+                @update:model-value="updateTheme"
                 hint="Customize the app with light and dark themes."
                 persistent-hint
-                @update:model-value="updateTheme"
+                v-model="appStore.state.theme"
               >
                 <v-radio
-                  v-for="(theme, idx) in themes"
                   :key="idx"
                   :value="theme.value"
                   true-icon="mdi:mdi-checkbox-marked-circle-outline"
+                  v-for="(theme, idx) in themes"
                 >
                   <template #label>
                     <v-icon :icon="theme.icon" class="mx-2" />
@@ -29,13 +29,13 @@
           <v-card flat subtitle="General">
             <v-card-text>
               <v-switch
-                v-model="appStore.state.devMode"
                 density="compact"
                 false-icon="mdi:mdi-close-circle"
                 hint="Developer mode enables features that are still in development."
                 label="Developer mode"
                 persistent-hint
                 true-icon="mdi:mdi-checkbox-marked-circle"
+                v-model="appStore.state.devMode"
               >
                 <template #label="{ label }">
                   <div class="ma-2">
@@ -49,12 +49,12 @@
           <v-card flat subtitle="Simulators">
             <v-card-text>
               <v-select
-                v-model="appStore.state.simulatorVisible"
                 :items="simulatorItems"
                 chips
+                item-value="id"
                 label="Visible simulators"
                 multiple
-                item-value="id"
+                v-model="appStore.state.simulatorVisible"
                 variant="outlined"
               >
                 <template #chip="{ item }">

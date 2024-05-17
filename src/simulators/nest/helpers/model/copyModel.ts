@@ -74,6 +74,10 @@ export class NESTCopyModel {
     );
   }
 
+  get elementTypeGeneral(): string {
+    return this.model.elementType === "synapse" ? "synapse" : "node";
+  }
+
   get elementType(): string {
     return this.model.elementType;
   }

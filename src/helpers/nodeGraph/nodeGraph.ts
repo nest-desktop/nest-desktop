@@ -176,7 +176,7 @@ export class NodeGraph extends BaseObj {
       this._networkGraph.selector
         .select("g#nodes")
         .selectAll("g.node")
-        .data(this.network.nodes.all, (n: NodeGroup | TNode | any) => n.hash);
+        .data(this.network.nodes.all, (n: NodeGroup | TNode | any) => n.uuid);
 
     const dragging: DragBehavior<any, any, any> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

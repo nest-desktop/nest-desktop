@@ -31,10 +31,10 @@
 
     <v-list density="compact">
       <v-list-item
-        v-for="(item, index) in appStore.simulatorItems"
         :key="index"
-        :value="item.id"
         :to="'/' + item.id"
+        :value="item.id"
+        v-for="(item, index) in appStore.simulatorItems"
       >
         <template #prepend>
           <v-icon :color="item.id" :icon="item.id + ':logo'" size="small" />
@@ -79,7 +79,7 @@
     </v-list>
   </v-menu>
 
-  <v-btn :to="{ name: 'about' }" size="x-small" variant="text">about</v-btn>
+  <v-btn :to="{ name: 'about' }" size="x-small" variant="text"> about </v-btn>
 
   <v-btn
     append-icon="mdi:mdi-open-in-new"
