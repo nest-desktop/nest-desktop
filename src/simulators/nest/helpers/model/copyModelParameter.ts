@@ -12,7 +12,7 @@ export class NESTCopyModelParameter extends Parameter {
   private _copyModel: NESTCopyModel;
 
   constructor(model: NESTCopyModel, paramProps: INESTCopyModelParamProps) {
-    super(paramProps, { minLevel: 1 });
+    super(paramProps, { minLevel: 3 });
     this._copyModel = model;
   }
 

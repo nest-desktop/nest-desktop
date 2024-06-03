@@ -117,13 +117,14 @@ export function defineBackendStore(
               switch (response.status) {
                 case 200:
                   notifySuccess(`${baseURL} (${name} backend) found.`);
-                  return baseURL;
+                  break;
                 default:
                   notifyError(
                     `${baseURL} (${name} backend) ${response.statusText.toLowerCase()}.`
                   );
                   break;
               }
+              return baseURL;
             }
           )
           .catch((error: AxiosError<any, { message: string }>) => {
@@ -170,6 +171,8 @@ export function defineBackendStore(
        * Update access token.
        */
       const updateAccessToken = (): void => {
+        logger.trace("update access token");
+
         // Add token to axios instance header.
         if (state.accessToken) {
           axiosInstance.defaults.headers.common["accessToken"] =
@@ -181,6 +184,8 @@ export function defineBackendStore(
        * Update axios instance.
        */
       const updateInstance = (): void => {
+        logger.trace("update instance");
+
         updateURL();
         updateAccessToken();
       };

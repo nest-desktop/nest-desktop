@@ -46,7 +46,7 @@ export class NESTCopyModel extends BaseObj {
     copyModels: NESTCopyModels,
     modelProps: INESTCopyModelProps = { existing: "", new: "" }
   ) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._copyModels = copyModels;
     this._existingModelId = modelProps.existing;

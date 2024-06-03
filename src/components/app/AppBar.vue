@@ -110,7 +110,7 @@
     :disabled="!backend.state.enabled"
     :key="index"
     :title="backend.state.url"
-    @click="backend.check()"
+    @click="backend.update()"
     size="x-small"
     v-for="(backend, index) in appStore.currentSimulator.backends"
     variant="text"
