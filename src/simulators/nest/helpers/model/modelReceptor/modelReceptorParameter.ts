@@ -6,7 +6,6 @@ import {
 } from "@/helpers/model/modelParameter";
 
 import { NESTModelReceptor } from "./modelReceptor";
-import { NESTModel } from "../model";
 
 export interface INESTModelReceptorParamProps extends IModelParamProps {}
 
@@ -23,9 +22,5 @@ export class NESTModelReceptorParameter extends ModelParameter {
    */
   override get modelParam(): ModelParameter {
     return this.model.params[this.id];
-  }
-
-  get model(): NESTModel {
-    return this.parent as NESTModel;
   }
 }

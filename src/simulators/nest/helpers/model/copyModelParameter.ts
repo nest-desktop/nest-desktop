@@ -6,12 +6,12 @@ import { TModel } from "@/types";
 
 import { NESTCopyModel } from "./copyModel";
 
-export interface IModelParamProps extends IParamProps {}
+export interface INESTCopyModelParamProps extends IParamProps {}
 
-export class CopyModelParameter extends Parameter {
+export class NESTCopyModelParameter extends Parameter {
   private _copyModel: NESTCopyModel;
 
-  constructor(model: NESTCopyModel, paramProps: IModelParamProps) {
+  constructor(model: NESTCopyModel, paramProps: INESTCopyModelParamProps) {
     super(paramProps, { minLevel: 1 });
     this._copyModel = model;
   }
@@ -74,8 +74,8 @@ export class CopyModelParameter extends Parameter {
    * Serialize for JSON.
    * @return model parameter object
    */
-  override toJSON(): IModelParamProps {
-    const paramProps: IModelParamProps = {
+  override toJSON(): INESTCopyModelParamProps {
+    const paramProps: INESTCopyModelParamProps = {
       id: this.id,
       component: this.component,
       label: this.label,

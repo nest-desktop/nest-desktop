@@ -65,14 +65,15 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import { TModelParameter } from "@/types";
+
 import ArrayInput from "../controls/ArrayInput.vue";
 import RangeSlider from "../controls/RangeSlider.vue";
 import TickSlider from "../controls/TickSlider.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { ModelParameter } from "@/helpers/model/modelParameter";
 import ParameterSpecMenu from "../parameter/ParameterSpecMenu.vue";
 
-const props = defineProps<{ param: ModelParameter }>();
+const props = defineProps<{ param: TModelParameter }>();
 const param = computed(() => props.param);
 
 const update = (value: number | number[]) => {

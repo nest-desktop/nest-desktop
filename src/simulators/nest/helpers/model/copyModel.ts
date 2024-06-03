@@ -18,7 +18,7 @@ import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NESTConnection } from "../connection/connection";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
-import { CopyModelParameter } from "./copyModelParameter";
+import { NESTCopyModelParameter } from "./copyModelParameter";
 import { NESTCopyModels } from "./copyModels";
 import { NESTModel } from "./model";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
@@ -38,7 +38,7 @@ export class NESTCopyModel extends BaseObj {
   private _existingModelId: string;
   private _copyModels: NESTCopyModels;
   private _newModelId: string;
-  private _params: Record<string, CopyModelParameter> = {};
+  private _params: Record<string, NESTCopyModelParameter> = {};
   private _paramsVisible: string[] = [];
   private _state: UnwrapRef<INESTCopyModelState>;
 
@@ -188,7 +188,7 @@ export class NESTCopyModel extends BaseObj {
     return this._copyModels.all.indexOf(this);
   }
 
-  get filteredParams(): CopyModelParameter[] {
+  get filteredParams(): NESTCopyModelParameter[] {
     return this._paramsVisible.map((paramId) => this._params[paramId]);
   }
 
@@ -247,15 +247,15 @@ export class NESTCopyModel extends BaseObj {
     );
   }
 
-  get params(): Record<string, CopyModelParameter> {
+  get params(): Record<string, NESTCopyModelParameter> {
     return this._params;
   }
 
-  set params(values: Record<string, CopyModelParameter>) {
+  set params(values: Record<string, NESTCopyModelParameter>) {
     this._params = { ...this._params, ...values };
   }
 
-  get paramsAll(): CopyModelParameter[] {
+  get paramsAll(): NESTCopyModelParameter[] {
     return Object.values(this._params);
   }
 
@@ -313,7 +313,7 @@ export class NESTCopyModel extends BaseObj {
   addParameter(paramProps: IParamProps): void {
     this.logger.trace("add parameter", paramProps.id);
 
-    this._params[paramProps.id] = new CopyModelParameter(this, paramProps);
+    this._params[paramProps.id] = new NESTCopyModelParameter(this, paramProps);
   }
 
   /**
@@ -334,7 +334,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   clean(): void {
-    const weightRecorderParam: CopyModelParameter =
+    const weightRecorderParam: NESTCopyModelParameter =
       this._params.weight_recorder;
 
     // Update weight recorder list to select.
@@ -350,7 +350,7 @@ export class NESTCopyModel extends BaseObj {
   //  */
   hideAllParams(): void {
     this.paramsAll.forEach(
-      (param: CopyModelParameter) => (param.visible = false)
+      (param: NESTCopyModelParameter) => (param.visible = false)
     );
   }
 
@@ -450,7 +450,7 @@ export class NESTCopyModel extends BaseObj {
    * Reset all parameters.
    */
   resetParams(): void {
-    this.paramsAll.forEach((param: CopyModelParameter) => param.reset());
+    this.paramsAll.forEach((param: NESTCopyModelParameter) => param.reset());
   }
 
   /**
@@ -458,7 +458,7 @@ export class NESTCopyModel extends BaseObj {
    */
   showAllParams(): void {
     this.paramsAll.forEach(
-      (param: CopyModelParameter) => (param.visible = true)
+      (param: NESTCopyModelParameter) => (param.visible = true)
     );
   }
 
@@ -470,7 +470,7 @@ export class NESTCopyModel extends BaseObj {
     return {
       existing: this._existingModelId,
       new: this._newModelId,
-      params: this.filteredParams.map((param: CopyModelParameter) =>
+      params: this.filteredParams.map((param: NESTCopyModelParameter) =>
         param.toJSON()
       ),
     };

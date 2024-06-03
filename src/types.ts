@@ -49,6 +49,7 @@ import {
 import { BaseConnections } from "@/helpers/connection/connections";
 import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNetwork, INetworkProps } from "@/helpers/network/network";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
@@ -72,6 +73,7 @@ import {
   INESTCopyModelProps,
   NESTCopyModel,
 } from "@/simulators/nest/helpers/model/copyModel";
+import { NESTCopyModelParameter } from "@/simulators/nest/helpers/model/copyModelParameter";
 import {
   INESTModelProps,
   NESTModel,
@@ -161,6 +163,7 @@ export type TConnectionProps =
   | INorseConnectionProps;
 export type TConnections = BaseConnections | NESTConnections | NorseConnections;
 export type TModel = BaseModel | NESTModel | NorseModel | PyNNModel;
+export type TModelParameter = ModelParameter | NESTCopyModelParameter;
 export type TModelDB = BaseModelDB | NESTModelDB | NorseModelDB | PyNNModelDB;
 export type TModelProps =
   | IModelProps
