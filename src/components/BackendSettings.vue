@@ -9,7 +9,7 @@
       <v-text-field
         :disabled="!store.state.enabled"
         :hide-details="store.state.response.data.length === 0"
-        :placeholder="store.state.defaults.url"
+        :placeholder="store.defaults"
         :rules="[
           (value) => value.length === 0 || isURL(value) || 'URL is not valid',
         ]"

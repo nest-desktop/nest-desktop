@@ -24,10 +24,9 @@ export function defineBackendStore(
     () => {
       const state = reactive({
         accessToken: "",
-        configLoadedFromAssets: false,
-        defaults: { url },
         enabled: false,
         error: {} as AxiosError,
+        loadedFromAssets: false,
         name,
         response: {
           status: 0,
@@ -38,6 +37,7 @@ export function defineBackendStore(
 
       const axiosInstance = axios.create();
 
+      const defaults = computed((): string => url);
       const isOK = computed((): boolean => state.response.status === 200);
       const isValid = computed((): boolean => name in state.response.data);
       const versions = computed((): string[][] =>
@@ -57,15 +57,14 @@ export function defineBackendStore(
       const init = (): void => {
         logger.trace("init");
 
-        update();
+        state.loadedFromAssets ? update() : loadFromAssets().then(update);
       };
 
       /**
-       * Load config from file.
-       * @param simulator
-       * @returns
+       * Load from assets.
+       * @returns void promise
        */
-      const loadConfig = async (): Promise<void> => {
+      const loadFromAssets = async (): Promise<void> => {
         logger.trace("load config");
 
         return getRuntimeConfig(
@@ -80,17 +79,20 @@ export function defineBackendStore(
               "//" +
               (window.location.hostname || "localhost");
 
-            if (config.port) {
+            if (config.url) {
+              state.url = config.url;
+            } else if (config.port) {
               state.url = baseURL + ":" + config.port;
             } else if (config.path) {
               state.url = baseURL + "/" + config.path;
             } else {
-              state.url = config.url || state.defaults.url;
+              state.url = url;
             }
+
             state.enabled = getBoolean(config.enabled) || false;
           })
           .finally(() => {
-            state.configLoadedFromAssets = true;
+            state.loadedFromAssets = true;
           });
       };
 
@@ -145,7 +147,7 @@ export function defineBackendStore(
       };
 
       const resetURL = (): void => {
-        state.url = state.defaults.url;
+        state.url = url;
       };
 
       /**
@@ -190,19 +192,18 @@ export function defineBackendStore(
         updateAccessToken();
       };
 
-      update();
-
       return {
         URL,
         axiosInstance: () => axiosInstance,
         check,
+        defaults,
         init,
         isOK,
         isValid,
+        loadFromAssets,
         ping,
         resetResponse,
         resetURL,
-        loadConfig,
         state,
         update,
         updateAccessToken,
@@ -214,12 +215,7 @@ export function defineBackendStore(
     {
       persist: [
         {
-          paths: [
-            "state.defaults",
-            "state.enabled",
-            "state.configLoadedFromAssets",
-            "state.url",
-          ],
+          paths: ["state.enabled", "state.loadedFromAssets", "state.url"],
           storage: localStorage,
         },
         {

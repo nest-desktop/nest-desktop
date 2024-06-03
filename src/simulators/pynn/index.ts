@@ -1,13 +1,12 @@
 // pynn/index.ts
 
-import { ISimulatorProps } from "..";
-
+import { ISimulatorProps } from "../";
 import iconSet from "./components/iconSet";
-import route from "./routes";
 import types from "./helpers/types";
+import route from "./routes";
+import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
 import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
-import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
 
 export const pynn: ISimulatorProps = {
   autocomplete: [],
@@ -17,12 +16,12 @@ export const pynn: ISimulatorProps = {
   iconSet,
   id: "pynn",
   init: () => {
-    // Init stores
+    // Initialize stores
     const modelDBStore = usePyNNModelDBStore();
     const projectDBStore = usePyNNProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
-    // Init backend PyNN Simulator
+    // Initialize backend PyNN Simulator
     const pynnSimulatorStore = usePyNNSimulatorStore();
     pynnSimulatorStore.init();
 

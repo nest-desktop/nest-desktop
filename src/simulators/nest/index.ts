@@ -1,18 +1,17 @@
 // nest/index.ts
 
-import { ISimulatorProps } from "..";
-
-import nestIconSet from "./components/iconSet";
-import nestRoute from "./routes";
-import types from "./helpers/types";
+import { ISimulatorProps } from "../";
 import { nestCompletions } from "./codemirror/nestCompletion";
 import { nestRandomCompletions } from "./codemirror/nestRandomCompletion";
 import { nestSpatialCompletions } from "./codemirror/nestSpatialCompletion";
 import { nestSpatialDistributionsCompletions } from "./codemirror/nestSpatialDistributionsCompletion";
+import nestIconSet from "./components/iconSet";
+import types from "./helpers/types";
+import nestRoute from "./routes";
 import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
+import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
-import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 
 export const nest: ISimulatorProps = {
   autocomplete: [
@@ -34,12 +33,12 @@ export const nest: ISimulatorProps = {
   iconSet: nestIconSet,
   id: "nest",
   init: () => {
-    // Init stores.
+    // Initialize stores.
     const modelDBStore = useNESTModelDBStore();
     const projectDBStore = useNESTProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
-    // Init backend NEST Simulator.
+    // Initialize backend NEST Simulator.
     const nestSimulatorStore = useNESTSimulatorStore();
 
     // Customize headers to authenticate on NEST Server.
@@ -52,8 +51,11 @@ export const nest: ISimulatorProps = {
       }
     };
 
-    // Init backend Insite Access.
+    nestSimulatorStore.init();
+
+    // Initialize backend Insite Access.
     const insiteAccessStore = useInsiteAccessStore();
+    insiteAccessStore.init();
 
     nest.backends = {
       insite: insiteAccessStore,

@@ -1,14 +1,13 @@
 // norse/index.ts
 
-import { ISimulatorProps } from "..";
-
-import iconSet from "./components/iconSet";
-import route from "./routes";
-import types from "./helpers/types";
+import { ISimulatorProps } from "../";
 import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
+import iconSet from "./components/iconSet";
+import types from "./helpers/types";
+import route from "./routes";
+import { useNorseSimulatorStore } from "./stores/backends/norseSimulatorStore";
 import { useNorseModelDBStore } from "./stores/model/modelDBStore";
 import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
-import { useNorseSimulatorStore } from "./stores/backends/norseSimulatorStore";
 
 export const norse: ISimulatorProps = {
   autocomplete: [norseTorchCompletions],
@@ -18,13 +17,14 @@ export const norse: ISimulatorProps = {
   iconSet,
   id: "norse",
   init: () => {
-    // Init stores.
+    // Initialize stores.
     const modelDBStore = useNorseModelDBStore();
     const projectDBStore = useNorseProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
-    // Init backend Norse Simulator.
+    // Initialize backend Norse Simulator.
     const norseSimulatorStore = useNorseSimulatorStore();
+    norseSimulatorStore.init();
 
     norse.backends = {
       norse: norseSimulatorStore,

@@ -91,29 +91,23 @@
         <v-expansion-panels variant="accordion">
           <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
-              <div class="d-flex flex-row">
-                <v-tabs
-                  v-model="backendTab"
-                  density="compact"
-                  direction="vertical"
-                >
-                  <v-tab direction="vertical" value="nest">
-                    NEST Simulator
-                  </v-tab>
-                  <v-tab direction="vertical" value="insite">
-                    Insite Access
-                  </v-tab>
-                </v-tabs>
+              <v-tabs v-model="backendTab" density="compact">
+                <v-tab direction="vertical" value="nest">
+                  NEST Simulator
+                </v-tab>
+                <v-tab direction="vertical" value="insite">
+                  Insite Access
+                </v-tab>
+              </v-tabs>
 
-                <v-window v-model="backendTab" class="mx-2 w-100">
-                  <v-window-item value="nest">
-                    <backend-settings :store="nestSimulatorStore" />
-                  </v-window-item>
-                  <v-window-item value="insite">
-                    <backend-settings :store="insiteAccessStore" />
-                  </v-window-item>
-                </v-window>
-              </div>
+              <v-window v-model="backendTab" class="mx-2">
+                <v-window-item value="nest">
+                  <backend-settings :store="nestSimulatorStore" />
+                </v-window-item>
+                <v-window-item value="insite">
+                  <backend-settings :store="insiteAccessStore" />
+                </v-window-item>
+              </v-window>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
