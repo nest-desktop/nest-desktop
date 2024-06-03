@@ -53,12 +53,13 @@ export class BaseNode extends BaseObj {
 
     this._nodes = nodes;
     this._modelId = nodeProps.model || "";
+    this.loadModel(nodeProps.params);
+
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
     this._doc = nodeProps;
 
     this._view = new NodeView(this, nodeProps.view);
-    this.loadModel(nodeProps.params);
 
     if (this.model.isRecorder) {
       this.createActivity(nodeProps?.activity);
@@ -361,6 +362,7 @@ export class BaseNode extends BaseObj {
    * @param visible boolean
    */
   addParameter(paramProps: INodeParamProps, visible: boolean = false): void {
+    this.logger.trace("add parameter", paramProps.id, visible);
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
 
     if (visible) {
@@ -373,7 +375,7 @@ export class BaseNode extends BaseObj {
    * @param paramsProps - list of parameter props
    */
   addParameters(paramsProps?: INodeParamProps[]): void {
-    this.logger.trace("add parameters");
+    this.logger.trace("add parameters", paramsProps);
 
     this.emptyParams();
 
@@ -506,7 +508,7 @@ export class BaseNode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.loadModel();
+    // this.loadModel();
     this.update();
   }
 
@@ -514,7 +516,7 @@ export class BaseNode extends BaseObj {
    * Load model.
    */
   loadModel(paramsProps?: INodeParamProps[]): void {
-    this.logger.trace("load model:", this._modelId);
+    this.logger.trace("load model:", this._modelId, paramsProps);
 
     this._model = this.getModel(this._modelId);
     this.addParameters(paramsProps);

@@ -1,26 +1,20 @@
 // copyModel.ts
 
-import { StateTree, Store } from "pinia";
-import { UnwrapRef, reactive } from "vue";
+import { StateTree, Store } from 'pinia';
+import { UnwrapRef, reactive } from 'vue';
 
-import {
-  IParamProps,
-  Parameter,
-  TParamValue,
-} from "@/helpers/common/parameter";
-import {
-  IModelParamProps,
-  ModelParameter,
-} from "@/helpers/model/modelParameter";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { BaseObj } from '@/helpers/common/base';
+import { IParamProps, Parameter, TParamValue } from '@/helpers/common/parameter';
+import { IModelParamProps, ModelParameter } from '@/helpers/model/modelParameter';
+import { INodeRecordProps } from '@/helpers/node/nodeRecord';
 
-import { NESTConnection } from "../connection/connection";
-import { NESTNetwork } from "../network/network";
-import { NESTNode } from "../node/node";
-import { NESTCopyModels } from "./copyModels";
-import { NESTModel } from "./model";
-import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
-import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTConnection } from '../connection/connection';
+import { NESTNetwork } from '../network/network';
+import { NESTNode } from '../node/node';
+import { NESTCopyModels } from './copyModels';
+import { NESTModel } from './model';
+import { NESTModelCompartmentParameter } from './modelCompartmentParameter';
+import { NESTModelReceptor } from './modelReceptor/modelReceptor';
 
 export interface INESTCopyModelProps {
   existing: string;
@@ -32,7 +26,7 @@ interface INESTCopyModelState {
   visible: boolean;
 }
 
-export class NESTCopyModel {
+export class NESTCopyModel extends BaseObj {
   private _existingModelId: string;
   private _copyModels: NESTCopyModels;
   private _newModelId: string;
@@ -44,6 +38,8 @@ export class NESTCopyModel {
     copyModels: NESTCopyModels,
     modelProps: INESTCopyModelProps = { existing: "", new: "" }
   ) {
+    super({ logger: { settings: { minLevel: 1 } } });
+
     this._copyModels = copyModels;
     this._existingModelId = modelProps.existing;
     this._newModelId = modelProps.new;
@@ -59,7 +55,7 @@ export class NESTCopyModel {
     return this.model.abbreviation;
   }
 
-  get config(): Record<string, string> {
+  get modelConfig(): Record<string, string> {
     return this.model.config?.localStorage;
   }
 
@@ -407,6 +403,8 @@ export class NESTCopyModel {
    * It emits network changes.
    */
   changes(): void {
+    this.logger.trace("changes");
+
     this.network.changes();
   }
 

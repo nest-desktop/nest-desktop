@@ -1,16 +1,16 @@
 // network.ts
 
-import { BaseNetwork } from "@/helpers/network/network";
-import { INodeGroupProps } from "@/helpers/node/nodeGroup";
-import { TNetworkProps } from "@/types";
+import { BaseNetwork } from '@/helpers/network/network';
+import { INodeGroupProps, NodeGroup } from '@/helpers/node/nodeGroup';
+import { TNetworkProps, TNode } from '@/types';
 
-import { INESTConnectionProps, NESTConnection } from "../connection/connection";
-import { NESTConnections } from "../connection/connections";
-import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
-import { NESTCopyModels } from "../model/copyModels";
-import { INESTNodeProps } from "../node/node";
-import { NESTNodes } from "../node/nodes";
-import { NESTProject } from "../project/project";
+import { INESTConnectionProps, NESTConnection } from '../connection/connection';
+import { NESTConnections } from '../connection/connections';
+import { INESTCopyModelProps, NESTCopyModel } from '../model/copyModel';
+import { NESTCopyModels } from '../model/copyModels';
+import { INESTNodeProps } from '../node/node';
+import { NESTNodes } from '../node/nodes';
+import { NESTProject } from '../project/project';
 
 export interface INESTNetworkProps {
   models?: INESTCopyModelProps[];
@@ -208,5 +208,18 @@ export class NESTNetwork extends BaseNetwork {
     this.connections.update(networkProps.connections);
 
     this.nodes.updateRecords();
+  }
+
+  /**
+   * Update hash.
+   */
+  override updateHash(): void {
+    this._updateHash({
+      models: this.modelsCopied.all.map((model: NESTCopyModel) => model.hash),
+      nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
+      connections: this.connections.all.map(
+        (connection: NESTConnection) => connection.hash
+      ),
+    });
   }
 }
