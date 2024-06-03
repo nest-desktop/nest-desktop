@@ -1,21 +1,23 @@
-// modelParameter.ts
+// copyModelParameter.ts
 
+import { IParamProps, Parameter } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 import { TModel } from "@/types";
 
-import { IParamProps, Parameter } from "../common/parameter";
+import { NESTCopyModel } from "./copyModel";
 
 export interface IModelParamProps extends IParamProps {}
 
-export class ModelParameter extends Parameter {
-  private _model: TModel;
+export class CopyModelParameter extends Parameter {
+  private _copyModel: NESTCopyModel;
 
-  constructor(model: TModel, paramProps: IModelParamProps) {
+  constructor(model: NESTCopyModel, paramProps: IModelParamProps) {
     super(paramProps, { minLevel: 1 });
-    this._model = model;
+    this._copyModel = model;
   }
 
   get model(): TModel {
-    return this._model;
+    return this._copyModel.model as TModel;
   }
 
   /**
@@ -23,6 +25,10 @@ export class ModelParameter extends Parameter {
    */
   override get modelParam(): ModelParameter {
     return this.model.params[this.id];
+  }
+
+  get copyModel(): NESTCopyModel {
+    return this._copyModel;
   }
 
   get visible(): boolean {
@@ -54,7 +60,7 @@ export class ModelParameter extends Parameter {
    * It emits model changes.
    */
   override changes(): void {
-    this._model.changes();
+    this._copyModel.changes();
   }
 
   /**
