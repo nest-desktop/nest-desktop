@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer class="d-print-none" permanent rail>
-    <v-tabs
-      :model-value="navStore.state.view"
+    <!-- <v-tabs
       :mandatory="false"
+      :model-value="navStore.state.view"
       color="primary"
       direction="vertical"
       stacked
@@ -22,7 +22,31 @@
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.title }}</span>
       </v-tab>
-    </v-tabs>
+    </v-tabs> -->
+
+    <v-list
+      :model-value="navStore.state.view"
+      class="pa-1 text-center"
+      color="primary"
+      density="compact"
+      nav
+    >
+      <v-list-item
+        :key="index"
+        :to="item.to"
+        :value="item.id"
+        @click.stop="navStore.toggle(item)"
+        class="pt-3 justify-center"
+        exact
+        v-for="(item, index) in navItems"
+        v-show="item.simulator === appStore.state.simulator"
+      >
+        <v-icon :icon="item.icon" size="large" />
+        <span class="text-button" style="font-size: 9px !important">
+          {{ item.title }}
+        </span>
+      </v-list-item>
+    </v-list>
 
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>

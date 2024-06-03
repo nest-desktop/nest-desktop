@@ -5,7 +5,7 @@
     permanent
     rail
   >
-    <v-tabs
+    <!-- <v-tabs
       :mandatory="false"
       :model-value="projectStore.state.controller.view"
       color="primary"
@@ -33,7 +33,31 @@
         />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
-    </v-tabs>
+    </v-tabs> -->
+
+    <v-list
+      :model-value="projectStore.state.controller.view"
+      class="pa-1 text-center"
+      color="primary"
+      density="compact"
+      nav
+    >
+      <v-list-item
+        :key="index"
+        :value="item.id"
+        @click.stop="projectStore.toggleController(item)"
+        class="pt-3 justify-center"
+        v-for="(item, index) in controllerItems"
+        v-show="
+          item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
+        "
+      >
+        <v-icon :class="item.icon.class" :icon="item.icon.icon" size="large" />
+        <span class="text-button" style="font-size: 9px !important">
+          {{ item.id }}
+        </span>
+      </v-list-item>
+    </v-list>
 
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
