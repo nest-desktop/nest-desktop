@@ -1,22 +1,21 @@
 // vite.config.mts
 
-// Plugins
-import vue from "@vitejs/plugin-vue";
-
-// Vite plugins
-import electron from "vite-plugin-electron";
-import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-import { VitePWA } from "vite-plugin-pwa";
-
+import { URL, fileURLToPath } from "node:url";
 // Utilities
 import { defineConfig } from "vite";
-import { fileURLToPath, URL } from "node:url";
+// Vite plugins
+import electron from "vite-plugin-electron";
+import { VitePWA } from "vite-plugin-pwa";
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+
+// Plugins
+import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
     chunkSizeWarningLimit: 10000,
-    outDir: "./dist", // "./nest_desktop/app",
+    outDir: "./nest_desktop/app",
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
     rollupOptions: {
       output: {
