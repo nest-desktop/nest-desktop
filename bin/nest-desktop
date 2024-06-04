@@ -1,0 +1,86 @@
+#!/bin/bash
+
+HOST="${NEST_DESKTOP_HOST:-127.0.0.1}"
+PORT="${NEST_DESKTOP_PORT:-54286}"
+
+# Returns a short overview of the available command options.
+usage() {
+  echo "NEST Desktop"
+  echo "------------"
+  echo "Usage: nest-desktop status|start|stop|restart [-h <HOST>] [-p <PORT>]"
+  echo ""
+  echo "Commands:"
+  echo "  status      display the status of NEST Desktop"
+  echo "  start       start a new server instance for NEST Desktop"
+  echo "  stop        stop a server instance running on <HOST>:<PORT>"
+  echo "  restart     restart (i.e. stop and start) a server on <HOST>:<PORT>"
+  echo
+  echo "Options:"
+  echo "  -h <HOST>   use hostname/IP address <HOST> for the server [default: 127.0.0.1]"
+  echo "  -p <PORT>   use port <PORT> for opening the socket [default: 54286]" >&2; exit 1
+}
+
+# Returns the process ID of a running NEST Desktop instance or null if none is
+# running.
+pid() {
+  pgrep -f "python3 -m nest_desktop.app ${HOST} ${PORT}"
+}
+
+# Starts NEST Desktop (if no instance is already running).
+start() {
+  if pid > /dev/null; then
+    echo "NEST Desktop is already running at http://${HOST}:${PORT}."
+  else
+    echo "NEST Desktop is now running at http://${HOST}:${PORT}."
+    echo "Use CTRL + C to stop this service."
+    python3 -m nest_desktop.app ${HOST} ${PORT}
+  fi
+}
+
+# Returns the status of NEST Desktop instances started with the Python webserver
+# by giving the IP addresses and ports.
+status() {
+  PS_AUX="$(ps aux | grep "[p]ython3 -m nest_desktop.app")"
+  PS_CMD="$(echo ${PS_AUX} | awk '{ for(i=1;i<=NF;i++) {if ( i >= 11 ) printf $i" "}; printf "\n" }')"
+  printf "HTTP-SOCKETS (PYTHON)\n---------------------\n"
+  if [ -z "${PS_CMD}" ]; then
+    echo "[no running instance found]"
+  else
+    echo "${PS_CMD}" | awk '{ for(i=1;i<=NF;i++) {if ( i == 4 || i == 5 ) printf $i" "}; printf "\n" }'
+  fi;
+}
+
+# Tries to stop a running NEST Desktop instance.
+stop() {
+  if pid > /dev/null; then
+    kill "$(pid)"
+    echo "NEST Desktop running at http://${HOST}:${PORT} has just stopped."
+  else
+    echo "NEST Desktop is not running at http://${HOST}:${PORT}."
+    false
+  fi
+}
+
+# Returns the version of this NEST Desktop instance.
+version() {
+   python3 -c "from nest_desktop import __version__; print(__version__)"
+}
+
+
+CMD=$1; shift
+while getopts "h:p:" flag; do
+  case ${flag} in
+    h) HOST=$OPTARG ;;
+    p) PORT=$OPTARG ;;
+  esac
+done
+
+case "$CMD" in
+  pid)     pid ;;
+  restart) stop; sleep .5; start ;;
+  start)   start ;;
+  status)  status ;;
+  stop)    stop ;;
+  version) version ;;
+  *)       usage ;;
+esac
