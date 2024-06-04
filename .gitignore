@@ -138,3 +138,6 @@ __pycache__
 
 # PWA
 /dev-dist
+
+# Python Package output
+/pydist
