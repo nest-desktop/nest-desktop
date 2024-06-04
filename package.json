@@ -1,6 +1,6 @@
 {
   "name": "nest-desktop",
-  "version": "4.0.0-beta3",
+  "version": "4.0.0-beta4",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for NEST Simulator and other simulators of spiking networks.",
   "author": {
@@ -8,8 +8,8 @@
     "email": "spreizer@web.de"
   },
   "scripts": {
-    "app:build": "vue-tsc && vite build && electron-builder",
-    "app:build:deb": "vue-tsc && vite build && electron-builder --linux deb",
+    "app:build": "vue-tsc && vite build --outDir ./dist && electron-builder",
+    "app:build:deb": "vue-tsc && vite build --outDir ./dist && electron-builder --linux deb",
     "app:dev": "vite",
     "app:preview": "./release/nest-desktop-*.AppImage",
     "build": "vue-tsc --noEmit && vite build",
