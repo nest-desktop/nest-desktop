@@ -2,8 +2,11 @@
 
 import { defineBackendStore } from "@/stores/defineBackendStore";
 
-export const useNESTSimulatorStore = defineBackendStore(
+const useNESTSimulatorStore = defineBackendStore(
   "nest",
   "nest",
-  "http://localhost:52425"
+  "http://localhost:52425",
+  { axiosHeaderTokenValue: "NESTServerAuth" }
 );
+
+export { useNESTSimulatorStore };

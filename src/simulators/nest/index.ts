@@ -7,7 +7,7 @@ import { nestSpatialCompletions } from "./codemirror/nestSpatialCompletion";
 import { nestSpatialDistributionsCompletions } from "./codemirror/nestSpatialDistributionsCompletion";
 import nestIconSet from "./components/iconSet";
 import types from "./helpers/types";
-import nestRoute from "./routes";
+import route from "./routes";
 import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
 import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
@@ -40,17 +40,6 @@ export const nest: ISimulatorProps = {
 
     // Initialize backend NEST Simulator.
     const nestSimulatorStore = useNESTSimulatorStore();
-
-    // Customize headers to authenticate on NEST Server.
-    nestSimulatorStore.updateAccessToken = () => {
-      // Add token to axios instance header.
-      if (nestSimulatorStore.state.accessToken) {
-        nestSimulatorStore.axiosInstance().defaults.headers.common[
-          "NESTServerAuth"
-        ] = nestSimulatorStore.state.accessToken;
-      }
-    };
-
     nestSimulatorStore.init();
 
     // Initialize backend Insite Access.
@@ -62,7 +51,7 @@ export const nest: ISimulatorProps = {
       nest: nestSimulatorStore,
     };
   },
-  route: nestRoute,
+  route,
   title: "NEST",
   theme: {
     nest: "ff6633",

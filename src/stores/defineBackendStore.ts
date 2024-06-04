@@ -12,7 +12,8 @@ import { getRuntimeConfig } from "@/utils/fetch";
 export function defineBackendStore(
   simulator: string,
   name: string,
-  url: string
+  url: string,
+  options?: Record<string, string>
 ) {
   const logger = mainLogger.getSubLogger({
     minLevel: 3,
@@ -44,6 +45,9 @@ export function defineBackendStore(
         Object.entries(state.response.data)
       );
 
+      /**
+       * Check backend.
+       */
       const check = (): void => {
         if (state.enabled === false) return;
         logger.trace("check");
@@ -136,7 +140,7 @@ export function defineBackendStore(
       };
 
       /**
-       * Reset state.
+       * Reset response and error states.
        */
       const resetResponse = (): void => {
         state.response = {
@@ -146,6 +150,9 @@ export function defineBackendStore(
         state.error = {} as AxiosError;
       };
 
+      /**
+       * Reset url to defaults.
+       */
       const resetURL = (): void => {
         state.url = url;
       };
@@ -166,7 +173,7 @@ export function defineBackendStore(
       const updateURL = (): void => {
         logger.trace("update URL");
 
-        axiosInstance.defaults.baseURL = state.url;
+        axiosInstance.defaults.baseURL = state.url || url;
       };
 
       /**
@@ -177,8 +184,9 @@ export function defineBackendStore(
 
         // Add token to axios instance header.
         if (state.accessToken) {
-          axiosInstance.defaults.headers.common["accessToken"] =
-            state.accessToken;
+          axiosInstance.defaults.headers.common[
+            options?.axiosHeaderTokenValue || "AccessToken"
+          ] = state.accessToken;
         }
       };
 
