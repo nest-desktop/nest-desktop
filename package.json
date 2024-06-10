@@ -45,7 +45,7 @@
     "roboto-fontface": "*",
     "stats.js": "~0.17",
     "three": "~0.165",
-    "uuid": "~9.0",
+    "uuid": "~10.0",
     "vue": "~3.4",
     "vue-codemirror": "~6.1",
     "vue-router": "~4.3",
