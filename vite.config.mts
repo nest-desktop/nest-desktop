@@ -45,6 +45,7 @@ export default defineConfig({
         entryFileNames: "assets/js/[name]-[hash].js",
       },
     },
+    sourcemap: true,
   },
   define: {
     global: "window",
