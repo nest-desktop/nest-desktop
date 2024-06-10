@@ -1,17 +1,14 @@
 <template>
   <v-container>
     <v-responsive>
-      <v-card
-        class="ma-auto my-4"
-        flat
-        max-width="640px"
-      >
+      <v-card class="ma-auto my-4" flat max-width="640px">
         <div class="text-center">
           <v-img
-            src="@/assets/img/logo/nest-desktop-logo-light.svg"
+            alt="nest-desktop-logo"
             class="logo my-6"
             contain
             height="250"
+            src="@/assets/img/logo/nest-desktop-logo-light.svg"
           />
 
           <!-- :src="
@@ -20,20 +17,11 @@
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-          <p class="text-h2">
-            NEST Desktop
-          </p>
-          <p class="text-subtitle-1">
-            An educational GUI for neuroscience
-          </p>
+          <p class="text-h2">NEST Desktop</p>
+          <p class="text-subtitle-1">An educational GUI for neuroscience</p>
         </div>
 
-        <v-card
-          flat
-          height="100%"
-          rounded="0"
-          variant="text"
-        >
+        <v-card flat height="100%" rounded="0" variant="text">
           <v-card-text class="text-justify">
             <div class="my-1">
               NEST Desktop is a web-based GUI application for multiple
@@ -65,11 +53,7 @@
             supported by the DFG Excellence Cluster BrainLinks-BrainTools (grant
             EXC 1086).
 
-            <v-row
-              class="mt-4"
-              justify="center"
-              no-gutters
-            >
+            <v-row class="mt-4" justify="center" no-gutters>
               <v-col
                 v-for="reference in references"
                 :key="reference.title"
@@ -79,6 +63,7 @@
               >
                 <v-img
                   :src="reference.iconSrc"
+                  alt="reference-icon"
                   contain
                   height="32px"
                 />

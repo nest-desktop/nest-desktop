@@ -3,7 +3,7 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-img :src="nestLogo" class="ma-2 mx-10" />
+          <v-img :src="nestLogo" alt="nest-logo" class="ma-2 mx-10" />
 
           <v-card-subtitle class="mt-4">
             Simulator for spiking neural network models

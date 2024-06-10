@@ -3,7 +3,7 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-img :src="norseLogo" class="ma-2 mx-10" />
+          <v-img :src="norseLogo" alt="norse-logo" class="ma-2 mx-10" />
 
           <v-card-subtitle>
             Deep learning with spiking neural networks in PyTorch

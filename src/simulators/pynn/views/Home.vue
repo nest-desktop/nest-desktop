@@ -3,7 +3,12 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-img :src="pynnLogo" class="ma-2 mx-10" max-height="400" />
+          <v-img
+            :src="pynnLogo"
+            alt="pynn-logo"
+            class="ma-2 mx-10"
+            max-height="400"
+          />
 
           <v-card-subtitle>
             An integration layer for neural simulation

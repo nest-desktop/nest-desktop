@@ -118,6 +118,7 @@
                       <v-col class="py-0" cols="4">
                         <img
                           :src="require(`@/assets/img/colorscales/${item}.png`)"
+                          alt="colorscale"
                           height="20"
                           width="100%"
                         />
@@ -143,6 +144,7 @@
                 :src="
                   require(`@/assets/img/colorscales/${layer.state.record.colorMap.scale}.png`)
                 "
+                alt="colorscale"
                 height="8"
                 width="100%"
               />

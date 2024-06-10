@@ -3,10 +3,11 @@
     <v-responsive class="align-center text-center">
       <div>
         <v-img
-          src="@/assets/img/logo/nest-desktop-logo-light.svg"
+          alt="nest-desktop-logo"
           class="logo my-6"
           contain
           height="250"
+          src="@/assets/img/logo/nest-desktop-logo-light.svg"
         />
 
         <!-- :src="
@@ -15,9 +16,7 @@
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-        <h2 class="text-h2">
-          NEST Desktop
-        </h2>
+        <h2 class="text-h2">NEST Desktop</h2>
       </div>
 
       <div style="height: 60px" />
