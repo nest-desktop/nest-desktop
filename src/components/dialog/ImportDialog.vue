@@ -1,14 +1,5 @@
 <template>
   <v-dialog max-width="1280">
-    <template #activator="{ props: activatorProps }">
-      <v-btn
-        icon="mdi:mdi-import"
-        style="min-width: 40px"
-        title="Open dialog to import"
-        v-bind="activatorProps"
-      />
-    </template>
-
     <template #default="{ isActive }">
       <v-card>
         <v-toolbar color="transparent" density="compact">

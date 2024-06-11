@@ -24,20 +24,30 @@
 
       <v-btn
         :to="{ name: appStore.state.simulator + 'ProjectNew' }"
-        icon
+        icon="mdi:mdi-plus"
         size="small"
         title="Create a new project"
-      >
-        <v-icon icon="mdi:mdi-plus" />
-      </v-btn>
+      />
 
       <v-menu>
         <template #activator="{ props }">
           <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
         </template>
 
+        <ImportDialog
+          :modelDBStore="modelDBStore"
+          :projectDBStore="projectDBStore"
+          activator="#import-dialog"
+        />
+        <ExportDialog
+          :modelDBStore="modelDBStore"
+          :projectDBStore="projectDBStore"
+          activator="#export-dialog"
+        />
+
         <v-list density="compact">
           <v-list-item
+            :id="item.id"
             :key="index"
             :value="index"
             v-for="(item, index) in projectsMenuItems"
@@ -87,6 +97,7 @@
                   variant="text"
                 >
                   <v-icon icon="mdi:mdi-dots-vertical" />
+
                   <ProjectMenu :project :projectDBStore />
                 </v-btn>
               </template>
@@ -100,6 +111,7 @@
                   variant="text"
                 >
                   <v-icon icon="mdi:mdi-dots-vertical" />
+
                   <v-menu activator="parent">
                     <v-list density="compact">
                       <v-list-item
@@ -164,6 +176,8 @@
 import { computed, nextTick, ref } from "vue";
 import { Store } from "pinia";
 
+import ExportDialog from "../dialog/ExportDialog.vue";
+import ImportDialog from "../dialog/ImportDialog.vue";
 import ProjectMenu from "./ProjectMenu.vue";
 import { TProject } from "@/types";
 // @ts-ignore - 'truncate' is declared but its value is never read.
@@ -175,7 +189,11 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const props = defineProps<{ projectDBStore: Store<any, any> }>();
+const props = defineProps<{
+  modelDBStore: Store<any, any>;
+  projectDBStore: Store<any, any>;
+}>();
+
 const projectDBStore = computed(() => props.projectDBStore);
 const projects = computed(() =>
   props.projectDBStore.state.projects.filter((project: TProject) =>
@@ -186,8 +204,8 @@ const projects = computed(() =>
 const search = ref("");
 
 const projectsMenuItems = [
-  { title: "Import", icon: "mdi:mdi-import" },
-  { title: "Export", icon: "mdi:mdi-export" },
+  { title: "Import", icon: "mdi:mdi-import", id: "import-dialog" },
+  { title: "Export", icon: "mdi:mdi-export", id: "export-dialog" },
   { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
   { title: "Reload list", icon: "mdi:mdi-reload" },
   { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },

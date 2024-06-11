@@ -1,5 +1,16 @@
 <template>
   <v-card class="mt-2">
+    <ImportDialog
+      :modelDBStore="modelDBStore"
+      :projectDBStore="projectDBStore"
+      activator="#import-dialog"
+    />
+    <ExportDialog
+      :modelDBStore="modelDBStore"
+      :projectDBStore="projectDBStore"
+      activator="#export-dialog"
+    />
+
     <v-toolbar color="transparent" density="compact">
       <v-app-bar-nav-icon size="small" />
       <v-toolbar-title>Store list</v-toolbar-title>
@@ -7,13 +18,17 @@
       <v-spacer />
 
       <v-btn-toggle class="mx-2" density="compact">
-        <import-dialog
-          :modelDBStore="modelDBStore"
-          :projectDBStore="projectDBStore"
+        <v-btn
+          icon="mdi:mdi-import"
+          id="import-dialog"
+          style="min-width: 40px"
+          title="Open dialog to import"
         />
-        <export-dialog
-          :modelDBStore="modelDBStore"
-          :projectDBStore="projectDBStore"
+        <v-btn
+          icon="mdi:mdi-export"
+          id="export-dialog"
+          style="min-width: 40px"
+          title="Open dialog to export"
         />
       </v-btn-toggle>
 

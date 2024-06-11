@@ -1,5 +1,5 @@
 <template>
-  <ProjectNav :projectDBStore />
+  <ProjectNav :modelDBStore :projectDBStore />
 
   <ProjectBar :projectStore color="nest-project">
     <template #tabs>
@@ -174,6 +174,9 @@ import SimulationKernelEditor from "../components/simulation/SimulationKernelEdi
 import { NESTCopyModel } from "../helpers/model/copyModel";
 import { NESTNode } from "../helpers/node/node";
 import { NESTProject } from "../helpers/project/project";
+
+import { useNESTModelDBStore } from "../stores/model/modelDBStore";
+const modelDBStore = useNESTModelDBStore();
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
