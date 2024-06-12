@@ -3,8 +3,8 @@
     <template #default="{ isActive }">
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
-          <v-icon icon="mdi:mdi-export" size="small" />
-          Export
+          <v-icon icon="mdi:mdi-trash-can-outline" size="small" />
+          Delete
 
           <v-btn
             @click="isActive.value = false"
@@ -15,7 +15,6 @@
         </v-card-title>
 
         <v-data-table-virtual
-          :group-by="[{ key: 'group', order: 'asc' }]"
           :headers
           :items="state.items"
           item-selectable="valid"
@@ -37,13 +36,13 @@
             :disabled="state.selected.length === 0"
             @click="
               () => {
-                exportSelected();
+                deleteSelected();
                 isActive.value = false;
               }
             "
-            prepend-icon="mdi:mdi-export"
+            prepend-icon="mdi:mdi-trash-can-outline"
             size="small"
-            text="export selected"
+            text="delete selected"
             variant="outlined"
           />
 
@@ -73,28 +72,24 @@ import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
-import { TModel, TProject } from "@/types";
-import { download } from "@/helpers/common/download";
+import { TProject } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
-interface IExportProps {
-  group: string;
+interface IDeleteProps {
   name: string;
   props: IModelProps | IProjectProps;
 }
 
 const props = defineProps<{
-  modelDBStore: Store<any, any>;
-  projectDBStore: Store<any, any>;
+  store: Store<any, any>;
 }>();
-const modelDBStore = computed(() => props.modelDBStore);
-const projectDBStore = computed(() => props.projectDBStore);
+const store = computed(() => props.store);
 
 const state = reactive({
-  items: [] as IExportProps[],
-  selected: [] as IExportProps[],
+  items: [] as IDeleteProps[],
+  selected: [] as IDeleteProps[],
 });
 
 const headers = [
@@ -103,41 +98,25 @@ const headers = [
 ];
 
 /**
- * Export selected.
+ * Delete selected.
  */
-const exportSelected = () => {
-  download(
-    JSON.stringify(
-      state.selected.map((selected: IExportProps) => selected.props)
-    )
-  );
-  state.selected = [] as IExportProps[];
+const deleteSelected = () => {
+  state.selected = [] as IDeleteProps[];
 };
 
 /**
  * Update list item.
  */
 const update = (): void => {
-  state.selected = [] as IExportProps[];
-  state.items = [] as IExportProps[];
+  state.selected = [] as IDeleteProps[];
+  state.items = [] as IDeleteProps[];
 
-  modelDBStore.value.state.models.forEach((model: TModel) => {
+  store.value.state.projects.forEach((project: TProject | IProjectProps) => {
     state.items.push({
-      group: "model",
-      name: model.label,
-      props: model.toJSON(),
+      name: project.name as string,
+      props: project.doc ? project.toJSON() : project,
     });
   });
-
-  projectDBStore.value.state.projects.forEach(
-    (project: TProject | IProjectProps) => {
-      state.items.push({
-        group: "project",
-        name: project.name as string,
-        props: project.doc ? project.toJSON() : project,
-      });
-    }
-  );
 };
 
 onMounted(() => {

@@ -2,15 +2,23 @@
   <v-dialog max-width="1280">
     <template #default="{ isActive }">
       <v-card>
-        <v-toolbar color="transparent" density="compact">
-          <span class="mx-2 font-weight-bold">
-            <v-icon icon="mdi:mdi-import" size="small" />
-            Import
-          </span>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <v-icon icon="mdi:mdi-import" size="small" />
+          Import
 
+          <v-btn
+            @click="isActive.value = false"
+            flat
+            icon="mdi:mdi-close"
+            size="small"
+          />
+        </v-card-title>
+
+        <v-toolbar class="px-2" color="transparent" density="compact">
           <v-btn-toggle
-            class="mx-1"
+            class="mr-1"
             density="compact"
+            mandatory
             v-model="state.source"
             variant="outlined"
           >
@@ -27,6 +35,7 @@
               @update:model-value="getTreesFromGithub"
               class="mx-1"
               density="compact"
+              mandatory
               v-model="state.githubGroup"
               variant="outlined"
             >
@@ -132,14 +141,9 @@
           </template>
 
           <template v-else>
-            <v-spacer />
+            <v-icon icon="mdi:mdi-arrow-left-thin" />
+            Please select one source of files to import.
           </template>
-
-          <v-btn
-            @click="isActive.value = false"
-            icon="mdi:mdi-close"
-            size="small"
-          />
         </v-toolbar>
 
         <v-data-table-virtual
