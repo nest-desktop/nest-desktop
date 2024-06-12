@@ -34,15 +34,16 @@
           <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
         </template>
 
-        <ImportDialog
-          :modelDBStore="modelDBStore"
-          :projectDBStore="projectDBStore"
-          activator="#import-dialog"
-        />
+        <DeleteDialog :store="projectDBStore" activator="#delete-dialog" />
         <ExportDialog
           :modelDBStore="modelDBStore"
           :projectDBStore="projectDBStore"
           activator="#export-dialog"
+        />
+        <ImportDialog
+          :modelDBStore="modelDBStore"
+          :projectDBStore="projectDBStore"
+          activator="#import-dialog"
         />
 
         <v-list density="compact">
@@ -50,6 +51,7 @@
             :id="item.id"
             :key="index"
             :value="index"
+            @click="item.onclick"
             v-for="(item, index) in projectsMenuItems"
           >
             <template #prepend>
@@ -176,6 +178,7 @@
 import { computed, nextTick, ref } from "vue";
 import { Store } from "pinia";
 
+import DeleteDialog from "../dialog/DeleteDialog.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import ProjectMenu from "./ProjectMenu.vue";
@@ -197,7 +200,9 @@ const props = defineProps<{
 const projectDBStore = computed(() => props.projectDBStore);
 const projects = computed(() =>
   props.projectDBStore.state.projects.filter((project: TProject) =>
-    project.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+    project.name
+      .toLocaleLowerCase()
+      .includes(search.value ? search.value.toLocaleLowerCase() : "")
   )
 );
 
@@ -206,9 +211,13 @@ const search = ref("");
 const projectsMenuItems = [
   { title: "Import", icon: "mdi:mdi-import", id: "import-dialog" },
   { title: "Export", icon: "mdi:mdi-export", id: "export-dialog" },
-  { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
-  { title: "Reload list", icon: "mdi:mdi-reload" },
-  { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
+  { title: "Delete", icon: "mdi:mdi-trash-can-outline", id: "delete-dialog" },
+  {
+    title: "Reload list",
+    icon: "mdi:mdi-reload",
+    onclick: () => projectDBStore.value.updateList(),
+  },
+  // { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];
 
 const dispatchWindowResize = () => {

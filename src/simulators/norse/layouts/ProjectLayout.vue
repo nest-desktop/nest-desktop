@@ -1,5 +1,5 @@
 <template>
-  <ProjectNav :projectDBStore />
+  <ProjectNav :modelDBStore :projectDBStore />
 
   <ProjectBar :project-store color="purple" />
 
@@ -13,9 +13,12 @@ import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 
-import { useNorseProjectStore } from "../stores/project/projectStore";
-const projectStore = useNorseProjectStore();
+import { useNorseModelDBStore } from "../stores/model/modelDBStore";
+const modelDBStore = useNorseModelDBStore();
 
 import { useNorseProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNorseProjectDBStore();
+
+import { useNorseProjectStore } from "../stores/project/projectStore";
+const projectStore = useNorseProjectStore();
 </script>

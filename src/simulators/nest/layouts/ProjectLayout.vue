@@ -178,11 +178,11 @@ import { NESTProject } from "../helpers/project/project";
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore = useNESTModelDBStore();
 
-import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore = useNESTProjectStore();
-
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore = useNESTProjectDBStore();
+
+import { useNESTProjectStore } from "../stores/project/projectStore";
+const projectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.state.project as NESTProject);
 
