@@ -5,7 +5,7 @@
       id="networkGraphLayout"
       style="height: 300px"
     >
-      <NetworkGraph :network />
+      <NetworkGraph :key="network.project.id" :network />
     </v-layout>
 
     <v-row no-gutters>

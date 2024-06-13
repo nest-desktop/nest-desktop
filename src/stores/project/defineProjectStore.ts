@@ -65,7 +65,7 @@ export function defineProjectStore(
 
       watch(
         () => projectDBStore.state.initialized,
-        (state) => {
+        () => {
           logger.trace("watch", state.projectId);
 
           state.projectId ? loadProject(state.projectId) : loadFirstProject();
