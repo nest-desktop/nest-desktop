@@ -1,39 +1,45 @@
 // projectRoutes.ts
 
-import { computed, watch } from "vue";
-
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
-// import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
+import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
+// import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
-import { useNESTStore } from "../stores/nestStore";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
   name: "nest project route",
 });
 
+const loadProject = (projectId?: string) => {
+  logger.trace("load project:", truncate(projectId || ""));
+  const projectStore = useNESTProjectStore();
+  const projectDBStore = useNESTProjectDBStore();
+
+  if (projectId) {
+    if (projectDBStore.state.initialized) {
+      projectStore.loadProject(projectId);
+    } else {
+      projectStore.state.projectId = projectId;
+    }
+  }
+};
+
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
-  const nestStore = useNESTStore();
   const projectStore = useNESTProjectStore();
+  loadProject(to.params.projectId);
 
-  if (to.params.projectId) {
-    const loading = computed(() => nestStore.state.loading);
-    watch(loading, (state) => {
-      if (!state) {
-        projectStore.loadProject(to.params.projectId);
-      }
-    });
+  if (projectStore.state.project) {
+    const path = to.path.split("/");
+    projectStore.state.tab.view = path[path.length - 1] || "edit";
+    if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
+      projectStore.state.tab.activityView = "abstract";
+    }
   }
 
-  const path = to.path.split("/");
-  projectStore.state.tab.view = path[path.length - 1] || "edit";
-  if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-    projectStore.state.tab.activityView = "abstract";
-  }
   logger.trace("enter:", to.path);
 };
 
@@ -56,10 +62,7 @@ const projectRedirect = (to: any) => {
   logger.trace("redirect to project:", truncate(to.params.projectId || ""));
 
   const projectStore = useNESTProjectStore();
-
-  if (to.params.projectId) {
-    projectStore.loadProject(to.params.projectId);
-  }
+  loadProject(to.params.projectId);
 
   if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
     projectStore.state.tab.activityView = "abstract";

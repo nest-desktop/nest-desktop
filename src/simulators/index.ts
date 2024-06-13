@@ -4,19 +4,25 @@
  * Automatically included in `./src/main.ts`
  */
 
-import { App } from "vue";
-import { IconSet } from "vuetify";
-import { RouteRecordRaw } from "vue-router";
 import { StateTree, Store } from "pinia";
+import { App } from "vue";
+import { RouteRecordRaw } from "vue-router";
+import { IconSet } from "vuetify";
 
-import router from "@/router";
-import { addTheme, addIconSet } from "@/plugins/vuetify";
 import { Config } from "@/helpers/common/config";
+import { logger as mainLogger } from "@/helpers/common/logger";
+import { addIconSet, addTheme } from "@/plugins/vuetify";
+import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
 import { pynn } from "./pynn";
+
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "simulator index",
+});
 
 export interface ISimulatorProps {
   autocomplete: any[];
@@ -55,10 +61,11 @@ export function registerSimulators(app: App) {
 
   // Register only visible simulators.
   const appStore = useAppStore();
-  appStore.state.simulatorVisible.forEach((id: string) => {
+  appStore.state.simulatorVisible.forEach((simulatorId: string) => {
     app.use({
       async install() {
-        const simulatorProps = simulators[id];
+        logger.trace("install", simulatorId);
+        const simulatorProps = simulators[simulatorId];
 
         // Load config files.
         simulatorProps.configNames.forEach(
@@ -70,8 +77,4 @@ export function registerSimulators(app: App) {
       },
     });
   });
-
-  // const hostname = "https://nest-desktop-next.apps-dev.hbp.eu";
-  // simulators.nest.backends.nest.url = hostname + "/nest";
-  // simulators.norse.backends.norse.url = hostname + "/norse";
 }

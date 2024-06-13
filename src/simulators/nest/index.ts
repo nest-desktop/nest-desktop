@@ -1,5 +1,7 @@
 // nest/index.ts
 
+import { logger as mainLogger } from "@/helpers/common/logger";
+
 import { ISimulatorProps } from "../";
 import { nestCompletions } from "./codemirror/nestCompletion";
 import { nestRandomCompletions } from "./codemirror/nestRandomCompletion";
@@ -12,6 +14,11 @@ import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
 import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
+
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "nest index",
+});
 
 export const nest: ISimulatorProps = {
   autocomplete: [
@@ -33,6 +40,8 @@ export const nest: ISimulatorProps = {
   iconSet: nestIconSet,
   id: "nest",
   init: () => {
+    logger.trace("init");
+
     // Initialize stores.
     const modelDBStore = useNESTModelDBStore();
     const projectDBStore = useNESTProjectDBStore();

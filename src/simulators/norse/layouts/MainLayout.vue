@@ -1,33 +1,22 @@
 <template>
-  <v-app v-if="norseSessionStore.loading">
-    <v-container class="fill-height">
-      <v-progress-circular class="ma-auto" color="primary" indeterminate />
-    </v-container>
+  <AppNavigation :nav-items />
 
-    <AppFooter />
-  </v-app>
-
-  <template v-else>
-    <AppNavigation :nav-items />
-
-    <v-main>
-      <router-view />
-    </v-main>
-  </template>
+  <v-main>
+    <router-view />
+  </v-main>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
 
-import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
 import { useNorseModelStore } from "../stores/model/modelStore";
 import { useNorseProjectStore } from "../stores/project/projectStore";
-import { useNorseSessionStore } from "../stores/sessionStore";
+import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 
 const modelStore = useNorseModelStore();
-const norseSessionStore = useNorseSessionStore();
+const norseSimulatorStore = useNorseSimulatorStore();
 const projectStore = useNorseProjectStore();
 
 const navItems = [
@@ -48,11 +37,11 @@ const navItems = [
 ];
 
 onMounted(() => {
+  // Update and check backends.
+  norseSimulatorStore.update();
+
   // Initialize model and project stores.
   modelStore.init();
   projectStore.init();
-
-  // Loading off.
-  norseSessionStore.loading = false;
 });
 </script>

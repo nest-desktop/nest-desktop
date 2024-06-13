@@ -1,34 +1,23 @@
 <template>
-  <v-app v-if="pynnSessionStore.loading">
-    <v-container class="fill-height">
-      <v-progress-circular class="ma-auto" color="primary" indeterminate />
-    </v-container>
+  <AppNavigation :nav-items />
 
-    <AppFooter />
-  </v-app>
-
-  <template v-else>
-    <AppNavigation :nav-items />
-
-    <v-main>
-      <router-view />
-    </v-main>
-  </template>
+  <v-main>
+    <router-view />
+  </v-main>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
 
-import AppFooter from "@/components/app/AppFooter.vue";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
 import { usePyNNModelStore } from "../stores/model/modelStore";
 import { usePyNNProjectStore } from "../stores/project/projectStore";
-import { usePyNNSessionStore } from "../stores/sessionStore";
+import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 
 const modelStore = usePyNNModelStore();
 const projectStore = usePyNNProjectStore();
-const pynnSessionStore = usePyNNSessionStore();
+const pynnSimulatorStore = usePyNNSimulatorStore();
 
 const navItems = [
   {
@@ -48,11 +37,11 @@ const navItems = [
 ];
 
 onMounted(() => {
+  // Update and check backends.
+  pynnSimulatorStore.update();
+
   // Initialize model and project stores.
   modelStore.init();
   projectStore.init();
-
-  // Loading off.
-  pynnSessionStore.loading = false;
 });
 </script>

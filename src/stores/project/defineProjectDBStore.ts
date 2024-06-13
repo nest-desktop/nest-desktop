@@ -230,6 +230,11 @@ export function defineProjectDBStore(
       });
     };
 
+    /**
+     * Check if the project is loaded.
+     * @param project project object or props
+     * @returns boolean
+     */
     const isProjectLoaded = (project: Project | TProjectProps): boolean => {
       return project instanceof BaseProject;
     };

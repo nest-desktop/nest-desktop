@@ -10,7 +10,7 @@ export class ModelParameter extends Parameter {
   private _model: TModel;
 
   constructor(model: TModel, paramProps: IModelParamProps) {
-    super(paramProps, { minLevel: 1 });
+    super(paramProps, { minLevel: 3 });
     this._model = model;
   }
 

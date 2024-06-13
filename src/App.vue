@@ -6,8 +6,15 @@
 import { confirmDialog } from "vuetify3-dialog";
 import { nextTick, onMounted, reactive } from "vue";
 
+import { logger as mainLogger } from "./helpers/common/logger";
+
 import { useAppStore } from "./stores/appStore";
 const appStore = useAppStore();
+
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "app component",
+});
 
 // more information on Service Worker updates:
 // https://medium.com/@dougallrich/give-users-control-over-app-updates-in-vue-cli-3-pwas-20453aedc1f2 (2019)
@@ -24,7 +31,7 @@ const state = reactive({
  * Otherwise the user has to confirm to refresh app.
  */
 const updateAvailable = (event: { detail: ServiceWorkerRegistration }) => {
-  console.log("Updates are available:", event.detail);
+  logger.trace("updates are available:", event.detail);
 
   if (appStore.state.autoUpdate) {
     nextTick(() => refreshApp());
@@ -44,7 +51,7 @@ const updateAvailable = (event: { detail: ServiceWorkerRegistration }) => {
  * Called when the user accepts the update
  */
 const refreshApp = () => {
-  console.log("Refresh app.");
+  logger.trace("refresh app.");
 
   if (state.refreshing) return;
   state.refreshing = true;
@@ -53,6 +60,8 @@ const refreshApp = () => {
 };
 
 onMounted(() => {
+  logger.trace("on mounted");
+
   // Check if new updates existed.
   document.addEventListener(
     "swUpdated",

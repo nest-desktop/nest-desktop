@@ -2,21 +2,24 @@
 
 import { RouteRecordRaw } from "vue-router";
 
+import { logger as mainLogger } from "@/helpers/common/logger";
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
 
-const closeNav = () => {
-  const navStore = useNavStore();
-  navStore.state.open = false;
-};
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "nest route",
+});
 
 export default {
   path: "nest",
   name: "nestLayout",
   beforeEnter: () => {
+    logger.trace("before enter main layout");
+
     const appStore = useAppStore();
     appStore.state.simulator = "nest";
   },
@@ -26,7 +29,12 @@ export default {
       path: "",
       name: "nestHome",
       component: () => import("../views/Home.vue"),
-      beforeEnter: closeNav,
+      beforeEnter: () => {
+        logger.trace("before enter home");
+
+        const navStore = useNavStore();
+        navStore.state.open = false;
+      },
     },
     {
       path: "model/",

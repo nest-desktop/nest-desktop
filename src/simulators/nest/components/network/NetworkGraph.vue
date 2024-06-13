@@ -97,6 +97,7 @@ import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
 import { NESTNode } from "../../helpers/node/node";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+import { nextTick } from "vue";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps<{ network: NESTNetwork }>();
@@ -107,7 +108,11 @@ const graph = computed(() => networkGraphStore.state.graph as NESTNetworkGraph);
 const networkGraphRef: Ref<null> = ref(null);
 
 onMounted(() => {
-  networkGraphStore.mount(new NESTNetworkGraph(networkGraphRef, network.value));
+  nextTick(() => {
+    networkGraphStore.mount(
+      new NESTNetworkGraph(networkGraphRef, network.value)
+    );
+  });
 });
 
 onBeforeUnmount(() => {

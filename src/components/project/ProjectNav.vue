@@ -153,7 +153,7 @@
                   {{ truncate(project.id) }}
                 </span>
                 <span class="mx-1" v-if="project.doc">
-                  {{ truncate(project.docId) }}
+                  {{ truncate(project.docId || "") }}
                 </span>
               </v-list-item-subtitle>
             </template>

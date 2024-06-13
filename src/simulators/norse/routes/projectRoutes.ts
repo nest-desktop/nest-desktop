@@ -1,7 +1,5 @@
 // projectRoutes.ts
 
-import { nextTick } from "vue";
-
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -13,17 +11,25 @@ const logger = mainLogger.getSubLogger({
   name: "norse project route",
 });
 
+const loadProject = (projectId?: string) => {
+  logger.trace("load project:", truncate(projectId || ""));
+  const projectStore = useNorseProjectStore();
+  const projectDBStore = useNorseProjectDBStore();
+
+  if (projectId) {
+    if (projectDBStore.state.initialized) {
+      projectStore.loadProject(projectId);
+    } else {
+      projectStore.state.projectId = projectId;
+    }
+  }
+};
+
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter project route:", to.path);
 
-  const projectDBStore = useNorseProjectDBStore();
-  if (projectDBStore.state.projects.length === 0) {
-    nextTick(() => projectBeforeEnter(to));
-    return;
-  }
-
   const projectStore = useNorseProjectStore();
-  projectStore.loadProject(to.params.projectId);
+  loadProject(to.params.projectId);
 
   const path = to.path.split("/");
   projectStore.state.tab.view = path[path.length - 1] || "edit";
@@ -48,10 +54,7 @@ const projectRedirect = (to: any) => {
   logger.trace("redirect to project:", truncate(to.params.projectId || ""));
 
   const projectStore = useNorseProjectStore();
-
-  if (to.params.projectId) {
-    projectStore.loadProject(to.params.projectId);
-  }
+  loadProject(to.params.projectId);
 
   return {
     path:

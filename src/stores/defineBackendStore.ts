@@ -61,7 +61,11 @@ export function defineBackendStore(
       const init = (): void => {
         logger.trace("init");
 
-        state.loadedFromAssets ? update() : loadFromAssets().then(update);
+        if (!state.loadedFromAssets) {
+          loadFromAssets();
+        }
+
+        // state.loadedFromAssets ? update() : loadFromAssets().then(update);
       };
 
       /**

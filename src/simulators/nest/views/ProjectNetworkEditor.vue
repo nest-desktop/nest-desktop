@@ -1,7 +1,8 @@
 <template>
   <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
     <NetworkEditorToolbar />
-    <NetworkGraph :network />
+
+    <NetworkGraph :network v-if="projectStore.state.project" />
   </v-layout>
 </template>
 

@@ -95,6 +95,7 @@ import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TNetwork, TNode } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+import { nextTick } from "vue";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps<{ network: TNetwork }>();
@@ -105,7 +106,11 @@ const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 const networkGraphRef: Ref<HTMLElement | null> = ref<HTMLElement | null>(null);
 
 onMounted(() => {
-  networkGraphStore.mount(new BaseNetworkGraph(networkGraphRef, network.value));
+  nextTick(() => {
+    networkGraphStore.mount(
+      new BaseNetworkGraph(networkGraphRef, network.value)
+    );
+  });
 });
 
 onBeforeUnmount(() => {

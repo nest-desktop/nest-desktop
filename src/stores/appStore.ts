@@ -17,6 +17,7 @@ export const useAppStore = defineStore(
       filterTag: "",
       loading: false,
       logsOpen: false,
+      initialized: false,
       requestLogs: [] as { date: string; text: string; type: string }[],
       simulator: "nest",
       simulatorVisible: ["nest"],

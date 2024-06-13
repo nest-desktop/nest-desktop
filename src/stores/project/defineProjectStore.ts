@@ -1,7 +1,7 @@
 // defineProjectStore.ts
 
 import { Store, defineStore } from "pinia";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseProject } from "@/helpers/project/project";
@@ -59,11 +59,18 @@ export function defineProjectStore(
     const init = (): void => {
       logger.trace("init");
 
-      if (projectDBStore.state.projects.length > 0) {
-        const firstProject = projectDBStore.state.projects[0];
-        state.projectId = firstProject.id;
-        state.project = projectDBStore.getProject(firstProject.id);
+      if (projectDBStore.state.initialized) {
+        state.projectId ? loadProject(state.projectId) : loadFirstProject();
       }
+
+      watch(
+        () => projectDBStore.state.initialized,
+        (state) => {
+          logger.trace("watch", state.projectId);
+
+          state.projectId ? loadProject(state.projectId) : loadFirstProject();
+        }
+      );
     };
 
     /**
@@ -75,13 +82,21 @@ export function defineProjectStore(
       state.projectId === projectId;
 
     /**
+     * Load first project
+     */
+    const loadFirstProject = (): void => {
+      const firstProject = projectDBStore.state.projects[0];
+      state.projectId = firstProject.id;
+      state.project = projectDBStore.getProject(firstProject.id);
+    };
+
+    /**
      * Load current project from store.
      * @param projectId project ID
      */
     const loadProject = (projectId: string = ""): void => {
       logger.trace("load project:", truncate(projectId || ""));
 
-      state.projectId = projectId;
       state.project = projectDBStore.getProject(projectId);
       state.projectId = state.project.id;
 

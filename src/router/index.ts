@@ -4,18 +4,17 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router";
 
+import { logger as mainLogger } from "@/helpers/common/logger";
 // Store
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
 
-const checkSimulator = () => {
-  const appStore = useAppStore();
-  if (!appStore.hasSimulator) {
-    appStore.resetSimulator();
-  }
-};
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "app route",
+});
 
 const closeNav = () => {
   const navStore = useNavStore();
@@ -26,7 +25,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "appLayout",
-    beforeEnter: checkSimulator,
+    beforeEnter: () => {
+      logger.trace("before enter app layout");
+
+      const appStore = useAppStore();
+      if (!appStore.hasSimulator) {
+        appStore.resetSimulator();
+      }
+    },
     component: () => import("@/layouts/AppLayout.vue"),
     children: [
       {
