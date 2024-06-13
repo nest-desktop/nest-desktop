@@ -11,7 +11,7 @@ COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the built app from the build folder to the NGINX serve folder
-COPY ./dist /usr/share/nginx/html/
+COPY ./nest_desktop/app /usr/share/nginx/html/
 
 # Run nginx as non-root
 RUN chmod -R 777 /usr/share/nginx/html/assets && \
