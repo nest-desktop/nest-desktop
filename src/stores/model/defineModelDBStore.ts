@@ -36,9 +36,14 @@ export function defineModelDBStore(
   type Model = props.Model;
 
   return defineStore(props.simulator + "-model-db", () => {
-    const state: UnwrapRef<{ tryImports: number; models: Model[] }> = reactive({
-      tryImports: 3,
+    const state: UnwrapRef<{
+      initialized: boolean;
+      models: Model[];
+      tryImports: number;
+    }> = reactive({
+      initialized: false,
       models: [],
+      tryImports: 3,
     });
 
     /**
@@ -190,13 +195,14 @@ export function defineModelDBStore(
     const updateList = (): void => {
       logger.debug("update list");
 
-      state.models = [] as UnwrapRef<Model[]>;
+      state.models = [];
       db.list("id").then((modelsProps: TModelProps[]) => {
         modelsProps.forEach((modelProps: TModelProps) => {
           const model = newModel(modelProps);
           // @ts-ignore Argument of type 'Model' is not assignable to parameter of type 'UnwrapRefSimple<Model>'.
           state.models.push(model);
         });
+        state.initialized = true;
       });
     };
 

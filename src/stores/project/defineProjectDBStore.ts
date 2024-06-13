@@ -37,17 +37,17 @@ export function defineProjectDBStore(
 
   return defineStore(props.simulator + "-project-db", () => {
     const state = reactive<{
-      tryImports: number;
       initialized: Boolean;
       numLoaded: number;
       projects: (Project | TProjectProps)[];
       searchTerm: string;
+      tryImports: number;
     }>({
-      tryImports: 3,
       initialized: false,
       numLoaded: 0,
       projects: [] as (Project | TProjectProps)[],
       searchTerm: "",
+      tryImports: 3,
     });
 
     /**

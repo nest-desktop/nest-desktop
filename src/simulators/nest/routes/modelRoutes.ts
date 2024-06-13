@@ -1,10 +1,7 @@
 // modelRoutes.ts
 
-import { nextTick } from "vue";
-
 import { logger as mainLogger } from "@/helpers/common/logger";
 
-import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 import { useNESTModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
@@ -16,13 +13,6 @@ const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
   const modelStore = useNESTModelStore();
-
-  const modelDBStore = useNESTModelDBStore();
-  if (modelDBStore.state.models.length === 0) {
-    nextTick(() => modelBeforeEnter(to));
-    return;
-  }
-
   if (to.params.modelId) {
     modelStore.state.modelId = to.params.modelId;
   }
@@ -35,7 +25,6 @@ const modelRedirect = (to: any) => {
   logger.trace("redirect to model:", to.params.modelId);
 
   const modelStore = useNESTModelStore();
-
   if (to.params.modelId) {
     modelStore.state.modelId = to.params.modelId;
   }
