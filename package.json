@@ -1,6 +1,6 @@
 {
   "name": "nest-desktop",
-  "version": "4.0.0-beta6",
+  "version": "4.0.0-beta7",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for NEST Simulator and other simulators of spiking networks.",
   "author": {
@@ -13,6 +13,7 @@
     "app:dev": "vite",
     "app:preview": "./release/nest-desktop-*.AppImage",
     "build": "vue-tsc --noEmit && vite build",
+    "clean": "rm -rf build coverage dev-dist dist dist-electron nest_desktop.egg-info pydist release yarn-error.log",
     "coverage": "vitest run --coverage",
     "dev": "vite",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
@@ -82,7 +83,7 @@
     "semver": "~7.6",
     "sharp": "~0.33",
     "tslog": "~4.9",
-    "vite": "~5.2",
+    "vite": "~5.3",
     "vite-plugin-electron": "~0.28",
     "vite-plugin-pwa": "~0.20",
     "vite-plugin-vuetify": "~2.0",
