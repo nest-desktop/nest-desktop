@@ -64,7 +64,7 @@
       <v-list-item
         v-for="(log, index) in appStore.state.requestLogs"
         :key="index"
-        class="px-0"
+        class="pa-0"
         v-show="
           appStore.state.filterTag
             ? log.type === appStore.state.filterTag
