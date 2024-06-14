@@ -71,31 +71,27 @@
             : true
         "
       >
-        <v-card class="pb-2" tile variant="text">
-          <v-toolbar color="transparent" density="compact">
-            <template #prepend>
-              <v-icon :color="log.type" :icon="icons[log.type]" />
-            </template>
+        <v-toolbar color="transparent" density="compact">
+          <template #prepend>
+            <v-icon :color="log.type" :icon="icons[log.type]" />
+          </template>
 
-            <v-toolbar-title color="primary" class="text-subtitle-1">
-              {{ log.date }}
-            </v-toolbar-title>
+          <v-toolbar-title color="primary" class="text-subtitle-1">
+            {{ log.date }}
+          </v-toolbar-title>
 
-            <template #append>
-              <v-btn
-                icon="mdi:mdi-close"
-                size="small"
-                @click="appStore.state.requestLogs.splice(index, 1)"
-              />
-            </template>
-          </v-toolbar>
+          <template #append>
+            <v-btn
+              icon="mdi:mdi-close"
+              size="small"
+              @click="appStore.state.requestLogs.splice(index, 1)"
+            />
+          </template>
+        </v-toolbar>
 
-          <v-card-text class="px-2 py-0">
-            <span v-html="log.text" />
-          </v-card-text>
-        </v-card>
+        <div class="px-4" v-html="log.text" />
 
-        <v-divider />
+        <v-divider class="my-1" />
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
