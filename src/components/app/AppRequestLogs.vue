@@ -58,23 +58,26 @@
       />
     </div>
 
-    <v-list density="compact">
+    <v-list class="px-1" density="compact">
+      <v-divider />
+
       <v-list-item
         v-for="(log, index) in appStore.state.requestLogs"
         :key="index"
+        class="px-0"
         v-show="
           appStore.state.filterTag
             ? log.type === appStore.state.filterTag
             : true
         "
       >
-        <v-card :color="log.type" variant="tonal">
-          <v-toolbar :color="log.type" density="compact">
+        <v-card class="pb-2" tile variant="text">
+          <v-toolbar color="transparent" density="compact">
             <template #prepend>
-              <v-icon :icon="icons[log.type]" />
+              <v-icon :color="log.type" :icon="icons[log.type]" />
             </template>
 
-            <v-toolbar-title class="text-subtitle-1">
+            <v-toolbar-title color="primary" class="text-subtitle-1">
               {{ log.date }}
             </v-toolbar-title>
 
@@ -87,10 +90,12 @@
             </template>
           </v-toolbar>
 
-          <v-card-text>
+          <v-card-text class="px-2 py-0">
             <span v-html="log.text" />
           </v-card-text>
         </v-card>
+
+        <v-divider />
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
