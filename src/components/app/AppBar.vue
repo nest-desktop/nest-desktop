@@ -135,7 +135,7 @@
     @click="appStore.state.logsOpen = !appStore.state.logsOpen"
     icon="mdi:mdi-menu-open"
     size="x-small"
-    title="Open request logs"
+    title="View request logs"
     variant="text"
   />
 </template>

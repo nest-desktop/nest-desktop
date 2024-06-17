@@ -40,7 +40,7 @@
         <v-btn
           icon="mdi:mdi-menu-close"
           size="small"
-          title="Close request logs"
+          title="Hide request logs"
           @click="appStore.state.logsOpen = false"
         />
       </template>
