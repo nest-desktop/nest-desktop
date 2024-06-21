@@ -36,7 +36,7 @@ export class NESTNodeParameter extends NodeParameter {
       } else {
         value = JSON.stringify(this.value);
       }
-    } else if (this.type.id.startsWith("numpy")) {
+    } else if (this.type.id.startsWith("np")) {
       const specs: string = this.specs
         .filter((spec: any) => !(spec.optional && spec.value === spec.default))
         .map((spec: any) => spec.value)

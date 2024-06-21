@@ -417,7 +417,7 @@ export class Parameter extends BaseObj {
       } else {
         value = JSON.stringify(this._value);
       }
-    } else if (this._type.id.startsWith("numpy")) {
+    } else if (this._type.id.startsWith("np")) {
       const specs: string = this.specs
         .filter(
           (spec: IParamTypeSpec) =>
