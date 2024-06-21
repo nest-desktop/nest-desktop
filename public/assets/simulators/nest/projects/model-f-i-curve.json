@@ -54,7 +54,7 @@
             "id": "amplitude",
             "value": 0,
             "type": {
-              "id": "numpy.arange",
+              "id": "np.arange",
               "specs": [
                 {
                   "id": "start",

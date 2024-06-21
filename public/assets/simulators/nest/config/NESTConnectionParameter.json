@@ -7,7 +7,7 @@
     },
     {
       "icon": "mdi-code-brackets",
-      "id": "numpy.arange",
+      "id": "np.arange",
       "label": "ranged array",
       "specs": [
         {
@@ -33,7 +33,7 @@
     },
     {
       "icon": "mdi-code-brackets",
-      "id": "numpy.linspace",
+      "id": "np.linspace",
       "label": "linear spaced array",
       "specs": [
         {
