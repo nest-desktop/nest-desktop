@@ -1,10 +1,13 @@
 <template>
   <ModelNav :modelDBStore />
 
-  <ModelBar :model color="nest-model">
+  <ModelBar :model="modelStore.model()" color="nest-model">
     <template #prependTabs>
       <v-tab
-        :to="{ name: 'nestModelDoc', params: { modelId: model.id } }"
+        :to="{
+          name: 'nestModelDoc',
+          params: { modelId: modelStore.model().id },
+        }"
         size="small"
         title="Read documentation"
       >
@@ -20,19 +23,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
-
-import { NESTModel } from "../helpers/model/model";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore = useNESTModelStore();
+const modelStore: TModelStore = useNESTModelStore();
 
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore = useNESTModelDBStore();
-
-const model = computed(() => modelStore.model as NESTModel);
+const modelDBStore: TModelDBStore = useNESTModelDBStore();
 </script>

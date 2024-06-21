@@ -1,9 +1,9 @@
 // nodeGroup.ts
 
-import { TConnection, TNetwork, TNode, TNodes } from "@/types";
+import { TConnection, TNetwork, TNode, TNodes } from '@/types';
 
-import { BaseObj } from "../common/base";
-import { NodeGroupView } from "./nodeGroupView";
+import { BaseObj } from '../common/base';
+import { NodeGroupView } from './nodeGroupView';
 
 export interface INodeGroupProps {
   nodes: number[];
@@ -168,6 +168,21 @@ export class NodeGroup extends BaseObj {
    */
   clean(): void {
     this.view.updateCentroid();
+  }
+
+  /**
+   * Clone this node group component.
+   * @return node group component.
+   */
+  clone(): NodeGroup {
+    this.logger.trace("clone");
+
+    const nodeIndices = this.nodes.map(
+      (node: NodeGroup | TNode) => node.clone().idx
+    );
+    const nodeGroupProps = this.toJSON();
+    nodeGroupProps.nodes = nodeIndices;
+    return this.network.nodes.addNodeGroup({ ...this.toJSON() });
   }
 
   /**

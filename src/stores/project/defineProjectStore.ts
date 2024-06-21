@@ -9,30 +9,52 @@ import router from "@/router";
 import { TProject } from "@/types";
 import { truncate } from "@/utils/truncate";
 
+import { TProjectDBStore } from "./defineProjectDBStore";
 import { useProjectDBStore } from "./projectDBStore";
 import { useProjectViewStore } from "./projectViewStore";
 
+interface IProjectStoreState {
+  bottomNav: {
+    height: number;
+    active: boolean;
+  };
+  code: string;
+  controller: {
+    open: boolean;
+    view: string;
+    width: number;
+  };
+  project: TProject;
+  projectId: string;
+  tab: {
+    activityView: string;
+    view: string;
+  };
+}
+
 type Class<T> = new (...args: any) => T;
+
+export type TProjectStore = Store<string, any>;
 
 export function defineProjectStore(
   args: {
     Project: Class<TProject>;
     loggerMinLevel?: number;
     simulator: string;
-    useProjectDBStore: Store<string, any>;
+    useProjectDBStore: TProjectDBStore;
   } = {
     Project: BaseProject,
     simulator: "base",
     useProjectDBStore,
   }
-): Store<any, any> {
+): TProjectStore {
   const logger = mainLogger.getSubLogger({
     minLevel: args.loggerMinLevel || 3,
     name: args.simulator + " project store",
   });
 
   return defineStore(args.simulator + "-project", () => {
-    const state = reactive({
+    const state = reactive<IProjectStoreState>({
       bottomNav: {
         height: 200,
         active: false,
@@ -51,7 +73,7 @@ export function defineProjectStore(
       },
     });
 
-    const projectDBStore = args.useProjectDBStore();
+    const projectDBStore: TProjectDBStore = args.useProjectDBStore();
 
     /**
      * Initialize project store.

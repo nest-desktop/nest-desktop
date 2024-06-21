@@ -1,20 +1,29 @@
 // node.ts
 
-import { onlyUnique } from '@/helpers/common/array';
-import { Parameter } from '@/helpers/common/parameter';
-import { ModelParameter } from '@/helpers/model/modelParameter';
-import { BaseNode, INodeProps } from '@/helpers/node/node';
-import { INodeParamProps, NodeParameter } from '@/helpers/node/nodeParameter';
-import { INodeRecordProps, NodeRecord } from '@/helpers/node/nodeRecord';
+import { onlyUnique } from "@/helpers/common/array";
+import { Parameter } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 
-import { NESTConnection } from '../connection/connection';
-import { NESTCopyModel } from '../model/copyModel';
-import { NESTModel } from '../model/model';
-import { NESTNetwork } from '../network/network';
-import { INESTNodeCompartmentProps, NESTNodeCompartment } from './nodeCompartment/nodeCompartment';
-import { INESTNodeReceptorProps, NESTNodeReceptor } from './nodeReceptor/nodeReceptor';
-import { INESTNodeSpatialProps, NESTNodeSpatial } from './nodeSpatial/nodeSpatial';
-import { NESTNodes } from './nodes';
+import { NESTConnection } from "../connection/connection";
+import { NESTCopyModel } from "../model/copyModel";
+import { NESTModel } from "../model/model";
+import { NESTNetwork } from "../network/network";
+import {
+  INESTNodeCompartmentProps,
+  NESTNodeCompartment,
+} from "./nodeCompartment/nodeCompartment";
+import {
+  INESTNodeReceptorProps,
+  NESTNodeReceptor,
+} from "./nodeReceptor/nodeReceptor";
+import {
+  INESTNodeSpatialProps,
+  NESTNodeSpatial,
+} from "./nodeSpatial/nodeSpatial";
+import { NESTNodes } from "./nodes";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -147,8 +156,9 @@ export class NESTNode extends BaseNode {
     // Get models of the same element type.
     const elementType: string = this.model.elementType;
 
-    const models: NESTModel[] =
-      this.modelDBStore.getModelsByElementType(elementType);
+    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(
+      elementType
+    ) as NESTModel[];
 
     return models;
   }
@@ -239,14 +249,6 @@ export class NESTNode extends BaseNode {
     receptorsProps.forEach((receptorProps: INESTNodeReceptorProps) =>
       this.addReceptor(receptorProps)
     );
-  }
-
-  /**
-   * Clone this node component.
-   * @return nest node object
-   */
-  override clone(): NESTNode {
-    return new NESTNode(this.nodes, { ...this.toJSON() });
   }
 
   /**

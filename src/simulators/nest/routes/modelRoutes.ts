@@ -1,6 +1,7 @@
 // modelRoutes.ts
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 
@@ -12,7 +13,7 @@ const logger = mainLogger.getSubLogger({
 const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
-  const modelStore = useNESTModelStore();
+  const modelStore: TModelStore = useNESTModelStore();
   if (to.params.modelId) {
     modelStore.state.modelId = to.params.modelId;
   }
@@ -24,7 +25,7 @@ const modelBeforeEnter = (to: any) => {
 const modelRedirect = (to: any) => {
   logger.trace("redirect to model:", to.params.modelId);
 
-  const modelStore = useNESTModelStore();
+  const modelStore: TModelStore = useNESTModelStore();
   if (to.params.modelId) {
     modelStore.state.modelId = to.params.modelId;
   }

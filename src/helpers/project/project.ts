@@ -1,8 +1,8 @@
 // project.ts
 
-import { Store } from "pinia";
 import { nextTick } from "vue";
 
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { TActivityGraph, TNetwork, TProject, TSimulation } from "@/types";
@@ -35,7 +35,8 @@ export class BaseProject extends BaseObj {
   private _description: string; // description about the project
   private _doc: any; // raw data of the database
   private _id: string; // id of the project
-  private _modelDBStore: Store<string, any>;
+  // @ts-ignore: Property '_modelDBStore' has no initializer and is not definitely assigned in the constructor.
+  private _modelDBStore: TModelDBStore;
   private _name: string; // project name
   private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
@@ -132,11 +133,11 @@ export class BaseProject extends BaseObj {
     return this._id;
   }
 
-  get modelDBStore(): Store<string, any> {
+  get modelDBStore(): TModelDBStore {
     return this._modelDBStore;
   }
 
-  set modelDBStore(value: any) {
+  set modelDBStore(value: TModelDBStore) {
     this._modelDBStore = value;
   }
 

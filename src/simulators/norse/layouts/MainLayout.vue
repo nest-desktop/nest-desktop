@@ -11,13 +11,16 @@ import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
 
+import { TBackendStore } from "@/stores/defineBackendStore";
+import { TModelStore } from "@/stores/model/defineModelStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { useNorseModelStore } from "../stores/model/modelStore";
 import { useNorseProjectStore } from "../stores/project/projectStore";
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 
-const modelStore = useNorseModelStore();
-const norseSimulatorStore = useNorseSimulatorStore();
-const projectStore = useNorseProjectStore();
+const modelStore: TModelStore = useNorseModelStore();
+const norseSimulatorStore: TBackendStore = useNorseSimulatorStore();
+const projectStore: TProjectStore = useNorseProjectStore();
 
 const navItems = [
   {

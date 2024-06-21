@@ -12,9 +12,10 @@ import { computed } from "vue";
 
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 import { BaseActivityGraph } from "@/helpers/activity/activityGraph";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { useNorseProjectStore } from "../stores/project/projectStore";
-const projectStore = useNorseProjectStore();
+const projectStore: TProjectStore = useNorseProjectStore();
 
 const graph = computed(
   () => projectStore.state.project.activityGraph as BaseActivityGraph

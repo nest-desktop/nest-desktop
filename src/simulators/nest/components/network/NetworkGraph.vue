@@ -125,6 +125,38 @@ onBeforeUnmount(() => {
     stroke-linecap: round;
   }
 
+  .connection {
+    cursor: pointer;
+  }
+
+  .dragline {
+    pointer-events: none;
+  }
+
+  .node:not(.nodeGroup) {
+    text {
+      font-size: 12px;
+      opacity: var(--v-medium-emphasis-opacity);
+      pointer-events: none;
+      text-transform: uppercase !important;
+    }
+
+    .shape {
+      cursor: pointer;
+      fill: rgb(var(--v-theme-background));
+    }
+  }
+
+  .nodeGroup {
+    path {
+      cursor: pointer;
+    }
+
+    .shape {
+      cursor: pointer;
+    }
+  }
+
   .synMarker {
     text {
       font-size: 4px;
@@ -139,37 +171,6 @@ onBeforeUnmount(() => {
     text.toLeft {
       text-anchor: start;
       transform: rotate(180deg);
-    }
-  }
-
-  .connection {
-    cursor: pointer;
-  }
-
-  .dragline {
-    pointer-events: none;
-  }
-
-  .node:not(.nodeGroup) {
-    .shape {
-      cursor: pointer;
-      fill: rgb(var(--v-theme-background));
-    }
-
-    text {
-      font-size: 12px;
-      opacity: var(--v-medium-emphasis-opacity);
-      pointer-events: none;
-      text-transform: uppercase !important;
-    }
-  }
-
-  .nodeGroup {
-    text {
-      opacity: 1;
-    }
-    path {
-      cursor: pointer;
     }
   }
 }

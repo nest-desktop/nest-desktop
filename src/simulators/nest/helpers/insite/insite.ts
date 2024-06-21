@@ -1,13 +1,13 @@
 // insite.ts
 
 import { AxiosResponse } from "axios";
-import { StateTree, Store } from "pinia";
 
 import { IActivityProps } from "@/helpers/activity/activity";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { notifySuccess } from "@/helpers/common/dialog";
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { TBackendStore } from "@/stores/defineBackendStore";
 
 import { useInsiteAccessStore } from "../../stores/backends/insiteAccessStore";
 import { NESTProject } from "../project/project";
@@ -64,7 +64,7 @@ export class Insite {
     };
   }
 
-  get insiteAccess(): Store<string, StateTree> {
+  get insiteAccess(): TBackendStore {
     const insiteAccessStore = useInsiteAccessStore();
     return insiteAccessStore;
   }

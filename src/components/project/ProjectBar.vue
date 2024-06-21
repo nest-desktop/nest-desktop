@@ -38,15 +38,14 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
-
 import NetworkHistory from "../network/NetworkHistory.vue";
 import SimulationButton from "../simulation/SimulationButton.vue";
 
 import { useAppStore } from "@/stores/appStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 const appStore = useAppStore();
 
-defineProps<{ projectStore: Store<any, any> }>();
+defineProps<{ projectStore: TProjectStore }>();
 
 const tabItems = [
   {

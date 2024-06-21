@@ -2,6 +2,7 @@
 
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
@@ -98,7 +99,7 @@ export class NESTSynapse extends BaseSynapse {
     this.modelChanges();
   }
 
-  get modelDBStore(): any {
+  get modelDBStore(): TModelDBStore {
     return this.connection.connections.network.project.modelDBStore;
   }
 
@@ -124,8 +125,9 @@ export class NESTSynapse extends BaseSynapse {
 
   get models(): NESTModel[] {
     const elementType: string = this.model.elementType;
-    const models: NESTModel[] =
-      this.modelDBStore.getModelsByElementType(elementType);
+    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(
+      elementType
+    ) as NESTModel[];
 
     // const modelsCopied: NESTCopyModel[] =
     //   this.connection.network.modelsCopied.filterByElementType(elementType);
@@ -192,7 +194,7 @@ export class NESTSynapse extends BaseSynapse {
   getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
 
-    return this.modelDBStore.getModel(modelId);
+    return this.modelDBStore.getModel(modelId) as NESTModel;
   }
 
   /**

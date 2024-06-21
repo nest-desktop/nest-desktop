@@ -1,32 +1,32 @@
 // simulation.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from 'axios';
 
-import { BaseSimulation } from "@/helpers/simulation/simulation";
-import { notifyError } from "@/helpers/common/dialog";
+import { notifyError } from '@/helpers/common/dialog';
+import { BaseSimulation } from '@/helpers/simulation/simulation';
 
-import { NESTProject } from "../project/project";
-import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
-import {
-  INESTSimulationKernelProps,
-  NESTSimulationKernel,
-} from "./simulationKernel";
-import { useNESTSimulatorStore } from "../../stores/backends/nestSimulatorStore";
+import { useNESTSimulatorStore } from '../../stores/backends/nestSimulatorStore';
+import { NESTProject } from '../project/project';
+import { INESTSimulationCodeProps, NESTSimulationCode } from './simulationCode';
+import { INESTSimulationKernelProps, NESTSimulationKernel } from './simulationKernel';
 
 export interface INESTSimulationProps {
   code?: INESTSimulationCodeProps;
   kernel?: INESTSimulationKernelProps;
   time?: number;
+  modules?: string[];
 }
 
 export class NESTSimulation extends BaseSimulation {
   private _kernel: NESTSimulationKernel; // simulation kernel
+  private _modules: string[];
 
   constructor(
     project: NESTProject,
     simulationProps: INESTSimulationProps = {}
   ) {
     super(project, simulationProps);
+    this._modules = simulationProps.modules || [];
     this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
   }
 
@@ -38,8 +38,17 @@ export class NESTSimulation extends BaseSimulation {
     return this._code as NESTSimulationCode;
   }
 
-  override get project(): NESTProject {
-    return this._project as NESTProject;
+  get kernel(): NESTSimulationKernel {
+    return this._kernel;
+  }
+
+  get modules(): string[] {
+    return this._modules;
+  }
+
+  set modules(value: string[]) {
+    this._modules = value;
+    this.changes();
   }
 
   get nestSimulator() {
@@ -47,8 +56,8 @@ export class NESTSimulation extends BaseSimulation {
     return nestSimulatorStore;
   }
 
-  get kernel(): NESTSimulationKernel {
-    return this._kernel;
+  override get project(): NESTProject {
+    return this._project as NESTProject;
   }
 
   override beforeSimulation(): void {
@@ -191,6 +200,9 @@ export class NESTSimulation extends BaseSimulation {
     };
     if (this.code.state.customBlocks) {
       simulationProps.code = this.code.toJSON();
+    }
+    if (this._modules.length > 0) {
+      simulationProps.modules = this._modules;
     }
     return simulationProps;
   }

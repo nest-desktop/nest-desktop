@@ -4,7 +4,6 @@
  * Automatically included in `./src/main.ts`
  */
 
-import { StateTree, Store } from "pinia";
 import { App } from "vue";
 import { RouteRecordRaw } from "vue-router";
 import { IconSet } from "vuetify";
@@ -14,6 +13,7 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
 import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
+import { TBackendStore } from "@/stores/defineBackendStore";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
@@ -26,7 +26,7 @@ const logger = mainLogger.getSubLogger({
 
 export interface ISimulatorProps {
   autocomplete: any[];
-  backends: Record<string, Store<string, StateTree>>;
+  backends: Record<string, TBackendStore>;
   configNames: string[];
   databases: string[];
   iconSet: IconSet;

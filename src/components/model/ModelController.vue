@@ -43,12 +43,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
-defineProps<{ modelStore: Store<any, any> }>();
+defineProps<{ modelStore: TModelStore }>();
 
 const items = [
   {

@@ -43,13 +43,14 @@
 import { computed } from "vue";
 
 import NodeViewer from "@/components/node/NodeViewer.vue";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import NetworkGraph from "../components/network/NetworkGraph.vue";
 import { NESTNetwork } from "../helpers/network/network";
 import { NESTNode } from "../helpers/node/node";
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore = useNESTProjectStore();
+const projectStore: TProjectStore = useNESTProjectStore();
 
 const network = computed(
   () => projectStore.state.project.network as NESTNetwork

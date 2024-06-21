@@ -1,6 +1,8 @@
 // projectRoutes.ts
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { truncate } from "@/utils/truncate";
 
 import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
@@ -13,8 +15,8 @@ const logger = mainLogger.getSubLogger({
 
 const loadProject = (projectId?: string) => {
   logger.trace("load project:", truncate(projectId || ""));
-  const projectStore = usePyNNProjectStore();
-  const projectDBStore = usePyNNProjectDBStore();
+  const projectStore: TProjectStore = usePyNNProjectStore();
+  const projectDBStore: TProjectDBStore = usePyNNProjectDBStore();
 
   if (projectId) {
     if (projectDBStore.state.initialized) {
@@ -28,7 +30,7 @@ const loadProject = (projectId?: string) => {
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter project route:", to.path);
 
-  const projectStore = usePyNNProjectStore();
+  const projectStore: TProjectStore = usePyNNProjectStore();
   loadProject(to.params.projectId);
 
   const path = to.path.split("/");
@@ -38,7 +40,7 @@ const projectBeforeEnter = (to: any) => {
 const projectNew = () => {
   logger.trace("create a new pynn project");
 
-  const projectStore = usePyNNProjectStore();
+  const projectStore: TProjectStore = usePyNNProjectStore();
   projectStore.loadProject();
 
   return {
@@ -53,7 +55,7 @@ const projectNew = () => {
 const projectRedirect = (to: any) => {
   logger.trace("redirect to project:", truncate(to.params.projectId || ""));
 
-  const projectStore = usePyNNProjectStore();
+  const projectStore: TProjectStore = usePyNNProjectStore();
   loadProject(to.params.projectId);
 
   return {

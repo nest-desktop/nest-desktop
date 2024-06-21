@@ -1,14 +1,25 @@
 <template>
   <v-container>
-    <v-card>
-      <v-card-title>Editor</v-card-title>
-      <v-card-subtitle>{{ model.label }}</v-card-subtitle>
+    <v-card title="Model editor">
+      <v-text-field
+        class="ma-2"
+        density="compact"
+        hide-details
+        label="Model id"
+        v-model="model.id"
+        variant="outlined"
+      />
 
-      <v-card-text>Text</v-card-text>
+      <v-text-field
+        class="ma-2"
+        density="compact"
+        hide-details
+        label="Model label"
+        v-model="model.label"
+        variant="outlined"
+      />
 
-      <v-card-actions>
-        <v-btn>Action</v-btn>
-      </v-card-actions>
+      <NESTMLModelEditor :modelId="model.id" />
     </v-card>
   </v-container>
 </template>
@@ -16,9 +27,12 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import NESTMLModelEditor from "../components/model/NESTMLModelEditor.vue";
 import { NESTModel } from "../helpers/model/model";
+import { TModelStore } from "@/stores/model/defineModelStore";
+
 import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore = useNESTModelStore();
+const modelStore: TModelStore = useNESTModelStore();
 
 const model = computed(() => modelStore.model as NESTModel);
 </script>

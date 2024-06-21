@@ -35,15 +35,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
 import { computed } from "vue";
 
 import { TSimulation } from "@/types";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 const props = defineProps<{
   disabled?: boolean;
-  projectStore: Store<any, any>;
+  projectStore: TProjectStore;
   simulation: TSimulation;
 }>();
 

@@ -89,7 +89,7 @@
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controller.view === 'network'">
         <slot name="network">
-          <NetworkParamEditor :network="project.network">
+          <NetworkParamEditor :network="(project.network as BaseNetwork)">
             <template #model><slot name="model" /></template>
             <template #nodes><slot name="nodes" /></template>
           </NetworkParamEditor>
@@ -98,7 +98,9 @@
 
       <template v-else-if="projectStore.state.controller.view === 'kernel'">
         <slot name="simulationKernel">
-          <SimulationKernelEditor :simulation="project.simulation" />
+          <SimulationKernelEditor
+            :simulation="(project.simulation as BaseSimulation)"
+          />
         </slot>
       </template>
 
@@ -117,20 +119,22 @@
 
       <template v-else-if="projectStore.state.controller.view === 'code'">
         <slot name="simulationCodeEditor">
-          <SimulationCodeEditor :simulation="project.simulation" />
+          <SimulationCodeEditor
+            :simulation="(project.simulation as BaseSimulation)"
+          />
         </slot>
       </template>
 
       <template v-else-if="projectStore.state.controller.view === 'activity'">
         <slot name="activityController">
           <ActivityChartController
-            :graph="project.activityGraph.activityChartGraph"
+            :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
           />
         </slot>
       </template>
 
       <template v-else-if="projectStore.state.controller.view === 'stats'">
-        <ActivityStats :activities="project.activities" />
+        <ActivityStats :activities="(project.activities as Activities)" />
       </template>
     </div>
   </v-navigation-drawer>
@@ -145,7 +149,9 @@
     <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />
 
     <slot name="simulationCodeMirror">
-      <SimulationCodeMirror :simulation="project.simulation" />
+      <SimulationCodeMirror
+        :simulation="(project.simulation as BaseSimulation)"
+      />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -153,7 +159,6 @@
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
 import { LanguageSupport } from "@codemirror/language";
-import { Store } from "pinia";
 import { computed, nextTick } from "vue";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -164,15 +169,22 @@ import NetworkParamEditor from "../network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
+import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { Activities } from "@/helpers/activity/activities";
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { BaseNetwork } from "@/helpers/network/network";
 const navStore = useNavStore();
 
-const props = defineProps<{ projectStore: Store<any, any> }>();
+const props = defineProps<{
+  projectStore: TProjectStore;
+}>();
 const projectStore = computed(() => props.projectStore);
 const project = computed(() => projectStore.value.state.project);
 
@@ -180,28 +192,38 @@ const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)
 );
 
-const controllerItems = [
+interface IControllerItem {
+  id: string;
+  icon: {
+    class: string;
+    icon: string;
+  };
+  show?: string;
+  title: string;
+}
+
+const controllerItems: IControllerItem[] = [
   {
     id: "network",
     icon: {
-      icon: "network:network",
       class: "",
+      icon: "network:network",
     },
     title: "Edit network",
   },
   {
     id: "kernel",
     icon: {
-      icon: "mdi:mdi-engine-outline",
       class: "",
+      icon: "mdi:mdi-engine-outline",
     },
     title: "Edit kernel",
   },
   {
     id: "raw",
     icon: {
-      icon: "mdi:mdi-code-json",
       class: "",
+      icon: "mdi:mdi-code-json",
     },
     show: "dev",
     title: "View raw data",
@@ -210,16 +232,16 @@ const controllerItems = [
   {
     id: "activity",
     icon: {
-      icon: "mdi:mdi-border-style",
       class: "mdi-flip-v",
+      icon: "mdi:mdi-border-style",
     },
     title: "Configure activity",
   },
   {
     id: "stats",
     icon: {
-      icon: "mdi:mdi-table-large",
       class: "",
+      icon: "mdi:mdi-table-large",
     },
     title: "View statistics",
   },

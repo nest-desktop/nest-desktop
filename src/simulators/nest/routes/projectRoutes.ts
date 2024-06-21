@@ -1,6 +1,8 @@
 // projectRoutes.ts
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { truncate } from "@/utils/truncate";
 
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
@@ -14,8 +16,8 @@ const logger = mainLogger.getSubLogger({
 
 const loadProject = (projectId?: string) => {
   logger.trace("load project:", truncate(projectId || ""));
-  const projectStore = useNESTProjectStore();
-  const projectDBStore = useNESTProjectDBStore();
+  const projectStore: TProjectStore = useNESTProjectStore();
+  const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
 
   if (projectId) {
     if (projectDBStore.state.initialized) {
@@ -29,7 +31,7 @@ const loadProject = (projectId?: string) => {
 const projectBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
-  const projectStore = useNESTProjectStore();
+  const projectStore: TProjectStore = useNESTProjectStore();
   loadProject(to.params.projectId);
 
   if (projectStore.state.project) {
@@ -46,7 +48,7 @@ const projectBeforeEnter = (to: any) => {
 const projectNew = () => {
   logger.trace("create a new nest project");
 
-  const projectStore = useNESTProjectStore();
+  const projectStore: TProjectStore = useNESTProjectStore();
   projectStore.loadProject();
 
   return {
@@ -61,7 +63,7 @@ const projectNew = () => {
 const projectRedirect = (to: any) => {
   logger.trace("redirect to project:", truncate(to.params.projectId || ""));
 
-  const projectStore = useNESTProjectStore();
+  const projectStore: TProjectStore = useNESTProjectStore();
   loadProject(to.params.projectId);
 
   if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {

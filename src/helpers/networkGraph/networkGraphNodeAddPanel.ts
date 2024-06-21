@@ -8,12 +8,6 @@ import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
-interface IModelProps {
-  favorite: string;
-  label: string;
-  title: string;
-}
-
 export class NetworkGraphNodeAddPanel extends BaseObj {
   private _elementTypes: string[] = ["recorder", "neuron", "stimulator"];
   private _selector: Selection<any, any, any, any>;
@@ -150,7 +144,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     panel: Selection<any, any, any, any>,
     idx: number,
     elementType: string,
-    model: IModelProps
+    model: TModel
   ): Selection<any, any, any, any> {
     const layer = Math.floor(idx / 3);
     const idxOffset = this._elementTypes.indexOf(elementType) * 3 + layer * 6;
@@ -164,8 +158,8 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       idx + idxOffset,
       9,
       "model",
-      model.title,
-      model.label
+      model.id,
+      model.abbreviation
     );
 
     modelPanel.select(".menuItem").on("mouseup", () => {
@@ -176,7 +170,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
       this._workspace.animationOff();
 
-      this.network.createNode(model.title, {
+      this.network.createNode(model.id, {
         elementType,
         position: Object.assign({}, this.position),
       });
@@ -280,19 +274,15 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       .attr("class", "models")
       .style("display", "none");
 
-    const models: IModelProps[] = this.network?.project.modelDBStore
-      .getModelsByElementType(elementType)
-      .map((model: TModel) => ({
-        favorite: model.favorite,
-        title: model.id,
-        label: model.abbreviation,
-      }));
-
-    models
-      .filter((model: IModelProps) => model.favorite || !favoriteOnly)
-      .forEach((model: IModelProps, modelIdx: number) =>
-        this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model)
-      );
+    if (this.network) {
+      const models: TModel[] =
+        this.network.project.modelDBStore.getModelsByElementType(elementType);
+      models
+        .filter((model: TModel) => model.favorite || !favoriteOnly)
+        .forEach((model: TModel, modelIdx: number) =>
+          this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model)
+        );
+    }
 
     // Select default model by element type.
     panel.select(".menuItem").on("mouseup", () => {

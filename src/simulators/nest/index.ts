@@ -1,6 +1,8 @@
 // nest/index.ts
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 import { ISimulatorProps } from "../";
 import { nestCompletions } from "./codemirror/nestCompletion";
@@ -43,8 +45,8 @@ export const nest: ISimulatorProps = {
     logger.trace("init");
 
     // Initialize stores.
-    const modelDBStore = useNESTModelDBStore();
-    const projectDBStore = useNESTProjectDBStore();
+    const modelDBStore: TModelDBStore = useNESTModelDBStore();
+    const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
     // Initialize backend NEST Simulator.

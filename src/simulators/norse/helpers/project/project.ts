@@ -1,16 +1,17 @@
 // project.ts
 
-import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { nextTick } from "vue";
 
-import { NorseNetwork, INorseNetworkProps } from "../network/network";
+import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
+
+import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
+import { INorseNetworkProps, NorseNetwork } from "../network/network";
 import { NorseNode } from "../node/node";
 import {
-  NorseSimulation,
   INorseSimulationProps,
+  NorseSimulation,
 } from "../simulation/simulation";
-import { nextTick } from "vue";
-import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 export interface INorseProjectProps extends IProjectProps {
   network?: INorseNetworkProps;

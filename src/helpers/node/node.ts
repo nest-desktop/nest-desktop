@@ -1,7 +1,6 @@
 // node.ts
 
-import { StateTree, Store } from "pinia";
-
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import {
   TConnection,
   TModel,
@@ -49,7 +48,7 @@ export class BaseNode extends BaseObj {
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
+    super({ config: { name: "Node" }, logger: { settings: { minLevel: 1 } } });
 
     this._nodes = nodes;
     this._modelId = nodeProps.model || "";
@@ -199,7 +198,7 @@ export class BaseNode extends BaseObj {
     return this._model as BaseModel;
   }
 
-  get modelDBStore(): Store<string, StateTree> {
+  get modelDBStore(): TModelDBStore {
     return this.nodes.network.project.modelDBStore;
   }
 
@@ -429,10 +428,17 @@ export class BaseNode extends BaseObj {
 
   /**
    * Clone this node component.
-   * @return cloned node component
+   * @return cloned node component.
    */
   clone(): TNode {
-    return new BaseNode(this.nodes, { ...this.toJSON() });
+    this.logger.trace("clone");
+
+    const nodeProps = this.toJSON();
+    if (nodeProps.view) {
+      nodeProps.view.position.y += 50;
+      nodeProps.view.color = undefined;
+    }
+    return this.nodes.addNode({ ...nodeProps });
   }
 
   /**
@@ -462,7 +468,7 @@ export class BaseNode extends BaseObj {
   /**
    * Get model.
    */
-  getModel(modelId: string): TModel {
+  getModel(modelId: string): TModel | undefined {
     this.logger.trace("get model:", modelId);
 
     return this.modelDBStore.getModel(modelId);

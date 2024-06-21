@@ -19,16 +19,19 @@ import {
 export interface INESTModelProps extends IModelProps {
   compartmentParams?: IParamProps[];
   receptors?: INESTModelReceptorProps[];
+  nestmlScript?: string;
 }
 
 export class NESTModel extends BaseModel {
   private _compartmentParams: Record<string, NESTModelCompartmentParameter> =
     {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
+  private _nestmlScript: string;
   private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
 
   constructor(modelProps: INESTModelProps) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
+    this._nestmlScript = modelProps.nestmlScript || "";
   }
 
   get compartmentParams(): Record<string, NESTModelCompartmentParameter> {
@@ -64,6 +67,10 @@ export class NESTModel extends BaseModel {
    */
   get isWeightRecorder(): boolean {
     return this.id === "weight_recorder";
+  }
+
+  get nestmlScript(): string {
+    return this._nestmlScript;
   }
 
   get receptors(): Record<string, NESTModelReceptor> {

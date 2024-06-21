@@ -176,13 +176,14 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, ref } from "vue";
-import { Store } from "pinia";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import ProjectMenu from "./ProjectMenu.vue";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProject } from "@/types";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 // @ts-ignore - 'truncate' is declared but its value is never read.
 import { truncate } from "@/utils/truncate";
 
@@ -193,8 +194,8 @@ import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
 const props = defineProps<{
-  modelDBStore: Store<any, any>;
-  projectDBStore: Store<any, any>;
+  modelDBStore: TModelDBStore;
+  projectDBStore: TProjectDBStore;
 }>();
 
 const projectDBStore = computed(() => props.projectDBStore);

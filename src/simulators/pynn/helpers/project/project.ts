@@ -2,8 +2,8 @@
 
 import { BaseProject, IProjectProps } from "@/helpers/project/project";
 
-import { PyNNSimulation, IPyNNSimulationProps } from "../simulation/simulation";
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
+import { IPyNNSimulationProps, PyNNSimulation } from "../simulation/simulation";
 
 export interface IPyNNProjectProps extends IProjectProps {
   simulation?: IPyNNSimulationProps;

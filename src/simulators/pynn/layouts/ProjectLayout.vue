@@ -12,13 +12,16 @@
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
+import { TBackendStore } from "@/stores/defineBackendStore";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore = usePyNNModelDBStore();
+const modelDBStore: TModelDBStore = usePyNNModelDBStore();
 
 import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore = usePyNNProjectDBStore();
+const projectDBStore: TBackendStore = usePyNNProjectDBStore();
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore = usePyNNProjectStore();
+const projectStore: TProjectStore = usePyNNProjectStore();
 </script>

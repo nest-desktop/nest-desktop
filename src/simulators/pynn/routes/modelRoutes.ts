@@ -1,6 +1,7 @@
 // modelRoute.ts
 
 import { logger as mainLogger } from "@/helpers/common/logger";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { usePyNNModelStore } from "../stores/model/modelStore";
 
@@ -11,7 +12,7 @@ const logger = mainLogger.getSubLogger({
 const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
-  const modelStore = usePyNNModelStore();
+  const modelStore: TModelStore = usePyNNModelStore();
   if (to.params.modelId) {
     modelStore.state.modelId = to.params.modelId;
   }
@@ -23,7 +24,7 @@ const modelBeforeEnter = (to: any) => {
 const modelRedirect = (to: any) => {
   logger.trace("Redirect to model:", to.params.modelId);
 
-  const modelStore = usePyNNModelStore();
+  const modelStore: TModelStore = usePyNNModelStore();
 
   if (to.params.modelId) {
     modelStore.state.modelId = to.params.modelId;

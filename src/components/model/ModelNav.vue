@@ -41,35 +41,40 @@
     </v-toolbar>
 
     <v-list density="compact" lines="two" nav>
-      <v-list-item
-        :key="index"
-        :subtitle="model.elementType"
-        :title="model.label"
-        :to="{
-          name: appStore.state.simulator + 'Model',
-          params: { modelId: model.id },
-        }"
-        v-for="(model, index) in models"
-      >
-        <template #append>
-          <v-btn
-            @click.stop="(e: MouseEvent) => e.preventDefault()"
-            class="list-item-menu"
-            icon="mdi:mdi-dots-vertical"
-            size="x-small"
-            variant="text"
-          />
-        </template>
-      </v-list-item>
+      <template v-for="(model, index) in models">
+        <v-hover v-slot="{ isHovering, props }">
+          <v-list-item
+            :key="index"
+            :subtitle="model.elementType"
+            :title="model.label"
+            :to="{
+              name: appStore.state.simulator + 'Model',
+              params: { modelId: model.id },
+            }"
+            v-bind="props"
+          >
+            <template #append>
+              <v-btn
+                :color="isHovering ? 'primary' : 'transparent'"
+                @click.stop="(e: MouseEvent) => e.preventDefault()"
+                class="list-item-menu"
+                icon="mdi:mdi-dots-vertical"
+                size="x-small"
+                variant="text"
+              />
+            </template>
+          </v-list-item>
+        </v-hover>
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
 import { computed, nextTick, ref } from "vue";
 
 import { TModel } from "@/types";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -77,7 +82,7 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
 
-const props = defineProps<{ modelDBStore: Store<any, any> }>();
+const props = defineProps<{ modelDBStore: TModelDBStore }>();
 const models = computed(() =>
   props.modelDBStore.state.models.filter((model: TModel) =>
     model.label.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())

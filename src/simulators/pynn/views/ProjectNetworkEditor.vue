@@ -11,9 +11,10 @@ import { computed } from "vue";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import { BaseNetwork } from "@/helpers/network/network";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore = usePyNNProjectStore();
+const projectStore: TProjectStore = usePyNNProjectStore();
 
 const network = computed(
   () => projectStore.state.project.network as BaseNetwork

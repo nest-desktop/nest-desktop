@@ -293,7 +293,7 @@ const select = (props: Record<string, unknown>, callback?: () => void) => {
     } else {
       state.items =
         node.value.network.project.modelDBStore.getModelsByElementType(
-          props.value
+          state.elementType
         );
     }
   } else {

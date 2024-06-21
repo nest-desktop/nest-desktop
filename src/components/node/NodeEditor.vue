@@ -264,7 +264,7 @@ const select = (props: Record<string, unknown>, callback?: () => void) => {
     state.elementType = props.value as string;
     state.items =
       node.value.network.project.modelDBStore.getModelsByElementType(
-        props.value
+        state.elementType
       );
   } else {
     node.value.modelId = props.value as string;

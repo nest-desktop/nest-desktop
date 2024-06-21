@@ -229,16 +229,17 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
 import { INESTCopyModelProps } from "@/simulators/nest/helpers/model/copyModel";
 import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
 import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
@@ -260,9 +261,10 @@ interface IGithubTree {
 }
 
 const props = defineProps<{
-  modelDBStore: Store<any, any>;
-  projectDBStore: Store<any, any>;
+  modelDBStore: TModelDBStore;
+  projectDBStore: TProjectDBStore;
 }>();
+
 const modelDBStore = computed(() => props.modelDBStore);
 const projectDBStore = computed(() => props.projectDBStore);
 

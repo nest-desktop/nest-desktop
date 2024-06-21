@@ -67,12 +67,13 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
 import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProject } from "@/types";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
@@ -83,7 +84,7 @@ interface IDeleteProps {
 }
 
 const props = defineProps<{
-  store: Store<any, any>;
+  store: TModelDBStore | TProjectDBStore;
 }>();
 const store = computed(() => props.store);
 

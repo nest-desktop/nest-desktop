@@ -5,14 +5,9 @@ import numpy
 {{ #simulation.code.resetKernel }}
 
 nest.ResetKernel()
-{{ /simulation.code.resetKernel }}
-{{ #simulation.code.runSimulationInsite }}
-
-try:
-  nest.Install('insitemodule')
-except:
-  pass
-{{ /simulation.code.runSimulationInsite }}
+{{ /simulation.code.resetKernel }}{{ #simulation.modules }}
+nest.Install("{{.}}")
+{{ /simulation.modules }}
 {{ #simulation.code.setKernelStatus }}
 
 # Set simulation kernel

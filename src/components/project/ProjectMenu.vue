@@ -63,9 +63,9 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
-import { Store } from "pinia";
 
 import { TProject } from "@/types";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -76,7 +76,7 @@ const route = useRoute();
 
 const props = defineProps<{
   project: TProject;
-  projectDBStore: Store<any, any>;
+  projectDBStore: TProjectDBStore;
 }>();
 
 const project = computed(() => props.project);

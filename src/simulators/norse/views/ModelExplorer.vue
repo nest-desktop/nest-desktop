@@ -17,9 +17,10 @@
 import { computed } from "vue";
 
 import { NorseModel } from "../helpers/model/model";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNorseModelStore } from "../stores/model/modelStore";
-const modelStore = useNorseModelStore();
+const modelStore: TModelStore = useNorseModelStore();
 
 const model = computed(() => modelStore.model as NorseModel);
 </script>

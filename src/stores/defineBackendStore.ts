@@ -1,13 +1,15 @@
 // defineBackendStore.ts
 
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { defineStore } from "pinia";
+import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
 import { notifyError, notifySuccess } from "@/helpers/common/dialog";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { getBoolean } from "@/utils/boolean";
 import { getRuntimeConfig } from "@/utils/fetch";
+
+export type TBackendStore = Store<string, any>;
 
 export function defineBackendStore(
   simulator: string,

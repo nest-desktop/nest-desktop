@@ -1,6 +1,6 @@
 // defineModelDBStore.ts
 
-import { defineStore } from "pinia";
+import { Store, _UnwrapAll, defineStore } from "pinia";
 import { UnwrapRef, reactive } from "vue";
 
 import { IDoc } from "@/helpers/common/database";
@@ -11,7 +11,32 @@ import { TModel, TModelDB, TModelProps } from "@/types";
 import { getRuntimeConfig } from "@/utils/fetch";
 import { truncate } from "@/utils/truncate";
 
+interface IModelDBStoreState {
+  initialized: boolean;
+  models: TModel[];
+  tryImports: number;
+}
+
 type Class<T> = new (...props: any) => T;
+
+export type TModelDBStore = Store<string, any>;
+// {
+//   deleteModel: (modelId: string) => Promise<void>;
+//   findModel: (modelId: string) => TModel | undefined;
+//   getModelsByElementType: (elementType: string) => TModel[];
+//   getModel: (modelId: string) => TModel | undefined;
+//   getRecentModelId: () => string | undefined;
+//   hasModel: (modelId: string) => boolean;
+//   importModels: (modelsProps: TModelProps[]) => void;
+//   importModelsFromAssets: () => Promise<TModelProps[]>;
+//   init: () => void;
+//   newModel: (modelProps: TModelProps) => TModel;
+//   resetDatabase: () => void;
+//   saveModel: (modelId: string) => Promise<TModelProps | void>;
+//   state: IModelDBStoreState;
+//   updateList: () => void;
+//   validateModel: (modelProps: TModelProps) => boolean;
+// }
 
 export function defineModelDBStore(
   props: {
@@ -25,7 +50,7 @@ export function defineModelDBStore(
     ModelDB: BaseModelDB,
     simulator: "base",
   }
-) {
+): TModelDBStore {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " model DB store",
@@ -36,11 +61,7 @@ export function defineModelDBStore(
   type Model = props.Model;
 
   return defineStore(props.simulator + "-model-db", () => {
-    const state: UnwrapRef<{
-      initialized: boolean;
-      models: Model[];
-      tryImports: number;
-    }> = reactive({
+    const state = reactive<IModelDBStoreState>({
       initialized: false,
       models: [],
       tryImports: 3,
@@ -102,7 +123,7 @@ export function defineModelDBStore(
      * Get recent model ID.
      * @returns model ID
      */
-    const getRecentModelId = () =>
+    const getRecentModelId = (): string | undefined =>
       state.models.length > 0 ? state.models[0].id : undefined;
 
     /**

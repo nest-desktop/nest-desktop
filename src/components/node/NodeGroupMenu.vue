@@ -83,8 +83,7 @@
 import { computed, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import { INodeGroupProps, NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNodes } from "@/types";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 const props = defineProps<{ nodeGroup: NodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);
@@ -112,9 +111,7 @@ const items = [
     iconClass: "",
     id: "nodeGroupClone",
     onClick: () => {
-      const newNodeGroupProps: INodeGroupProps = nodeGroup.value.toJSON();
-      const nodes = nodeGroup.value.parent as TNodes;
-      nodes.addNodeGroup(newNodeGroupProps);
+      nodeGroup.value.clone();
       nodeGroup.value.changes();
       closeMenu();
     },

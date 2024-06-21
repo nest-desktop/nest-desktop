@@ -68,7 +68,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   get network(): TNetwork {
     return this._network;
-    // const projectStore = useProjectStore();
+    // const projectStore: TProjectStore = useProjectStore();
     // return projectStore.state.project.network;
   }
 

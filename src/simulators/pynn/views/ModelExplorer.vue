@@ -17,9 +17,10 @@
 import { computed } from "vue";
 
 import { PyNNModel } from "../helpers/model/model";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { usePyNNModelStore } from "../stores/model/modelStore";
-const modelStore = usePyNNModelStore();
+const modelStore: TModelStore = usePyNNModelStore();
 
 const model = computed(() => modelStore.model as PyNNModel);
 </script>

@@ -130,7 +130,7 @@
       <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
         <CopyModelEditor
           :key="index"
-          :model="(model as NESTCopyModel)"
+          :model="model"
           v-for="(model, index) of project.network.modelsCopied.all"
         />
       </span>
@@ -139,11 +139,8 @@
     <template #nodes>
       <div :key="project.network.nodes.length">
         <div :key="index" v-for="(node, index) in project.network.nodes.all">
-          <NodeEditor :node="(node as NESTNode)" v-if="node.isNode" />
-          <NodeGroup
-            :nodeGroup="(node as TNodeGroup)"
-            v-else-if="node.isGroup"
-          />
+          <NodeEditor :node="node" v-if="node.isNode" />
+          <NodeGroup :nodeGroup="node" v-else-if="node.isGroup" />
         </div>
       </div>
     </template>
@@ -164,27 +161,26 @@ import NodeGroup from "@/components/node/NodeGroup.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
-import { NodeGroup as TNodeGroup } from "@/helpers/node/nodeGroup";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
 import NodeEditor from "../components/node/NodeEditor.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
-import { NESTCopyModel } from "../helpers/model/copyModel";
-import { NESTNode } from "../helpers/node/node";
-import { NESTProject } from "../helpers/project/project";
 
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore = useNESTModelDBStore();
+const modelDBStore: TModelDBStore = useNESTModelDBStore();
 
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore = useNESTProjectDBStore();
+const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore = useNESTProjectStore();
+const projectStore: TProjectStore = useNESTProjectStore();
 
-const project = computed(() => projectStore.state.project as NESTProject);
+const project = computed(() => projectStore.state.project);
 
 const model = ref("");
 

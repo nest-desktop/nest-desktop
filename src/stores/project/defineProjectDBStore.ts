@@ -1,6 +1,6 @@
 // defineProjectDBStore.ts
 
-import { defineStore } from "pinia";
+import { Store, defineStore } from "pinia";
 import { reactive } from "vue";
 
 import { download } from "@/helpers/common/download";
@@ -11,7 +11,17 @@ import { TProject, TProjectDB, TProjectProps } from "@/types";
 import { getRuntimeConfig } from "@/utils/fetch";
 import { truncate } from "@/utils/truncate";
 
+interface IProjectDBStoreState {
+  initialized: Boolean;
+  numLoaded: number;
+  projects: (TProject | TProjectProps)[];
+  searchTerm: string;
+  tryImports: number;
+}
+
 type Class<T> = new (...props: any) => T;
+
+export type TProjectDBStore = Store<string, any>;
 
 export function defineProjectDBStore(
   props: {
@@ -25,7 +35,7 @@ export function defineProjectDBStore(
     ProjectDB: BaseProjectDB,
     simulator: "base",
   }
-) {
+): TProjectDBStore {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " project DB store",
@@ -36,13 +46,7 @@ export function defineProjectDBStore(
   type Project = props.Project;
 
   return defineStore(props.simulator + "-project-db", () => {
-    const state = reactive<{
-      initialized: Boolean;
-      numLoaded: number;
-      projects: (Project | TProjectProps)[];
-      searchTerm: string;
-      tryImports: number;
-    }>({
+    const state = reactive<IProjectDBStoreState>({
       initialized: false,
       numLoaded: 0,
       projects: [] as (Project | TProjectProps)[],
@@ -252,7 +256,7 @@ export function defineProjectDBStore(
 
       if (!project.docId) {
         const projectIds = state.projects.map(
-          (project: TProject | TProjectProps) => project.id
+          (project: Project | TProjectProps) => project.id
         );
         const projectIdx = projectIds.indexOf(projectId);
 

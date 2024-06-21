@@ -114,7 +114,6 @@
 import { computed, nextTick, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import { INodeProps } from "@/helpers/node/node";
 import { TNode } from "@/types";
 
 const props = defineProps<{ node: TNode }>();
@@ -166,12 +165,7 @@ const items = [
     iconClass: "",
     id: "nodeClone",
     onClick: () => {
-      const newNodeProps: INodeProps = node.value.clone().toJSON();
-      if (newNodeProps.view) {
-        newNodeProps.view.position.x += 50;
-        newNodeProps.view.color = undefined;
-      }
-      node.value.nodes.addNode(newNodeProps);
+      node.value.clone();
       node.value.changes();
       closeMenu();
     },

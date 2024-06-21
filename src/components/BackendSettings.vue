@@ -49,12 +49,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
 import { computed } from "vue";
 
 import { isURL } from "@/utils/urls";
+import { TBackendStore } from "@/stores/defineBackendStore";
 
-const props = defineProps<{ store: Store<any, any> }>();
+const props = defineProps<{ store: TBackendStore }>();
 const store = computed(() => props.store);
 
 const updateOnFocus = (focus: boolean) => {

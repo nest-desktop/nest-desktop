@@ -12,7 +12,6 @@
     />
 
     <v-toolbar color="transparent" density="compact">
-      <v-app-bar-nav-icon size="small" />
       <v-toolbar-title>Store list</v-toolbar-title>
 
       <v-spacer />
@@ -57,10 +56,11 @@
             </template>
             New project
           </v-list-item>
+
           <v-divider />
+
           <v-list-subheader>Existing projects</v-list-subheader>
           <v-list-item
-            v-for="(project, index) in projectDBStore.state.projects"
             :key="index"
             :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
             :title="project.name"
@@ -68,14 +68,15 @@
               name: simulator + 'Project',
               params: { projectId: project.id },
             }"
+            v-for="(project, index) in projectDBStore.state.projects"
           />
         </v-list>
       </v-window-item>
 
       <v-window-item value="model">
         <v-card-subtitle
-          v-if="appStore.state.devMode"
           :key="modelStore.modelId"
+          v-if="appStore.state.devMode"
         >
           Current model: {{ modelStore.modelId }}
         </v-card-subtitle>
@@ -99,21 +100,24 @@
 </template>
 
 <script lang="ts" setup>
-import { Store } from "pinia";
 import { ref } from "vue";
 
 import ExportDialog from "./dialog/ExportDialog.vue";
 import ImportDialog from "./dialog/ImportDialog.vue";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TModelStore } from "@/stores/model/defineModelStore";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 defineProps<{
-  modelDBStore: Store<any, any>;
-  modelStore: Store<any, any>;
-  projectDBStore: Store<any, any>;
-  projectStore: Store<any, any>;
+  modelDBStore: TModelDBStore;
+  modelStore: TModelStore;
+  projectDBStore: TProjectDBStore;
+  projectStore: TProjectStore;
   simulator: string;
 }>();
 

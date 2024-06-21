@@ -13,15 +13,19 @@ import { useRoute } from "vue-router";
 import AppNavigation from "@/components/app/AppNavigation.vue";
 import { getParamFromURL } from "@/helpers/common/paramQuery";
 
+import { TBackendStore } from "@/stores/defineBackendStore";
+import { TModelStore } from "@/stores/model/defineModelStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
 import { useNESTModelStore } from "../stores/model/modelStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
 import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
+import { AxiosResponse } from "axios";
 
-const insiteAccessStore = useInsiteAccessStore();
-const modelStore = useNESTModelStore();
-const nestSimulatorStore = useNESTSimulatorStore();
-const projectStore = useNESTProjectStore();
+const insiteAccessStore: TBackendStore = useInsiteAccessStore();
+const modelStore: TModelStore = useNESTModelStore();
+const nestSimulatorStore: TBackendStore = useNESTSimulatorStore();
+const projectStore: TProjectStore = useNESTProjectStore();
 
 const route = useRoute();
 
@@ -62,5 +66,15 @@ onMounted(() => {
   // Initialize project and model stores.
   modelStore.init();
   projectStore.init();
+
+  nestSimulatorStore
+    .axiosInstance()
+    .get("/api/Models")
+    .then((response: AxiosResponse) => {
+      // console.log(response);
+      if (response.data && response.data.length > 0) {
+        modelStore.state.models = response.data;
+      }
+    });
 });
 </script>

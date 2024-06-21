@@ -168,8 +168,8 @@ const select = (props: Record<string, unknown>, callback?: () => void) => {
     state.elementType = props.value as string;
     state.items =
       model.value.network.project.modelDBStore.getModelsByElementType(
-        props.value
-      );
+        state.elementType
+      ) as NESTModel[];
   } else {
     model.value.existingModelId = props.value as string;
   }

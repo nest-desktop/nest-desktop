@@ -110,6 +110,73 @@
               </v-window>
             </v-expansion-panel-text>
           </v-expansion-panel>
+
+          <v-expansion-panel :disabled="modelStore.state.models.length === 0">
+            <v-expansion-panel-title>
+              Models in backend
+              <v-spacer />
+
+              <v-btn
+                @click.stop="resetKernel"
+                class="mx-2"
+                flat
+                icon="mdi:mdi-delete-empty-outline"
+                title="Reset kernel"
+                size="small"
+              />
+            </v-expansion-panel-title>
+            <v-expansion-panel-text class="pa-2">
+              <v-text-field
+                class="my-2"
+                clearable
+                density="compact"
+                hide-details
+                label="Install module"
+                placeholder="Install module"
+                prepend-inner-icon="mdi:mdi-memory"
+                v-model="module"
+                variant="outlined"
+              >
+                <template #append>
+                  <v-btn
+                    @click="installModule"
+                    flat
+                    icon="nest:install-module"
+                    title="Install module"
+                  />
+                </template>
+              </v-text-field>
+
+              <v-text-field
+                class="my-2"
+                clearable
+                density="compact"
+                hide-details
+                label="Search model"
+                placeholder="Search model"
+                prepend-inner-icon="mdi:mdi-magnify"
+                v-model="search"
+                variant="outlined"
+              >
+                <template #append>
+                  <v-btn
+                    @click="fetchModels"
+                    flat
+                    icon="mdi:mdi-refresh"
+                    title="Fetch models"
+                  />
+                </template>
+              </v-text-field>
+
+              <v-list>
+                <template v-for="model in modelStore.state.models">
+                  <v-list-item v-show="model.includes(search)">
+                    {{ model }}
+                  </v-list-item>
+                </template>
+              </v-list>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
         </v-expansion-panels>
 
         <StoreList
@@ -130,18 +197,22 @@ import { ref } from "vue";
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
+import { TModelStore } from "@/stores/model/defineModelStore";
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore = useNESTModelDBStore();
+const modelDBStore: TModelDBStore = useNESTModelDBStore();
 
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore = useNESTProjectDBStore();
+const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
 
 import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore = useNESTModelStore();
+const modelStore: TModelStore = useNESTModelStore();
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore = useNESTProjectStore();
+const projectStore: TProjectStore = useNESTProjectStore();
 
 import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
 const nestSimulatorStore = useNESTSimulatorStore();
@@ -150,4 +221,29 @@ import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
 const insiteAccessStore = useInsiteAccessStore();
 
 const backendTab = ref("nest");
+const search = ref("");
+const module = ref("nestmlmodule");
+
+const fetchModels = () => {
+  nestSimulatorStore
+    .axiosInstance()
+    .get("/api/Models")
+    .then((response) => {
+      // console.log(response);
+      if (response.data && response.data.length > 0) {
+        modelStore.state.models = response.data;
+      }
+    });
+};
+
+const installModule = () => {
+  nestSimulatorStore
+    .axiosInstance()
+    .post("/api/Install", { module_name: module.value })
+    .then(fetchModels);
+};
+
+const resetKernel = () => {
+  nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
+};
 </script>
