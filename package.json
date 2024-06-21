@@ -67,7 +67,7 @@
     "@types/pouchdb-upsert": "~2.2",
     "@types/semver": "~7.5",
     "@types/three": "~0.165",
-    "@types/uuid": "~9.0",
+    "@types/uuid": "~10.0",
     "@types/webfontloader": "~1.6",
     "@vite-pwa/assets-generator": "~0.2",
     "@vitejs/plugin-vue": "~5.0",
