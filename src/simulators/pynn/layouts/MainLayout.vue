@@ -14,12 +14,14 @@ import AppNavigation from "@/components/app/AppNavigation.vue";
 import { TBackendStore } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { usePyNNModelStore } from "../stores/model/modelStore";
-import { usePyNNProjectStore } from "../stores/project/projectStore";
-import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 
+import { usePyNNModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = usePyNNModelStore();
+
+import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = usePyNNProjectStore();
+
+import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
 
 const navItems = [

@@ -1,14 +1,24 @@
 // navStore.ts
 
-import { defineStore } from "pinia";
+import { Store, defineStore } from "pinia";
 import { reactive } from "vue";
 
-export const useNavStore = defineStore("nav-store", () => {
-  const state = reactive({
-    resizing: false,
+interface INavStoreState {
+  open: boolean;
+  resizing: boolean;
+  view: string;
+  width: number;
+}
+
+export type TNavStore = Store<string, any>;
+// { state: INavStoreState; toggle: (navItem: any) => void }
+
+export const useNavStore: TNavStore = defineStore("nav-store", () => {
+  const state = reactive<INavStoreState>({
     open: false,
-    width: 320,
+    resizing: false,
     view: "",
+    width: 320,
   });
 
   const toggle = (navItem: any) => {
