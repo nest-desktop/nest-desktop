@@ -91,7 +91,7 @@
         <v-expansion-panels variant="accordion">
           <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
-              <v-tabs v-model="backendTab" density="compact">
+              <v-tabs v-model="state.backendTab" density="compact">
                 <v-tab direction="vertical" value="nest">
                   NEST Simulator
                 </v-tab>
@@ -100,7 +100,7 @@
                 </v-tab>
               </v-tabs>
 
-              <v-window v-model="backendTab" class="mx-2">
+              <v-window v-model="state.backendTab" class="mx-2">
                 <v-window-item value="nest">
                   <backend-settings :store="nestSimulatorStore" />
                 </v-window-item>
@@ -125,16 +125,15 @@
                 size="small"
               />
             </v-expansion-panel-title>
+
             <v-expansion-panel-text class="pa-2">
-              <v-text-field
-                class="my-2"
-                clearable
+              <v-select
+                :items="simulatorStore.state.modules"
                 density="compact"
                 hide-details
-                label="Install module"
-                placeholder="Install module"
+                label="Module which model is installed to"
                 prepend-inner-icon="mdi:mdi-memory"
-                v-model="module"
+                v-model="state.selectedModule"
                 variant="outlined"
               >
                 <template #append>
@@ -145,7 +144,7 @@
                     title="Install module"
                   />
                 </template>
-              </v-text-field>
+              </v-select>
 
               <v-text-field
                 class="my-2"
@@ -155,7 +154,7 @@
                 label="Search model"
                 placeholder="Search model"
                 prepend-inner-icon="mdi:mdi-magnify"
-                v-model="search"
+                v-model="state.modelSearch"
                 variant="outlined"
               >
                 <template #append>
@@ -170,7 +169,7 @@
 
               <v-list>
                 <template v-for="model in modelStore.state.models">
-                  <v-list-item v-show="model.includes(search)">
+                  <v-list-item v-show="model.includes(state.modelSearch)">
                     {{ model }}
                   </v-list-item>
                 </template>
@@ -192,7 +191,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
@@ -201,6 +200,9 @@ import { TModelStore } from "@/stores/model/defineModelStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+
+import { useSimulatorStore } from "../stores/simulatorStore";
+const simulatorStore = useSimulatorStore();
 
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore: TModelDBStore = useNESTModelDBStore();
@@ -218,11 +220,15 @@ import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
 const nestSimulatorStore = useNESTSimulatorStore();
 
 import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
+import { AxiosError } from "axios";
+import { notifyError } from "vuetify3-dialog";
 const insiteAccessStore = useInsiteAccessStore();
 
-const backendTab = ref("nest");
-const search = ref("");
-const module = ref("nestmlmodule");
+const state = reactive({
+  backendTab: "nest",
+  modelSearch: "",
+  selectedModule: "nestmlmodule",
+});
 
 const fetchModels = () => {
   nestSimulatorStore
@@ -239,8 +245,25 @@ const fetchModels = () => {
 const installModule = () => {
   nestSimulatorStore
     .axiosInstance()
-    .post("/api/Install", { module_name: module.value })
-    .then(fetchModels);
+    .post("/api/Install", { module_name: state.selectedModule })
+    .then(fetchModels)
+    .catch((error: AxiosError) => {
+      if ("response" in error && error.response?.data != undefined) {
+        // The request made and the server responded.
+        if (typeof error.response.data === "string") {
+          notifyError(error.response.data);
+        }
+      } else if ("request" in error) {
+        // The request was made but no response was received.
+        notifyError(
+          "Failed to perform simulation (Simulator backend is not running)."
+        );
+      } else if ("message" in error && error.message != undefined) {
+        // Something happened in setting up the request
+        // that triggered an error.
+        notifyError(error.message);
+      }
+    });
 };
 
 const resetKernel = () => {

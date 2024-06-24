@@ -48,7 +48,7 @@ export class BaseNode extends BaseObj {
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 1 } } });
+    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
 
     this._nodes = nodes;
     this._modelId = nodeProps.model || "";

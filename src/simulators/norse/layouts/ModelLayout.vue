@@ -1,7 +1,7 @@
 <template>
   <ModelNav :modelDBStore />
 
-  <ModelBar :model="modelStore.model()" color="rosa" />
+  <ModelBar :model="modelStore.model" color="rosa" />
 
   <ModelController :modelStore />
 

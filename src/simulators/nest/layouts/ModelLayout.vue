@@ -1,12 +1,12 @@
 <template>
   <ModelNav :modelDBStore />
 
-  <ModelBar :model="modelStore.model()" color="nest-model">
+  <ModelBar :model="modelStore.model" color="nest-model">
     <template #prependTabs>
       <v-tab
         :to="{
           name: 'nestModelDoc',
-          params: { modelId: modelStore.model().id },
+          params: { modelId: modelStore.model.id },
         }"
         size="small"
         title="Read documentation"

@@ -1,12 +1,12 @@
 // nodes.ts
 
-import { UnwrapRef, reactive } from 'vue';
+import { UnwrapRef, reactive } from "vue";
 
-import { TActivityGraph, TNetwork, TNode } from '@/types';
+import { TActivityGraph, TNetwork, TNode } from "@/types";
 
-import { BaseObj } from '../common/base';
-import { BaseNode, INodeProps } from './node';
-import { INodeGroupProps, NodeGroup } from './nodeGroup';
+import { BaseObj } from "../common/base";
+import { BaseNode, INodeProps } from "./node";
+import { INodeGroupProps, NodeGroup } from "./nodeGroup";
 
 interface INodesState {
   annotations: Record<string, string>[];
@@ -24,7 +24,7 @@ export class BaseNodes extends BaseObj {
     network: TNetwork,
     nodesProps?: (INodeProps | INodeGroupProps)[]
   ) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._network = network;
 

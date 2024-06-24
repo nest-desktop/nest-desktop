@@ -14,20 +14,63 @@
 
     <v-card-actions>
       <v-spacer />
-      <v-text-field
-        class="my-2"
-        clearable
-        density="compact"
-        hide-details
-        label="Module name"
-        placeholder="Module name"
-        prepend-inner-icon="mdi:mdi-memory"
-        v-model="state.moduleName"
-        variant="outlined"
-        max-width="400"
-      />
 
-      <v-btn @click="generateModel" :disabled="state.script.length === 0">
+      <v-combobox
+        :append-inner-icon="
+          state.valid && !simulatorStore.state.modules.includes(state.search)
+            ? 'mdi:mdi-plus'
+            : false
+        "
+        :hide-no-data="false"
+        :items="simulatorStore.state.modules"
+        :rules
+        @click:append-inner="
+          state.valid ? simulatorStore.addModule(state.search) : ''
+        "
+        class="px-2"
+        density="compact"
+        hide-details="auto"
+        label="Module which model is installed to"
+        max-width="400"
+        prepend-inner-icon="mdi:mdi-memory"
+        v-model:search="state.search"
+        v-model="state.selectedModule"
+        variant="outlined"
+      >
+        <template #no-data>
+          <v-list-item>
+            <v-list-item-title>
+              No results matching "
+              <strong>{{ state.search }}</strong
+              >".
+              <span v-if="state.valid">
+                Click <kbd>+</kbd> to create a new one.
+              </span>
+            </v-list-item-title>
+          </v-list-item>
+        </template>
+
+        <template #item="{ index, item, props }">
+          <v-list-item :key="index" class="module-item" v-bind="props" title="">
+            <template #append>
+              <v-btn
+                @click.stop="simulatorStore.removeModule(item.title)"
+                class="icon"
+                icon="mdi:mdi-close"
+                flat
+                size="x-small"
+              />
+            </template>
+
+            {{ item.title }}
+          </v-list-item>
+        </template>
+      </v-combobox>
+
+      <v-btn
+        @click="generateModel"
+        :disabled="!state.valid || state.script.length === 0"
+      >
         Generate
       </v-btn>
     </v-card-actions>
@@ -35,23 +78,35 @@
 </template>
 
 <script lang="ts" setup>
-import { notifyError, notifySuccess } from "@/helpers/common/dialog";
+import { computed, onMounted, reactive, watch } from "vue";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { watch } from "vue";
-import { computed, onMounted, reactive } from "vue";
+
+import { notifyError, notifySuccess } from "@/helpers/common/dialog";
 
 const props = defineProps<{ modelId: string }>();
 const modelId = computed(() => props.modelId);
 
 const state = reactive({
-  moduleName: "nestmlmodule",
   script: "",
+  search: "nestmlmodule",
+  selectedModule: "nestmlmodule",
+  valid: false,
 });
+
+const rules = [
+  (value: string) => {
+    state.valid = value.endsWith("module");
+    return state.valid || "The module name must ends with `module`.";
+  },
+];
+
+import { useSimulatorStore } from "../../stores/simulatorStore";
+const simulatorStore = useSimulatorStore();
 
 const generateModel = () => {
   axios
     .post("http://localhost:52426/generate", {
-      module_name: state.moduleName,
+      module_name: state.selectedModule,
       models: [
         {
           name: modelId.value,
@@ -60,13 +115,12 @@ const generateModel = () => {
       ],
     })
     .then((response: AxiosResponse) => {
-      console.log(response);
       switch (response.status) {
         case 200:
           notifySuccess(
             `Models (${response.data.status["INSTALLED"].join(
               ","
-            )}) are successfully generated in "${state.moduleName}" module.`
+            )}) are successfully generated in "${state.selectedModule}" module.`
           );
           break;
         case 400:
@@ -100,3 +154,17 @@ onMounted(() => {
 
 watch(() => props.modelId, loadNESTMLScript);
 </script>
+
+<style lang="scss">
+.module-item {
+  .icon {
+    display: none;
+  }
+
+  &:hover {
+    .icon {
+      display: block;
+    }
+  }
+}
+</style>

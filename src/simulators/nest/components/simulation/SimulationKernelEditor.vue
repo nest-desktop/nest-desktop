@@ -12,13 +12,14 @@
       <v-card-text>
         <v-combobox
           :hide-no-data="false"
-          :items="moduleItems"
+          :items="simulatorStore.state.modules"
           class="px-2"
           density="compact"
           hide-selected
           label="Install modules"
           multiple
           persistent-hint
+          prepend-inner-icon="mdi:mdi-memory"
           v-model:search="search"
           v-model="simulation.modules"
           variant="outlined"
@@ -132,6 +133,9 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { NESTSimulation } from "../../helpers/simulation/simulation";
 
+import { useSimulatorStore } from "../../stores/simulatorStore";
+const simulatorStore = useSimulatorStore();
+
 import { useNESTProjectStore } from "../../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
@@ -141,7 +145,6 @@ const simulation = computed(
   () => projectStore.state.project.simulation as NESTSimulation
 );
 
-const moduleItems = ["insitemodule", "nestmlmodule"];
 const search = ref("");
 
 const options = {
