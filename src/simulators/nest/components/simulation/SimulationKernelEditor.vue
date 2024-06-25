@@ -10,7 +10,16 @@
       </v-card-title>
 
       <v-card-text>
-        <v-combobox
+        <NESTModuleSelect
+          chips
+          class="pa-2"
+          hide-selected
+          label="Install modules"
+          multiple
+          v-model="simulation.modules"
+        />
+
+        <!-- <v-combobox
           :hide-no-data="false"
           :items="simulatorStore.state.modules"
           class="px-2"
@@ -45,7 +54,7 @@
               <v-list-item-title>
                 No results matching "
                 <strong>{{ search }}</strong
-                >". Press <kbd>enter</kbd> to create a new one.
+                >". Press <kbd>enter</kbd> to create a new temporary one.
               </v-list-item-title>
             </v-list-item>
           </template>
@@ -64,7 +73,7 @@
               {{ item.title }}
             </v-chip>
           </template>
-        </v-combobox>
+        </v-combobox> -->
       </v-card-text>
     </Card>
 
@@ -131,6 +140,7 @@ import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
 
+import NESTModuleSelect from "../model/NESTModuleSelect.vue";
 import { NESTSimulation } from "../../helpers/simulation/simulation";
 
 import { useSimulatorStore } from "../../stores/simulatorStore";

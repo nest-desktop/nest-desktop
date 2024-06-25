@@ -122,29 +122,22 @@
                 flat
                 icon="mdi:mdi-delete-empty-outline"
                 title="Reset kernel"
-                size="small"
+                size="x-small"
               />
             </v-expansion-panel-title>
 
             <v-expansion-panel-text class="pa-2">
-              <v-select
-                :items="simulatorStore.state.modules"
-                density="compact"
-                hide-details
-                label="Module which model is installed to"
-                prepend-inner-icon="mdi:mdi-memory"
-                v-model="state.selectedModule"
-                variant="outlined"
-              >
+              <NESTModuleSelect>
                 <template #append>
                   <v-btn
                     @click="installModule"
                     flat
                     icon="nest:install-module"
+                    size="x-small"
                     title="Install module"
                   />
                 </template>
-              </v-select>
+              </NESTModuleSelect>
 
               <v-text-field
                 class="my-2"
@@ -162,6 +155,7 @@
                     @click="fetchModels"
                     flat
                     icon="mdi:mdi-refresh"
+                    size="x-small"
                     title="Fetch models"
                   />
                 </template>
@@ -191,7 +185,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
@@ -222,12 +216,12 @@ const nestSimulatorStore = useNESTSimulatorStore();
 import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
 import { AxiosError } from "axios";
 import { notifyError } from "vuetify3-dialog";
+import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
 const insiteAccessStore = useInsiteAccessStore();
 
 const state = reactive({
   backendTab: "nest",
   modelSearch: "",
-  selectedModule: "nestmlmodule",
 });
 
 const fetchModels = () => {
@@ -245,7 +239,7 @@ const fetchModels = () => {
 const installModule = () => {
   nestSimulatorStore
     .axiosInstance()
-    .post("/api/Install", { module_name: state.selectedModule })
+    .post("/api/Install", { module_name: simulatorStore.state.selectedModule })
     .then(fetchModels)
     .catch((error: AxiosError) => {
       if ("response" in error && error.response?.data != undefined) {

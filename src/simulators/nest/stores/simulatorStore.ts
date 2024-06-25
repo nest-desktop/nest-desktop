@@ -5,6 +5,7 @@ import { reactive } from "vue";
 
 interface ISimulatorStoreState {
   modules: string[];
+  selectedModule: string;
 }
 
 export type TSimulatorStore = Store<string, any>;
@@ -14,6 +15,7 @@ export const useSimulatorStore: TSimulatorStore = defineStore(
   () => {
     const state = reactive<ISimulatorStoreState>({
       modules: ["nestmlmodule", "insitemodule"],
+      selectedModule: "nestmlmodule",
     });
 
     const addModule = (module: string) => {
