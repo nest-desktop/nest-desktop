@@ -16,9 +16,9 @@
     "@jridgewell/trace-mapping" "^0.3.24"
 
 "@antfu/utils@^0.7.7":
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/@antfu/utils/-/utils-0.7.8.tgz#86cb0974bcab7e64e29b57d6d9021102307257de"
-  integrity sha512-rWQkqXRESdjXtc+7NRfK9lASQjpXJu1ayp7qi1d23zZorY+wBHVLHHoVcMsEnkqEBWTFqbztO7/QdJFzyEcLTg==
+  version "0.7.10"
+  resolved "https://registry.yarnpkg.com/@antfu/utils/-/utils-0.7.10.tgz#ae829f170158e297a9b6a28f161a8e487d00814d"
+  integrity sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==
 
 "@apideck/better-ajv-errors@^0.3.1":
   version "0.3.6"
@@ -2516,24 +2516,24 @@
     loupe "^2.3.7"
     pretty-format "^29.7.0"
 
-"@volar/language-core@2.3.2", "@volar/language-core@~2.3.1":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.3.2.tgz#da46e2000c18ed5f0547c49ca5e04a7523834ca9"
-  integrity sha512-tx2BCWPpSNEW5fbE4XfERqgTtESHfsh8zoRDtpf3fsiDAPJI+2emqlxz2Dqcb4O0kFZzVnWINDOx/j6j1H3Vgw==
+"@volar/language-core@2.3.4", "@volar/language-core@~2.3.1":
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.3.4.tgz#51de0263039a567a12a1eea90e02e59cdbf5de3b"
+  integrity sha512-wXBhY11qG6pCDAqDnbBRFIDSIwbqkWI7no+lj5+L7IlA7HRIjRP7YQLGzT0LF4lS6eHkMSsclXqy9DwYJasZTQ==
   dependencies:
-    "@volar/source-map" "2.3.2"
+    "@volar/source-map" "2.3.4"
 
-"@volar/source-map@2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.3.2.tgz#4c4bc4afa704ccde580d75fa0dd87c4066f8bb4c"
-  integrity sha512-YGQ5UFNj+ngpklp3SNzTHzaq7e5Rqlcb01ym+oR8mtu7BfkfBxmtCv8YNXEVZ/oU6MF8s3cibpZhOn696MRsYg==
+"@volar/source-map@2.3.4":
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.3.4.tgz#1d285610134fe565ca59a54e5a99c12befc70c93"
+  integrity sha512-C+t63nwcblqLIVTYXaVi/+gC8NukDaDIQI72J3R7aXGvtgaVB16c+J8Iz7/VfOy7kjYv7lf5GhBny6ACw9fTGQ==
 
 "@volar/typescript@~2.3.1":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.3.2.tgz#a5ccf061917f381554507e0f1305b98e2cbb337f"
-  integrity sha512-HJ1mjiEU/R1Wg3lrBp9jqNZvMOkNLA8+ryHhrzHAjV7pv214mQT/mB/1msu3mduh1Q2iDETU4Vttl5RA7ZPezg==
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.3.4.tgz#bfa2834c79bd0b9a38cdfdf220fea0afa8ed64b0"
+  integrity sha512-acCvt7dZECyKcvO5geNybmrqOsu9u8n5XP1rfiYsOLYGPxvHRav9BVmEdRyZ3vvY6mNyQ1wLL5Hday4IShe17w==
   dependencies:
-    "@volar/language-core" "2.3.2"
+    "@volar/language-core" "2.3.4"
     path-browserify "^1.0.1"
     vscode-uri "^3.0.8"
 
@@ -4343,9 +4343,9 @@ electron-publish@24.13.1:
     mime "^2.5.2"
 
 electron-to-chromium@^1.4.796:
-  version "1.4.810"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.810.tgz#7dee01b090b9e048e6db752f7b30921790230654"
-  integrity sha512-Kaxhu4T7SJGpRQx99tq216gCq2nMxJo+uuT6uzz9l8TVN2stL7M06MIIXAtr9jsrLs2Glflgf2vMQRepxawOdQ==
+  version "1.4.811"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.811.tgz#031c8b101e7d0a7cde1dfdb0623dbdb5e19655cd"
+  integrity sha512-CDyzcJ5XW78SHzsIOdn27z8J4ist8eaFLhdto2hSMSJQgsiwvbv2fbizcKUICryw1Wii1TI/FEkvzvJsR3awrA==
 
 electron@~31.0:
   version "31.0.2"
