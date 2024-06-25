@@ -92,7 +92,6 @@
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
-    "electron >=30.1: error on start because Headers is not defined. PR is coming.",
     "node: Use node LTS version (v20)",
     "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
   ],
