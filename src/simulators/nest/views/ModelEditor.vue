@@ -19,7 +19,7 @@
         variant="outlined"
       />
 
-      <NESTMLModelEditor :modelId="model.id" />
+      <NESTMLModelEditor :elementType="model.elementType" :modelId="model.id" />
     </v-card>
   </v-container>
 </template>

@@ -1,6 +1,6 @@
 // config.ts
 
-import { getRuntimeConfig } from "@/utils/fetch";
+import { loadJSON } from "@/utils/fetch";
 
 export interface IConfigProps {
   name: string;
@@ -65,7 +65,7 @@ export class Config {
     const path = this._simulator
       ? `assets/simulators/${this._simulator}/config/${this._name}`
       : `assets/config/${this._name}`;
-    return getRuntimeConfig(path + ".json");
+    return loadJSON(path + ".json");
   }
 
   reset(): void {

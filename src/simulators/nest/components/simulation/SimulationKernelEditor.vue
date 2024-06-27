@@ -18,62 +18,6 @@
           multiple
           v-model="simulation.modules"
         />
-
-        <!-- <v-combobox
-          :hide-no-data="false"
-          :items="simulatorStore.state.modules"
-          class="px-2"
-          density="compact"
-          hide-selected
-          label="Install modules"
-          multiple
-          persistent-hint
-          prepend-inner-icon="mdi:mdi-memory"
-          v-model:search="search"
-          v-model="simulation.modules"
-          variant="outlined"
-        >
-          <template #item="{ index, item, props }">
-            <v-list-item :key="index" v-bind="props" title="">
-              <template #prepend>
-                <v-avatar
-                  :color="simulation.project.network.getNodeColor(index)"
-                  class="text-uppercase"
-                  size="small"
-                  start
-                >
-                  {{ item.title.slice(0, 1) }}
-                </v-avatar>
-              </template>
-              {{ item.title }}
-            </v-list-item>
-          </template>
-
-          <template #no-data>
-            <v-list-item>
-              <v-list-item-title>
-                No results matching "
-                <strong>{{ search }}</strong
-                >". Press <kbd>enter</kbd> to create a new temporary one.
-              </v-list-item-title>
-            </v-list-item>
-          </template>
-
-          <template #selection="{ index, item }">
-            <v-chip :key="index" size="small" variant="outlined">
-              <template #prepend>
-                <v-avatar
-                  :color="simulation.project.network.getNodeColor(index)"
-                  class="text-uppercase"
-                  start
-                >
-                  {{ item.title.slice(0, 1) }}
-                </v-avatar>
-              </template>
-              {{ item.title }}
-            </v-chip>
-          </template>
-        </v-combobox> -->
       </v-card-text>
     </Card>
 
@@ -133,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
@@ -143,9 +87,6 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 import NESTModuleSelect from "../model/NESTModuleSelect.vue";
 import { NESTSimulation } from "../../helpers/simulation/simulation";
 
-import { useSimulatorStore } from "../../stores/simulatorStore";
-const simulatorStore = useSimulatorStore();
-
 import { useNESTProjectStore } from "../../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
@@ -154,8 +95,6 @@ const props = defineProps({ color: { default: "primary", type: String } });
 const simulation = computed(
   () => projectStore.state.project.simulation as NESTSimulation
 );
-
-const search = ref("");
 
 const options = {
   autoRNGSeedSettings: {

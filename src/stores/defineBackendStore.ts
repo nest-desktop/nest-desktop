@@ -7,7 +7,7 @@ import { computed, reactive } from "vue";
 import { notifyError, notifySuccess } from "@/helpers/common/dialog";
 import { logger as mainLogger } from "@/helpers/common/logger";
 import { getBoolean } from "@/utils/boolean";
-import { getRuntimeConfig } from "@/utils/fetch";
+import { loadJSON } from "@/utils/fetch";
 
 export type TBackendStore = Store<string, any>;
 
@@ -77,9 +77,7 @@ export function defineBackendStore(
       const loadFromAssets = async (): Promise<void> => {
         logger.trace("load config");
 
-        return getRuntimeConfig(
-          `assets/simulators/${simulator}/config/backends.json`
-        )
+        return loadJSON(`assets/simulators/${simulator}/config/backends.json`)
           .then((data) => {
             const config = data[name];
             const baseURL =

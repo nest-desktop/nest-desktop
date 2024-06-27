@@ -8,7 +8,7 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseModel } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import { TModel, TModelDB, TModelProps } from "@/types";
-import { getRuntimeConfig } from "@/utils/fetch";
+import { loadJSON } from "@/utils/fetch";
 import { truncate } from "@/utils/truncate";
 
 interface IModelDBStoreState {
@@ -155,7 +155,7 @@ export function defineModelDBStore(
       let promises: Promise<TModelProps>[] = [];
       if (props.modelAssets) {
         promises = props.modelAssets.map(async (file: string) => {
-          return getRuntimeConfig(
+          return loadJSON(
             `assets/simulators/${props.simulator}/models/${file}.json`
           ).then((modelProps: TModelProps) => db.create(modelProps as IDoc));
         });

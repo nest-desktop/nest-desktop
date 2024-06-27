@@ -17,8 +17,9 @@
 
       <NESTModuleSelect class="px-2" max-width="400" />
 
+      <v-btn @click="getParams">get params</v-btn>
       <v-btn @click="generateModel" :disabled="script.length === 0">
-        Generate
+        generate
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -34,15 +35,16 @@ import NESTModuleSelect from "./NESTModuleSelect.vue";
 import { useSimulatorStore } from "../../stores/simulatorStore";
 const simulatorStore = useSimulatorStore();
 
-const props = defineProps<{ modelId: string }>();
+const props = defineProps<{ elementType: string; modelId: string }>();
 const modelId = computed(() => props.modelId);
+const elementType = computed(() => props.elementType);
 
 const script = ref("");
 
 const generateModel = () => {
   axios
     .post("http://localhost:52426/generate", {
-      module_name: simulatorStore.state.selectedModule,
+      module_name: simulatorStore.state.selectedModule[0],
       models: [
         {
           name: modelId.value,
@@ -57,7 +59,7 @@ const generateModel = () => {
             `Models (${response.data.status["INSTALLED"].join(
               ","
             )}) are successfully generated in "${
-              simulatorStore.state.selectedModule
+              simulatorStore.state.selectedModule[0]
             }" module.`
           );
           break;
@@ -71,10 +73,31 @@ const generateModel = () => {
     });
 };
 
+const getParams = () => {
+  axios
+    .post("http://localhost:52426/getParams", {
+      element_type: elementType.value,
+      script: script.value,
+    })
+    .then((response: AxiosResponse) => {
+      switch (response.status) {
+        case 200:
+          alert(JSON.stringify(response.data.params, null, 2));
+          break;
+        case 400:
+          notifyError("Failed to get params for model.");
+          break;
+      }
+    })
+    .catch((error: AxiosError) => {
+      notifyError(error.message);
+    });
+};
+
 const loadNESTMLScript = () => {
   axios
     .get(
-      `https://raw.githubusercontent.com/nest/nestml/v7.0.2/models/neurons/${modelId.value}.nestml`
+      `https://raw.githubusercontent.com/nest/nestml/v7.0.2/models/${elementType.value}s/${modelId.value}.nestml`
     )
     .then((response: AxiosResponse) => {
       if (response.data) {

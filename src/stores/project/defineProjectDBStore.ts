@@ -8,7 +8,7 @@ import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseProject } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
 import { TProject, TProjectDB, TProjectProps } from "@/types";
-import { getRuntimeConfig } from "@/utils/fetch";
+import { loadJSON } from "@/utils/fetch";
 import { truncate } from "@/utils/truncate";
 
 interface IProjectDBStoreState {
@@ -209,7 +209,7 @@ export function defineProjectDBStore(
       let promises: Promise<TProjectProps>[] = [];
       if (props.projectAssets) {
         promises = props.projectAssets.map(async (file: string) => {
-          return getRuntimeConfig(
+          return loadJSON(
             `assets/simulators/${props.simulator}/projects/${file}.json`
           ).then((data) => db.create(data));
         });
