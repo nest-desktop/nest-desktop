@@ -108,7 +108,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
-        maximumFileSizeToCacheInBytes: 6000000,
+        maximumFileSizeToCacheInBytes: 6500000,
         // Don't fallback on document based (e.g. `/some-page`) requests
         // Even though this says `null` by default, I had to set this specifically to `null` to make it work
         navigateFallback: null,
