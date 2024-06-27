@@ -92,20 +92,22 @@
           <v-expansion-panel title="Backend settings">
             <v-expansion-panel-text>
               <v-tabs v-model="state.backendTab" density="compact">
-                <v-tab direction="vertical" value="nest">
-                  NEST Simulator
-                </v-tab>
-                <v-tab direction="vertical" value="insite">
-                  Insite Access
+                <v-tab
+                  :key="index"
+                  :value="backend.state.name"
+                  v-for="(backend, index) in appStore.currentSimulator.backends"
+                >
+                  {{ backend.state.name }}
                 </v-tab>
               </v-tabs>
 
               <v-window v-model="state.backendTab" class="mx-2">
-                <v-window-item value="nest">
-                  <backend-settings :store="nestSimulatorStore" />
-                </v-window-item>
-                <v-window-item value="insite">
-                  <backend-settings :store="insiteAccessStore" />
+                <v-window-item
+                  :key="index"
+                  :value="backend.state.name"
+                  v-for="(backend, index) in appStore.currentSimulator.backends"
+                >
+                  <backend-settings :store="backend" />
                 </v-window-item>
               </v-window>
             </v-expansion-panel-text>
@@ -194,6 +196,9 @@ import { TModelStore } from "@/stores/model/defineModelStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import { useSimulatorStore } from "../stores/simulatorStore";
 const simulatorStore = useSimulatorStore();

@@ -14,6 +14,7 @@ import types from "./helpers/types";
 import route from "./routes";
 import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
 import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
+import { useNESTMLServerStore } from "./stores/backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
 
@@ -57,9 +58,14 @@ export const nest: ISimulatorProps = {
     const insiteAccessStore = useInsiteAccessStore();
     insiteAccessStore.init();
 
+    // Initialize backend NESTML Server.
+    const nestmlServerStore = useNESTMLServerStore();
+    nestmlServerStore.init();
+
     nest.backends = {
-      insite: insiteAccessStore,
       nest: nestSimulatorStore,
+      insite: insiteAccessStore,
+      nestml: nestmlServerStore,
     };
   },
   route,
