@@ -49,7 +49,12 @@
         >
           Current project: {{ truncate(projectStore.state.projectId) }}
         </v-card-subtitle>
-        <v-list :key="projectDBStore.state.projects.length" lines="two" nav>
+        <v-list
+          :key="projectDBStore.state.projects.length"
+          density="compact"
+          lines="two"
+          nav
+        >
           <v-list-item :to="{ name: simulator + 'ProjectNew' }">
             <template #prepend>
               <v-icon icon="mdi:mdi-plus" />

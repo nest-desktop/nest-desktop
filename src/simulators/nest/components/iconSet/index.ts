@@ -3,6 +3,7 @@
 
 import { h } from "vue";
 
+import buildModelsIcon from "./BuildModels.vue";
 import copyModelIcon from "./CopyModelIcon.vue";
 import installModuleIcon from "./InstallModule.vue";
 import nestIcon from "./NESTIcon.vue";
@@ -11,6 +12,7 @@ import type { IconProps } from "vuetify";
 
 const nestSvgNameToComponent: Record<string, Object> = {
   logo: nestIcon,
+  "build-models": buildModelsIcon,
   "copy-model": copyModelIcon,
   "install-module": installModuleIcon,
 };

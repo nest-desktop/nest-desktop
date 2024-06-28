@@ -98,8 +98,48 @@
                   v-for="(backend, index) in appStore.currentSimulator.backends"
                 >
                   {{ backend.state.name }}
+                  <template #append>
+                    <v-icon
+                      :color="
+                        backend.state.enabled
+                          ? backend.isOK && backend.isValid
+                            ? 'green'
+                            : 'red'
+                          : ''
+                      "
+                      class="mx-1"
+                      icon="mdi:mdi-circle"
+                    />
+                  </template>
                 </v-tab>
               </v-tabs>
+
+              <!-- <v-btn-toggle
+                class="mx-1"
+                density="compact"
+                divided
+                v-model="state.backendTab"
+              >
+                <v-btn
+                  :key="index"
+                  :value="backend.state.name"
+                  variant="outlined"
+                  v-for="(backend, index) in appStore.currentSimulator.backends"
+                >
+                  {{ backend.state.name }}
+                  <v-icon
+                    :color="
+                      backend.state.enabled
+                        ? backend.isOK && backend.isValid
+                          ? 'green'
+                          : 'red'
+                        : ''
+                    "
+                    class="mx-1"
+                    icon="mdi:mdi-circle"
+                  />
+                </v-btn>
+              </v-btn-toggle> -->
 
               <v-window v-model="state.backendTab" class="mx-2">
                 <v-window-item
@@ -129,8 +169,16 @@
             </v-expansion-panel-title>
 
             <v-expansion-panel-text class="pa-2">
-              <NESTModuleSelect>
+              <NESTModuleSelect v-model="state.selectedModule">
                 <template #append>
+                  <v-btn
+                    @click="generateModels"
+                    flat
+                    icon="nest:build-models"
+                    size="x-small"
+                    title="Generate models"
+                  />
+
                   <v-btn
                     @click="installModule"
                     flat
@@ -140,6 +188,8 @@
                   />
                 </template>
               </NESTModuleSelect>
+
+              {{ state.selectedModule.models.length }} models
 
               <v-text-field
                 class="my-2"
@@ -187,24 +237,28 @@
 </template>
 
 <script setup lang="ts">
+import { AxiosError, AxiosResponse } from "axios";
 import { reactive } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
-import { TModelStore } from "@/stores/model/defineModelStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TModelStore } from "@/stores/model/defineModelStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { notifyError, notifySuccess } from "@/helpers/common/dialog";
+
+import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useSimulatorStore } from "../stores/simulatorStore";
-const simulatorStore = useSimulatorStore();
-
 import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 const modelDBStore: TModelDBStore = useNESTModelDBStore();
+
+import { useModuleStore } from "../stores/moduleStore";
+const moduleStore = useModuleStore();
 
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
@@ -215,36 +269,71 @@ const modelStore: TModelStore = useNESTModelStore();
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
+import { useNESTMLServerStore } from "../stores/backends/nestmlServerStore";
+const nestmlServerStore = useNESTMLServerStore();
+
 import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
 const nestSimulatorStore = useNESTSimulatorStore();
-
-import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
-import { AxiosError } from "axios";
-import { notifyError } from "vuetify3-dialog";
-import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
-const insiteAccessStore = useInsiteAccessStore();
 
 const state = reactive({
   backendTab: "nest",
   modelSearch: "",
+  modelsLength: 0,
+  selectedModule: moduleStore.findModule("nestmlmodule"),
 });
 
 const fetchModels = () => {
   nestSimulatorStore
     .axiosInstance()
     .get("/api/Models")
-    .then((response) => {
-      // console.log(response);
+    .then((response: AxiosResponse) => {
       if (response.data && response.data.length > 0) {
         modelStore.state.models = response.data;
       }
     });
 };
 
+const generateModels = () => {
+  const models = state.selectedModule.models
+    .filter((modelId: string) => modelDBStore.hasModel(modelId))
+    .map((modelId: string) => ({
+      name: state.selectedModule.id,
+      script: modelDBStore.findModel(modelId).nestmlScript,
+    }));
+
+  if (!models && models.length === 0) return;
+
+  nestmlServerStore
+    .axiosInstance()
+    .post("/generateModels", {
+      module_name: state.selectedModule.id,
+      models: models,
+    })
+    .then((response: AxiosResponse) => {
+      switch (response.status) {
+        case 200:
+          notifySuccess(
+            `Models (${response.data.status["INSTALLED"].join(
+              ","
+            )}) are successfully generated in "${
+              state.selectedModule.id
+            }" module.`
+          );
+          break;
+        case 400:
+          notifyError("Failed to generate model.");
+          break;
+      }
+    })
+    .catch((error: AxiosError) => {
+      notifyError(error.message);
+    });
+};
+
 const installModule = () => {
   nestSimulatorStore
     .axiosInstance()
-    .post("/api/Install", { module_name: simulatorStore.state.selectedModule })
+    .post("/api/Install", { module_name: state.selectedModule.id })
     .then(fetchModels)
     .catch((error: AxiosError) => {
       if ("response" in error && error.response?.data != undefined) {

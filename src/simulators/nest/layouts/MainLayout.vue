@@ -7,24 +7,23 @@
 </template>
 
 <script lang="ts" setup>
+import { AxiosResponse } from "axios";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-import { getParamFromURL } from "@/helpers/common/paramQuery";
-
 import { TBackendStore } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { useInsiteAccessStore } from "../stores/backends/insiteAccessStore";
-import { useNESTModelStore } from "../stores/model/modelStore";
-import { useNESTProjectStore } from "../stores/project/projectStore";
-import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
-import { AxiosResponse } from "axios";
+import { getParamFromURL } from "@/helpers/common/paramQuery";
 
-const insiteAccessStore: TBackendStore = useInsiteAccessStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
+import { useNESTModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = useNESTModelStore();
-const nestSimulatorStore: TBackendStore = useNESTSimulatorStore();
+
+import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
 const route = useRoute();
@@ -47,27 +46,32 @@ const navItems = [
 ];
 
 onMounted(() => {
+  const backends = appStore.currentSimulator.backends;
+
   // Store URL of NEST Server from the query.
   const nestServerURL = getParamFromURL(route, "nest_server_url");
   if (nestServerURL) {
-    nestSimulatorStore.state.url = nestServerURL;
+    backends.nest.state.url = nestServerURL;
   }
 
   // Store access token for NEST Server from the query.
   const accessToken = getParamFromURL(route, "nest_server_access_token");
   if (accessToken) {
-    nestSimulatorStore.state.accessToken = accessToken;
+    backends.nest.state.accessToken = accessToken;
   }
 
   // Update and check backends.
-  nestSimulatorStore.update();
-  insiteAccessStore.update();
+  Object.values(backends).forEach((backend: TBackendStore) => {
+    if (backend.state.response.status != 200) {
+      backend.update();
+    }
+  });
 
-  // Initialize project and model stores.
+  // Initialize model and project stores.
   modelStore.init();
   projectStore.init();
 
-  nestSimulatorStore
+  backends.nest
     .axiosInstance()
     .get("/api/Models")
     .then((response: AxiosResponse) => {

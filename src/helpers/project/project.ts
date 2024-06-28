@@ -121,12 +121,8 @@ export class BaseProject extends BaseObj {
     return this._doc;
   }
 
-  set doc(value: any) {
-    this._doc = value;
-  }
-
   get docId(): string | undefined {
-    return this._doc?._id;
+    return this._doc._id;
   }
 
   get id(): string {

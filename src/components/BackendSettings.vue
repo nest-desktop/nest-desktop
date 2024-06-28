@@ -1,11 +1,9 @@
 <template>
   <v-row class="mt-1">
-    <v-col class="d-flex justify-center" cols="2">
-      <div>
-        <v-switch inset title="Enable backend" v-model="store.state.enabled" />
-      </div>
+    <v-col class="d-flex justify-center" cols="1">
+      <v-checkbox inset title="Enable backend" v-model="store.state.enabled" />
     </v-col>
-    <v-col cols="10">
+    <v-col cols="11">
       <v-text-field
         :disabled="!store.state.enabled"
         :hide-details="store.state.response.data.length === 0"
@@ -25,7 +23,14 @@
           <v-btn @click="store.ping()" variant="outlined">
             <template #append>
               <v-icon
-                :color="store.isOK ? 'green' : 'red'"
+                :color="
+                  store.state.enabled
+                    ? store.isOK && store.isValid
+                      ? 'green'
+                      : 'red'
+                    : ''
+                "
+                class="mx-1"
                 icon="mdi:mdi-circle"
               />
             </template>

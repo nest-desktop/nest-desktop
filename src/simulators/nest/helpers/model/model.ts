@@ -73,6 +73,10 @@ export class NESTModel extends BaseModel {
     return this._nestmlScript;
   }
 
+  set nestmlScript(value: string) {
+    this._nestmlScript = value;
+  }
+
   get receptors(): Record<string, NESTModelReceptor> {
     return this._receptors;
   }
@@ -151,6 +155,11 @@ export class NESTModel extends BaseModel {
       modelProps.receptors = Object.values(this._receptors).map(
         (receptor: NESTModelReceptor) => receptor.toJSON()
       );
+    }
+
+    // Add NESTML script if provided.
+    if (this._nestmlScript) {
+      modelProps.nestmlScript = this._nestmlScript;
     }
 
     return modelProps;

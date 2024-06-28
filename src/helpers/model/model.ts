@@ -56,7 +56,7 @@ export class BaseModel extends BaseObj {
   }
 
   get docId(): string | undefined {
-    return this._doc.id;
+    return this._doc._id;
   }
 
   get elementType(): string {

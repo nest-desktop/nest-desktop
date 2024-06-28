@@ -40,8 +40,10 @@ const navItems = [
 ];
 
 onMounted(() => {
-  // Update and check backends.
-  norseSimulatorStore.update();
+  // Update and check backend.
+  if (norseSimulatorStore.state.response.status != 200) {
+    norseSimulatorStore.update();
+  }
 
   // Initialize model and project stores.
   modelStore.init();

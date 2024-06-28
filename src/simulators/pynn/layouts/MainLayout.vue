@@ -42,8 +42,10 @@ const navItems = [
 ];
 
 onMounted(() => {
-  // Update and check backends.
-  pynnSimulatorStore.update();
+  // Update and check backend.
+  if (pynnSimulatorStore.state.response.status != 200) {
+    pynnSimulatorStore.update();
+  }
 
   // Initialize model and project stores.
   modelStore.init();

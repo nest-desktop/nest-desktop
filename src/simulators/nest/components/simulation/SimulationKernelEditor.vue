@@ -11,6 +11,7 @@
 
       <v-card-text>
         <NESTModuleSelect
+          :return-object="false"
           chips
           class="pa-2"
           hide-selected

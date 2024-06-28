@@ -1,22 +1,19 @@
 <template>
   <v-combobox
-    :append-inner-icon="
-      state.valid && !simulatorStore.state.modules.includes(state.search)
-        ? 'mdi:mdi-plus'
-        : false
-    "
+    :append-inner-icon="state.valid && !state.exist ? 'mdi:mdi-plus' : false"
     :hide-no-data="false"
-    :items="simulatorStore.state.modules"
+    :items="moduleStore.state.modules"
     :rules
-    @click:append-inner="
-      state.valid ? simulatorStore.addModule(state.search) : ''
-    "
+    @click:append-inner="state.valid ? moduleStore.addModule(state.search) : ''"
+    @update:search="updateModuleExisting()"
+    @update:model-value="updateModuleExisting()"
     density="compact"
     hide-details="auto"
-    label="Module which model is installed to"
+    label="Module"
     prepend-inner-icon="mdi:mdi-memory"
+    item-title="id"
+    item-value="id"
     v-model:search="state.search"
-    v-model="simulatorStore.state.selectedModule"
     variant="outlined"
   >
     <template #append><slot name="append" /></template>
@@ -44,7 +41,7 @@
 
         <template #append>
           <v-btn
-            @click.stop="simulatorStore.removeModule(item.title)"
+            @click.stop="moduleStore.removeModule(item.title)"
             class="icon"
             flat
             icon="mdi:mdi-close"
@@ -61,11 +58,12 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import { useSimulatorStore } from "../../stores/simulatorStore";
-const simulatorStore = useSimulatorStore();
+import { useModuleStore } from "../../stores/moduleStore";
+const moduleStore = useModuleStore();
 
 const state = reactive({
   search: "nestmlmodule",
+  exist: true,
   valid: false,
 });
 
@@ -75,6 +73,11 @@ const rules = [
     return state.valid || "The module name must ends with `module`.";
   },
 ];
+
+const updateModuleExisting = () => {
+  const moduleIds = moduleStore.moduleIds();
+  state.exist = moduleIds.includes(state.search);
+};
 </script>
 
 <style lang="scss">
