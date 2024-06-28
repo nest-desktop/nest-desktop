@@ -296,10 +296,13 @@ const fetchModels = () => {
 const generateModels = () => {
   const models = state.selectedModule.models
     .filter((modelId: string) => modelDBStore.hasModel(modelId))
-    .map((modelId: string) => ({
-      name: state.selectedModule.id,
-      script: modelDBStore.findModel(modelId).nestmlScript,
-    }));
+    .map((modelId: string) => {
+      const model = modelDBStore.findModel(modelId);
+      return {
+        name: model.id,
+        script: model.nestmlScript,
+      };
+    });
 
   if (!models && models.length === 0) return;
 
