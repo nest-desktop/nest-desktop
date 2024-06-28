@@ -1,50 +1,5 @@
 <template>
   <v-menu activator="parent">
-    <v-dialog max-width="480" v-model="state.dialog.delete">
-      <v-card>
-        <v-card-title> Are you sure to delete it? </v-card-title>
-
-        <v-card-text>
-          <v-list density="compact">
-            <v-list-subheader>Project: {{ project.name }} </v-list-subheader>
-            <v-list-item
-              :key="index"
-              v-for="(connection, index) in project.network.connections.all"
-            >
-              {{ connection.source.view.label }} ->
-              {{ connection.target.view.label }}
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="closeDialog()" size="small">close</v-btn>
-          <v-btn @click="deleteProject" size="small">save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog max-width="480" v-model="state.dialog.rename">
-      <v-card>
-        <v-card-title> Rename this project </v-card-title>
-
-        <v-card-text>
-          <v-text-field
-            label="Project name"
-            append-icon="mdi:mdi-pencil-outline"
-            v-model="state.projectName"
-          />
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="closeDialog()" size="small">close </v-btn>
-          <v-btn @click="saveProject" size="small">save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-list density="compact">
       <v-list-item
         :key="index"
@@ -62,59 +17,59 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from "vue";
+import { computed, nextTick } from "vue";
 
-import { TProject } from "@/types";
+import { TProject, TProjectProps } from "@/types";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useRouter, useRoute } from "vue-router";
+import { confirmDialog } from "vuetify3-dialog";
 const router = useRouter();
 const route = useRoute();
 
 const props = defineProps<{
-  project: TProject;
+  project: TProject | TProjectProps;
   projectDBStore: TProjectDBStore;
 }>();
 
 const project = computed(() => props.project);
 const projectDBStore = computed(() => props.projectDBStore);
 
-const state = reactive({
-  dialog: {
-    delete: false,
-    rename: false,
-  },
-  projectName: "",
-});
-
 const projectMenuItems = [
   {
     icon: "mdi:mdi-pencil",
     onClick: () => {
-      project.value.state.state.editMode = true;
-      // project.state.checkChanges();
+      projectDBStore.value.loadProject(project.value);
+      nextTick(() => {
+        project.value.state.state.editMode = true;
+      });
     },
     title: "Rename",
   },
   {
     icon: "mdi:mdi-content-save-outline",
-    onClick: () => projectDBStore.value.saveProject(project.value.id),
+    onClick: () => {
+      projectDBStore.value.loadProject(project.value);
+      nextTick(() => {
+        projectDBStore.value.saveProject(project.value);
+      });
+    },
     title: "Save",
   },
   {
     icon: "mdi:mdi-reload",
     onClick: () => {
-      projectDBStore.value.reloadProject(project.value.id);
+      projectDBStore.value.reloadProject(project.value);
     },
     title: "Reload",
   },
   {
     icon: "mdi:mdi-power",
     onClick: () => {
-      projectDBStore.value.unloadProject(project.value.id);
+      projectDBStore.value.unloadProject(project.value);
     },
     title: "Unload",
   },
@@ -122,7 +77,7 @@ const projectMenuItems = [
     icon: "mdi:mdi-content-duplicate",
     id: "projectDuplicate",
     onClick: () => {
-      const newProject = projectDBStore.value.duplicate();
+      const newProject = projectDBStore.value.duplicateProject(project.value);
       if (!route.path.endsWith(newProject.id)) {
         router.push({
           name: appStore.state.simulator + "NetworkEditor",
@@ -134,50 +89,21 @@ const projectMenuItems = [
   },
   {
     icon: "mdi:mdi-download",
-    onClick: () => projectDBStore.value.exportProject(project.value.id),
+    onClick: () => projectDBStore.value.exportProject(project.value),
     title: "Download",
   },
   {
     icon: "mdi:mdi-trash-can-outline",
-    onClick: () => projectDBStore.value.delete(project.value.id),
+    onClick: () =>
+      confirmDialog({
+        text: "Are you sure to delete it?",
+        title: "Delete project",
+      }).then((answer: boolean) => {
+        if (answer) {
+          projectDBStore.value.deleteProject(project.value);
+        }
+      }),
     title: "Delete",
   },
 ];
-
-/**
- * Close dialog.
- */
-const closeDialog = () => {
-  state.dialog.delete = false;
-  state.dialog.rename = false;
-};
-
-/**
- * Close project.
- */
-const saveProject = () => {
-  project.value.state.state.editMode = false;
-  project.value.name = state.projectName;
-  projectDBStore.value.saveProject(project.value.id);
-  closeDialog();
-};
-
-/**
- * Delete project.
- */
-const deleteProject = () => {
-  projectDBStore.value.deleteProject(project.value.id);
-  closeDialog();
-};
-
-// const openDialog = (action: string = "export") => {
-//   if (["delete", "rename"].includes(action)) {
-//     state.projectName = project.value.name;
-//     // state.dialog[action] = true;
-//   } else {
-//     project.value.state.reset();
-//     project.value.state.selected = true;
-//     // core.app.openDialog("projects", action, { projects: [project] });
-//   }
-// };
 </script>

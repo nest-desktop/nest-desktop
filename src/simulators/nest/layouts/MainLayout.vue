@@ -75,7 +75,6 @@ onMounted(() => {
     .axiosInstance()
     .get("/api/Models")
     .then((response: AxiosResponse) => {
-      // console.log(response);
       if (response.data && response.data.length > 0) {
         modelStore.state.models = response.data;
       }

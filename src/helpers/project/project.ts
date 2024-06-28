@@ -190,6 +190,7 @@ export class BaseProject extends BaseObj {
    */
   changes(): void {
     this.updateHash();
+
     this._state.checkChanges();
 
     this.logger.trace("changes");
@@ -248,6 +249,7 @@ export class BaseProject extends BaseObj {
     this.logger.trace("clean");
 
     this.updateHash();
+
     this._state.checkChanges();
   }
 
@@ -283,6 +285,9 @@ export class BaseProject extends BaseObj {
 
     // Initialize activity graph.
     this.activityGraph.init();
+
+    this.updateHash();
+    this.doc.hash = this.hash;
 
     this.clean();
   }

@@ -15,7 +15,7 @@ const logger = mainLogger.getSubLogger({
 });
 
 const loadProject = (projectId?: string) => {
-  logger.trace("load project:", truncate(projectId || ""));
+  logger.trace("load project:", truncate(projectId));
   const projectStore: TProjectStore = useNESTProjectStore();
   const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
 
@@ -61,7 +61,7 @@ const projectNew = () => {
 };
 
 const projectRedirect = (to: any) => {
-  logger.trace("redirect to project:", truncate(to.params.projectId || ""));
+  logger.trace("redirect to project:", truncate(to.params.projectId));
 
   const projectStore: TProjectStore = useNESTProjectStore();
   loadProject(to.params.projectId);

@@ -1,7 +1,7 @@
 // defineProjectDBStore.ts
 
 import { Store, defineStore } from "pinia";
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 
 import { download } from "@/helpers/common/download";
 import { logger as mainLogger } from "@/helpers/common/logger";
@@ -62,7 +62,7 @@ export function defineProjectDBStore(
      * It pushes new project to the first line of the list.
      */
     const addProject = (projectProps?: TProjectProps): Project => {
-      logger.trace("add project:", truncate(projectProps?.id || ""));
+      logger.trace("add project:", truncate(projectProps?.id));
 
       const project = newProject(projectProps);
       state.projects.unshift(project);
@@ -71,14 +71,12 @@ export function defineProjectDBStore(
 
     /**
      * Delete project in database and then update the list.
-     * @param project project object
+     * @param project project object or props
      */
-    const deleteProject = (project: Project): void => {
+    const deleteProject = (project: Project | TProjectProps): void => {
       logger.trace("delete project:", truncate(project.id));
 
-      db.deleteProject(project).then(() => {
-        removeFromList(project.id);
-      });
+      db.deleteProject(project).then(() => removeFromList(project));
     };
 
     /**
@@ -98,10 +96,12 @@ export function defineProjectDBStore(
      * @remarks
      * It pushes new project to the first line of the list.
      */
-    const duplicateProject = (project: Project): void => {
-      logger.trace("duplicate project");
+    const duplicateProject = (project: Project): Project => {
+      logger.trace("duplicate project", truncate(project.id));
 
-      addProject(project.toJSON());
+      const projectDoc = project.doc ? project.toJSON() : project;
+      projectDoc.id = undefined;
+      return addProject(projectDoc);
     };
 
     /**
@@ -109,22 +109,22 @@ export function defineProjectDBStore(
      * @param projectId project ID
      */
     const exportProject = (
-      projectId: string,
+      project: Project | TProjectProps,
       withActivities: boolean = false
     ): void => {
-      logger.trace("export project:", truncate(projectId));
+      logger.trace("export project:", truncate(project.id));
 
-      const project = findProject(projectId) as Project;
-      const projectData: TProjectProps = project.toJSON();
-      if (withActivities) {
-        projectData.activities = project.activities.toJSON();
+      if (project.doc && withActivities) {
+        project.activities = project.activities.toJSON();
       }
-      download(JSON.stringify(projectData), "project");
+
+      download(JSON.stringify(project), "project");
     };
 
     /**
      * Find project from the list.
      * @param projectId project ID
+     * @returns project object or props
      */
     const findProject = (
       projectId: string
@@ -172,7 +172,7 @@ export function defineProjectDBStore(
         project = findProject(projectId);
 
         if (project && !isProjectLoaded(project)) {
-          loadProject(projectId);
+          loadProject(project);
           project = findProject(projectId) as Project;
         }
       }
@@ -245,20 +245,17 @@ export function defineProjectDBStore(
 
     /**
      * Load a project in the list.
-     * @param projectId project ID
+     * @param project project object or props
      * @returns
      */
-    const loadProject = (projectId: string): Project | undefined => {
-      logger.trace("load project:", truncate(projectId));
-
-      let project = findProject(projectId);
-      if (project == undefined) return;
+    const loadProject = (
+      project: Project | TProjectProps
+    ): Project | undefined => {
+      logger.trace("load project:", truncate(project.id));
 
       if (!project.docId) {
-        const projectIds = state.projects.map(
-          (project: Project | TProjectProps) => project.id
-        );
-        const projectIdx = projectIds.indexOf(projectId);
+        const projectIds = getProjectIds();
+        const projectIdx = projectIds.indexOf(project.id);
 
         if (projectIdx === -1) return;
 
@@ -280,53 +277,53 @@ export function defineProjectDBStore(
 
     /**
      * Reload the project in the list.
-     * @param projectId project ID
+     * @param projectId project object or props
      */
-    const reloadProject = (projectId: string): void => {
-      logger.trace("reload project:", truncate(projectId));
+    const reloadProject = (project: Project | TProjectProps): void => {
+      logger.trace("reload project:", truncate(project.id));
 
-      unloadProject(projectId);
-      loadProject(projectId);
+      unloadProject(project);
+      nextTick(() => loadProject(project));
     };
 
     /**
      * Remove project from the list.
-     * @param projectId project ID
+     * @param projectId project object or props
      */
-    const removeFromList = (projectId: string): void => {
-      logger.trace("remove project from the list:", truncate(projectId));
+    const removeFromList = (project: Project | TProjectProps): void => {
+      logger.trace("remove project from the list:", truncate(project.id));
 
-      const idx: number = state.projects
-        .map((project: Project | TProjectProps) => project.id)
-        .indexOf(projectId);
+      const projectIds = getProjectIds();
+      const projectIdx: number = projectIds.indexOf(project.id);
 
-      if (idx !== -1) {
+      if (projectIdx !== -1) {
         // Remove project from the project list.
-        state.projects.splice(idx, 1);
+        state.projects.splice(projectIdx, 1);
       }
     };
 
     /**
      * Save project from the list.
-     * @param projectId project ID
+     * @param project project object
      */
-    const saveProject = (projectId: string): void => {
-      logger.trace("save project:", truncate(projectId));
+    const saveProject = (project: Project): void => {
+      logger.trace("save project:", truncate(project.id));
 
-      const project = findProject(projectId) as Project;
-      db.importProject(project);
+      db.importProject(project).then(() => {
+        project.doc.hash = project.hash;
+        project.state.checkChanges();
+      });
     };
 
     /**
      * Unload the project in the list.
-     * @param projectId project ID
+     * @param project project object or props
      */
-    const unloadProject = (projectId: string): void => {
-      logger.trace("Unload project:", projectId);
+    const unloadProject = (project: Project | TProjectProps): void => {
+      logger.trace("unload project:", truncate(project.id));
 
-      const project = findProject(projectId) as Project;
       if (isProjectLoaded(project) && project != undefined) {
-        const projectIdx: number = getProjectIds().indexOf(projectId);
+        const projectIdx: number = getProjectIds().indexOf(project.id);
         state.projects[projectIdx] = project.doc;
         state.numLoaded -= 1;
       }

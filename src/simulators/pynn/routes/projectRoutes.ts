@@ -14,7 +14,7 @@ const logger = mainLogger.getSubLogger({
 });
 
 const loadProject = (projectId?: string) => {
-  logger.trace("load project:", truncate(projectId || ""));
+  logger.trace("load project:", truncate(projectId));
   const projectStore: TProjectStore = usePyNNProjectStore();
   const projectDBStore: TProjectDBStore = usePyNNProjectDBStore();
 

@@ -117,7 +117,7 @@ export function defineProjectStore(
      * @param projectId project ID
      */
     const loadProject = (projectId: string = ""): void => {
-      logger.trace("load project:", truncate(projectId || ""));
+      logger.trace("load project:", truncate(projectId));
 
       state.project = projectDBStore.getProject(projectId);
       state.projectId = state.project.id;
@@ -152,7 +152,7 @@ export function defineProjectStore(
      * Save current project.
      */
     const saveCurrentProject = (): void => {
-      logger.trace("save project:", truncate(state.projectId || ""));
+      logger.trace("save project:", truncate(state.projectId));
 
       projectDBStore.saveProject(state.projectId);
     };
@@ -161,7 +161,7 @@ export function defineProjectStore(
      * Start simulation of the current project.
      */
     const startSimulation = (): void => {
-      logger.trace("start simulation:", truncate(state.projectId || ""));
+      logger.trace("start simulation:", truncate(state.projectId));
 
       router
         .push({

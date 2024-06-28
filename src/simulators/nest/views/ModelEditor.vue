@@ -1,48 +1,46 @@
 <template>
-  <v-container>
-    <v-card title="Model editor">
-      <v-card-text>
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-              density="compact"
-              hide-details
-              label="Model id"
-              v-model="model.id"
-              variant="outlined"
-            />
-          </v-col>
+  <v-card flat title="Model editor">
+    <v-card-text>
+      <v-row>
+        <v-col cols="6">
+          <v-text-field
+            density="compact"
+            hide-details
+            label="Model id"
+            v-model="model.id"
+            variant="outlined"
+          />
+        </v-col>
 
-          <v-col cols="4">
-            <v-text-field
-              density="compact"
-              hide-details
-              label="Model label"
-              v-model="model.label"
-              variant="outlined"
-            />
-          </v-col>
+        <v-col cols="6">
+          <v-text-field
+            density="compact"
+            hide-details
+            label="Model label"
+            v-model="model.label"
+            variant="outlined"
+          />
+        </v-col>
 
-          <v-col cols="4">
-            <v-select
-              :items
-              density="compact"
-              hide-details
-              label="Model element type"
-              v-model="model.elementType"
-              variant="outlined"
-            />
-          </v-col>
-        </v-row>
+        <!-- <v-col cols="4">
+          <v-select
+            :items
+            density="compact"
+            hide-details
+            label="Model element type"
+            v-model="model.elementType"
+            variant="outlined"
+          />
+        </v-col> -->
+      </v-row>
 
-        <NESTMLModelEditor :model />
-      </v-card-text>
+      <NESTMLModelEditor :model />
+    </v-card-text>
 
-      <v-card-actions>
-        <v-btn @click="modelStore.save()">save</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-container>
+    <v-card-actions>
+      <v-btn @click="modelStore.save()">save</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -58,5 +56,5 @@ const modelStore: TModelStore = useNESTModelStore();
 
 const model = computed(() => modelStore.model as NESTModel);
 
-const items = ["neuron", "recorder", "stimulator", "synapse"];
+// const items = ["neuron", "recorder", "stimulator", "synapse"];
 </script>

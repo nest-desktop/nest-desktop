@@ -13,11 +13,12 @@ export class BaseProjectDB extends DatabaseService {
 
   /**
    * Create a project in the database.
+   * @param project project object or props
    */
-  async createProject(project: TProject): Promise<void> {
+  async createProject(project: TProject | TProjectProps): Promise<void> {
     this.logger.trace("create project:", truncate(project.id));
 
-    const data = project.toJSON();
+    const data = project.doc ? project.toJSON() : project;
     return this.create(data as IDoc).then((res: IRes) => {
       if (res.ok) {
         project.doc._id = res.id;
@@ -28,6 +29,7 @@ export class BaseProjectDB extends DatabaseService {
 
   /**
    * Create multiple projects in the database.
+   * @param project project props
    */
   async createProjects(projectsProps: TProjectProps[]): Promise<boolean> {
     this.logger.trace("create projects");
@@ -47,8 +49,9 @@ export class BaseProjectDB extends DatabaseService {
 
   /**
    * Delete a project in the database.
+   * @param project project object or props
    */
-  deleteProject(project: TProject | TProjectProps): Promise<IRes> {
+  async deleteProject(project: TProject | TProjectProps): Promise<IRes> {
     this.logger.trace("delete project:", truncate(project.id as string));
 
     const projectId: string = (
@@ -75,21 +78,26 @@ export class BaseProjectDB extends DatabaseService {
   /**
    * Import the project in the database.
    */
-  importProject(project: TProject): void {
-    this.logger.trace("import project:", truncate(project.id as string));
+  async importProject(project: TProject): Promise<void> {
+    this.logger.trace("import project:", truncate(project.id));
 
-    project.docId ? this.updateProject(project) : this.createProject(project);
+    return project.docId
+      ? this.updateProject(project)
+      : this.createProject(project);
   }
 
   /**
    * Update a project in the database.
    */
-  updateProject(project: TProject): void {
-    if (!project.docId) return;
+  async updateProject(project: TProject | TProjectProps): Promise<void> {
     this.logger.trace("update project:", truncate(project.id));
+    const docId = (
+      project instanceof BaseProject ? project.docId : project._id
+    ) as string;
 
-    const data: TProjectProps = project.toJSON();
-    this.update(project.docId, data as IDoc).then((res: IRes) => {
+    const data: TProjectProps =
+      project instanceof BaseProject ? project.toJSON() : project;
+    return this.update(docId, data as IDoc).then((res: IRes) => {
       if (res.ok) {
         project.doc._id = res.id;
         project.doc._rev = res.rev;

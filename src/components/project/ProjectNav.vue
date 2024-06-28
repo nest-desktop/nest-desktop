@@ -73,67 +73,44 @@
               name: appStore.state.simulator + 'Project',
               params: { projectId: project.id },
             }"
+            :ripple="!project.state?.editMode"
             v-bind="props"
           >
-            <template #append>
+            <template #append v-if="!project.state?.editMode">
               <template v-if="project.doc">
                 <v-btn
                   @click.prevent="saveProject(project)"
-                  :disabled="
-                    !project.state?.changes && !project.state?.editMode
-                  "
+                  :disabled="!project.state?.changes"
+                  :color="project.state?.changes ? 'red' : 'primary'"
                   :icon="
                     project.state?.changes
-                      ? 'mdi:mdi-content-save-edit-outline'
-                      : 'mdi:mdi-content-save-check-outline'
+                      ? 'mdi:mdi-content-save-outline'
+                      : 'mdi:mdi-check'
                   "
                   size="x-small"
                   variant="text"
                 />
-
-                <v-btn
-                  :color="isHovering ? 'primary' : 'transparent'"
-                  @click.prevent
-                  icon
-                  size="x-small"
-                  variant="text"
-                >
-                  <v-icon icon="mdi:mdi-dots-vertical" />
-
-                  <ProjectMenu :project :projectDBStore />
-                </v-btn>
               </template>
 
-              <template v-else>
-                <v-btn
-                  :color="isHovering ? 'primary' : 'transparent'"
-                  @click.prevent
-                  icon
-                  size="x-small"
-                  variant="text"
-                >
-                  <v-icon icon="mdi:mdi-dots-vertical" />
+              <v-btn
+                :color="isHovering ? 'primary' : 'transparent'"
+                @click.prevent
+                icon
+                size="x-small"
+                variant="text"
+              >
+                <v-icon icon="mdi:mdi-dots-vertical" />
 
-                  <v-menu activator="parent">
-                    <v-list density="compact">
-                      <v-list-item
-                        @click="projectDBStore.deleteProject(project)"
-                      >
-                        <template #prepend>
-                          <v-icon icon="mdi:mdi-trash-can-outline" />
-                        </template>
-                        <v-list-item-title>Delete</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-btn>
-              </template>
+                <ProjectMenu :project :projectDBStore />
+              </v-btn>
             </template>
 
             <template #default v-if="project.state?.editMode">
               <v-text-field
                 @click.prevent
+                @click:append-inner="saveProject(project)"
                 @update:model-value="project.state.state.changes = true"
+                append-inner-icon="mdi:mdi-content-save-edit-outline"
                 autofocused
                 class="pt-2"
                 density="compact"
@@ -153,7 +130,7 @@
                   {{ truncate(project.id) }}
                 </span>
                 <span class="mx-1" v-if="project.doc">
-                  {{ truncate(project.docId || "") }}
+                  {{ truncate(project.docId) }}
                 </span>
               </v-list-item-subtitle>
             </template>
@@ -258,7 +235,7 @@ const resizeSideNav = () => {
  */
 const saveProject = (project: TProject) => {
   project.state.state.editMode = false;
-  projectDBStore.value.saveProject(project.id);
+  projectDBStore.value.saveProject(project);
 };
 </script>
 

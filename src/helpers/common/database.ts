@@ -160,8 +160,6 @@ export class DatabaseService extends BaseObj {
     this.logger.trace("update:", truncate(id));
 
     this.clean(data);
-    console.log(id);
-
     return this._db
       .get(id)
       .then((doc: IDoc) => {
@@ -176,7 +174,6 @@ export class DatabaseService extends BaseObj {
           .catch((err: IErr) => this.logger.error("Put doc:", err.stack));
       })
       .catch((err: IErr) => {
-        console.log(id);
         this.logger.error("Get doc:", err.stack);
         // return this.create(data);
       });

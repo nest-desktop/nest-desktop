@@ -1,57 +1,74 @@
 <template>
   <v-card flat>
-    <v-toolbar class="px-2" color="transparent" density="compact" tile>
-      Load NESTML template from GitHub
-
-      <template #append>
-        <v-btn @click="loadNESTMLScript">load nestml script</v-btn>
-        <v-btn @click="getParams">get params</v-btn>
-      </template>
-    </v-toolbar>
-
     <v-card-text>
-      <codemirror v-model="model.nestmlScript" />
+      <v-expansion-panels>
+        <v-expansion-panel
+          :disabled="!['neuron', 'synapse'].includes(model.elementType)"
+        >
+          <v-expansion-panel-title>
+            NESTML script for {{ model.elementType }}
+            <v-spacer />
+            <v-chip
+              :key="index"
+              class="mx-1"
+              size="small"
+              v-for="(module, index) in state.selectedModules"
+            >
+              {{ module.id }}
+            </v-chip>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-toolbar class="px-2" color="transparent" density="compact">
+              <v-btn @click="loadNESTMLScript" variant="outlined">
+                load nestml script
+              </v-btn>
+              <v-btn @click="getParams" class="mx-1" variant="outlined">
+                get params
+              </v-btn>
+
+              <template #append>
+                <NESTModuleSelect
+                  @click.stop
+                  @update:model-value="updateModules()"
+                  chips
+                  width="400"
+                  multiple
+                  v-model="state.selectedModules"
+                />
+              </template>
+            </v-toolbar>
+
+            <codemirror v-model="model.nestmlScript" />
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-card-text>
-
-    <v-card-actions>
-      <v-spacer />
-
-      <NESTModuleSelect
-        class="px-2"
-        max-width="300"
-        v-model="state.selectedModule"
-      />
-
-      <v-btn
-        @click="addModelToModule"
-        :disabled="model.nestmlScript.length === 0"
-      >
-        add to module
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts" setup>
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { computed, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive } from "vue";
 
 import { notifyError } from "@/helpers/common/dialog";
 
 import NESTModuleSelect from "./NESTModuleSelect.vue";
 import { NESTModel } from "../../helpers/model/model";
 
-import { useModuleStore } from "../../stores/moduleStore";
+import { IModule, useModuleStore } from "../../stores/moduleStore";
 const moduleStore = useModuleStore();
 
 import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
+import { watch } from "vue";
 const nestmlServerStore = useNESTMLServerStore();
 
 const props = defineProps<{ model: NESTModel }>();
 const model = computed(() => props.model as NESTModel);
 
 const state = reactive({
-  selectedModule: moduleStore.findModule("nestmlmodule"),
+  selectedModules: moduleStore.state.modules.filter((module: IModule) =>
+    module.models.includes(model.value.id)
+  ),
 });
 
 const getParams = () => {
@@ -90,9 +107,29 @@ const loadNESTMLScript = () => {
     });
 };
 
-const addModelToModule = () => {
-  if (!state.selectedModule.models.includes(model.value.id)) {
-    state.selectedModule.models.push(model.value.id);
-  }
+const updateModules = () => {
+  moduleStore.state.modules.forEach((module: IModule) => {
+    nextTick(() => {
+      if (
+        state.selectedModules.includes(module) &&
+        !module.models.includes(model.value.id) &&
+        model.value.nestmlScript.length > 0
+      ) {
+        module.models.push(model.value.id);
+      } else if (module.models.includes(model.value.id)) {
+        module.models.splice(module.models.indexOf(model.value.id), 1);
+      }
+    });
+  });
 };
+
+const update = () => {
+  state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>
+    module.models.includes(model.value.id)
+  );
+};
+
+onMounted(update);
+
+watch(() => props.model, update);
 </script>

@@ -124,6 +124,7 @@ export class BaseNetwork extends BaseObj {
 
     this.updateStyle();
     this.updateHash();
+
     this.project.changes();
   }
 

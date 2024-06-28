@@ -656,6 +656,7 @@ export class BaseNode extends BaseObj {
     this.clean();
     this.updateRecords();
     this.updateRecordsColor();
+
     this.updateHash();
   }
 
