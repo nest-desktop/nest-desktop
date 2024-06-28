@@ -108,8 +108,8 @@ export class DatabaseService extends BaseObj {
         const docs: IDoc[] = res.rows.map((row: { doc: IDoc }) => row.doc);
         if (sortedBy) {
           docs.sort((a: IDoc, b: IDoc) => {
-            const aValue = a[sortedBy] as string;
-            const bValue = b[sortedBy] as string;
+            const aValue = (a[sortedBy] as string) || "";
+            const bValue = (b[sortedBy] as string) || "";
             return aValue.localeCompare(bValue);
           });
         }

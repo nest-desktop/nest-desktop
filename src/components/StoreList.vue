@@ -68,12 +68,17 @@
           <v-list-item
             :key="index"
             :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
-            :title="project.name"
+            :title="
+              project.name ||
+              'undefined project ' + projectDBStore.getProjectIdx(project)
+            "
             :to="{
               name: simulator + 'Project',
               params: { projectId: project.id },
             }"
-            v-for="(project, index) in projectDBStore.state.projects"
+            v-for="(project, index) in projectDBStore.state.projects
+              .slice()
+              .reverse()"
           />
         </v-list>
       </v-window-item>

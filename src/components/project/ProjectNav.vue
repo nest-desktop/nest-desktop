@@ -65,7 +65,7 @@
     </v-toolbar>
 
     <v-list :key="projects.length" density="compact" lines="two" nav>
-      <template v-for="(project, index) in projects">
+      <template v-for="(project, index) in projects.slice().reverse()">
         <v-hover v-slot="{ isHovering, props }">
           <v-list-item
             :key="index"
@@ -123,7 +123,10 @@
 
             <template #default v-else-if="appStore.state.devMode">
               <v-list-item-title>
-                {{ project.name }}
+                {{
+                  project.name ||
+                  "undefined project " + projectDBStore.getProjectIdx(project)
+                }}
               </v-list-item-title>
               <v-list-item-subtitle>
                 <span class="mx-1" v-if="project.id">
@@ -137,7 +140,10 @@
 
             <template #default v-else>
               <v-list-item-title>
-                {{ project.name }}
+                {{
+                  project.name ||
+                  "undefined project " + projectDBStore.getProjectIdx(project)
+                }}
               </v-list-item-title>
               <v-list-item-subtitle>
                 {{ project.network.nodes.length }} nodes,

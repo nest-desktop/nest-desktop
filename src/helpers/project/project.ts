@@ -55,7 +55,7 @@ export class BaseProject extends BaseObj {
     this._updatedAt = projectProps.updatedAt;
 
     // Project metadata.
-    this._name = projectProps.name || "undefined project";
+    this._name = projectProps.name || "";
     this._description = projectProps.description || "";
 
     // Initialize model database.

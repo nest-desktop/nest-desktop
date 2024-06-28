@@ -65,8 +65,16 @@ export function defineProjectDBStore(
       logger.trace("add project:", truncate(projectProps?.id));
 
       const project = newProject(projectProps);
-      state.projects.unshift(project);
+      addToList(project);
       return project;
+    };
+
+    /**
+     * Add project to the list.
+     * @param project project object or props
+     */
+    const addToList = (project: TProject | TProjectProps): void => {
+      state.projects.push(project);
     };
 
     /**
@@ -168,6 +176,7 @@ export function defineProjectDBStore(
 
       if (!projectId || !hasProjectId(projectId)) {
         project = addProject();
+        project.state.state.editMode = true;
       } else {
         project = findProject(projectId);
 
@@ -181,6 +190,9 @@ export function defineProjectDBStore(
 
     const getProjectIds = (): (string | undefined)[] =>
       state.projects.map((project: Project | TProjectProps) => project.id);
+
+    const getProjectIdx = (project: TProject | TProjectProps): number =>
+      state.projects.indexOf(project);
 
     /**
      * Check if the store has project.
@@ -312,6 +324,8 @@ export function defineProjectDBStore(
       db.importProject(project).then(() => {
         project.doc.hash = project.hash;
         project.state.checkChanges();
+        // removeFromList(project);
+        // addToList(project);
       });
     };
 
@@ -336,10 +350,12 @@ export function defineProjectDBStore(
       logger.trace("update list");
 
       state.projects = [];
-      return db.list("", true).then((projectsProps: TProjectProps[]) => {
-        state.projects = projectsProps as TProjectProps[];
-        state.initialized = true;
-      });
+      return db
+        .list("updatedAt", false)
+        .then((projectsProps: TProjectProps[]) => {
+          state.projects = projectsProps as TProjectProps[];
+          state.initialized = true;
+        });
     };
 
     /**
@@ -366,6 +382,7 @@ export function defineProjectDBStore(
       findProject,
       getProject,
       getProjectIds,
+      getProjectIdx,
       importProjects,
       importProjectsFromAssets,
       init,
