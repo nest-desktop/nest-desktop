@@ -3,8 +3,8 @@
 import { useAppStore } from "@/stores/appStore";
 import { TNode } from "@/types";
 
+import { deviation, max, mean, min, sum } from "../../../utils/array";
 import { SpikeActivity } from "../../activity/spikeActivity";
-import { deviation, max, mean, min, sum } from "../../common/array";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import {

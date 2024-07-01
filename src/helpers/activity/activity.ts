@@ -5,9 +5,9 @@ import { UnwrapRef, reactive } from "vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { TNode, TProject } from "@/types";
 
+import { download } from "../../utils/download";
 import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";
-import { download } from "../common/download";
 
 export interface IActivityProps {
   events?: IEventProps;

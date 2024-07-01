@@ -52,7 +52,7 @@
             :key="index"
             :value="index"
             @click="item.onclick"
-            v-for="(item, index) in projectsMenuItems"
+            v-for="(item, index) in menuItems"
           >
             <template #prepend>
               <v-icon :icon="item.icon" />
@@ -192,7 +192,7 @@ const projects = computed(() =>
 
 const search = ref("");
 
-const projectsMenuItems = [
+const menuItems = [
   { title: "Import", icon: "mdi:mdi-import", id: "import-dialog" },
   { title: "Export", icon: "mdi:mdi-export", id: "export-dialog" },
   { title: "Delete", icon: "mdi:mdi-trash-can-outline", id: "delete-dialog" },

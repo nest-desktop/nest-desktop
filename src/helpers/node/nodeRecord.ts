@@ -4,8 +4,8 @@ import * as d3 from "d3";
 
 import { TNode } from "@/types";
 
+import { max, min } from "../../utils/array";
 import { Activity } from "../activity/activity";
-import { max, min } from "../common/array";
 import { BaseObj } from "../common/base";
 
 export interface INodeRecordProps {

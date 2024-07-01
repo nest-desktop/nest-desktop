@@ -9,11 +9,11 @@ import { RouteRecordRaw } from "vue-router";
 import { IconSet } from "vuetify";
 
 import { Config } from "@/helpers/common/config";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
 import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
 import { TBackendStore } from "@/stores/defineBackendStore";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { nest } from "./nest";
 import { norse } from "./norse";

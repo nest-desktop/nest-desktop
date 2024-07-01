@@ -1,11 +1,11 @@
 // node.ts
 
-import { onlyUnique } from "@/helpers/common/array";
 import { Parameter } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
 import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
+import { onlyUnique } from "@/utils/array";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";

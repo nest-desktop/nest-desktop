@@ -75,7 +75,7 @@ import { IProjectProps } from "@/helpers/project/project";
 import { TModel, TProject } from "@/types";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-import { download } from "@/helpers/common/download";
+import { download } from "@/utils/download";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();

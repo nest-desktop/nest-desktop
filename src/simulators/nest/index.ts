@@ -1,8 +1,8 @@
 // nest/index.ts
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { ISimulatorProps } from "../";
 import { nestCompletions } from "./codemirror/nestCompletion";

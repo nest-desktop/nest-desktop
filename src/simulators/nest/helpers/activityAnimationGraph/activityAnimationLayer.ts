@@ -5,7 +5,7 @@ import { UnwrapRef, reactive } from "vue";
 
 import { Activity, IEventProps } from "@/helpers/activity/activity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { range } from "@/helpers/common/array";
+import { range } from "@/utils/array";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";

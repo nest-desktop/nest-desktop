@@ -1,7 +1,7 @@
 // interSpikeIntervalHistogramModel.ts
 
+import { max } from "../../../utils/array";
 import { SpikeActivity } from "../../activity/spikeActivity";
-import { max } from "../../common/array";
 import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";

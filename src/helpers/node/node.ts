@@ -10,10 +10,10 @@ import {
   TSimulation,
 } from "@/types";
 
+import { onlyUnique } from "../../utils/array";
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { SpikeActivity } from "../activity/spikeActivity";
-import { onlyUnique } from "../common/array";
 import { BaseObj } from "../common/base";
 import { BaseModel } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";

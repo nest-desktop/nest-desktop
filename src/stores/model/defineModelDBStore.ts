@@ -4,11 +4,12 @@ import { Store, _UnwrapAll, defineStore } from "pinia";
 import { UnwrapRef, reactive } from "vue";
 
 import { IDoc } from "@/helpers/common/database";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseModel } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import { TModel, TModelDB, TModelProps } from "@/types";
+import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
+import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 interface IModelDBStoreState {
@@ -21,7 +22,7 @@ type Class<T> = new (...props: any) => T;
 
 export type TModelDBStore = Store<string, any>;
 // {
-//   deleteModel: (modelId: string) => Promise<void>;
+//   deleteModel: (model: TModel) => Promise<void>;
 //   findModel: (modelId: string) => TModel | undefined;
 //   getModelsByElementType: (elementType: string) => TModel[];
 //   getModel: (modelId: string) => TModel | undefined;
@@ -32,7 +33,7 @@ export type TModelDBStore = Store<string, any>;
 //   init: () => void;
 //   newModel: (modelProps: TModelProps) => TModel;
 //   resetDatabase: () => void;
-//   saveModel: (modelId: string) => Promise<TModelProps | void>;
+//   saveModel: (model: TModel) => Promise<TModelProps | void>;
 //   state: IModelDBStoreState;
 //   updateList: () => void;
 //   validateModel: (modelProps: TModelProps) => boolean;
@@ -68,14 +69,70 @@ export function defineModelDBStore(
     });
 
     /**
+     * Add model to the list.
+     * @param model model object
+     */
+    const _addToList = (model: TModel): void => {
+      state.models.push(model);
+    };
+
+    /**
+     * Add this new model to the list.
+     * @param modelProps model props
+     *
+     * @remarks
+     * It pushes new model to the first line of the list.
+     */
+    const addModel = (modelProps: TModelProps): Model => {
+      logger.trace("add model:", truncate(modelProps?.id));
+
+      const model = newModel(modelProps);
+      _addToList(model);
+      return model;
+    };
+
+    /**
      * Delete model object from the database and then list model.
-     * @param modelId model ID
+     * @param model model object
      * @returns
      */
-    const deleteModel = async (modelId: string): Promise<void> => {
-      logger.trace("delete model:", modelId);
+    const deleteModel = async (model: Model): Promise<void> => {
+      logger.trace("delete model:", model.id);
 
-      return db.deleteModel(modelId).then(() => updateList());
+      return db.deleteModel(model).then(() => updateList());
+    };
+
+    /**
+     * Clone this current model and add it to the list.
+     *
+     * @remarks
+     * It pushes new model to the first line of the list.
+     */
+    const duplicateModel = (model: Model): Model => {
+      logger.trace("duplicate model", truncate(model.id));
+
+      const modelDoc = model.doc ? model.toJSON() : model;
+      modelDoc.id += "_duplicated";
+      const modelCloned = addModel(modelDoc);
+      modelCloned.custom = true;
+      return modelCloned;
+    };
+
+    /**
+     * Export model from the list.
+     * @param modelId model ID
+     */
+    const exportModel = (
+      model: Model | TModelProps,
+      withActivities: boolean = false
+    ): void => {
+      logger.trace("export model:", truncate(model.id));
+
+      if (model.doc && withActivities) {
+        model.activities = model.activities.toJSON();
+      }
+
+      download(JSON.stringify(model), "model");
     };
 
     /**
@@ -200,14 +257,15 @@ export function defineModelDBStore(
 
     /**
      * Save model object to the database.
-     * @param modelId model ID
+     * @param model model object
      */
-    const saveModel = async (modelId: string): Promise<TModelProps | void> => {
-      logger.trace("save model:", truncate(modelId));
+    const saveModel = async (model: Model): Promise<TModelProps | void> => {
+      logger.trace("save model:", truncate(model.id));
 
-      const model = findModel(modelId);
-      if (!model) return;
-      return db.importModel(model);
+      return db.importModel(model).then(() => {
+        // model.state.checkChanges();
+        // updateList();
+      });
     };
 
     /**
@@ -218,11 +276,7 @@ export function defineModelDBStore(
 
       state.models = [];
       db.list("id").then((modelsProps: TModelProps[]) => {
-        modelsProps.forEach((modelProps: TModelProps) => {
-          const model = newModel(modelProps);
-          // @ts-ignore Argument of type 'Model' is not assignable to parameter of type 'UnwrapRefSimple<Model>'.
-          state.models.push(model);
-        });
+        modelsProps.forEach((modelProps: TModelProps) => addModel(modelProps));
         state.initialized = true;
       });
     };
@@ -241,6 +295,8 @@ export function defineModelDBStore(
 
     return {
       deleteModel,
+      duplicateModel,
+      exportModel,
       findModel,
       getModel,
       getModelsByElementType,

@@ -3,12 +3,12 @@
 import { Store, defineStore } from "pinia";
 import { nextTick, reactive } from "vue";
 
-import { download } from "@/helpers/common/download";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseProject } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
 import { TProject, TProjectDB, TProjectProps } from "@/types";
+import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
+import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 interface IProjectDBStoreState {
@@ -55,6 +55,14 @@ export function defineProjectDBStore(
     });
 
     /**
+     * Add project to the list.
+     * @param project project object or props
+     */
+    const _addToList = (project: TProject | TProjectProps): void => {
+      state.projects.push(project);
+    };
+
+    /**
      * Add this new project to the list.
      * @param projectProps project props
      *
@@ -65,16 +73,8 @@ export function defineProjectDBStore(
       logger.trace("add project:", truncate(projectProps?.id));
 
       const project = newProject(projectProps);
-      addToList(project);
+      _addToList(project);
       return project;
-    };
-
-    /**
-     * Add project to the list.
-     * @param project project object or props
-     */
-    const addToList = (project: TProject | TProjectProps): void => {
-      state.projects.push(project);
     };
 
     /**
@@ -325,7 +325,7 @@ export function defineProjectDBStore(
         project.doc.hash = project.hash;
         project.state.checkChanges();
         // removeFromList(project);
-        // addToList(project);
+        // _addToList(project);
       });
     };
 

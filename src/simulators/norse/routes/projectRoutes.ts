@@ -1,8 +1,8 @@
 // projectRoutes.ts
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useNorseProjectDBStore } from "../stores/project/projectDBStore";

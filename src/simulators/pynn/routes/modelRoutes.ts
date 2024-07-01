@@ -1,7 +1,7 @@
 // modelRoute.ts
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { TModelStore } from "@/stores/model/defineModelStore";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { usePyNNModelStore } from "../stores/model/modelStore";
 

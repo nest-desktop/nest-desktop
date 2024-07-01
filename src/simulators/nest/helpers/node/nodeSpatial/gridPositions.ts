@@ -1,10 +1,10 @@
 // gridPositions.ts
 
-import { range } from "@/helpers/common/array";
+import { range } from "@/utils/array";
 import { round } from "@/utils/converter";
 
-import { NESTNodeSpatial } from "./nodeSpatial";
 import { BasePositions, IBasePositionsProps } from "./basePositions";
+import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IGridPositionsProps extends IBasePositionsProps {
   center?: number[];

@@ -1,56 +1,84 @@
 <template>
-  <v-card flat>
-    <v-card-text>
-      <v-expansion-panels>
-        <v-expansion-panel
-          :disabled="!['neuron', 'synapse'].includes(model.elementType)"
+  <v-expansion-panels class="my-2" flat>
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        NESTML script for {{ model.elementType }}
+        <v-spacer />
+        <v-chip
+          :key="index"
+          class="mx-1"
+          size="small"
+          v-for="(module, index) in state.selectedModules"
         >
-          <v-expansion-panel-title>
-            NESTML script for {{ model.elementType }}
-            <v-spacer />
-            <v-chip
-              :key="index"
-              class="mx-1"
-              size="small"
-              v-for="(module, index) in state.selectedModules"
-            >
-              {{ module.id }}
-            </v-chip>
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <v-toolbar class="px-2" color="transparent" density="compact">
-              <v-btn @click="loadNESTMLScript" variant="outlined">
-                load nestml script
-              </v-btn>
-              <v-btn @click="getParams" class="mx-1" variant="outlined">
-                get params
-              </v-btn>
+          {{ module.id }}
+        </v-chip>
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <v-toolbar color="transparent" density="compact">
+          <v-select
+            :items="state.elementTypes"
+            @update:model-value="fetchModels"
+            class="mx-2"
+            density="compact"
+            hide-details
+            item-title="path"
+            item-value="path"
+            label="Select an element type"
+            return-object
+            v-model="state.selectedElementType"
+            variant="outlined"
+          />
 
-              <template #append>
-                <NESTModuleSelect
-                  @click.stop
-                  @update:model-value="updateModules()"
-                  chips
-                  width="400"
-                  multiple
-                  v-model="state.selectedModules"
-                />
-              </template>
-            </v-toolbar>
+          <v-select
+            :disabled="state.models.length === 0"
+            :items="state.models"
+            class="mx-2"
+            density="compact"
+            hide-details
+            item-title="path"
+            item-value="path"
+            label="Select a nestml file"
+            return-object
+            v-model="state.selectedModel"
+            variant="outlined"
+          />
 
-            <codemirror v-model="model.nestmlScript" />
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-card-text>
-  </v-card>
+          <v-btn
+            @click="loadNESTMLScript"
+            icon="mdi:mdi-cloud-arrow-down-outline"
+            title="Load nestml script"
+            size="small"
+          />
+
+          <v-spacer />
+
+          <v-btn @click="getParams" class="mx-1" variant="outlined">
+            get params
+          </v-btn>
+
+          <template #append>
+            <NESTModuleSelect
+              @click.stop
+              @update:model-value="updateModules()"
+              chips
+              width="400"
+              multiple
+              v-model="state.selectedModules"
+            />
+          </template>
+        </v-toolbar>
+
+        <codemirror v-model="model.nestmlScript" />
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script lang="ts" setup>
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { computed, nextTick, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
-import { notifyError } from "@/helpers/common/dialog";
+import { notifyError } from "@/utils/dialog";
 
 import NESTModuleSelect from "./NESTModuleSelect.vue";
 import { NESTModel } from "../../helpers/model/model";
@@ -59,17 +87,41 @@ import { IModule, useModuleStore } from "../../stores/moduleStore";
 const moduleStore = useModuleStore();
 
 import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
-import { watch } from "vue";
 const nestmlServerStore = useNESTMLServerStore();
+
+interface IGithubTree {
+  path: string;
+  mode: string;
+  type: string;
+  sha: string;
+  size: number;
+  url: string;
+}
+
+const githubTag = "v7.0.2";
 
 const props = defineProps<{ model: NESTModel }>();
 const model = computed(() => props.model as NESTModel);
 
 const state = reactive({
+  elementTypes: [],
+  models: [],
+  selectedElementType: undefined,
+  selectedModel: undefined,
   selectedModules: moduleStore.state.modules.filter((module: IModule) =>
     module.models.includes(model.value.id)
   ),
 });
+
+const fetchModels = (elementType: IGithubTree) => {
+  model.value.elementType = elementType.path.slice(
+    0,
+    elementType.path.length - 1
+  );
+  axios.get(elementType.url).then((response: AxiosResponse) => {
+    state.models = response.data.tree;
+  });
+};
 
 const getParams = () => {
   nestmlServerStore
@@ -94,11 +146,11 @@ const getParams = () => {
 };
 
 const loadNESTMLScript = () => {
-  const path = `https://raw.githubusercontent.com/nest/nestml/v7.0.2/models/${model.value.elementType}s/${model.value.id}.nestml`;
+  const path = `https://raw.githubusercontent.com/nest/nestml/${githubTag}/models/${state.selectedElementType.path}/${state.selectedModel.path}`;
   axios
     .get(path)
     .then((response: AxiosResponse) => {
-      if (response.data) {
+      if (response.status === 200 && response.data) {
         model.value.nestmlScript = response.data;
       }
     })
@@ -124,6 +176,23 @@ const updateModules = () => {
 };
 
 const update = () => {
+  if (state.elementTypes.length === 0) {
+    axios
+      .get(`https://api.github.com/repos/nest/nestml/git/trees/${githubTag}`)
+      .then((response: AxiosResponse) => {
+        const modelsTree = response.data.tree.find(
+          (tree: IGithubTree) => tree.path === "models"
+        );
+        axios
+          .get(
+            `https://api.github.com/repos/nest/nestml/git/trees/${modelsTree.sha}`
+          )
+          .then((response: AxiosResponse) => {
+            state.elementTypes = response.data.tree;
+          });
+      });
+  }
+
   state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>
     module.models.includes(model.value.id)
   );

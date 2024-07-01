@@ -247,7 +247,7 @@ import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { notifyError, notifySuccess } from "@/helpers/common/dialog";
+import { notifyError, notifySuccess } from "@/utils/dialog";
 
 import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
 

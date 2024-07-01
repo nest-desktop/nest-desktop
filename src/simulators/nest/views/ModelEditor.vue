@@ -4,6 +4,7 @@
       <v-row>
         <v-col cols="6">
           <v-text-field
+            :disabled="!model.custom"
             density="compact"
             hide-details
             label="Model id"
@@ -34,7 +35,7 @@
         </v-col> -->
       </v-row>
 
-      <NESTMLModelEditor :model />
+      <NESTMLModelEditor :model v-if="model.custom" />
     </v-card-text>
 
     <v-card-actions>

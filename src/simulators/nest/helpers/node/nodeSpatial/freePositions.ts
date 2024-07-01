@@ -2,11 +2,11 @@
 
 import mustache from "mustache";
 
-import { randomUniformFloat } from "@/helpers/common/random";
 import { round } from "@/utils/converter";
+import { randomUniformFloat } from "@/utils/random";
 
-import { NESTNodeSpatial } from "./nodeSpatial";
 import { BasePositions, IBasePositionsProps } from "./basePositions";
+import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IFreePositionsProps extends IBasePositionsProps {}
 

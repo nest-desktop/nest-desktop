@@ -63,6 +63,10 @@ export class BaseModel extends BaseObj {
     return this._elementType;
   }
 
+  set elementType(value: string) {
+    this._elementType = value;
+  }
+
   get favorite(): boolean {
     return this._favorite;
   }

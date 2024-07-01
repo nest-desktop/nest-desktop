@@ -4,7 +4,7 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TConnection } from "@/types";
 
-import { randomUniformInt } from "../common/random";
+import { randomUniformInt } from "../../utils/random";
 import { calcPathNode } from "../connectionGraph/connectionGraphPath";
 
 interface ConnectionViewState {

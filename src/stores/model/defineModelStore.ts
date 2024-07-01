@@ -3,8 +3,8 @@
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { TModel } from "@/types";
+import { logger as mainLogger } from "@/utils/logger";
 
 import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
@@ -83,7 +83,7 @@ export function defineModelStore(
       logger.trace("save model");
 
       const modelDBStore: TModelDBStore = args.useModelDBStore();
-      modelDBStore.saveModel(model.value.id);
+      modelDBStore.saveModel(model.value);
     };
 
     /**

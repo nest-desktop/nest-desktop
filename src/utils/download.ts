@@ -2,12 +2,14 @@
 
 import moment from "moment";
 
+const filenamePrefix = "nest-desktop";
+
 /*
  * Download data.
  */
 export function download(
   data: string,
-  filenameSuffix: string = "",
+  filename: string = "",
   format: string = "json"
 ) {
   const element: HTMLAnchorElement = document.createElement("a");
@@ -18,7 +20,7 @@ export function download(
   const now = moment().format("YYYYMMDD_HHMMSS");
   element.setAttribute(
     "download",
-    `nest-desktop-${filenameSuffix}-${now}.${format}`
+    `${filenamePrefix}-${filename}-${now}.${format}`
   );
   element.style.display = "none";
   document.body.appendChild(element);
@@ -55,7 +57,7 @@ export function downloadSVGImage(svg: Node, filename: string): void {
   const downloadLink = document.createElement("a");
   downloadLink.href = url;
   const now = moment().format("YYYYMMDD_HHMMSS");
-  downloadLink.download = `nest_desktop-${filename}-${now}.svg`;
+  downloadLink.download = `${filenamePrefix}-${filename}-${now}.svg`;
   document.body.appendChild(downloadLink);
 
   // Apply download.

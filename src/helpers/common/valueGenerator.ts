@@ -1,11 +1,11 @@
 // valueGenerator.ts
 
-import { fill, linSpace, range } from "./array";
+import { fill, linSpace, range } from "../../utils/array";
 import {
   randomNormalArray,
   randomUniformFloatArray,
   randomUniformIntArray,
-} from "./random";
+} from "../../utils/random";
 
 interface IValueGeneratorOption {
   id: string;

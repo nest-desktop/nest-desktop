@@ -4,10 +4,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
-import { notifyError, notifySuccess } from "@/helpers/common/dialog";
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { getBoolean } from "@/utils/boolean";
+import { notifyError, notifySuccess } from "@/utils/dialog";
 import { loadJSON } from "@/utils/fetch";
+import { logger as mainLogger } from "@/utils/logger";
 
 export type TBackendStore = Store<string, any>;
 

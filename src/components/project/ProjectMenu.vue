@@ -5,7 +5,7 @@
         :key="index"
         :value="index"
         @click="item.onClick"
-        v-for="(item, index) in projectMenuItems"
+        v-for="(item, index) in menuItems"
       >
         <template #prepend>
           <v-icon :icon="item.icon" />
@@ -38,7 +38,7 @@ const props = defineProps<{
 const project = computed(() => props.project);
 const projectDBStore = computed(() => props.projectDBStore);
 
-const projectMenuItems = [
+const menuItems = [
   {
     icon: "mdi:mdi-pencil",
     onClick: () => {

@@ -6,10 +6,10 @@
 
 import { RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router";
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 // Store
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
+import { logger as mainLogger } from "@/utils/logger";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,

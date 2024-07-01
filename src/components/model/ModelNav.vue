@@ -58,10 +58,14 @@
                 :color="isHovering ? 'primary' : 'transparent'"
                 @click.stop="(e: MouseEvent) => e.preventDefault()"
                 class="list-item-menu"
-                icon="mdi:mdi-dots-vertical"
+                icon
                 size="x-small"
                 variant="text"
-              />
+              >
+                <v-icon icon="mdi:mdi-dots-vertical" />
+
+                <ModelMenu :model :modelDBStore />
+              </v-btn>
             </template>
           </v-list-item>
         </v-hover>
@@ -73,6 +77,7 @@
 <script lang="ts" setup>
 import { computed, nextTick, ref } from "vue";
 
+import ModelMenu from "./ModelMenu.vue";
 import { TModel } from "@/types";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 

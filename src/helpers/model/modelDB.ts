@@ -45,14 +45,14 @@ export class BaseModelDB extends DatabaseService {
 
   /**
    * Delete a model in the database.
-   * @param modelId model ID
+   * @param model model object
    * @returns
    */
 
-  async deleteModel(modelId: string): Promise<TModelProps> {
-    this.logger.trace("delete model:", modelId);
+  async deleteModel(model: TModel): Promise<TModelProps> {
+    this.logger.trace("delete model:", model.id);
 
-    return this.delete(modelId);
+    return this.delete(model.docId || model.id);
   }
 
   /**

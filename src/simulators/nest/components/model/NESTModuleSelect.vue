@@ -1,6 +1,6 @@
 <template>
   <v-combobox
-    :append-inner-icon="state.valid && !state.exist ? 'mdi:mdi-plus' : false"
+    :append-inner-icon="state.valid && !state.exist ? 'mdi:mdi-plus' : ''"
     :hide-no-data="false"
     :items="moduleStore.state.modules"
     :rules

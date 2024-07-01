@@ -2,6 +2,9 @@
 
 import { useToast } from "vue-toast-notification";
 
+const docUrl =
+  "https://nest-desktop.readthedocs.io/en/latest/troubleshootings/index.html#error-messages";
+
 interface IOptionProps {
   type?: "success" | "info" | "warning" | "error" | "default" | string;
   onClick?: () => void;
@@ -21,11 +24,7 @@ export function openToast(
   switch (optionProps.type) {
     case "error": {
       message += " -- Click here for details ...";
-      optionProps.onClick = () =>
-        window.open(
-          "https://nest-desktop.readthedocs.io/en/latest/troubleshootings/index.html#error-messages",
-          "_blank"
-        );
+      optionProps.onClick = () => window.open(docUrl, "_blank");
       optionProps.duration = 5000;
       $toast.error(message, optionProps);
       break;

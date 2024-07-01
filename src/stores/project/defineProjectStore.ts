@@ -3,10 +3,10 @@
 import { Store, defineStore } from "pinia";
 import { reactive, watch } from "vue";
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { BaseProject } from "@/helpers/project/project";
 import router from "@/router";
 import { TProject } from "@/types";
+import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { TProjectDBStore } from "./defineProjectDBStore";

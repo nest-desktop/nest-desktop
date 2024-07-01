@@ -1,14 +1,17 @@
 // simulation.ts
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from "axios";
 
-import { notifyError } from '@/helpers/common/dialog';
-import { BaseSimulation } from '@/helpers/simulation/simulation';
+import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { notifyError } from "@/utils/dialog";
 
-import { useNESTSimulatorStore } from '../../stores/backends/nestSimulatorStore';
-import { NESTProject } from '../project/project';
-import { INESTSimulationCodeProps, NESTSimulationCode } from './simulationCode';
-import { INESTSimulationKernelProps, NESTSimulationKernel } from './simulationKernel';
+import { useNESTSimulatorStore } from "../../stores/backends/nestSimulatorStore";
+import { NESTProject } from "../project/project";
+import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
+import {
+  INESTSimulationKernelProps,
+  NESTSimulationKernel,
+} from "./simulationKernel";
 
 export interface INESTSimulationProps {
   code?: INESTSimulationCodeProps;

@@ -15,7 +15,7 @@ import AppNavigation from "@/components/app/AppNavigation.vue";
 import { TBackendStore } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { getParamFromURL } from "@/helpers/common/paramQuery";
+import { getParamFromURL } from "@/utils/paramQuery";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

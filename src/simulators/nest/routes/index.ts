@@ -2,9 +2,9 @@
 
 import { RouteRecordRaw } from "vue-router";
 
-import { logger as mainLogger } from "@/helpers/common/logger";
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
+import { logger as mainLogger } from "@/utils/logger";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";

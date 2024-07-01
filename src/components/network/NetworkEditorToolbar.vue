@@ -94,7 +94,7 @@ import { createDialog } from "vuetify3-dialog";
 
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 import { TNode } from "@/types";
-import { downloadSVGImage } from "@/helpers/common/download";
+import { downloadSVGImage } from "@/utils/download";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
 const networkGraphStore = useNetworkGraphStore();

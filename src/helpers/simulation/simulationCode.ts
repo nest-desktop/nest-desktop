@@ -5,8 +5,8 @@ import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TSimulation } from "@/types";
 
+import { download } from "../../utils/download";
 import { BaseObj } from "../common/base";
-import { download } from "../common/download";
 
 export interface ISimulationCodeProps {
   blocks?: string[];

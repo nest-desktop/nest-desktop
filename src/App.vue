@@ -6,7 +6,7 @@
 import { confirmDialog } from "vuetify3-dialog";
 import { nextTick, onMounted, reactive } from "vue";
 
-import { logger as mainLogger } from "./helpers/common/logger";
+import { logger as mainLogger } from "./utils/logger";
 
 import { useAppStore } from "./stores/appStore";
 const appStore = useAppStore();
