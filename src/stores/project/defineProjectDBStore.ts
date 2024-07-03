@@ -13,7 +13,6 @@ import { truncate } from "@/utils/truncate";
 
 interface IProjectDBStoreState {
   initialized: Boolean;
-  numLoaded: number;
   projects: (TProject | TProjectProps)[];
   searchTerm: string;
   tryImports: number;
@@ -48,7 +47,6 @@ export function defineProjectDBStore(
   return defineStore(props.simulator + "-project-db", () => {
     const state = reactive<IProjectDBStoreState>({
       initialized: false,
-      numLoaded: 0,
       projects: [] as (Project | TProjectProps)[],
       searchTerm: "",
       tryImports: 3,
@@ -72,10 +70,22 @@ export function defineProjectDBStore(
     const addProject = (projectProps?: TProjectProps): Project => {
       logger.trace("add project:", truncate(projectProps?.id));
 
-      const project = newProject(projectProps);
+      const project = new props.Project(projectProps);
       _addToList(project);
       return project;
     };
+
+    // /**
+    //  * Create new project
+    //  * @returns param object
+    //  */
+    // const createNewProject = (): Project => {
+    //   logger.trace("new project:");
+
+    //   const project = Project();
+    //   _addToList(project);
+    //   return project;
+    // };
 
     /**
      * Delete project in database and then update the list.
@@ -271,9 +281,8 @@ export function defineProjectDBStore(
 
         if (projectIdx === -1) return;
 
-        project = newProject(project);
+        project = new props.Project(project);
         state.projects[projectIdx] = project;
-        state.numLoaded += 1;
       }
 
       return project;
@@ -281,11 +290,17 @@ export function defineProjectDBStore(
 
     /**
      * Create new project.
-     * @param projectsProps project props
-     * @returns project object
+     * @param projectProps project props
+     *
+     * @remarks
+     * It pushes new project to the first line of the list.
      */
-    const newProject = (projectsProps?: TProjectProps): Project =>
-      new props.Project(projectsProps) as Project;
+    const newProject = (projectProps?: TProjectProps): Project => {
+      logger.trace("new project");
+
+      const project = addProject(projectProps);
+      return project;
+    };
 
     /**
      * Reload the project in the list.
@@ -339,7 +354,6 @@ export function defineProjectDBStore(
       if (isProjectLoaded(project) && project != undefined) {
         const projectIdx: number = getProjectIds().indexOf(project.id);
         state.projects[projectIdx] = project.doc;
-        state.numLoaded -= 1;
       }
     };
 

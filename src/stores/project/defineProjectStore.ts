@@ -138,6 +138,17 @@ export function defineProjectStore(
     };
 
     /**
+     * Create new project.
+     */
+    const newProject = (): void => {
+      logger.trace("new project:");
+
+      const projectDBStore: TProjectStore = args.useProjectDBStore();
+      state.project = projectDBStore.newProject();
+      state.projectId = state.project.id;
+    };
+
+    /**
      * Reload the project in the list.
      * @param project project object
      */
@@ -191,6 +202,7 @@ export function defineProjectStore(
       init,
       isProjectSelected,
       loadProject,
+      newProject,
       reloadProject,
       saveCurrentProject,
       startSimulation,

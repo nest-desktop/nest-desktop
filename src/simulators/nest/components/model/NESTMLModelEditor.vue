@@ -1,77 +1,74 @@
 <template>
-  <v-expansion-panels class="my-2" flat>
-    <v-expansion-panel>
-      <v-expansion-panel-title>
-        NESTML script for {{ model.elementType }}
-        <v-spacer />
-        <v-chip
-          :key="index"
-          class="mx-1"
-          size="small"
-          v-for="(module, index) in state.selectedModules"
-        >
-          {{ module.id }}
-        </v-chip>
-      </v-expansion-panel-title>
-      <v-expansion-panel-text>
-        <v-toolbar color="transparent" density="compact">
-          <v-select
-            :items="state.elementTypes"
-            @update:model-value="fetchModels"
-            class="mx-2"
-            density="compact"
-            hide-details
-            item-title="path"
-            item-value="path"
-            label="Select an element type"
-            return-object
-            v-model="state.selectedElementType"
-            variant="outlined"
-          />
+  <v-card class="my-2" flat>
+    <v-toolbar color="transparent" density="compact">
+      <v-select
+        :items="state.githubTags"
+        @update:model-value="fetchElementTypes()"
+        class="mx-2"
+        density="compact"
+        hide-details
+        item-title="name"
+        item-value="name"
+        label="Select a tag"
+        v-model="state.githubTag"
+        variant="outlined"
+      />
 
-          <v-select
-            :disabled="state.models.length === 0"
-            :items="state.models"
-            class="mx-2"
-            density="compact"
-            hide-details
-            item-title="path"
-            item-value="path"
-            label="Select a nestml file"
-            return-object
-            v-model="state.selectedModel"
-            variant="outlined"
-          />
+      <v-select
+        :items="state.elementTypes"
+        @update:model-value="fetchModels"
+        class="mx-2"
+        density="compact"
+        hide-details
+        item-title="path"
+        item-value="path"
+        label="Select an element type"
+        v-model="state.elementType"
+        variant="outlined"
+      />
 
-          <v-btn
-            @click="loadNESTMLScript"
-            icon="mdi:mdi-cloud-arrow-down-outline"
-            title="Load nestml script"
-            size="small"
-          />
+      <v-select
+        :disabled="state.models.length === 0"
+        :items="state.models"
+        class="mx-2"
+        density="compact"
+        hide-details
+        item-title="path"
+        item-value="path"
+        label="Select a nestml file"
+        v-model="state.model"
+        variant="outlined"
+      />
 
-          <v-spacer />
+      <v-btn
+        @click="loadNESTMLScript"
+        icon="mdi:mdi-cloud-arrow-down-outline"
+        title="Load nestml script"
+        size="small"
+      />
 
-          <v-btn @click="getParams" class="mx-1" variant="outlined">
-            get params
-          </v-btn>
+      <v-spacer />
 
-          <template #append>
-            <NESTModuleSelect
-              @click.stop
-              @update:model-value="updateModules()"
-              chips
-              width="400"
-              multiple
-              v-model="state.selectedModules"
-            />
-          </template>
-        </v-toolbar>
+      <v-btn @click="getParams" class="mx-1" variant="outlined">
+        get params
+      </v-btn>
 
-        <codemirror v-model="model.nestmlScript" />
-      </v-expansion-panel-text>
-    </v-expansion-panel>
-  </v-expansion-panels>
+      <template #append>
+        <NESTModuleSelect
+          @click.stop
+          @update:model-value="updateModules()"
+          chips
+          width="400"
+          multiple
+          v-model="state.selectedModules"
+        />
+      </template>
+    </v-toolbar>
+
+    <v-card-text>
+      <codemirror v-model="model.nestmlScript" />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -98,29 +95,66 @@ interface IGithubTree {
   url: string;
 }
 
-const githubTag = "v7.0.2";
-
 const props = defineProps<{ model: NESTModel }>();
 const model = computed(() => props.model as NESTModel);
 
 const state = reactive({
+  elementType: "",
   elementTypes: [],
+  githubTag: "v7.0.2",
+  githubTags: [],
+  model: "",
   models: [],
-  selectedElementType: undefined,
-  selectedModel: undefined,
   selectedModules: moduleStore.state.modules.filter((module: IModule) =>
     module.models.includes(model.value.id)
   ),
 });
 
-const fetchModels = (elementType: IGithubTree) => {
-  model.value.elementType = elementType.path.slice(
-    0,
-    elementType.path.length - 1
-  );
-  axios.get(elementType.url).then((response: AxiosResponse) => {
-    state.models = response.data.tree;
-  });
+const fetchElementTypes = () => {
+  state.model = "";
+
+  if (state.elementTypes.length === 0) {
+    axios
+      .get(
+        `https://api.github.com/repos/nest/nestml/git/trees/${state.githubTag}`
+      )
+      .then((response: AxiosResponse) => {
+        const modelsTree = response.data.tree.find(
+          (tree: IGithubTree) => tree.path === "models"
+        );
+        axios
+          .get(
+            `https://api.github.com/repos/nest/nestml/git/trees/${modelsTree.sha}`
+          )
+          .then((response: AxiosResponse) => {
+            state.elementTypes = response.data.tree;
+          });
+      });
+  }
+};
+
+const fetchGithubTags = () => {
+  state.elementType = "";
+  state.model = "";
+
+  axios
+    .get("https://api.github.com/repos/nest/nestml/tags")
+    .then((response: AxiosResponse) => {
+      if (response.status === 200) {
+        state.githubTags = response.data;
+      }
+    });
+};
+
+const fetchModels = (elementType: string | null) => {
+  if (elementType) {
+    const elementTypeTree = getTree(state.elementTypes, elementType);
+    if (elementTypeTree) {
+      axios.get(elementTypeTree.url).then((response: AxiosResponse) => {
+        state.models = response.data.tree;
+      });
+    }
+  }
 };
 
 const getParams = () => {
@@ -145,18 +179,28 @@ const getParams = () => {
     });
 };
 
+const getTree = (trees: IGithubTree[], path: string) => {
+  return trees.find((tree: IGithubTree) => tree.path === path);
+};
+
 const loadNESTMLScript = () => {
-  const path = `https://raw.githubusercontent.com/nest/nestml/${githubTag}/models/${state.selectedElementType.path}/${state.selectedModel.path}`;
-  axios
-    .get(path)
-    .then((response: AxiosResponse) => {
-      if (response.status === 200 && response.data) {
-        model.value.nestmlScript = response.data;
-      }
-    })
-    .catch(() => {
-      model.value.nestmlScript = "";
-    });
+  if (state.elementType && state.model) {
+    const path = `https://raw.githubusercontent.com/nest/nestml/${state.githubTag}/models/${state.elementType}/${state.model}`;
+    axios
+      .get(path)
+      .then((response: AxiosResponse) => {
+        if (response.status === 200 && response.data) {
+          model.value.nestmlScript = response.data;
+          model.value.elementType = state.elementType.slice(
+            0,
+            state.elementType.length - 1
+          );
+        }
+      })
+      .catch(() => {
+        model.value.nestmlScript = "";
+      });
+  }
 };
 
 const updateModules = () => {
@@ -176,22 +220,8 @@ const updateModules = () => {
 };
 
 const update = () => {
-  if (state.elementTypes.length === 0) {
-    axios
-      .get(`https://api.github.com/repos/nest/nestml/git/trees/${githubTag}`)
-      .then((response: AxiosResponse) => {
-        const modelsTree = response.data.tree.find(
-          (tree: IGithubTree) => tree.path === "models"
-        );
-        axios
-          .get(
-            `https://api.github.com/repos/nest/nestml/git/trees/${modelsTree.sha}`
-          )
-          .then((response: AxiosResponse) => {
-            state.elementTypes = response.data.tree;
-          });
-      });
-  }
+  fetchGithubTags();
+  fetchElementTypes();
 
   state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>
     module.models.includes(model.value.id)

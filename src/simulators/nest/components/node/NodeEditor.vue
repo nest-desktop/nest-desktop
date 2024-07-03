@@ -195,7 +195,7 @@
         </v-list-item>
       </v-list>
 
-      <v-list class="py-0" v-if="node.model.isMultimeter">
+      <v-list class="py-0" v-if="node.model?.isMultimeter">
         <v-list-item>
           <NodeRecordSelect :node />
         </v-list-item>

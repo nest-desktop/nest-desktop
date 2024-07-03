@@ -53,7 +53,7 @@ export class NodeView extends BaseObj {
   get color(): string {
     if (this._state.color) {
       return this._state.color;
-    } else if (this.node.model.isRecorder) {
+    } else if (this.node.model?.isRecorder) {
       const connections: TConnection[] =
         this.node.network.connections.all.filter(
           (connection: TConnection) =>

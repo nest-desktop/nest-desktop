@@ -9,7 +9,13 @@
   >
     <div @mousedown="resizeSideNav()" class="resize-handle" />
 
-    <v-toolbar class="project-nav" color="transparent" density="compact">
+    <v-toolbar
+      class="fixed-bar"
+      color="nest-project"
+      density="compact"
+      extended
+      extension-height="28"
+    >
       <v-text-field
         class="mx-1"
         clearable
@@ -22,12 +28,24 @@
         variant="outlined"
       />
 
-      <v-btn
-        :to="{ name: appStore.state.simulator + 'ProjectNew' }"
-        icon="mdi:mdi-plus"
-        size="small"
-        title="Create a new project"
-      />
+      <template #extension>
+        <v-fab
+          @click="dialogNewProject()"
+          class="ms-4"
+          color="primary"
+          icon="mdi:mdi-plus"
+          location="bottom left"
+          size="40"
+          absolute
+          offset
+          title="Create a new project"
+        />
+
+        <v-row class="mx-4 text-subtitle-2" no-gutters>
+          <v-spacer />
+          {{ projects.length }} projects
+        </v-row>
+      </template>
 
       <v-menu>
         <template #activator="{ props }">
@@ -64,7 +82,15 @@
       </v-menu>
     </v-toolbar>
 
-    <v-list :key="projects.length" density="compact" lines="two" nav>
+    <v-list
+      :key="projects.length"
+      class="pt-0"
+      density="compact"
+      lines="two"
+      nav
+    >
+      <v-list-subheader title="Projects" inset />
+
       <template v-for="(project, index) in projects.slice().reverse()">
         <v-hover v-slot="{ isHovering, props }">
           <v-list-item
@@ -159,6 +185,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, ref } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
@@ -166,9 +193,13 @@ import ImportDialog from "../dialog/ImportDialog.vue";
 import ProjectMenu from "./ProjectMenu.vue";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProject } from "@/types";
+import DialogTextField from "../dialog/DialogTextField.vue";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 // @ts-ignore - 'truncate' is declared but its value is never read.
 import { truncate } from "@/utils/truncate";
+
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -203,6 +234,27 @@ const menuItems = [
   },
   // { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];
+
+const dialogNewProject = () => {
+  createDialog({
+    title: "",
+    text: "",
+    customComponent: {
+      component: DialogTextField,
+      props: {
+        title: "Create project",
+        modelValue: "new_project_" + props.projectDBStore.state.projects.length,
+      },
+    },
+  }).then((projectName: boolean | string) => {
+    if (projectName) {
+      router.push({
+        name: appStore.state.simulator + "ProjectAdd",
+        query: { name: projectName as string },
+      });
+    }
+  });
+};
 
 const dispatchWindowResize = () => {
   nextTick(() => window.dispatchEvent(new Event("resize")));
@@ -245,7 +297,14 @@ const saveProject = (project: TProject) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.fixed-bar {
+  position: sticky;
+  position: -webkit-sticky; /* for Safari */
+  top: 0em;
+  z-index: 2;
+}
+
 .resize-handle {
   position: fixed;
   z-index: 10;

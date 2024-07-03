@@ -74,9 +74,9 @@ function getTrianglePoints(radius: number): string {
 }
 
 function nodePoints(node: TNode, radius: number): string {
-  if (node.model.isStimulator) {
+  if (node.model?.isStimulator) {
     return getHexagonPoints(radius);
-  } else if (node.model.isRecorder) {
+  } else if (node.model?.isRecorder) {
     return getRectanglePoints(radius);
   } else if (node.isExcitatoryNeuron) {
     return getTrianglePoints(radius);

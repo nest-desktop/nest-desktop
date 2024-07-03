@@ -194,7 +194,7 @@ export class NESTSynapse extends BaseSynapse {
   getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
 
-    return this.modelDBStore.getModel(modelId) as NESTModel;
+    return this.modelDBStore.findModel(modelId) as NESTModel;
   }
 
   /**

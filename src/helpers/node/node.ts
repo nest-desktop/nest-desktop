@@ -60,7 +60,7 @@ export class BaseNode extends BaseObj {
 
     this._view = new NodeView(this, nodeProps.view);
 
-    if (this.model.isRecorder) {
+    if (this.model?.isRecorder) {
       this.createActivity(nodeProps?.activity);
     }
   }
@@ -132,7 +132,7 @@ export class BaseNode extends BaseObj {
   }
 
   get elementType(): string {
-    return this.model.elementType;
+    return this.model?.elementType;
   }
 
   get filteredParams(): NodeParameter[] {
@@ -151,7 +151,7 @@ export class BaseNode extends BaseObj {
    * Check if it is an excitatory neuron.
    */
   get isExcitatoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.synWeights === "excitatory";
+    return this.model?.isNeuron && this._view.synWeights === "excitatory";
   }
 
   get isGroup(): boolean {
@@ -162,7 +162,7 @@ export class BaseNode extends BaseObj {
    * Check if it is an inhibitory neuron.
    */
   get isInhibitoryNeuron(): boolean {
-    return this.model.isNeuron && this._view.synWeights === "inhibitory";
+    return this.model?.isNeuron && this._view.synWeights === "inhibitory";
   }
 
   get isNode(): boolean {
@@ -471,7 +471,7 @@ export class BaseNode extends BaseObj {
   getModel(modelId: string): TModel | undefined {
     this.logger.trace("get model:", modelId);
 
-    return this.modelDBStore.getModel(modelId);
+    return this.modelDBStore.findModel(modelId);
   }
 
   /**

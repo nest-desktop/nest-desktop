@@ -30,7 +30,7 @@ export class NESTModel extends BaseModel {
   private _nestmlScript: string = "";
   private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
 
-  constructor(modelProps: INESTModelProps) {
+  constructor(modelProps: INESTModelProps = {}) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
     this.nestmlScript = modelProps.nestmlScript || "";
   }

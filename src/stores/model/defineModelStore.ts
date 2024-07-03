@@ -5,6 +5,7 @@ import { computed, reactive } from "vue";
 
 import { TModel } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
+import { truncate } from "@/utils/truncate";
 
 import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
@@ -61,7 +62,7 @@ export function defineModelStore(
 
     const model = computed(() => {
       const modelDBStore: TModelStore = args.useModelDBStore();
-      return modelDBStore.getModel(state.modelId);
+      return modelDBStore.findModel(state.modelId);
     });
 
     /**
@@ -77,9 +78,33 @@ export function defineModelStore(
     };
 
     /**
+     * Load model.
+     * @param modelId string
+     */
+    const loadModel = (modelId: string = ""): void => {
+      logger.trace("load model", truncate(modelId));
+
+      const modelDBStore: TModelStore = args.useModelDBStore();
+      const model = modelDBStore.getModel(modelId);
+      state.modelId = model.id;
+    };
+
+    /**
+     * New model.
+     * @param modelId string
+     */
+    const newModel = (modelId: string): void => {
+      logger.trace("new model");
+
+      const modelDBStore: TModelStore = args.useModelDBStore();
+      const model = modelDBStore.newModel({ id: modelId });
+      state.modelId = model.id;
+    };
+
+    /**
      * Save current model to the database.
      */
-    const save = (): void => {
+    const saveModel = (): void => {
       logger.trace("save model");
 
       const modelDBStore: TModelDBStore = args.useModelDBStore();
@@ -97,6 +122,6 @@ export function defineModelStore(
       state.controller.view = state.controller.open ? (item?.id as string) : "";
     };
 
-    return { model, init, save, state, toggle };
+    return { model, init, loadModel, newModel, saveModel, state, toggle };
   });
 }

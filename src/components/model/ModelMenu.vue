@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
+import { confirmDialog } from "vuetify3-dialog";
 
 import { TModel } from "@/types";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
@@ -26,7 +27,6 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useRouter, useRoute } from "vue-router";
-import { confirmDialog } from "vuetify3-dialog";
 const router = useRouter();
 const route = useRoute();
 

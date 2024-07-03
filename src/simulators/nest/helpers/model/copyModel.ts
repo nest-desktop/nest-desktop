@@ -204,7 +204,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   get model(): NESTModel {
-    return this.modelDBStore.getModel(this._existingModelId) as NESTModel;
+    return this.modelDBStore.findModel(this._existingModelId) as NESTModel;
   }
 
   get modelDBStore(): TModelDBStore {

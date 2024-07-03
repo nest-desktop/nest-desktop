@@ -15,7 +15,7 @@
 
       <span v-if="state.content == undefined">
         <v-list density="compact">
-          <v-list-item v-if="!node.model.isRecorder">
+          <v-list-item v-if="!node.model?.isRecorder">
             <template #prepend>
               <v-icon icon="mdi:mdi-contrast" />
             </template>
@@ -219,7 +219,7 @@ const items = [
     onClick: () => {
       node.value.toggleSpatial();
     },
-    show: () => !node.value.model.isRecorder,
+    show: () => !node.value.model?.isRecorder,
     title: "Toggle spatial mode",
     value: "spatialNode",
   },
@@ -275,7 +275,7 @@ const items = [
       state.content = "eventsExport";
     },
     show: () =>
-      node.value.model.isRecorder &&
+      node.value.model?.isRecorder &&
       node.value.activity &&
       node.value.activity.hasEvents,
     title: "Export events",

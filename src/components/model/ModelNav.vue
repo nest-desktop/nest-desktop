@@ -8,7 +8,13 @@
   >
     <div @mousedown="resizeSidebar" class="resize-handle" />
 
-    <v-toolbar color="transparent" density="compact">
+    <v-toolbar
+      class="fixed-bar"
+      color="nest-model"
+      density="compact"
+      extended
+      extension-height="28"
+    >
       <v-text-field
         class="mx-1"
         clearable
@@ -16,9 +22,29 @@
         hide-details
         placeholder="Search model"
         prepend-inner-icon="mdi:mdi-magnify"
-        v-model="search"
+        single-line
+        v-model="state.search"
         variant="outlined"
       />
+
+      <template #extension>
+        <v-fab
+          @click="dialogNewModel()"
+          class="ms-4"
+          color="primary"
+          icon="mdi:mdi-plus"
+          location="bottom left"
+          size="40"
+          absolute
+          offset
+          title="Create a new model"
+        />
+
+        <v-row class="mx-4 text-subtitle-2" no-gutters>
+          <v-spacer />
+          {{ models.length }} models
+        </v-row>
+      </template>
 
       <v-menu>
         <template #activator="{ props }">
@@ -40,7 +66,52 @@
       </v-menu>
     </v-toolbar>
 
-    <v-list density="compact" lines="two" nav>
+    <!-- <v-virtual-scroll :items="models">
+      <template #default="{ item }">
+        <v-hover v-slot="{ isHovering, props }">
+          <v-list-item
+            :subtitle="item.elementType"
+            :title="item.label"
+            :to="{
+              name: appStore.state.simulator + 'Model',
+              params: { modelId: item.id },
+            }"
+            v-bind="props"
+          >
+            <template #append>
+              <v-btn
+                :color="isHovering ? 'primary' : 'transparent'"
+                @click.stop="(e: MouseEvent) => e.preventDefault()"
+                class="list-item-menu"
+                icon
+                size="x-small"
+                variant="text"
+              >
+                <v-icon icon="mdi:mdi-dots-vertical" />
+
+                <ModelMenu :model="item" :modelDBStore />
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-hover>
+      </template>
+    </v-virtual-scroll> -->
+
+    <v-list class="pt-0" density="compact" lines="two" nav>
+      <v-list-subheader class="pa-0" inset style="margin-left: -24px">
+        <v-btn-toggle density="compact" tile v-model="state.elementType">
+          <v-btn
+            :key="elementType"
+            size="x-small"
+            style="font-size: 9px"
+            :value="elementType"
+            v-for="elementType in elementTypes"
+          >
+            {{ elementType }}
+          </v-btn>
+        </v-btn-toggle>
+      </v-list-subheader>
+
       <template v-for="(model, index) in models">
         <v-hover v-slot="{ isHovering, props }">
           <v-list-item
@@ -75,11 +146,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref } from "vue";
+import { computed, nextTick, reactive } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
+import DialogTextField from "@/components/dialog/DialogTextField.vue";
 import ModelMenu from "./ModelMenu.vue";
 import { TModel } from "@/types";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -88,13 +164,35 @@ import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
 
 const props = defineProps<{ modelDBStore: TModelDBStore }>();
-const models = computed(() =>
-  props.modelDBStore.state.models.filter((model: TModel) =>
-    model.label.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-  )
-);
+const models = computed(() => {
+  let models = props.modelDBStore.state.models;
 
-const search = ref("");
+  if (state.search) {
+    models = models.filter((model: TModel) =>
+      model.label
+        .toLocaleLowerCase()
+        .includes(state.search ? state.search.toLocaleLowerCase() : "")
+    );
+  }
+
+  if (state.elementType) {
+    models = models.filter(
+      (model: TModel) => model.elementType === state.elementType
+    );
+  }
+
+  models = models.sort((a: any, b: any) =>
+    a["id"] < b["id"] ? -1 : a["id"] > b["id"] ? 1 : 0
+  );
+  return models;
+});
+
+const state = reactive({
+  elementType: "",
+  search: "",
+});
+
+const elementTypes = ["neuron", "recorder", "stimulator", "synapse"];
 
 const menuItems = [
   { title: "Upload", icon: "mdi:mdi-upload" },
@@ -102,6 +200,35 @@ const menuItems = [
   { title: "Reload", icon: "mdi:mdi-reload" },
   { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
 ];
+
+const dialogNewModel = () => {
+  createDialog({
+    title: "",
+    text: "",
+    customComponent: {
+      component: DialogTextField,
+      props: {
+        title: "Create model",
+        modelValue: "new model " + props.modelDBStore.state.models.length,
+      },
+    },
+  }).then((modelLabel: boolean | string) => {
+    if (modelLabel) {
+      let modelId = modelLabel as string;
+      const model = props.modelDBStore.newModel({
+        id: modelId.replaceAll(" ", "_"),
+        label: modelLabel,
+      });
+
+      nextTick(() => {
+        router.push({
+          name: appStore.state.simulator + "ModelEditor",
+          params: { modelId: model.id },
+        });
+      });
+    }
+  });
+};
 
 const dispatchWindowResize = () => {
   nextTick(() => window.dispatchEvent(new Event("resize")));
@@ -136,7 +263,14 @@ const resizeSidebar = () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.fixed-bar {
+  position: sticky;
+  position: -webkit-sticky; /* for Safari */
+  top: 0em;
+  z-index: 2;
+}
+
 .resize-handle {
   cursor: ew-resize;
   height: 100%;

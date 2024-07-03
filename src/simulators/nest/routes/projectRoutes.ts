@@ -49,14 +49,10 @@ const projectNew = () => {
   logger.trace("create a new nest project");
 
   const projectStore: TProjectStore = useNESTProjectStore();
-  projectStore.loadProject();
+  projectStore.newProject();
 
   return {
-    path:
-      "/nest/project/" +
-      projectStore.state.projectId +
-      "/" +
-      projectStore.state.tab.view,
+    path: "/nest/project/" + projectStore.state.projectId + "/edit",
   };
 };
 

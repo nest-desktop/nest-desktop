@@ -10,6 +10,7 @@ import { INodeRecordProps } from "../node/nodeRecord";
 import { IModelParamProps, ModelParameter } from "./modelParameter";
 
 export interface IModelProps extends IDoc {
+  id?: string;
   abbreviation?: string;
   elementType?: string;
   favorite?: boolean;
@@ -29,14 +30,14 @@ export class BaseModel extends BaseObj {
   private _paramsVisible: string[] = [];
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
-  constructor(modelProps: IModelProps, configProps?: IConfigProps) {
+  constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
     super({
       config: { name: "Model", ...configProps },
       logger: { settings: { minLevel: 3 } },
     });
 
     this._doc = modelProps;
-    this._id = modelProps.id || uuidv4();
+    this._id = modelProps.id || uuidv4().slice(0, 6);
 
     this._elementType = modelProps.elementType || "neuron";
 

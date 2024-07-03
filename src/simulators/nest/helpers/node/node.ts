@@ -102,7 +102,7 @@ export class NESTNode extends BaseNode {
   }
 
   override get elementType(): string {
-    return this.model.elementType;
+    return this.model?.elementType;
   }
 
   get hasCompartments(): boolean {
@@ -154,7 +154,7 @@ export class NESTNode extends BaseNode {
 
   override get models(): NESTModel[] {
     // Get models of the same element type.
-    const elementType: string = this.model.elementType;
+    const elementType: string = this.model?.elementType;
 
     const models: NESTModel[] = this.modelDBStore.getModelsByElementType(
       elementType
@@ -256,7 +256,7 @@ export class NESTNode extends BaseNode {
    */
   override getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
-    return this.modelDBStore.getModel(modelId) as NESTModel;
+    return this.modelDBStore.findModel(modelId) as NESTModel;
   }
 
   /**

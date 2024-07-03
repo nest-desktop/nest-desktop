@@ -61,14 +61,14 @@ export class BaseNodes extends BaseObj {
    * Check if it contains some recorders for analog signals.
    */
   get hasSomeAnalogRecorder(): boolean {
-    return this.nodeItems.some((node: TNode) => node.model.isAnalogRecorder);
+    return this.nodeItems.some((node: TNode) => node.model?.isAnalogRecorder);
   }
 
   /**
    * Check if it contains some spike recorders.
    */
   get hasSomeSpikeRecorder(): boolean {
-    return this.nodeItems.some((node: TNode) => node.model.isSpikeRecorder);
+    return this.nodeItems.some((node: TNode) => node.model?.isSpikeRecorder);
   }
 
   /**
@@ -109,21 +109,21 @@ export class BaseNodes extends BaseObj {
    * Get recorders
    */
   get recorders(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model.isRecorder);
+    return this.nodeItems.filter((node: TNode) => node.model?.isRecorder);
   }
 
   /**
    * Get recorders for analog signals
    */
   get recordersAnalog(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model.isAnalogRecorder);
+    return this.nodeItems.filter((node: TNode) => node.model?.isAnalogRecorder);
   }
 
   /**
    * Get recorders
    */
   get recordersSpike(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model.isSpikeRecorder);
+    return this.nodeItems.filter((node: TNode) => node.model?.isSpikeRecorder);
   }
 
   get selectedNodeGroups(): NodeGroup[] {

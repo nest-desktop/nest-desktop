@@ -73,7 +73,7 @@ export function defineModelDBStore(
      * @param model model object
      */
     const _addToList = (model: TModel): void => {
-      state.models.push(model);
+      state.models.unshift(model);
     };
 
     /**
@@ -83,10 +83,10 @@ export function defineModelDBStore(
      * @remarks
      * It pushes new model to the first line of the list.
      */
-    const addModel = (modelProps: TModelProps): Model => {
+    const addModel = (modelProps?: TModelProps): Model => {
       logger.trace("add model:", truncate(modelProps?.id));
 
-      const model = newModel(modelProps);
+      const model = new props.Model(modelProps);
       _addToList(model);
       return model;
     };
@@ -146,16 +146,6 @@ export function defineModelDBStore(
       return state.models.find(
         (model: UnwrapRef<TModel>) => model.id === modelId
       ) as Model;
-    };
-
-    /**
-     * Get model from the model list.
-     * @param modelId model ID
-     */
-    const getModel = (modelId: string): Model | undefined => {
-      logger.trace("get model:", modelId);
-
-      return findModel(modelId) || newModel({ id: modelId });
     };
 
     /**
@@ -238,12 +228,18 @@ export function defineModelDBStore(
     };
 
     /**
-     * Create new model object.
+     * Add this new model to the list.
      * @param modelProps model props
-     * @returns model object
+     *
+     * @remarks
+     * It pushes new model to the first line of the list.
      */
-    const newModel = (modelProps: TModelProps): Model => {
-      return new props.Model(modelProps) as Model;
+    const newModel = (modelProps?: TModelProps): Model => {
+      logger.trace("new model");
+
+      const model = addModel(modelProps);
+      model.custom = true;
+      return model;
     };
 
     /**
@@ -275,7 +271,7 @@ export function defineModelDBStore(
       logger.debug("update list");
 
       state.models = [];
-      db.list("id").then((modelsProps: TModelProps[]) => {
+      db.list("id", true).then((modelsProps: TModelProps[]) => {
         modelsProps.forEach((modelProps: TModelProps) => addModel(modelProps));
         state.initialized = true;
       });
@@ -286,7 +282,7 @@ export function defineModelDBStore(
      */
     const validateModel = (modelProps: TModelProps): boolean => {
       try {
-        newModel(modelProps);
+        new props.Model(modelProps);
         return true;
       } catch {
         return false;
@@ -298,13 +294,13 @@ export function defineModelDBStore(
       duplicateModel,
       exportModel,
       findModel,
-      getModel,
       getModelsByElementType,
       getRecentModelId,
       hasModel,
       importModels,
       importModelsFromAssets,
       init,
+      newModel,
       resetDatabase,
       saveModel,
       state,

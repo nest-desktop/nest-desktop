@@ -6,7 +6,7 @@
       <v-tab
         :to="{
           name: 'nestModelDoc',
-          params: { modelId: modelStore.model.id },
+          params: { modelId: modelStore.state.modelId },
         }"
         size="small"
         title="Read documentation"
