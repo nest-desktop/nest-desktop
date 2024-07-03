@@ -1,5 +1,6 @@
 // defineModelStore.ts
 
+import { mode } from "d3";
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
@@ -62,8 +63,11 @@ export function defineModelStore(
 
     const model = computed(() => {
       const modelDBStore: TModelStore = args.useModelDBStore();
-      return modelDBStore.findModel(state.modelId);
+      return modelDBStore.findModel(state.modelId) || findModel(state.modelId);
     });
+
+    const findModel = (modelId: string) =>
+      state.models.find((model: any) => model.id === modelId);
 
     /**
      * Initialize model store.

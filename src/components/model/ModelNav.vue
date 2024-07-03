@@ -41,6 +41,21 @@
         />
 
         <v-row class="ma-2" no-gutters>
+          <v-spacer />
+
+          <v-chip
+            @click="
+              state.source =
+                sources[(sources.indexOf(state.source) + 1) % sources.length]
+            "
+            class="mx-1"
+            density="compact"
+            prepend-icon="mdi:mdi-filter-variant"
+            title="source of the models"
+          >
+            {{ state.source }}
+          </v-chip>
+
           <v-chip
             :prepend-icon="
               'mdi:mdi-order-alphabetical-' +
@@ -52,17 +67,6 @@
             title="order by"
           >
             sort
-          </v-chip>
-
-          <v-chip
-            :active="state.custom"
-            @click="state.custom = !state.custom"
-            class="mx-1"
-            density="compact"
-            prepend-icon="mdi:mdi-pencil"
-            title="show only custom models"
-          >
-            own
           </v-chip>
 
           <v-spacer />
@@ -112,12 +116,43 @@
         </v-btn-toggle>
       </v-list-subheader>
 
-      <template v-for="(model, index) in models">
+      <v-virtual-scroll :items="models">
+        <template #default="{ item }">
+          <v-hover v-slot="{ isHovering, props }">
+            <v-list-item
+              :subtitle="item.elementType"
+              :title="item.label || item.id"
+              :to="{
+                name: appStore.state.simulator + 'Model',
+                params: { modelId: item.id },
+              }"
+              v-bind="props"
+            >
+              <template #append>
+                <v-btn
+                  :color="isHovering ? 'primary' : 'transparent'"
+                  @click.stop="(e: MouseEvent) => e.preventDefault()"
+                  class="list-item-menu"
+                  icon
+                  size="x-small"
+                  variant="text"
+                >
+                  <v-icon icon="mdi:mdi-dots-vertical" />
+
+                  <ModelMenu :model="item" :modelDBStore />
+                </v-btn>
+              </template>
+            </v-list-item>
+          </v-hover>
+        </template>
+      </v-virtual-scroll>
+
+      <!-- <template v-for="(model, index) in models">
         <v-hover v-slot="{ isHovering, props }">
           <v-list-item
             :key="index"
             :subtitle="model.elementType"
-            :title="model.label"
+            :title="model.label || model.id"
             :to="{
               name: appStore.state.simulator + 'Model',
               params: { modelId: model.id },
@@ -140,7 +175,7 @@
             </template>
           </v-list-item>
         </v-hover>
-      </template>
+      </template> -->
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -151,9 +186,10 @@ import { createDialog } from "vuetify3-dialog";
 
 import { TModel } from "@/types";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { TModelStore } from "@/stores/model/defineModelStore";
 
-import DialogTextField from "../dialog/DialogTextField.vue";
 import DeleteDialog from "../dialog/DeleteDialog.vue";
+import DialogTextField from "../dialog/DialogTextField.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import ModelMenu from "./ModelMenu.vue";
@@ -167,12 +203,21 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
 
-const props = defineProps<{ modelDBStore: TModelDBStore }>();
+const props = defineProps<{
+  modelStore: TModelStore;
+  modelDBStore: TModelDBStore;
+}>();
 const models = computed(() => {
-  let models = props.modelDBStore.state.models;
+  let models = [];
 
-  if (state.custom) {
-    models = models.filter((model: TModel) => model.custom);
+  if (state.source == appStore.currentSimulator.id) {
+    models = props.modelStore.state.models;
+  } else {
+    models = props.modelDBStore.state.models;
+
+    if (state.source === "custom") {
+      models = models.filter((model: TModel) => model.custom);
+    }
   }
 
   if (state.search) {
@@ -203,12 +248,13 @@ const models = computed(() => {
 });
 
 const state = reactive({
-  custom: false,
   elementType: "",
   orderByAsc: true,
   search: "",
+  source: "installed",
 });
 
+const sources = ["installed", "custom", appStore.currentSimulator.id];
 const elementTypes = ["neuron", "recorder", "stimulator", "synapse"];
 
 const menuItems = [

@@ -71,12 +71,36 @@ onMounted(() => {
   modelStore.init();
   projectStore.init();
 
+  const getElementType = (modelId: string) => {
+    if (modelId.endsWith("generator") || modelId.endsWith("dilutor")) {
+      return "stimulator";
+    } else if (
+      modelId.endsWith("meter") ||
+      modelId.endsWith("detector") ||
+      modelId.endsWith("recorder")
+    ) {
+      return "recorder";
+    } else if (
+      modelId.includes("synapse") ||
+      modelId.includes("connection") ||
+      modelId.startsWith("rate") ||
+      modelId == "volume_transmitter" ||
+      modelId == "gap_junction"
+    ) {
+      return "synapse";
+    }
+    return "neuron";
+  };
+
   backends.nest
     .axiosInstance()
     .get("/api/Models")
     .then((response: AxiosResponse) => {
       if (response.data && response.data.length > 0) {
-        modelStore.state.models = response.data;
+        modelStore.state.models = response.data.map((modelId: string) => ({
+          id: modelId,
+          elementType: getElementType(modelId),
+        }));
       }
     });
 });
