@@ -2,9 +2,9 @@
   <v-container>
     <v-card>
       <v-card-title>Explorer</v-card-title>
-      <v-card-subtitle>{{ model.label }}</v-card-subtitle>
+      <v-card-subtitle>{{ modelStore.state.modelId }}</v-card-subtitle>
 
-      <v-card-text>Text</v-card-text>
+      <v-card-text>{{ model.label }}</v-card-text>
 
       <v-card-actions>
         <v-btn>Action</v-btn>

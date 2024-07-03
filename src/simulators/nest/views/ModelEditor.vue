@@ -1,5 +1,5 @@
 <template>
-  <v-card flat title="Model editor">
+  <v-card flat title="Model editor" v-if="model">
     <v-card-text>
       <v-row>
         <v-col cols="6">

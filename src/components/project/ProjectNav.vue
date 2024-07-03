@@ -30,7 +30,7 @@
 
       <template #extension>
         <v-fab
-          @click="dialogNewProject()"
+          @click="openDialogNewProject()"
           class="ms-4"
           color="primary"
           icon="mdi:mdi-plus"
@@ -52,24 +52,12 @@
           <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
         </template>
 
-        <DeleteDialog :store="projectDBStore" activator="#delete-dialog" />
-        <ExportDialog
-          :modelDBStore="modelDBStore"
-          :projectDBStore="projectDBStore"
-          activator="#export-dialog"
-        />
-        <ImportDialog
-          :modelDBStore="modelDBStore"
-          :projectDBStore="projectDBStore"
-          activator="#import-dialog"
-        />
-
         <v-list density="compact">
           <v-list-item
             :id="item.id"
             :key="index"
             :value="index"
-            @click="item.onclick"
+            @click="item.onClick()"
             v-for="(item, index) in menuItems"
           >
             <template #prepend>
@@ -213,6 +201,8 @@ const props = defineProps<{
 }>();
 
 const projectDBStore = computed(() => props.projectDBStore);
+const modelDBStore = computed(() => props.modelDBStore);
+
 const projects = computed(() =>
   props.projectDBStore.state.projects.filter((project: TProject) =>
     project.name
@@ -224,18 +214,77 @@ const projects = computed(() =>
 const search = ref("");
 
 const menuItems = [
-  { title: "Import", icon: "mdi:mdi-import", id: "import-dialog" },
-  { title: "Export", icon: "mdi:mdi-export", id: "export-dialog" },
-  { title: "Delete", icon: "mdi:mdi-trash-can-outline", id: "delete-dialog" },
+  {
+    title: "Import",
+    icon: "mdi:mdi-import",
+    id: "import-dialog",
+    onClick: () => {
+      createDialog({
+        title: "",
+        text: "",
+        customComponent: {
+          component: ImportDialog,
+          props: {
+            modelDBStore: modelDBStore.value,
+            projectDBStore: projectDBStore.value,
+          },
+        },
+        dialogOptions: {
+          width: "1280px",
+        },
+      });
+    },
+  },
+  {
+    title: "Export",
+    icon: "mdi:mdi-export",
+    id: "export-dialog",
+    onClick: () => {
+      createDialog({
+        title: "",
+        text: "",
+        customComponent: {
+          component: ExportDialog,
+          props: {
+            modelDBStore: modelDBStore.value,
+            projectDBStore: projectDBStore.value,
+          },
+        },
+        dialogOptions: {
+          width: "1280px",
+        },
+      });
+    },
+  },
+  {
+    title: "Delete",
+    icon: "mdi:mdi-trash-can-outline",
+    id: "delete-dialog",
+    onClick: () => {
+      createDialog({
+        title: "",
+        text: "",
+        customComponent: {
+          component: DeleteDialog,
+          props: {
+            store: projectDBStore.value,
+          },
+        },
+        dialogOptions: {
+          width: "1280px",
+        },
+      });
+    },
+  },
   {
     title: "Reload list",
     icon: "mdi:mdi-reload",
-    onclick: () => projectDBStore.value.updateList(),
+    onClick: () => projectDBStore.value.updateList(),
   },
   // { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];
 
-const dialogNewProject = () => {
+const openDialogNewProject = () => {
   createDialog({
     title: "",
     text: "",

@@ -84,7 +84,7 @@ export function defineModelDBStore(
      * It pushes new model to the first line of the list.
      */
     const addModel = (modelProps?: TModelProps): Model => {
-      logger.trace("add model:", truncate(modelProps?.id));
+      logger.trace("add model:", modelProps?.id);
 
       const model = new props.Model(modelProps);
       _addToList(model);
@@ -273,7 +273,10 @@ export function defineModelDBStore(
       state.models = [];
       db.list("id", true).then((modelsProps: TModelProps[]) => {
         modelsProps.forEach((modelProps: TModelProps) => addModel(modelProps));
-        state.initialized = true;
+
+        setTimeout(() => {
+          state.initialized = true;
+        }, 500);
       });
     };
 

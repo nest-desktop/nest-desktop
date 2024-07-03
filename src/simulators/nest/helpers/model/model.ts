@@ -26,7 +26,6 @@ export class NESTModel extends BaseModel {
   private _compartmentParams: Record<string, NESTModelCompartmentParameter> =
     {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
-  private _custom: boolean = false;
   private _nestmlScript: string = "";
   private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
 
@@ -46,14 +45,6 @@ export class NESTModel extends BaseModel {
   set compartmentParamsVisible(values: string[]) {
     this._compartmentParamsVisible = values;
     this.changes();
-  }
-
-  get custom(): boolean {
-    return this._custom;
-  }
-
-  set custom(value: boolean) {
-    this._custom = value;
   }
 
   get existing(): string {
@@ -84,7 +75,7 @@ export class NESTModel extends BaseModel {
 
   set nestmlScript(value: string) {
     this._nestmlScript = value;
-    this._custom = this._nestmlScript.length > 0;
+    this.custom = this._nestmlScript.length > 0;
   }
 
   get receptors(): Record<string, NESTModelReceptor> {

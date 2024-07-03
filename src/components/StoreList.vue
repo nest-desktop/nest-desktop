@@ -1,16 +1,5 @@
 <template>
   <v-card class="mt-2">
-    <ImportDialog
-      :modelDBStore="modelDBStore"
-      :projectDBStore="projectDBStore"
-      activator="#import-dialog"
-    />
-    <ExportDialog
-      :modelDBStore="modelDBStore"
-      :projectDBStore="projectDBStore"
-      activator="#export-dialog"
-    />
-
     <v-toolbar color="transparent" density="compact">
       <v-toolbar-title>Store list</v-toolbar-title>
 
@@ -18,12 +7,14 @@
 
       <v-btn-toggle class="mx-2" density="compact">
         <v-btn
+          @click="openImportDialog()"
           icon="mdi:mdi-import"
           id="import-dialog"
           style="min-width: 40px"
           title="Open dialog to import"
         />
         <v-btn
+          @click="openExportDialog()"
           icon="mdi:mdi-export"
           id="export-dialog"
           style="min-width: 40px"
@@ -111,6 +102,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import ExportDialog from "./dialog/ExportDialog.vue";
 import ImportDialog from "./dialog/ImportDialog.vue";
@@ -123,7 +115,7 @@ import { truncate } from "@/utils/truncate";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-defineProps<{
+const props = defineProps<{
   modelDBStore: TModelDBStore;
   modelStore: TModelStore;
   projectDBStore: TProjectDBStore;
@@ -132,4 +124,38 @@ defineProps<{
 }>();
 
 const databaseTab = ref("project");
+
+const openExportDialog = () => {
+  createDialog({
+    title: "",
+    text: "",
+    customComponent: {
+      component: ExportDialog,
+      props: {
+        modelDBStore: props.modelDBStore,
+        projectDBStore: props.projectDBStore,
+      },
+    },
+    dialogOptions: {
+      width: "1280px",
+    },
+  });
+};
+
+const openImportDialog = () => {
+  createDialog({
+    title: "",
+    text: "",
+    customComponent: {
+      component: ImportDialog,
+      props: {
+        modelDBStore: props.modelDBStore,
+        projectDBStore: props.projectDBStore,
+      },
+    },
+    dialogOptions: {
+      width: "1280px",
+    },
+  });
+};
 </script>

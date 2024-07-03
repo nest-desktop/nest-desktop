@@ -13,7 +13,7 @@
       color="nest-model"
       density="compact"
       extended
-      extension-height="28"
+      extension-height="36"
     >
       <v-text-field
         class="mx-1"
@@ -40,9 +40,35 @@
           title="Create a new model"
         />
 
-        <v-row class="mx-4 text-subtitle-2" no-gutters>
+        <v-row class="ma-2" no-gutters>
+          <v-chip
+            :prepend-icon="
+              'mdi:mdi-order-alphabetical-' +
+              (state.orderByAsc ? 'ascending' : 'descending')
+            "
+            @click="state.orderByAsc = !state.orderByAsc"
+            class="mx-1"
+            density="compact"
+            title="order by"
+          >
+            sort
+          </v-chip>
+
+          <v-chip
+            :active="state.custom"
+            @click="state.custom = !state.custom"
+            class="mx-1"
+            density="compact"
+            prepend-icon="mdi:mdi-pencil"
+            title="show only custom models"
+          >
+            own
+          </v-chip>
+
           <v-spacer />
-          {{ models.length }} models
+          <span class="text-subtitle-2">
+            {{ models.length }} model<span v-show="models.length > 1">s</span>
+          </span>
         </v-row>
       </template>
 
@@ -55,6 +81,7 @@
           <v-list-item
             :key="index"
             :value="index"
+            @click="item.onClick()"
             v-for="(item, index) in menuItems"
           >
             <template #prepend>
@@ -66,45 +93,22 @@
       </v-menu>
     </v-toolbar>
 
-    <!-- <v-virtual-scroll :items="models">
-      <template #default="{ item }">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-list-item
-            :subtitle="item.elementType"
-            :title="item.label"
-            :to="{
-              name: appStore.state.simulator + 'Model',
-              params: { modelId: item.id },
-            }"
-            v-bind="props"
-          >
-            <template #append>
-              <v-btn
-                :color="isHovering ? 'primary' : 'transparent'"
-                @click.stop="(e: MouseEvent) => e.preventDefault()"
-                class="list-item-menu"
-                icon
-                size="x-small"
-                variant="text"
-              >
-                <v-icon icon="mdi:mdi-dots-vertical" />
-
-                <ModelMenu :model="item" :modelDBStore />
-              </v-btn>
-            </template>
-          </v-list-item>
-        </v-hover>
-      </template>
-    </v-virtual-scroll> -->
-
     <v-list class="pt-0" density="compact" lines="two" nav>
-      <v-list-subheader class="pa-0" inset style="margin-left: -24px">
-        <v-btn-toggle density="compact" tile v-model="state.elementType">
+      <v-list-subheader
+        class="pa-0"
+        inset
+        style="margin-left: -24px; line-height: 20px"
+      >
+        <v-btn-toggle
+          density="compact"
+          style="height: 24px; line-height: 20px"
+          v-model="state.elementType"
+        >
           <v-btn
             :key="elementType"
+            :value="elementType"
             size="x-small"
             style="font-size: 9px"
-            :value="elementType"
             v-for="elementType in elementTypes"
           >
             {{ elementType }}
@@ -149,10 +153,14 @@
 import { computed, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import DialogTextField from "@/components/dialog/DialogTextField.vue";
-import ModelMenu from "./ModelMenu.vue";
 import { TModel } from "@/types";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+
+import DialogTextField from "../dialog/DialogTextField.vue";
+import DeleteDialog from "../dialog/DeleteDialog.vue";
+import ExportDialog from "../dialog/ExportDialog.vue";
+import ImportDialog from "../dialog/ImportDialog.vue";
+import ModelMenu from "./ModelMenu.vue";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -166,6 +174,10 @@ const navState = useNavStore();
 const props = defineProps<{ modelDBStore: TModelDBStore }>();
 const models = computed(() => {
   let models = props.modelDBStore.state.models;
+
+  if (state.custom) {
+    models = models.filter((model: TModel) => model.custom);
+  }
 
   if (state.search) {
     models = models.filter((model: TModel) =>
@@ -181,24 +193,89 @@ const models = computed(() => {
     );
   }
 
-  models = models.sort((a: any, b: any) =>
-    a["id"] < b["id"] ? -1 : a["id"] > b["id"] ? 1 : 0
-  );
+  if (state.orderByAsc) {
+    models = models.sort((a: TModel, b: TModel) =>
+      a["id"] < b["id"] ? -1 : a["id"] > b["id"] ? 1 : 0
+    );
+  } else {
+    models = models.sort((a: TModel, b: TModel) =>
+      a["id"] > b["id"] ? -1 : a["id"] < b["id"] ? 1 : 0
+    );
+  }
+
   return models;
 });
 
 const state = reactive({
+  custom: false,
   elementType: "",
+  orderByAsc: true,
   search: "",
 });
 
 const elementTypes = ["neuron", "recorder", "stimulator", "synapse"];
 
 const menuItems = [
-  { title: "Upload", icon: "mdi:mdi-upload" },
-  { title: "Download", icon: "mdi:mdi-download" },
-  { title: "Reload", icon: "mdi:mdi-reload" },
-  { title: "Delete", icon: "mdi:mdi-trash-can-outline" },
+  {
+    title: "Import",
+    icon: "mdi:mdi-import",
+    id: "import-dialog",
+    onClick: () => {
+      createDialog({
+        title: "",
+        text: "",
+        customComponent: {
+          component: ImportDialog,
+          props: {
+            modelDBStore: props.modelDBStore,
+          },
+        },
+        dialogOptions: {
+          width: "1280px",
+        },
+      });
+    },
+  },
+  {
+    title: "Export",
+    icon: "mdi:mdi-export",
+    id: "export-dialog",
+    onClick: () => {
+      createDialog({
+        title: "",
+        text: "",
+        customComponent: {
+          component: ExportDialog,
+          props: {
+            modelDBStore: props.modelDBStore,
+          },
+        },
+        dialogOptions: {
+          width: "1280px",
+        },
+      });
+    },
+  },
+  {
+    title: "Delete",
+    icon: "mdi:mdi-trash-can-outline",
+    id: "delete-dialog",
+    onClick: () => {
+      createDialog({
+        title: "",
+        text: "",
+        customComponent: {
+          component: DeleteDialog,
+          props: {
+            store: props.modelDBStore,
+          },
+        },
+        dialogOptions: {
+          width: "1280px",
+        },
+      });
+    },
+  },
 ];
 
 const dialogNewModel = () => {

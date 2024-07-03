@@ -1,69 +1,60 @@
 <template>
-  <v-dialog max-width="1280">
-    <template #default="{ isActive }">
-      <v-card>
-        <v-card-title class="d-flex justify-space-between align-center">
-          <v-icon icon="mdi:mdi-trash-can-outline" size="small" />
-          Delete
+  <v-card>
+    <v-card-title class="d-flex justify-space-between align-center">
+      <v-icon icon="mdi:mdi-trash-can-outline" size="small" />
+      Delete
 
-          <v-btn
-            @click="isActive.value = false"
-            flat
-            icon="mdi:mdi-close"
-            size="small"
-          />
-        </v-card-title>
+      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+    </v-card-title>
 
-        <v-data-table-virtual
-          :headers
-          :items="state.items"
-          item-selectable="valid"
-          item-value="name"
-          return-object
-          show-select
-          v-model="state.selected"
-        >
-          <template #item.valid="{ value }">
-            <v-icon
-              :color="value ? 'success' : 'error'"
-              :icon="value ? 'mdi-check' : 'mdi-close'"
-            />
-          </template>
-        </v-data-table-virtual>
+    <v-data-table-virtual
+      :headers
+      :items="state.items"
+      item-selectable="valid"
+      item-value="name"
+      return-object
+      show-select
+      v-model="state.selected"
+    >
+      <template #item.valid="{ value }">
+        <v-icon
+          :color="value ? 'success' : 'error'"
+          :icon="value ? 'mdi-check' : 'mdi-close'"
+        />
+      </template>
+    </v-data-table-virtual>
 
-        <v-card-actions>
-          <v-btn
-            :disabled="state.selected.length === 0"
-            @click="
-              () => {
-                deleteSelected();
-                isActive.value = false;
-              }
-            "
-            prepend-icon="mdi:mdi-trash-can-outline"
-            size="small"
-            text="delete selected"
-            variant="outlined"
-          />
+    <v-card-actions>
+      <v-btn
+        :disabled="state.selected.length === 0"
+        @click="
+          () => {
+            deleteSelected();
+            closeDialog();
+          }
+        "
+        prepend-icon="mdi:mdi-trash-can-outline"
+        size="small"
+        text="delete selected"
+        variant="outlined"
+      />
 
-          <v-btn
-            @click="update()"
-            prepend-icon="mdi:mdi-reload"
-            size="small"
-            text="Reload"
-            variant="outlined"
-          />
+      <v-btn
+        @click="update()"
+        prepend-icon="mdi:mdi-reload"
+        size="small"
+        text="Reload"
+        variant="outlined"
+      />
 
-          <v-btn
-            @click="isActive.value = false"
-            size="small"
-            text="close"
-            variant="outlined"
-          />
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
+      <v-btn
+        @click="closeDialog()"
+        size="small"
+        text="close"
+        variant="outlined"
+      />
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -72,7 +63,7 @@ import { computed, onMounted, reactive } from "vue";
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProject } from "@/types";
+import { TModel, TProject } from "@/types";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 // import { useAppStore } from "@/stores/appStore";
@@ -98,6 +89,11 @@ const headers = [
   { title: "Created at", key: "props.createdAt" },
 ];
 
+const emit = defineEmits(["closeDialog"]);
+function closeDialog(value?: string | boolean) {
+  emit("closeDialog", value);
+}
+
 /**
  * Delete selected.
  */
@@ -112,12 +108,23 @@ const update = (): void => {
   state.selected = [] as IDeleteProps[];
   state.items = [] as IDeleteProps[];
 
-  store.value.state.projects.forEach((project: TProject | IProjectProps) => {
-    state.items.push({
-      name: project.name as string,
-      props: project.doc ? project.toJSON() : project,
+  if (store.value.state.projects) {
+    store.value.state.projects.forEach((project: TProject | IProjectProps) => {
+      state.items.push({
+        name: project.name as string,
+        props: project.doc ? project.toJSON() : project,
+      });
     });
-  });
+  }
+
+  if (store.value.state.models) {
+    store.value.state.models.forEach((model: TModel) => {
+      state.items.push({
+        name: model.label as string,
+        props: model.toJSON(),
+      });
+    });
+  }
 };
 
 onMounted(() => {

@@ -1,83 +1,126 @@
 <template>
-  <v-dialog max-width="1280">
-    <template #default="{ isActive }">
-      <v-card>
-        <v-card-title class="d-flex justify-space-between align-center">
-          <v-icon icon="mdi:mdi-import" size="small" />
-          Import
+  <v-card>
+    <v-card-title class="d-flex justify-space-between align-center">
+      <v-icon icon="mdi:mdi-import" size="small" />
+      Import
 
+      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+    </v-card-title>
+
+    <v-toolbar class="px-2" color="transparent" density="compact">
+      <v-btn-toggle
+        class="mr-1"
+        density="compact"
+        mandatory
+        v-model="state.source"
+        variant="outlined"
+      >
+        <v-btn
+          :key="index"
+          style="min-width: 40px"
+          v-bind="source"
+          v-for="(source, index) in sources"
+        />
+      </v-btn-toggle>
+
+      <template v-if="state.source === 'github'">
+        <v-btn-toggle
+          @update:model-value="getTreesFromGithub()"
+          class="mx-1"
+          density="compact"
+          mandatory
+          v-model="state.githubGroup"
+          variant="outlined"
+        >
           <v-btn
-            @click="isActive.value = false"
-            flat
-            icon="mdi:mdi-close"
-            size="small"
+            :key="index"
+            style="min-width: 40px"
+            v-bind="source"
+            v-for="(source, index) in groups"
           />
-        </v-card-title>
+        </v-btn-toggle>
 
-        <v-toolbar class="px-2" color="transparent" density="compact">
-          <v-btn-toggle
-            class="mr-1"
-            density="compact"
-            mandatory
-            v-model="state.source"
-            variant="outlined"
-          >
+        <v-select
+          :disabled="state.githubTrees.length === 0"
+          :items="state.githubTrees"
+          :label="state.githubGroup + ' path'"
+          @update:model-value="getFilesFromGithub"
+          class="mx-1"
+          density="compact"
+          flat
+          hide-details
+          item-title="path"
+          prepend-icon="mdi:mdi-github"
+          return-object
+          v-model="state.githubSelectedTree"
+          variant="outlined"
+        />
+
+        <v-select
+          :disabled="state.githubFiles.length === 0"
+          :items="state.githubFiles"
+          @update:model-value="updateURLFromGithub"
+          class="mx-1"
+          density="compact"
+          flat
+          hide-details
+          item-title="path"
+          label="File"
+          return-object
+          v-model="state.githubSelectedFile"
+          variant="outlined"
+        />
+
+        <v-btn
+          @click="fetchProps()"
+          flat
+          prepend-icon="mdi:mdi-download"
+          variant="outlined"
+        >
+          Fetch
+        </v-btn>
+      </template>
+
+      <template v-else-if="state.source === 'drive'">
+        <v-file-input
+          @update:model-value="loadProjectsFromDrive"
+          density="compact"
+          flat
+          hide-details
+          label="File"
+          show-size
+          title="Click to select a file"
+          truncate-length="100"
+          variant="outlined"
+        >
+          <template #append>
             <v-btn
-              :key="index"
-              style="min-width: 40px"
-              v-bind="source"
-              v-for="(source, index) in sources"
-            />
-          </v-btn-toggle>
-
-          <template v-if="state.source === 'github'">
-            <v-btn-toggle
-              @update:model-value="getTreesFromGithub"
-              class="mx-1"
-              density="compact"
-              mandatory
-              v-model="state.githubGroup"
+              @upload="loadProjectsFromDrive"
+              flat
+              prepend-icon="mdi:mdi-upload"
               variant="outlined"
             >
-              <v-btn
-                :key="index"
-                style="min-width: 40px"
-                v-bind="source"
-                v-for="(source, index) in groups"
-              />
-            </v-btn-toggle>
+              Upload
+            </v-btn>
+          </template>
+        </v-file-input>
+      </template>
 
-            <v-select
-              :disabled="state.githubTrees.length === 0"
-              :items="state.githubTrees"
-              :label="state.githubGroup + ' path'"
-              @update:model-value="getFilesFromGithub"
-              class="mx-1"
-              density="compact"
-              flat
-              hide-details
-              item-title="path"
-              prepend-icon="mdi:mdi-github"
-              return-object
-              v-model="state.githubSelectedTree"
-              variant="outlined"
-            />
-
-            <v-select
-              :disabled="state.githubFiles.length === 0"
-              :items="state.githubFiles"
-              @update:model-value="updateURLFromGithub"
-              class="mx-1"
-              density="compact"
-              flat
-              hide-details
-              item-title="path"
-              label="File"
-              return-object
-              v-model="state.githubSelectedFile"
-              variant="outlined"
-            />
-
+      <template v-else-if="state.source === 'url'">
+        <v-text-field
+          class="ma-0 pa-0"
+          clearable
+          density="compact"
+          flat
+          full-width
+          hide-details
+          label="URL"
+          prepend-icon="mdi:mdi-web"
+          title="Please enter the project's URL"
+          v-model="state.url"
+          variant="outlined"
+        >
+          <template #append>
             <v-btn
               @click="fetchProps()"
               flat
@@ -87,77 +130,27 @@
               Fetch
             </v-btn>
           </template>
+        </v-text-field>
+      </template>
 
-          <template v-else-if="state.source === 'drive'">
-            <v-file-input
-              @update:model-value="loadProjectsFromDrive"
-              density="compact"
-              flat
-              hide-details
-              label="File"
-              show-size
-              title="Click to select a file"
-              truncate-length="100"
-              variant="outlined"
-            >
-              <template #append>
-                <v-btn
-                  @upload="loadProjectsFromDrive"
-                  flat
-                  prepend-icon="mdi:mdi-upload"
-                  variant="outlined"
-                >
-                  Upload
-                </v-btn>
-              </template>
-            </v-file-input>
-          </template>
+      <template v-else>
+        <v-icon icon="mdi:mdi-arrow-left-thin" />
+        Please select one source of files to import.
+      </template>
+    </v-toolbar>
 
-          <template v-else-if="state.source === 'url'">
-            <v-text-field
-              class="ma-0 pa-0"
-              clearable
-              density="compact"
-              flat
-              full-width
-              hide-details
-              label="URL"
-              prepend-icon="mdi:mdi-web"
-              title="Please enter the project's URL"
-              v-model="state.url"
-              variant="outlined"
-            >
-              <template #append>
-                <v-btn
-                  @click="fetchProps()"
-                  flat
-                  prepend-icon="mdi:mdi-download"
-                  variant="outlined"
-                >
-                  Fetch
-                </v-btn>
-              </template>
-            </v-text-field>
-          </template>
-
-          <template v-else>
-            <v-icon icon="mdi:mdi-arrow-left-thin" />
-            Please select one source of files to import.
-          </template>
-        </v-toolbar>
-
-        <v-data-table-virtual
-          :group-by="[{ key: 'group', order: 'asc' }]"
-          :headers
-          :items="state.items"
-          :show-expand="false"
-          item-selectable="valid"
-          item-value="name"
-          return-object
-          show-select
-          v-model="state.selected"
-        >
-          <!-- <template #group-header="{ item, columns, toggleGroup, isGroupOpen }">
+    <v-data-table-virtual
+      :group-by="[{ key: 'group', order: 'asc' }]"
+      :headers
+      :items="state.items"
+      :show-expand="false"
+      item-selectable="valid"
+      item-value="name"
+      return-object
+      show-select
+      v-model="state.selected"
+    >
+      <!-- <template #group-header="{ item, columns, toggleGroup, isGroupOpen }">
             <tr>
               <td :colspan="columns.length">
                 <v-btn
@@ -176,14 +169,14 @@
             </tr>
           </template> -->
 
-          <template #item.valid="{ value }">
-            <v-icon
-              :color="value ? 'success' : 'error'"
-              :icon="value ? 'mdi-check' : 'mdi-close'"
-            />
-          </template>
+      <template #item.valid="{ value }">
+        <v-icon
+          :color="value ? 'success' : 'error'"
+          :icon="value ? 'mdi-check' : 'mdi-close'"
+        />
+      </template>
 
-          <!-- <template #expanded-row="{ columns, item }">
+      <!-- <template #expanded-row="{ columns, item }">
             <tr>
               <td :colspan="columns.length" v-if="item.group === 'project'">
                 {{ item.props.network.nodes.length }} nodes,
@@ -191,41 +184,39 @@
               </td>
             </tr>
           </template> -->
-        </v-data-table-virtual>
+    </v-data-table-virtual>
 
-        <v-card-actions>
-          <v-btn
-            :disabled="state.selected.length === 0"
-            @click="
-              () => {
-                importSelected();
-                isActive.value = false;
-              }
-            "
-            prepend-icon="mdi:mdi-import"
-            size="small"
-            text="import selected"
-            variant="outlined"
-          />
+    <v-card-actions>
+      <v-btn
+        :disabled="state.selected.length === 0"
+        @click="
+          () => {
+            importSelected();
+            closeDialog();
+          }
+        "
+        prepend-icon="mdi:mdi-import"
+        size="small"
+        text="import selected"
+        variant="outlined"
+      />
 
-          <v-btn
-            @click="state.items = []"
-            prepend-icon="mdi:mdi-delete-empty-outline"
-            size="small"
-            text="Clear"
-            variant="outlined"
-          />
+      <v-btn
+        @click="state.items = []"
+        prepend-icon="mdi:mdi-delete-empty-outline"
+        size="small"
+        text="Clear"
+        variant="outlined"
+      />
 
-          <v-btn
-            @click="isActive.value = false"
-            size="small"
-            text="close"
-            variant="outlined"
-          />
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
+      <v-btn
+        @click="closeDialog()"
+        size="small"
+        text="close"
+        variant="outlined"
+      />
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -443,6 +434,11 @@ const addProps = (
     });
   });
 };
+
+const emit = defineEmits(["closeDialog"]);
+function closeDialog(value?: string | boolean) {
+  emit("closeDialog", value);
+}
 
 /**
  * Get model from github.

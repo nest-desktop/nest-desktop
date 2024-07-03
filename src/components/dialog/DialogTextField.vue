@@ -22,11 +22,10 @@ import { ref } from "vue";
 
 const props = defineProps<{ modelValue: string; title: string }>();
 
-const emit = defineEmits(["closeDialog"]);
-
 const modelValue = ref(props.modelValue);
 
-function closeDialog(value: string | boolean) {
+const emit = defineEmits(["closeDialog"]);
+function closeDialog(value?: string | boolean) {
   emit("closeDialog", value);
 }
 </script>

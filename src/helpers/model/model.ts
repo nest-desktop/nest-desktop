@@ -21,6 +21,7 @@ export interface IModelProps extends IDoc {
 
 export class BaseModel extends BaseObj {
   private _abbreviation: string;
+  private _custom: boolean = false;
   private _doc: IModelProps; // doc data of the database
   private _elementType: string; // element type of the model
   private _favorite: boolean = false;
@@ -50,6 +51,14 @@ export class BaseModel extends BaseObj {
 
   get abbreviation(): string {
     return this._abbreviation;
+  }
+
+  get custom(): boolean {
+    return this._custom;
+  }
+
+  set custom(value: boolean) {
+    this._custom = value;
   }
 
   get doc(): IModelProps {
