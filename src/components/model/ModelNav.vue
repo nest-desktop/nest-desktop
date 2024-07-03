@@ -94,14 +94,10 @@
     </v-toolbar>
 
     <v-list class="pt-0" density="compact" lines="two" nav>
-      <v-list-subheader
-        class="pa-0"
-        inset
-        style="margin-left: -24px; line-height: 20px"
-      >
+      <v-list-subheader class="pa-0" inset style="margin-left: -28px">
         <v-btn-toggle
           density="compact"
-          style="height: 24px; line-height: 20px"
+          style="height: 24px"
           v-model="state.elementType"
         >
           <v-btn

@@ -14,7 +14,7 @@
       color="nest-project"
       density="compact"
       extended
-      extension-height="28"
+      extension-height="36"
     >
       <v-text-field
         class="mx-1"
