@@ -27,7 +27,6 @@ const modelBeforeEnter = (to: any) => {
   const modelDBStore: TModelDBStore = useNESTModelDBStore();
 
   let intervalId: string | number | NodeJS.Timeout;
-
   intervalId = setInterval(() => {
     if (!modelDBStore.state.initialized) return;
 

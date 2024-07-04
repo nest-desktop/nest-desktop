@@ -1,6 +1,5 @@
 // defineModelStore.ts
 
-import { mode } from "d3";
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 

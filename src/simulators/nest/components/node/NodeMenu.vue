@@ -112,7 +112,7 @@
 
       <span>
         <v-dialog :value="state.dialog" width="80%">
-          <ModelDocumentation :id="node.modelId" />
+          <ModelDocumentation :modelId="node.modelId" />
         </v-dialog>
       </span>
 

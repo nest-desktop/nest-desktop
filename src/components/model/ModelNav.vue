@@ -120,11 +120,11 @@
         <template #default="{ item }">
           <v-hover v-slot="{ isHovering, props }">
             <v-list-item
-              :subtitle="item.elementType"
-              :title="item.label || item.id"
+              :subtitle="(item as TModel).elementType"
+              :title="(item as TModel).label || (item as TModel).id"
               :to="{
                 name: appStore.state.simulator + 'Model',
-                params: { modelId: item.id },
+                params: { modelId: (item as TModel).id },
               }"
               v-bind="props"
             >
@@ -139,7 +139,7 @@
                 >
                   <v-icon icon="mdi:mdi-dots-vertical" />
 
-                  <ModelMenu :model="item" :modelDBStore />
+                  <ModelMenu :model="item as TModel" :modelDBStore />
                 </v-btn>
               </template>
             </v-list-item>

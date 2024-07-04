@@ -24,7 +24,7 @@
     variant="outlined"
   />
 
-  <Simulation-code-mirror
+  <SimulationCodeMirror
     :disabled="state.disabled"
     :simulation="simulation"
     v-if="simulation"

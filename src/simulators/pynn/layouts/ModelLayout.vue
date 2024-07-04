@@ -1,11 +1,11 @@
 <template>
-  <ModelNav :modelDBStore />
+  <ModelNav :modelStore :modelDBStore />
 
   <ModelBar :model="modelStore.model" color="brown" />
 
   <ModelController :modelStore />
 
-  <router-view name="model" />
+  <router-view :key="modelStore.state.modelId" name="model" />
 </template>
 
 <script lang="ts" setup>

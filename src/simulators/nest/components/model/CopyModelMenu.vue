@@ -53,7 +53,7 @@
 
       <span>
         <v-dialog :value="state.dialog" width="80%">
-          <ModelDocumentation :id="model.existingModelId" />
+          <ModelDocumentation :modelId="model.existingModelId" />
         </v-dialog>
       </span>
     </v-card>

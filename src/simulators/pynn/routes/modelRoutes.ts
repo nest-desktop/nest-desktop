@@ -1,8 +1,10 @@
 // modelRoute.ts
 
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { logger as mainLogger } from "@/utils/logger";
 
+import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
 import { usePyNNModelStore } from "../stores/model/modelStore";
 
 const logger = mainLogger.getSubLogger({
@@ -12,13 +14,26 @@ const logger = mainLogger.getSubLogger({
 const modelBeforeEnter = (to: any) => {
   logger.trace("before enter:", to.path);
 
-  const modelStore: TModelStore = usePyNNModelStore();
+  let modelId: string;
   if (to.params.modelId) {
-    modelStore.state.modelId = to.params.modelId;
+    modelId = to.params.modelId;
   }
 
   const path = to.path.split("/");
-  modelStore.state.view = path[path.length - 1] || "edit";
+  const view = path[path.length - 1] || "doc";
+
+  const modelStore: TModelStore = usePyNNModelStore();
+  const modelDBStore: TModelDBStore = usePyNNModelDBStore();
+
+  let intervalId: string | number | NodeJS.Timeout;
+  intervalId = setInterval(() => {
+    if (!modelDBStore.state.initialized) return;
+
+    modelStore.state.view = view;
+    clearInterval(intervalId);
+
+    modelStore.state.modelId = modelId;
+  }, 250);
 };
 
 const modelRedirect = (to: any) => {
