@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { notifyError } from "@/utils/dialog";
 
-import { useNESTSimulatorStore } from "../../stores/backends/nestSimulatorStore";
+import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
 import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
 import {
@@ -52,11 +52,6 @@ export class NESTSimulation extends BaseSimulation {
   set modules(value: string[]) {
     this._modules = value;
     this.changes();
-  }
-
-  get nestSimulator() {
-    const nestSimulatorStore = useNESTSimulatorStore();
-    return nestSimulatorStore;
   }
 
   override get project(): NESTProject {
@@ -106,46 +101,40 @@ export class NESTSimulation extends BaseSimulation {
   async runSimulation(): Promise<AxiosResponse<any, { data: any }>> {
     this.logger.trace("run simulation");
 
-    return this.nestSimulator
-      .axiosInstance()
-      .post("exec", {
-        source: this.code.script,
-        return: "response",
-      })
-      .then(
-        (
-          response: AxiosResponse<
-            any,
-            {
-              data: {
-                events: any[];
-                biological_time: number;
-              };
-              status: number;
-            }
-          >
-        ) => {
-          if (response.data.data == null) {
-            return response;
+    return nest.simulate({ source: this.code.script, return: "response" }).then(
+      (
+        response: AxiosResponse<
+          any,
+          {
+            data: {
+              events: any[];
+              biological_time: number;
+            };
+            status: number;
           }
-
-          let data: {
-            events: any[];
-            biological_time: number;
-          };
-          switch (response.status) {
-            case 200:
-              data = response.data.data;
-
-              // Get biological time
-              this.state.biologicalTime =
-                data.biological_time != null ? data.biological_time : this.time;
-
-              break;
-          }
+        >
+      ) => {
+        if (response.data.data == null) {
           return response;
         }
-      );
+
+        let data: {
+          events: any[];
+          biological_time: number;
+        };
+        switch (response.status) {
+          case 200:
+            data = response.data.data;
+
+            // Get biological time
+            this.state.biologicalTime =
+              data.biological_time != null ? data.biological_time : this.time;
+
+            break;
+        }
+        return response;
+      }
+    );
   }
 
   /**
@@ -167,9 +156,8 @@ export class NESTSimulation extends BaseSimulation {
       stepSize: 1,
     };
 
-    return this.nestSimulator
-      .axiosInstance()
-      .post("exec", { source: this.code.script })
+    return nest
+      .simulate({ source: this.code.script })
       .then((response: AxiosResponse<any, { data: any; status: number }>) => {
         switch (response.status) {
           case 200:

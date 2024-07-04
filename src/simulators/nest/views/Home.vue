@@ -159,7 +159,7 @@
               <v-spacer />
 
               <v-btn
-                @click.stop="resetKernel"
+                @click.stop="nestSimulator.resetKernel()"
                 class="mx-2"
                 flat
                 icon="mdi:mdi-delete-empty-outline"
@@ -172,15 +172,17 @@
               <NESTModuleSelect v-model="state.selectedModule">
                 <template #append>
                   <v-btn
-                    @click="generateModels"
+                    @click="generateNESTMLModels()"
                     flat
                     icon="nest:build-models"
                     size="x-small"
-                    title="Generate models"
+                    title="Generate NESTML models"
                   />
 
                   <v-btn
-                    @click="installModule"
+                    @click="
+                      nestSimulator.installModule(state.selectedModule.id)
+                    "
                     flat
                     icon="nest:install-module"
                     size="x-small"
@@ -204,7 +206,7 @@
               >
                 <template #append>
                   <v-btn
-                    @click="fetchModels"
+                    @click="nestSimulator.fetchModels()"
                     flat
                     icon="mdi:mdi-refresh"
                     size="x-small"
@@ -215,8 +217,8 @@
 
               <v-list>
                 <template v-for="model in modelStore.state.models">
-                  <v-list-item v-show="model.includes(state.modelSearch)">
-                    {{ model }}
+                  <v-list-item v-show="model.id.includes(state.modelSearch)">
+                    {{ model.id }}
                   </v-list-item>
                 </template>
               </v-list>
@@ -237,7 +239,6 @@
 </template>
 
 <script setup lang="ts">
-import { AxiosError, AxiosResponse } from "axios";
 import { reactive } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
@@ -247,9 +248,10 @@ import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { notifyError, notifySuccess } from "@/utils/dialog";
 
 import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
+import nestmlServer from "../stores/backends/nestmlServerStore";
+import nestSimulator from "../stores/backends/nestSimulatorStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -269,12 +271,6 @@ const modelStore: TModelStore = useNESTModelStore();
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
-import { useNESTMLServerStore } from "../stores/backends/nestmlServerStore";
-const nestmlServerStore = useNESTMLServerStore();
-
-import { useNESTSimulatorStore } from "../stores/backends/nestSimulatorStore";
-const nestSimulatorStore = useNESTSimulatorStore();
-
 const state = reactive({
   backendTab: "nest",
   modelSearch: "",
@@ -282,18 +278,7 @@ const state = reactive({
   selectedModule: moduleStore.findModule("nestmlmodule"),
 });
 
-const fetchModels = () => {
-  nestSimulatorStore
-    .axiosInstance()
-    .get("/api/Models")
-    .then((response: AxiosResponse) => {
-      if (response.data && response.data.length > 0) {
-        modelStore.state.models = response.data;
-      }
-    });
-};
-
-const generateModels = () => {
+const generateNESTMLModels = () => {
   const models = state.selectedModule.models
     .filter((modelId: string) => modelDBStore.hasModel(modelId))
     .map((modelId: string) => {
@@ -304,60 +289,8 @@ const generateModels = () => {
       };
     });
 
-  if (!models && models.length === 0) return;
-
-  nestmlServerStore
-    .axiosInstance()
-    .post("/generateModels", {
-      module_name: state.selectedModule.id,
-      models: models,
-    })
-    .then((response: AxiosResponse) => {
-      switch (response.status) {
-        case 200:
-          notifySuccess(
-            `Models (${response.data.status["INSTALLED"].join(
-              ","
-            )}) are successfully generated in "${
-              state.selectedModule.id
-            }" module.`
-          );
-          break;
-        case 400:
-          notifyError("Failed to generate model.");
-          break;
-      }
-    })
-    .catch((error: AxiosError) => {
-      notifyError(error.message);
-    });
-};
-
-const installModule = () => {
-  nestSimulatorStore
-    .axiosInstance()
-    .post("/api/Install", { module_name: state.selectedModule.id })
-    .then(fetchModels)
-    .catch((error: AxiosError) => {
-      if ("response" in error && error.response?.data != undefined) {
-        // The request made and the server responded.
-        if (typeof error.response.data === "string") {
-          notifyError(error.response.data);
-        }
-      } else if ("request" in error) {
-        // The request was made but no response was received.
-        notifyError(
-          "Failed to perform simulation (Simulator backend is not running)."
-        );
-      } else if ("message" in error && error.message != undefined) {
-        // Something happened in setting up the request
-        // that triggered an error.
-        notifyError(error.message);
-      }
-    });
-};
-
-const resetKernel = () => {
-  nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
+  if (models && models.length > 0) {
+    nestmlServer.generateModels(models, state.selectedModule.id);
+  }
 };
 </script>

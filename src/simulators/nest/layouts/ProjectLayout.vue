@@ -119,7 +119,7 @@
           <template #append>
             <v-btn
               :disabled="model.length === 0"
-              @click="copyModel()"
+              @click="copyModel(model)"
               text="copy"
               variant="outlined"
             />
@@ -177,18 +177,10 @@ const modelDBStore: TModelDBStore = useNESTModelDBStore();
 import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
 const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
 
-import { useNESTProjectStore } from "../stores/project/projectStore";
+import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.state.project);
 
 const model = ref("");
-
-/**
- * Copy model.
- */
-const copyModel = () => {
-  project.value.network.modelsCopied.copy(model.value);
-  project.value.network.changes();
-};
 </script>

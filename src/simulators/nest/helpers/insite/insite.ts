@@ -5,11 +5,10 @@ import { AxiosResponse } from "axios";
 import { IActivityProps } from "@/helpers/activity/activity";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { TBackendStore } from "@/stores/defineBackendStore";
 import { notifySuccess } from "@/utils/dialog";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { useInsiteAccessStore } from "../../stores/backends/insiteAccessStore";
+import insiteAccess from "../../stores/backends/insiteAccessStore";
 import { NESTProject } from "../project/project";
 
 const logger = mainLogger.getSubLogger({ minLevel: 3, name: "insite" });
@@ -64,11 +63,6 @@ export class Insite {
     };
   }
 
-  get insiteAccess(): TBackendStore {
-    const insiteAccessStore = useInsiteAccessStore();
-    return insiteAccessStore;
-  }
-
   set activityGraphIntervalId(value: number) {
     clearInterval(this._state.activityGraphIntervalId);
     this._state.activityGraphIntervalId = value;
@@ -117,45 +111,40 @@ export class Insite {
     logger.trace("Update simulation time info continuously");
 
     this.simulationTimeIntervalId = window.setInterval(() => {
-      this.insiteAccess
-        .axiosInstance()
-        .get("nest/simulationTimeInfo/")
-        .then(
-          (
-            response: AxiosResponse<
-              any,
-              {
-                data: {
-                  begin: number;
-                  current: number;
-                  end: number;
-                  stepSize: number;
-                };
-              }
-            >
-          ) => {
-            if (response === undefined) return;
-
-            const timeInfo = response.data || {
-              begin: 0,
-              current: 0,
-              end: 0,
-              stepSize: 1,
-            };
-
-            if (
-              timeInfo.current ===
-              this._project.simulation.state.timeInfo.current
-            ) {
-              return;
+      insiteAccess.getSimulationTimeInfo().then(
+        (
+          response: AxiosResponse<
+            any,
+            {
+              data: {
+                begin: number;
+                current: number;
+                end: number;
+                stepSize: number;
+              };
             }
+          >
+        ) => {
+          if (response === undefined) return;
 
-            this._project.simulation.state.timeInfo = timeInfo;
+          const timeInfo = response.data || {
+            begin: 0,
+            current: 0,
+            end: 0,
+            stepSize: 1,
+          };
 
-            // this._project.state.snackbar.text = `Getting activities from Insite regularly. Current time:
-            //   ${this._project.simulation.state.timeInfo.current}ms.`;
-          }
-        );
+          if (
+            timeInfo.current === this._project.simulation.state.timeInfo.current
+          )
+            return;
+
+          this._project.simulation.state.timeInfo = timeInfo;
+
+          // this._project.state.snackbar.text = `Getting activities from Insite regularly. Current time:
+          //   ${this._project.simulation.state.timeInfo.current}ms.`;
+        }
+      );
     }, milliseconds);
   }
 
@@ -186,20 +175,22 @@ export class Insite {
     // );
 
     // Get node Ids from Insite.
-    this.getNodePositions().then((positions: { [key: number]: number[] }) => {
-      // Check if project has activities.
-      this._project.activities.checkActivities();
+    this.getNodePositions().then(
+      (positions: Record<number, number[]> | undefined) => {
+        // Check if project has activities.
+        this._project.activities.checkActivities();
 
-      // Get spike activities from Insite.
-      if (this._project.activities.state.hasSomeSpikeRecorders) {
-        this.getSpikeActivities(positions);
-      }
+        // Get spike activities from Insite.
+        if (this._project.activities.state.hasSomeSpikeRecorders) {
+          this.getSpikeActivities(positions);
+        }
 
-      // Get analog signal activities from Insite.
-      if (this._project.activities.state.hasSomeAnalogRecorders) {
-        this.getAnalogSignalActivities(positions);
+        // Get analog signal activities from Insite.
+        if (this._project.activities.state.hasSomeAnalogRecorders) {
+          this.getAnalogSignalActivities(positions);
+        }
       }
-    });
+    );
   }
 
   /**
@@ -210,44 +201,40 @@ export class Insite {
    *
    * @param positions object
    */
-  getAnalogSignalActivities(positions: { [key: number]: number[] }): void {
-    if (!this._state.on) {
-      return;
-    }
+  getAnalogSignalActivities(
+    positions: Record<number, number[]> | undefined
+  ): void {
+    if (!this._state.on) return;
     logger.trace("Get analog signal activities from Insite");
 
-    this.insiteAccess
-      .axiosInstance()
-      .get("nest/multimeters/")
-      .then(
-        (
-          response: AxiosResponse<
-            any,
-            {
-              data: IInsiteMultimeterResponseData[];
-            }
-          >
-        ) => {
-          if (response == null) {
-            return;
+    insiteAccess.getMultimeters().then(
+      (
+        response: AxiosResponse<
+          any,
+          {
+            data: IInsiteMultimeterResponseData[];
           }
+        >
+      ) => {
+        if (response == null) return;
 
-          if (response.status === 202) {
-            setTimeout(() => this.getAnalogSignalActivities(positions), 100);
-            return;
-          }
+        if (response.status === 202) {
+          setTimeout(() => this.getAnalogSignalActivities(positions), 100);
+          return;
+        }
 
-          const activities: IActivityProps[] = response.data.map(
-            (data: IInsiteMultimeterResponseData) => {
-              const events: Record<string, (number | string)[]> = {
-                times: [],
-                senders: [],
-              };
-              data.attributes.forEach((attribute: string) => {
-                events[attribute] = [];
-              });
+        const activities: IActivityProps[] = response.data.map(
+          (data: IInsiteMultimeterResponseData) => {
+            const events: Record<string, (number | string)[]> = {
+              times: [],
+              senders: [],
+            };
+            data.attributes.forEach((attribute: string) => {
+              events[attribute] = [];
+            });
 
-              const nodePositions: number[][] = [];
+            const nodePositions: number[][] = [];
+            if (positions) {
               if (Object.keys(positions).length > 0) {
                 data.nodeIds.forEach((nodeId: number) => {
                   if (nodeId in positions) {
@@ -255,48 +242,47 @@ export class Insite {
                   }
                 });
               }
-
-              return {
-                events,
-                recorderUnitId: data.multimeterId,
-                nodeIds: data.nodeIds,
-                nodePositions,
-              };
             }
-          );
 
-          // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
-          activities.sort((a: IActivityProps, b: IActivityProps) =>
-            a.recorderUnitId && b.recorderUnitId
-              ? a.recorderUnitId - b.recorderUnitId
-              : 0
-          );
+            return {
+              events,
+              recorderUnitId: data.multimeterId,
+              nodeIds: data.nodeIds,
+              nodePositions,
+            };
+          }
+        );
 
-          // Initialize activities.
-          this._project.activities.update(activities);
+        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
+        activities.sort((a: IActivityProps, b: IActivityProps) =>
+          a.recorderUnitId && b.recorderUnitId
+            ? a.recorderUnitId - b.recorderUnitId
+            : 0
+        );
 
-          // Get analog signal activities from each multimeter.
-          this._project.activities.analogSignals.forEach(
-            (activity: AnalogSignalActivity) =>
-              this.getAnalogSignalsFromRecorder(activity)
-          );
-        }
-      );
+        // Initialize activities.
+        this._project.activities.update(activities);
+
+        // Get analog signal activities from each multimeter.
+        this._project.activities.analogSignals.forEach(
+          (activity: AnalogSignalActivity) =>
+            this.getAnalogSignalsFromRecorder(activity)
+        );
+      }
+    );
   }
 
   /**
    * Get activity from Insite.
    */
   getAnalogSignalsFromRecorder(activity: AnalogSignalActivity): void {
-    if (!this._state.on) {
-      return;
-    }
+    if (!this._state.on) return;
 
     const attribute: string = "V_m";
-    const path = `nest/multimeters/${activity.recorderUnitId}/attributes/${attribute}/?fromTime=${activity.lastTime}`;
-    this.insiteAccess
-      .axiosInstance()
-      .get(path)
+    insiteAccess
+      .getMultimeterAttribute(activity.recorderUnitId, attribute, {
+        fromTime: activity.lastTime,
+      })
       .then(
         (
           response: AxiosResponse<
@@ -304,9 +290,7 @@ export class Insite {
             { data: { nodeIds: number[]; simulationTimes: number[] } }
           >
         ) => {
-          if (response == null) {
-            return;
-          }
+          if (response == null) return;
 
           if (response.status === 202) {
             setTimeout(() => this.getAnalogSignalsFromRecorder(activity), 100);
@@ -340,13 +324,10 @@ export class Insite {
    * Get all first spike activity from Insite.
    */
   getAllFirstSpikeActivity(): void {
-    if (!this._state.on) {
-      return;
-    }
-    const path = `nest/spikes/?top=${this._state.top}&skip=${this._state.skip}`;
-    this.insiteAccess
-      .axiosInstance()
-      .get(path)
+    if (!this._state.on) return;
+
+    insiteAccess
+      .getSpikes({ top: this._state.top, skip: this._state.skip })
       .then(
         (
           response: AxiosResponse<
@@ -356,9 +337,7 @@ export class Insite {
             }
           >
         ) => {
-          if (response == null) {
-            return;
-          }
+          if (response == null) return;
 
           if (response.status === 202) {
             setTimeout(() => this.getAllFirstSpikeActivity(), 100);
@@ -416,35 +395,30 @@ export class Insite {
    * @remarks
    * It gets node positions from Insite.
    */
-  async getNodePositions(): Promise<{ [key: number]: number[] }> {
+  async getNodePositions(): Promise<Record<number, number[]> | undefined> {
     logger.trace("Get node IDs from Insite");
 
-    const positions: { [key: number]: number[] } = {};
-    return this.insiteAccess
-      .axiosInstance()
-      .get("nest/nodes/")
-      .then(
-        (
-          response: AxiosResponse<
-            any,
-            {
-              data: TNodeData[];
-            }
-          >
-        ) => {
-          if (response == null) {
-            return;
+    return insiteAccess.getNodes().then(
+      (
+        response: AxiosResponse<
+          any,
+          {
+            data: TNodeData[];
           }
+        >
+      ) => {
+        if (response == null) return;
+        const positions: Record<number, number[]> = {};
 
-          response.data.forEach((data: TNodeData) => {
-            if (data.position != null) {
-              positions[data.nodeId] = data.position;
-            }
-          });
+        response.data.forEach((data: TNodeData) => {
+          if (data.position != null) {
+            positions[data.nodeId] = data.position;
+          }
+        });
 
-          return positions;
-        }
-      );
+        return positions;
+      }
+    );
   }
 
   /**
@@ -456,14 +430,11 @@ export class Insite {
    * @param positions Object
    */
   getSpikeActivities(positions?: { [key: number]: number[] }): void {
-    if (!this._state.on) {
-      return;
-    }
+    if (!this._state.on) return;
     logger.trace("Get spike activities from Insite");
 
-    this.insiteAccess
-      .axiosInstance()
-      .get("nest/spikerecorders/")
+    insiteAccess
+      .getSpikeRecorders()
       .then(
         (
           response: AxiosResponse<
@@ -471,9 +442,7 @@ export class Insite {
             { data: IInsiteSpikeRecorderResponseData[] }
           >
         ) => {
-          if (response == null) {
-            return;
-          }
+          if (response == null) return;
 
           if (response.status === 202) {
             setTimeout(() => this.getSpikeActivities(positions), 100);
@@ -526,16 +495,13 @@ export class Insite {
    * Get spikes for each recorder from Insite.
    */
   getSpikeActivityFromEachRecorder(activity: SpikeActivity): void {
-    if (!this._state.on) {
-      return;
-    }
+    if (!this._state.on) return;
 
-    const path = `nest/spikes/?fromTime=${
-      activity.lastTime + 0.1
-    }&spikedetectorId=${activity.recorderUnitId}`;
-    this.insiteAccess
-      .axiosInstance()
-      .get(path)
+    insiteAccess
+      .getSpikes({
+        fromTime: activity.lastTime + 0.1,
+        spikedetectorId: activity.recorderUnitId,
+      })
       .then(
         (
           response: AxiosResponse<
@@ -548,9 +514,7 @@ export class Insite {
             }
           >
         ) => {
-          if (response == null) {
-            return;
-          }
+          if (response == null) return;
 
           if (response.status === 202) {
             setTimeout(
@@ -585,9 +549,8 @@ export class Insite {
    * Notify whether the simulation is finished.
    */
   simulationEndNotification(): void {
-    this.insiteAccess
-      .axiosInstance()
-      .get("nest/simulationTimeInfo/")
+    insiteAccess
+      .getSimulationTimeInfo()
       .then(
         (
           response: AxiosResponse<
