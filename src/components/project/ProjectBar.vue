@@ -29,14 +29,9 @@
 
     <v-spacer />
 
-    <NetworkHistory :project="projectStore.state.project" />
+    <NetworkHistory />
 
-    <SimulationButton
-      v-if="projectStore.state.project"
-      class="mx-2"
-      :project-store
-      :simulation="projectStore.state.project.simulation"
-    />
+    <SimulationButton class="mx-2" v-if="projectStore.state.project" />
   </v-app-bar>
 </template>
 

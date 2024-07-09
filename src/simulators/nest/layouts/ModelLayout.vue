@@ -16,6 +16,47 @@
           <span class="text-no-wrap">Doc</span>
         </v-tab>
       </template>
+
+      <template #modelExplorer>
+        <v-tab
+          :disabled="!modelStore.model.isNeuron"
+          :to="{
+            name: 'nestModelExplorer',
+            params: { modelId: modelStore.state.modelId },
+          }"
+          size="small"
+          title="Model Explorer"
+          value="explore"
+        >
+          <v-icon icon="mdi:mdi-chart-scatter-plot" />
+          <span class="text-no-wrap">Explorer</span>
+        </v-tab>
+
+        <v-btn
+          :disabled="!modelStore.model.isNeuron"
+          height="100%"
+          rounded="0"
+          variant="plain"
+          width="32"
+          style="min-width: 32px"
+        >
+          <v-icon icon="mdi:mdi-menu-down" />
+
+          <v-menu activator="parent">
+            <v-list density="compact">
+              <v-list-item
+                :key="index"
+                :prependIcon="project.icon"
+                :title="project.name"
+                @click="selectProject(project.id)"
+                v-for="(project, index) in projects"
+              />
+            </v-list>
+          </v-menu>
+        </v-btn>
+
+        <v-divider vertical />
+      </template>
     </ModelBar>
 
     <ModelController />
@@ -25,49 +66,98 @@
 </template>
 
 <script lang="ts" setup>
+import { nextTick, onMounted, watch } from "vue";
+
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import { TModelStore } from "@/stores/model/defineModelStore";
+import { loadJSON } from "@/utils/fetch";
+
+import { INESTProjectProps, NESTProject } from "../helpers/project/project";
+import { NESTNode } from "../helpers/node/node";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = useNESTModelStore();
 
-// const projects = [
-//   {
-//     id: "model-step-current-up-down",
-//     name: "step current (up/down)",
-//     icon: "mdi-chart-line",
-//   },
-//   {
-//     id: "model-current-steps",
-//     name: "current steps",
-//     icon: "mdi-chart-line",
-//   },
-//   {
-//     id: "model-spikes-up-down",
-//     name: "spikes (up/down)",
-//     icon: "mdi-chart-line",
-//   },
-//   {
-//     id: "model-regular-spikes-steps",
-//     name: "regular spikes steps",
-//     icon: "mdi-chart-line",
-//   },
-//   {
-//     id: "model-poisson-spikes-steps",
-//     name: "Poisson spikes steps",
-//     icon: "mdi-chart-line",
-//   },
-//   {
-//     id: "model-f-i-curve",
-//     name: "F-I curve",
-//     icon: "mdi-chart-line",
-//   },
-//   {
-//     id: "spike-activity",
-//     name: "spike activity",
-//     icon: "mdi-chart-scatter-plot",
-//   },
-// ];
+const loadProjectfromAssets = (): void => {
+  if (modelStore.state.projectId) {
+    loadJSON(
+      `assets/simulators/nest/projects/${modelStore.state.projectId}.json`
+    ).then((projectProps: INESTProjectProps) => {
+      projectProps.filename = modelStore.state.projectId;
+      modelStore.model.project = new NESTProject(projectProps);
+      update();
+    });
+  }
+};
+
+const selectProject = (projectId: string): void => {
+  modelStore.state.projectId = projectId;
+  update();
+};
+
+const update = () => {
+  if (
+    modelStore.model?.project &&
+    modelStore.model.project?.filename === modelStore.state.projectId
+  ) {
+    modelStore.state.project = modelStore.model.project;
+    const project = modelStore.state.project;
+    if (project) {
+      project.network.nodes.neurons.forEach((neuron: NESTNode) => {
+        neuron.modelId = modelStore.state.modelId;
+        neuron.showAllParams();
+      });
+      project.network.changes();
+      project.activityGraph.init();
+    }
+  } else {
+    loadProjectfromAssets();
+  }
+};
+
+const projects: { id: string; name: string; icon: string }[] = [
+  {
+    id: "model-step-current-up-down",
+    name: "step current (up/down)",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "model-current-steps",
+    name: "current steps",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "model-spikes-up-down",
+    name: "spikes (up/down)",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "model-regular-spikes-steps",
+    name: "regular spikes steps",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "model-poisson-spikes-steps",
+    name: "Poisson spikes steps",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "model-f-i-curve",
+    name: "F-I curve",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "spike-activity",
+    name: "spike activity",
+    icon: "mdi-chart-scatter-plot",
+  },
+];
+
+onMounted(() => {
+  selectProject("current-input");
+});
+
+watch(() => modelStore.state.modelId, update);
 </script>

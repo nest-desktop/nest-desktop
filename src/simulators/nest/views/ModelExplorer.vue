@@ -13,6 +13,8 @@ import { TModelStore } from "@/stores/model/defineModelStore";
 import { useNESTModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = useNESTModelStore();
 
+// defineProps<{ modelId: string }>();
+
 const graph = computed(
   () => modelStore.state.project?.activityGraph as NESTActivityGraph
 );

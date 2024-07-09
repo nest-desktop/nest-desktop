@@ -6,12 +6,12 @@
 export function throttle(callback: object, interval: number = 300) {
   let enableCall: boolean = true;
 
-  return function (...args: any) {
+  return function (...props: any) {
     if (!enableCall) return;
 
     enableCall = false;
     // @ts-ignore - Property 'apply' does not exist on type 'object'.
-    timer = setTimeout(() => callback.apply(this, args), delay);
+    timer = setTimeout(() => callback.apply(this, props), delay);
     setTimeout(() => (enableCall = true), interval);
   };
 }
@@ -19,9 +19,9 @@ export function throttle(callback: object, interval: number = 300) {
 export function debounce(callback: object, interval: number = 100) {
   let debounceTimeoutId: any;
 
-  return function (...args: any) {
+  return function (...props: any) {
     clearTimeout(debounceTimeoutId);
     // @ts-ignore - Property 'apply' does not exist on type 'object'.
-    debounceTimeoutId = setTimeout(() => callback.apply(this, args), interval);
+    debounceTimeoutId = setTimeout(() => callback.apply(this, props), interval);
   };
 }

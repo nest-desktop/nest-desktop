@@ -53,10 +53,12 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TProject } from "@/types";
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
-const props = defineProps<{ project: TProject }>();
-const project = computed(() => props.project);
+const project = computed(
+  () => appStore.currentSimulator.stores.projectStore.state.project
+);
 
 /**
  * Count networks before the current.

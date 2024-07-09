@@ -2,6 +2,8 @@
 
 import { v4 as uuidv4 } from "uuid";
 
+import { TProject } from "@/types";
+
 import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
 import { IDoc } from "../common/database";
@@ -29,6 +31,7 @@ export class BaseModel extends BaseObj {
   private _label: string; // model label for view
   private _params: Record<string, ModelParameter> = {}; // model parameters
   private _paramsVisible: string[] = [];
+  private _project: TProject | undefined;
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
   constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
@@ -154,6 +157,14 @@ export class BaseModel extends BaseObj {
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
     this.changes();
+  }
+
+  get project(): TProject | undefined {
+    return this._project;
+  }
+
+  set project(value: TProject) {
+    this._project = value;
   }
 
   get recordables(): INodeRecordProps[] {

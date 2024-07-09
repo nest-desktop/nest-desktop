@@ -45,6 +45,10 @@ const modelRedirect = (to: any) => {
     modelStore.state.modelId = to.params.modelId;
   }
 
+  modelStore.state.view = modelStore.model.isNeuron
+    ? modelStore.state.view
+    : "doc";
+
   return {
     path:
       "/nest/model/" + modelStore.state.modelId + "/" + modelStore.state.view,

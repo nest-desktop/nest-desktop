@@ -13,7 +13,7 @@
       <span v-else>Prepare</span>
     </v-btn>
 
-    <!-- <v-btn class="border-white pa-2" style="min-width: 0">
+    <v-btn class="border-white pa-2" style="min-width: 0">
       <v-icon icon="mdi:mdi-menu-down" />
 
       <v-menu
@@ -22,46 +22,39 @@
         theme="primary"
       >
         <v-list density="compact">
-          <v-list-item :key="index" v-for="(itemKey, index) in itemKeys">
-            <v-checkbox-btn
-              :label="state[itemKey].title"
-              v-model="state[itemKey].value"
-            />
+          <v-list-item :key="index" v-for="(menuItem, index) in menuItems">
+            {{ menuItem }}
           </v-list-item>
         </v-list>
       </v-menu>
-    </v-btn> -->
+    </v-btn>
   </v-btn-group>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TSimulation } from "@/types";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
-// import { useProjectViewStore } from "@/stores/project/projectViewStore";
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 const props = defineProps<{
   disabled?: boolean;
-  projectStore: TProjectStore;
-  simulation: TSimulation;
 }>();
 
-const simulation = computed(() => props.simulation);
+const projectStore = computed(
+  () => appStore.currentSimulator.stores.projectStore
+);
+const simulation = computed(() => projectStore.value.state.project.simulation);
 const disabled = computed(
   () => props.disabled || simulation.value.state.running || false
 );
 const loading = computed(() => simulation.value.state.running);
-const projectStore = computed(() => props.projectStore);
 
-// const itemKeys = [
-//   "simulateAfterChange",
-//   "simulateAfterCheckout",
-//   "simulateAfterLoad",
-// ];
-
-// const projectViewStore = useProjectViewStore();
-// const state = projectViewStore.state;
+const menuItems = [
+  "simulateAfterChange",
+  "simulateAfterCheckout",
+  "simulateAfterLoad",
+];
 </script>
 
 <style lang="scss">

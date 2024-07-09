@@ -32,12 +32,12 @@ interface IProjectStoreState {
   };
 }
 
-type Class<T> = new (...args: any) => T;
+type Class<T> = new (...props: any) => T;
 
 export type TProjectStore = Store<string, any>;
 
 export function defineProjectStore(
-  args: {
+  props: {
     Project: Class<TProject>;
     loggerMinLevel?: number;
     simulator: string;
@@ -49,11 +49,11 @@ export function defineProjectStore(
   }
 ): TProjectStore {
   const logger = mainLogger.getSubLogger({
-    minLevel: args.loggerMinLevel || 3,
-    name: args.simulator + " project store",
+    minLevel: props.loggerMinLevel || 3,
+    name: props.simulator + " project store",
   });
 
-  return defineStore(args.simulator + "-project", () => {
+  return defineStore(props.simulator + "-project", () => {
     const state = reactive<IProjectStoreState>({
       bottomNav: {
         height: 200,
@@ -65,7 +65,7 @@ export function defineProjectStore(
         view: "",
         width: 480,
       },
-      project: new args.Project(),
+      project: new props.Project(),
       projectId: "",
       tab: {
         activityView: "abstract",
@@ -73,7 +73,7 @@ export function defineProjectStore(
       },
     });
 
-    const projectDBStore: TProjectDBStore = args.useProjectDBStore();
+    const projectDBStore: TProjectDBStore = props.useProjectDBStore();
 
     /**
      * Initialize project store.
@@ -143,7 +143,7 @@ export function defineProjectStore(
     const newProject = (): void => {
       logger.trace("new project:");
 
-      const projectDBStore: TProjectStore = args.useProjectDBStore();
+      const projectDBStore: TProjectStore = props.useProjectDBStore();
       state.project = projectDBStore.newProject();
       state.projectId = state.project.id;
     };
@@ -176,7 +176,7 @@ export function defineProjectStore(
 
       router
         .push({
-          name: args.simulator + "ActivityExplorer",
+          name: props.simulator + "ActivityExplorer",
           params: { projectId: state.projectId },
         })
         .then(() => {

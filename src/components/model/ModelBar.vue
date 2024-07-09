@@ -31,7 +31,9 @@
 
     <v-spacer />
 
-    <v-btn variant="outlined">Simulate</v-btn>
+    <v-btn @click="modelStore.startSimulation()" variant="outlined">
+      Simulate
+    </v-btn>
   </v-app-bar>
 </template>
 

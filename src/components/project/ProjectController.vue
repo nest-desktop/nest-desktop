@@ -36,7 +36,7 @@
     </v-tabs> -->
 
     <v-list
-      :model-value="projectStore.state.controller.view"
+      :modelValue="projectStore.state.controller.view"
       class="pa-1 text-center"
       color="primary"
       density="compact"
@@ -76,7 +76,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="projectStore.state.controller.open"
+    :modelValue="projectStore.state.controller.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="projectStore.state.controller.width"
     @transitionend="dispatchWindowResize()"

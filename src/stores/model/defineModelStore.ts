@@ -3,6 +3,7 @@
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
+import router from "@/router";
 import { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -14,12 +15,13 @@ interface IModelStoreState {
   controller: {
     open: boolean;
     view: string;
+    width: number;
   };
   modelId: string;
   models: string[];
   project?: TProject;
+  projectFilename?: string;
   view: string;
-  width: number;
 }
 
 export type TModelStore = Store<
@@ -34,7 +36,7 @@ export type TModelStore = Store<
 >;
 
 export function defineModelStore(
-  args: {
+  props: {
     defaultView?: string;
     loggerMinLevel?: number;
     simulator: string;
@@ -45,24 +47,24 @@ export function defineModelStore(
   }
 ): TModelStore {
   const logger = mainLogger.getSubLogger({
-    minLevel: args.loggerMinLevel || 3,
-    name: args.simulator + " model store",
+    minLevel: props.loggerMinLevel || 3,
+    name: props.simulator + " model store",
   });
 
-  return defineStore(args.simulator + "-model-view", () => {
+  return defineStore(props.simulator + "-model-view", () => {
     const state = reactive<IModelStoreState>({
       controller: {
         open: false,
         view: "",
+        width: 480,
       },
       modelId: "",
       models: [],
-      view: args.defaultView || "edit",
-      width: 320,
+      view: props.defaultView || "edit",
     });
 
     const model = computed(() => {
-      const modelDBStore: TModelStore = args.useModelDBStore();
+      const modelDBStore: TModelStore = props.useModelDBStore();
       return modelDBStore.findModel(state.modelId) || findModel(state.modelId);
     });
 
@@ -75,7 +77,7 @@ export function defineModelStore(
     const init = (): void => {
       logger.trace("init");
 
-      const modelDBStore: TModelDBStore = args.useModelDBStore();
+      const modelDBStore: TModelDBStore = props.useModelDBStore();
       if (modelDBStore.state.models.length > 0) {
         state.modelId = modelDBStore.getRecentModelId();
       }
@@ -88,7 +90,7 @@ export function defineModelStore(
     const loadModel = (modelId: string = ""): void => {
       logger.trace("load model", truncate(modelId));
 
-      const modelDBStore: TModelStore = args.useModelDBStore();
+      const modelDBStore: TModelStore = props.useModelDBStore();
       const model = modelDBStore.getModel(modelId);
       state.modelId = model.id;
     };
@@ -100,7 +102,7 @@ export function defineModelStore(
     const newModel = (modelId: string): void => {
       logger.trace("new model");
 
-      const modelDBStore: TModelStore = args.useModelDBStore();
+      const modelDBStore: TModelStore = props.useModelDBStore();
       const model = modelDBStore.newModel({ id: modelId });
       state.modelId = model.id;
     };
@@ -111,8 +113,25 @@ export function defineModelStore(
     const saveModel = (): void => {
       logger.trace("save model");
 
-      const modelDBStore: TModelDBStore = args.useModelDBStore();
+      const modelDBStore: TModelDBStore = props.useModelDBStore();
       modelDBStore.saveModel(model.value);
+    };
+
+    /**
+     * Start simulation of the current project.
+     */
+    const startSimulation = (): void => {
+      logger.trace("start simulation:", truncate(state.project?.id));
+
+      router
+        .push({
+          name: props.simulator + "ModelExplorer",
+          params: { modelId: state.modelId },
+        })
+        .then(() => {
+          // TODO: nextTick doesn't work.
+          setTimeout(() => state.project?.startSimulation(), 100);
+        });
     };
 
     /**
@@ -126,6 +145,15 @@ export function defineModelStore(
       state.controller.view = state.controller.open ? (item?.id as string) : "";
     };
 
-    return { model, init, loadModel, newModel, saveModel, state, toggle };
+    return {
+      model,
+      init,
+      loadModel,
+      newModel,
+      saveModel,
+      startSimulation,
+      state,
+      toggle,
+    };
   });
 }

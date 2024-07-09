@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer location="right" permanent rail>
     <v-tabs
-      :model-value="modelStore.state.controller.view"
+      :modelValue="modelStore.state.controller.view"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -24,7 +24,8 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="modelStore.state.controller.open"
+    :modelValue="modelStore.state.controller.open"
+    :width="modelStore.state.controller.width"
     location="right"
     permanent
   >
@@ -37,13 +38,21 @@
     </template>
 
     <template v-if="modelStore.state.controller.view === 'code'">
-      code
+      <slot name="simulationCodeEditor">
+        <SimulationCodeEditor
+          :simulation="(modelStore.state.project.simulation as BaseSimulation)"
+          v-if="modelStore.state.project"
+        />
+      </slot>
     </template>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
+
+import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
+import { BaseSimulation } from "@/helpers/simulation/simulation";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
