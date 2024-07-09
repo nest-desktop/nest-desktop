@@ -1,5 +1,5 @@
 <template>
-  <AppNavigation :nav-items />
+  <AppNavigation :navItems />
 
   <v-main>
     <router-view />
@@ -10,16 +10,10 @@
 import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-
 import { TBackendStore } from "@/stores/defineBackendStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 
-import { usePyNNModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = usePyNNModelStore();
-
-import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = usePyNNProjectStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
 const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
@@ -42,13 +36,15 @@ const navItems = [
 ];
 
 onMounted(() => {
+  const stores = appStore.currentSimulator.stores;
+
   // Update and check backend.
   if (pynnSimulatorStore.state.response.status != 200) {
     pynnSimulatorStore.update();
   }
 
   // Initialize model and project stores.
-  modelStore.init();
-  projectStore.init();
+  stores.modelStore.init();
+  stores.projectStore.init();
 });
 </script>

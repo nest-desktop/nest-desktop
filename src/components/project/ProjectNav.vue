@@ -115,7 +115,7 @@
               >
                 <v-icon icon="mdi:mdi-dots-vertical" />
 
-                <ProjectMenu :project :projectDBStore />
+                <ProjectMenu :project />
               </v-btn>
             </template>
 
@@ -175,16 +175,15 @@
 import { computed, nextTick, ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
+import { TProject } from "@/types";
+// @ts-ignore - 'truncate' is declared but its value is never read.
+import { truncate } from "@/utils/truncate";
+
 import DeleteDialog from "../dialog/DeleteDialog.vue";
+import DialogTextField from "../dialog/DialogTextField.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import ProjectMenu from "./ProjectMenu.vue";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProject } from "@/types";
-import DialogTextField from "../dialog/DialogTextField.vue";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-// @ts-ignore - 'truncate' is declared but its value is never read.
-import { truncate } from "@/utils/truncate";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -195,16 +194,12 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const props = defineProps<{
-  modelDBStore: TModelDBStore;
-  projectDBStore: TProjectDBStore;
-}>();
-
-const projectDBStore = computed(() => props.projectDBStore);
-const modelDBStore = computed(() => props.modelDBStore);
+const projectDBStore = computed(
+  () => appStore.currentSimulator.stores.projectDBStore
+);
 
 const projects = computed(() =>
-  props.projectDBStore.state.projects.filter((project: TProject) =>
+  projectDBStore.value.state.projects.filter((project: TProject) =>
     project.name
       .toLocaleLowerCase()
       .includes(search.value ? search.value.toLocaleLowerCase() : "")
@@ -224,10 +219,7 @@ const menuItems = [
         text: "",
         customComponent: {
           component: ImportDialog,
-          props: {
-            modelDBStore: modelDBStore.value,
-            projectDBStore: projectDBStore.value,
-          },
+          props: {},
         },
         dialogOptions: {
           width: "1280px",
@@ -245,10 +237,7 @@ const menuItems = [
         text: "",
         customComponent: {
           component: ExportDialog,
-          props: {
-            modelDBStore: modelDBStore.value,
-            projectDBStore: projectDBStore.value,
-          },
+          props: {},
         },
         dialogOptions: {
           width: "1280px",
@@ -292,7 +281,7 @@ const openDialogNewProject = () => {
       component: DialogTextField,
       props: {
         title: "Create project",
-        modelValue: "new_project_" + props.projectDBStore.state.projects.length,
+        modelValue: "new_project_" + projectDBStore.value.state.projects.length,
       },
     },
   }).then((projectName: boolean | string) => {

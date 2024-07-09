@@ -2,19 +2,22 @@
   <v-app-bar class="d-print-none" height="48" flat>
     <v-tabs stacked>
       <slot name="tabs">
-        <v-tab
-          v-for="(tab, index) in tabItems"
-          :key="index"
-          :to="{
-            name: appStore.state.simulator + tab.to.name,
-            params: { projectId: projectStore.state.projectId },
-          }"
-          :title="tab.title"
-          size="small"
-        >
-          <v-icon :class="tab.iconClass" :icon="tab.icon" />
-          <span class="text-no-wrap">{{ tab.label }}</span>
-        </v-tab>
+        <template v-for="(tabItem, index) in tabItems">
+          <slot :name="tabItem.id">
+            <v-tab
+              :key="index"
+              :to="{
+                name: appStore.state.simulator + tabItem.to.name,
+                params: { projectId: projectStore.state.projectId },
+              }"
+              :title="tabItem.title"
+              size="small"
+            >
+              <v-icon :class="tabItem.iconClass" :icon="tabItem.icon" />
+              <span class="text-no-wrap">{{ tabItem.label }}</span>
+            </v-tab>
+          </slot>
+        </template>
       </slot>
     </v-tabs>
 
@@ -38,14 +41,16 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
 import NetworkHistory from "../network/NetworkHistory.vue";
 import SimulationButton from "../simulation/SimulationButton.vue";
 
 import { useAppStore } from "@/stores/appStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 const appStore = useAppStore();
 
-defineProps<{ projectStore: TProjectStore }>();
+const projectStore = computed(
+  () => appStore.currentSimulator.stores.projectStore
+);
 
 const tabItems = [
   {

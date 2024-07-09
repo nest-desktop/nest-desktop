@@ -7,9 +7,9 @@ import {
   ISimulationProps,
 } from "@/helpers/simulation/simulation";
 
+import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { PyNNProject } from "../project/project";
 import { PyNNSimulationCode } from "./simulationCode";
-import { usePyNNSimulatorStore } from "../../stores/backends/pynnSimulatorStore";
 
 export interface IPyNNSimulationProps extends ISimulationProps {}
 
@@ -34,10 +34,8 @@ export class PyNNSimulation extends BaseSimulation {
   override async run(): Promise<AxiosResponse<any, { data: any }>> {
     this.logger.trace("run simulation");
 
-    const pynnSimulatorStore = usePyNNSimulatorStore();
-    return pynnSimulatorStore
-      .axiosInstance()
-      .post("exec", {
+    return pynnSimulator
+      .simulate({
         source: this.code.script,
         return: "response",
       })

@@ -21,7 +21,6 @@ import { computed } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
 
 import { TModel } from "@/types";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -32,11 +31,12 @@ const route = useRoute();
 
 const props = defineProps<{
   model: TModel;
-  modelDBStore: TModelDBStore;
 }>();
 
 const model = computed(() => props.model);
-const modelDBStore = computed(() => props.modelDBStore);
+const modelDBStore = computed(
+  () => appStore.currentSimulator.stores.modelDBStore
+);
 
 const menuItems = [
   {

@@ -33,6 +33,7 @@ export interface ISimulatorProps {
   id: string;
   init: () => void;
   route: RouteRecordRaw;
+  stores: Record<string, TBackendStore>;
   theme: Record<string, string>;
   title: string;
   types: Record<string, any>;

@@ -7,9 +7,9 @@ import {
   ISimulationProps,
 } from "@/helpers/simulation/simulation";
 
+import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { NorseProject } from "../project/project";
 import { NorseSimulationCode } from "./simulationCode";
-import { useNorseSimulatorStore } from "../../stores/backends/norseSimulatorStore";
 
 export interface INorseSimulationProps extends ISimulationProps {}
 
@@ -34,10 +34,8 @@ export class NorseSimulation extends BaseSimulation {
   override async run(): Promise<AxiosResponse<any, { data: any }>> {
     this.logger.trace("run simulation");
 
-    const norseSimulatorStore = useNorseSimulatorStore();
-    return norseSimulatorStore
-      .axiosInstance()
-      .post("exec", {
+    return norseSimulator
+      .simulate({
         source: this.code.script,
         return: "response",
       })

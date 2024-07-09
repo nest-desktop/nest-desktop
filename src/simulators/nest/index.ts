@@ -16,7 +16,9 @@ import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
 import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
 import { useNESTMLServerStore } from "./stores/backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
+import { useNESTModelStore } from "./stores/model/modelStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
+import { useNESTProjectStore } from "./stores/project/projectStore";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
@@ -50,6 +52,16 @@ export const nest: ISimulatorProps = {
     const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
+    const modelStore = useNESTModelStore();
+    const projectStore = useNESTProjectStore();
+
+    nest.stores = {
+      modelDBStore,
+      modelStore,
+      projectDBStore,
+      projectStore,
+    };
+
     // Initialize backend NEST Simulator.
     const nestSimulatorStore = useNESTSimulatorStore();
     nestSimulatorStore.init();
@@ -69,11 +81,12 @@ export const nest: ISimulatorProps = {
     };
   },
   route,
-  title: "NEST",
+  stores: {},
   theme: {
     nest: "ff6633",
     "nest-model": "ff6633",
     "nest-project": "1281b3",
   },
+  title: "NEST",
   types,
 };

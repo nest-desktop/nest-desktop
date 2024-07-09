@@ -10,7 +10,9 @@ import types from "./helpers/types";
 import route from "./routes";
 import { useNorseSimulatorStore } from "./stores/backends/norseSimulatorStore";
 import { useNorseModelDBStore } from "./stores/model/modelDBStore";
+import { useNorseModelStore } from "./stores/model/modelStore";
 import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
+import { useNorseProjectStore } from "./stores/project/projectStore";
 
 export const norse: ISimulatorProps = {
   autocomplete: [norseTorchCompletions],
@@ -25,6 +27,16 @@ export const norse: ISimulatorProps = {
     const projectDBStore: TProjectDBStore = useNorseProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
+    const modelStore = useNorseModelStore();
+    const projectStore = useNorseProjectStore();
+
+    norse.stores = {
+      modelDBStore,
+      modelStore,
+      projectDBStore,
+      projectStore,
+    };
+
     // Initialize backend Norse Simulator.
     const norseSimulatorStore = useNorseSimulatorStore();
     norseSimulatorStore.init();
@@ -34,12 +46,13 @@ export const norse: ISimulatorProps = {
     };
   },
   route,
-  title: "Norse",
+  stores: {},
   theme: {
     "norse-accent": "#e6007e",
     "norse-green": "#0F9959",
     "norse-logo": "#000080",
     norse: "#e6007e",
   },
+  title: "Norse",
   types,
 };

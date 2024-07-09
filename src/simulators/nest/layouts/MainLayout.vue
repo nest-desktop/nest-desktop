@@ -1,5 +1,5 @@
 <template>
-  <AppNavigation :nav-items />
+  <AppNavigation :navItems />
 
   <v-main>
     <router-view />
@@ -12,19 +12,11 @@ import { useRoute } from "vue-router";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
 import { TBackendStore } from "@/stores/defineBackendStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { getParamFromURL } from "@/utils/paramQuery";
 import nestSimulator from "../stores/backends/nestSimulatorStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
-
-import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
-
-import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNESTProjectStore();
 
 const route = useRoute();
 
@@ -47,6 +39,7 @@ const navItems = [
 
 onMounted(() => {
   const backends = appStore.currentSimulator.backends;
+  const stores = appStore.currentSimulator.stores;
 
   // Store URL of NEST Server from the query.
   const nestServerURL = getParamFromURL(route, "nest_server_url");
@@ -68,8 +61,8 @@ onMounted(() => {
   });
 
   // Initialize model and project stores.
-  modelStore.init();
-  projectStore.init();
+  stores.modelStore.init();
+  stores.projectStore.init();
 
   nestSimulator.fetchModels();
 });

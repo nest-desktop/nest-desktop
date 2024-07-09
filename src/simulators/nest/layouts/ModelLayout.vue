@@ -1,8 +1,8 @@
 <template>
-  <ModelNav :modelStore :modelDBStore />
+  <ModelNav />
 
   <template v-if="modelStore.model">
-    <ModelBar :model="modelStore.model" color="nest-model">
+    <ModelBar color="nest-model">
       <template #prependTabs>
         <v-tab
           :to="{
@@ -18,7 +18,7 @@
       </template>
     </ModelBar>
 
-    <ModelController :modelStore />
+    <ModelController />
 
     <router-view :key="modelStore.state.modelId" name="model" />
   </template>
@@ -28,12 +28,46 @@
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = useNESTModelStore();
 
-import { useNESTModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore: TModelDBStore = useNESTModelDBStore();
+// const projects = [
+//   {
+//     id: "model-step-current-up-down",
+//     name: "step current (up/down)",
+//     icon: "mdi-chart-line",
+//   },
+//   {
+//     id: "model-current-steps",
+//     name: "current steps",
+//     icon: "mdi-chart-line",
+//   },
+//   {
+//     id: "model-spikes-up-down",
+//     name: "spikes (up/down)",
+//     icon: "mdi-chart-line",
+//   },
+//   {
+//     id: "model-regular-spikes-steps",
+//     name: "regular spikes steps",
+//     icon: "mdi-chart-line",
+//   },
+//   {
+//     id: "model-poisson-spikes-steps",
+//     name: "Poisson spikes steps",
+//     icon: "mdi-chart-line",
+//   },
+//   {
+//     id: "model-f-i-curve",
+//     name: "F-I curve",
+//     icon: "mdi-chart-line",
+//   },
+//   {
+//     id: "spike-activity",
+//     name: "spike activity",
+//     icon: "mdi-chart-scatter-plot",
+//   },
+// ];
 </script>

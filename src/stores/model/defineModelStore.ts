@@ -3,7 +3,7 @@
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
-import { TModel } from "@/types";
+import { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -17,6 +17,7 @@ interface IModelStoreState {
   };
   modelId: string;
   models: string[];
+  project?: TProject;
   view: string;
   width: number;
 }

@@ -82,13 +82,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <StoreList
-          :modelDBStore
-          :modelStore
-          :projectStore
-          :projectDBStore
-          simulator="pynn"
-        />
+        <StoreList />
       </v-col>
     </v-row>
   </v-container>
@@ -98,23 +92,8 @@
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
-
-import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore: TModelDBStore = usePyNNModelDBStore();
-
-import { usePyNNModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = usePyNNModelStore();
-
-import { usePyNNProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore: TProjectDBStore = usePyNNProjectDBStore();
-
-import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = usePyNNProjectStore();
+import { TBackendStore } from "@/stores/defineBackendStore";
 
 import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
-const pynnSimulatorStore = usePyNNSimulatorStore();
+const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
 </script>

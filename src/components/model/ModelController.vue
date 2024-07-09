@@ -43,12 +43,12 @@
 </template>
 
 <script lang="ts" setup>
-import { TModelStore } from "@/stores/model/defineModelStore";
+import { computed } from "vue";
 
-// import { useAppStore } from "@/stores/appStore";
-// const appStore = useAppStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
-defineProps<{ modelStore: TModelStore }>();
+const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
 
 const items = [
   {

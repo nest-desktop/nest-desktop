@@ -10,7 +10,9 @@ import types from "./helpers/types";
 import route from "./routes";
 import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
+import { usePyNNModelStore } from "./stores/model/modelStore";
 import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
+import { usePyNNProjectStore } from "./stores/project/projectStore";
 
 export const pynn: ISimulatorProps = {
   autocomplete: [],
@@ -25,6 +27,16 @@ export const pynn: ISimulatorProps = {
     const projectDBStore: TProjectDBStore = usePyNNProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
+    const modelStore = usePyNNModelStore();
+    const projectStore = usePyNNProjectStore();
+
+    pynn.stores = {
+      modelDBStore,
+      modelStore,
+      projectDBStore,
+      projectStore,
+    };
+
     // Initialize backend PyNN Simulator
     const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
     pynnSimulatorStore.init();
@@ -34,11 +46,12 @@ export const pynn: ISimulatorProps = {
     };
   },
   route,
-  title: "PyNN",
+  stores: {},
   theme: {
     "pynn-accent": "#e6007e",
     "pynn-logo": "#000080",
     pynn: "#0F9959",
   },
+  title: "PyNN",
   types,
 };

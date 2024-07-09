@@ -59,17 +59,15 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
 import { TModel, TProject } from "@/types";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { download } from "@/utils/download";
 
-// import { useAppStore } from "@/stores/appStore";
-// const appStore = useAppStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 interface IExportProps {
   group?: string;
@@ -77,10 +75,25 @@ interface IExportProps {
   props: IModelProps | IProjectProps;
 }
 
-const props = defineProps<{
-  modelDBStore: TModelDBStore;
-  projectDBStore: TProjectDBStore;
-}>();
+const props = defineProps({
+  model: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+  project: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+});
+
+const modelDBStore = computed(
+  () => appStore.currentSimulator.stores.modelDBStore
+);
+const projectDBStore = computed(
+  () => appStore.currentSimulator.stores.projectDBStore
+);
 
 const state = reactive({
   items: [] as IExportProps[],
@@ -116,14 +129,14 @@ const update = (): void => {
   state.selected = [] as IExportProps[];
   state.items = [] as IExportProps[];
 
-  if (props.modelDBStore) {
-    props.modelDBStore.state.models.forEach((model: TModel) => {
+  if (props.model) {
+    modelDBStore.value.state.models.forEach((model: TModel) => {
       const item: IExportProps = {
         name: model.label,
         props: model.toJSON(),
       };
 
-      if (props.projectDBStore) {
+      if (props.project) {
         item.group = "model";
       }
 
@@ -131,15 +144,15 @@ const update = (): void => {
     });
   }
 
-  if (props.projectDBStore) {
-    props.projectDBStore.state.projects.forEach(
+  if (props.project) {
+    projectDBStore.value.state.projects.forEach(
       (project: TProject | IProjectProps) => {
         const item: IExportProps = {
           name: project.name as string,
           props: project.doc ? project.toJSON() : project,
         };
 
-        if (props.modelDBStore) {
+        if (props.model) {
           item.group = "project";
         }
 

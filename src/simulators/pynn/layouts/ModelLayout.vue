@@ -1,9 +1,9 @@
 <template>
-  <ModelNav :modelStore :modelDBStore />
+  <ModelNav />
 
-  <ModelBar :model="modelStore.model" color="brown" />
+  <ModelBar color="brown" />
 
-  <ModelController :modelStore />
+  <ModelController />
 
   <router-view :key="modelStore.state.modelId" name="model" />
 </template>
@@ -12,12 +12,8 @@
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { usePyNNModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = usePyNNModelStore();
-
-import { usePyNNModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore: TModelDBStore = usePyNNModelDBStore();
 </script>

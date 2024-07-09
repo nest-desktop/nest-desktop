@@ -24,8 +24,8 @@
 
       <template #extension>
         <v-tabs v-model="databaseTab">
-          <v-tab value="project"> Project </v-tab>
-          <v-tab value="model"> Model </v-tab>
+          <v-tab value="project">Project</v-tab>
+          <v-tab value="model">Model</v-tab>
 
           <v-spacer />
         </v-tabs>
@@ -36,17 +36,22 @@
       <v-window-item value="project">
         <v-card-subtitle
           v-if="appStore.state.devMode"
-          :key="projectStore.state.projectId"
+          :key="stores.projectStore.state.projectId"
         >
-          Current project: {{ truncate(projectStore.state.projectId) }}
+          Current project:
+          {{
+            truncate(
+              appStore.currentSimulator.stores.projectStore.state.projectId
+            )
+          }}
         </v-card-subtitle>
         <v-list
-          :key="projectDBStore.state.projects.length"
+          :key="stores.projectDBStore.state.projects.length"
           density="compact"
           lines="two"
           nav
         >
-          <v-list-item :to="{ name: simulator + 'ProjectNew' }">
+          <v-list-item :to="{ name: appStore.state.simulator + 'ProjectNew' }">
             <template #prepend>
               <v-icon icon="mdi:mdi-plus" />
             </template>
@@ -61,13 +66,14 @@
             :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
             :title="
               project.name ||
-              'undefined project ' + projectDBStore.getProjectIdx(project)
+              'undefined project ' +
+                stores.projectDBStore.getProjectIdx(project)
             "
             :to="{
-              name: simulator + 'Project',
+              name: appStore.state.simulator + 'Project',
               params: { projectId: project.id },
             }"
-            v-for="(project, index) in projectDBStore.state.projects
+            v-for="(project, index) in stores.projectDBStore.state.projects
               .slice()
               .reverse()"
           />
@@ -76,21 +82,21 @@
 
       <v-window-item value="model">
         <v-card-subtitle
-          :key="modelStore.modelId"
+          :key="stores.modelStore.modelId"
           v-if="appStore.state.devMode"
         >
-          Current model: {{ modelStore.modelId }}
+          Current model: {{ stores.modelStore.modelId }}
         </v-card-subtitle>
 
-        <v-list :key="modelDBStore.state.models.length" nav>
+        <v-list :key="stores.modelDBStore.state.models.length" nav>
           <v-list-subheader>Existing models</v-list-subheader>
           <v-list-item
-            v-for="(model, index) in modelDBStore.state.models"
+            v-for="(model, index) in stores.modelDBStore.state.models"
             :key="index"
             :subtitle="model.elementType"
             :title="model.label"
             :to="{
-              name: simulator + 'Model',
+              name: appStore.state.simulator + 'Model',
               params: { modelId: model.id },
             }"
           />
@@ -101,27 +107,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import ExportDialog from "./dialog/ExportDialog.vue";
 import ImportDialog from "./dialog/ImportDialog.vue";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps<{
-  modelDBStore: TModelDBStore;
-  modelStore: TModelStore;
-  projectDBStore: TProjectDBStore;
-  projectStore: TProjectStore;
-  simulator: string;
-}>();
+const stores = computed(() => appStore.currentSimulator.stores);
 
 const databaseTab = ref("project");
 
@@ -131,10 +127,7 @@ const openExportDialog = () => {
     text: "",
     customComponent: {
       component: ExportDialog,
-      props: {
-        modelDBStore: props.modelDBStore,
-        projectDBStore: props.projectDBStore,
-      },
+      props: {},
     },
     dialogOptions: {
       width: "1280px",
@@ -148,10 +141,7 @@ const openImportDialog = () => {
     text: "",
     customComponent: {
       component: ImportDialog,
-      props: {
-        modelDBStore: props.modelDBStore,
-        projectDBStore: props.projectDBStore,
-      },
+      props: {},
     },
     dialogOptions: {
       width: "1280px",

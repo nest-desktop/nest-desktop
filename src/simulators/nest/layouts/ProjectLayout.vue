@@ -1,22 +1,8 @@
 <template>
-  <ProjectNav :modelDBStore :projectDBStore />
+  <ProjectNav />
 
-  <ProjectBar :projectStore color="nest-project">
-    <template #tabs>
-      <v-tab
-        :to="{
-          name: 'nestNetworkEditor',
-          params: { projectId: projectStore.state.projectId },
-        }"
-        title="Network Editor"
-        size="small"
-        stacked
-        value="edit"
-      >
-        <v-icon icon="network:network" />
-        Editor
-      </v-tab>
-
+  <ProjectBar color="nest-project">
+    <template #activityExplorer>
       <v-tab
         :to="{
           name: 'nestActivityExplorer',
@@ -62,24 +48,10 @@
       </v-btn>
 
       <v-divider vertical />
-
-      <v-tab
-        :to="{
-          name: 'nestLabBook',
-          params: { projectId: projectStore.state.projectId },
-        }"
-        title="Lab Book"
-        size="small"
-        stacked
-        value="lab"
-      >
-        <v-icon icon="mdi:mdi-book-open-outline" />
-        Lab Book
-      </v-tab>
     </template>
   </ProjectBar>
 
-  <ProjectController :projectStore>
+  <ProjectController>
     <template #activityController>
       <ActivityChartController
         :graph="project.activityGraph.activityChartGraph"
@@ -161,8 +133,6 @@ import NodeGroup from "@/components/node/NodeGroup.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
@@ -170,12 +140,6 @@ import ActivityAnimationControllerLayer from "../components/activityAnimation/Ac
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
 import NodeEditor from "../components/node/NodeEditor.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
-
-import { useNESTModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore: TModelDBStore = useNESTModelDBStore();
-
-import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();

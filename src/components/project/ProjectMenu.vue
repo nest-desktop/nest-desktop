@@ -18,25 +18,25 @@
 
 <script lang="ts" setup>
 import { computed, nextTick } from "vue";
+import { confirmDialog } from "vuetify3-dialog";
 
 import { TProject, TProjectProps } from "@/types";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useRouter, useRoute } from "vue-router";
-import { confirmDialog } from "vuetify3-dialog";
-const router = useRouter();
-const route = useRoute();
-
 const props = defineProps<{
   project: TProject | TProjectProps;
-  projectDBStore: TProjectDBStore;
 }>();
 
 const project = computed(() => props.project);
-const projectDBStore = computed(() => props.projectDBStore);
+const projectDBStore = computed(
+  () => appStore.currentSimulator.stores.projectDBStore
+);
 
 const menuItems = [
   {

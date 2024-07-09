@@ -7,3 +7,11 @@ export const usePyNNSimulatorStore = defineBackendStore(
   "pynn",
   "http://localhost:91198"
 );
+
+const simulate = (data: { source: string; return?: string }) => {
+  const pynnSimulatorStore = usePyNNSimulatorStore();
+
+  return pynnSimulatorStore.axiosInstance().post("exec", data);
+};
+
+export default { simulate };

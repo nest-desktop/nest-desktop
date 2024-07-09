@@ -1,5 +1,5 @@
 <template>
-  <AppNavigation :nav-items />
+  <AppNavigation :navItems />
 
   <v-main>
     <router-view />
@@ -10,17 +10,13 @@
 import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-
 import { TBackendStore } from "@/stores/defineBackendStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { useNorseModelStore } from "../stores/model/modelStore";
-import { useNorseProjectStore } from "../stores/project/projectStore";
-import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 
-const modelStore: TModelStore = useNorseModelStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
+import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 const norseSimulatorStore: TBackendStore = useNorseSimulatorStore();
-const projectStore: TProjectStore = useNorseProjectStore();
 
 const navItems = [
   {
@@ -40,13 +36,15 @@ const navItems = [
 ];
 
 onMounted(() => {
+  const stores = appStore.currentSimulator.stores;
+
   // Update and check backend.
   if (norseSimulatorStore.state.response.status != 200) {
     norseSimulatorStore.update();
   }
 
   // Initialize model and project stores.
-  modelStore.init();
-  projectStore.init();
+  stores.modelStore.init();
+  stores.projectStore.init();
 });
 </script>

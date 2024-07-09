@@ -226,14 +226,12 @@ import axios, { AxiosResponse } from "axios";
 import { INESTCopyModelProps } from "@/simulators/nest/helpers/model/copyModel";
 import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
 import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
-// import { useAppStore } from "@/stores/appStore";
-// const appStore = useAppStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 interface IImportProps {
   group: string;
@@ -251,13 +249,12 @@ interface IGithubTree {
   url: string;
 }
 
-const props = defineProps<{
-  modelDBStore: TModelDBStore;
-  projectDBStore: TProjectDBStore;
-}>();
-
-const modelDBStore = computed(() => props.modelDBStore);
-const projectDBStore = computed(() => props.projectDBStore);
+const modelDBStore = computed(
+  () => appStore.currentSimulator.stores.modelDBStore
+);
+const projectDBStore = computed(
+  () => appStore.currentSimulator.stores.projectDBStore
+);
 
 const state = reactive({
   githubFiles: [] as IGithubTree[],
@@ -458,7 +455,7 @@ const getModelFromGithub = (path: string, modelId: string) => {
           (modelProps: TModelProps) => modelProps.id === modelId
         );
         if (!modelProps) return;
-        const valid = modelDBStore.value.validateModel(props);
+        const valid = modelDBStore.value.validateModel(modelProps);
 
         state.items.push({
           group: "model",

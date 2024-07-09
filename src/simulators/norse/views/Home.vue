@@ -53,13 +53,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <StoreList
-          :modelDBStore
-          :modelStore
-          :projectStore
-          :projectDBStore
-          simulator="norse"
-        />
+        <StoreList />
       </v-col>
     </v-row>
   </v-container>
@@ -69,24 +63,8 @@
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
-
-import { useNorseModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore: TModelDBStore = useNorseModelDBStore();
-
-import { useNorseModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNorseModelStore();
-
-import { useNorseProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore: TProjectDBStore = useNorseProjectDBStore();
-
-import { useNorseProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNorseProjectStore();
+import { TBackendStore } from "@/stores/defineBackendStore";
 
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
-import { TBackendStore } from "@/stores/defineBackendStore";
 const norseSimulatorStore: TBackendStore = useNorseSimulatorStore();
 </script>

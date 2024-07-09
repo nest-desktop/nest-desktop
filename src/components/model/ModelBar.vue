@@ -3,23 +3,31 @@
     <v-tabs stacked>
       <slot name="prependTabs"></slot>
 
-      <v-tab
-        :key="index"
-        :title="tab.title"
-        :to="tab.to"
-        size="small"
-        v-for="(tab, index) in tabItems"
-      >
-        <v-icon :icon="tab.icon" />
-        <span class="text-no-wrap">{{ tab.label }}</span>
-      </v-tab>
+      <template v-for="(tabItem, index) in tabItems">
+        <slot :name="tabItem.id">
+          <v-tab
+            :key="index"
+            :title="tabItem.title"
+            :to="{
+              name: appStore.state.simulator + tabItem.to.name,
+              params: {
+                modelId: modelStore.state.modelId,
+              },
+            }"
+            size="small"
+          >
+            <v-icon :icon="tabItem.icon" />
+            <span class="text-no-wrap">{{ tabItem.label }}</span>
+          </v-tab>
+        </slot>
+      </template>
 
       <slot name="appendTabs"></slot>
     </v-tabs>
 
     <v-spacer />
 
-    <v-app-bar-title>{{ model.id }}</v-app-bar-title>
+    <v-app-bar-title>{{ modelStore.state.modelId }}</v-app-bar-title>
 
     <v-spacer />
 
@@ -30,23 +38,19 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TModel } from "@/types";
-
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps<{ model: TModel }>();
-const model = computed(() => props.model);
+const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
 
-const tabItems = computed(() => [
+const tabItems = [
   {
     icon: "mdi:mdi-chart-scatter-plot",
     id: "modelExplorer",
     label: "Explore",
     title: "Explore activity",
     to: {
-      name: appStore.state.simulator + "ModelExplorer",
-      params: { modelId: model.value.id },
+      name: "ModelExplorer",
     },
   },
   {
@@ -55,9 +59,8 @@ const tabItems = computed(() => [
     label: "Edit",
     title: "Edit activity",
     to: {
-      name: appStore.state.simulator + "ModelEditor",
-      params: { modelId: model.value.id },
+      name: "ModelEditor",
     },
   },
-]);
+];
 </script>

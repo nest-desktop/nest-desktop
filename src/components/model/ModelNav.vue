@@ -139,7 +139,7 @@
                 >
                   <v-icon icon="mdi:mdi-dots-vertical" />
 
-                  <ModelMenu :model="item as TModel" :modelDBStore />
+                  <ModelMenu :model="item as TModel" />
                 </v-btn>
               </template>
             </v-list-item>
@@ -170,7 +170,7 @@
               >
                 <v-icon icon="mdi:mdi-dots-vertical" />
 
-                <ModelMenu :model :modelDBStore />
+                <ModelMenu :model />
               </v-btn>
             </template>
           </v-list-item>
@@ -185,8 +185,6 @@ import { computed, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { TModel } from "@/types";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
 import DialogTextField from "../dialog/DialogTextField.vue";
@@ -203,17 +201,18 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
 
-const props = defineProps<{
-  modelStore: TModelStore;
-  modelDBStore: TModelDBStore;
-}>();
+const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
+const modelDBStore = computed(
+  () => appStore.currentSimulator.stores.modelDBStore
+);
+
 const models = computed(() => {
-  let models = [];
+  let models: TModel[] = [];
 
   if (state.source == appStore.currentSimulator.id) {
-    models = props.modelStore.state.models;
+    models = modelStore.value.state.models;
   } else {
-    models = props.modelDBStore.state.models;
+    models = modelDBStore.value.state.models;
 
     if (state.source === "custom") {
       models = models.filter((model: TModel) => model.custom);
@@ -268,9 +267,7 @@ const menuItems = [
         text: "",
         customComponent: {
           component: ImportDialog,
-          props: {
-            modelDBStore: props.modelDBStore,
-          },
+          props: {},
         },
         dialogOptions: {
           width: "1280px",
@@ -289,7 +286,7 @@ const menuItems = [
         customComponent: {
           component: ExportDialog,
           props: {
-            modelDBStore: props.modelDBStore,
+            project: false,
           },
         },
         dialogOptions: {
@@ -309,7 +306,7 @@ const menuItems = [
         customComponent: {
           component: DeleteDialog,
           props: {
-            store: props.modelDBStore,
+            store: modelDBStore.value,
           },
         },
         dialogOptions: {
@@ -328,13 +325,13 @@ const dialogNewModel = () => {
       component: DialogTextField,
       props: {
         title: "Create model",
-        modelValue: "new model " + props.modelDBStore.state.models.length,
+        modelValue: "new model " + modelDBStore.value.state.models.length,
       },
     },
   }).then((modelLabel: boolean | string) => {
     if (modelLabel) {
       let modelId = modelLabel as string;
-      const model = props.modelDBStore.newModel({
+      const model = modelDBStore.value.newModel({
         id: modelId.replaceAll(" ", "_"),
         label: modelLabel,
       });

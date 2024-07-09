@@ -169,23 +169,21 @@ import NetworkParamEditor from "../network/NetworkParamEditor.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { Activities } from "@/helpers/activity/activities";
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { BaseNetwork } from "@/helpers/network/network";
+import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
-import { BaseSimulation } from "@/helpers/simulation/simulation";
-import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { BaseNetwork } from "@/helpers/network/network";
 const navStore = useNavStore();
 
-const props = defineProps<{
-  projectStore: TProjectStore;
-}>();
-const projectStore = computed(() => props.projectStore);
+const projectStore = computed(
+  () => appStore.currentSimulator.stores.projectStore
+);
 const project = computed(() => projectStore.value.state.project);
 
 const projectJSON = computed(() =>

@@ -153,7 +153,12 @@
             </v-expansion-panel-text>
           </v-expansion-panel>
 
-          <v-expansion-panel :disabled="modelStore.state.models.length === 0">
+          <v-expansion-panel
+            :disabled="
+              appStore.currentSimulator.stores.modelStore.state.models
+                .length === 0
+            "
+          >
             <v-expansion-panel-title>
               Models in backend
               <v-spacer />
@@ -216,7 +221,10 @@
               </v-text-field>
 
               <v-list>
-                <template v-for="model in modelStore.state.models">
+                <template
+                  v-for="model in appStore.currentSimulator.stores.modelStore
+                    .state.models"
+                >
                   <v-list-item v-show="model.id.includes(state.modelSearch)">
                     {{ model.id }}
                   </v-list-item>
@@ -226,13 +234,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <StoreList
-          :modelDBStore
-          :modelStore
-          :projectStore
-          :projectDBStore
-          simulator="nest"
-        />
+        <StoreList />
       </v-col>
     </v-row>
   </v-container>
@@ -244,10 +246,6 @@ import { reactive } from "vue";
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
 import nestmlServer from "../stores/backends/nestmlServerStore";
@@ -256,20 +254,8 @@ import nestSimulator from "../stores/backends/nestSimulatorStore";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNESTModelDBStore } from "../stores/model/modelDBStore";
-const modelDBStore: TModelDBStore = useNESTModelDBStore();
-
 import { useModuleStore } from "../stores/moduleStore";
 const moduleStore = useModuleStore();
-
-import { useNESTProjectDBStore } from "../stores/project/projectDBStore";
-const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
-
-import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
-
-import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNESTProjectStore();
 
 const state = reactive({
   backendTab: "nest",
@@ -279,6 +265,8 @@ const state = reactive({
 });
 
 const generateNESTMLModels = () => {
+  const modelDBStore = appStore.currentSimulator.stores.modelDBStore;
+
   const models = state.selectedModule.models
     .filter((modelId: string) => modelDBStore.hasModel(modelId))
     .map((modelId: string) => {
