@@ -31,7 +31,10 @@
 
     <NetworkHistory />
 
-    <SimulationButton class="mx-2" v-if="projectStore.state.project" />
+    <SimulationButton
+      :simulation="projectStore.state.project.simulation"
+      @click:simulate="projectStore.startSimulation()"
+    />
   </v-app-bar>
 </template>
 

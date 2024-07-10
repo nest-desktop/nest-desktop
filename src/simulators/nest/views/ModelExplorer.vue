@@ -7,7 +7,11 @@
   >
     {{ modelStore.state.projectId }}
   </v-chip>
-  <ActivityChartGraph :graph="graph.activityChartGraph" v-if="graph" />
+
+  <ActivityChartGraph
+    :graph="graph.activityChartGraph"
+    v-if="graph && modelStore.model.isNeuron"
+  />
 </template>
 
 <script lang="ts" setup>

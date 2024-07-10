@@ -1,26 +1,28 @@
 <template>
-  <v-btn-group density="compact" divided theme="dark" variant="outlined">
+  <v-btn-group
+    class="mx-2"
+    density="compact"
+    divided
+    theme="dark"
+    variant="outlined"
+    v-if="simulation"
+  >
     <v-btn
-      :disabled="disabled"
-      :loading="loading"
-      @click="projectStore?.startSimulation()"
+      :disabled
+      :loading
+      @click="simulate()"
       class="border-white"
       prepend-icon="mdi:mdi-play"
       title="Simulate"
-      v-if="simulation"
     >
       <span v-if="simulation.code.runSimulation">Simulate</span>
       <span v-else>Prepare</span>
     </v-btn>
 
-    <v-btn class="border-white pa-2" style="min-width: 0">
+    <v-btn :disabled class="border-white pa-2" style="min-width: 0">
       <v-icon icon="mdi:mdi-menu-down" />
 
-      <v-menu
-        :close-on-content-click="false"
-        activator="parent"
-        theme="primary"
-      >
+      <v-menu :closeOnContentClick="false" activator="parent" theme="primary">
         <v-list density="compact">
           <v-list-item :key="index" v-for="(menuItem, index) in menuItems">
             {{ menuItem }}
@@ -34,17 +36,16 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+import { TSimulation } from "@/types";
 
 const props = defineProps<{
+  simulation: TSimulation;
   disabled?: boolean;
 }>();
 
-const projectStore = computed(
-  () => appStore.currentSimulator.stores.projectStore
-);
-const simulation = computed(() => projectStore.value.state.project.simulation);
+const emit = defineEmits(["click:simulate"]);
+
+const simulation = computed(() => props.simulation);
 const disabled = computed(
   () => props.disabled || simulation.value.state.running || false
 );
@@ -55,6 +56,12 @@ const menuItems = [
   "simulateAfterCheckout",
   "simulateAfterLoad",
 ];
+
+const simulate = () => {
+  if (!loading.value) {
+    emit("click:simulate");
+  }
+};
 </script>
 
 <style lang="scss">

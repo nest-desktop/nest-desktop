@@ -98,7 +98,9 @@ const selectProject = (projectId: string): void => {
 };
 
 const update = () => {
-  if (
+  if (!modelStore.model.isNeuron) {
+    modelStore.state.project = undefined;
+  } else if (
     modelStore.model?.project &&
     modelStore.model.project?.filename === modelStore.state.projectId
   ) {

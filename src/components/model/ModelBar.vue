@@ -31,18 +31,19 @@
 
     <v-spacer />
 
-    <v-btn
+    <SimulationButton
       :disabled="!modelStore.model.isNeuron"
-      @click="modelStore.startSimulation()"
-      variant="outlined"
-    >
-      Simulate
-    </v-btn>
+      :simulation="modelStore.state.project.simulation"
+      @click:simulate="modelStore.startSimulation()"
+      v-if="modelStore.state.project"
+    />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
+
+import SimulationButton from "../simulation/SimulationButton.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

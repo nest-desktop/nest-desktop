@@ -53,12 +53,12 @@ export const vuetify = createVuetify({
     // global: {
     //   ripple: false,
     // },
-    VCard: {
-      // variant: "outlined",
-      VCardActions: {
-        VBtn: { size: "small", variant: "outlined", ripple: true },
-      },
-    },
+    // VCard: {
+    //   variant: "outlined",
+    //   VCardActions: {
+    //     VBtn: { size: "small", variant: "outlined", ripple: true },
+    //   },
+    // },
     VMenu: {
       transition: "slide-y-transition",
     },

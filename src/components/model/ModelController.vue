@@ -8,14 +8,15 @@
       stacked
     >
       <v-tab
-        v-for="(item, index) in items"
+        :disabled="!modelStore.model.isNeuron && item.id === 'code'"
         :key="index"
         :ripple="false"
         :value="modelStore.state.controller.open ? item.id : null"
+        @click.stop="modelStore.toggle(item)"
         class="justify-center"
         height="72"
         min-width="0"
-        @click.stop="modelStore.toggle(item)"
+        v-for="(item, index) in items"
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.id }}</span>
@@ -55,24 +56,36 @@
         title="Model parameter for simulation"
       />
 
-      <v-card
-        :key="index"
-        flat
-        v-for="(neuron, index) in modelStore.state.project.network.nodes
-          .neurons"
-      >
-        <v-list :key="neuron.modelId" v-if="neuron.paramsVisible.length > 0">
-          <NodeParamEditor
+      <template v-if="modelStore.model.isNeuron">
+        <v-card
+          :key="index"
+          flat
+          v-for="(neuron, index) in modelStore.state.project.network.nodes
+            .neurons"
+        >
+          <v-list :key="neuron.modelId" v-if="neuron.paramsVisible.length > 0">
+            <NodeParamEditor
+              :key="index"
+              :param="neuron.params[paramId]"
+              v-for="(paramId, index) in neuron.paramsVisible"
+            />
+          </v-list>
+
+          <v-card-actions>
+            <v-btn @click="setDefaults()">set param values as defaults</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+
+      <template v-else>
+        <v-list>
+          <ModelParamEditor
             :key="index"
-            :param="neuron.params[paramId]"
-            v-for="(paramId, index) in neuron.paramsVisible"
+            :param="param as TModelParameter"
+            v-for="(param, index) in modelParams"
           />
         </v-list>
-
-        <v-card-actions>
-          <v-btn @click="setDefaults()">set param values as defaults</v-btn>
-        </v-card-actions>
-      </v-card>
+      </template>
     </template>
 
     <template v-if="modelStore.state.controller.view === 'code'">
@@ -99,6 +112,7 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
+import ModelParamEditor from "./ModelParamEditor.vue";
 const navStore = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);

@@ -45,9 +45,14 @@ const modelRedirect = (to: any) => {
     modelStore.state.modelId = to.params.modelId;
   }
 
-  modelStore.state.view = modelStore.model.isNeuron
-    ? modelStore.state.view
-    : "doc";
+  if (!modelStore.model.isNeuron) {
+    if (modelStore.state.view === "explore") {
+      modelStore.state.view = "doc";
+    }
+    if (modelStore.state.controller.view === "code") {
+      modelStore.state.controller.view = "defaults";
+    }
+  }
 
   return {
     path:
