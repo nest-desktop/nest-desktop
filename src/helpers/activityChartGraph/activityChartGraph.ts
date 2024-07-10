@@ -1,7 +1,7 @@
 // activityChartGraph.ts
 
 // @ts-ignore - Module '"plotly.js-dist-min"' has no exported member 'Partial'.
-import Plotly, { Partial } from "plotly.js-dist-min";
+import Plotly, { Partial, Root, deleteTraces } from "plotly.js-dist-min";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TProject } from "@/types";
@@ -268,6 +268,13 @@ export class ActivityChartGraph extends BaseObj {
         this.addPanel({ model: { id: "spikeTimesHistogram" } });
       }
     }
+  }
+
+  /**
+   * Delete traces.
+   */
+  deleteTraces(): void {
+    Plotly.deleteTraces(this._state.ref as Root, 0);
   }
 
   /**

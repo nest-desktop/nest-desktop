@@ -31,7 +31,11 @@
 
     <v-spacer />
 
-    <v-btn @click="modelStore.startSimulation()" variant="outlined">
+    <v-btn
+      :disabled="!modelStore.model.isNeuron"
+      @click="modelStore.startSimulation()"
+      variant="outlined"
+    >
       Simulate
     </v-btn>
   </v-app-bar>

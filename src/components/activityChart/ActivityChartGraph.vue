@@ -96,6 +96,7 @@ const relayout = () => graph.value?.relayout();
 
 onBeforeUnmount(() => {
   state.dialog = false;
+  // graph.value.deleteTraces();
   window.removeEventListener("relayout", relayout);
 });
 

@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, watch } from "vue";
+import { onMounted, watch } from "vue";
 
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
@@ -156,7 +156,7 @@ const projects: { id: string; name: string; icon: string }[] = [
 ];
 
 onMounted(() => {
-  selectProject("current-input");
+  selectProject("model-step-current-up-down");
 });
 
 watch(() => modelStore.state.modelId, update);
