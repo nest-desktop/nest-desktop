@@ -37,16 +37,15 @@
 
     <v-list
       :modelValue="projectStore.state.controller.view"
-      class="pa-1 text-center"
+      class="px-0 text-center"
       color="primary"
       density="compact"
-      nav
     >
       <v-list-item
         :key="index"
         :value="item.id"
         @click.stop="projectStore.toggleController(item)"
-        class="pt-3 justify-center"
+        class="py-3 my-0 justify-center"
         v-for="(item, index) in controllerItems"
         v-show="
           item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)

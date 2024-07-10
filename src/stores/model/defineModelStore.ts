@@ -138,7 +138,7 @@ export function defineModelStore(
      * Toggle controller navigation.
      * @param item
      */
-    const toggle = (item?: { id: string }): void => {
+    const toggleController = (item?: { id: string }): void => {
       if (!state.controller.open || state.controller.view === item?.id) {
         state.controller.open = !state.controller.open;
       }
@@ -153,7 +153,7 @@ export function defineModelStore(
       saveModel,
       startSimulation,
       state,
-      toggle,
+      toggleController,
     };
   });
 }

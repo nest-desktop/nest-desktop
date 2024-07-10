@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer location="right" permanent rail>
-    <v-tabs
+    <!-- <v-tabs
       :modelValue="modelStore.state.controller.view"
       :mandatory="false"
       color="primary"
@@ -12,16 +12,37 @@
         :key="index"
         :ripple="false"
         :value="modelStore.state.controller.open ? item.id : null"
-        @click.stop="modelStore.toggle(item)"
+        @click.stop="modelStore.toggleController(item)"
         class="justify-center"
         height="72"
         min-width="0"
-        v-for="(item, index) in items"
+        v-for="(item, index) in controllerItems"
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
-    </v-tabs>
+    </v-tabs> -->
+
+    <v-list
+      :modelValue="modelStore.state.controller.view"
+      class="px-0 text-center"
+      color="primary"
+      density="compact"
+    >
+      <v-list-item
+        :disabled="!modelStore.model.isNeuron && item.id === 'code'"
+        :key="index"
+        :value="item.id"
+        @click.stop="modelStore.toggleController(item)"
+        class="py-3 my-0 justify-center"
+        v-for="(item, index) in controllerItems"
+      >
+        <v-icon :icon="item.icon" size="large" />
+        <span class="text-button" style="font-size: 9px !important">
+          {{ item.id }}
+        </span>
+      </v-list-item>
+    </v-list>
   </v-navigation-drawer>
 
   <v-navigation-drawer
@@ -50,13 +71,13 @@
     </template>
 
     <template v-if="modelStore.state.controller.view === 'params'">
-      <v-toolbar
-        color="transparent"
-        density="compact"
-        title="Model parameter for simulation"
-      />
-
       <template v-if="modelStore.model.isNeuron">
+        <v-toolbar
+          color="transparent"
+          density="compact"
+          title="Model parameter for simulation"
+        />
+
         <v-card
           :key="index"
           flat
@@ -78,6 +99,12 @@
       </template>
 
       <template v-else>
+        <v-toolbar
+          color="transparent"
+          density="compact"
+          title="Default values of model parameters"
+        />
+
         <v-list>
           <ModelParamEditor
             :key="index"
@@ -121,7 +148,7 @@ const modelParams = computed(() =>
   Object.values(modelStore.value.model.params)
 );
 
-const items = [
+const controllerItems = [
   {
     id: "defaults",
     icon: "mdi:mdi-format-list-numbered-rtl",

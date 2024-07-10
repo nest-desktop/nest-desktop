@@ -26,18 +26,16 @@
 
     <v-list
       :model-value="navStore.state.view"
-      class="pa-1 text-center"
+      class="px-0 text-center"
       color="primary"
       density="compact"
-      nav
     >
       <v-list-item
         :key="index"
         :to="item.to"
         :value="item.id"
         @click.stop="navStore.toggle(item)"
-        class="pt-3 justify-center"
-        exact
+        class="py-3 my-0 justify-center"
         v-for="(item, index) in navItems"
         v-show="item.simulator === appStore.state.simulator"
       >
