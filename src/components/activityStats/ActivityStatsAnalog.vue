@@ -46,9 +46,32 @@
       </v-select>
     </template>
 
+    <template #item.actions="{ index }">
+      <v-menu transition="slide-y-transition">
+        <template #activator="{ props }">
+          <v-icon
+            :color="record.state.traceColors[index]"
+            class="me-2"
+            icon="mdi:mdi-format-color-fill"
+            size="small"
+            v-bind="props"
+          />
+        </template>
+
+        <v-color-picker
+          @update:model-value="updateRecordsColor()"
+          flat
+          show-swatches
+          style="border-radius: 0"
+          v-model="record.state.traceColors[index]"
+        />
+      </v-menu>
+    </template>
+
     <template #item.mean="{ item }">
       {{ toFixed(Number(item.mean)) }}
     </template>
+
     <template #item.std="{ item }">
       {{ toFixed(Number(item.std)) }}
     </template>
@@ -84,6 +107,7 @@ import { toFixed } from "@/utils/converter";
 
 const props = defineProps<{ activity: AnalogSignalActivity }>();
 const activity = computed(() => props.activity);
+const record = computed(() => activity.value.state.records[0]);
 
 const state = reactive({
   activityHash: "",
@@ -99,6 +123,7 @@ const headers = [
   },
   { title: "Mean", key: "mean" },
   { title: "Std", key: "std" },
+  { title: "Actions", key: "actions", sortable: false },
 ];
 
 // const activeLineGraph = (nodeId?: number) => {
@@ -130,7 +155,7 @@ const update = () => {
   state.items = [];
 
   if (!state.selectedRecord && activity.value.state.records.length > 0) {
-    state.selectedRecord = activity.value.state.records[0].id;
+    state.selectedRecord = record.value.id;
   }
 
   if (activity.value && state.selectedRecord) {
@@ -153,13 +178,26 @@ const update = () => {
   state.loading = false;
 };
 
-const updateGraph = () => {
-  nextTick(() => activity.value.chartGraph.update());
+/**
+ * Triggers when record color is changed.
+ */
+const updateRecordsColor = () => {
+  nextTick(() => {
+    activity.value.chartGraph.updateRecordsColor();
+  });
 };
 
-onMounted(() => {
-  update();
-});
+/**
+ * Triggers when a trace is selected.
+ */
+const updateGraph = () => {
+  nextTick(() => {
+    activity.value.state.selected.sort((a, b) => a - b);
+    activity.value.chartGraph.update();
+  });
+};
+
+onMounted(() => update());
 
 watch(
   () => activity.value.hash,

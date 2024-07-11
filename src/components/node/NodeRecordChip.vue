@@ -2,7 +2,7 @@
   <v-menu transition="slide-y-transition">
     <template #activator="{ props }">
       <v-chip
-        :color="nodeRecord.color"
+        :color="nodeRecord.state.color"
         :title="nodeRecord.title"
         class="nodeRecordChip"
         label
@@ -20,7 +20,7 @@
       flat
       show-swatches
       style="border-radius: 0"
-      v-model="nodeRecord.color"
+      v-model="nodeRecord.state.color"
     />
   </v-menu>
 </template>

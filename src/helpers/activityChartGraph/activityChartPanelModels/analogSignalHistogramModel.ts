@@ -94,7 +94,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       hoverinfo: "x+y",
       legendgroup: record.groupId,
       marker: {
-        color: record.color,
+        color: record.state.color,
         line: {
           color: currentBackgroundColor(),
           width: (this.params[0].value as number) > 100 ? 0 : 1,

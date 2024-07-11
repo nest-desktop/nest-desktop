@@ -46,7 +46,7 @@
             <v-list density="compact">
               <v-list-item
                 :key="index"
-                :prependIcon="project.icon"
+                :prepend-icon="project.icon"
                 :title="project.name"
                 @click="selectProject(project.id)"
                 v-for="(project, index) in projects"

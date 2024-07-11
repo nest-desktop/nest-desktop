@@ -16,6 +16,25 @@ export interface IActivityChartPanelProps {
 }
 
 interface IActivityChartPanelLayoutProps {
+  shapes: {
+    label: {
+      font: { size: number };
+      text: string;
+      textposition: string;
+    };
+    line: {
+      color: string;
+      dash: string;
+      width: number;
+    };
+    type: string;
+    x0: number;
+    x1: number;
+    xref: string;
+    y0: number;
+    y1: number;
+    yref: string;
+  }[];
   xaxis: { anchor?: string; showgrid: boolean; title: string; type?: string };
   yaxis: {
     domain?: number[];
@@ -37,6 +56,7 @@ export class ActivityChartPanel extends BaseObj {
   // private _activities: Activity[] = [];
   private _graph: ActivityChartGraph; // parent
   private _layout: IActivityChartPanelLayoutProps = {
+    shapes: [],
     xaxis: {
       showgrid: true,
       title: "",

@@ -286,7 +286,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
           const recordVisible = this.records.find(
             (rec: NodeRecord) => rec.groupId === recordProps.groupId
           );
-          if (recordVisible != null) recordVisible.color = recordProps.color;
+          if (recordVisible != null)
+            recordVisible.state.color = recordProps.color || "";
           return recordVisible as NodeRecord;
         }) as NodeRecord[];
     }
@@ -452,7 +453,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       );
 
       const color = record
-        ? record.color
+        ? record.state.color
         : activity.recorder.view.color || "grey";
 
       if (data.type.includes("scatter")) {

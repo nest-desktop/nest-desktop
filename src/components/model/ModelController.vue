@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer location="right" permanent rail>
     <!-- <v-tabs
-      :modelValue="modelStore.state.controller.view"
+      :model-value="modelStore.state.controller.view"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -24,7 +24,7 @@
     </v-tabs> -->
 
     <v-list
-      :modelValue="modelStore.state.controller.view"
+      :model-value="modelStore.state.controller.view"
       class="px-0 text-center"
       color="primary"
       density="compact"
@@ -46,7 +46,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :modelValue="modelStore.state.controller.open"
+    :model-value="modelStore.state.controller.open"
     :width="modelStore.state.controller.width"
     @transitionend="dispatchWindowResize()"
     location="right"
@@ -64,7 +64,7 @@
       <v-list>
         <ModelParamViewer
           :key="index"
-          :param="param as TModelParameter"
+          :param="(param as TModelParameter)"
           v-for="(param, index) in modelParams"
         />
       </v-list>
@@ -108,7 +108,7 @@
         <v-list>
           <ModelParamEditor
             :key="index"
-            :param="param as TModelParameter"
+            :param="(param as TModelParameter)"
             v-for="(param, index) in modelParams"
           />
         </v-list>

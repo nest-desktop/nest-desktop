@@ -271,6 +271,13 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
+   * Clear shapes.
+   */
+  clearShapes(): void {
+    this._plotLayout["shapes"] = [];
+  }
+
+  /**
    * Delete traces.
    */
   deleteTraces(): void {
@@ -294,6 +301,11 @@ export class ActivityChartGraph extends BaseObj {
    */
   empty(): void {
     this._plotData = [];
+    this._plotLayout.shapes = [];
+
+    this.panels.forEach(
+      (panel: ActivityChartPanel) => (panel.layout.shapes = [])
+    );
   }
 
   /**
@@ -505,6 +517,15 @@ export class ActivityChartGraph extends BaseObj {
    * @param panel
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
+    panel.layout.shapes.forEach((shape) => {
+      shape.yref = "y" + (panel.yAxis > 1 ? panel.yAxis : "");
+    });
+
+    this._plotLayout.shapes = [
+      ...this._plotLayout.shapes,
+      ...panel.layout.shapes,
+    ];
+
     this._plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] =
       panel.layout.yaxis;
     this._plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] =

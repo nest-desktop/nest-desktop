@@ -59,7 +59,7 @@
           >
             <template #selection="{ item }">
               <v-chip
-                :color="item.raw.color"
+                :color="item.raw.state.color"
                 class="mx-2"
                 disable-lookup
                 label
@@ -76,7 +76,7 @@
 
             <template #item="{ item }">
               <v-chip
-                :color="item.raw.color"
+                :color="item.raw.state.color"
                 class="mx-2"
                 label
                 size="small"

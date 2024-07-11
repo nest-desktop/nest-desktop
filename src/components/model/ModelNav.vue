@@ -139,7 +139,7 @@
                 >
                   <v-icon icon="mdi:mdi-dots-vertical" />
 
-                  <ModelMenu :model="item as TModel" />
+                  <ModelMenu :model="(item as TModel)" />
                 </v-btn>
               </template>
             </v-list-item>

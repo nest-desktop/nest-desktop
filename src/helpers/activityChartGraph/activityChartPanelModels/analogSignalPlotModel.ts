@@ -1,5 +1,7 @@
 // analogSignalPlotModel.ts
 
+import { TNode } from "@/types";
+
 import { currentBackgroundColor, currentColor } from "../../common/theme";
 import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
@@ -48,102 +50,29 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Add spike threshold data for membrane potential.
-   */
-  // addSpikeThresholdLine(record: NodeRecord): void {
-  // const thresholds: number[] = record.node.nodes.nodeItems
-  //   .filter((node: Node) => node.modelId.startsWith("iaf"))
-  //   .map(
-  //     (target: Node) => (target.getParameter("V_th").value as number) || -55
-  //   );
-  // if (thresholds.length > 0) {
-  //   const line = {
-  //     color: record.color,
-  //     dash: "dot",
-  //     width: 2,
-  //   };
-  //   this.data.push({
-  //     activityIdx: record.activity.idx,
-  //     hoverinfo: "none",
-  //     legendgroup: record.groupId,
-  //     line,
-  //     mode: "lines",
-  //     opacity: 0.5,
-  //     recordId: record.id,
-  //     showlegend: false,
-  //     type: plotType,
-  //     visible: this.state.visible,
-  //     x: [0.1, record.activity.currentTime],
-  //     y: [thresholds[0], thresholds[0]], // Gets only first threshold, TODO: find better solution
-  //   } as IActivityChartPanelModelData);
-  // }
-  // }
-
-  /**
-   * Add single line data for analog signal.
+   * Add active line for analog signals.
    * @param record node record object
+   *
+   * @remarks will be updated in `updateActiveMarker`.
    */
-  addSingleLine(record: NodeRecord): void {
-    if (!record.hasEvent) {
-      return;
-    }
-
-    const line = {
-      color: record.color,
-      width: 1.5,
-    };
-
+  addActiveLine(record: NodeRecord): void {
+    // active line
     this.data.push({
       activityIdx: record.activity.idx,
       hoverinfo: "x+y",
       legendgroup: record.groupId,
-      line,
-      mode: "lines",
-      name: record.id + " of " + record.nodeLabel,
-      recordId: record.id,
-      showlegend: true,
-      type: plotType,
-      visible: this.state.visible,
-      x: record.times,
-      y: record.values,
-    } as IActivityChartPanelModelData);
-  }
-
-  /**
-   * Add multiple lines data for analog signals.
-   * @param record node record object
-   */
-  addMultipleLines(record: NodeRecord): void {
-    if (!record.hasEvent || record.activity.state.selected?.length === 0)
-      return;
-
-    const nodeIds: number[] = record.activity.state.selected;
-    const data: IDataPoints[] = this.createGraphDataPoints(nodeIds, record);
-
-    data.forEach((d: IDataPoints, idx: number) => {
-      const line = {
-        color: record.color,
+      line: {
+        color: currentColor(),
         width: 1.5,
-      };
-
-      this.data.push({
-        activityIdx: record.activity.idx,
-        hoverinfo: "none",
-        legendgroup: record.groupId,
-        line,
-        mode: "lines",
-        name: d.name,
-        nodeId: nodeIds[idx],
-        // opacity: idx === 0 ? 0.5 : 0.3,
-        recordId: record.id,
-        showlegend: idx === 0,
-        type: plotType,
-        visible: this.state.visible,
-        // yaxis: 'y' + idx,
-        x: d.x,
-        y: d.y,
-        // y: d.y.map(y => y+= 15*idx),
-      } as IActivityChartPanelModelData);
+      },
+      mode: "lines",
+      opacity: 0.5,
+      recordId: record.id,
+      showlegend: false,
+      type: plotType,
+      visible: false,
+      x: [],
+      y: [],
     });
   }
 
@@ -188,17 +117,15 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       y,
     } as IActivityChartPanelModelData);
 
-    const line = {
-      color: record.color,
-      width: 1.5,
-    };
-
     // average line
     this.data.push({
       activityIdx: record.activity.idx,
       hoverinfo: "x+y",
       legendgroup: record.groupId,
-      line,
+      line: {
+        color: record.state.color,
+        width: 1.5,
+      },
       mode: "lines",
       recordId: record.id,
       showlegend: false,
@@ -210,30 +137,107 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   }
 
   /**
-   * Add active line for analog signals.
+   * Add multiple lines data for analog signals.
    * @param record node record object
-   *
-   * @remarks will be updated in `updateActiveMarker`.
    */
-  addActiveLine(record: NodeRecord): void {
-    // active line
+  addMultipleLines(record: NodeRecord): void {
+    if (!record.hasEvent || record.activity.state.selected?.length === 0)
+      return;
+
+    const nodeIds: number[] = record.activity.nodeIds;
+    const selected: number[] = record.activity.state.selected;
+    const data: IDataPoints[] = this.createGraphDataPoints(
+      nodeIds,
+      record,
+      selected
+    );
+
+    data.forEach((d: IDataPoints, idx: number) => {
+      if (selected.includes(nodeIds[idx])) {
+        this.data.push({
+          activityIdx: record.activity.idx,
+          hoverinfo: "x+y",
+          legendgroup: record.groupId,
+          line: {
+            color: record.state.traceColors[idx],
+            width: 1.5,
+          },
+          mode: "lines",
+          name: d.name,
+          nodeId: nodeIds[idx],
+          // opacity: idx === 0 ? 0.5 : 0.3,
+          recordId: record.id,
+          showlegend: idx === 0,
+          type: plotType,
+          visible: this.state.visible,
+          // yaxis: 'y' + idx,
+          x: d.x,
+          y: d.y,
+          // y: d.y.map(y => y+= 15*idx),
+        } as IActivityChartPanelModelData);
+      }
+    });
+  }
+
+  /**
+   * Add single line data for analog signal.
+   * @param record node record object
+   */
+  addSingleLine(record: NodeRecord): void {
+    if (!record.hasEvent) {
+      return;
+    }
+
     this.data.push({
       activityIdx: record.activity.idx,
       hoverinfo: "x+y",
       legendgroup: record.groupId,
       line: {
-        color: currentColor(),
+        color: record.state.color,
         width: 1.5,
       },
       mode: "lines",
-      opacity: 0.5,
+      name: record.id + " of " + record.nodeLabel,
       recordId: record.id,
-      showlegend: false,
+      showlegend: true,
       type: plotType,
-      visible: false,
-      x: [],
-      y: [],
-    });
+      visible: this.state.visible,
+      x: record.times,
+      y: record.values,
+    } as IActivityChartPanelModelData);
+  }
+
+  /**
+   * Add spike threshold data for membrane potential.
+   */
+  addSpikeThresholdLine(record: NodeRecord): void {
+    record.node.targetNodes
+      .filter((node: TNode) => node.modelId.startsWith("iaf"))
+      .forEach((node: TNode) => {
+        const Vth = node.getParameter("V_th").value as number;
+
+        if (Vth) {
+          this.panel.layout.shapes.push({
+            label: {
+              font: { size: 10 },
+              text: "Spike threshold",
+              textposition: "end",
+            },
+            line: {
+              color: node.view.color,
+              dash: "dot",
+              width: 2,
+            },
+            type: "line",
+            x0: 0,
+            x1: 1,
+            xref: "paper",
+            y0: Vth,
+            y1: Vth,
+            yref: "y",
+          });
+        }
+      });
   }
 
   /**
@@ -243,7 +247,11 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record Array of NodeRecords (containing the events)
    * @returns Array containing x, y and name value for every data point
    */
-  createGraphDataPoints(nodeIds: number[], record: NodeRecord): IDataPoints[] {
+  createGraphDataPoints(
+    nodeIds: number[],
+    record: NodeRecord,
+    selected: number[] = []
+  ): IDataPoints[] {
     if (!nodeIds || nodeIds.length === 0) return [];
     const data: IDataPoints[] = nodeIds.map(() => ({ name: "", x: [], y: [] }));
 
@@ -255,10 +263,13 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     }
 
     senders.forEach((sender: number, idx: number) => {
-      const senderIdx: number = nodeIds.indexOf(sender);
-      if (senderIdx === -1) {
+      if (
+        (selected.length > 0 && !selected.includes(sender)) ||
+        !nodeIds.includes(sender)
+      )
         return;
-      }
+
+      const senderIdx: number = nodeIds.indexOf(sender);
       data[senderIdx].x.push(record.times[idx]);
       data[senderIdx].y.push(record.values[idx] as number);
       data[senderIdx].name = record.id + " of " + record.nodeLabel;
@@ -274,18 +285,17 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   override update(): void {
     this.data = [];
-    if (this.recordsVisible.length === 0) {
-      return;
-    }
+
+    if (this.recordsVisible.length === 0) return;
 
     this.updateAnalogRecords();
     this.updateTime();
 
     this.recordsVisible.forEach((record: NodeRecord) => {
-      // if (record.id === "V_m" && this.params.spikeThreshold?.visible) {
-      //   // Add spike threshold for membrane potential.
-      //   this.addSpikeThresholdLine(record);
-      // }
+      if (record.id === "V_m") {
+        // Add spike threshold for membrane potential.
+        this.addSpikeThresholdLine(record);
+      }
 
       if (record.nodeSize === 1) {
         // Add line for a single node.
@@ -301,7 +311,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       }
 
       // Add active line.
-      this.addActiveLine(record);
+      // this.addActiveLine(record);
     });
 
     this.updateLayoutLabel();

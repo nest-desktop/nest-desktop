@@ -44,9 +44,7 @@ export class Activity extends BaseObj {
       activeNodeId: undefined,
       fromTime: 0,
       records: [],
-      selected: activityProps.nodeIds?.slice(0, 10) || [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-      ],
+      selected: [],
     });
 
     this.init(activityProps);
@@ -230,6 +228,8 @@ export class Activity extends BaseObj {
     this.reset();
     this.events = activityProps.events || { senders: [], times: [] };
     this.nodeIds = activityProps.nodeIds || [];
+    this._state.selected = this.nodeIds.slice(0, 10);
+
     this.nodePositions = activityProps.nodePositions || [];
     this.recorderUnitId = activityProps.recorderUnitId || -1;
     this.updateHash();

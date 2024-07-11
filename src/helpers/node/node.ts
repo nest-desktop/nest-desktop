@@ -750,7 +750,7 @@ export class BaseNode extends BaseObj {
   updateRecordsColor(): void {
     const color = this._view.color;
     this._recordables.forEach((record: NodeRecord) => {
-      record.color = color;
+      record.state.color = color;
     });
   }
 }

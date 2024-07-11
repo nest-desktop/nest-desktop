@@ -21,6 +21,6 @@ export const useNESTProjectStore = defineProjectStore({
 export const copyModel = (modelId: string) => {
   const projectStore: TProjectStore = useNESTProjectStore();
 
-  projectStore.state.project.value.network.modelsCopied.copy(modelId);
-  projectStore.state.project.value.network.changes();
+  projectStore.state.project.network.modelsCopied.copy(modelId);
+  projectStore.state.project.network.changes();
 };

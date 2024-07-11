@@ -238,7 +238,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Get node color.
-   * @param idx
+   * @param idx number
    * @returns node color name
    */
   getNodeColor(idx: number): string {

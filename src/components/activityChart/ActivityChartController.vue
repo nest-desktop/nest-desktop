@@ -1,20 +1,5 @@
 <template>
   <div class="activityChartController">
-    <!-- <v-menu
-      :close-on-content-click="false"
-      :position-x="state.menu.position.x"
-      :position-y="state.menu.position.y"
-      :value="state.menu.show"
-    >
-      <v-color-picker
-        @update:color="graph.updateRecordsColor()"
-        flat
-        show-swatches
-        v-if="state.menu.record"
-        v-model="state.menu.record.color"
-      />
-    </v-menu> -->
-
     <v-toolbar color="transparent" density="compact">
       <v-btn
         @click="resetPanels()"
@@ -22,6 +7,9 @@
         size="x-small"
         variant="outlined"
       />
+
+      <v-btn @click="graph.init()" text="Init" />
+      <v-btn @click="graph.relayout()" text="Relayout" />
 
       <v-spacer />
 
@@ -57,10 +45,7 @@
           <span v-if="panel.model.state.records.length > 0">
             <v-select
               :items="panel.model.state.records"
-              @update:model-value="update(panel)"
-              chips
-              closable-chips
-              :chipsProps="{ variant: 'outlined' }"
+              @update:model-value="update()"
               class="pa-1 pt-3"
               clearable
               density="compact"
@@ -70,12 +55,13 @@
               multiple
               persistent-hint
               return-object
-              v-model="panel.model.state.recordsVisible"
               variant="outlined"
+              v-model="panel.model.state.recordsVisible"
             >
-              <template #chip="{ item }">
+              <!-- <template #chip="{ item }">
                 <NodeRecordChip :nodeRecord="item.raw as NodeRecord" />
               </template>
+              -->
 
               <!-- <template #prepend-item>
                 <v-list-item title="Select All" />
@@ -163,11 +149,11 @@ import { computed, nextTick } from "vue";
 import Card from "../common/Card.vue";
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
-import NodeRecordChip from "../node/NodeRecordChip.vue";
+// import NodeRecordChip from "../node/NodeRecordChip.vue";
 // import ParameterEdit from "../parameter/ParameterEdit.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
+// import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);
@@ -226,10 +212,12 @@ const resetPanels = () => {
 //   state.menu.record = null as NodeRecord;
 // };
 
-const update = (panel: ActivityChartPanel) => {
-  nextTick(() => {
-    panel.model.init();
-    graph.value.update();
-  });
-};
+const update = () =>
+  // panel: ActivityChartPanel
+  {
+    nextTick(() => {
+      // panel.model.init();
+      graph.value.update();
+    });
+  };
 </script>

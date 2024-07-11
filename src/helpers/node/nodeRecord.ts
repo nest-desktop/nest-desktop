@@ -1,6 +1,7 @@
 // nodeRecord.ts
 
 import * as d3 from "d3";
+import { UnwrapRef, reactive } from "vue";
 
 import { TNode } from "@/types";
 
@@ -10,10 +11,15 @@ import { BaseObj } from "../common/base";
 
 export interface INodeRecordProps {
   id: string;
-  color: string;
+  color?: string;
   groupId: string;
   label?: string;
   unit?: string;
+}
+
+interface INodeRecordState {
+  color: string;
+  traceColors: string[];
 }
 
 interface IColorMap {
@@ -25,7 +31,6 @@ interface IColorMap {
 
 export class NodeRecord extends BaseObj {
   // private _activity: Activity;
-  private _color: string = "blue";
   private _colorMap: IColorMap = {
     max: -55,
     min: -70,
@@ -38,6 +43,7 @@ export class NodeRecord extends BaseObj {
   private _node: TNode;
   private _nodeSize: number = 0;
   private _unit: string;
+  private _state: UnwrapRef<INodeRecordState>;
 
   constructor(node: TNode, nodeRecordProps: INodeRecordProps) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -49,20 +55,17 @@ export class NodeRecord extends BaseObj {
     this._label = nodeRecordProps.label || "";
     this._unit = nodeRecordProps.unit || "";
 
+    this._state = reactive({
+      color: "",
+      traceColors: [],
+    });
+
     this.updateGroupID();
     this.updateColor();
   }
 
   get activity(): Activity {
     return this._node.activity as Activity;
-  }
-
-  get color(): string {
-    return this._color;
-  }
-
-  set color(value: string) {
-    this._color = value;
   }
 
   get colorMap(): IColorMap {
@@ -105,6 +108,10 @@ export class NodeRecord extends BaseObj {
     return this._nodeSize;
   }
 
+  get state(): UnwrapRef<INodeRecordState> {
+    return this._state;
+  }
+
   get times(): number[] {
     return this.node.activity?.events.times || [];
   }
@@ -122,6 +129,15 @@ export class NodeRecord extends BaseObj {
   }
 
   /**
+   * Get color.
+   * @param idx number
+   * @returns node color name
+   */
+  getColor(idx: number): string {
+    return this.node.network.getNodeColor(idx);
+  }
+
+  /**
    * Normalize value for color or height.
    */
   normalize(value: number): number {
@@ -133,7 +149,7 @@ export class NodeRecord extends BaseObj {
   toJSON(): INodeRecordProps {
     return {
       id: this._id,
-      color: this._color,
+      color: this._state.color,
       groupId: this._groupId,
     };
   }
@@ -145,6 +161,7 @@ export class NodeRecord extends BaseObj {
     this.logger.trace("update");
 
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
+    this.updateColor();
     this.updateGroupID();
     this.updateState();
   }
@@ -153,7 +170,12 @@ export class NodeRecord extends BaseObj {
    * Update color of the node record.
    */
   updateColor(): void {
-    this._color = this.node.view.color;
+    this._state.color = this.node.view.color;
+
+    const arrayIdx = [...Array(this._nodeSize).keys()];
+    this._state.traceColors = arrayIdx.map((idx) =>
+      this.nodeSize == 1 ? this._state.color : this.getColor(idx)
+    );
   }
 
   /**
