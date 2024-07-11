@@ -1,0 +1,109 @@
+---
+abbreviation: hpa
+elementType: neuron
+id: hh_psc_alpha
+label: HH psc alpha
+recordables:
+  - Act_m
+  - Act_n
+  - I_syn_ex
+  - I_syn_in
+  - Inact_h
+  - V_m
+params:
+  - id: C_m
+    component: valueSlider
+    label: capacity of the membrane
+    max: 500
+    min: 0
+    step: 1
+    unit: pF
+    value: 100
+  - id: E_K
+    component: valueSlider
+    label: potassium reversal potential
+    max: 100
+    min: -100
+    step: 1
+    unit: mV
+    value: -77
+  - id: E_L
+    component: valueSlider
+    label: leak reversal potential
+    max: 100
+    min: -100
+    step: 1
+    unit: mV
+    value: -54.4
+  - id: E_Na
+    component: valueSlider
+    label: sodium reversal potential
+    max: 100
+    min: -100
+    step: 1
+    unit: mV
+    value: 50
+  - id: I_e
+    component: valueSlider
+    label: constant external input current
+    max: 100
+    min: -100
+    step: 1
+    unit: pA
+    value: 0
+  - id: V_m
+    component: valueSlider
+    label: initial membrane potential
+    max: 100
+    min: -100
+    step: 1
+    unit: mV
+    value: -65
+  - id: g_K
+    component: valueSlider
+    label: potassium conductance
+    max: 5000
+    min: 10
+    step: 10
+    unit: nS
+    value: 3600
+  - id: g_L
+    component: valueSlider
+    label: leak conductance
+    max: 30
+    min: 1
+    step: 1
+    unit: nS
+    value: 30
+  - id: g_Na
+    component: valueSlider
+    label: sodium conductance
+    max: 20000
+    min: 100
+    step: 100
+    unit: nS
+    value: 12000
+  - id: t_ref
+    component: valueSlider
+    label: duration of refractory period
+    max: 5
+    min: 0.1
+    step: 0.1
+    unit: ms
+    value: 2
+  - id: tau_syn_ex
+    component: valueSlider
+    label: time constant of the excitatory synapse
+    max: 4
+    min: 0.1
+    step: 0.1
+    unit: ms
+    value: 0.2
+  - id: tau_syn_in
+    component: valueSlider
+    label: time constant of the inhibitory synapse
+    max: 4
+    min: 0.1
+    step: 0.1
+    unit: ms
+    value: 2

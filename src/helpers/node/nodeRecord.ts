@@ -46,7 +46,10 @@ export class NodeRecord extends BaseObj {
   private _state: UnwrapRef<INodeRecordState>;
 
   constructor(node: TNode, nodeRecordProps: INodeRecordProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({
+      config: { name: "NodeRecord" },
+      logger: { settings: { minLevel: 3 } },
+    });
 
     this._node = node;
     // this._activity = node.activity;
@@ -134,7 +137,8 @@ export class NodeRecord extends BaseObj {
    * @returns node color name
    */
   getColor(idx: number): string {
-    return this.node.network.getNodeColor(idx);
+    const colors: string[] = this.config?.localStorage.color.cycle;
+    return colors[idx % colors.length];
   }
 
   /**

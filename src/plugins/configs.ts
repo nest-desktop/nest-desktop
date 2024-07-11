@@ -10,6 +10,7 @@ const _configNames = [
   "NetworkGraph",
   "NetworkGraphWorkspace",
   "Node",
+  "NodeRecord",
   "Parameter",
   "ParameterRandom",
   "ProjectView",

@@ -17,12 +17,12 @@ export interface IActivityChartPanelProps {
 
 interface IActivityChartPanelLayoutProps {
   shapes: {
-    label: {
+    label?: {
       font: { size: number };
       text: string;
       textposition: string;
     };
-    line: {
+    line?: {
       color: string;
       dash: string;
       width: number;
@@ -30,10 +30,10 @@ interface IActivityChartPanelLayoutProps {
     type: string;
     x0: number;
     x1: number;
-    xref: string;
+    xref?: string;
     y0: number;
     y1: number;
-    yref: string;
+    yref?: string;
   }[];
   xaxis: { anchor?: string; showgrid: boolean; title: string; type?: string };
   yaxis: {
