@@ -1,15 +1,12 @@
 // activityChartPanel.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { UnwrapRef, reactive } from 'vue';
 
-import { sum } from "../../utils/array";
-import { BaseObj } from "../common/base";
-import { ActivityChartGraph } from "./activityChartGraph";
-import {
-  ActivityChartPanelModel,
-  IActivityChartPanelModelProps,
-} from "./activityChartPanelModel";
-import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
+import { sum } from '../../utils/array';
+import { BaseObj } from '../common/base';
+import { ActivityChartGraph } from './activityChartGraph';
+import { ActivityChartPanelModel, IActivityChartPanelModelProps } from './activityChartPanelModel';
+import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
 
 export interface IActivityChartPanelProps {
   model?: IActivityChartPanelModelProps;
@@ -86,7 +83,8 @@ export class ActivityChartPanel extends BaseObj {
     });
 
     this.selectModel(
-      panelProps.model ? panelProps.model.id : "spikeTimesRasterPlot"
+      panelProps.model ? panelProps.model.id : "spikeTimesRasterPlot",
+      panelProps.model
     );
   }
 
@@ -141,9 +139,8 @@ export class ActivityChartPanel extends BaseObj {
    * Decrease panel height.
    */
   decreaseHeight(): void {
-    if (this.height === 1) {
-      return;
-    }
+    if (this.height === 1) return;
+
     this.height -= 1;
     this._graph.update();
   }

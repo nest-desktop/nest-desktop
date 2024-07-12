@@ -1,15 +1,12 @@
 // analogSignalPlotModel.ts
 
-import { TNode } from "@/types";
+import { TNode } from '@/types';
 
-import { currentBackgroundColor, currentColor } from "../../common/theme";
-import { NodeRecord } from "../../node/nodeRecord";
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  AnalogSignalPanelModel,
-  IAnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
+import { currentBackgroundColor, currentColor } from '../../common/theme';
+import { NodeRecord } from '../../node/nodeRecord';
+import { ActivityChartPanel, plotType } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
 
 export interface IAnalogSignalPlotModelProps
   extends IAnalogSignalPanelModelProps {}
@@ -152,6 +149,8 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       selected
     );
 
+    const color = record.color;
+
     data.forEach((d: IDataPoints, idx: number) => {
       if (selected.includes(nodeIds[idx])) {
         this.data.push({
@@ -159,7 +158,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
           hoverinfo: "x+y",
           legendgroup: record.groupId,
           line: {
-            color: record.state.traceColors[idx],
+            color: color instanceof Array ? color[idx] : color,
             width: 1.5,
           },
           mode: "lines",
@@ -184,9 +183,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record node record object
    */
   addSingleLine(record: NodeRecord): void {
-    if (!record.hasEvent) {
-      return;
-    }
+    if (!record.hasEvent) return;
 
     this.data.push({
       activityIdx: record.activity.idx,
@@ -284,7 +281,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * It requires activity data.
    */
   override update(): void {
-    this.data = [];
+    this.empty();
 
     if (this.recordsVisible.length === 0) return;
 

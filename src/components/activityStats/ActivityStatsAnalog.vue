@@ -46,6 +46,24 @@
       </v-select>
     </template>
 
+    <template #item.id="{ item }">
+      <span style="color: rgb(var(--v-theme-primary))">
+        {{ item.id }}
+      </span>
+    </template>
+
+    <template #item.mean="{ item }">
+      <span style="color: rgb(var(--v-theme-primary))">
+        {{ toFixed(Number(item.mean)) }}
+      </span>
+    </template>
+
+    <template #item.std="{ item }">
+      <span style="color: rgb(var(--v-theme-primary))">
+        {{ toFixed(Number(item.std)) }}
+      </span>
+    </template>
+
     <template #item.actions="{ index }">
       <v-menu transition="slide-y-transition">
         <template #activator="{ props }">
@@ -66,14 +84,6 @@
           v-model="record.state.traceColors[index]"
         />
       </v-menu>
-    </template>
-
-    <template #item.mean="{ item }">
-      {{ toFixed(Number(item.mean)) }}
-    </template>
-
-    <template #item.std="{ item }">
-      {{ toFixed(Number(item.std)) }}
     </template>
 
     <template #bottom>
@@ -138,6 +148,11 @@ const headers = [
 const colMean = (key: string) => {
   return mean(state.items.map((item) => item[key]) as number[]);
 };
+
+// const colorRowItem = (item: Record<string, number | string>) => {
+//   const color = record.value.getColor(item.internalItem.index as number);
+//   return { style: { color } };
+// };
 
 // const isActive = (nodeId: number) => {
 //   return activity.state.activeNodeId === nodeId;

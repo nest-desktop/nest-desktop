@@ -1,25 +1,22 @@
 // project.ts
 
-import { nextTick } from "vue";
+import { nextTick } from 'vue';
 
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
-import { TActivityGraph, TNetwork, TProject, TSimulation } from "@/types";
-import { truncate } from "@/utils/truncate";
+import { TModelDBStore } from '@/stores/model/defineModelDBStore';
+import { useModelDBStore } from '@/stores/model/modelDBStore';
+import { useProjectViewStore } from '@/stores/project/projectViewStore';
+import { TActivityGraph, TNetwork, TProject, TSimulation } from '@/types';
+import { truncate } from '@/utils/truncate';
 
-import { Activities } from "../activity/activities";
-import { Activity } from "../activity/activity";
-import {
-  BaseActivityGraph,
-  IBaseActivityGraphProps,
-} from "../activity/activityGraph";
-import { BaseObj } from "../common/base";
-import { IDoc } from "../common/database";
-import { BaseNetwork, INetworkProps } from "../network/network";
-import { NetworkRevision } from "../network/networkRevision";
-import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
-import { ProjectState } from "./projectState";
+import { Activities } from '../activity/activities';
+import { Activity } from '../activity/activity';
+import { BaseActivityGraph, IBaseActivityGraphProps } from '../activity/activityGraph';
+import { BaseObj } from '../common/base';
+import { IDoc } from '../common/database';
+import { BaseNetwork, INetworkProps } from '../network/network';
+import { NetworkRevision } from '../network/networkRevision';
+import { BaseSimulation, ISimulationProps } from '../simulation/simulation';
+import { ProjectState } from './projectState';
 
 export interface IProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -47,7 +44,7 @@ export class BaseProject extends BaseObj {
   public _simulation: TSimulation; // settings for the simulation
 
   constructor(projectProps: IProjectProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     // Database instance.
     this._doc = projectProps || {};
@@ -343,7 +340,7 @@ export class BaseProject extends BaseObj {
    */
   toJSON(): IProjectProps {
     const projectProps: IProjectProps = {
-      // activityGraph: this._activityGraph.toJSON(),
+      activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,

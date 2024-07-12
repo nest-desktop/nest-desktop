@@ -79,7 +79,7 @@
     </v-list>
   </v-menu>
 
-  <v-btn :to="{ name: 'about' }" size="x-small" variant="text"> about </v-btn>
+  <v-btn :to="{ name: 'about' }" size="x-small" variant="text">about</v-btn>
 
   <v-btn
     append-icon="mdi:mdi-open-in-new"

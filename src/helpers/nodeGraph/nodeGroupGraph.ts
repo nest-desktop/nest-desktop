@@ -3,11 +3,11 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, drag, polygonHull } from "d3";
+import { DragBehavior, drag, polygonHull } from 'd3';
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TNetwork, TNetworkGraph, TNode } from '@/types';
 
-import { NodeGroup } from "../node/nodeGroup";
+import { NodeGroup } from '../node/nodeGroup';
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
@@ -131,8 +131,8 @@ export class NodeGroupGraph {
       .attr("class", "nodeGroupArea");
 
     g.append("path")
-      .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
-      .style("stroke", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
+      .style("fill", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
+      .style("stroke", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
       .style("stroke-linejoin", "round")
       .attr("stroke-width", 64)
       .style("opacity", 0.12);
@@ -148,7 +148,7 @@ export class NodeGroupGraph {
     //   .style("pointer-events", "none")
     //   .style("text-anchor", "middle")
     //   .style("text-transform", "uppercase", "important")
-    //   .style("fill", (n: NodeGroup) => "var(--node" + n.idx + "-color)")
+    //   .style("fill", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
     //   .text((n: NodeGroup) => n.view.label);
 
     elem.on("mouseover", (_: MouseEvent, n: NodeGroup) => {

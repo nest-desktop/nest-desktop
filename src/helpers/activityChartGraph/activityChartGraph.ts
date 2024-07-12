@@ -1,28 +1,25 @@
 // activityChartGraph.ts
 
 // @ts-ignore - Module '"plotly.js-dist-min"' has no exported member 'Partial'.
-import Plotly, { Partial, Root, deleteTraces } from "plotly.js-dist-min";
-import { UnwrapRef, nextTick, reactive } from "vue";
+import Plotly, { Partial, Root, deleteTraces } from 'plotly.js-dist-min';
+import { UnwrapRef, nextTick, reactive } from 'vue';
 
-import { TProject } from "@/types";
+import { TProject } from '@/types';
 
-import { BaseObj } from "../common/base";
-import { currentBackgroundColor, currentColor } from "../common/theme";
-import {
-  ActivityChartPanel,
-  IActivityChartPanelProps,
-} from "./activityChartPanel";
-import { IActivityChartPanelModelData } from "./activityChartPanelModel";
-import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
-import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
-import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
-import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
-import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
-import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";
-import { SenderSpikeCountPlotModel } from "./activityChartPanelModels/senderSpikeCountPlotModel";
-import { SpikeCountPlotModel } from "./activityChartPanelModels/spikeCountPlotModel";
-import { SpikeTimesHistogramModel } from "./activityChartPanelModels/spikeTimesHistogramModel";
-import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
+import { BaseObj } from '../common/base';
+import { currentBackgroundColor, currentColor } from '../common/theme';
+import { ActivityChartPanel, IActivityChartPanelProps } from './activityChartPanel';
+import { IActivityChartPanelModelData } from './activityChartPanelModel';
+import { CVISIHistogramModel } from './activityChartPanelModels/CVISIHistogramModel';
+import { AnalogSignalHistogramModel } from './activityChartPanelModels/analogSignalHistogramModel';
+import { AnalogSignalPlotModel } from './activityChartPanelModels/analogSignalPlotModel';
+import { InterSpikeIntervalHistogramModel } from './activityChartPanelModels/interSpikeIntervalHistogramModel';
+import { SenderCVISIPlotModel } from './activityChartPanelModels/senderCVISIPlotModel';
+import { SenderMeanISIPlotModel } from './activityChartPanelModels/senderMeanISIPlotModel';
+import { SenderSpikeCountPlotModel } from './activityChartPanelModels/senderSpikeCountPlotModel';
+import { SpikeCountPlotModel } from './activityChartPanelModels/spikeCountPlotModel';
+import { SpikeTimesHistogramModel } from './activityChartPanelModels/spikeTimesHistogramModel';
+import { SpikeTimesRasterPlotModel } from './activityChartPanelModels/spikeTimesRasterPlotModel';
 
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
@@ -39,6 +36,7 @@ interface IActivityChartGraphState {
   dialog: Boolean;
   gd?: Plotly.RootOrData;
   ref?: Plotly.Root;
+  traceColor: string;
 }
 
 const models: IActivityChartPanelModelProps[] = [
@@ -124,7 +122,7 @@ export class ActivityChartGraph extends BaseObj {
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, panelsProps?: IActivityChartPanelProps[]) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     this._project = project;
     this._plotConfig = {
@@ -171,6 +169,7 @@ export class ActivityChartGraph extends BaseObj {
 
     this._state = reactive({
       dialog: false,
+      traceColor: "trace",
     });
 
     this.addPanels(panelsProps);
@@ -302,10 +301,6 @@ export class ActivityChartGraph extends BaseObj {
   empty(): void {
     this._plotData = [];
     this._plotLayout.shapes = [];
-
-    this.panels.forEach(
-      (panel: ActivityChartPanel) => (panel.layout.shapes = [])
-    );
   }
 
   /**
@@ -350,11 +345,7 @@ export class ActivityChartGraph extends BaseObj {
         if (plot && plot.data) {
           plot.data.forEach((d: Partial<Plotly.Data>) => {
             const panel = this._panels[d.panelIdx];
-            if (d.id === "threshold") {
-              panel.model.state.visibleThreshold = d.visible;
-            } else {
-              panel.model.state.visible = d.visible;
-            }
+            panel.model.state.visible = d.visible;
           });
         }
       });
@@ -418,6 +409,15 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
+   * Reset panels.
+   */
+  resetPanels(): void {
+    this.panels = [];
+    this.addPanels();
+    this.update();
+  }
+
+  /**
    * Restyle plots with new updates.
    */
   restyle(): void {
@@ -459,7 +459,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return activity chart graph object
+   * @return activity chart graph props
    */
   toJSON(): IActivityChartPanelProps[] {
     return this._panels.map((panel: ActivityChartPanel) => panel.toJSON());
@@ -493,6 +493,8 @@ export class ActivityChartGraph extends BaseObj {
    * Update activities in panel models.
    */
   updateActivities(): void {
+    this.logger.trace("update activities");
+
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       panel.model.updateActivities();
       panel.model.initAnalogRecords();

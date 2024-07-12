@@ -1,14 +1,11 @@
 // spikeTimesRasterPlotModel.ts
 
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore } from '@/stores/appStore';
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { SpikeActivity } from '../../activity/spikeActivity';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -52,6 +49,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
+
     const appStore = useAppStore();
 
     this.data.push({

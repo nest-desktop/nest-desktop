@@ -1,10 +1,10 @@
 <template :key="theme.name.value">
   <v-app>
     <v-system-bar class="d-print-none" color="systembar" flat>
-      <app-bar />
+      <AppBar />
     </v-system-bar>
 
-    <app-request-logs />
+    <AppRequestLogs />
 
     <v-progress-circular
       v-if="appStore.state.loading"

@@ -2,14 +2,29 @@
   <div class="activityChartController">
     <v-toolbar color="transparent" density="compact">
       <v-btn
-        @click="resetPanels()"
+        @click="graph.resetPanels()"
         icon="mdi:mdi-reload"
         size="x-small"
         variant="outlined"
       />
 
-      <v-btn @click="graph.init()" text="Init" />
-      <v-btn @click="graph.relayout()" text="Relayout" />
+      <v-btn-toggle
+        @update:model-value="update()"
+        class="mx-2"
+        density="compact"
+        v-model="graph.state.traceColor"
+        variant="outlined"
+      >
+        <v-icon class="ma-auto" icon="mdi:mdi-format-color-fill" />
+
+        <v-btn
+          :key="index"
+          :text="traceColor"
+          :value="traceColor"
+          size="small"
+          v-for="(traceColor, index) in traceColors"
+        />
+      </v-btn-toggle>
 
       <v-spacer />
 
@@ -25,7 +40,7 @@
           </v-btn>
         </template>
 
-        <activity-chart-panel-menu-popover
+        <ActivityChartPanelMenuPopover
           :graph="(graph as ActivityChartGraph)"
           @changed="addPanel"
         />
@@ -36,25 +51,24 @@
     <div :key="'panel' + index" v-for="(panel, index) in graph.panels">
       <Card class="mx-1" color="primary">
         <v-card-title class="pa-0">
-          <activity-chart-panel-toolbar
-            :panel="(panel as ActivityChartPanel)"
-          />
+          <ActivityChartPanelToolbar :panel="(panel as ActivityChartPanel)" />
         </v-card-title>
 
         <v-card-text class="pa-0" v-if="panel.state.visible">
           <span v-if="panel.model.state.records.length > 0">
             <v-select
+              :disabled="panel.model.state.records.length < 2"
               :items="panel.model.state.records"
               @update:model-value="update()"
               class="pa-1 pt-3"
               clearable
               density="compact"
               item-title="title"
+              item-value="groupId"
               hide-details
               label="Recorded events"
               multiple
               persistent-hint
-              return-object
               variant="outlined"
               v-model="panel.model.state.recordsVisible"
             >
@@ -158,17 +172,7 @@ import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPa
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);
 
-// const state = reactive({
-//   color: "#9e9e9e",
-//   menu: {
-//     position: {
-//       x: 0,
-//       y: 0,
-//     },
-//     // record: null as NodeRecord,
-//     show: false,
-//   },
-// });
+const traceColors = ["node", "record", "trace"];
 
 /**
  * Add panel.
@@ -177,40 +181,6 @@ const addPanel = (modelId: string) => {
   graph.value.addPanel({ model: { id: modelId } });
   graph.value.update();
 };
-
-/**
- * Reset panels.
- */
-const resetPanels = () => {
-  graph.value.panels = [];
-  graph.value.addPanels();
-  graph.value.update();
-};
-
-// /**
-//  * Show color popup for the selected record.
-//  */
-// const showColorPopup = function (e: MouseEvent, record: NodeRecord) {
-//   // https://thewebdev.info/2020/08/13/vuetify%E2%80%8A-%E2%80%8Amenus-and-context-menu/
-//   e.preventDefault();
-//   state.menu.show = false;
-//   state.menu.record = record;
-//   state.menu.position.x = e.clientX;
-//   state.menu.position.y = e.clientY;
-//   this.$nextTick(() => {
-//     state.menu.show = true;
-//   });
-// };
-
-// /**
-//  * Reset menu.
-//  */
-// const resetMenu = () => {
-//   state.menu.show = false;
-//   state.menu.position.x = 0;
-//   state.menu.position.y = 0;
-//   state.menu.record = null as NodeRecord;
-// };
 
 const update = () =>
   // panel: ActivityChartPanel

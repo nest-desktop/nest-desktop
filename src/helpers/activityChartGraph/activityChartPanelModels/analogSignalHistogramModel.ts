@@ -1,14 +1,11 @@
 // analogSignalHistogramModel.ts
 
-import { max, min } from "../../../utils/array";
-import { currentBackgroundColor } from "../../common/theme";
-import { NodeRecord } from "../../node/nodeRecord";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  AnalogSignalPanelModel,
-  IAnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
+import { max, min } from '../../../utils/array';
+import { currentBackgroundColor } from '../../common/theme';
+import { NodeRecord } from '../../node/nodeRecord';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(
@@ -39,15 +36,13 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * It requires activity data.
    */
   override addData(): void {
-    this.data = [];
+    this.empty();
 
-    if (this.recordsVisible.length === 0) {
-      return;
-    }
+    if (this.recordsVisible.length === 0) return;
 
-    this.recordsVisible.forEach((record: NodeRecord) => {
-      this.updateHistogramRange(record.values);
-    });
+    this.recordsVisible.forEach((record: NodeRecord) =>
+      this.updateHistogramRange(record.values)
+    );
 
     this.recordsVisible.forEach((record: NodeRecord) =>
       this.updateEventData(record)
@@ -62,9 +57,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    */
   updateHistogramRange(values: number[] = []): void {
     // Update time.
-    if (values.length === 0) {
-      return;
-    }
+    if (values.length === 0) return;
 
     this.state.histogram.start = Math.min(
       this.state.histogram.start,
@@ -80,9 +73,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * Update data for analog signal histogram.
    */
   updateEventData(record: NodeRecord): void {
-    if (record.values == null || record.values.length === 0) {
-      return;
-    }
+    if (record.values == null || record.values.length === 0) return;
 
     const start: number = this.state.histogram.start;
     const end: number = this.state.histogram.end + 1;

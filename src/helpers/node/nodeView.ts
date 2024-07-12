@@ -1,11 +1,11 @@
 // nodeView.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { UnwrapRef, reactive } from 'vue';
 
-import { TConnection, TNode } from "@/types";
+import { TConnection, TNode } from '@/types';
 
-import { BaseObj } from "../common/base";
-import { NodeRecord } from "./nodeRecord";
+import { BaseObj } from '../common/base';
+import { NodeRecord } from './nodeRecord';
 
 export interface INodeViewProps {
   color?: string;
@@ -242,6 +242,6 @@ export class NodeView extends BaseObj {
    */
   updateStyle(): void {
     const root = document.documentElement;
-    root.style.setProperty("--node" + this._node.idx + "-color", this.color);
+    root.style.setProperty("--colorNode" + this._node.idx, this.color);
   }
 }

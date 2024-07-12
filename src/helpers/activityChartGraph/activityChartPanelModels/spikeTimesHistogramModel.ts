@@ -1,13 +1,10 @@
 // spikeTimesHistogramModel.ts
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { currentBackgroundColor } from "../../common/theme";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { SpikeActivity } from '../../activity/spikeActivity';
+import { currentBackgroundColor } from '../../common/theme';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(

@@ -1,29 +1,20 @@
 // node.ts
 
-import { Parameter } from "@/helpers/common/parameter";
-import { ModelParameter } from "@/helpers/model/modelParameter";
-import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
-import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
-import { onlyUnique } from "@/utils/array";
+import { Parameter } from '@/helpers/common/parameter';
+import { ModelParameter } from '@/helpers/model/modelParameter';
+import { BaseNode, INodeProps } from '@/helpers/node/node';
+import { INodeParamProps, NodeParameter } from '@/helpers/node/nodeParameter';
+import { INodeRecordProps, NodeRecord } from '@/helpers/node/nodeRecord';
+import { onlyUnique } from '@/utils/array';
 
-import { NESTConnection } from "../connection/connection";
-import { NESTCopyModel } from "../model/copyModel";
-import { NESTModel } from "../model/model";
-import { NESTNetwork } from "../network/network";
-import {
-  INESTNodeCompartmentProps,
-  NESTNodeCompartment,
-} from "./nodeCompartment/nodeCompartment";
-import {
-  INESTNodeReceptorProps,
-  NESTNodeReceptor,
-} from "./nodeReceptor/nodeReceptor";
-import {
-  INESTNodeSpatialProps,
-  NESTNodeSpatial,
-} from "./nodeSpatial/nodeSpatial";
-import { NESTNodes } from "./nodes";
+import { NESTConnection } from '../connection/connection';
+import { NESTCopyModel } from '../model/copyModel';
+import { NESTModel } from '../model/model';
+import { NESTNetwork } from '../network/network';
+import { INESTNodeCompartmentProps, NESTNodeCompartment } from './nodeCompartment/nodeCompartment';
+import { INESTNodeReceptorProps, NESTNodeReceptor } from './nodeReceptor/nodeReceptor';
+import { INESTNodeSpatialProps, NESTNodeSpatial } from './nodeSpatial/nodeSpatial';
+import { NESTNodes } from './nodes';
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -480,8 +471,9 @@ export class NESTNode extends BaseNode {
     ];
 
     recordableIds = this.recordables.map(
-      (recordProps: INodeRecordProps) => recordProps.id
+      (recordProps: NodeRecord) => recordProps.id
     );
+
     recordables
       .filter(
         (recordProps: INodeRecordProps) =>

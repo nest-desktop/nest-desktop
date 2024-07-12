@@ -19,7 +19,7 @@
       <template #item.valid="{ value }">
         <v-icon
           :color="value ? 'success' : 'error'"
-          :icon="value ? 'mdi-check' : 'mdi-close'"
+          :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'"
         />
       </template>
     </v-data-table-virtual>

@@ -19,7 +19,7 @@
             size="small"
             title="Show only error logs"
             value="error"
-            width="40px"
+            width="40"
           />
           <v-btn
             color="success"
@@ -27,7 +27,7 @@
             size="small"
             title="Show only success logs"
             value="success"
-            width="40px"
+            width="40"
           />
         </v-btn-toggle>
 

@@ -7,7 +7,7 @@
     <div style="width: 320px">
       <NodeMenu
         :model-value="graph?.state.nodeMenu.open"
-        :node="graph?.state.nodeMenu.node as TNode"
+        :node="(graph?.state.nodeMenu.node as TNode)"
         :offset="graph?.state.nodeMenu.offset"
         v-if="graph?.state.nodeMenu.node"
       />
@@ -24,7 +24,7 @@
             <defs
               :key="'defs' + index"
               :style="{
-                color: 'var(--node' + connection.source.idx + '-color)',
+                color: 'var(--colorNode' + connection.source.idx + ')',
               }"
               v-for="(connection, index) of graph?.network.connections.all"
             >

@@ -1,13 +1,13 @@
 // nodeRecord.ts
 
-import * as d3 from "d3";
-import { UnwrapRef, reactive } from "vue";
+import * as d3 from 'd3';
+import { UnwrapRef, reactive } from 'vue';
 
-import { TNode } from "@/types";
+import { TNode } from '@/types';
 
-import { max, min } from "../../utils/array";
-import { Activity } from "../activity/activity";
-import { BaseObj } from "../common/base";
+import { max, min } from '../../utils/array';
+import { Activity } from '../activity/activity';
+import { BaseObj } from '../common/base';
 
 export interface INodeRecordProps {
   id: string;
@@ -69,6 +69,18 @@ export class NodeRecord extends BaseObj {
 
   get activity(): Activity {
     return this._node.activity as Activity;
+  }
+
+  get color(): string | string[] {
+    switch (this.activity.chartGraph.state.traceColor) {
+      case "node":
+        return this._node.view.color;
+      case "record":
+        return this._state.color;
+      case "trace":
+        return this._state.traceColors;
+    }
+    return this._state.color;
   }
 
   get colorMap(): IColorMap {

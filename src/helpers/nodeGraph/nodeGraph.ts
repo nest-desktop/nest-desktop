@@ -1,21 +1,14 @@
 // nodeGraph.ts
 
-import {
-  DragBehavior,
-  Selection,
-  Transition,
-  drag,
-  select,
-  transition,
-} from "d3";
-import { nextTick } from "vue";
+import { DragBehavior, Selection, Transition, drag, select, transition } from 'd3';
+import { nextTick } from 'vue';
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TNetwork, TNetworkGraph, TNode } from '@/types';
 
-import { BaseObj } from "../common/base";
-import { NodeGroup } from "../node/nodeGroup";
-import { NodeGraphConnector } from "./nodeGraphConnector";
-import { NodeGraphShape } from "./nodeGraphShape";
+import { BaseObj } from '../common/base';
+import { NodeGroup } from '../node/nodeGroup';
+import { NodeGraphConnector } from './nodeGraphConnector';
+import { NodeGraphShape } from './nodeGraphShape';
 
 export class NodeGraph extends BaseObj {
   private _networkGraph: TNetworkGraph;
@@ -143,7 +136,7 @@ export class NodeGraph extends BaseObj {
       .style("opacity", 1)
       .style(
         "color",
-        (n: NodeGroup | TNode | any) => "var(--node" + n.idx + "-color)"
+        (n: NodeGroup | TNode | any) => "var(--colorNode" + n.idx + ")"
       )
       .style("background-color", "rgb(var(--v-theme-background))")
       .attr(
@@ -190,10 +183,7 @@ export class NodeGraph extends BaseObj {
       .append("g")
       .attr("class", "node")
       .classed("nodeGroup", (n: NodeGroup | TNode) => n.isGroup)
-      .style(
-        "color",
-        (n: NodeGroup | TNode) => "var(--node" + n.idx + "-color)"
-      )
+      .style("color", (n: NodeGroup | TNode) => "var(--colorNode" + n.idx + ")")
       .attr("idx", (n: NodeGroup | TNode) => n.idx)
       .attr("weight", (n: NodeGroup | TNode) => n.view.synWeights as string)
       .attr(

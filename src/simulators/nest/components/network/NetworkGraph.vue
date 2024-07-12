@@ -24,7 +24,7 @@
             <defs
               :key="'defs' + index"
               :style="{
-                color: 'var(--node' + connection.source.idx + '-color)',
+                color: 'var(--colorNode' + connection.source.idx + ')',
               }"
               v-for="(connection, index) of graph?.network.connections.all"
             >

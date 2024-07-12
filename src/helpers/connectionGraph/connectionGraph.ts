@@ -1,21 +1,14 @@
 // connectionGraph.ts
 
-import {
-  DragBehavior,
-  Selection,
-  Transition,
-  drag,
-  select,
-  transition,
-} from "d3";
+import { DragBehavior, Selection, Transition, drag, select, transition } from 'd3';
 
-import { TConnection, TNetworkGraph, TNode } from "@/types";
+import { TConnection, TNetworkGraph, TNode } from '@/types';
 
-import { BaseObj } from "../common/base";
-import { BaseNetworkGraph } from "../networkGraph/networkGraph";
-import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
-import { NodeGroup } from "../node/nodeGroup";
-import { drawPathNode } from "./connectionGraphPath";
+import { BaseObj } from '../common/base';
+import { BaseNetworkGraph } from '../networkGraph/networkGraph';
+import { INetworkGraphWorkspaceState } from '../networkGraph/networkGraphWorkspace';
+import { NodeGroup } from '../node/nodeGroup';
+import { drawPathNode } from './connectionGraphPath';
 
 export class ConnectionGraph extends BaseObj {
   private _networkGraph: TNetworkGraph;
@@ -182,7 +175,7 @@ export class ConnectionGraph extends BaseObj {
     connections
       .style(
         "color",
-        (c: TConnection | any) => "var(--node" + c.source.idx + "-color)"
+        (c: TConnection | any) => "var(--colorNode" + c.source.idx + ")"
       )
       .transition(t)
       .style("opacity", 1);
