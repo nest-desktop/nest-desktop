@@ -570,9 +570,8 @@ const loadProjectsFromDrive = (files: File | File[]) => {
 const updateURLFromGithub = () => {
   nextTick(() => {
     const tree = state.githubSelectedTree;
-    if (!tree && !Object.keys(tree).includes("path")) {
-      return;
-    }
+    if (!tree && !Object.keys(tree).includes("path")) return;
+
     state.url =
       githubRawURL() + `${tree.path}/${state.githubSelectedFile.path}`;
   });

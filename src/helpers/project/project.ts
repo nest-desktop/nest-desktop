@@ -1,22 +1,25 @@
 // project.ts
 
-import { nextTick } from 'vue';
+import { nextTick } from "vue";
 
-import { TModelDBStore } from '@/stores/model/defineModelDBStore';
-import { useModelDBStore } from '@/stores/model/modelDBStore';
-import { useProjectViewStore } from '@/stores/project/projectViewStore';
-import { TActivityGraph, TNetwork, TProject, TSimulation } from '@/types';
-import { truncate } from '@/utils/truncate';
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { useModelDBStore } from "@/stores/model/modelDBStore";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
+import { TActivityGraph, TNetwork, TProject, TSimulation } from "@/types";
+import { truncate } from "@/utils/truncate";
 
-import { Activities } from '../activity/activities';
-import { Activity } from '../activity/activity';
-import { BaseActivityGraph, IBaseActivityGraphProps } from '../activity/activityGraph';
-import { BaseObj } from '../common/base';
-import { IDoc } from '../common/database';
-import { BaseNetwork, INetworkProps } from '../network/network';
-import { NetworkRevision } from '../network/networkRevision';
-import { BaseSimulation, ISimulationProps } from '../simulation/simulation';
-import { ProjectState } from './projectState';
+import { Activities } from "../activity/activities";
+import { Activity } from "../activity/activity";
+import {
+  BaseActivityGraph,
+  IBaseActivityGraphProps,
+} from "../activity/activityGraph";
+import { BaseObj } from "../common/base";
+import { IDoc } from "../common/database";
+import { BaseNetwork, INetworkProps } from "../network/network";
+import { NetworkRevision } from "../network/networkRevision";
+import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
+import { ProjectState } from "./projectState";
 
 export interface IProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -322,9 +325,8 @@ export class BaseProject extends BaseObj {
         response.status !== 200 ||
         response.data == null ||
         !response.data.data
-      ) {
+      )
         return;
-      }
 
       // Update activities.
       this.activities.update(response.data.data);

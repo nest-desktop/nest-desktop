@@ -1,12 +1,15 @@
 // analogSignalPlotModel.ts
 
-import { TNode } from '@/types';
+import { TNode } from "@/types";
 
-import { currentBackgroundColor, currentColor } from '../../common/theme';
-import { NodeRecord } from '../../node/nodeRecord';
-import { ActivityChartPanel, plotType } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
+import { currentBackgroundColor, currentColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  AnalogSignalPanelModel,
+  IAnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 
 export interface IAnalogSignalPlotModelProps
   extends IAnalogSignalPanelModelProps {}
@@ -323,32 +326,24 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     plotData.visible = false;
 
     // Check if the record is null.
-    if (record == null) {
-      return;
-    }
+    if (record == null) return;
 
     // Check if the activity state contains the active node.
-    if (record.activity.state.activeNodeId == null) {
-      return;
-    }
+    if (record.activity.state.activeNodeId == null) return;
 
     const nodeIds = this.recordsVisible
       .map((record: NodeRecord) => record.activity.nodeIds)
       .flat();
 
     // Check if the panel displays activity of the active node.
-    if (!nodeIds.includes(record.activity.state.activeNodeId)) {
-      return;
-    }
+    if (!nodeIds.includes(record.activity.state.activeNodeId)) return;
 
     const recordIds = this.recordsVisible.map(
       (record: NodeRecord) => record.id
     );
 
     // Check if the record is displayed in the panel.
-    if (!recordIds.includes(record.id)) {
-      return;
-    }
+    if (!recordIds.includes(record.id)) return;
 
     const data: { x: number[]; y: number[] } = this.createGraphDataPoints(
       [record.activity.state.activeNodeId],

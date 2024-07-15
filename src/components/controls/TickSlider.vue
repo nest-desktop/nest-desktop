@@ -64,16 +64,12 @@ const ticks = computed(() =>
 const max = computed(() => ticks.value.length - 1);
 
 const decrement = () => {
-  if (state.tickIdx <= 0) {
-    return;
-  }
+  if (state.tickIdx <= 0) return;
   tickIdx.value -= 1;
 };
 
 const increment = () => {
-  if (state.tickIdx >= ticks.value.length - 1) {
-    return;
-  }
+  if (state.tickIdx >= ticks.value.length - 1) return;
   tickIdx.value += 1;
 };
 

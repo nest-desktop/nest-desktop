@@ -27,11 +27,13 @@ export class SpikeActivity extends Activity {
     if (times.length <= 1) {
       return [0];
     }
+
     times.sort((a: number, b: number) => a - b);
     const values: number[] = [];
     for (let ii = 0; ii < times.length - 1; ii++) {
       values.push(times[ii + 1] - times[ii]);
     }
+
     return values;
   }
 
@@ -87,6 +89,7 @@ export class SpikeActivity extends Activity {
    */
   override postUpdate(activity: ISpikeActivityProps): void {
     if (activity.events == undefined) return;
+
     this.updateTimes(activity.events);
   }
 
@@ -99,9 +102,8 @@ export class SpikeActivity extends Activity {
       eventProps.times == undefined ||
       eventProps.senders.length === 0 ||
       eventProps.times.length === 0
-    ) {
+    )
       return;
-    }
 
     eventProps.senders.forEach((sender: number, idx: number) => {
       this._times[sender].push(this.events.times[idx]);

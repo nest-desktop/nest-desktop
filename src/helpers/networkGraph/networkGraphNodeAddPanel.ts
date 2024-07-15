@@ -164,9 +164,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
     modelPanel.select(".menuItem").on("mouseup", () => {
       this.close();
-      if (this.network == undefined) {
-        return;
-      }
+      if (this.network == undefined) return;
 
       this._workspace.animationOff();
 
@@ -286,9 +284,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
     // Select default model by element type.
     panel.select(".menuItem").on("mouseup", () => {
-      if (this.network == undefined) {
-        return;
-      }
+      if (this.network == undefined) return;
 
       this.updateModelMenu(elementType, false);
       this.updateColor();
