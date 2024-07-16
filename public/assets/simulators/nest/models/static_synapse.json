@@ -4,8 +4,8 @@
   "label": "static synapse",
   "params": [
     {
-      "id": "weight",
       "component": "valueSlider",
+      "id": "weight",
       "label": "synaptic weight",
       "max": 100,
       "min": -100,
@@ -13,8 +13,8 @@
       "value": 1
     },
     {
-      "id": "delay",
       "component": "valueSlider",
+      "id": "delay",
       "label": "synaptic delay",
       "max": 100,
       "min": 1,

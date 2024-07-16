@@ -5,8 +5,8 @@
   "label": "spike generator",
   "params": [
     {
-      "id": "spike_times",
       "component": "arrayInput",
+      "id": "spike_times",
       "label": "spike times",
       "rules": [
         [
@@ -18,8 +18,8 @@
       "unit": "ms"
     },
     {
-      "id": "spike_weights",
       "component": "arrayInput",
+      "id": "spike_weights",
       "label": "weights of spike",
       "unit": "pA"
     }

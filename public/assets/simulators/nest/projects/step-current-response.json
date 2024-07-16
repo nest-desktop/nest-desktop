@@ -1,23 +1,31 @@
 {
-  "name": "spikes (up/down) to model",
+  "name": "step current response",
   "network": {
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ],
     "nodes": [
       {
-        "model": "spike_generator",
+        "model": "dc_generator",
         "params": [
           {
-            "id": "spike_times",
-            "value": [
-              100,
-              300
-            ]
+            "id": "amplitude",
+            "value": 1
           },
           {
-            "id": "spike_weights",
-            "value": [
-              1,
-              -1
-            ]
+            "id": "start",
+            "value": 100
+          },
+          {
+            "id": "stop",
+            "value": 600
           }
         ],
         "view": {
@@ -29,6 +37,12 @@
       },
       {
         "model": "iaf_psc_alpha",
+        "params": [
+          {
+            "id": "C_m",
+            "value": 250
+          }
+        ],
         "view": {
           "position": {
             "x": 175,
@@ -51,16 +65,6 @@
           }
         }
       }
-    ],
-    "connections": [
-      {
-        "source": 0,
-        "target": 1
-      },
-      {
-        "source": 2,
-        "target": 1
-      }
     ]
   },
   "simulation": {
@@ -69,7 +73,7 @@
       "resolution": 0.1,
       "rngSeed": 1
     },
-    "time": 500
+    "time": 1000
   },
   "version": "3.2.0"
 }

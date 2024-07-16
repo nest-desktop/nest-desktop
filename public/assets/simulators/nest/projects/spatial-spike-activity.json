@@ -1,6 +1,24 @@
 {
   "name": "spatial spike activity",
   "network": {
+    "connections": [
+      {
+        "source": 0,
+        "synapse": {
+          "params": [
+            {
+              "id": "weight",
+              "value": 10
+            }
+          ]
+        },
+        "target": 1
+      },
+      {
+        "source": 1,
+        "target": 2
+      }
+    ],
     "nodes": [
       {
         "model": "poisson_generator",
@@ -28,11 +46,11 @@
               0,
               0
             ],
+            "edgeWrap": false,
             "extent": [
               1,
               1
             ],
-            "edgeWrap": false,
             "numDimensions": 2
           }
         },
@@ -51,24 +69,6 @@
             "y": 25
           }
         }
-      }
-    ],
-    "connections": [
-      {
-        "source": 0,
-        "target": 1,
-        "synapse": {
-          "params": [
-            {
-              "id": "weight",
-              "value": 10
-            }
-          ]
-        }
-      },
-      {
-        "source": 1,
-        "target": 2
       }
     ]
   },

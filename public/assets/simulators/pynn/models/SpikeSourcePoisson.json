@@ -1,25 +1,22 @@
 {
-  "abbreviation": "dc",
+  "abbreviation": "sp",
   "elementType": "stimulator",
-  "id": "dc_generator",
-  "label": "direct current",
-  "recordables": [
-    "I"
-  ],
+  "id": "SpikeSourcePoisson",
+  "label": "spike Poisson",
   "params": [
     {
-      "id": "amplitude",
       "component": "valueSlider",
-      "label": "amplitude of current",
-      "max": 1000,
-      "min": -1000,
+      "id": "rate",
+      "label": "mean spike frequency",
+      "max": 10000,
+      "min": 0,
       "step": 1,
-      "unit": "pA",
+      "unit": "Hz",
       "value": 0
     },
     {
-      "id": "start",
       "component": "valueSlider",
+      "id": "start",
       "label": "start time",
       "max": 1000,
       "min": 0,
@@ -28,14 +25,14 @@
       "value": 0
     },
     {
-      "id": "stop",
       "component": "valueSlider",
-      "label": "stop time",
-      "max": 1000,
-      "min": 0,
+      "id": "duration",
+      "label": "duration of spike sequence",
+      "max": 10E9,
+      "min": 1,
       "step": 1,
       "unit": "ms",
-      "value": 1000
+      "value": 10E9
     }
   ]
 }

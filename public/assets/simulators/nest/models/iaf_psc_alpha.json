@@ -4,17 +4,10 @@
   "favorite": true,
   "id": "iaf_psc_alpha",
   "label": "IAF psc alpha",
-  "recordables": [
-    "I_syn_ex",
-    "I_syn_in",
-    "V_m",
-    "weighted_spikes_ex",
-    "weighted_spikes_in"
-  ],
   "params": [
     {
-      "id": "C_m",
       "component": "valueSlider",
+      "id": "C_m",
       "label": "capacity of the membrane",
       "max": 500,
       "min": 1,
@@ -23,8 +16,8 @@
       "value": 250
     },
     {
-      "id": "E_L",
       "component": "valueSlider",
+      "id": "E_L",
       "label": "leak reversal potential",
       "max": 100,
       "min": -100,
@@ -33,8 +26,8 @@
       "value": -70
     },
     {
-      "id": "I_e",
       "component": "valueSlider",
+      "id": "I_e",
       "label": "constant external input current",
       "max": 100,
       "min": -100,
@@ -43,8 +36,8 @@
       "value": 0
     },
     {
-      "id": "V_m",
       "component": "valueSlider",
+      "id": "V_m",
       "label": "initial membrane potential",
       "max": 100,
       "min": -100,
@@ -53,8 +46,8 @@
       "value": -70
     },
     {
-      "id": "V_reset",
       "component": "valueSlider",
+      "id": "V_reset",
       "label": "reset potential of the membrane",
       "max": 100,
       "min": -100,
@@ -63,8 +56,8 @@
       "value": -70
     },
     {
-      "id": "V_th",
       "component": "valueSlider",
+      "id": "V_th",
       "label": "spike threshold",
       "max": 100,
       "min": -100,
@@ -73,8 +66,8 @@
       "value": -55
     },
     {
-      "id": "t_ref",
       "component": "valueSlider",
+      "id": "t_ref",
       "label": "duration of refractory period",
       "max": 5,
       "min": 0.1,
@@ -83,8 +76,8 @@
       "value": 2
     },
     {
-      "id": "tau_m",
       "component": "valueSlider",
+      "id": "tau_m",
       "label": "membrane time constant",
       "max": 30,
       "min": 1,
@@ -93,8 +86,8 @@
       "value": 10
     },
     {
-      "id": "tau_syn_ex",
       "component": "valueSlider",
+      "id": "tau_syn_ex",
       "label": "time constant of the excitatory synapse",
       "max": 4,
       "min": 0.1,
@@ -103,8 +96,8 @@
       "value": 2
     },
     {
-      "id": "tau_syn_in",
       "component": "valueSlider",
+      "id": "tau_syn_in",
       "label": "time constant of the inhibitory synapse",
       "max": 4,
       "min": 0.1,
@@ -112,5 +105,12 @@
       "unit": "ms",
       "value": 2
     }
+  ],
+  "recordables": [
+    "I_syn_ex",
+    "I_syn_in",
+    "V_m",
+    "weighted_spikes_ex",
+    "weighted_spikes_in"
   ]
 }

@@ -1,15 +1,12 @@
 {
   "abbreviation": "ac",
   "elementType": "stimulator",
-  "id": "ac_generator",
+  "id": "ACSource",
   "label": "alternating current",
-  "recordables": [
-    "I"
-  ],
   "params": [
     {
-      "id": "amplitude",
       "component": "valueSlider",
+      "id": "amplitude",
       "label": "amplitude of sine current",
       "max": 1000,
       "min": -1000,
@@ -18,8 +15,8 @@
       "value": 0
     },
     {
-      "id": "frequency",
       "component": "valueSlider",
+      "id": "frequency",
       "label": "frequency",
       "max": 100,
       "min": 0,
@@ -28,8 +25,8 @@
       "value": 0
     },
     {
-      "id": "offset",
       "component": "valueSlider",
+      "id": "offset",
       "label": "constant amplitude offset",
       "max": 1000,
       "min": 0,
@@ -38,8 +35,8 @@
       "value": 0
     },
     {
-      "id": "phase",
       "component": "valueSlider",
+      "id": "phase",
       "label": "phase of sine current",
       "max": 360,
       "min": 0,
@@ -48,8 +45,8 @@
       "value": 0
     },
     {
-      "id": "start",
       "component": "valueSlider",
+      "id": "start",
       "label": "start time",
       "max": 1000,
       "min": 0,
@@ -58,8 +55,8 @@
       "value": 0
     },
     {
-      "id": "stop",
       "component": "valueSlider",
+      "id": "stop",
       "label": "stop time",
       "max": 1000,
       "min": 0,
@@ -67,5 +64,8 @@
       "unit": "ms",
       "value": 1000
     }
+  ],
+  "recordables": [
+    "I"
   ]
 }

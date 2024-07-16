@@ -1,6 +1,16 @@
 {
   "name": "regular spikes steps to model",
   "network": {
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ],
     "nodes": [
       {
         "model": "spike_generator",
@@ -234,16 +244,6 @@
             "y": 75
           }
         }
-      }
-    ],
-    "connections": [
-      {
-        "source": 0,
-        "target": 1
-      },
-      {
-        "source": 2,
-        "target": 1
       }
     ]
   },

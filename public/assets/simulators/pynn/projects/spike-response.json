@@ -1,21 +1,15 @@
 {
-  "name": "current input",
+  "name": "spike response",
   "network": {
     "nodes": [
       {
-        "model": "dc_generator",
+        "model": "spike_generator",
         "params": [
           {
-            "id": "amplitude",
-            "value": 1
-          },
-          {
-            "id": "start",
-            "value": 100
-          },
-          {
-            "id": "stop",
-            "value": 600
+            "id": "spike_times",
+            "value": [
+              300
+            ]
           }
         ],
         "view": {
@@ -27,12 +21,6 @@
       },
       {
         "model": "iaf_psc_alpha",
-        "params": [
-          {
-            "id": "C_m",
-            "value": 250
-          }
-        ],
         "view": {
           "position": {
             "x": 175,

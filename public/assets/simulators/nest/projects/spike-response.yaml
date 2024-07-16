@@ -1,5 +1,5 @@
 ---
-name: spike input
+name: spike response
 network:
   nodes:
     - model: spike_generator

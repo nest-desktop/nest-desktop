@@ -4,16 +4,10 @@
   "favorite": true,
   "id": "iaf_cond_alpha",
   "label": "IAF cond alpha",
-  "recordables": [
-    "g_ex",
-    "g_in",
-    "t_ref_remaining",
-    "V_m"
-  ],
   "params": [
     {
-      "id": "C_m",
       "component": "valueSlider",
+      "id": "C_m",
       "label": "capacity of the membrane",
       "max": 500,
       "min": 0,
@@ -22,8 +16,8 @@
       "value": 250
     },
     {
-      "id": "E_L",
       "component": "valueSlider",
+      "id": "E_L",
       "label": "leak reversal potential",
       "max": 100,
       "min": -100,
@@ -32,8 +26,8 @@
       "value": -70
     },
     {
-      "id": "E_ex",
       "component": "valueSlider",
+      "id": "E_ex",
       "label": "excitatory reversal potential",
       "max": 100,
       "min": 0,
@@ -42,8 +36,8 @@
       "value": 0
     },
     {
-      "id": "E_in",
       "component": "valueSlider",
+      "id": "E_in",
       "label": "inhibitory reversal potential",
       "max": 0,
       "min": -100,
@@ -52,8 +46,8 @@
       "value": -85
     },
     {
-      "id": "I_e",
       "component": "valueSlider",
+      "id": "I_e",
       "label": "constant external input current",
       "max": 100,
       "min": -100,
@@ -62,8 +56,8 @@
       "value": 0
     },
     {
-      "id": "V_m",
       "component": "valueSlider",
+      "id": "V_m",
       "label": "initial membrane potential",
       "max": 100,
       "min": -100,
@@ -72,8 +66,8 @@
       "value": -70
     },
     {
-      "id": "V_reset",
       "component": "valueSlider",
+      "id": "V_reset",
       "label": "reset potential of the membrane",
       "max": 100,
       "min": -100,
@@ -82,8 +76,8 @@
       "value": -60
     },
     {
-      "id": "V_th",
       "component": "valueSlider",
+      "id": "V_th",
       "label": "spike threshold",
       "max": 100,
       "min": -100,
@@ -92,8 +86,8 @@
       "value": -55
     },
     {
-      "id": "g_L",
       "component": "valueSlider",
+      "id": "g_L",
       "label": "leak conductance",
       "max": 30,
       "min": 1,
@@ -102,8 +96,8 @@
       "value": 16.6667
     },
     {
-      "id": "t_ref",
       "component": "valueSlider",
+      "id": "t_ref",
       "label": "duration of refractory period",
       "max": 5,
       "min": 0.1,
@@ -112,8 +106,8 @@
       "value": 2
     },
     {
-      "id": "tau_syn_ex",
       "component": "valueSlider",
+      "id": "tau_syn_ex",
       "label": "time constant of the excitatory synapse",
       "max": 4,
       "min": 0.1,
@@ -122,8 +116,8 @@
       "value": 0.2
     },
     {
-      "id": "tau_syn_in",
       "component": "valueSlider",
+      "id": "tau_syn_in",
       "label": "time constant of the inhibitory synapse",
       "max": 4,
       "min": 0.1,
@@ -131,5 +125,11 @@
       "unit": "ms",
       "value": 2
     }
+  ],
+  "recordables": [
+    "g_ex",
+    "g_in",
+    "t_ref_remaining",
+    "V_m"
   ]
 }

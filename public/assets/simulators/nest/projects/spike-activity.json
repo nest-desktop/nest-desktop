@@ -1,6 +1,24 @@
 {
   "name": "spike activity",
   "network": {
+    "connections": [
+      {
+        "source": 0,
+        "synapse": {
+          "params": [
+            {
+              "id": "weight",
+              "value": 10
+            }
+          ]
+        },
+        "target": 1
+      },
+      {
+        "source": 1,
+        "target": 2
+      }
+    ],
     "nodes": [
       {
         "model": "poisson_generator",
@@ -35,24 +53,6 @@
             "y": 25
           }
         }
-      }
-    ],
-    "connections": [
-      {
-        "source": 0,
-        "target": 1,
-        "synapse": {
-          "params": [
-            {
-              "id": "weight",
-              "value": 10
-            }
-          ]
-        }
-      },
-      {
-        "source": 1,
-        "target": 2
       }
     ]
   },

@@ -6,8 +6,8 @@
   "label": "Poisson generator",
   "params": [
     {
-      "id": "rate",
       "component": "valueSlider",
+      "id": "rate",
       "label": "mean firing rate",
       "max": 10000,
       "min": 0,
@@ -16,8 +16,8 @@
       "value": 0
     },
     {
-      "id": "start",
       "component": "valueSlider",
+      "id": "start",
       "label": "start time",
       "max": 1000,
       "min": 0,
@@ -26,8 +26,8 @@
       "value": 0
     },
     {
-      "id": "stop",
       "component": "valueSlider",
+      "id": "stop",
       "label": "stop time",
       "max": 1000,
       "min": 0,

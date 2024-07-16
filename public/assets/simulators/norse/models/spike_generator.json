@@ -1,13 +1,13 @@
 {
   "abbreviation": "sg",
+  "codeTemplate": "{{ view.label }} = torch.zeros({{ simulation.time }}, {{ size }}){{ #params.spike_times.value }}\n{{ view.label }}[{{ &value }}] = 1{{ /params.spike_times.value }}",
   "elementType": "stimulator",
   "id": "spike_generator",
   "label": "spike generator",
-  "codeTemplate": "{{ view.label }} = torch.zeros({{ simulation.time }}, {{ size }}){{ #params.spike_times.value }}\n{{ view.label }}[{{ &value }}] = 1{{ /params.spike_times.value }}",
   "params": [
     {
-      "id": "spike_times",
       "component": "arrayInput",
+      "id": "spike_times",
       "label": "spike times",
       "rules": [
         [
@@ -19,8 +19,8 @@
       "unit": "ms"
     },
     {
-      "id": "spike_weights",
       "component": "arrayInput",
+      "id": "spike_weights",
       "label": "weights of spike",
       "unit": "pA"
     }

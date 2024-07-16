@@ -1,20 +1,13 @@
 {
-  "abbreviation": "scg",
+  "abbreviation": "sc",
   "elementType": "stimulator",
-  "id": "step_current_generator",
-  "label": "step current generator",
+  "id": "StepCurrentSource",
+  "label": "step current",
   "params": [
     {
       "component": "arrayInput",
       "id": "amplitude_times",
       "label": "times at which current changes",
-      "rules": [
-        [
-          "value.slice(1).every((item, idx) => value[idx] < item)",
-          "The values must be sorted  in ascending order.",
-          "error"
-        ]
-      ],
       "unit": "ms"
     },
     {

@@ -4,13 +4,10 @@
   "favorite": true,
   "id": "dc_generator",
   "label": "direct current",
-  "recordables": [
-    "I"
-  ],
   "params": [
     {
-      "id": "amplitude",
       "component": "valueSlider",
+      "id": "amplitude",
       "label": "amplitude of current",
       "max": 1000,
       "min": -1000,
@@ -19,8 +16,8 @@
       "value": 0
     },
     {
-      "id": "start",
       "component": "valueSlider",
+      "id": "start",
       "label": "start time",
       "max": 1000,
       "min": 0,
@@ -29,8 +26,8 @@
       "value": 0
     },
     {
-      "id": "stop",
       "component": "valueSlider",
+      "id": "stop",
       "label": "stop time",
       "max": 1000,
       "min": 0,
@@ -38,5 +35,8 @@
       "unit": "ms",
       "value": 1000
     }
+  ],
+  "recordables": [
+    "I"
   ]
 }

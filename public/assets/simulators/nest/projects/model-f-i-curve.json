@@ -1,13 +1,12 @@
 {
-  "name": "F-I Curve",
   "activityGraph": {
     "panels": [
       {
         "model": {
           "id": "senderSpikeCountPlot",
           "params": {
-            "plotMode": "lines",
             "lineShape": "linear",
+            "plotMode": "lines",
             "spikeRate": true
           }
         }
@@ -16,13 +15,14 @@
         "model": {
           "id": "senderMeanISIPlot",
           "params": {
-            "plotMode": "lines",
-            "lineShape": "linear"
+            "lineShape": "linear",
+            "plotMode": "lines"
           }
         }
       }
     ]
   },
+  "name": "F-I Curve",
   "network": {
     "connections": [
       {
@@ -52,7 +52,6 @@
         "params": [
           {
             "id": "amplitude",
-            "value": 0,
             "type": {
               "id": "np.arange",
               "specs": [
@@ -69,7 +68,8 @@
                   "value": 1
                 }
               ]
-            }
+            },
+            "value": 0
           }
         ],
         "size": 1000,

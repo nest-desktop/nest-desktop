@@ -1,6 +1,16 @@
 {
-  "name": "spike input",
+  "name": "spike response",
   "network": {
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ],
     "nodes": [
       {
         "model": "spike_generator",
@@ -8,7 +18,15 @@
           {
             "id": "spike_times",
             "value": [
+              100,
               300
+            ]
+          },
+          {
+            "id": "spike_weights",
+            "value": [
+              1,
+              -1
             ]
           }
         ],
@@ -43,16 +61,6 @@
           }
         }
       }
-    ],
-    "connections": [
-      {
-        "source": 0,
-        "target": 1
-      },
-      {
-        "source": 2,
-        "target": 1
-      }
     ]
   },
   "simulation": {
@@ -61,7 +69,7 @@
       "resolution": 0.1,
       "rngSeed": 1
     },
-    "time": 1000
+    "time": 500
   },
   "version": "3.2.0"
 }

@@ -5,16 +5,16 @@ favorite: true
 id: spike_recorder
 label: spike recorder
 params:
-  - id: start
-    component: valueSlider
+  - component: valueSlider
+    id: start
     label: start time
     max: 10000
     min: 0
     step: 10
     unit: ms
     value: 0
-  - id: stop
-    component: valueSlider
+  - component: valueSlider
+    id: stop
     label: stop time
     max: 10000
     min: 0

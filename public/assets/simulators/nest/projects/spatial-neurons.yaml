@@ -1,6 +1,15 @@
 ---
 name: spatial neurons
 network:
+  connections:
+    - source: 0
+      synapse:
+        params:
+          - id: weight
+            value: 10
+      target: 1
+    - source: 2
+      target: 1
   nodes:
     - model: poisson_generator
       params:
@@ -9,7 +18,7 @@ network:
       view:
         position:
           x: 25
-          y: 25
+          "y": 25
     - model: iaf_psc_alpha
       params: []
       size: 100
@@ -17,31 +26,22 @@ network:
         positions: free
         specs:
           center: [0, 0]
-          extent: [1, 1]
           edgeWrap: false
+          extent: [1, 1]
           numDimensions: 2
       view:
         position:
           x: 175
-          y: 75
+          "y": 75
     - model: voltmeter
       view:
         position:
           x: 325
-          y: 25
-  connections:
-    - source: 0
-      target: 1
-      synapse:
-        params:
-          - id: weight
-            value: 10
-    - source: 2
-      target: 1
+          "y": 25
 simulation:
   kernel:
     localNumThreads: 1
     resolution: 1
     rngSeed: 1
   time: 1000
-version: 4.0
+version: 4

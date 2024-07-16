@@ -1,16 +1,13 @@
 {
   "abbreviation": "dc",
+  "codeTemplate": "{{ view.label }} = torch.ones({{ simulation.time }}, {{ size }}) * {{ params.amplitude.value }}",
   "elementType": "stimulator",
   "id": "dc_generator",
   "label": "direct current",
-  "codeTemplate": "{{ view.label }} = torch.ones({{ simulation.time }}, {{ size }}) * {{ params.amplitude.value }}",
-  "recordables": [
-    "I"
-  ],
   "params": [
     {
-      "id": "amplitude",
       "component": "valueSlider",
+      "id": "amplitude",
       "label": "amplitude of current",
       "max": 10,
       "min": -10,
@@ -18,5 +15,8 @@
       "unit": "pA",
       "value": 0
     }
+  ],
+  "recordables": [
+    "I"
   ]
 }

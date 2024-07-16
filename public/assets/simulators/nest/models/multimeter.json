@@ -6,8 +6,8 @@
   "label": "multimeter",
   "params": [
     {
-      "id": "interval",
       "component": "tickSlider",
+      "id": "interval",
       "label": "time interval of recording",
       "rules": [
         [
@@ -26,8 +26,8 @@
       "value": 1
     },
     {
-      "id": "start",
       "component": "valueSlider",
+      "id": "start",
       "label": "start time",
       "max": 10000,
       "min": 0,
@@ -36,8 +36,8 @@
       "value": 0
     },
     {
-      "id": "stop",
       "component": "valueSlider",
+      "id": "stop",
       "label": "stop time",
       "max": 10000,
       "min": 0,
