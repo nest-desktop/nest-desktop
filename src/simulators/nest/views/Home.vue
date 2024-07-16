@@ -272,7 +272,7 @@ const generateNESTMLModels = () => {
     .map((modelId: string) => {
       const model = modelDBStore.findModel(modelId);
       return {
-        name: model.id,
+        name: model.id + "_" + model.elementType,
         script: model.nestmlScript,
       };
     });

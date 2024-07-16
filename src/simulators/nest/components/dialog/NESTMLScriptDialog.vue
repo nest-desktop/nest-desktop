@@ -90,7 +90,7 @@ interface IGithubTree {
 const state = reactive({
   elementType: "",
   elementTypes: [],
-  githubTag: "v7.0.2",
+  githubTag: "v8.0.0-rc1",
   githubTags: [],
   model: "",
   models: [],
@@ -106,7 +106,9 @@ function closeDialog(value?: Object) {
 }
 
 const fetchElementTypes = async () => {
+  state.elementType = "";
   state.model = "";
+  state.models = [];
 
   return new Promise<void>((resolve, reject) =>
     axios
@@ -141,7 +143,7 @@ const fetchGithubTags = async () => {
 const fetchModels = (elementType: string | null) => {
   if (elementType) {
     const elementTypeTree = getTree(state.elementTypes, elementType);
-    console.log(state.elementType, state.elementTypes);
+    console.log(elementTypeTree, state.elementType, state.elementTypes);
     if (elementTypeTree) {
       axios.get(elementTypeTree.url).then((response: AxiosResponse) => {
         state.models = response.data.tree;
