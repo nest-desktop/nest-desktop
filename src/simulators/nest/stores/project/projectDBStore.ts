@@ -9,8 +9,8 @@ const projectAssets = [
   "spatial-neurons",
   "spatial-spike-activity",
   "spike-activity",
-  "spike-input",
-  "current-input",
+  "spike-response",
+  "step-current-response",
 ];
 
 export const useNESTProjectDBStore = defineProjectDBStore({
