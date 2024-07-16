@@ -2,6 +2,7 @@
 
 import { TNode } from "@/types";
 
+import { NodeRecord } from "../node/nodeRecord";
 import { Activity, IActivityProps } from "./activity";
 
 interface IAnalogSignalActivityProps extends IActivityProps {}
@@ -20,25 +21,38 @@ export class AnalogSignalActivity extends Activity {
   }
 
   /**
+   * Get node record.
+   * @param groupId string
+   * @returns node record object
+   */
+  getNodeRecord(groupId: string): NodeRecord | undefined {
+    if (this.recorder.records.length === 0) return;
+
+    return this.recorder.records.find(
+      (record: NodeRecord) => record.groupId === groupId
+    );
+  }
+
+  /**
    * Post-initialize activity of analog signals.
    */
-  override postInit(): void {
-    this.updateActivityRecords();
-  }
+  // override postInit(): void {
+  //   this.updateActivityRecords();
+  // }
 
   /**
    * Post-update activity of analog signals.
    */
-  override postUpdate(): void {
-    this.updateActivityRecords();
-  }
+  // override postUpdate(): void {
+  //   this.updateActivityRecords();
+  // }
 
   /**
    * Update records from recorder.
    */
-  updateActivityRecords(): void {
-    if (this.recorder.records.length === 0) return;
+  // updateActivityRecords(): void {
+  //   if (this.recorder.records.length === 0) return;
 
-    this.state.records = [...this.recorder.records];
-  }
+  //   this.state.records = [...this.recorder.records];
+  // }
 }

@@ -2,7 +2,7 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { NodeRecord } from "@/helpers/node/nodeRecord";
+// import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { TNode, TProject } from "@/types";
 
 import { download } from "../../utils/download";
@@ -19,7 +19,7 @@ export interface IActivityProps {
 interface IActivityState {
   activeNodeId: number | undefined;
   fromTime: number;
-  records: NodeRecord[];
+  // records: NodeRecord[];
   selected: number[];
 }
 
@@ -43,7 +43,7 @@ export class Activity extends BaseObj {
     this._state = reactive({
       activeNodeId: undefined,
       fromTime: 0,
-      records: [],
+      // records: [] as NodeRecord[],
       selected: [],
     });
 
@@ -251,7 +251,7 @@ export class Activity extends BaseObj {
     this._events = {};
     this._nodeIds = [];
     this._nodePositions = [];
-    this._state.records = [];
+    // this._state.records = [];
   }
 
   /**

@@ -14,35 +14,41 @@
   >
     <template #top>
       <v-select
-        :items="activity.state.records"
+        :readonly="activity.recorder.records.length < 2"
+        :items="activity.recorder.records"
         @update:model-value="selected()"
+        chips
+        class="mr-1"
         density="compact"
         hide-details
         item-title="title"
         item-value="id"
         v-if="activity.recorder.model.isMultimeter"
         v-model="state.selectedRecord"
+        variant="outlined"
       >
-        <!-- <template #selection="{ item }">
-      <v-list-item min-width="400px">
-        <template #append>
-          <node-record-chip :nodeRecord="item.value" />
-        </template>
-        <span>{{ item.value.labelCapitalize }}</span>
-        <span v-if="item.value.unit">({{ item.value.unit }})</span>
-      </v-list-item>
-    </template>
-
-      <template #item="{ item, props: { onClick } }">
-      <v-list-item :value="item.value" @click="onClick">
-        <template #append>
-          <node-record-chip :nodeRecord="item.value" />
+        <template #chip="{ item }" style="width: 100%">
+          {{ item.title }}
+          <NodeRecordChip
+            :nodeRecord="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+            style="position: absolute; right: 4px"
+            v-if="item.raw.groupId"
+          />
         </template>
 
-        <span> {{ item.value.labelCapitalize }}</span>
-        <span v-if="item.value.unit">({{ item.value.unit }}) </span>
-      </v-list-item>
-    </template> -->
+        <template #item="{ item, props }">
+          <v-list-item v-bind="props" density="compact" title="">
+            <v-row no-gutters>
+              {{ item.title }}
+              <v-spacer />
+              <NodeRecordChip
+                :nodeRecord="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+                class="my-auto"
+                v-if="item.raw.groupId"
+              />
+            </v-row>
+          </v-list-item>
+        </template>
       </v-select>
     </template>
 
@@ -76,11 +82,10 @@
           />
         </template>
 
-        <v-color-picker
+        <ColorPicker
           @update:model-value="updateRecordsColor()"
-          flat
-          show-swatches
-          style="border-radius: 0"
+          colorScheme="google20c"
+          hide-inputs
           v-model="record.state.traceColors[index]"
         />
       </v-menu>
@@ -114,10 +119,13 @@ import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 // import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { deviation, mean } from "@/utils/array";
 import { toFixed } from "@/utils/converter";
+import NodeRecordChip from "../node/NodeRecordChip.vue";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
+import ColorPicker from "../common/ColorPicker.vue";
 
 const props = defineProps<{ activity: AnalogSignalActivity }>();
 const activity = computed(() => props.activity);
-const record = computed(() => activity.value.state.records[0]);
+const record = computed(() => activity.value.recorder.records[0]);
 
 const state = reactive({
   activityHash: "",
@@ -169,7 +177,7 @@ const update = () => {
   state.loading = true;
   state.items = [];
 
-  if (!state.selectedRecord && activity.value.state.records.length > 0) {
+  if (!state.selectedRecord && activity.value.recorder.records.length > 0) {
     state.selectedRecord = record.value.id;
   }
 

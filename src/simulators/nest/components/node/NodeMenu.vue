@@ -117,13 +117,23 @@
       </span>
 
       <span v-if="state.content === 'nodeColor'">
-        <v-color-picker
-          @update:model-value="nodeColorChange"
-          flat
-          show-swatches
-          elevation="0"
-          v-model="node.view.color"
-        />
+        <v-card flat>
+          <ColorPicker
+            :colorScheme="state.colorScheme"
+            @update:model-value="nodeColorChange()"
+            hide-inputs
+            v-model="node.view.color"
+          />
+
+          <v-select
+            :items="colorSchemes"
+            class="mx-2"
+            density="compact"
+            hide-details
+            v-model="state.colorScheme"
+            variant="outlined"
+          />
+        </v-card>
 
         <v-card-actions>
           <v-btn
@@ -140,29 +150,6 @@
           </v-btn>
         </v-card-actions>
       </span>
-
-      <span v-if="state.content === 'synWeights'">
-        <v-switch
-          :key="index"
-          :label="connection.synapse.weightLabel"
-          false-value="inhibitory"
-          true-value="excitatory"
-          v-for="(connection, index) in node.connections"
-          v-model="connection.synapse.weightLabel"
-        />
-
-        <v-card-actions>
-          <v-btn
-            @click="backMenu"
-            prepend-icon="mdi:mdi-menu-left"
-            size="small"
-            variant="text"
-          >
-            back
-          </v-btn>
-          <v-spacer />
-        </v-card-actions>
-      </span>
     </v-card>
   </v-menu>
 </template>
@@ -175,17 +162,32 @@ import ModelDocumentation from "../../views/ModelDoc.vue";
 import { NESTNode } from "../../helpers/node/node";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+import ColorPicker from "@/components/common/ColorPicker.vue";
 const networkGraphStore = useNetworkGraphStore();
 
 const props = defineProps<{ node: NESTNode }>();
 const node = computed(() => props.node);
 
 const state = reactive({
+  colorScheme: "category10",
   content: undefined as string | undefined,
   dialog: false,
   show: false,
   spatialNode: false,
 });
+
+const colorSchemes = [
+  "all",
+  "category10",
+  "category20",
+  "paired",
+  "set1",
+  "set2",
+  "set3",
+  "tableau10",
+  "google10c",
+  "google20c",
+];
 
 const items = [
   // {

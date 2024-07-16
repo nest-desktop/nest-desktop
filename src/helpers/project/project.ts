@@ -47,7 +47,7 @@ export class BaseProject extends BaseObj {
   public _simulation: TSimulation; // settings for the simulation
 
   constructor(projectProps: IProjectProps = {}) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     // Database instance.
     this._doc = projectProps || {};

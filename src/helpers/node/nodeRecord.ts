@@ -1,13 +1,13 @@
 // nodeRecord.ts
 
-import * as d3 from 'd3';
-import { UnwrapRef, reactive } from 'vue';
+import * as d3 from "d3";
+import { UnwrapRef, reactive } from "vue";
 
-import { TNode } from '@/types';
+import { TNode } from "@/types";
 
-import { max, min } from '../../utils/array';
-import { Activity } from '../activity/activity';
-import { BaseObj } from '../common/base';
+import { max, min } from "../../utils/array";
+import { Activity } from "../activity/activity";
+import { BaseObj } from "../common/base";
 
 export interface INodeRecordProps {
   id: string;
@@ -37,7 +37,7 @@ export class NodeRecord extends BaseObj {
     reverse: false,
     scale: "Spectral",
   };
-  private _groupId: string = "0";
+  private _groupId: string = "";
   private _id: string;
   private _label: string;
   private _node: TNode;
@@ -63,8 +63,8 @@ export class NodeRecord extends BaseObj {
       traceColors: [],
     });
 
-    this.updateGroupID();
     this.updateColor();
+    this.updateGroupID();
   }
 
   get activity(): Activity {
@@ -177,9 +177,11 @@ export class NodeRecord extends BaseObj {
     this.logger.trace("update");
 
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
-    this.updateColor();
-    this.updateGroupID();
-    this.updateState();
+    if (this._nodeSize != this.state.traceColors.length) {
+      this.updateTraceColors();
+    }
+
+    this.updateColorMap();
   }
 
   /**
@@ -187,18 +189,13 @@ export class NodeRecord extends BaseObj {
    */
   updateColor(): void {
     this._state.color = this.node.view.color;
-
-    const arrayIdx = [...Array(this._nodeSize).keys()];
-    this._state.traceColors = arrayIdx.map((idx) =>
-      this.nodeSize == 1 ? this._state.color : this.getColor(idx)
-    );
   }
 
   /**
    * Update group id of node record.
    */
   updateGroupID(): void {
-    this._groupId = this.id + "." + this.node.view.label;
+    this._groupId = this.node.view.label + "." + this.id;
   }
 
   /**
@@ -207,12 +204,30 @@ export class NodeRecord extends BaseObj {
    * @remarks:
    * It requires network activity.
    */
-  updateState(): void {
+  updateColorMap(): void {
     if (!this.hasEvent || !this.hasValues) return;
 
     const values = this.values;
     this._colorMap.max = max(values);
     this._colorMap.min = min(values);
+  }
+
+  updateTraceColors(): void {
+    this._state.traceColors.slice(0, this._nodeSize);
+
+    if (this._nodeSize > this._state.traceColors.length) {
+      const arrayIdx = [
+        ...Array(this._nodeSize - this._state.traceColors.length).keys(),
+      ];
+      this._state.traceColors = [
+        ...this._state.traceColors,
+        ...arrayIdx.map((idx) =>
+          this.nodeSize == 1
+            ? this._state.color
+            : this.getColor(idx + this._state.traceColors.length)
+        ),
+      ];
+    }
   }
 
   /**

@@ -1,20 +1,29 @@
 // node.ts
 
-import { Parameter } from '@/helpers/common/parameter';
-import { ModelParameter } from '@/helpers/model/modelParameter';
-import { BaseNode, INodeProps } from '@/helpers/node/node';
-import { INodeParamProps, NodeParameter } from '@/helpers/node/nodeParameter';
-import { INodeRecordProps, NodeRecord } from '@/helpers/node/nodeRecord';
-import { onlyUnique } from '@/utils/array';
+import { Parameter } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
+import { onlyUnique } from "@/utils/array";
 
-import { NESTConnection } from '../connection/connection';
-import { NESTCopyModel } from '../model/copyModel';
-import { NESTModel } from '../model/model';
-import { NESTNetwork } from '../network/network';
-import { INESTNodeCompartmentProps, NESTNodeCompartment } from './nodeCompartment/nodeCompartment';
-import { INESTNodeReceptorProps, NESTNodeReceptor } from './nodeReceptor/nodeReceptor';
-import { INESTNodeSpatialProps, NESTNodeSpatial } from './nodeSpatial/nodeSpatial';
-import { NESTNodes } from './nodes';
+import { NESTConnection } from "../connection/connection";
+import { NESTCopyModel } from "../model/copyModel";
+import { NESTModel } from "../model/model";
+import { NESTNetwork } from "../network/network";
+import {
+  INESTNodeCompartmentProps,
+  NESTNodeCompartment,
+} from "./nodeCompartment/nodeCompartment";
+import {
+  INESTNodeReceptorProps,
+  NESTNodeReceptor,
+} from "./nodeReceptor/nodeReceptor";
+import {
+  INESTNodeSpatialProps,
+  NESTNodeSpatial,
+} from "./nodeSpatial/nodeSpatial";
+import { NESTNodes } from "./nodes";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -390,8 +399,8 @@ export class NESTNode extends BaseNode {
 
     // Add records if this model is multimeter.
     if (this.model.isMultimeter) {
-      nodeProps.records = this.records.map((nodeRecord: NodeRecord) =>
-        nodeRecord.toJSON()
+      nodeProps.records = this.records.map((record: NodeRecord) =>
+        record.toJSON()
       );
     }
 
@@ -416,14 +425,9 @@ export class NESTNode extends BaseNode {
   }
 
   /**
-   * Update records.
-   *
-   * @remarks
-   * It should be called after connections are created.
+   * Update recordables.
    */
-  override updateRecords(): void {
-    this.logger.trace("update records");
-
+  override updateRecordables(): void {
     let recordables: INodeRecordProps[] = [];
 
     // Initialize recordables.
@@ -460,52 +464,9 @@ export class NESTNode extends BaseNode {
       );
     }
 
-    let recordableIds: string[];
-    recordableIds = recordables.map(
-      (recordProps: INodeRecordProps) => recordProps.id
+    this.recordables = recordables.map(
+      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
     );
-    this.recordables = [
-      ...this.recordables.filter((record: NodeRecord) =>
-        recordableIds.includes(record.id)
-      ),
-    ];
-
-    recordableIds = this.recordables.map(
-      (recordProps: NodeRecord) => recordProps.id
-    );
-
-    recordables
-      .filter(
-        (recordProps: INodeRecordProps) =>
-          !recordableIds.includes(recordProps.id)
-      )
-      .forEach((recordProps: INodeRecordProps) => {
-        this.recordables.push(new NodeRecord(this, recordProps));
-      });
-
-    // Initialize selected records.
-    if (this.doc.records != null) {
-      // Load record from stored nodes.
-      const recordIds = this.doc.records.map(
-        (recordProps: INodeRecordProps) => recordProps.id
-      );
-      this.records = [
-        ...this.recordables.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
-    } else if (this.records.length > 0) {
-      // In case when user select other model.
-      const recordIds = this.records.map((record: NodeRecord) => record.id);
-      this.records = [
-        ...this.recordables.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
-      this.records.forEach((record: NodeRecord) => record.updateGroupID());
-    } else {
-      this.records = [...this.recordables];
-    }
   }
 
   // /**

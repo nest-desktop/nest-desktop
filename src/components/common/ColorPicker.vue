@@ -1,17 +1,5 @@
 <template>
-  <v-color-picker
-    :hideCanvas="state.hideCanvas"
-    :hideInputs="state.hideInputs"
-    :hideSliders="state.hideSliders"
-    :showSwatches="state.showSwatches"
-    :swatches="state.swatches"
-    color="transparent"
-    elevation="0"
-    width="100%"
-    v-model="state.color"
-  />
-
-  {{ state.color }}
+  <v-color-picker :swatches="state.swatches" elevation="0" flat show-swatches />
 </template>
 
 <script lang="ts" setup>
@@ -112,31 +100,37 @@ const colorSchemes: Record<string, string[][]> = {
     ["#316395"],
   ],
   google20c: [
-    ["#3366cc", "#dc3912"],
-    ["#ff9900", "#109618"],
-    ["#990099", "#0099c6"],
-    ["#dd4477", "#66aa00"],
-    ["#b82e2e", "#316395"],
-    ["#994499", "#22aa99"],
-    ["#aaaa11", "#6633cc"],
-    ["#e67300", "#8b0707"],
-    ["#651067", "#329262"],
-    ["#5574a6", "#3b3eac"],
+    ["#3366cc"],
+    ["#dc3912"],
+    ["#ff9900"],
+    ["#109618"],
+    ["#990099"],
+    ["#0099c6"],
+    ["#dd4477"],
+    ["#66aa00"],
+    ["#b82e2e"],
+    ["#316395"],
+    ["#994499"],
+    ["#22aa99"],
+    ["#aaaa11"],
+    ["#6633cc"],
+    ["#e67300"],
+    ["#8b0707"],
+    ["#651067"],
+    ["#329262"],
+    ["#5574a6"],
+    ["#3b3eac"],
   ],
 };
 
 const state = reactive({
   color: "",
   colorScheme: "category10",
-  hideCanvas: true,
-  hideInputs: true,
-  hideSliders: true,
-  showSwatches: true,
   swatches: [] as string[][],
 });
 
 const update = () => {
-  state.colorScheme = props.colorScheme;
+  state.colorScheme = props.colorScheme || "category10";
   state.swatches = colorSchemes[state.colorScheme];
 };
 

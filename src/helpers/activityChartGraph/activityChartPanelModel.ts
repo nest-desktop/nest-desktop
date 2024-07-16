@@ -1,13 +1,13 @@
 // activityChartPanelModel.ts
 
-import { UnwrapRef, reactive } from 'vue';
+import { UnwrapRef, reactive } from "vue";
 
-import { Activity } from '../activity/activity';
-import { BaseObj } from '../common/base';
-import { TParamValue } from '../common/parameter';
-import { currentBackgroundColor } from '../common/theme';
-import { INodeRecordProps, NodeRecord } from '../node/nodeRecord';
-import { ActivityChartPanel } from './activityChartPanel';
+import { Activity } from "../activity/activity";
+import { BaseObj } from "../common/base";
+import { TParamValue } from "../common/parameter";
+import { currentBackgroundColor } from "../common/theme";
+import { NodeRecord } from "../node/nodeRecord";
+import { ActivityChartPanel } from "./activityChartPanel";
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -71,7 +71,7 @@ export interface IActivityChartPanelModelProps {
   id?: string;
   markerSize?: number;
   params?: Record<string, TParamValue>;
-  records?: INodeRecordProps[];
+  records?: string[];
 }
 
 interface IActivityChartPanelModelState {
@@ -103,7 +103,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
   constructor(panel: ActivityChartPanel) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._id = "activityChart";
     this._panel = panel;
@@ -245,6 +245,17 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   }
 
   /**
+   * Get node record.
+   * @param groupId string
+   * @returns node record object
+   */
+  getNodeRecord(groupId: string): NodeRecord | undefined {
+    return this.records.find(
+      (nodeRecord: NodeRecord) => nodeRecord.groupId === groupId
+    );
+  }
+
+  /**
    * Initialize panel model.
    *
    * @remarks
@@ -271,9 +282,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       });
 
     if (this._state.recordsVisible.length === 0) {
-      this._state.recordsVisible = this.records.map(
-        (record: NodeRecord) => record.groupId
-      );
+      this.selectAllNodeRecords();
     }
   }
 
@@ -281,13 +290,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Initialize visible records from analog activities.
    * @param recordsProps node records props
    */
-  initAnalogRecordsVisible(recordsProps: INodeRecordProps[] = []): void {
+  initAnalogRecordsVisible(recordsProps: string[] = []): void {
     this.logger.trace("init visible analog records:", recordsProps);
 
     if (recordsProps && recordsProps.length > 0) {
-      this._state.recordsVisible = recordsProps.map(
-        (recordProps: INodeRecordProps) => recordProps.groupId
-      );
+      this._state.recordsVisible = recordsProps;
     }
   }
 
@@ -312,6 +319,15 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   }
 
   /**
+   * Select all node records.
+   */
+  selectAllNodeRecords(): void {
+    this._state.recordsVisible = this.records.map(
+      (record: NodeRecord) => record.groupId
+    );
+  }
+
+  /**
    * Serialize for JSON.
    * @return activity chart panel model props
    */
@@ -332,9 +348,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       0 < this._state.recordsVisible.length &&
       this._state.recordsVisible.length < this.state.records.length
     ) {
-      modelProps.records = this.recordsVisible.map((record: NodeRecord) =>
-        record.toJSON()
-      );
+      modelProps.records = this._state.recordsVisible;
     }
     return modelProps;
   }

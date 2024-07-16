@@ -1,12 +1,13 @@
 // activityGraph.ts
 
-import { TProject } from '@/types';
+import { TProject } from "@/types";
 
-import { ActivityChartGraph } from '../activityChartGraph/activityChartGraph';
-import { IActivityChartPanelProps } from '../activityChartGraph/activityChartPanel';
-import { BaseObj } from '../common/base';
+import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
+import { IActivityChartPanelProps } from "../activityChartGraph/activityChartPanel";
+import { BaseObj } from "../common/base";
 
 export interface IBaseActivityGraphProps {
+  color: string;
   panels: IActivityChartPanelProps[];
 }
 
@@ -20,7 +21,7 @@ export class BaseActivityGraph extends BaseObj {
     this._project = project;
     this._activityChartGraph = new ActivityChartGraph(
       project,
-      activityGraphProps?.panels
+      activityGraphProps
     );
   }
 
@@ -48,10 +49,11 @@ export class BaseActivityGraph extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return activity graph object
+   * @return activity graph props
    */
-  toJSON(): { panels: IActivityChartPanelProps[] } {
+  toJSON(): IBaseActivityGraphProps {
     return {
+      color: this._activityChartGraph.state.traceColor,
       panels: this._activityChartGraph ? this._activityChartGraph.toJSON() : [],
     };
   }

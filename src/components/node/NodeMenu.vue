@@ -83,13 +83,23 @@
       </span>
 
       <span v-if="state.content === 'nodeColor'">
-        <v-color-picker
-          @update:model-value="nodeColorChange()"
-          flat
-          show-swatches
-          elevation="0"
-          v-model="node.view.color"
-        />
+        <v-card>
+          <ColorPicker
+            :colorScheme="state.colorScheme"
+            @update:model-value="nodeColorChange()"
+            hide-inputs
+            v-model="node.view.color"
+          />
+
+          <v-select
+            :items="colorSchemes"
+            class="mx-2"
+            density="compact"
+            hide-details
+            v-model="state.colorScheme"
+            variant="outlined"
+          />
+        </v-card>
 
         <v-card-actions>
           <v-btn
@@ -115,15 +125,30 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { TNode } from "@/types";
+import ColorPicker from "../common/ColorPicker.vue";
 
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);
 
 const state = reactive({
+  colorScheme: "category10",
   content: undefined as string | undefined,
   dialog: false,
   show: false,
 });
+
+const colorSchemes = [
+  "all",
+  "category10",
+  "category20",
+  "paired",
+  "set1",
+  "set2",
+  "set3",
+  "tableau10",
+  "google10c",
+  "google20c",
+];
 
 const items = [
   {

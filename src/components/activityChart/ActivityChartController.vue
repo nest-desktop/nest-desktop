@@ -8,6 +8,25 @@
         variant="outlined"
       />
 
+      <v-btn
+        class="mx-2"
+        prepend-icon="mdi:mdi-plus"
+        size="small"
+        variant="outlined"
+      >
+        Add panel
+        <v-menu :close-on-content-click="false" activator="parent">
+          <ActivityChartPanelMenuPopover
+            :graph="(graph as ActivityChartGraph)"
+            @changed="addPanel"
+          />
+        </v-menu>
+      </v-btn>
+
+      <v-spacer />
+
+      <v-icon class="ma-auto" icon="mdi:mdi-format-color-fill" />
+
       <v-btn-toggle
         @update:model-value="update()"
         class="mx-2"
@@ -15,8 +34,6 @@
         v-model="graph.state.traceColor"
         variant="outlined"
       >
-        <v-icon class="ma-auto" icon="mdi:mdi-format-color-fill" />
-
         <v-btn
           :key="index"
           :text="traceColor"
@@ -25,26 +42,6 @@
           v-for="(traceColor, index) in traceColors"
         />
       </v-btn-toggle>
-
-      <v-spacer />
-
-      <v-menu :close-on-content-click="false">
-        <template #activator="{ props }">
-          <v-btn
-            prepend-icon="mdi:mdi-plus"
-            size="small"
-            v-bind="props"
-            variant="outlined"
-          >
-            Add panel
-          </v-btn>
-        </template>
-
-        <ActivityChartPanelMenuPopover
-          :graph="(graph as ActivityChartGraph)"
-          @changed="addPanel"
-        />
-      </v-menu>
     </v-toolbar>
 
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
@@ -61,6 +58,7 @@
               :items="panel.model.state.records"
               @update:model-value="update()"
               class="pa-1 pt-3"
+              chips
               clearable
               density="compact"
               item-title="title"
@@ -72,33 +70,39 @@
               variant="outlined"
               v-model="panel.model.state.recordsVisible"
             >
-              <!-- <template #chip="{ item }">
-                <NodeRecordChip :nodeRecord="item.raw as NodeRecord" />
+              <template #chip="{ item }">
+                <NodeRecordChip
+                  :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                />
               </template>
-              -->
 
-              <!-- <template #prepend-item>
-                <v-list-item title="Select All" />
-                <v-divider />
-              </template> -->
-
-              <!-- <template #item="{ item, props }">
-                <v-list-item :value="item.value" @click="props.onClick">
-                  <template #prepend="{ isSelected }">
-                    <NodeAvatar :node="item.value.node" />
-                    <v-checkbox-btn :model-value="isSelected" />
-                  </template>
-
-                  {{
-                    item.value.labelCapitalize +
-                    (item.value.unit ? ` (${item.value.unit})` : "")
-                  }}
-
-                  <template #append>
-                    <node-record-chip :nodeRecord="item.raw.value" />
-                  </template>
+              <template #item="{ item, props }">
+                <v-list-item v-bind="props" density="compact" title="">
+                  <v-checkbox
+                    :label="item.title"
+                    :model-value="
+                      panel.model.state.recordsVisible.includes(item.value)
+                    "
+                    density="compact"
+                    hide-details
+                  >
+                    <template #append>
+                      <NodeRecordChip
+                        :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                        class="my-auto"
+                      />
+                    </template>
+                  </v-checkbox>
                 </v-list-item>
-              </template> -->
+              </template>
+
+              <template #prepend-item>
+                <v-list-item
+                  @click="selectAllNodeRecords(panel)"
+                  title="Select All"
+                />
+                <v-divider />
+              </template>
 
               <!-- <template #selection="{ item }">
                 <v-chip
@@ -160,14 +164,14 @@
 <script lang="ts" setup>
 import { computed, nextTick } from "vue";
 
-import Card from "../common/Card.vue";
+// import ParameterEdit from "../parameter/ParameterEdit.vue";
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
-// import NodeRecordChip from "../node/NodeRecordChip.vue";
-// import ParameterEdit from "../parameter/ParameterEdit.vue";
+import Card from "../common/Card.vue";
+import NodeRecordChip from "../node/NodeRecordChip.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
-// import { NodeRecord } from "@/helpers/node/nodeRecord";
+import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);
@@ -179,6 +183,11 @@ const traceColors = ["node", "record", "trace"];
  */
 const addPanel = (modelId: string) => {
   graph.value.addPanel({ model: { id: modelId } });
+  graph.value.update();
+};
+
+const selectAllNodeRecords = (panel: ActivityChartPanel) => {
+  panel.model.selectAllNodeRecords();
   graph.value.update();
 };
 

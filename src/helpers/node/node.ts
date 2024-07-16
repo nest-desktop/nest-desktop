@@ -1,19 +1,26 @@
 // node.ts
 
-import { TModelDBStore } from '@/stores/model/defineModelDBStore';
-import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from '@/types';
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import {
+  TConnection,
+  TModel,
+  TNetwork,
+  TNode,
+  TNodes,
+  TSimulation,
+} from "@/types";
 
-import { onlyUnique } from '../../utils/array';
-import { Activity, IActivityProps } from '../activity/activity';
-import { AnalogSignalActivity } from '../activity/analogSignalActivity';
-import { SpikeActivity } from '../activity/spikeActivity';
-import { BaseObj } from '../common/base';
-import { BaseModel } from '../model/model';
-import { ModelParameter } from '../model/modelParameter';
-import { NodeGroup } from './nodeGroup';
-import { INodeParamProps, NodeParameter } from './nodeParameter';
-import { INodeRecordProps, NodeRecord } from './nodeRecord';
-import { INodeViewProps, NodeView } from './nodeView';
+import { onlyUnique } from "../../utils/array";
+import { Activity, IActivityProps } from "../activity/activity";
+import { AnalogSignalActivity } from "../activity/analogSignalActivity";
+import { SpikeActivity } from "../activity/spikeActivity";
+import { BaseObj } from "../common/base";
+import { BaseModel } from "../model/model";
+import { ModelParameter } from "../model/modelParameter";
+import { NodeGroup } from "./nodeGroup";
+import { INodeParamProps, NodeParameter } from "./nodeParameter";
+import { INodeRecordProps, NodeRecord } from "./nodeRecord";
+import { INodeViewProps, NodeView } from "./nodeView";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -477,6 +484,17 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Get node record.
+   * @param groupId string
+   * @returns node record object
+   */
+  getNodeRecord(groupId: string): NodeRecord | undefined {
+    return this._records.find(
+      (record: NodeRecord) => record.groupId === groupId
+    );
+  }
+
+  /**
    * Check if node has parameter component.
    * @param paramId parameter ID
    */
@@ -647,7 +665,7 @@ export class BaseNode extends BaseObj {
    */
   update(): void {
     this.clean();
-    this.updateRecords();
+    this.updateRecordables();
     this.updateRecordsColor();
 
     this.updateHash();
@@ -666,6 +684,35 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Update recordables.
+   */
+  updateRecordables(): void {
+    this.logger.trace("update recordables");
+    let recordables: INodeRecordProps[] = [];
+
+    // Initialize recordables.
+    if (this.connections.length > 0) {
+      if (this.model.isMultimeter) {
+        const recordablesNodes = this.targetNodes.map((target: TNode) =>
+          [...target.model.recordables].flat()
+        );
+
+        if (recordablesNodes.length > 0) {
+          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
+          recordables = recordablesPooled.filter(onlyUnique);
+          recordables.sort((a: { id: any }, b: { id: any }) => a.id - b.id);
+        }
+      }
+    }
+
+    if (recordables.length != this.recordables.length) {
+      this.recordables = recordables.map(
+        (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
+      );
+    }
+  }
+
+  /**
    * Update records.
    *
    * @remarks
@@ -674,65 +721,19 @@ export class BaseNode extends BaseObj {
   updateRecords(): void {
     this.logger.trace("update records");
 
-    let recordables: INodeRecordProps[] = [];
-    // Initialize recordables.
-    if (this.connections.length > 0) {
-      if (this.model.isMultimeter) {
-        const recordablesNodes = this.targetNodes.map((target: TNode) => {
-          return [...target.model.recordables];
-        });
-        if (recordablesNodes.length > 0) {
-          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled.filter(onlyUnique);
-          recordables.sort();
-        }
-      } else if (this._modelId === "voltmeter") {
-        recordables.push(
-          this.model.config?.localStorage.recordables.find(
-            (record: INodeRecordProps) => record.id === "V_m"
-          )
-        );
-      }
-    }
-
-    let recordableIds: string[];
-    recordableIds = recordables.map((record: INodeRecordProps) => record.id);
-    this._recordables = [
-      ...this._recordables.filter((record: NodeRecord) =>
-        recordableIds.includes(record.id)
-      ),
-    ];
-
-    recordableIds = this._recordables.map((record: NodeRecord) => record.id);
-
-    recordables
-      .filter((record: INodeRecordProps) => !recordableIds.includes(record.id))
-      .forEach((record: INodeRecordProps) => {
-        this._recordables.push(new NodeRecord(this, record));
-      });
-
     // Initialize selected records.
-    if (this._doc.records != null) {
+    if (this.doc.records != null) {
       // Load record from stored nodes.
-      const recordIds = this._doc.records.map(
-        (record: INodeRecordProps) => record.id
+      const recordIds = this.doc.records.map(
+        (recordProps: INodeRecordProps) => recordProps.id
       );
-      this._records = [
-        ...this._recordables.filter((record: NodeRecord) =>
+      this.records = [
+        ...this.recordables.filter((record: NodeRecord) =>
           recordIds.includes(record.id)
         ),
       ];
-    } else if (this._records.length > 0) {
-      // In case when user select other model.
-      const recordIds = this._records.map((record: NodeRecord) => record.id);
-      this._records = [
-        ...this._recordables.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
-      this.records.forEach((record: NodeRecord) => record.updateGroupID());
     } else {
-      this._records = [...this._recordables];
+      this.records = [...this.recordables];
     }
   }
 

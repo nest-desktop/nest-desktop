@@ -152,7 +152,7 @@
       <v-list class="py-0" v-if="node.view.state.showSize">
         <v-list-item class="param pl-0 pr-1">
           <v-row no-gutters>
-            <value-slider
+            <ValueSlider
               :thumb-color="node.view.color"
               @update:model-value="node.changes()"
               id="n"
