@@ -107,7 +107,10 @@ const updateModules = () => {
         model.value.nestmlScript.length > 0
       ) {
         module.models.push(model.value.id);
-      } else if (module.models.includes(model.value.id)) {
+      } else if (
+        !state.selectedModules.includes(module) &&
+        module.models.includes(model.value.id)
+      ) {
         module.models.splice(module.models.indexOf(model.value.id), 1);
       }
     });

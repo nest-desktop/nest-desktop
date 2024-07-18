@@ -24,7 +24,7 @@
 
         <v-select
           :items="state.elementTypes"
-          @update:model-value="fetchModels"
+          @update:model-value="fetchModels()"
           class="mx-2"
           density="compact"
           hide-details
@@ -55,10 +55,11 @@
 
     <v-card-actions>
       <v-btn
+        :disabled="!state.script"
         @click="loadNESTMLScript()"
-        title="Load nestml script"
         size="small"
         text="load"
+        title="Load nestml script"
         variant="outlined"
       />
 
@@ -74,7 +75,10 @@
 
 <script lang="ts" setup>
 import axios, { AxiosResponse } from "axios";
-import { onMounted, reactive } from "vue";
+import { nextTick, onMounted, reactive } from "vue";
+
+import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
+const nestmlServerStore = useNESTMLServerStore();
 
 const props = defineProps<{ elementType: string }>();
 
@@ -90,7 +94,7 @@ interface IGithubTree {
 const state = reactive({
   elementType: "",
   elementTypes: [],
-  githubTag: "v8.0.0-rc1",
+  githubTag: nestmlServerStore.state.response.data?.nestml || "",
   githubTags: [],
   model: "",
   models: [],
@@ -110,7 +114,7 @@ const fetchElementTypes = async () => {
   state.model = "";
   state.models = [];
 
-  return new Promise<void>((resolve, reject) =>
+  nextTick(() => {
     axios
       .get(`${githubAPI}/git/trees/${state.githubTag}`)
       .then((response: AxiosResponse) => {
@@ -120,13 +124,10 @@ const fetchElementTypes = async () => {
             .get(`${githubAPI}/git/trees/${modelsTree.sha}`)
             .then((response: AxiosResponse) => {
               state.elementTypes = response.data.tree;
-              resolve();
             });
-        } else {
-          reject();
         }
-      })
-  );
+      });
+  });
 };
 
 const fetchGithubTags = async () => {
@@ -140,30 +141,26 @@ const fetchGithubTags = async () => {
   });
 };
 
-const fetchModels = (elementType: string | null) => {
-  if (elementType) {
-    const elementTypeTree = getTree(state.elementTypes, elementType);
-    console.log(elementTypeTree, state.elementType, state.elementTypes);
+const fetchModels = () => {
+  nextTick(() => {
+    const elementTypeTree = getTree(state.elementTypes, state.elementType);
     if (elementTypeTree) {
       axios.get(elementTypeTree.url).then((response: AxiosResponse) => {
         state.models = response.data.tree;
       });
     }
-  }
+  });
 };
 
-const fetchNESTMLScript = (model: string | null) => {
-  if (state.elementType && model) {
-    const path = `${githubRaw}/${state.githubTag}/models/${state.elementType}/${model}`;
-    axios
-      .get(path)
-      .then((response: AxiosResponse) => {
-        if (response.status === 200 && response.data) {
-          state.script = response.data;
-        }
-      })
-      .catch(() => {});
-  }
+const fetchNESTMLScript = () => {
+  nextTick(() => {
+    const path = `${githubRaw}/${state.githubTag}/models/${state.elementType}/${state.model}`;
+    axios.get(path).then((response: AxiosResponse) => {
+      if (response.status === 200 && response.data) {
+        state.script = response.data;
+      }
+    });
+  });
 };
 
 const getTree = (trees: IGithubTree[], path: string) =>
@@ -177,9 +174,7 @@ const loadNESTMLScript = () => {
 onMounted(() => {
   fetchGithubTags().then(() => {
     state.elementType = props.elementType + "s";
-    fetchElementTypes().then(() => {
-      fetchModels(state.elementType);
-    });
+    fetchElementTypes();
   });
 });
 </script>
