@@ -5,7 +5,7 @@ LABEL maintainer="Sebastian Spreizer <spreizer@web.de>"
 RUN apk add --no-cache jq bash
 
 # Add default to available sites
-COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/nest-desktop-build/nginx-default.conf /etc/nginx/conf.d/default.conf
 
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
@@ -20,11 +20,11 @@ RUN chmod -R 777 /usr/share/nginx/html/assets && \
     chmod -R 777 /var/run/nginx.pid
 
 # Copy entrypoint.sh and make it executable
-COPY ./docker/simulators /usr/local/bin/simulators
+COPY ./docker/nest-desktop-build/simulators /usr/local/bin/simulators
 RUN chmod +x -R /usr/local/bin/simulators
 
 # Copy entrypoint.sh and make it executable
-COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./docker/nest-desktop-build/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 54286
