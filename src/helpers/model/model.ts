@@ -1,6 +1,7 @@
 // model.ts
 
 import { v4 as uuidv4 } from "uuid";
+import { UnwrapRef, reactive } from "vue";
 
 import { TProject } from "@/types";
 
@@ -21,6 +22,10 @@ export interface IModelProps extends IDoc {
   recordables?: string[];
 }
 
+interface IBaseModelState {
+  paramsVisible: string[];
+}
+
 export class BaseModel extends BaseObj {
   private _abbreviation: string;
   private _custom: boolean = false;
@@ -30,9 +35,9 @@ export class BaseModel extends BaseObj {
   private _id: string; // model id
   private _label: string; // model label for view
   private _params: Record<string, ModelParameter> = {}; // model parameters
-  private _paramsVisible: string[] = [];
   private _project: TProject | undefined;
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
+  private _state: UnwrapRef<IBaseModelState>;
 
   constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
     super({
@@ -48,6 +53,8 @@ export class BaseModel extends BaseObj {
     this._label = modelProps.label || "";
     this._abbreviation = modelProps.abbreviation || "";
     this._favorite = modelProps.favorite || false;
+
+    this._state = reactive({ paramsVisible: [] });
 
     this.update(modelProps);
   }
@@ -151,11 +158,11 @@ export class BaseModel extends BaseObj {
   }
 
   get paramsVisible(): string[] {
-    return this._paramsVisible;
+    return this._state.paramsVisible;
   }
 
   set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
+    this._state.paramsVisible = values;
     this.changes();
   }
 
@@ -169,6 +176,10 @@ export class BaseModel extends BaseObj {
 
   get recordables(): INodeRecordProps[] {
     return this._recordables;
+  }
+
+  get state(): UnwrapRef<IBaseModelState> {
+    return this._state;
   }
 
   get value(): string {

@@ -147,13 +147,13 @@
             </v-select>
           </span>
 
-          <!-- <ParameterEdit
-                    :key="'param' + index"
-                    :options="param"
-                    :value.sync="param.value"
-                    @update:value="graph.update()"
-                    v-for="(param, index) of panel.model.params"
-                  /> -->
+          <ActivityChartPanelModelParamEditor
+            :key="index"
+            :model-value="param.value"
+            :param
+            @update:model-value="graph.update()"
+            v-for="(param, index) of panel.model.paramsAll"
+          />
         </v-card-text>
       </Card>
     </div>
@@ -164,8 +164,8 @@
 <script lang="ts" setup>
 import { computed, nextTick } from "vue";
 
-// import ParameterEdit from "../parameter/ParameterEdit.vue";
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
+import ActivityChartPanelModelParamEditor from "./ActivityChartPanelModelParamEditor.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import Card from "../common/Card.vue";
 import NodeRecordChip from "../node/NodeRecordChip.vue";

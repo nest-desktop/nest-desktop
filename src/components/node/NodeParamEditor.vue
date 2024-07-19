@@ -4,14 +4,14 @@
       <ParameterSpecMenu :param v-if="param.state.random" />
 
       <ArrayInput
-        :model-value="(param.value as Number[])"
+        :model-value="(param.state.value as Number[])"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'arrayInput'"
       />
 
       <RangeSlider
-        :model-value="(param.value as number[])"
+        :model-value="(param.state.value as number[])"
         :thumb-color="param.node.view.color"
         @update:model-value="update"
         v-bind="param.options"
@@ -19,7 +19,7 @@
       />
 
       <TickSlider
-        :model-value="(param.value as number)"
+        :model-value="(param.state.value as number)"
         :thumb-color="param.node.view.color"
         @update:model-value="update"
         v-bind="param.options"
@@ -27,7 +27,7 @@
       />
 
       <ValueSlider
-        :model-value="(param.value as number)"
+        :model-value="(param.state.value as number)"
         :thumb-color="param.node.view.color"
         @update:model-value="update"
         v-bind="param.options"
@@ -78,11 +78,6 @@ import ParameterSpecMenu from "../parameter/ParameterSpecMenu.vue";
 const props = defineProps<{ param: NodeParameter }>();
 const param = computed(() => props.param);
 
-const update = (value: number | number[]) => {
-  param.value.value = value;
-  param.value.changes();
-};
-
 const items = [
   {
     icon: "custom:dice-multiple-outline",
@@ -111,6 +106,11 @@ const items = [
     title: "Hide parameter",
   },
 ];
+
+const update = (value: number | number[]) => {
+  param.value.state.value = value;
+  param.value.changes();
+};
 </script>
 
 <style lang="scss">

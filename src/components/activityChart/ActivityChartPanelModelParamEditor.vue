@@ -1,20 +1,13 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
-      <ParameterSpecMenu :param v-if="param.state.random" />
-
-      <ArrayInput
-        :model-value="(param.state.value as Number[])"
+      <v-checkbox
+        :model-value="(param.state.value as boolean)"
         @update:model-value="update"
+        density="compact"
+        hide-details
         v-bind="param.options"
-        v-else-if="param.options.component === 'arrayInput'"
-      />
-
-      <RangeSlider
-        :model-value="(param.state.value as number[])"
-        @update:model-value="update"
-        v-bind="param.options"
-        v-else-if="param.options.component === 'rangeSlider'"
+        v-if="param.options.component === 'checkbox'"
       />
 
       <TickSlider
@@ -28,7 +21,7 @@
         :model-value="(param.state.value as number)"
         @update:model-value="update"
         v-bind="param.options"
-        v-else-if="param.options.component === 'valueSlider'"
+        v-else
       />
     </v-row>
 
@@ -65,31 +58,14 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { TModelParameter } from "@/types";
-
-import ArrayInput from "../controls/ArrayInput.vue";
-import RangeSlider from "../controls/RangeSlider.vue";
 import TickSlider from "../controls/TickSlider.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import ParameterSpecMenu from "../parameter/ParameterSpecMenu.vue";
+import { ActivityChartPanelModelParameter } from "@/helpers/activityChartGraph/activityChartPanelModelParameter";
 
-const props = defineProps<{ param: TModelParameter }>();
+const props = defineProps<{ param: ActivityChartPanelModelParameter }>();
 const param = computed(() => props.param);
 
-const update = (value: number | number[]) => {
-  param.value.state.value = value;
-  param.value.changes();
-};
-
 const items = [
-  {
-    icon: "custom:dice-multiple-outline",
-    onClick: () => {
-      param.value.state.random = !param.value.state.random;
-      param.value.changes();
-    },
-    title: "Toggle view",
-  },
   {
     icon: "mdi:mdi-reload",
     iconClass: "mdi-flip-h",
@@ -109,6 +85,12 @@ const items = [
     title: "Hide parameter",
   },
 ];
+
+const update = (value: boolean | number | null) => {
+  if (value == null) return;
+  param.value.state.value = value;
+  param.value.changes();
+};
 </script>
 
 <style lang="scss">

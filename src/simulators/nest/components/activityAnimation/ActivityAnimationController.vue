@@ -71,8 +71,8 @@
                 :max="graph.state.nSamples"
                 :min="0"
                 :readonly="graph.state.frames.speed !== 0"
-                unit="ms"
                 label="Current time"
+                unit="ms"
                 v-model="graph.frameIdx"
               />
             </v-list-item>

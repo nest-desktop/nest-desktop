@@ -20,7 +20,10 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     this.id = "interSpikeIntervalHistogram";
     this.label = "inter-spike interval";
     this.panel.xAxis = 2;
-    this.params = [
+
+    this.state.xaxisType = "linear";
+
+    this.initParams([
       {
         id: "binSize",
         component: "tickSlider",
@@ -29,10 +32,9 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
         unit: "ms",
         value: 5,
       },
-    ];
-    this.state.xaxisType = "linear";
+    ]);
 
-    this.initParams(modelProps.params);
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -46,7 +48,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     const x: number[] = isi.flat();
     const start: number = 0;
     const end: number = (max(x) as number) + 1;
-    const size: number = this.params[0].value as number;
+    const size: number = this.params.binSize.value as number;
 
     this.data.push({
       activityIdx: activity.idx,

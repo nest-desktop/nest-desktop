@@ -19,7 +19,8 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
     this.id = "senderCVISIPlot";
     this.label = "CV of ISI in each sender";
     this.panel.xAxis = 4;
-    this.params = [
+
+    this.initParams([
       {
         _parent: this,
         _value: "bar",
@@ -32,9 +33,9 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
         },
         set value(value: string) {
           this._value = value;
-          const param = this._parent?.params[1];
-          if (param) {
-            param.show = value.includes("lines");
+          const lineShape = this._parent?.params.lineShape;
+          if (lineShape) {
+            lineShape.visible = value.includes("lines");
           }
         },
       },
@@ -53,21 +54,9 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
         show: false,
         value: "linear",
       },
-    ];
+    ]);
 
-    this.initParams(modelProps.params);
-  }
-
-  get plotMode(): string {
-    return this.params[0].value as string;
-  }
-
-  get plotType(): string {
-    return this.plotMode === "bar" ? this.plotMode : "scatter";
-  }
-
-  get lineShape(): string {
-    return this.params[1].value as string;
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -85,12 +74,16 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
         : 0
     );
 
+    const lineShape = this.params.lineShape.value as string;
+    const plotMode = this.params.plotMode.value as string;
+    const plotType = plotMode === "bar" ? plotMode : "scatter";
+
     this.data.push({
       activityIdx: activity.idx,
       hoverinfo: "x+y",
       legendgroup: "spikes" + activity.idx,
       line: {
-        shape: this.lineShape,
+        shape: lineShape,
       },
       marker: {
         color: activity.recorder.view.color,
@@ -99,11 +92,11 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
           width: x.length > 100 ? 0 : 1,
         },
       },
-      mode: this.plotMode,
+      mode: plotMode,
       name: "CV of ISI in each sender in" + activity.recorder.view.label,
       opacity: 0.6,
       showlegend: false,
-      type: this.plotType,
+      type: plotType,
       visible: this.state.visible,
       x,
       y,

@@ -4,10 +4,11 @@ import { UnwrapRef, reactive } from "vue";
 
 import { Activity } from "../activity/activity";
 import { BaseObj } from "../common/base";
-import { TParamValue } from "../common/parameter";
+import { IParamProps, TParamValue } from "../common/parameter";
 import { currentBackgroundColor } from "../common/theme";
 import { NodeRecord } from "../node/nodeRecord";
 import { ActivityChartPanel } from "./activityChartPanel";
+import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -80,6 +81,7 @@ interface IActivityChartPanelModelState {
     end: number;
     start: number;
   };
+  paramsVisible: string[];
   records: NodeRecord[];
   recordsVisible: string[];
   time: {
@@ -99,7 +101,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _id: string = "";
   private _label: string = "";
   private _panel: ActivityChartPanel; // parent
-  private _params: IActivityChartPanelModelParamProps[] = [];
+  private _params: Record<string, ActivityChartPanelModelParameter> = {};
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
   constructor(panel: ActivityChartPanel) {
@@ -113,6 +115,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
         end: -1e100,
         start: 1e100,
       },
+      paramsVisible: [],
       records: [] as NodeRecord[],
       recordsVisible: [],
       time: {
@@ -184,12 +187,21 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     return this._panel;
   }
 
-  get params(): IActivityChartPanelModelParamProps[] {
+  get params(): Record<string, ActivityChartPanelModelParameter> {
     return this._params;
   }
 
-  set params(value: IActivityChartPanelModelParamProps[]) {
-    this._params = value;
+  get paramsAll(): ActivityChartPanelModelParameter[] {
+    return Object.values(this._params);
+  }
+
+  get paramsVisible(): string[] {
+    return this._state.paramsVisible;
+  }
+
+  set paramsVisible(value: string[]) {
+    this._state.paramsVisible = value;
+    this.changes();
   }
 
   get records(): NodeRecord[] {
@@ -218,6 +230,13 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     activity;
   }
 
+  addParameter(paramProps: IParamProps) {
+    this._params[paramProps.id] = new ActivityChartPanelModelParameter(
+      this,
+      paramProps
+    );
+  }
+
   /**
    * Capitalize axis label.
    * @param text
@@ -225,6 +244,17 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  /**
+   * Observer for activity chart panel model changes.
+   *
+   * @remarks
+   * It emits activity chart graph changes.
+   */
+  changes(): void {
+    this.update();
+    this._panel.graph.changes();
   }
 
   /**
@@ -302,11 +332,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Initialize params for controller.
    * @param paramsProps parameter props
    */
-  initParams(paramsProps: Record<string, TParamValue> = {}): void {
-    this._params.forEach((param: IActivityChartPanelModelParamProps) => {
-      if (paramsProps.hasOwnProperty(param.id)) {
-        param.value = paramsProps[param.id];
-      }
+  initParams(paramsProps: IActivityChartPanelModelParamProps[]): void {
+    paramsProps.forEach((paramProps: IActivityChartPanelModelParamProps) => {
+      this.addParameter(paramProps);
+      this.params[paramProps.id].visible = true;
     });
   }
 
@@ -336,9 +365,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       id: this._id,
     };
 
-    if (this._params.length > 0) {
+    if (this.paramsAll.length > 0) {
       const params: Record<string, TParamValue> = {};
-      this._params.forEach((param: IActivityChartPanelModelParamProps) => {
+      this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
         params[param.id] = param.value;
       });
       modelProps.params = params;
@@ -436,6 +465,18 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this._data.forEach((data: IActivityChartPanelModelData) => {
       if (data.marker && data.marker.line && data.type === "histogram") {
         data.marker.line.color = currentBackgroundColor();
+      }
+    });
+  }
+
+  /**
+   * Update params for controller.
+   * @param paramsProps parameter props
+   */
+  updateParams(paramsProps: Record<string, TParamValue> = {}): void {
+    this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
+      if (paramsProps.hasOwnProperty(param.id)) {
+        param.state.value = paramsProps[param.id];
       }
     });
   }

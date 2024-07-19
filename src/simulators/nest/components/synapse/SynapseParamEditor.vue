@@ -2,21 +2,21 @@
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
       <RangeSlider
-        :model-value="(param.value as number[])"
+        :model-value="(param.state.value as number[])"
         :thumb-color="param.synapse.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-if="param.options.component === 'rangeSlider'"
       />
       <TickSlider
-        :model-value="(param.value as number)"
+        :model-value="(param.state.value as number)"
         :thumb-color="param.synapse.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
         v-else-if="param.options.component === 'tickSlider'"
       />
       <ValueSlider
-        :model-value="(param.value as number)"
+        :model-value="(param.state.value as number)"
         :thumb-color="param.synapse.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
@@ -65,7 +65,7 @@ const props = defineProps<{ param: NESTSynapseParameter }>();
 const param = computed(() => props.param);
 
 const update = (value: number | number[]) => {
-  param.value.value = value;
+  param.value.state.value = value;
   param.value.changes();
 };
 

@@ -1,7 +1,7 @@
 // synapseParameters.ts
 
+import { IParamProps, Parameter } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { Parameter, IParamProps } from "@/helpers/common/parameter";
 
 import { NESTSynapse } from "./synapse";
 
@@ -33,36 +33,8 @@ export class NESTSynapseParameter extends Parameter {
       : types;
   }
 
-  get visible(): boolean {
-    return this.synapse.paramsVisible.includes(this.id);
-  }
-
-  set visible(value: boolean) {
-    const isVisible = this.synapse.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.synapse.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.synapse.paramsVisible = this.synapse.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
-    }
-  }
-
-  /**
-   * Observer for parameter changes.
-   *
-   * @remarks
-   * It emits synapse changes.
-   */
-  override changes(): void {
-    this._synapse.changes();
-  }
-
-  /**
-   * Hide this parameter.
-   */
-  hide(): void {
-    this.visible = false;
+  get parent(): NESTSynapse {
+    return this.synapse;
   }
 
   /**

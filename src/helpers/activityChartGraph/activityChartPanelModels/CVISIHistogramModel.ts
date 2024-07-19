@@ -19,7 +19,8 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     this.id = "CVISIHistogram";
     this.label = "CV of ISI";
     this.panel.xAxis = 3;
-    this.params = [
+
+    this.initParams([
       {
         component: "tickSlider",
         id: "binSize",
@@ -27,9 +28,9 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
         ticks: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
         value: 0.05,
       },
-    ];
+    ]);
 
-    this.initParams(modelProps.params);
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -41,7 +42,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
 
     const start = 0;
     const end = 5;
-    const size = this.params[0].value as number;
+    const size = this.params.binSize.value as number;
     const isi: number[][] = activity.ISI();
     const x: number[] = isi.map(
       (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)

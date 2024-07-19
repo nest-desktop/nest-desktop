@@ -117,7 +117,7 @@ export class NESTNodeSlice extends BaseObj {
    */
   update(): void {
     if (this._node.isNode && this._params.stop.disabled) {
-      this._params.stop.value = this.nodeItem.size;
+      this._params.stop.state.value = this.nodeItem.size;
     }
   }
 }

@@ -43,7 +43,7 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   set delay(value: number) {
-    this._params.delay.value = value;
+    this._params.delay.state.value = value;
   }
 
   /**
@@ -150,6 +150,10 @@ export class NESTSynapse extends BaseSynapse {
     return this.connection.targetNode.receptors?.map((_, idx: number) => idx);
   }
 
+  get paramsAll(): NESTSynapseParameter[] {
+    return Object.values(this._params);
+  }
+
   get params(): Record<string, NESTSynapseParameter> {
     return this._params;
   }
@@ -179,7 +183,7 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   override set weight(value: number) {
-    this._params.weight.value = value;
+    this._params.weight.state.value = value;
   }
 
   /**
@@ -240,7 +244,7 @@ export class NESTSynapse extends BaseSynapse {
     const weight: NESTSynapseParameter = this._params.weight;
     if (typeof weight.value === "number") {
       weight.visible = true;
-      weight.value = -1 * weight.value;
+      weight.state.value = -1 * weight.value;
       this.connection.changes();
     }
   }

@@ -1,13 +1,16 @@
 // spikeCountPlotModel.ts
 
-import { useAppStore } from '@/stores/appStore';
-import { TNode } from '@/types';
+import { useAppStore } from "@/stores/appStore";
+import { TNode } from "@/types";
 
-import { deviation, max, mean, min, sum } from '../../../utils/array';
-import { SpikeActivity } from '../../activity/spikeActivity';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { deviation, max, mean, min, sum } from "../../../utils/array";
+import { SpikeActivity } from "../../activity/spikeActivity";
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -19,7 +22,8 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     this.id = "spikeCountPlot";
     this.label = "Spike count";
     this.panel.xAxis = 1;
-    this.params = [
+
+    this.initParams([
       {
         id: "binSize",
         component: "tickSlider",
@@ -46,13 +50,13 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         },
         set value(value: string) {
           this._value = value;
-          const paramLower = this._parent?.params[2];
-          if (paramLower) {
-            paramLower.show = value.startsWith("lower-upper");
+          const lowerUpperBinSize = this._parent?.params.lowerUpperBinSize;
+          if (lowerUpperBinSize) {
+            lowerUpperBinSize.visible = value.startsWith("lower-upper");
           }
-          const paramUpper = this._parent?.params[3];
-          if (paramUpper) {
-            paramUpper.show = value.startsWith("lower-upper");
+          const horizontalLine = this._parent?.params.horizontalLine;
+          if (horizontalLine) {
+            horizontalLine.visible = value.startsWith("lower-upper");
           }
         },
       },
@@ -72,25 +76,9 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
         show: false,
         value: false,
       },
-    ];
+    ]);
 
-    this.initParams(modelProps.params);
-  }
-
-  get binSize(): number {
-    return this.params[0].value as number;
-  }
-
-  get horizontalLine(): string {
-    return this.params[3].value as string;
-  }
-
-  get lowerUpperBinSize(): number {
-    return this.params[2].value as number;
-  }
-
-  get normalization(): string {
-    return this.params[1].value as string;
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -151,32 +139,31 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
-    const binSize: number = this.binSize;
+    const binSize: number = this.params.binSize.value as number;
 
     const x: number[] = this.range(start, end, binSize);
     const h: number[] = this.histogram(times, start, end, binSize);
 
+    const normalization = this.params.normalization.value as string;
+    const lowerUpperBinSize = this.params.lowerUpperBinSize.value as number;
+    const horizontalLine = this.params.horizontalLine.value as boolean;
+
     let y: number[];
-    if (this.normalization === "min-max scale") {
+    if (normalization === "min-max scale") {
       const minVal = min(h) as number;
       const maxVal = max(h) as number;
       y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
-    } else if (this.normalization.startsWith("lower-upper")) {
-      const hh: number[] = this.histogram(
-        times,
-        start,
-        end,
-        this.lowerUpperBinSize
-      );
-      const ratio = binSize / this.lowerUpperBinSize;
+    } else if (normalization.startsWith("lower-upper")) {
+      const hh: number[] = this.histogram(times, start, end, lowerUpperBinSize);
+      const ratio = binSize / lowerUpperBinSize;
       const minVal = (min(hh) as number) * ratio;
       const maxVal = (max(hh) as number) * ratio;
       y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
-    } else if (this.normalization === "standard score") {
+    } else if (normalization === "standard score") {
       const m = mean(h) as number;
       const std = deviation(h) as number;
       y = h.map((val: number) => (val - m) / std);
-    } else if (this.normalization.startsWith("firing rate")) {
+    } else if (normalization.startsWith("firing rate")) {
       y = h.map((val: number) => (val / nodeSizeTotal / binSize) * 1000);
     } else {
       y = h;
@@ -198,7 +185,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       y,
     } as IActivityChartPanelModelData);
 
-    if (this.horizontalLine) {
+    if (horizontalLine) {
       this.data.push({
         activityIdx: activity.idx,
         hoverinfo: "none",

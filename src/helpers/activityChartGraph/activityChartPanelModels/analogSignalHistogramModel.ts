@@ -1,11 +1,14 @@
 // analogSignalHistogramModel.ts
 
-import { max, min } from '../../../utils/array';
-import { currentBackgroundColor } from '../../common/theme';
-import { NodeRecord } from '../../node/nodeRecord';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
+import { max, min } from "../../../utils/array";
+import { currentBackgroundColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  AnalogSignalPanelModel,
+  IAnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(
@@ -16,7 +19,8 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     this.icon = "mdi:mdi-chart-bar";
     this.id = "analogSignalHistogram";
     this.panel.xAxis = 2;
-    this.params = [
+
+    this.initParams([
       {
         id: "bins",
         component: "tickSlider",
@@ -24,9 +28,9 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
         ticks: [1, 5, 10, 20, 50, 100, 200],
         value: 50,
       },
-    ];
+    ]);
 
-    this.initParams(model.params);
+    this.updateParams(model.params);
   }
 
   /**
@@ -75,9 +79,11 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   updateEventData(record: NodeRecord): void {
     if (record.values == null || record.values.length === 0) return;
 
+    const bins = this.params.bins.value as number;
+
     const start: number = this.state.histogram.start;
     const end: number = this.state.histogram.end + 1;
-    const size: number = (end - start) / (this.params[0].value as number);
+    const size: number = (end - start) / bins;
 
     this.data.push({
       activityIdx: record.activity.idx,
@@ -88,7 +94,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
         color: record.state.color,
         line: {
           color: currentBackgroundColor(),
-          width: (this.params[0].value as number) > 100 ? 0 : 1,
+          width: bins > 100 ? 0 : 1,
         },
       },
       name: "Histogram of " + record.nodeLabel,

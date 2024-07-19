@@ -177,7 +177,7 @@ export type TNetworkProps =
   | INorseNetworkProps;
 export type TNetworkGraph = BaseNetworkGraph | NESTNetworkGraph;
 export type TNode = BaseNode | NESTNode | NorseNode;
-export type TNodeParameter =
+export type TNodeParameterParent =
   | BaseNode
   | NESTNode
   | NESTCopyModel

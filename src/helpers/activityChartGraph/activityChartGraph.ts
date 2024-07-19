@@ -274,6 +274,16 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
+   * Observer for activity chart graph changes.
+   *
+   * @remarks
+   * It emits plotly react and restyle.
+   */
+  changes(): void {
+    this.update();
+  }
+
+  /**
    * Clear shapes.
    */
   clearShapes(): void {

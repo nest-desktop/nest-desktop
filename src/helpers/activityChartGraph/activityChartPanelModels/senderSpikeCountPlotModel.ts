@@ -19,7 +19,8 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
     this.id = "senderSpikeCountPlot";
     this.label = "spike count in each sender";
     this.panel.xAxis = 4;
-    this.params = [
+
+    this.initParams([
       {
         _parent: this,
         _value: "bar",
@@ -32,9 +33,9 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         },
         set value(value: string) {
           this._value = value;
-          const param = this._parent?.params[1];
-          if (param) {
-            param.show = value.includes("lines");
+          const lineShape = this._parent?.params.lineShape;
+          if (lineShape) {
+            lineShape.visible = value.includes("lines");
           }
         },
       },
@@ -59,25 +60,9 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         label: "Spikes per seconds (spikes/s)",
         value: false,
       },
-    ];
+    ]);
 
-    this.initParams(modelProps.params);
-  }
-
-  get lineShape(): string {
-    return this.params[1].value as string;
-  }
-
-  get plotMode(): string {
-    return this.params[0].value as string;
-  }
-
-  get plotType(): string {
-    return this.plotMode === "bar" ? this.plotMode : "scatter";
-  }
-
-  get spikeRate(): boolean {
-    return this.params[2].value as boolean;
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -95,18 +80,23 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       counts[sender] = counts[sender] ? counts[sender] + 1 : 1;
     }
 
-    const time = this.spikeRate ? activity.endTime / 1000 : 1;
+    const spikeRate = this.params.spikeRate.value as boolean;
+    const time = spikeRate ? activity.endTime / 1000 : 1;
     const y: number[] = x.map((nodeId: number) =>
       counts[nodeId] ? counts[nodeId] / time : 0
     );
     const size = x.length;
+
+    const lineShape = this.params.lineShape.value as string;
+    const plotMode = this.params.plotMode.value as string;
+    const plotType = plotMode === "bar" ? plotMode : "scatter";
 
     this.data.push({
       activityIdx: activity.idx,
       hoverinfo: "x+y",
       legendgroup: "spikes" + activity.idx,
       line: {
-        shape: this.lineShape,
+        shape: lineShape,
       },
       marker: {
         color: activity.recorder.view.color,
@@ -115,11 +105,11 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
           width: size > 100 ? 0 : 1,
         },
       },
-      mode: this.plotMode,
+      mode: plotMode,
       name: "Spike count in each sender in" + activity.recorder.view.label,
       opacity: 0.6,
       showlegend: false,
-      type: this.plotType,
+      type: plotType,
       visible: this.state.visible,
       x,
       y,
@@ -130,7 +120,9 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
    * Update layout label for spike sender histogram.
    */
   override updateLayoutLabel(): void {
+    const spikeRate = this.params.spikeRate.value as boolean;
+
     this.panel.layout.xaxis.title = "Neuron ID";
-    this.panel.layout.yaxis.title = this.spikeRate ? "Spikes/s" : "Spike count";
+    this.panel.layout.yaxis.title = spikeRate ? "Spikes/s" : "Spike count";
   }
 }

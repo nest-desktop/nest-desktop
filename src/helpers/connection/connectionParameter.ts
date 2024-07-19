@@ -3,11 +3,12 @@
 import { TConnection } from "@/types";
 
 import { IParamProps, IParamType, Parameter } from "../common/parameter";
+import { IConnectionRuleConfig } from "./connectionRule";
 
 export interface IConnectionParamProps extends IParamProps {}
 
 export class ConnectionParameter extends Parameter {
-  private _connection: TConnection;
+  public _connection: TConnection;
 
   constructor(connection: TConnection, paramProps: IConnectionParamProps) {
     super(paramProps, { minLevel: 3 });
@@ -18,40 +19,30 @@ export class ConnectionParameter extends Parameter {
     return this._connection as TConnection;
   }
 
+  override get parent(): TConnection {
+    return this.connection;
+  }
+
   get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;
     return types;
   }
 
-  get visible(): boolean {
-    return this.connection.paramsVisible.includes(this.id);
-  }
+  /**
+   * Reset value taken from options.
+   */
+  override reset(): void {
+    this.typeId = "constant";
 
-  set visible(value: boolean) {
-    const isVisible = this.connection.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.connection.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.connection.paramsVisible = this.connection.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
+    const ruleConfig: IConnectionRuleConfig = this.connection.getRuleConfig();
+    const p = ruleConfig.params.find(
+      (p: IConnectionParamProps) => p.id === this.id
+    );
+
+    if (p?.value) {
+      this.state.value = p.value;
+    } else if (this.options) {
+      this.state.value = this.options.defaultValue;
     }
-  }
-
-  /**
-   * Observer for parameter changes.
-   *
-   * @remarks
-   * It emits connection changes.
-   */
-  override changes(): void {
-    this.connection.changes();
-  }
-
-  /**
-   * Hide this parameter.
-   */
-  hide(): void {
-    this.visible = false;
   }
 }

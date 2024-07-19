@@ -1,5 +1,7 @@
 // modelReceptor.ts
 
+import { UnwrapRef, reactive } from "vue";
+
 import { BaseObj } from "@/helpers/common/base";
 import { IModelProps } from "@/helpers/model/model";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
@@ -17,6 +19,10 @@ export interface INESTModelReceptorProps {
   recordables?: string[];
 }
 
+interface INESTModelReceptorState {
+  paramsVisible: string[];
+}
+
 export class NESTModelReceptor extends BaseObj {
   private readonly _name = "ModelReceptor";
 
@@ -24,7 +30,7 @@ export class NESTModelReceptor extends BaseObj {
   private _label: string;
   private _model: NESTModel; // parent
   private _params: Record<string, NESTModelReceptorParameter> = {};
-  private _paramsVisible: string[] = [];
+  private _state: UnwrapRef<INESTModelReceptorState>;
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
   constructor(model: NESTModel, modelReceptorProps: INESTModelReceptorProps) {
@@ -35,12 +41,16 @@ export class NESTModelReceptor extends BaseObj {
     this._id = modelReceptorProps.id;
     this._label = modelReceptorProps.label;
 
-    this.updateParameters(modelReceptorProps);
+    this._state = reactive({
+      paramsVisible: [],
+    });
+
+    this.initParameters(modelReceptorProps);
     this.updateRecordables(modelReceptorProps);
   }
 
   get filteredParams(): NESTModelReceptorParameter[] {
-    return this._paramsVisible.map((paramId) => this._params[paramId]);
+    return this._state.paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   get id(): string {
@@ -72,16 +82,20 @@ export class NESTModelReceptor extends BaseObj {
   }
 
   get paramsVisible(): string[] {
-    return this._paramsVisible;
+    return this._state.paramsVisible;
   }
 
   set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
+    this._state.paramsVisible = values;
     this.changes();
   }
 
   get recordables(): INodeRecordProps[] {
     return this._recordables;
+  }
+
+  get state(): UnwrapRef<INESTModelReceptorState> {
+    return this._state;
   }
 
   /**
@@ -93,6 +107,17 @@ export class NESTModelReceptor extends BaseObj {
       this,
       paramProps
     );
+  }
+
+  /**
+   * Observer for model receptor changes.
+   *
+   * @remarks
+   * It emits model changes.
+   */
+  changes(): void {
+    this.clean();
+    this._model.changes();
   }
 
   /**
@@ -121,20 +146,24 @@ export class NESTModelReceptor extends BaseObj {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    this.paramsAll.forEach(
-      (param: NESTModelReceptorParameter) => (param.state.visible = false)
-    );
+    this.paramsVisible = [];
   }
 
   /**
-   * Observer for model receptor changes.
-   *
-   * @remarks
-   * It emits model changes.
+   * Init model parameters.
    */
-  changes(): void {
-    this.clean();
-    this._model.changes();
+  initParameters(modelReceptorProps: INESTModelReceptorProps): void {
+    if (modelReceptorProps.params) {
+      modelReceptorProps.params.forEach(
+        (paramProps: INESTModelReceptorParamProps) => {
+          if (this.getParameter(paramProps.id)) {
+            this.updateParameter(paramProps);
+          } else {
+            this.addParameter(paramProps);
+          }
+        }
+      );
+    }
   }
 
   /**
@@ -164,9 +193,7 @@ export class NESTModelReceptor extends BaseObj {
   //  * Sets all params to visible.
   //  */
   showAllParams(): void {
-    this.paramsAll.forEach(
-      (param: NESTModelReceptorParameter) => (param.visible = true)
-    );
+    this.paramsVisible = Object.keys(this._params);
   }
 
   /**
@@ -203,24 +230,7 @@ export class NESTModelReceptor extends BaseObj {
    * Update a parameter.
    */
   updateParameter(paramProps: INESTModelReceptorParamProps): void {
-    this._params[paramProps.id].update(paramProps);
-  }
-
-  /**
-   * Update model parameters.
-   */
-  updateParameters(modelReceptorProps: INESTModelReceptorProps): void {
-    if (modelReceptorProps.params) {
-      modelReceptorProps.params.forEach(
-        (paramProps: INESTModelReceptorParamProps) => {
-          if (this.getParameter(paramProps.id)) {
-            this.updateParameter(paramProps);
-          } else {
-            this.addParameter(paramProps);
-          }
-        }
-      );
-    }
+    this._params[paramProps.id].init(paramProps);
   }
 
   /**

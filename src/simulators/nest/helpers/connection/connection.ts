@@ -4,23 +4,19 @@ import {
   BaseConnection,
   IConnectionProps,
 } from "@/helpers/connection/connection";
-import {
-  ConnectionParameter,
-  IConnectionParamProps,
-} from "@/helpers/connection/connectionParameter";
-import { IConnectionRuleConfig } from "@/helpers/connection/connectionRule";
+import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
 
-import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
-import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
-import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
 import { NESTNodeSlice } from "../node/nodeSlice";
+import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
+import { NESTConnections } from "./connections";
 
 export interface INESTConnectionProps extends IConnectionProps {
   sourceSlice?: INodeParamProps[];
@@ -130,23 +126,11 @@ export class NESTConnection extends BaseConnection {
    * Resets all parameters to their default.
    */
   override resetParams(): void {
-    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
-
     // Reset connection parameter.
-    Object.values(this.params).forEach((param: ConnectionParameter) => {
-      param.reset();
-
-      const p = ruleConfig.params.find(
-        (p: IConnectionParamProps) => p.id === param.id
-      );
-
-      if (p?.value) {
-        param.value = p.value;
-      }
-    });
+    this.paramsAll.forEach((param: ConnectionParameter) => param.reset());
 
     // Reset synapse parameter.
-    Object.values(this.synapse.params).forEach((param: NESTSynapseParameter) =>
+    this.synapse.paramsAll.forEach((param: NESTSynapseParameter) =>
       param.reset()
     );
   }

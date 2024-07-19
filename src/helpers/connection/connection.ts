@@ -326,23 +326,11 @@ export class BaseConnection extends BaseObj {
   }
 
   /**
-   * Resets parameters to their default.
+   * Resets all parameters to their default.
    */
   resetParams(): void {
-    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
-
     // Reset connection parameter.
-    this.paramsAll.forEach((param: ConnectionParameter) => {
-      param.reset();
-
-      const p = ruleConfig.params.find(
-        (p: IConnectionParamProps) => p.id === param.id
-      );
-
-      if (p?.value) {
-        param.value = p.value;
-      }
-    });
+    this.paramsAll.forEach((param: ConnectionParameter) => param.reset());
   }
 
   /**

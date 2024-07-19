@@ -12,7 +12,7 @@ export class NESTNodeParameter extends NodeParameter {
 
   /**
    * Generate the Python code for this parameter.
-   * @returns parameter as Python code
+   * @returns string code
    */
   override toPythonCode(): string {
     let value: string;

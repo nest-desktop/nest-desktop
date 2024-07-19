@@ -53,7 +53,7 @@
             <ActivityStatsAnalog
               :activity="activity as AnalogSignalActivity"
               :height="
-                state.height - (activity.recorder.model.isMultimeter ? 60 : 0)
+                state.height - (activity.recorder.model.isMultimeter ? 40 : 0)
               "
               v-if="activity.recorder.model.isAnalogRecorder"
             />
@@ -90,7 +90,8 @@ const onResize = () => {
     24 - // system bar
     48 - // project bar
     48 - // toolbar
-    activities.value.all.length * 48 - // expansion title panel
+    64 - // current expansion title panel
+    (activities.value.all.length - 1) * 48 - // other expansion title panel
     42; // data table footer
 };
 

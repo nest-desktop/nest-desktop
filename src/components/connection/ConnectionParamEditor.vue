@@ -5,7 +5,7 @@
 
       <v-checkbox
         :color="param.connection.sourceNode.view.color"
-        :model-value="(param.value as boolean)"
+        :model-value="(param.state.value as boolean)"
         @update:model-value="update"
         density="compact"
         hide-details
@@ -14,7 +14,7 @@
       />
 
       <ValueSlider
-        :model-value="(param.value as number)"
+        :model-value="(param.state.value as number)"
         :thumb-color="param.connection.sourceNode.view.color"
         @update:model-value="update"
         v-bind="param.options"
@@ -91,7 +91,7 @@ const items = [
 
 const update = (value: number | number[] | boolean | null) => {
   if (value == null) return;
-  param.value.value = value;
+  param.value.state.value = value;
   param.value.changes();
 };
 </script>

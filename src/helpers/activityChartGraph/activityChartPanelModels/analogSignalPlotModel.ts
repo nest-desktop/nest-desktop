@@ -30,7 +30,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.id = "analogSignalPlot";
     this.panel.xAxis = 1;
 
-    this.params = [
+    this.initParams([
       {
         id: "averageLine",
         component: "checkbox",
@@ -39,14 +39,13 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       },
       {
         id: "spikeThreshold",
-        component: "checkbox+valueInput",
+        component: "checkbox",
         label: "spike threshold",
-        value: -55,
-        show: false,
+        value: false,
       },
-    ];
+    ]);
 
-    this.initParams(modelProps.params);
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -292,7 +291,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === "V_m") {
+      if (record.id === "V_m" && this.params.spikeThreshold.value) {
         // Add spike threshold for membrane potential.
         this.addSpikeThresholdLine(record);
       }
@@ -305,7 +304,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         this.addMultipleLines(record);
 
         // Add average line for the population.
-        if (this.params[0].value as boolean) {
+        if (this.params.averageLine.value) {
           this.addAverageLine(record);
         }
       }

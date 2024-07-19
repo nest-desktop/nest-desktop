@@ -1,6 +1,7 @@
 // connectionParameter.ts
 
-import { IParamProps, IParamType, Parameter } from "@/helpers/common/parameter";
+import { IParamProps, IParamType } from "@/helpers/common/parameter";
+import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 
 import { NESTConnection } from "./connection";
 
@@ -13,18 +14,15 @@ const PyNNParamIds: Record<string, string> = {
   p: "p_connect",
 };
 
-export class NESTConnectionParameter extends Parameter {
-  private _connection: NESTConnection;
-
+export class NESTConnectionParameter extends ConnectionParameter {
   constructor(
     connection: NESTConnection,
     paramProps: INESTConnectionParamProps
   ) {
-    super(paramProps);
-    this._connection = connection;
+    super(connection, paramProps);
   }
 
-  get connection(): NESTConnection {
+  override get connection(): NESTConnection {
     return this._connection as NESTConnection;
   }
 
@@ -33,46 +31,14 @@ export class NESTConnectionParameter extends Parameter {
    * when the connection is spatial.
    */
   get isSpatial(): boolean {
-    return this._connection.isBothSpatial;
+    return this.connection.isBothSpatial;
   }
 
-  get types(): IParamType[] {
+  override get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;
     return !this.isSpatial
       ? types.filter((type: IParamType) => !type.id.startsWith("spatial"))
       : types;
-  }
-
-  get visible(): boolean {
-    return this.connection.paramsVisible.includes(this.id);
-  }
-
-  set visible(value: boolean) {
-    const isVisible = this.connection.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.connection.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.connection.paramsVisible = this.connection.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
-    }
-  }
-
-  /**
-   * Observer for parameter changes.
-   *
-   * @remarks
-   * It emits connection changes.
-   */
-  override changes(): void {
-    this.connection.changes();
-  }
-
-  /**
-   * Hide this parameter.
-   */
-  hide(): void {
-    this.visible = false;
   }
 
   PyNNParamId(): string {

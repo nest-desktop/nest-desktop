@@ -43,7 +43,7 @@ export interface IParamProps {
 interface IParamState {
   disabled: boolean;
   random: boolean;
-  visible: boolean;
+  value: TParamValue;
 }
 export interface IParamType {
   icon?: string;
@@ -77,7 +77,6 @@ export class Parameter extends BaseObj {
   private _ticks: (number | string)[] = [];
   private _type: IParamType = { id: "constant" };
   private _unit: string = "";
-  private _value: TParamValue = 0; // constant value;
   private _component: string = "valueInput";
 
   constructor(
@@ -90,17 +89,25 @@ export class Parameter extends BaseObj {
       logger: { settings: { minLevel: 3, ...loggerProps } },
     });
 
-    this._state = reactive({
-      visible: false,
-      random: false,
-      disabled: true,
-    });
+    this.init(paramProps);
 
-    this.update(paramProps);
+    this._state = reactive({
+      random: false,
+      disabled: paramProps.disabled != undefined ? paramProps.disabled : true,
+      value: paramProps.value || 0,
+    });
   }
 
   get code(): string {
     return this.toPythonCode();
+  }
+
+  get component(): string {
+    return this._component;
+  }
+
+  set component(value: string) {
+    this._component = value;
   }
 
   get disabled(): boolean {
@@ -222,6 +229,10 @@ export class Parameter extends BaseObj {
     return options;
   }
 
+  get parent(): { changes: () => void; paramsVisible: string[] } {
+    return { changes: () => {}, paramsVisible: [] };
+  }
+
   get readonly(): boolean {
     return this._readonly;
   }
@@ -232,7 +243,7 @@ export class Parameter extends BaseObj {
 
   get specs(): IParamTypeSpec[] {
     if (this._type.id === "constant") {
-      return [{ label: this.label, value: this._value }];
+      return [{ label: this.label, value: this.value }];
     } else {
       return this._type.specs || [];
     }
@@ -291,39 +302,42 @@ export class Parameter extends BaseObj {
   }
 
   get value(): TParamValue {
-    return this._value;
-  }
-
-  set value(value: TParamValue) {
-    this._value = value;
+    return this._state.value;
   }
 
   get valueFixed(): string {
-    if (Array.isArray(this._value)) {
+    if (Array.isArray(this.value)) {
       return (
-        "[" + this._value.map((value) => this.toFixed(value)).join(",") + "]"
+        "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]"
       );
-    } else if (typeof this._value === "number") {
-      return this.toFixed(this._value);
+    } else if (typeof this.value === "number") {
+      return this.toFixed(this.value);
     } else {
-      return this._value.toString();
+      return this.value.toString();
     }
   }
 
   get valueAsString(): string {
-    if (Array.isArray(this._value)) {
-      return JSON.stringify(this._value.map((value) => value));
+    if (Array.isArray(this.value)) {
+      return JSON.stringify(this.value.map((value) => value));
     } else {
-      return JSON.stringify(this._value);
+      return JSON.stringify(this.value);
     }
   }
 
-  get component(): string {
-    return this._component;
+  get visible(): boolean {
+    return this.parent.paramsVisible.includes(this.id);
   }
 
-  set component(value: string) {
-    this._component = value;
+  set visible(value: boolean) {
+    const isVisible = this.parent.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.parent.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.parent.paramsVisible = this.parent.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id
+      );
+    }
   }
 
   /**
@@ -336,7 +350,49 @@ export class Parameter extends BaseObj {
   /**
    * Updates when parameter is changed.
    */
-  changes(): void {}
+  changes(): void {
+    this.parent.changes();
+  }
+
+  /**
+   * Hide this parameter.
+   */
+  hide(): void {
+    this.visible = false;
+  }
+
+  /**
+   * Init parameter
+   * @param paramProps parameter props
+   */
+  init(paramProps: IParamProps): void {
+    this._id = paramProps.id;
+
+    // optional param specifications
+    this._rules = paramProps.rules || [];
+    this._factors = paramProps.factors || [];
+
+    if (paramProps.type) {
+      const type = this.config?.localStorage.types.find(
+        (t: IParamType) => t.id === paramProps.type?.id
+      );
+      if (type != null) {
+        this._type = { ...type, ...paramProps.type };
+      }
+    }
+
+    this._format = paramProps.format || "";
+    this._items = paramProps.items || [];
+    this._label = paramProps.label || paramProps.id;
+    this._readonly = paramProps.readonly || false;
+
+    this._max = paramProps.max || 1;
+    this._min = paramProps.min || 0;
+    this._step = paramProps.step || 1;
+    this._ticks = paramProps.ticks || [];
+    this._unit = paramProps.unit || "";
+    this._component = paramProps.component || paramProps.input || "valueInput";
+  }
 
   /**
    * Reset value taken from options.
@@ -344,8 +400,15 @@ export class Parameter extends BaseObj {
   reset(): void {
     this.typeId = "constant";
     if (this.options) {
-      this._value = this.options.defaultValue;
+      this._state.value = this.options.defaultValue;
     }
+  }
+
+  /**
+   * Show this parameter.
+   */
+  show(): void {
+    this.visible = true;
   }
 
   /**
@@ -370,7 +433,7 @@ export class Parameter extends BaseObj {
   toJSON(): IParamProps {
     const paramProps: IParamProps = {
       id: this._id,
-      value: this._value,
+      value: this.value,
     };
 
     // Add value factors if existed.
@@ -401,21 +464,21 @@ export class Parameter extends BaseObj {
       // Constant value.
       if (this._format === "integer") {
         // Integer value
-        value = this.toFixed(this._value as number, 0);
+        value = this.toFixed(this.value as number, 0);
       } else if (this._format === "float") {
         // Float value
-        value = this.toFixed(this._value as number);
-      } else if (typeof this._value === "string") {
+        value = this.toFixed(this.value as number);
+      } else if (typeof this.value === "string") {
         // TODO: this condition should be checked if it is really possible.
         // String value
-        value = this._value as string;
-      } else if (typeof this._value === "boolean") {
+        value = this.value as string;
+      } else if (typeof this.value === "boolean") {
         // Boolean value
-        value = this._value ? "True" : "False";
-      } else if (Array.isArray(this._value)) {
-        value = JSON.stringify(this._value.map((value) => value));
+        value = this.value ? "True" : "False";
+      } else if (Array.isArray(this.value)) {
+        value = JSON.stringify(this.value.map((value) => value));
       } else {
-        value = JSON.stringify(this._value);
+        value = JSON.stringify(this.value);
       }
     } else if (this._type.id.startsWith("np")) {
       const specs: string = this.specs
@@ -474,44 +537,5 @@ export class Parameter extends BaseObj {
     }
 
     return paramType;
-  }
-
-  /**
-   * Update parameter
-   * @param paramProps parameter props
-   */
-  update(paramProps: IParamProps): void {
-    this._id = paramProps.id;
-    this._value = paramProps.value || 0;
-
-    this._state.visible =
-      paramProps.visible != undefined ? paramProps.visible : false;
-    this._state.disabled =
-      paramProps.disabled != undefined ? paramProps.disabled : true;
-
-    // optional param specifications
-    this._rules = paramProps.rules || [];
-    this._factors = paramProps.factors || [];
-
-    if (paramProps.type) {
-      const type = this.config?.localStorage.types.find(
-        (t: IParamType) => t.id === paramProps.type?.id
-      );
-      if (type != null) {
-        this._type = { ...type, ...paramProps.type };
-      }
-    }
-
-    this._format = paramProps.format || "";
-    this._items = paramProps.items || [];
-    this._label = paramProps.label || paramProps.id;
-    this._readonly = paramProps.readonly || false;
-
-    this._max = paramProps.max || 1;
-    this._min = paramProps.min || 0;
-    this._step = paramProps.step || 1;
-    this._ticks = paramProps.ticks || [];
-    this._unit = paramProps.unit || "";
-    this._component = paramProps.component || paramProps.input || "valueInput";
   }
 }

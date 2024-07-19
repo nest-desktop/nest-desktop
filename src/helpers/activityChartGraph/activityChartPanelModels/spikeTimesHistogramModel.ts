@@ -1,10 +1,13 @@
 // spikeTimesHistogramModel.ts
 
-import { SpikeActivity } from '../../activity/spikeActivity';
-import { currentBackgroundColor } from '../../common/theme';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { SpikeActivity } from "../../activity/spikeActivity";
+import { currentBackgroundColor } from "../../common/theme";
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(
@@ -15,7 +18,8 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     this.icon = "mdi:mdi-chart-bar";
     this.id = "spikeTimesHistogram";
     this.panel.xAxis = 1;
-    this.params = [
+
+    this.initParams([
       {
         id: "binSize",
         component: "tickSlider",
@@ -24,9 +28,9 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         unit: "ms",
         value: 20,
       },
-    ];
+    ]);
 
-    this.initParams(modelProps.params);
+    this.updateParams(modelProps.params);
   }
 
   /**
@@ -39,7 +43,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     const x: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
-    const size: number = this.params[0].value as number;
+    const size: number = this.params.binSize.value as number;
 
     this.data.push({
       activityIdx: activity.idx,
