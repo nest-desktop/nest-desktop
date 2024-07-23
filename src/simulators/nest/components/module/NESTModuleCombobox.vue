@@ -11,8 +11,8 @@
     hide-details="auto"
     label="Module"
     prepend-inner-icon="mdi:mdi-memory"
-    item-title="id"
-    item-value="id"
+    item-title="name"
+    item-value="name"
     v-model:search="state.search"
     variant="outlined"
   >
@@ -58,8 +58,8 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-import { useModuleStore } from "../../stores/moduleStore";
-const moduleStore = useModuleStore();
+import { useNESTModuleStore } from "../../stores/moduleStore";
+const moduleStore = useNESTModuleStore();
 
 const state = reactive({
   search: "nestmlmodule",
@@ -75,8 +75,8 @@ const rules = [
 ];
 
 const updateModuleExisting = () => {
-  const moduleIds = moduleStore.moduleIds();
-  state.exist = moduleIds.includes(state.search);
+  const moduleNames = moduleStore.moduleNames();
+  state.exist = moduleNames.includes(state.search);
 };
 </script>
 

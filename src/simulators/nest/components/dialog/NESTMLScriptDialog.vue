@@ -10,7 +10,9 @@
     <v-card-text>
       <v-row class="mb-2">
         <v-select
+          :disabled="state.githubTags.length === 0"
           :items="state.githubTags"
+          :model-value="state.githubTag"
           @update:model-value="fetchElementTypes()"
           class="mx-2"
           density="compact"
@@ -18,12 +20,13 @@
           item-title="name"
           item-value="name"
           label="Select a tag"
-          v-model="state.githubTag"
           variant="outlined"
         />
 
         <v-select
+          :disabled="state.elementTypes.length === 0"
           :items="state.elementTypes"
+          :model-value="state.elementType"
           @update:model-value="fetchModels()"
           class="mx-2"
           density="compact"
@@ -31,13 +34,13 @@
           item-title="path"
           item-value="path"
           label="Select an element type"
-          v-model="state.elementType"
           variant="outlined"
         />
 
         <v-select
           :disabled="state.models.length === 0"
           :items="state.models"
+          :model-value="state.model"
           @update:model-value="fetchNESTMLScript"
           class="mx-2"
           density="compact"
@@ -45,7 +48,6 @@
           item-title="path"
           item-value="path"
           label="Select a nestml file"
-          v-model="state.model"
           variant="outlined"
         />
       </v-row>
@@ -91,7 +93,15 @@ interface IGithubTree {
   url: string;
 }
 
-const state = reactive({
+const state = reactive<{
+  elementType: string;
+  elementTypes: IGithubTree[];
+  githubTag: string;
+  githubTags: IGithubTree[];
+  model: string;
+  models: IGithubTree[];
+  script: string;
+}>({
   elementType: "",
   elementTypes: [],
   githubTag: nestmlServerStore.state.response.data?.nestml || "",
@@ -123,7 +133,7 @@ const fetchElementTypes = async () => {
           axios
             .get(`${githubAPI}/git/trees/${modelsTree.sha}`)
             .then((response: AxiosResponse) => {
-              state.elementTypes = response.data.tree;
+              state.elementTypes = response.data.tree || [];
             });
         }
       });
@@ -136,7 +146,7 @@ const fetchGithubTags = async () => {
 
   return axios.get(`${githubAPI}/tags`).then((response: AxiosResponse) => {
     if (response.status === 200) {
-      state.githubTags = response.data;
+      state.githubTags = response.data || [];
     }
   });
 };

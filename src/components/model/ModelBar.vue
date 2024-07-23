@@ -31,6 +31,8 @@
 
     <v-spacer />
 
+    <slot name="prependBtn"></slot>
+
     <SimulationButton
       :disabled="!modelStore.model.isNeuron"
       :simulation="modelStore.state.project.simulation"

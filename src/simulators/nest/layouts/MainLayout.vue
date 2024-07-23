@@ -18,6 +18,9 @@ import nestSimulator from "../stores/backends/nestSimulatorStore";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
+import { useNESTModuleStore } from "../stores/moduleStore";
+const nestModuleStore = useNESTModuleStore();
+
 const route = useRoute();
 
 const navItems = [
@@ -65,5 +68,6 @@ onMounted(() => {
   stores.projectStore.init();
 
   nestSimulator.fetchModels();
+  nestModuleStore.init();
 });
 </script>

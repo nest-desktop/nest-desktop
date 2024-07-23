@@ -11,17 +11,22 @@ export const useNESTMLServerStore = defineBackendStore(
   "http://localhost:52426"
 );
 
-const generateModels = (
-  models: string[],
-  moduleName: string = "nestmlmodule"
+export const generateModels = (
+  module: {
+    models: { name: string; script: string }[];
+    name: string;
+  } = {
+    models: [],
+    name: "nestmlmodule",
+  }
 ) => {
   const nestmlServerStore = useNESTMLServerStore();
 
-  nestmlServerStore
+  return nestmlServerStore
     .axiosInstance()
     .post("/generateModels", {
-      module_name: moduleName,
-      models: models,
+      module_name: module.name,
+      models: module.models,
     })
     .then((response: AxiosResponse) => {
       switch (response.status) {
@@ -29,7 +34,7 @@ const generateModels = (
           notifySuccess(
             `Models (${response.data.status["INSTALLED"].join(
               ","
-            )}) are successfully generated in "${moduleName}" module.`
+            )}) are successfully generated in "${module.name}" module.`
           );
           break;
         case 400:
@@ -42,6 +47,9 @@ const generateModels = (
     });
 };
 
-export default {
-  generateModels,
+export const fetchNESTMLModels = (moduleName: string) => {
+  const nestmlServerStore = useNESTMLServerStore();
+  return nestmlServerStore
+    .axiosInstance()
+    .get(`/module/${moduleName}/installed`);
 };

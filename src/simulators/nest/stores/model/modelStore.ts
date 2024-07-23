@@ -1,7 +1,8 @@
 // modelStore.ts
 
-import { defineModelStore } from "@/stores/model/defineModelStore";
+import { TModelStore, defineModelStore } from "@/stores/model/defineModelStore";
 
+import { IModule, useNESTModuleStore } from "../moduleStore";
 import { useNESTModelDBStore } from "./modelDBStore";
 
 export const useNESTModelStore = defineModelStore({
@@ -9,3 +10,15 @@ export const useNESTModelStore = defineModelStore({
   useModelDBStore: useNESTModelDBStore,
   defaultView: "doc",
 });
+
+export const updateSimulationModules = () => {
+  const modelStore: TModelStore = useNESTModelStore();
+
+  const moduleStore = useNESTModuleStore();
+
+  modelStore.state.project.simulation.modules = moduleStore.state.modules
+    .filter((module: IModule) =>
+      module.models.includes(modelStore.state.modelId)
+    )
+    .map((module: IModule) => module.id);
+};

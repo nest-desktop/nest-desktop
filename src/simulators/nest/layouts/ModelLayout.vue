@@ -17,6 +17,16 @@
         </v-tab>
       </template>
 
+      <template #prependBtn>
+        <v-btn
+          @click="openNESTModuleDialog()"
+          prepend-icon="mdi:mdi-memory"
+          text="Module"
+          title="Generate module"
+          variant="outlined"
+        />
+      </template>
+
       <template #modelExplorer>
         <v-tab
           :disabled="!modelStore.model.isNeuron"
@@ -76,8 +86,12 @@ import { loadJSON } from "@/utils/fetch";
 
 import { INESTProjectProps, NESTProject } from "../helpers/project/project";
 import { NESTNode } from "../helpers/node/node";
+import { openNESTModuleDialog } from "../stores/moduleStore";
 
-import { useNESTModelStore } from "../stores/model/modelStore";
+import {
+  updateSimulationModules,
+  useNESTModelStore,
+} from "../stores/model/modelStore";
 const modelStore: TModelStore = useNESTModelStore();
 
 const loadProjectfromAssets = (): void => {
@@ -100,17 +114,24 @@ const selectProject = (projectId: string): void => {
 const update = () => {
   if (!modelStore.model.isNeuron) {
     modelStore.state.project = undefined;
-  } else if (
+    return;
+  }
+
+  if (
     modelStore.model?.project &&
     modelStore.model.project?.filename === modelStore.state.projectId
   ) {
     modelStore.state.project = modelStore.model.project;
     const project = modelStore.state.project;
+
     if (project) {
+      updateSimulationModules();
+
       project.network.nodes.neurons.forEach((neuron: NESTNode) => {
         neuron.modelId = modelStore.state.modelId;
         neuron.showAllParams();
       });
+
       project.network.changes();
       project.activityGraph.init();
     }

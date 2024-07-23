@@ -164,6 +164,14 @@
               <v-spacer />
 
               <v-btn
+                @click.stop="openNESTModuleDialog()"
+                flat
+                icon="nest:build-models"
+                title="Generate NESTML models"
+                variant="outlined"
+              />
+
+              <v-btn
                 @click.stop="nestSimulator.resetKernel()"
                 class="mx-2"
                 flat
@@ -176,14 +184,6 @@
             <v-expansion-panel-text class="pa-2">
               <NESTModuleSelect v-model="state.selectedModule">
                 <template #append>
-                  <v-btn
-                    @click="generateNESTMLModels()"
-                    flat
-                    icon="nest:build-models"
-                    size="x-small"
-                    title="Generate NESTML models"
-                  />
-
                   <v-btn
                     @click="
                       nestSimulator.installModule(state.selectedModule.id)
@@ -247,15 +247,17 @@ import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
-import NESTModuleSelect from "../components/model/NESTModuleSelect.vue";
-import nestmlServer from "../stores/backends/nestmlServerStore";
+import NESTModuleSelect from "../components/module/NESTModuleSelect.vue";
 import nestSimulator from "../stores/backends/nestSimulatorStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useModuleStore } from "../stores/moduleStore";
-const moduleStore = useModuleStore();
+import {
+  openNESTModuleDialog,
+  useNESTModuleStore,
+} from "../stores/moduleStore";
+const moduleStore = useNESTModuleStore();
 
 const state = reactive({
   backendTab: "nest",
@@ -263,22 +265,4 @@ const state = reactive({
   modelsLength: 0,
   selectedModule: moduleStore.findModule("nestmlmodule"),
 });
-
-const generateNESTMLModels = () => {
-  const modelDBStore = appStore.currentSimulator.stores.modelDBStore;
-
-  const models = state.selectedModule.models
-    .filter((modelId: string) => modelDBStore.hasModel(modelId))
-    .map((modelId: string) => {
-      const model = modelDBStore.findModel(modelId);
-      return {
-        name: model.id + "_" + model.elementType,
-        script: model.nestmlScript,
-      };
-    });
-
-  if (models && models.length > 0) {
-    nestmlServer.generateModels(models, state.selectedModule.id);
-  }
-};
 </script>

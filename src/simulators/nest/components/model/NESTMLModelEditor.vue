@@ -15,7 +15,7 @@
       <v-spacer />
 
       <template #append>
-        <NESTModuleSelect
+        <NESTModuleCombobox
           @click.stop
           @update:model-value="updateModules()"
           chips
@@ -37,13 +37,15 @@ import { AxiosError, AxiosResponse } from "axios";
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import NESTMLScriptDialog from "../dialog/NESTMLScriptDialog.vue";
-import NESTModuleSelect from "./NESTModuleSelect.vue";
-import { NESTModel } from "../../helpers/model/model";
 import { notifyError } from "@/utils/dialog";
 
-import { IModule, useModuleStore } from "../../stores/moduleStore";
-const moduleStore = useModuleStore();
+import NESTMLScriptDialog from "../dialog/NESTMLScriptDialog.vue";
+import NESTModuleCombobox from "../module/NESTModuleCombobox.vue";
+import { NESTModel } from "../../helpers/model/model";
+import { updateSimulationModules } from "../../stores/model/modelStore";
+
+import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
+const moduleStore = useNESTModuleStore();
 
 import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
 const nestmlServerStore = useNESTMLServerStore();
@@ -113,6 +115,8 @@ const updateModules = () => {
       ) {
         module.models.splice(module.models.indexOf(model.value.id), 1);
       }
+
+      updateSimulationModules();
     });
   });
 };

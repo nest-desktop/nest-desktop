@@ -1,7 +1,7 @@
 <template>
   <!-- <v-toolbar density="compact">
-    <v-btn icon="mdi:mdi-plus"></v-btn>
-    <v-btn icon="mdi:mdi-minus"></v-btn>
+    <v-btn icon="mdi:mdi-plus" />
+    <v-btn icon="mdi:mdi-minus" />
   </v-toolbar> -->
 
   <ActivityChartGraph
