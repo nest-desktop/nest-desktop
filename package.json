@@ -71,7 +71,7 @@
     "@types/uuid": "~10.0",
     "@types/webfontloader": "~1.6",
     "@vite-pwa/assets-generator": "~0.2",
-    "@vitejs/plugin-vue": "~5.0",
+    "@vitejs/plugin-vue": "~5.1",
     "@vitest/coverage-istanbul": "~2.0",
     "@vue/test-utils": "~2.4",
     "electron": "~31.2",
