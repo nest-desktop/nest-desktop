@@ -85,7 +85,7 @@ import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
 
-import NESTModuleSelect from "../model/NESTModuleSelect.vue";
+import NESTModuleSelect from "../module/NESTModuleSelect.vue";
 import { NESTSimulation } from "../../helpers/simulation/simulation";
 
 import { useNESTProjectStore } from "../../stores/project/projectStore";

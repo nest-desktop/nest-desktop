@@ -199,6 +199,7 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
+import { sortString } from "@/utils/array";
 const navState = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
@@ -233,15 +234,10 @@ const models = computed(() => {
     );
   }
 
-  if (state.orderByAsc) {
-    models = models.sort((a: TModel, b: TModel) =>
-      a["id"] < b["id"] ? -1 : a["id"] > b["id"] ? 1 : 0
-    );
-  } else {
-    models = models.sort((a: TModel, b: TModel) =>
-      a["id"] > b["id"] ? -1 : a["id"] < b["id"] ? 1 : 0
-    );
-  }
+  const sortedBy = "id";
+  models.sort((a: TModel, b: TModel) =>
+    sortString(a[sortedBy], b[sortedBy], state.orderByAsc)
+  );
 
   return models;
 });

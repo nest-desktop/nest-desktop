@@ -5,7 +5,7 @@ import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
 import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
-import { onlyUnique } from "@/utils/array";
+import { onlyUnique, sortString } from "@/utils/array";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
@@ -447,7 +447,9 @@ export class NESTNode extends BaseNode {
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
           recordables = recordablesPooled.filter(onlyUnique);
-          recordables.sort((a: { id: any }, b: { id: any }) => a.id - b.id);
+          recordables.sort((a: { id: string }, b: { id: string }) =>
+            sortString(a.id, b.id)
+          );
         }
       } else if (this.modelId === "voltmeter") {
         recordables.push(

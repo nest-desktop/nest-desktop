@@ -10,7 +10,7 @@ import {
   TSimulation,
 } from "@/types";
 
-import { onlyUnique } from "../../utils/array";
+import { onlyUnique, sortString } from "../../utils/array";
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { SpikeActivity } from "../activity/spikeActivity";
@@ -700,7 +700,9 @@ export class BaseNode extends BaseObj {
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
           recordables = recordablesPooled.filter(onlyUnique);
-          recordables.sort((a: { id: any }, b: { id: any }) => a.id - b.id);
+          recordables.sort((a: { id: string }, b: { id: string }) =>
+            sortString(a.id, b.id)
+          );
         }
       }
     }

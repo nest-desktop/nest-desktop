@@ -5,6 +5,7 @@ import { major, minor } from "semver";
 import { ILogObj, ISettingsParam } from "tslog";
 import { v4 as uuidv4 } from "uuid";
 
+import { sortString } from "@/utils/array";
 import { truncate } from "@/utils/truncate";
 
 import { BaseObj } from "./base";
@@ -14,8 +15,8 @@ export interface IDoc {
   _id?: string;
   _rev?: string;
   _revisions?: {
-    start: number;
     ids: string[];
+    start: number;
   };
   createdAt?: string;
   id?: string;
@@ -107,12 +108,9 @@ export class DatabaseService extends BaseObj {
       .then((res: IRes) => {
         const docs: IDoc[] = res.rows.map((row: { doc: IDoc }) => row.doc);
         if (sortedBy) {
-          docs.sort((a: IDoc, b: IDoc) => {
-            const aValue = (a[sortedBy] as string) || "";
-            const bValue = (b[sortedBy] as string) || "";
-            return aValue.localeCompare(bValue);
-          });
+          docs.sort((a: IDoc, b: IDoc) => sortString(a[sortedBy], b[sortedBy]));
         }
+
         if (reverse) {
           docs.reverse();
         }

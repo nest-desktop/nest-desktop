@@ -213,7 +213,7 @@ const updateRecordsColor = () => {
  */
 const updateGraph = () => {
   nextTick(() => {
-    activity.value.state.selected.sort((a, b) => a - b);
+    activity.value.state.selected.sort((a: number, b: number) => a - b);
     activity.value.chartGraph.update();
   });
 };

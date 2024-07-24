@@ -1,11 +1,9 @@
 // moduleStore.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { Store, defineStore } from "pinia";
 import { reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
-
-import { notifyError } from "@/utils/dialog";
 
 import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
 import {
@@ -56,9 +54,7 @@ export const useNESTModuleStore: TModuleStore = defineStore(
         .then((response: AxiosResponse) => {
           state.installedModels = response.data;
         })
-        .catch((error: AxiosError) => {
-          // notifyError(error.message);
-        });
+        .catch(() => {});
     };
 
     const findModule = (moduleName: string) =>
@@ -108,8 +104,10 @@ export const openNESTModuleDialog = (): void => {
     dialogOptions: {
       width: "420px",
     },
-  }).then((module: IModule | undefined) => {
-    if (module) {
+  }).then((answer: IModule | string | undefined) => {
+    if (answer) {
+      const module = answer as IModule;
+
       const modelDBStore = useNESTModelDBStore();
 
       const models = module.models

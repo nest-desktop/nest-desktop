@@ -4,6 +4,7 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
+import { sortString } from "@/utils/array";
 import { notifyError } from "@/utils/dialog";
 
 import { useNESTModelStore } from "../model/modelStore";
@@ -21,11 +22,15 @@ const fetchModels = () => {
 
   nestSimulatorStore
     .axiosInstance()
-    .get("/api/Models")
+    .post("/api/GetKernelStatus", { keys: ["node_models", "synapse_models"] })
     .then((response: AxiosResponse) => {
-      if (response.data && response.data.length > 0) {
-        modelStore.state.models = response.data.map((modelId: string) => ({
+      if (response.data) {
+        let models = [...response.data[0], ...response.data[1]];
+        models.sort((a: string, b: string) => sortString(a, b));
+
+        modelStore.state.models = models.map((modelId: string) => ({
           id: modelId,
+          label: modelId,
           elementType: getElementType(modelId),
         }));
       }

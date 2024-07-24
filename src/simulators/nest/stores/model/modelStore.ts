@@ -20,5 +20,5 @@ export const updateSimulationModules = () => {
     .filter((module: IModule) =>
       module.models.includes(modelStore.state.modelId)
     )
-    .map((module: IModule) => module.id);
+    .map((module: IModule) => module.name);
 };

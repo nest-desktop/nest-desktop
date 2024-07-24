@@ -3,6 +3,13 @@
 import * as d3 from "d3";
 
 /**
+ * Get standard deviation of values.
+ */
+export function deviation(values: number[]): number {
+  return d3.deviation(values) as number;
+}
+
+/**
  * Get values difference in an array.
  */
 export function diff(values: number[]): number[] {
@@ -17,17 +24,17 @@ export function diff(values: number[]): number[] {
 }
 
 /**
- * Get standard deviation of values.
- */
-export function deviation(values: number[]): number {
-  return d3.deviation(values) as number;
-}
-
-/**
  * Get extension of array, return [min, max].
  */
 export function extent(values: number[]): number[] {
   return extent(values) as number[];
+}
+
+/**
+ * Fill an array with a value.
+ */
+export function fill(value: number, size: number): number[] {
+  return Array.from({ length: size }, () => value);
 }
 
 /**
@@ -60,13 +67,6 @@ export function min(values: number[]): number {
 }
 
 /**
- * Fill an array with a value.
- */
-export function fill(value: number, size: number): number[] {
-  return Array.from({ length: size }, () => value);
-}
-
-/**
  * Remove duplicated values in an array.
  *
  * https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
@@ -96,6 +96,14 @@ export function range(start: number, end?: number, step?: number): number[] {
       (_, index: number) => start + index * step
     );
   }
+}
+
+export function sortString(
+  a: string = "",
+  b: string = "",
+  asc: boolean = true
+) {
+  return (asc ? 1 : -1) * (a < b ? -1 : a > b ? 1 : 0);
 }
 
 /**

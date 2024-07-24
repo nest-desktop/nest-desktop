@@ -165,28 +165,29 @@
 
               <v-btn
                 @click.stop="openNESTModuleDialog()"
+                class="mx-1"
                 flat
                 icon="nest:build-models"
+                size="x-small"
                 title="Generate NESTML models"
-                variant="outlined"
               />
 
               <v-btn
                 @click.stop="nestSimulator.resetKernel()"
-                class="mx-2"
+                class="mx-1"
                 flat
                 icon="mdi:mdi-delete-empty-outline"
-                title="Reset kernel"
                 size="x-small"
+                title="Reset kernel"
               />
             </v-expansion-panel-title>
 
             <v-expansion-panel-text class="pa-2">
-              <NESTModuleSelect v-model="state.selectedModule">
+              <NESTModuleSelect return-object v-model="state.selectedModule">
                 <template #append>
                   <v-btn
                     @click="
-                      nestSimulator.installModule(state.selectedModule.id)
+                      nestSimulator.installModule(state.selectedModule.name)
                     "
                     flat
                     icon="nest:install-module"
