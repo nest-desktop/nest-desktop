@@ -1,11 +1,11 @@
 // nodeView.ts
 
-import { UnwrapRef, reactive } from 'vue';
+import { UnwrapRef, reactive } from "vue";
 
-import { TConnection, TNode } from '@/types';
+import { TConnection, TNode } from "@/types";
 
-import { BaseObj } from '../common/base';
-import { NodeRecord } from './nodeRecord';
+import { BaseObj } from "../common/base";
+import { NodeRecord } from "./nodeRecord";
 
 export interface INodeViewProps {
   color?: string;
@@ -17,7 +17,7 @@ export interface INodeViewProps {
 
 interface INodeViewState {
   color?: string;
-  connectionPanelIdx: number | null;
+  expansionPanelIdx: number | null;
   label?: string;
   position: { x: number; y: number };
   positions?: number[][];
@@ -41,7 +41,7 @@ export class NodeView extends BaseObj {
 
     this._node = node;
     this._state = reactive({
-      connectionPanelIdx: null,
+      expansionPanelIdx: 0,
       label: "",
       positions: [],
       showSize: this.node.size > 1,
@@ -82,15 +82,15 @@ export class NodeView extends BaseObj {
     this.node.network.clean();
   }
 
-  get connectionPanelIdx(): number | null {
-    return this._state.connectionPanelIdx;
+  get expansionPanelIdx(): number | null {
+    return this._state.expansionPanelIdx;
   }
 
-  set connectionPanelIdx(value: number | null) {
-    this._state.connectionPanelIdx = value;
+  set expansionPanelIdx(value: number | null) {
+    this._state.expansionPanelIdx = value;
 
-    if (this._state.connectionPanelIdx != null) {
-      this.node.connections[this._state.connectionPanelIdx].state.select();
+    if (this._state.expansionPanelIdx != null) {
+      this.node.connections[this._state.expansionPanelIdx].state.select();
     }
   }
 

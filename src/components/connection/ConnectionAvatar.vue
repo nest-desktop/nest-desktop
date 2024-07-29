@@ -1,6 +1,6 @@
 <template>
   <div style="pointer-events: none">
-    <v-btn icon size="small">
+    <v-btn icon flat size="small">
       <NodeAvatar :node="connection.source" :size="32" />
     </v-btn>
 
@@ -11,7 +11,7 @@
       variant="text"
     />
 
-    <v-btn icon size="small">
+    <v-btn icon flat size="small">
       <NodeAvatar :node="connection.target" :size="32" />
     </v-btn>
   </div>

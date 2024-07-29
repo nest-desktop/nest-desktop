@@ -6,218 +6,219 @@
     class="node ma-1"
     v-if="node.show"
   >
-    <v-card-title class="node-title mt-2 ml-10">
-      <v-select
-        :items="node.models"
-        :label="node.model.elementType + ' model'"
-        class="text-primary"
-        density="compact"
-        hide-details
-        item-title="label"
-        item-value="id"
-        v-model="node.modelId"
-        variant="outlined"
-      >
-        <template #append>
-          <div class="d-print-none">
-            <v-chip>{{ node.hash }}</v-chip>
-          </div>
-
-          <div class="d-print-none menu">
-            <v-menu :close-on-content-click="false" v-model="state.menu">
-              <template #activator="{ props }">
-                <v-btn
-                  color="primary"
-                  icon="mdi:mdi-order-bool-ascending-variant"
-                  size="small"
-                  v-bind="props"
-                  variant="text"
-                />
-              </template>
-
-              <v-card>
-                <v-card-text>
-                  <v-checkbox
-                    :disabled="node.model.isRecorder"
-                    :color="node.view.color"
-                    density="compact"
-                    hide-details
-                    label="Population size"
-                    v-model="node.view.state.showSize"
-                  >
-                    <template #append>n: {{ node.size }}</template>
-                  </v-checkbox>
-
-                  <template v-if="node.modelParams">
-                    <v-checkbox
-                      :color="node.view.color"
-                      :key="index"
-                      :label="param.label"
-                      :value="param.id"
-                      density="compact"
-                      hide-details
-                      v-for="(param, index) in Object.values(node.modelParams)"
-                      v-model="node.paramsVisible"
-                    >
-                      <template #append>
-                        {{ param.id }}: {{ param.value }}
-                        {{ param.unit }}
-                      </template>
-                    </v-checkbox>
-                  </template>
-                </v-card-text>
-
-                <v-card-actions>
-                  <v-btn
-                    @click.stop="() => node.showAllParams()"
-                    size="small"
-                    variant="outlined"
-                  >
-                    all
-                  </v-btn>
-                  <v-btn
-                    @click.stop="() => node.hideAllParams()"
-                    size="small"
-                    variant="outlined"
-                  >
-                    none
-                  </v-btn>
-                  <v-spacer />
-                  <v-btn
-                    @click.stop="state.menu = false"
-                    size="small"
-                    variant="outlined"
-                  >
-                    close
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-menu>
-
-            <v-btn color="primary" icon size="small" variant="text">
-              <v-icon icon="mdi:mdi-dots-vertical" />
-              <NodeMenu :node />
-            </v-btn>
-          </div>
-        </template>
-
-        <template #item="{ props }">
-          <v-list-item @click="select(props)" class="node-model-item">
-            {{ props.title }}
-
+    <v-expansion-panels
+      :key="node.connections.length"
+      v-model="node.view.expansionPanelIdx"
+      variant="accordion"
+    >
+      <v-expansion-panel>
+        <v-expansion-panel-title class="node-title">
+          <v-select
+            :items="node.models"
+            :label="node.model.elementType + ' model'"
+            @click.stop
+            class="text-primary"
+            density="compact"
+            hide-details
+            item-title="label"
+            item-value="id"
+            v-model="node.modelId"
+            variant="outlined"
+          >
             <template #append>
-              <v-btn
-                @click.stop="select(props, () => (state.menu = true))"
-                class="icon"
-                icon="mdi:mdi-menu-right"
-                size="small"
-                variant="text"
-              />
+              <div class="d-print-none">
+                <v-chip>{{ node.hash }}</v-chip>
+              </div>
+
+              <div class="d-print-none menu">
+                <v-menu :close-on-content-click="false" v-model="state.menu">
+                  <template #activator="{ props }">
+                    <v-btn
+                      color="primary"
+                      icon="mdi:mdi-order-bool-ascending-variant"
+                      size="small"
+                      v-bind="props"
+                      variant="text"
+                    />
+                  </template>
+
+                  <v-card>
+                    <v-card-text>
+                      <v-checkbox
+                        :disabled="node.model.isRecorder"
+                        :color="node.view.color"
+                        density="compact"
+                        hide-details
+                        label="Population size"
+                        v-model="node.view.state.showSize"
+                      >
+                        <template #append>n: {{ node.size }}</template>
+                      </v-checkbox>
+
+                      <template v-if="node.modelParams">
+                        <v-checkbox
+                          :color="node.view.color"
+                          :key="index"
+                          :label="param.label"
+                          :value="param.id"
+                          density="compact"
+                          hide-details
+                          v-for="(param, index) in Object.values(
+                            node.modelParams
+                          )"
+                          v-model="node.paramsVisible"
+                        >
+                          <template #append>
+                            {{ param.id }}: {{ param.value }}
+                            {{ param.unit }}
+                          </template>
+                        </v-checkbox>
+                      </template>
+                    </v-card-text>
+
+                    <v-card-actions>
+                      <v-btn
+                        @click.stop="() => node.showAllParams()"
+                        size="small"
+                        variant="outlined"
+                      >
+                        all
+                      </v-btn>
+                      <v-btn
+                        @click.stop="() => node.hideAllParams()"
+                        size="small"
+                        variant="outlined"
+                      >
+                        none
+                      </v-btn>
+                      <v-spacer />
+                      <v-btn
+                        @click.stop="state.menu = false"
+                        size="small"
+                        variant="outlined"
+                      >
+                        close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-menu>
+
+                <v-btn color="primary" icon size="small" variant="text">
+                  <v-icon icon="mdi:mdi-dots-vertical" />
+                  <NodeMenu :node />
+                </v-btn>
+              </div>
             </template>
-          </v-list-item>
-        </template>
 
-        <template #prepend>
-          <v-btn
-            class="position-absolute"
-            flat
-            icon
-            size="large"
-            style="left: 8px; top: 8px"
-          >
-            <NodeAvatar :node @click="node.select()" size="48px" />
-          </v-btn>
-        </template>
+            <template #item="{ props }">
+              <v-list-item @click="select(props)" class="node-model-item">
+                {{ props.title }}
 
-        <template #prepend-item v-if="state.elementType">
-          <v-list-item
-            @click="
-              () => {
-                state.elementType = '';
-                state.items = elementTypes;
-              }
-            "
-          >
-            Other element types
+                <template #append>
+                  <v-btn
+                    @click.stop="select(props, () => (state.menu = true))"
+                    class="icon"
+                    icon="mdi:mdi-menu-right"
+                    size="small"
+                    variant="text"
+                  />
+                </template>
+              </v-list-item>
+            </template>
 
             <template #prepend>
-              <v-icon icon="mdi:mdi-menu-left" />
+              <v-btn
+                class="position-absolute"
+                flat
+                icon
+                size="large"
+                style="left: 8px; top: 8px"
+              >
+                <NodeAvatar :node @click="node.select()" size="48px" />
+              </v-btn>
             </template>
-          </v-list-item>
-        </template>
-      </v-select>
-    </v-card-title>
 
-    <v-card-text class="pa-0">
-      <v-list class="py-0" v-if="node.view.state.showSize">
-        <v-list-item class="param pl-0 pr-1">
-          <v-row no-gutters>
-            <ValueSlider
-              :thumb-color="node.view.color"
-              @update:model-value="node.changes()"
-              id="n"
-              input-label="n"
-              label="population size"
-              v-model="node.size"
-            />
+            <template #prepend-item v-if="state.elementType">
+              <v-list-item
+                @click="
+                  () => {
+                    state.elementType = '';
+                    state.items = elementTypes;
+                  }
+                "
+              >
+                Other element types
 
-            <v-menu :close-on-content-click="false">
-              <template #activator="{ props }">
-                <v-btn
-                  color="primary"
-                  class="d-print-none menu align-center justify-center my-auto"
-                  icon="mdi:mdi-dots-vertical"
-                  size="x-small"
-                  v-bind="props"
-                  variant="text"
+                <template #prepend>
+                  <v-icon icon="mdi:mdi-menu-left" />
+                </template>
+              </v-list-item>
+            </template>
+          </v-select>
+        </v-expansion-panel-title>
+
+        <v-expansion-panel-text>
+          <v-list class="py-0" v-if="node.view.state.showSize">
+            <v-list-item class="param pl-0 pr-1">
+              <v-row no-gutters>
+                <ValueSlider
+                  :thumb-color="node.view.color"
+                  @update:model-value="node.changes()"
+                  id="n"
+                  input-label="n"
+                  label="population size"
+                  v-model="node.size"
                 />
-              </template>
 
-              <v-list density="compact">
-                <v-list-item
-                  :icon="item.icon"
-                  :key="index"
-                  :title="item.title"
-                  v-for="(item, index) in popItems"
-                >
-                  <template #prepend>
-                    <v-icon :class="item.iconClass" :icon="item.icon" />
+                <v-menu :close-on-content-click="false">
+                  <template #activator="{ props }">
+                    <v-btn
+                      color="primary"
+                      class="d-print-none menu align-center justify-center my-auto"
+                      icon="mdi:mdi-dots-vertical"
+                      size="x-small"
+                      v-bind="props"
+                      variant="text"
+                    />
                   </template>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-row>
-        </v-list-item>
-      </v-list>
 
-      <v-list
-        :key="node.modelId"
-        class="py-0"
-        v-if="node.paramsVisible.length > 0"
-      >
-        <NodeParamEditor
-          :key="index"
-          :param="node.params[paramId]"
-          v-for="(paramId, index) in node.paramsVisible"
-        />
-      </v-list>
-    </v-card-text>
+                  <v-list density="compact">
+                    <v-list-item
+                      :icon="item.icon"
+                      :key="index"
+                      :title="item.title"
+                      v-for="(item, index) in popItems"
+                    >
+                      <template #prepend>
+                        <v-icon :class="item.iconClass" :icon="item.icon" />
+                      </template>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-row>
+            </v-list-item>
+          </v-list>
 
-    <v-card-actions style="min-height: 40px" v-if="node.connections.length > 0">
-      <v-row>
-        <v-expansion-panels
-          :key="node.connections.length"
-          v-model="node.view.connectionPanelIdx"
-          variant="accordion"
-        >
-          <connection-editor
-            :connection
-            :key="index"
-            v-for="(connection, index) in node.connections"
-          />
-        </v-expansion-panels>
-      </v-row>
-    </v-card-actions>
+          <v-list
+            :key="node.modelId"
+            class="py-0"
+            v-if="node.paramsVisible.length > 0"
+          >
+            <NodeParamEditor
+              :key="index"
+              :param="node.params[paramId]"
+              v-for="(paramId, index) in node.paramsVisible"
+            />
+          </v-list>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <ConnectionEditor
+        :connection
+        :key="index"
+        v-for="(connection, index) in node.connections"
+      />
+    </v-expansion-panels>
   </Card>
 </template>
 
@@ -283,18 +284,6 @@ onMounted(() => {
 
 <style lang="scss">
 .node {
-  .node-title {
-    .menu {
-      opacity: 0;
-    }
-
-    &:hover {
-      .menu {
-        opacity: 1;
-      }
-    }
-  }
-
   .v-list {
     overflow: visible;
 
