@@ -1,5 +1,5 @@
 <template>
-  <v-card title="Select a module to generate">
+  <v-card title="Select a module">
     <v-card-text>
       <NESTModuleSelect
         @update:model-value="fetchInstalledModels()"
@@ -35,6 +35,9 @@
 
     <v-card-actions>
       <v-btn
+        :disabled="
+          appStore.currentSimulator.backends.nestml.state.response.status != 200
+        "
         @click="closeDialog(state.selectedModule)"
         text="Generate module"
         variant="outlined"
@@ -46,12 +49,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 
 import NESTModuleSelect from "../module/NESTModuleSelect.vue";
 
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
 import { useNESTModuleStore } from "../../stores/moduleStore";
-import { nextTick } from "vue";
 const moduleStore = useNESTModuleStore();
 
 const state = reactive({
