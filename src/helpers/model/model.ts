@@ -15,7 +15,7 @@ import { IModelParamProps, ModelParameter } from "./modelParameter";
 export interface IModelProps extends IDoc {
   id?: string;
   abbreviation?: string;
-  elementType?: string;
+  elementType?: TElementType;
   favorite?: boolean;
   label?: string;
   params?: IModelParamProps[];
@@ -26,11 +26,13 @@ interface IBaseModelState {
   paramsVisible: string[];
 }
 
+export type TElementType = "neuron" | "recorder" | "stimulator" | "synapse";
+
 export class BaseModel extends BaseObj {
   private _abbreviation: string;
   private _custom: boolean = false;
   private _doc: IModelProps; // doc data of the database
-  private _elementType: string; // element type of the model
+  private _elementType: TElementType; // element type of the model
   private _favorite: boolean = false;
   private _id: string; // model id
   private _label: string; // model label for view
@@ -79,11 +81,11 @@ export class BaseModel extends BaseObj {
     return this._doc._id;
   }
 
-  get elementType(): string {
+  get elementType(): TElementType {
     return this._elementType;
   }
 
-  set elementType(value: string) {
+  set elementType(value: TElementType) {
     this._elementType = value;
   }
 

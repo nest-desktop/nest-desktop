@@ -3,6 +3,7 @@
 import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
+import { TElementType } from "@/helpers/model/model";
 import router from "@/router";
 import { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
@@ -10,8 +11,6 @@ import { truncate } from "@/utils/truncate";
 
 import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
-
-type TElementTypes = "neuron" | "recorder" | "stimulator";
 
 interface IModelStoreState {
   controller: {
@@ -23,11 +22,7 @@ interface IModelStoreState {
   models: string[];
   project?: TProject;
   projectFilename?: string;
-  recentAddedModels: {
-    neuron: string[];
-    recorder: string[];
-    stimulator: string[];
-  };
+  recentAddedModels: Record<TElementType, string[]>;
   view: string;
 }
 
@@ -73,6 +68,7 @@ export function defineModelStore(
           neuron: [],
           recorder: [],
           stimulator: [],
+          synapse: [],
         },
         view: props.defaultView || "edit",
       });
@@ -166,11 +162,11 @@ export function defineModelStore(
       /**
        * Update recent added models.
        * @param modelId string
-       * @param elementType string
+       * @param elementType neuron, recorder, stimulator
        */
       const updateRecentAddedModels = (
         modelId: string,
-        elementType: TElementTypes
+        elementType: TElementType
       ) => {
         const models = state.recentAddedModels[elementType];
         if (models.includes(modelId)) models.splice(models.indexOf(modelId), 1);

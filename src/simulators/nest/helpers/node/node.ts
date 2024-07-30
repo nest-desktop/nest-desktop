@@ -1,6 +1,7 @@
 // node.ts
 
 import { Parameter } from "@/helpers/common/parameter";
+import { TElementType } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
 import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
@@ -101,7 +102,7 @@ export class NESTNode extends BaseNode {
     );
   }
 
-  override get elementType(): string {
+  override get elementType(): TElementType {
     return this.model?.elementType;
   }
 

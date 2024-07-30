@@ -8,10 +8,11 @@ import { TModel, TNetwork } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";
+import { TElementType } from "../model/model";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 export class NetworkGraphNodeAddPanel extends BaseObj {
-  private _elementTypes: string[] = ["recorder", "neuron", "stimulator"];
+  private _elementTypes: TElementType[] = ["recorder", "neuron", "stimulator"];
   private _selector: Selection<any, any, any, any>;
   private _workspace: NetworkGraphWorkspace;
 
@@ -145,7 +146,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   drawModelMenuItem(
     panel: Selection<any, any, any, any>,
     idx: number,
-    elementType: string,
+    elementType: TElementType,
     model: TModel
   ): Selection<any, any, any, any> {
     const layer = Math.floor(idx / 3);
@@ -204,7 +205,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
         this._workspace.reset();
       });
 
-    this._elementTypes.forEach((elementType: string, idx: number) => {
+    this._elementTypes.forEach((elementType: TElementType, idx: number) => {
       this.drawArcFrame(
         this._selector,
         this.nodeRadius,
@@ -260,10 +261,9 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
   /**
    * Update model menu.
-   * @param elementType
-   * @param favoriteOnly
+   * @param elementType neuron, recorder, stimulator
    */
-  updateModelMenu(elementType: string): void {
+  updateModelMenu(elementType: TElementType): void {
     this.logger.trace("update model menu");
 
     const panel = this._selector.select("." + elementType);

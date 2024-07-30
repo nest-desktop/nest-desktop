@@ -184,7 +184,9 @@
 import { computed, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
+import { TElementType } from "@/helpers/model/model";
 import { TModel } from "@/types";
+import { sortString } from "@/utils/array";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
 import DialogTextField from "../dialog/DialogTextField.vue";
@@ -199,7 +201,6 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
-import { sortString } from "@/utils/array";
 const navState = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
@@ -250,7 +251,12 @@ const state = reactive({
 });
 
 const sources = ["installed", "custom", appStore.currentSimulator.id];
-const elementTypes = ["neuron", "recorder", "stimulator", "synapse"];
+const elementTypes: TElementType[] = [
+  "neuron",
+  "recorder",
+  "stimulator",
+  "synapse",
+];
 
 const menuItems = [
   {

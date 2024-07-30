@@ -4,7 +4,7 @@ import { Store, _UnwrapAll, defineStore } from "pinia";
 import { UnwrapRef, reactive } from "vue";
 
 import { IDoc } from "@/helpers/common/database";
-import { BaseModel } from "@/helpers/model/model";
+import { BaseModel, TElementType } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import { TModel, TModelDB, TModelProps } from "@/types";
 import { download } from "@/utils/download";
@@ -24,7 +24,7 @@ export type TModelDBStore = Store<string, any>;
 // {
 //   deleteModel: (model: TModel) => Promise<void>;
 //   findModel: (modelId: string) => TModel | undefined;
-//   getModelsByElementType: (elementType: string) => TModel[];
+//   getModelsByElementType: (elementType: TElementType) => TModel[];
 //   getModel: (modelId: string) => TModel | undefined;
 //   getRecentModelId: () => string | undefined;
 //   hasModel: (modelId: string) => boolean;
@@ -150,10 +150,10 @@ export function defineModelDBStore(
 
     /**
      * Get models by elementType.
-     * @param elementType element type
+     * @param elementType  neuron, recorder, stimulator
      */
     const getModelsByElementType = (
-      elementType: string
+      elementType: TElementType | "device"
     ): UnwrapRef<TModel[]> => {
       logger.trace("get model by element type:", elementType);
 

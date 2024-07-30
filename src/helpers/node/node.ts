@@ -15,7 +15,7 @@ import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { BaseObj } from "../common/base";
-import { BaseModel } from "../model/model";
+import { BaseModel, TElementType } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeGroup } from "./nodeGroup";
 import { INodeParamProps, NodeParameter } from "./nodeParameter";
@@ -131,7 +131,7 @@ export class BaseNode extends BaseObj {
     return this._doc;
   }
 
-  get elementType(): string {
+  get elementType(): TElementType {
     return this.model?.elementType;
   }
 
