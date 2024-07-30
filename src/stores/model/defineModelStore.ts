@@ -11,6 +11,8 @@ import { truncate } from "@/utils/truncate";
 import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
 
+type TElementTypes = "neuron" | "recorder" | "stimulator";
+
 interface IModelStoreState {
   controller: {
     open: boolean;
@@ -21,6 +23,11 @@ interface IModelStoreState {
   models: string[];
   project?: TProject;
   projectFilename?: string;
+  recentAddedModels: {
+    neuron: string[];
+    recorder: string[];
+    stimulator: string[];
+  };
   view: string;
 }
 
@@ -51,109 +58,144 @@ export function defineModelStore(
     name: props.simulator + " model store",
   });
 
-  return defineStore(props.simulator + "-model-view", () => {
-    const state = reactive<IModelStoreState>({
-      controller: {
-        open: false,
-        view: "",
-        width: 480,
+  return defineStore(
+    props.simulator + "-model-view",
+    () => {
+      const state = reactive<IModelStoreState>({
+        controller: {
+          open: false,
+          view: "",
+          width: 480,
+        },
+        modelId: "",
+        models: [],
+        recentAddedModels: {
+          neuron: [],
+          recorder: [],
+          stimulator: [],
+        },
+        view: props.defaultView || "edit",
+      });
+
+      const model = computed(() => getModel(state.modelId));
+
+      const findModel = (modelId: string) =>
+        state.models.find((model: any) => model.id === modelId);
+
+      const getModel = (modelId: string) => {
+        const modelDBStore: TModelStore = props.useModelDBStore();
+        return modelDBStore.findModel(modelId) || findModel(modelId);
+      };
+
+      /**
+       * Initialize model store.
+       */
+      const init = (): void => {
+        logger.trace("init");
+
+        const modelDBStore: TModelDBStore = props.useModelDBStore();
+        if (modelDBStore.state.models.length > 0) {
+          state.modelId = modelDBStore.getRecentModelId();
+        }
+      };
+
+      /**
+       * Load model.
+       * @param modelId string
+       */
+      const loadModel = (modelId: string = ""): void => {
+        logger.trace("load model", truncate(modelId));
+
+        const modelDBStore: TModelStore = props.useModelDBStore();
+        const model = modelDBStore.getModel(modelId);
+        state.modelId = model.id;
+      };
+
+      /**
+       * New model.
+       * @param modelId string
+       */
+      const newModel = (modelId: string): void => {
+        logger.trace("new model");
+
+        const modelDBStore: TModelStore = props.useModelDBStore();
+        const model = modelDBStore.newModel({ id: modelId });
+        state.modelId = model.id;
+      };
+
+      /**
+       * Save current model to the database.
+       */
+      const saveModel = (): void => {
+        logger.trace("save model");
+
+        const modelDBStore: TModelDBStore = props.useModelDBStore();
+        modelDBStore.saveModel(model.value);
+      };
+
+      /**
+       * Start simulation of the current project.
+       */
+      const startSimulation = (): void => {
+        logger.trace("start simulation:", truncate(state.project?.id));
+
+        router
+          .push({
+            name: props.simulator + "ModelExplorer",
+            params: { modelId: state.modelId },
+          })
+          .then(() => {
+            // TODO: nextTick doesn't work.
+            setTimeout(() => state.project?.startSimulation(), 100);
+          });
+      };
+
+      /**
+       * Toggle controller navigation.
+       * @param item
+       */
+      const toggleController = (item?: { id: string }): void => {
+        if (!state.controller.open || state.controller.view === item?.id) {
+          state.controller.open = !state.controller.open;
+        }
+        state.controller.view = state.controller.open
+          ? (item?.id as string)
+          : "";
+      };
+
+      /**
+       * Update recent added models.
+       * @param modelId string
+       * @param elementType string
+       */
+      const updateRecentAddedModels = (
+        modelId: string,
+        elementType: TElementTypes
+      ) => {
+        const models = state.recentAddedModels[elementType];
+        if (models.includes(modelId)) models.splice(models.indexOf(modelId), 1);
+        models.unshift(modelId);
+        state.recentAddedModels[elementType] = models.slice(0, 3);
+      };
+
+      return {
+        getModel,
+        init,
+        loadModel,
+        model,
+        newModel,
+        saveModel,
+        startSimulation,
+        state,
+        toggleController,
+        updateRecentAddedModels,
+      };
+    },
+    {
+      persist: {
+        paths: ["state.recentAddedModels"],
+        storage: localStorage,
       },
-      modelId: "",
-      models: [],
-      view: props.defaultView || "edit",
-    });
-
-    const model = computed(() => {
-      const modelDBStore: TModelStore = props.useModelDBStore();
-      return modelDBStore.findModel(state.modelId) || findModel(state.modelId);
-    });
-
-    const findModel = (modelId: string) =>
-      state.models.find((model: any) => model.id === modelId);
-
-    /**
-     * Initialize model store.
-     */
-    const init = (): void => {
-      logger.trace("init");
-
-      const modelDBStore: TModelDBStore = props.useModelDBStore();
-      if (modelDBStore.state.models.length > 0) {
-        state.modelId = modelDBStore.getRecentModelId();
-      }
-    };
-
-    /**
-     * Load model.
-     * @param modelId string
-     */
-    const loadModel = (modelId: string = ""): void => {
-      logger.trace("load model", truncate(modelId));
-
-      const modelDBStore: TModelStore = props.useModelDBStore();
-      const model = modelDBStore.getModel(modelId);
-      state.modelId = model.id;
-    };
-
-    /**
-     * New model.
-     * @param modelId string
-     */
-    const newModel = (modelId: string): void => {
-      logger.trace("new model");
-
-      const modelDBStore: TModelStore = props.useModelDBStore();
-      const model = modelDBStore.newModel({ id: modelId });
-      state.modelId = model.id;
-    };
-
-    /**
-     * Save current model to the database.
-     */
-    const saveModel = (): void => {
-      logger.trace("save model");
-
-      const modelDBStore: TModelDBStore = props.useModelDBStore();
-      modelDBStore.saveModel(model.value);
-    };
-
-    /**
-     * Start simulation of the current project.
-     */
-    const startSimulation = (): void => {
-      logger.trace("start simulation:", truncate(state.project?.id));
-
-      router
-        .push({
-          name: props.simulator + "ModelExplorer",
-          params: { modelId: state.modelId },
-        })
-        .then(() => {
-          // TODO: nextTick doesn't work.
-          setTimeout(() => state.project?.startSimulation(), 100);
-        });
-    };
-
-    /**
-     * Toggle controller navigation.
-     * @param item
-     */
-    const toggleController = (item?: { id: string }): void => {
-      if (!state.controller.open || state.controller.view === item?.id) {
-        state.controller.open = !state.controller.open;
-      }
-      state.controller.view = state.controller.open ? (item?.id as string) : "";
-    };
-
-    return {
-      model,
-      init,
-      loadModel,
-      newModel,
-      saveModel,
-      startSimulation,
-      state,
-      toggleController,
-    };
-  });
+    }
+  );
 }

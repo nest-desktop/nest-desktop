@@ -1,7 +1,9 @@
 // networkGraphNodeAddPanel.ts
 
 import { Arc, Selection, arc } from "d3";
+import { createBottomSheet } from "vuetify3-dialog";
 
+import { useAppStore } from "@/stores/appStore";
 import { TModel, TNetwork } from "@/types";
 
 import { BaseObj } from "../common/base";
@@ -261,7 +263,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * @param elementType
    * @param favoriteOnly
    */
-  updateModelMenu(elementType: string, favoriteOnly: boolean = true): void {
+  updateModelMenu(elementType: string): void {
     this.logger.trace("update model menu");
 
     const panel = this._selector.select("." + elementType);
@@ -273,22 +275,55 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       .style("display", "none");
 
     if (this.network) {
-      const models: TModel[] =
-        this.network.project.modelDBStore.getModelsByElementType(elementType);
-      models
-        .filter((model: TModel) => model.favorite || !favoriteOnly)
-        .forEach((model: TModel, modelIdx: number) =>
-          this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model)
-        );
+      const appStore = useAppStore();
+      const modelStore = appStore.currentSimulator.stores.modelStore;
+
+      modelStore.state.recentAddedModels[elementType].forEach(
+        (modelId: string, modelIdx: number) => {
+          const model = modelStore.getModel(modelId);
+          if (model) {
+            this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model);
+          }
+        }
+      );
+
+      // Click on element type.
+      panel.select(".menuItem").on("click", () => {
+        this.close();
+        if (!this.network) return;
+
+        const models: TModel[] =
+          this.network.project.modelDBStore.getModelsByElementType(elementType);
+
+        const items = models.map((model: TModel) => ({
+          title: model.label,
+          value: model.id,
+        }));
+
+        createBottomSheet({
+          title: `Select a ${elementType} model`,
+          items,
+        }).then((modelId: string) => {
+          if (!this.network) return;
+          modelStore.updateRecentAddedModels(modelId, elementType);
+
+          this._workspace.animationOff();
+
+          this.network.createNode(modelId, {
+            elementType,
+            position: Object.assign({}, this.position),
+          });
+
+          this.updateModelMenu(elementType);
+          this._workspace.networkGraph.update();
+          this._workspace.networkGraph.workspace.updateTransform();
+        });
+
+        // this.openMenu(modelIds, offset);
+
+        // this.updateColor();
+        // panel.select(".models").style("display", "block");
+      });
     }
-
-    // Select default model by element type.
-    panel.select(".menuItem").on("mouseup", () => {
-      if (this.network == undefined) return;
-
-      this.updateModelMenu(elementType, false);
-      this.updateColor();
-      panel.select(".models").style("display", "block");
-    });
   }
 }

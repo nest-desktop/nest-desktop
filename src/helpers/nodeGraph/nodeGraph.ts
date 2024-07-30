@@ -1,14 +1,20 @@
 // nodeGraph.ts
 
-import { DragBehavior, Selection, Transition, drag, select, transition } from 'd3';
-import { nextTick } from 'vue';
+import {
+  DragBehavior,
+  Selection,
+  Transition,
+  drag,
+  select,
+  transition,
+} from "d3";
 
-import { TNetwork, TNetworkGraph, TNode } from '@/types';
+import { TNetwork, TNetworkGraph, TNode } from "@/types";
 
-import { BaseObj } from '../common/base';
-import { NodeGroup } from '../node/nodeGroup';
-import { NodeGraphConnector } from './nodeGraphConnector';
-import { NodeGraphShape } from './nodeGraphShape';
+import { BaseObj } from "../common/base";
+import { NodeGroup } from "../node/nodeGroup";
+import { NodeGraphConnector } from "./nodeGraphConnector";
+import { NodeGraphShape } from "./nodeGraphShape";
 
 export class NodeGraph extends BaseObj {
   private _networkGraph: TNetworkGraph;
@@ -110,7 +116,7 @@ export class NodeGraph extends BaseObj {
 
       this._networkGraph.state.nodeMenu.node = n as TNode;
       this._networkGraph.state.nodeMenu.offset = [event.clientX, event.clientY];
-      nextTick(() => (this._networkGraph.state.nodeMenu.open = true));
+      this._networkGraph.state.nodeMenu.open = true;
     });
   }
 

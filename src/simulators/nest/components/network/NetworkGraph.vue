@@ -4,12 +4,12 @@
       {{ graph?.hash }}
     </v-chip>
 
-    <div style="width: 320px">
+    <div style="width: 320px" v-if="graph">
       <NodeMenu
-        :model-value="graph?.state.nodeMenu.open"
-        :node="graph?.state.nodeMenu.node as NESTNode"
-        :offset="graph?.state.nodeMenu.offset"
-        v-if="graph?.state.nodeMenu.node"
+        :model-value="graph.state.nodeMenu.open"
+        :node="(graph.state.nodeMenu.node as NESTNode)"
+        :offset="graph.state.nodeMenu.offset"
+        v-if="graph.state.nodeMenu.node"
       />
     </div>
 

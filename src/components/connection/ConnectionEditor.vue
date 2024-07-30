@@ -20,18 +20,15 @@
 
         <v-spacer />
 
-        <v-menu>
-          <template #activator="{ props }">
-            <v-btn
-              color="primary"
-              icon="mdi:mdi-dots-vertical"
-              size="small"
-              variant="text"
-              class="menu"
-              v-bind="props"
-            />
-          </template>
+        <v-btn
+          color="primary"
+          icon="mdi:mdi-dots-vertical"
+          size="small"
+          variant="text"
+          class="menu"
+        />
 
+        <v-menu activator="parent">
           <v-list density="compact">
             <v-list-item
               :icon="item.icon"

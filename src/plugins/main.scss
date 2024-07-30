@@ -4,18 +4,17 @@
 );
 
 .expansion-panel-title {
-  height: 52px;
-  min-height: 52px;
+  height: 48px;
 
-  .menu {
-    opacity: 0;
-  }
+  // .menu {
+  //   opacity: 0;
+  // }
 
-  &:hover {
-    .menu {
-      opacity: 1;
-    }
-  }
+  // &:hover {
+  //   .menu {
+  //     opacity: 1;
+  //   }
+  // }
 }
 
 .v-expansion-panel-text__wrapper {

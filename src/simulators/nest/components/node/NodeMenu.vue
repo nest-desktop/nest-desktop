@@ -2,6 +2,7 @@
   <v-menu
     :close-on-content-click="false"
     activator="parent"
+    width="320"
     v-model="state.show"
   >
     <v-card flat style="min-width: 300px">

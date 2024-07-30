@@ -116,8 +116,8 @@
                     class="icon"
                     icon="mdi:mdi-menu-right"
                     size="x-small"
-                    variant="outlined"
                     v-if="state.elementType"
+                    variant="text"
                   />
                 </template>
               </v-list-item>
