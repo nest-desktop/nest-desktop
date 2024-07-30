@@ -41,8 +41,12 @@ export class NESTConnections extends BaseConnections {
 
   /**
    * Add connection component to the network.
+   * @param connectionProps connection props
+   * @returns connection object
    */
-  override add(connectionProps: INESTConnectionProps): NESTConnection {
+  override addConnection(
+    connectionProps: INESTConnectionProps
+  ): NESTConnection {
     this.logger.trace("add");
 
     const connection: NESTConnection = new this.Connection(

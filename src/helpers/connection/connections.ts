@@ -85,7 +85,7 @@ export class BaseConnections extends BaseObj {
    * @param connectionProps connection props
    * @returns connection object
    */
-  add(connectionProps: IConnectionProps): TConnection {
+  addConnection(connectionProps: IConnectionProps): TConnection {
     this.logger.trace("add");
 
     const connection: TConnection = new this.Connection(this, connectionProps);
@@ -197,7 +197,7 @@ export class BaseConnections extends BaseObj {
 
     if (connectionsProps) {
       connectionsProps.forEach((connectionProps: IConnectionProps) =>
-        this.add(connectionProps)
+        this.addConnection(connectionProps)
       );
     }
 

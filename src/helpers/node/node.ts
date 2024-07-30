@@ -434,10 +434,14 @@ export class BaseNode extends BaseObj {
     this.logger.trace("clone");
 
     const nodeProps = this.toJSON();
+
     if (nodeProps.view) {
-      nodeProps.view.position.y += 50;
+      const position = { ...nodeProps.view.position };
+      position.y += 72;
+      nodeProps.view.position = position;
       nodeProps.view.color = undefined;
     }
+
     return this.nodes.addNode({ ...nodeProps });
   }
 

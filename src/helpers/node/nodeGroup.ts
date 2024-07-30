@@ -1,9 +1,9 @@
 // nodeGroup.ts
 
-import { TConnection, TNetwork, TNode, TNodes } from '@/types';
+import { TConnection, TNetwork, TNode, TNodes } from "@/types";
 
-import { BaseObj } from '../common/base';
-import { NodeGroupView } from './nodeGroupView';
+import { BaseObj } from "../common/base";
+import { NodeGroupView } from "./nodeGroupView";
 
 export interface INodeGroupProps {
   nodes: number[];
@@ -33,6 +33,16 @@ export class NodeGroup extends BaseObj {
   get connections(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) => connection.sourceIdx === this.idx
+    );
+  }
+
+  get connectionsWithin(): TConnection[] {
+    const nodeIndices = this.nodes.map((node: NodeGroup | TNode) => node.idx);
+
+    return this.network.connections.all.filter(
+      (connection: TConnection) =>
+        nodeIndices.includes(connection.sourceIdx) &&
+        nodeIndices.includes(connection.targetIdx)
     );
   }
 
@@ -177,12 +187,21 @@ export class NodeGroup extends BaseObj {
   clone(): NodeGroup {
     this.logger.trace("clone");
 
-    const nodeIndices = this.nodes.map(
-      (node: NodeGroup | TNode) => node.clone().idx
+    const nodeIndices = Object.fromEntries(
+      this.nodes.map((node: NodeGroup | TNode) => [node.idx, node.clone().idx])
     );
+
+    const connections = this.connectionsWithin;
+    connections.forEach((connection: TConnection) => {
+      const connectionProps = connection.toJSON();
+      connectionProps.source = nodeIndices[connectionProps.source];
+      connectionProps.target = nodeIndices[connectionProps.target];
+      this.network.connections.addConnection(connectionProps);
+    });
+
     const nodeGroupProps = this.toJSON();
-    nodeGroupProps.nodes = nodeIndices;
-    return this.network.nodes.addNodeGroup({ ...this.toJSON() });
+    nodeGroupProps.nodes = Object.values(nodeIndices);
+    return this.network.nodes.addNodeGroup(nodeGroupProps);
   }
 
   /**

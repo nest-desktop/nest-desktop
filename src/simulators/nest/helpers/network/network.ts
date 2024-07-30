@@ -1,16 +1,16 @@
 // network.ts
 
-import { BaseNetwork } from '@/helpers/network/network';
-import { INodeGroupProps, NodeGroup } from '@/helpers/node/nodeGroup';
-import { TNetworkProps, TNode } from '@/types';
+import { BaseNetwork } from "@/helpers/network/network";
+import { INodeGroupProps, NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNetworkProps, TNode } from "@/types";
 
-import { INESTConnectionProps, NESTConnection } from '../connection/connection';
-import { NESTConnections } from '../connection/connections';
-import { INESTCopyModelProps, NESTCopyModel } from '../model/copyModel';
-import { NESTCopyModels } from '../model/copyModels';
-import { INESTNodeProps } from '../node/node';
-import { NESTNodes } from '../node/nodes';
-import { NESTProject } from '../project/project';
+import { INESTConnectionProps, NESTConnection } from "../connection/connection";
+import { NESTConnections } from "../connection/connections";
+import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
+import { NESTCopyModels } from "../model/copyModels";
+import { INESTNodeProps } from "../node/node";
+import { NESTNodes } from "../node/nodes";
+import { NESTProject } from "../project/project";
 
 export interface INESTNetworkProps {
   models?: INESTCopyModelProps[];
@@ -118,6 +118,8 @@ export class NESTNetwork extends BaseNetwork {
 
   /**
    * Connect node components by user interaction.
+   * @param sourceIdx node index
+   * @param targetIdx node index
    *
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
@@ -125,7 +127,7 @@ export class NESTNetwork extends BaseNetwork {
   override connectNodes(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
-    const connection: NESTConnection = this.connections.add({
+    const connection: NESTConnection = this.connections.addConnection({
       source: sourceIdx,
       target: targetIdx,
     });
@@ -150,6 +152,7 @@ export class NESTNetwork extends BaseNetwork {
 
   /**
    * Delete model component from the network.
+   * @param model NEST copy model
    *
    * @remarks
    * It emits network changes.

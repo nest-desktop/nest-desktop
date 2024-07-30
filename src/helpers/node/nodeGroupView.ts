@@ -15,7 +15,7 @@ export interface INodeGroupViewProps {
 interface INodeGroupViewState {
   centroid: { x: number; y: number };
   color?: string;
-  connectionPanelIdx: number | null;
+  expansionPanelIdx: number | null;
   label: string;
   margin: number;
   visible?: boolean;
@@ -37,7 +37,7 @@ export class NodeGroupView extends BaseObj {
     this._nodeGroup = nodeGroup;
     this._state = reactive({
       ...viewProps,
-      connectionPanelIdx: null,
+      expansionPanelIdx: null,
       centroid: { x: 0, y: 0 },
       label: "",
       margin: 1,
@@ -61,15 +61,15 @@ export class NodeGroupView extends BaseObj {
     this._nodeGroup.network.clean();
   }
 
-  get connectionPanelIdx(): number | null {
-    return this._state.connectionPanelIdx;
+  get expansionPanelIdx(): number | null {
+    return this._state.expansionPanelIdx;
   }
 
-  set connectionPanelIdx(value: number | null) {
-    this._state.connectionPanelIdx = value;
+  set expansionPanelIdx(value: number | null) {
+    this._state.expansionPanelIdx = value;
 
-    if (this._state.connectionPanelIdx != null) {
-      this.nodeGroup.connections[this._state.connectionPanelIdx].state.select();
+    if (this._state.expansionPanelIdx != null) {
+      this.nodeGroup.connections[this._state.expansionPanelIdx].state.select();
     }
   }
 
@@ -177,9 +177,6 @@ export class NodeGroupView extends BaseObj {
    */
   updateStyle(): void {
     const root = document.documentElement;
-    root.style.setProperty(
-      "--node" + this._nodeGroup.idx + "-color",
-      this.color
-    );
+    root.style.setProperty("--colorNode" + this._nodeGroup.idx, this.color);
   }
 }

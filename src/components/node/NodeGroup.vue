@@ -49,7 +49,7 @@
       <v-row>
         <v-expansion-panels
           :key="nodeGroup.connections.length"
-          v-model="nodeGroup.view.connectionPanelIdx"
+          v-model="nodeGroup.view.expansionPanelIdx"
           variant="accordion"
         >
           <ConnectionEditor

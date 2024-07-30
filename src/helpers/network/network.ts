@@ -166,7 +166,7 @@ export class BaseNetwork extends BaseObj {
   connectNodes(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
-    const connection: TConnection | undefined = this.connections.add({
+    const connection: TConnection | undefined = this.connections.addConnection({
       source: sourceIdx,
       target: targetIdx,
     });
