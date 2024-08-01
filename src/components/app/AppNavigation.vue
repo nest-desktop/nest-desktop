@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer class="d-print-none" permanent rail>
-    <!-- <v-tabs
+    <v-tabs
       :mandatory="false"
       :model-value="navStore.state.view"
       color="primary"
@@ -14,7 +14,7 @@
         :to="item.to"
         @click.stop="navStore.toggle(item)"
         class="justify-center"
-        height="72"
+        height="76"
         min-width="0"
         v-for="(item, index) in navItems"
         v-show="item.simulator === appStore.state.simulator"
@@ -22,9 +22,9 @@
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.title }}</span>
       </v-tab>
-    </v-tabs> -->
+    </v-tabs>
 
-    <v-list
+    <!-- <v-list
       :model-value="navStore.state.view"
       class="px-0 text-center"
       color="primary"
@@ -44,7 +44,7 @@
           {{ item.title }}
         </span>
       </v-list-item>
-    </v-list>
+    </v-list> -->
 
     <!-- <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>

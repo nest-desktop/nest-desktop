@@ -77,7 +77,7 @@
       lines="two"
       nav
     >
-      <v-list-subheader title="Projects" inset />
+      <v-list-subheader inset />
 
       <template v-for="(project, index) in projects.slice().reverse()">
         <v-hover v-slot="{ isHovering, props }">

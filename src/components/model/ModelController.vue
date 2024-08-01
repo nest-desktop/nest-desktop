@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer location="right" permanent rail>
-    <!-- <v-tabs
+    <v-tabs
       :model-value="modelStore.state.controller.view"
       :mandatory="false"
       color="primary"
@@ -14,16 +14,16 @@
         :value="modelStore.state.controller.open ? item.id : null"
         @click.stop="modelStore.toggleController(item)"
         class="justify-center"
-        height="72"
+        height="76"
         min-width="0"
         v-for="(item, index) in controllerItems"
       >
         <v-icon :icon="item.icon" class="ma-1" size="large" />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
-    </v-tabs> -->
+    </v-tabs>
 
-    <v-list
+    <!-- <v-list
       :model-value="modelStore.state.controller.view"
       class="px-0 text-center"
       color="primary"
@@ -42,7 +42,7 @@
           {{ item.id }}
         </span>
       </v-list-item>
-    </v-list>
+    </v-list> -->
   </v-navigation-drawer>
 
   <v-navigation-drawer

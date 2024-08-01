@@ -5,7 +5,7 @@
     permanent
     rail
   >
-    <!-- <v-tabs
+    <v-tabs
       :mandatory="false"
       :model-value="projectStore.state.controller.view"
       color="primary"
@@ -18,7 +18,7 @@
         :value="item.id"
         @click.stop="projectStore.toggleController(item)"
         class="justify-center"
-        height="72"
+        height="76"
         min-width="0"
         v-for="(item, index) in controllerItems"
         v-show="
@@ -33,9 +33,9 @@
         />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
-    </v-tabs> -->
+    </v-tabs>
 
-    <v-list
+    <!-- <v-list
       :model-value="projectStore.state.controller.view"
       class="px-0 text-center"
       color="primary"
@@ -56,7 +56,7 @@
           {{ item.id }}
         </span>
       </v-list-item>
-    </v-list>
+    </v-list> -->
 
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
