@@ -12,21 +12,20 @@
         <v-select
           :disabled="state.githubTags.length === 0"
           :items="state.githubTags"
-          :model-value="state.githubTag"
-          @update:model-value="fetchElementTypes()"
+          @update:model-value="fetchElementTypes"
           class="mx-2"
           density="compact"
           hide-details
           item-title="name"
           item-value="name"
           label="Select a tag"
+          v-model="state.githubTag"
           variant="outlined"
         />
 
         <v-select
           :disabled="state.elementTypes.length === 0"
           :items="state.elementTypes"
-          :model-value="state.elementType"
           @update:model-value="fetchModels()"
           class="mx-2"
           density="compact"
@@ -34,13 +33,13 @@
           item-title="path"
           item-value="path"
           label="Select an element type"
+          v-model="state.elementType"
           variant="outlined"
         />
 
         <v-select
           :disabled="state.models.length === 0"
           :items="state.models"
-          :model-value="state.model"
           @update:model-value="fetchNESTMLScript"
           class="mx-2"
           density="compact"
@@ -48,6 +47,7 @@
           item-title="path"
           item-value="path"
           label="Select a nestml file"
+          v-model="state.model"
           variant="outlined"
         />
       </v-row>
@@ -119,7 +119,7 @@ function closeDialog(value?: Object) {
   emit("closeDialog", value);
 }
 
-const fetchElementTypes = async () => {
+const fetchElementTypes = () => {
   state.elementType = "";
   state.model = "";
   state.models = [];
