@@ -104,7 +104,7 @@ const state = reactive<{
 }>({
   elementType: "",
   elementTypes: [],
-  githubTag: nestmlServerStore.state.response.data?.nestml || "",
+  githubTag: "v" + nestmlServerStore.state.response.data?.nestml || "",
   githubTags: [],
   model: "",
   models: [],
