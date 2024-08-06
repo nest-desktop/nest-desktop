@@ -10,8 +10,9 @@
   "scripts": {
     "app:build": "vue-tsc && vite build --outDir ./dist && electron-builder",
     "app:build:deb": "vue-tsc && vite build --outDir ./dist && electron-builder --linux deb",
+    "app:build:AppImage": "vue-tsc && vite build --outDir ./dist && electron-builder --linux AppImage",
     "app:dev": "vite",
-    "app:preview": "./release/nest-desktop-*.AppImage",
+    "app:preview:AppImage": "./release/nest-desktop-*.AppImage",
     "build": "vue-tsc --noEmit && vite build",
     "clean": "rm -rf build coverage dev-dist dist dist-electron nest_desktop.egg-info pydist release yarn-error.log",
     "coverage": "vitest run --coverage",
