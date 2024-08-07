@@ -70,9 +70,9 @@
           </v-chip>
 
           <v-spacer />
+
           <span class="text-subtitle-2">
-            {{ models.length }} model
-            <span v-show="models.length > 1">s</span>
+            {{ models.length }} model<span v-show="models.length > 1">s</span>
           </span>
         </v-row>
       </template>
