@@ -52,7 +52,7 @@ export class NESTCopyModel extends BaseObj {
     this._existingModelId = modelProps.existing;
     this._newModelId = modelProps.new;
 
-    this._state = reactive({
+    this._state = reactive<INESTCopyModelState>({
       visible: true,
     });
 

@@ -1,5 +1,7 @@
 // insiteAccessStore.ts
 
+import { AxiosResponse } from "axios";
+
 import { defineBackendStore } from "@/stores/defineBackendStore";
 
 export const useInsiteAccessStore = defineBackendStore(
@@ -12,7 +14,7 @@ const getMultimeterAttribute = (
   recorderUnitId: number,
   attribute: string,
   query?: { fromTime?: number }
-) => {
+): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   let path = `nest/multimeters/${recorderUnitId}/attributes/${attribute}/`;
@@ -27,19 +29,19 @@ const getMultimeterAttribute = (
   return insiteAccessStore.axiosInstance().get(path);
 };
 
-const getMultimeters = () => {
+const getMultimeters = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   return insiteAccessStore.axiosInstance().get("nest/multimeters/");
 };
 
-const getNodes = () => {
+const getNodes = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   return insiteAccessStore.axiosInstance().get("nest/nodes/");
 };
 
-const getSimulationTimeInfo = () => {
+const getSimulationTimeInfo = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   return insiteAccessStore.axiosInstance().get("nest/simulationTimeInfo/");
@@ -50,7 +52,7 @@ const getSpikes = (query?: {
   skip?: number;
   spikedetectorId?: number;
   top?: number;
-}) => {
+}): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   let path = "nest/spikes/";
@@ -65,7 +67,7 @@ const getSpikes = (query?: {
   return insiteAccessStore.axiosInstance().get(path);
 };
 
-const getSpikeRecorders = () => {
+const getSpikeRecorders = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   return insiteAccessStore.axiosInstance().get("nest/spikerecorders/");

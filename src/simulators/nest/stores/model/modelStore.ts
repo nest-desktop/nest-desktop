@@ -11,7 +11,7 @@ export const useNESTModelStore = defineModelStore({
   defaultView: "doc",
 });
 
-export const updateSimulationModules = () => {
+export const updateSimulationModules = (): void => {
   const modelStore: TModelStore = useNESTModelStore();
 
   const moduleStore = useNESTModuleStore();

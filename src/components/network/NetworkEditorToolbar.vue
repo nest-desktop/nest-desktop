@@ -101,7 +101,11 @@ const networkGraphStore = useNetworkGraphStore();
 
 const graph = computed(() => networkGraphStore.state.graph);
 
-const state = reactive({
+const state = reactive<{
+  collapse: boolean;
+  dialogDelete: boolean;
+  dialogDownload: boolean;
+}>({
   collapse: false,
   dialogDelete: false,
   dialogDownload: false,

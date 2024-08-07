@@ -40,7 +40,7 @@ export class NodeView extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._node = node;
-    this._state = reactive({
+    this._state = reactive<INodeViewState>({
       expansionPanelIdx: 0,
       label: "",
       positions: [],

@@ -11,13 +11,26 @@ export const useAppStore = defineStore(
   () => {
     let themeInstance: ThemeInstance;
 
-    const state = reactive({
+    const state = reactive<{
+      autoUpdate: boolean;
+      devMode: boolean;
+      filterTag: string;
+      initialized: boolean;
+      loading: boolean;
+      logsOpen: boolean;
+      requestLogs: { date: string; text: string; type: string }[];
+      simulator: string;
+      simulatorVisible: string[];
+      theme: string;
+      themeIcon: string;
+      webGL: boolean;
+    }>({
       autoUpdate: false,
       devMode: false,
       filterTag: "",
+      initialized: false,
       loading: false,
       logsOpen: false,
-      initialized: false,
       requestLogs: [] as { date: string; text: string; type: string }[],
       simulator: "nest",
       simulatorVisible: ["nest"],

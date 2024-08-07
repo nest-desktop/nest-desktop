@@ -25,7 +25,15 @@ export function defineBackendStore(
   return defineStore(
     name + "-backend-store",
     () => {
-      const state = reactive({
+      const state = reactive<{
+        accessToken: string;
+        enabled: boolean;
+        error: AxiosError;
+        loadedFromAssets: boolean;
+        name: string;
+        response: AxiosResponse;
+        url: string;
+      }>({
         accessToken: "",
         enabled: false,
         error: {} as AxiosError,

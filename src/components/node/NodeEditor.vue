@@ -236,9 +236,14 @@ import { TModel, TNode } from "@/types";
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);
 
-const state = reactive({
+const state = reactive<{
+  elementType: string;
+  items: (TModel | any)[];
+  menu: boolean;
+  panelIdx: number | null;
+}>({
   elementType: "",
-  items: [] as (TModel | any)[],
+  items: [],
   menu: false,
   panelIdx: null,
 });

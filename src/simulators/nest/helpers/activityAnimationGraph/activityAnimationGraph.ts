@@ -5,9 +5,9 @@ import { UnwrapRef, reactive } from "vue";
 
 import { Activity } from "@/helpers/activity/activity";
 
+import { NESTProject } from "../project/project";
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
-import { NESTProject } from "../project/project";
 
 interface IActivityAnimationGraphState {
   frames: {
@@ -27,7 +27,7 @@ export class ActivityAnimationGraph {
   private _layers: ActivityAnimationLayer[] = [];
   private _project: NESTProject;
   private _scene?: ActivityAnimationScene;
-  private _state: UnwrapRef<IActivityAnimationGraphState> = reactive({
+  private _state = reactive<IActivityAnimationGraphState>({
     frames: {
       rate: 24,
       sampleRate: 1,

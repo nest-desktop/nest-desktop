@@ -47,7 +47,11 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);
 
-const state = reactive({
+const state = reactive<{
+  dialog: boolean;
+  imageFormats: string[];
+  toImageButtonOptions: { filename: string; format: string };
+}>({
   dialog: false,
   imageFormats: ["jpeg", "png", "svg", "webp"],
   toImageButtonOptions: {

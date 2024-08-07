@@ -125,9 +125,14 @@ const props = defineProps<{ activity: AnalogSignalActivity }>();
 const activity = computed(() => props.activity);
 const record = computed(() => activity.value.recorder.records[0]);
 
-const state = reactive({
+const state = reactive<{
+  activityHash: string;
+  items: Record<string, number | string>[];
+  loading: boolean;
+  selectedRecord: string;
+}>({
   activityHash: "",
-  items: [] as Record<string, number | string>[],
+  items: [],
   loading: false,
   selectedRecord: "",
 });

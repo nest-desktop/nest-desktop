@@ -165,11 +165,17 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import NodePositionTitle from "./NodePositionTitle.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { NESTNodeSpatial } from "../../helpers/node/nodeSpatial/nodeSpatial";
+import { IParamProps } from "@/helpers/common/parameter";
 
 const props = defineProps<{ nodeSpatial: NESTNodeSpatial }>();
 const nodeSpatial = computed(() => props.nodeSpatial);
 
-const state = reactive({
+const state = reactive<{
+  numDimensions: boolean;
+  positions: { title: string; value: string }[];
+  selectedPositions: string;
+  sizeOptions: IParamProps;
+}>({
   numDimensions: false,
   positions: [
     { title: "Free positions", value: "free" },
@@ -177,7 +183,8 @@ const state = reactive({
   ],
   selectedPositions: "free",
   sizeOptions: {
-    input: "valueSlider",
+    component: "valueSlider",
+    id: "size",
     label: "population size",
     max: 1000,
     rules: [

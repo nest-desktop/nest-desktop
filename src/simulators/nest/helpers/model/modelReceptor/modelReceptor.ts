@@ -41,7 +41,7 @@ export class NESTModelReceptor extends BaseObj {
     this._id = modelReceptorProps.id;
     this._label = modelReceptorProps.label;
 
-    this._state = reactive({
+    this._state = reactive<INESTModelReceptorState>({
       paramsVisible: [],
     });
 

@@ -78,7 +78,7 @@ import { nextTick } from "vue";
 const props = defineProps<{ activities: Activities }>();
 const activities = computed(() => props.activities);
 
-const state = reactive({
+const state = reactive<{ height: number }>({
   height: 700,
 });
 

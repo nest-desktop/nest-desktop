@@ -80,7 +80,7 @@ export class ActivityChartPanel extends BaseObj {
     this._graph = graph;
     this._model = new SpikeTimesRasterPlotModel(this);
 
-    this._state = reactive({
+    this._state = reactive<IActivityChartPanelState>({
       initialized: false,
       visible: true,
     });

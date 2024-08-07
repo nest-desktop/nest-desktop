@@ -3,20 +3,11 @@
     <v-list density="compact">
       <v-list-item>
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
+          <v-col class="font-weight-bold text-left" cols="4">
             Documentation
           </v-col>
-          <v-col
-            class="text-right"
-            cols="8"
-          >
-            <a
-              :href="doc"
-              target="_blank"
-            >
+          <v-col class="text-right" cols="8">
+            <a :href="doc" target="_blank">
               {{ doc }}
             </a>
           </v-col>
@@ -24,20 +15,11 @@
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
+          <v-col class="font-weight-bold text-left" cols="4">
             Source code
           </v-col>
-          <v-col
-            class="text-right"
-            cols="8"
-          >
-            <a
-              :href="repo"
-              target="_blank"
-            >
+          <v-col class="text-right" cols="8">
+            <a :href="repo" target="_blank">
               {{ repo }}
             </a>
           </v-col>
@@ -45,52 +27,27 @@
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
-            License
-          </v-col>
-          <v-col
-            class="text-right"
-            cols="8"
-          >
+          <v-col class="font-weight-bold text-left" cols="4"> License </v-col>
+          <v-col class="text-right" cols="8">
             {{ license }}
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
+          <v-col class="font-weight-bold text-left" cols="4">
             Current version
           </v-col>
-          <v-col
-            class="text-right"
-            cols="8"
-          >
+          <v-col class="text-right" cols="8">
             {{ appVersion }}
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
-            Contact
-          </v-col>
-          <v-col
-            class="text-caption text-right"
-            cols="8"
-          >
-            <a
-              :href="mailText"
-              v-text="contactName"
-            />
+          <v-col class="font-weight-bold text-left" cols="4"> Contact </v-col>
+          <v-col class="text-caption text-right" cols="8">
+            <a :href="mailText" v-text="contactName" />
           </v-col>
         </v-row>
       </v-list-item>
@@ -110,7 +67,12 @@ const mailSubject = `[NEST Desktop ${appVersion}]`;
 const doc = "https://nest-desktop.readthedocs.io";
 const repo = "https://github.com/nest-desktop/nest-desktop";
 
-const state = reactive({
+const state = reactive<{
+  browserName: string;
+  browserVersion: string;
+  clientType: string;
+  osType: string;
+}>({
   browserName: "",
   browserVersion: "",
   clientType: "",

@@ -21,7 +21,7 @@ const logger = mainLogger.getSubLogger({
 // https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip (2020)
 // https://devpress.csdn.net/vue/62f40393c6770329307f8fcf.html (2022)
 
-const state = reactive({
+const state = reactive<{ refreshing: boolean }>({
   refreshing: false,
 });
 

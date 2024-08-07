@@ -79,9 +79,9 @@ const props = defineProps<{
 }>();
 const store = computed(() => props.store);
 
-const state = reactive({
-  items: [] as IDeleteProps[],
-  selected: [] as IDeleteProps[],
+const state = reactive<{ items: IDeleteProps[]; selected: IDeleteProps[] }>({
+  items: [],
+  selected: [],
 });
 
 const headers = [
@@ -98,15 +98,15 @@ function closeDialog(value?: string | boolean) {
  * Delete selected.
  */
 const deleteSelected = () => {
-  state.selected = [] as IDeleteProps[];
+  state.selected = [];
 };
 
 /**
  * Update list item.
  */
 const update = (): void => {
-  state.selected = [] as IDeleteProps[];
-  state.items = [] as IDeleteProps[];
+  state.selected = [];
+  state.items = [];
 
   if (store.value.state.projects) {
     store.value.state.projects.forEach((project: TProject | IProjectProps) => {

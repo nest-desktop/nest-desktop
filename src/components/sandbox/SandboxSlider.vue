@@ -10,6 +10,7 @@
         </v-tabs>
       </v-row>
     </v-card-title>
+
     <v-card-text>
       <v-window v-model="state.tab">
         <v-window-item
@@ -18,10 +19,7 @@
           value="components"
         >
           <v-list>
-            <v-list-item
-              :key="index"
-              v-for="(sliderItem, index) in state.items"
-            >
+            <v-list-item :key="index" v-for="(sliderItem, index) in items">
               <v-row no-gutters>
                 <Slider
                   :options="sliderItem"
@@ -36,12 +34,13 @@
             </v-list-item>
           </v-list>
         </v-window-item>
+
         <v-window-item
           reverse-transition="no-transition"
           transition="no-transition"
           value="values"
         >
-          <pre>{{ state.items }}</pre>
+          <pre>{{ items }}</pre>
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -53,65 +52,68 @@ import { reactive } from "vue";
 
 import Slider from "../controls/Slider.vue";
 
-const state = reactive({
+const state = reactive<{
+  tab: string;
+}>({
   tab: "components",
-  items: [
-    { inputLabel: "id1", label: "default slider", value: 10 },
-    {
-      color: "blue",
-      inputLabel: "id2",
-      label: "custom slider",
-      max: 10,
-      min: -10,
-      step: 0.1,
-      unit: "ms",
-      value: 0,
-    },
-    {
-      color: "orange",
-      inputLabel: "id3",
-      label: "default ticks",
-      ticks: [1, 2, 3, 4],
-      value: 2,
-      variant: "ticks",
-    },
-    {
-      color: "green",
-      inputLabel: "id4",
-      label: "non-linear ticks",
-      ticks: [1, 10, 100],
-      unit: "ms",
-      value: 10,
-      variant: "ticks",
-    },
-    {
-      color: "red",
-      inputLabel: "id4",
-      label: "string ticks",
-      ticks: ["bad", "okay", "superb"],
-      value: "okay",
-      variant: "ticks",
-    },
-    {
-      color: "purple",
-      inputLabel: ["id5l", "id5u"],
-      label: "default rangeslider",
-      value: [20, 50],
-      variant: "range",
-    },
-    {
-      color: "brown",
-      inputLabel: ["id6l", "id6u"],
-      label: "custom rangeslider",
-      max: 10,
-      min: -10,
-      step: 0.1,
-      unit: "ms",
-      value: [-5, 5],
-      variant: "range",
-    },
-  ],
 });
+
+const items = [
+  { inputLabel: "id1", label: "default slider", value: 10 },
+  {
+    color: "blue",
+    inputLabel: "id2",
+    label: "custom slider",
+    max: 10,
+    min: -10,
+    step: 0.1,
+    unit: "ms",
+    value: 0,
+  },
+  {
+    color: "orange",
+    inputLabel: "id3",
+    label: "default ticks",
+    ticks: [1, 2, 3, 4],
+    value: 2,
+    variant: "ticks",
+  },
+  {
+    color: "green",
+    inputLabel: "id4",
+    label: "non-linear ticks",
+    ticks: [1, 10, 100],
+    unit: "ms",
+    value: 10,
+    variant: "ticks",
+  },
+  {
+    color: "red",
+    inputLabel: "id4",
+    label: "string ticks",
+    ticks: ["bad", "okay", "superb"],
+    value: "okay",
+    variant: "ticks",
+  },
+  {
+    color: "purple",
+    inputLabel: ["id5l", "id5u"],
+    label: "default rangeslider",
+    value: [20, 50],
+    variant: "range",
+  },
+  {
+    color: "brown",
+    inputLabel: ["id6l", "id6u"],
+    label: "custom rangeslider",
+    max: 10,
+    min: -10,
+    step: 0.1,
+    unit: "ms",
+    value: [-5, 5],
+    variant: "range",
+  },
+];
 </script>
 
 <style lang="scss">

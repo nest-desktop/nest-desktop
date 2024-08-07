@@ -71,7 +71,8 @@
 
           <v-spacer />
           <span class="text-subtitle-2">
-            {{ models.length }} model<span v-show="models.length > 1">s</span>
+            {{ models.length }} model
+            <span v-show="models.length > 1">s</span>
           </span>
         </v-row>
       </template>
@@ -243,7 +244,12 @@ const models = computed(() => {
   return models;
 });
 
-const state = reactive({
+const state = reactive<{
+  elementType: string;
+  orderByAsc: boolean;
+  search: string;
+  source: string;
+}>({
   elementType: "",
   orderByAsc: true,
   search: "",

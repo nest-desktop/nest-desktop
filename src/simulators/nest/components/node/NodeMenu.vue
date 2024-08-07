@@ -169,7 +169,13 @@ const networkGraphStore = useNetworkGraphStore();
 const props = defineProps<{ node: NESTNode }>();
 const node = computed(() => props.node);
 
-const state = reactive({
+const state = reactive<{
+  colorScheme: string;
+  content: string | undefined;
+  dialog: boolean;
+  show: boolean;
+  spatialNode: boolean;
+}>({
   colorScheme: "category10",
   content: undefined as string | undefined,
   dialog: false,

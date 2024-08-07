@@ -130,9 +130,14 @@ import ColorPicker from "../common/ColorPicker.vue";
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);
 
-const state = reactive({
+const state = reactive<{
+  colorScheme: string;
+  content: string | undefined;
+  dialog: boolean;
+  show: boolean;
+}>({
   colorScheme: "category10",
-  content: undefined as string | undefined,
+  content: undefined,
   dialog: false,
   show: false,
 });

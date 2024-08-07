@@ -3,19 +3,10 @@
     <v-card-title>Tabs</v-card-title>
     <v-card-text>
       <v-card variant="text">
-        <v-tabs
-          v-model="state.tab"
-          grow
-        >
-          <v-tab value="one">
-            Item One
-          </v-tab>
-          <v-tab value="two">
-            Item Two
-          </v-tab>
-          <v-tab value="three">
-            Item Three
-          </v-tab>
+        <v-tabs v-model="state.tab" grow>
+          <v-tab value="one"> Item One </v-tab>
+          <v-tab value="two"> Item Two </v-tab>
+          <v-tab value="three"> Item Three </v-tab>
         </v-tabs>
 
         <v-card-text>
@@ -51,7 +42,9 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-const state = reactive({
+const state = reactive<{
+  tab: string | null;
+}>({
   tab: null,
 });
 </script>

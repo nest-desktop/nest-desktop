@@ -60,7 +60,7 @@ const modelStore: TModelStore = useNESTModelStore();
 
 const model = computed(() => modelStore.model as NESTModel);
 
-const state = reactive({
+const state = reactive<{ modelId: string }>({
   modelId: modelStore.state.modelId,
 });
 

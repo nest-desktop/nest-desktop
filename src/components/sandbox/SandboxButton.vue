@@ -21,7 +21,11 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 
-const state = reactive({
+const state = reactive<{
+  color: string;
+  size: string;
+  variant: string;
+}>({
   color: "primary",
   size: "default",
   variant: "evelated",

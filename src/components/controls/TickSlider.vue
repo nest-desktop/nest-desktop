@@ -43,11 +43,13 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(["update:modelValue"]);
 
-const state: { tickIdx: number; ticks: Record<string, number | string> } =
-  reactive({
-    tickIdx: 0,
-    ticks: {},
-  });
+const state = reactive<{
+  tickIdx: number;
+  ticks: Record<string, number | string>;
+}>({
+  tickIdx: 0,
+  ticks: {},
+});
 
 const tickIdx = computed({
   get: () => state.tickIdx,

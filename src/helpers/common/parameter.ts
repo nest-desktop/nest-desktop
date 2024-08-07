@@ -91,7 +91,7 @@ export class Parameter extends BaseObj {
 
     this.init(paramProps);
 
-    this._state = reactive({
+    this._state = reactive<IParamState>({
       random: false,
       disabled: paramProps.disabled != undefined ? paramProps.disabled : true,
       value: paramProps.value || 0,

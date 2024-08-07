@@ -41,7 +41,7 @@ export class BaseSimulationCode extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._simulation = simulation;
-    this._state = reactive({
+    this._state = reactive<ISimulationCodeState>({
       blocks: simulationCodeProps?.blocks || simulationCodeBlocks,
       customBlocks: false,
       templateFilename: simulationCodeProps?.templateFilename || "",

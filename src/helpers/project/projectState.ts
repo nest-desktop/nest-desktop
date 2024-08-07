@@ -17,7 +17,7 @@ export class ProjectState {
   constructor(project: TProject) {
     this._project = project;
 
-    this._state = reactive({
+    this._state = reactive<IProjectState>({
       changes: false,
       editMode: false,
     });

@@ -256,13 +256,24 @@ const projectDBStore = computed(
   () => appStore.currentSimulator.stores.projectDBStore
 );
 
-const state = reactive({
-  githubFiles: [] as IGithubTree[],
+const state = reactive<{
+  githubFiles: IGithubTree[];
+  githubGroup: string;
+  githubSelectedFile: IGithubTree;
+  githubSelectedTree: IGithubTree;
+  githubTag: string;
+  githubTrees: IGithubTree[];
+  items: IImportProps[];
+  selected: TModelProps | TProjectProps[];
+  source: string;
+  url: string;
+}>({
+  githubFiles: [],
   githubGroup: "project",
   githubSelectedFile: { path: "" } as IGithubTree,
   githubSelectedTree: { path: "" } as IGithubTree,
   githubTag: "v3",
-  githubTrees: [] as IGithubTree[],
+  githubTrees: [],
   items: [
     // {
     //   group: "project",

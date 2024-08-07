@@ -9,11 +9,16 @@
     item-value="name"
     variant="outlined"
   >
-    <template #append>
+    <!-- <template #append>
       <slot name="append" />
+    </template> -->
+
+    <template #details>
+      <slot name="details" />
     </template>
 
     <template #item="{ index, item, props }">
+      <!-- Use title after v-bind. -->
       <v-list-item :key="index" class="module-item" v-bind="props" title="">
         <template #prepend>
           <v-avatar class="text-uppercase" size="small" start>

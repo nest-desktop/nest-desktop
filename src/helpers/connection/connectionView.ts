@@ -7,7 +7,7 @@ import { TConnection } from "@/types";
 import { randomUniformInt } from "../../utils/random";
 import { calcPathNode } from "../connectionGraph/connectionGraphPath";
 
-interface ConnectionViewState {
+interface IConnectionViewState {
   xAxisRotation: number;
   visible?: boolean;
 }
@@ -16,12 +16,12 @@ export class ConnectionView {
   private _colorExcitation = "#595289"; // '#467ab3';
   private _colorInhibition = "#AF143C"; // '#b34846';
   private _connection: TConnection; // parent
-  private _state: UnwrapRef<ConnectionViewState>;
+  private _state: UnwrapRef<IConnectionViewState>;
 
   constructor(connection: TConnection) {
     this._connection = connection;
 
-    this._state = reactive({
+    this._state = reactive<IConnectionViewState>({
       xAxisRotation: randomUniformInt(0, 90),
     });
   }
@@ -102,7 +102,7 @@ export class ConnectionView {
     return { x: x2, y: y2 };
   }
 
-  get state(): UnwrapRef<ConnectionViewState> {
+  get state(): UnwrapRef<IConnectionViewState> {
     return this._state;
   }
 

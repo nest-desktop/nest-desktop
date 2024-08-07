@@ -150,9 +150,14 @@ import { NESTCopyModel } from "../../helpers/model/copyModel";
 const props = defineProps<{ model: NESTCopyModel }>();
 const model = computed(() => props.model);
 
-const state = reactive({
+const state = reactive<{
+  elementType: string;
+  items: (NESTModel | { title: string; value: string })[];
+  menu: boolean;
+  panelIdx: number | null;
+}>({
   elementType: "",
-  items: [] as (NESTModel | { title: string; value: string })[],
+  items: [],
   menu: false,
   panelIdx: null,
 });

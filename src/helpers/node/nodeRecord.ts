@@ -58,7 +58,7 @@ export class NodeRecord extends BaseObj {
     this._label = nodeRecordProps.label || "";
     this._unit = nodeRecordProps.unit || "";
 
-    this._state = reactive({
+    this._state = reactive<INodeRecordState>({
       color: "",
       traceColors: [],
     });

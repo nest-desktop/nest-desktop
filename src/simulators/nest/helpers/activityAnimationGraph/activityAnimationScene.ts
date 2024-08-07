@@ -25,12 +25,12 @@ import { useAppStore } from "@/stores/appStore";
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 
 interface ICameraState {
-  position: Vector3;
   control: boolean;
   distance: number;
+  position: Vector3;
   rotation: {
-    theta: number;
     speed: number;
+    theta: number;
   };
 }
 
@@ -58,7 +58,7 @@ export class ActivityAnimationScene {
     this._graph = graph;
     this._ref = ref;
 
-    this._state = reactive({
+    this._state = reactive<IActivityAnimationSceneState>({
       camera: {
         control: false,
         distance: 12,

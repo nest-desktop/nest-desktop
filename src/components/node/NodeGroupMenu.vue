@@ -88,8 +88,11 @@ import { NodeGroup } from "@/helpers/node/nodeGroup";
 const props = defineProps<{ nodeGroup: NodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);
 
-const state = reactive({
-  content: undefined as string | undefined,
+const state = reactive<{
+  content: string | undefined;
+  show: boolean;
+}>({
+  content: undefined,
   show: false,
 });
 

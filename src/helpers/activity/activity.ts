@@ -40,7 +40,7 @@ export class Activity extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._recorder = recorder;
-    this._state = reactive({
+    this._state = reactive<IActivityState>({
       activeNodeId: undefined,
       fromTime: 0,
       // records: [] as NodeRecord[],

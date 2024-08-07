@@ -51,7 +51,7 @@ export class BaseSimulation extends BaseObj {
     this._code = new this.SimulationCode(this, simulationProps.code);
 
     // Initialize simulation state.
-    this._state = reactive({
+    this._state = reactive<ISimulationState>({
       biologicalTime: 0,
       running: false,
       timeInfo: {

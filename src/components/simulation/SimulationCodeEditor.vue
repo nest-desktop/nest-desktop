@@ -40,7 +40,9 @@ import { TSimulation } from "@/types";
 
 defineProps<{ simulation: TSimulation }>();
 
-const state = reactive({
+const state = reactive<{
+  disabled: boolean;
+}>({
   disabled: true,
 });
 

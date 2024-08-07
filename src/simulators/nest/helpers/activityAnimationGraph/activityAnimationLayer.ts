@@ -59,7 +59,7 @@ export class ActivityAnimationLayer {
     },
   ];
   private _offset: Vector3 = new Vector3(0, 0, 0);
-  private _state: UnwrapRef<IActivityAnimationLayerState> = reactive({
+  private _state = reactive<IActivityAnimationLayerState>({
     layout: {
       extent: [
         [-1, 0],

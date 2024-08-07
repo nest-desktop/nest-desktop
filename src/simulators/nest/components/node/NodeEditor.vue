@@ -248,9 +248,14 @@ import { NESTNode } from "../../helpers/node/node";
 const props = defineProps<{ node: NESTNode }>();
 const node = computed(() => props.node);
 
-const state = reactive({
+const state = reactive<{
+  elementType: string;
+  items: (NESTCopyModel | NESTModel | any)[];
+  menu: boolean;
+  panelIdx: number | null;
+}>({
   elementType: "",
-  items: [] as (NESTCopyModel | NESTModel | any)[],
+  items: [],
   menu: false,
   panelIdx: null,
 });

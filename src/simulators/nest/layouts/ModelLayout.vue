@@ -3,30 +3,6 @@
 
   <template v-if="modelStore.model">
     <ModelBar color="nest-model">
-      <template #prependTabs>
-        <v-tab
-          :to="{
-            name: 'nestModelDoc',
-            params: { modelId: modelStore.state.modelId },
-          }"
-          size="small"
-          title="Read documentation"
-        >
-          <v-icon icon="mdi:mdi-text-box-outline" />
-          <span class="text-no-wrap">Doc</span>
-        </v-tab>
-      </template>
-
-      <template #prependBtn>
-        <v-btn
-          @click="openNESTModuleDialog()"
-          prepend-icon="mdi:mdi-memory"
-          text="Module"
-          title="Generate module"
-          variant="outlined"
-        />
-      </template>
-
       <template #modelExplorer>
         <v-tab
           :disabled="!modelStore.model.isNeuron"
@@ -66,6 +42,30 @@
         </v-btn>
 
         <v-divider vertical />
+      </template>
+
+      <template #prependBtn>
+        <v-btn
+          @click="openNESTModuleDialog()"
+          prepend-icon="mdi:mdi-memory"
+          text="Module"
+          title="Generate module"
+          variant="outlined"
+        />
+      </template>
+
+      <template #prependTabs>
+        <v-tab
+          :to="{
+            name: 'nestModelDoc',
+            params: { modelId: modelStore.state.modelId },
+          }"
+          size="small"
+          title="Read documentation"
+        >
+          <v-icon icon="mdi:mdi-text-box-outline" />
+          <span class="text-no-wrap">Doc</span>
+        </v-tab>
       </template>
     </ModelBar>
 

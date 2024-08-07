@@ -53,7 +53,9 @@ const nestmlServerStore = useNESTMLServerStore();
 const props = defineProps<{ model: NESTModel }>();
 const model = computed(() => props.model as NESTModel);
 
-const state = reactive({
+const state = reactive<{
+  selectedModules: IModule[];
+}>({
   selectedModules: moduleStore.state.modules.filter((module: IModule) =>
     module.models.includes(model.value.id)
   ),

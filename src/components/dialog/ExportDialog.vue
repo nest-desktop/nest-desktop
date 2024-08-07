@@ -95,9 +95,9 @@ const projectDBStore = computed(
   () => appStore.currentSimulator.stores.projectDBStore
 );
 
-const state = reactive({
-  items: [] as IExportProps[],
-  selected: [] as IExportProps[],
+const state = reactive<{ items: IExportProps[]; selected: IExportProps[] }>({
+  items: [],
+  selected: [],
 });
 
 const headers = [
@@ -119,15 +119,15 @@ const exportSelected = () => {
       state.selected.map((selected: IExportProps) => selected.props)
     )
   );
-  state.selected = [] as IExportProps[];
+  state.selected = [];
 };
 
 /**
  * Update list item.
  */
 const update = (): void => {
-  state.selected = [] as IExportProps[];
-  state.items = [] as IExportProps[];
+  state.selected = [];
+  state.items = [];
 
   if (props.model) {
     modelDBStore.value.state.models.forEach((model: TModel) => {

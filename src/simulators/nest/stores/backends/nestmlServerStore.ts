@@ -19,7 +19,7 @@ export const generateModels = (
     models: [],
     name: "nestmlmodule",
   }
-) => {
+): Promise<void> => {
   const nestmlServerStore = useNESTMLServerStore();
 
   return nestmlServerStore
@@ -47,7 +47,9 @@ export const generateModels = (
     });
 };
 
-export const fetchNESTMLModels = (moduleName: string) => {
+export const fetchNESTMLModels = (
+  moduleName: string
+): Promise<AxiosResponse> => {
   const nestmlServerStore = useNESTMLServerStore();
   return nestmlServerStore
     .axiosInstance()

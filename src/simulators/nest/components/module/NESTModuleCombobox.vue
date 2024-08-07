@@ -61,9 +61,13 @@ import { reactive } from "vue";
 import { useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
-const state = reactive({
-  search: "nestmlmodule",
+const state = reactive<{
+  exist: boolean;
+  search: string;
+  valid: boolean;
+}>({
   exist: true,
+  search: "nestmlmodule",
   valid: false,
 });
 

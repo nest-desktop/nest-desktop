@@ -70,7 +70,12 @@ import { NESTCopyModel } from "../../helpers/model/copyModel";
 const props = defineProps<{ model: NESTCopyModel }>();
 const model = computed(() => props.model);
 
-const state = reactive({
+const state = reactive<{
+  content: string | undefined;
+  dialog: boolean;
+  show: boolean;
+  spatialNode: boolean;
+}>({
   content: undefined as string | undefined,
   dialog: false,
   show: false,

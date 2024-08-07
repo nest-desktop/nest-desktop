@@ -15,7 +15,7 @@ export class ConnectionState {
   constructor(connection: TConnection) {
     this._connection = connection;
 
-    this._state = reactive({
+    this._state = reactive<IConnectionState>({
       showRule: false,
     });
   }

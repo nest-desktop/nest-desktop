@@ -54,9 +54,14 @@ const props = defineProps({
 });
 const activity = computed(() => props.activity as SpikeActivity);
 
-const state = reactive({
+const state = reactive<{
+  activityHash: string;
+  items: Record<string, number | string>[];
+  loading: boolean;
+  search: string;
+}>({
   activityHash: "",
-  items: [] as Record<string, number>[],
+  items: [],
   loading: false,
   search: "",
 });
@@ -74,11 +79,11 @@ const headers = [
 ];
 
 const colMean = (key: string): number => {
-  return mean(state.items.map((item: Record<string, number>) => item[key]));
+  return mean(state.items.map((item) => item[key] as number));
 };
 
 const colSum = (key: string): number => {
-  return sum(state.items.map((item: Record<string, number>) => item[key]));
+  return sum(state.items.map((item) => item[key] as number));
 };
 
 /**

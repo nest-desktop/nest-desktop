@@ -35,7 +35,7 @@ export class NodeGroupView extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._nodeGroup = nodeGroup;
-    this._state = reactive({
+    this._state = reactive<INodeGroupViewState>({
       ...viewProps,
       expansionPanelIdx: null,
       centroid: { x: 0, y: 0 },

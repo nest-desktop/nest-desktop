@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, UnwrapRef, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 
 const props = defineProps({
   inputLabel: { default: ["lower", "upper"], type: Array<String> },
@@ -49,7 +49,10 @@ const props = defineProps({
   unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);
-const modelRef: UnwrapRef<{ lower: number; upper: number }> = reactive({
+const modelRef = reactive<{
+  lower: number;
+  upper: number;
+}>({
   lower: 0,
   upper: 1,
 });

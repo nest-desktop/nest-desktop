@@ -38,7 +38,7 @@
         :disabled="
           appStore.currentSimulator.backends.nestml.state.response.status != 200
         "
-        @click="closeDialog(state.selectedModule)"
+        @click="closeDialog(state.selectedModule.name)"
         text="Generate module"
         variant="outlined"
       />
@@ -56,17 +56,17 @@ import NESTModuleSelect from "../module/NESTModuleSelect.vue";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNESTModuleStore } from "../../stores/moduleStore";
+import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
-const state = reactive({
+const state = reactive<{ selectedModule: IModule }>({
   selectedModule: moduleStore.findModule("nestmlmodule"),
 });
 
 const emit = defineEmits(["closeDialog"]);
-function closeDialog(value?: string | boolean) {
-  emit("closeDialog", value);
-}
+const closeDialog = (moduleName?: string | null) => {
+  emit("closeDialog", moduleName ? module : false);
+};
 
 const fetchInstalledModels = () => {
   nextTick(() => {

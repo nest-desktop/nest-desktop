@@ -109,7 +109,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
     this._id = "activityChart";
     this._panel = panel;
-    this._state = reactive({
+    this._state = reactive<IActivityChartPanelModelState>({
       height: 1,
       histogram: {
         end: -1e100,

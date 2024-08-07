@@ -16,7 +16,13 @@ export const useNESTSimulatorStore = defineBackendStore(
   { axiosHeaderTokenValue: "NESTServerAuth" }
 );
 
-const fetchModels = () => {
+export interface IModelProps {
+  id: string;
+  label: string;
+  elementType: string;
+}
+
+const fetchModels = (): void => {
   const modelStore: TModelStore = useNESTModelStore();
   const nestSimulatorStore = useNESTSimulatorStore();
 
@@ -37,7 +43,7 @@ const fetchModels = () => {
     });
 };
 
-const getElementType = (modelId: string) => {
+const getElementType = (modelId: string): string => {
   if (modelId.endsWith("generator") || modelId.endsWith("dilutor")) {
     return "stimulator";
   } else if (
@@ -58,39 +64,51 @@ const getElementType = (modelId: string) => {
   return "neuron";
 };
 
-const installModule = (moduleName: string = "nestmlmodule") => {
+const installModule = (moduleName?: string): void => {
   const nestSimulatorStore = useNESTSimulatorStore();
 
   nestSimulatorStore
     .axiosInstance()
-    .post("/api/Install", { module_name: moduleName })
-    .then(fetchModels)
-    .catch((error: AxiosError) => {
-      if ("response" in error && error.response?.data != undefined) {
-        // The request made and the server responded.
-        if (typeof error.response.data === "string") {
-          notifyError(error.response.data);
-        }
-      } else if ("request" in error) {
-        // The request was made but no response was received.
-        notifyError(
-          "Failed to perform simulation (Simulator backend is not running)."
-        );
-      } else if ("message" in error && error.message != undefined) {
-        // Something happened in setting up the request
-        // that triggered an error.
-        notifyError(error.message);
+    .get("/api/ResetKernel")
+    .then(() => {
+      if (moduleName) {
+        nestSimulatorStore
+          .axiosInstance()
+          .post("/api/Install", { module_name: moduleName })
+          .catch((error: AxiosError) => {
+            if ("response" in error && error.response?.data != undefined) {
+              // The request made and the server responded.
+              if (typeof error.response.data === "string") {
+                notifyError(error.response.data);
+              }
+            } else if ("request" in error) {
+              // The request was made but no response was received.
+              notifyError(
+                "Failed to perform simulation (Simulator backend is not running)."
+              );
+            } else if ("message" in error && error.message != undefined) {
+              // Something happened in setting up the request
+              // that triggered an error.
+              notifyError(error.message);
+            }
+          })
+          .finally(fetchModels);
+      } else {
+        fetchModels();
       }
     });
 };
 
-const resetKernel = () => {
+const resetKernel = (): void => {
   const nestSimulatorStore = useNESTSimulatorStore();
 
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
 };
 
-const simulate = (data: { source: string; return?: string }) => {
+const simulate = (data: {
+  source: string;
+  return?: string;
+}): Promise<AxiosResponse> => {
   const nestSimulatorStore = useNESTSimulatorStore();
 
   return nestSimulatorStore.axiosInstance().post("exec", data);

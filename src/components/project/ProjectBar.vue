@@ -30,6 +30,7 @@
     <v-spacer />
 
     <NetworkHistory />
+    <slot name="prependBtn"></slot>
 
     <SimulationButton
       :simulation="projectStore.state.project.simulation"

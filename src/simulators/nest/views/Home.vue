@@ -171,20 +171,22 @@
                 size="x-small"
                 title="Generate NESTML models"
               />
-
-              <v-btn
-                @click.stop="nestSimulator.resetKernel()"
-                class="mx-1"
-                flat
-                icon="mdi:mdi-delete-empty-outline"
-                size="x-small"
-                title="Reset kernel"
-              />
             </v-expansion-panel-title>
 
             <v-expansion-panel-text class="pa-2">
-              <NESTModuleSelect return-object v-model="state.selectedModule">
-                <template #append>
+              <NESTModuleSelect
+                :hide-details="false"
+                @update:model-value="
+                  (item) =>
+                    item
+                      ? nestSimulator.installModule(item.name)
+                      : resetKernel()
+                "
+                clearable
+                return-object
+                v-model="state.selectedModule"
+              >
+                <!-- <template #append>
                   <v-btn
                     @click="
                       nestSimulator.installModule(state.selectedModule.name)
@@ -194,23 +196,36 @@
                     size="x-small"
                     title="Install module"
                   />
+                </template> -->
+                <template #details>
+                  <span
+                    :title="customModels?.join(',')"
+                    density="compact"
+                    variant="text"
+                    v-if="customModels ? customModels.length > 0 : false"
+                  >
+                    {{ customModels?.length }}
+                    custom model
+                    <span
+                      v-show="customModels ? customModels.length > 1 : false"
+                    >
+                      s
+                    </span>
+                  </span>
                 </template>
               </NESTModuleSelect>
-
-              {{ state.selectedModule.models.length }} models
 
               <v-text-field
                 class="my-2"
                 clearable
                 density="compact"
-                hide-details
                 label="Search model"
                 placeholder="Search model"
                 prepend-inner-icon="mdi:mdi-magnify"
                 v-model="state.modelSearch"
                 variant="outlined"
               >
-                <template #append>
+                <!-- <template #append>
                   <v-btn
                     @click="nestSimulator.fetchModels()"
                     flat
@@ -218,16 +233,22 @@
                     size="x-small"
                     title="Fetch models"
                   />
+                </template> -->
+                <template #details>
+                  {{ models.length }} model
+                  <span v-show="models.length > 1">s</span>
                 </template>
               </v-text-field>
 
-              <v-list>
-                <template
-                  v-for="model in appStore.currentSimulator.stores.modelStore
-                    .state.models"
-                >
-                  <v-list-item v-show="model.id.includes(state.modelSearch)">
+              <v-list density="compact">
+                <template v-for="model in models">
+                  <v-list-item>
                     {{ model.id }}
+                    <template #append>
+                      <span class="text-disabled">
+                        {{ model.elementType }}
+                      </span>
+                    </template>
                   </v-list-item>
                 </template>
               </v-list>
@@ -242,28 +263,43 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
 import NESTModuleSelect from "../components/module/NESTModuleSelect.vue";
-import nestSimulator from "../stores/backends/nestSimulatorStore";
+import nestSimulator, {
+  IModelProps,
+} from "../stores/backends/nestSimulatorStore";
+import { IModule, openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import {
-  openNESTModuleDialog,
-  useNESTModuleStore,
-} from "../stores/moduleStore";
-const moduleStore = useNESTModuleStore();
-
-const state = reactive({
+const state = reactive<{
+  backendTab: string;
+  modelSearch: string;
+  selectedModule: IModule | null;
+}>({
   backendTab: "nest",
   modelSearch: "",
-  modelsLength: 0,
-  selectedModule: moduleStore.findModule("nestmlmodule"),
+  selectedModule: null,
 });
+
+const customModels = computed(() => state.selectedModule?.models);
+
+const models = computed(() => {
+  const models = appStore.currentSimulator.stores.modelStore.state.models;
+  return state.modelSearch
+    ? models.filter((model: IModelProps) =>
+        model.id.includes(state.modelSearch)
+      )
+    : models;
+});
+
+const resetKernel = () => {
+  nestSimulator.resetKernel();
+};
 </script>

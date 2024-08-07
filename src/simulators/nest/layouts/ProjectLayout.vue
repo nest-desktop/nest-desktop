@@ -49,6 +49,16 @@
 
       <v-divider vertical />
     </template>
+
+    <template #prependBtn>
+      <v-btn
+        @click="openNESTModuleDialog()"
+        prepend-icon="mdi:mdi-memory"
+        text="Module"
+        title="Generate module"
+        variant="outlined"
+      />
+    </template>
   </ProjectBar>
 
   <ProjectController>
@@ -140,6 +150,7 @@ import ActivityAnimationControllerLayer from "../components/activityAnimation/Ac
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
 import NodeEditor from "../components/node/NodeEditor.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
+import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();

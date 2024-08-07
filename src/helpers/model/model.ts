@@ -56,7 +56,7 @@ export class BaseModel extends BaseObj {
     this._abbreviation = modelProps.abbreviation || "";
     this._favorite = modelProps.favorite || false;
 
-    this._state = reactive({ paramsVisible: [] });
+    this._state = reactive<IBaseModelState>({ paramsVisible: [] });
 
     this.update(modelProps);
   }

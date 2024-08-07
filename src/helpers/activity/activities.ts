@@ -25,7 +25,7 @@ export class Activities extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._project = project;
-    this._state = reactive({
+    this._state = reactive<IActivitiesState>({
       activityStatsPanelId: 0,
       hasSomeAnalogRecorders: false,
       hasSomeEvents: false,

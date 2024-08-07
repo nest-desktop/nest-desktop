@@ -171,7 +171,7 @@ export class ActivityChartGraph extends BaseObj {
       },
     };
 
-    this._state = reactive({
+    this._state = reactive<IActivityChartGraphState>({
       dialog: false,
       traceColor: activityGraphProps?.color || "record",
     });

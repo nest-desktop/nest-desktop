@@ -151,7 +151,7 @@ const options = {
   },
 };
 
-const state = reactive({
+const state = reactive<{ autoRNGSeed: boolean }>({
   autoRNGSeed: false,
 });
 

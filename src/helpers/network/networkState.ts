@@ -46,7 +46,7 @@ export class NetworkState {
 
   constructor(network: TNetwork) {
     this._network = network;
-    this._state = reactive({
+    this._state = reactive<INetworkState>({
       displayIdx: {
         connections: [],
         models: [],

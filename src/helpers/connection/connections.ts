@@ -24,9 +24,8 @@ export class BaseConnections extends BaseObj {
 
     this._network = network;
 
-    this._state = reactive({
+    this._state = reactive<IConnectionsState>({
       focusedConnection: null,
-      hash: "",
       selectedConnection: null,
       selectedNode: null,
     });

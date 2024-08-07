@@ -43,7 +43,8 @@
 
         <v-row class="mx-4 text-subtitle-2" no-gutters>
           <v-spacer />
-          {{ projects.length }} projects
+          {{ projects.length }} project
+          <span v-show="projects.length > 1">s</span>
         </v-row>
       </template>
 

@@ -46,7 +46,7 @@ export class BaseNetworkGraph extends BaseObj {
     this._nodeGraph = new NodeGraph(this);
     this._nodeGroupGraph = new NodeGroupGraph(this);
 
-    this._state = reactive({
+    this._state = reactive<IBaseNetworkGraphState>({
       hash: "",
       nodeMenu: {
         node: null,

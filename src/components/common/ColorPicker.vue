@@ -123,10 +123,14 @@ const colorSchemes: Record<string, string[][]> = {
   ],
 };
 
-const state = reactive({
+const state = reactive<{
+  color: string;
+  colorScheme: string;
+  swatches: string[][];
+}>({
   color: "",
   colorScheme: "category10",
-  swatches: [] as string[][],
+  swatches: [],
 });
 
 const update = () => {
