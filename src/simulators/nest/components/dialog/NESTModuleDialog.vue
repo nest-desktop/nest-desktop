@@ -38,7 +38,7 @@
         :disabled="
           appStore.currentSimulator.backends.nestml.state.response.status != 200
         "
-        @click="closeDialog(state.selectedModule.name)"
+        @click="closeDialog(state.selectedModule)"
         text="Generate module"
         variant="outlined"
       />
@@ -64,8 +64,8 @@ const state = reactive<{ selectedModule: IModule }>({
 });
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (moduleName?: string | null) => {
-  emit("closeDialog", moduleName ? moduleName : false);
+const closeDialog = (module?: IModule | null) => {
+  emit("closeDialog", module ? module : false);
 };
 
 const fetchInstalledModels = () => {
