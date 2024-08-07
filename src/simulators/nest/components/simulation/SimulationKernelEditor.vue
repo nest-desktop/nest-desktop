@@ -13,6 +13,8 @@
         <NESTModuleSelect
           :return-object="false"
           chips
+          clearable
+          closable-chips
           class="pa-2"
           hide-selected
           label="Install modules"
