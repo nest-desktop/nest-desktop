@@ -160,7 +160,7 @@
             "
           >
             <v-expansion-panel-title>
-              Models in backend
+              Models from NEST backend
               <v-spacer />
 
               <v-btn
@@ -245,7 +245,7 @@
                   <v-list-item>
                     {{ model.id }}
                     <template #append>
-                      <span class="text-disabled">
+                      <span class="text-caption">
                         {{ model.elementType }}
                       </span>
                     </template>
