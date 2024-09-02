@@ -1,7 +1,7 @@
 // activityChartGraph.ts
 
-// @ts-ignore - Module '"plotly.js-dist-min"' has no exported member 'Partial'.
-import Plotly, { Partial, Root, deleteTraces } from "plotly.js-dist-min";
+// @ts-ignore - Module '"plotly.js-cartesian-dist-min"' has no exported member 'Partial'.
+import Plotly, { Partial, Root } from "plotly.js-cartesian-dist-min";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TProject } from "@/types";

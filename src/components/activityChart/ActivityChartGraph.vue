@@ -40,7 +40,6 @@ import {
   ref,
   watch,
 } from "vue";
-import { DownloadImgopts } from "plotly.js";
 
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
@@ -71,7 +70,7 @@ const downloadImage = () => {
   state.dialog = false;
   const date: string = new Date().toISOString();
   state.toImageButtonOptions.filename = `nest_desktop-${graph.value?.project.name}-${date}`;
-  graph.value?.downloadImage(state.toImageButtonOptions as DownloadImgopts);
+  graph.value?.downloadImage(state.toImageButtonOptions);
 };
 
 const init = () => {
