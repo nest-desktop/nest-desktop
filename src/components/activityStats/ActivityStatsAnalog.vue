@@ -94,17 +94,19 @@
     <template #bottom>
       <div class="pr-4 wrapper-table">
         <table class="py-2">
-          <tr>
-            <td style="width: 48px" />
-            <td :key="idx" class="px-2" v-for="(header, idx) in headers">
-              <div v-if="header.key === 'id'">Total</div>
-              <div v-else-if="['mean', 'std'].includes(header.key)">
-                <span>&#956;</span>
-                = {{ toFixed(colMean(header.key)) }}
-              </div>
-              <div v-else />
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td style="width: 48px" />
+              <td :key="idx" class="px-2" v-for="(header, idx) in headers">
+                <div v-if="header.key === 'id'">Total</div>
+                <div v-else-if="['mean', 'std'].includes(header.key)">
+                  <span>&#956;</span>
+                  = {{ toFixed(colMean(header.key)) }}
+                </div>
+                <div v-else />
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </template>

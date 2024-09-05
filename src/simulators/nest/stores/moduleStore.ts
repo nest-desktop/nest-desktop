@@ -86,7 +86,7 @@ export const useNESTModuleStore: TModuleStore = defineStore(
   {
     persist: [
       {
-        paths: ["state.modules"],
+        pick: ["state.modules"],
         storage: localStorage,
       },
     ],

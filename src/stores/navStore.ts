@@ -35,7 +35,7 @@ export const useNavStore: TNavStore = defineStore(
   {
     persist: [
       {
-        paths: ["state.open", "state.view", "state.width"],
+        pick: ["state.open", "state.view", "state.width"],
         storage: sessionStorage,
       },
     ],

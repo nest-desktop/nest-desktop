@@ -22,19 +22,21 @@
     <template #bottom>
       <div class="pr-4 wrapper-table">
         <table class="py-2">
-          <tr>
-            <td :key="idx" class="px-2" v-for="(header, idx) in headers">
-              <div v-if="header.key === 'id'">Total</div>
-              <div v-else-if="header.key === 'count'">
-                <span>&#931;</span>
-                = {{ colSum(header.key) }}
-              </div>
-              <div v-else>
-                <span>&#956;</span>
-                = {{ toFixed(colMean(header.key)) }}
-              </div>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td :key="idx" class="px-2" v-for="(header, idx) in headers">
+                <div v-if="header.key === 'id'">Total</div>
+                <div v-else-if="header.key === 'count'">
+                  <span>&#931;</span>
+                  = {{ colSum(header.key) }}
+                </div>
+                <div v-else>
+                  <span>&#956;</span>
+                  = {{ toFixed(colMean(header.key)) }}
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </template>

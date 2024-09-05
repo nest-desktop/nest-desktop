@@ -22,9 +22,9 @@
           :disabled="!modelStore.model.isNeuron"
           height="100%"
           rounded="0"
+          style="min-width: 32px"
           variant="plain"
           width="32"
-          style="min-width: 32px"
         >
           <v-icon icon="mdi:mdi-menu-down" />
 
@@ -112,7 +112,7 @@ const selectProject = (projectId: string): void => {
 };
 
 const update = () => {
-  if (!modelStore.model.isNeuron) {
+  if (!modelStore.model || !modelStore.model.isNeuron) {
     modelStore.state.project = undefined;
     return;
   }

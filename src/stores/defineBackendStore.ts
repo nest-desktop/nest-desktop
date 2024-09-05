@@ -235,11 +235,11 @@ export function defineBackendStore(
     {
       persist: [
         {
-          paths: ["state.enabled", "state.loadedFromAssets", "state.url"],
+          pick: ["state.enabled", "state.loadedFromAssets", "state.url"],
           storage: localStorage,
         },
         {
-          paths: ["state.accessToken"],
+          pick: ["state.accessToken"],
           storage: sessionStorage,
         },
       ],

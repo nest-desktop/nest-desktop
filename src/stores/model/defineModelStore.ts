@@ -189,7 +189,7 @@ export function defineModelStore(
     },
     {
       persist: {
-        paths: ["state.recentAddedModels"],
+        pick: ["state.recentAddedModels"],
         storage: localStorage,
       },
     }

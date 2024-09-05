@@ -127,7 +127,7 @@ export const useAppStore = defineStore(
   {
     persist: [
       {
-        paths: [
+        pick: [
           "state.autoUpdate",
           "state.theme",
           "state.themeIcon",
@@ -137,7 +137,7 @@ export const useAppStore = defineStore(
         storage: localStorage,
       },
       {
-        paths: ["state.devMode", "state.webGL"],
+        pick: ["state.devMode", "state.webGL"],
         storage: sessionStorage,
       },
     ],

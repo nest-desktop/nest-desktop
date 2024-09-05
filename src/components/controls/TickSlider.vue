@@ -30,13 +30,13 @@
 <script lang="ts" setup>
 import { computed, reactive, onMounted, watch } from "vue";
 
-interface Props {
+interface IProps {
   modelValue: number | string;
-  tickLabels: (number | string)[];
+  tickLabels?: (number | string)[];
   unit?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<IProps>(), {
   modelValue: 0,
   tickLabels: () => [""],
   unit: "",
