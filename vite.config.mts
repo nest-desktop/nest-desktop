@@ -20,13 +20,17 @@ export default defineConfig((configEnv: { mode: string }) => ({
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo: { name: string }) => {
-          let extType = assetInfo.name.split(".").at(1);
+          const name = assetInfo.name;
+          let extType = name.split(".").at(1);
           if (/png|svg/.test(extType)) {
             extType = "img";
           } else if (/woff|woff2|eot|ttf|otf/.test(extType)) {
             extType = "fonts";
           }
-          return `assets/${extType}/[name]-[hash][extname]`;
+          if (name.startsWith("vendors_")) {
+            return `assets/${extType}/vendors/${name.slice(8)}.[hash][extname]`;
+          }
+          return `assets/${extType}/[name].[hash][extname]`;
         },
         chunkFileNames: (assetInfo: { facadeModuleId: string; name: string }) => {
           // https://github.com/vitejs/vite-plugin-vue/issues/19
@@ -41,25 +45,25 @@ export default defineConfig((configEnv: { mode: string }) => ({
           //   return `assets/js/simulators/${path[path.indexOf("simulators") + 1]}/${name}-[hash].js`;
           // }
           if (name.startsWith("vendors_")) {
-            return `assets/js/vendors/${name.slice(8)}-[hash].js`;
+            return `assets/js/vendors/${name.slice(8)}.[hash].js`;
           }
-          return `assets/js/${name}-[hash].js`;
+          return `assets/js/${name}.[hash].js`;
         },
-        entryFileNames: "assets/js/[name]-[hash].js",
+        entryFileNames: "assets/js/[name].[hash].js",
         manualChunks: (id: string): string => {
           // https://github.com/vitejs/vite/discussions/9440#discussioncomment-10131471
-          if (id.includes("/vue/") || id.includes("/@vue/")) {
-            return "vue";
-          } else if (id.includes("node_modules")) {
+          // if (id.includes("/vue/") || id.includes("/@vue/")) {
+          //   return "@vue";
+          // } else
+          if (id.includes("node_modules")) {
             const path = id.toString().split("/");
             const vendor = path[path.indexOf("node_modules") + 1];
-            return "vendors_" + (vendor.startsWith("d3") ? "d3" : vendor);
+            return "vendors_" + (vendor.startsWith("d3") ? "@d3" : vendor);
             // } else if (id.includes("simulators")) {
             //   const path = id.toString().split("/");
             //   return path[path.indexOf("simulators") + 1];
-          } else {
-            return "main";
           }
+          return "main";
         },
       },
     },
