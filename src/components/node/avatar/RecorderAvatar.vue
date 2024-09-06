@@ -28,7 +28,7 @@ defineProps({
     z-index: 1;
   }
   .icon-size {
-    --v-icon-size-multiplier: 2;
+    --v-icon-size-multiplier: 2 !important;
   }
 }
 </style>

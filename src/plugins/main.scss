@@ -4,7 +4,7 @@
 );
 
 .expansion-panel-title {
-  height: 48px;
+  height: 48px !important;
 
   // .menu {
   //   opacity: 0;
@@ -18,5 +18,5 @@
 }
 
 .v-expansion-panel-text__wrapper {
-  padding: 0;
+  padding: 0 !important;
 }
