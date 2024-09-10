@@ -1,16 +1,13 @@
 // moduleStore.ts
 
-import { AxiosResponse } from "axios";
-import { Store, defineStore } from "pinia";
-import { reactive } from "vue";
-import { createDialog } from "vuetify3-dialog";
+import { AxiosResponse } from 'axios';
+import { Store, defineStore } from 'pinia';
+import { reactive } from 'vue';
+import { createDialog } from 'vuetify3-dialog';
 
-import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
-import {
-  fetchNESTMLModels,
-  generateModels,
-} from "./backends/nestmlServerStore";
-import { useNESTModelDBStore } from "./model/modelDBStore";
+import NESTModuleDialog from '../components/dialog/NESTModuleDialog.vue';
+import { fetchNESTMLModels, generateModels } from './backends/nestmlServerStore';
+import { useNESTModelDBStore } from './model/modelDBStore';
 
 export interface IModule {
   models: string[];
@@ -115,7 +112,8 @@ export const openNESTModuleDialog = (): void => {
         .map((modelId: string) => {
           const model = modelDBStore.findModel(modelId);
           return {
-            name: model.id + "_" + model.elementType,
+            element_type: model.elementType,
+            name: model.id,
             script: model.nestmlScript,
           };
         });

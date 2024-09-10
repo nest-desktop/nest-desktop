@@ -24,7 +24,6 @@
         prepend-inner-icon="mdi:mdi-magnify"
         single-line
         v-model="state.search"
-        variant="outlined"
       />
 
       <template #extension>
@@ -44,6 +43,7 @@
           <v-spacer />
 
           <v-chip
+            :text="state.source"
             @click="
               state.source =
                 sources[(sources.indexOf(state.source) + 1) % sources.length]
@@ -52,9 +52,8 @@
             density="compact"
             prepend-icon="mdi:mdi-filter-variant"
             title="source of the models"
-          >
-            {{ state.source }}
-          </v-chip>
+            variant="text"
+          />
 
           <v-chip
             :prepend-icon="
@@ -64,15 +63,16 @@
             @click="state.orderByAsc = !state.orderByAsc"
             class="mx-1"
             density="compact"
+            text="sort"
             title="order by"
-          >
-            sort
-          </v-chip>
+            variant="text"
+          />
 
           <v-spacer />
 
           <span class="text-subtitle-2">
-            {{ models.length }} model<span v-show="models.length > 1">s</span>
+            {{ models.length }}
+            model<span text="s" v-show="models.length > 1" />
           </span>
         </v-row>
       </template>
@@ -86,14 +86,9 @@
           <v-list-item
             :key="index"
             :value="index"
-            @click="item.onClick()"
+            v-bind="item"
             v-for="(item, index) in menuItems"
-          >
-            <template #prepend>
-              <v-icon :icon="item.icon"></v-icon>
-            </template>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
+          />
         </v-list>
       </v-menu>
     </v-toolbar>
@@ -107,13 +102,12 @@
         >
           <v-btn
             :key="elementType"
+            :text="elementType"
             :value="elementType"
             size="x-small"
             style="font-size: 9px"
             v-for="elementType in elementTypes"
-          >
-            {{ elementType }}
-          </v-btn>
+          />
         </v-btn-toggle>
       </v-list-subheader>
 
@@ -266,9 +260,9 @@ const elementTypes: TElementType[] = [
 
 const menuItems = [
   {
-    title: "Import",
-    icon: "mdi:mdi-import",
     id: "import-dialog",
+    prependIcon: "mdi:mdi-import",
+    title: "Import",
     onClick: () => {
       createDialog({
         title: "",
@@ -284,9 +278,9 @@ const menuItems = [
     },
   },
   {
-    title: "Export",
-    icon: "mdi:mdi-export",
     id: "export-dialog",
+    prependIcon: "mdi:mdi-export",
+    title: "Export",
     onClick: () => {
       createDialog({
         title: "",
@@ -304,9 +298,9 @@ const menuItems = [
     },
   },
   {
-    title: "Delete",
-    icon: "mdi:mdi-trash-can-outline",
     id: "delete-dialog",
+    prependIcon: "mdi:mdi-trash-can-outline",
+    title: "Delete",
     onClick: () => {
       createDialog({
         title: "",

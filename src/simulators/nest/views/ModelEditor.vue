@@ -2,24 +2,31 @@
   <v-card flat title="Model editor" v-if="model">
     <v-card-text>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="5">
           <v-text-field
             density="compact"
             disabled
             hide-details
             label="Model id"
             v-model="state.modelId"
-            variant="outlined"
           />
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="5">
           <v-text-field
             density="compact"
             hide-details
             label="Model label"
             v-model="model.label"
-            variant="outlined"
+          />
+        </v-col>
+
+        <v-col cols="2">
+          <v-btn
+            @click="saveModel()"
+            block
+            prepend-icon="mdi-content-save-outline"
+            text="save"
           />
         </v-col>
 
@@ -30,7 +37,6 @@
             hide-details
             label="Model element type"
             v-model="model.elementType"
-            variant="outlined"
           />
         </v-col> -->
       </v-row>

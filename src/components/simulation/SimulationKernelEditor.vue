@@ -1,17 +1,15 @@
 <template>
   <div class="simulationKernelEditor">
-    <v-toolbar color="transparent" density="compact">
-      <v-toolbar-title>Simulation kernel editor</v-toolbar-title>
-    </v-toolbar>
+    <v-toolbar
+      color="transparent"
+      density="compact"
+      title="Simulation kernel editor"
+    />
 
-    <Card :color="props.color || 'primary'" class="ma-1">
-      <v-card-title class="pa-0 text-center text-button">
-        Simulation
-      </v-card-title>
-
+    <Card :color="props.color" class="ma-1" title="Simulation">
       <v-card-text class="py-0">
         <ValueSlider
-          :thumb-color="props.color || 'primary'"
+          :thumb-color="props.color"
           class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"

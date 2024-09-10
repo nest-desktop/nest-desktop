@@ -40,9 +40,8 @@
             <v-list-item
               @click="() => (projectStore.state.tab.activityView = 'spatial')"
               prepend-icon="mdi:mdi-axis-arrow"
-            >
-              spatial
-            </v-list-item>
+              text="spatial"
+            />
           </v-list>
         </v-menu>
       </v-btn>
@@ -54,9 +53,8 @@
       <v-btn
         @click="openNESTModuleDialog()"
         prepend-icon="mdi:mdi-memory"
-        text="Module"
+        text="module"
         title="Generate module"
-        variant="outlined"
       />
     </template>
   </ProjectBar>
@@ -96,14 +94,12 @@
           label="Existing model"
           prepend-icon="mdi:mdi-plus"
           v-model="model"
-          variant="outlined"
         >
           <template #append>
             <v-btn
               :disabled="model.length === 0"
               @click="copyModel(model)"
               text="copy"
-              variant="outlined"
             />
           </template>
         </v-select>

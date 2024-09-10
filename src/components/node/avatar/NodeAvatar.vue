@@ -1,31 +1,35 @@
 <template>
   <StimulatorAvatar
     :color="node.view.color"
-    :text="node.view.label"
-    :size="size || 40"
+    :size="props.size || 40"
     v-if="node.elementType === 'stimulator'"
-  />
+  >
+    {{ node.view.label }}
+  </StimulatorAvatar>
   <RecorderAvatar
     :color="node.view.color"
-    :text="node.view.label"
-    :size="size || 40"
+    :size="props.size || 40"
     v-else-if="node.elementType === 'recorder'"
-  />
+  >
+    {{ node.view.label }}
+  </RecorderAvatar>
   <NeuronAvatar
     :color="node.view.color"
-    :text="node.view.label"
-    :size="size || 40"
+    :size="props.size || 40"
     :weight="node.view.synWeights"
     v-else-if="node.elementType === 'neuron'"
-  />
+  >
+    {{ node.view.label }}
+  </NeuronAvatar>
   <v-avatar
     :color="nodeGroup.view.color"
-    :size="size || 40"
-    :text="nodeGroup.view.label"
+    :size="props.size || 40"
     class="node-avatar"
     v-else
     variant="tonal"
-  />
+  >
+    {{ node.view.label }}
+  </v-avatar>
 </template>
 
 <script lang="ts" setup>

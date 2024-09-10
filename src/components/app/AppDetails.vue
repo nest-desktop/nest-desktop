@@ -1,56 +1,79 @@
 <template>
   <v-card class="appDetails">
     <v-list density="compact">
-      <v-list-item>
+      <v-list-item
+        href="https://github.com/nest-desktop/nest-desktop/blob/dev/LICENSE"
+        target="_blank"
+      >
         <v-row>
           <v-col class="font-weight-bold text-left" cols="4">
-            Documentation
+            <v-icon class="mx-2" icon="mdi:mdi-license" />
+            License
           </v-col>
-          <v-col class="text-right" cols="8">
-            <a :href="doc" target="_blank">
-              {{ doc }}
-            </a>
-          </v-col>
+          <v-col class="text-right" cols="8">{{ license }}</v-col>
         </v-row>
       </v-list-item>
-      <v-list-item>
+      <v-list-item
+        href="
+          https://github.com/nest-desktop/nest-desktop/releases/
+        "
+        target="_blank"
+      >
         <v-row>
           <v-col class="font-weight-bold text-left" cols="4">
-            Source code
-          </v-col>
-          <v-col class="text-right" cols="8">
-            <a :href="repo" target="_blank">
-              {{ repo }}
-            </a>
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold text-left" cols="4"> License </v-col>
-          <v-col class="text-right" cols="8">
-            {{ license }}
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <v-list-item>
-        <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-tag-outline" />
             Current version
           </v-col>
-          <v-col class="text-right" cols="8">
-            {{ appVersion }}
+          <v-col class="text-right" cols="8">{{ appVersion }}</v-col>
+        </v-row>
+      </v-list-item>
+      <v-list-item :href="mailText" target="_blank">
+        <v-row>
+          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
+            Contact
+          </v-col>
+          <v-col class="text-caption text-right" cols="8">
+            {{ contactName }}
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4"> Contact </v-col>
+          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-magnify" />
+            Client info
+          </v-col>
           <v-col class="text-caption text-right" cols="8">
-            <a :href="mailText" v-text="contactName" />
+            <v-chip
+              :text="state.browserName + ' ' + state.browserVersion"
+              prepend-icon="mdi:mdi-application-outline"
+              size="x-small"
+              variant="text"
+            />
+            <v-chip
+              :text="state.osType"
+              prepend-icon="mdi:mdi-desktop-tower-monitor"
+              size="x-small"
+              variant="text"
+            />
           </v-col>
         </v-row>
       </v-list-item>
+    </v-list>
+
+    <v-divider />
+
+    <v-list density="compact">
+      <v-list-subheader>References</v-list-subheader>
+      <v-list-item
+        :key="index"
+        append-icon="mdi:mdi-open-in-new"
+        target="_blank"
+        v-bind="item"
+        :title="item.title + ' (' + item.href + ')'"
+        v-for="(item, index) in refItems"
+      />
     </v-list>
   </v-card>
 </template>
@@ -61,11 +84,9 @@ import { detect } from "detect-browser";
 
 const appVersion = process.env.APP_VERSION;
 const license = "MIT License";
-const contactName = "📧 Sebastian Spreizer";
+const contactName = "Sebastian Spreizer";
 const mailto = "spreizer@uni-trier.de";
 const mailSubject = `[NEST Desktop ${appVersion}]`;
-const doc = "https://nest-desktop.readthedocs.io";
-const repo = "https://github.com/nest-desktop/nest-desktop";
 
 const state = reactive<{
   browserName: string;
@@ -104,6 +125,19 @@ if (info) {
   state.browserVersion = info.version || "";
   state.osType = info.os || "";
 }
+
+const refItems = [
+  {
+    href: "https://nest-desktop.readthedocs.io",
+    prependIcon: "mdi:mdi-book-open",
+    title: "Documentation",
+  },
+  {
+    href: "https://github.com/nest-desktop/nest-desktop",
+    prependIcon: "mdi:mdi-github",
+    title: "Source code",
+  },
+];
 </script>
 
 <style lang="scss">
@@ -117,9 +151,6 @@ if (info) {
   }
   .v-list-item {
     min-height: 28px !important;
-  }
-  a:hover {
-    text-decoration: underline !important;
   }
 }
 </style>

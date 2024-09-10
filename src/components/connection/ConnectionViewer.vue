@@ -5,10 +5,10 @@
         <ConnectionAvatar :connection />
 
         <v-spacer />
-
-        <div class="d-flex justify-center align-center text-grey">
-          {{ connection.rule.value }}
-        </div>
+        <div
+          :text="connection.rule.value"
+          class="d-flex justify-center align-center text-grey"
+        />
         <v-spacer />
       </v-row>
     </v-expansion-panel-title>
@@ -18,10 +18,9 @@
           <v-list>
             <v-list-item
               :key="index"
+              :text="param.id"
               v-for="(param, index) in connection.params"
-            >
-              {{ param.id }}
-            </v-list-item>
+            />
           </v-list>
         </v-card-text>
       </v-card>

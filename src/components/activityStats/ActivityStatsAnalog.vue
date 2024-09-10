@@ -25,7 +25,6 @@
         item-value="id"
         v-if="activity.recorder.model.isMultimeter"
         v-model="state.selectedRecord"
-        variant="outlined"
       >
         <template #chip="{ item }" style="width: 100%">
           {{ item.title }}
@@ -53,21 +52,21 @@
     </template>
 
     <template #item.id="{ item }">
-      <span style="color: rgb(var(--v-theme-primary))">
-        {{ item.id }}
-      </span>
+      <span :text="item.id" style="color: rgb(var(--v-theme-primary))" />
     </template>
 
     <template #item.mean="{ item }">
-      <span style="color: rgb(var(--v-theme-primary))">
-        {{ toFixed(Number(item.mean)) }}
-      </span>
+      <span
+        :text="toFixed(Number(item.mean))"
+        style="color: rgb(var(--v-theme-primary))"
+      />
     </template>
 
     <template #item.std="{ item }">
-      <span style="color: rgb(var(--v-theme-primary))">
-        {{ toFixed(Number(item.std)) }}
-      </span>
+      <span
+        :text="toFixed(Number(item.std))"
+        style="color: rgb(var(--v-theme-primary))"
+      />
     </template>
 
     <template #item.actions="{ index }">

@@ -3,6 +3,7 @@
     <v-col class="d-flex justify-center" cols="1">
       <v-checkbox inset title="Enable backend" v-model="store.state.enabled" />
     </v-col>
+
     <v-col cols="11">
       <v-text-field
         :disabled="!store.state.enabled"
@@ -17,22 +18,11 @@
         label="URL of backend"
         persistent-placeholder
         v-model="store.state.url"
-        variant="outlined"
       >
         <template #append>
-          <v-btn @click="store.ping()" variant="outlined">
+          <v-btn @click="store.ping()">
             <template #append>
-              <v-icon
-                :color="
-                  store.state.enabled
-                    ? store.isOK && store.isValid
-                      ? 'green'
-                      : 'red'
-                    : ''
-                "
-                class="mx-1"
-                icon="mdi:mdi-circle"
-              />
+              <BackendStatusIcon :backend-store="store" size="small" />
             </template>
             ping
           </v-btn>
@@ -58,6 +48,7 @@ import { computed } from "vue";
 
 import { isURL } from "@/utils/urls";
 import { TBackendStore } from "@/stores/defineBackendStore";
+import BackendStatusIcon from "./iconsets/BackendStatusIcon.vue";
 
 const props = defineProps<{ store: TBackendStore }>();
 const store = computed(() => props.store);

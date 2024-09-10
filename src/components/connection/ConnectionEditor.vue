@@ -14,9 +14,10 @@
 
         <v-spacer />
 
-        <div class="d-flex flex-column justify-center align-center text-grey">
-          {{ connection.rule.value }}
-        </div>
+        <div
+          :text="connection.rule.value"
+          class="d-flex flex-column justify-center align-center text-grey"
+        />
 
         <v-spacer />
 
@@ -39,6 +40,7 @@
               <template #prepend>
                 <v-icon :icon="item.icon" />
               </template>
+
               {{ item.title }}
             </v-list-item>
           </v-list>

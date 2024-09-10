@@ -1,9 +1,9 @@
 // nestmlServerStore.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from 'axios';
 
-import { defineBackendStore } from "@/stores/defineBackendStore";
-import { notifyError, notifySuccess } from "@/utils/dialog";
+import { defineBackendStore } from '@/stores/defineBackendStore';
+import { notifyError, notifySuccess } from '@/utils/dialog';
 
 export const useNESTMLServerStore = defineBackendStore(
   "nest",
@@ -43,7 +43,7 @@ export const generateModels = (
       }
     })
     .catch((error: AxiosError) => {
-      notifyError(error.message);
+      notifyError((error.response?.data || error.message) as string);
     });
 };
 

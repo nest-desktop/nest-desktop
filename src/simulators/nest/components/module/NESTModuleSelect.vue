@@ -7,7 +7,6 @@
     prepend-inner-icon="mdi:mdi-memory"
     item-title="name"
     item-value="name"
-    variant="outlined"
   >
     <!-- <template #append>
       <slot name="append" />
@@ -21,9 +20,12 @@
       <!-- Use title after v-bind. -->
       <v-list-item :key="index" class="module-item" v-bind="props" title="">
         <template #prepend>
-          <v-avatar class="text-uppercase" size="small" start>
-            {{ item.title.slice(0, 2) }}
-          </v-avatar>
+          <v-avatar
+            :text="item.title.slice(0, 2)"
+            class="text-uppercase"
+            size="small"
+            start
+          />
         </template>
 
         {{ item.title }}

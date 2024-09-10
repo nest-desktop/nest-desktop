@@ -4,13 +4,15 @@
       <v-btn
         @click="loadNESTMLScript()"
         prepend-icon="mdi:mdi-cloud-arrow-down-outline"
-        text="Load nestml script"
-        variant="outlined"
+        text="Load NESTML script"
       />
 
-      <v-btn @click="getParams" class="mx-1" variant="outlined">
-        get params
-      </v-btn>
+      <v-btn
+        @click="getParams"
+        class="mx-1"
+        v-if="appStore.state.devMode"
+        text="get params"
+      />
 
       <v-spacer />
 
@@ -46,6 +48,9 @@ import { updateSimulationModules } from "../../stores/model/modelStore";
 
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
 const nestmlServerStore = useNESTMLServerStore();

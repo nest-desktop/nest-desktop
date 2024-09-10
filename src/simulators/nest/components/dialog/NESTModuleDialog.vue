@@ -8,7 +8,7 @@
       />
 
       <v-list>
-        <v-list-subheader>Models</v-list-subheader>
+        <v-list-subheader text="Models" />
 
         <v-list-item
           :key="index"
@@ -40,10 +40,9 @@
         "
         @click="closeDialog(state.selectedModule)"
         text="Generate module"
-        variant="outlined"
       />
 
-      <v-btn @click="closeDialog()" text="close" variant="outlined" />
+      <v-btn @click="closeDialog()" text="close" />
     </v-card-actions>
   </v-card>
 </template>

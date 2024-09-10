@@ -24,7 +24,6 @@
             item-title="label"
             item-value="id"
             v-model="node.modelId"
-            variant="outlined"
           >
             <template #append>
               <div class="d-print-none menu">
@@ -49,7 +48,7 @@
                         label="Population size"
                         v-model="node.view.state.showSize"
                       >
-                        <template #append> n: {{ node.size }} </template>
+                        <template #append>n: {{ node.size }}</template>
                       </v-checkbox>
                       <template v-if="node.modelParams">
                         <v-checkbox
@@ -75,26 +74,14 @@
                     <v-card-actions>
                       <v-btn
                         @click.stop="() => node.showAllParams()"
-                        size="small"
-                        variant="outlined"
-                      >
-                        all
-                      </v-btn>
+                        text="all"
+                      />
                       <v-btn
                         @click.stop="() => node.hideAllParams()"
-                        size="small"
-                        variant="outlined"
-                      >
-                        none
-                      </v-btn>
+                        text="none"
+                      />
                       <v-spacer />
-                      <v-btn
-                        @click.stop="state.menu = false"
-                        size="small"
-                        variant="outlined"
-                      >
-                        close
-                      </v-btn>
+                      <v-btn @click.stop="state.menu = false" text="close" />
                     </v-card-actions>
                   </v-card>
                 </v-menu>
@@ -125,13 +112,15 @@
 
             <template #prepend>
               <v-btn
+                @click="node.toggleSelection()"
                 class="position-absolute"
                 flat
                 icon
                 size="large"
                 style="left: 8px; top: 8px"
+                variant="text"
               >
-                <NodeAvatar :node @click="node.select()" size="48px" />
+                <NodeAvatar :node size="48px" />
               </v-btn>
             </template>
 

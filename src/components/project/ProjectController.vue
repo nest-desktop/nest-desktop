@@ -52,9 +52,7 @@
         "
       >
         <v-icon :class="item.icon.class" :icon="item.icon.icon" size="large" />
-        <span class="text-button" style="font-size: 9px !important">
-          {{ item.id }}
-        </span>
+        <span :text="item.id" class="text-button" style="font-size: 9px !important" />
       </v-list-item>
     </v-list> -->
 

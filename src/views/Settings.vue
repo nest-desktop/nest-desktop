@@ -55,14 +55,12 @@
                 label="Visible simulators"
                 multiple
                 v-model="appStore.state.simulatorVisible"
-                variant="outlined"
               >
                 <template #chip="{ item }">
                   <v-chip
                     :prepend-icon="item.value + ':logo'"
                     color="grey"
                     label
-                    variant="outlined"
                   >
                     {{ item.title }}
                   </v-chip>

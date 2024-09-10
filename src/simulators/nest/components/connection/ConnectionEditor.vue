@@ -16,9 +16,10 @@
 
         <div class="d-flex flex-column justify-center align-center text-grey">
           {{ connection.rule.value }}
-          <div v-if="connection.view.connectOnlyNeurons()">
-            {{ connection.synapse.modelId }}
-          </div>
+          <div
+            :text="connection.synapse.modelId"
+            v-if="connection.view.connectOnlyNeurons()"
+          />
         </div>
 
         <v-spacer />
@@ -45,6 +46,7 @@
               <template #prepend>
                 <v-icon :icon="item.icon" />
               </template>
+
               {{ item.title }}
             </v-list-item>
           </v-list>

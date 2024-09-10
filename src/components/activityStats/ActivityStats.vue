@@ -12,7 +12,6 @@
         v-model="
           activities.project.activityGraph.activityChartGraph.state.traceColor
         "
-        variant="outlined"
       >
         <v-btn
           :key="index"

@@ -17,9 +17,7 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="param.changes()" size="small" variant="outlined">
-          Update parameter
-        </v-btn>
+        <v-btn @click="param.changes()" text="update parameter" />
       </v-card-actions>
     </v-card>
   </v-menu>

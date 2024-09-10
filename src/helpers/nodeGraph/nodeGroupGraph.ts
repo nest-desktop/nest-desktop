@@ -3,11 +3,11 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, drag, polygonHull } from 'd3';
+import { DragBehavior, drag, polygonHull } from "d3";
 
-import { TNetwork, TNetworkGraph, TNode } from '@/types';
+import { TNetwork, TNetworkGraph, TNode } from "@/types";
 
-import { NodeGroup } from '../node/nodeGroup';
+import { NodeGroup } from "../node/nodeGroup";
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
@@ -203,9 +203,10 @@ export class NodeGroupGraph {
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
       } else if (this._networkGraph.workspace.ctrlPressed) {
-        nodes.toggleNodeSelection(nodeGroup);
+        nodeGroup.toggleSelection();
       } else {
-        nodes.state.selectedNodes = [nodeGroup];
+        nodes.unselectNodes();
+        nodeGroup.select();
       }
     });
 

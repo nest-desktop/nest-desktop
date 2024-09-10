@@ -18,7 +18,6 @@
       persistent-hint
       return-object
       v-model="node.records"
-      variant="outlined"
     >
       <template #chip="{ item }" v-if="node.records.length > 0">
         <NodeRecordChip

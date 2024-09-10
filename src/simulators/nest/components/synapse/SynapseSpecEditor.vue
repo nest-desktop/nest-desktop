@@ -14,7 +14,6 @@
       item-value="id"
       label="Synapse model"
       v-model="synapse.modelId"
-      variant="outlined"
     />
     <div class="d-print-none menu align-center justify-center my-auto mx-1">
       <v-menu :close-on-content-click="false">

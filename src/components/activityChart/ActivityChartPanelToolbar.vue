@@ -1,6 +1,6 @@
 <template>
   <div class="activityChartPanelToolbar">
-    <v-icon class="ma-3" size="small">{{ panel.model.icon }}</v-icon>
+    <v-icon :text="panel.model.icon" class="ma-3" size="small" />
     {{ panel.model?.label }}
 
     <v-spacer />

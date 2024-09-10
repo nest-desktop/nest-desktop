@@ -35,25 +35,10 @@
           }
         "
         prepend-icon="mdi:mdi-export"
-        size="small"
         text="export selected"
-        variant="outlined"
       />
-
-      <v-btn
-        @click="update()"
-        prepend-icon="mdi:mdi-reload"
-        size="small"
-        text="Reload"
-        variant="outlined"
-      />
-
-      <v-btn
-        @click="closeDialog()"
-        size="small"
-        text="close"
-        variant="outlined"
-      />
+      <v-btn @click="update()" prepend-icon="mdi:mdi-reload" text="reload" />
+      <v-btn @click="closeDialog()" text="close" />
     </v-card-actions>
   </v-card>
 </template>

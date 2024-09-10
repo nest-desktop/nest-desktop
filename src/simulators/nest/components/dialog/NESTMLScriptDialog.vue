@@ -20,7 +20,6 @@
           item-value="name"
           label="Select a tag"
           v-model="state.githubTag"
-          variant="outlined"
         />
 
         <v-select
@@ -34,7 +33,6 @@
           item-value="path"
           label="Select an element type"
           v-model="state.elementType"
-          variant="outlined"
         />
 
         <v-select
@@ -48,30 +46,36 @@
           item-value="path"
           label="Select a nestml file"
           v-model="state.model"
-          variant="outlined"
+        />
+
+        <v-btn
+          :disabled="!state.script"
+          @click="loadNESTMLScript()"
+          text="load"
+          title="Load nestml script"
         />
       </v-row>
 
-      <codemirror disabled v-model="state.script" />
+      <v-window style="max-height: 500px; overflow: auto">
+        <codemirror disabled v-model="state.script" />
+      </v-window>
     </v-card-text>
 
-    <v-card-actions>
+    <!-- <v-card-actions>
       <v-btn
         :disabled="!state.script"
         @click="loadNESTMLScript()"
         size="small"
         text="load"
-        title="Load nestml script"
-        variant="outlined"
+        title="Load NESTML script"
       />
 
       <v-btn
         @click="closeDialog()"
         size="small"
         text="close"
-        variant="outlined"
       />
-    </v-card-actions>
+    </v-card-actions> -->
   </v-card>
 </template>
 

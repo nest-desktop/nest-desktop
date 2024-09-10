@@ -14,18 +14,16 @@
     item-title="name"
     item-value="name"
     v-model:search="state.search"
-    variant="outlined"
   >
     <template #append><slot name="append" /></template>
 
     <template #no-data>
       <v-list-item>
         <v-list-item-title>
-          No results matching "
-          <strong>{{ state.search }}</strong
-          >".
+          No results matching "<strong>{{ state.search }}</strong
+          >.
           <span v-if="state.valid">
-            Click <kbd>+</kbd> to create a new one.
+            Click <kbd text="+" /> to create a new one.
           </span>
         </v-list-item-title>
       </v-list-item>
@@ -34,9 +32,12 @@
     <template #item="{ index, item, props }">
       <v-list-item :key="index" class="module-item" v-bind="props" title="">
         <template #prepend>
-          <v-avatar class="text-uppercase" size="small" start>
-            {{ item.title.slice(0, 2) }}
-          </v-avatar>
+          <v-avatar
+            :text="item.title.slice(0, 2)"
+            class="text-uppercase"
+            size="small"
+            start
+          />
         </template>
 
         <template #append>

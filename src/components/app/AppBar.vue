@@ -1,11 +1,11 @@
 <template>
   <v-btn
     class="mx-2"
-    color="systembar"
     flat
     icon="mdi:mdi-home"
     size="x-small"
     to="/"
+    variant="text"
   />
 
   <v-menu>
@@ -32,15 +32,12 @@
     <v-list density="compact">
       <v-list-item
         :key="index"
+        :prepend-icon="item.id + ':logo'"
         :to="'/' + item.id"
+        :title="item.title"
         :value="item.id"
         v-for="(item, index) in appStore.simulatorItems"
-      >
-        <template #prepend>
-          <v-icon :color="item.id" :icon="item.id + ':logo'" size="small" />
-        </template>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
-      </v-list-item>
+      />
     </v-list>
   </v-menu>
 
@@ -50,25 +47,19 @@
         append-icon="mdi:mdi-menu-down"
         class="mx-1px"
         size="x-small"
+        text="settings"
         v-bind="props"
         variant="text"
-      >
-        settings
-      </v-btn>
+      />
     </template>
 
     <v-list density="compact">
       <v-list-item
         :key="index"
-        :value="item.id"
         @click="item.onClick"
+        v-bind="item"
         v-for="(item, index) in settingsItems"
-      >
-        <template #prepend>
-          <v-icon :icon="item.icon" size="small" />
-        </template>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
-      </v-list-item>
+      />
 
       <v-list-item :to="{ name: 'settings' }">
         <template #prepend>
@@ -79,7 +70,7 @@
     </v-list>
   </v-menu>
 
-  <v-btn :to="{ name: 'about' }" size="x-small" variant="text">about</v-btn>
+  <v-btn :to="{ name: 'about' }" size="x-small" text="about" variant="text" />
 
   <v-btn
     append-icon="mdi:mdi-open-in-new"
@@ -87,10 +78,9 @@
     href="https://nest-desktop.readthedocs.io"
     size="x-small"
     target="_blank"
+    text="help"
     variant="text"
-  >
-    help
-  </v-btn>
+  />
 
   <v-divider class="mx-1" vertical />
 
@@ -116,17 +106,7 @@
     variant="text"
   >
     {{ backend.state.name }}
-    <v-icon
-      :color="
-        backend.state.enabled
-          ? backend.isOK && backend.isValid
-            ? 'green'
-            : 'red'
-          : ''
-      "
-      class="mx-1"
-      icon="mdi:mdi-circle"
-    />
+    <BackendStatusIcon :backendStore="backend" size="small" />
   </v-btn>
 
   <v-divider class="mx-1" vertical />
@@ -142,16 +122,17 @@
 
 <script lang="ts" setup>
 // import { DatabaseService } from "@/helpers/common/database";
+import BackendStatusIcon from "../iconsets/BackendStatusIcon.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const settingsItems = [
   {
-    icon: "mdi:mdi-cog-refresh-outline",
-    id: "clearConfig",
+    prependIcon: "mdi:mdi-cog-refresh-outline",
     onClick: () => localStorage.clear(),
     title: "Clear config",
+    value: "clearConfig",
   },
   // {
   //   icon: "mdi:mdi-database-refresh-outline",

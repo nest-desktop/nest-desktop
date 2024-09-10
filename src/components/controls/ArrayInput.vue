@@ -7,7 +7,6 @@
     density="compact"
     hide-details
     v-model="value"
-    variant="outlined"
   >
   </v-textarea>
 </template>

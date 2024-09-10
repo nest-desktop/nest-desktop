@@ -1,16 +1,11 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title>Explorer</v-card-title>
-      <v-card-subtitle>{{ model.id }}</v-card-subtitle>
+  <v-card :subtitle="model.id" title="Explorer">
+    <v-card-text>Text</v-card-text>
 
-      <v-card-text>Text</v-card-text>
-
-      <v-card-actions>
-        <v-btn>Action</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-container>
+    <v-card-actions>
+      <v-btn text="action" />
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

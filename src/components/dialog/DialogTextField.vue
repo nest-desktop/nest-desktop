@@ -1,18 +1,13 @@
 <template>
   <v-card :title>
     <v-card-text>
-      <v-text-field
-        density="compact"
-        hide-details
-        variant="outlined"
-        v-model="modelValue"
-      />
+      <v-text-field density="compact" hide-details v-model="modelValue" />
     </v-card-text>
 
     <v-card-actions>
       <v-spacer />
-      <v-btn @click="closeDialog(false)" title="Cancel">cancel</v-btn>
-      <v-btn @click="closeDialog(modelValue)" title="Submit">submit</v-btn>
+      <v-btn @click="closeDialog(false)" text="cancel" title="Cancel" />
+      <v-btn @click="closeDialog(modelValue)" text="submit" title="Submit" />
     </v-card-actions>
   </v-card>
 </template>

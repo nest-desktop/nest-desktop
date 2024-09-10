@@ -3,7 +3,6 @@
     class="ma-2"
     density="compact"
     style="position: absolute; top: 72px; z-index: 1000"
-    variant="outlined"
   >
     {{ modelStore.state.projectId }}
   </v-chip>

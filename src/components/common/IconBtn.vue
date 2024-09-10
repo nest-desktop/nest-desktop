@@ -3,6 +3,7 @@
     <template #prepend>
       <v-icon :icon="props.icon" class="ma-1" size="large" />
     </template>
+
     {{ title }}
   </v-btn>
 </template>

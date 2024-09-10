@@ -12,7 +12,7 @@
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsAnalog"
           >
-            <v-list-item-title>{{ model.label }}</v-list-item-title>
+            <v-list-item-title :text="model.label" />
           </v-list-item>
         </v-list-group>
 
@@ -26,7 +26,7 @@
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsSpike"
           >
-            <v-list-item-title>{{ model.label }}</v-list-item-title>
+            <v-list-item-title :text="model.label" />
           </v-list-item>
         </v-list-group>
       </v-list>

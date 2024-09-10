@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mt-2">
+  <v-card class="mt-2" elevation="1" title="Frontend">
     <v-toolbar color="transparent" density="compact">
       <v-toolbar-title>Store list</v-toolbar-title>
 

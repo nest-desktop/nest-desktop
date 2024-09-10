@@ -1,7 +1,7 @@
 <template>
   <v-list-item class="paramViewer">
     <v-row no-gutters>
-      <span class="text-medium-emphasis">{{ props.options.label }}</span>
+      <span :text="props.options.label" class="text-medium-emphasis" />
       <v-spacer />
       {{ props.options.id }}:
       {{ props.value || props.options.value || props.options.defaultValue }}

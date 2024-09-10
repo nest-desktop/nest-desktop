@@ -10,7 +10,6 @@
       hide-details
       label="Connection rule"
       v-model="connection.rule.value"
-      variant="outlined"
     />
 
     <div class="d-print-none menu align-center justify-center my-auto mx-1">

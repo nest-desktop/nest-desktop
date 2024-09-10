@@ -287,22 +287,36 @@ export class BaseNodes extends BaseObj {
   resetState(): void {}
 
   /**
+   * Select node.
+   * @param node node or node group object
+   */
+  selectNode(node: NodeGroup | TNode) {
+    this._state.selectedNodes.push(node);
+    this._state.selectedNodes.sort();
+  }
+
+  /**
    * Show node in list.
    */
   showNode(node: NodeGroup | TNode): boolean {
     const elementTypeIdx = this._network.state.elementTypeIdx;
 
     if (this._state.selectedNodes.length > 0) {
-      // selected view
-      return this._state.selectedNodes.includes(node);
+      // selected node
+      return (
+        this._state.selectedNodes
+          .filter((node) => node.isGroup)
+          .some((nodeGrp) => nodeGrp.nodes.includes(node)) ||
+        this._state.selectedNodes.includes(node)
+      );
     } else if (elementTypeIdx > 0) {
-      // element type view
+      // element type
       return this._network.elementTypes[elementTypeIdx].id === node.elementType;
     } else if (this._network.state.state.displayIdx.nodes.length > 0) {
-      // custom view
+      // custom
       return this._network.state.state.displayIdx.nodes.includes(node.idx);
     } else {
-      // all view
+      // all
       return true;
     }
   }
@@ -322,14 +336,9 @@ export class BaseNodes extends BaseObj {
   toggleNodeSelection(node: NodeGroup | TNode) {
     this._network.state.state.elementTypeIdx = 0;
 
-    var index = this._state.selectedNodes.indexOf(node);
-    if (index === -1) {
-      this._state.selectedNodes.push(node);
-      this._state.selectedNodes.sort();
-    } else {
-      this._state.selectedNodes.splice(index, 1);
-    }
-    this.state.selectedNodes.sort();
+    this._state.selectedNodes.includes(node)
+      ? this.unselectNode(node)
+      : this.selectNode(node);
   }
 
   /**
@@ -337,6 +346,15 @@ export class BaseNodes extends BaseObj {
    */
   unfocusNode(): void {
     this._state.focusedNode = null;
+  }
+
+  /**
+   * Unselect node.
+   * @param node node or node group object
+   */
+  unselectNode(node: NodeGroup | TNode) {
+    const index = this._state.selectedNodes.indexOf(node);
+    this._state.selectedNodes.splice(index, 1);
   }
 
   /**

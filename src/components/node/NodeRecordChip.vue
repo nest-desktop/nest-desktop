@@ -7,7 +7,6 @@
     class="nodeRecordChip"
     label
     size="small"
-    variant="outlined"
     v-if="nodeRecord.state"
   >
     <v-menu
@@ -30,11 +29,8 @@
             density="compact"
             hide-details
             v-model="colorScheme"
-            variant="outlined"
           />
-          <v-btn @click="resetColor" size="small" variant="outlined">
-            reset
-          </v-btn>
+          <v-btn @click="resetColor" size="small" text="reset" />
         </v-card-actions>
       </v-card>
     </v-menu>

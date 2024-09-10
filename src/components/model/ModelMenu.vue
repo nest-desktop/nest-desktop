@@ -3,15 +3,9 @@
     <v-list density="compact">
       <v-list-item
         :key="index"
-        :value="index"
-        @click="item.onClick"
+        v-bind="item"
         v-for="(item, index) in menuItems"
-      >
-        <template #prepend>
-          <v-icon :icon="item.icon" />
-        </template>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
-      </v-list-item>
+      />
     </v-list>
   </v-menu>
 </template>
@@ -40,15 +34,13 @@ const modelDBStore = computed(
 
 const menuItems = [
   {
-    icon: "mdi:mdi-content-save-outline",
     onClick: () => {
       modelDBStore.value.saveModel(model.value);
     },
+    prependIicon: "mdi:mdi-content-save-outline",
     title: "Save",
   },
   {
-    icon: "mdi:mdi-content-duplicate",
-    id: "modelDuplicate",
     onClick: () => {
       const newModel = modelDBStore.value.duplicateModel(model.value);
       if (!route.path.endsWith(newModel.id)) {
@@ -58,15 +50,15 @@ const menuItems = [
         });
       }
     },
+    prependIcon: "mdi:mdi-content-duplicate",
     title: "Duplicate",
   },
   {
-    icon: "mdi:mdi-download",
     onClick: () => modelDBStore.value.exportModel(model.value),
+    prependIcon: "mdi:mdi-download",
     title: "Download",
   },
   {
-    icon: "mdi:mdi-trash-can-outline",
     onClick: () =>
       confirmDialog({
         text: "Are you sure to delete it?",
@@ -76,6 +68,7 @@ const menuItems = [
           modelDBStore.value.deleteModel(model.value);
         }
       }),
+    prependIcon: "mdi:mdi-trash-can-outline",
     title: "Delete",
   },
 ];

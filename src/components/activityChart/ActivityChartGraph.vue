@@ -11,18 +11,13 @@
             hide-details
             label="Select image format"
             v-model="state.toImageButtonOptions.format"
-            variant="outlined"
           />
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="state.dialog = false" size="small" variant="outlined">
-            cancel
-          </v-btn>
-          <v-btn @click="downloadImage" size="small" variant="outlined">
-            download
-          </v-btn>
+          <v-btn @click="state.dialog = false"> cancel </v-btn>
+          <v-btn @click="downloadImage"> download </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

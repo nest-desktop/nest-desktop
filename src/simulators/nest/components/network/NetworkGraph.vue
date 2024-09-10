@@ -1,8 +1,11 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <v-chip @click="graph?.updateHash()" size="small" variant="text">
-      {{ graph?.hash }}
-    </v-chip>
+    <v-chip
+      :text="graph?.hash"
+      @click="graph?.updateHash()"
+      size="small"
+      variant="text"
+    />
 
     <div style="width: 320px" v-if="graph">
       <NodeMenu

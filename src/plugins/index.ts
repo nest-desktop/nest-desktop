@@ -5,21 +5,17 @@
  */
 
 import type { App } from "vue";
+import { Vuetify3Dialog } from "vuetify3-dialog";
 
-import pinia from "@/stores";
 import router from "@/router";
-
-// Simulators
 import { registerSimulators } from "@/simulators";
-
-// Load fonts
-import { loadFonts } from "./webfontloader";
+import pinia from "@/stores";
 
 // Plugins
 import codeMirror from "./codemirror";
 import configs from "./configs";
-import { Vuetify3Dialog } from "vuetify3-dialog";
 import { vuetify } from "./vuetify";
+import { loadFonts } from "./webfontloader";
 
 export function registerPlugins(app: App) {
   // Load fonts

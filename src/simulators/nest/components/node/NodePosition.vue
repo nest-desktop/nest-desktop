@@ -12,7 +12,6 @@
           density="compact"
           hide-details
           v-model="state.selectedPositions"
-          variant="outlined"
         />
 
         <v-switch
@@ -72,7 +71,6 @@
                 density="compact"
                 hide-details
                 type="number"
-                variant="outlined"
               />
             </v-col>
           </v-row>
@@ -101,7 +99,6 @@
                 density="compact"
                 hide-details
                 type="number"
-                variant="outlined"
               />
             </v-col>
           </v-row>
@@ -131,7 +128,6 @@
                 density="compact"
                 hide-details
                 type="number"
-                variant="outlined"
               />
             </v-col>
           </v-row>
@@ -147,13 +143,13 @@
             />
           </v-col>
         </v-row>
-        <v-btn @click="updatePositions()" size="small" variant="outlined">
-          Update positions
-        </v-btn>
+        <v-btn
+          @click="updatePositions()"
+          size="small"
+          text="update positions"
+        />
         <!-- <v-spacer />
-        <v-btn :title="state.nodeSpatial.positions.pos" icon>
-          <v-icon v-text="'mdi-map-outline'" />
-        </v-btn> -->
+        <v-btn :title="state.nodeSpatial.positions.pos" icon="mdi:mdi-map-outline" /> -->
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>

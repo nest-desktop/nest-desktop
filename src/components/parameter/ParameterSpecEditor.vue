@@ -10,7 +10,6 @@
         item-value="id"
         label="Select a parameter type"
         v-model="param.typeId"
-        variant="outlined"
       >
         <!-- <template slot="selection" slot-scope="data">
             <v-icon :icon="data.item.icon" left />
@@ -41,7 +40,6 @@
             style="font-size: 13px"
             type="number"
             v-model="spec.value"
-            variant="outlined"
           />
         </v-col>
       </v-row>

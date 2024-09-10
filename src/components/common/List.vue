@@ -1,12 +1,11 @@
 <template>
   <v-list class="list" density="compact" v-model:opened="state.listOpen">
     <v-list-item
+      :text="state.listOpen[0]"
       @click="state.listOpen = []"
       prepend-icon="mdi:mdi-chevron-left"
       v-if="state.listOpen.length > 0"
-    >
-      {{ state.listOpen[0] }}
-    </v-list-item>
+    />
 
     <div :key="index" v-for="(item, index) in items">
       <v-list-group

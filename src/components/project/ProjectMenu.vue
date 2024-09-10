@@ -3,15 +3,9 @@
     <v-list density="compact">
       <v-list-item
         :key="index"
-        :value="index"
-        @click="item.onClick"
+        v-bind="item"
         v-for="(item, index) in menuItems"
-      >
-        <template #prepend>
-          <v-icon :icon="item.icon" />
-        </template>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
-      </v-list-item>
+      />
     </v-list>
   </v-menu>
 </template>
@@ -40,42 +34,40 @@ const projectDBStore = computed(
 
 const menuItems = [
   {
-    icon: "mdi:mdi-pencil",
     onClick: () => {
       projectDBStore.value.loadProject(project.value);
       nextTick(() => {
         project.value.state.state.editMode = true;
       });
     },
+    prependIcon: "mdi:mdi-pencil",
     title: "Rename",
   },
   {
-    icon: "mdi:mdi-content-save-outline",
     onClick: () => {
       projectDBStore.value.loadProject(project.value);
       nextTick(() => {
         projectDBStore.value.saveProject(project.value);
       });
     },
+    prependIcon: "mdi:mdi-content-save-outline",
     title: "Save",
   },
   {
-    icon: "mdi:mdi-reload",
+    prependIcon: "mdi:mdi-reload",
     onClick: () => {
       projectDBStore.value.reloadProject(project.value);
     },
     title: "Reload",
   },
   {
-    icon: "mdi:mdi-power",
     onClick: () => {
       projectDBStore.value.unloadProject(project.value);
     },
+    prependIcon: "mdi:mdi-power",
     title: "Unload",
   },
   {
-    icon: "mdi:mdi-content-duplicate",
-    id: "projectDuplicate",
     onClick: () => {
       const newProject = projectDBStore.value.duplicateProject(project.value);
       if (!route.path.endsWith(newProject.id)) {
@@ -85,15 +77,15 @@ const menuItems = [
         });
       }
     },
+    prependIcon: "mdi:mdi-content-duplicate",
     title: "Duplicate",
   },
   {
-    icon: "mdi:mdi-download",
     onClick: () => projectDBStore.value.exportProject(project.value),
+    prependIcon: "mdi:mdi-download",
     title: "Download",
   },
   {
-    icon: "mdi:mdi-trash-can-outline",
     onClick: () =>
       confirmDialog({
         text: "Are you sure to delete it?",
@@ -103,6 +95,7 @@ const menuItems = [
           projectDBStore.value.deleteProject(project.value);
         }
       }),
+    prependIcon: "mdi:mdi-trash-can-outline",
     title: "Delete",
   },
 ];

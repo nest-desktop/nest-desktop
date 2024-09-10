@@ -1,10 +1,10 @@
 <template>
   <v-avatar class="neuron" rounded="0">
     <span :class="{ 'mt-2': weight === 'excitatory' }" class="label">
-      {{ text }}
+      <slot></slot>
     </span>
     <v-icon
-      :color="color"
+      :color
       :icon="`network:neuron${weight ? `-${$props.weight}` : ''}`"
       class="icon-size position-absolute"
     />
@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 defineProps({
   color: { type: String, default: "primary" },
-  text: { type: String, default: "" },
   weight: { type: String, default: "" },
 });
 </script>

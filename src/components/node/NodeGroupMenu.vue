@@ -65,14 +65,10 @@
             @click="backMenu"
             prepend-icon="mdi:mdi-menu-left"
             size="small"
-            variant="text"
-          >
-            back
-          </v-btn>
+            text="back"
+          />
           <v-spacer />
-          <v-btn @click="resetColor" size="small" variant="outlined">
-            reset
-          </v-btn>
+          <v-btn @click="resetColor" size="small" text="reset" />
         </v-card-actions>
       </span>
     </v-card>

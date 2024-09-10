@@ -21,7 +21,6 @@
     size="small"
     style="position: absolute; right: 10px; z-index: 10"
     title="Edit mode"
-    variant="outlined"
   />
 
   <SimulationCodeMirror

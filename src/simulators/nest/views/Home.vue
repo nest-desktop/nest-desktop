@@ -38,223 +38,161 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2" title="References">
+        <v-card class="mt-2" elevation="1" title="References">
           <v-card-text>
             <v-list density="compact">
               <v-list-item
+                :key="index"
                 append-icon="mdi:mdi-open-in-new"
-                href="https://nest-initiative.org/"
-                prepend-icon="mdi:mdi-home"
                 target="_blank"
-              >
-                https://nest-initiative.org/
-              </v-list-item>
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="https://github.com/nest/nest-simulator/"
-                prepend-icon="mdi:mdi-github"
-                target="_blank"
-              >
-                https://github.com/nest/nest-simulator/
-              </v-list-item>
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="https://nest-simulator.readthedocs.io/"
-                prepend-icon="mdi:mdi-book-open"
-                target="_blank"
-              >
-                https://nest-simulator.readthedocs.io/
-              </v-list-item>
-
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="https://twitter.com/NestSimulator"
-                prepend-icon="mdi:mdi-twitter"
-                target="_blank"
-              >
-                https://twitter.com/NestSimulator
-              </v-list-item>
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="https://www.ebrains.eu/tools/nest"
-                prepend-icon="mdi:mdi-brain"
-                target="_blank"
-              >
-                https://www.ebrains.eu/tools/nest
-              </v-list-item>
+                v-bind="refItem"
+                v-for="(refItem, index) in refItems"
+              />
             </v-list>
           </v-card-text>
         </v-card>
       </v-col>
 
       <v-col md="6">
-        <v-expansion-panels variant="accordion">
-          <v-expansion-panel title="Backend settings">
-            <v-expansion-panel-text>
-              <v-tabs v-model="state.backendTab" density="compact">
-                <v-tab
+        <v-card elevation="1" title="Backend">
+          <v-expansion-panels elevation="0" tile variant="accordion">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                Backend settings
+                <v-spacer />
+
+                <BackendStatusIcon
+                  :backend-store="backend"
+                  :title="backend.state.name"
                   :key="index"
-                  :value="backend.state.name"
                   v-for="(backend, index) in appStore.currentSimulator.backends"
-                >
-                  {{ backend.state.name }}
-                  <template #append>
-                    <v-icon
-                      :color="
-                        backend.state.enabled
-                          ? backend.isOK && backend.isValid
-                            ? 'green'
-                            : 'red'
-                          : ''
-                      "
-                      class="mx-1"
-                      icon="mdi:mdi-circle"
-                    />
-                  </template>
-                </v-tab>
-              </v-tabs>
+                />
+              </v-expansion-panel-title>
 
-              <!-- <v-btn-toggle
-                class="mx-1"
-                density="compact"
-                divided
-                v-model="state.backendTab"
-              >
-                <v-btn
-                  :key="index"
-                  :value="backend.state.name"
-                  variant="outlined"
-                  v-for="(backend, index) in appStore.currentSimulator.backends"
-                >
-                  {{ backend.state.name }}
-                  <v-icon
-                    :color="
-                      backend.state.enabled
-                        ? backend.isOK && backend.isValid
-                          ? 'green'
-                          : 'red'
-                        : ''
-                    "
-                    class="mx-1"
-                    icon="mdi:mdi-circle"
-                  />
-                </v-btn>
-              </v-btn-toggle> -->
-
-              <v-window v-model="state.backendTab" class="mx-2">
-                <v-window-item
-                  :key="index"
-                  :value="backend.state.name"
-                  v-for="(backend, index) in appStore.currentSimulator.backends"
-                >
-                  <backend-settings :store="backend" />
-                </v-window-item>
-              </v-window>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            :disabled="
-              appStore.currentSimulator.stores.modelStore.state.models
-                .length === 0
-            "
-          >
-            <v-expansion-panel-title>
-              Models from NEST backend
-              <v-spacer />
-
-              <v-btn
-                @click.stop="openNESTModuleDialog()"
-                class="mx-1"
-                flat
-                icon="nest:build-models"
-                size="x-small"
-                title="Generate NESTML models"
-              />
-            </v-expansion-panel-title>
-
-            <v-expansion-panel-text class="pa-2">
-              <NESTModuleSelect
-                :hide-details="false"
-                @update:model-value="
-                  (item) =>
-                    item
-                      ? nestSimulator.installModule(item.name)
-                      : resetKernel()
-                "
-                clearable
-                return-object
-                v-model="state.selectedModule"
-              >
-                <!-- <template #append>
-                  <v-btn
-                    @click="
-                      nestSimulator.installModule(state.selectedModule.name)
-                    "
-                    flat
-                    icon="nest:install-module"
-                    size="x-small"
-                    title="Install module"
-                  />
-                </template> -->
-                <template #details>
-                  <span
-                    :title="customModels?.join(',')"
-                    density="compact"
-                    variant="text"
-                    v-if="customModels ? customModels.length > 0 : false"
+              <v-expansion-panel-text>
+                <v-tabs v-model="state.backendTab" density="compact">
+                  <v-tab
+                    :key="index"
+                    :value="backend.state.name"
+                    v-for="(backend, index) in appStore.currentSimulator
+                      .backends"
                   >
-                    {{ customModels?.length }}
-                    custom model
-                    <span
-                      v-show="customModels ? customModels.length > 1 : false"
-                    >
-                      s
-                    </span>
-                  </span>
-                </template>
-              </NESTModuleSelect>
-
-              <v-text-field
-                class="my-2"
-                clearable
-                density="compact"
-                label="Search model"
-                placeholder="Search model"
-                prepend-inner-icon="mdi:mdi-magnify"
-                v-model="state.modelSearch"
-                variant="outlined"
-              >
-                <!-- <template #append>
-                  <v-btn
-                    @click="nestSimulator.fetchModels()"
-                    flat
-                    icon="mdi:mdi-refresh"
-                    size="x-small"
-                    title="Fetch models"
-                  />
-                </template> -->
-                <template #details>
-                  {{ models.length }} model
-                  <span v-show="models.length > 1">s</span>
-                </template>
-              </v-text-field>
-
-              <v-list density="compact">
-                <template v-for="model in models">
-                  <v-list-item>
-                    {{ model.id }}
+                    {{ backend.state.name }}
                     <template #append>
-                      <span class="text-caption">
-                        {{ model.elementType }}
-                      </span>
+                      <BackendStatusIcon
+                        :backend-store="backend"
+                        :title="backend.state.name"
+                      />
                     </template>
-                  </v-list-item>
-                </template>
-              </v-list>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+                  </v-tab>
+                </v-tabs>
+
+                <v-window v-model="state.backendTab" class="mx-2">
+                  <v-window-item
+                    :key="index"
+                    :value="backend.state.name"
+                    v-for="(backend, index) in appStore.currentSimulator
+                      .backends"
+                  >
+                    <BackendSettings :store="backend" />
+                  </v-window-item>
+                </v-window>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+
+            <v-expansion-panel
+              :disabled="
+                appStore.currentSimulator.stores.modelStore.state.models
+                  .length === 0
+              "
+            >
+              <v-expansion-panel-title>
+                Models from NEST backend
+                <v-spacer />
+
+                <v-btn
+                  @click.stop="openNESTModuleDialog()"
+                  class="mx-1"
+                  flat
+                  icon="nest:build-models"
+                  size="x-small"
+                  title="Generate NESTML models"
+                  variant="text"
+                />
+              </v-expansion-panel-title>
+
+              <v-expansion-panel-text>
+                <v-card>
+                  <v-card-title>
+                    <NESTModuleSelect
+                      :hide-details="false"
+                      @update:model-value="
+                        (item) =>
+                          item
+                            ? nestSimulator.installModule(item.name)
+                            : resetKernel()
+                      "
+                      clearable
+                      return-object
+                      v-model="state.selectedModule"
+                    >
+                      <template #details>
+                        <span
+                          :title="customModels?.join(',')"
+                          density="compact"
+                          variant="text"
+                          v-if="customModels ? customModels.length > 0 : false"
+                        >
+                          {{ customModels?.length }}
+                          custom model
+                          <span
+                            text="s"
+                            v-show="
+                              customModels ? customModels.length > 1 : false
+                            "
+                          />
+                        </span>
+                      </template>
+                    </NESTModuleSelect>
+
+                    <v-text-field
+                      class="my-2"
+                      clearable
+                      density="compact"
+                      hide-details="auto"
+                      label="Search model"
+                      placeholder="Search model"
+                      prepend-inner-icon="mdi:mdi-magnify"
+                      v-model="state.modelSearch"
+                    >
+                      <template #details>
+                        {{ models.length }} model
+                        <span text="s" v-show="models.length > 1" />
+                      </template>
+                    </v-text-field>
+                  </v-card-title>
+
+                  <v-divider />
+
+                  <v-virtual-scroll :items="models" max-height="300">
+                    <template #default="{ item }">
+                      <v-list-item>
+                        <!-- @vue-ignore item is unknown -->
+                        {{ item.id }}
+                        <template #append>
+                          <span class="text-caption">
+                            <!-- @vue-ignore item is unknown -->
+                            {{ item.elementType }}
+                          </span>
+                        </template>
+                      </v-list-item>
+                    </template>
+                  </v-virtual-scroll>
+                </v-card>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
 
         <StoreList />
       </v-col>
@@ -266,6 +204,7 @@
 import { computed, reactive } from "vue";
 
 import BackendSettings from "@/components/BackendSettings.vue";
+import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
 
@@ -298,6 +237,34 @@ const models = computed(() => {
       )
     : models;
 });
+
+const refItems = [
+  {
+    href: "https://nest-initiative.org/",
+    prependIcon: "mdi:mdi-home",
+    title: "https://nest-initiative.org/",
+  },
+  {
+    href: "https://github.com/nest/nest-simulator/",
+    prependIcon: "mdi:mdi-github",
+    title: "https://github.com/nest/nest-simulator/",
+  },
+  {
+    href: "https://nest-simulator.readthedocs.io/",
+    prependIcon: "mdi:mdi-book-open",
+    title: "https://nest-simulator.readthedocs.io/",
+  },
+  {
+    href: "https://twitter.com/NestSimulator",
+    prependIcon: "mdi:mdi-twitter",
+    title: "https://twitter.com/NestSimulator",
+  },
+  {
+    href: "https://www.ebrains.eu/tools/nest",
+    prependIcon: "mdi:mdi-brain",
+    title: "https://www.ebrains.eu/tools/nest",
+  },
+];
 
 const resetKernel = () => {
   nestSimulator.resetKernel();

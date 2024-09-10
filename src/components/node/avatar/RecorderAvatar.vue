@@ -1,10 +1,10 @@
 <template>
   <v-avatar class="recorder" rounded="0">
     <span class="label">
-      {{ text }}
+      <slot></slot>
     </span>
     <v-icon
-      :color="color"
+      :color
       class="position-absolute icon-size"
       icon="network:recorder"
     />
@@ -13,8 +13,7 @@
 
 <script lang="ts" setup>
 defineProps({
-  color: String,
-  text: String,
+  color: { type: String, default: "primary" },
 });
 </script>
 

@@ -13,7 +13,6 @@
         density="compact"
         mandatory
         v-model="state.source"
-        variant="outlined"
       >
         <v-btn
           :key="index"
@@ -30,7 +29,6 @@
           density="compact"
           mandatory
           v-model="state.githubGroup"
-          variant="outlined"
         >
           <v-btn
             :key="index"
@@ -53,7 +51,6 @@
           prepend-icon="mdi:mdi-github"
           return-object
           v-model="state.githubSelectedTree"
-          variant="outlined"
         />
 
         <v-select
@@ -68,17 +65,14 @@
           label="File"
           return-object
           v-model="state.githubSelectedFile"
-          variant="outlined"
         />
 
         <v-btn
           @click="fetchProps()"
           flat
           prepend-icon="mdi:mdi-download"
-          variant="outlined"
-        >
-          Fetch
-        </v-btn>
+          text="fetch"
+        />
       </template>
 
       <template v-else-if="state.source === 'drive'">
@@ -91,17 +85,14 @@
           show-size
           title="Click to select a file"
           truncate-length="100"
-          variant="outlined"
         >
           <template #append>
             <v-btn
               @upload="loadProjectsFromDrive"
               flat
               prepend-icon="mdi:mdi-upload"
-              variant="outlined"
-            >
-              Upload
-            </v-btn>
+              text="upload"
+            />
           </template>
         </v-file-input>
       </template>
@@ -118,17 +109,14 @@
           prepend-icon="mdi:mdi-web"
           title="Please enter the project's URL"
           v-model="state.url"
-          variant="outlined"
         >
           <template #append>
             <v-btn
               @click="fetchProps()"
               flat
               prepend-icon="mdi:mdi-download"
-              variant="outlined"
-            >
-              Fetch
-            </v-btn>
+              text="fetch"
+            />
           </template>
         </v-text-field>
       </template>
@@ -196,25 +184,14 @@
           }
         "
         prepend-icon="mdi:mdi-import"
-        size="small"
         text="import selected"
-        variant="outlined"
       />
-
       <v-btn
         @click="state.items = []"
         prepend-icon="mdi:mdi-delete-empty-outline"
-        size="small"
-        text="Clear"
-        variant="outlined"
+        text="clear"
       />
-
-      <v-btn
-        @click="closeDialog()"
-        size="small"
-        text="close"
-        variant="outlined"
-      />
+      <v-btn @click="closeDialog()" text="close" />
     </v-card-actions>
   </v-card>
 </template>

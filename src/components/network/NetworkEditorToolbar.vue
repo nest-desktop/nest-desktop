@@ -13,13 +13,13 @@
     />
 
     <v-btn
-      @click="graph?.network.nodes.toggleNodeSelection(node as TNode)"
+      @click.stop="node.unselect()"
       :key="index"
       icon
       size="small"
       v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
     >
-      <NodeAvatar :node="(node as TNode)" :size="32" />
+      <NodeAvatar :node :size="32" />
     </v-btn>
 
     <v-spacer />

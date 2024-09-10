@@ -44,6 +44,7 @@
             <template #prepend>
               <v-icon :icon="item.icon" />
             </template>
+
             {{ item.title }}
           </v-list-item>
         </v-list>

@@ -235,7 +235,7 @@ export class NodeGroup extends BaseObj {
    * Select this node group.
    */
   select(): void {
-    this._parent.toggleNodeSelection(this);
+    this._parent.selectNode(this);
   }
 
   /**
@@ -253,6 +253,20 @@ export class NodeGroup extends BaseObj {
     return {
       nodes: this.nodes.map((node: NodeGroup | TNode) => node.idx),
     };
+  }
+
+  /**
+   * Toggle the selection of this node group.
+   */
+  toggleSelection(): void {
+    this._parent.toggleNodeSelection(this);
+  }
+
+  /**
+   * Unselect this node group.
+   */
+  unselect(): void {
+    this._parent.unselectNode(this);
   }
 
   /**

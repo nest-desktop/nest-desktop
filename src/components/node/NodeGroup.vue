@@ -1,29 +1,37 @@
 <template>
-  <v-card
+  <Card
     :color="nodeGroup.view.color"
     @mouseenter="nodeGroup.view.focus()"
     @mouseleave="nodeGroup.parentNodes.unfocusNode()"
     class="node-group ma-1"
-    variant="outlined"
     v-if="nodeGroup.show"
   >
     <v-card-title class="node-group-title">
       <v-row no-gutters>
-        <v-btn @click.stop="nodeGroup.select()" class="mx-1" flat icon>
-          <NodeAvatar :node="nodeGroup" size="48px" />
+        <v-btn
+          @click.stop="nodeGroup.toggleSelection()"
+          class="mx-1"
+          flat
+          icon
+          variant="tonal"
+        >
+          <NodeAvatar :node="nodeGroup" size="48" />
         </v-btn>
 
-        <v-divider inset vertical />
-
-        <v-btn-group class="mx-4" multiple rounded="xl" variant="outlined">
+        <v-btn-group class="mx-4" multiple rounded="xl">
           <v-btn
             :key="index"
-            @click.stop="node.select()"
+            @click.stop="
+              () => {
+                node.nodes.unselectNodes();
+                node.toggleSelection();
+              }
+            "
             class="btn-avatar px-0"
             size="small"
             v-for="(node, index) in nodeGroup.nodes"
           >
-            <NodeAvatar :node size="32px" />
+            <NodeAvatar :node size="32" />
           </v-btn>
         </v-btn-group>
 
@@ -60,14 +68,15 @@
         </v-expansion-panels>
       </v-row>
     </v-card-actions>
-  </v-card>
+  </Card>
 </template>
 
 <script lang="ts" setup>
-import { NodeGroup } from "@/helpers/node/nodeGroup";
+import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeGroupMenu from "./NodeGroupMenu.vue";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 defineProps<{ nodeGroup: NodeGroup }>();
 </script>

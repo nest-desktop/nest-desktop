@@ -1,14 +1,12 @@
 <template>
   <div class="simulationKernelEditor">
-    <v-toolbar color="transparent" density="compact">
-      <v-toolbar-title> Simulation kernel editor</v-toolbar-title>
-    </v-toolbar>
+    <v-toolbar
+      color="transparent"
+      density="compact"
+      title="Simulation kernel editor"
+    />
 
-    <Card :color="props.color" class="ma-1">
-      <v-card-title class="pa-0 text-center text-button">
-        Modules
-      </v-card-title>
-
+    <Card :color="props.color" class="ma-1" title="Modules">
       <v-card-text>
         <NESTModuleSelect
           :return-object="false"
@@ -24,11 +22,7 @@
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1">
-      <v-card-title class="pa-0 text-center text-button">
-        Simulation kernel
-      </v-card-title>
-
+    <Card :color="props.color" class="ma-1" title="Simulation kernel">
       <v-card-text>
         <TickSlider
           :thumb-color="props.color"
@@ -62,11 +56,7 @@
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1">
-      <v-card-title class="pa-0 text-center text-button">
-        Simulation
-      </v-card-title>
-
+    <Card :color="props.color" class="ma-1" title="Simulation">
       <v-card-text class="py-0">
         <ValueSlider
           :thumb-color="props.color"

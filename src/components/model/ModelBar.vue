@@ -1,7 +1,7 @@
 <template>
   <v-app-bar class="d-print-none" flat height="48">
     <v-tabs stacked>
-      <slot name="prependTabs"></slot>
+      <slot name="prependTabs" />
 
       <template v-for="(tabItem, index) in tabItems">
         <slot :name="tabItem.id">
@@ -22,16 +22,14 @@
         </slot>
       </template>
 
-      <slot name="appendTabs"></slot>
+      <slot name="appendTabs" />
     </v-tabs>
 
     <v-spacer />
-
-    <v-app-bar-title>{{ modelStore.state.modelId }}</v-app-bar-title>
-
+    <v-app-bar-title :text="modelStore.state.modelId" />
     <v-spacer />
 
-    <slot name="prependBtn"></slot>
+    <slot name="prependBtn" />
 
     <SimulationButton
       :disabled="!modelStore.model.isNeuron"

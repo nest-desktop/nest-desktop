@@ -4,14 +4,13 @@
     <v-card-text>
       <v-btn
         v-for="(type, index) in types"
-        :key="index"
         :color="type"
+        :key="index"
+        :text="type"
         class="mx-1"
         variant="tonal"
         @click="openToast(`${type} message`, { type })"
-      >
-        {{ type }}
-      </v-btn>
+      />
     </v-card-text>
   </v-card>
 </template>

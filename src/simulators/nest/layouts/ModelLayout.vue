@@ -48,11 +48,17 @@
         <v-btn
           @click="openNESTModuleDialog()"
           prepend-icon="mdi:mdi-memory"
-          text="Module"
+          text="module"
           title="Generate module"
-          variant="outlined"
         />
       </template>
+
+      <v-btn
+        @click="openNESTModuleDialog()"
+        prepend-icon="mdi:mdi-memory"
+        text="module"
+        title="Generate module"
+      />
 
       <template #prependTabs>
         <v-tab

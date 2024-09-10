@@ -5,15 +5,9 @@
         @click="graph.resetPanels()"
         icon="mdi:mdi-reload"
         size="x-small"
-        variant="outlined"
       />
 
-      <v-btn
-        class="mx-2"
-        prepend-icon="mdi:mdi-plus"
-        size="small"
-        variant="outlined"
-      >
+      <v-btn class="mx-2" prepend-icon="mdi:mdi-plus" size="small">
         Add panel
         <v-menu :close-on-content-click="false" activator="parent">
           <ActivityChartPanelMenuPopover
@@ -32,7 +26,6 @@
         class="mx-2"
         density="compact"
         v-model="graph.state.traceColor"
-        variant="outlined"
       >
         <v-btn
           :key="index"
@@ -67,7 +60,6 @@
               label="Recorded events"
               multiple
               persistent-hint
-              variant="outlined"
               v-model="panel.model.state.recordsVisible"
             >
               <template #chip="{ item }">
@@ -122,7 +114,6 @@
                   label
                   size="small"
                   style="margin: 1px 2px"
-                  variant="outlined"
                 >
                   {{ appStore.devMode ? item.groupId : item.id }}
                 </v-chip>
@@ -136,7 +127,6 @@
                   class="mx-2"
                   label
                   size="small"
-                  variant="outlined"
                 />
                 {{ appStore.devMode ? item.groupId : item.id }}
                 <div style="font-size: 12px">

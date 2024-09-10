@@ -11,7 +11,6 @@
           class="mx-2"
           density="compact"
           v-model="appStore.state.filterTag"
-          variant="outlined"
         >
           <v-btn
             color="error"
@@ -51,7 +50,6 @@
         block
         class="px-2"
         density="compact"
-        variant="outlined"
         text="Show all logs"
         v-if="appStore.state.filterTag"
         @click="appStore.state.filterTag = ''"
@@ -76,9 +74,11 @@
             <v-icon :color="log.type" :icon="icons[log.type]" />
           </template>
 
-          <v-toolbar-title color="primary" class="text-subtitle-1">
-            {{ log.date }}
-          </v-toolbar-title>
+          <v-toolbar-title
+            :text="log.date"
+            color="primary"
+            class="text-subtitle-1"
+          />
 
           <template #append>
             <v-btn

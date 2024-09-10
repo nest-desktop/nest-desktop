@@ -53,15 +53,32 @@ export const vuetify = createVuetify({
     // global: {
     //   ripple: false,
     // },
-    // VCard: {
-    //   variant: "outlined",
-    //   VCardActions: {
-    //     VBtn: { size: "small", variant: "outlined", ripple: true },
-    //   },
-    // },
+    VBtn: { variant: "outlined" },
+    VBtnGroup: { variant: "outlined" },
+    VBtnToggle: { variant: "outlined" },
+    VCard: {
+      elevation: 0,
+      VCardActions: {
+        VBtn: { size: "small", variant: "outlined" },
+      },
+    },
+    VChip: { variant: "outlined" },
+    VCombobox: { variant: "outlined" },
+    VDialog: {
+      VCard: {
+        VCardTitle: {
+          VBtn: {
+            variant: "text",
+          },
+        },
+      },
+    },
     VMenu: {
       transition: "slide-y-transition",
     },
+    VSelect: { variant: "outlined" },
+    VTextarea: { variant: "outlined" },
+    VTextField: { variant: "outlined" },
   },
   directives,
   theme: {

@@ -10,12 +10,11 @@
       <v-tab
         :key="index"
         :ripple="false"
-        :title="item.title"
-        :to="item.to"
         @click.stop="navStore.toggle(item)"
         class="justify-center"
         height="76"
         min-width="0"
+        v-bind="item"
         v-for="(item, index) in navItems"
         v-show="item.simulator === appStore.state.simulator"
       >

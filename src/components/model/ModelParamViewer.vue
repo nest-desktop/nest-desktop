@@ -1,7 +1,7 @@
 <template>
   <v-list-item>
     <v-row no-gutters>
-      <span class="text-medium-emphasis">{{ param.label }}</span>
+      <span :text="param.label" class="text-medium-emphasis" />
       <v-spacer />
       {{ param.id }}:
       {{ param.value }}

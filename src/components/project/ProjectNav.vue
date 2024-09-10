@@ -25,7 +25,6 @@
         prepend-inner-icon="mdi:mdi-magnify"
         single-line
         v-model="search"
-        variant="outlined"
       />
 
       <template #extension>
@@ -56,18 +55,10 @@
 
         <v-list density="compact">
           <v-list-item
-            :id="item.id"
             :key="index"
-            :value="index"
-            @click="item.onClick()"
+            v-bind="item"
             v-for="(item, index) in menuItems"
-          >
-            <template #prepend>
-              <v-icon :icon="item.icon" />
-            </template>
-
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
+          />
         </v-list>
       </v-menu>
     </v-toolbar>
@@ -133,7 +124,6 @@
                 hide-details
                 label="Project name"
                 v-model="project.name"
-                variant="outlined"
               />
             </template>
 
@@ -212,9 +202,6 @@ const search = ref("");
 
 const menuItems = [
   {
-    title: "Import",
-    icon: "mdi:mdi-import",
-    id: "import-dialog",
     onClick: () => {
       createDialog({
         title: "",
@@ -228,11 +215,10 @@ const menuItems = [
         },
       });
     },
+    prependIcon: "mdi:mdi-import",
+    title: "Import",
   },
   {
-    title: "Export",
-    icon: "mdi:mdi-export",
-    id: "export-dialog",
     onClick: () => {
       createDialog({
         title: "",
@@ -246,11 +232,10 @@ const menuItems = [
         },
       });
     },
+    prependIcon: "mdi:mdi-export",
+    title: "Export",
   },
   {
-    title: "Delete",
-    icon: "mdi:mdi-trash-can-outline",
-    id: "delete-dialog",
     onClick: () => {
       createDialog({
         title: "",
@@ -266,11 +251,13 @@ const menuItems = [
         },
       });
     },
+    prependIcon: "mdi:mdi-trash-can-outline",
+    title: "Delete",
   },
   {
-    title: "Reload list",
-    icon: "mdi:mdi-reload",
     onClick: () => projectDBStore.value.updateList(),
+    prependIcon: "mdi:mdi-reload",
+    title: "Reload list",
   },
   // { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];

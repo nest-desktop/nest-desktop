@@ -23,11 +23,10 @@
             item-title="label"
             item-value="id"
             v-model="node.modelId"
-            variant="outlined"
           >
             <template #append>
               <div class="d-print-none">
-                <v-chip>{{ node.hash }}</v-chip>
+                <v-chip :text="node.hash" />
               </div>
 
               <div class="d-print-none menu">
@@ -79,26 +78,14 @@
                     <v-card-actions>
                       <v-btn
                         @click.stop="() => node.showAllParams()"
-                        size="small"
-                        variant="outlined"
-                      >
-                        all
-                      </v-btn>
+                        text="all"
+                      />
                       <v-btn
                         @click.stop="() => node.hideAllParams()"
-                        size="small"
-                        variant="outlined"
-                      >
-                        none
-                      </v-btn>
+                        text="none"
+                      />
                       <v-spacer />
-                      <v-btn
-                        @click.stop="state.menu = false"
-                        size="small"
-                        variant="outlined"
-                      >
-                        close
-                      </v-btn>
+                      <v-btn @click.stop="state.menu = false" text="close" />
                     </v-card-actions>
                   </v-card>
                 </v-menu>
@@ -128,13 +115,15 @@
 
             <template #prepend>
               <v-btn
+                @click="node.toggleSelection()"
                 class="position-absolute"
                 flat
                 icon
                 size="large"
                 style="left: 8px; top: 8px"
+                variant="text"
               >
-                <NodeAvatar :node @click="node.select()" size="48px" />
+                <NodeAvatar :node size="48px" />
               </v-btn>
             </template>
 

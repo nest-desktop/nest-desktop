@@ -612,7 +612,7 @@ export class BaseNode extends BaseObj {
    * Select this node.
    */
   select(): void {
-    this._nodes.toggleNodeSelection(this);
+    this._nodes.selectNode(this);
   }
 
   /**
@@ -662,6 +662,20 @@ export class BaseNode extends BaseObj {
     }
 
     return nodeProps;
+  }
+
+  /**
+   * Toggle the selection of this node group.
+   */
+  toggleSelection(): void {
+    this._nodes.toggleNodeSelection(this);
+  }
+
+  /**
+   * Unselect this node.
+   */
+  unselect(): void {
+    this._nodes.unselectNode(this);
   }
 
   /**

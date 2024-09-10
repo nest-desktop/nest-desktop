@@ -11,7 +11,6 @@
         item-title="label"
         item-value="id"
         v-model="model.existingModelId"
-        variant="outlined"
       >
         <template #append>
           <div class="d-print-none menu">
@@ -47,28 +46,13 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn
-                    @click.stop="() => model.showAllParams()"
-                    size="small"
-                    variant="outlined"
-                  >
-                    all
-                  </v-btn>
+                  <v-btn @click.stop="() => model.showAllParams()" text="all" />
                   <v-btn
                     @click.stop="() => model.hideAllParams()"
-                    size="small"
-                    variant="outlined"
-                  >
-                    none
-                  </v-btn>
+                    text="none"
+                  />
                   <v-spacer />
-                  <v-btn
-                    @click.stop="state.menu = false"
-                    size="small"
-                    variant="outlined"
-                  >
-                    close
-                  </v-btn>
+                  <v-btn @click.stop="state.menu = false" text="close" />
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -90,7 +74,6 @@
                 class="icon"
                 icon="mdi:mdi-menu-right"
                 size="x-small"
-                variant="outlined"
                 v-if="state.elementType"
               />
             </template>
@@ -123,7 +106,6 @@
         hide-details
         label="New label"
         v-model="model.newModelId"
-        variant="outlined"
       />
 
       <v-list class="py-0" v-if="model.paramsVisible.length > 0">

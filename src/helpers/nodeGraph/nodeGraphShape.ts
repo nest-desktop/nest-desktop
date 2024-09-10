@@ -194,9 +194,10 @@ export class NodeGraphShape extends BaseObj {
         this._networkGraph.workspace.reset();
         this._networkGraph.workspace.dragline.init(e);
       } else if (this._networkGraph.workspace.ctrlPressed) {
-        nodes.toggleNodeSelection(node);
+        node.toggleSelection();
       } else {
-        nodes.state.selectedNodes = [node];
+        nodes.unselectNodes();
+        node.select();
       }
     });
 

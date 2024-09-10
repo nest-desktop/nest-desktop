@@ -40,47 +40,43 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2">
+        <v-card class="mt-2" elevation="1">
           <v-card-title>References</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item
+                :key="index"
                 append-icon="mdi:mdi-open-in-new"
-                href="http://neuralensemble.org/PyNN/"
-                prepend-icon="mdi:mdi-home"
                 target="_blank"
-              >
-                http://neuralensemble.org/PyNN/
-              </v-list-item>
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="https://github.com/NeuralEnsemble/PyNN/"
-                prepend-icon="mdi:mdi-github"
-                target="_blank"
-              >
-                https://github.com/NeuralEnsemble/PyNN/
-              </v-list-item>
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="http://neuralensemble.org/docs/PyNN/"
-                prepend-icon="mdi:mdi-book-open"
-                target="_blank"
-              >
-                http://neuralensemble.org/docs/PyNN/
-              </v-list-item>
+                v-bind="refItem"
+                v-for="(refItem, index) in refItems"
+              />
             </v-list>
           </v-card-text>
         </v-card>
       </v-col>
 
       <v-col md="6">
-        <v-expansion-panels variant="accordion">
-          <v-expansion-panel title="Backend settings">
-            <v-expansion-panel-text>
-              <backend-settings :store="pynnSimulatorStore" />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+        <v-card elevation="1" title="Backend">
+          <v-expansion-panels elevation="0" title variant="accordion">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                Backend settings
+                <v-spacer />
+                <BackendStatusIcon
+                  :backend-store="pynnSimulatorStore"
+                  :title="pynnSimulatorStore.state.name"
+                />
+              </v-expansion-panel-title>
+
+              <v-expansion-panel-text>
+                <v-window class="mx-2">
+                  <BackendSettings :store="pynnSimulatorStore" />
+                </v-window>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
 
         <StoreList />
       </v-col>
@@ -95,5 +91,24 @@ import pynnLogo from "@/assets/img/logo/pynn-logo.png";
 import { TBackendStore } from "@/stores/defineBackendStore";
 
 import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
+import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
+
+const refItems = [
+  {
+    href: "http://neuralensemble.org/PyNN/",
+    prependIcon: "mdi:mdi-home",
+    title: "http://neuralensemble.org/PyNN/",
+  },
+  {
+    href: "https://github.com/NeuralEnsemble/PyNN/",
+    prependIcon: "mdi:mdi-github",
+    title: "https://github.com/NeuralEnsemble/PyNN/",
+  },
+  {
+    href: "http://neuralensemble.org/docs/PyNN/",
+    prependIcon: "mdi:mdi-book-open",
+    title: "http://neuralensemble.org/docs/PyNN/",
+  },
+];
 </script>

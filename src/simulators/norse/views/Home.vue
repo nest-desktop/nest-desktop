@@ -19,39 +19,42 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2">
-          <v-card-title>References</v-card-title>
+        <v-card class="mt-2" elevation="1" title="References">
           <v-card-text>
-            <v-list>
+            <v-list density="compact">
               <v-list-item
+                :key="index"
                 append-icon="mdi:mdi-open-in-new"
-                href="https://norse.github.io/norse"
-                prepend-icon="mdi:mdi-github"
                 target="_blank"
-              >
-                https://github.com/norse
-              </v-list-item>
-              <v-list-item
-                append-icon="mdi:mdi-open-in-new"
-                href="https://norse.github.io/norse"
-                prepend-icon="mdi:mdi-book-open"
-                target="_blank"
-              >
-                https://norse.github.io/norse
-              </v-list-item>
+                v-bind="refItem"
+                v-for="(refItem, index) in refItems"
+              />
             </v-list>
           </v-card-text>
         </v-card>
       </v-col>
 
       <v-col md="6">
-        <v-expansion-panels variant="accordion">
-          <v-expansion-panel title="Backend settings">
-            <v-expansion-panel-text>
-              <backend-settings :store="norseSimulatorStore" />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+        <v-card elevation="1" title="Backend">
+          <v-expansion-panels elevation="0" tile variant="accordion">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                Backend settings
+                <v-spacer />
+                <BackendStatusIcon
+                  :backend-store="norseSimulatorStore"
+                  :title="norseSimulatorStore.state.name"
+                />
+              </v-expansion-panel-title>
+
+              <v-expansion-panel-text>
+                <v-window class="mx-2">
+                  <BackendSettings :store="norseSimulatorStore" />
+                </v-window>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
 
         <StoreList />
       </v-col>
@@ -66,5 +69,19 @@ import norseLogo from "@/assets/img/logo/norse-logo.png";
 import { TBackendStore } from "@/stores/defineBackendStore";
 
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
+import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 const norseSimulatorStore: TBackendStore = useNorseSimulatorStore();
+
+const refItems = [
+  {
+    href: "https://norse.github.io/norse",
+    prependIcon: "mdi:mdi-github",
+    title: "https://github.com/norse",
+  },
+  {
+    href: "https://norse.github.io/norse",
+    prependIcon: "mdi:mdi-book-open",
+    title: "https://norse.github.io/norse",
+  },
+];
 </script>

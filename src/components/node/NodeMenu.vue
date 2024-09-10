@@ -74,46 +74,35 @@
           <v-btn
             @click="backMenu"
             prepend-icon="mdi:mdi-menu-left"
-            size="small"
-            variant="text"
-          >
-            back
-          </v-btn>
+            text="back"
+          />
         </v-card-actions>
       </span>
 
       <span v-if="state.content === 'nodeColor'">
-        <v-card>
-          <ColorPicker
-            :colorScheme="state.colorScheme"
-            @update:model-value="nodeColorChange()"
-            hide-inputs
-            v-model="node.view.color"
-          />
+        <ColorPicker
+          :colorScheme="state.colorScheme"
+          @update:model-value="nodeColorChange()"
+          hide-inputs
+          v-model="node.view.color"
+        />
 
-          <v-select
-            :items="colorSchemes"
-            class="mx-2"
-            density="compact"
-            hide-details
-            v-model="state.colorScheme"
-            variant="outlined"
-          />
-        </v-card>
+        <v-select
+          :items="colorSchemes"
+          class="mx-2"
+          density="compact"
+          hide-details
+          v-model="state.colorScheme"
+        />
 
         <v-card-actions>
           <v-btn
             @click="backMenu"
             prepend-icon="mdi:mdi-menu-left"
-            size="small"
-            variant="text"
-          >
-            back
-          </v-btn>
+            text="back"
+          />
           <v-spacer />
-          <v-btn @click="resetColor" size="small" variant="outlined">
-            reset
-          </v-btn>
+          <v-btn @click="resetColor" text="reset" />
         </v-card-actions>
       </span>
     </v-card>

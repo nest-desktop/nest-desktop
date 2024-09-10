@@ -7,7 +7,6 @@
         label="Select a color scheme"
         persistent-hint
         v-model="state.colorScheme"
-        variant="outlined"
       />
 
       <ColorPicker :color-scheme="state.colorScheme" />

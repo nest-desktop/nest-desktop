@@ -3,8 +3,7 @@
     <v-card-title class="d-flex justify-space-between align-center">
       <v-icon icon="mdi:mdi-trash-can-outline" size="small" />
       Delete
-
-      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+      <v-btn @click="closeDialog()" icon="mdi:mdi-close" size="small" />
     </v-card-title>
 
     <v-data-table-virtual
@@ -34,25 +33,10 @@
           }
         "
         prepend-icon="mdi:mdi-trash-can-outline"
-        size="small"
         text="delete selected"
-        variant="outlined"
       />
-
-      <v-btn
-        @click="update()"
-        prepend-icon="mdi:mdi-reload"
-        size="small"
-        text="Reload"
-        variant="outlined"
-      />
-
-      <v-btn
-        @click="closeDialog()"
-        size="small"
-        text="close"
-        variant="outlined"
-      />
+      <v-btn @click="update()" prepend-icon="mdi:mdi-reload" text="Reload" />
+      <v-btn @click="closeDialog()" text="close" />
     </v-card-actions>
   </v-card>
 </template>

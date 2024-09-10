@@ -27,7 +27,6 @@
           prepend-inner-icon="mdi-shape"
           return-object
           v-model="layer.modelSelected"
-          variant="outlined"
         />
       </v-card>
 
@@ -64,7 +63,6 @@
                 disable-lookup
                 label
                 size="small"
-                variant="outlined"
               >
                 {{ item.raw.id }}
               </v-chip>
@@ -80,7 +78,6 @@
                 class="mx-2"
                 label
                 size="small"
-                variant="outlined"
               >
                 {{ item.raw.id }}
               </v-chip>
@@ -123,7 +120,7 @@
                           width="100%"
                         />
                       </v-col>
-                      <v-col class="py-0" cols="8">{{ item }}</v-col>
+                      <v-col :text="item" class="py-0" cols="8" />
                     </v-row>
                   </template>
                 </v-select>
@@ -212,7 +209,6 @@
               hide-details
               label="Trail mode"
               v-model="layer.state.trail.mode"
-              variant="outlined"
             />
           </v-list-item>
         </v-list>
