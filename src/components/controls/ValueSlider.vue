@@ -4,7 +4,7 @@
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi:mdi-plus"
-    class="py-1 value-slider"
+    class="py-1 mr-0 value-slider"
     color="grey"
     hide-details="auto"
     prepend-icon="mdi:mdi-minus"
@@ -20,7 +20,7 @@
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="width: 80px"
+        style="max-width: 80px"
         type="number"
         v-model="value"
         variant="underlined"

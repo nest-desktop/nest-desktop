@@ -17,7 +17,7 @@
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="width: 80px"
+        style="max-width: 80px"
         type="number"
         v-model="lower"
         variant="underlined"
@@ -30,7 +30,7 @@
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="width: 80px"
+        style="max-width: 80px"
         type="number"
         v-model="upper"
         variant="underlined"

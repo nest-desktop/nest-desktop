@@ -35,25 +35,26 @@
       />
 
       <template v-else>
-        <v-col
+        <span
           class="px-2 py-auto text-medium-emphasis"
           cols="10"
           style="font-size: 15px"
         >
           {{ param.label }}
-        </v-col>
-        <v-col cols="2">
-          <v-text-field
-            :label="param.id"
-            :step="param.step"
-            :suffix="param.unit"
-            density="compact"
-            hide-details
-            type="number"
-            v-model="param.state.value"
-            variant="underlined"
-          />
-        </v-col>
+        </span>
+        <v-spacer />
+        <v-text-field
+          :label="param.id"
+          :step="param.step"
+          :suffix="param.unit"
+          density="compact"
+          hide-details
+          style="max-width: 80px"
+          type="number"
+          v-model="param.state.value"
+          variant="underlined"
+        >
+        </v-text-field>
       </template>
     </v-row>
 
