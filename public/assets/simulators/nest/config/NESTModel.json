@@ -146,6 +146,15 @@
       "unit": "ms"
     },
     {
+      "id": "u",
+      "label": "membrane potential recovery variable"
+    },
+    {
+      "id": "v",
+      "label": "membrane potential",
+      "unit": "mV"
+    },
+    {
       "id": "v_comp",
       "label": "membrane potential of the compartment",
       "unit": "mV"

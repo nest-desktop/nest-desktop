@@ -89,5 +89,3 @@ recordables:
   - I_syn_ex
   - I_syn_in
   - V_m
-  - weighted_spikes_ex
-  - weighted_spikes_in

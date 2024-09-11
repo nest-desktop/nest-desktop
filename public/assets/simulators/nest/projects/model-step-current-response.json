@@ -1,79 +1,170 @@
 {
-  "name": "step current response",
-  "network": {
-    "connections": [
-      {
-        "source": 0,
-        "target": 1
-      },
-      {
-        "source": 2,
-        "target": 1
-      }
-    ],
-    "nodes": [
-      {
-        "model": "step_current_generator",
-        "params": [
-          {
-            "id": "amplitude_times",
-            "value": [
-              100,
-              300,
-              500,
-              700
-            ]
-          },
-          {
-            "id": "amplitude_values",
-            "value": [
-              1,
-              0,
-              -1,
-              0
-            ]
-          }
-        ],
-        "view": {
-          "position": {
-            "x": 25,
-            "y": 75
-          }
-        }
-      },
-      {
-        "model": "iaf_psc_alpha",
-        "view": {
-          "position": {
-            "x": 175,
-            "y": 25
-          }
-        }
-      },
-      {
-        "model": "voltmeter",
-        "params": [
-          {
-            "id": "interval",
-            "value": 0.1
-          }
-        ],
-        "view": {
-          "position": {
-            "x": 325,
-            "y": 75
-          }
-        }
-      }
-    ]
-  },
-  "simulation": {
-    "kernel": {
-      "localNumThreads": 1,
-      "resolution": 0.1,
-      "rngSeed": 1
+    "activityGraph": {
+        "color": "trace",
+        "panels": [
+            {
+                "model": {
+                    "id": "analogSignalPlot",
+                    "params": {
+                        "averageLine": false,
+                        "spikeThreshold": -55
+                    },
+                    "records": [
+                        "mm2.V_m"
+                    ]
+                }
+            },
+            {
+                "model": {
+                    "id": "analogSignalPlot",
+                    "params": {
+                        "averageLine": false,
+                        "spikeThreshold": -55
+                    },
+                    "records": [
+                        "mm1.I"
+                    ]
+                }
+            }
+        ]
     },
-    "time": 1000
-  },
-  "version": "3.2.0"
+    "createdAt": "2024-07-11T07:42:01.509Z",
+    "description": "",
+    "id": "aa1637e3-bd9d-47af-8356-7daa28eff008",
+    "name": "step current response",
+    "network": {
+        "connections": [
+            {
+                "source": 0,
+                "target": 1,
+                "rule": "one_to_one"
+            },
+            {
+                "source": 2,
+                "target": 0
+            },
+            {
+                "source": 3,
+                "target": 1
+            }
+        ],
+        "models": [],
+        "nodes": [
+            {
+                "model": "dc_generator",
+                "view": {
+                    "position": {
+                        "x": 25,
+                        "y": 75
+                    }
+                },
+                "size": 6,
+                "params": [
+                    {
+                        "id": "amplitude",
+                        "value": 1,
+                        "type": {
+                            "id": "np.linspace",
+                            "specs": [
+                                {
+                                    "id": "start",
+                                    "value": -100
+                                },
+                                {
+                                    "id": "stop",
+                                    "value": 500
+                                },
+                                {
+                                    "id": "num",
+                                    "value": 6
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "start",
+                        "value": 20
+                    },
+                    {
+                        "id": "stop",
+                        "value": 80
+                    }
+                ]
+            },
+            {
+                "model": "my_neuron",
+                "view": {
+                    "position": {
+                        "x": 175,
+                        "y": 25
+                    }
+                },
+                "size": 6
+            },
+            {
+                "model": "multimeter",
+                "view": {
+                    "position": {
+                        "x": -10,
+                        "y": -47.75
+                    }
+                },
+                "params": [
+                    {
+                        "id": "interval",
+                        "value": 0.1,
+                        "rules": [
+                            [
+                                "value >= 0.1",
+                                "Small values generate many data points and can put quite a load on your browser.",
+                                "warning"
+                            ]
+                        ]
+                    }
+                ],
+                "records": [
+                    {
+                        "id": "I",
+                        "color": "#1f77b4",
+                        "groupId": "mm1.I"
+                    }
+                ]
+            },
+            {
+                "model": "voltmeter",
+                "view": {
+                    "position": {
+                        "x": 304.0999755859375,
+                        "y": -98.75
+                    }
+                },
+                "params": [
+                    {
+                        "id": "interval",
+                        "value": 0.1,
+                        "rules": [
+                            [
+                                "value >= 0.1",
+                                "Small values generate many data points and can put quite a load on your browser.",
+                                "warning"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "simulation": {
+        "kernel": {
+            "localNumThreads": 1,
+            "resolution": 0.1,
+            "rngSeed": 1
+        },
+        "time": 120,
+        "modules": [
+            "nestmlmodule"
+        ]
+    },
+    "updatedAt": "2024-09-11T08:05:52.230Z",
+    "version": "4.0.0-beta10"
 }
