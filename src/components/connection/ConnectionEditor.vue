@@ -14,10 +14,9 @@
 
         <v-spacer />
 
-        <div
-          :text="connection.rule.value"
-          class="d-flex flex-column justify-center align-center text-grey"
-        />
+        <div class="d-flex flex-column justify-center align-center text-grey">
+          {{ connection.rule.value }}
+        </div>
 
         <v-spacer />
 

@@ -127,7 +127,6 @@ export class NESTModel extends BaseModel {
    */
   override toJSON(): INESTModelProps {
     const modelProps: INESTModelProps = {
-      abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
       label: this.label,
@@ -137,22 +136,26 @@ export class NESTModel extends BaseModel {
       version: process.env.APP_VERSION,
     };
 
+    if (this.abbreviation) {
+      modelProps.abbreviation = this.abbreviation;
+    }
+
     // Add the recordables if provided.
     if (this.recordables.length > 0) {
       modelProps.recordables = this.recordables.map(
-        (recordable: INodeRecordProps) => recordable.id
+        (recordable: INodeRecordProps) => recordable
       );
     }
 
     // Add the compartment parameters if provided.
-    if (this._compartmentParams) {
+    if (this._compartmentParamsVisible.length > 0) {
       modelProps.compartmentParams = Object.values(this._compartmentParams).map(
         (param: NESTModelCompartmentParameter) => param.toJSON()
       );
     }
 
     // Add the receptors if provided.
-    if (this._receptors) {
+    if (Object.keys(this._receptors).length > 0) {
       modelProps.receptors = Object.values(this._receptors).map(
         (receptor: NESTModelReceptor) => receptor.toJSON()
       );
@@ -178,7 +181,7 @@ export class NESTModel extends BaseModel {
 
     // Update the model recordables.
     if (modelProps.recordables) {
-      this.updateRecordables(modelProps);
+      this.updateRecordables(modelProps.recordables);
     }
 
     // Update the model parameters.

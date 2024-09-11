@@ -40,9 +40,7 @@
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
     <div :key="'panel' + index" v-for="(panel, index) in graph.panels">
       <Card class="mx-1" color="primary">
-        <v-card-title class="pa-0">
-          <ActivityChartPanelToolbar :panel="(panel as ActivityChartPanel)" />
-        </v-card-title>
+        <ActivityChartPanelToolbar :panel="(panel as ActivityChartPanel)" />
 
         <v-card-text class="pa-0" v-if="panel.state.visible">
           <span v-if="panel.model.state.records.length > 0">

@@ -1,7 +1,7 @@
 <template>
   <v-chip :color="node.view.color" @click="selectNode" size="small">
-    <span :text="node.view.label" class="font-weight-bold" />
-    <span :text="node.model.label" class="mx-1" />
+    <span class="font-weight-bold">{{ node.view.label }}</span>
+    <span class="mx-1">{{ node.model.label }}</span>
 
     <span class="mx-1" v-if="appStore.state.devMode">
       ({{ node.view.position.x.toFixed() }},

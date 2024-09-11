@@ -36,19 +36,24 @@ export class ModelParameter extends Parameter {
   override toJSON(): IModelParamProps {
     const paramProps: IModelParamProps = {
       id: this.id,
-      component: this.component,
       label: this.label,
-      unit: this.unit,
       value: this.value,
       // visible: this.visible as boolean,
     };
 
-    if (this.component === "valueSlider") {
-      paramProps.min = this.min;
-      paramProps.max = this.max;
-      paramProps.step = this.step;
-    } else if (this.component === "tickSlider") {
-      paramProps.ticks = this.ticks;
+    if (this.unit) {
+      paramProps.unit = this.unit;
+    }
+
+    if (this.component) {
+      paramProps.component = this.component;
+      if (this.component === "valueSlider") {
+        paramProps.min = this.min;
+        paramProps.max = this.max;
+        paramProps.step = this.step;
+      } else if (this.component === "tickSlider") {
+        paramProps.ticks = this.ticks;
+      }
     }
 
     // Add rules for validation if existed.

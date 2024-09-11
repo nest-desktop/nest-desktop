@@ -7,12 +7,7 @@
         text="Load NESTML script"
       />
 
-      <v-btn
-        @click="getParams"
-        class="mx-1"
-        v-if="appStore.state.devMode"
-        text="get params"
-      />
+      <v-btn @click="updateSpecs" class="mx-1" text="update specs" />
 
       <v-spacer />
 
@@ -49,9 +44,6 @@ import { updateSimulationModules } from "../../stores/model/modelStore";
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
-
 import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
 const nestmlServerStore = useNESTMLServerStore();
 
@@ -65,28 +57,6 @@ const state = reactive<{
     module.models.includes(model.value.id)
   ),
 });
-
-const getParams = () => {
-  nestmlServerStore
-    .axiosInstance()
-    .post("getParams", {
-      element_type: model.value.elementType,
-      script: model.value.nestmlScript,
-    })
-    .then((response: AxiosResponse) => {
-      switch (response.status) {
-        case 200:
-          alert(JSON.stringify(response.data.params, null, 2));
-          break;
-        case 400:
-          notifyError("Failed to get params for model.");
-          break;
-      }
-    })
-    .catch((error: AxiosError) => {
-      notifyError(error.message);
-    });
-};
 
 const loadNESTMLScript = () => {
   createDialog({
@@ -105,6 +75,12 @@ const loadNESTMLScript = () => {
       model.value.elementType = response.elementType;
     }
   });
+};
+
+const update = () => {
+  state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>
+    module.models.includes(model.value.id)
+  );
 };
 
 const updateModules = () => {
@@ -128,10 +104,28 @@ const updateModules = () => {
   });
 };
 
-const update = () => {
-  state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>
-    module.models.includes(model.value.id)
-  );
+const updateSpecs = () => {
+  nestmlServerStore
+    .axiosInstance()
+    .post("getSpecs", {
+      element_type: model.value.elementType,
+      script: model.value.nestmlScript,
+    })
+    .then((response: AxiosResponse) => {
+      switch (response.status) {
+        case 200:
+          console.log(response.data);
+          model.value.updateParameters(response.data.params);
+          model.value.updateRecordables(response.data.states);
+          break;
+        case 400:
+          notifyError("Failed to get states for model.");
+          break;
+      }
+    })
+    .catch((error: AxiosError) => {
+      notifyError(error.message);
+    });
 };
 
 onMounted(update);

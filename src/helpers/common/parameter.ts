@@ -77,7 +77,7 @@ export class Parameter extends BaseObj {
   private _ticks: (number | string)[] = [];
   private _type: IParamType = { id: "constant" };
   private _unit: string = "";
-  private _component: string = "valueInput";
+  private _component: string = "";
 
   constructor(
     paramProps: IParamProps,
@@ -209,7 +209,7 @@ export class Parameter extends BaseObj {
       tickLabels?: (number | string)[];
       unit: string;
     } = {
-      component: param.component || "valueInput",
+      component: param.component || "",
       defaultValue: param.value,
       id: param.id,
       label: param.label,
@@ -391,7 +391,7 @@ export class Parameter extends BaseObj {
     this._step = paramProps.step || 1;
     this._ticks = paramProps.ticks || [];
     this._unit = paramProps.unit || "";
-    this._component = paramProps.component || paramProps.input || "valueInput";
+    this._component = paramProps.component || paramProps.input || "";
   }
 
   /**

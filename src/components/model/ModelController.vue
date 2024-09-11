@@ -17,8 +17,16 @@
         height="76"
         min-width="0"
         v-for="(item, index) in controllerItems"
+        v-show="
+          item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
+        "
       >
-        <v-icon :icon="item.icon" class="ma-1" size="large" />
+        <v-icon
+          :icon="item.icon.icon"
+          :class="item.icon.class"
+          class="ma-1"
+          size="large"
+        />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
@@ -115,6 +123,19 @@
       </template>
     </template>
 
+    <template
+      v-else-if="
+        appStore.state.devMode && modelStore.state.controller.view === 'raw'
+      "
+    >
+      <codemirror
+        :extensions="extensions"
+        :model-value="modelJSON"
+        disabled
+        style="font-size: 0.75rem; width: 100%"
+      />
+    </template>
+
     <template v-if="modelStore.state.controller.view === 'code'">
       <slot name="simulationCodeEditor">
         <SimulationCodeEditor
@@ -127,13 +148,18 @@
 </template>
 
 <script lang="ts" setup>
+import { Codemirror } from "vue-codemirror";
 import { computed, nextTick } from "vue";
+import { LanguageSupport } from "@codemirror/language";
+import { json } from "@codemirror/lang-json";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 import ModelParamViewer from "./ModelParamViewer.vue";
 import NodeParamEditor from "../node/NodeParamEditor.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { TModelParameter } from "@/types";
+import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -148,14 +174,33 @@ const modelParams = computed(() =>
   Object.values(modelStore.value.model.params)
 );
 
+const modelJSON = computed(() =>
+  JSON.stringify(modelStore.value.model.toJSON(), null, 2)
+);
+
 const controllerItems = [
   {
     id: "defaults",
-    icon: "mdi:mdi-format-list-numbered-rtl",
+    icon: {
+      icon: "mdi:mdi-format-list-numbered-rtl",
+    },
     title: "View defaults",
   },
-  { id: "params", icon: "mdi:mdi-tune-variant", title: "Edit params" },
-  { id: "code", icon: "mdi:mdi-xml" },
+  {
+    id: "params",
+    icon: { icon: "mdi:mdi-tune-variant" },
+    title: "Edit params",
+  },
+  {
+    id: "raw",
+    icon: {
+      class: "",
+      icon: "mdi:mdi-code-json",
+    },
+    show: "dev",
+    title: "View raw data",
+  },
+  { id: "code", icon: { icon: "mdi:mdi-xml" } },
 ];
 
 const setDefaults = () => {
@@ -166,6 +211,12 @@ const setDefaults = () => {
     modelParams[paramKey].value = neuron.params[paramKey].value;
   });
 };
+
+const extensions = [json()];
+
+if (darkMode()) {
+  extensions.push(oneDark as LanguageSupport);
+}
 
 const dispatchWindowResize = () => {
   nextTick(() => window.dispatchEvent(new Event("resize")));

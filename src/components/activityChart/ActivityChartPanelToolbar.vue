@@ -1,62 +1,50 @@
 <template>
-  <div class="activityChartPanelToolbar">
-    <v-icon :text="panel.model.icon" class="ma-3" size="small" />
-    {{ panel.model?.label }}
+  <v-toolbar
+    :title="panel.model.label"
+    class="px-1"
+    color="transparent"
+    density="compact"
+  >
+    <template #prepend>
+      <v-icon :icon="panel.model.icon" />
+    </template>
 
-    <v-spacer />
-
-    <span class="icons">
-      <v-btn
-        :icon="panel.state.visible ? 'mdi:mdi-eye' : 'mdi:mdi-eye-off'"
-        @click="panel.toggleVisible()"
-        class="mx-1"
-        right
-        size="x-small"
-        variant="text"
-      />
-      <v-btn
-        @click="panel.decreaseHeight()"
-        class="mx-1"
-        icon="mdi:mdi-minus"
-        right
-        size="x-small"
-        variant="text"
-      />
-      <v-btn
-        @click="panel.increaseHeight()"
-        class="mx-1"
-        icon="mdi:mdi-plus"
-        right
-        size="x-small"
-        variant="text"
-      />
-      <v-btn
-        @click="panel.remove()"
-        class="mx-1"
-        icon="mdi:mdi-trash-can-outline"
-        right
-        size="x-small"
-        variant="text"
-      />
-
-      <v-menu :close-on-content-click="false">
-        <template #activator="{ props }">
-          <v-btn
-            icon="mdi:mdi-dots-vertical"
-            color="primary"
-            size="x-small"
-            v-bind="props"
-            variant="text"
-          />
-        </template>
-
-        <ActivityChartPanelMenuPopover
-          :graph="(panel.graph as ActivityChartGraph)"
-          @changed="selectModel"
+    <template #append>
+      <v-btn-group class="py-2" style="height: 100%">
+        <v-btn
+          :icon="panel.state.visible ? 'mdi:mdi-eye' : 'mdi:mdi-eye-off'"
+          @click="panel.toggleVisible()"
+          size="x-small"
         />
-      </v-menu>
-    </span>
-  </div>
+        <v-btn
+          @click="panel.decreaseHeight()"
+          icon="mdi:mdi-minus"
+          size="x-small"
+        />
+        <v-btn
+          @click="panel.increaseHeight()"
+          icon="mdi:mdi-plus"
+          size="x-small"
+        />
+        <v-btn
+          @click="panel.remove()"
+          icon="mdi:mdi-trash-can-outline"
+          size="x-small"
+        />
+
+        <v-menu :close-on-content-click="false">
+          <template #activator="{ props }">
+            <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
+          </template>
+
+          <ActivityChartPanelMenuPopover
+            :graph="(panel.graph as ActivityChartGraph)"
+            @changed="selectModel"
+          />
+        </v-menu>
+      </v-btn-group>
+    </template>
+  </v-toolbar>
 </template>
 
 <script lang="ts" setup>
@@ -74,19 +62,3 @@ const selectModel = (modelId: string) => {
   panel.value.graph.update();
 };
 </script>
-
-<style lang="scss">
-.activityChartPanelToolbar {
-  .icons {
-    display: none;
-    line-height: 48px;
-    position: absolute;
-    right: 4px;
-    top: 0;
-  }
-
-  &:hover .icons {
-    display: block;
-  }
-}
-</style>

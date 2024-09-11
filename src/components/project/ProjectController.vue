@@ -52,7 +52,9 @@
         "
       >
         <v-icon :class="item.icon.class" :icon="item.icon.icon" size="large" />
-        <span :text="item.id" class="text-button" style="font-size: 9px !important" />
+        <span class="text-button" style="font-size: 9px !important">
+          {{ item.id }}
+        </span>
       </v-list-item>
     </v-list> -->
 
@@ -190,7 +192,7 @@ const projectJSON = computed(() =>
 interface IControllerItem {
   id: string;
   icon: {
-    class: string;
+    class?: string;
     icon: string;
   };
   show?: string;
@@ -201,7 +203,6 @@ const controllerItems: IControllerItem[] = [
   {
     id: "network",
     icon: {
-      class: "",
       icon: "network:network",
     },
     title: "Edit network",
@@ -209,7 +210,6 @@ const controllerItems: IControllerItem[] = [
   {
     id: "kernel",
     icon: {
-      class: "",
       icon: "mdi:mdi-engine-outline",
     },
     title: "Edit kernel",
@@ -217,13 +217,12 @@ const controllerItems: IControllerItem[] = [
   {
     id: "raw",
     icon: {
-      class: "",
       icon: "mdi:mdi-code-json",
     },
     show: "dev",
     title: "View raw data",
   },
-  { id: "code", icon: { icon: "mdi:mdi-xml", class: "" }, title: "Edit code" },
+  { id: "code", icon: { icon: "mdi:mdi-xml" }, title: "Edit code" },
   {
     id: "activity",
     icon: {
@@ -235,7 +234,6 @@ const controllerItems: IControllerItem[] = [
   {
     id: "stats",
     icon: {
-      class: "",
       icon: "mdi:mdi-table-large",
     },
     title: "View statistics",

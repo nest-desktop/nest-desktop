@@ -40,7 +40,7 @@
           transition="no-transition"
           value="values"
         >
-          <pre :text="items" />
+          <pre>{{ items }}</pre>
         </v-window-item>
       </v-window>
     </v-card-text>

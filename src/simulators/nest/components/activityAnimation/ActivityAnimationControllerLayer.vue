@@ -120,7 +120,9 @@
                           width="100%"
                         />
                       </v-col>
-                      <v-col :text="item" class="py-0" cols="8" />
+                      <v-col class="py-0" cols="8">
+                        {{ item }}
+                      </v-col>
                     </v-row>
                   </template>
                 </v-select>

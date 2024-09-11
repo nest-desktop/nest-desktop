@@ -27,11 +27,9 @@
         theme="primary"
       >
         <v-list density="compact">
-          <v-list-item
-            :key="index"
-            :text="menuItem"
-            v-for="(menuItem, index) in menuItems"
-          />
+          <v-list-item :key="index" v-for="(menuItem, index) in menuItems">
+            {{ menuItem }}
+          </v-list-item>
         </v-list>
       </v-menu>
     </v-btn>

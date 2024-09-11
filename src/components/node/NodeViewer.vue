@@ -3,8 +3,8 @@
     <v-card-title>
       <div class="d-flex text-button">
         <NodeAvatar :node="node" size="48px" title="Graphical representation" />
-        <div :text="node.modelId" class="ma-auto" title="Node model" />
-        <div :text="node.size" class="my-auto" title="Population size" />
+        <div class="ma-auto" title="Node model">{{ node.modelId }}</div>
+        <div class="my-auto" title="Population size">{{ node.size }}</div>
       </div>
     </v-card-title>
 

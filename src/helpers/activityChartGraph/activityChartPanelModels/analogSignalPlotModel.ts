@@ -291,7 +291,10 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.recordsVisible.forEach((record: NodeRecord) => {
-      if (record.id === "V_m" && this.params.spikeThreshold.value) {
+      if (
+        ["V_m", "v"].includes(record.id) &&
+        this.params.spikeThreshold.value
+      ) {
         // Add spike threshold for membrane potential.
         this.addSpikeThresholdLine(record);
       }

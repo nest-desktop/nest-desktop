@@ -52,21 +52,19 @@
     </template>
 
     <template #item.id="{ item }">
-      <span :text="item.id" style="color: rgb(var(--v-theme-primary))" />
+      <span style="color: rgb(var(--v-theme-primary))">{{ item.id }}</span>
     </template>
 
     <template #item.mean="{ item }">
-      <span
-        :text="toFixed(Number(item.mean))"
-        style="color: rgb(var(--v-theme-primary))"
-      />
+      <span style="color: rgb(var(--v-theme-primary))">
+        {{ toFixed(Number(item.mean)) }}
+      </span>
     </template>
 
     <template #item.std="{ item }">
-      <span
-        :text="toFixed(Number(item.std))"
-        style="color: rgb(var(--v-theme-primary))"
-      />
+      <span style="color: rgb(var(--v-theme-primary))">
+        {{ toFixed(Number(item.std)) }}
+      </span>
     </template>
 
     <template #item.actions="{ index }">

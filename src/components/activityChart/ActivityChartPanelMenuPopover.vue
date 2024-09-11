@@ -9,11 +9,10 @@
           <v-list-item
             :key="'analogPanel' + index"
             :prepend-icon="model.icon"
+            :title="model.label"
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsAnalog"
-          >
-            <v-list-item-title :text="model.label" />
-          </v-list-item>
+          />
         </v-list-group>
 
         <v-list-group fluid value="Spike activity">
@@ -23,11 +22,10 @@
           <v-list-item
             :key="'spikePanel' + index"
             :prepend-icon="model.icon"
+            :title="model.label"
             @click="selectModel(model.id)"
             v-for="(model, index) in graph.modelsSpike"
-          >
-            <v-list-item-title :text="model.label" />
-          </v-list-item>
+          />
         </v-list-group>
       </v-list>
     </v-card>
@@ -51,17 +49,3 @@ const selectModel = (modelId: string) => {
   emit("changed", modelId);
 };
 </script>
-
-<style lang="scss">
-.activityChartPanelToolbar .icons {
-  display: none;
-  line-height: 36px;
-  position: absolute;
-  right: 4px;
-  top: 0;
-
-  &:hover .icons {
-    display: block;
-  }
-}
-</style>

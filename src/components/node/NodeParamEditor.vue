@@ -33,6 +33,28 @@
         v-bind="param.options"
         v-else-if="param.options.component === 'valueSlider'"
       />
+
+      <template v-else>
+        <v-col
+          class="px-2 py-auto text-medium-emphasis"
+          cols="10"
+          style="font-size: 15px"
+        >
+          {{ param.label }}
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            :label="param.id"
+            :step="param.step"
+            :suffix="param.unit"
+            density="compact"
+            hide-details
+            type="number"
+            v-model="param.state.value"
+            variant="underlined"
+          />
+        </v-col>
+      </template>
     </v-row>
 
     <template #append>
@@ -131,6 +153,10 @@ const update = (value: number | number[]) => {
     .menu {
       opacity: 1;
     }
+  }
+
+  &:hover .v-text-field__suffix {
+    display: none;
   }
 }
 </style>

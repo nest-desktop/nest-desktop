@@ -106,26 +106,29 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
-   * Get recorders
+   * Get recorders.
    */
   get recorders(): TNode[] {
     return this.nodeItems.filter((node: TNode) => node.model?.isRecorder);
   }
 
   /**
-   * Get recorders for analog signals
+   * Get recorders for analog signals.
    */
   get recordersAnalog(): TNode[] {
     return this.nodeItems.filter((node: TNode) => node.model?.isAnalogRecorder);
   }
 
   /**
-   * Get recorders
+   * Get spike recorders.
    */
   get recordersSpike(): TNode[] {
     return this.nodeItems.filter((node: TNode) => node.model?.isSpikeRecorder);
   }
 
+  /**
+   * Get selected node groups.
+   */
   get selectedNodeGroups(): NodeGroup[] {
     const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
     return selectedNodes.filter(
@@ -133,6 +136,9 @@ export class BaseNodes extends BaseObj {
     ) as NodeGroup[];
   }
 
+  /**
+   * Get selected nodes.
+   */
   get selectedNodeItems(): TNode[] {
     const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
     return selectedNodes.filter(
@@ -304,10 +310,9 @@ export class BaseNodes extends BaseObj {
     if (this._state.selectedNodes.length > 0) {
       // selected node
       return (
-        this._state.selectedNodes
-          .filter((node) => node.isGroup)
-          .some((nodeGrp) => nodeGrp.nodes.includes(node)) ||
-        this._state.selectedNodes.includes(node)
+        this.selectedNodeGroups.some((nodeGrp: NodeGroup) =>
+          nodeGrp.nodes.includes(node)
+        ) || this._state.selectedNodes.includes(node)
       );
     } else if (elementTypeIdx > 0) {
       // element type

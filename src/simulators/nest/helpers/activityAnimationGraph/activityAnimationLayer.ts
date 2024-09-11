@@ -233,8 +233,8 @@ export class ActivityAnimationLayer {
     });
 
     if (this._state.record == null) {
-      const record = this._state.records.find(
-        (record: { id: string }) => record.id === "V_m"
+      const record = this._state.records.find((record: { id: string }) =>
+        ["V_m", "v"].includes(record.id)
       );
       this._state.record = record != null ? record : this._state.records[0];
     }

@@ -23,7 +23,7 @@
             :key="index"
             @click.stop="
               () => {
-                node.nodes.unselectNodes();
+                node.parentNodes.unselectNodes();
                 node.toggleSelection();
               }
             "

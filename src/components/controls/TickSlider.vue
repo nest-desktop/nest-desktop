@@ -18,11 +18,11 @@
     v-model="tickIdx"
   >
     <template #append>
-      <div :text="props.unit" class="unit" />
+      <div class="unit">{{ props.unit }}</div>
     </template>
 
     <template #tick-label="{ index }">
-      <div :text="state.ticks[index]" class="label" />
+      <div class="label">{{ state.ticks[index] }}</div>
     </template>
   </v-slider>
 </template>

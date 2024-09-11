@@ -18,7 +18,7 @@
             :items="state.items"
             :label="state.elementType + ' model'"
             @click.stop
-            class="model-select text-primary ml-8"
+            class="model-select text-primary ml-7 mr-2"
             density="compact"
             hide-details
             item-title="label"
@@ -26,15 +26,13 @@
             v-model="node.modelId"
           >
             <template #append>
-              <div class="d-print-none menu">
+              <v-btn-toggle class="d-print-none" style="height: 100%">
                 <v-menu :close-on-content-click="false" v-model="state.menu">
                   <template #activator="{ props }">
                     <v-btn
-                      color="primary"
                       icon="mdi:mdi-order-bool-ascending-variant"
                       size="small"
                       v-bind="props"
-                      variant="text"
                     />
                   </template>
 
@@ -86,11 +84,11 @@
                   </v-card>
                 </v-menu>
 
-                <v-btn color="primary" icon size="small" variant="text">
+                <v-btn icon size="small">
                   <v-icon icon="mdi:mdi-dots-vertical" />
                   <NodeMenu :node />
                 </v-btn>
-              </div>
+              </v-btn-toggle>
             </template>
 
             <template #item="{ props }">

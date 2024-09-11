@@ -19,7 +19,7 @@ export interface IModelProps extends IDoc {
   favorite?: boolean;
   label?: string;
   params?: IModelParamProps[];
-  recordables?: string[];
+  recordables?: (INodeRecordProps | string)[];
 }
 
 interface IBaseModelState {
@@ -281,9 +281,9 @@ export class BaseModel extends BaseObj {
     }
 
     // Add the recordables if provided.
-    if (this._recordables.length > 0) {
-      modelProps.recordables = this._recordables.map(
-        (recordable: INodeRecordProps) => recordable.id
+    if (this.recordables.length > 0) {
+      modelProps.recordables = this.recordables.map(
+        (recordable: INodeRecordProps) => recordable
       );
     }
 
@@ -302,7 +302,7 @@ export class BaseModel extends BaseObj {
 
     // Update the model recordables.
     if (modelProps.recordables) {
-      this.updateRecordables(modelProps);
+      this.updateRecordables(modelProps.recordables);
     }
 
     // Update the model parameters.
@@ -325,13 +325,18 @@ export class BaseModel extends BaseObj {
   }
 
   /**
-   * Update recordables from the config.
-   * @param modelProps model props
+   * Update recordables.
+   * @param recordablesProps recordable or string props
    */
-  updateRecordables(modelProps: IModelProps): void {
-    this._recordables = this.config?.localStorage.recordables?.filter(
-      (recordable: INodeRecordProps) =>
-        modelProps.recordables?.includes(recordable.id)
+  updateRecordables(recordablesProps: (INodeRecordProps | string)[]): void {
+    this._recordables = recordablesProps.map(
+      (recordableProps: INodeRecordProps | string) =>
+        recordableProps instanceof Object
+          ? recordableProps
+          : this.config?.localStorage.recordables.find(
+              (recordable: INodeRecordProps) =>
+                recordable.id === recordableProps
+            )
     );
   }
 }

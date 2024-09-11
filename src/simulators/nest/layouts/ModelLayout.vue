@@ -153,6 +153,11 @@ const projects: { id: string; name: string; icon: string }[] = [
     icon: "mdi-chart-line",
   },
   {
+    id: "model-step-current-response",
+    name: "step current response",
+    icon: "mdi-chart-line",
+  },
+  {
     id: "model-current-steps",
     name: "current steps",
     icon: "mdi-chart-line",

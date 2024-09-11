@@ -271,6 +271,10 @@ export class BaseNode extends BaseObj {
     this.changes();
   }
 
+  get parentNodes(): TNodes {
+    return this._nodes;
+  }
+
   get recordables(): NodeRecord[] {
     return this._recordables;
   }
