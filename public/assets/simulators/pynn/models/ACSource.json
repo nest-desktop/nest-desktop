@@ -41,7 +41,7 @@
       "max": 360,
       "min": 0,
       "step": 1,
-      "unit": "degrees",
+      "unit": "deg",
       "value": 0
     },
     {
