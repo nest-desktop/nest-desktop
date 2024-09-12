@@ -10,10 +10,9 @@
 
     <v-card-text class="pa-0">
       <v-list v-if="node.paramsVisible.length > 0">
-        <NodeParamViewer
+        <ParamViewer
           :key="index"
-          :options="node.params[paramId].options"
-          :value="node.params[paramId].value"
+          :param="node.params[paramId]"
           v-for="(paramId, index) in node.paramsVisible"
         />
       </v-list>
@@ -43,7 +42,7 @@
 import Card from "../common/Card.vue";
 import ConnectionViewer from "../connection/ConnectionViewer.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
-import NodeParamViewer from "./NodeParamViewer.vue";
+import ParamViewer from "../parameter/ParamViewer.vue";
 import { TNode } from "@/types";
 
 defineProps<{ node: TNode }>();

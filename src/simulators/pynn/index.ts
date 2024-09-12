@@ -15,7 +15,6 @@ import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
 import { usePyNNProjectStore } from "./stores/project/projectStore";
 
 export const pynn: ISimulatorProps = {
-  autocomplete: [],
   backends: {},
   configNames: ["PyNNModel"],
   databases: ["PYNN_MODEL_STORE", "PYNN_PROJECT_STORE"],

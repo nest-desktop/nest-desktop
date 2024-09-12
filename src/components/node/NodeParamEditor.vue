@@ -35,26 +35,22 @@
       />
 
       <template v-else>
-        <span
-          class="px-2 py-auto text-medium-emphasis"
-          cols="10"
-          style="font-size: 15px"
-        >
-          {{ param.label }}
+        <span class="px-2 py-auto text-medium-emphasis" style="font-size: 15px">
+          {{ param.label || param.options.label }}
         </span>
         <v-spacer />
         <v-text-field
           :label="param.id"
+          :model-value="param.state.value"
           :step="param.step"
           :suffix="param.unit"
+          @update:model-value="(value: string) => update(parseFloat(value))"
           density="compact"
           hide-details
           style="max-width: 80px"
           type="number"
-          v-model="param.state.value"
           variant="underlined"
-        >
-        </v-text-field>
+        />
       </template>
     </v-row>
 

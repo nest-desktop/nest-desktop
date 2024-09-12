@@ -3,13 +3,13 @@
     <v-layout
       class="networkGraphLayout"
       id="networkGraphLayout"
-      style="height: 300px"
+      style="height: 400px"
     >
       <NetworkGraph :key="network.project.id" :network />
     </v-layout>
 
     <v-row no-gutters>
-      <v-col class="pa-1" cols="12" md="4" sm="6">
+      <v-col class="pa-1" cols="12" sm="4">
         <div class="text-button">Stimulator</div>
         <NodeViewer
           :node="(node as NESTNode)"
@@ -18,7 +18,7 @@
         />
       </v-col>
 
-      <v-col class="pa-1" cols="12" md="4" sm="6">
+      <v-col class="pa-1" cols="12" sm="4">
         <div class="text-button">Neuron</div>
         <NodeViewer
           :node="(node as NESTNode)"
@@ -27,7 +27,7 @@
         />
       </v-col>
 
-      <v-col class="pa-1" cols="12" md="4" sm="6">
+      <v-col class="pa-1" cols="12" sm="4">
         <div class="text-button">Recorder</div>
         <NodeViewer
           :node="(node as NESTNode)"

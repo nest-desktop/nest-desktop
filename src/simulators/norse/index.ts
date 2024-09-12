@@ -15,8 +15,8 @@ import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
 import { useNorseProjectStore } from "./stores/project/projectStore";
 
 export const norse: ISimulatorProps = {
-  autocomplete: [norseTorchCompletions],
   backends: {},
+  completionSources: [norseTorchCompletions],
   configNames: ["NorseModel"],
   databases: ["NORSE_MODEL_STORE", "NORSE_PROJECT_STORE"],
   iconSet,

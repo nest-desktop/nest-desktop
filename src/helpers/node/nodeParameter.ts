@@ -37,6 +37,7 @@ export class NodeParameter extends Parameter {
   override toJSON(): INodeParamProps {
     const paramProps: INodeParamProps = {
       id: this.id,
+      label: this.label,
       value: this.value,
     };
 

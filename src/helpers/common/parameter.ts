@@ -383,12 +383,14 @@ export class Parameter extends BaseObj {
 
     this._format = paramProps.format || "";
     this._items = paramProps.items || [];
-    this._label = paramProps.label || paramProps.id;
+    this._label = paramProps.label || "";
     this._readonly = paramProps.readonly || false;
 
     this._max = paramProps.max || 1;
     this._min = paramProps.min || 0;
-    this._step = paramProps.step || 1;
+    const value = Math.abs(paramProps.value as number);
+    const step = value > 1 ? 0.1 : Math.ceil(value * 500) / 10000;
+    this._step = paramProps.step || step || 1;
     this._ticks = paramProps.ticks || [];
     this._unit = paramProps.unit || "";
     this._component = paramProps.component || paramProps.input || "";

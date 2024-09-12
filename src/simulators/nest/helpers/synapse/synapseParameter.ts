@@ -1,39 +1,39 @@
-// synapseParameters.ts
+// synapseParameter.ts
 
-import { IParamProps, Parameter } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
+import {
+  BaseSynapseParameter,
+  ISynapseParamProps,
+} from "@/helpers/synapse/synapseParameter";
 
 import { NESTSynapse } from "./synapse";
 
-export interface ISynapseParamProps extends IParamProps {}
+export interface INESTSynapseParamProps extends ISynapseParamProps {}
 
-export class NESTSynapseParameter extends Parameter {
-  private _synapse: NESTSynapse;
-
-  constructor(synapse: NESTSynapse, paramProps: ISynapseParamProps) {
-    super(paramProps);
-    this._synapse = synapse;
+export class NESTSynapseParameter extends BaseSynapseParameter {
+  constructor(synapse: NESTSynapse, paramProps: INESTSynapseParamProps) {
+    super(synapse, paramProps);
   }
 
   /**
    * Get model parameter.
    */
   override get modelParam(): ModelParameter {
-    return this._synapse.model.params[this.id];
+    return this.synapse.model.params[this.id];
   }
 
-  get synapse(): NESTSynapse {
-    return this._synapse;
+  override get synapse(): NESTSynapse {
+    return this._synapse as NESTSynapse;
   }
 
-  get types(): any[] {
+  override get types(): any[] {
     const types: any[] = this.config?.localStorage.types;
     return !this.synapse.isSpatial
       ? types.filter((type: any) => !type.id.startsWith("spatial"))
       : types;
   }
 
-  get parent(): NESTSynapse {
+  override get parent(): NESTSynapse {
     return this.synapse;
   }
 
@@ -41,8 +41,8 @@ export class NESTSynapseParameter extends Parameter {
    * Serialize for JSON.
    * @return synapse parameter props
    */
-  override toJSON(): ISynapseParamProps {
-    const paramProps: ISynapseParamProps = {
+  override toJSON(): INESTSynapseParamProps {
+    const paramProps: INESTSynapseParamProps = {
       id: this.id,
       value: this.value,
     };

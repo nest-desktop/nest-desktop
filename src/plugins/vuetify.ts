@@ -57,7 +57,7 @@ export const vuetify = createVuetify({
     VBtnGroup: { variant: "outlined" },
     VBtnToggle: { variant: "outlined" },
     VCard: {
-      elevation: 0,
+      // elevation: 0,
       VCardActions: {
         VBtn: { size: "small", variant: "outlined" },
       },

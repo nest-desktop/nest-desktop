@@ -14,6 +14,7 @@ import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
 import { TBackendStore } from "@/stores/defineBackendStore";
 import { logger as mainLogger } from "@/utils/logger";
+import { CompletionSource } from "@codemirror/autocomplete";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
@@ -25,8 +26,8 @@ const logger = mainLogger.getSubLogger({
 });
 
 export interface ISimulatorProps {
-  autocomplete: any[];
   backends: Record<string, TBackendStore>;
+  completionSources?: CompletionSource[];
   configNames: string[];
   databases: string[];
   iconSet: IconSet;

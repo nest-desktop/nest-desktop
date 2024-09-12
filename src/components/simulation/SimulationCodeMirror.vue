@@ -1,39 +1,51 @@
 <template>
   <codemirror
     :extensions
-    ref="codeMirror"
+    @blur="updateView($event)"
+    @focus="updateView($event)"
+    @ready="handleReady"
     style="font-size: 0.75rem; width: 100%"
-    v-if="simulation"
     v-model="simulation.code.script"
   />
 </template>
 
 <script lang="ts" setup>
-import { Compartment } from "@codemirror/state";
-import { autocompletion } from "@codemirror/autocomplete";
-import { basicSetup } from "codemirror";
-import { oneDark } from "@codemirror/theme-one-dark";
-import { python } from "@codemirror/lang-python";
-
-let language = new Compartment();
+import { computed, nextTick, ref, watch } from "vue";
 
 import { TSimulation } from "@/types";
-import { darkMode } from "@/helpers/common/theme";
+import { codemirrorExtensions } from "@/plugins/codemirror";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-defineProps<{ simulation: TSimulation }>();
+const props = defineProps<{ simulation: TSimulation }>();
+const simulation = computed(() => props.simulation);
 
-const extensions = [
-  basicSetup,
-  language.of(python()),
-  autocompletion({ override: appStore.currentSimulator.autocomplete }),
-];
+const view = ref();
+const cursor = ref({ from: 0 });
 
-if (darkMode()) {
-  extensions.push(oneDark);
-}
+const extensions = codemirrorExtensions(
+  appStore.currentSimulator.completionSources
+);
+
+const handleReady = (payload: any) => {
+  view.value = payload.view;
+};
+
+const updateView = (event: any) => {
+  cursor.value = event.state.selection.ranges[0];
+};
+
+watch(
+  () => props.simulation.code.script,
+  () => {
+    nextTick(() => {
+      view.value.dispatch({
+        selection: cursor.value,
+      });
+    });
+  }
+);
 </script>
 
 <style lang="scss">

@@ -7,7 +7,7 @@
     <v-list density="compact" width="100%">
       <v-list-item class="param pl-0 pr-1">
         <ValueSlider
-          :model-value="(synapse.weight as number)"
+          :model-value="(synapse.params.weight.state.value as number)"
           :thumbColor="synapse.connection.sourceNode.view.color"
           @update:model-value="update"
           v-bind="weightOptions"
@@ -59,7 +59,7 @@ const props = defineProps<{ synapse: TSynapse }>();
 const synapse = computed(() => props.synapse);
 
 const update = (value: number) => {
-  synapse.value.weight = value;
+  synapse.value.params.weight.state.value = value;
   synapse.value.changes();
 };
 

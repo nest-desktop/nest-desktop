@@ -38,7 +38,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2" elevation="1" title="References">
+        <v-card class="mt-2" title="References">
           <v-card-text>
             <v-list density="compact">
               <v-list-item
@@ -54,7 +54,7 @@
       </v-col>
 
       <v-col md="6">
-        <v-card elevation="1" title="Backend">
+        <v-card title="Backend">
           <v-expansion-panels elevation="0" tile variant="accordion">
             <v-expansion-panel>
               <v-expansion-panel-title>

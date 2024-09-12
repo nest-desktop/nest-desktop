@@ -15,12 +15,16 @@
       <v-card class="ma-0" variant="flat">
         <v-card-text>
           <v-list>
-            <v-list-item
+            <ParamViewer
               :key="index"
-              v-for="(param, index) in connection.params"
-            >
-              {{ param.id }}
-            </v-list-item>
+              :param="connection.params[paramId]"
+              v-for="(paramId, index) in connection.paramsVisible"
+            />
+            <ParamViewer
+              :key="index"
+              :param="connection.synapse.params[paramId]"
+              v-for="(paramId, index) in connection.synapse.paramsVisible"
+            />
           </v-list>
         </v-card-text>
       </v-card>
@@ -30,6 +34,7 @@
 
 <script lang="ts" setup>
 import ConnectionAvatar from "./ConnectionAvatar.vue";
+import ParamViewer from "../parameter/ParamViewer.vue";
 import { TConnection } from "@/types";
 
 defineProps<{ connection: TConnection }>();

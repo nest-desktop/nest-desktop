@@ -143,6 +143,7 @@
     :height="projectStore.state.bottomNav.height"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     @transitionend="dispatchWindowResize()"
+    class="no-print"
     location="bottom"
   >
     <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />

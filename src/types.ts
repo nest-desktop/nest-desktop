@@ -155,6 +155,15 @@ import {
 } from "@/simulators/pynn/helpers/simulation/simulation";
 import { PyNNSimulationCode } from "@/simulators/pynn/helpers/simulation/simulationCode";
 
+import {
+  BaseSynapseParameter,
+  ISynapseParamProps,
+} from "./helpers/synapse/synapseParameter";
+import {
+  INESTSynapseParamProps,
+  NESTSynapseParameter,
+} from "./simulators/nest/helpers/synapse/synapseParameter";
+
 export type TActivityGraph = BaseActivityGraph | NESTActivityGraph;
 export type TConnection = BaseConnection | NESTConnection | NorseConnection;
 export type TConnectionProps =
@@ -220,4 +229,6 @@ export type TSimulationProps =
   | INorseSimulationProps
   | IPyNNSimulationProps;
 export type TSynapse = BaseSynapse | NESTSynapse;
+export type TSynapseParameter = BaseSynapseParameter | NESTSynapseParameter;
+export type TSynapseParamProps = ISynapseParamProps | INESTSynapseParamProps;
 export type TSynapseProps = ISynapseProps | INESTSynapseProps;

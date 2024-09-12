@@ -40,8 +40,9 @@
             <v-list-item
               @click="() => (projectStore.state.tab.activityView = 'spatial')"
               prepend-icon="mdi:mdi-axis-arrow"
-              text="spatial"
-            />
+            >
+              spatial
+            </v-list-item>
           </v-list>
         </v-menu>
       </v-btn>

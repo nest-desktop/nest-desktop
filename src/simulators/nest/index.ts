@@ -5,10 +5,12 @@ import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { logger as mainLogger } from "@/utils/logger";
 
 import { ISimulatorProps } from "../";
-import { nestCompletions } from "./codemirror/nestCompletion";
-import { nestRandomCompletions } from "./codemirror/nestRandomCompletion";
-import { nestSpatialCompletions } from "./codemirror/nestSpatialCompletion";
-import { nestSpatialDistributionsCompletions } from "./codemirror/nestSpatialDistributionsCompletion";
+import {
+  nestCompletions,
+  nestRandomCompletions,
+  nestSpatialCompletions,
+  nestSpatialDistributionsCompletions,
+} from "./codemirror";
 import nestIconSet from "./components/iconSet";
 import types from "./helpers/types";
 import route from "./routes";
@@ -26,13 +28,13 @@ const logger = mainLogger.getSubLogger({
 });
 
 export const nest: ISimulatorProps = {
-  autocomplete: [
+  backends: {},
+  completionSources: [
     nestCompletions,
     nestRandomCompletions,
     nestSpatialCompletions,
     nestSpatialDistributionsCompletions,
   ],
-  backends: {},
   configNames: [
     "NESTConnection",
     "NESTConnectionMask",

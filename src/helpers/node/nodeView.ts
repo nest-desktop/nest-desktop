@@ -90,7 +90,11 @@ export class NodeView extends BaseObj {
     this._state.expansionPanelIdx = value;
 
     if (this._state.expansionPanelIdx != null) {
-      this.node.connections[this._state.expansionPanelIdx].state.select();
+      const connection =
+        this.node.connections[this._state.expansionPanelIdx - 1];
+      if (!connection) return;
+
+      connection.state.select();
     }
   }
 
