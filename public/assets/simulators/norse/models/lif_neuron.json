@@ -1,4 +1,5 @@
 {
+  "abbreviation": "lif",
   "elementType": "neuron",
   "id": "LIF",
   "label": "leaky-integrate-and-fire",

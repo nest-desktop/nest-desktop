@@ -712,6 +712,8 @@ export class BaseNode extends BaseObj {
     this.logger.trace("update recordables");
     let recordables: INodeRecordProps[] = [];
 
+    console.log(this.modelId, this.model.config?.localStorage.recordables);
+
     // Initialize recordables.
     if (this.connections.length > 0) {
       if (this.model.isMultimeter) {
@@ -726,6 +728,13 @@ export class BaseNode extends BaseObj {
             sortString(a.id, b.id)
           );
         }
+      } else if (this.modelId === "voltmeter") {
+        recordables.push(
+          this.model.config?.localStorage.recordables.find(
+            (recordProps: INodeRecordProps) =>
+              ["V_m", "v"].includes(recordProps.id)
+          )
+        );
       }
     }
 

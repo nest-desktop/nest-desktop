@@ -1,7 +1,7 @@
 {{ #simulation.code.importModules }}
-# import norse
-# import torch
-# import numpy as np
+import norse
+import torch
+import numpy as np
 {{ /simulation.code.importModules }}
 
 {{ #network.nodes.hasSomeSpikeRecorder }}
@@ -14,9 +14,10 @@ def simulateSpikes(neuron, connection_layer, stimulator, offset=0):
 {{ #network.nodes.hasSomeAnalogRecorder }}
 def simulateAnalogs(neuron, connection_layer, stimulator, offset=0):
     output, state = neuron(connection_layer(stimulator))
-    vm = state.v.detach().numpy()
     ids, ts  = np.meshgrid(np.arange(0, 1), np.arange(0, {{ simulation.time }}))
-    return {"times": ts.ravel(), "senders": ids.ravel() + offset, "V_m": vm.ravel()}
+    data = {"times": ts.ravel(), "senders": ids.ravel() + offset}
+    data.update({"v": state.v.detach().numpy().ravel()})
+    return data
 {{ /network.nodes.hasSomeAnalogRecorder }}
 
 {{ #simulation.code.createNodes }}
@@ -47,16 +48,14 @@ events = []
 {{ #model.isSpikeRecorder }}
 {{ #connectionsNeuronSources }}
 {{ #source.connectionsStimulatorSources }}
-event = simulateSpikes({{ target.view.label }}, l{{ idx }}, {{ source.view.label }}, {{ idx }})
-events.append(event)
+events.append(simulateSpikes({{ target.view.label }}, l{{ idx }}, {{ source.view.label }}, {{ idx }}))
 {{ /source.connectionsStimulatorSources }}
 {{ /connectionsNeuronSources }}
 {{ /model.isSpikeRecorder }}
 {{ #model.isAnalogRecorder }}
 {{ #connectionsNeuronTargets }}
 {{ #target.connectionsStimulatorSources }}
-event = simulateAnalogs({{ target.view.label }}, l{{ idx }}, {{ source.view.label }})
-events.append(event)
+events.append(simulateAnalogs({{ target.view.label }}, l{{ idx }}, {{ source.view.label }}))
 {{ /target.connectionsStimulatorSources }}
 {{ /connectionsNeuronTargets }}
 {{ /model.isAnalogRecorder }}

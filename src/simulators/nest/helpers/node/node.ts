@@ -455,7 +455,8 @@ export class NESTNode extends BaseNode {
       } else if (this.modelId === "voltmeter") {
         recordables.push(
           this.model.config?.localStorage.recordables.find(
-            (recordProps: INodeRecordProps) => recordProps.id === "V_m"
+            (recordProps: INodeRecordProps) =>
+              ["V_m", "v"].includes(recordProps.id)
           )
         );
       }
@@ -467,9 +468,11 @@ export class NESTNode extends BaseNode {
       );
     }
 
-    this.recordables = recordables.map(
-      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
-    );
+    if (recordables.length != this.recordables.length) {
+      this.recordables = recordables.map(
+        (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
+      );
+    }
   }
 
   // /**

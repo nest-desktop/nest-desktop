@@ -48,6 +48,7 @@
                       >
                         <template #append>n: {{ node.size }}</template>
                       </v-checkbox>
+
                       <template v-if="node.modelParams">
                         <v-checkbox
                           :color="node.view.color"
@@ -169,8 +170,8 @@
                       class="d-print-none menu align-center justify-center my-auto"
                       icon="mdi:mdi-dots-vertical"
                       size="x-small"
-                      variant="text"
                       v-bind="props"
+                      variant="text"
                     />
                   </template>
 

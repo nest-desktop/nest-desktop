@@ -17,7 +17,7 @@
             :items="node.models"
             :label="node.model.elementType + ' model'"
             @click.stop
-            class="text-primary"
+            class="model-select text-primary ml-7 mr-2"
             density="compact"
             hide-details
             item-title="label"
@@ -25,10 +25,6 @@
             v-model="node.modelId"
           >
             <template #append>
-              <div class="d-print-none">
-                <v-chip :text="node.hash" />
-              </div>
-
               <v-btn-toggle class="d-print-none" style="height: 100%">
                 <v-menu :close-on-content-click="false" v-model="state.menu">
                   <template #activator="{ props }">
@@ -104,7 +100,8 @@
                     @click.stop="select(props, () => (state.menu = true))"
                     class="icon"
                     icon="mdi:mdi-menu-right"
-                    size="small"
+                    size="x-small"
+                    v-if="state.elementType"
                     variant="text"
                   />
                 </template>
@@ -186,11 +183,7 @@
             </v-list-item>
           </v-list>
 
-          <v-list
-            :key="node.modelId"
-            class="py-0"
-            v-if="node.paramsVisible.length > 0"
-          >
+          <v-list class="py-0" v-if="node.paramsVisible.length > 0">
             <NodeParamEditor
               :key="index"
               :param="node.params[paramId]"
