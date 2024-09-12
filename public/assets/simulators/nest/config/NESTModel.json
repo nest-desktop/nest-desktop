@@ -39,20 +39,20 @@
       "unit": "nS"
     },
     {
-      "id": "g_ex.d",
       "abbr": "g_ex dist",
+      "id": "g_ex.d",
       "label": "distal conductance of excitatory input",
       "unit": "nS"
     },
     {
-      "id": "g_ex.p",
       "abbr": "g_ex prox",
+      "id": "g_ex.p",
       "label": "proximal conductance of excitatory input",
       "unit": "nS"
     },
     {
-      "id": "g_ex.s",
       "abbr": "g_ex soma",
+      "id": "g_ex.s",
       "label": "soma conductance of excitatory input",
       "unit": "nS"
     },
@@ -62,20 +62,20 @@
       "unit": "nS"
     },
     {
-      "id": "g_in.d",
       "abbr": "g_in dist",
+      "id": "g_in.d",
       "label": "distal conductance of inhibitory input",
       "unit": "nS"
     },
     {
-      "id": "g_in.p",
       "abbr": "g_in prox",
+      "id": "g_in.p",
       "label": "proximal conductance of inhibitory input",
       "unit": "nS"
     },
     {
-      "id": "g_in.s",
       "abbr": "g_in soma",
+      "id": "g_in.s",
       "label": "soma conductance of inhibitory input",
       "unit": "nS"
     },

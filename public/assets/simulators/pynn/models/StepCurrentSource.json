@@ -6,18 +6,15 @@
   "params": [
     {
       "component": "arrayInput",
-      "id": "amplitude_times",
-      "label": "times at which current changes",
+      "id": "times",
+      "label": "list/array of times at which the injected current changes",
       "unit": "ms"
     },
     {
       "component": "arrayInput",
-      "id": "amplitude_values",
-      "label": "amplitudes of step current current",
-      "unit": "pA"
+      "id": "amplitude",
+      "label": "list/array of current amplitudes to be injected at the times",
+      "unit": "nA"
     }
-  ],
-  "recordables": [
-    "I"
   ]
 }

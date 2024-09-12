@@ -9,10 +9,10 @@
       "id": "rate",
       "label": "mean spike frequency",
       "max": 10000,
-      "min": 0,
+      "min": 1,
       "step": 1,
       "unit": "Hz",
-      "value": 0
+      "value": 1
     },
     {
       "component": "valueSlider",
@@ -28,11 +28,14 @@
       "component": "valueSlider",
       "id": "duration",
       "label": "duration of spike sequence",
-      "max": 10E9,
+      "max": 1E10,
       "min": 1,
       "step": 1,
       "unit": "ms",
-      "value": 10E9
+      "value": 1E10
     }
+  ],
+  "recordables": [
+    "spikes"
   ]
 }
