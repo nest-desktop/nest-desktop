@@ -32,14 +32,18 @@
 <script lang="ts" setup>
 import { AxiosError, AxiosResponse } from "axios";
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
-import { createDialog } from "vuetify3-dialog";
+import { createDialog, notifySuccess } from "vuetify3-dialog";
 
+import { TModelStore } from "@/stores/model/defineModelStore";
 import { notifyError } from "@/utils/dialog";
 
 import NESTMLScriptDialog from "../dialog/NESTMLScriptDialog.vue";
 import NESTModuleCombobox from "../module/NESTModuleCombobox.vue";
 import { NESTModel } from "../../helpers/model/model";
 import { updateSimulationModules } from "../../stores/model/modelStore";
+
+import { useNESTModelStore } from "../../stores/model/modelStore";
+const modelStore: TModelStore = useNESTModelStore();
 
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
@@ -114,12 +118,13 @@ const updateSpecs = () => {
     .then((response: AxiosResponse) => {
       switch (response.status) {
         case 200:
-          console.log(response.data);
           model.value.updateParameters(response.data.params);
           model.value.updateRecordables(response.data.states);
+          modelStore.saveModel();
+          notifySuccess("Updated specifications from backend successfully.");
           break;
         case 400:
-          notifyError("Failed to get states for model.");
+          notifyError("Failed to get specs for model.");
           break;
       }
     })

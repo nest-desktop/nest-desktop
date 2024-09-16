@@ -62,18 +62,28 @@
   >
     <div @mousedown="resizeRightNav()" class="resize-handle left" />
 
-    <template v-if="modelStore.state.controller.view === 'defaults'">
+    <template v-if="modelStore.state.controller.view === 'specs'">
       <v-toolbar
         color="transparent"
         density="compact"
-        title="Model parameter defaults"
+        title="Model specifications"
       />
 
       <v-list>
+        <v-list-subheader>Default parameters</v-list-subheader>
         <ModelParamViewer
           :key="index"
           :param="(param as TModelParameter)"
           v-for="(param, index) in modelParams"
+        />
+      </v-list>
+
+      <v-list>
+        <v-list-subheader>Recordables / States</v-list-subheader>
+        <ModelParamViewer
+          :key="index"
+          :param="(recordable as TModelParameter)"
+          v-for="(recordable, index) in modelStore.model.recordables"
         />
       </v-list>
     </template>
@@ -144,6 +154,14 @@
         />
       </slot>
     </template>
+
+    <template v-else-if="modelStore.state.controller.view === 'activity'">
+      <slot name="activityController">
+        <ActivityChartController
+          :graph="(modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph)"
+        />
+      </slot>
+    </template>
   </v-navigation-drawer>
 </template>
 
@@ -154,9 +172,11 @@ import { LanguageSupport } from "@codemirror/language";
 import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 
+import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ModelParamViewer from "./ModelParamViewer.vue";
 import NodeParamEditor from "../node/NodeParamEditor.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
+import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { TModelParameter } from "@/types";
 import { darkMode } from "@/helpers/common/theme";
@@ -180,11 +200,11 @@ const modelJSON = computed(() =>
 
 const controllerItems = [
   {
-    id: "defaults",
+    id: "specs",
     icon: {
       icon: "mdi:mdi-format-list-numbered-rtl",
     },
-    title: "View defaults",
+    title: "View model specifications",
   },
   {
     id: "params",
@@ -201,6 +221,14 @@ const controllerItems = [
     title: "View raw data",
   },
   { id: "code", icon: { icon: "mdi:mdi-xml" } },
+  {
+    id: "activity",
+    icon: {
+      class: "mdi-flip-v",
+      icon: "mdi:mdi-border-style",
+    },
+    title: "Configure activity",
+  },
 ];
 
 const setDefaults = () => {
