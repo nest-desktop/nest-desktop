@@ -5,22 +5,14 @@
             {
                 "model": {
                     "id": "analogSignalPlot",
-                    "params": {
-                        "averageLine": false,
-                        "spikeThreshold": -55
-                    },
                     "records": [
-                        "mm2.V_m"
+                        "vm2.V_m"
                     ]
                 }
             },
             {
                 "model": {
                     "id": "analogSignalPlot",
-                    "params": {
-                        "averageLine": false,
-                        "spikeThreshold": -55
-                    },
                     "records": [
                         "mm1.I"
                     ]
