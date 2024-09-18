@@ -7,8 +7,8 @@ process.env.PUBLIC = app.isPackaged
   ? process.env.DIST
   : join(process.env.DIST, "../public");
 
-import { join } from "path";
 import { BrowserWindow, app } from "electron";
+import { join } from "path";
 
 // https://github.com/electron/electron/issues/32760
 app.disableHardwareAcceleration();
@@ -21,13 +21,14 @@ async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     icon: join(process.env.PUBLIC, "nest-desktop-icon.svg"),
-    width: 1200,
+    frame: true,
     height: 750,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
       preload,
     },
+    width: 1200,
   });
 
   // Test active push message to Renderer-process.
