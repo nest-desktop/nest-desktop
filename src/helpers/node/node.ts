@@ -1,26 +1,19 @@
 // node.ts
 
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import {
-  TConnection,
-  TModel,
-  TNetwork,
-  TNode,
-  TNodes,
-  TSimulation,
-} from "@/types";
+import { TModelDBStore } from '@/stores/model/defineModelDBStore';
+import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from '@/types';
 
-import { onlyUnique, sortString } from "../../utils/array";
-import { Activity, IActivityProps } from "../activity/activity";
-import { AnalogSignalActivity } from "../activity/analogSignalActivity";
-import { SpikeActivity } from "../activity/spikeActivity";
-import { BaseObj } from "../common/base";
-import { BaseModel, TElementType } from "../model/model";
-import { ModelParameter } from "../model/modelParameter";
-import { NodeGroup } from "./nodeGroup";
-import { INodeParamProps, NodeParameter } from "./nodeParameter";
-import { INodeRecordProps, NodeRecord } from "./nodeRecord";
-import { INodeViewProps, NodeView } from "./nodeView";
+import { onlyUnique, sortString } from '../../utils/array';
+import { Activity, IActivityProps } from '../activity/activity';
+import { AnalogSignalActivity } from '../activity/analogSignalActivity';
+import { SpikeActivity } from '../activity/spikeActivity';
+import { BaseObj } from '../common/base';
+import { BaseModel, TElementType } from '../model/model';
+import { ModelParameter } from '../model/modelParameter';
+import { NodeGroup } from './nodeGroup';
+import { INodeParamProps, NodeParameter } from './nodeParameter';
+import { INodeRecordProps, NodeRecord } from './nodeRecord';
+import { INodeViewProps, NodeView } from './nodeView';
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -556,7 +549,18 @@ export class BaseNode extends BaseObj {
   modelChanges(): void {
     this.logger.trace("model change");
 
-    // this.init();
+    this.update();
+
+    if (this.model.isAnalogRecorder) {
+      this.updateRecords();
+    } else if (!this.model.isSpikeRecorder) {
+      this.sourceNodes
+        .filter((node: TNode) => node.model.isAnalogRecorder)
+        .forEach((recorder: TNode) => {
+          recorder.update();
+        });
+    }
+
     this.nodes.network.changes();
   }
 
@@ -687,9 +691,8 @@ export class BaseNode extends BaseObj {
    */
   update(): void {
     this.clean();
-    this.updateRecordables();
-    this.updateRecordsColor();
 
+    this.updateRecordables();
     this.updateHash();
   }
 
@@ -701,6 +704,9 @@ export class BaseNode extends BaseObj {
       idx: this.idx,
       model: this._modelId,
       params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
+      recordables: this._recordables.map(
+        (recordable: NodeRecord) => recordable.uuid
+      ),
       size: this._size,
     });
   }
@@ -712,11 +718,9 @@ export class BaseNode extends BaseObj {
     this.logger.trace("update recordables");
     let recordables: INodeRecordProps[] = [];
 
-    console.log(this.modelId, this.model.config?.localStorage.recordables);
-
     // Initialize recordables.
     if (this.connections.length > 0) {
-      if (this.model.isMultimeter) {
+      if (this.model.isAnalogRecorder) {
         const recordablesNodes = this.targetNodes.map((target: TNode) =>
           [...target.model.recordables].flat()
         );
@@ -724,25 +728,27 @@ export class BaseNode extends BaseObj {
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
           recordables = recordablesPooled.filter(onlyUnique);
+
+          if (this.modelId === "voltmeter") {
+            recordables = recordables.filter((recordProps: INodeRecordProps) =>
+              ["V_m", "v"].includes(recordProps.id)
+            );
+          }
+
           recordables.sort((a: { id: string }, b: { id: string }) =>
             sortString(a.id, b.id)
           );
         }
-      } else if (this.modelId === "voltmeter") {
-        recordables.push(
-          this.model.config?.localStorage.recordables.find(
-            (recordProps: INodeRecordProps) =>
-              ["V_m", "v"].includes(recordProps.id)
-          )
-        );
       }
     }
 
-    if (recordables.length != this.recordables.length) {
-      this.recordables = recordables.map(
-        (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
-      );
-    }
+    // if (recordables.length != this.recordables.length) {
+    this.recordables = recordables.map(
+      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
+    );
+    // }
+
+    this.updateRecordsColor();
   }
 
   /**
@@ -765,6 +771,17 @@ export class BaseNode extends BaseObj {
           recordIds.includes(record.id)
         ),
       ];
+    } else if (this.records.length > 0) {
+      const recordIds = this.recordables.map((record: NodeRecord) => record.id);
+      this.records = [
+        ...this.records.filter((record: NodeRecord) =>
+          recordIds.includes(record.id)
+        ),
+      ];
+
+      this.records.forEach((record: NodeRecord) => {
+        record.node = this;
+      });
     } else {
       this.records = [...this.recordables];
     }

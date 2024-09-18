@@ -1,30 +1,21 @@
 // node.ts
 
-import { Parameter } from "@/helpers/common/parameter";
-import { TElementType } from "@/helpers/model/model";
-import { ModelParameter } from "@/helpers/model/modelParameter";
-import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
-import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
-import { onlyUnique, sortString } from "@/utils/array";
+import { Parameter } from '@/helpers/common/parameter';
+import { TElementType } from '@/helpers/model/model';
+import { ModelParameter } from '@/helpers/model/modelParameter';
+import { BaseNode, INodeProps } from '@/helpers/node/node';
+import { INodeParamProps, NodeParameter } from '@/helpers/node/nodeParameter';
+import { INodeRecordProps, NodeRecord } from '@/helpers/node/nodeRecord';
+import { onlyUnique, sortString } from '@/utils/array';
 
-import { NESTConnection } from "../connection/connection";
-import { NESTCopyModel } from "../model/copyModel";
-import { NESTModel } from "../model/model";
-import { NESTNetwork } from "../network/network";
-import {
-  INESTNodeCompartmentProps,
-  NESTNodeCompartment,
-} from "./nodeCompartment/nodeCompartment";
-import {
-  INESTNodeReceptorProps,
-  NESTNodeReceptor,
-} from "./nodeReceptor/nodeReceptor";
-import {
-  INESTNodeSpatialProps,
-  NESTNodeSpatial,
-} from "./nodeSpatial/nodeSpatial";
-import { NESTNodes } from "./nodes";
+import { NESTConnection } from '../connection/connection';
+import { NESTCopyModel } from '../model/copyModel';
+import { NESTModel } from '../model/model';
+import { NESTNetwork } from '../network/network';
+import { INESTNodeCompartmentProps, NESTNodeCompartment } from './nodeCompartment/nodeCompartment';
+import { INESTNodeReceptorProps, NESTNodeReceptor } from './nodeReceptor/nodeReceptor';
+import { INESTNodeSpatialProps, NESTNodeSpatial } from './nodeSpatial/nodeSpatial';
+import { NESTNodes } from './nodes';
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -135,19 +126,21 @@ export class NESTNode extends BaseNode {
     return this._modelCopied;
   }
 
-  override get modelId(): string {
-    return this._modelId;
-  }
+  // override get modelId(): string {
+  //   return this._modelId;
+  // }
 
-  /**
-   * Set model ID.
-   */
-  override set modelId(value: string) {
-    this._modelId = value;
+  // /**
+  //  * Set model ID.
+  //  */
+  // override set modelId(value: string) {
+  //   this._modelId = value;
 
-    this.loadModel();
-    this.modelChanges();
-  }
+  //   this.loadModel();
+
+  //   this.updateRecordables();
+  //   this.modelChanges();
+  // }
 
   override get modelParams(): Record<string, ModelParameter> {
     return this.model.params;
@@ -318,6 +311,9 @@ export class NESTNode extends BaseNode {
     this._receptors = [...this._receptors];
   }
 
+  /**
+   * Reset compartments and receptors.
+   */
   override reset(): void {
     this._compartments = [];
     this._receptors = [];
@@ -429,11 +425,13 @@ export class NESTNode extends BaseNode {
    * Update recordables.
    */
   override updateRecordables(): void {
+    this.logger.trace("update recordables");
+
     let recordables: INodeRecordProps[] = [];
 
     // Initialize recordables.
     if (this.connections.length > 0) {
-      if (this.model.isMultimeter) {
+      if (this.model.isAnalogRecorder) {
         const recordablesNodes = this.targetNodes.map((target: NESTNode) => {
           return (
             target.modelId === "cm_default"
@@ -448,17 +446,17 @@ export class NESTNode extends BaseNode {
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
           recordables = recordablesPooled.filter(onlyUnique);
+
+          if (this.modelId === "voltmeter") {
+            recordables = recordables.filter((recordProps: INodeRecordProps) =>
+              ["V_m", "v"].includes(recordProps.id)
+            );
+          }
+
           recordables.sort((a: { id: string }, b: { id: string }) =>
             sortString(a.id, b.id)
           );
         }
-      } else if (this.modelId === "voltmeter") {
-        recordables.push(
-          this.model.config?.localStorage.recordables.find(
-            (recordProps: INodeRecordProps) =>
-              ["V_m", "v"].includes(recordProps.id)
-          )
-        );
       }
     } else if (this.modelId === "weight_recorder") {
       recordables.push(
@@ -468,11 +466,13 @@ export class NESTNode extends BaseNode {
       );
     }
 
-    if (recordables.length != this.recordables.length) {
-      this.recordables = recordables.map(
-        (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
-      );
-    }
+    // if (recordables.length != this.recordables.length) {
+    this.recordables = recordables.map(
+      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
+    );
+    // }
+
+    this.updateRecordsColor();
   }
 
   // /**

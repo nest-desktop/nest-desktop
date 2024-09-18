@@ -41,9 +41,9 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
 {{ #model.isRecorder }}
-{{ #model.isMultimeter }}
+{{ #model.isAnalogRecorder }}
   "record_from": {{ &recordsFixed }},
-{{ /model.isMultimeter }}
+{{ /model.isAnalogRecorder }}
 {{ #simulation.code.runSimulationInsite }}
   "record_to": "insite",
 {{ /simulation.code.runSimulationInsite }}

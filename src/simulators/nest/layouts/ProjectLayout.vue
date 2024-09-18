@@ -123,8 +123,11 @@
               <NodeMenu :node />
             </template>
 
-            <template #nodeModelSelect>
-              <NodeModelSelect :node />
+            <template #nodeModelSelect="{ selectState }">
+              <NodeModelSelect
+                :node
+                @openMenu="() => (selectState.menu = true)"
+              />
             </template>
 
             <template #popItem>
@@ -147,14 +150,6 @@
                   <ParamMenu :items="getPopItems(node)" />
                 </template>
               </v-list-item>
-            </template>
-
-            <template #appendParamList>
-              <v-list class="py-0" v-if="node.model?.isMultimeter">
-                <v-list-item>
-                  <NodeRecordSelect :node />
-                </v-list-item>
-              </v-list>
             </template>
 
             <template #connectionEditor>
@@ -201,7 +196,6 @@ import ActivityChartController from "@/components/activityChart/ActivityChartCon
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
-import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
 import ParamMenu from "@/components/parameter/ParamMenu.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";

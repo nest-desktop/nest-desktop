@@ -1,14 +1,14 @@
 // activityChartPanelModel.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { UnwrapRef, reactive } from 'vue';
 
-import { Activity } from "../activity/activity";
-import { BaseObj } from "../common/base";
-import { IParamProps, TParamValue } from "../common/parameter";
-import { currentBackgroundColor } from "../common/theme";
-import { NodeRecord } from "../node/nodeRecord";
-import { ActivityChartPanel } from "./activityChartPanel";
-import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
+import { Activity } from '../activity/activity';
+import { BaseObj } from '../common/base';
+import { IParamProps, TParamValue } from '../common/parameter';
+import { currentBackgroundColor } from '../common/theme';
+import { NodeRecord } from '../node/nodeRecord';
+import { ActivityChartPanel } from './activityChartPanel';
+import { ActivityChartPanelModelParameter } from './activityChartPanelModelParameter';
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -210,7 +210,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   get recordsVisible(): NodeRecord[] {
     return this.records.filter((record: NodeRecord) =>
-      this._state.recordsVisible.includes(record.groupId)
+      this._state.recordsVisible.includes(record.uuid)
     );
   }
 
@@ -276,12 +276,12 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Get node record.
-   * @param groupId string
+   * @param uuid string
    * @returns node record object
    */
-  getNodeRecord(groupId: string): NodeRecord | undefined {
+  getNodeRecord(uuid: string): NodeRecord | undefined {
     return this.records.find(
-      (nodeRecord: NodeRecord) => nodeRecord.groupId === groupId
+      (nodeRecord: NodeRecord) => nodeRecord.uuid === uuid
     );
   }
 
@@ -352,7 +352,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   selectAllNodeRecords(): void {
     this._state.recordsVisible = this.records.map(
-      (record: NodeRecord) => record.groupId
+      (record: NodeRecord) => record.uuid
     );
   }
 
@@ -430,7 +430,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     // Remove old records from other recorder.
     this._state.records = this.records.filter((panelRecord: NodeRecord) =>
       panelRecord.node.records.some(
-        (record: NodeRecord) => record.groupId === panelRecord.groupId
+        (record: NodeRecord) => record.id === panelRecord.id
       )
     ) as NodeRecord[];
 

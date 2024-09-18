@@ -45,7 +45,6 @@
         <v-card-text class="pa-0" v-if="panel.state.visible">
           <span v-if="panel.model.state.records.length > 0">
             <v-select
-              :disabled="panel.model.state.records.length < 2"
               :items="panel.model.state.records"
               @update:model-value="update()"
               class="pa-1 pt-3"
@@ -53,7 +52,7 @@
               clearable
               density="compact"
               item-title="title"
-              item-value="groupId"
+              item-value="uuid"
               hide-details
               label="Recorded events"
               multiple
@@ -63,6 +62,7 @@
               <template #chip="{ item }">
                 <NodeRecordChip
                   :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                  v-if="panel.model.getNodeRecord(item.value)"
                 />
               </template>
 
@@ -80,6 +80,7 @@
                       <NodeRecordChip
                         :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
                         class="my-auto"
+                        v-if="panel.model.getNodeRecord(item.value)"
                       />
                     </template>
                   </v-checkbox>

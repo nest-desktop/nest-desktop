@@ -1,18 +1,18 @@
 // nodeRecord.ts
 
-import * as d3 from "d3";
-import { UnwrapRef, reactive } from "vue";
+import * as d3 from 'd3';
+import { UnwrapRef, reactive } from 'vue';
 
-import { TNode } from "@/types";
+import { TNode } from '@/types';
 
-import { max, min } from "../../utils/array";
-import { Activity } from "../activity/activity";
-import { BaseObj } from "../common/base";
+import { max, min } from '../../utils/array';
+import { Activity } from '../activity/activity';
+import { BaseObj } from '../common/base';
 
 export interface INodeRecordProps {
   id: string;
   color?: string;
-  groupId: string;
+  recorderId?: string;
   label?: string;
   unit?: string;
 }
@@ -37,13 +37,13 @@ export class NodeRecord extends BaseObj {
     reverse: false,
     scale: "Spectral",
   };
-  private _groupId: string = "";
   private _id: string;
   private _label: string;
   private _node: TNode;
   private _nodeSize: number = 0;
-  private _unit: string;
+  private _recorderId: string = "";
   private _state: UnwrapRef<INodeRecordState>;
+  private _unit: string;
 
   constructor(node: TNode, nodeRecordProps: INodeRecordProps) {
     super({
@@ -55,6 +55,7 @@ export class NodeRecord extends BaseObj {
     // this._activity = node.activity;
 
     this._id = nodeRecordProps.id;
+    this._recorderId = nodeRecordProps.recorderId || node.view.label;
     this._label = nodeRecordProps.label || "";
     this._unit = nodeRecordProps.unit || "";
 
@@ -64,7 +65,6 @@ export class NodeRecord extends BaseObj {
     });
 
     this.updateColor();
-    this.updateGroupID();
   }
 
   get activity(): Activity {
@@ -88,7 +88,7 @@ export class NodeRecord extends BaseObj {
   }
 
   get groupId(): string {
-    return this._groupId;
+    return this._recorderId + "." + this._id;
   }
 
   get hasEvent(): boolean {
@@ -115,12 +115,21 @@ export class NodeRecord extends BaseObj {
     return this._node;
   }
 
+  set node(value: TNode) {
+    this._node = value;
+    this._recorderId = this._node.view.label;
+  }
+
   get nodeLabel(): string {
     return this.node.view.label;
   }
 
   get nodeSize(): number {
     return this._nodeSize;
+  }
+
+  get recorderId(): string {
+    return this._recorderId;
   }
 
   get state(): UnwrapRef<INodeRecordState> {
@@ -166,7 +175,7 @@ export class NodeRecord extends BaseObj {
     return {
       id: this._id,
       color: this._state.color,
-      groupId: this._groupId,
+      recorderId: this._recorderId,
     };
   }
 
@@ -189,13 +198,6 @@ export class NodeRecord extends BaseObj {
    */
   updateColor(): void {
     this._state.color = this.node.view.color;
-  }
-
-  /**
-   * Update group id of node record.
-   */
-  updateGroupID(): void {
-    this._groupId = this.node.view.label + "." + this.id;
   }
 
   /**

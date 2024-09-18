@@ -24,8 +24,8 @@
               <NodeAvatar :node />
             </v-btn>
 
-            <slot name="nodeModelSelect">
-              <NodeModelSelect :node />
+            <slot name="nodeModelSelect" :selectState="state">
+              <NodeModelSelect :node @openMenu="() => (state.menu = true)" />
             </slot>
 
             <v-menu :close-on-content-click="false" v-model="state.menu">
@@ -108,15 +108,20 @@
             </slot>
           </v-list>
 
-          <v-list class="py-0" v-if="node.paramsVisible.length > 0">
+          <v-list class="py-0" v-if="node.model.isMultimeter">
+            <v-list-item>
+              <NodeRecordSelect :node />
+            </v-list-item>
+          </v-list>
+
+          <v-list class="py-0">
             <NodeParamEditor
               :key="index"
               :param="node.params[paramId]"
               v-for="(paramId, index) in node.paramsVisible"
+              v-if="node.paramsVisible.length > 0"
             />
           </v-list>
-
-          <slot name="appendParamList" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -140,6 +145,7 @@ import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeModelSelect from "./NodeModelSelect.vue";
 import NodeParamEditor from "./NodeParamEditor.vue";
+import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
 import ParamMenu from "../parameter/ParamMenu.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { TModel, TNode } from "@/types";

@@ -17,7 +17,7 @@
 
         <template #append>
           <v-btn
-            @click.stop="select(props, openMenu)"
+            @click.stop="select(props, true)"
             class="icon"
             icon="mdi:mdi-menu-right"
             size="x-small"
@@ -56,6 +56,8 @@ import { TModel, TNode } from "@/types";
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);
 
+const emit = defineEmits(["openMenu"]);
+
 const state = reactive<{
   elementType: string;
   items: (TModel | any)[];
@@ -71,9 +73,12 @@ const elementTypes = [
   { title: "stimulator", value: "stimulator" },
 ];
 
-const openMenu = () => {};
+const openMenu = () => {
+  console.log("openMenu");
+  emit("openMenu", true);
+};
 
-const select = (props: Record<string, unknown>, callback?: () => void) => {
+const select = (props: Record<string, unknown>, open?: boolean) => {
   node.value.view.expandNodePanel();
 
   if (
@@ -95,8 +100,8 @@ const select = (props: Record<string, unknown>, callback?: () => void) => {
     node.value.modelId = props.value as string;
   }
 
-  if (callback) {
-    callback();
+  if (open) {
+    openMenu();
   }
 };
 

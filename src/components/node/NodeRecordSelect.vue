@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-select
+      :key="node.hash"
       :items="node.recordables"
       @update:model-value="nextTick(() => node.changes())"
       base-color="primary"
@@ -22,6 +23,7 @@
       <template #chip="{ item }" v-if="node.records.length > 0">
         <NodeRecordChip
           :nodeRecord="(node.getNodeRecord(item.value) as NodeRecord)"
+          v-if="node.getNodeRecord(item.value)"
         />
       </template>
 
