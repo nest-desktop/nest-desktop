@@ -1,9 +1,8 @@
 <template>
   <v-expansion-panel elevation="0" rounded="0">
     <v-expansion-panel-title class="expansion-panel-title">
-      <v-row no-gutters>
+      <v-row>
         <ConnectionAvatar :connection />
-
         <v-spacer />
         <div class="d-flex justify-center align-center text-grey">
           {{ connection.rule.value }}

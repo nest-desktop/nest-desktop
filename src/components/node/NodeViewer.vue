@@ -1,11 +1,13 @@
 <template>
   <Card :color="node.view.color" class="node my-1" rounded="1" v-if="node">
     <v-card-title>
-      <div class="d-flex text-button">
-        <NodeAvatar :node="node" size="48px" title="Graphical representation" />
-        <div class="ma-auto" title="Node model">{{ node.modelId }}</div>
+      <v-row class="ma-0 text-button">
+        <NodeAvatar :node :size="48" title="Graphical representation" />
+        <v-spacer />
+        <div class="my-auto" title="Node model">{{ node.modelId }}</div>
+        <v-spacer />
         <div class="my-auto" title="Population size">{{ node.size }}</div>
-      </div>
+      </v-row>
     </v-card-title>
 
     <v-card-text class="pa-0">

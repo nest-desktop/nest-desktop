@@ -3,7 +3,7 @@
     <v-layout
       class="networkGraphLayout"
       id="networkGraphLayout"
-      style="height: 400px"
+      style="height: 300px"
     >
       <NetworkGraph :key="network.project.id" :network />
     </v-layout>
