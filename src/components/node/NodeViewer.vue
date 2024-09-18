@@ -48,7 +48,7 @@ import { TNode } from "@/types";
 defineProps<{ node: TNode }>();
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 .node {
   .v-list {
     overflow: visible;
@@ -63,4 +63,4 @@ defineProps<{ node: TNode }>();
     padding-top: 0 !important;
   }
 }
-</style>
+</style> -->

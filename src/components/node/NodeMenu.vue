@@ -24,7 +24,7 @@
           >
             <template #append>
               <template v-if="item.append">
-                <v-icon icon="mdi:mdi-menu-right" size="small" />
+                <v-icon icon="mdi:mdi-menu-right" size="x-small" />
               </template>
 
               <!-- <template v-if="item.input === 'checkbox'">

@@ -12,8 +12,8 @@
       <v-col class="pa-1" cols="12" sm="4">
         <div class="text-button">Stimulator</div>
         <NodeViewer
-          :node="(node as NESTNode)"
           :key="index"
+          :node="(node as NESTNode)"
           v-for="(node, index) in network.nodes.stimulators"
         />
       </v-col>
@@ -21,8 +21,8 @@
       <v-col class="pa-1" cols="12" sm="4">
         <div class="text-button">Neuron</div>
         <NodeViewer
-          :node="(node as NESTNode)"
           :key="index"
+          :node="(node as NESTNode)"
           v-for="(node, index) in network.nodes.neurons"
         />
       </v-col>
@@ -30,8 +30,8 @@
       <v-col class="pa-1" cols="12" sm="4">
         <div class="text-button">Recorder</div>
         <NodeViewer
-          :node="(node as NESTNode)"
           :key="index"
+          :node="(node as NESTNode)"
           v-for="(node, index) in network.nodes.recorders"
         />
       </v-col>

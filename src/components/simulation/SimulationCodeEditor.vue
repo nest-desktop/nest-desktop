@@ -47,8 +47,6 @@ const state = reactive<{
 
 const codeBlocks = [
   { icon: "mdi:mdi-delete-empty", title: "reset" },
-  // { icon: "mdi:mdi-arrow-down", title: "insite" },
-  // { icon: "mdi:mdi-engine-outline", title: "kernel" },
   { icon: "mdi:mdi-shape", title: "create" },
   { icon: "network:network", title: "connect" },
   { icon: "mdi:mdi-play", title: "simulate" },

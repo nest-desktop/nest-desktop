@@ -1,16 +1,17 @@
 <template>
   <codemirror
     :extensions
-    @blur="updateView($event)"
-    @focus="updateView($event)"
+    @blur="() => (state.focused = false)"
+    @focus="() => (state.focused = true)"
     @ready="handleReady"
+    @update="updateView($event)"
     style="font-size: 0.75rem; width: 100%"
     v-model="simulation.code.script"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, reactive, ref, watch } from "vue";
 
 import { TSimulation } from "@/types";
 import { codemirrorExtensions } from "@/plugins/codemirror";
@@ -22,7 +23,10 @@ const props = defineProps<{ simulation: TSimulation }>();
 const simulation = computed(() => props.simulation);
 
 const view = ref();
-const cursor = ref({ from: 0 });
+const state = reactive({
+  cursor: { from: 0 },
+  focused: false,
+});
 
 const extensions = codemirrorExtensions(
   appStore.currentSimulator.completionSources
@@ -33,17 +37,19 @@ const handleReady = (payload: any) => {
 };
 
 const updateView = (event: any) => {
-  cursor.value = event.state.selection.ranges[0];
+  state.cursor = event.state.selection.ranges[0];
 };
 
 watch(
   () => props.simulation.code.script,
   () => {
-    nextTick(() => {
-      view.value.dispatch({
-        selection: cursor.value,
+    if (!state.focused && state.cursor.from > 0) {
+      nextTick(() => {
+        view.value.dispatch({
+          selection: state.cursor,
+        });
       });
-    });
+    }
   }
 );
 </script>

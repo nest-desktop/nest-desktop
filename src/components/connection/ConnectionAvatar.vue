@@ -1,7 +1,13 @@
 <template>
-  <div style="pointer-events: none">
-    <v-btn icon flat size="small" variant="text">
-      <NodeAvatar :node="connection.source" :size="32" />
+  <div>
+    <v-btn
+      @click="connection.source.toggleSelection()"
+      class="rounded-circle"
+      icon
+      size="small"
+      variant="text"
+    >
+      <NodeAvatar :node="connection.source" />
     </v-btn>
 
     <v-btn
@@ -11,8 +17,14 @@
       variant="text"
     />
 
-    <v-btn icon flat size="small" variant="text">
-      <NodeAvatar :node="connection.target" :size="32" />
+    <v-btn
+      @click="connection.target.toggleSelection()"
+      class="rounded-circle"
+      icon
+      size="small"
+      variant="text"
+    >
+      <NodeAvatar :node="connection.target" />
     </v-btn>
   </div>
 </template>

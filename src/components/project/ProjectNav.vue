@@ -276,7 +276,7 @@ const openDialogNewProject = () => {
   }).then((projectName: boolean | string) => {
     if (projectName) {
       router.push({
-        name: appStore.state.simulator + "ProjectAdd",
+        name: appStore.state.simulator + "ProjectNew",
         query: { name: projectName as string },
       });
     }

@@ -1,9 +1,9 @@
 <template>
   <v-menu :close-on-content-click="false" :max-width="300">
     <template #activator="{ props }">
-      <v-btn color="primary" block flat tile v-bind="props" variant="text">
+      <v-btn block height="40" tile v-bind="props" variant="text">
         <v-row no-gutters>
-          {{ param.label }}
+          {{ param.label || param.options.label || param.id }}
           <v-spacer />
           {{ param.type.id }}
         </v-row>
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import ParameterSpecEditor from "./ParameterSpecEditor.vue";
+import ParameterSpecEditor from "./ParamSpecEditor.vue";
 import { Parameter } from "@/helpers/common/parameter";
 
 defineProps<{ param: Parameter }>();

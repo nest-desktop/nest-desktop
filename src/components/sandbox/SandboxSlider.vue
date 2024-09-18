@@ -116,7 +116,7 @@ const items = [
 ];
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 .playground-slider {
   .v-list {
     overflow: visible;
@@ -130,4 +130,4 @@ const items = [
     overflow: visible;
   }
 }
-</style>
+</style> -->

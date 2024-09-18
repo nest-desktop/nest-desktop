@@ -1,7 +1,7 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
-      <ParameterSpecMenu :param v-if="param.state.random" />
+      <ParamPopover :param v-if="param.state.random" />
 
       <v-checkbox
         :color="param.connection.sourceNode.view.color"
@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ParameterSpecMenu from "../parameter/ParameterSpecMenu.vue";
+import ParamPopover from "../parameter/ParamPopover.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 

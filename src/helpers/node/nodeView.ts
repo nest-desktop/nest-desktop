@@ -17,7 +17,7 @@ export interface INodeViewProps {
 
 interface INodeViewState {
   color?: string;
-  expansionPanelIdx: number | null;
+  expansionPanels: number[];
   label?: string;
   position: { x: number; y: number };
   positions?: number[][];
@@ -41,7 +41,7 @@ export class NodeView extends BaseObj {
 
     this._node = node;
     this._state = reactive<INodeViewState>({
-      expansionPanelIdx: 0,
+      expansionPanels: [0],
       label: "",
       positions: [],
       showSize: this.node.size > 1,
@@ -80,22 +80,6 @@ export class NodeView extends BaseObj {
 
     this.node.network.updateStyle();
     this.node.network.clean();
-  }
-
-  get expansionPanelIdx(): number | null {
-    return this._state.expansionPanelIdx;
-  }
-
-  set expansionPanelIdx(value: number | null) {
-    this._state.expansionPanelIdx = value;
-
-    if (this._state.expansionPanelIdx != null) {
-      const connection =
-        this.node.connections[this._state.expansionPanelIdx - 1];
-      if (!connection) return;
-
-      connection.state.select();
-    }
   }
 
   /**
@@ -182,6 +166,15 @@ export class NodeView extends BaseObj {
    * Clean node.
    */
   clean(): void {}
+
+  /**
+   * Expand node panel.
+   */
+  expandNodePanel(): void {
+    if (!this.state.expansionPanels.includes(0)) {
+      this.state.expansionPanels.push(0);
+    }
+  }
 
   /**
    * Focus this node.

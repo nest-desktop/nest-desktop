@@ -172,7 +172,7 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 .model-title {
   .model-select {
     .v-label {
@@ -215,4 +215,4 @@ onMounted(() => {
     }
   }
 }
-</style>
+</style> -->

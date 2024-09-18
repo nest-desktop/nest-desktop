@@ -1,7 +1,7 @@
 <template>
   <v-list-item class="param pl-0 pr-1" v-if="props.param">
     <v-row no-gutters>
-      <ParameterSpecMenu :param v-if="param.state.random" />
+      <ParamPopover :param v-if="param.state.random" />
 
       <ArrayInput
         :model-value="(param.state.value as Number[])"
@@ -68,10 +68,10 @@ import { computed } from "vue";
 import { TModelParameter } from "@/types";
 
 import ArrayInput from "../controls/ArrayInput.vue";
+import ParamPopover from "../parameter/ParamPopover.vue";
 import RangeSlider from "../controls/RangeSlider.vue";
 import TickSlider from "../controls/TickSlider.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import ParameterSpecMenu from "../parameter/ParameterSpecMenu.vue";
 
 const props = defineProps<{ param: TModelParameter }>();
 const param = computed(() => props.param);

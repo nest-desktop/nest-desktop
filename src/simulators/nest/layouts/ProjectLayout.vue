@@ -118,7 +118,69 @@
     <template #nodes>
       <div :key="project.network.nodes.length">
         <div :key="index" v-for="(node, index) in project.network.nodes.all">
-          <NodeEditor :node="node" v-if="node.isNode" />
+          <NodeEditor :node="node" v-if="node.isNode">
+            <template #nodeMenu>
+              <NodeMenu :node />
+            </template>
+
+            <template #nodeModelSelect>
+              <NodeModelSelect :node />
+            </template>
+
+            <template #popItem>
+              <v-list-item class="param pl-0 pr-1">
+                <NodePositionPopover
+                  :nodeSpatial="node.spatial"
+                  v-if="node.spatial.hasPositions"
+                />
+                <ValueSlider
+                  :thumb-color="node.view.color"
+                  @update:model-value="node.changes()"
+                  id="n"
+                  input-label="n"
+                  label="population size"
+                  v-else
+                  v-model="node.size"
+                />
+
+                <template #append>
+                  <ParamMenu :items="getPopItems(node)" />
+                </template>
+              </v-list-item>
+            </template>
+
+            <template #appendParamList>
+              <v-list class="py-0" v-if="node.model?.isMultimeter">
+                <v-list-item>
+                  <NodeRecordSelect :node />
+                </v-list-item>
+              </v-list>
+            </template>
+
+            <template #connectionEditor>
+              <ConnectionEditor
+                :connection
+                :key="index"
+                v-for="(connection, index) in node.connections"
+              >
+                <template #panelTitle>
+                  <div
+                    class="d-flex flex-column justify-center align-center text-grey"
+                  >
+                    {{ connection.rule.value }}
+                    <div v-if="connection.view.connectOnlyNeurons()">
+                      {{ connection.synapse.modelId }}
+                    </div>
+                  </div>
+                </template>
+
+                <template #synapseSpecEditor>
+                  <SynapseSpecEditor :synapse="connection.synapse" />
+                </template>
+              </ConnectionEditor>
+            </template>
+          </NodeEditor>
+
           <NodeGroup :nodeGroup="node" v-else-if="node.isGroup" />
         </div>
       </div>
@@ -136,17 +198,26 @@
 import { computed, ref } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
+import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
+import NodeEditor from "@/components/node/NodeEditor.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
+import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
+import ParamMenu from "@/components/parameter/ParamMenu.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
+import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
-import NodeEditor from "../components/node/NodeEditor.vue";
+import NodeMenu from "../components/node/NodeMenu.vue";
+import NodeModelSelect from "../components/node/NodeModelSelect.vue";
+import NodePositionPopover from "../components/node/NodePositionPopover.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
+import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
+import { NESTNode } from "../helpers/node/node";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
@@ -155,4 +226,19 @@ const projectStore: TProjectStore = useNESTProjectStore();
 const project = computed(() => projectStore.state.project);
 
 const model = ref("");
+
+const getPopItems = (node: NESTNode) => [
+  {
+    icon: "mdi:mdi-reload",
+    iconClass: "mdi-flip-h",
+    onClick: () => (node.size = 1),
+    title: "Set default size",
+  },
+  {
+    icon: "mdi:mdi-axis-arrow",
+    iconClass: "",
+    onClick: () => node.toggleSpatial(),
+    title: "Toggle spatial mode",
+  },
+];
 </script>

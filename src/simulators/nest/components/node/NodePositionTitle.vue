@@ -1,6 +1,6 @@
 <template>
-  <v-row class="my-auto" no-gutters v-if="nodeSpatial.positions">
-    <span class="my-1">Positions</span>
+  <v-row no-gutters v-if="nodeSpatial.positions">
+    Positions
     <v-spacer />
 
     <v-chip

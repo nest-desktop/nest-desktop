@@ -8,27 +8,31 @@
     elevation="0"
     rounded="0"
   >
-    <v-expansion-panel-title class="expansion-panel-title">
-      <v-row no-gutters>
-        <ConnectionAvatar :connection />
+    <v-expansion-panel-title class="ma-0 pa-0 pr-3 pt-1 expansion-panel-title">
+      <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
+        <ConnectionAvatar :connection class="my-auto ml-4" />
 
         <v-spacer />
 
-        <div class="d-flex flex-column justify-center align-center text-grey">
-          {{ connection.rule.value }}
-        </div>
+        <slot name="panelTitle">
+          <div class="d-flex flex-column justify-center align-center text-grey">
+            {{ connection.rule.value }}
+          </div>
+        </slot>
 
         <v-spacer />
 
-        <v-btn
-          color="primary"
-          icon="mdi:mdi-dots-vertical"
-          size="small"
-          variant="text"
-          class="menu"
-        />
+        <v-menu>
+          <template #activator="{ props }">
+            <v-btn
+              v-bind="props"
+              class="rounded-circle"
+              color="primary"
+              icon="mdi:mdi-dots-vertical"
+              size="small"
+            />
+          </template>
 
-        <v-menu activator="parent">
           <v-list density="compact">
             <v-list-item
               :icon="item.icon"
@@ -44,12 +48,14 @@
             </v-list-item>
           </v-list>
         </v-menu>
-      </v-row>
+      </v-btn-group>
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
       <ConnectionSpecEditor :connection />
-      <SynapseSpecEditor :synapse />
+      <slot name="synapseSpecEditor">
+        <SynapseSpecEditor :synapse />
+      </slot>
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>

@@ -1,8 +1,8 @@
 // simulationKernel.ts
 
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from '@/helpers/common/base';
 
-import { NESTSimulation } from "./simulation";
+import { NESTSimulation } from './simulation';
 
 export interface INESTSimulationKernelProps {
   resolution?: number;
@@ -29,7 +29,7 @@ export class NESTSimulationKernel extends BaseObj {
 
     this._resolution = kernelProps.resolution || 0.1;
     this._localNumThreads = kernelProps.localNumThreads || 1;
-    this._rngSeed = kernelProps.rngSeed || 0;
+    this._rngSeed = kernelProps.rngSeed || 1;
   }
 
   get localNumThreads(): number {

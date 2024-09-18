@@ -1,78 +1,76 @@
 <template>
-  <v-row class="conn-spec mx-1" no-gutters>
+  <v-btn-group class="pt-2 mt-1" style="width: 100%" variant="text">
     <v-select
       :disabled="
         connection.sourceNode.size === 1 && connection.targetNode.size === 1
       "
       :items="rules"
-      class="pa-1"
+      class="mx-1"
       density="compact"
       hide-details
       label="Connection rule"
       v-model="connection.rule.value"
     />
 
-    <div class="d-print-none menu align-center justify-center my-auto mx-1">
-      <v-menu :close-on-content-click="false">
-        <template #activator="{ props }">
-          <v-btn
-            :disabled="Object.keys(connection.params).length === 0"
-            color="primary"
-            icon="mdi:mdi-order-bool-ascending-variant"
-            size="small"
-            v-bind="props"
-            variant="text"
-          />
-        </template>
+    <v-menu :close-on-content-click="false">
+      <template #activator="{ props }">
+        <v-btn
+          :disabled="Object.keys(connection.params).length === 0"
+          class="rounded-circle"
+          color="primary"
+          icon="mdi:mdi-order-bool-ascending-variant"
+          size="small"
+          v-bind="props"
+        />
+      </template>
 
-        <v-card>
-          <v-card-text>
-            <v-checkbox
-              :color="connection.sourceNode.view.color"
-              :key="index"
-              :label="param.label"
-              :value="param.id"
-              density="compact"
-              hide-details
-              v-for="(param, index) in Object.values(connection.params)"
-              v-model="connection.paramsVisible"
-            >
-              <template #append>
-                {{ param.id }}: {{ param.value }}
-                {{ param.unit }}
-              </template>
-            </v-checkbox>
-          </v-card-text>
-        </v-card>
-      </v-menu>
-
-      <v-menu>
-        <template #activator="{ props }">
-          <v-btn
-            color="primary"
-            icon="mdi:mdi-dots-vertical"
-            size="small"
-            variant="text"
-            v-bind="props"
-          />
-        </template>
-
-        <v-list density="compact">
-          <v-list-item
+      <v-card>
+        <v-card-text>
+          <v-checkbox
+            :color="connection.sourceNode.view.color"
             :key="index"
-            :icon="item.icon"
-            @click="item.onClick"
-            v-for="(item, index) in items"
+            :label="param.label"
+            :value="param.id"
+            density="compact"
+            hide-details
+            v-for="(param, index) in Object.values(connection.params)"
+            v-model="connection.paramsVisible"
           >
-            <template #prepend>
-              <v-icon :icon="item.icon" />
+            <template #append>
+              {{ param.id }}: {{ param.value }}
+              {{ param.unit }}
             </template>
-            {{ item.title }}
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-  </v-row>
+          </v-checkbox>
+        </v-card-text>
+      </v-card>
+    </v-menu>
+
+    <v-menu>
+      <template #activator="{ props }">
+        <v-btn
+          class="rounded-circle"
+          color="primary"
+          icon="mdi:mdi-dots-vertical"
+          size="small"
+          v-bind="props"
+        />
+      </template>
+
+      <v-list density="compact">
+        <v-list-item
+          :key="index"
+          :icon="item.icon"
+          @click="item.onClick"
+          v-for="(item, index) in items"
+        >
+          <template #prepend>
+            <v-icon :icon="item.icon" />
+          </template>
+          {{ item.title }}
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </v-btn-group>
 
   <v-list density="compact" v-if="connection.paramsVisible.length > 0">
     <ConnectionParamEditor
@@ -120,7 +118,7 @@ const items = [
 ];
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 .conn-spec {
   .menu {
     opacity: 0;
@@ -132,4 +130,4 @@ const items = [
     }
   }
 }
-</style>
+</style> -->

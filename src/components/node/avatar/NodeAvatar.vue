@@ -1,21 +1,18 @@
 <template>
   <StimulatorAvatar
     :color="node.view.color"
-    :size="props.size || 40"
     v-if="node.elementType === 'stimulator'"
   >
     {{ node.view.label }}
   </StimulatorAvatar>
   <RecorderAvatar
     :color="node.view.color"
-    :size="props.size || 40"
     v-else-if="node.elementType === 'recorder'"
   >
     {{ node.view.label }}
   </RecorderAvatar>
   <NeuronAvatar
     :color="node.view.color"
-    :size="props.size || 40"
     :weight="node.view.synWeights"
     v-else-if="node.elementType === 'neuron'"
   >
@@ -23,7 +20,6 @@
   </NeuronAvatar>
   <v-avatar
     :color="nodeGroup.view.color"
-    :size="props.size || 40"
     class="node-avatar"
     v-else
     variant="tonal"
@@ -44,7 +40,6 @@ import StimulatorAvatar from "./StimulatorAvatar.vue";
 
 const props = defineProps<{
   node: NodeGroup | TNode;
-  size?: number | string;
 }>();
 
 const node = computed(() => props.node as TNode);

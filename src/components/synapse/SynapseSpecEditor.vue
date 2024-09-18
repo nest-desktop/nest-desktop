@@ -14,35 +14,32 @@
         />
 
         <template #append>
-          <div
-            class="d-print-none menu align-center justify-center my-auto mx-1"
-          >
-            <v-menu>
-              <template #activator="{ props }">
-                <v-btn
-                  color="primary"
-                  icon="mdi:mdi-dots-vertical"
-                  size="small"
-                  variant="text"
-                  v-bind="props"
-                />
-              </template>
+          <v-menu>
+            <template #activator="{ props }">
+              <v-btn
+                class="rounded-circle"
+                color="primary"
+                icon="mdi:mdi-dots-vertical"
+                size="small"
+                variant="text"
+                v-bind="props"
+              />
+            </template>
 
-              <v-list density="compact">
-                <v-list-item
-                  :key="index"
-                  @click="item.onClick"
-                  v-for="(item, index) in items"
-                >
-                  <template #prepend>
-                    <v-icon :icon="item.icon" />
-                  </template>
+            <v-list density="compact">
+              <v-list-item
+                :key="index"
+                @click="item.onClick"
+                v-for="(item, index) in items"
+              >
+                <template #prepend>
+                  <v-icon :icon="item.icon" />
+                </template>
 
-                  {{ item.title }}
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
+                {{ item.title }}
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </template>
       </v-list-item>
     </v-list>
