@@ -54,69 +54,6 @@
           "value": 50
         }
       ]
-    },
-    {
-      "icon": "custom:dice-multiple-outline",
-      "id": "random.exponential",
-      "label": "exponential distribution",
-      "specs": [
-        {
-          "id": "beta",
-          "label": "scale",
-          "value": 1
-        }
-      ]
-    },
-    {
-      "icon": "custom:dice-multiple-outline",
-      "id": "random.lognormal",
-      "label": "logarithm normal distribution",
-      "specs": [
-        {
-          "id": "mean",
-          "label": "mean",
-          "value": 0
-        },
-        {
-          "id": "std",
-          "label": "standard deviation",
-          "value": 1
-        }
-      ]
-    },
-    {
-      "icon": "custom:dice-multiple-outline",
-      "id": "random.normal",
-      "label": "normal distribution",
-      "specs": [
-        {
-          "id": "mean",
-          "label": "mean",
-          "value": 0
-        },
-        {
-          "id": "std",
-          "label": "standard deviation",
-          "value": 1
-        }
-      ]
-    },
-    {
-      "icon": "custom:dice-multiple-outline",
-      "id": "random.uniform",
-      "label": "uniform distribution",
-      "specs": [
-        {
-          "id": "min",
-          "label": "lower boundary",
-          "value": 0
-        },
-        {
-          "id": "max",
-          "label": "upper boundary",
-          "value": 1
-        }
-      ]
     }
   ]
 }

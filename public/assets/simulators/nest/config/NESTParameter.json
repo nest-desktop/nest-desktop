@@ -1,0 +1,217 @@
+{
+  "types": [
+    {
+      "icon": "mdi:mdi-numeric",
+      "id": "constant",
+      "label": "constant"
+    },
+    {
+      "icon": "mdi:mdi-code-brackets",
+      "id": "np.arange",
+      "label": "ranged array",
+      "specs": [
+        {
+          "default": 0,
+          "id": "start",
+          "optional": true,
+          "label": "start",
+          "value": 0
+        },
+        {
+          "id": "stop",
+          "label": "stop",
+          "value": 1
+        },
+        {
+          "default": 1,
+          "id": "step",
+          "optional": true,
+          "label": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-code-brackets",
+      "id": "np.linspace",
+      "label": "linear spaced array",
+      "specs": [
+        {
+          "id": "start",
+          "label": "start",
+          "value": 0
+        },
+        {
+          "id": "stop",
+          "label": "stop",
+          "value": 1
+        },
+        {
+          "default": 50,
+          "id": "num",
+          "optional": true,
+          "label": "num",
+          "value": 50
+        }
+      ]
+    },
+    {
+      "icon": "custom:dice-multiple-outline",
+      "id": "random.exponential",
+      "label": "exponential distribution",
+      "specs": [
+        {
+          "id": "beta",
+          "label": "scale",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "custom:dice-multiple-outline",
+      "id": "random.lognormal",
+      "label": "logarithm normal distribution",
+      "specs": [
+        {
+          "id": "mean",
+          "label": "mean",
+          "value": 0
+        },
+        {
+          "id": "std",
+          "label": "standard deviation",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "custom:dice-multiple-outline",
+      "id": "random.normal",
+      "label": "normal distribution",
+      "specs": [
+        {
+          "id": "mean",
+          "label": "mean",
+          "value": 0
+        },
+        {
+          "id": "std",
+          "label": "standard deviation",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "custom:dice-multiple-outline",
+      "id": "random.uniform",
+      "label": "uniform distribution",
+      "specs": [
+        {
+          "id": "min",
+          "label": "lower boundary",
+          "value": 0
+        },
+        {
+          "id": "max",
+          "label": "upper boundary",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial.distance",
+      "label": "linear distance",
+      "specs": [
+        {
+          "id": "a",
+          "label": "slope",
+          "value": 1
+        },
+        {
+          "id": "c",
+          "label": "shift",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.exponential",
+      "label": "exponential spatial distribution",
+      "specs": [
+        {
+          "id": "beta",
+          "label": "scale",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.gamma",
+      "label": "gamma spatial distribution",
+      "specs": [
+        {
+          "id": "kappa",
+          "label": "shape",
+          "value": 1
+        },
+        {
+          "id": "theta",
+          "label": "scale",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.gaussian",
+      "label": "gaussian spatial distribution",
+      "specs": [
+        {
+          "id": "mean",
+          "label": "mean",
+          "value": 0
+        },
+        {
+          "id": "std",
+          "label": "standard deviation",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "mdi-arrow-expand-horizontal",
+      "id": "spatial_distributions.gaussian2D",
+      "label": "2D gaussian spatial distribution",
+      "specs": [
+        {
+          "id": "mean_x",
+          "label": "mean x",
+          "value": 0
+        },
+        {
+          "id": "mean_y",
+          "label": "mean y",
+          "value": 0
+        },
+        {
+          "id": "std_x",
+          "label": "std x",
+          "value": 1
+        },
+        {
+          "id": "std_y",
+          "label": "std y",
+          "value": 1
+        },
+        {
+          "id": "rho",
+          "label": "correlation of x and y",
+          "value": 0
+        }
+      ]
+    }
+  ]
+}
