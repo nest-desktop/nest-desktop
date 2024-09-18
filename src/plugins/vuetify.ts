@@ -74,7 +74,10 @@ export const vuetify = createVuetify({
       },
     },
     VMenu: {
-      transition: "slide-y-transition",
+      VList: {
+        density: "compact",
+      },
+      transition: "no-transition",
     },
     VSelect: { variant: "outlined" },
     VTextarea: { variant: "outlined" },
