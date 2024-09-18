@@ -21,8 +21,8 @@
                 color="primary"
                 icon="mdi:mdi-dots-vertical"
                 size="small"
-                variant="text"
                 v-bind="props"
+                variant="text"
               />
             </template>
 

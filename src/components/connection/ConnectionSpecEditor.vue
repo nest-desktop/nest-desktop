@@ -53,6 +53,7 @@
           icon="mdi:mdi-dots-vertical"
           size="small"
           v-bind="props"
+          variant="text"
         />
       </template>
 

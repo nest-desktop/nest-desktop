@@ -17,10 +17,11 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { NESTActivityGraph } from "../helpers/activity/activityGraph";
-import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+
+import { NESTActivityGraph } from "../helpers/activity/activityGraph";
+import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();

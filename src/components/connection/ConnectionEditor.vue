@@ -25,11 +25,12 @@
         <v-menu>
           <template #activator="{ props }">
             <v-btn
-              v-bind="props"
               class="rounded-circle"
               color="primary"
               icon="mdi:mdi-dots-vertical"
               size="small"
+              v-bind="props"
+              variant="text"
             />
           </template>
 
@@ -52,7 +53,9 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="ma-1">
-      <ConnectionSpecEditor :connection />
+      <slot name="connectionSpecEditor">
+        <ConnectionSpecEditor :connection />
+      </slot>
       <slot name="synapseSpecEditor">
         <SynapseSpecEditor :synapse />
       </slot>

@@ -31,6 +31,7 @@
             icon="mdi:mdi-dots-vertical"
             size="x-small"
             v-bind="props"
+            variant="text"
           />
         </template>
 

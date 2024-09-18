@@ -9,9 +9,9 @@
 import { computed } from "vue";
 
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
-import NetworkGraph from "../components/network/NetworkGraph.vue";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
 
+import NetworkGraph from "../components/network/NetworkGraph.vue";
 import { NESTNetwork } from "../helpers/network/network";
 
 import { useNESTProjectStore } from "../stores/project/projectStore";

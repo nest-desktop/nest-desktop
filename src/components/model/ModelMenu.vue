@@ -37,7 +37,7 @@ const menuItems = [
     onClick: () => {
       modelDBStore.value.saveModel(model.value);
     },
-    prependIicon: "mdi:mdi-content-save-outline",
+    prependIcon: "mdi:mdi-content-save-outline",
     title: "Save",
   },
   {
