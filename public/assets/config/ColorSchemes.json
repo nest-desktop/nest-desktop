@@ -1,6 +1,6 @@
 [
   {
-    "text": "category 10",
+    "title": "category 10",
     "value": "category10",
     "colors": [
       "#1f77b4",
@@ -16,7 +16,7 @@
     ]
   },
   {
-    "text": "category 20",
+    "title": "category 20",
     "value": "category20",
     "colors": [
       "#1f77b4",
@@ -42,7 +42,7 @@
     ]
   },
   {
-    "text": "paired",
+    "title": "paired",
     "value": "paired",
     "colors": [
       "#a6cee3",
@@ -60,7 +60,7 @@
     ]
   },
   {
-    "text": "set1",
+    "title": "set1",
     "value": "set1",
     "colors": [
       "#e41a1c",
@@ -75,7 +75,7 @@
     ]
   },
   {
-    "text": "set2",
+    "title": "set2",
     "value": "set2",
     "colors": [
       "#66c2a5",
@@ -89,7 +89,7 @@
     ]
   },
   {
-    "text": "set3",
+    "title": "set3",
     "value": "set3",
     "colors": [
       "#8dd3c7",
@@ -107,8 +107,25 @@
     ]
   },
   {
-    "text": "tableau10",
-    "value": "stableau10",
+    "title": "spectral 11",
+    "value": "spectral11",
+    "colors": [
+      "#9e0142",
+      "#d53e4f",
+      "#f46d43",
+      "#fdae61",
+      "#fee08b",
+      "#ffffbf",
+      "#e6f598",
+      "#abdda4",
+      "#66c2a5",
+      "#3288bd",
+      "#5e4fa2"
+    ]
+  },
+  {
+    "title": "tableau10",
+    "value": "tableau10",
     "colors": [
       "#4e79a7",
       "#f28e2c",
@@ -123,7 +140,7 @@
     ]
   },
   {
-    "text": "google 10c",
+    "title": "google 10c",
     "value": "google10c",
     "colors": [
       "#3366cc",
@@ -139,7 +156,7 @@
     ]
   },
   {
-    "text": "google 20c",
+    "title": "google 20c",
     "value": "google20c",
     "colors": [
       "#3366cc",
